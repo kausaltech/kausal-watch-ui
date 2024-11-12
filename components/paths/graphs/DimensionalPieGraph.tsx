@@ -4,7 +4,6 @@ import type { DimensionalNodeMetricFragment } from 'common/__generated__/paths/g
 import { isEqual } from 'lodash';
 import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
-import darken from 'polished/lib/color/darken';
 import styled, { useTheme } from 'styled-components';
 
 import { activeGoalVar } from '@/context/paths/cache';
@@ -106,93 +105,13 @@ const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
     }
   }
 
-  const plotData: Partial<Plotly.PlotData>[] = [];
-
-  let maxTotal = 0;
-
-  // Pie per scope
-  yearData.categoryTypes[1].options.forEach((colId, cIdx) => {
-    const colTotals = yearData.rows.reduce((acc, row) => {
-      return row[cIdx] + acc;
-    }, 0);
-    // Remember the largest total for scaling the y-axis
-    if (Math.abs(colTotals) > maxTotal) {
-      maxTotal = Math.abs(colTotals);
-    }
-    // Pie segment per sector
-    const pieSegmentLabels: string[] = [];
-    const pieSegmentValues: number[] = [];
-    const pieSegmentColors: string[] = [];
-    const pieSegmentHovers: string[] = [];
-    yearData.categoryTypes[0].options.forEach((rowId, rIdx) => {
-      const datum = yearData.rows[rIdx][cIdx];
-      const portion = datum / colTotals;
-      /*
-      const displayPortions =
-        portion >= 0.01 ? Math.round((datum / colTotals) * 100) : '<1';
-      const textTemplate =
-        portion && portion !== 1 && portion !== 0 ? '%{meta[0]}%' : '';
-      const dimDetails = yearData.allLabels.find((l) => l.id === rowId);
-      */
-      if (datum != 0) {
-        pieSegmentLabels.push(
-          `${yearData.allLabels.find((l) => l.id === rowId)?.label}` || ''
-        );
-        pieSegmentValues.push(Math.abs(datum));
-        pieSegmentColors.push(
-          yearData.allLabels.find((l) => l.id === rowId)?.color || '#333'
-        );
-        pieSegmentHovers.push(
-          `${yearData.allLabels.find((l) => l.id === rowId)?.label}, ${Math.abs(
-            datum
-          )} ${metric.unit.htmlShort}` || ''
-        );
-      }
-    });
-    const scalePie = 0.75; // Use this to scale multiple pies relative to each other
-    plotData.push({
-      type: 'pie',
-      hole: 0.5,
-      labels: pieSegmentLabels,
-      values: pieSegmentValues,
-      hovertext: pieSegmentHovers,
-      textinfo: 'none',
-      hoverinfo: 'text',
-      marker: {
-        colors: pieSegmentColors,
-        pattern: {
-          shape: '/',
-          bgcolor: pieSegmentColors,
-          fgcolor: pieSegmentColors.map((color) => darken(0.2, color)),
-          size: 4,
-        },
-      },
-      domain: {
-        x: [0.5 - scalePie, 0.5 + scalePie],
-        y: [0.5 - scalePie, 0.5 + scalePie],
-      },
-      name: yearData.allLabels.find((l) => l.id === colId)?.label || '',
-    });
-  });
-
-  // Calculate total and percentages
-  const total = plotData[0].values.reduce((sum, value) => sum + value, 0);
-  const percentages = plotData[0].values.map((value) =>
-    ((value / total) * 100).toFixed(1)
-  );
-
-  // Create new labels with percentages
-  const newLabels = plotData[0].labels.map(
-    (label, index) => `${label}, ${percentages[index]}%`
-  );
-
-  // Update the data with new labels
-  plotData[0].labels = newLabels;
-
-  const range = [0, maxTotal * 1.25];
-
-  const layout: Partial<Plotly.Layout> = {
-    width: 400,
+  const plotData: {
+    data: Partial<Plotly.PlotData>;
+    layout: Partial<Plotly.Layout>;
+    total: 0 | number;
+  }[] = [];
+  const defaultLayout: Partial<Plotly.Layout> = {
+    width: 300,
     modebar: {
       remove: [
         'zoom2d',
@@ -211,11 +130,11 @@ const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
     dragmode: false,
     showlegend: true,
     legend: {
-      x: 1,
-      y: 0.5,
-      xanchor: 'left',
-      yanchor: 'middle',
-      orientation: 'vertical',
+      x: 0.5,
+      y: -0.1,
+      xanchor: 'center',
+      yanchor: 'top',
+      orientation: 'h',
       itemclick: false,
       itemdoubleclick: false,
     },
@@ -227,18 +146,106 @@ const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
       pad: 4,
     },
     autosize: false,
-    annotations: [
-      {
-        font: {
-          size: 18,
-        },
-        showarrow: false,
-        text: `<b>${total.toFixed(1).toString()}</b>`,
-        x: 0.5,
-        y: 0.5,
-      },
-    ],
   };
+
+  let maxTotal = 0;
+
+  // Pie per scope
+  yearData.categoryTypes[1].options.forEach((colId, cIdx) => {
+    const colTotals = yearData.rows.reduce((acc, row) => {
+      return row[cIdx] ? row[cIdx] + acc : acc;
+    }, 0);
+    // Remember the largest total for scaling the pies
+    if (Math.abs(colTotals) > maxTotal) {
+      maxTotal = Math.abs(colTotals);
+    }
+    // Pie segment per sector
+    const pieSegmentLabels: string[] = [];
+    const pieSegmentValues: (number | null)[] = [];
+    const pieSegmentColors: string[] = [];
+    const pieSegmentHovers: string[] = [];
+    yearData.categoryTypes[0].options.forEach((rowId, rIdx) => {
+      const datum = yearData.rows[rIdx][cIdx];
+      /*
+      const displayPortions =
+        portion >= 0.01 ? Math.round((datum / colTotals) * 100) : '<1';
+      const textTemplate =
+        portion && portion !== 1 && portion !== 0 ? '%{meta[0]}%' : '';
+      const dimDetails = yearData.allLabels.find((l) => l.id === rowId);
+      */
+      if (datum != 0) {
+        pieSegmentLabels.push(
+          `${yearData.allLabels.find((l) => l.id === rowId)?.label}` || ''
+        );
+        pieSegmentValues.push(datum ? Math.abs(datum) : null);
+        pieSegmentColors.push(
+          yearData.allLabels.find((l) => l.id === rowId)?.color || '#333'
+        );
+        pieSegmentHovers.push(
+          `${yearData.allLabels.find((l) => l.id === rowId)?.label}, ${
+            datum && Math.abs(datum).toFixed(1)
+          } ${datum && metric.unit.htmlShort}` || ''
+        );
+      }
+    });
+
+    // Calculate total and percentages
+    const total =
+      pieSegmentValues.reduce((sum, value) => {
+        const numSum = sum === null ? 0 : sum;
+        const numValue = value === null ? 0 : value;
+        return numSum + numValue;
+      }, 0) || 0;
+    const percentages = pieSegmentValues.map((value) =>
+      value ? ((value / total) * 100).toFixed(1) : null
+    );
+
+    // Create new labels with percentages
+    const newLabels = pieSegmentLabels.map(
+      (label, index) => `${label}, ${percentages[index]}%`
+    );
+
+    plotData.push({
+      total: total,
+      layout: {
+        ...defaultLayout,
+        annotations: [
+          {
+            font: {
+              size: 18,
+              color: theme.graphColors.grey050,
+            },
+            showarrow: false,
+            text: `<b>${total.toFixed(1).toString()}</b>`,
+            x: 0.5,
+            y: 0.5,
+          },
+        ],
+      },
+      data: {
+        type: 'pie',
+        hole: 0.5,
+        labels: newLabels,
+        values: pieSegmentValues,
+        hovertext: pieSegmentHovers,
+        textinfo: 'none',
+        hoverinfo: 'text',
+        marker: {
+          colors: pieSegmentColors,
+        },
+        name: yearData.allLabels.find((l) => l.id === colId)?.label || '',
+      },
+    });
+  });
+
+  plotData.forEach((plot) => {
+    const scaleTotal = plot.total / maxTotal;
+    const scalePie = 0.95 * scaleTotal; // Use this to scale multiple pies relative to each other
+    plot.data.domain = {
+      x: [0.5 - scalePie, 0.5 + scalePie],
+      y: [0.5 - scalePie, 0.5 + scalePie],
+    };
+  });
 
   const plotConfig = {
     displaylogo: false,
@@ -248,22 +255,25 @@ const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
   return (
     <>
       <PlotsContainer className="mt-3">
-        {plotData.map((plot) => (
-          <Subplot key={plot.name}>
-            <h5>
-              {plot.name} {endYear}
-            </h5>
-            <span dangerouslySetInnerHTML={{ __html: longUnit }} />
-            <Plot
-              data={[plot]}
-              layout={layout}
-              useResizeHandler
-              config={plotConfig}
-              style={{ minWidth: '300px', maxWidth: '600px' }}
-              noValidate
-            />
-          </Subplot>
-        ))}
+        {plotData.map(
+          (plot) =>
+            plot.total !== 0 && (
+              <Subplot key={plot.data.name}>
+                <h5>
+                  {plot.data.name} {endYear}
+                </h5>
+                <span dangerouslySetInnerHTML={{ __html: longUnit }} />
+                <Plot
+                  data={[plot.data]}
+                  layout={plot.layout}
+                  useResizeHandler
+                  config={plotConfig}
+                  style={{ minWidth: '300px', maxWidth: '600px' }}
+                  noValidate
+                />
+              </Subplot>
+            )
+        )}
       </PlotsContainer>
     </>
   );
