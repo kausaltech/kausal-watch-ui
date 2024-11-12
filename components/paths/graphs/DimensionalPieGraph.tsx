@@ -123,6 +123,7 @@ const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
     const pieSegmentLabels: string[] = [];
     const pieSegmentValues: number[] = [];
     const pieSegmentColors: string[] = [];
+    const pieSegmentHovers: string[] = [];
     yearData.categoryTypes[0].options.forEach((rowId, rIdx) => {
       const datum = yearData.rows[rIdx][cIdx];
       const portion = datum / colTotals;
@@ -135,19 +136,28 @@ const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
       */
       if (datum != 0) {
         pieSegmentLabels.push(
-          yearData.allLabels.find((l) => l.id === rowId)?.label || ''
+          `${yearData.allLabels.find((l) => l.id === rowId)?.label}` || ''
         );
         pieSegmentValues.push(Math.abs(datum));
         pieSegmentColors.push(
-          yearData.allLabels.find((l) => l.id === rowId)?.color || ''
+          yearData.allLabels.find((l) => l.id === rowId)?.color || '#333'
+        );
+        pieSegmentHovers.push(
+          `${yearData.allLabels.find((l) => l.id === rowId)?.label}, ${Math.abs(
+            datum
+          )} ${metric.unit.htmlShort}` || ''
         );
       }
     });
+    const scalePie = 0.75; // Use this to scale multiple pies relative to each other
     plotData.push({
       type: 'pie',
       hole: 0.5,
       labels: pieSegmentLabels,
       values: pieSegmentValues,
+      hovertext: pieSegmentHovers,
+      textinfo: 'none',
+      hoverinfo: 'text',
       marker: {
         colors: pieSegmentColors,
         pattern: {
@@ -157,15 +167,32 @@ const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
           size: 4,
         },
       },
+      domain: {
+        x: [0.5 - scalePie, 0.5 + scalePie],
+        y: [0.5 - scalePie, 0.5 + scalePie],
+      },
       name: yearData.allLabels.find((l) => l.id === colId)?.label || '',
     });
   });
 
+  // Calculate total and percentages
+  const total = plotData[0].values.reduce((sum, value) => sum + value, 0);
+  const percentages = plotData[0].values.map((value) =>
+    ((value / total) * 100).toFixed(1)
+  );
+
+  // Create new labels with percentages
+  const newLabels = plotData[0].labels.map(
+    (label, index) => `${label}, ${percentages[index]}%`
+  );
+
+  // Update the data with new labels
+  plotData[0].labels = newLabels;
+
   const range = [0, maxTotal * 1.25];
 
   const layout: Partial<Plotly.Layout> = {
-    height: 400,
-    hovermode: false,
+    width: 400,
     modebar: {
       remove: [
         'zoom2d',
@@ -184,14 +211,33 @@ const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
     dragmode: false,
     showlegend: true,
     legend: {
-      orientation: 'h',
-      yanchor: 'top',
-      y: -0.2,
-      xanchor: 'right',
       x: 1,
+      y: 0.5,
+      xanchor: 'left',
+      yanchor: 'middle',
+      orientation: 'vertical',
       itemclick: false,
       itemdoubleclick: false,
     },
+    margin: {
+      l: 50,
+      r: 50,
+      b: 50,
+      t: 50,
+      pad: 4,
+    },
+    autosize: false,
+    annotations: [
+      {
+        font: {
+          size: 18,
+        },
+        showarrow: false,
+        text: `<b>${total.toFixed(1).toString()}</b>`,
+        x: 0.5,
+        y: 0.5,
+      },
+    ],
   };
 
   const plotConfig = {
