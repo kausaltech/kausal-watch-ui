@@ -74,6 +74,20 @@ const MutedReason = styled.div`
   margin-bottom: 0.25rem;
 `;
 
+const Change = styled.div<{ $positive?: boolean }>`
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  display: block;
+  width: fit-content;
+  margin-top: 0.25rem;
+  margin-left: 0;
+  // TODO: We assume that negative value is desirable, so we color it green
+  // We should probably make this more explicit
+  background-color: ${({ $positive, theme }) =>
+    $positive ? theme.graphColors.red030 : theme.graphColors.green030};
+`;
+
 type HighlightValueProps = {
   displayValue: string;
   header: string;
@@ -82,6 +96,7 @@ type HighlightValueProps = {
   size?: 'sm' | 'md' | 'lg';
   muted?: boolean;
   mutedReason?: string;
+  change?: string;
 };
 
 const HighlightValue = (props: HighlightValueProps) => {
@@ -93,6 +108,7 @@ const HighlightValue = (props: HighlightValueProps) => {
     size = 'md',
     muted,
     mutedReason,
+    change,
   } = props;
 
   const id = `tt-${displayValue}`.replace(/\W/g, '_');
@@ -108,6 +124,9 @@ const HighlightValue = (props: HighlightValueProps) => {
         </YearRange>
         {displayValue}
         <TotalUnit dangerouslySetInnerHTML={{ __html: unit }} $size={size} />
+        {change ? (
+          <Change $positive={!change.startsWith('-')}>{change}</Change>
+        ) : null}
       </TotalValue>
     </>
   );

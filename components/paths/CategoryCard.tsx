@@ -19,8 +19,7 @@ import styled, { useTheme } from 'styled-components';
 import HighlightValue from '@/components/paths/HighlightValue';
 import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
 import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
-import { getScopeLabel, getScopeTotal } from '@/utils/paths/emissions';
-import { DimensionalMetric } from '@/utils/paths/metric';
+import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
@@ -76,14 +75,16 @@ const Values = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px 10px;
-`;
-
-const TotalValue = styled.div`
-  flex: 100% 0 0;
+  align-items: stretch;
+  height: 100%;
 `;
 
 const SubValue = styled.div`
   flex: 45% 1 0;
+
+  > div {
+    height: 100%;
+  }
 `;
 
 const ParametersWrapper = styled.div`
@@ -91,6 +92,7 @@ const ParametersWrapper = styled.div`
   flex-direction: column;
   flex: 45% 1 0;
   align-items: flex-end;
+  height: 100%;
 `;
 
 const PathsContentLoader = (props) => {
@@ -113,6 +115,28 @@ const PathsContentLoader = (props) => {
   );
 };
 
+const getTotalValues = (yearData) => {
+  const totals: number[] = [];
+  yearData.categoryTypes[1].options.forEach((colId, cIdx) => {
+    const pieSegmentValues: (number | null)[] = [];
+    yearData.categoryTypes[0].options.forEach((rowId, rIdx) => {
+      const datum = yearData.rows[rIdx][cIdx];
+      if (datum != 0) {
+        pieSegmentValues.push(datum ? Math.abs(datum) : null);
+      }
+    });
+    // Calculate total and percentages
+    const total =
+      pieSegmentValues.reduce((sum, value) => {
+        const numSum = sum === null ? 0 : sum;
+        const numValue = value === null ? 0 : value;
+        return numSum + numValue;
+      }, 0) || 0;
+    totals.push(total);
+  });
+  return totals;
+};
+
 type PathsBasicNodeContentProps = {
   categoryId: string;
   node: CausalGridNodeFragment;
@@ -123,16 +147,17 @@ type EmissionDisplay = {
   value: number | null;
   label: string | null;
   year: number | null;
+  change?: number | null;
 };
 type Emissions = {
   total: { latest: EmissionDisplay; reference: EmissionDisplay };
-  indirect: { latest: EmissionDisplay; reference: EmissionDisplay };
-  direct: { latest: EmissionDisplay; reference: EmissionDisplay };
 };
 
 const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
   const { categoryId, node, onLoaded } = props;
   const yearRange = useReactiveVar(yearRangeVar);
+  const activeGoal = useReactiveVar(activeGoalVar);
+  //const [sliceConfig, setSliceConfig] = useState<SliceConfig>(null);
 
   const [emissions, setEmissions] = useState<Emissions>({
     total: {
@@ -140,20 +165,9 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
         value: null,
         label: null,
         year: null,
+        change: null,
       },
-      reference: { value: null, label: null, year: null },
-    },
-    indirect: {
-      latest: {
-        value: null,
-        label: null,
-        year: null,
-      },
-      reference: { value: null, label: null, year: null },
-    },
-    direct: {
-      latest: { value: null, label: null, year: null },
-      reference: { value: null, label: null, year: null },
+      reference: { value: null, label: null, year: null, change: null },
     },
   });
 
@@ -161,69 +175,68 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
 
   useEffect(() => {
     const nodeMetric = new DimensionalMetric(node.metricDim!);
-    console.log('Node metric', nodeMetric);
+    const sliceConfig: SliceConfig =
+      nodeMetric.getDefaultSliceConfig(activeGoal);
 
     const historicalYears = nodeMetric.getHistoricalYears();
     const lastHistoricalYear = historicalYears[historicalYears.length - 1];
 
     setUnit(nodeMetric.getUnit());
-
-    //const total = getScopeTotal(nodeMetric, 'total', yearRange[1]);
-    const indirect = getScopeTotal(nodeMetric, 'indirect', yearRange[1]);
-    const direct = getScopeTotal(nodeMetric, 'direct', yearRange[1]);
-    const indirectLatest = getScopeTotal(
-      nodeMetric,
-      'indirect',
-      lastHistoricalYear
+    const latestData = nodeMetric.getSingleYear(
+      lastHistoricalYear,
+      sliceConfig.categories
     );
-    const directLatest = getScopeTotal(
-      nodeMetric,
-      'direct',
-      lastHistoricalYear
+    const referenceData = nodeMetric.getSingleYear(
+      yearRange[1],
+      sliceConfig.categories
     );
 
-    setEmissions({
-      total: {
-        latest: {
-          value: indirectLatest + directLatest,
-          label: getScopeLabel(nodeMetric, 'indirect'),
-          year: lastHistoricalYear,
+    // Let's assume the first key is the one we want to display
+    //const displayCategoryType = Object.keys(sliceConfig.categories)[0];
+    const displayCategoryType =
+      sliceConfig.categories[Object.keys(sliceConfig.categories)[0]];
+
+    const displayCategory =
+      displayCategoryType && displayCategoryType.groups?.length
+        ? { id: displayCategoryType?.groups[0], type: 'group' }
+        : { id: displayCategoryType?.categories[0], type: 'category' };
+
+    if (displayCategory.id) {
+      const latestLabel = latestData.allLabels.find(
+        (label) => label.id === displayCategory.id
+      )?.label;
+      const referenceLabel = referenceData.allLabels.find(
+        (label) => label.id === displayCategory.id
+      )?.label;
+
+      const latestValue = getTotalValues(latestData)[0];
+      const referenceValue = getTotalValues(referenceData)[0];
+
+      setEmissions({
+        total: {
+          latest: {
+            value: latestValue,
+            label: latestLabel || null,
+            year: lastHistoricalYear,
+            change:
+              lastHistoricalYear > yearRange[1]
+                ? (latestValue - referenceValue) / Math.abs(referenceValue)
+                : null,
+          },
+          reference: {
+            value: referenceValue,
+            label: referenceLabel || null,
+            year: yearRange[1],
+            change:
+              lastHistoricalYear < yearRange[1]
+                ? (referenceValue - latestValue) / Math.abs(latestValue)
+                : null,
+          },
         },
-        reference: {
-          value: indirect + direct,
-          label: getScopeLabel(nodeMetric, 'indirect'),
-          year: yearRange[1],
-        },
-      },
-      indirect: {
-        latest: {
-          value: indirectLatest,
-          label: getScopeLabel(nodeMetric, 'indirect'),
-          year: lastHistoricalYear,
-        },
-        reference: {
-          value: indirect,
-          label: getScopeLabel(nodeMetric, 'indirect'),
-          year: yearRange[1],
-        },
-      },
-      direct: {
-        latest: {
-          value: directLatest,
-          label: getScopeLabel(nodeMetric, 'direct'),
-          year: lastHistoricalYear,
-        },
-        reference: {
-          value: direct,
-          label: getScopeLabel(nodeMetric, 'direct'),
-          year: yearRange[1],
-        },
-      },
-      // TODO: handle having goals
-      goal: { value: null, label: null },
-    });
-    setUnit(nodeMetric.getUnit());
-    onLoaded(categoryId, indirect + direct);
+      });
+      setUnit(nodeMetric.getUnit());
+      onLoaded(categoryId, referenceValue);
+    }
     // using exhausive deps here causes an infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yearRange[1]]);
@@ -231,53 +244,35 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
   return (
     <CardContentBlock>
       <Values>
-        {emissions.total.value ? (
-          <TotalValue>
-            <HighlightValue
-              displayValue={emissions.total.value.toPrecision(3) || ''}
-              header={`${emissions.total.label} (${emissions.total.year})`}
-              unit={unit || ''}
-              size="md"
-            />
-          </TotalValue>
-        ) : null}
-        {emissions.direct.latest.value ? (
+        {emissions.total.latest.value ? (
           <SubValue>
             <HighlightValue
-              displayValue={emissions.direct.latest.value.toPrecision(3)}
-              header={`${emissions.direct.latest.label || ''}  (${
-                emissions.direct.latest.year
-              })`}
+              displayValue={emissions.total.latest.value.toPrecision(3) || ''}
+              header={`${emissions.total.latest.label} (${emissions.total.latest.year})`}
               unit={unit || ''}
-              size="sm"
-            />
-            <HighlightValue
-              displayValue={emissions.direct.reference.value.toPrecision(3)}
-              header={`${emissions.direct.reference.label || ''}  (${
-                emissions.direct.reference.year
-              })`}
-              unit={unit || ''}
-              size="sm"
+              size="md"
+              change={
+                emissions.total.latest.change != null
+                  ? `${(emissions.total.latest.change * 100).toFixed(1)}%`
+                  : undefined
+              }
             />
           </SubValue>
         ) : null}
-        {emissions.indirect.latest.value ? (
+        {emissions.total.reference.value ? (
           <SubValue>
             <HighlightValue
-              displayValue={emissions.indirect.latest.value.toPrecision(3)}
-              header={`${emissions.indirect.latest.label || ''}  (${
-                emissions.indirect.latest.year
-              })`}
+              displayValue={
+                emissions.total.reference.value.toPrecision(3) || ''
+              }
+              header={`${emissions.total.reference.label} (${emissions.total.reference.year})`}
               unit={unit || ''}
-              size="sm"
-            />
-            <HighlightValue
-              displayValue={emissions.indirect.reference.value.toPrecision(3)}
-              header={`${emissions.indirect.reference.label || ''}  (${
-                emissions.indirect.reference.year
-              })`}
-              unit={unit || ''}
-              size="sm"
+              size="md"
+              change={
+                emissions.total.reference.change != null
+                  ? `${(emissions.total.reference.change * 100).toFixed(1)}%`
+                  : undefined
+              }
             />
           </SubValue>
         ) : null}
