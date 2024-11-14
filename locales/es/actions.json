@@ -55,6 +55,5 @@
     "action-draft": "Borrador",
     "other": "Otro",
     "inactive-actions": "Acciones inactivas",
-    "no-action-version-available": "No hay versión {versionType} disponible",
-    "late": "Tarde"
+    "no-action-version-available": "No hay versión {versionType} disponible"
 }

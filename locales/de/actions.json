@@ -58,6 +58,5 @@
     "other": "Andere",
     "logo": "Logo",
     "inactive-actions": "Inaktive Maßnahmen",
-    "no-action-version-available": "Keine {versionType}-Version verfügbar",
-    "late": "Verspätet"
+    "no-action-version-available": "Keine {versionType}-Version verfügbar"
 }
