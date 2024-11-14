@@ -22,47 +22,6 @@ const Subplot = styled.div`
 
 const Plot = dynamic(() => import('components/graphs/Plot'), { ssr: false });
 
-function getDefaultSliceConfig(
-  cube: DimensionalMetric,
-  activeGoal: InstanceGoal | null
-) {
-  /**
-   * By default, we group by the first dimension `metric` has, whatever it is.
-   * @todo Is there a better way to select the default?
-   *
-   * If the currently selected goal has category selections for this metric,
-   * we might choose another dimension.
-   *
-   * NOTE: This is just the default -- the actually active filtering and
-   * grouping is controlled by the `sliceConfig` state below.
-   */
-  const defaultConfig: SliceConfig = {
-    dimensionId: cube.dimensions[0]?.id,
-    categories: {},
-  };
-
-  if (!activeGoal) return defaultConfig;
-
-  const cubeDefault = cube.getChoicesForGoal(activeGoal);
-  if (!cubeDefault) return defaultConfig;
-  defaultConfig.categories = cubeDefault;
-  /**
-   * Check if our default dimension to slice by is affected by the
-   * goal-based default filters. If so, we should choose another
-   * dimension.
-   */
-  if (
-    defaultConfig.dimensionId &&
-    cubeDefault.hasOwnProperty(defaultConfig.dimensionId)
-  ) {
-    const firstPossible = cube.dimensions.find(
-      (dim) => !cubeDefault.hasOwnProperty(dim.id)
-    );
-    defaultConfig.dimensionId = firstPossible?.id;
-  }
-  return defaultConfig;
-}
-
 type DimensionalPieGraphProps = {
   metric: NonNullable<DimensionalNodeMetricFragment['metricDim']>;
   endYear: number;
@@ -74,7 +33,7 @@ const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
   const theme = useTheme();
   const activeGoal = useReactiveVar(activeGoalVar);
   const cube = useMemo(() => new DimensionalMetric(metric), [metric]);
-  const defaultConfig = getDefaultSliceConfig(cube, activeGoal);
+  const defaultConfig = cube.getDefaultSliceConfig(activeGoal);
   const [sliceConfig, setSliceConfig] = useState<SliceConfig>(defaultConfig);
 
   useEffect(() => {
@@ -84,7 +43,7 @@ const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
      * dimensions with our metric).
      */
     if (!activeGoal) return;
-    const newDefault = getDefaultSliceConfig(cube, activeGoal);
+    const newDefault = cube.getDefaultSliceConfig(activeGoal);
     if (!newDefault || isEqual(sliceConfig, newDefault)) return;
     setSliceConfig(newDefault);
   }, [activeGoal, cube]);
