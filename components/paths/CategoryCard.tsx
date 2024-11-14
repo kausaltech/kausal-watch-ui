@@ -219,7 +219,9 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
             label: latestLabel || null,
             year: lastHistoricalYear,
             change:
-              lastHistoricalYear > yearRange[1]
+              lastHistoricalYear > yearRange[1] &&
+              referenceValue &&
+              referenceValue !== latestValue
                 ? (latestValue - referenceValue) / Math.abs(referenceValue)
                 : null,
           },
@@ -228,7 +230,9 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
             label: referenceLabel || null,
             year: yearRange[1],
             change:
-              lastHistoricalYear < yearRange[1]
+              lastHistoricalYear < yearRange[1] &&
+              latestValue &&
+              latestValue !== referenceValue
                 ? (referenceValue - latestValue) / Math.abs(latestValue)
                 : null,
           },
@@ -253,7 +257,9 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
               size="md"
               change={
                 emissions.total.latest.change != null
-                  ? `${(emissions.total.latest.change * 100).toFixed(1)}%`
+                  ? `${emissions.total.latest.change > 0 ? '+' : ''}${(
+                      emissions.total.latest.change * 100
+                    ).toFixed(1)}%`
                   : undefined
               }
             />
@@ -270,7 +276,9 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
               size="md"
               change={
                 emissions.total.reference.change != null
-                  ? `${(emissions.total.reference.change * 100).toFixed(1)}%`
+                  ? `${emissions.total.reference.change > 0 ? '+' : ''}${(
+                      emissions.total.reference.change * 100
+                    ).toFixed(1)}%`
                   : undefined
               }
             />
