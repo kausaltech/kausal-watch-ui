@@ -22,7 +22,9 @@ async function exportActions(
   const worksheet = workbook.addWorksheet(
     t('actions', getActionTermContext(plan))
   );
-  worksheet.columns = [
+  const planIds = new Set(actions.map((action) => action.plan.id));
+  const multiplePlans = planIds.size > 1;
+  const columns = [
     { header: t('action-identifier'), key: 'id', width: 10 },
     {
       header: t('action-name-title', getActionTermContext(plan)),
@@ -72,6 +74,16 @@ async function exportActions(
       width: 20,
     },
   ];
+  if (multiplePlans) {
+    columns.unshift({
+      header: t('plan'),
+      key: 'plan',
+      width: 20,
+    });
+  }
+  // When assigning to worksheet.columns, some magic happens and manipulating worksheet.columns afterwards does not
+  // yield the desired results. So we prepare the columns array separately before assigning it to worksheet.columns.
+  worksheet.columns = columns;
   actions.forEach((act) => {
     const status = cleanActionStatus(act, actionStatuses);
     // Remove any soft hyphens in action name (due to `hyphenated: true` when querying the name) as Excel renders
@@ -126,7 +138,7 @@ async function exportActions(
       .filter((p) => p.role === null)
       .map(getOrgName);
 
-    worksheet.addRow([
+    const row = [
       act.identifier,
       actionName,
       status?.name,
@@ -139,7 +151,11 @@ async function exportActions(
       primaryResponsibleOrgs.join(';'),
       collaboratorResponsibleOrgs.join(';'),
       otherResponsibleOrgs.join(';'),
-    ]);
+    ];
+    if (multiplePlans) {
+      row.unshift(act.plan.name);
+    }
+    worksheet.addRow(row);
   });
 
   const today = new Date().toISOString().split('T')[0];
