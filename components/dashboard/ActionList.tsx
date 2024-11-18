@@ -323,6 +323,7 @@ const actionFragment = gql`
         abbreviation
         name
       }
+      hasContactPerson
     }
     primaryOrg {
       id
@@ -331,14 +332,6 @@ const actionFragment = gql`
       logo {
         rendition(size: "128x128", crop: true) {
           src
-        }
-      }
-    }
-    contactPersons {
-      id
-      person {
-        organization {
-          id
         }
       }
     }
