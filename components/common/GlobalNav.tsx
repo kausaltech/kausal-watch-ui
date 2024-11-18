@@ -303,6 +303,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
   }
 
   .dropdown-menu {
+    background-color: ${(props) => props.theme.siteNavBackground};
     border: 0px;
     padding-top: ${(props) => props.theme.spaces.s150};
     box-shadow: none;
@@ -328,7 +329,6 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     .dropdown-menu {
-      background-color: ${(props) => props.theme.themeColors.white};
       box-shadow: 3px 3px 6px 2px ${(props) =>
         transparentize(0.85, props.theme.themeColors.black)}};
     }
