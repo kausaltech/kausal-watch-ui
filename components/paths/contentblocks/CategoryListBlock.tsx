@@ -201,6 +201,7 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
     <CategoryListSection id={id}>
       <Container>
         {heading && <h4>{heading}</h4>}
+        <h5>TODO:MAKE THESE CARDS USE PATHS DATA</h5>
         <Suspense fallback={<div>Loading...</div>}>
           <CategoryList categories={categories} />
         </Suspense>
