@@ -173,6 +173,10 @@ export default function DimensionalNodePlot({
 }: DimensionalNodePlotProps) {
   const t = useTranslations();
   const activeGoal = useReactiveVar(activeGoalVar);
+  const separateYears =
+    activeGoal?.dimensions[0].groups[0] === 'indirect'
+      ? [1990, 2010, 2015, 2020, 2022, 2023]
+      : null;
   const cube = useMemo(() => new DimensionalMetric(metric), [metric]);
 
   const lastMetricYear = metric.years.slice(-1)[0];
@@ -226,9 +230,15 @@ export default function DimensionalNodePlot({
 
   const filledStyles = (stackGroup: string) => {
     if (!filled) return {};
-    const out: Partial<Plotly.PlotData> = {
+
+    if (separateYears) {
+      return {
+        type: 'bar',
+      };
+    }
+
+    return {
       stackgroup: stackGroup,
-      //marker: { opacity: 0 },
       line: {
         color: 'white',
         width: 1,
@@ -237,7 +247,6 @@ export default function DimensionalNodePlot({
         smoothing: 0.8,
       },
     };
-    return out;
   };
 
   let colors: string[];
@@ -285,23 +294,42 @@ export default function DimensionalNodePlot({
   const genTraces = (cv: MetricCategoryValues, idx: number) => {
     const stackGroup = cv.isNegative ? 'neg' : 'pos';
     const color = cv.color || colors[idx];
+    const separateYearsTrace = separateYears
+      ? {
+          marker: { color },
+        }
+      : {
+          fillcolor: color,
+          line: {
+            color,
+            shape: 'spline',
+            width: 3,
+          },
+        };
     const traceConfig: Partial<Plotly.PlotData> = {
       name: cv.category.label,
-      type: 'scatter',
+      type: separateYears ? 'bar' : 'scatter',
       xaxis: 'x2',
-      line: {
-        color,
-        shape: 'spline',
-        width: 3,
-      },
-      fillcolor: color,
+      ...separateYearsTrace,
     };
 
     if (hasHistorical) {
+      const separateYearsIndices: number[] = [];
+      const separateYearsValues: (number | null)[] = [];
+      if (separateYears) {
+        separateYearsIndices.push(
+          ...separateYears.map((year) =>
+            slice.historicalYears.findIndex((y) => y === year)
+          )
+        );
+        separateYearsValues.push(
+          ...separateYearsIndices.map((i) => cv.historicalValues[i])
+        );
+      }
       plotData.push({
         ...traceConfig,
-        x: slice.historicalYears,
-        y: cv.historicalValues,
+        x: separateYears || slice.historicalYears,
+        y: separateYears ? separateYearsValues : cv.historicalValues,
         ...filledStyles(`${stackGroup}-hist`),
         ...formatHover(
           cv.category.label,
@@ -313,7 +341,7 @@ export default function DimensionalNodePlot({
         ),
       });
     }
-    if (hasHistorical && hasForecast) {
+    if (hasHistorical && hasForecast && !separateYears) {
       const lastHist = slice.historicalYears.length - 1;
       // Short trace to join historical and forecast series together
       plotData.push({
@@ -327,6 +355,23 @@ export default function DimensionalNodePlot({
       });
     }
     if (hasForecast) {
+      const separateYearsIndices: number[] = [];
+      const separateYearsValues: (number | null)[] = [];
+      const separateYearsConfig = separateYears
+        ? {}
+        : {
+            fillcolor: tint(0.3, color),
+          };
+      if (separateYears) {
+        separateYearsIndices.push(
+          ...separateYears.map((year) =>
+            slice.forecastYears.findIndex((y) => y === year)
+          )
+        );
+        separateYearsValues.push(
+          ...separateYearsIndices.map((i) => cv.forecastValues[i])
+        );
+      }
       plotData.push({
         ...traceConfig,
         ...filledStyles(`${stackGroup}-forecast`),
@@ -338,10 +383,10 @@ export default function DimensionalNodePlot({
           theme.fontFamily,
           maximumFractionDigits
         ),
-        x: slice.forecastYears,
-        y: cv.forecastValues,
+        x: separateYears || slice.forecastYears,
+        y: separateYears ? separateYearsValues : cv.forecastValues,
         showlegend: false,
-        fillcolor: tint(0.3, color),
+        ...separateYearsConfig,
       });
     }
 
@@ -471,6 +516,22 @@ export default function DimensionalNodePlot({
   }
 
   if (metric.stackable && slice.totalValues) {
+    const allYears = [...slice.historicalYears, ...slice.forecastYears];
+    const allValues = [
+      ...slice.totalValues.historicalValues,
+      ...slice.totalValues.forecastValues,
+    ];
+    const separateYearsIndices: number[] = [];
+    const separateYearsValues: (number | null)[] = [];
+    if (separateYears) {
+      separateYearsIndices.push(
+        ...separateYears.map((year) => allYears.findIndex((y) => y === year))
+      );
+      separateYearsValues.push(
+        ...separateYearsIndices.map((i) => allValues[i])
+      );
+    }
+
     const label = t('plot-total')!;
     plotData.push({
       xaxis: 'x2',
@@ -481,11 +542,8 @@ export default function DimensionalNodePlot({
         color: theme.graphColors.grey080,
         width: 0,
       },
-      x: [...slice.historicalYears, ...slice.forecastYears],
-      y: [
-        ...slice.totalValues.historicalValues,
-        ...slice.totalValues.forecastValues,
-      ],
+      x: separateYears || allYears,
+      y: separateYears ? separateYearsValues : allValues,
       ...formatHover(
         label,
         theme.graphColors.grey080,
@@ -540,7 +598,30 @@ export default function DimensionalNodePlot({
       ? Math.max(dataRange[1], baselineRange[1])
       : dataRange[1];
 
-  const customRange = rangeMin && rangeMax ? [rangeMin, rangeMax] : undefined;
+  const customRange = [rangeMin, rangeMax];
+
+  const separateYearsLayout = separateYears
+    ? {
+        barmode: 'stack',
+        bargap: 0.15,
+        bargroupgap: 0.1,
+      }
+    : {};
+
+  const referenceYearConfig = showReferenceYear
+    ? {
+        xaxis: {
+          ...referenceXAxisConfig,
+          visible: true,
+          domain: [0, 0.03],
+          range: [`${referenceYear - 1}-01-01`, `${referenceYear}-01-01`],
+        },
+        xaxis2: {
+          ...mainXAxisConfig,
+          domain: [0.066, 1],
+        },
+      }
+    : { xaxis2: mainXAxisConfig };
 
   const layout: Partial<Plotly.Layout> = {
     height: 300,
@@ -574,28 +655,14 @@ export default function DimensionalNodePlot({
     ],
     yaxis: {
       domain: [0, 1],
-      anchor: 'x',
+      anchor: showReferenceYear ? 'x' : 'x2',
       ticklen: 10,
       gridcolor: theme.graphColors.grey005,
       tickcolor: theme.graphColors.grey030,
       fixedrange: true,
-      rangemode: rangeMode,
       range: customRange,
     },
-    xaxis: showReferenceYear
-      ? {
-          ...referenceXAxisConfig,
-          visible: true,
-          domain: [0, 0.03],
-          range: [`${referenceYear - 1}-01-01`, `${referenceYear}-01-01`],
-        }
-      : referenceXAxisConfig,
-    xaxis2: showReferenceYear
-      ? {
-          ...mainXAxisConfig,
-          domain: [0.066, 1],
-        }
-      : mainXAxisConfig,
+    ...referenceYearConfig,
     autosize: true,
     dragmode: false,
     font: {
@@ -630,6 +697,7 @@ export default function DimensionalNodePlot({
       bgcolor: theme.graphColors.grey010,
       activecolor: theme.brandDark,
     },
+    ...separateYearsLayout,
   };
 
   const hasGroups = cube.dimensions.some((dim) => dim.groups.length);
@@ -705,8 +773,8 @@ export default function DimensionalNodePlot({
           layout={layout}
           useResizeHandler
           style={{ width: '100%' }}
-          noValidate
           config={plotConfig}
+          debug={true}
         />
       </div>
 
