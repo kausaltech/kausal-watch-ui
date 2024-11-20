@@ -95,6 +95,22 @@ const ParametersWrapper = styled.div`
   height: 100%;
 `;
 
+const CardGoalBlock = styled.div`
+  margin: ${({ theme }) => `0 ${theme.spaces.s100} ${theme.spaces.s100}`};
+  line-height: ${(props) => props.theme.lineHeightMd};
+  font-size: ${(props) => props.theme.fontSizeBase};
+
+  p {
+    display: inline;
+    margin: 0;
+  }
+
+  strong,
+  span {
+    display: inline;
+  }
+`;
+
 const PathsContentLoader = (props) => {
   const theme = useTheme();
   return (
@@ -398,6 +414,19 @@ type CategoryCardProps = {
 const CategoryCard = (props: CategoryCardProps) => {
   const { category, group, pathsInstance, onLoaded } = props;
 
+  const mainGoalAttribute = category.attributes?.find(
+    (attr) => attr.key === 'Hauptziel'
+  );
+
+  const mainGoalLabel = mainGoalAttribute?.key || 'Main Goal';
+  const mainGoalValue = mainGoalAttribute?.value;
+
+  const flattenHTML = (html: string) => html.replace(/<\/?p[^>]*>/g, '');
+
+  const flattenedMainGoalValue = mainGoalValue
+    ? flattenHTML(mainGoalValue)
+    : null;
+
   //console.log('category indicators', category?.indicators);
   return (
     <Card>
@@ -423,6 +452,13 @@ const CategoryCard = (props: CategoryCardProps) => {
             <CardContentBlock>{category.leadParagraph}</CardContentBlock>
           )}
         </CardHeaderBlock>
+        {mainGoalValue && (
+          <CardGoalBlock>
+            <p>
+              <strong>{mainGoalLabel}:</strong> {flattenedMainGoalValue}
+            </p>
+          </CardGoalBlock>
+        )}
         <CardDataBlock>
           {category.kausalPathsNodeUuid && pathsInstance && (
             <PathsNodeContent
