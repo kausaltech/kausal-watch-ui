@@ -6,7 +6,6 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import ContentLoader from '@/components/common/ContentLoader';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
 import {
   activeGoalVar,
@@ -121,16 +120,11 @@ export default function PathsOutcomeBlock(props) {
   });
 
   const { loading, error, previousData, networkStatus } = queryResp;
-  const refetching = networkStatus === NetworkStatus.refetch;
+  const refetching = networkStatus === NetworkStatus.refetch || loading;
 
   const data = queryResp.data ?? previousData;
 
-  if (loading && !refetching) {
-    return <ContentLoader />;
-  }
-
-  if (data?.node) {
-    const outcomeNode = data.node ?? null;
+  const getVisibleNodes = (outcomeNode) => {
     const upstreamNodes = outcomeNode?.upstreamNodes ?? [];
 
     const allNodes = new Map(upstreamNodes.map((node) => [node.id, node]));
@@ -142,51 +136,54 @@ export default function PathsOutcomeBlock(props) {
         ? lastActiveNodeId
         : outcomeNode.id;
     // TODO: filtering out empty nodes, in some instances there are some -> investigate why
-    const visibleNodes = findVisibleNodes(allNodes, activeNodeId, []).filter(
-      (node) => node?.id
-    );
+    return {
+      visible: findVisibleNodes(allNodes, activeNodeId, []).filter(
+        (node) => node?.id
+      ),
+      all: allNodes,
+    };
+  };
 
-    //const outcomeType = visibleNodes[0].quantity;
+  const nodes = data?.node ? getVisibleNodes(data.node ?? null) : [];
 
-    return (
-      <Background>
-        <Container>
-          <Row>
-            <Col>
-              <StyledTitle>{heading}</StyledTitle>
-              <StyledCard $disabled={refetching}>
-                <CardBody>
-                  {visibleNodes.map((node, index) => (
-                    <OutcomeCardSet
-                      key={node.id}
-                      // Hacky solution to support different sub node titles depending on level
-                      subNodesTitle={
-                        index === 0
-                          ? t('outcome-sub-nodes')
-                          : t('outcome-sub-nodes-secondary')
-                      }
-                      nodeMap={allNodes}
-                      rootNode={node}
-                      startYear={yearRange[0]}
-                      endYear={yearRange[1]}
-                      activeScenario={activeScenario?.name || ''}
-                      parentColor="#666"
-                      activeNodeId={
-                        index < visibleNodes.length - 1
-                          ? visibleNodes[index + 1].id
-                          : undefined
-                      }
-                      lastActiveNodeId={lastActiveNodeId}
-                      setLastActiveNodeId={setLastActiveNodeId}
-                      refetching={refetching}
-                    />
-                  ))}
-                </CardBody>
-              </StyledCard>
-            </Col>
-          </Row>
-        </Container>
-      </Background>
-    );
-  }
+  return (
+    <Background>
+      <Container>
+        <Row>
+          <Col>
+            <StyledTitle>{heading}</StyledTitle>
+            <StyledCard $disabled={refetching}>
+              <CardBody>
+                {nodes.visible.map((node, index) => (
+                  <OutcomeCardSet
+                    key={node.id}
+                    // Hacky solution to support different sub node titles depending on level
+                    subNodesTitle={
+                      index === 0
+                        ? t('outcome-sub-nodes')
+                        : t('outcome-sub-nodes-secondary')
+                    }
+                    nodeMap={nodes.all}
+                    rootNode={node}
+                    startYear={yearRange[0]}
+                    endYear={yearRange[1]}
+                    activeScenario={activeScenario?.name || ''}
+                    parentColor="#666"
+                    activeNodeId={
+                      index < nodes.visible.length - 1
+                        ? nodes.visible[index + 1].id
+                        : undefined
+                    }
+                    lastActiveNodeId={lastActiveNodeId}
+                    setLastActiveNodeId={setLastActiveNodeId}
+                    refetching={refetching}
+                  />
+                ))}
+              </CardBody>
+            </StyledCard>
+          </Col>
+        </Row>
+      </Container>
+    </Background>
+  );
 }
