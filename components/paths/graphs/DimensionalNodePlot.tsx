@@ -558,6 +558,16 @@ export default function DimensionalNodePlot({
 
   const nrYears = usableEndYear - startYear;
 
+  const separateYearsConfig: Partial<LayoutAxis> = separateYears
+    ? {
+        type: 'category' as const,
+        data: separateYears,
+        axisTick: {
+          alignWithLabel: true,
+        },
+      }
+    : { range: [`${startYear - 1}-12-31`, `${usableEndYear}-02-01`] };
+
   const commonXAxisConfig: Partial<LayoutAxis> = {
     domain: [0, 1],
     ticklen: 10,
@@ -572,7 +582,7 @@ export default function DimensionalNodePlot({
 
   const mainXAxisConfig: Partial<LayoutAxis> = {
     ...commonXAxisConfig,
-    range: [`${startYear - 1}-12-31`, `${usableEndYear}-02-01`],
+    ...separateYearsConfig,
   };
 
   const referenceXAxisConfig: Partial<LayoutAxis> = {
