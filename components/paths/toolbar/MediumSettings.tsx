@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import GoalSelector from 'components/paths/GoalSelector';
 import RangeSelector from 'components/paths/RangeSelector';
@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl';
 import { Col, Container, Popover, PopoverBody, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import { yearRangeVar } from '@/context/paths/cache';
+import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { useReactiveVar } from '@apollo/client';
 
@@ -61,11 +61,19 @@ const StyledButton = styled.button<{ ref: HTMLButtonElement }>`
 `;
 
 const YearRangeSelector = (props) => {
-  const { minYear, maxYear, referenceYear } = props;
+  const { minYear, maxYear, referenceYear, disabled = false } = props;
   const inputReference = useRef<HTMLDivElement>(null);
   const triggerReference = useRef<HTMLButtonElement | null>(null);
 
   const [popoverOpen, setPopoverOpen] = useState(false);
+
+  useEffect(() => {
+    if (disabled) {
+      setPopoverOpen(false);
+      yearRangeVar([minYear, maxYear]);
+    }
+  }, [disabled, maxYear, minYear]);
+
   const toggle = () => {
     setPopoverOpen(!popoverOpen);
     // Focus on the input when the popover is opened
@@ -96,20 +104,21 @@ const YearRangeSelector = (props) => {
     [yearRangeVar]
   );
   const t = useTranslations();
-
+  const buttonLabel = disabled ? '-' : `${yearRange[0]}–${yearRange[1]}`;
   if (!yearRange) return <div>Loading...</div>;
   return (
     <div>
       <ButtonLabel>{t('comparing-years')}</ButtonLabel>
       <StyledButton
-        className="btn btn-light"
+        className={`btn btn-light ${disabled ? 'disabled' : ''}`}
         id="rangeSelector"
         aria-expanded={popoverOpen}
         aria-haspopup="dialog"
         aria-controls="rangeSelectorPopover"
         ref={setTriggerRef}
+        disabled={disabled}
       >
-        {`${yearRange[0]}–${yearRange[1]}`}
+        {buttonLabel}
       </StyledButton>
       <Popover
         placement="bottom"
@@ -160,6 +169,11 @@ const MediumSettings = (props) => {
   const nrGoals = instance.goals.length;
   const hasMultipleGoals = nrGoals > 1;
   const columnSizes = getColumnSizes(hasMultipleGoals);
+  const activeGoal = useReactiveVar(activeGoalVar);
+  // TODO: This is a hack. We should get this from the backend.
+  const goalHasSeparateYears =
+    activeGoal?.dimensions[0].groups[0] === 'indirect' ? true : false;
+
   return (
     <Container fluid="xl">
       <PanelContent>
@@ -172,6 +186,7 @@ const MediumSettings = (props) => {
               minYear={instance.minimumHistoricalYear}
               maxYear={instance.modelEndYear}
               referenceYear={instance.referenceYear}
+              disabled={goalHasSeparateYears}
             />
           </StyledDropdownCol>
           {hasMultipleGoals && (
