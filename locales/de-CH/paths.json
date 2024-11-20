@@ -1,7 +1,7 @@
 {
   "action-impact": "Massnahmenauswirkungen",
-  "action": "Massnahmenpaket",
-  "actions": "Massnahmenpakete",
+  "action": "Massnahmen",
+  "actions": "Massnahmen",
   "actions-available": "Massnahmen in Szenario",
   "actions-influencing-this": "Für die Abschätzung der zukünftigen {sector} berücksichtigte Massnahmenpakete",
   "plot-action-impact": "Massnahmenauswirkungen",

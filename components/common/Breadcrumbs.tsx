@@ -17,6 +17,7 @@ type Props = {
 
 const StyledContainer = styled.div`
   font-size: ${(props) => props.theme.fontSizeBase};
+  line-height: ${(props) => props.theme.lineHeightMd};
   margin-bottom: ${(props) => props.theme.spaces.s100};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -24,7 +25,7 @@ const StyledContainer = styled.div`
   }
 `;
 
-function Crumb({ crumb }: { crumb: TCrumb }) {
+function Crumb({ crumb, sibling }: { crumb: TCrumb; sibling?: boolean }) {
   const id = `crumb-${crumb.id}`;
   const ariaId = `tt-content-${crumb.id}`;
   const isTruncated = crumb.name.length > MAX_CRUMB_LENGTH;
@@ -32,6 +33,15 @@ function Crumb({ crumb }: { crumb: TCrumb }) {
     ? `${crumb.name.slice(0, MAX_CRUMB_LENGTH).trim()}...`
     : crumb.name;
 
+  const isSeparator = crumb.name === '';
+  if (isSeparator) {
+    return (
+      <>
+        &nbsp;/
+        <br />
+      </>
+    );
+  }
   return (
     <>
       <span id={id} aria-describedby={isTruncated ? ariaId : undefined}>
@@ -42,7 +52,7 @@ function Crumb({ crumb }: { crumb: TCrumb }) {
         ) : (
           name
         )}
-        &nbsp;/{' '}
+        {!sibling && <>&nbsp;/ </>}
       </span>
 
       {isTruncated && (
@@ -61,10 +71,28 @@ function Crumb({ crumb }: { crumb: TCrumb }) {
 }
 
 export default function Breadcrumbs({ breadcrumbs }: Props) {
+  // Try to handle duplicate breadcrumbs due to multiselect categories
+  // this might not work for all cases
+  const uniqueBreadcrumbs = breadcrumbs.reduce((acc, current) => {
+    const index = acc.findIndex((item) => item.id === current.id);
+    if (index >= 0) {
+      acc.push({ id: `${current.id}-separator`, name: '' });
+      acc.push(current);
+    } else {
+      // Keep the first instance
+      acc.push(current);
+    }
+    return acc;
+  }, [] as TCrumb[]);
+
   return (
     <StyledContainer>
-      {breadcrumbs.map((crumb) => (
-        <Crumb key={crumb.id} crumb={crumb} />
+      {uniqueBreadcrumbs.map((crumb, index) => (
+        <Crumb
+          key={crumb.id}
+          crumb={crumb}
+          sibling={uniqueBreadcrumbs[index + 1]?.name === ''}
+        />
       ))}
     </StyledContainer>
   );
