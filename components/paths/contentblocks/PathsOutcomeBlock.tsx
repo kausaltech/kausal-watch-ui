@@ -144,7 +144,9 @@ export default function PathsOutcomeBlock(props) {
     };
   };
 
-  const nodes = data?.node ? getVisibleNodes(data.node ?? null) : [];
+  const nodes = data?.node
+    ? getVisibleNodes(data.node ?? null)
+    : { visible: [], all: new Map() };
 
   return (
     <Background>
