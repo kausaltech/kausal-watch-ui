@@ -2,9 +2,18 @@ import { useTranslations } from 'next-intl';
 import { Table } from 'reactstrap';
 import Styled from 'styled-components';
 
+import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
 import { formatNumber } from '@/common/paths/preprocess';
 
 //  import { useFeatures } from '@/common/instance';
+interface DataTableProps {
+  node: OutcomeNodeFieldsFragment;
+  subNodes?: Node[];
+  startYear: number;
+  endYear: number;
+  separateYears?: number[];
+  goalName?: string;
+}
 
 const TableWrapper = Styled.div`
   margin: 0 auto;
@@ -19,14 +28,18 @@ const TableWrapper = Styled.div`
   font-size: 70%;
 `;
 
-const DataTable = (props) => {
-  const { node, subNodes, startYear, endYear } = props;
+const DataTable = (props: DataTableProps) => {
+  const { node, subNodes, startYear, endYear, separateYears, goalName } = props;
   const t = useTranslations();
-  const totalHistoricalValues = node.metric.historicalValues.filter(
-    (value) => value.year >= startYear && value.year <= endYear
+  const totalHistoricalValues = node.metric.historicalValues.filter((value) =>
+    separateYears
+      ? separateYears.includes(value.year)
+      : value.year >= startYear && value.year <= endYear
   );
-  const totalForecastValues = node.metric.forecastValues.filter(
-    (value) => value.year >= startYear && value.year <= endYear
+  const totalForecastValues = node.metric.forecastValues.filter((value) =>
+    separateYears
+      ? separateYears.includes(value.year)
+      : value.year >= startYear && value.year <= endYear
   );
   //const maximumFractionDigits = useFeatures().maximumFractionDigits ?? undefined;
   const maximumFractionDigits = 3;
@@ -35,17 +48,42 @@ const DataTable = (props) => {
     totalHistoricalValues.some((val) => val.value !== null) ||
     totalForecastValues.some((val) => val.value !== null);
 
+  // Add this function to check if a subNode has any data
+  const hasData = (subNode) => {
+    const hasHistoricalData = subNode.metric.historicalValues
+      .filter((value) =>
+        separateYears
+          ? separateYears.includes(value.year)
+          : value.year >= startYear && value.year <= endYear
+      )
+      .some((value) => value.value !== null);
+
+    const hasForecastData = subNode.metric.forecastValues
+      .filter((value) =>
+        separateYears
+          ? separateYears.includes(value.year)
+          : value.year >= startYear && value.year <= endYear
+      )
+      .some((value) => value.value !== null);
+
+    return hasHistoricalData || hasForecastData;
+  };
+
+  // Filter subNodes to only include those with data
+  const validSubNodes = subNodes?.filter(hasData);
+
   return (
     <TableWrapper>
       <h5>
-        {node.name} ({startYear} - {endYear})
+        {node.name}, {goalName}
+        {separateYears ? '' : ` (${startYear} - ${endYear})`}
       </h5>
       <Table bordered size="sm" responsive>
         <thead>
           <tr>
             <th>{t('table-year')}</th>
             <th>{t('table-measure-type')}</th>
-            {subNodes?.map((subNode) => (
+            {validSubNodes?.map((subNode) => (
               <th key={subNode.id}>{subNode.name}</th>
             ))}
             {hasTotalValues && <th>{node.metric.name}</th>}
@@ -57,7 +95,7 @@ const DataTable = (props) => {
             <tr key={`h-${metric.year}`}>
               <td>{metric.year}</td>
               <td>{t('table-historical')}</td>
-              {subNodes?.map((subNode) => (
+              {validSubNodes?.map((subNode) => (
                 <td key={`${subNode.id}-${metric.year}`}>
                   {subNode.metric.historicalValues.find(
                     (value) => value.year === metric.year
@@ -92,7 +130,7 @@ const DataTable = (props) => {
             <tr key={`f-${metric.year}`}>
               <td>{metric.year}</td>
               <td>{t('table-scenario-forecast')}</td>
-              {subNodes?.map((subNode) => (
+              {validSubNodes?.map((subNode) => (
                 <td key={`${subNode.id}-${metric.year}`}>
                   {subNode.metric.forecastValues.find(
                     (value) => value.year === metric.year

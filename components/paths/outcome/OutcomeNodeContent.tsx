@@ -18,7 +18,9 @@ import DimensionalPieGraph from '@/components/paths/graphs/DimensionalPieGraph';
 import HighlightValue from '@/components/paths/HighlightValue';
 import OutcomeNodeDetails from '@/components/paths/outcome/OutcomeNodeDetails';
 import ScenarioBadge from '@/components/paths/ScenarioBadge';
+import { activeGoalVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
+import { useReactiveVar } from '@apollo/client';
 
 const DisplayTab = styled(NavItem)`
   font-size: 0.9rem;
@@ -130,10 +132,16 @@ const OutcomeNodeContent = ({
   activeScenario,
   refetching,
 }: OutcomeNodeContentProps) => {
-  //console.log('node', node);
   const t = useTranslations();
   const [activeTabId, setActiveTabId] = useState('graph');
   const paths = usePaths();
+
+  const activeGoal = useReactiveVar(activeGoalVar);
+  const separateYears =
+    activeGoal?.dimensions[0].groups[0] === 'indirect'
+      ? [1990, 2010, 2015, 2020, 2022, 2023]
+      : null;
+
   const instance = paths?.instance;
   if (!instance) return null;
   const showDistribution = subNodes.length > 1;
@@ -158,6 +166,7 @@ const OutcomeNodeContent = ({
           metric={node.metricDim!}
           startYear={startYear}
           endYear={endYear}
+          separateYears={separateYears}
           color={color}
           withControls={false}
           baselineForecast={node.metric?.baselineForecastValues ?? undefined}
@@ -175,7 +184,12 @@ const OutcomeNodeContent = ({
   const singleYearGraph = useMemo(
     () => (
       <div>
-        <DimensionalPieGraph metric={node.metricDim!} endYear={endYear} />
+        <DimensionalPieGraph
+          metric={node.metricDim!}
+          endYear={
+            separateYears ? separateYears[separateYears.length - 1] : endYear
+          }
+        />
       </div>
     ),
     [node, endYear, color]
@@ -332,6 +346,8 @@ const OutcomeNodeContent = ({
             <ContentWrapper tabIndex={0}>
               <DataTable
                 node={node}
+                goalName={activeGoal?.label}
+                separateYears={separateYears}
                 subNodes={subNodes}
                 color={color}
                 startYear={startYear}
