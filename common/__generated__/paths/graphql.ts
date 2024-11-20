@@ -2784,6 +2784,236 @@ export type OutcomeNodeFieldsFragment = (
   & { __typename?: 'Node' }
 );
 
+export type GetOutcomeNodeContentQueryVariables = Exact<{
+  node: Scalars['ID'];
+  goal?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type GetOutcomeNodeContentQuery = (
+  { node?: (
+    { upstreamNodes: Array<{ __typename?: 'ActionNode' } | (
+      { id: string, name: string, color?: string | null, order?: number | null, shortName?: string | null, shortDescription?: any | null, targetYearGoal?: number | null, quantity?: string | null, metric?: (
+        { id?: string | null, name?: string | null, unit?: (
+          { short: string, htmlShort: string, htmlLong: string }
+          & { __typename?: 'UnitType' }
+        ) | null, forecastValues: Array<(
+          { year: number, value: number }
+          & { __typename?: 'YearlyValue' }
+        )>, baselineForecastValues?: Array<(
+          { year: number, value: number }
+          & { __typename?: 'YearlyValue' }
+        )> | null, historicalValues: Array<(
+          { year: number, value: number }
+          & { __typename?: 'YearlyValue' }
+        )> }
+        & { __typename?: 'ForecastMetricType' }
+      ) | null, goals: Array<(
+        { year: number, value: number }
+        & { __typename?: 'NodeGoal' }
+      )>, unit?: (
+        { short: string, htmlShort: string, htmlLong: string }
+        & { __typename?: 'UnitType' }
+      ) | null, inputNodes: Array<(
+        { id: string, name: string }
+        & { __typename?: 'ActionNode' | 'Node' }
+      )>, outputNodes: Array<(
+        { id: string }
+        & { __typename?: 'ActionNode' | 'Node' }
+      )>, upstreamActions?: Array<(
+        { id: string, name: string, goal?: any | null, shortName?: string | null, shortDescription?: any | null, parameters: Array<(
+          { id: string, nodeRelativeId?: string | null, isCustomized: boolean, boolValue?: boolean | null, boolDefaultValue?: boolean | null, node?: (
+            { id: string }
+            & { __typename?: 'ActionNode' | 'Node' }
+          ) | null }
+          & { __typename: 'BoolParameterType' }
+        ) | (
+          { id: string, nodeRelativeId?: string | null, isCustomized: boolean, node?: (
+            { id: string }
+            & { __typename?: 'ActionNode' | 'Node' }
+          ) | null }
+          & { __typename: 'NumberParameterType' | 'StringParameterType' | 'UnknownParameterType' }
+        )>, group?: (
+          { id: string, name: string, color?: string | null }
+          & { __typename?: 'ActionGroupType' }
+        ) | null }
+        & { __typename?: 'ActionNode' }
+      )> | null, metricDim?: (
+        { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+          { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
+            { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
+            & { __typename?: 'MetricDimensionCategoryType' }
+          )>, groups: Array<(
+            { id: string, originalId: string, label: string, color?: string | null, order?: number | null }
+            & { __typename?: 'MetricDimensionCategoryGroupType' }
+          )> }
+          & { __typename?: 'MetricDimensionType' }
+        )>, goals: Array<(
+          { categories: Array<string>, groups: Array<string>, values: Array<(
+            { year: number, value: number, isInterpolated: boolean }
+            & { __typename?: 'MetricYearlyGoalType' }
+          )> }
+          & { __typename?: 'DimensionalMetricGoalEntry' }
+        )>, unit: (
+          { htmlShort: string, short: string }
+          & { __typename?: 'UnitType' }
+        ), normalizedBy?: (
+          { id: string, name: string }
+          & { __typename?: 'Node' }
+        ) | null }
+        & { __typename?: 'DimensionalMetricType' }
+      ) | null }
+      & { __typename?: 'Node' }
+    )> }
+    & { __typename?: 'ActionNode' }
+  ) | (
+    { id: string, name: string, color?: string | null, order?: number | null, shortName?: string | null, shortDescription?: any | null, targetYearGoal?: number | null, quantity?: string | null, upstreamNodes: Array<{ __typename?: 'ActionNode' } | (
+      { id: string, name: string, color?: string | null, order?: number | null, shortName?: string | null, shortDescription?: any | null, targetYearGoal?: number | null, quantity?: string | null, metric?: (
+        { id?: string | null, name?: string | null, unit?: (
+          { short: string, htmlShort: string, htmlLong: string }
+          & { __typename?: 'UnitType' }
+        ) | null, forecastValues: Array<(
+          { year: number, value: number }
+          & { __typename?: 'YearlyValue' }
+        )>, baselineForecastValues?: Array<(
+          { year: number, value: number }
+          & { __typename?: 'YearlyValue' }
+        )> | null, historicalValues: Array<(
+          { year: number, value: number }
+          & { __typename?: 'YearlyValue' }
+        )> }
+        & { __typename?: 'ForecastMetricType' }
+      ) | null, goals: Array<(
+        { year: number, value: number }
+        & { __typename?: 'NodeGoal' }
+      )>, unit?: (
+        { short: string, htmlShort: string, htmlLong: string }
+        & { __typename?: 'UnitType' }
+      ) | null, inputNodes: Array<(
+        { id: string, name: string }
+        & { __typename?: 'ActionNode' | 'Node' }
+      )>, outputNodes: Array<(
+        { id: string }
+        & { __typename?: 'ActionNode' | 'Node' }
+      )>, upstreamActions?: Array<(
+        { id: string, name: string, goal?: any | null, shortName?: string | null, shortDescription?: any | null, parameters: Array<(
+          { id: string, nodeRelativeId?: string | null, isCustomized: boolean, boolValue?: boolean | null, boolDefaultValue?: boolean | null, node?: (
+            { id: string }
+            & { __typename?: 'ActionNode' | 'Node' }
+          ) | null }
+          & { __typename: 'BoolParameterType' }
+        ) | (
+          { id: string, nodeRelativeId?: string | null, isCustomized: boolean, node?: (
+            { id: string }
+            & { __typename?: 'ActionNode' | 'Node' }
+          ) | null }
+          & { __typename: 'NumberParameterType' | 'StringParameterType' | 'UnknownParameterType' }
+        )>, group?: (
+          { id: string, name: string, color?: string | null }
+          & { __typename?: 'ActionGroupType' }
+        ) | null }
+        & { __typename?: 'ActionNode' }
+      )> | null, metricDim?: (
+        { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+          { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
+            { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
+            & { __typename?: 'MetricDimensionCategoryType' }
+          )>, groups: Array<(
+            { id: string, originalId: string, label: string, color?: string | null, order?: number | null }
+            & { __typename?: 'MetricDimensionCategoryGroupType' }
+          )> }
+          & { __typename?: 'MetricDimensionType' }
+        )>, goals: Array<(
+          { categories: Array<string>, groups: Array<string>, values: Array<(
+            { year: number, value: number, isInterpolated: boolean }
+            & { __typename?: 'MetricYearlyGoalType' }
+          )> }
+          & { __typename?: 'DimensionalMetricGoalEntry' }
+        )>, unit: (
+          { htmlShort: string, short: string }
+          & { __typename?: 'UnitType' }
+        ), normalizedBy?: (
+          { id: string, name: string }
+          & { __typename?: 'Node' }
+        ) | null }
+        & { __typename?: 'DimensionalMetricType' }
+      ) | null }
+      & { __typename?: 'Node' }
+    )>, metric?: (
+      { id?: string | null, name?: string | null, unit?: (
+        { short: string, htmlShort: string, htmlLong: string }
+        & { __typename?: 'UnitType' }
+      ) | null, forecastValues: Array<(
+        { year: number, value: number }
+        & { __typename?: 'YearlyValue' }
+      )>, baselineForecastValues?: Array<(
+        { year: number, value: number }
+        & { __typename?: 'YearlyValue' }
+      )> | null, historicalValues: Array<(
+        { year: number, value: number }
+        & { __typename?: 'YearlyValue' }
+      )> }
+      & { __typename?: 'ForecastMetricType' }
+    ) | null, goals: Array<(
+      { year: number, value: number }
+      & { __typename?: 'NodeGoal' }
+    )>, unit?: (
+      { short: string, htmlShort: string, htmlLong: string }
+      & { __typename?: 'UnitType' }
+    ) | null, inputNodes: Array<(
+      { id: string, name: string }
+      & { __typename?: 'ActionNode' | 'Node' }
+    )>, outputNodes: Array<(
+      { id: string }
+      & { __typename?: 'ActionNode' | 'Node' }
+    )>, upstreamActions?: Array<(
+      { id: string, name: string, goal?: any | null, shortName?: string | null, shortDescription?: any | null, parameters: Array<(
+        { id: string, nodeRelativeId?: string | null, isCustomized: boolean, boolValue?: boolean | null, boolDefaultValue?: boolean | null, node?: (
+          { id: string }
+          & { __typename?: 'ActionNode' | 'Node' }
+        ) | null }
+        & { __typename: 'BoolParameterType' }
+      ) | (
+        { id: string, nodeRelativeId?: string | null, isCustomized: boolean, node?: (
+          { id: string }
+          & { __typename?: 'ActionNode' | 'Node' }
+        ) | null }
+        & { __typename: 'NumberParameterType' | 'StringParameterType' | 'UnknownParameterType' }
+      )>, group?: (
+        { id: string, name: string, color?: string | null }
+        & { __typename?: 'ActionGroupType' }
+      ) | null }
+      & { __typename?: 'ActionNode' }
+    )> | null, metricDim?: (
+      { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+        { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
+          { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
+          & { __typename?: 'MetricDimensionCategoryType' }
+        )>, groups: Array<(
+          { id: string, originalId: string, label: string, color?: string | null, order?: number | null }
+          & { __typename?: 'MetricDimensionCategoryGroupType' }
+        )> }
+        & { __typename?: 'MetricDimensionType' }
+      )>, goals: Array<(
+        { categories: Array<string>, groups: Array<string>, values: Array<(
+          { year: number, value: number, isInterpolated: boolean }
+          & { __typename?: 'MetricYearlyGoalType' }
+        )> }
+        & { __typename?: 'DimensionalMetricGoalEntry' }
+      )>, unit: (
+        { htmlShort: string, short: string }
+        & { __typename?: 'UnitType' }
+      ), normalizedBy?: (
+        { id: string, name: string }
+        & { __typename?: 'Node' }
+      ) | null }
+      & { __typename?: 'DimensionalMetricType' }
+    ) | null }
+    & { __typename?: 'Node' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
 export type GetPageQueryVariables = Exact<{
   path: Scalars['String'];
   goal?: InputMaybe<Scalars['ID']>;

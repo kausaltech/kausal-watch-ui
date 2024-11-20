@@ -4806,7 +4806,7 @@ export type GetActionListQuery = (
       ) }
       & { __typename?: 'ActionDependencyRelationship' }
     )>, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -4836,19 +4836,19 @@ export type GetActionListQuery = (
       ) | null, categoryPage?: (
         { id?: string | null, title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
-      ) | null, categoryPages: Array<(
-        { id?: string | null }
-        & { __typename?: 'CategoryPage' }
-      )>, children: Array<(
-        { id: string }
-        & { __typename?: 'Category' }
-      )>, type: (
+      ) | null, type: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ), parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      ), attributes?: Array<(
+        { key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+      ) | (
+        { value: string, key: string }
+        & { __typename?: 'AttributeRichText' }
+      )> | null, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -4878,16 +4878,16 @@ export type GetActionListQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -4919,16 +4919,16 @@ export type GetActionListQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null, level?: (
           { id: string, name: string, namePlural?: string | null }
@@ -4960,16 +4960,16 @@ export type GetActionListQuery = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null }
         & { __typename?: 'Category' }
       ) | null }
       & { __typename?: 'Category' }
@@ -5076,7 +5076,7 @@ export type GetActionListForBlockQuery = (
       ) }
       & { __typename?: 'ActionDependencyRelationship' }
     )>, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -5106,19 +5106,19 @@ export type GetActionListForBlockQuery = (
       ) | null, categoryPage?: (
         { id?: string | null, title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
-      ) | null, categoryPages: Array<(
-        { id?: string | null }
-        & { __typename?: 'CategoryPage' }
-      )>, children: Array<(
-        { id: string }
-        & { __typename?: 'Category' }
-      )>, type: (
+      ) | null, type: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ), parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      ), attributes?: Array<(
+        { key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+      ) | (
+        { value: string, key: string }
+        & { __typename?: 'AttributeRichText' }
+      )> | null, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -5148,16 +5148,16 @@ export type GetActionListForBlockQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -5189,16 +5189,16 @@ export type GetActionListForBlockQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null, level?: (
           { id: string, name: string, namePlural?: string | null }
@@ -5230,16 +5230,16 @@ export type GetActionListForBlockQuery = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null }
         & { __typename?: 'Category' }
       ) | null }
       & { __typename?: 'Category' }
@@ -6308,7 +6308,7 @@ export type PlaywrightGetPlanInfoQuery = (
 
 type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
   { id: string, categories: Array<(
-    { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
       { id: string, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
     ) | null, image?: (
@@ -6338,19 +6338,19 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
     ) | null, categoryPage?: (
       { id?: string | null, title: string, urlPath: string, live: boolean }
       & { __typename?: 'CategoryPage' }
-    ) | null, categoryPages: Array<(
-      { id?: string | null }
-      & { __typename?: 'CategoryPage' }
-    )>, children: Array<(
-      { id: string }
-      & { __typename?: 'Category' }
-    )>, type: (
+    ) | null, type: (
       { id: string, identifier: string, hideCategoryIdentifiers: boolean }
       & { __typename?: 'CategoryType' }
-    ), parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    ), attributes?: Array<(
+      { key: string }
+      & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+    ) | (
+      { value: string, key: string }
+      & { __typename?: 'AttributeRichText' }
+    )> | null, parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -6380,16 +6380,16 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null, level?: (
           { id: string, name: string, namePlural?: string | null }
@@ -6421,16 +6421,16 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null }
         & { __typename?: 'Category' }
       ) | null, level?: (
         { id: string, name: string, namePlural?: string | null }
@@ -6462,16 +6462,16 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
       ) | null, categoryPage?: (
         { id?: string | null, title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
-      ) | null, categoryPages: Array<(
-        { id?: string | null }
-        & { __typename?: 'CategoryPage' }
-      )>, children: Array<(
-        { id: string }
-        & { __typename?: 'Category' }
-      )>, type: (
+      ) | null, type: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ) }
+      ), attributes?: Array<(
+        { key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+      ) | (
+        { value: string, key: string }
+        & { __typename?: 'AttributeRichText' }
+      )> | null }
       & { __typename?: 'Category' }
     ) | null }
     & { __typename?: 'Category' }
@@ -6545,7 +6545,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
     )> }
     & { __typename: 'AttributeType' }
   ), categories: Array<(
-    { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
       { id: string, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
     ) | null, image?: (
@@ -6575,19 +6575,19 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
     ) | null, categoryPage?: (
       { id?: string | null, title: string, urlPath: string, live: boolean }
       & { __typename?: 'CategoryPage' }
-    ) | null, categoryPages: Array<(
-      { id?: string | null }
-      & { __typename?: 'CategoryPage' }
-    )>, children: Array<(
-      { id: string }
-      & { __typename?: 'Category' }
-    )>, type: (
+    ) | null, type: (
       { id: string, identifier: string, hideCategoryIdentifiers: boolean }
       & { __typename?: 'CategoryType' }
-    ), parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    ), attributes?: Array<(
+      { key: string }
+      & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+    ) | (
+      { value: string, key: string }
+      & { __typename?: 'AttributeRichText' }
+    )> | null, parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -6617,16 +6617,16 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null, level?: (
           { id: string, name: string, namePlural?: string | null }
@@ -6658,16 +6658,16 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null }
         & { __typename?: 'Category' }
       ) | null, level?: (
         { id: string, name: string, namePlural?: string | null }
@@ -6699,16 +6699,16 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
       ) | null, categoryPage?: (
         { id?: string | null, title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
-      ) | null, categoryPages: Array<(
-        { id?: string | null }
-        & { __typename?: 'CategoryPage' }
-      )>, children: Array<(
-        { id: string }
-        & { __typename?: 'Category' }
-      )>, type: (
+      ) | null, type: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ) }
+      ), attributes?: Array<(
+        { key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+      ) | (
+        { value: string, key: string }
+        & { __typename?: 'AttributeRichText' }
+      )> | null }
       & { __typename?: 'Category' }
     ) | null }
     & { __typename?: 'Category' }
@@ -6780,7 +6780,7 @@ export type ActionCardFragment = (
     ) }
     & { __typename?: 'ActionDependencyRelationship' }
   )>, categories: Array<(
-    { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
       { id: string, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
     ) | null, image?: (
@@ -6810,19 +6810,19 @@ export type ActionCardFragment = (
     ) | null, categoryPage?: (
       { id?: string | null, title: string, urlPath: string, live: boolean }
       & { __typename?: 'CategoryPage' }
-    ) | null, categoryPages: Array<(
-      { id?: string | null }
-      & { __typename?: 'CategoryPage' }
-    )>, children: Array<(
-      { id: string }
-      & { __typename?: 'Category' }
-    )>, type: (
+    ) | null, type: (
       { id: string, identifier: string, hideCategoryIdentifiers: boolean }
       & { __typename?: 'CategoryType' }
-    ), parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    ), attributes?: Array<(
+      { key: string }
+      & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+    ) | (
+      { value: string, key: string }
+      & { __typename?: 'AttributeRichText' }
+    )> | null, parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -6852,16 +6852,16 @@ export type ActionCardFragment = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null, level?: (
           { id: string, name: string, namePlural?: string | null }
@@ -6893,16 +6893,16 @@ export type ActionCardFragment = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null }
         & { __typename?: 'Category' }
       ) | null, level?: (
         { id: string, name: string, namePlural?: string | null }
@@ -6934,16 +6934,16 @@ export type ActionCardFragment = (
       ) | null, categoryPage?: (
         { id?: string | null, title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
-      ) | null, categoryPages: Array<(
-        { id?: string | null }
-        & { __typename?: 'CategoryPage' }
-      )>, children: Array<(
-        { id: string }
-        & { __typename?: 'Category' }
-      )>, type: (
+      ) | null, type: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ) }
+      ), attributes?: Array<(
+        { key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+      ) | (
+        { value: string, key: string }
+        & { __typename?: 'AttributeRichText' }
+      )> | null }
       & { __typename?: 'Category' }
     ) | null }
     & { __typename?: 'Category' }
@@ -7170,7 +7170,7 @@ export type CategoryTypeFragmentFragment = (
 );
 
 export type CategoryFragmentFragment = (
-  { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
     { id: string, name: string, namePlural?: string | null }
     & { __typename?: 'CategoryLevel' }
   ) | null, image?: (
@@ -7200,24 +7200,24 @@ export type CategoryFragmentFragment = (
   ) | null, categoryPage?: (
     { id?: string | null, title: string, urlPath: string, live: boolean }
     & { __typename?: 'CategoryPage' }
-  ) | null, categoryPages: Array<(
-    { id?: string | null }
-    & { __typename?: 'CategoryPage' }
-  )>, children: Array<(
-    { id: string }
-    & { __typename?: 'Category' }
-  )>, type: (
+  ) | null, type: (
     { id: string, identifier: string, hideCategoryIdentifiers: boolean }
     & { __typename?: 'CategoryType' }
-  ) }
+  ), attributes?: Array<(
+    { key: string }
+    & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+  ) | (
+    { value: string, key: string }
+    & { __typename?: 'AttributeRichText' }
+  )> | null }
   & { __typename?: 'Category' }
 );
 
 export type CategoryWithParentsFragmentFragment = (
   { parent?: (
-    { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -7247,16 +7247,16 @@ export type CategoryWithParentsFragmentFragment = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null }
         & { __typename?: 'Category' }
       ) | null, level?: (
         { id: string, name: string, namePlural?: string | null }
@@ -7288,16 +7288,16 @@ export type CategoryWithParentsFragmentFragment = (
       ) | null, categoryPage?: (
         { id?: string | null, title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
-      ) | null, categoryPages: Array<(
-        { id?: string | null }
-        & { __typename?: 'CategoryPage' }
-      )>, children: Array<(
-        { id: string }
-        & { __typename?: 'Category' }
-      )>, type: (
+      ) | null, type: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ) }
+      ), attributes?: Array<(
+        { key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+      ) | (
+        { value: string, key: string }
+        & { __typename?: 'AttributeRichText' }
+      )> | null }
       & { __typename?: 'Category' }
     ) | null, level?: (
       { id: string, name: string, namePlural?: string | null }
@@ -7329,23 +7329,23 @@ export type CategoryWithParentsFragmentFragment = (
     ) | null, categoryPage?: (
       { id?: string | null, title: string, urlPath: string, live: boolean }
       & { __typename?: 'CategoryPage' }
-    ) | null, categoryPages: Array<(
-      { id?: string | null }
-      & { __typename?: 'CategoryPage' }
-    )>, children: Array<(
-      { id: string }
-      & { __typename?: 'Category' }
-    )>, type: (
+    ) | null, type: (
       { id: string, identifier: string, hideCategoryIdentifiers: boolean }
       & { __typename?: 'CategoryType' }
-    ) }
+    ), attributes?: Array<(
+      { key: string }
+      & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+    ) | (
+      { value: string, key: string }
+      & { __typename?: 'AttributeRichText' }
+    )> | null }
     & { __typename?: 'Category' }
   ) | null }
   & { __typename?: 'Category' }
 );
 
 export type CategoryRecursiveFragmentFragment = (
-  { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
     { id: string, name: string, namePlural?: string | null }
     & { __typename?: 'CategoryLevel' }
   ) | null, image?: (
@@ -7375,19 +7375,19 @@ export type CategoryRecursiveFragmentFragment = (
   ) | null, categoryPage?: (
     { id?: string | null, title: string, urlPath: string, live: boolean }
     & { __typename?: 'CategoryPage' }
-  ) | null, categoryPages: Array<(
-    { id?: string | null }
-    & { __typename?: 'CategoryPage' }
-  )>, children: Array<(
-    { id: string }
-    & { __typename?: 'Category' }
-  )>, type: (
+  ) | null, type: (
     { id: string, identifier: string, hideCategoryIdentifiers: boolean }
     & { __typename?: 'CategoryType' }
-  ), parent?: (
-    { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+  ), attributes?: Array<(
+    { key: string }
+    & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+  ) | (
+    { value: string, key: string }
+    & { __typename?: 'AttributeRichText' }
+  )> | null, parent?: (
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -7417,16 +7417,16 @@ export type CategoryRecursiveFragmentFragment = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null }
         & { __typename?: 'Category' }
       ) | null, level?: (
         { id: string, name: string, namePlural?: string | null }
@@ -7458,16 +7458,16 @@ export type CategoryRecursiveFragmentFragment = (
       ) | null, categoryPage?: (
         { id?: string | null, title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
-      ) | null, categoryPages: Array<(
-        { id?: string | null }
-        & { __typename?: 'CategoryPage' }
-      )>, children: Array<(
-        { id: string }
-        & { __typename?: 'Category' }
-      )>, type: (
+      ) | null, type: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ) }
+      ), attributes?: Array<(
+        { key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+      ) | (
+        { value: string, key: string }
+        & { __typename?: 'AttributeRichText' }
+      )> | null }
       & { __typename?: 'Category' }
     ) | null, level?: (
       { id: string, name: string, namePlural?: string | null }
@@ -7499,16 +7499,16 @@ export type CategoryRecursiveFragmentFragment = (
     ) | null, categoryPage?: (
       { id?: string | null, title: string, urlPath: string, live: boolean }
       & { __typename?: 'CategoryPage' }
-    ) | null, categoryPages: Array<(
-      { id?: string | null }
-      & { __typename?: 'CategoryPage' }
-    )>, children: Array<(
-      { id: string }
-      & { __typename?: 'Category' }
-    )>, type: (
+    ) | null, type: (
       { id: string, identifier: string, hideCategoryIdentifiers: boolean }
       & { __typename?: 'CategoryType' }
-    ) }
+    ), attributes?: Array<(
+      { key: string }
+      & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+    ) | (
+      { value: string, key: string }
+      & { __typename?: 'AttributeRichText' }
+    )> | null }
     & { __typename?: 'Category' }
   ) | null }
   & { __typename?: 'Category' }
@@ -7641,7 +7641,7 @@ type StreamFieldFragment_CartographyVisualisationBlock_Fragment = (
 type StreamFieldFragment_CategoryListBlock_Fragment = (
   { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
     { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -7671,19 +7671,19 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
       ) | null, categoryPage?: (
         { id?: string | null, title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
-      ) | null, categoryPages: Array<(
-        { id?: string | null }
-        & { __typename?: 'CategoryPage' }
-      )>, children: Array<(
-        { id: string }
-        & { __typename?: 'Category' }
-      )>, type: (
+      ) | null, type: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ), parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      ), attributes?: Array<(
+        { key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+      ) | (
+        { value: string, key: string }
+        & { __typename?: 'AttributeRichText' }
+      )> | null, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -7713,16 +7713,16 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -7754,16 +7754,16 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null, level?: (
           { id: string, name: string, namePlural?: string | null }
@@ -7795,16 +7795,16 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null }
         & { __typename?: 'Category' }
       ) | null }
       & { __typename?: 'Category' }
@@ -7812,7 +7812,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
     & { __typename?: 'CategoryType' }
   ) | null, category?: (
     { id: string, children: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -7842,16 +7842,16 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
       ) | null, categoryPage?: (
         { id?: string | null, title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
-      ) | null, categoryPages: Array<(
-        { id?: string | null }
-        & { __typename?: 'CategoryPage' }
-      )>, children: Array<(
-        { id: string }
-        & { __typename?: 'Category' }
-      )>, type: (
+      ) | null, type: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ) }
+      ), attributes?: Array<(
+        { key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+      ) | (
+        { value: string, key: string }
+        & { __typename?: 'AttributeRichText' }
+      )> | null }
       & { __typename?: 'Category' }
     )> }
     & { __typename?: 'Category' }
@@ -7882,7 +7882,7 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
     & { __typename?: 'CategoryLevel' }
   ) | null, categoryBlockType: (
     { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
         { id: string, name: string }
         & { __typename?: 'Indicator' }
       )>, level?: (
@@ -7915,19 +7915,19 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
       ) | null, categoryPage?: (
         { id?: string | null, title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
-      ) | null, categoryPages: Array<(
-        { id?: string | null }
-        & { __typename?: 'CategoryPage' }
-      )>, children: Array<(
-        { id: string }
-        & { __typename?: 'Category' }
-      )>, type: (
+      ) | null, type: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ), parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      ), attributes?: Array<(
+        { key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+      ) | (
+        { value: string, key: string }
+        & { __typename?: 'AttributeRichText' }
+      )> | null, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -7957,16 +7957,16 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -7998,16 +7998,16 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null, level?: (
           { id: string, name: string, namePlural?: string | null }
@@ -8039,16 +8039,16 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null }
         & { __typename?: 'Category' }
       ) | null }
       & { __typename?: 'Category' }
@@ -8278,7 +8278,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename?: 'Action' }
     )>, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -8308,19 +8308,19 @@ export type GetActionDetailsQuery = (
       ) | null, categoryPage?: (
         { id?: string | null, title: string, urlPath: string, live: boolean }
         & { __typename?: 'CategoryPage' }
-      ) | null, categoryPages: Array<(
-        { id?: string | null }
-        & { __typename?: 'CategoryPage' }
-      )>, children: Array<(
-        { id: string }
-        & { __typename?: 'Category' }
-      )>, type: (
+      ) | null, type: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CategoryType' }
-      ), parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      ), attributes?: Array<(
+        { key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+      ) | (
+        { value: string, key: string }
+        & { __typename?: 'AttributeRichText' }
+      )> | null, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -8350,16 +8350,16 @@ export type GetActionDetailsQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -8391,16 +8391,16 @@ export type GetActionDetailsQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null, level?: (
           { id: string, name: string, namePlural?: string | null }
@@ -8432,16 +8432,16 @@ export type GetActionDetailsQuery = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null }
         & { __typename?: 'Category' }
       ) | null }
       & { __typename?: 'Category' }
@@ -8525,7 +8525,7 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'ActionDependencyRelationship' }
       )>, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -8555,19 +8555,19 @@ export type GetActionDetailsQuery = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ), parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -8597,16 +8597,16 @@ export type GetActionDetailsQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -8638,16 +8638,16 @@ export type GetActionDetailsQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -8679,16 +8679,16 @@ export type GetActionDetailsQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null }
         & { __typename?: 'Category' }
@@ -8747,7 +8747,7 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'ActionDependencyRelationship' }
       )>, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -8777,19 +8777,19 @@ export type GetActionDetailsQuery = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ), parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -8819,16 +8819,16 @@ export type GetActionDetailsQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -8860,16 +8860,16 @@ export type GetActionDetailsQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -8901,16 +8901,16 @@ export type GetActionDetailsQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null }
         & { __typename?: 'Category' }
@@ -8963,7 +8963,7 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'ActionDependencyRelationship' }
       )>, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -8993,19 +8993,19 @@ export type GetActionDetailsQuery = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ), parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -9035,16 +9035,16 @@ export type GetActionDetailsQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -9076,16 +9076,16 @@ export type GetActionDetailsQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -9117,16 +9117,16 @@ export type GetActionDetailsQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null }
         & { __typename?: 'Category' }
@@ -9170,7 +9170,7 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'Action' }
     ) | null, attributes: Array<(
       { id: string, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -9200,19 +9200,19 @@ export type GetActionDetailsQuery = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ), parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -9242,16 +9242,16 @@ export type GetActionDetailsQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -9283,16 +9283,16 @@ export type GetActionDetailsQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -9324,16 +9324,16 @@ export type GetActionDetailsQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null }
         & { __typename?: 'Category' }
@@ -9429,7 +9429,7 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename?: 'ActionDependencyRelationship' }
         )>, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -9459,19 +9459,19 @@ export type GetActionDetailsQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -9501,16 +9501,16 @@ export type GetActionDetailsQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -9542,16 +9542,16 @@ export type GetActionDetailsQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -9583,16 +9583,16 @@ export type GetActionDetailsQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -9645,7 +9645,7 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename?: 'ActionDependencyRelationship' }
         )>, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -9675,19 +9675,19 @@ export type GetActionDetailsQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -9717,16 +9717,16 @@ export type GetActionDetailsQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -9758,16 +9758,16 @@ export type GetActionDetailsQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -9799,16 +9799,16 @@ export type GetActionDetailsQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -9952,7 +9952,7 @@ export type GetActionDetailsQuery = (
             { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
               { attribute?: (
                 { id: string, categories: Array<(
-                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                     { id: string, name: string, namePlural?: string | null }
                     & { __typename?: 'CategoryLevel' }
                   ) | null, image?: (
@@ -9982,19 +9982,19 @@ export type GetActionDetailsQuery = (
                   ) | null, categoryPage?: (
                     { id?: string | null, title: string, urlPath: string, live: boolean }
                     & { __typename?: 'CategoryPage' }
-                  ) | null, categoryPages: Array<(
-                    { id?: string | null }
-                    & { __typename?: 'CategoryPage' }
-                  )>, children: Array<(
-                    { id: string }
-                    & { __typename?: 'Category' }
-                  )>, type: (
+                  ) | null, type: (
                     { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                     & { __typename?: 'CategoryType' }
-                  ), parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  ), attributes?: Array<(
+                    { key: string }
+                    & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                  ) | (
+                    { value: string, key: string }
+                    & { __typename?: 'AttributeRichText' }
+                  )> | null, parent?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                           { id: string, name: string, namePlural?: string | null }
                           & { __typename?: 'CategoryLevel' }
                         ) | null, image?: (
@@ -10024,16 +10024,16 @@ export type GetActionDetailsQuery = (
                         ) | null, categoryPage?: (
                           { id?: string | null, title: string, urlPath: string, live: boolean }
                           & { __typename?: 'CategoryPage' }
-                        ) | null, categoryPages: Array<(
-                          { id?: string | null }
-                          & { __typename?: 'CategoryPage' }
-                        )>, children: Array<(
-                          { id: string }
-                          & { __typename?: 'Category' }
-                        )>, type: (
+                        ) | null, type: (
                           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                           & { __typename?: 'CategoryType' }
-                        ) }
+                        ), attributes?: Array<(
+                          { key: string }
+                          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                        ) | (
+                          { value: string, key: string }
+                          & { __typename?: 'AttributeRichText' }
+                        )> | null }
                         & { __typename?: 'Category' }
                       ) | null, level?: (
                         { id: string, name: string, namePlural?: string | null }
@@ -10065,16 +10065,16 @@ export type GetActionDetailsQuery = (
                       ) | null, categoryPage?: (
                         { id?: string | null, title: string, urlPath: string, live: boolean }
                         & { __typename?: 'CategoryPage' }
-                      ) | null, categoryPages: Array<(
-                        { id?: string | null }
-                        & { __typename?: 'CategoryPage' }
-                      )>, children: Array<(
-                        { id: string }
-                        & { __typename?: 'Category' }
-                      )>, type: (
+                      ) | null, type: (
                         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                         & { __typename?: 'CategoryType' }
-                      ) }
+                      ), attributes?: Array<(
+                        { key: string }
+                        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                      ) | (
+                        { value: string, key: string }
+                        & { __typename?: 'AttributeRichText' }
+                      )> | null }
                       & { __typename?: 'Category' }
                     ) | null, level?: (
                       { id: string, name: string, namePlural?: string | null }
@@ -10106,16 +10106,16 @@ export type GetActionDetailsQuery = (
                     ) | null, categoryPage?: (
                       { id?: string | null, title: string, urlPath: string, live: boolean }
                       & { __typename?: 'CategoryPage' }
-                    ) | null, categoryPages: Array<(
-                      { id?: string | null }
-                      & { __typename?: 'CategoryPage' }
-                    )>, children: Array<(
-                      { id: string }
-                      & { __typename?: 'Category' }
-                    )>, type: (
+                    ) | null, type: (
                       { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                       & { __typename?: 'CategoryType' }
-                    ) }
+                    ), attributes?: Array<(
+                      { key: string }
+                      & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                    ) | (
+                      { value: string, key: string }
+                      & { __typename?: 'AttributeRichText' }
+                    )> | null }
                     & { __typename?: 'Category' }
                   ) | null }
                   & { __typename?: 'Category' }
@@ -10212,7 +10212,7 @@ export type GetActionDetailsQuery = (
           { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
             { attribute?: (
               { id: string, categories: Array<(
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -10242,19 +10242,19 @@ export type GetActionDetailsQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ), parent?: (
-                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null, parent?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                         { id: string, name: string, namePlural?: string | null }
                         & { __typename?: 'CategoryLevel' }
                       ) | null, image?: (
@@ -10284,16 +10284,16 @@ export type GetActionDetailsQuery = (
                       ) | null, categoryPage?: (
                         { id?: string | null, title: string, urlPath: string, live: boolean }
                         & { __typename?: 'CategoryPage' }
-                      ) | null, categoryPages: Array<(
-                        { id?: string | null }
-                        & { __typename?: 'CategoryPage' }
-                      )>, children: Array<(
-                        { id: string }
-                        & { __typename?: 'Category' }
-                      )>, type: (
+                      ) | null, type: (
                         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                         & { __typename?: 'CategoryType' }
-                      ) }
+                      ), attributes?: Array<(
+                        { key: string }
+                        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                      ) | (
+                        { value: string, key: string }
+                        & { __typename?: 'AttributeRichText' }
+                      )> | null }
                       & { __typename?: 'Category' }
                     ) | null, level?: (
                       { id: string, name: string, namePlural?: string | null }
@@ -10325,16 +10325,16 @@ export type GetActionDetailsQuery = (
                     ) | null, categoryPage?: (
                       { id?: string | null, title: string, urlPath: string, live: boolean }
                       & { __typename?: 'CategoryPage' }
-                    ) | null, categoryPages: Array<(
-                      { id?: string | null }
-                      & { __typename?: 'CategoryPage' }
-                    )>, children: Array<(
-                      { id: string }
-                      & { __typename?: 'Category' }
-                    )>, type: (
+                    ) | null, type: (
                       { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                       & { __typename?: 'CategoryType' }
-                    ) }
+                    ), attributes?: Array<(
+                      { key: string }
+                      & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                    ) | (
+                      { value: string, key: string }
+                      & { __typename?: 'AttributeRichText' }
+                    )> | null }
                     & { __typename?: 'Category' }
                   ) | null, level?: (
                     { id: string, name: string, namePlural?: string | null }
@@ -10366,16 +10366,16 @@ export type GetActionDetailsQuery = (
                   ) | null, categoryPage?: (
                     { id?: string | null, title: string, urlPath: string, live: boolean }
                     & { __typename?: 'CategoryPage' }
-                  ) | null, categoryPages: Array<(
-                    { id?: string | null }
-                    & { __typename?: 'CategoryPage' }
-                  )>, children: Array<(
-                    { id: string }
-                    & { __typename?: 'Category' }
-                  )>, type: (
+                  ) | null, type: (
                     { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                     & { __typename?: 'CategoryType' }
-                  ) }
+                  ), attributes?: Array<(
+                    { key: string }
+                    & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                  ) | (
+                    { value: string, key: string }
+                    & { __typename?: 'AttributeRichText' }
+                  )> | null }
                   & { __typename?: 'Category' }
                 ) | null }
                 & { __typename?: 'Category' }
@@ -10534,7 +10534,7 @@ export type GetActionDetailsQuery = (
             { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
               { attribute?: (
                 { id: string, categories: Array<(
-                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                     { id: string, name: string, namePlural?: string | null }
                     & { __typename?: 'CategoryLevel' }
                   ) | null, image?: (
@@ -10564,19 +10564,19 @@ export type GetActionDetailsQuery = (
                   ) | null, categoryPage?: (
                     { id?: string | null, title: string, urlPath: string, live: boolean }
                     & { __typename?: 'CategoryPage' }
-                  ) | null, categoryPages: Array<(
-                    { id?: string | null }
-                    & { __typename?: 'CategoryPage' }
-                  )>, children: Array<(
-                    { id: string }
-                    & { __typename?: 'Category' }
-                  )>, type: (
+                  ) | null, type: (
                     { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                     & { __typename?: 'CategoryType' }
-                  ), parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  ), attributes?: Array<(
+                    { key: string }
+                    & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                  ) | (
+                    { value: string, key: string }
+                    & { __typename?: 'AttributeRichText' }
+                  )> | null, parent?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                           { id: string, name: string, namePlural?: string | null }
                           & { __typename?: 'CategoryLevel' }
                         ) | null, image?: (
@@ -10606,16 +10606,16 @@ export type GetActionDetailsQuery = (
                         ) | null, categoryPage?: (
                           { id?: string | null, title: string, urlPath: string, live: boolean }
                           & { __typename?: 'CategoryPage' }
-                        ) | null, categoryPages: Array<(
-                          { id?: string | null }
-                          & { __typename?: 'CategoryPage' }
-                        )>, children: Array<(
-                          { id: string }
-                          & { __typename?: 'Category' }
-                        )>, type: (
+                        ) | null, type: (
                           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                           & { __typename?: 'CategoryType' }
-                        ) }
+                        ), attributes?: Array<(
+                          { key: string }
+                          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                        ) | (
+                          { value: string, key: string }
+                          & { __typename?: 'AttributeRichText' }
+                        )> | null }
                         & { __typename?: 'Category' }
                       ) | null, level?: (
                         { id: string, name: string, namePlural?: string | null }
@@ -10647,16 +10647,16 @@ export type GetActionDetailsQuery = (
                       ) | null, categoryPage?: (
                         { id?: string | null, title: string, urlPath: string, live: boolean }
                         & { __typename?: 'CategoryPage' }
-                      ) | null, categoryPages: Array<(
-                        { id?: string | null }
-                        & { __typename?: 'CategoryPage' }
-                      )>, children: Array<(
-                        { id: string }
-                        & { __typename?: 'Category' }
-                      )>, type: (
+                      ) | null, type: (
                         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                         & { __typename?: 'CategoryType' }
-                      ) }
+                      ), attributes?: Array<(
+                        { key: string }
+                        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                      ) | (
+                        { value: string, key: string }
+                        & { __typename?: 'AttributeRichText' }
+                      )> | null }
                       & { __typename?: 'Category' }
                     ) | null, level?: (
                       { id: string, name: string, namePlural?: string | null }
@@ -10688,16 +10688,16 @@ export type GetActionDetailsQuery = (
                     ) | null, categoryPage?: (
                       { id?: string | null, title: string, urlPath: string, live: boolean }
                       & { __typename?: 'CategoryPage' }
-                    ) | null, categoryPages: Array<(
-                      { id?: string | null }
-                      & { __typename?: 'CategoryPage' }
-                    )>, children: Array<(
-                      { id: string }
-                      & { __typename?: 'Category' }
-                    )>, type: (
+                    ) | null, type: (
                       { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                       & { __typename?: 'CategoryType' }
-                    ) }
+                    ), attributes?: Array<(
+                      { key: string }
+                      & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                    ) | (
+                      { value: string, key: string }
+                      & { __typename?: 'AttributeRichText' }
+                    )> | null }
                     & { __typename?: 'Category' }
                   ) | null }
                   & { __typename?: 'Category' }
@@ -10794,7 +10794,7 @@ export type GetActionDetailsQuery = (
           { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
             { attribute?: (
               { id: string, categories: Array<(
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -10824,19 +10824,19 @@ export type GetActionDetailsQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ), parent?: (
-                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null, parent?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                         { id: string, name: string, namePlural?: string | null }
                         & { __typename?: 'CategoryLevel' }
                       ) | null, image?: (
@@ -10866,16 +10866,16 @@ export type GetActionDetailsQuery = (
                       ) | null, categoryPage?: (
                         { id?: string | null, title: string, urlPath: string, live: boolean }
                         & { __typename?: 'CategoryPage' }
-                      ) | null, categoryPages: Array<(
-                        { id?: string | null }
-                        & { __typename?: 'CategoryPage' }
-                      )>, children: Array<(
-                        { id: string }
-                        & { __typename?: 'Category' }
-                      )>, type: (
+                      ) | null, type: (
                         { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                         & { __typename?: 'CategoryType' }
-                      ) }
+                      ), attributes?: Array<(
+                        { key: string }
+                        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                      ) | (
+                        { value: string, key: string }
+                        & { __typename?: 'AttributeRichText' }
+                      )> | null }
                       & { __typename?: 'Category' }
                     ) | null, level?: (
                       { id: string, name: string, namePlural?: string | null }
@@ -10907,16 +10907,16 @@ export type GetActionDetailsQuery = (
                     ) | null, categoryPage?: (
                       { id?: string | null, title: string, urlPath: string, live: boolean }
                       & { __typename?: 'CategoryPage' }
-                    ) | null, categoryPages: Array<(
-                      { id?: string | null }
-                      & { __typename?: 'CategoryPage' }
-                    )>, children: Array<(
-                      { id: string }
-                      & { __typename?: 'Category' }
-                    )>, type: (
+                    ) | null, type: (
                       { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                       & { __typename?: 'CategoryType' }
-                    ) }
+                    ), attributes?: Array<(
+                      { key: string }
+                      & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                    ) | (
+                      { value: string, key: string }
+                      & { __typename?: 'AttributeRichText' }
+                    )> | null }
                     & { __typename?: 'Category' }
                   ) | null, level?: (
                     { id: string, name: string, namePlural?: string | null }
@@ -10948,16 +10948,16 @@ export type GetActionDetailsQuery = (
                   ) | null, categoryPage?: (
                     { id?: string | null, title: string, urlPath: string, live: boolean }
                     & { __typename?: 'CategoryPage' }
-                  ) | null, categoryPages: Array<(
-                    { id?: string | null }
-                    & { __typename?: 'CategoryPage' }
-                  )>, children: Array<(
-                    { id: string }
-                    & { __typename?: 'Category' }
-                  )>, type: (
+                  ) | null, type: (
                     { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                     & { __typename?: 'CategoryType' }
-                  ) }
+                  ), attributes?: Array<(
+                    { key: string }
+                    & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                  ) | (
+                    { value: string, key: string }
+                    & { __typename?: 'AttributeRichText' }
+                  )> | null }
                   & { __typename?: 'Category' }
                 ) | null }
                 & { __typename?: 'Category' }
@@ -11095,7 +11095,7 @@ export type ActionDependenciesFragment = (
         ) }
         & { __typename?: 'ActionDependencyRelationship' }
       )>, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -11125,19 +11125,19 @@ export type ActionDependenciesFragment = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ), parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -11167,16 +11167,16 @@ export type ActionDependenciesFragment = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -11208,16 +11208,16 @@ export type ActionDependenciesFragment = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -11249,16 +11249,16 @@ export type ActionDependenciesFragment = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null }
         & { __typename?: 'Category' }
@@ -11311,7 +11311,7 @@ export type ActionDependenciesFragment = (
         ) }
         & { __typename?: 'ActionDependencyRelationship' }
       )>, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -11341,19 +11341,19 @@ export type ActionDependenciesFragment = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ), parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -11383,16 +11383,16 @@ export type ActionDependenciesFragment = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -11424,16 +11424,16 @@ export type ActionDependenciesFragment = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -11465,16 +11465,16 @@ export type ActionDependenciesFragment = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         ) | null }
         & { __typename?: 'Category' }
@@ -11673,7 +11673,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
       { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
         { attribute?: (
           { id: string, categories: Array<(
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -11703,19 +11703,19 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ), parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                     { id: string, name: string, namePlural?: string | null }
                     & { __typename?: 'CategoryLevel' }
                   ) | null, image?: (
@@ -11745,16 +11745,16 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                   ) | null, categoryPage?: (
                     { id?: string | null, title: string, urlPath: string, live: boolean }
                     & { __typename?: 'CategoryPage' }
-                  ) | null, categoryPages: Array<(
-                    { id?: string | null }
-                    & { __typename?: 'CategoryPage' }
-                  )>, children: Array<(
-                    { id: string }
-                    & { __typename?: 'Category' }
-                  )>, type: (
+                  ) | null, type: (
                     { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                     & { __typename?: 'CategoryType' }
-                  ) }
+                  ), attributes?: Array<(
+                    { key: string }
+                    & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                  ) | (
+                    { value: string, key: string }
+                    & { __typename?: 'AttributeRichText' }
+                  )> | null }
                   & { __typename?: 'Category' }
                 ) | null, level?: (
                   { id: string, name: string, namePlural?: string | null }
@@ -11786,16 +11786,16 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -11827,16 +11827,16 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null }
             & { __typename?: 'Category' }
@@ -11945,7 +11945,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
     { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
       { attribute?: (
         { id: string, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -11975,19 +11975,19 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -12017,16 +12017,16 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -12058,16 +12058,16 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -12099,16 +12099,16 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -12177,7 +12177,7 @@ export type ReportComparisonBlockActionContentFragment = (
     { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
       { attribute?: (
         { id: string, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -12207,19 +12207,19 @@ export type ReportComparisonBlockActionContentFragment = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -12249,16 +12249,16 @@ export type ReportComparisonBlockActionContentFragment = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -12290,16 +12290,16 @@ export type ReportComparisonBlockActionContentFragment = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -12331,16 +12331,16 @@ export type ReportComparisonBlockActionContentFragment = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -12683,7 +12683,7 @@ export type GetContentPageQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -12713,19 +12713,19 @@ export type GetContentPageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -12755,16 +12755,16 @@ export type GetContentPageQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -12796,16 +12796,16 @@ export type GetContentPageQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -12837,16 +12837,16 @@ export type GetContentPageQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -12854,7 +12854,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -12884,16 +12884,16 @@ export type GetContentPageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         )> }
         & { __typename?: 'Category' }
@@ -12920,7 +12920,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryLevel' }
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
             { id: string, name: string }
             & { __typename?: 'Indicator' }
           )>, level?: (
@@ -12953,19 +12953,19 @@ export type GetContentPageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -12995,16 +12995,16 @@ export type GetContentPageQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -13036,16 +13036,16 @@ export type GetContentPageQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -13077,16 +13077,16 @@ export type GetContentPageQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -13381,7 +13381,7 @@ export type GetContentPageQuery = (
         ) | null }
         & { __typename?: 'Image' }
       ) | null, children: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -13411,16 +13411,16 @@ export type GetContentPageQuery = (
         ) | null, categoryPage?: (
           { id?: string | null, title: string, urlPath: string, live: boolean }
           & { __typename?: 'CategoryPage' }
-        ) | null, categoryPages: Array<(
-          { id?: string | null }
-          & { __typename?: 'CategoryPage' }
-        )>, children: Array<(
-          { id: string }
-          & { __typename?: 'Category' }
-        )>, type: (
+        ) | null, type: (
           { id: string, identifier: string, hideCategoryIdentifiers: boolean }
           & { __typename?: 'CategoryType' }
-        ) }
+        ), attributes?: Array<(
+          { key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+        ) | (
+          { value: string, key: string }
+          & { __typename?: 'AttributeRichText' }
+        )> | null }
         & { __typename?: 'Category' }
       )>, parent?: (
         { id: string, identifier: string, name: string, color?: string | null, iconSvgUrl?: string | null, level?: (
@@ -13505,7 +13505,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'AttributeType' }
         ), categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -13535,19 +13535,19 @@ export type GetContentPageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -13577,16 +13577,16 @@ export type GetContentPageQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -13618,16 +13618,16 @@ export type GetContentPageQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -13659,16 +13659,16 @@ export type GetContentPageQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -13844,7 +13844,7 @@ export type GetContentPageQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -13874,19 +13874,19 @@ export type GetContentPageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -13916,16 +13916,16 @@ export type GetContentPageQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -13957,16 +13957,16 @@ export type GetContentPageQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -13998,16 +13998,16 @@ export type GetContentPageQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -14015,7 +14015,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -14045,16 +14045,16 @@ export type GetContentPageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         )> }
         & { __typename?: 'Category' }
@@ -14081,7 +14081,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryLevel' }
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
             { id: string, name: string }
             & { __typename?: 'Indicator' }
           )>, level?: (
@@ -14114,19 +14114,19 @@ export type GetContentPageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -14156,16 +14156,16 @@ export type GetContentPageQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -14197,16 +14197,16 @@ export type GetContentPageQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -14238,16 +14238,16 @@ export type GetContentPageQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -14585,7 +14585,7 @@ export type GetContentPageQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -14615,19 +14615,19 @@ export type GetContentPageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -14657,16 +14657,16 @@ export type GetContentPageQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -14698,16 +14698,16 @@ export type GetContentPageQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -14739,16 +14739,16 @@ export type GetContentPageQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -14756,7 +14756,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -14786,16 +14786,16 @@ export type GetContentPageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         )> }
         & { __typename?: 'Category' }
@@ -14822,7 +14822,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryLevel' }
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
             { id: string, name: string }
             & { __typename?: 'Indicator' }
           )>, level?: (
@@ -14855,19 +14855,19 @@ export type GetContentPageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -14897,16 +14897,16 @@ export type GetContentPageQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -14938,16 +14938,16 @@ export type GetContentPageQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -14979,16 +14979,16 @@ export type GetContentPageQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -15335,7 +15335,7 @@ export type GetHomePageQuery = (
     ) | (
       { id?: string | null, style?: string | null, heading?: string | null, lead?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -15365,19 +15365,19 @@ export type GetHomePageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -15407,16 +15407,16 @@ export type GetHomePageQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -15448,16 +15448,16 @@ export type GetHomePageQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -15489,16 +15489,16 @@ export type GetHomePageQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }
@@ -15506,7 +15506,7 @@ export type GetHomePageQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -15536,16 +15536,16 @@ export type GetHomePageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ) }
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null }
           & { __typename?: 'Category' }
         )> }
         & { __typename?: 'Category' }
@@ -15572,7 +15572,7 @@ export type GetHomePageQuery = (
         & { __typename?: 'CategoryLevel' }
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
             { id: string, name: string }
             & { __typename?: 'Indicator' }
           )>, level?: (
@@ -15605,19 +15605,19 @@ export type GetHomePageQuery = (
           ) | null, categoryPage?: (
             { id?: string | null, title: string, urlPath: string, live: boolean }
             & { __typename?: 'CategoryPage' }
-          ) | null, categoryPages: Array<(
-            { id?: string | null }
-            & { __typename?: 'CategoryPage' }
-          )>, children: Array<(
-            { id: string }
-            & { __typename?: 'Category' }
-          )>, type: (
+          ) | null, type: (
             { id: string, identifier: string, hideCategoryIdentifiers: boolean }
             & { __typename?: 'CategoryType' }
-          ), parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, uuid: any, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          ), attributes?: Array<(
+            { key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+          ) | (
+            { value: string, key: string }
+            & { __typename?: 'AttributeRichText' }
+          )> | null, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -15647,16 +15647,16 @@ export type GetHomePageQuery = (
                 ) | null, categoryPage?: (
                   { id?: string | null, title: string, urlPath: string, live: boolean }
                   & { __typename?: 'CategoryPage' }
-                ) | null, categoryPages: Array<(
-                  { id?: string | null }
-                  & { __typename?: 'CategoryPage' }
-                )>, children: Array<(
-                  { id: string }
-                  & { __typename?: 'Category' }
-                )>, type: (
+                ) | null, type: (
                   { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                   & { __typename?: 'CategoryType' }
-                ) }
+                ), attributes?: Array<(
+                  { key: string }
+                  & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+                ) | (
+                  { value: string, key: string }
+                  & { __typename?: 'AttributeRichText' }
+                )> | null }
                 & { __typename?: 'Category' }
               ) | null, level?: (
                 { id: string, name: string, namePlural?: string | null }
@@ -15688,16 +15688,16 @@ export type GetHomePageQuery = (
               ) | null, categoryPage?: (
                 { id?: string | null, title: string, urlPath: string, live: boolean }
                 & { __typename?: 'CategoryPage' }
-              ) | null, categoryPages: Array<(
-                { id?: string | null }
-                & { __typename?: 'CategoryPage' }
-              )>, children: Array<(
-                { id: string }
-                & { __typename?: 'Category' }
-              )>, type: (
+              ) | null, type: (
                 { id: string, identifier: string, hideCategoryIdentifiers: boolean }
                 & { __typename?: 'CategoryType' }
-              ) }
+              ), attributes?: Array<(
+                { key: string }
+                & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+              ) | (
+                { value: string, key: string }
+                & { __typename?: 'AttributeRichText' }
+              )> | null }
               & { __typename?: 'Category' }
             ) | null, level?: (
               { id: string, name: string, namePlural?: string | null }
@@ -15729,16 +15729,16 @@ export type GetHomePageQuery = (
             ) | null, categoryPage?: (
               { id?: string | null, title: string, urlPath: string, live: boolean }
               & { __typename?: 'CategoryPage' }
-            ) | null, categoryPages: Array<(
-              { id?: string | null }
-              & { __typename?: 'CategoryPage' }
-            )>, children: Array<(
-              { id: string }
-              & { __typename?: 'Category' }
-            )>, type: (
+            ) | null, type: (
               { id: string, identifier: string, hideCategoryIdentifiers: boolean }
               & { __typename?: 'CategoryType' }
-            ) }
+            ), attributes?: Array<(
+              { key: string }
+              & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' | 'AttributeText' }
+            ) | (
+              { value: string, key: string }
+              & { __typename?: 'AttributeRichText' }
+            )> | null }
             & { __typename?: 'Category' }
           ) | null }
           & { __typename?: 'Category' }

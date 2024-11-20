@@ -38,6 +38,12 @@ export const CATEGORY_FRAGMENT = gql`
       identifier
       hideCategoryIdentifiers
     }
+    attributes {
+      key
+      ... on AttributeRichText {
+        value
+      }
+    }
   }
   ${images.fragments.multiUseImage}
 `;
