@@ -10,6 +10,7 @@ import { Container } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
 import { ActionNode } from '@/common/__generated__/paths/graphql';
+import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
 import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
 import { getScopeLabel, getScopeTotal } from '@/utils/paths/emissions';
@@ -248,34 +249,36 @@ const PathsNodeContent = (props) => {
   }
 };
 
+interface Props {
+  page: CategoryPage;
+  title: string;
+  identifier;
+  lead?: string;
+  color?;
+  attributes;
+}
+
 function CategoryPageHeaderBlock(props: Props) {
-  const { title, identifier, lead, level, pathsNodeId } = props;
+  const { title, identifier, lead, pathsNodeId, page } = props;
 
   const paths = usePaths();
+
+  const breadcrumbs = page.category?.parent
+    ? getBreadcrumbsFromCategoryHierarchy([page.category.parent], false)
+    : [];
+
+  // TODO: A better way to find root category list page
+  const rootCategoryListPage =
+    page?.category && page.category.type.id === '76'
+      ? { id: 0, name: 'Bereiche', url: '/klimaschutzplan/bereiche' }
+      : null;
+  if (rootCategoryListPage) breadcrumbs.unshift(rootCategoryListPage);
 
   return (
     <Background>
       <Container>
         <CategoryHeader>
-          <Breadcrumbs
-            breadcrumbs={[
-              {
-                id: '1',
-                name: 'Massnahmenpakete',
-                url: '/',
-              },
-              {
-                id: '2',
-                name: 'Pakete',
-                url: '/categories/',
-              },
-              {
-                id: '3',
-                name: title,
-                url: `/categories/${identifier}/`,
-              },
-            ]}
-          />
+          {!!breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
           <h1>
             {identifier && <Identifier>{identifier}.</Identifier>} {title}
           </h1>
