@@ -74,6 +74,10 @@ const YearRangeSelector = (props) => {
     }
   }, [disabled, maxYear, minYear]);
 
+  // State of display settings
+  // Year range
+  const yearRange = useReactiveVar(yearRangeVar) ?? [minYear, maxYear];
+
   const toggle = () => {
     setPopoverOpen(!popoverOpen);
     // Focus on the input when the popover is opened
@@ -92,10 +96,6 @@ const YearRangeSelector = (props) => {
     },
     [triggerReference]
   );
-
-  // State of display settings
-  // Year range
-  const yearRange = useReactiveVar(yearRangeVar);
 
   const setYearRange = useCallback(
     (newRange: [number, number]) => {
