@@ -1,20 +1,23 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { usePathname } from 'next/navigation';
-import { useLocale } from 'next-intl';
-import { useSession } from 'next-auth/react';
-import { usePlan } from 'context/plan';
 
-import GlobalNav from 'components/common/GlobalNav';
-import TopToolBar from './common/TopToolBar';
-import SkipToContent from 'components/common/SkipToContent';
-import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
-import GoogleAnalytics from 'components/GoogleAnalytics';
 import { getActiveBranch } from 'common/links';
+import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
+import GlobalNav from 'components/common/GlobalNav';
+import SkipToContent from 'components/common/SkipToContent';
+import GoogleAnalytics from 'components/GoogleAnalytics';
+import { usePlan } from 'context/plan';
+import { useSession } from 'next-auth/react';
+import { useLocale } from 'next-intl';
+import { usePathname } from 'next/navigation';
 import { useTheme } from 'styled-components';
+
 import { deploymentType } from '@/common/environment';
 import { getMetaTitles } from '@/utils/metadata';
+
+import TopToolBar from './common/TopToolBar';
+import { useCustomComponent } from './paths/custom';
 
 const getMenuStructure = (pages, rootId, activeBranch) => {
   const menuLevelItems = [];
@@ -90,6 +93,8 @@ function Header() {
       }));
   }, [plan.mainMenu]);
 
+  const NavComponent = useCustomComponent('GlobalNav', GlobalNav);
+
   const googleAnalyticsId = theme.settings?.googleAnalyticsId;
 
   return (
@@ -97,7 +102,7 @@ function Header() {
       <SkipToContent />
       <ApplicationStateBanner deploymentType={deploymentType} />
       {isAuthenticated && <TopToolBar />}
-      <GlobalNav
+      <NavComponent
         activeBranch={activeBranch}
         siteTitle={siteTitle}
         ownerName={
