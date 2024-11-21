@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import styled from 'styled-components';
 
@@ -111,14 +111,16 @@ const HighlightValue = (props: HighlightValueProps) => {
     change,
   } = props;
 
-  const id = `tt-${displayValue}`.replace(/\W/g, '_');
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-  const toggle = () => setTooltipOpen(!tooltipOpen);
-
+  // Tooltip support deprecated
+  /*
+    const id = `tt-${displayValue}`.replace(/\W/g, '_');
+    const [tooltipOpen, setTooltipOpen] = useState(false);
+    const toggle = () => setTooltipOpen(!tooltipOpen);
+  */
   return (
-    <>
+    <div>
       {mutedReason ? <MutedReason>{mutedReason}</MutedReason> : null}
-      <TotalValue className={className} $size={size} $muted={muted} id={id}>
+      <TotalValue className={className} $size={size} $muted={muted}>
         <YearRange $size={size}>
           <span dangerouslySetInnerHTML={{ __html: header }} />
         </YearRange>
@@ -128,7 +130,7 @@ const HighlightValue = (props: HighlightValueProps) => {
           <Change $positive={!change.startsWith('-')}>{change}</Change>
         ) : null}
       </TotalValue>
-    </>
+    </div>
   );
 };
 
