@@ -1,16 +1,20 @@
 'use client';
 
 import React from 'react';
-import { useTheme } from 'styled-components';
+
 import { usePlan } from 'context/plan';
-import ApplicationStateBanner from './common/ApplicationStateBanner';
-import SiteFooter, { UtilityLink } from './common/SiteFooter';
-import { deploymentType } from '@/common/environment';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
+import { useTheme } from 'styled-components';
+
 import { PlanContextFragment } from '@/common/__generated__/graphql';
-import { getMetaTitles } from '@/utils/metadata';
+import { deploymentType } from '@/common/environment';
 import MonsidoAccessibility from '@/components/MonsidoAccessibility';
+import { getMetaTitles } from '@/utils/metadata';
+
+import ApplicationStateBanner from './common/ApplicationStateBanner';
+import SiteFooter, { UtilityLink } from './common/SiteFooter';
+import { useCustomComponent } from './paths/custom';
 
 type NavItem = NonNullable<PlanContextFragment['footer']>['items'][0];
 
@@ -42,7 +46,7 @@ function Footer() {
   const pathname = usePathname();
   const generalContent = plan.generalContent || {};
   const theme = useTheme();
-
+  const FooterComponent = useCustomComponent('Footer', SiteFooter);
   const { navigationTitle: siteTitle } = getMetaTitles(plan);
   const { fundingInstruments, otherLogos, footerStatement } = theme.settings;
   const t = useTranslations();
@@ -141,7 +145,7 @@ function Footer() {
 
   return (
     <>
-      <SiteFooter
+      <FooterComponent
         siteTitle={siteTitle}
         ownerName={generalContent.ownerName}
         ownerUrl={generalContent.ownerUrl}
