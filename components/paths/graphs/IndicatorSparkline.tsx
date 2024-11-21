@@ -16,9 +16,14 @@ import { useQuery } from '@apollo/client';
 
 const IndicatorSparklineContainer = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
-  padding: 0% ${(props) => props.theme.spaces.s100};
+  padding: ${({ theme }) => `0 ${theme.spaces.s100} ${theme.spaces.s100}`};
   margin-bottom: ${(props) => props.theme.spaces.s100};
   border-radius: 0.5rem;
+`;
+
+const SparkLineHeader = styled.div`
+  font-size: ${(props) => props.theme.fontSizeSm};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
 type IndicatorSparklineProps = {
@@ -94,12 +99,55 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   const option: ECOption = {
     dataset: dataset,
     xAxis: {
-      show: false,
+      show: true,
       type: 'category',
+      axisLabel: {
+        show: true,
+        showMinLabel: true,
+        showMaxLabel: true,
+        hideOverlap: true,
+        formatter: function (value: string) {
+          return new Date(value).getFullYear();
+        },
+        fontSize: 10,
+      },
+      axisTick: {
+        show: false,
+      },
+      axisLine: {
+        show: false,
+      },
     },
     yAxis: {
-      show: false,
+      show: true,
       type: 'value',
+      position: 'left',
+      axisLabel: {
+        show: true,
+        showMinLabel: true,
+        showMaxLabel: true,
+        hideOverlap: true,
+        inside: false,
+        fontSize: 10,
+        formatter: function (value: number) {
+          return value.toLocaleString();
+        },
+        margin: 5,
+        align: 'right',
+      },
+      splitLine: {
+        show: false,
+      },
+      axisTick: {
+        show: true,
+        inside: false,
+        length: 3,
+      },
+      axisLine: {
+        show: false,
+      },
+      interval: 'auto',
+      scale: true,
     },
     series: [
       {
@@ -135,10 +183,10 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
       },
     ],
     grid: {
-      left: '5%',
+      left: '10%',
       right: '5%',
       top: '10%',
-      bottom: '10%',
+      bottom: '15%',
     },
     tooltip: {
       trigger: 'axis',
@@ -161,9 +209,12 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
 
   return (
     <IndicatorSparklineContainer>
-      Main indicator{' '}
-      <PopoverTip content={indicator.name} identifier={indicator.id} />
-      <Chart data={option} isLoading={false} />
+      <SparkLineHeader>
+        {indicator.unit.shortName || indicator.unit.name}{' '}
+        <PopoverTip content={indicator.name} identifier={indicator.id} />
+      </SparkLineHeader>
+
+      <Chart data={option} isLoading={false} height="110px" />
     </IndicatorSparklineContainer>
   );
 };

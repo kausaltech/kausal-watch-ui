@@ -36,6 +36,8 @@ const GroupIdentifierHeader = styled.div<{
 `;
 
 const Card = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   transition: all 0.5s ease;
   overflow: hidden;
@@ -55,6 +57,7 @@ const CardContentBlock = styled.div<{ $disabled?: boolean }>`
 const CardContent = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   height: 100%;
 `;
 
@@ -96,7 +99,7 @@ const ParametersWrapper = styled.div`
 `;
 
 const CardGoalBlock = styled.div`
-  margin: ${({ theme }) => `0 ${theme.spaces.s100} ${theme.spaces.s100}`};
+  margin: ${({ theme }) => `0 0 ${theme.spaces.s100}`};
   line-height: ${(props) => props.theme.lineHeightMd};
   font-size: ${(props) => props.theme.fontSizeBase};
 
@@ -452,13 +455,6 @@ const CategoryCard = (props: CategoryCardProps) => {
             <CardContentBlock>{category.leadParagraph}</CardContentBlock>
           )}
         </CardHeaderBlock>
-        {mainGoalValue && (
-          <CardGoalBlock>
-            <p>
-              <strong>{mainGoalLabel}:</strong> {flattenedMainGoalValue}
-            </p>
-          </CardGoalBlock>
-        )}
         <CardDataBlock>
           {category.kausalPathsNodeUuid && pathsInstance && (
             <PathsNodeContent
@@ -468,11 +464,18 @@ const CategoryCard = (props: CategoryCardProps) => {
               onLoaded={onLoaded}
             />
           )}
-          {category.indicators?.length > 0 && (
-            <CardContentBlock>
+          <CardContentBlock>
+            {mainGoalValue && (
+              <CardGoalBlock>
+                <p>
+                  <strong>{mainGoalLabel}:</strong> {flattenedMainGoalValue}
+                </p>
+              </CardGoalBlock>
+            )}
+            {category.indicators?.length > 0 && (
               <IndicatorSparkline indicatorId={category.indicators[0].id} />
-            </CardContentBlock>
-          )}
+            )}
+          </CardContentBlock>
         </CardDataBlock>
       </CardContent>
     </Card>
