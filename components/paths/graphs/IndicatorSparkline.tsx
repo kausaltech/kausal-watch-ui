@@ -9,6 +9,7 @@ import {
   IndicatorValue,
 } from '@/common/__generated__/graphql';
 import PopoverTip from '@/components/common/PopoverTip';
+import Unit from '@/components/indicators/Unit';
 import Chart, { ECOption } from '@/components/paths/graphs/Chart';
 import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/utils/indicatorData';
@@ -210,7 +211,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   return (
     <IndicatorSparklineContainer>
       <SparkLineHeader>
-        {indicator.unit.shortName || indicator.unit.name}{' '}
+        <Unit unit={indicator.unit} />{' '}
         <PopoverTip content={indicator.name} identifier={indicator.id} />
       </SparkLineHeader>
 
