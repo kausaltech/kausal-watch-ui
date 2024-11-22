@@ -137,11 +137,18 @@ const OutcomeNodeContent = ({
   const paths = usePaths();
 
   const activeGoal = useReactiveVar(activeGoalVar);
+  // We have a different group for indirect emissions (hack)
   const separateYears =
     activeGoal?.dimensions[0].groups[0] === 'indirect'
       ? [1990, 2010, 2015, 2020, 2022, 2023]
       : null;
-
+  console.log('current node', node);
+  // We have a disclaimer for the mobility node for 2023 (hack)
+  const showDisclaimer =
+    startYear <= 2023 && endYear >= 2023 && node.id === 'net_emissions';
+  const disclaimer = showDisclaimer
+    ? 'Die Werte für den Bereich Mobilität 2023 sind provisorisch (schraffierte Fläche)'
+    : undefined;
   const instance = paths?.instance;
   if (!instance) return null;
   const showDistribution = subNodes.length > 1;
@@ -172,6 +179,7 @@ const OutcomeNodeContent = ({
           baselineForecast={node.metric?.baselineForecastValues ?? undefined}
           withReferenceYear
           withTools={false}
+          disclaimer={disclaimer}
         />
       ) : (
         <h5>
@@ -190,6 +198,7 @@ const OutcomeNodeContent = ({
             separateYears ? separateYears[separateYears.length - 1] : endYear
           }
           colorChange={separateYears ? 1.75 : 0}
+          disclaimer={endYear === 2023 ? disclaimer : undefined}
         />
       </div>
     ),
@@ -353,6 +362,7 @@ const OutcomeNodeContent = ({
                 color={color}
                 startYear={startYear}
                 endYear={endYear}
+                disclaimer={disclaimer}
               />
             </ContentWrapper>
           )}
