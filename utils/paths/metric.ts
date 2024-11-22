@@ -541,7 +541,7 @@ export class DimensionalMetric {
     return out;
   }
 
-  private isForecastYear(year: number) {
+  isForecastYear(year: number) {
     return this.data.forecastFrom && year >= this.data.forecastFrom;
   }
 
