@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import chroma from 'chroma-js';
 import type {
   DimensionalNodeMetricFragment,
   InstanceGoalEntry,
@@ -9,7 +10,6 @@ import { isEqual } from 'lodash';
 import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import type { LayoutAxis } from 'plotly.js';
-import { tint } from 'polished';
 import {
   Col,
   DropdownItem,
@@ -225,7 +225,7 @@ export default function DimensionalNodePlot({
   const defaultColor = color || theme.graphColors.blue070;
   const shapes: Plotly.Layout['shapes'] = [];
   const plotData: Plotly.Data[] = [];
-  const rangeMode = metric.stackable ? 'tozero' : 'normal';
+  //const rangeMode = metric.stackable ? 'tozero' : 'normal'; TODO: Do we need this?
   const filled = metric.stackable;
 
   const filledStyles = (stackGroup: string) => {
@@ -293,7 +293,14 @@ export default function DimensionalNodePlot({
 
   const genTraces = (cv: MetricCategoryValues, idx: number) => {
     const stackGroup = cv.isNegative ? 'neg' : 'pos';
-    const color = cv.color || colors[idx];
+    const forecastColorChange = 1;
+    const separateYearsColorChange = separateYears ? 1.75 : 0;
+    //const color = lighten(colorTint, cv.color || colors[idx]);
+    const color = chroma(cv.color || colors[idx])
+      .brighten(separateYearsColorChange)
+      .hex();
+    //const color = chroma(baseColor).brighten(0.5).hex();
+
     const separateYearsTrace = separateYears
       ? {
           marker: { color },
@@ -351,7 +358,7 @@ export default function DimensionalNodePlot({
         y: [cv.historicalValues[lastHist], cv.forecastValues[0]],
         hoverinfo: 'skip',
         showlegend: false,
-        fillcolor: tint(0.3, color),
+        fillcolor: chroma(color).brighten(forecastColorChange).hex(),
       });
     }
     if (hasForecast) {
@@ -360,7 +367,7 @@ export default function DimensionalNodePlot({
       const separateYearsConfig = separateYears
         ? {}
         : {
-            fillcolor: tint(0.3, color),
+            fillcolor: chroma(color).brighten(forecastColorChange).hex(),
           };
       if (separateYears) {
         separateYearsIndices.push(

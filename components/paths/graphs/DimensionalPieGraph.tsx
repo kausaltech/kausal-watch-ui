@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import chroma from 'chroma-js';
 import type { DimensionalNodeMetricFragment } from 'common/__generated__/paths/graphql';
 import { isEqual } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -26,15 +27,25 @@ type DimensionalPieGraphProps = {
   metric: NonNullable<DimensionalNodeMetricFragment['metricDim']>;
   endYear: number;
   color?: string | null;
+  colorChange?: number;
 };
 
-const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
+const DimensionalPieGraph = ({
+  metric,
+  endYear,
+  colorChange: colorChangeProp = 0,
+}: DimensionalPieGraphProps) => {
   const t = useTranslations();
   const theme = useTheme();
   const activeGoal = useReactiveVar(activeGoalVar);
   const cube = useMemo(() => new DimensionalMetric(metric), [metric]);
+  const isForecast = cube.isForecastYear(endYear);
   const defaultConfig = cube.getDefaultSliceConfig(activeGoal);
   const [sliceConfig, setSliceConfig] = useState<SliceConfig>(defaultConfig);
+
+  // TODO: Handle this color change more elegantly.
+  // Currently isForecast and set colorChange will not be true at the same time
+  const colorChange = isForecast ? 1 : colorChangeProp;
 
   useEffect(() => {
     /**
@@ -137,9 +148,9 @@ const DimensionalPieGraph = ({ metric, endYear }: DimensionalPieGraphProps) => {
           `${yearData.allLabels.find((l) => l.id === rowId)?.label}` || ''
         );
         pieSegmentValues.push(datum ? Math.abs(datum) : null);
-        pieSegmentColors.push(
-          yearData.allLabels.find((l) => l.id === rowId)?.color || '#333'
-        );
+        const segmentColor =
+          yearData.allLabels.find((l) => l.id === rowId)?.color || '#333';
+        pieSegmentColors.push(chroma(segmentColor).brighten(colorChange).hex());
         pieSegmentHovers.push(
           `${yearData.allLabels.find((l) => l.id === rowId)?.label}, ${
             datum && Math.abs(datum).toFixed(1)

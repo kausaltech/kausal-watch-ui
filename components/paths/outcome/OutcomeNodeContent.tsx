@@ -189,6 +189,7 @@ const OutcomeNodeContent = ({
           endYear={
             separateYears ? separateYears[separateYears.length - 1] : endYear
           }
+          colorChange={separateYears ? 1.75 : 0}
         />
       </div>
     ),
