@@ -13,6 +13,7 @@ interface DataTableProps {
   endYear: number;
   separateYears?: number[];
   goalName?: string;
+  disclaimer?: string;
 }
 
 const TableWrapper = Styled.div`
@@ -29,7 +30,15 @@ const TableWrapper = Styled.div`
 `;
 
 const DataTable = (props: DataTableProps) => {
-  const { node, subNodes, startYear, endYear, separateYears, goalName } = props;
+  const {
+    node,
+    subNodes,
+    startYear,
+    endYear,
+    separateYears,
+    goalName,
+    disclaimer,
+  } = props;
   const t = useTranslations();
   const totalHistoricalValues = node.metric.historicalValues.filter((value) =>
     separateYears
@@ -79,6 +88,7 @@ const DataTable = (props: DataTableProps) => {
         {separateYears ? '' : ` (${startYear} - ${endYear})`}
       </h5>
       <Table bordered size="sm" responsive>
+        {disclaimer && <caption>{disclaimer}</caption>}
         <thead>
           <tr>
             <th>{t('table-year')}</th>

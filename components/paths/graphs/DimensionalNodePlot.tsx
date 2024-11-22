@@ -53,6 +53,13 @@ const Tools = styled.div`
   }
 `;
 
+const Disclaimer = styled.p`
+  margin-right: 1.25rem;
+  font-size: ${({ theme }) => theme.fontSizeSm};
+  color: ${({ theme }) => theme.textColor.secondary};
+  text-align: right;
+`;
+
 function formatHover(
   name: string,
   color: string,
@@ -159,6 +166,7 @@ type DimensionalNodePlotProps = {
   color?: string | null;
   withControls?: boolean;
   withTools?: boolean;
+  disclaimer?: string;
 };
 
 export default function DimensionalNodePlot({
@@ -170,6 +178,7 @@ export default function DimensionalNodePlot({
   withTools = true,
   endYear,
   baselineForecast,
+  disclaimer,
 }: DimensionalNodePlotProps) {
   const t = useTranslations();
   const activeGoal = useReactiveVar(activeGoalVar);
@@ -179,6 +188,7 @@ export default function DimensionalNodePlot({
       : null;
   const cube = useMemo(() => new DimensionalMetric(metric), [metric]);
 
+  console.log('plot cube', cube);
   const lastMetricYear = metric.years.slice(-1)[0];
   const usableEndYear =
     lastMetricYear && endYear > lastMetricYear ? lastMetricYear : endYear;
@@ -793,6 +803,7 @@ export default function DimensionalNodePlot({
           config={plotConfig}
           debug={true}
         />
+        {disclaimer && <Disclaimer>{disclaimer}</Disclaimer>}
       </div>
 
       {withTools && (
