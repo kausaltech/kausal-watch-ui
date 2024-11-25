@@ -521,21 +521,7 @@ function SiteFooter(props: SiteFooterProps) {
             {navItems &&
               navItems.map((page) => (
                 <FooterNavItem key={page.id}>
-                  {!page.children && page.slug && (
-                    <NavigationLink slug={page.slug} className="parent-item">
-                      <>
-                        {theme?.navLinkIcons && (
-                          <Icon.AngleRight
-                            color={theme.footerColor}
-                            aria-hidden="true"
-                            className="me-1"
-                          />
-                        )}
-                        {page.name}
-                      </>
-                    </NavigationLink>
-                  )}
-                  {page.children && (
+                  {page.children && page.children.length > 0 ? (
                     <>
                       <span className="parent-item">{page.name}</span>
                       <FooterSubnav>
@@ -557,6 +543,10 @@ function SiteFooter(props: SiteFooterProps) {
                         ))}
                       </FooterSubnav>
                     </>
+                  ) : (
+                    <NavigationLink slug={page.slug} className="parent-item">
+                      {page.name}
+                    </NavigationLink>
                   )}
                 </FooterNavItem>
               ))}
