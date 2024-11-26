@@ -94,6 +94,8 @@ type IndicatorHighlightCardProps = {
   unit?: string;
 };
 
+import { useLocale } from 'next-intl';
+
 function IndicatorHighlightCard({
   level,
   objectid,
@@ -103,6 +105,7 @@ function IndicatorHighlightCard({
 }: IndicatorHighlightCardProps) {
   const t = useTranslations();
   const plan = usePlan();
+  const locale = useLocale();
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
   const indicatorType =
@@ -117,7 +120,7 @@ function IndicatorHighlightCard({
           <IndicatorBg $level={level} />
           <CardImgOverlay>
             <IndicatorValue $level={level} className="action-number">
-              {typeof value === 'number' ? beautifyValue(value) : '-'}
+              {typeof value === 'number' ? beautifyValue(value, locale) : '-'}
               <IndicatorUnit>{unit === 'no unit' ? '' : unit}</IndicatorUnit>
             </IndicatorValue>
           </CardImgOverlay>
