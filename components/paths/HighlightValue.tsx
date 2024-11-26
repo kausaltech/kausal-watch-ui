@@ -66,14 +66,6 @@ const YearRange = styled.div<{ $size?: string }>`
   color: ${({ theme }) => theme.textColor.secondary};
 `;
 
-const MutedReason = styled.div`
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  background-color: ${({ theme }) => theme.themeColors.dark};
-  color: ${({ theme }) => theme.themeColors.white};
-  margin-bottom: 0.25rem;
-`;
-
 const Change = styled.div<{ $positive?: boolean }>`
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
@@ -118,19 +110,20 @@ const HighlightValue = (props: HighlightValueProps) => {
     const toggle = () => setTooltipOpen(!tooltipOpen);
   */
   return (
-    <div>
-      {mutedReason ? <MutedReason>{mutedReason}</MutedReason> : null}
-      <TotalValue className={className} $size={size} $muted={muted}>
-        <YearRange $size={size}>
+    <TotalValue className={className} $size={size} $muted={muted}>
+      <YearRange $size={size}>
+        {mutedReason ? (
+          <span>{mutedReason}</span>
+        ) : (
           <span dangerouslySetInnerHTML={{ __html: header }} />
-        </YearRange>
-        {displayValue}
-        <TotalUnit dangerouslySetInnerHTML={{ __html: unit }} $size={size} />
-        {change ? (
-          <Change $positive={!change.startsWith('-')}>{change}</Change>
-        ) : null}
-      </TotalValue>
-    </div>
+        )}
+      </YearRange>
+      {displayValue}
+      <TotalUnit dangerouslySetInnerHTML={{ __html: unit }} $size={size} />
+      {change ? (
+        <Change $positive={!change.startsWith('-')}>{change}</Change>
+      ) : null}
+    </TotalValue>
   );
 };
 
