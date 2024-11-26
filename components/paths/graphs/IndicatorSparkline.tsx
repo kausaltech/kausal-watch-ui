@@ -62,8 +62,6 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
   const indicator = data?.indicator;
-  console.log('Indicator for sparkline', indicator);
-
   if (!indicator) return null;
 
   const { maxValue, minValue, desiredTrend } = indicator;
