@@ -1,19 +1,24 @@
 import React from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
-import { readableColor } from 'polished';
-import { IndicatorGroupBlock as TIndicatorGroupBlock } from 'common/__generated__/graphql';
-import Icon from 'components/common/Icon';
 
+import {
+  Indicator,
+  IndicatorGroupBlock as TIndicatorGroupBlock,
+} from 'common/__generated__/graphql';
 import { IndicatorLink, IndicatorListLink } from 'common/links';
+import Button from 'components/common/Button';
+import Icon from 'components/common/Icon';
 import IndicatorHighlightCard from 'components/indicators/IndicatorHighlightCard';
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
-import Button from 'components/common/Button';
 import { useTranslations } from 'next-intl';
+import { readableColor } from 'polished';
+import { Col, Container, Row } from 'reactstrap';
+import styled from 'styled-components';
+
+import { usePlan } from '@/context/plan';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
-  padding: ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s100};
   color: ${(props) =>
     readableColor(
       props.theme.neutralLight,
@@ -34,6 +39,9 @@ const IndicatorGraphSection = styled.div`
 `;
 
 const IndicatorContainer = styled.div`
+  background-color: ${(props) => props.theme.themeColors.white};
+  padding: ${(props) => props.theme.spaces.s300};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
     color: ${(props) =>
@@ -45,20 +53,30 @@ const IndicatorContainer = styled.div`
   }
 `;
 
-const IndicatorItem = (props) => {
-  const { indicator, display } = props;
+type IndicatorItemProps = {
+  indicator: Indicator;
+  display: IndicatorStyle;
+  linkToPage?: boolean;
+};
+
+const IndicatorItem = (props: IndicatorItemProps) => {
+  const { indicator, display, linkToPage = true } = props;
   if (display === 'graph')
     return (
       <Col className="mb-5" lg={{ size: 8 }}>
         <IndicatorContainer>
-          <IndicatorLink id={indicator.id}>
-            <a>
-              <h3>
-                {indicator.name}
-                <Icon.ArrowRight color="" />
-              </h3>
-            </a>
-          </IndicatorLink>
+          {linkToPage ? (
+            <IndicatorLink id={indicator.id}>
+              <a>
+                <h3>
+                  {indicator.name}
+                  <Icon.ArrowRight color="" />
+                </h3>
+              </a>
+            </IndicatorLink>
+          ) : (
+            <h3>{indicator.name}</h3>
+          )}
           <IndicatorVisualisation indicatorId={indicator.id} />
         </IndicatorContainer>
       </Col>
@@ -91,6 +109,12 @@ type Props = {
 // TODO: Format as list for a11y
 const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
   const t = useTranslations();
+  const plan = usePlan();
+
+  const hasIndicatorsPage =
+    plan.mainMenu?.items.findIndex(
+      (menuItem) => menuItem?.page?.slug === 'indicators'
+    ) !== -1;
 
   return (
     <IndicatorGraphSection id={id}>
@@ -102,18 +126,21 @@ const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
               indicator={item.indicator}
               display={item.style}
               key={item.indicator.id}
+              linkToPage={hasIndicatorsPage}
             />
           ))}
         </Row>
-        <Row>
-          <StyledColCentered>
-            <IndicatorListLink>
-              <Button color="primary" tag="a">
-                {t('see-all-indicators')} <Icon.ArrowRight />
-              </Button>
-            </IndicatorListLink>
-          </StyledColCentered>
-        </Row>
+        {hasIndicatorsPage && (
+          <Row>
+            <StyledColCentered>
+              <IndicatorListLink>
+                <Button color="primary" tag="a">
+                  {t('see-all-indicators')} <Icon.ArrowRight />
+                </Button>
+              </IndicatorListLink>
+            </StyledColCentered>
+          </Row>
+        )}
       </Container>
     </IndicatorGraphSection>
   );
