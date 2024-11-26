@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import styled, { useTheme } from 'styled-components';
 
+import { beautifyValue } from '@/common/paths/preprocess';
 import { activeGoalVar } from '@/context/paths/cache';
 //import type { InstanceGoal } from 'common/instance';
 import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';
@@ -153,7 +154,7 @@ const DimensionalPieGraph = ({
         pieSegmentColors.push(chroma(segmentColor).brighten(colorChange).hex());
         pieSegmentHovers.push(
           `${yearData.allLabels.find((l) => l.id === rowId)?.label}, ${
-            datum && Math.abs(datum).toFixed(1)
+            datum && beautifyValue(Math.abs(datum), 2)
           } ${datum && metric.unit.htmlShort}` || ''
         );
       }
@@ -167,7 +168,7 @@ const DimensionalPieGraph = ({
         return numSum + numValue;
       }, 0) || 0;
     const percentages = pieSegmentValues.map((value) =>
-      value ? ((value / total) * 100).toFixed(1) : null
+      value ? beautifyValue((value / total) * 100) : null
     );
 
     // Create new labels with percentages
@@ -186,7 +187,7 @@ const DimensionalPieGraph = ({
               color: theme.graphColors.grey050,
             },
             showarrow: false,
-            text: `<b>${total.toFixed(1).toString()}</b>`,
+            text: `<b>${beautifyValue(total, 2)}</b>`,
             x: 0.5,
             y: 0.5,
           },
