@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 
-import { Link } from 'common/links';
+import { NavigationLink } from 'common/links';
 import SVG from 'react-inlinesvg';
 import { Collapse, Nav, Navbar, NavItem } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
@@ -41,6 +41,11 @@ const SecondaryNav = styled(Navbar)<{ $dark?: boolean }>`
         color: ${(props) =>
           props.$dark && 'var(--stzh-color-white64)'} !important;
       }
+
+      .highlighter.active {
+        text-decoration: ${(props) => (props.$dark ? 'underline' : 'inherit')};
+        text-underline-offset: 6px;
+      }
     }
   }
 
@@ -55,7 +60,7 @@ const SecondaryNav = styled(Navbar)<{ $dark?: boolean }>`
   }
 `;
 
-const HomeLink = styled.a`
+const HomeLink = styled.div`
   display: flex;
   align-items: flex-start;
   color: ${(props) => props.theme.brandNavColor};
@@ -153,9 +158,10 @@ const StyledHeaderMain = styled.div`
 `;
 
 function GlobalNav(props) {
-  const { siteTitle, ownerName, navItems } = props;
+  const { siteTitle, ownerName, navItems, activeBranch, activePath } = props;
   const theme = useTheme();
-  const [subNav, setSubNav] = useState(false);
+
+  const [subNavState, setSubNavState] = useState(null);
 
   const orgLogo = useMemo(() => {
     const url = getThemeStaticURL(theme.themeLogoUrl);
@@ -176,11 +182,9 @@ function GlobalNav(props) {
           <StyledHeaderMain className="header__main">
             <div className="header__logobar" id="branding-navigation-bar">
               <div className="header__logobar-logo">
-                <Link href="/" passHref>
-                  <HomeLink href="dummy" className="header__logo-link">
-                    {orgLogo}
-                  </HomeLink>
-                </Link>
+                <NavigationLink slug="/" onClick={() => setSubNavState(null)}>
+                  <HomeLink className="header__logo-link">{orgLogo}</HomeLink>
+                </NavigationLink>
               </div>
             </div>
           </StyledHeaderMain>
@@ -202,13 +206,18 @@ function GlobalNav(props) {
                     active={false}
                   >
                     <NavLink>
-                      <Link href="/">
+                      <NavigationLink
+                        slug="/"
+                        onClick={() => setSubNavState(null)}
+                      >
                         <NavHighlighter
-                          className={`highlighter ${false && 'active'}`}
+                          className={`highlighter ${
+                            activeBranch === '' && 'active'
+                          }`}
                         >
                           Treibhausgasemissionen
                         </NavHighlighter>
-                      </Link>
+                      </NavigationLink>
                     </NavLink>
                   </NavItem>
                   {navItems &&
@@ -222,10 +231,7 @@ function GlobalNav(props) {
                           <NavLink>
                             <a
                               role="button"
-                              onClick={() =>
-                                setSubNav(subNav ? null : page.children)
-                              }
-                              active={page.active}
+                              onClick={() => setSubNavState(page.id)}
                               key={page.slug}
                             >
                               <NavHighlighter
@@ -245,9 +251,9 @@ function GlobalNav(props) {
                           active={page.active}
                         >
                           <NavLink>
-                            <Link
-                              href={page.urlPath}
-                              onClick={() => setSubNav(false)}
+                            <NavigationLink
+                              slug={page.urlPath}
+                              onClick={() => setSubNavState(null)}
                             >
                               <NavHighlighter
                                 className={`highlighter ${
@@ -256,7 +262,7 @@ function GlobalNav(props) {
                               >
                                 {page.name}
                               </NavHighlighter>
-                            </Link>
+                            </NavigationLink>
                           </NavLink>
                         </NavItem>
                       )
@@ -266,12 +272,12 @@ function GlobalNav(props) {
               <SiteTitle>{siteTitle}</SiteTitle>
             </SecondaryNav>
           </SecondaryNavWrapper>
-          {subNav && (
+          {subNavState && (
             <SecondaryNavWrapper $dark={true}>
               <SecondaryNav
                 expand="md"
                 id="global-navigation-bar"
-                className="header__appnav-inner"
+                className="header__appnav-inner dark-nav"
                 container={false}
                 $dark={true}
               >
@@ -280,25 +286,27 @@ function GlobalNav(props) {
                     navbar
                     className="stzh-appnav__items sc-stzh-appnav sc-stzh-appnav-s me-auto"
                   >
-                    {subNav.map((item) => (
-                      <NavItem
-                        className="sc-stzh-link-h sc-stzh-link-s"
-                        key={item.id}
-                        active={item.active}
-                      >
-                        <NavLink>
-                          <Link href={item.urlPath}>
-                            <NavHighlighter
-                              className={`highlighter ${
-                                item.active && 'active'
-                              }`}
-                            >
-                              {item.name}
-                            </NavHighlighter>
-                          </Link>
-                        </NavLink>
-                      </NavItem>
-                    ))}
+                    {navItems
+                      .find((item) => item.id === subNavState)
+                      .children.map((item) => (
+                        <NavItem
+                          className="sc-stzh-link-h sc-stzh-link-s"
+                          key={item.id}
+                          active={activePath === item.urlPath}
+                        >
+                          <NavLink>
+                            <NavigationLink slug={item.urlPath}>
+                              <NavHighlighter
+                                className={`highlighter xxx ${
+                                  item.active && 'active'
+                                }`}
+                              >
+                                {item.name}
+                              </NavHighlighter>
+                            </NavigationLink>
+                          </NavLink>
+                        </NavItem>
+                      ))}
                   </Nav>
                 </StyledCollapse>
               </SecondaryNav>

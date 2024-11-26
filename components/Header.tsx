@@ -19,7 +19,7 @@ import { getMetaTitles } from '@/utils/metadata';
 import TopToolBar from './common/TopToolBar';
 import { useCustomComponent } from './paths/custom';
 
-const getMenuStructure = (pages, rootId, activeBranch) => {
+const getMenuStructure = (pages, rootId) => {
   const menuLevelItems = [];
   pages.forEach((page) => {
     if (page.parent.id === rootId) {
@@ -28,12 +28,21 @@ const getMenuStructure = (pages, rootId, activeBranch) => {
         name: page.page.title,
         slug: page.page.slug,
         urlPath: page.page.urlPath,
-        active: activeBranch === page.page.slug,
+        active: false,
         children: getMenuStructure(pages, page.id),
       });
     }
   });
   return menuLevelItems.length > 0 ? menuLevelItems : null;
+};
+
+const setActivePages = (navLinks, pathname, activeBranch) => {
+  navLinks.forEach((page) => {
+    page.active = activeBranch === page.slug || pathname === page.urlPath;
+    if (page.children) {
+      setActivePages(page.children, pathname, activeBranch);
+    }
+  });
 };
 
 function createLocalizeMenuItem(currentLocale, primaryLocale) {
@@ -58,6 +67,7 @@ function Header() {
   const plan = usePlan();
   const theme = useTheme();
   const activeBranch = getActiveBranch(pathname, locale);
+
   const { status } = useSession();
   const isAuthenticated = status === 'authenticated';
   const { navigationTitle: siteTitle } = getMetaTitles(plan);
@@ -77,12 +87,15 @@ function Header() {
       const staticPages = getMenuStructure(
         pageMenuItems,
         pageMenuItems[rootItemIndex].parent.id,
+        pathname,
         activeBranch
       );
       links = links.concat(staticPages);
     }
     return links;
   }, [activeBranch, plan.mainMenu]);
+
+  setActivePages(navLinks, pathname, activeBranch);
 
   const externalLinks = useMemo(() => {
     return plan.mainMenu.items
@@ -104,6 +117,7 @@ function Header() {
       {isAuthenticated && <TopToolBar />}
       <NavComponent
         activeBranch={activeBranch}
+        activePath={pathname}
         siteTitle={siteTitle}
         ownerName={
           plan.generalContent ? plan.generalContent.ownerName : plan.name
