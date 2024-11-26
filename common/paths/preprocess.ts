@@ -1,6 +1,6 @@
 import { ceil, max as _max, min as _min, sum } from 'lodash';
 
-let nrSignificantDigits = 3;
+let nrSignificantDigits = 2;
 
 export function setSignificantDigits(nr: number) {
   nrSignificantDigits = nr;

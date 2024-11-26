@@ -72,7 +72,7 @@ function formatHover(
     // Round to maximumFractionDigits if provided, otherwise 3 significant digits
     typeof maximumFractionDigits === 'number'
       ? `.${maximumFractionDigits}f`
-      : '.3r';
+      : '.2r';
   //const predText = predLabel ? ` <i>(${predLabel})</i>` : '';
 
   const out: Partial<Plotly.PlotData> = {
@@ -197,7 +197,7 @@ export default function DimensionalNodePlot({
   const [sliceConfig, setSliceConfig] = useState<SliceConfig>(defaultConfig);
 
   //const maximumFractionDigits = useFeatures().maximumFractionDigits ?? undefined;
-  const maximumFractionDigits = 3;
+  const maximumFractionDigits = 2;
   useEffect(() => {
     /**
      * If the active goal changes, we will reset the grouping + filtering
