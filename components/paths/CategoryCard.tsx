@@ -8,8 +8,8 @@ import {
   ActionNode,
   CausalGridNodeFragment,
 } from 'common/__generated__/paths/graphql';
-import { beautifyValue } from 'common/data/format';
 import { Link } from 'common/links';
+import { beautifyValue } from 'common/paths/preprocess';
 import ActionParameters from 'components/paths/ActionParameters';
 import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
@@ -270,15 +270,15 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
         {emissions.total.latest.value ? (
           <SubValue>
             <HighlightValue
-              displayValue={emissions.total.latest.value.toPrecision(3) || ''}
+              displayValue={beautifyValue(emissions.total.latest.value) || ''}
               header={`${emissions.total.latest.label} (${emissions.total.latest.year})`}
               unit={unit || ''}
               size="md"
               change={
                 emissions.total.latest.change != null
-                  ? `${emissions.total.latest.change > 0 ? '+' : ''}${(
-                      emissions.total.latest.change * 100
-                    ).toFixed(1)}%`
+                  ? `${
+                      emissions.total.latest.change > 0 ? '+' : ''
+                    }${beautifyValue(emissions.total.latest.change * 100)}%`
                   : undefined
               }
             />
@@ -288,16 +288,16 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
           <SubValue>
             <HighlightValue
               displayValue={
-                emissions.total.reference.value.toPrecision(3) || ''
+                beautifyValue(emissions.total.reference.value) || ''
               }
               header={`${emissions.total.reference.label} (${emissions.total.reference.year})`}
               unit={unit || ''}
               size="md"
               change={
                 emissions.total.reference.change != null
-                  ? `${emissions.total.reference.change > 0 ? '+' : ''}${(
-                      emissions.total.reference.change * 100
-                    ).toFixed(1)}%`
+                  ? `${
+                      emissions.total.reference.change > 0 ? '+' : ''
+                    }${beautifyValue(emissions.total.reference.change * 100)}%`
                   : undefined
               }
             />
