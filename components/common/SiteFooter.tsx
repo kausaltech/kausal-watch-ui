@@ -521,7 +521,7 @@ function SiteFooter(props: SiteFooterProps) {
             {navItems &&
               navItems.map((page) => (
                 <FooterNavItem key={page.id}>
-                  {!page.children && page.slug && (
+                  {!page.children?.length && page.slug && (
                     <NavigationLink slug={page.slug} className="parent-item">
                       <>
                         {theme?.navLinkIcons && (
@@ -535,7 +535,7 @@ function SiteFooter(props: SiteFooterProps) {
                       </>
                     </NavigationLink>
                   )}
-                  {page.children && (
+                  {page.children?.length > 0 && (
                     <>
                       <span className="parent-item">{page.name}</span>
                       <FooterSubnav>
