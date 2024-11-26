@@ -10,6 +10,7 @@ import IndicatorHighlightCard from 'components/indicators/IndicatorHighlightCard
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import Button from 'components/common/Button';
 import { useTranslations } from 'next-intl';
+import { SectionHeader } from 'components/contentblocks/ActionListBlock';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
@@ -92,10 +93,14 @@ type Props = {
 const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
   const t = useTranslations();
 
+  const displayHeader = title && title !== '-' ? title : t('indicators');
+
   return (
     <IndicatorGraphSection id={id}>
       <Container>
-        <h2>{title ?? t('indicators')}</h2>
+        {displayHeader && displayHeader !== '-' ? (
+          <SectionHeader>{displayHeader}</SectionHeader>
+        ) : null}
         <Row className="justify-content-center">
           {indicators.map((item) => (
             <IndicatorItem
