@@ -7,6 +7,8 @@ import { setUniqueColors } from '@/common/paths/colors';
 import { getMetricValue, getOutcomeTotal } from '@/common/paths/preprocess';
 import OutcomeCard from '@/components/paths/outcome/OutcomeCard';
 import OutcomeNodeContent from '@/components/paths/outcome/OutcomeNodeContent';
+import { activeGoalVar } from '@/context/paths/cache';
+import { useReactiveVar } from '@apollo/client';
 
 const CardSet = styled.div<{
   $color?: string;
@@ -245,6 +247,13 @@ const OutcomeCardSet = ({
     };
   }, [nodeMap]);
 
+  const activeGoal = useReactiveVar(activeGoalVar);
+  // We have a different group for indirect emissions (hack)
+  const separateYears =
+    activeGoal?.dimensions[0].groups[0] === 'indirect'
+      ? [1990, 2010, 2015, 2020, 2022, 2023]
+      : null;
+  const hideForecast = separateYears && separateYears.length > 1;
   const inputNodes = rootNode.inputNodes.filter(
     (node) => !nodeMap.has(node.id)
   );
@@ -300,6 +309,7 @@ const OutcomeCardSet = ({
             endYear={endYear}
             activeScenario={activeScenario}
             refetching={refetching}
+            separateYears={separateYears}
           />
         </ContentArea>
         {showOutcomeBar && (
@@ -322,8 +332,12 @@ const OutcomeCardSet = ({
               {cardNodes.map((node, indx) => (
                 <OutcomeCard
                   key={node.id}
-                  startYear={startYear}
-                  endYear={endYear}
+                  startYear={separateYears ? separateYears[0] : startYear}
+                  endYear={
+                    separateYears
+                      ? separateYears[separateYears.length - 1]
+                      : endYear
+                  }
                   node={node}
                   state={activeNodeId === undefined ? 'closed' : 'open'}
                   hovered={hoveredNodeId === node.id}
@@ -335,6 +349,7 @@ const OutcomeCardSet = ({
                   positiveTotal={positiveNodesTotal}
                   negativeTotal={negativeNodesTotal}
                   refetching={refetching}
+                  hideForecast={hideForecast}
                 />
               ))}
             </CardDeck>

@@ -121,6 +121,7 @@ type OutcomeNodeContentProps = {
   endYear: number;
   activeScenario: string;
   refetching: boolean;
+  separateYears: number[] | null;
 };
 
 const OutcomeNodeContent = ({
@@ -131,23 +132,18 @@ const OutcomeNodeContent = ({
   endYear,
   activeScenario,
   refetching,
+  separateYears,
 }: OutcomeNodeContentProps) => {
   const t = useTranslations();
   const [activeTabId, setActiveTabId] = useState('graph');
   const paths = usePaths();
-
   const activeGoal = useReactiveVar(activeGoalVar);
-  // We have a different group for indirect emissions (hack)
-  const separateYears =
-    activeGoal?.dimensions[0].groups[0] === 'indirect'
-      ? [1990, 2010, 2015, 2020, 2022, 2023]
-      : null;
-  console.log('current node', node);
   // We have a disclaimer for the mobility node for 2023 (hack)
+  const hideForecast = separateYears && separateYears.length > 1;
   const showDisclaimer =
     startYear <= 2023 && endYear >= 2023 && node.id === 'net_emissions';
   const disclaimer = showDisclaimer
-    ? 'Die Werte für den Bereich Mobilität 2023 sind provisorisch (schraffierte Fläche)'
+    ? 'Die Werte für den Bereich Mobilität 2023 sind provisorisch'
     : undefined;
   const instance = paths?.instance;
   if (!instance) return null;
@@ -217,51 +213,59 @@ const OutcomeNodeContent = ({
                 nodeName
               )}
             </h4>
-            <CardSetDescriptionDetails>
-              {startYear < lastMeasuredYear && (
-                <ScenarioBadge startYear={startYear} endYear={lastMeasuredYear}>
-                  {t('table-historical')}
-                </ScenarioBadge>
-              )}{' '}
-              {typeof firstForecastYear === 'number' &&
-                firstForecastYear < endYear && (
+            {!hideForecast && (
+              <CardSetDescriptionDetails>
+                {startYear < lastMeasuredYear && (
                   <ScenarioBadge
-                    startYear={Math.max(startYear, firstForecastYear)}
-                    endYear={endYear}
+                    startYear={startYear}
+                    endYear={lastMeasuredYear}
                   >
-                    {t('table-scenario-forecast')}
-                    {activeScenario && ` (${activeScenario})`}
+                    {t('table-historical')}
                   </ScenarioBadge>
-                )}
-            </CardSetDescriptionDetails>
+                )}{' '}
+                {typeof firstForecastYear === 'number' &&
+                  firstForecastYear < endYear && (
+                    <ScenarioBadge
+                      startYear={Math.max(startYear, firstForecastYear)}
+                      endYear={endYear}
+                    >
+                      {t('table-scenario-forecast')}
+                      {activeScenario && ` (${activeScenario})`}
+                    </ScenarioBadge>
+                  )}
+              </CardSetDescriptionDetails>
+            )}
           </CardSetDescription>
         </div>
-        <CardSetSummary>
-          {nodesTotal && (
+        {!hideForecast && (
+          <CardSetSummary>
+            {nodesTotal && (
+              <HighlightValue
+                className="figure"
+                displayValue={
+                  '' +
+                  beautifyValue(nodesTotal, undefined, maximumFractionDigits)
+                }
+                header={`${
+                  isForecast
+                    ? t('table-scenario-forecast')
+                    : t('table-historical')
+                } ${endYear}`}
+                unit={unit || ''}
+              />
+            )}
             <HighlightValue
               className="figure"
               displayValue={
-                '' + beautifyValue(nodesTotal, undefined, maximumFractionDigits)
+                outcomeChange
+                  ? `${outcomeChange > 0 ? '+' : ''}${outcomeChange}`
+                  : '-'
               }
-              header={`${
-                isForecast
-                  ? t('table-scenario-forecast')
-                  : t('table-historical')
-              } ${endYear}`}
-              unit={unit || ''}
+              header={`${t('change-over-time')} ${startYear}–${endYear}`}
+              unit="%"
             />
-          )}
-          <HighlightValue
-            className="figure"
-            displayValue={
-              outcomeChange
-                ? `${outcomeChange > 0 ? '+' : ''}${outcomeChange}`
-                : '-'
-            }
-            header={`${t('change-over-time')} ${startYear}–${endYear}`}
-            unit="%"
-          />
-        </CardSetSummary>
+          </CardSetSummary>
+        )}
       </CardSetHeader>
       <CardContent>
         <TabNavigation

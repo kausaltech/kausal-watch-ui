@@ -167,6 +167,7 @@ type DimensionalNodePlotProps = {
   withControls?: boolean;
   withTools?: boolean;
   disclaimer?: string;
+  separateYears?: number[] | null;
 };
 
 export default function DimensionalNodePlot({
@@ -179,16 +180,13 @@ export default function DimensionalNodePlot({
   endYear,
   baselineForecast,
   disclaimer,
+  separateYears,
 }: DimensionalNodePlotProps) {
   const t = useTranslations();
   const activeGoal = useReactiveVar(activeGoalVar);
-  const separateYears =
-    activeGoal?.dimensions[0].groups[0] === 'indirect'
-      ? [1990, 2010, 2015, 2020, 2022, 2023]
-      : null;
+
   const cube = useMemo(() => new DimensionalMetric(metric), [metric]);
 
-  console.log('plot cube', cube);
   const lastMetricYear = metric.years.slice(-1)[0];
   const usableEndYear =
     lastMetricYear && endYear > lastMetricYear ? lastMetricYear : endYear;
