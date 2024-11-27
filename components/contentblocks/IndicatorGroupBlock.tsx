@@ -96,15 +96,12 @@ type Props = {
 // TODO: Format as list for a11y
 const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
   const t = useTranslations();
-
-  const displayHeader = title && title !== '-' ? title : t('indicators');
+  const displayHeader = title === '-' ? null : title || t('indicators');
 
   return (
     <IndicatorGraphSection id={id}>
       <Container>
-        {displayHeader && displayHeader !== '-' ? (
-          <SectionHeader>{displayHeader}</SectionHeader>
-        ) : null}
+        {displayHeader ? <SectionHeader>{displayHeader}</SectionHeader> : null}
         <StyledRow className="justify-content-center">
           {indicators.map((item) => (
             <IndicatorItem
