@@ -56,6 +56,7 @@ const PathsPageContent = ({
   const isCategoryPage = page.__typename === 'CategoryPage';
   const isStaticPage = page.__typename === 'StaticPage';
   const isActionListPage = page.__typename === 'ActionListPage';
+
   return (
     <>
       {isCategoryPage && (

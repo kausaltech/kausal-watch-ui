@@ -84,6 +84,15 @@ let config = {
     // Enables the styled-components SWC transform
     styledComponents: true,
   },
+  // TODO: This should be an environment variable
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'watch-media-prod.s3.kausal.tech',
+      },
+    ],
+  },
   webpack(config, { webpack }) {
     if (process.env.NODE_ENV !== 'development') {
       // Disable Apollo Client development mode
