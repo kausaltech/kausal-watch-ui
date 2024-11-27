@@ -58,7 +58,7 @@ const DropdownLabel = styled.div`
   font-size: 0.8rem;
 `;
 
-const ScenarioSelector = () => {
+const ScenarioSelector = ({ disabled }: { disabled: boolean }) => {
   const t = useTranslations();
   const paths = usePaths();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -85,7 +85,7 @@ const ScenarioSelector = () => {
 
   if (loading) {
     return (
-      <StyledDropdown>
+      <StyledDropdown disabled={disabled}>
         <DropdownLabel>{t('scenario')}</DropdownLabel>
         <DropdownToggle color="light">
           <span>
@@ -108,13 +108,17 @@ const ScenarioSelector = () => {
   const activeScenario = scenarios.find((scen) => scen.isActive);
 
   return (
-    <StyledDropdown isOpen={dropdownOpen} toggle={toggle}>
+    <StyledDropdown isOpen={dropdownOpen} toggle={toggle} disabled={disabled}>
       <DropdownLabel>{t('scenario')}</DropdownLabel>
       <DropdownToggle
-        color={`${activeScenario.id === 'custom' ? 'secondary' : 'light'}`}
+        color={`${
+          activeScenario.id === 'custom' && !disabled ? 'secondary' : 'light'
+        }`}
       >
-        <span>{activeScenario.name}</span>
-        <span>{activeScenario.id === 'custom' && <span>*</span>}</span>
+        <span>{disabled ? '-' : activeScenario.name}</span>
+        <span>
+          {!disabled && activeScenario.id === 'custom' && <span>*</span>}
+        </span>
       </DropdownToggle>
       <DropdownMenu>
         <DropdownItem header>{t('change-scenario')}</DropdownItem>
