@@ -15,6 +15,8 @@ import { useReactiveVar } from '@apollo/client';
 
 const PlotsContainer = styled.div`
   display: flex;
+  width: 100%;
+  justify-content: center;
 `;
 
 const Subplot = styled.div`

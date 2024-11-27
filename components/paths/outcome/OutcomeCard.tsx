@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 
+import chroma from 'chroma-js';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
@@ -140,6 +141,7 @@ type OutcomeCardProps = {
   positiveTotal: number;
   negativeTotal: number;
   refetching: boolean;
+  hideForecast: boolean | null;
 };
 
 const OutcomeCard = (props: OutcomeCardProps) => {
@@ -157,6 +159,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
     positiveTotal,
     negativeTotal,
     refetching,
+    hideForecast,
   } = props;
 
   const cardRef = useRef<HTMLDivElement>(null);
@@ -169,6 +172,8 @@ const OutcomeCard = (props: OutcomeCardProps) => {
       });
   }, [active]);
 
+  const separateYearsColorChange = hideForecast ? 1.75 : 0;
+  const displayColor = chroma(color).brighten(separateYearsColorChange).hex();
   //console.log(state);
   const t = useTranslations();
   const baseOutcomeValue = getMetricValue(node, startYear) || 0;
@@ -207,19 +212,19 @@ const OutcomeCard = (props: OutcomeCardProps) => {
         state={state}
         hovered={hovered}
         active={active}
-        color={color}
+        color={displayColor}
         refProp={cardRef}
       >
         {refetching && <ContentLoader />}
 
         <ProportionBar
           size={goalOutcomeValue / total}
-          color={color}
+          color={displayColor}
           active={active}
           offset={negativeTotal < 0 ? Math.abs(negativeTotal / total) : 0}
         />
         <Header className={state}>
-          <Title color={color}>
+          <Title color={displayColor}>
             <Name>{node.shortName || node.name}</Name>
           </Title>
         </Header>

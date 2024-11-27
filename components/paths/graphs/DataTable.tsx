@@ -11,7 +11,7 @@ interface DataTableProps {
   subNodes?: Node[];
   startYear: number;
   endYear: number;
-  separateYears?: number[];
+  separateYears?: number[] | null;
   goalName?: string;
   disclaimer?: string;
 }
