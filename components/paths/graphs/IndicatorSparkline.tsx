@@ -63,7 +63,6 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   if (error) return <p>Error :(</p>;
   const indicator = data?.indicator;
   if (!indicator) return null;
-
   const { maxValue, minValue, desiredTrend } = indicator;
 
   const indicatorGoals:
@@ -91,31 +90,42 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
     | null
     | undefined
   )[];
+
   items.forEach((item) => {
     if (!item) return;
-    const date = item.date as string;
-    if (!(date in combinedData)) {
-      combinedData[date] = {};
+    //const date = item.date as string;
+    const year = new Date(item.date as string).getFullYear().toString();
+    if (!(year in combinedData)) {
+      combinedData[year] = {};
     }
     if (item.__typename === 'IndicatorValue') {
-      combinedData[date].value = item.value;
+      combinedData[year].value = item.value;
     } else if (item.__typename === 'IndicatorGoal') {
-      combinedData[date].goal = item.value;
+      combinedData[year].goal = item.value;
     }
   });
 
   //const sortedDates = Object.keys(combinedData).sort((a, b) => new Date(a) - new Date(b));
 
-  const sortedDates = Object.keys(combinedData).sort(
-    (a, b) => new Date(a as string).getTime() - new Date(b as string).getTime()
+  const sortedYears = Object.keys(combinedData).sort(
+    (a, b) => Number(a) - Number(b)
+  );
+
+  // TODO: make this dynamic
+  const allYears = Array.from({ length: 2040 - 2022 + 1 }, (_, i) =>
+    (2022 + i).toString()
   );
 
   const dataset: DatasetComponentOption = {
     dimensions: ['date', 'value', 'goal'],
-    source: sortedDates.map((date) => ({
-      date: date,
-      value: combinedData[date].value || null,
-      goal: combinedData[date].goal || null,
+    source: sortedYears.map((year) => ({
+      date: year,
+      value:
+        combinedData[year].value !== undefined
+          ? combinedData[year].value
+          : null,
+      goal:
+        combinedData[year].goal !== undefined ? combinedData[year].goal : null,
     })),
   };
 
@@ -123,17 +133,15 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
     dataset: dataset,
     xAxis: {
       show: true,
-      type: 'time',
+      type: 'category',
       axisLabel: {
         show: true,
         showMinLabel: true,
         showMaxLabel: true,
-        hideOverlap: true,
-        formatter: function (value: number) {
-          return new Date(value).getFullYear().toString();
-        },
+        hideOverlap: false,
         fontSize: 10,
       },
+      data: allYears,
       axisTick: {
         show: false,
       },
