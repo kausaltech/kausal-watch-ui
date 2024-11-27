@@ -132,10 +132,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'RichTextBlock': {
       const { value } = block;
-      const COLLAPSIBLE_BREAKPOINT = 1200;
-      const isCollapsible =
-        page.__typename === 'CategoryPage' &&
-        value.length > COLLAPSIBLE_BREAKPOINT;
+      // const COLLAPSIBLE_BREAKPOINT = 1200;
       return (
         <Container id={id}>
           <Row>
@@ -145,7 +142,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
               md={{ size: 10, offset: 1 }}
               className="my-4"
             >
-              <RichText html={value} isCollapsible={isCollapsible} />
+              <RichText html={value} isCollapsible={false} />
             </Col>
           </Row>
         </Container>

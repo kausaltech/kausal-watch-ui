@@ -46,7 +46,7 @@ const getSortOptions = (t: TFunction): SortActionsConfig[] => [
 ];
 
 const HeaderSection = styled.div`
-  padding: 4rem 0;
+  padding: 3rem 0;
   margin-bottom: 2rem;
   background-color: ${(props) => props.theme.brandDark};
   color: ${(props) => props.theme.themeColors.white};
@@ -60,6 +60,10 @@ const StyledTitle = styled.h1`
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     font-size: ${(props) => props.theme.fontSizeXl};
   }
+`;
+
+const LeadText = styled.p`
+  max-width: 720px;
 `;
 
 const GroupHeader = styled.h4<{ $color: string }>`
@@ -196,7 +200,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
           <Row>
             <Col className="mb-4">
               {heading && <StyledTitle>{heading}</StyledTitle>}
-              {lead && <p>{lead}</p>}
+              {lead && <LeadText>{lead}</LeadText>}
             </Col>
           </Row>
         </Container>
