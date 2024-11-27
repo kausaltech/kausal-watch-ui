@@ -5,6 +5,7 @@ import Breadcrumbs from 'components/common/Breadcrumbs';
 import { CategoryPage } from 'components/common/CategoryPageStreamField';
 import ActionParameters from 'components/paths/ActionParameters';
 import { usePaths } from 'context/paths/paths';
+import Image from 'next/image';
 import ContentLoader from 'react-content-loader';
 import { Container } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
@@ -61,9 +62,15 @@ const PathsContentLoader = (props) => {
   );
 };
 
-const Background = styled.div`
-  padding: 4rem 0 2em;
+const Background = styled.div<{ $hasHeaderImage: boolean }>`
+  padding: ${(props) => (props.$hasHeaderImage ? '2rem 0' : '4rem 0 2em')};
   background-color: ${(props) => props.theme.brandDark};
+`;
+
+const HeaderImage = styled.div`
+  height: 300px;
+  width: 100%;
+  position: relative;
 `;
 
 const PathsActionImpact = styled.div<{ $disabled: boolean }>`
@@ -260,8 +267,8 @@ interface Props {
 
 function CategoryPageHeaderBlock(props: Props) {
   const { title, identifier, lead, pathsNodeId, page } = props;
-
   const paths = usePaths();
+  const headerImage = page.category?.image || page.category?.parent?.image;
 
   const breadcrumbs = page.category?.parent
     ? getBreadcrumbsFromCategoryHierarchy([page.category.parent], false)
@@ -275,8 +282,21 @@ function CategoryPageHeaderBlock(props: Props) {
   if (rootCategoryListPage) breadcrumbs.unshift(rootCategoryListPage);
 
   return (
-    <Background>
+    <Background $hasHeaderImage={!!headerImage}>
       <Container>
+        {headerImage && headerImage.large && (
+          <HeaderImage>
+            <Image
+              src={headerImage.large.src}
+              alt="Picture of the author"
+              sizes="100vw"
+              fill
+              style={{
+                objectFit: 'cover',
+              }}
+            />
+          </HeaderImage>
+        )}
         <CategoryHeader>
           {!!breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
           <h1>
