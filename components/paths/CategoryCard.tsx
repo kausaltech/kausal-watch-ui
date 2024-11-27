@@ -382,7 +382,6 @@ const PathsNodeContent = React.memo((props: PathsNodeContentProps) => {
     return <div>Error: {error.message}</div>; // Handle error appropriately
   }
   if (data) {
-    //console.log(data);
     if (data.node.__typename === 'ActionNode') {
       return (
         <PathsActionNodeContent
@@ -430,7 +429,7 @@ const CategoryCard = (props: CategoryCardProps) => {
     ? flattenHTML(mainGoalValue)
     : null;
 
-  //console.log('category indicators', category?.indicators);
+  console.log('category indicators', category?.indicators);
   return (
     <Card>
       {group && (
