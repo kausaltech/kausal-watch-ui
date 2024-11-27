@@ -14,7 +14,7 @@ import { SectionHeader } from 'components/contentblocks/ActionListBlock';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
-  padding: ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s400} 0;
   color: ${(props) =>
     readableColor(
       props.theme.neutralLight,
@@ -83,6 +83,10 @@ const StyledColCentered = styled(Col)`
   justify-content: center;
 `;
 
+const StyledRow = styled(Row)`
+  margin-top: ${(props) => props.theme.spaces.s400};
+`;
+
 type Props = {
   id?: string;
   title?: string;
@@ -101,7 +105,7 @@ const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
         {displayHeader && displayHeader !== '-' ? (
           <SectionHeader>{displayHeader}</SectionHeader>
         ) : null}
-        <Row className="justify-content-center">
+        <StyledRow className="justify-content-center">
           {indicators.map((item) => (
             <IndicatorItem
               indicator={item.indicator}
@@ -109,7 +113,7 @@ const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
               key={item.indicator.id}
             />
           ))}
-        </Row>
+        </StyledRow>
         <Row>
           <StyledColCentered>
             <IndicatorListLink>
