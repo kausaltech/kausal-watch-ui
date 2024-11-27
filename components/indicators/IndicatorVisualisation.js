@@ -214,12 +214,22 @@ function generateCubeFromValues(
   return generateCube(indicatorGraphSpecification.dimensions, values);
 }
 
-function getTraces(dimensions, cube, names, hasTimeDimension, i18n) {
+function getTraces(
+  dimensions,
+  cube,
+  names,
+  hasTimeDimension,
+  i18n,
+  quantityName
+) {
+  // TODO: We could use quantity name but we can not tell if it's in the correct language
+  // const name = capitalizeFirstLetter(quantityName ?? i18n.t('value'));
+  const name = capitalizeFirstLetter(i18n.t('value'));
   if (dimensions.length === 0) {
     return [
       {
         xType: cube.length === 1 ? 'category' : 'time',
-        name: i18n.t('total'),
+        name: name,
         dataType: 'total',
         x: cube.map((val) => {
           const d = dayjs(val.date);
@@ -599,6 +609,7 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
     plan: { scenarios },
   } = data;
 
+  console.log('indicator', data);
   if (!indicator)
     return <Alert color="danger">{t('indicator-not-found')}</Alert>;
 
@@ -684,7 +695,8 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
     cube,
     null,
     hasTimeDimension,
-    i18n
+    i18n,
+    indicator.quantity?.name
   );
   const [goalTraces, goalBounds] = normalizeByPopulation
     ? [[], []]
