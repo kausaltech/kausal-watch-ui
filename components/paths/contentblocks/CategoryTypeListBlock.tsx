@@ -120,7 +120,7 @@ interface ImpactData {
 }
 
 const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
-  const { id = '', heading, groupByLevelId, categories } = props;
+  const { id = '', heading, groupByLevelId, categories, lead } = props;
 
   const paths = usePaths();
   const t = useTranslations();
@@ -196,6 +196,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
           <Row>
             <Col className="mb-4">
               {heading && <StyledTitle>{heading}</StyledTitle>}
+              {lead && <p>{lead}</p>}
             </Col>
           </Row>
         </Container>
