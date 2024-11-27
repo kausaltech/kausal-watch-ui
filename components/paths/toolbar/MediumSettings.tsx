@@ -178,24 +178,25 @@ const MediumSettings = (props) => {
     <Container fluid="xl">
       <PanelContent>
         <StyledRow>
-          <StyledDropdownCol {...columnSizes.scenario}>
-            <ScenarioSelector />
-          </StyledDropdownCol>
-          <StyledDropdownCol {...columnSizes.yearRange}>
-            <YearRangeSelector
-              minYear={instance.minimumHistoricalYear}
-              maxYear={instance.modelEndYear}
-              referenceYear={instance.referenceYear}
-              disabled={goalHasSeparateYears}
-            />
-          </StyledDropdownCol>
           {hasMultipleGoals && (
             <StyledDropdownCol {...columnSizes.goal}>
               <GoalSelector />
             </StyledDropdownCol>
           )}
+
+          <StyledDropdownCol {...columnSizes.yearRange}>
+            <YearRangeSelector
+              minYear={instance.minimumHistoricalYear}
+              maxYear={instance.modelEndYear}
+              referenceYear={instance.referenceYear}
+              disabled={!!goalHasSeparateYears}
+            />
+          </StyledDropdownCol>
+          <StyledDropdownCol {...columnSizes.scenario}>
+            <ScenarioSelector disabled={goalHasSeparateYears} />
+          </StyledDropdownCol>
           <StyledOutcomeCol className="text-right" {...columnSizes.outcome}>
-            <GoalOutcomeBar compact />
+            {goalHasSeparateYears ? <div /> : <GoalOutcomeBar compact />}
           </StyledOutcomeCol>
         </StyledRow>
       </PanelContent>
