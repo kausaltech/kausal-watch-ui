@@ -56,9 +56,14 @@ const GoalSelector = () => {
   const paths = usePaths();
   const activeGoal = useReactiveVar(activeGoalVar);
 
-  const selectGoal = useCallback((goal) => {
-    activeGoalVar(goal);
-  }, []);
+  const selectGoal = useCallback(
+    (goal) => {
+      // Make sure we're using the augmented goal object
+      const newGoal = paths?.instance.goals.find((g) => g.id === goal.id);
+      activeGoalVar(newGoal);
+    },
+    [paths?.instance.goals]
+  );
 
   return (
     <StyledDropdown isOpen={dropdownOpen} toggle={toggle}>

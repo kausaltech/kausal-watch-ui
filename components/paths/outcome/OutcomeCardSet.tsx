@@ -249,10 +249,7 @@ const OutcomeCardSet = ({
 
   const activeGoal = useReactiveVar(activeGoalVar);
   // We have a different group for indirect emissions (hack)
-  const separateYears =
-    activeGoal?.dimensions[0].groups[0] === 'indirect'
-      ? [1990, 2010, 2015, 2020, 2022, 2023]
-      : null;
+  const separateYears = activeGoal?.separateYears || null;
   const hideForecast = separateYears && separateYears.length > 1;
   const inputNodes = rootNode.inputNodes.filter(
     (node) => !nodeMap.has(node.id)
