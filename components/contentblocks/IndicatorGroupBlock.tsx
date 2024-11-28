@@ -10,10 +10,11 @@ import IndicatorHighlightCard from 'components/indicators/IndicatorHighlightCard
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import Button from 'components/common/Button';
 import { useTranslations } from 'next-intl';
+import { SectionHeader } from 'components/contentblocks/ActionListBlock';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
-  padding: ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s400} 0;
   color: ${(props) =>
     readableColor(
       props.theme.neutralLight,
@@ -82,6 +83,10 @@ const StyledColCentered = styled(Col)`
   justify-content: center;
 `;
 
+const StyledRow = styled(Row)`
+  margin-top: ${(props) => props.theme.spaces.s400};
+`;
+
 type Props = {
   id?: string;
   title?: string;
@@ -91,12 +96,13 @@ type Props = {
 // TODO: Format as list for a11y
 const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
   const t = useTranslations();
+  const displayHeader = title === '-' ? null : title || t('indicators');
 
   return (
     <IndicatorGraphSection id={id}>
       <Container>
-        <h2>{title ?? t('indicators')}</h2>
-        <Row className="justify-content-center">
+        {displayHeader ? <SectionHeader>{displayHeader}</SectionHeader> : null}
+        <StyledRow className="justify-content-center">
           {indicators.map((item) => (
             <IndicatorItem
               indicator={item.indicator}
@@ -104,7 +110,7 @@ const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
               key={item.indicator.id}
             />
           ))}
-        </Row>
+        </StyledRow>
         <Row>
           <StyledColCentered>
             <IndicatorListLink>

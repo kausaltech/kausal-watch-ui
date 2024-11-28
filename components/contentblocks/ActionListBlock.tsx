@@ -35,7 +35,7 @@ const ActionListSection = styled.div`
   padding: ${(props) => props.theme.spaces.s400} 0;
 `;
 
-const SectionHeader = styled.h2`
+export const SectionHeader = styled.h2`
   text-align: center;
   padding: ${(props) => props.theme.spaces.s100};
   border-radius: ${(props) => props.theme.cardBorderRadius};
