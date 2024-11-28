@@ -199,7 +199,7 @@ const PathsActionNodeContent = (props: PathsActionNodeContentProps) => {
       <div>
         <HighlightValue
           displayValue={impact.toPrecision(3)}
-          header={`Impact (${yearRange[1]})`}
+          header={`${t('impact')} ${yearRange[1]}`}
           unit={pathsAction.getUnit() || ''}
           size="lg"
           muted={refetching || !pathsAction.isEnabled()}
@@ -276,13 +276,23 @@ function CategoryPageHeaderBlock(props: Props) {
     ? getBreadcrumbsFromCategoryHierarchy([page.category.parent], false)
     : [];
 
+  console.log('breadcrumbs', breadcrumbs);
+  console.log('page', page);
   // TODO: A better way to find root category list page
   const rootCategoryListPage =
     page?.category && page.category.type.id === '76'
       ? { id: 0, name: 'Bereiche', url: '/klimaschutzplan/bereiche' }
       : null;
+  const currentCategoryListPage =
+    page?.category && page.category.level?.id === '25'
+      ? {
+          id: 1,
+          name: page.category.level.namePlural,
+          url: '/klimaschutzplan/massnahmenpakete',
+        }
+      : null;
   if (rootCategoryListPage) breadcrumbs.unshift(rootCategoryListPage);
-
+  if (currentCategoryListPage) breadcrumbs.push(currentCategoryListPage);
   return (
     <Background $hasHeaderImage={!!headerImage}>
       <Container>
