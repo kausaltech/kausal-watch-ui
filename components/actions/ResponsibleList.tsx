@@ -27,10 +27,14 @@ const ResponsiblesList = styled.ul`
   margin-bottom: ${(props) => props.theme.spaces.s150};
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: ${(props) => props.theme.spaces.s050};
 `;
 
 const ResponsibleItem = styled.li`
-  margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
