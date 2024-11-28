@@ -138,7 +138,10 @@ const OutcomeNodeContent = ({
   // We have a disclaimer for the mobility node for 2023 (hack)
   const hideForecast = separateYears && separateYears.length > 1;
   const showDisclaimer =
-    startYear <= 2023 && endYear >= 2023 && node.id === 'net_emissions';
+    startYear <= 2023 &&
+    endYear >= 2023 &&
+    node.id === 'net_emissions' &&
+    !activeGoal?.hideForecast;
   const disclaimer = showDisclaimer
     ? 'Die Werte für den Bereich Mobilität 2023 sind provisorisch'
     : undefined;
