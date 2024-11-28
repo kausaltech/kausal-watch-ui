@@ -288,6 +288,7 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
                     }${format.number(emissions.total.latest.change * 100, {
                       style: 'unit',
                       unit: 'percent',
+                      maximumSignificantDigits: 2,
                     })}`
                   : undefined
               }
@@ -314,6 +315,7 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
                     }${format.number(emissions.total.reference.change * 100, {
                       style: 'unit',
                       unit: 'percent',
+                      maximumSignificantDigits: 2,
                     })}`
                   : undefined
               }
