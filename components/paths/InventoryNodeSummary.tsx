@@ -13,17 +13,25 @@ import { yearRangeVar } from '@/context/paths/cache';
 import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';
 import { useReactiveVar } from '@apollo/client';
 
-const CardContentBlock = styled.div<{ $disabled?: boolean }>`
-  margin: ${({ theme }) => `0 ${theme.spaces.s100} ${theme.spaces.s100}`};
-  opacity: ${({ $disabled = false }) => ($disabled ? 0.5 : 1)};
-`;
-
 const Values = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 10px;
+  gap: 0 10px;
   align-items: stretch;
   height: 100%;
+  background-color: ${({ theme }) => theme.themeColors.white};
+
+  &:not(:last-child) {
+    margin-bottom: ${({ theme }) => theme.spaces.s100};
+  }
+`;
+
+const ValuesHeader = styled.div`
+  flex: 100% 0 0;
+  padding: 0 0.5rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
 `;
 
 const SubValue = styled.div`
@@ -69,7 +77,12 @@ type EmissionDisplay = {
   year: number | null;
   change?: number | null;
 };
-type Emissions = { latest: EmissionDisplay; reference: EmissionDisplay };
+type Emissions = {
+  label: string | null;
+  id: number | string;
+  latest: EmissionDisplay;
+  reference: EmissionDisplay;
+};
 
 const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
   const { categoryId, node, onLoaded, displayGoals } = props;
@@ -78,6 +91,8 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
 
   const [emissions, setEmissions] = useState<Emissions[]>([
     {
+      label: null,
+      id: 0,
       latest: {
         value: null,
         label: null,
@@ -95,6 +110,7 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
 
   const [unit, setUnit] = useState<string | null>(null);
 
+  // Redefine values if yearRange is maniupulated
   useEffect(() => {
     const nodeMetric = new DimensionalMetric(node.metricDim!);
     const historicalYears = nodeMetric.getHistoricalYears();
@@ -137,6 +153,8 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
           : getTotalValues(referenceData)[0];
 
         displayEmissions.push({
+          label: goal.label ? goal.label : null,
+          id: goal.id,
           latest: {
             value: latestValue,
             label: latestLabel || null,
@@ -169,69 +187,79 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yearRange[1]]);
 
+  console.log('display goals', displayGoals);
+  console.log('emissions', emissions);
   return (
-    <CardContentBlock>
-      {emissions.map((em) => (
-        <Values key={em.latest.value}>
-          {em.latest.value ? (
-            <SubValue>
-              <HighlightValue
-                displayValue={
-                  em.latest.value
-                    ? format.number(em.latest.value, {
-                        maximumSignificantDigits: 2,
-                      })
-                    : ''
-                }
-                header={`${em.latest.label} (${em.latest.year})`}
-                unit={unit || ''}
-                size="md"
-                change={
-                  em.latest.change != null
-                    ? `${em.latest.change > 0 ? '+' : ''}${format.number(
-                        em.latest.change * 100,
-                        {
-                          style: 'unit',
-                          unit: 'percent',
-                          maximumSignificantDigits: 2,
-                        }
-                      )}`
-                    : undefined
-                }
-              />
-            </SubValue>
-          ) : null}
-          {em.reference.value ? (
-            <SubValue>
-              <HighlightValue
-                displayValue={
-                  em.reference.value
-                    ? format.number(em.reference.value, {
-                        maximumSignificantDigits: 2,
-                      })
-                    : ''
-                }
-                header={`${em.reference.label} (${em.reference.year})`}
-                unit={unit || ''}
-                size="md"
-                change={
-                  em.reference.change != null
-                    ? `${em.reference.change > 0 ? '+' : ''}${format.number(
-                        em.reference.change * 100,
-                        {
-                          style: 'unit',
-                          unit: 'percent',
-                          maximumSignificantDigits: 2,
-                        }
-                      )}`
-                    : undefined
-                }
-              />
-            </SubValue>
-          ) : null}
-        </Values>
-      ))}
-    </CardContentBlock>
+    <>
+      {emissions.map(
+        (em) =>
+          (em.latest.value || em.reference.value) && (
+            <Values key={em.id}>
+              <ValuesHeader>{em.label}</ValuesHeader>
+              {em.latest.value ? (
+                <SubValue>
+                  <HighlightValue
+                    displayValue={
+                      em.latest.value
+                        ? format.number(em.latest.value, {
+                            maximumSignificantDigits: 2,
+                          })
+                        : ''
+                    }
+                    header={`${em.latest.year}`}
+                    unit={unit || ''}
+                    size="md"
+                    change={
+                      em.latest.change != null
+                        ? `${em.latest.change > 0 ? '+' : ''}${format.number(
+                            em.latest.change * 100,
+                            {
+                              style: 'unit',
+                              unit: 'percent',
+                              maximumSignificantDigits: 2,
+                            }
+                          )}`
+                        : undefined
+                    }
+                  />
+                </SubValue>
+              ) : (
+                <SubValue />
+              )}
+              {em.reference.value ? (
+                <SubValue>
+                  <HighlightValue
+                    displayValue={
+                      em.reference.value
+                        ? format.number(em.reference.value, {
+                            maximumSignificantDigits: 2,
+                          })
+                        : ''
+                    }
+                    header={`${em.reference.year}`}
+                    unit={unit || ''}
+                    size="md"
+                    change={
+                      em.reference.change != null
+                        ? `${em.reference.change > 0 ? '+' : ''}${format.number(
+                            em.reference.change * 100,
+                            {
+                              style: 'unit',
+                              unit: 'percent',
+                              maximumSignificantDigits: 2,
+                            }
+                          )}`
+                        : undefined
+                    }
+                  />
+                </SubValue>
+              ) : (
+                <SubValue />
+              )}
+            </Values>
+          )
+      )}
+    </>
   );
 };
 
