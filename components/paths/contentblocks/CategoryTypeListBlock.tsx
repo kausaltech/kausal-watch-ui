@@ -63,6 +63,7 @@ const LeadText = styled.p`
 
 const GroupHeader = styled.h4<{ $color: string }>`
   border-left: 6px solid ${(props) => props.$color};
+  padding-left: 0.5rem;
   margin-bottom: 24px;
 `;
 
@@ -231,9 +232,11 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
         {groups?.map((group) => (
           <Row key={group?.id}>
             {group?.id !== 'all' && (
-              <GroupHeader $color={group?.color || '#eeeeee'}>
-                {group.name}
-              </GroupHeader>
+              <Col xs={12}>
+                <GroupHeader $color={group?.color || '#eeeeee'}>
+                  {group.name}
+                </GroupHeader>
+              </Col>
             )}
             {sortedCategories
               ?.filter(
