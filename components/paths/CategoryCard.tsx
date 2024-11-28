@@ -9,18 +9,10 @@ import { InstanceType } from 'common/__generated__/paths/graphql';
 import { Link } from 'common/links';
 
 import { readableColor, transparentize } from 'polished';
-import ContentLoader from 'react-content-loader';
-import styled, { useTheme } from 'styled-components';
-
-import { activeGoalVar } from '@/context/paths/cache';
-import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
-
-import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
+import styled from 'styled-components';
 
 import IndicatorSparkline from './graphs/IndicatorSparkline';
-import InventoryNodeSummary from './InventoryNodeSummary';
-import ActionNodeSummary from './ActionNodeSummary';
+import PathsNodeSummary from './PathsNodeSummary';
 
 const GroupIdentifierHeader = styled.div<{
   $color?: string | null | undefined;
@@ -86,88 +78,6 @@ const CardGoalBlock = styled.div`
   }
 `;
 
-const PathsContentLoader = (props) => {
-  const theme = useTheme();
-  return (
-    <ContentLoader
-      speed={1}
-      width={330}
-      height={80}
-      viewBox="0 0 330 80"
-      backgroundColor={theme.graphColors.grey010}
-      foregroundColor={theme.graphColors.grey030}
-      {...props}
-    >
-      <rect x="5" y="1" rx="3" ry="3" width="166" height="16" />
-      <rect x="0" y="88" rx="3" ry="3" width="178" height="6" />
-      <rect x="6" y="24" rx="3" ry="3" width="130" height="27" />
-      <rect x="4" y="61" rx="3" ry="3" width="166" height="16" />
-    </ContentLoader>
-  );
-};
-
-type PathsNodeContentProps = {
-  categoryId: string;
-  node: string;
-  pathsInstance: InstanceType;
-  onLoaded: (id: string, impact: number) => void;
-};
-
-const PathsNodeContent = React.memo((props: PathsNodeContentProps) => {
-  const { categoryId, node, pathsInstance, onLoaded } = props;
-  const pathsInstanceId = pathsInstance.id;
-  const activeGoal = useReactiveVar(activeGoalVar);
-  const displayAllGoals = true;
-  const displayGoals = displayAllGoals
-    ? pathsInstance.goals
-    : activeGoal
-    ? [activeGoal]
-    : undefined;
-
-  const { data, loading, error, networkStatus } = useQuery(GET_NODE_CONTENT, {
-    fetchPolicy: 'no-cache',
-    variables: { node: node, goal: activeGoal?.id },
-    notifyOnNetworkStatusChange: true,
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: pathsInstanceId }),
-    },
-  });
-
-  const refetching = networkStatus === NetworkStatus.refetch;
-
-  if (loading && !refetching) {
-    return <PathsContentLoader />;
-  }
-  if (error) {
-    return <div>Error: {error.message}</div>; // Handle error appropriately
-  }
-  if (data) {
-    if (data.node.__typename === 'ActionNode') {
-      return (
-        <ActionNodeSummary
-          categoryId={categoryId}
-          node={data.node}
-          onLoaded={onLoaded}
-          refetching={refetching}
-        />
-      );
-    } else if (data.node.__typename && displayGoals) {
-      return (
-        <InventoryNodeSummary
-          categoryId={categoryId}
-          node={data.node}
-          onLoaded={onLoaded}
-          displayGoals={displayGoals}
-        />
-      );
-    }
-    return null;
-  }
-});
-
-PathsNodeContent.displayName = 'PathsNodeContent';
-
 type CategoryCardProps = {
   category: Category;
   group?: CategoryFragmentFragment;
@@ -217,7 +127,7 @@ const CategoryCard = (props: CategoryCardProps) => {
         </CardHeaderBlock>
         <CardDataBlock>
           {category.kausalPathsNodeUuid && pathsInstance?.id && (
-            <PathsNodeContent
+            <PathsNodeSummary
               categoryId={category.id}
               node={category.kausalPathsNodeUuid}
               pathsInstance={pathsInstance}
