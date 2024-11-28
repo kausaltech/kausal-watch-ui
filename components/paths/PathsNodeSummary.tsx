@@ -51,7 +51,7 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
     : activeGoal
     ? [activeGoal]
     : undefined;
-
+  displayGoals?.sort((a, b) => (a.id === activeGoal?.id ? -1 : 1));
   const { data, loading, error, networkStatus } = useQuery(GET_NODE_CONTENT, {
     fetchPolicy: 'no-cache',
     variables: { node: node, goal: activeGoal?.id },
