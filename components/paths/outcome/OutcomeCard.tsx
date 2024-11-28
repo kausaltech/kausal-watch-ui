@@ -1,14 +1,10 @@
 import { useEffect, useRef } from 'react';
 
 import chroma from 'chroma-js';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
-import {
-  beautifyValue,
-  getMetricChange,
-  getMetricValue,
-} from '@/common/paths/preprocess';
+import { getMetricChange, getMetricValue } from '@/common/paths/preprocess';
 import ContentLoader from '@/components/common/ContentLoader';
 import DashCard from '@/components/paths/DashCard';
 
@@ -176,6 +172,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
   const displayColor = chroma(color).brighten(separateYearsColorChange).hex();
   //console.log(state);
   const t = useTranslations();
+  const format = useFormatter();
   const baseOutcomeValue = getMetricValue(node, startYear) || 0;
   const goalOutcomeValue = getMetricValue(node, endYear);
   const change = getMetricChange(baseOutcomeValue, goalOutcomeValue);
@@ -239,7 +236,9 @@ const OutcomeCard = (props: OutcomeCardProps) => {
             </Label>
             {goalOutcomeValue ? (
               <>
-                {beautifyValue(goalOutcomeValue)}
+                {format.number(goalOutcomeValue, {
+                  maximumSignificantDigits: 2,
+                })}
                 <MainUnit dangerouslySetInnerHTML={{ __html: unit || '' }} />
               </>
             ) : (
@@ -253,7 +252,14 @@ const OutcomeCard = (props: OutcomeCardProps) => {
               {change ? (
                 <>
                   {change > 0 && <span>+</span>}
-                  {change ? <span>{`${change}%`}</span> : <span>-</span>}
+                  {change ? (
+                    <span>{`${format.number(change, {
+                      style: 'unit',
+                      unit: 'percent',
+                    })}`}</span>
+                  ) : (
+                    <span>-</span>
+                  )}
                 </>
               ) : (
                 <NoValue />

@@ -3,11 +3,10 @@ import {
   GetInstanceGoalOutcomeQueryVariables,
 } from 'common/__generated__/paths/graphql';
 import _ from 'lodash';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { Button, CardBody, Spinner, UncontrolledCollapse } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
-import { beautifyValue } from '@/common/paths/preprocess';
 import Icon from '@/components/common/Icon';
 import {
   activeGoalVar,
@@ -152,6 +151,7 @@ const BarWithLabel = (props) => {
     labelSide,
     placement,
     zeroOffset,
+    format,
   } = props;
 
   return (
@@ -169,7 +169,7 @@ const BarWithLabel = (props) => {
       >
         <Label>{label}</Label>
         <Value>
-          {beautifyValue(value)}{' '}
+          {format.number(value, { maximumSignificantDigits: 2 })}{' '}
           <Unit dangerouslySetInnerHTML={{ __html: unit }} />
         </Value>
       </BarLabel>
@@ -217,6 +217,7 @@ type GoalOutcomeBarProps = {
 const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
   const { compact } = props;
   const t = useTranslations();
+  const format = useFormatter();
   const theme = useTheme();
   const paths = usePaths();
   const activeScenario = useReactiveVar(activeScenarioVar);
@@ -334,10 +335,16 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
     activeScenario.name,
     activeGoal.label,
     yearRange[1],
-    `${beautifyValue(missingFromTarget)} ${longUnit}`,
-    `${beautifyValue(comparisonActual.actual)} ${longUnit}`,
+    `${format.number(missingFromTarget, {
+      maximumSignificantDigits: 2,
+    })} ${longUnit}`,
+    `${format.number(comparisonActual.actual, {
+      maximumSignificantDigits: 2,
+    })} ${longUnit}`,
     comparisonGoal.year,
-    `${beautifyValue(comparisonGoal.goal)} ${longUnit}`,
+    `${format.number(comparisonGoal.goal, {
+      maximumSignificantDigits: 2,
+    })} ${longUnit}`,
     t
   );
 
@@ -352,6 +359,7 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
                 key={bar.label}
                 placement={index}
                 zeroOffset={zeroOffset}
+                format={format}
               />
             ))}
           </EmissionsBar>
@@ -384,6 +392,7 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
                         key={bar.label}
                         placement={index}
                         zeroOffset={zeroOffset}
+                        format={format}
                       />
                     ))}
                   </EmissionsBar>

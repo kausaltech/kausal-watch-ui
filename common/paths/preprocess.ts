@@ -20,7 +20,7 @@ export const beautifyValue = (x: number, significantDigits?: number) => {
   return rounded;
 };
 
-// Use Format number to locale and round to 3 decimals
+// DEPRECATED, use useFormatter instead
 export const formatNumber = (value, language = 'en') => {
   return parseFloat(
     Number(value).toPrecision(nrSignificantDigits)

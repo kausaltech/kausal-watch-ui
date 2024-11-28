@@ -1,9 +1,8 @@
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { Table } from 'reactstrap';
 import Styled from 'styled-components';
 
 import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
-import { formatNumber } from '@/common/paths/preprocess';
 
 //  import { useFeatures } from '@/common/instance';
 interface DataTableProps {
@@ -40,6 +39,7 @@ const DataTable = (props: DataTableProps) => {
     disclaimer,
   } = props;
   const t = useTranslations();
+  const format = useFormatter();
   const totalHistoricalValues = node.metric.historicalValues.filter((value) =>
     separateYears
       ? separateYears.includes(value.year)
@@ -110,23 +110,18 @@ const DataTable = (props: DataTableProps) => {
                   {subNode.metric.historicalValues.find(
                     (value) => value.year === metric.year
                   )
-                    ? formatNumber(
+                    ? format.number(
                         subNode.metric.historicalValues.find(
                           (value) => value.year === metric.year
                         ).value,
-                        t.language,
-                        maximumFractionDigits
+                        { maximumSignificantDigits: 2 }
                       )
                     : '-'}
                 </td>
               ))}
               {hasTotalValues && (
                 <td>
-                  {formatNumber(
-                    metric.value,
-                    t.language,
-                    maximumFractionDigits
-                  )}
+                  {format.number(metric.value, { maximumSignificantDigits: 2 })}
                 </td>
               )}
               <td
@@ -145,23 +140,18 @@ const DataTable = (props: DataTableProps) => {
                   {subNode.metric.forecastValues.find(
                     (value) => value.year === metric.year
                   )
-                    ? formatNumber(
+                    ? format.number(
                         subNode.metric.forecastValues.find(
                           (value) => value.year === metric.year
                         ).value,
-                        t.language,
-                        maximumFractionDigits
+                        { maximumSignificantDigits: 2 }
                       )
                     : '-'}
                 </td>
               ))}
               {hasTotalValues && (
                 <td>
-                  {formatNumber(
-                    metric.value,
-                    t.language,
-                    maximumFractionDigits
-                  )}
+                  {format.number(metric.value, { maximumSignificantDigits: 2 })}
                 </td>
               )}
               <td

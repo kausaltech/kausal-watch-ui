@@ -69,12 +69,11 @@ function formatHover(
   maximumFractionDigits?: number
 ) {
   const valueFormatter =
-    // Round to maximumFractionDigits if provided, otherwise 3 significant digits
+    // Round to maximumFractionDigits if provided, otherwise 2 significant digits
     typeof maximumFractionDigits === 'number'
-      ? `.${maximumFractionDigits}f`
+      ? `.${maximumFractionDigits}r`
       : '.2r';
   //const predText = predLabel ? ` <i>(${predLabel})</i>` : '';
-
   const out: Partial<Plotly.PlotData> = {
     /*
     hovertemplate: `${name}<br />` +

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import type { DatasetComponentOption } from 'echarts/components';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useFormatter } from 'next-intl';
 import styled, { useTheme } from 'styled-components';
 
 import {
@@ -48,6 +48,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   const { indicatorId } = props;
   const theme = useTheme();
   const t = useTranslations();
+  const format = useFormatter();
   const plan = usePlan();
   const { loading, error, data } = useQuery<IndicatorGraphDataQuery>(
     GET_INDICATOR_GRAPH_DATA,
@@ -140,6 +141,9 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
         showMaxLabel: true,
         hideOverlap: false,
         fontSize: 10,
+        formatter: function (value: number) {
+          return format.number(value);
+        },
       },
       data: allYears,
       axisTick: {
@@ -163,7 +167,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
         inside: false,
         fontSize: 10,
         formatter: function (value: number) {
-          return value.toLocaleString();
+          return format.number(value);
         },
         margin: 12,
         align: 'right',
@@ -237,7 +241,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
         params.forEach((param) => {
           const value = param.value[param.dimensionNames[param.encode.y]];
           if (value !== null) {
-            result += `${param.seriesName}: ${value.toLocaleString()} ${
+            result += `${param.seriesName}: ${format.number(value)} ${
               indicator.unit.shortName || indicator.unit.name
             }<br/>`;
           }

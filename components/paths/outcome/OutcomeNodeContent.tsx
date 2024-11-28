@@ -1,16 +1,12 @@
 import { useMemo, useState } from 'react';
 
 import { PathsNodeLink } from 'common/links';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { Nav, NavItem, NavLink, TabContent } from 'reactstrap';
 import styled from 'styled-components';
 
 import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
-import {
-  beautifyValue,
-  getMetricChange,
-  getMetricValue,
-} from '@/common/paths/preprocess';
+import { getMetricChange, getMetricValue } from '@/common/paths/preprocess';
 import Icon from '@/components/common/Icon';
 import DataTable from '@/components/paths/graphs/DataTable';
 import DimensionalNodePlot from '@/components/paths/graphs/DimensionalNodePlot';
@@ -135,6 +131,7 @@ const OutcomeNodeContent = ({
   separateYears,
 }: OutcomeNodeContentProps) => {
   const t = useTranslations();
+  const format = useFormatter();
   const [activeTabId, setActiveTabId] = useState('graph');
   const paths = usePaths();
   const activeGoal = useReactiveVar(activeGoalVar);
@@ -244,7 +241,7 @@ const OutcomeNodeContent = ({
                 className="figure"
                 displayValue={
                   '' +
-                  beautifyValue(nodesTotal, undefined, maximumFractionDigits)
+                  format.number(nodesTotal, { maximumSignificantDigits: 2 })
                 }
                 header={`${
                   isForecast

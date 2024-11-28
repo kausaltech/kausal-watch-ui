@@ -3,11 +3,10 @@ import { useEffect, useMemo, useState } from 'react';
 import chroma from 'chroma-js';
 import type { DimensionalNodeMetricFragment } from 'common/__generated__/paths/graphql';
 import { isEqual } from 'lodash';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import styled, { useTheme } from 'styled-components';
 
-import { beautifyValue } from '@/common/paths/preprocess';
 import { activeGoalVar } from '@/context/paths/cache';
 //import type { InstanceGoal } from 'common/instance';
 import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';
@@ -39,6 +38,7 @@ const DimensionalPieGraph = ({
   colorChange: colorChangeProp = 0,
 }: DimensionalPieGraphProps) => {
   const t = useTranslations();
+  const format = useFormatter();
   const theme = useTheme();
   const activeGoal = useReactiveVar(activeGoalVar);
   const cube = useMemo(() => new DimensionalMetric(metric), [metric]);
@@ -156,7 +156,8 @@ const DimensionalPieGraph = ({
         pieSegmentColors.push(chroma(segmentColor).brighten(colorChange).hex());
         pieSegmentHovers.push(
           `${yearData.allLabels.find((l) => l.id === rowId)?.label}, ${
-            datum && beautifyValue(Math.abs(datum), 2)
+            datum &&
+            format.number(Math.abs(datum), { maximumSignificantDigits: 2 })
           } ${datum && metric.unit.htmlShort}` || ''
         );
       }
@@ -170,7 +171,9 @@ const DimensionalPieGraph = ({
         return numSum + numValue;
       }, 0) || 0;
     const percentages = pieSegmentValues.map((value) =>
-      value ? beautifyValue((value / total) * 100) : null
+      value
+        ? format.number((value / total) * 100, { maximumSignificantDigits: 2 })
+        : null
     );
 
     // Create new labels with percentages
@@ -189,7 +192,9 @@ const DimensionalPieGraph = ({
               color: theme.graphColors.grey050,
             },
             showarrow: false,
-            text: `<b>${beautifyValue(total, 2)}</b>`,
+            text: `<b>${format.number(total, {
+              maximumSignificantDigits: 2,
+            })}</b>`,
             x: 0.5,
             y: 0.5,
           },

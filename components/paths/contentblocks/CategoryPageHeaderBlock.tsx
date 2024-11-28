@@ -21,6 +21,7 @@ import PathsActionNode from '@/utils/paths/PathsActionNode';
 import { gql, NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 
 import HighlightValue from '../HighlightValue';
+import { useTranslations } from 'next-intl';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -186,6 +187,7 @@ type PathsActionNodeContentProps = {
 
 const PathsActionNodeContent = (props: PathsActionNodeContentProps) => {
   const { node, refetching } = props;
+  const t = useTranslations();
   const yearRange = useReactiveVar(yearRangeVar);
 
   const pathsAction = new PathsActionNode(node);
@@ -202,7 +204,7 @@ const PathsActionNodeContent = (props: PathsActionNodeContentProps) => {
           size="lg"
           muted={refetching || !pathsAction.isEnabled()}
           mutedReason={
-            !pathsAction.isEnabled() ? 'Not included in scenario' : ''
+            !pathsAction.isEnabled() ? t('action-not-included-in-scenario') : ''
           }
         />
       </div>
