@@ -123,7 +123,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
 
   const paths = usePaths();
   const t = useTranslations();
-  const pathsInstance = paths?.instance.id;
+  const pathsInstance = paths?.instance;
   const sortOptions = getSortOptions(t);
 
   const groups = useMemo(
