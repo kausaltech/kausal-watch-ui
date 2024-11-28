@@ -127,12 +127,14 @@ const CategoryCard = (props: CategoryCardProps) => {
         </CardHeaderBlock>
         <CardDataBlock>
           {category.kausalPathsNodeUuid && pathsInstance?.id && (
-            <PathsNodeSummary
-              categoryId={category.id}
-              node={category.kausalPathsNodeUuid}
-              pathsInstance={pathsInstance}
-              onLoaded={onLoaded}
-            />
+            <CardContentBlock>
+              <PathsNodeSummary
+                categoryId={category.id}
+                node={category.kausalPathsNodeUuid}
+                pathsInstance={pathsInstance}
+                onLoaded={onLoaded}
+              />
+            </CardContentBlock>
           )}
           <CardContentBlock>
             {mainGoalValue && (
