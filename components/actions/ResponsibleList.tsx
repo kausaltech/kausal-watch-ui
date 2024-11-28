@@ -1,13 +1,15 @@
 import React from 'react';
-import styled from 'styled-components';
+
 import { OrganizationLink } from 'common/links';
 import { slugify } from 'common/utils';
 import BadgeTooltip, {
   BadgeTooltipProps,
 } from 'components/common/BadgeTooltip';
-import { ActionContentAction } from './ActionContent';
 import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
+import styled from 'styled-components';
+
+import { ActionContentAction } from './ActionContent';
 
 const Responsibles = styled.div`
   a {
@@ -82,7 +84,7 @@ function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
             ariaLabel={ariaLabel}
             content={org.abbreviation || org.name}
             size={size}
-            color="brandDark"
+            color="badgeColor"
             isLink
           />
         </a>
