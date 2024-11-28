@@ -22,6 +22,8 @@ import { gql, NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 
 import HighlightValue from '../HighlightValue';
 import { useTranslations } from 'next-intl';
+import InventoryNodeSummary from '../InventoryNodeSummary';
+import PathsNodeSummary from '../PathsNodeSummary';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -218,8 +220,7 @@ const PathsActionNodeContent = (props: PathsActionNodeContentProps) => {
 };
 
 const PathsNodeContent = (props) => {
-  const { categoryId, node, paths } = props;
-  console.log('getting paths node content');
+  const { categoryId, node, pathsInstance } = props;
   const activeGoal = useReactiveVar(activeGoalVar);
 
   const { data, loading, error, networkStatus } = useQuery(GET_NODE_CONTENT, {
@@ -228,7 +229,7 @@ const PathsNodeContent = (props) => {
     notifyOnNetworkStatusChange: true,
     context: {
       uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: paths }),
+      headers: getHttpHeaders({ instanceIdentifier: pathsInstance.id }),
     },
   });
   const refetching = networkStatus === NetworkStatus.refetch;
@@ -246,11 +247,12 @@ const PathsNodeContent = (props) => {
       );
     } else if (data.node.__typename) {
       return (
-        <PathsBasicNodeContent
+        <InventoryNodeSummary
           categoryId={categoryId}
           node={data.node}
-          pathsInstance={paths}
+          pathsInstance={pathsInstance}
           refetching={refetching}
+          displayGoals={false}
         />
       );
     }
@@ -270,6 +272,7 @@ interface Props {
 function CategoryPageHeaderBlock(props: Props) {
   const { title, identifier, lead, pathsNodeId, page } = props;
   const paths = usePaths();
+  const pathsInstance = paths?.instance;
   const headerImage = page.category?.image || page.category?.parent?.image;
 
   const breadcrumbs = page.category?.parent
@@ -315,11 +318,11 @@ function CategoryPageHeaderBlock(props: Props) {
             {identifier && <Identifier>{identifier}.</Identifier>} {title}
           </h1>
           {lead && <p>{lead}</p>}
-          {pathsNodeId && paths && (
-            <PathsNodeContent
+          {pathsNodeId && pathsInstance?.id && (
+            <PathsNodeSummary
               categoryId={identifier}
               node={pathsNodeId}
-              paths={paths.instance.id}
+              pathsInstance={pathsInstance}
             />
           )}
         </CategoryHeader>
