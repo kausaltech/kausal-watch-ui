@@ -171,8 +171,7 @@ const MediumSettings = (props) => {
   const columnSizes = getColumnSizes(hasMultipleGoals);
   const activeGoal = useReactiveVar(activeGoalVar);
   // TODO: This is a hack. We should get this from the backend.
-  const goalHasSeparateYears =
-    activeGoal?.dimensions[0].groups[0] === 'indirect' ? true : false;
+  const goalHasSeparateYears = activeGoal?.separateYears;
 
   return (
     <Container fluid="xl">
