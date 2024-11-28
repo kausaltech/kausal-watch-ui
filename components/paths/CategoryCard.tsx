@@ -9,9 +9,9 @@ import {
   CausalGridNodeFragment,
 } from 'common/__generated__/paths/graphql';
 import { Link } from 'common/links';
-import { beautifyValue } from 'common/paths/preprocess';
+
 import ActionParameters from 'components/paths/ActionParameters';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
 import ContentLoader from 'react-content-loader';
 import styled, { useTheme } from 'styled-components';
@@ -176,6 +176,7 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
   const { categoryId, node, onLoaded } = props;
   const yearRange = useReactiveVar(yearRangeVar);
   const activeGoal = useReactiveVar(activeGoalVar);
+  const format = useFormatter();
   //const [sliceConfig, setSliceConfig] = useState<SliceConfig>(null);
 
   const [emissions, setEmissions] = useState<Emissions>({
@@ -270,7 +271,13 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
         {emissions.total.latest.value ? (
           <SubValue>
             <HighlightValue
-              displayValue={beautifyValue(emissions.total.latest.value) || ''}
+              displayValue={
+                emissions.total.latest.value
+                  ? format.number(emissions.total.latest.value, {
+                      maximumSignificantDigits: 2,
+                    })
+                  : ''
+              }
               header={`${emissions.total.latest.label} (${emissions.total.latest.year})`}
               unit={unit || ''}
               size="md"
@@ -278,7 +285,10 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
                 emissions.total.latest.change != null
                   ? `${
                       emissions.total.latest.change > 0 ? '+' : ''
-                    }${beautifyValue(emissions.total.latest.change * 100)}%`
+                    }${format.number(emissions.total.latest.change * 100, {
+                      style: 'unit',
+                      unit: 'percent',
+                    })}`
                   : undefined
               }
             />
@@ -288,7 +298,11 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
           <SubValue>
             <HighlightValue
               displayValue={
-                beautifyValue(emissions.total.reference.value) || ''
+                emissions.total.reference.value
+                  ? format.number(emissions.total.reference.value, {
+                      maximumSignificantDigits: 2,
+                    })
+                  : ''
               }
               header={`${emissions.total.reference.label} (${emissions.total.reference.year})`}
               unit={unit || ''}
@@ -297,7 +311,10 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
                 emissions.total.reference.change != null
                   ? `${
                       emissions.total.reference.change > 0 ? '+' : ''
-                    }${beautifyValue(emissions.total.reference.change * 100)}%`
+                    }${format.number(emissions.total.reference.change * 100, {
+                      style: 'unit',
+                      unit: 'percent',
+                    })}`
                   : undefined
               }
             />
@@ -318,7 +335,7 @@ type PathsActionNodeContentProps = {
 const PathsActionNodeContent = (props: PathsActionNodeContentProps) => {
   const { categoryId, node, refetching = false, onLoaded } = props;
   const t = useTranslations();
-
+  const format = useFormatter();
   const yearRange = useReactiveVar(yearRangeVar);
   const pathsAction = new PathsActionNode(node);
   const impact = pathsAction.getYearlyImpact(yearRange[1]) || 0;
@@ -334,13 +351,19 @@ const PathsActionNodeContent = (props: PathsActionNodeContentProps) => {
       <Values>
         <SubValue>
           <HighlightValue
-            displayValue={pathsAction.isEnabled() ? beautifyValue(impact) : '-'}
+            displayValue={
+              pathsAction.isEnabled()
+                ? format.number(impact, { maximumSignificantDigits: 2 })
+                : '-'
+            }
             header={`${t('impact')} ${yearRange[1]}`}
             unit={pathsAction.getUnit() || ''}
             size="md"
             muted={refetching || !pathsAction.isEnabled()}
             mutedReason={
-              !pathsAction.isEnabled() ? 'Not included in scenario' : ''
+              !pathsAction.isEnabled()
+                ? t('action-not-included-in-scenario')
+                : ''
             }
           />
         </SubValue>
@@ -429,7 +452,6 @@ const CategoryCard = (props: CategoryCardProps) => {
     ? flattenHTML(mainGoalValue)
     : null;
 
-  console.log('category indicators', category?.indicators);
   return (
     <Card>
       {group && (
