@@ -179,6 +179,7 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
   const format = useFormatter();
   //const [sliceConfig, setSliceConfig] = useState<SliceConfig>(null);
 
+  const hideForecast = activeGoal?.hideForecast;
   const [emissions, setEmissions] = useState<Emissions>({
     total: {
       latest: {
@@ -230,7 +231,9 @@ const PathsBasicNodeContent = (props: PathsBasicNodeContentProps) => {
       )?.label;
 
       const latestValue = getTotalValues(latestData)[0];
-      const referenceValue = getTotalValues(referenceData)[0];
+      const referenceValue = hideForecast
+        ? null
+        : getTotalValues(referenceData)[0];
 
       setEmissions({
         total: {
@@ -339,15 +342,18 @@ const PathsActionNodeContent = (props: PathsActionNodeContentProps) => {
   const t = useTranslations();
   const format = useFormatter();
   const yearRange = useReactiveVar(yearRangeVar);
+  const activeGoal = useReactiveVar(activeGoalVar);
   const pathsAction = new PathsActionNode(node);
   const impact = pathsAction.getYearlyImpact(yearRange[1]) || 0;
 
+  const hideForecast = activeGoal?.hideForecast;
   useEffect(() => {
     onLoaded(categoryId, impact);
     // Using exhaustive deps here causes an infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yearRange[1]]);
 
+  if (hideForecast) return <CardContentBlock>-</CardContentBlock>;
   return (
     <CardContentBlock>
       <Values>

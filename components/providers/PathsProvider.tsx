@@ -10,7 +10,6 @@ type Props = {
 };
 
 export default function PathsProvider({ instance, children }: Props) {
-  console.log('Paths instance', instance);
   const pathsInstance = instance?.instance;
   const pathsAvailableNormalizations = instance?.availableNormalizations;
   const pathsParameters = instance?.parameters;
@@ -22,9 +21,15 @@ export default function PathsProvider({ instance, children }: Props) {
       goal.id === 'net_emissions/emission_scope:indirect'
         ? [1990, 2010, 2015, 2020, 2022, 2023]
         : null;
+    const colorAdjust =
+      goal.id === 'net_emissions/emission_scope:indirect' ? 1.75 : 0;
+    const hideForecast =
+      goal.id === 'net_emissions/emission_scope:indirect' ? true : false;
     return {
       ...goal,
       separateYears,
+      colorAdjust,
+      hideForecast,
     };
   });
 
@@ -34,6 +39,8 @@ export default function PathsProvider({ instance, children }: Props) {
     parameters: pathsParameters,
     scenarios: pathsScenarios,
   };
+
+  console.log('Augmented Paths instance', augmentedInstance);
   return (
     <PathsContext.Provider value={augmentedInstance}>
       {children}

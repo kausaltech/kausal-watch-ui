@@ -38,11 +38,6 @@ const getSortOptions = (t: TFunction): SortActionsConfig[] => [
     label: t('actions-sort-default'),
     sortKey: 'order',
   },
-  {
-    key: 'IMPACT',
-    label: t('actions-sort-impact'),
-    sortKey: 'impact',
-  },
 ];
 
 const HeaderSection = styled.div`
@@ -206,31 +201,33 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
         </Container>
       </HeaderSection>
       <Container>
-        <Row>
-          <Col xs={{ size: 6, offset: 6 }} md={{ size: 2, offset: 10 }}>
-            <FormGroup>
-              <Label for="sort">{t('actions-sort-by')}</Label>
-              <Input
-                id="sort"
-                name="select"
-                type="select"
-                onChange={(e) =>
-                  handleChangeSort(e.target.value as SortActionsConfig['key'])
-                }
-                defaultValue={sortBy.key}
-              >
-                {sortOptions.map(
-                  (sortOption) =>
-                    !sortOption.isHidden && (
-                      <option key={sortOption.key} value={sortOption.key}>
-                        {sortOption.label}
-                      </option>
-                    )
-                )}
-              </Input>
-            </FormGroup>
-          </Col>
-        </Row>
+        {sortOptions.length > 1 && (
+          <Row>
+            <Col xs={{ size: 6, offset: 6 }} md={{ size: 2, offset: 10 }}>
+              <FormGroup>
+                <Label for="sort">{t('actions-sort-by')}</Label>
+                <Input
+                  id="sort"
+                  name="select"
+                  type="select"
+                  onChange={(e) =>
+                    handleChangeSort(e.target.value as SortActionsConfig['key'])
+                  }
+                  defaultValue={sortBy.key}
+                >
+                  {sortOptions.map(
+                    (sortOption) =>
+                      !sortOption.isHidden && (
+                        <option key={sortOption.key} value={sortOption.key}>
+                          {sortOption.label}
+                        </option>
+                      )
+                  )}
+                </Input>
+              </FormGroup>
+            </Col>
+          </Row>
+        )}
         {groups?.map((group) => (
           <Row key={group?.id}>
             {group?.id !== 'all' && (
