@@ -4,6 +4,8 @@
   "actions": "Massnahmen",
   "actions-available": "Massnahmen in Szenario",
   "actions-influencing-this": "Für die Abschätzung der zukünftigen {sector} berücksichtigte Massnahmenpakete",
+  "action-enabled-description": "Soll das Massnahmenpaket im Szenario berücksichtigt werden?",
+  "action-not-included-in-scenario": "Nicht im Szenario berücksichtigt",
   "plot-action-impact": "Massnahmenauswirkungen",
   "plot-without-action": "Ohne diese Massnahme",
   "table-action-impact": "Auswirkung der Massnahme",
@@ -17,5 +19,7 @@
   "outcome-sub-nodes-secondary": "Emissionsquellen",
   "table-unit": "Masseinheit",
   "tco2-e-inhabitant": "t CO<sub>2</sub>-Äquivalente/Einw./a",
-  "ktco2-e": "kt CO<sub>2</sub>-Äquivalente/a"
+  "ktco2-e": "kt CO<sub>2</sub>-Äquivalente/a",
+  "nav-menu-open": " Navigation öffnen",
+  "nav-menu-close": " Navigation schliessen"
 }
