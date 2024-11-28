@@ -141,9 +141,6 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
         showMaxLabel: true,
         hideOverlap: false,
         fontSize: 10,
-        formatter: function (value: number) {
-          return format.number(value);
-        },
       },
       data: allYears,
       axisTick: {
@@ -241,9 +238,9 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
         params.forEach((param) => {
           const value = param.value[param.dimensionNames[param.encode.y]];
           if (value !== null) {
-            result += `${param.seriesName}: ${format.number(value)} ${
-              indicator.unit.shortName || indicator.unit.name
-            }<br/>`;
+            result += `${param.seriesName}: ${format.number(value, {
+              maximumSignificantDigits: 2,
+            })} ${indicator.unit.shortName || indicator.unit.name}<br/>`;
           }
         });
         return result;
