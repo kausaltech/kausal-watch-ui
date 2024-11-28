@@ -66,31 +66,27 @@ const ActionNodeSummary = (props: PathsActionNodeContentProps) => {
 
   if (hideForecast) return <CardContentBlock>-</CardContentBlock>;
   return (
-    <CardContentBlock>
-      <Values>
-        <SubValue>
-          <HighlightValue
-            displayValue={
-              pathsAction.isEnabled()
-                ? format.number(impact, { maximumSignificantDigits: 2 })
-                : '-'
-            }
-            header={`${t('impact')} ${yearRange[1]}`}
-            unit={pathsAction.getUnit() || ''}
-            size="md"
-            muted={refetching || !pathsAction.isEnabled()}
-            mutedReason={
-              !pathsAction.isEnabled()
-                ? t('action-not-included-in-scenario')
-                : ''
-            }
-          />
-        </SubValue>
-        <ParametersWrapper>
-          <ActionParameters parameters={node.parameters} />
-        </ParametersWrapper>
-      </Values>
-    </CardContentBlock>
+    <Values>
+      <SubValue>
+        <HighlightValue
+          displayValue={
+            pathsAction.isEnabled()
+              ? format.number(impact, { maximumSignificantDigits: 2 })
+              : '-'
+          }
+          header={`${t('impact')} ${yearRange[1]}`}
+          unit={pathsAction.getUnit() || ''}
+          size="md"
+          muted={refetching || !pathsAction.isEnabled()}
+          mutedReason={
+            !pathsAction.isEnabled() ? t('action-not-included-in-scenario') : ''
+          }
+        />
+      </SubValue>
+      <ParametersWrapper>
+        <ActionParameters parameters={node.parameters} />
+      </ParametersWrapper>
+    </Values>
   );
 };
 
