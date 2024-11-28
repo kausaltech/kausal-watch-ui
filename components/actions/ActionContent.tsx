@@ -432,10 +432,12 @@ function ActionContentProgressContainer({
 
   return (
     <>
-      <StyledProgressHeaderContainer>
-        <PrimaryHeaderInline>{t('action-progress')}</PrimaryHeaderInline>
-        {isBadgeVisible && <StatusBadge {...commonStatusBadgeProps} />}
-      </StyledProgressHeaderContainer>
+      {(!!action.implementationPhase || isBadgeVisible) && (
+        <StyledProgressHeaderContainer>
+          <PrimaryHeaderInline>{t('action-progress')}</PrimaryHeaderInline>
+          {isBadgeVisible && <StatusBadge {...commonStatusBadgeProps} />}
+        </StyledProgressHeaderContainer>
+      )}
 
       {!!action.implementationPhase && (
         <StyledProgressCard>
