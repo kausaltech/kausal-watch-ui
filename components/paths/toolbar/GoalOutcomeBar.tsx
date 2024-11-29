@@ -190,7 +190,7 @@ const outcomeAsText = (
 ) => {
   if (isForecast)
     return t.markup('outcome-bar-summary-forecast', {
-      scenarioName: 'sfsdfsd',
+      scenarioName: scenarioName,
       goalType: goalType,
       selectedYear: selectedYear,
       selectedYearValue: selectedYearValue,
