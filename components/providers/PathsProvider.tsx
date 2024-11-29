@@ -33,14 +33,15 @@ export default function PathsProvider({ instance, children }: Props) {
     };
   });
 
-  const augmentedInstance = {
-    instance: { ...pathsInstance, goals: instanceGoals },
-    availableNormalizations: pathsAvailableNormalizations,
-    parameters: pathsParameters,
-    scenarios: pathsScenarios,
-  };
+  const augmentedInstance = instance
+    ? {
+        instance: { ...pathsInstance, goals: instanceGoals },
+        availableNormalizations: pathsAvailableNormalizations,
+        parameters: pathsParameters,
+        scenarios: pathsScenarios,
+      }
+    : undefined;
 
-  console.log('Augmented Paths instance', augmentedInstance);
   return (
     <PathsContext.Provider value={augmentedInstance}>
       {children}
