@@ -4901,7 +4901,19 @@ export type GetActionListQuery = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null, iconImage?: (
+      ) | null, indicators: Array<(
+        { id: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -4943,7 +4955,19 @@ export type GetActionListQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -4984,7 +5008,19 @@ export type GetActionListQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -5025,7 +5061,19 @@ export type GetActionListQuery = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -5171,7 +5219,19 @@ export type GetActionListForBlockQuery = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null, iconImage?: (
+      ) | null, indicators: Array<(
+        { id: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -5213,7 +5273,19 @@ export type GetActionListForBlockQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -5254,7 +5326,19 @@ export type GetActionListForBlockQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -5295,7 +5379,19 @@ export type GetActionListForBlockQuery = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -6376,7 +6472,19 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
         & { __typename?: 'ImageRendition' }
       ) | null }
       & { __typename?: 'Image' }
-    ) | null, iconImage?: (
+    ) | null, indicators: Array<(
+      { id: string, values?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> | null, goals?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    )>, iconImage?: (
       { rendition?: (
         { src: string }
         & { __typename?: 'ImageRendition' }
@@ -6418,7 +6526,19 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -6459,7 +6579,19 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -6500,7 +6632,19 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null, iconImage?: (
+      ) | null, indicators: Array<(
+        { id: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -6613,7 +6757,19 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
         & { __typename?: 'ImageRendition' }
       ) | null }
       & { __typename?: 'Image' }
-    ) | null, iconImage?: (
+    ) | null, indicators: Array<(
+      { id: string, values?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> | null, goals?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    )>, iconImage?: (
       { rendition?: (
         { src: string }
         & { __typename?: 'ImageRendition' }
@@ -6655,7 +6811,19 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -6696,7 +6864,19 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -6737,7 +6917,19 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null, iconImage?: (
+      ) | null, indicators: Array<(
+        { id: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -6848,7 +7040,19 @@ export type ActionCardFragment = (
         & { __typename?: 'ImageRendition' }
       ) | null }
       & { __typename?: 'Image' }
-    ) | null, iconImage?: (
+    ) | null, indicators: Array<(
+      { id: string, values?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> | null, goals?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    )>, iconImage?: (
       { rendition?: (
         { src: string }
         & { __typename?: 'ImageRendition' }
@@ -6890,7 +7094,19 @@ export type ActionCardFragment = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -6931,7 +7147,19 @@ export type ActionCardFragment = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -6972,7 +7200,19 @@ export type ActionCardFragment = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null, iconImage?: (
+      ) | null, indicators: Array<(
+        { id: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -7238,7 +7478,19 @@ export type CategoryFragmentFragment = (
       & { __typename?: 'ImageRendition' }
     ) | null }
     & { __typename?: 'Image' }
-  ) | null, iconImage?: (
+  ) | null, indicators: Array<(
+    { id: string, values?: Array<(
+      { date?: string | null, value: number }
+      & { __typename?: 'IndicatorValue' }
+    ) | null> | null, goals?: Array<(
+      { date?: string | null, value: number }
+      & { __typename?: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) }
+    & { __typename?: 'Indicator' }
+  )>, iconImage?: (
     { rendition?: (
       { src: string }
       & { __typename?: 'ImageRendition' }
@@ -7285,7 +7537,19 @@ export type CategoryWithParentsFragmentFragment = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -7326,7 +7590,19 @@ export type CategoryWithParentsFragmentFragment = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null, iconImage?: (
+      ) | null, indicators: Array<(
+        { id: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -7367,7 +7643,19 @@ export type CategoryWithParentsFragmentFragment = (
         & { __typename?: 'ImageRendition' }
       ) | null }
       & { __typename?: 'Image' }
-    ) | null, iconImage?: (
+    ) | null, indicators: Array<(
+      { id: string, values?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> | null, goals?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    )>, iconImage?: (
       { rendition?: (
         { src: string }
         & { __typename?: 'ImageRendition' }
@@ -7413,7 +7701,19 @@ export type CategoryRecursiveFragmentFragment = (
       & { __typename?: 'ImageRendition' }
     ) | null }
     & { __typename?: 'Image' }
-  ) | null, iconImage?: (
+  ) | null, indicators: Array<(
+    { id: string, values?: Array<(
+      { date?: string | null, value: number }
+      & { __typename?: 'IndicatorValue' }
+    ) | null> | null, goals?: Array<(
+      { date?: string | null, value: number }
+      & { __typename?: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName?: string | null }
+      & { __typename?: 'Unit' }
+    ) }
+    & { __typename?: 'Indicator' }
+  )>, iconImage?: (
     { rendition?: (
       { src: string }
       & { __typename?: 'ImageRendition' }
@@ -7455,7 +7755,19 @@ export type CategoryRecursiveFragmentFragment = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -7496,7 +7808,19 @@ export type CategoryRecursiveFragmentFragment = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null, iconImage?: (
+      ) | null, indicators: Array<(
+        { id: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -7537,7 +7861,19 @@ export type CategoryRecursiveFragmentFragment = (
         & { __typename?: 'ImageRendition' }
       ) | null }
       & { __typename?: 'Image' }
-    ) | null, iconImage?: (
+    ) | null, indicators: Array<(
+      { id: string, values?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> | null, goals?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    )>, iconImage?: (
       { rendition?: (
         { src: string }
         & { __typename?: 'ImageRendition' }
@@ -7709,7 +8045,19 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null, iconImage?: (
+      ) | null, indicators: Array<(
+        { id: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -7751,7 +8099,19 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -7792,7 +8152,19 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -7833,7 +8205,19 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -7880,7 +8264,19 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null, iconImage?: (
+      ) | null, indicators: Array<(
+        { id: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -7930,7 +8326,16 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
   ) | null, categoryBlockType: (
     { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
       { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
-        { id: string, name: string }
+        { id: string, name: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
         & { __typename?: 'Indicator' }
       )>, level?: (
         { id: string, name: string, namePlural?: string | null }
@@ -7995,7 +8400,19 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -8036,7 +8453,19 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -8077,7 +8506,19 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -8346,7 +8787,19 @@ export type GetActionDetailsQuery = (
           & { __typename?: 'ImageRendition' }
         ) | null }
         & { __typename?: 'Image' }
-      ) | null, iconImage?: (
+      ) | null, indicators: Array<(
+        { id: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -8388,7 +8841,19 @@ export type GetActionDetailsQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -8429,7 +8894,19 @@ export type GetActionDetailsQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -8470,7 +8947,19 @@ export type GetActionDetailsQuery = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -8593,7 +9082,19 @@ export type GetActionDetailsQuery = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -8635,7 +9136,19 @@ export type GetActionDetailsQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -8676,7 +9189,19 @@ export type GetActionDetailsQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -8717,7 +9242,19 @@ export type GetActionDetailsQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -8815,7 +9352,19 @@ export type GetActionDetailsQuery = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -8857,7 +9406,19 @@ export type GetActionDetailsQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -8898,7 +9459,19 @@ export type GetActionDetailsQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -8939,7 +9512,19 @@ export type GetActionDetailsQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -9031,7 +9616,19 @@ export type GetActionDetailsQuery = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -9073,7 +9670,19 @@ export type GetActionDetailsQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -9114,7 +9723,19 @@ export type GetActionDetailsQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -9155,7 +9776,19 @@ export type GetActionDetailsQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -9238,7 +9871,19 @@ export type GetActionDetailsQuery = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -9280,7 +9925,19 @@ export type GetActionDetailsQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -9321,7 +9978,19 @@ export type GetActionDetailsQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -9362,7 +10031,19 @@ export type GetActionDetailsQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -9497,7 +10178,19 @@ export type GetActionDetailsQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -9539,7 +10232,19 @@ export type GetActionDetailsQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -9580,7 +10285,19 @@ export type GetActionDetailsQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -9621,7 +10338,19 @@ export type GetActionDetailsQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -9713,7 +10442,19 @@ export type GetActionDetailsQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -9755,7 +10496,19 @@ export type GetActionDetailsQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -9796,7 +10549,19 @@ export type GetActionDetailsQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -9837,7 +10602,19 @@ export type GetActionDetailsQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -10020,7 +10797,19 @@ export type GetActionDetailsQuery = (
                       & { __typename?: 'ImageRendition' }
                     ) | null }
                     & { __typename?: 'Image' }
-                  ) | null, iconImage?: (
+                  ) | null, indicators: Array<(
+                    { id: string, values?: Array<(
+                      { date?: string | null, value: number }
+                      & { __typename?: 'IndicatorValue' }
+                    ) | null> | null, goals?: Array<(
+                      { date?: string | null, value: number }
+                      & { __typename?: 'IndicatorGoal' }
+                    ) | null> | null, unit: (
+                      { name: string, shortName?: string | null }
+                      & { __typename?: 'Unit' }
+                    ) }
+                    & { __typename?: 'Indicator' }
+                  )>, iconImage?: (
                     { rendition?: (
                       { src: string }
                       & { __typename?: 'ImageRendition' }
@@ -10062,7 +10851,19 @@ export type GetActionDetailsQuery = (
                             & { __typename?: 'ImageRendition' }
                           ) | null }
                           & { __typename?: 'Image' }
-                        ) | null, iconImage?: (
+                        ) | null, indicators: Array<(
+                          { id: string, values?: Array<(
+                            { date?: string | null, value: number }
+                            & { __typename?: 'IndicatorValue' }
+                          ) | null> | null, goals?: Array<(
+                            { date?: string | null, value: number }
+                            & { __typename?: 'IndicatorGoal' }
+                          ) | null> | null, unit: (
+                            { name: string, shortName?: string | null }
+                            & { __typename?: 'Unit' }
+                          ) }
+                          & { __typename?: 'Indicator' }
+                        )>, iconImage?: (
                           { rendition?: (
                             { src: string }
                             & { __typename?: 'ImageRendition' }
@@ -10103,7 +10904,19 @@ export type GetActionDetailsQuery = (
                           & { __typename?: 'ImageRendition' }
                         ) | null }
                         & { __typename?: 'Image' }
-                      ) | null, iconImage?: (
+                      ) | null, indicators: Array<(
+                        { id: string, values?: Array<(
+                          { date?: string | null, value: number }
+                          & { __typename?: 'IndicatorValue' }
+                        ) | null> | null, goals?: Array<(
+                          { date?: string | null, value: number }
+                          & { __typename?: 'IndicatorGoal' }
+                        ) | null> | null, unit: (
+                          { name: string, shortName?: string | null }
+                          & { __typename?: 'Unit' }
+                        ) }
+                        & { __typename?: 'Indicator' }
+                      )>, iconImage?: (
                         { rendition?: (
                           { src: string }
                           & { __typename?: 'ImageRendition' }
@@ -10144,7 +10957,19 @@ export type GetActionDetailsQuery = (
                         & { __typename?: 'ImageRendition' }
                       ) | null }
                       & { __typename?: 'Image' }
-                    ) | null, iconImage?: (
+                    ) | null, indicators: Array<(
+                      { id: string, values?: Array<(
+                        { date?: string | null, value: number }
+                        & { __typename?: 'IndicatorValue' }
+                      ) | null> | null, goals?: Array<(
+                        { date?: string | null, value: number }
+                        & { __typename?: 'IndicatorGoal' }
+                      ) | null> | null, unit: (
+                        { name: string, shortName?: string | null }
+                        & { __typename?: 'Unit' }
+                      ) }
+                      & { __typename?: 'Indicator' }
+                    )>, iconImage?: (
                       { rendition?: (
                         { src: string }
                         & { __typename?: 'ImageRendition' }
@@ -10280,7 +11105,19 @@ export type GetActionDetailsQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -10322,7 +11159,19 @@ export type GetActionDetailsQuery = (
                           & { __typename?: 'ImageRendition' }
                         ) | null }
                         & { __typename?: 'Image' }
-                      ) | null, iconImage?: (
+                      ) | null, indicators: Array<(
+                        { id: string, values?: Array<(
+                          { date?: string | null, value: number }
+                          & { __typename?: 'IndicatorValue' }
+                        ) | null> | null, goals?: Array<(
+                          { date?: string | null, value: number }
+                          & { __typename?: 'IndicatorGoal' }
+                        ) | null> | null, unit: (
+                          { name: string, shortName?: string | null }
+                          & { __typename?: 'Unit' }
+                        ) }
+                        & { __typename?: 'Indicator' }
+                      )>, iconImage?: (
                         { rendition?: (
                           { src: string }
                           & { __typename?: 'ImageRendition' }
@@ -10363,7 +11212,19 @@ export type GetActionDetailsQuery = (
                         & { __typename?: 'ImageRendition' }
                       ) | null }
                       & { __typename?: 'Image' }
-                    ) | null, iconImage?: (
+                    ) | null, indicators: Array<(
+                      { id: string, values?: Array<(
+                        { date?: string | null, value: number }
+                        & { __typename?: 'IndicatorValue' }
+                      ) | null> | null, goals?: Array<(
+                        { date?: string | null, value: number }
+                        & { __typename?: 'IndicatorGoal' }
+                      ) | null> | null, unit: (
+                        { name: string, shortName?: string | null }
+                        & { __typename?: 'Unit' }
+                      ) }
+                      & { __typename?: 'Indicator' }
+                    )>, iconImage?: (
                       { rendition?: (
                         { src: string }
                         & { __typename?: 'ImageRendition' }
@@ -10404,7 +11265,19 @@ export type GetActionDetailsQuery = (
                       & { __typename?: 'ImageRendition' }
                     ) | null }
                     & { __typename?: 'Image' }
-                  ) | null, iconImage?: (
+                  ) | null, indicators: Array<(
+                    { id: string, values?: Array<(
+                      { date?: string | null, value: number }
+                      & { __typename?: 'IndicatorValue' }
+                    ) | null> | null, goals?: Array<(
+                      { date?: string | null, value: number }
+                      & { __typename?: 'IndicatorGoal' }
+                    ) | null> | null, unit: (
+                      { name: string, shortName?: string | null }
+                      & { __typename?: 'Unit' }
+                    ) }
+                    & { __typename?: 'Indicator' }
+                  )>, iconImage?: (
                     { rendition?: (
                       { src: string }
                       & { __typename?: 'ImageRendition' }
@@ -10602,7 +11475,19 @@ export type GetActionDetailsQuery = (
                       & { __typename?: 'ImageRendition' }
                     ) | null }
                     & { __typename?: 'Image' }
-                  ) | null, iconImage?: (
+                  ) | null, indicators: Array<(
+                    { id: string, values?: Array<(
+                      { date?: string | null, value: number }
+                      & { __typename?: 'IndicatorValue' }
+                    ) | null> | null, goals?: Array<(
+                      { date?: string | null, value: number }
+                      & { __typename?: 'IndicatorGoal' }
+                    ) | null> | null, unit: (
+                      { name: string, shortName?: string | null }
+                      & { __typename?: 'Unit' }
+                    ) }
+                    & { __typename?: 'Indicator' }
+                  )>, iconImage?: (
                     { rendition?: (
                       { src: string }
                       & { __typename?: 'ImageRendition' }
@@ -10644,7 +11529,19 @@ export type GetActionDetailsQuery = (
                             & { __typename?: 'ImageRendition' }
                           ) | null }
                           & { __typename?: 'Image' }
-                        ) | null, iconImage?: (
+                        ) | null, indicators: Array<(
+                          { id: string, values?: Array<(
+                            { date?: string | null, value: number }
+                            & { __typename?: 'IndicatorValue' }
+                          ) | null> | null, goals?: Array<(
+                            { date?: string | null, value: number }
+                            & { __typename?: 'IndicatorGoal' }
+                          ) | null> | null, unit: (
+                            { name: string, shortName?: string | null }
+                            & { __typename?: 'Unit' }
+                          ) }
+                          & { __typename?: 'Indicator' }
+                        )>, iconImage?: (
                           { rendition?: (
                             { src: string }
                             & { __typename?: 'ImageRendition' }
@@ -10685,7 +11582,19 @@ export type GetActionDetailsQuery = (
                           & { __typename?: 'ImageRendition' }
                         ) | null }
                         & { __typename?: 'Image' }
-                      ) | null, iconImage?: (
+                      ) | null, indicators: Array<(
+                        { id: string, values?: Array<(
+                          { date?: string | null, value: number }
+                          & { __typename?: 'IndicatorValue' }
+                        ) | null> | null, goals?: Array<(
+                          { date?: string | null, value: number }
+                          & { __typename?: 'IndicatorGoal' }
+                        ) | null> | null, unit: (
+                          { name: string, shortName?: string | null }
+                          & { __typename?: 'Unit' }
+                        ) }
+                        & { __typename?: 'Indicator' }
+                      )>, iconImage?: (
                         { rendition?: (
                           { src: string }
                           & { __typename?: 'ImageRendition' }
@@ -10726,7 +11635,19 @@ export type GetActionDetailsQuery = (
                         & { __typename?: 'ImageRendition' }
                       ) | null }
                       & { __typename?: 'Image' }
-                    ) | null, iconImage?: (
+                    ) | null, indicators: Array<(
+                      { id: string, values?: Array<(
+                        { date?: string | null, value: number }
+                        & { __typename?: 'IndicatorValue' }
+                      ) | null> | null, goals?: Array<(
+                        { date?: string | null, value: number }
+                        & { __typename?: 'IndicatorGoal' }
+                      ) | null> | null, unit: (
+                        { name: string, shortName?: string | null }
+                        & { __typename?: 'Unit' }
+                      ) }
+                      & { __typename?: 'Indicator' }
+                    )>, iconImage?: (
                       { rendition?: (
                         { src: string }
                         & { __typename?: 'ImageRendition' }
@@ -10862,7 +11783,19 @@ export type GetActionDetailsQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -10904,7 +11837,19 @@ export type GetActionDetailsQuery = (
                           & { __typename?: 'ImageRendition' }
                         ) | null }
                         & { __typename?: 'Image' }
-                      ) | null, iconImage?: (
+                      ) | null, indicators: Array<(
+                        { id: string, values?: Array<(
+                          { date?: string | null, value: number }
+                          & { __typename?: 'IndicatorValue' }
+                        ) | null> | null, goals?: Array<(
+                          { date?: string | null, value: number }
+                          & { __typename?: 'IndicatorGoal' }
+                        ) | null> | null, unit: (
+                          { name: string, shortName?: string | null }
+                          & { __typename?: 'Unit' }
+                        ) }
+                        & { __typename?: 'Indicator' }
+                      )>, iconImage?: (
                         { rendition?: (
                           { src: string }
                           & { __typename?: 'ImageRendition' }
@@ -10945,7 +11890,19 @@ export type GetActionDetailsQuery = (
                         & { __typename?: 'ImageRendition' }
                       ) | null }
                       & { __typename?: 'Image' }
-                    ) | null, iconImage?: (
+                    ) | null, indicators: Array<(
+                      { id: string, values?: Array<(
+                        { date?: string | null, value: number }
+                        & { __typename?: 'IndicatorValue' }
+                      ) | null> | null, goals?: Array<(
+                        { date?: string | null, value: number }
+                        & { __typename?: 'IndicatorGoal' }
+                      ) | null> | null, unit: (
+                        { name: string, shortName?: string | null }
+                        & { __typename?: 'Unit' }
+                      ) }
+                      & { __typename?: 'Indicator' }
+                    )>, iconImage?: (
                       { rendition?: (
                         { src: string }
                         & { __typename?: 'ImageRendition' }
@@ -10986,7 +11943,19 @@ export type GetActionDetailsQuery = (
                       & { __typename?: 'ImageRendition' }
                     ) | null }
                     & { __typename?: 'Image' }
-                  ) | null, iconImage?: (
+                  ) | null, indicators: Array<(
+                    { id: string, values?: Array<(
+                      { date?: string | null, value: number }
+                      & { __typename?: 'IndicatorValue' }
+                    ) | null> | null, goals?: Array<(
+                      { date?: string | null, value: number }
+                      & { __typename?: 'IndicatorGoal' }
+                    ) | null> | null, unit: (
+                      { name: string, shortName?: string | null }
+                      & { __typename?: 'Unit' }
+                    ) }
+                    & { __typename?: 'Indicator' }
+                  )>, iconImage?: (
                     { rendition?: (
                       { src: string }
                       & { __typename?: 'ImageRendition' }
@@ -11163,7 +12132,19 @@ export type ActionDependenciesFragment = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -11205,7 +12186,19 @@ export type ActionDependenciesFragment = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -11246,7 +12239,19 @@ export type ActionDependenciesFragment = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -11287,7 +12292,19 @@ export type ActionDependenciesFragment = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -11379,7 +12396,19 @@ export type ActionDependenciesFragment = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -11421,7 +12450,19 @@ export type ActionDependenciesFragment = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -11462,7 +12503,19 @@ export type ActionDependenciesFragment = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -11503,7 +12556,19 @@ export type ActionDependenciesFragment = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -11741,7 +12806,19 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -11783,7 +12860,19 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                       & { __typename?: 'ImageRendition' }
                     ) | null }
                     & { __typename?: 'Image' }
-                  ) | null, iconImage?: (
+                  ) | null, indicators: Array<(
+                    { id: string, values?: Array<(
+                      { date?: string | null, value: number }
+                      & { __typename?: 'IndicatorValue' }
+                    ) | null> | null, goals?: Array<(
+                      { date?: string | null, value: number }
+                      & { __typename?: 'IndicatorGoal' }
+                    ) | null> | null, unit: (
+                      { name: string, shortName?: string | null }
+                      & { __typename?: 'Unit' }
+                    ) }
+                    & { __typename?: 'Indicator' }
+                  )>, iconImage?: (
                     { rendition?: (
                       { src: string }
                       & { __typename?: 'ImageRendition' }
@@ -11824,7 +12913,19 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -11865,7 +12966,19 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -12013,7 +13126,19 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -12055,7 +13180,19 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -12096,7 +13233,19 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -12137,7 +13286,19 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -12245,7 +13406,19 @@ export type ReportComparisonBlockActionContentFragment = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -12287,7 +13460,19 @@ export type ReportComparisonBlockActionContentFragment = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -12328,7 +13513,19 @@ export type ReportComparisonBlockActionContentFragment = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -12369,7 +13566,19 @@ export type ReportComparisonBlockActionContentFragment = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -12750,7 +13959,19 @@ export type GetContentPageQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -12792,7 +14013,19 @@ export type GetContentPageQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -12833,7 +14066,19 @@ export type GetContentPageQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -12874,7 +14119,19 @@ export type GetContentPageQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -12921,7 +14178,19 @@ export type GetContentPageQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -12967,7 +14236,16 @@ export type GetContentPageQuery = (
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
-            { id: string, name: string }
+            { id: string, name: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
             & { __typename?: 'Indicator' }
           )>, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -13032,7 +14310,19 @@ export type GetContentPageQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -13073,7 +14363,19 @@ export type GetContentPageQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -13114,7 +14416,19 @@ export type GetContentPageQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -13445,7 +14759,19 @@ export type GetContentPageQuery = (
             & { __typename?: 'ImageRendition' }
           ) | null }
           & { __typename?: 'Image' }
-        ) | null, iconImage?: (
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -13569,7 +14895,19 @@ export type GetContentPageQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -13611,7 +14949,19 @@ export type GetContentPageQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -13652,7 +15002,19 @@ export type GetContentPageQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -13693,7 +15055,19 @@ export type GetContentPageQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -13908,7 +15282,19 @@ export type GetContentPageQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -13950,7 +15336,19 @@ export type GetContentPageQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -13991,7 +15389,19 @@ export type GetContentPageQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -14032,7 +15442,19 @@ export type GetContentPageQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -14079,7 +15501,19 @@ export type GetContentPageQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -14125,7 +15559,16 @@ export type GetContentPageQuery = (
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
-            { id: string, name: string }
+            { id: string, name: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
             & { __typename?: 'Indicator' }
           )>, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -14190,7 +15633,19 @@ export type GetContentPageQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -14231,7 +15686,19 @@ export type GetContentPageQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -14272,7 +15739,19 @@ export type GetContentPageQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -14646,7 +16125,19 @@ export type GetContentPageQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -14688,7 +16179,19 @@ export type GetContentPageQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -14729,7 +16232,19 @@ export type GetContentPageQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -14770,7 +16285,19 @@ export type GetContentPageQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -14817,7 +16344,19 @@ export type GetContentPageQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -14863,7 +16402,16 @@ export type GetContentPageQuery = (
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
-            { id: string, name: string }
+            { id: string, name: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
             & { __typename?: 'Indicator' }
           )>, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -14928,7 +16476,19 @@ export type GetContentPageQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -14969,7 +16529,19 @@ export type GetContentPageQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -15010,7 +16582,19 @@ export type GetContentPageQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -15393,7 +16977,19 @@ export type GetHomePageQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -15435,7 +17031,19 @@ export type GetHomePageQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -15476,7 +17084,19 @@ export type GetHomePageQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -15517,7 +17137,19 @@ export type GetHomePageQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
@@ -15564,7 +17196,19 @@ export type GetHomePageQuery = (
               & { __typename?: 'ImageRendition' }
             ) | null }
             & { __typename?: 'Image' }
-          ) | null, iconImage?: (
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -15610,7 +17254,16 @@ export type GetHomePageQuery = (
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
-            { id: string, name: string }
+            { id: string, name: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
             & { __typename?: 'Indicator' }
           )>, level?: (
             { id: string, name: string, namePlural?: string | null }
@@ -15675,7 +17328,19 @@ export type GetHomePageQuery = (
                     & { __typename?: 'ImageRendition' }
                   ) | null }
                   & { __typename?: 'Image' }
-                ) | null, iconImage?: (
+                ) | null, indicators: Array<(
+                  { id: string, values?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorValue' }
+                  ) | null> | null, goals?: Array<(
+                    { date?: string | null, value: number }
+                    & { __typename?: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName?: string | null }
+                    & { __typename?: 'Unit' }
+                  ) }
+                  & { __typename?: 'Indicator' }
+                )>, iconImage?: (
                   { rendition?: (
                     { src: string }
                     & { __typename?: 'ImageRendition' }
@@ -15716,7 +17381,19 @@ export type GetHomePageQuery = (
                   & { __typename?: 'ImageRendition' }
                 ) | null }
                 & { __typename?: 'Image' }
-              ) | null, iconImage?: (
+              ) | null, indicators: Array<(
+                { id: string, values?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorValue' }
+                ) | null> | null, goals?: Array<(
+                  { date?: string | null, value: number }
+                  & { __typename?: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName?: string | null }
+                  & { __typename?: 'Unit' }
+                ) }
+                & { __typename?: 'Indicator' }
+              )>, iconImage?: (
                 { rendition?: (
                   { src: string }
                   & { __typename?: 'ImageRendition' }
@@ -15757,7 +17434,19 @@ export type GetHomePageQuery = (
                 & { __typename?: 'ImageRendition' }
               ) | null }
               & { __typename?: 'Image' }
-            ) | null, iconImage?: (
+            ) | null, indicators: Array<(
+              { id: string, values?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorValue' }
+              ) | null> | null, goals?: Array<(
+                { date?: string | null, value: number }
+                & { __typename?: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName?: string | null }
+                & { __typename?: 'Unit' }
+              ) }
+              & { __typename?: 'Indicator' }
+            )>, iconImage?: (
               { rendition?: (
                 { src: string }
                 & { __typename?: 'ImageRendition' }
