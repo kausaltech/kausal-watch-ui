@@ -17,10 +17,12 @@ import PathsNodeSummary from './PathsNodeSummary';
 const GroupIdentifierHeader = styled.div<{
   $color?: string | null | undefined;
 }>`
-  background-color: ${(props) => props.$color};
-  color: ${(props) => readableColor(props.$color || '#ffffff')};
+  background-color: ${(props) => props.$color || props.theme.themeColors.dark};
+  color: ${(props) =>
+    readableColor(props.$color || props.theme.themeColors.dark)};
   padding: 6px;
   margin-bottom: ${(props) => props.theme.spaces.s100};
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const Card = styled.div`
