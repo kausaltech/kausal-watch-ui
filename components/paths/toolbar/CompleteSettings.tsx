@@ -168,11 +168,6 @@ const CompleteSettings = (props) => {
                     <ScenarioSelector />
                   </Widget>
                   <Widget>
-                    <h5>{t('actions')}</h5>
-                    {/*<ActionsSummary activeScenario={activeScenario} />*/}
-                    (coming soon)
-                  </Widget>
-                  <Widget>
                     {hasGlobalParameters && (
                       <>
                         <h5>Global settings</h5>

@@ -29,6 +29,8 @@ export default class PathsActionNode {
 
   getUnit(): string | null | undefined {
     return (
+      this.data.metricDim?.unit?.htmlShort ||
+      this.data.metricDim?.unit?.short ||
       this.data.unit?.htmlShort ||
       this.data.unit?.htmlLong ||
       this.data.unit?.short ||

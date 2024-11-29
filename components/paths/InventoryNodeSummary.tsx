@@ -69,6 +69,7 @@ type PathsBasicNodeContentProps = {
   node: CausalGridNodeFragment;
   onLoaded: (id: string, impact: number) => void;
   displayGoals: InstanceGoalEntry[];
+  refetching: boolean;
 };
 
 type EmissionDisplay = {
@@ -86,7 +87,7 @@ type Emissions = {
 };
 
 const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
-  const { categoryId, node, onLoaded, displayGoals } = props;
+  const { categoryId, node, onLoaded, displayGoals, refetching } = props;
   const yearRange = useReactiveVar(yearRangeVar);
   const format = useFormatter();
 
@@ -197,7 +198,7 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
     onLoaded(categoryId, 100);
     // using exhausive deps here causes an infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [yearRange[1]]);
+  }, [yearRange[1], refetching]);
 
   return (
     <>

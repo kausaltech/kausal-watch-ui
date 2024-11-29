@@ -101,6 +101,7 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
           node={data.node}
           onLoaded={onLoaded ? onLoaded : () => void 0}
           displayGoals={displayGoals}
+          refetching={refetching}
         />
       );
     }
