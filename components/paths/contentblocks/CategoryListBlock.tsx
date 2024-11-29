@@ -21,7 +21,7 @@ const CategoryListSection = styled.div`
     props.theme.section.categoryList?.color || props.theme.neutralDark};
 `;
 
-const CategoryList = ({ categories, pathsInstance }) => (
+const CategoryList = ({ categories, pathsInstance, group }) => (
   <Row>
     {categories
       ?.filter((cat) => cat?.categoryPage?.live)
@@ -36,10 +36,9 @@ const CategoryList = ({ categories, pathsInstance }) => (
         >
           <CategoryCard
             category={cat}
+            group={group}
             pathsInstance={pathsInstance}
-            onLoaded={(id, impact) => {
-              console.log(`Category ${id} loaded with impact: ${impact}`);
-            }}
+            onLoaded={() => void 0}
           />
         </Col>
       ))}
@@ -49,23 +48,28 @@ const CategoryList = ({ categories, pathsInstance }) => (
 interface CategoryListBlockProps extends CommonContentBlockProps {
   categories?: Array<CategoryFragmentFragment>;
   heading?: string;
-  lead: string;
+  lead?: string | null;
   style?: 'treemap' | 'cards';
+  group?: CategoryFragmentFragment;
 }
 
 const CategoryListBlock = (props: CategoryListBlockProps) => {
   const fallbackCategories = useFallbackCategories();
   const paths = usePaths();
-  const { id = '', categories = fallbackCategories, heading } = props;
+  const { id = '', categories = fallbackCategories, heading, group } = props;
 
-  const pathsInstance = paths?.instance?.id;
+  const pathsInstance = paths?.instance;
 
   return (
     <CategoryListSection id={id}>
       <Container>
         {heading && <h4>{heading}</h4>}
         <Suspense fallback={<div>Loading...</div>}>
-          <CategoryList categories={categories} pathsInstance={pathsInstance} />
+          <CategoryList
+            categories={categories}
+            pathsInstance={pathsInstance}
+            group={group}
+          />
         </Suspense>
       </Container>
     </CategoryListSection>

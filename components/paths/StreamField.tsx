@@ -30,7 +30,7 @@ type StreamFieldBlockProps = {
 function StreamFieldBlock(props: StreamFieldBlockProps) {
   const { id, page, block } = props;
   const { __typename } = block;
-  console.log('rendering', props);
+
   switch (__typename) {
     case 'ActionListBlock': {
       const { categoryFilter, groupByCategoryLevel, heading, helpText } = block;
@@ -48,13 +48,14 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       const { heading, lead, categoryType, category } = block;
       const { category: pageCategory } = page;
       let categories;
-
+      let group: typeof category | undefined = undefined;
       /* If the block specifies a category type, use cats from there.
        * Otherwise, fall back on the containing page's sub-categories.
        * If even that doesn't work, use plan's main categories.
        */
       if (category) {
         categories = category.children;
+        group = category.id === pageCategory.id ? pageCategory : undefined;
       } else if (categoryType) {
         categories = categoryType.categories.filter(
           (cat) => cat.parent == null
@@ -66,6 +67,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         <CategoryListBlock
           id={id}
           categories={categories}
+          group={group}
           heading={heading ?? undefined}
           lead={lead}
         />
@@ -80,7 +82,6 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         groupByCategoryLevel,
         categoryBlockType,
       } = block;
-      console.log('CategoryLevelListBlock', block);
 
       const allPlanCategories = categoryBlockType?.categories;
       const categories = allPlanCategories
