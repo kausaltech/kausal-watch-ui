@@ -163,6 +163,16 @@ function GlobalNav(props) {
 
   const [subNavState, setSubNavState] = useState(null);
 
+  // Handle custom category page hierarchy --------------------------------------
+  const activePathParts = activePath.split('/');
+  const isSubCategory =
+    activePathParts[1] === 'bereiche' && activePathParts.length >= 4;
+  if (isSubCategory && navItems[0].children.length > 1) {
+    navItems[0].children[0].active = false;
+    navItems[0].children[1].active = true;
+  }
+  // ----------------------------------------------------------------------------
+
   const orgLogo = useMemo(() => {
     const url = getThemeStaticURL(theme.themeLogoUrl);
     return (
