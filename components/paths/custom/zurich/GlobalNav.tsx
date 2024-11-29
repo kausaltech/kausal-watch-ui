@@ -6,7 +6,7 @@ import { Collapse, Nav, Navbar, NavItem } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
 import { getThemeStaticURL } from '@/common/theme';
-
+import { NavItem as NavItemType } from '@/components/Header';
 //import NavDropdown, { type NavDropdownProps } from '@/components/common/NavDropdown';
 //import type { GlobalNavProps } from '@/components/common/GlobalNav';
 
@@ -108,7 +108,7 @@ const NavLink = styled.div`
       color: ${(props) => props.theme.neutralDark};
 
       .highlighter {
-        color: var(--hover-color);
+        color: var(--stzh-color-primary);
       }
     }
 
@@ -124,7 +124,7 @@ const NavHighlighter = styled.span`
   color: var(--stzh-base-color);
 
   &.active {
-    color: var(--hover-color);
+    color: var(--stzh-color-primary);
   }
 `;
 
@@ -157,21 +157,42 @@ const StyledHeaderMain = styled.div`
   }
 `;
 
-function GlobalNav(props) {
+type GlobalNavProps = {
+  siteTitle: string;
+  ownerName: string;
+  navItems: NavItemType[];
+  activeBranch: string;
+  activePath: string;
+  isDark?: boolean;
+};
+
+function GlobalNav(props: GlobalNavProps) {
   const { siteTitle, ownerName, navItems, activeBranch, activePath } = props;
   const theme = useTheme();
-
-  const [subNavState, setSubNavState] = useState(null);
 
   // Handle custom category page hierarchy --------------------------------------
   const activePathParts = activePath.split('/');
   const isSubCategory =
     activePathParts[1] === 'bereiche' && activePathParts.length >= 4;
-  if (isSubCategory && navItems[0].children.length > 1) {
+  if (
+    isSubCategory &&
+    navItems[0].children &&
+    navItems[0].children.length > 1
+  ) {
     navItems[0].children[0].active = false;
     navItems[0].children[1].active = true;
   }
   // ----------------------------------------------------------------------------
+
+  // Check if we need to open subnav by default (active top level has children)
+  const activeMainItemIndex = navItems.findIndex((item) => item.active);
+  const initialSubnav =
+    navItems[activeMainItemIndex]?.children &&
+    navItems[activeMainItemIndex]?.children.length > 0
+      ? navItems[activeMainItemIndex].id
+      : null;
+
+  const [subNavState, setSubNavState] = useState<string | null>(initialSubnav);
 
   const orgLogo = useMemo(() => {
     const url = getThemeStaticURL(theme.themeLogoUrl);
@@ -297,8 +318,8 @@ function GlobalNav(props) {
                     className="stzh-appnav__items sc-stzh-appnav sc-stzh-appnav-s me-auto"
                   >
                     {navItems
-                      .find((item) => item.id === subNavState)
-                      .children.map((item) => (
+                      ?.find((item) => item.id === subNavState)
+                      ?.children?.map((item) => (
                         <NavItem
                           className="sc-stzh-link-h sc-stzh-link-s"
                           key={item.id}
