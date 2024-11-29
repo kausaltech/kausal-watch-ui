@@ -13,6 +13,8 @@ import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 
 import InventoryNodeSummary from './InventoryNodeSummary';
 import ActionNodeSummary from './ActionNodeSummary';
+import { captureException } from '@sentry/nextjs';
+import { useTranslations } from 'next-intl';
 
 const PathsContentLoader = (props) => {
   const theme = useTheme();
@@ -43,8 +45,16 @@ type PathsNodeContentProps = {
 
 const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
   const { categoryId, node, pathsInstance, onLoaded } = props;
+  const t = useTranslations();
   const pathsInstanceId = pathsInstance.id;
   const activeGoal = useReactiveVar(activeGoalVar);
+
+  // Only show the impact of this type of goal
+  const actionImpactGoal = pathsInstance.goals.find(
+    (goal) => goal.id === 'net_emissions/emission_scope:direct+negative'
+  );
+
+  // For Inventory nodes show all goals, Always show the active goal first
   const displayAllGoals = true;
   const displayGoals = displayAllGoals
     ? pathsInstance.goals
@@ -52,9 +62,10 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
     ? [activeGoal]
     : undefined;
   displayGoals?.sort((a, b) => (a.id === activeGoal?.id ? -1 : 1));
+
   const { data, loading, error, networkStatus } = useQuery(GET_NODE_CONTENT, {
     fetchPolicy: 'no-cache',
-    variables: { node: node, goal: activeGoal?.id },
+    variables: { node: node, goal: actionImpactGoal?.id },
     notifyOnNetworkStatusChange: true,
     context: {
       uri: '/api/graphql-paths',
@@ -68,8 +79,10 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
     return <PathsContentLoader />;
   }
   if (error) {
-    return <div>Error: {error.message}</div>; // Handle error appropriately
+    captureException(error, { extra: { pathsInstanceId: pathsInstance.id } });
+    return null;
   }
+
   if (data) {
     if (data.node.__typename === 'ActionNode') {
       return (
@@ -78,6 +91,7 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
           node={data.node}
           onLoaded={onLoaded ? onLoaded : () => void 0}
           refetching={refetching}
+          displayGoal={actionImpactGoal}
         />
       );
     } else if (data.node.__typename && displayGoals) {
