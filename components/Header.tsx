@@ -133,7 +133,6 @@ function Header() {
 
   const googleAnalyticsId = theme.settings?.googleAnalyticsId;
 
-  console.log('navlinks', navLinks);
   return (
     <header style={{ position: 'relative' }}>
       <SkipToContent />
