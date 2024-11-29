@@ -19,6 +19,21 @@ export const CATEGORY_FRAGMENT = gql`
       id
       ...MultiUseImageFragment
     }
+    indicators {
+      id
+      values {
+        date
+        value
+      }
+      goals {
+        date
+        value
+      }
+      unit {
+        name
+        shortName
+      }
+    }
     color
     iconSvgUrl
     helpText
