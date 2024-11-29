@@ -105,12 +105,12 @@ const clearCacheIfTimedOut = (function handleCacheTTL() {
   let timeCached: number | null = null;
   const THIRTY_MINS = 30 * 60 * 1000;
 
-  return () => {
+  return async () => {
     if (!timeCached) {
       timeCached = Date.now();
     } else if (Date.now() - timeCached > THIRTY_MINS) {
       timeCached = Date.now();
-      apolloClient.clearStore();
+      await apolloClient.clearStore();
       logger.info('Clearing Apollo cache');
     }
   };
@@ -163,7 +163,7 @@ async function handleRequest(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  clearCacheIfTimedOut();
+  await clearCacheIfTimedOut();
 
   const { data, error } = await tryRequest(
     apolloClient.query<
@@ -179,7 +179,7 @@ async function handleRequest(request: NextRequest) {
     if (error) {
       Sentry.captureException(error, { extra: { hostname, ...error } });
       logger.error(
-        { error: error.toString(), hostname },
+        { error: error, hostname },
         'Unable to get plans for hostname'
       );
     } else {

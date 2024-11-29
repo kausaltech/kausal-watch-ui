@@ -36,7 +36,7 @@ const edgeSpotlightIntegration: IntegrationFn = (options = {}) => {
       client.on('beforeEnvelope', (envelope) => {
         const serializedEnvelope = serializeEnvelope(envelope);
         console.log('middleware send');
-        fetch('http://localhost:8969/stream', {
+        void fetch('http://localhost:8969/stream', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-sentry-envelope',
@@ -48,6 +48,7 @@ const edgeSpotlightIntegration: IntegrationFn = (options = {}) => {
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/require-await
 async function initSentry() {
   const runtimeConfig = getRuntimeConfig();
   const backendHost = new URL(runtimeConfig.apiUrl).hostname;

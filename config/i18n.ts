@@ -1,6 +1,6 @@
 import { getRequestConfig } from 'next-intl/server';
 
-const FALLBACKS = {
+const FALLBACKS: Record<string, string> = {
   'en-AU': 'en',
   'en-GB': 'en',
   'de-CH': 'de',
@@ -14,7 +14,7 @@ type LocaleFiles = 'common' | 'actions' | 'a11y';
 async function importLocale(locale: string, file: LocaleFiles) {
   try {
     const translations = (await import(`../locales/${locale}/${file}.json`))
-      .default;
+      .default as Record<string, string>;
 
     return translations;
   } catch {
@@ -27,7 +27,7 @@ async function importLocale(locale: string, file: LocaleFiles) {
 }
 
 async function importLocales(locale: string) {
-  const translations = {
+  const translations: Record<string, string> = {
     ...(await importLocale(locale, 'common')),
     ...(await importLocale(locale, 'actions')),
     ...(await importLocale(locale, 'a11y')),
@@ -39,7 +39,7 @@ async function importLocales(locale: string) {
    */
   if (FALLBACKS[locale]) {
     return {
-      ...(await importLocales(FALLBACKS[locale])),
+      ...((await importLocales(FALLBACKS[locale])) as Record<string, string>),
       ...translations,
     };
   }
@@ -57,7 +57,9 @@ async function importLocales(locale: string) {
   return translations;
 }
 
-export default getRequestConfig(async ({ locale }) => {
+export default getRequestConfig(async ({ requestLocale }) => {
+  let locale = await requestLocale;
+
   const messages = await importLocales(locale);
 
   return { messages };

@@ -1,8 +1,7 @@
-import {
-  GetPlansByHostnameQuery,
-  PublicationStatus,
-} from '@/common/__generated__/graphql';
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest, NextResponse } from 'next/server';
+
+import type { GetPlansByHostnameQuery } from '@/common/__generated__/graphql';
+import { PublicationStatus } from '@/common/__generated__/graphql';
 import { stripSlashes } from './urls';
 
 const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';

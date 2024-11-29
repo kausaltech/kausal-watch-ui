@@ -1,12 +1,13 @@
 import 'react-medium-image-zoom/dist/styles.css';
 import '@/styles/default/main.scss';
 
-import { type ReactNode, use } from 'react';
+import { type ReactNode } from 'react';
 import Script from 'next/script';
 
 import * as Sentry from '@sentry/nextjs';
 import type { Metadata } from 'next';
-import { NextIntlClientProvider, useMessages } from 'next-intl';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { PublicEnvScript } from 'next-runtime-env';
 
 import { DayjsLocaleProvider } from '@/common/dayjs';
@@ -39,14 +40,12 @@ export function generateMetadata(): Metadata {
   };
 }
 
-export default function LangLayout(props: Props) {
-  const params = use(props.params);
+export default async function LangLayout(props: Props) {
+  const params = await props.params;
 
   const { children } = props;
 
-  const messages = useMessages();
-  console.log('root layout');
-  console.log(Sentry.getActiveSpan()?.spanContext());
+  const messages = await getMessages();
 
   return (
     <html lang={params.lang}>

@@ -3,6 +3,8 @@ import { headers, type UnsafeUnwrappedHeaders } from 'next/headers';
 import type { OIDCConfig } from '@auth/core/providers';
 import NextAuth from 'next-auth';
 
+import { getAuthIssuer } from '@/common/environment';
+
 type Profile = {
   name: string;
   given_name: string;
@@ -12,13 +14,15 @@ type Profile = {
 export const {
   handlers: { GET, POST },
   auth,
-} = NextAuth(() => {
-  const headersList = headers() as unknown as UnsafeUnwrappedHeaders;
+} = NextAuth(async () => {
+  const headersList =
+    (await headers()) as unknown as UnsafeUnwrappedHeaders as unknown as UnsafeUnwrappedHeaders;
   const protocol = headersList.get('x-forwarded-proto');
   const host = headersList.get('host');
   const url = protocol && host ? `${protocol}://${host}/api/auth` : null;
+  const authIssuer = getAuthIssuer();
 
-  if (!url || !process.env.AUTH_ISSUER) {
+  if (!url || !authIssuer) {
     if (!url) {
       console.error('Invalid request url');
     }
@@ -56,13 +60,13 @@ export const {
         id: 'watch-oidc-provider',
         name: 'Kausal Watch Provider',
         type: 'oidc',
-        issuer: process.env.AUTH_ISSUER,
+        issuer: authIssuer,
         clientId: process.env.AUTH_CLIENT_ID,
         clientSecret: process.env.AUTH_CLIENT_SECRET,
         profile(profile) {
           return { name: profile.name };
         },
-        wellKnown: `${process.env.AUTH_ISSUER}/.well-known/openid-configuration`,
+        wellKnown: `${authIssuer}/.well-known/openid-configuration`,
       } satisfies OIDCConfig<Profile>,
     ],
     secret: process.env.AUTH_SECRET,

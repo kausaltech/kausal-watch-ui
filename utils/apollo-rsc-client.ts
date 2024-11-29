@@ -38,9 +38,11 @@ const authMiddleware = setContext(
  * Apollo client used in React Server Components (fully server-side). For client components
  * (which are also server-side rendered) use the separate useQuery hooks provided by ApolloWrapper.
  */
-export const { getClient } = registerApolloClient(() => {
-  const headers = getHeaders() as unknown as UnsafeUnwrappedHeaders;
-  const cookiesList = cookies() as unknown as UnsafeUnwrappedCookies;
+export const { getClient } = registerApolloClient(async () => {
+  const headers =
+    (await getHeaders()) as unknown as UnsafeUnwrappedHeaders as unknown as UnsafeUnwrappedHeaders;
+  const cookiesList =
+    (await cookies()) as unknown as UnsafeUnwrappedCookies as unknown as UnsafeUnwrappedCookies;
   const locale = headers.get('x-next-intl-locale') ?? undefined;
   const plan = headers.get('x-plan-identifier') ?? undefined;
   const domain = headers.get('x-plan-domain') ?? undefined;

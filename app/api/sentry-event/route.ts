@@ -11,7 +11,7 @@ async function forwardToSentry(req: NextRequest, sentryDsn: URL) {
   const envelopeBytes = await req.arrayBuffer();
   const envelope = new TextDecoder().decode(envelopeBytes);
   const piece = envelope.split('\n')[0];
-  const header = JSON.parse(piece);
+  const header = JSON.parse(piece) as { dsn: string };
   const dsn = new URL(header['dsn']);
   const projectId = dsn.pathname?.replace('/', '');
 

@@ -68,7 +68,7 @@ async function initializeThemes() {
   }
 }
 
-initializeThemes();
+await initializeThemes();
 
 const standaloneBuild = process.env.NEXTJS_STANDALONE_BUILD === '1';
 // NextJS doesn't support runtime asset prefix, so we'll need to replace the
@@ -102,16 +102,13 @@ let config: NextConfigObject = {
     // Enables the styled-components SWC transform
     styledComponents: true,
   },
-  experimental: {
-    instrumentationHook: true,
-    // FIXME: Enable later
-    serverExternalPackages: ['@opentelemetry/instrumentation'],
-    outputFileTracingIncludes: standaloneBuild
-      ? {
-          '/': ['./node_modules/@kausal/themes*/**'],
-        }
-      : undefined,
-  },
+  outputFileTracingIncludes: standaloneBuild
+    ? {
+        '/': ['./node_modules/@kausal/themes*/**'],
+      }
+    : undefined,
+  serverExternalPackages: ['@opentelemetry/instrumentation'],
+  // eslint-disable-next-line @typescript-eslint/require-await
   generateBuildId: async () => {
     if (process.env.NEXTJS_BUILD_ID) return process.env.NEXTJS_BUILD_ID;
     // If a fixed Build ID was not provided, fall back to the default implementation.
@@ -120,7 +117,7 @@ let config: NextConfigObject = {
   webpack(config, { isServer, webpack }) {
     const defines = {};
     if (process.env.NODE_ENV !== 'development') {
-      // Disable Apollo Client development mode
+      // Disable Apollo Client development mode when not in production
       defines['globalThis.__DEV__'] = false;
     }
 
