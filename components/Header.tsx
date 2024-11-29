@@ -19,8 +19,21 @@ import { getMetaTitles } from '@/utils/metadata';
 import TopToolBar from './common/TopToolBar';
 import { useCustomComponent } from './paths/custom';
 
-const getMenuStructure = (pages, rootId) => {
-  const menuLevelItems = [];
+import { MainMenu, MenuItem } from 'common/__generated__/graphql';
+
+export type NavItem = {
+  id: string;
+  name: string;
+  slug: string;
+  urlPath: string;
+  active: boolean;
+  children: MenuItem[] | null;
+};
+
+export type NavItems = NavItem[] | null;
+
+const getMenuStructure: NavItems = (pages, rootId: string) => {
+  const menuLevelItems: NavItems = [];
   pages.forEach((page) => {
     if (page.parent.id === rootId) {
       menuLevelItems.push({
@@ -36,13 +49,22 @@ const getMenuStructure = (pages, rootId) => {
   return menuLevelItems.length > 0 ? menuLevelItems : null;
 };
 
+// Set active page per pathname and active branch
 const setActivePages = (navLinks, pathname, activeBranch) => {
+  let hasActivePage = false;
   navLinks.forEach((page) => {
-    page.active = activeBranch === page.slug || pathname === page.urlPath;
+    let childHasActivePage = false;
     if (page.children) {
-      setActivePages(page.children, pathname, activeBranch);
+      const activeChild = setActivePages(page.children, pathname, activeBranch);
+      if (activeChild) childHasActivePage = true;
     }
+    page.active =
+      activeBranch === page.slug ||
+      decodeURI(pathname) === page.urlPath ||
+      childHasActivePage;
+    if (page.active) hasActivePage = true;
   });
+  return hasActivePage;
 };
 
 function createLocalizeMenuItem(currentLocale, primaryLocale) {
@@ -72,11 +94,12 @@ function Header() {
   const isAuthenticated = status === 'authenticated';
   const { navigationTitle: siteTitle } = getMetaTitles(plan);
 
-  const navLinks = useMemo(() => {
+  const navLinks: NavItems = useMemo(() => {
     let links = [];
 
-    const pageMenuItems = plan.mainMenu.items
-      .filter((item) => item.__typename == 'PageMenuItem')
+    const mainMenu = plan.mainMenu as MainMenu;
+    const pageMenuItems: MenuItem[] = mainMenu.items
+      .filter((item) => item?.__typename == 'PageMenuItem')
       .map(createLocalizeMenuItem(locale, plan.primaryLanguage));
 
     if (pageMenuItems.length > 0) {
@@ -110,6 +133,7 @@ function Header() {
 
   const googleAnalyticsId = theme.settings?.googleAnalyticsId;
 
+  console.log('navlinks', navLinks);
   return (
     <header style={{ position: 'relative' }}>
       <SkipToContent />
