@@ -52,7 +52,6 @@ const PathsPageContent = ({
   page: GeneralPlanPage;
   pageSectionColor?: string;
 }) => {
-  console.log('page', page);
   const isCategoryPage = page.__typename === 'CategoryPage';
   const isStaticPage = page.__typename === 'StaticPage';
   const isActionListPage = page.__typename === 'ActionListPage';

@@ -98,7 +98,7 @@ async function getPathsData(pathsInstance: string) {
       getPathsInstance(pathsInstance)
     );
     if (pathsData?.instance) {
-      console.log('pathsData', pathsData);
+      // console.log('pathsData', pathsData);
       return pathsData;
     } else return { instance: { id: 'unknown' } };
   }
