@@ -229,12 +229,12 @@ function getTraces(
   if (dimensions.length === 0) {
     return [
       {
-        xType: cube.length === 1 ? 'category' : 'time',
+        xType: 'time',
         name: name,
         dataType: 'total',
         x: cube.map((val) => {
           const d = dayjs(val.date);
-          return cube.length < 2 ? d.year() : val.date;
+          return val.date;
         }),
         y: cube.map((val) => val.value),
       },
@@ -603,7 +603,6 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
     plan: { scenarios },
   } = data;
 
-  console.log('indicator', data);
   if (!indicator)
     return <Alert color="danger">{t('indicator-not-found')}</Alert>;
 
