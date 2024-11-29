@@ -84,7 +84,8 @@ function CategoryPageHeaderBlock(props: CategoryPageHeaderProps) {
     ? getBreadcrumbsFromCategoryHierarchy([page.category.parent], false)
     : [];
 
-  // TODO: A better way to find root category list page
+  /*
+  // Not needed, leaving this here for reference
   const rootCategoryListPage =
     page?.category && page.category.type.id === '76'
       ? { id: 0, name: 'Bereiche', url: '/klimaschutzplan/bereiche' }
@@ -99,6 +100,8 @@ function CategoryPageHeaderBlock(props: CategoryPageHeaderProps) {
       : null;
   if (rootCategoryListPage) breadcrumbs.unshift(rootCategoryListPage);
   if (currentCategoryListPage) breadcrumbs.push(currentCategoryListPage);
+  */
+
   return (
     <Background $hasHeaderImage={!!headerImage}>
       <Container>

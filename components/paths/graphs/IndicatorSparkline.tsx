@@ -216,7 +216,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
         symbol: 'circle',
         symbolSize: 6,
         lineStyle: {
-          color: theme.graphColors.blue050,
+          color: theme.graphColors.blue070,
           width: 2,
         },
         z: 2,
