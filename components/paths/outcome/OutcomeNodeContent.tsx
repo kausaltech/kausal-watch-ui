@@ -213,6 +213,11 @@ const OutcomeNodeContent = ({
                 nodeName
               )}
             </h4>
+            {activeGoal?.label && (
+              <CardSetDescriptionDetails>
+                <ScenarioBadge>{activeGoal?.label}</ScenarioBadge>
+              </CardSetDescriptionDetails>
+            )}
             {!hideForecast && (
               <CardSetDescriptionDetails>
                 {startYear < lastMeasuredYear && (
