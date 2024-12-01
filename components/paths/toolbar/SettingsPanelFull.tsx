@@ -18,6 +18,12 @@ import { useReactiveVar } from '@apollo/client';
 import CompleteSettings from './CompleteSettings';
 import MediumSettings from './MediumSettings';
 
+const Spacer = styled.div`
+  // Add space under footer for approximate height of the settings panel
+  height: 120px;
+  background-color: ${(props) => props.theme.themeColors.dark};
+`;
+
 const FixedPanel = styled.aside`
   position: fixed;
   z-index: 255;
@@ -28,7 +34,6 @@ const FixedPanel = styled.aside`
   color: ${(props) => props.theme.graphColors.grey090};
   box-shadow: 0 0 4px 4px rgba(20, 20, 20, 0.05);
   transition: height 0.25s;
-  //border-top: 2px solid ${(props) => props.theme.graphColors.grey050};
 
   &.panel-sm {
     height: 4rem;
@@ -143,24 +148,27 @@ const SettingsPanelFull: React.FC = () => {
 
   // console.log(props);
   return (
-    <FixedPanel className={`panel-${mode}`} aria-label={t('all-settings')}>
-      <StyledSettingsButton onClick={(e) => handleToggle(e)}>
-        {mode === MODE.MD && (
-          <>
-            <Icon name="gear" />{' '}
-            <StyledButtonLabel>{t('settings-expand')}</StyledButtonLabel>
-          </>
-        )}
-        {mode === MODE.LG && (
-          <>
-            <Icon name="angle-down" />{' '}
-            <StyledButtonLabel>{t('settings-collapse')}</StyledButtonLabel>
-          </>
-        )}
-      </StyledSettingsButton>
-      {mode === MODE.MD && <MediumSettings />}
-      {mode === MODE.LG && <CompleteSettings />}
-    </FixedPanel>
+    <>
+      <Spacer />
+      <FixedPanel className={`panel-${mode}`} aria-label={t('all-settings')}>
+        <StyledSettingsButton onClick={(e) => handleToggle(e)}>
+          {mode === MODE.MD && (
+            <>
+              <Icon name="gear" />{' '}
+              <StyledButtonLabel>{t('settings-expand')}</StyledButtonLabel>
+            </>
+          )}
+          {mode === MODE.LG && (
+            <>
+              <Icon name="angle-down" />{' '}
+              <StyledButtonLabel>{t('settings-collapse')}</StyledButtonLabel>
+            </>
+          )}
+        </StyledSettingsButton>
+        {mode === MODE.MD && <MediumSettings />}
+        {mode === MODE.LG && <CompleteSettings />}
+      </FixedPanel>
+    </>
   );
 };
 
