@@ -3,7 +3,7 @@ import React from 'react';
 import type { DatasetComponentOption } from 'echarts/components';
 import { useTranslations, useFormatter } from 'next-intl';
 import styled, { useTheme } from 'styled-components';
-
+import ContentLoader from 'react-content-loader';
 import {
   IndicatorGoal,
   IndicatorGraphDataQuery,
@@ -16,6 +16,22 @@ import Chart, { ECOption } from '@/components/paths/graphs/Chart';
 import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/utils/indicatorData';
 import { useQuery } from '@apollo/client';
+
+const SparklineLoader = (props) => (
+  <ContentLoader
+    speed={2}
+    width={300}
+    height={130}
+    viewBox="0 0 300 130"
+    backgroundColor="#f3f3f3"
+    foregroundColor="#ecebeb"
+    {...props}
+  >
+    <rect x="39" y="113" rx="3" ry="3" width="243" height="8" />
+    <rect x="25" y="15" rx="3" ry="3" width="9" height="93" />
+    <rect x="43" y="17" rx="3" ry="3" width="73" height="18" />
+  </ContentLoader>
+);
 
 const IndicatorSparklineContainer = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
@@ -60,7 +76,12 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
     }
   );
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <IndicatorSparklineContainer>
+        <SparklineLoader />
+      </IndicatorSparklineContainer>
+    );
   if (error) return <p>Error :(</p>;
   const indicator = data?.indicator;
   if (!indicator) return null;
