@@ -1,12 +1,14 @@
 import React, { useMemo, useState } from 'react';
-
+import Head from 'next/head';
 import { NavigationLink } from 'common/links';
 import SVG from 'react-inlinesvg';
 import { Collapse, Nav, Navbar, NavItem } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
-
+import { deploymentType } from '@/common/environment';
 import { getThemeStaticURL } from '@/common/theme';
 import { NavItem as NavItemType } from '@/components/Header';
+import Icon from '@/components/common/Icon';
+import { useTranslations } from 'next-intl';
 //import NavDropdown, { type NavDropdownProps } from '@/components/common/NavDropdown';
 //import type { GlobalNavProps } from '@/components/common/GlobalNav';
 
@@ -157,6 +159,29 @@ const StyledHeaderMain = styled.div`
   }
 `;
 
+const NavbarToggler = styled.button`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  font-size: 1.5rem;
+  width: ${(props) => props.theme.spaces.s300};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  line-height: ${(props) => props.theme.lineHeightMd};
+  hyphens: auto;
+  border: none;
+  overflow: visible;
+  background: transparent;
+  border-radius: 0;
+  -webkit-appearance: none;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    display: none;
+  }
+`;
+
 type GlobalNavProps = {
   siteTitle: string;
   ownerName: string;
@@ -169,7 +194,7 @@ type GlobalNavProps = {
 function GlobalNav(props: GlobalNavProps) {
   const { siteTitle, ownerName, navItems, activeBranch, activePath } = props;
   const theme = useTheme();
-
+  const t = useTranslations();
   // Handle custom category page hierarchy --------------------------------------
   const activePathParts = activePath.split('/');
   const isSubCategory =
@@ -193,6 +218,7 @@ function GlobalNav(props: GlobalNavProps) {
       : null;
 
   const [subNavState, setSubNavState] = useState<string | null>(initialSubnav);
+  const [isOpen, toggleOpen] = useState(false);
 
   const orgLogo = useMemo(() => {
     const url = getThemeStaticURL(theme.themeLogoUrl);
@@ -206,8 +232,18 @@ function GlobalNav(props: GlobalNavProps) {
     );
   }, [theme.themeLogoUrl, ownerName, siteTitle]);
 
+  const analyticsUrl =
+    deploymentType === 'production'
+      ? 'https://www.stadt-zuerich.ch/etc/clientlibs/stzh/analytics/294297d554c0/068a31a4609c/launch-9189fcb507a0.min.js'
+      : 'https://www.integ.stadt-zuerich.ch/etc/clientlibs/stzh/analytics/294297d554c0/068a31a4609c/launch-92ad5f87cc3b-staging.min.js';
+
   return (
     <>
+      {deploymentType === 'production' ? (
+        <Head>
+          <script key="zuerich-analytics" src={analyticsUrl} async />
+        </Head>
+      ) : null}
       <div className="header header--has-appnav">
         <div className="header__inner">
           <StyledHeaderMain className="header__main">
@@ -217,6 +253,19 @@ function GlobalNav(props: GlobalNavProps) {
                   <HomeLink className="header__logo-link">{orgLogo}</HomeLink>
                 </NavigationLink>
               </div>
+              <NavbarToggler
+                onClick={() => toggleOpen(!isOpen)}
+                aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
+                aria-controls="global-navigation-bar"
+                aria-expanded={isOpen}
+                type="button"
+              >
+                {isOpen ? (
+                  <Icon.Times color={theme.themeColors.white} />
+                ) : (
+                  <Icon.Bars color={theme.themeColors.white} />
+                )}
+              </NavbarToggler>
             </div>
           </StyledHeaderMain>
 
@@ -227,7 +276,7 @@ function GlobalNav(props: GlobalNavProps) {
               className="header__appnav-inner"
               container={false}
             >
-              <StyledCollapse navbar>
+              <StyledCollapse isOpen={isOpen} navbar>
                 <Nav
                   navbar
                   className="stzh-appnav__items sc-stzh-appnav sc-stzh-appnav-s me-auto"
@@ -312,7 +361,7 @@ function GlobalNav(props: GlobalNavProps) {
                 container={false}
                 $dark={true}
               >
-                <StyledCollapse navbar $dark={true}>
+                <StyledCollapse navbar $dark={true} isOpen={isOpen}>
                   <Nav
                     navbar
                     className="stzh-appnav__items sc-stzh-appnav sc-stzh-appnav-s me-auto"
