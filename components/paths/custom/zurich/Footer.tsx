@@ -28,7 +28,7 @@ const Footer = (props) => {
           <div className="stzh-footer__logo"></div>
           <div className="stzh-footer__info"></div>
           <div className="stzh-footer__links">
-            <div className="stzh-footer__copyright">© 2023 Stadt Zürich</div>
+            <div className="stzh-footer__copyright">© 2024 Stadt Zürich</div>
             <div className="stzh-footer__link-list" role="list">
               <slot-fb name="link">
                 <stzh-link
