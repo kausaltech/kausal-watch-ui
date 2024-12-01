@@ -16,6 +16,22 @@ import { usePaths } from '@/context/paths/paths';
 import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
+import ContentLoader from 'react-content-loader';
+
+const OutcomeBlockLoader = (props) => (
+  <ContentLoader
+    speed={2}
+    width={600}
+    height={12}
+    viewBox="0 0 600 12"
+    backgroundColor="#f4f4f4"
+    foregroundColor="#c9c9c9"
+    style={{ width: '100%' }}
+    {...props}
+  >
+    <rect x="0" y="0" rx="0" ry="0" width="600" height="12" />
+  </ContentLoader>
+);
 
 const Background = styled.div`
   padding: 4rem 0 6rem;
@@ -120,8 +136,9 @@ export default function PathsOutcomeBlock(props) {
   });
 
   const { loading, error, previousData, networkStatus } = queryResp;
-  const refetching = networkStatus === NetworkStatus.refetch || loading;
+  const refetching = networkStatus === NetworkStatus.refetch;
 
+  if (error) return <p>Error : {error.message}</p>;
   const data = queryResp.data ?? previousData;
 
   const getVisibleNodes = (outcomeNode) => {
@@ -156,6 +173,7 @@ export default function PathsOutcomeBlock(props) {
             <StyledTitle>{heading}</StyledTitle>
             <StyledCard $disabled={refetching}>
               <CardBody>
+                {loading && <OutcomeBlockLoader />}
                 {nodes.visible.map((node, index) => (
                   <OutcomeCardSet
                     key={node.id}
