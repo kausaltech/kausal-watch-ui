@@ -16,6 +16,7 @@ import {
 import { usePaths } from '@/context/paths/paths';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import { gql, NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
+import ContentLoader from 'react-content-loader';
 
 export const GET_INSTANCE_GOAL_OUTCOME = gql`
   query GetInstanceGoalOutcome($goal: ID!) {
@@ -36,6 +37,22 @@ export const GET_INSTANCE_GOAL_OUTCOME = gql`
     }
   }
 `;
+
+const OutcomeBarLoader = (props) => (
+  <ContentLoader
+    speed={2}
+    width={500}
+    height={80}
+    viewBox="0 0 500 80"
+    backgroundColor="#f4f4f4"
+    foregroundColor="#d6d6d6"
+    {...props}
+  >
+    <rect x="100" y="33" rx="2" ry="2" width="385" height="6" />
+    <rect x="100" y="45" rx="2" ry="2" width="385" height="6" />
+    <rect x="100" y="58" rx="2" ry="2" width="385" height="6" />
+  </ContentLoader>
+);
 
 const AccordionHeader = styled(Button)`
   display: flex;
@@ -243,12 +260,7 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
   const refetching = networkStatus === NetworkStatus.refetch;
   if (!activeGoal?.id) return null;
 
-  if (loading && !refetching)
-    return (
-      <span>
-        <Spinner size="sm" color="primary" />
-      </span>
-    );
+  if (loading && !refetching) return <OutcomeBarLoader />;
   if (error) return <div>error!</div>;
   if (!data || !data.instance.goals.length) return <div>no data</div>;
 
