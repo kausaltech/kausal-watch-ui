@@ -44,7 +44,7 @@ const Footer = (props) => {
                   badge-position="icon"
                 >
                   <a
-                    href="https://www.stadt-zuerich.ch/portal/de/index/footer/rechtliche_hinweise.html"
+                    href="https://www.stadt-zuerich.ch/de/service/rechtliche-hinweise.html"
                     target="_blank"
                     className="stzh-link stzh-link--badge-position-icon stzh-link--align-default stzh-link--size-default stzh-link--default sc-stzh-link"
                     s-object-id="Legal notice"
@@ -100,7 +100,7 @@ const Footer = (props) => {
                   badge-position="icon"
                 >
                   <a
-                    href="https://www.stadt-zuerich.ch/portal/de/index/footer/barrierefreiheit.html"
+                    href="https://www.stadt-zuerich.ch/de/service/barrierefreiheit.html"
                     target="_blank"
                     className="stzh-link stzh-link--badge-position-icon stzh-link--align-default stzh-link--size-default stzh-link--default sc-stzh-link"
                     s-object-id="Accessibility"
