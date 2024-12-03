@@ -71,12 +71,6 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     renderCell: (action) => action.identifier,
   },
 
-  // TODO: Remove from the backend
-  ImpactColumnBlock: {
-    renderHeader: () => '',
-    renderCell: () => '',
-  },
-
   NameColumnBlock: {
     sortable: true,
     headerKey: 'name',
