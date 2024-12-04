@@ -534,6 +534,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       },
       //info: 'none',
       ...trendTrace,
+      hoverinfo: 'skip',
     });
 
   // add goals if defined
@@ -558,7 +559,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
           color: plotColors.goalScale[idx % plotColors.goalScale.length],
         },
         opacity: 0.5,
-        hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
+        hovertemplate: `${goalTrace.name}: %{y} ${yRange.unit}`,
         hoverlabel: {
           namelength: 0,
           bgcolor: '#fff',
