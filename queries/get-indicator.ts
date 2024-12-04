@@ -49,6 +49,10 @@ const GET_INDICATOR_DETAILS = gql`
         identifier
         name
         id
+        level {
+          id
+          name
+        }
         type {
           ...CategoryTypeFragment
         }
