@@ -276,8 +276,8 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
         modTrace.cliponaxis = false;
       }
     }
-    const timeFormat = timeResolution === 'YEAR' ? '%Y' : '%x';
-    modTrace.hovertemplate = `(%{x|${timeFormat}})<br> ${trace.name}: %{y:,.3r} ${unit}`;
+    //const timeFormat = timeResolution === 'YEAR' ? '%Y' : '%x';
+    modTrace.hovertemplate = `${trace.name}: %{y:,.3r} ${unit}`;
     modTrace.hoverlabel = {
       bgcolor: plotColors.mainScale[idx % numColors],
       namelength: 0,
@@ -529,6 +529,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       },
       //info: 'none',
       ...trendTrace,
+      hoverinfo: 'skip',
     });
 
   // add goals if defined
@@ -553,7 +554,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
           color: plotColors.goalScale[idx % plotColors.goalScale.length],
         },
         opacity: 0.5,
-        hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
+        hovertemplate: `${goalTrace.name}: %{y} ${yRange.unit}`,
         hoverlabel: {
           namelength: 0,
           bgcolor: '#fff',
