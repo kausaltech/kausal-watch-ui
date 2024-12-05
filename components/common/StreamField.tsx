@@ -294,6 +294,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
                   style={{
                     display: 'block',
                     width: '100%',
+                    marginBottom: theme.spaces.s600,
                   }}
                 />
                 {block.image?.imageCredit && (
