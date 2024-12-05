@@ -129,6 +129,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
         renditionUncropped: rendition(size: "1320x1320", crop: false) {
           src
         }
+        imageCredit
       }
       width
     }

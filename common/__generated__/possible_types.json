@@ -120,7 +120,19 @@
       "ActionResponsiblePartiesBlock",
       "ActionScheduleBlock",
       "ActionTasksBlock",
-      "IndicatorCausalChainBlock"
+      "EndDateColumnBlock",
+      "IdentifierColumnBlock",
+      "ImpactColumnBlock",
+      "ImplementationPhaseColumnBlock",
+      "IndicatorCausalChainBlock",
+      "IndicatorsColumnBlock",
+      "NameColumnBlock",
+      "OrganizationColumnBlock",
+      "ResponsiblePartiesColumnBlock",
+      "StartDateColumnBlock",
+      "StatusColumnBlock",
+      "TasksColumnBlock",
+      "UpdatedAtColumnBlock"
     ],
     "MenuItem": [
       "ExternalLinkMenuItem",

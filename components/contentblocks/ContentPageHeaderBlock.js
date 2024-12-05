@@ -47,7 +47,7 @@ const ContentHeader = styled.header`
   }
 `;
 
-const ImageCredit = styled.span`
+export const ImageCredit = styled.span`
   position: absolute;
   top: 0;
   right: 0;
