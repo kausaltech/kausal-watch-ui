@@ -22,6 +22,8 @@ import IndicatorShowcaseBlock from 'components/contentblocks/IndicatorShowcaseBl
 import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
 import RelatedIndicatorsBlock from 'components/contentblocks/RelatedIndicatorsBlock';
 import RelatedPlanListBlock from 'components/contentblocks/RelatedPlanListBlock';
+import { ImageCredit } from 'components/contentblocks/ContentPageHeaderBlock';
+import { useTranslations } from 'next-intl';
 import { usePlan } from 'context/plan';
 import { Col, ColProps, Container, Row } from 'reactstrap';
 import { ColumnProps } from 'reactstrap/types/lib/Col';
@@ -123,6 +125,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
   const { __typename } = block;
   const plan = usePlan();
   const theme = useTheme();
+  const t = useTranslations();
 
   switch (__typename) {
     case 'RichTextBlock': {
@@ -254,6 +257,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
        * fit_to_column: image is limited to text block width
        * Image keeps it original ratio and doesn't crop
        */
+
       const getColSize = (breakpoint) => {
         if (block.width === 'maximum') return {};
         switch (breakpoint) {
@@ -274,16 +278,30 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
               xl={getColSize('xl')}
               lg={getColSize('lg')}
               md={getColSize('md')}
+              style={{
+                position: 'relative',
+              }}
             >
-              <img
-                src={block.image?.renditionUncropped?.src}
-                alt={block.image?.altText}
+              <div
                 style={{
-                  display: 'block',
-                  width: '100%',
-                  marginBottom: theme.spaces.s600,
+                  position: 'relative',
+                  display: 'inline-block',
                 }}
-              />
+              >
+                <img
+                  src={block.image?.renditionUncropped?.src}
+                  alt={block.image?.altText}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                  }}
+                />
+                {block.image?.imageCredit && (
+                  <ImageCredit>
+                    {`${t('image-credit')}: ${block.image.imageCredit}`}
+                  </ImageCredit>
+                )}
+              </div>
             </Col>
           </Row>
         </Container>
