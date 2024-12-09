@@ -26,6 +26,7 @@ const GET_PLAN_CONTEXT = gql`
     hideActionIdentifiers
     publishedAt
     viewUrl(clientUrl: $clientUrl)
+    actionReportExportViewUrl
     primaryActionClassification {
       id
       identifier
