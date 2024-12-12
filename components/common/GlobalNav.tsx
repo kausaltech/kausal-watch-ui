@@ -514,7 +514,6 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
     isPrimaryNavSticky,
   };
 };
-
 function GlobalNav(props) {
   const t = useTranslations();
   const theme = useTheme();
