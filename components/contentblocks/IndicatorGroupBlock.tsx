@@ -25,12 +25,6 @@ const IndicatorGraphSection = styled.div`
   h2 {
     text-align: center;
     margin-bottom: ${(props) => props.theme.spaces.s300};
-    color: ${(props) =>
-      readableColor(
-        props.theme.neutralLight,
-        props.theme.themeColors.black,
-        props.theme.themeColors.white
-      )};
   }
 `;
 
