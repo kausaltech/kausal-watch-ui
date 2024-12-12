@@ -84,24 +84,6 @@ function isChildOrg(childOrg, parentOrg) {
   return childTree.some((id) => parentTree.indexOf(id) >= 0);
 }
 
-function processAction(actionIn, orgMap) {
-  const action = { ...actionIn };
-
-  action.responsibleParties = actionIn.responsibleParties.map((rp) => {
-    const org = orgMap.get(rp.organization.id);
-    const found = (action?.contactPersons ?? []).some(({ person }) => {
-      if (!person.organization) return false;
-      const personOrg = orgMap.get(person.organization.id);
-      return isChildOrg(personOrg, org);
-    });
-    return {
-      ...rp,
-      hasContactPerson: found,
-    };
-  });
-  return action;
-}
-
 interface SortableTableHeaderProps {
   children: ReactNode;
   headerKey: Sort['key'];
@@ -211,9 +193,7 @@ const ActionStatusTable = (props: Props) => {
     return sort.direction === 1 ? val : -val;
   };
 
-  const sortedActions = [...actions]
-    .sort(comparator)
-    .map((action) => processAction(action, orgMap));
+  const sortedActions = [...actions].sort(comparator);
 
   const sortHandler = (key: keyof ActionListAction | null) => () => {
     let direction = 1;
