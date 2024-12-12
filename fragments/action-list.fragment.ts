@@ -106,9 +106,6 @@ export const ACTION_TABLE_COLUMN_FRAGMENT = gql`
       ... on OrganizationColumnBlock {
         columnLabel
       }
-      ... on ImpactColumnBlock {
-        columnLabel
-      }
       ... on FieldColumnBlock {
         columnLabel
         field

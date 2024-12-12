@@ -28,6 +28,7 @@ const GET_PLAN_CONTEXT = gql`
     publishedAt
     kausalPathsInstanceUuid
     viewUrl(clientUrl: $clientUrl)
+    actionReportExportViewUrl
     primaryActionClassification {
       id
       identifier

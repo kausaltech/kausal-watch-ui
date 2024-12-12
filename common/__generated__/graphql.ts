@@ -8660,7 +8660,7 @@ type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
 
 type StreamFieldFragment_LargeImageBlock_Fragment = (
   { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
-    { title: string, altText: string, width: number, height: number, renditionUncropped?: (
+    { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped?: (
       { src: string }
       & { __typename?: 'ImageRendition' }
     ) | null }
@@ -14557,7 +14557,7 @@ export type GetContentPageQuery = (
       & { __typename?: 'IndicatorShowcaseBlock' }
     ) | (
       { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
+        { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
         ) | null }
@@ -15883,7 +15883,7 @@ export type GetContentPageQuery = (
       & { __typename?: 'IndicatorShowcaseBlock' }
     ) | (
       { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
+        { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
         ) | null }
@@ -16729,7 +16729,7 @@ export type GetContentPageQuery = (
       & { __typename?: 'IndicatorShowcaseBlock' }
     ) | (
       { width?: string | null, id?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
+        { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
         ) | null }
@@ -17584,7 +17584,7 @@ export type GetHomePageQuery = (
       & { __typename?: 'IndicatorShowcaseBlock' }
     ) | (
       { id?: string | null, width?: string | null, blockType: string, field: string, image?: (
-        { title: string, altText: string, width: number, height: number, renditionUncropped?: (
+        { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
         ) | null }
