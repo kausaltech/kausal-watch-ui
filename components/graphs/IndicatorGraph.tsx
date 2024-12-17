@@ -276,7 +276,12 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       }
     }
     const timeFormat = timeResolution === 'YEAR' ? '%Y' : '%x';
-    modTrace.hovertemplate = `(%{x|${timeFormat}})<br> ${trace.name}: %{y:,.3r} ${unit}`;
+    const theme = useTheme();
+    const roundIndicatorValue =
+      theme.settings?.graphs?.roundIndicatorValue ?? true;
+    modTrace.hovertemplate = `(%{x|${timeFormat}})<br> ${trace.name}: ${
+      roundIndicatorValue === false ? '%{y:,.f}' : '%{y:,.3r}'
+    } ${unit}`;
     modTrace.hoverlabel = {
       bgcolor: plotColors.mainScale[idx % numColors],
       namelength: 0,
