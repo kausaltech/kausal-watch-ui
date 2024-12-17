@@ -361,10 +361,10 @@ const OutcomeNodeContent = ({
               <OutcomeNodeDetails node={node} t={t} />
             </ContentWrapper>
           )}
-          {activeTabId === 'table' && (
+          {activeTabId === 'table' && node.metricDim && (
             <ContentWrapper tabIndex={0}>
               <DataTable
-                node={node}
+                metric={node.metricDim}
                 goalName={activeGoal?.label}
                 separateYears={separateYears}
                 subNodes={subNodes}
