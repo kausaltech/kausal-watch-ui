@@ -11,6 +11,7 @@ import { CommonContentBlockProps } from 'common/blocks.types';
 import { readableColor } from 'polished';
 import { Theme } from '@kausal/themes/types';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
+import { SectionHeader } from 'components/contentblocks/ActionListBlock';
 
 const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
   theme.section.categoryList?.color ||
@@ -24,11 +25,6 @@ const CategoryListSection = styled.div`
   padding: ${(props) =>
     `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
   color: ${({ theme }) => getColor(theme)};
-
-  h2 {
-    font-size: ${(props) => props.theme.fontSizeLg};
-    color: ${({ theme }) => getColor(theme, theme.headingsColor)};
-  }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     h2 {
@@ -70,12 +66,6 @@ const CategoryListSection = styled.div`
       line-height: ${(props) => props.theme.lineHeightBase};
     }
   }
-`;
-
-const SectionHeader = styled.h2`
-  text-align: center;
-  color: ${(props) => props.theme.headingsColor};
-  margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
 const CardHeader = styled.h3`
