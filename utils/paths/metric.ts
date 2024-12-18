@@ -138,17 +138,17 @@ export class MetricSlice {
       this.categoryValues.forEach((cv) => {
         if (historicalYearIndex >= 0) {
           const value = cv.historicalValues[historicalYearIndex] || null;
-          row[cv.category.id] = value?.toPrecision(2) ?? null;
+          row[cv.category.id] = parseFloat(value?.toPrecision(2) || '') ?? null;
           total += value || 0;
         } else if (forecastYearIndex >= 0) {
           const value = cv.forecastValues[forecastYearIndex] || null;
-          row[cv.category.id] = value?.toPrecision(2) ?? null;
+          row[cv.category.id] = parseFloat(value?.toPrecision(2) || '') ?? null;
           total += value || 0;
         } else {
           row[cv.category.id] = null;
         }
       });
-      row.total = total.toPrecision(2);
+      row.total = parseFloat(total.toPrecision(2) || '') ?? null;
       row.type =
         historicalYearIndex >= 0 ? viewHistoricalLabel : viewForecastLabel;
       return row;
