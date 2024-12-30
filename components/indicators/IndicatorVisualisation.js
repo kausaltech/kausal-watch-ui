@@ -33,6 +33,8 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       name
       timeResolution
       showTrendline
+      # TODO: add when backend available
+      # showTotalLine
       desiredTrend
       reference
       minValue
@@ -242,6 +244,7 @@ function getTraces(dimensions, cube, names, hasTimeDimension, i18n) {
           _cube = cube[idx];
         x = _cube.map((val) => val.date);
         y = _cube.map((val) => val.value);
+        console.log('trace', traceName, x, y);
         return {
           xType: 'time',
           dataType: cat.id === 'total' ? 'total' : null,
@@ -679,13 +682,16 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
   indicatorGraphSpecification.cube = cube;
   const hasTimeDimension =
     indicatorGraphSpecification.axes.filter((a) => a[0] === 'time').length > 0;
+  const showTotalLine = false; //indicator.showTotalLine;
   const traces = getTraces(
     indicatorGraphSpecification.dimensions,
     cube,
     null,
     hasTimeDimension,
     i18n
-  );
+  ).filter((t) => t.dataType !== 'total' || showTotalLine);
+
+  console.log('traces', traces);
   const [goalTraces, goalBounds] = normalizeByPopulation
     ? [[], []]
     : generateGoalTraces(indicator, scenarios, i18n);
