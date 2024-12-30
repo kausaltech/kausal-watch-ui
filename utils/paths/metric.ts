@@ -587,12 +587,15 @@ export class DimensionalMetric {
     row: MetricRow,
     categoryChoice: MetricCategoryChoice
   ) {
+    //console.log('matches', row, categoryChoice);
     const noMatch = Object.entries(categoryChoice).some(([dimId, choice]) => {
       if (!choice) return false;
       if (!choice.categories.length) return false;
+      if (choice.categories.length === 0) return true;
       if (!choice.categories.includes(row.dimCats[dimId].id)) return true;
       return false;
     });
+    //console.log('noMatch', noMatch);
     return !noMatch;
   }
 
@@ -602,9 +605,16 @@ export class DimensionalMetric {
     categoryChoice: MetricCategoryChoice | undefined,
     useGroups: boolean = true,
     years: number[] | undefined = undefined
-  ) {
+  ): MetricSlice | null {
     const byYear: Map<number, Map<string, number>> = new Map();
     const dim = this.dimensions.find((dim) => dim.id === dimensionId)!;
+
+    // TODO: If categoryChoice.categories is empty array, we should assume no data
+    // if categoryChoice is undefined, we should assume no filtering
+
+    if (categoryChoice && categoryChoice[dim.id]?.categories.length === 0) {
+      return null;
+    }
 
     const yearsToUse = years ?? this.data.years;
     if (dim.groups.length) {
