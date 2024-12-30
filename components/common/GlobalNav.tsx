@@ -33,8 +33,7 @@ import NavbarSearch from './NavbarSearch';
 const getRootLink = (plan, locale, primaryLanguage) => {
   if (plan.parent && plan.parent.viewUrl) {
     const shouldAppendLocale =
-      locale !== primaryLanguage &&
-      !plan.parent.viewUrl.includes(`/${locale}/`);
+      locale !== primaryLanguage && !plan.parent.viewUrl.includes(`/${locale}`);
     if (shouldAppendLocale) {
       return `${plan.parent.viewUrl}/${locale}/`;
     }
