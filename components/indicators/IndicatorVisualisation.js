@@ -687,7 +687,10 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
     ? [[], []]
     : generateGoalTraces(indicator, scenarios, i18n);
   const [trendTrace, trendBounds] =
-    normalizeByPopulation || !hasTimeDimension || !indicator.showTrendline
+    normalizeByPopulation ||
+    !hasTimeDimension ||
+    !indicator.showTrendline ||
+    !indicator.showTotalLine
       ? [null, null]
       : generateTrendTrace(indicator, traces, goalTraces, i18n);
 
