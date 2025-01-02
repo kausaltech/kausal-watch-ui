@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 
 import dayjs from 'common/dayjs';
@@ -33,6 +34,7 @@ const GET_INDICATOR_GRAPH_DATA = gql`
       name
       timeResolution
       showTrendline
+      showTotalLine
       desiredTrend
       reference
       minValue
@@ -185,7 +187,6 @@ function generateCubeFromValues(
   indicatorGraphSpecification,
   combinedValues
 ) {
-  const traces = [];
   const values = [...combinedValues]
     .sort((a, b) => a.date - b.date)
     .map((item) => {
@@ -238,10 +239,10 @@ function getTraces(dimensions, cube, names, hasTimeDimension, i18n) {
         ).join(', ');
         let x,
           y,
-          xType,
           _cube = cube[idx];
         x = _cube.map((val) => val.date);
         y = _cube.map((val) => val.value);
+        console.log('trace', traceName, x, y);
         return {
           xType: 'time',
           dataType: cat.id === 'total' ? 'total' : null,
@@ -451,7 +452,7 @@ function getIndicatorGraphSpecification(
 
   if (hasTime) {
     dimensions.forEach((d) => {
-      const { categories, id: dimId, type } = d.dimension;
+      const { categories, type } = d.dimension;
       if (type === 'organization') {
         return;
       }
@@ -562,13 +563,7 @@ function normalizeValuesByNormalizer(values, normalizerId) {
   );
 }
 
-const isServer = typeof window === 'undefined';
 function IndicatorVisualisation({ indicatorId, indicatorLink }) {
-  // FIXME: Hooks cannot be called conditionally, we shouldn't return early here
-  if (isServer) {
-    return null;
-  }
-
   const plan = usePlan();
   const enableIndicatorComparison =
     plan.features.enableIndicatorComparison === true;
@@ -679,18 +674,23 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
   indicatorGraphSpecification.cube = cube;
   const hasTimeDimension =
     indicatorGraphSpecification.axes.filter((a) => a[0] === 'time').length > 0;
+  const showTotalLine = indicator.showTotalLine;
   const traces = getTraces(
     indicatorGraphSpecification.dimensions,
     cube,
     null,
     hasTimeDimension,
     i18n
-  );
+  ).filter((t) => t.dataType !== 'total' || showTotalLine);
+
   const [goalTraces, goalBounds] = normalizeByPopulation
     ? [[], []]
     : generateGoalTraces(indicator, scenarios, i18n);
   const [trendTrace, trendBounds] =
-    normalizeByPopulation || !hasTimeDimension || !indicator.showTrendline
+    normalizeByPopulation ||
+    !hasTimeDimension ||
+    !indicator.showTrendline ||
+    !indicator.showTotalLine
       ? [null, null]
       : generateTrendTrace(indicator, traces, goalTraces, i18n);
 
