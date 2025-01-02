@@ -107,17 +107,18 @@ const FilterSectionDivider = styled.div`
   border-bottom: 1px solid #333;
 `;
 
-const StyledBadge = styled(Badge)`
+const StyledBadge = styled(Badge)<{ $color?: string }>`
   display: inline-flex;
   max-width: 100%;
   white-space: normal;
   margin-bottom: ${(props) => props.theme.spaces.s050};
   margin-right: ${(props) => props.theme.spaces.s050};
   padding-left: 0;
-  background-color: ${(props) => props.theme.brandDark} !important;
+  background-color: ${(props) =>
+    props.$color || props.theme.brandDark} !important;
   color: ${(props) =>
     readableColor(
-      props.theme.brandDark,
+      props.$color || props.theme.brandDark,
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )};
@@ -348,6 +349,7 @@ type ActionListFilterBadgesProps = {
   actionCount: number;
   actionCountLabel?: string;
   onReset: (id: string, value: SingleFilterValue) => void;
+  buttonColor?: string;
 };
 
 type Badge = {
@@ -365,6 +367,7 @@ function ActionListFilterBadges({
   actionCount,
   actionCountLabel,
   onReset,
+  buttonColor,
 }: ActionListFilterBadgesProps) {
   const t = useTranslations();
 
@@ -444,10 +447,14 @@ function ActionListFilterBadges({
         <StyledBadge
           key={`${item.id}-${item.value}`}
           className="me-3"
-          color="primary"
+          $color={buttonColor}
         >
           <CloseButton
-            variant="white"
+            variant={
+              readableColor(buttonColor || '#000') === '#000'
+                ? 'black'
+                : 'white'
+            }
             className="btn-sm"
             onClick={item.onReset}
             aria-label={t('remove-filter')}
@@ -940,6 +947,11 @@ function ActionListFilters(props: ActionListFiltersProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const t = useTranslations();
+  const theme = useTheme();
+  // theme.neutralLight is the background color of the action list filters
+  // Let's make sure that the button color is readable on this background
+  const buttonColorName =
+    theme.neutralLight === theme.brandDark ? 'secondary' : 'primary';
   const plan = usePlan();
 
   const allFilters: ActionListFilter[] = useMemo(
@@ -1026,7 +1038,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
                   >
                     <Button
                       type="submit"
-                      color="primary"
+                      color={buttonColorName}
                       className="mb-3"
                       block
                     >
@@ -1052,6 +1064,11 @@ function ActionListFilters(props: ActionListFiltersProps) {
               onReset={onReset}
               actionCount={actionCount}
               actionCountLabel={actionCountLabel}
+              buttonColor={
+                theme.neutralLight === theme.brandDark
+                  ? theme.brandLight
+                  : theme.brandDark
+              }
             />
           </Col>
         </Row>
