@@ -112,10 +112,10 @@ if (sentryAuthToken) {
       authToken: sentryAuthToken,
 
       // Suppresses source map uploading logs during build
-      silent: false,
+      silent: true,
       org: 'kausal',
       project: 'watch-ui',
-      url: 'https://sentry.kausal.tech',
+      url: 'https://sentry.kausal.tech/',
     },
     {
       // For all available options, see:
