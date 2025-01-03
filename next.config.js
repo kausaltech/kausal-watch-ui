@@ -116,6 +116,15 @@ if (sentryAuthToken) {
       org: 'kausal',
       project: 'watch-ui',
       url: 'https://sentry.kausal.tech/',
+      errorHandler: (error) => {
+        // When an error occurs during release creation or sourcemaps
+        // upload, the plugin will call this function. Without this
+        // handler, the build would fail completely.
+        console.error(
+          '⚠️  There was an error communicating with the Sentry API'
+        );
+        console.error(error.message);
+      },
     },
     {
       // For all available options, see:
