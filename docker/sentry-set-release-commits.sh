@@ -18,6 +18,11 @@ if [ ! -z "$SENTRY_ORG" -a ! -z "$SENTRY_AUTH_TOKEN" ] ; then
     if [ -e "${BUILD_ID_FILE}" ] ; then
         node_modules/.bin/sentry-cli releases set-commits \
             --ignore-missing "$(cat ${BUILD_ID_FILE})" $ARGS
+        ret=$?
+        if [ $ret -ne 0 ]; then
+            echo "ERROR setting Sentry release commits"
+        if
+        exit 0
     else
         echo NextJS build id file not found: ${BUILD_ID_FILE}
     fi
