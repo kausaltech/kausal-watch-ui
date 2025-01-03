@@ -21,7 +21,7 @@ if [ ! -z "$SENTRY_ORG" -a ! -z "$SENTRY_AUTH_TOKEN" ] ; then
         ret=$?
         if [ $ret -ne 0 ]; then
             echo "ERROR setting Sentry release commits"
-        if
+        fi
         exit 0
     else
         echo NextJS build id file not found: ${BUILD_ID_FILE}
