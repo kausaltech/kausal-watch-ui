@@ -242,7 +242,6 @@ function getTraces(dimensions, cube, names, hasTimeDimension, i18n) {
           _cube = cube[idx];
         x = _cube.map((val) => val.date);
         y = _cube.map((val) => val.value);
-        console.log('trace', traceName, x, y);
         return {
           xType: 'time',
           dataType: cat.id === 'total' ? 'total' : null,
