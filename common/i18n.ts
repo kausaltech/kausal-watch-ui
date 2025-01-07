@@ -4,10 +4,15 @@ import {
   SiteGeneralContentActionTerm,
 } from './__generated__/graphql';
 
-export function getActionTermContext(plan: {
-  generalContent?: { actionTerm: SiteGeneralContentActionTerm };
-}) {
-  const actionTerm = plan.generalContent?.actionTerm;
+export function getActionTermContext(
+  plan: {
+    generalContent?: { actionTerm: SiteGeneralContentActionTerm };
+  },
+  actionTerm?: string
+) {
+  if (!actionTerm) {
+    actionTerm = plan.generalContent?.actionTerm;
+  }
   return actionTerm === 'ACTION'
     ? { context: undefined }
     : { context: actionTerm };
