@@ -480,6 +480,7 @@ const IndicatorList = ({
       plan,
       filterByCommonCategory: false,
       t,
+      actionTerm: 'INDICATOR',
     });
 
   const filteredIndicators = filterIndicators(

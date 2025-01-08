@@ -818,9 +818,9 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
   hasActionIdentifiers: boolean;
   ref: Ref<HTMLInputElement>;
 
-  constructor(plan: PlanContextType) {
+  constructor(plan: PlanContextType, actionTerm?: string) {
     this.hasActionIdentifiers = plan.features.hasActionIdentifiers;
-    this.actionTermContext = getActionTermContext(plan);
+    this.actionTermContext = getActionTermContext(plan, actionTerm);
     this.ref = createRef();
   }
 
@@ -1084,11 +1084,19 @@ type ConstructFiltersOpts = {
   orgs: ActionListOrganization[];
   primaryOrgs: ActionListPrimaryOrg[];
   filterByCommonCategory: boolean;
+  actionTerm?: string;
 };
 
 ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
-  const { mainConfig, plan, t, orgs, primaryOrgs, filterByCommonCategory } =
-    opts;
+  const {
+    mainConfig,
+    plan,
+    t,
+    orgs,
+    primaryOrgs,
+    filterByCommonCategory,
+    actionTerm,
+  } = opts;
   const { primaryFilters, mainFilters, advancedFilters } = mainConfig;
 
   function makeSection(
@@ -1236,7 +1244,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
         };
         filters.push(new GenericSelectFilter(opts));
       }
-      filters.push(new ActionNameFilter(plan));
+      filters.push(new ActionNameFilter(plan, actionTerm));
     }
 
     const ret: ActionListFilterSection = {

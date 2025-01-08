@@ -49,7 +49,7 @@
   "filter-result-actions": "{context, select, CASE_STUDY {case studies} STRATEGY {strategies} other {actions}}",
   "filter-schedule": "Schedule",
   "filter-status": "Status",
-  "filter-text": "{context, select, STRATEGY {Search strategies} CASE_STUDY {Search case studies} other {Search actions}}",
+  "filter-text": "{context, select, STRATEGY {Search strategies} CASE_STUDY {Search case studies} INDICATOR {Search indicators} other {Search actions}}",
   "filter-text-default": "Search by keyword",
   "front-page": "Front Page",
   "give-feedback": "Give feedback",
