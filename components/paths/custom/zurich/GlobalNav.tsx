@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import Head from 'next/head';
+import Script from 'next/script';
 import { NavigationLink } from 'common/links';
 import SVG from 'react-inlinesvg';
 import { Collapse, Nav, Navbar, NavItem } from 'reactstrap';
@@ -232,18 +232,15 @@ function GlobalNav(props: GlobalNavProps) {
     );
   }, [theme.themeLogoUrl, ownerName, siteTitle]);
 
+  const isProduction = deploymentType === 'production';
   const analyticsUrl =
-    deploymentType === 'production'
-      ? 'https://www.stadt-zuerich.ch/etc/clientlibs/stzh/analytics/294297d554c0/068a31a4609c/launch-9189fcb507a0.min.js'
-      : 'https://www.integ.stadt-zuerich.ch/etc/clientlibs/stzh/analytics/294297d554c0/068a31a4609c/launch-92ad5f87cc3b-staging.min.js';
+    'https://www.stadt-zuerich.ch/etc/clientlibs/stzh/analytics/294297d554c0/068a31a4609c/launch-9189fcb507a0.min.js';
 
   return (
-    <>
-      {deploymentType === 'production' ? (
-        <Head>
-          <script key="zuerich-analytics" src={analyticsUrl} async />
-        </Head>
-      ) : null}
+    <React.Fragment>
+      {isProduction && (
+        <Script key="zuerich-analytics" src={analyticsUrl} async />
+      )}
       <div className="header header--has-appnav">
         <div className="header__inner">
           <StyledHeaderMain className="header__main">
@@ -394,7 +391,7 @@ function GlobalNav(props: GlobalNavProps) {
           )}
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 }
 
