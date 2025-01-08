@@ -126,15 +126,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@auth/core@npm:0.35.3":
-  version: 0.35.3
-  resolution: "@auth/core@npm:0.35.3"
+"@auth/core@npm:0.37.2":
+  version: 0.37.2
+  resolution: "@auth/core@npm:0.37.2"
   dependencies:
-    "@panva/hkdf": ^1.1.1
+    "@panva/hkdf": ^1.2.1
     "@types/cookie": 0.6.0
-    cookie: 0.6.0
-    jose: ^5.1.3
-    oauth4webapi: ^2.10.4
+    cookie: 0.7.1
+    jose: ^5.9.3
+    oauth4webapi: ^3.0.0
     preact: 10.11.3
     preact-render-to-string: 5.2.3
   peerDependencies:
@@ -148,7 +148,7 @@ __metadata:
       optional: true
     nodemailer:
       optional: true
-  checksum: 93b2db76c80807598f56aaf685cbd1ad9df083a7859ab58a24b55e422683e53c5497d814fc71255b22207275eef99aff253d6698027ae1f03f35ed567b2c907c
+  checksum: 669eea9bf2d84e97d179f2dd0b7f7915269aa23d6014d0dd177f072bf3f894f1a6844a346bcdea868325976cc064baa6c26925715447ba61aa96875782458969
   languageName: node
   linkType: hard
 
@@ -4137,7 +4137,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@panva/hkdf@npm:^1.1.1":
+"@panva/hkdf@npm:^1.2.1":
   version: 1.2.1
   resolution: "@panva/hkdf@npm:1.2.1"
   checksum: a4a9d1812f88f02bc163b365524bbaa5239cc4711e5e7be1bda68dabae1c896cf1cd12520949b0925a6910733d1afcb25ab51fd3cf06f0f69aee988fffebf56e
@@ -9884,13 +9884,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie@npm:0.6.0":
-  version: 0.6.0
-  resolution: "cookie@npm:0.6.0"
-  checksum: f56a7d32a07db5458e79c726b77e3c2eff655c36792f2b6c58d351fb5f61531e5b1ab7f46987150136e366c65213cbe31729e02a3eaed630c3bf7334635fb410
-  languageName: node
-  linkType: hard
-
 "cookie@npm:0.7.1":
   version: 0.7.1
   resolution: "cookie@npm:0.7.1"
@@ -11163,8 +11156,8 @@ __metadata:
   linkType: hard
 
 "elliptic@npm:^6.5.3, elliptic@npm:^6.5.4":
-  version: 6.5.4
-  resolution: "elliptic@npm:6.5.4"
+  version: 6.6.1
+  resolution: "elliptic@npm:6.6.1"
   dependencies:
     bn.js: ^4.11.9
     brorand: ^1.1.0
@@ -11173,7 +11166,7 @@ __metadata:
     inherits: ^2.0.4
     minimalistic-assert: ^1.0.1
     minimalistic-crypto-utils: ^1.0.1
-  checksum: d56d21fd04e97869f7ffcc92e18903b9f67f2d4637a23c860492fbbff5a3155fd9ca0184ce0c865dd6eb2487d234ce9551335c021c376cd2d3b7cb749c7d10f4
+  checksum: 27b14a52f68bbbc0720da259f712cb73e953f6d2047958cd02fb0d0ade2e83849dc39fb4af630889c67df8817e24237428cf59c4f4c07700f755b401149a7375
   languageName: node
   linkType: hard
 
@@ -11484,14 +11477,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"es5-ext@npm:^0.10.35, es5-ext@npm:^0.10.46, es5-ext@npm:^0.10.50":
-  version: 0.10.62
-  resolution: "es5-ext@npm:0.10.62"
+"es5-ext@npm:^0.10.35, es5-ext@npm:^0.10.46, es5-ext@npm:^0.10.50, es5-ext@npm:^0.10.62, es5-ext@npm:~0.10.14":
+  version: 0.10.64
+  resolution: "es5-ext@npm:0.10.64"
   dependencies:
     es6-iterator: ^2.0.3
     es6-symbol: ^3.1.3
+    esniff: ^2.0.1
     next-tick: ^1.1.0
-  checksum: 25f42f6068cfc6e393cf670bc5bba249132c5f5ec2dd0ed6e200e6274aca2fed8e9aec8a31c76031744c78ca283c57f0b41c7e737804c6328c7b8d3fbcba7983
+  checksum: 01179fab0769fdbef213062222f99d0346724dbaccf04b87c0e6ee7f0c97edabf14be647ca1321f0497425ea7145de0fd278d1b3f3478864b8933e7136a5c645
   languageName: node
   linkType: hard
 
@@ -11931,6 +11925,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"esniff@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "esniff@npm:2.0.1"
+  dependencies:
+    d: ^1.0.1
+    es5-ext: ^0.10.62
+    event-emitter: ^0.3.5
+    type: ^2.7.2
+  checksum: d814c0e5c39bce9925b2e65b6d8767af72c9b54f35a65f9f3d6e8c606dce9aebe35a9599d30f15b0807743f88689f445163cfb577a425de4fb8c3c5bc16710cc
+  languageName: node
+  linkType: hard
+
 "espree@npm:^9.6.0, espree@npm:^9.6.1":
   version: 9.6.1
   resolution: "espree@npm:9.6.1"
@@ -12002,6 +12008,16 @@ __metadata:
   version: 1.8.1
   resolution: "etag@npm:1.8.1"
   checksum: 571aeb3dbe0f2bbd4e4fadbdb44f325fc75335cd5f6f6b6a091e6a06a9f25ed5392f0863c5442acb0646787446e816f13cbfc6edce5b07658541dff573cab1ff
+  languageName: node
+  linkType: hard
+
+"event-emitter@npm:^0.3.5":
+  version: 0.3.5
+  resolution: "event-emitter@npm:0.3.5"
+  dependencies:
+    d: 1
+    es5-ext: ~0.10.14
+  checksum: 27c1399557d9cd7e0aa0b366c37c38a4c17293e3a10258e8b692a847dd5ba9fb90429c3a5a1eeff96f31f6fa03ccbd31d8ad15e00540b22b22f01557be706030
   languageName: node
   linkType: hard
 
@@ -15459,17 +15475,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jose@npm:^5.0.0":
+"jose@npm:^5.0.0, jose@npm:^5.9.3":
   version: 5.9.6
   resolution: "jose@npm:5.9.6"
   checksum: 4b536da0201858ed4c4582e8bb479081f11e0c63dd0f5e473adde16fc539785e1f2f0409bc1fc7cbbb5b68026776c960b4952da3a06f6fdfff0b9764c9127ae0
-  languageName: node
-  linkType: hard
-
-"jose@npm:^5.1.3":
-  version: 5.9.3
-  resolution: "jose@npm:5.9.3"
-  checksum: d128f2b90daf76f14eb22a81528e4f1cd99aa73613ae9d7edad69479c0ae9c29d571108e21d6ac33c3892de7bea24c4a4b99b4eb63354ebe566683c719ee334e
   languageName: node
   linkType: hard
 
@@ -15785,7 +15794,7 @@ __metadata:
     mapbox-gl: ^2.11.0
     morgan: ^1.10.0
     next: 14.2.21
-    next-auth: beta
+    next-auth: ^5.0.0-beta.25
     next-images: ^1.8.4
     next-intl: ^3.3.2
     plotly.js-locales: ^2.34.0
@@ -16903,11 +16912,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-auth@npm:beta":
-  version: 5.0.0-beta.22
-  resolution: "next-auth@npm:5.0.0-beta.22"
+"next-auth@npm:^5.0.0-beta.25":
+  version: 5.0.0-beta.25
+  resolution: "next-auth@npm:5.0.0-beta.25"
   dependencies:
-    "@auth/core": 0.35.3
+    "@auth/core": 0.37.2
   peerDependencies:
     "@simplewebauthn/browser": ^9.0.1
     "@simplewebauthn/server": ^9.0.2
@@ -16921,7 +16930,7 @@ __metadata:
       optional: true
     nodemailer:
       optional: true
-  checksum: 4b82f3fc147b444ec4942900c0e0a430372117e4c2c2ad84dff0afbce5dea4f36ef147e647f8b88e9894b492d8a92faa26801203d2d2839541092713c8767866
+  checksum: 5a3f52e6d32ae6c954e438496b96bb8d46ba60ca6dbfab146af718d50e7fe8b967b7019fda162e5fa32bfc5219160f7b995c327d62d5144e7935bb18b9b61e39
   languageName: node
   linkType: hard
 
@@ -17276,10 +17285,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oauth4webapi@npm:^2.10.4":
-  version: 2.17.0
-  resolution: "oauth4webapi@npm:2.17.0"
-  checksum: 2a29c1d4c2f597aa8e41f51bc102cf098c23295a05b0ab4769f53800b6ede7abae3f8b00136634e1ec32bea7849cbefdd9e0f21ec7c215f45fa6d9e82cb6701c
+"oauth4webapi@npm:^3.0.0":
+  version: 3.1.4
+  resolution: "oauth4webapi@npm:3.1.4"
+  checksum: d4b81096020ae3edb4170ee229368848ed0bb49a1bca02f5c39778951246d6519c8afbcbaeaffb2c36862af8493c121a439964f0ca9e4c7da9cafb18cb019474
   languageName: node
   linkType: hard
 
