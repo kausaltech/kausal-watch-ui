@@ -42,7 +42,7 @@
     "filter-primary-organization": "{context, select, DIVISION {Ledande division} other {Primär organisation}}",
     "filter-result-actions": "{context, select, CASE_STUDY {handlingar} STRATEGY {strategier} other {åtgärder}}",
     "filter-schedule": "Tidsram",
-    "filter-text": "{context, select, STRATEGY {Sökstrategier} CASE_STUDY {Sök efter fallstudier} other {Sök åtgärder}}",
+    "filter-text": "{context, select, STRATEGY {Sökstrategier} CASE_STUDY {Sök efter fallstudier} INDICATOR {Sök indicatorer} other {Sök åtgärder}}",
     "filter-text-default": "Sök efter nyckelord",
     "front-page": "Framsida",
     "give-feedback": "Ge respons",
