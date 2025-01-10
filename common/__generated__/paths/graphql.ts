@@ -3,18 +3,20 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  DateTime: any;
-  JSONString: any;
-  PositiveInt: any;
-  RichText: any;
-  UUID: any;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
+  JSONString: { input: any; output: any; }
+  PositiveInt: { input: any; output: any; }
+  RichText: { input: any; output: any; }
+  UUID: { input: any; output: any; }
 };
 
 export type ActionEfficiency = {
@@ -22,38 +24,38 @@ export type ActionEfficiency = {
   action: ActionNode;
   costDim: DimensionalMetricType;
   costValues: Array<Maybe<YearlyValue>>;
-  efficiencyDivisor?: Maybe<Scalars['Float']>;
+  efficiencyDivisor?: Maybe<Scalars['Float']['output']>;
   impactDim: DimensionalMetricType;
   impactValues: Array<Maybe<YearlyValue>>;
-  unitAdjustmentMultiplier?: Maybe<Scalars['Float']>;
+  unitAdjustmentMultiplier?: Maybe<Scalars['Float']['output']>;
 };
 
 export type ActionEfficiencyPairType = {
   __typename?: 'ActionEfficiencyPairType';
   actions: Array<ActionEfficiency>;
-  costCutpoint?: Maybe<Scalars['Float']>;
+  costCutpoint?: Maybe<Scalars['Float']['output']>;
   costNode: Node;
   costUnit: UnitType;
   efficiencyUnit: UnitType;
-  graphType?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
+  graphType?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
   impactNode: Node;
   impactUnit: UnitType;
-  indicatorCutpoint?: Maybe<Scalars['Float']>;
+  indicatorCutpoint?: Maybe<Scalars['Float']['output']>;
   indicatorUnit: UnitType;
-  invertCost: Scalars['Boolean'];
-  invertImpact: Scalars['Boolean'];
-  label: Scalars['String'];
-  plotLimitEfficiency?: Maybe<Scalars['Float']>;
-  plotLimitForIndicator?: Maybe<Scalars['Float']>;
+  invertCost: Scalars['Boolean']['output'];
+  invertImpact: Scalars['Boolean']['output'];
+  label: Scalars['String']['output'];
+  plotLimitEfficiency?: Maybe<Scalars['Float']['output']>;
+  plotLimitForIndicator?: Maybe<Scalars['Float']['output']>;
 };
 
 export type ActionGroupType = {
   __typename?: 'ActionGroupType';
   actions: Array<ActionNode>;
-  color?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  color?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type ActionListPage = PageInterface & {
@@ -61,156 +63,158 @@ export type ActionListPage = PageInterface & {
   aliasOf?: Maybe<Page>;
   ancestors: Array<PageInterface>;
   children: Array<PageInterface>;
-  contentType: Scalars['String'];
+  contentType: Scalars['String']['output'];
   defaultSortOrder: ActionSortOrder;
-  depth?: Maybe<Scalars['Int']>;
+  depth?: Maybe<Scalars['Int']['output']>;
   descendants: Array<PageInterface>;
-  draftTitle: Scalars['String'];
-  expireAt?: Maybe<Scalars['DateTime']>;
-  expired: Scalars['Boolean'];
-  firstPublishedAt?: Maybe<Scalars['DateTime']>;
-  goLiveAt?: Maybe<Scalars['DateTime']>;
-  hasUnpublishedChanges: Scalars['Boolean'];
-  id?: Maybe<Scalars['ID']>;
-  lastPublishedAt?: Maybe<Scalars['DateTime']>;
-  latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
-  leadParagraph?: Maybe<Scalars['String']>;
-  leadTitle?: Maybe<Scalars['String']>;
-  live: Scalars['Boolean'];
-  locked?: Maybe<Scalars['Boolean']>;
-  lockedAt?: Maybe<Scalars['DateTime']>;
+  draftTitle: Scalars['String']['output'];
+  expireAt?: Maybe<Scalars['DateTime']['output']>;
+  expired: Scalars['Boolean']['output'];
+  firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  goLiveAt?: Maybe<Scalars['DateTime']['output']>;
+  hasUnpublishedChanges: Scalars['Boolean']['output'];
+  id?: Maybe<Scalars['ID']['output']>;
+  lastPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  latestRevisionCreatedAt?: Maybe<Scalars['DateTime']['output']>;
+  leadParagraph?: Maybe<Scalars['String']['output']>;
+  leadTitle?: Maybe<Scalars['String']['output']>;
+  live: Scalars['Boolean']['output'];
+  locked?: Maybe<Scalars['Boolean']['output']>;
+  lockedAt?: Maybe<Scalars['DateTime']['output']>;
   lockedBy?: Maybe<UserType>;
-  numchild: Scalars['Int'];
+  numchild: Scalars['Int']['output'];
   owner?: Maybe<UserType>;
-  pageType?: Maybe<Scalars['String']>;
+  pageType?: Maybe<Scalars['String']['output']>;
   parent?: Maybe<PageInterface>;
-  path: Scalars['String'];
-  searchDescription?: Maybe<Scalars['String']>;
-  searchScore?: Maybe<Scalars['Float']>;
-  seoTitle: Scalars['String'];
-  showActionComparison?: Maybe<Scalars['Boolean']>;
-  showCumulativeImpact?: Maybe<Scalars['Boolean']>;
-  showInFooter: Scalars['Boolean'];
-  showInMenus: Scalars['Boolean'];
-  showOnlyMunicipalActions?: Maybe<Scalars['Boolean']>;
+  path: Scalars['String']['output'];
+  searchDescription?: Maybe<Scalars['String']['output']>;
+  searchScore?: Maybe<Scalars['Float']['output']>;
+  seoTitle: Scalars['String']['output'];
+  showActionComparison?: Maybe<Scalars['Boolean']['output']>;
+  showCumulativeImpact?: Maybe<Scalars['Boolean']['output']>;
+  showInFooter: Scalars['Boolean']['output'];
+  showInMenus: Scalars['Boolean']['output'];
+  showOnlyMunicipalActions?: Maybe<Scalars['Boolean']['output']>;
   siblings: Array<PageInterface>;
-  slug: Scalars['String'];
-  title: Scalars['String'];
-  translationKey: Scalars['UUID'];
-  url?: Maybe<Scalars['String']>;
-  urlPath: Scalars['String'];
+  slug: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  translationKey: Scalars['UUID']['output'];
+  url?: Maybe<Scalars['String']['output']>;
+  urlPath: Scalars['String']['output'];
 };
 
 
 export type ActionListPageAncestorsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type ActionListPageChildrenArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type ActionListPageDescendantsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type ActionListPageSiblingsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ActionNode = NodeInterface & {
   __typename?: 'ActionNode';
   body?: Maybe<Array<StreamFieldInterface>>;
-  color?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['String']['output']>;
   decisionLevel?: Maybe<DecisionLevel>;
-  description?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
   dimensionalFlow?: Maybe<DimensionalFlowType>;
   downstreamNodes: Array<NodeInterface>;
-  explanation?: Maybe<Scalars['String']>;
-  goal?: Maybe<Scalars['RichText']>;
+  explanation?: Maybe<Scalars['String']['output']>;
+  goal?: Maybe<Scalars['RichText']['output']>;
   goals: Array<NodeGoal>;
   group?: Maybe<ActionGroupType>;
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
   impactMetric?: Maybe<ForecastMetricType>;
   indicatorNode?: Maybe<Node>;
   inputNodes: Array<NodeInterface>;
   /** @deprecated Use __typeName instead */
-  isAction: Scalars['Boolean'];
-  isEnabled: Scalars['Boolean'];
-  isVisible: Scalars['Boolean'];
+  isAction: Scalars['Boolean']['output'];
+  isEnabled: Scalars['Boolean']['output'];
+  isVisible: Scalars['Boolean']['output'];
   metric?: Maybe<ForecastMetricType>;
   metricDim?: Maybe<DimensionalMetricType>;
   metrics?: Maybe<Array<ForecastMetricType>>;
-  name: Scalars['String'];
-  order?: Maybe<Scalars['Int']>;
+  name: Scalars['String']['output'];
+  order?: Maybe<Scalars['Int']['output']>;
   outcome?: Maybe<DimensionalMetricType>;
   outputNodes: Array<NodeInterface>;
   parameters: Array<ParameterInterface>;
   parentAction?: Maybe<ActionNode>;
-  quantity?: Maybe<Scalars['String']>;
-  shortDescription?: Maybe<Scalars['RichText']>;
-  shortName?: Maybe<Scalars['String']>;
+  quantity?: Maybe<Scalars['String']['output']>;
+  shortDescription?: Maybe<Scalars['RichText']['output']>;
+  shortName?: Maybe<Scalars['String']['output']>;
   subactions: Array<ActionNode>;
   /** @deprecated Replaced by "goals". */
-  targetYearGoal?: Maybe<Scalars['Float']>;
+  targetYearGoal?: Maybe<Scalars['Float']['output']>;
   unit?: Maybe<UnitType>;
   upstreamNodes: Array<NodeInterface>;
+  visualizations?: Maybe<Array<VisualizationEntry>>;
 };
 
 
 export type ActionNodeDownstreamNodesArgs = {
-  maxDepth?: InputMaybe<Scalars['Int']>;
+  maxDepth?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type ActionNodeGoalsArgs = {
-  activeGoal?: InputMaybe<Scalars['ID']>;
+  activeGoal?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type ActionNodeImpactMetricArgs = {
-  goalId?: InputMaybe<Scalars['ID']>;
-  targetNodeId?: InputMaybe<Scalars['ID']>;
+  goalId?: InputMaybe<Scalars['ID']['input']>;
+  targetNodeId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type ActionNodeMetricArgs = {
-  goalId?: InputMaybe<Scalars['ID']>;
+  goalId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type ActionNodeMetricDimArgs = {
-  withScenarios?: InputMaybe<Array<Scalars['String']>>;
+  includeScenarioKinds?: InputMaybe<Array<ScenarioKind>>;
+  withScenarios?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
 export type ActionNodeUpstreamNodesArgs = {
-  includeActions?: InputMaybe<Scalars['Boolean']>;
-  sameQuantity?: InputMaybe<Scalars['Boolean']>;
-  sameUnit?: InputMaybe<Scalars['Boolean']>;
+  includeActions?: InputMaybe<Scalars['Boolean']['input']>;
+  sameQuantity?: InputMaybe<Scalars['Boolean']['input']>;
+  sameUnit?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** An enumeration. */
@@ -226,146 +230,146 @@ export enum ActionSortOrder {
 export type ActivateScenarioMutation = {
   __typename?: 'ActivateScenarioMutation';
   activeScenario?: Maybe<ScenarioType>;
-  ok?: Maybe<Scalars['Boolean']>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type BlockQuoteBlock = StreamFieldInterface & {
   __typename?: 'BlockQuoteBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type BoolParameterType = ParameterInterface & {
   __typename?: 'BoolParameterType';
-  defaultValue?: Maybe<Scalars['Boolean']>;
-  description?: Maybe<Scalars['String']>;
+  defaultValue?: Maybe<Scalars['Boolean']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   /** Global ID for the parameter in the instance */
-  id: Scalars['ID'];
-  isCustomizable: Scalars['Boolean'];
-  isCustomized: Scalars['Boolean'];
-  label?: Maybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  isCustomizable: Scalars['Boolean']['output'];
+  isCustomized: Scalars['Boolean']['output'];
+  label?: Maybe<Scalars['String']['output']>;
   /** ID of parameter in the node's namespace */
-  localId?: Maybe<Scalars['ID']>;
+  localId?: Maybe<Scalars['ID']['output']>;
   node?: Maybe<NodeInterface>;
-  nodeRelativeId?: Maybe<Scalars['ID']>;
-  value?: Maybe<Scalars['Boolean']>;
+  nodeRelativeId?: Maybe<Scalars['ID']['output']>;
+  value?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type BooleanBlock = StreamFieldInterface & {
   __typename?: 'BooleanBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['Boolean'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['Boolean']['output'];
 };
 
 export type CardListBlock = StreamFieldInterface & {
   __typename?: 'CardListBlock';
-  blockType: Scalars['String'];
+  blockType: Scalars['String']['output'];
   blocks: Array<StreamFieldInterface>;
   cards?: Maybe<Array<Maybe<CardListCardBlock>>>;
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 export type CardListCardBlock = {
   __typename?: 'CardListCardBlock';
-  shortDescription?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
+  shortDescription?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 export type CharBlock = StreamFieldInterface & {
   __typename?: 'CharBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type ChoiceBlock = StreamFieldInterface & {
   __typename?: 'ChoiceBlock';
-  blockType: Scalars['String'];
+  blockType: Scalars['String']['output'];
   choices: Array<ChoiceOption>;
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type ChoiceOption = {
   __typename?: 'ChoiceOption';
-  key: Scalars['String'];
-  value: Scalars['String'];
+  key: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 /** Collection type */
 export type CollectionObjectType = {
   __typename?: 'CollectionObjectType';
   ancestors: Array<Maybe<CollectionObjectType>>;
-  depth: Scalars['Int'];
+  depth: Scalars['Int']['output'];
   descendants: Array<Maybe<CollectionObjectType>>;
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  numchild: Scalars['Int'];
-  path: Scalars['String'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  numchild: Scalars['Int']['output'];
+  path: Scalars['String']['output'];
 };
 
 export type CreateFrameworkConfigMutation = {
   __typename?: 'CreateFrameworkConfigMutation';
   /** The created framework config instance. */
   frameworkConfig?: Maybe<FrameworkConfig>;
-  ok: Scalars['Boolean'];
+  ok: Scalars['Boolean']['output'];
 };
 
 export type CreateNzcFrameworkConfigMutation = {
   __typename?: 'CreateNZCFrameworkConfigMutation';
   /** The created framework config instance. */
   frameworkConfig?: Maybe<FrameworkConfig>;
-  ok: Scalars['Boolean'];
+  ok: Scalars['Boolean']['output'];
 };
 
 export type DateBlock = StreamFieldInterface & {
   __typename?: 'DateBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 
 export type DateBlockValueArgs = {
-  format?: InputMaybe<Scalars['String']>;
+  format?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DateTimeBlock = StreamFieldInterface & {
   __typename?: 'DateTimeBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 
 export type DateTimeBlockValueArgs = {
-  format?: InputMaybe<Scalars['String']>;
+  format?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DecimalBlock = StreamFieldInterface & {
   __typename?: 'DecimalBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['Float'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['Float']['output'];
 };
 
 /** An enumeration. */
@@ -377,10 +381,15 @@ export enum DecisionLevel {
 
 export type DeleteFrameworkConfigMutation = {
   __typename?: 'DeleteFrameworkConfigMutation';
-  ok?: Maybe<Scalars['Boolean']>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
 };
 
-/** An enumeration. */
+/** Desired (benificial) direction for the values of the output of a node */
+export enum DesiredOutcome {
+  Decreasing = 'decreasing',
+  Increasing = 'increasing'
+}
+
 export enum DimensionKind {
   Common = 'COMMON',
   Node = 'NODE',
@@ -389,41 +398,41 @@ export enum DimensionKind {
 
 export type DimensionalFlowType = {
   __typename?: 'DimensionalFlowType';
-  id: Scalars['String'];
+  id: Scalars['String']['output'];
   links: Array<FlowLinksType>;
   nodes: Array<FlowNodeType>;
-  sources: Array<Scalars['String']>;
+  sources: Array<Scalars['String']['output']>;
   unit: UnitType;
 };
 
 export type DimensionalMetricGoalEntry = {
   __typename?: 'DimensionalMetricGoalEntry';
-  categories: Array<Scalars['String']>;
-  groups: Array<Scalars['String']>;
+  categories: Array<Scalars['String']['output']>;
+  groups: Array<Scalars['String']['output']>;
   values: Array<MetricYearlyGoalType>;
 };
 
 export type DimensionalMetricType = {
   __typename?: 'DimensionalMetricType';
   dimensions: Array<MetricDimensionType>;
-  forecastFrom?: Maybe<Scalars['Int']>;
+  forecastFrom?: Maybe<Scalars['Int']['output']>;
   goals: Array<DimensionalMetricGoalEntry>;
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  normalizedBy?: Maybe<Node>;
-  stackable: Scalars['Boolean'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  normalizedBy?: Maybe<NormalizerNodeType>;
+  stackable: Scalars['Boolean']['output'];
   unit: UnitType;
-  values: Array<Maybe<Scalars['Float']>>;
-  years: Array<Scalars['Int']>;
+  values: Array<Scalars['Float']['output']>;
+  years: Array<Scalars['Int']['output']>;
 };
 
 export type DocumentChooserBlock = StreamFieldInterface & {
   __typename?: 'DocumentChooserBlock';
-  blockType: Scalars['String'];
+  blockType: Scalars['String']['output'];
   document?: Maybe<DocumentObjectType>;
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
 };
 
 /**
@@ -433,72 +442,72 @@ export type DocumentChooserBlock = StreamFieldInterface & {
 export type DocumentObjectType = {
   __typename?: 'DocumentObjectType';
   collection: CollectionObjectType;
-  createdAt: Scalars['DateTime'];
-  file: Scalars['String'];
-  fileHash: Scalars['String'];
-  fileSize?: Maybe<Scalars['Int']>;
-  id: Scalars['ID'];
+  createdAt: Scalars['DateTime']['output'];
+  file: Scalars['String']['output'];
+  fileHash: Scalars['String']['output'];
+  fileSize?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['ID']['output'];
   tags: Array<TagObjectType>;
-  title: Scalars['String'];
+  title: Scalars['String']['output'];
   uploadedByUser?: Maybe<UserType>;
-  url: Scalars['String'];
+  url: Scalars['String']['output'];
 };
 
 export type EmailBlock = StreamFieldInterface & {
   __typename?: 'EmailBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type EmbedBlock = StreamFieldInterface & {
   __typename?: 'EmbedBlock';
-  blockType: Scalars['String'];
-  embed?: Maybe<Scalars['String']>;
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawEmbed?: Maybe<Scalars['JSONString']>;
-  rawValue: Scalars['String'];
-  url: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  embed?: Maybe<Scalars['String']['output']>;
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawEmbed?: Maybe<Scalars['JSONString']['output']>;
+  rawValue: Scalars['String']['output'];
+  url: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type FloatBlock = StreamFieldInterface & {
   __typename?: 'FloatBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['Float'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['Float']['output'];
 };
 
 export type FlowLinksType = {
   __typename?: 'FlowLinksType';
-  absoluteSourceValues: Array<Scalars['Float']>;
-  isForecast: Scalars['Boolean'];
-  sources: Array<Scalars['String']>;
-  targets: Array<Scalars['String']>;
-  values: Array<Maybe<Scalars['Float']>>;
-  year: Scalars['Int'];
+  absoluteSourceValues: Array<Scalars['Float']['output']>;
+  isForecast: Scalars['Boolean']['output'];
+  sources: Array<Scalars['String']['output']>;
+  targets: Array<Scalars['String']['output']>;
+  values: Array<Maybe<Scalars['Float']['output']>>;
+  year: Scalars['Int']['output'];
 };
 
 export type FlowNodeType = {
   __typename?: 'FlowNodeType';
-  color?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  label: Scalars['String'];
+  color?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  label: Scalars['String']['output'];
 };
 
 export type ForecastMetricType = {
   __typename?: 'ForecastMetricType';
   baselineForecastValues?: Maybe<Array<YearlyValue>>;
-  cumulativeForecastValue?: Maybe<Scalars['Float']>;
+  cumulativeForecastValue?: Maybe<Scalars['Float']['output']>;
   forecastValues: Array<YearlyValue>;
   historicalValues: Array<YearlyValue>;
-  id?: Maybe<Scalars['ID']>;
-  name?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
   /** Will be set if the node outputs multiple time-series */
   outputNode?: Maybe<Node>;
   unit?: Maybe<UnitType>;
@@ -507,7 +516,7 @@ export type ForecastMetricType = {
 
 
 export type ForecastMetricTypeHistoricalValuesArgs = {
-  latest?: InputMaybe<Scalars['Int']>;
+  latest?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
@@ -531,15 +540,16 @@ export type Framework = {
   __typename?: 'Framework';
   config?: Maybe<FrameworkConfig>;
   configs: Array<FrameworkConfig>;
-  description: Scalars['String'];
-  id: Scalars['ID'];
-  identifier: Scalars['String'];
+  defaults: FrameworkDefaultsType;
+  description: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  identifier: Scalars['String']['output'];
   measureTemplate?: Maybe<MeasureTemplate>;
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   section?: Maybe<Section>;
   sections: Array<Section>;
   userPermissions?: Maybe<UserPermissions>;
-  userRoles?: Maybe<Array<Scalars['String']>>;
+  userRoles?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 
@@ -561,7 +571,7 @@ export type Framework = {
  *     description (TextField): An optional description of the framework.
  */
 export type FrameworkConfigArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
@@ -583,7 +593,7 @@ export type FrameworkConfigArgs = {
  *     description (TextField): An optional description of the framework.
  */
 export type FrameworkMeasureTemplateArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
@@ -605,7 +615,7 @@ export type FrameworkMeasureTemplateArgs = {
  *     description (TextField): An optional description of the framework.
  */
 export type FrameworkSectionArgs = {
-  identifier: Scalars['ID'];
+  identifier: Scalars['ID']['input'];
 };
 
 /**
@@ -617,34 +627,43 @@ export type FrameworkSectionArgs = {
  */
 export type FrameworkConfig = {
   __typename?: 'FrameworkConfig';
-  baselineYear: Scalars['Int'];
+  baselineYear: Scalars['Int']['output'];
   framework: Framework;
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
   instance?: Maybe<InstanceType>;
   measures: Array<Measure>;
-  organizationIdentifier?: Maybe<Scalars['String']>;
-  organizationName?: Maybe<Scalars['String']>;
-  organizationSlug?: Maybe<Scalars['String']>;
+  organizationIdentifier?: Maybe<Scalars['String']['output']>;
+  organizationName?: Maybe<Scalars['String']['output']>;
+  organizationSlug?: Maybe<Scalars['String']['output']>;
   /** URL for downloading a results file */
-  resultsDownloadUrl?: Maybe<Scalars['String']>;
+  resultsDownloadUrl?: Maybe<Scalars['String']['output']>;
+  targetYear?: Maybe<Scalars['Int']['output']>;
   userPermissions?: Maybe<UserPermissions>;
-  userRoles?: Maybe<Array<Scalars['String']>>;
-  uuid: Scalars['UUID'];
+  userRoles?: Maybe<Array<Scalars['String']['output']>>;
+  uuid: Scalars['UUID']['output'];
   /** Public URL for instance dashboard */
-  viewUrl?: Maybe<Scalars['String']>;
+  viewUrl?: Maybe<Scalars['String']['output']>;
 };
 
 export type FrameworkConfigInput = {
-  baselineYear: Scalars['Int'];
-  frameworkId: Scalars['ID'];
+  baselineYear: Scalars['Int']['input'];
+  frameworkId: Scalars['ID']['input'];
   /** Identifier for the model instance. Needs to be unique. */
-  instanceIdentifier: Scalars['ID'];
+  instanceIdentifier: Scalars['ID']['input'];
   /** Name for the framework configuration instance. Typically the name of the organization. */
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   /** Name of the organization. If not set, it will be determined through the user's credentials, if possible. */
-  organizationName?: InputMaybe<Scalars['String']>;
+  organizationName?: InputMaybe<Scalars['String']['input']>;
+  /** Target year for model. */
+  targetYear?: InputMaybe<Scalars['Int']['input']>;
   /** UUID for the new framework config. If not set, will be generated automatically. */
-  uuid?: InputMaybe<Scalars['UUID']>;
+  uuid?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type FrameworkDefaultsType = {
+  __typename?: 'FrameworkDefaultsType';
+  baselineYear: MinMaxDefaultIntType;
+  targetYear: MinMaxDefaultIntType;
 };
 
 /** An enumeration. */
@@ -659,115 +678,121 @@ export enum FrameworksMeasureTemplatePriorityChoices {
 
 export type ImageChooserBlock = StreamFieldInterface & {
   __typename?: 'ImageChooserBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
   image?: Maybe<ImageObjectType>;
-  rawValue: Scalars['String'];
+  rawValue: Scalars['String']['output'];
 };
 
 export type ImageObjectType = {
   __typename?: 'ImageObjectType';
-  aspectRatio: Scalars['Float'];
+  aspectRatio: Scalars['Float']['output'];
   collection: CollectionObjectType;
-  createdAt: Scalars['DateTime'];
-  description: Scalars['String'];
-  file: Scalars['String'];
-  fileHash: Scalars['String'];
-  fileSize?: Maybe<Scalars['Int']>;
-  focalPointHeight?: Maybe<Scalars['Int']>;
-  focalPointWidth?: Maybe<Scalars['Int']>;
-  focalPointX?: Maybe<Scalars['Int']>;
-  focalPointY?: Maybe<Scalars['Int']>;
-  height: Scalars['Int'];
-  id: Scalars['ID'];
-  isSvg: Scalars['Boolean'];
+  createdAt: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  file: Scalars['String']['output'];
+  fileHash: Scalars['String']['output'];
+  fileSize?: Maybe<Scalars['Int']['output']>;
+  focalPointHeight?: Maybe<Scalars['Int']['output']>;
+  focalPointWidth?: Maybe<Scalars['Int']['output']>;
+  focalPointX?: Maybe<Scalars['Int']['output']>;
+  focalPointY?: Maybe<Scalars['Int']['output']>;
+  height: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  isSvg: Scalars['Boolean']['output'];
   rendition?: Maybe<ImageRenditionObjectType>;
   renditions: Array<ImageRenditionObjectType>;
-  sizes: Scalars['String'];
+  sizes: Scalars['String']['output'];
   /** @deprecated Use the `url` attribute */
-  src: Scalars['String'];
-  srcSet?: Maybe<Scalars['String']>;
+  src: Scalars['String']['output'];
+  srcSet?: Maybe<Scalars['String']['output']>;
   tags: Array<TagObjectType>;
-  title: Scalars['String'];
+  title: Scalars['String']['output'];
   uploadedByUser?: Maybe<UserType>;
-  url: Scalars['String'];
-  width: Scalars['Int'];
+  url: Scalars['String']['output'];
+  width: Scalars['Int']['output'];
 };
 
 
 export type ImageObjectTypeRenditionArgs = {
-  bgcolor?: InputMaybe<Scalars['String']>;
-  fill?: InputMaybe<Scalars['String']>;
-  format?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['Int']>;
-  jpegquality?: InputMaybe<Scalars['Int']>;
-  max?: InputMaybe<Scalars['String']>;
-  min?: InputMaybe<Scalars['String']>;
-  preserveSvg?: InputMaybe<Scalars['Boolean']>;
-  webpquality?: InputMaybe<Scalars['Int']>;
-  width?: InputMaybe<Scalars['Int']>;
+  bgcolor?: InputMaybe<Scalars['String']['input']>;
+  fill?: InputMaybe<Scalars['String']['input']>;
+  format?: InputMaybe<Scalars['String']['input']>;
+  height?: InputMaybe<Scalars['Int']['input']>;
+  jpegquality?: InputMaybe<Scalars['Int']['input']>;
+  max?: InputMaybe<Scalars['String']['input']>;
+  min?: InputMaybe<Scalars['String']['input']>;
+  preserveSvg?: InputMaybe<Scalars['Boolean']['input']>;
+  webpquality?: InputMaybe<Scalars['Int']['input']>;
+  width?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type ImageObjectTypeSrcSetArgs = {
-  format?: InputMaybe<Scalars['String']>;
-  preserveSvg?: InputMaybe<Scalars['Boolean']>;
-  sizes?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  format?: InputMaybe<Scalars['String']['input']>;
+  preserveSvg?: InputMaybe<Scalars['Boolean']['input']>;
+  sizes?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type ImageRenditionObjectType = {
   __typename?: 'ImageRenditionObjectType';
-  alt: Scalars['String'];
-  backgroundPositionStyle: Scalars['String'];
-  file: Scalars['String'];
-  filterSpec: Scalars['String'];
-  focalPoint?: Maybe<Scalars['String']>;
-  focalPointKey: Scalars['String'];
-  height: Scalars['Int'];
-  id: Scalars['ID'];
+  alt: Scalars['String']['output'];
+  backgroundPositionStyle: Scalars['String']['output'];
+  file: Scalars['String']['output'];
+  filterSpec: Scalars['String']['output'];
+  focalPoint?: Maybe<Scalars['String']['output']>;
+  focalPointKey: Scalars['String']['output'];
+  height: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
   image: ImageObjectType;
-  url: Scalars['String'];
-  width: Scalars['Int'];
+  url: Scalars['String']['output'];
+  width: Scalars['Int']['output'];
 };
 
 export type InstanceBasicConfiguration = {
   __typename?: 'InstanceBasicConfiguration';
-  defaultLanguage: Scalars['String'];
+  defaultLanguage: Scalars['String']['output'];
   hostname: InstanceHostname;
-  identifier: Scalars['String'];
-  isProtected: Scalars['Boolean'];
-  supportedLanguages: Array<Scalars['String']>;
-  themeIdentifier: Scalars['String'];
+  identifier: Scalars['String']['output'];
+  isProtected: Scalars['Boolean']['output'];
+  supportedLanguages: Array<Scalars['String']['output']>;
+  themeIdentifier: Scalars['String']['output'];
+};
+
+export type InstanceContext = {
+  hostname?: InputMaybe<Scalars['String']['input']>;
+  identifier?: InputMaybe<Scalars['ID']['input']>;
+  locale?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type InstanceFeaturesType = {
   __typename?: 'InstanceFeaturesType';
-  baselineVisibleInGraphs: Scalars['Boolean'];
-  hideNodeDetails: Scalars['Boolean'];
-  maximumFractionDigits?: Maybe<Scalars['Int']>;
-  showAccumulatedEffects: Scalars['Boolean'];
-  showRefreshPrompt: Scalars['Boolean'];
-  showSignificantDigits?: Maybe<Scalars['Int']>;
+  baselineVisibleInGraphs: Scalars['Boolean']['output'];
+  hideNodeDetails: Scalars['Boolean']['output'];
+  maximumFractionDigits?: Maybe<Scalars['Int']['output']>;
+  showAccumulatedEffects: Scalars['Boolean']['output'];
+  showRefreshPrompt: Scalars['Boolean']['output'];
+  showSignificantDigits?: Maybe<Scalars['Int']['output']>;
 };
 
 export type InstanceGoalDimension = {
   __typename?: 'InstanceGoalDimension';
-  categories: Array<Scalars['String']>;
+  categories: Array<Scalars['String']['output']>;
   /** @deprecated replaced with categories */
-  category: Scalars['String'];
-  dimension: Scalars['String'];
-  groups: Array<Scalars['String']>;
+  category: Scalars['String']['output'];
+  dimension: Scalars['String']['output'];
+  groups: Array<Scalars['String']['output']>;
 };
 
 export type InstanceGoalEntry = {
   __typename?: 'InstanceGoalEntry';
-  default: Scalars['Boolean'];
+  default: Scalars['Boolean']['output'];
   dimensions: Array<InstanceGoalDimension>;
-  disableReason?: Maybe<Scalars['String']>;
-  disabled: Scalars['Boolean'];
-  id: Scalars['ID'];
-  label?: Maybe<Scalars['String']>;
+  disableReason?: Maybe<Scalars['String']['output']>;
+  disabled: Scalars['Boolean']['output'];
+  id: Scalars['ID']['output'];
+  label?: Maybe<Scalars['String']['output']>;
   outcomeNode: Node;
   unit: UnitType;
   values: Array<InstanceYearlyGoalType>;
@@ -775,8 +800,8 @@ export type InstanceGoalEntry = {
 
 export type InstanceHostname = {
   __typename?: 'InstanceHostname';
-  basePath?: Maybe<Scalars['String']>;
-  hostname?: Maybe<Scalars['String']>;
+  basePath?: Maybe<Scalars['String']['output']>;
+  hostname?: Maybe<Scalars['String']['output']>;
 };
 
 export type InstanceRootPage = PageInterface & {
@@ -784,147 +809,147 @@ export type InstanceRootPage = PageInterface & {
   aliasOf?: Maybe<Page>;
   ancestors: Array<PageInterface>;
   children: Array<PageInterface>;
-  contentType: Scalars['String'];
-  depth?: Maybe<Scalars['Int']>;
+  contentType: Scalars['String']['output'];
+  depth?: Maybe<Scalars['Int']['output']>;
   descendants: Array<PageInterface>;
-  draftTitle: Scalars['String'];
-  expireAt?: Maybe<Scalars['DateTime']>;
-  expired: Scalars['Boolean'];
-  firstPublishedAt?: Maybe<Scalars['DateTime']>;
-  goLiveAt?: Maybe<Scalars['DateTime']>;
-  hasUnpublishedChanges: Scalars['Boolean'];
-  id?: Maybe<Scalars['ID']>;
-  lastPublishedAt?: Maybe<Scalars['DateTime']>;
-  latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
-  live: Scalars['Boolean'];
-  locked?: Maybe<Scalars['Boolean']>;
-  lockedAt?: Maybe<Scalars['DateTime']>;
+  draftTitle: Scalars['String']['output'];
+  expireAt?: Maybe<Scalars['DateTime']['output']>;
+  expired: Scalars['Boolean']['output'];
+  firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  goLiveAt?: Maybe<Scalars['DateTime']['output']>;
+  hasUnpublishedChanges: Scalars['Boolean']['output'];
+  id?: Maybe<Scalars['ID']['output']>;
+  lastPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  latestRevisionCreatedAt?: Maybe<Scalars['DateTime']['output']>;
+  live: Scalars['Boolean']['output'];
+  locked?: Maybe<Scalars['Boolean']['output']>;
+  lockedAt?: Maybe<Scalars['DateTime']['output']>;
   lockedBy?: Maybe<UserType>;
-  numchild: Scalars['Int'];
+  numchild: Scalars['Int']['output'];
   owner?: Maybe<UserType>;
-  pageType?: Maybe<Scalars['String']>;
+  pageType?: Maybe<Scalars['String']['output']>;
   parent?: Maybe<PageInterface>;
-  path: Scalars['String'];
-  searchDescription?: Maybe<Scalars['String']>;
-  searchScore?: Maybe<Scalars['Float']>;
-  seoTitle: Scalars['String'];
-  showInFooter: Scalars['Boolean'];
-  showInMenus: Scalars['Boolean'];
+  path: Scalars['String']['output'];
+  searchDescription?: Maybe<Scalars['String']['output']>;
+  searchScore?: Maybe<Scalars['Float']['output']>;
+  seoTitle: Scalars['String']['output'];
+  showInFooter: Scalars['Boolean']['output'];
+  showInMenus: Scalars['Boolean']['output'];
   siblings: Array<PageInterface>;
-  slug: Scalars['String'];
-  title: Scalars['String'];
-  translationKey: Scalars['UUID'];
-  url?: Maybe<Scalars['String']>;
-  urlPath: Scalars['String'];
+  slug: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  translationKey: Scalars['UUID']['output'];
+  url?: Maybe<Scalars['String']['output']>;
+  urlPath: Scalars['String']['output'];
 };
 
 
 export type InstanceRootPageAncestorsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type InstanceRootPageChildrenArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type InstanceRootPageDescendantsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type InstanceRootPageSiblingsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type InstanceSiteContent = SnippetInterface & {
   __typename?: 'InstanceSiteContent';
-  contentType: Scalars['String'];
-  id?: Maybe<Scalars['ID']>;
+  contentType: Scalars['String']['output'];
+  id?: Maybe<Scalars['ID']['output']>;
   introContent?: Maybe<Array<Maybe<StreamFieldInterface>>>;
-  snippetType: Scalars['String'];
+  snippetType: Scalars['String']['output'];
 };
 
 export type InstanceType = {
   __typename?: 'InstanceType';
   actionGroups: Array<ActionGroupType>;
   actionListPage?: Maybe<ActionListPage>;
-  basePath: Scalars['String'];
-  defaultLanguage: Scalars['String'];
+  basePath: Scalars['String']['output'];
+  defaultLanguage: Scalars['String']['output'];
   features: InstanceFeaturesType;
   goals: Array<InstanceGoalEntry>;
   hostname?: Maybe<InstanceHostname>;
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
   introContent?: Maybe<Array<StreamFieldInterface>>;
-  leadParagraph?: Maybe<Scalars['String']>;
-  leadTitle?: Maybe<Scalars['String']>;
-  maximumHistoricalYear?: Maybe<Scalars['Int']>;
-  minimumHistoricalYear: Scalars['Int'];
-  modelEndYear: Scalars['Int'];
-  name: Scalars['String'];
-  owner?: Maybe<Scalars['String']>;
-  referenceYear?: Maybe<Scalars['Int']>;
-  supportedLanguages: Array<Scalars['String']>;
-  targetYear?: Maybe<Scalars['Int']>;
-  themeIdentifier?: Maybe<Scalars['String']>;
+  leadParagraph?: Maybe<Scalars['String']['output']>;
+  leadTitle?: Maybe<Scalars['String']['output']>;
+  maximumHistoricalYear?: Maybe<Scalars['Int']['output']>;
+  minimumHistoricalYear: Scalars['Int']['output'];
+  modelEndYear: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  owner?: Maybe<Scalars['String']['output']>;
+  referenceYear?: Maybe<Scalars['Int']['output']>;
+  supportedLanguages: Array<Scalars['String']['output']>;
+  targetYear?: Maybe<Scalars['Int']['output']>;
+  themeIdentifier?: Maybe<Scalars['String']['output']>;
 };
 
 
 export type InstanceTypeGoalsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type InstanceTypeHostnameArgs = {
-  hostname: Scalars['String'];
+  hostname: Scalars['String']['input'];
 };
 
 export type InstanceYearlyGoalType = {
   __typename?: 'InstanceYearlyGoalType';
-  actual?: Maybe<Scalars['Float']>;
-  goal?: Maybe<Scalars['Float']>;
-  isForecast: Scalars['Boolean'];
-  isInterpolated?: Maybe<Scalars['Boolean']>;
-  year: Scalars['Int'];
+  actual?: Maybe<Scalars['Float']['output']>;
+  goal?: Maybe<Scalars['Float']['output']>;
+  isForecast: Scalars['Boolean']['output'];
+  isInterpolated?: Maybe<Scalars['Boolean']['output']>;
+  year: Scalars['Int']['output'];
 };
 
 export type IntegerBlock = StreamFieldInterface & {
   __typename?: 'IntegerBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['Int'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['Int']['output'];
 };
 
 export type ListBlock = StreamFieldInterface & {
   __typename?: 'ListBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
   items: Array<StreamFieldInterface>;
-  rawValue: Scalars['String'];
+  rawValue: Scalars['String']['output'];
 };
 
 export enum LowHigh {
@@ -943,12 +968,12 @@ export type Measure = {
   __typename?: 'Measure';
   dataPoints: Array<MeasureDataPoint>;
   frameworkConfig: FrameworkConfig;
-  id: Scalars['ID'];
-  internalNotes: Scalars['String'];
+  id: Scalars['ID']['output'];
+  internalNotes: Scalars['String']['output'];
   measureTemplate: MeasureTemplate;
   unit?: Maybe<UnitType>;
   userPermissions?: Maybe<UserPermissions>;
-  userRoles?: Maybe<Array<Scalars['String']>>;
+  userRoles?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 /**
@@ -960,27 +985,27 @@ export type Measure = {
  */
 export type MeasureDataPoint = {
   __typename?: 'MeasureDataPoint';
-  defaultValue?: Maybe<Scalars['Float']>;
-  id: Scalars['ID'];
+  defaultValue?: Maybe<Scalars['Float']['output']>;
+  id: Scalars['ID']['output'];
   userPermissions?: Maybe<UserPermissions>;
-  userRoles?: Maybe<Array<Scalars['String']>>;
-  value?: Maybe<Scalars['Float']>;
-  year: Scalars['Int'];
+  userRoles?: Maybe<Array<Scalars['String']['output']>>;
+  value?: Maybe<Scalars['Float']['output']>;
+  year: Scalars['Int']['output'];
 };
 
 export type MeasureDataPointInput = {
   /** Value for the data point (set to null to remove) */
-  value?: InputMaybe<Scalars['Float']>;
+  value?: InputMaybe<Scalars['Float']['input']>;
   /** Year of the data point. If not given, defaults to the baseline year for the framework instance */
-  year?: InputMaybe<Scalars['Int']>;
+  year?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type MeasureInput = {
   dataPoints?: InputMaybe<Array<MeasureDataPointInput>>;
   /** Internal notes for the measure instance */
-  internalNotes?: InputMaybe<Scalars['String']>;
+  internalNotes?: InputMaybe<Scalars['String']['input']>;
   /** ID (or UUID) of the measure template within a framework */
-  measureTemplateId: Scalars['ID'];
+  measureTemplateId: Scalars['ID']['input'];
 };
 
 /**
@@ -997,18 +1022,19 @@ export type MeasureInput = {
 export type MeasureTemplate = {
   __typename?: 'MeasureTemplate';
   defaultDataPoints: Array<MeasureTemplateDefaultDataPoint>;
-  defaultValueSource: Scalars['String'];
-  id: Scalars['ID'];
-  maxValue?: Maybe<Scalars['Float']>;
+  defaultValueSource: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  maxValue?: Maybe<Scalars['Float']['output']>;
   measure?: Maybe<Measure>;
-  minValue?: Maybe<Scalars['Float']>;
-  name: Scalars['String'];
+  minValue?: Maybe<Scalars['Float']['output']>;
+  name: Scalars['String']['output'];
   priority: FrameworksMeasureTemplatePriorityChoices;
-  timeSeriesMax?: Maybe<Scalars['Float']>;
+  timeSeriesMax?: Maybe<Scalars['Float']['output']>;
   unit: UnitType;
   userPermissions?: Maybe<UserPermissions>;
-  userRoles?: Maybe<Array<Scalars['String']>>;
-  uuid: Scalars['UUID'];
+  userRoles?: Maybe<Array<Scalars['String']['output']>>;
+  uuid: Scalars['UUID']['output'];
+  yearBound: Scalars['Boolean']['output'];
 };
 
 
@@ -1024,7 +1050,7 @@ export type MeasureTemplate = {
  *     section (ForeignKey): A reference to the Section this measure template belongs to.
  */
 export type MeasureTemplateMeasureArgs = {
-  frameworkConfigId: Scalars['ID'];
+  frameworkConfigId: Scalars['ID']['input'];
 };
 
 /**
@@ -1036,48 +1062,55 @@ export type MeasureTemplateMeasureArgs = {
  */
 export type MeasureTemplateDefaultDataPoint = {
   __typename?: 'MeasureTemplateDefaultDataPoint';
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
   userPermissions?: Maybe<UserPermissions>;
-  userRoles?: Maybe<Array<Scalars['String']>>;
-  value: Scalars['Float'];
-  year: Scalars['Int'];
+  userRoles?: Maybe<Array<Scalars['String']['output']>>;
+  value: Scalars['Float']['output'];
+  year: Scalars['Int']['output'];
 };
 
 export type MetricDimensionCategoryGroupType = {
   __typename?: 'MetricDimensionCategoryGroupType';
-  color?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  label: Scalars['String'];
-  order?: Maybe<Scalars['Int']>;
-  originalId: Scalars['ID'];
+  color?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  label: Scalars['String']['output'];
+  order?: Maybe<Scalars['Int']['output']>;
+  originalId: Scalars['ID']['output'];
 };
 
 export type MetricDimensionCategoryType = {
   __typename?: 'MetricDimensionCategoryType';
-  color?: Maybe<Scalars['String']>;
-  group?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  label: Scalars['String'];
-  order?: Maybe<Scalars['Int']>;
-  originalId?: Maybe<Scalars['ID']>;
+  color?: Maybe<Scalars['String']['output']>;
+  group?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  label: Scalars['String']['output'];
+  order?: Maybe<Scalars['Int']['output']>;
+  originalId?: Maybe<Scalars['ID']['output']>;
 };
 
 export type MetricDimensionType = {
   __typename?: 'MetricDimensionType';
   categories: Array<MetricDimensionCategoryType>;
   groups: Array<MetricDimensionCategoryGroupType>;
-  helpText?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
+  helpText?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
   kind: DimensionKind;
-  label: Scalars['String'];
-  originalId?: Maybe<Scalars['ID']>;
+  label: Scalars['String']['output'];
+  originalId?: Maybe<Scalars['ID']['output']>;
 };
 
 export type MetricYearlyGoalType = {
   __typename?: 'MetricYearlyGoalType';
-  isInterpolated: Scalars['Boolean'];
-  value: Scalars['Float'];
-  year: Scalars['Int'];
+  isInterpolated: Scalars['Boolean']['output'];
+  value: Scalars['Float']['output'];
+  year: Scalars['Int']['output'];
+};
+
+export type MinMaxDefaultIntType = {
+  __typename?: 'MinMaxDefaultIntType';
+  default?: Maybe<Scalars['Int']['output']>;
+  max?: Maybe<Scalars['Int']['output']>;
+  min?: Maybe<Scalars['Int']['output']>;
 };
 
 /** An enumeration. */
@@ -1105,17 +1138,17 @@ export type Mutations = {
 
 
 export type MutationsActivateScenarioArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationsCreateFrameworkConfigArgs = {
-  baselineYear: Scalars['Int'];
-  frameworkId: Scalars['ID'];
-  instanceIdentifier: Scalars['ID'];
-  name: Scalars['String'];
-  organizationName?: InputMaybe<Scalars['String']>;
-  uuid?: InputMaybe<Scalars['UUID']>;
+  baselineYear: Scalars['Int']['input'];
+  frameworkId: Scalars['ID']['input'];
+  instanceIdentifier: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  organizationName?: InputMaybe<Scalars['String']['input']>;
+  uuid?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 
@@ -1126,60 +1159,61 @@ export type MutationsCreateNzcFrameworkConfigArgs = {
 
 
 export type MutationsDeleteFrameworkConfigArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationsRegisterUserArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 
 export type MutationsResetParameterArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type MutationsSetNormalizerArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type MutationsSetParameterArgs = {
-  boolValue?: InputMaybe<Scalars['Boolean']>;
-  id: Scalars['ID'];
-  numberValue?: InputMaybe<Scalars['Float']>;
-  stringValue?: InputMaybe<Scalars['String']>;
+  boolValue?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['ID']['input'];
+  numberValue?: InputMaybe<Scalars['Float']['input']>;
+  stringValue?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationsUpdateFrameworkConfigArgs = {
-  baselineYear?: InputMaybe<Scalars['Int']>;
-  id: Scalars['ID'];
-  organizationIdentifier?: InputMaybe<Scalars['String']>;
-  organizationName?: InputMaybe<Scalars['String']>;
-  organizationSlug?: InputMaybe<Scalars['String']>;
+  baselineYear?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['ID']['input'];
+  organizationIdentifier?: InputMaybe<Scalars['String']['input']>;
+  organizationName?: InputMaybe<Scalars['String']['input']>;
+  organizationSlug?: InputMaybe<Scalars['String']['input']>;
+  targetYear?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type MutationsUpdateMeasureDataPointArgs = {
-  frameworkInstanceId: Scalars['ID'];
-  internalNotes?: InputMaybe<Scalars['String']>;
-  measureTemplateId: Scalars['ID'];
-  value?: InputMaybe<Scalars['Float']>;
-  year?: InputMaybe<Scalars['Int']>;
+  frameworkInstanceId: Scalars['ID']['input'];
+  internalNotes?: InputMaybe<Scalars['String']['input']>;
+  measureTemplateId: Scalars['ID']['input'];
+  value?: InputMaybe<Scalars['Float']['input']>;
+  year?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type MutationsUpdateMeasureDataPointsArgs = {
-  frameworkConfigId: Scalars['ID'];
+  frameworkConfigId: Scalars['ID']['input'];
   measures: Array<MeasureInput>;
 };
 
 export type NzcCityEssentialData = {
   /** Population of the city */
-  population: Scalars['Int'];
+  population: Scalars['Int']['input'];
   /** Share of renewables in energy production (low or high) */
   renewableMix: LowHigh;
   /** Average yearly temperature (low or high) */
@@ -1189,171 +1223,181 @@ export type NzcCityEssentialData = {
 export type Node = NodeInterface & {
   __typename?: 'Node';
   body?: Maybe<Array<StreamFieldInterface>>;
-  color?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   dimensionalFlow?: Maybe<DimensionalFlowType>;
   downstreamNodes: Array<NodeInterface>;
-  explanation?: Maybe<Scalars['String']>;
+  explanation?: Maybe<Scalars['String']['output']>;
   goals: Array<NodeGoal>;
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
   impactMetric?: Maybe<ForecastMetricType>;
   inputNodes: Array<NodeInterface>;
   /** @deprecated Use __typeName instead */
-  isAction: Scalars['Boolean'];
-  isVisible: Scalars['Boolean'];
+  isAction: Scalars['Boolean']['output'];
+  isVisible: Scalars['Boolean']['output'];
   metric?: Maybe<ForecastMetricType>;
   metricDim?: Maybe<DimensionalMetricType>;
   metrics?: Maybe<Array<ForecastMetricType>>;
-  name: Scalars['String'];
-  order?: Maybe<Scalars['Int']>;
+  name: Scalars['String']['output'];
+  order?: Maybe<Scalars['Int']['output']>;
   outcome?: Maybe<DimensionalMetricType>;
   outputNodes: Array<NodeInterface>;
   parameters: Array<ParameterInterface>;
-  quantity?: Maybe<Scalars['String']>;
-  shortDescription?: Maybe<Scalars['RichText']>;
-  shortName?: Maybe<Scalars['String']>;
+  quantity?: Maybe<Scalars['String']['output']>;
+  shortDescription?: Maybe<Scalars['RichText']['output']>;
+  shortName?: Maybe<Scalars['String']['output']>;
   /** @deprecated Replaced by "goals". */
-  targetYearGoal?: Maybe<Scalars['Float']>;
+  targetYearGoal?: Maybe<Scalars['Float']['output']>;
   unit?: Maybe<UnitType>;
   upstreamActions?: Maybe<Array<ActionNode>>;
   upstreamNodes: Array<NodeInterface>;
+  visualizations?: Maybe<Array<VisualizationEntry>>;
 };
 
 
 export type NodeDownstreamNodesArgs = {
-  maxDepth?: InputMaybe<Scalars['Int']>;
+  maxDepth?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type NodeGoalsArgs = {
-  activeGoal?: InputMaybe<Scalars['ID']>;
+  activeGoal?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type NodeImpactMetricArgs = {
-  goalId?: InputMaybe<Scalars['ID']>;
-  targetNodeId?: InputMaybe<Scalars['ID']>;
+  goalId?: InputMaybe<Scalars['ID']['input']>;
+  targetNodeId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type NodeMetricArgs = {
-  goalId?: InputMaybe<Scalars['ID']>;
+  goalId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type NodeMetricDimArgs = {
-  withScenarios?: InputMaybe<Array<Scalars['String']>>;
+  includeScenarioKinds?: InputMaybe<Array<ScenarioKind>>;
+  withScenarios?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
 export type NodeUpstreamActionsArgs = {
   decisionLevel?: InputMaybe<DecisionLevel>;
-  onlyRoot?: InputMaybe<Scalars['Boolean']>;
+  onlyRoot?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type NodeUpstreamNodesArgs = {
-  includeActions?: InputMaybe<Scalars['Boolean']>;
-  sameQuantity?: InputMaybe<Scalars['Boolean']>;
-  sameUnit?: InputMaybe<Scalars['Boolean']>;
+  includeActions?: InputMaybe<Scalars['Boolean']['input']>;
+  sameQuantity?: InputMaybe<Scalars['Boolean']['input']>;
+  sameUnit?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type NodeGoal = {
   __typename?: 'NodeGoal';
-  value: Scalars['Float'];
-  year: Scalars['Int'];
+  value: Scalars['Float']['output'];
+  year: Scalars['Int']['output'];
 };
 
 export type NodeInterface = {
   body?: Maybe<Array<StreamFieldInterface>>;
-  color?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
+  color?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   dimensionalFlow?: Maybe<DimensionalFlowType>;
   downstreamNodes: Array<NodeInterface>;
-  explanation?: Maybe<Scalars['String']>;
+  explanation?: Maybe<Scalars['String']['output']>;
   goals: Array<NodeGoal>;
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
   impactMetric?: Maybe<ForecastMetricType>;
   inputNodes: Array<NodeInterface>;
   /** @deprecated Use __typeName instead */
-  isAction: Scalars['Boolean'];
-  isVisible: Scalars['Boolean'];
+  isAction: Scalars['Boolean']['output'];
+  isVisible: Scalars['Boolean']['output'];
   metric?: Maybe<ForecastMetricType>;
   metricDim?: Maybe<DimensionalMetricType>;
   metrics?: Maybe<Array<ForecastMetricType>>;
-  name: Scalars['String'];
-  order?: Maybe<Scalars['Int']>;
+  name: Scalars['String']['output'];
+  order?: Maybe<Scalars['Int']['output']>;
   outcome?: Maybe<DimensionalMetricType>;
   outputNodes: Array<NodeInterface>;
   parameters: Array<ParameterInterface>;
-  quantity?: Maybe<Scalars['String']>;
-  shortDescription?: Maybe<Scalars['RichText']>;
-  shortName?: Maybe<Scalars['String']>;
+  quantity?: Maybe<Scalars['String']['output']>;
+  shortDescription?: Maybe<Scalars['RichText']['output']>;
+  shortName?: Maybe<Scalars['String']['output']>;
   /** @deprecated Replaced by "goals". */
-  targetYearGoal?: Maybe<Scalars['Float']>;
+  targetYearGoal?: Maybe<Scalars['Float']['output']>;
   unit?: Maybe<UnitType>;
   upstreamNodes: Array<NodeInterface>;
+  visualizations?: Maybe<Array<VisualizationEntry>>;
 };
 
 
 export type NodeInterfaceDownstreamNodesArgs = {
-  maxDepth?: InputMaybe<Scalars['Int']>;
+  maxDepth?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type NodeInterfaceGoalsArgs = {
-  activeGoal?: InputMaybe<Scalars['ID']>;
+  activeGoal?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type NodeInterfaceImpactMetricArgs = {
-  goalId?: InputMaybe<Scalars['ID']>;
-  targetNodeId?: InputMaybe<Scalars['ID']>;
+  goalId?: InputMaybe<Scalars['ID']['input']>;
+  targetNodeId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type NodeInterfaceMetricArgs = {
-  goalId?: InputMaybe<Scalars['ID']>;
+  goalId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type NodeInterfaceMetricDimArgs = {
-  withScenarios?: InputMaybe<Array<Scalars['String']>>;
+  includeScenarioKinds?: InputMaybe<Array<ScenarioKind>>;
+  withScenarios?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
 export type NodeInterfaceUpstreamNodesArgs = {
-  includeActions?: InputMaybe<Scalars['Boolean']>;
-  sameQuantity?: InputMaybe<Scalars['Boolean']>;
-  sameUnit?: InputMaybe<Scalars['Boolean']>;
+  includeActions?: InputMaybe<Scalars['Boolean']['input']>;
+  sameQuantity?: InputMaybe<Scalars['Boolean']['input']>;
+  sameUnit?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type NormalizationType = {
   __typename?: 'NormalizationType';
-  id: Scalars['ID'];
-  isActive: Scalars['Boolean'];
-  label: Scalars['String'];
+  id: Scalars['ID']['output'];
+  isActive: Scalars['Boolean']['output'];
+  label: Scalars['String']['output'];
   normalizer: Node;
+};
+
+export type NormalizerNodeType = {
+  __typename?: 'NormalizerNodeType';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type NumberParameterType = ParameterInterface & {
   __typename?: 'NumberParameterType';
-  defaultValue?: Maybe<Scalars['Float']>;
-  description?: Maybe<Scalars['String']>;
+  defaultValue?: Maybe<Scalars['Float']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   /** Global ID for the parameter in the instance */
-  id: Scalars['ID'];
-  isCustomizable: Scalars['Boolean'];
-  isCustomized: Scalars['Boolean'];
-  label?: Maybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  isCustomizable: Scalars['Boolean']['output'];
+  isCustomized: Scalars['Boolean']['output'];
+  label?: Maybe<Scalars['String']['output']>;
   /** ID of parameter in the node's namespace */
-  localId?: Maybe<Scalars['ID']>;
-  maxValue?: Maybe<Scalars['Float']>;
-  minValue?: Maybe<Scalars['Float']>;
+  localId?: Maybe<Scalars['ID']['output']>;
+  maxValue?: Maybe<Scalars['Float']['output']>;
+  minValue?: Maybe<Scalars['Float']['output']>;
   node?: Maybe<NodeInterface>;
-  nodeRelativeId?: Maybe<Scalars['ID']>;
-  step?: Maybe<Scalars['Float']>;
+  nodeRelativeId?: Maybe<Scalars['ID']['output']>;
+  step?: Maybe<Scalars['Float']['output']>;
   unit?: Maybe<UnitType>;
-  value?: Maybe<Scalars['Float']>;
+  value?: Maybe<Scalars['Float']['output']>;
 };
 
 export type OutcomePage = PageInterface & {
@@ -1361,83 +1405,83 @@ export type OutcomePage = PageInterface & {
   aliasOf?: Maybe<Page>;
   ancestors: Array<PageInterface>;
   children: Array<PageInterface>;
-  contentType: Scalars['String'];
-  depth?: Maybe<Scalars['Int']>;
+  contentType: Scalars['String']['output'];
+  depth?: Maybe<Scalars['Int']['output']>;
   descendants: Array<PageInterface>;
-  draftTitle: Scalars['String'];
-  expireAt?: Maybe<Scalars['DateTime']>;
-  expired: Scalars['Boolean'];
-  firstPublishedAt?: Maybe<Scalars['DateTime']>;
-  goLiveAt?: Maybe<Scalars['DateTime']>;
-  hasUnpublishedChanges: Scalars['Boolean'];
-  i18n?: Maybe<Scalars['JSONString']>;
-  id?: Maybe<Scalars['ID']>;
-  lastPublishedAt?: Maybe<Scalars['DateTime']>;
-  latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
-  leadParagraph: Scalars['String'];
-  leadTitle: Scalars['String'];
-  live: Scalars['Boolean'];
-  locked?: Maybe<Scalars['Boolean']>;
-  lockedAt?: Maybe<Scalars['DateTime']>;
+  draftTitle: Scalars['String']['output'];
+  expireAt?: Maybe<Scalars['DateTime']['output']>;
+  expired: Scalars['Boolean']['output'];
+  firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  goLiveAt?: Maybe<Scalars['DateTime']['output']>;
+  hasUnpublishedChanges: Scalars['Boolean']['output'];
+  i18n?: Maybe<Scalars['JSONString']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  lastPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  latestRevisionCreatedAt?: Maybe<Scalars['DateTime']['output']>;
+  leadParagraph: Scalars['String']['output'];
+  leadTitle: Scalars['String']['output'];
+  live: Scalars['Boolean']['output'];
+  locked?: Maybe<Scalars['Boolean']['output']>;
+  lockedAt?: Maybe<Scalars['DateTime']['output']>;
   lockedBy?: Maybe<UserType>;
-  numchild: Scalars['Int'];
+  numchild: Scalars['Int']['output'];
   outcomeNode: Node;
   owner?: Maybe<UserType>;
   pagePtr: Page;
-  pageType?: Maybe<Scalars['String']>;
+  pageType?: Maybe<Scalars['String']['output']>;
   parent?: Maybe<PageInterface>;
-  path: Scalars['String'];
-  searchDescription?: Maybe<Scalars['String']>;
-  searchScore?: Maybe<Scalars['Float']>;
-  seoTitle: Scalars['String'];
-  showInFooter?: Maybe<Scalars['Boolean']>;
-  showInMenus: Scalars['Boolean'];
+  path: Scalars['String']['output'];
+  searchDescription?: Maybe<Scalars['String']['output']>;
+  searchScore?: Maybe<Scalars['Float']['output']>;
+  seoTitle: Scalars['String']['output'];
+  showInFooter?: Maybe<Scalars['Boolean']['output']>;
+  showInMenus: Scalars['Boolean']['output'];
   siblings: Array<PageInterface>;
-  slug: Scalars['String'];
-  title: Scalars['String'];
-  translationKey: Scalars['UUID'];
-  url?: Maybe<Scalars['String']>;
-  urlPath: Scalars['String'];
+  slug: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  translationKey: Scalars['UUID']['output'];
+  url?: Maybe<Scalars['String']['output']>;
+  urlPath: Scalars['String']['output'];
 };
 
 
 export type OutcomePageAncestorsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type OutcomePageChildrenArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type OutcomePageDescendantsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type OutcomePageSiblingsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
@@ -1451,41 +1495,41 @@ export type Page = PageInterface & {
   aliases: Array<Page>;
   ancestors: Array<PageInterface>;
   children: Array<PageInterface>;
-  contentType: Scalars['String'];
-  depth?: Maybe<Scalars['Int']>;
+  contentType: Scalars['String']['output'];
+  depth?: Maybe<Scalars['Int']['output']>;
   descendants: Array<PageInterface>;
-  draftTitle: Scalars['String'];
-  expireAt?: Maybe<Scalars['DateTime']>;
-  expired: Scalars['Boolean'];
-  firstPublishedAt?: Maybe<Scalars['DateTime']>;
-  goLiveAt?: Maybe<Scalars['DateTime']>;
-  hasUnpublishedChanges: Scalars['Boolean'];
-  id?: Maybe<Scalars['ID']>;
+  draftTitle: Scalars['String']['output'];
+  expireAt?: Maybe<Scalars['DateTime']['output']>;
+  expired: Scalars['Boolean']['output'];
+  firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  goLiveAt?: Maybe<Scalars['DateTime']['output']>;
+  hasUnpublishedChanges: Scalars['Boolean']['output'];
+  id?: Maybe<Scalars['ID']['output']>;
   instancerootpage?: Maybe<InstanceRootPage>;
-  lastPublishedAt?: Maybe<Scalars['DateTime']>;
-  latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
-  live: Scalars['Boolean'];
-  locked?: Maybe<Scalars['Boolean']>;
-  lockedAt?: Maybe<Scalars['DateTime']>;
+  lastPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  latestRevisionCreatedAt?: Maybe<Scalars['DateTime']['output']>;
+  live: Scalars['Boolean']['output'];
+  locked?: Maybe<Scalars['Boolean']['output']>;
+  lockedAt?: Maybe<Scalars['DateTime']['output']>;
   lockedBy?: Maybe<UserType>;
-  numchild: Scalars['Int'];
+  numchild: Scalars['Int']['output'];
   outcomepage?: Maybe<OutcomePage>;
   owner?: Maybe<UserType>;
-  pageType?: Maybe<Scalars['String']>;
+  pageType?: Maybe<Scalars['String']['output']>;
   parent?: Maybe<PageInterface>;
-  path: Scalars['String'];
-  searchDescription?: Maybe<Scalars['String']>;
-  searchScore?: Maybe<Scalars['Float']>;
-  seoTitle: Scalars['String'];
-  showInMenus: Scalars['Boolean'];
+  path: Scalars['String']['output'];
+  searchDescription?: Maybe<Scalars['String']['output']>;
+  searchScore?: Maybe<Scalars['Float']['output']>;
+  seoTitle: Scalars['String']['output'];
+  showInMenus: Scalars['Boolean']['output'];
   siblings: Array<PageInterface>;
   sitesRootedHere: Array<SiteObjectType>;
-  slug: Scalars['String'];
+  slug: Scalars['String']['output'];
   staticpage?: Maybe<StaticPage>;
-  title: Scalars['String'];
-  translationKey: Scalars['UUID'];
-  url?: Maybe<Scalars['String']>;
-  urlPath: Scalars['String'];
+  title: Scalars['String']['output'];
+  translationKey: Scalars['UUID']['output'];
+  url?: Maybe<Scalars['String']['output']>;
+  urlPath: Scalars['String']['output'];
 };
 
 
@@ -1494,12 +1538,12 @@ export type Page = PageInterface & {
  * All other node types extend this.
  */
 export type PageAncestorsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1508,12 +1552,12 @@ export type PageAncestorsArgs = {
  * All other node types extend this.
  */
 export type PageChildrenArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1522,12 +1566,12 @@ export type PageChildrenArgs = {
  * All other node types extend this.
  */
 export type PageDescendantsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1536,98 +1580,98 @@ export type PageDescendantsArgs = {
  * All other node types extend this.
  */
 export type PageSiblingsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PageChooserBlock = StreamFieldInterface & {
   __typename?: 'PageChooserBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
   page?: Maybe<PageInterface>;
-  rawValue: Scalars['String'];
+  rawValue: Scalars['String']['output'];
 };
 
 export type PageInterface = {
   ancestors: Array<PageInterface>;
   children: Array<PageInterface>;
-  contentType: Scalars['String'];
-  depth?: Maybe<Scalars['Int']>;
+  contentType: Scalars['String']['output'];
+  depth?: Maybe<Scalars['Int']['output']>;
   descendants: Array<PageInterface>;
-  firstPublishedAt?: Maybe<Scalars['DateTime']>;
-  id?: Maybe<Scalars['ID']>;
-  lastPublishedAt?: Maybe<Scalars['DateTime']>;
-  live: Scalars['Boolean'];
-  locked?: Maybe<Scalars['Boolean']>;
-  pageType?: Maybe<Scalars['String']>;
+  firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  lastPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  live: Scalars['Boolean']['output'];
+  locked?: Maybe<Scalars['Boolean']['output']>;
+  pageType?: Maybe<Scalars['String']['output']>;
   parent?: Maybe<PageInterface>;
-  searchDescription?: Maybe<Scalars['String']>;
-  searchScore?: Maybe<Scalars['Float']>;
-  seoTitle: Scalars['String'];
-  showInMenus: Scalars['Boolean'];
+  searchDescription?: Maybe<Scalars['String']['output']>;
+  searchScore?: Maybe<Scalars['Float']['output']>;
+  seoTitle: Scalars['String']['output'];
+  showInMenus: Scalars['Boolean']['output'];
   siblings: Array<PageInterface>;
-  slug: Scalars['String'];
-  title: Scalars['String'];
-  url?: Maybe<Scalars['String']>;
-  urlPath: Scalars['String'];
+  slug: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  url?: Maybe<Scalars['String']['output']>;
+  urlPath: Scalars['String']['output'];
 };
 
 
 export type PageInterfaceAncestorsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type PageInterfaceChildrenArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type PageInterfaceDescendantsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type PageInterfaceSiblingsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ParameterInterface = {
-  description?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
   /** Global ID for the parameter in the instance */
-  id: Scalars['ID'];
-  isCustomizable: Scalars['Boolean'];
-  isCustomized: Scalars['Boolean'];
-  label?: Maybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  isCustomizable: Scalars['Boolean']['output'];
+  isCustomized: Scalars['Boolean']['output'];
+  label?: Maybe<Scalars['String']['output']>;
   /** ID of parameter in the node's namespace */
-  localId?: Maybe<Scalars['ID']>;
+  localId?: Maybe<Scalars['ID']['output']>;
   node?: Maybe<NodeInterface>;
-  nodeRelativeId?: Maybe<Scalars['ID']>;
+  nodeRelativeId?: Maybe<Scalars['ID']['output']>;
 };
 
 export type Query = {
@@ -1658,70 +1702,70 @@ export type Query = {
 
 
 export type QueryActionArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type QueryActionsArgs = {
-  onlyRoot?: InputMaybe<Scalars['Boolean']>;
+  onlyRoot?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type QueryAvailableInstancesArgs = {
-  hostname?: InputMaybe<Scalars['String']>;
+  hostname?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryFrameworkArgs = {
-  identifier: Scalars['ID'];
+  identifier: Scalars['ID']['input'];
 };
 
 
 export type QueryNodeArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type QueryPageArgs = {
-  path: Scalars['String'];
+  path: Scalars['String']['input'];
 };
 
 
 export type QueryPagesArgs = {
-  inMenu?: InputMaybe<Scalars['Boolean']>;
+  inMenu?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type QueryParameterArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type QueryScenarioArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type QueryUnitArgs = {
-  value: Scalars['String'];
+  value: Scalars['String']['input'];
 };
 
 export type RawHtmlBlock = StreamFieldInterface & {
   __typename?: 'RawHTMLBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type RegexBlock = StreamFieldInterface & {
   __typename?: 'RegexBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type RegisterUser = {
@@ -1731,16 +1775,16 @@ export type RegisterUser = {
 
 export type ResetParameterMutation = {
   __typename?: 'ResetParameterMutation';
-  ok?: Maybe<Scalars['Boolean']>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type RichTextBlock = StreamFieldInterface & {
   __typename?: 'RichTextBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 /** An enumeration. */
@@ -1753,13 +1797,13 @@ export enum ScenarioKind {
 
 export type ScenarioType = {
   __typename?: 'ScenarioType';
-  actualHistoricalYears?: Maybe<Array<Scalars['Int']>>;
-  id?: Maybe<Scalars['ID']>;
-  isActive: Scalars['Boolean'];
-  isDefault: Scalars['Boolean'];
-  isSelectable: Scalars['Boolean'];
+  actualHistoricalYears?: Maybe<Array<Scalars['Int']['output']>>;
+  id?: Maybe<Scalars['ID']['output']>;
+  isActive: Scalars['Boolean']['output'];
+  isDefault: Scalars['Boolean']['output'];
+  isSelectable: Scalars['Boolean']['output'];
   kind?: Maybe<ScenarioKind>;
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
 };
 
 /** Enum for search operator. */
@@ -1776,97 +1820,97 @@ export enum SearchOperatorEnum {
  */
 export type Section = {
   __typename?: 'Section';
-  availableYears?: Maybe<Array<Scalars['Int']>>;
+  availableYears?: Maybe<Array<Scalars['Int']['output']>>;
   children: Array<Section>;
   descendants: Array<Section>;
-  description: Scalars['String'];
-  id: Scalars['ID'];
-  identifier?: Maybe<Scalars['String']>;
+  description: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  identifier?: Maybe<Scalars['String']['output']>;
   measureTemplates: Array<MeasureTemplate>;
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   parent?: Maybe<Section>;
-  path: Scalars['String'];
+  path: Scalars['String']['output'];
   userPermissions?: Maybe<UserPermissions>;
-  userRoles?: Maybe<Array<Scalars['String']>>;
-  uuid: Scalars['UUID'];
+  userRoles?: Maybe<Array<Scalars['String']['output']>>;
+  uuid: Scalars['UUID']['output'];
 };
 
 export type ServerDeployment = {
   __typename?: 'ServerDeployment';
-  buildId?: Maybe<Scalars['String']>;
-  deploymentType?: Maybe<Scalars['String']>;
-  gitRevision?: Maybe<Scalars['String']>;
+  buildId?: Maybe<Scalars['String']['output']>;
+  deploymentType?: Maybe<Scalars['String']['output']>;
+  gitRevision?: Maybe<Scalars['String']['output']>;
 };
 
 export type SetNormalizerMutation = {
   __typename?: 'SetNormalizerMutation';
   activeNormalization?: Maybe<NormalizationType>;
-  ok: Scalars['Boolean'];
+  ok: Scalars['Boolean']['output'];
 };
 
 export type SetParameterMutation = {
   __typename?: 'SetParameterMutation';
-  ok?: Maybe<Scalars['Boolean']>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
   parameter?: Maybe<ParameterInterface>;
 };
 
 export type SiteObjectType = {
   __typename?: 'SiteObjectType';
-  hostname: Scalars['String'];
-  id: Scalars['ID'];
+  hostname: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   /** If true, this site will handle requests for all other hostnames that do not have a site entry of their own */
-  isDefaultSite: Scalars['Boolean'];
+  isDefaultSite: Scalars['Boolean']['output'];
   page?: Maybe<PageInterface>;
   pages: Array<PageInterface>;
   /** Set this to something other than 80 if you need a specific port number to appear in URLs (e.g. development on port 8000). Does not affect request handling (so port forwarding still works). */
-  port: Scalars['Int'];
+  port: Scalars['Int']['output'];
   rootPage: Page;
   /** Human-readable name for the site. */
-  siteName: Scalars['String'];
+  siteName: Scalars['String']['output'];
 };
 
 
 export type SiteObjectTypePageArgs = {
-  contentType?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['ID']>;
-  slug?: InputMaybe<Scalars['String']>;
-  token?: InputMaybe<Scalars['String']>;
-  urlPath?: InputMaybe<Scalars['String']>;
+  contentType?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  token?: InputMaybe<Scalars['String']['input']>;
+  urlPath?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type SiteObjectTypePagesArgs = {
-  contentType?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['ID']>;
-  inMenu?: InputMaybe<Scalars['Boolean']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  contentType?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  inMenu?: InputMaybe<Scalars['Boolean']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SnippetChooserBlock = StreamFieldInterface & {
   __typename?: 'SnippetChooserBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
   snippet?: Maybe<SnippetInterface>;
 };
 
 export type SnippetInterface = {
-  contentType: Scalars['String'];
-  snippetType: Scalars['String'];
+  contentType: Scalars['String']['output'];
+  snippetType: Scalars['String']['output'];
 };
 
 export type StaticBlock = StreamFieldInterface & {
   __typename?: 'StaticBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type StaticPage = PageInterface & {
@@ -1875,246 +1919,284 @@ export type StaticPage = PageInterface & {
   ancestors: Array<PageInterface>;
   body?: Maybe<Array<Maybe<StreamFieldInterface>>>;
   children: Array<PageInterface>;
-  contentType: Scalars['String'];
-  depth?: Maybe<Scalars['Int']>;
+  contentType: Scalars['String']['output'];
+  depth?: Maybe<Scalars['Int']['output']>;
   descendants: Array<PageInterface>;
-  draftTitle: Scalars['String'];
-  expireAt?: Maybe<Scalars['DateTime']>;
-  expired: Scalars['Boolean'];
-  firstPublishedAt?: Maybe<Scalars['DateTime']>;
-  goLiveAt?: Maybe<Scalars['DateTime']>;
-  hasUnpublishedChanges: Scalars['Boolean'];
-  id?: Maybe<Scalars['ID']>;
-  lastPublishedAt?: Maybe<Scalars['DateTime']>;
-  latestRevisionCreatedAt?: Maybe<Scalars['DateTime']>;
-  live: Scalars['Boolean'];
-  locked?: Maybe<Scalars['Boolean']>;
-  lockedAt?: Maybe<Scalars['DateTime']>;
+  draftTitle: Scalars['String']['output'];
+  expireAt?: Maybe<Scalars['DateTime']['output']>;
+  expired: Scalars['Boolean']['output'];
+  firstPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  goLiveAt?: Maybe<Scalars['DateTime']['output']>;
+  hasUnpublishedChanges: Scalars['Boolean']['output'];
+  id?: Maybe<Scalars['ID']['output']>;
+  lastPublishedAt?: Maybe<Scalars['DateTime']['output']>;
+  latestRevisionCreatedAt?: Maybe<Scalars['DateTime']['output']>;
+  live: Scalars['Boolean']['output'];
+  locked?: Maybe<Scalars['Boolean']['output']>;
+  lockedAt?: Maybe<Scalars['DateTime']['output']>;
   lockedBy?: Maybe<UserType>;
-  numchild: Scalars['Int'];
+  numchild: Scalars['Int']['output'];
   owner?: Maybe<UserType>;
-  pageType?: Maybe<Scalars['String']>;
+  pageType?: Maybe<Scalars['String']['output']>;
   parent?: Maybe<PageInterface>;
-  path: Scalars['String'];
-  searchDescription?: Maybe<Scalars['String']>;
-  searchScore?: Maybe<Scalars['Float']>;
-  seoTitle: Scalars['String'];
-  showInFooter: Scalars['Boolean'];
-  showInMenus: Scalars['Boolean'];
+  path: Scalars['String']['output'];
+  searchDescription?: Maybe<Scalars['String']['output']>;
+  searchScore?: Maybe<Scalars['Float']['output']>;
+  seoTitle: Scalars['String']['output'];
+  showInFooter: Scalars['Boolean']['output'];
+  showInMenus: Scalars['Boolean']['output'];
   siblings: Array<PageInterface>;
-  slug: Scalars['String'];
-  title: Scalars['String'];
-  translationKey: Scalars['UUID'];
-  url?: Maybe<Scalars['String']>;
-  urlPath: Scalars['String'];
+  slug: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  translationKey: Scalars['UUID']['output'];
+  url?: Maybe<Scalars['String']['output']>;
+  urlPath: Scalars['String']['output'];
 };
 
 
 export type StaticPageAncestorsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type StaticPageChildrenArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type StaticPageDescendantsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type StaticPageSiblingsArgs = {
-  id?: InputMaybe<Scalars['ID']>;
-  limit?: InputMaybe<Scalars['PositiveInt']>;
-  offset?: InputMaybe<Scalars['PositiveInt']>;
-  order?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+  offset?: InputMaybe<Scalars['PositiveInt']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
   searchOperator?: InputMaybe<SearchOperatorEnum>;
-  searchQuery?: InputMaybe<Scalars['String']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type StreamBlock = StreamFieldInterface & {
   __typename?: 'StreamBlock';
-  blockType: Scalars['String'];
+  blockType: Scalars['String']['output'];
   blocks: Array<StreamFieldInterface>;
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
 };
 
 export type StreamFieldBlock = StreamFieldInterface & {
   __typename?: 'StreamFieldBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type StreamFieldInterface = {
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
 };
 
 export type StringParameterType = ParameterInterface & {
   __typename?: 'StringParameterType';
-  defaultValue?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
+  defaultValue?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   /** Global ID for the parameter in the instance */
-  id: Scalars['ID'];
-  isCustomizable: Scalars['Boolean'];
-  isCustomized: Scalars['Boolean'];
-  label?: Maybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  isCustomizable: Scalars['Boolean']['output'];
+  isCustomized: Scalars['Boolean']['output'];
+  label?: Maybe<Scalars['String']['output']>;
   /** ID of parameter in the node's namespace */
-  localId?: Maybe<Scalars['ID']>;
+  localId?: Maybe<Scalars['ID']['output']>;
   node?: Maybe<NodeInterface>;
-  nodeRelativeId?: Maybe<Scalars['ID']>;
-  value?: Maybe<Scalars['String']>;
+  nodeRelativeId?: Maybe<Scalars['ID']['output']>;
+  value?: Maybe<Scalars['String']['output']>;
 };
 
 export type StructBlock = StreamFieldInterface & {
   __typename?: 'StructBlock';
-  blockType: Scalars['String'];
+  blockType: Scalars['String']['output'];
   blocks: Array<StreamFieldInterface>;
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
 };
 
 export type TagObjectType = {
   __typename?: 'TagObjectType';
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type TextBlock = StreamFieldInterface & {
   __typename?: 'TextBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type TimeBlock = StreamFieldInterface & {
   __typename?: 'TimeBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 
 export type TimeBlockValueArgs = {
-  format?: InputMaybe<Scalars['String']>;
+  format?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UrlBlock = StreamFieldInterface & {
   __typename?: 'URLBlock';
-  blockType: Scalars['String'];
-  field: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  rawValue: Scalars['String'];
-  value: Scalars['String'];
+  blockType: Scalars['String']['output'];
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  rawValue: Scalars['String']['output'];
+  value: Scalars['String']['output'];
 };
 
 export type UnitType = {
   __typename?: 'UnitType';
-  htmlLong: Scalars['String'];
-  htmlShort: Scalars['String'];
-  long: Scalars['String'];
-  short: Scalars['String'];
+  htmlLong: Scalars['String']['output'];
+  htmlShort: Scalars['String']['output'];
+  long: Scalars['String']['output'];
+  short: Scalars['String']['output'];
 };
 
 export type UnknownParameterType = ParameterInterface & {
   __typename?: 'UnknownParameterType';
-  description?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']['output']>;
   /** Global ID for the parameter in the instance */
-  id: Scalars['ID'];
-  isCustomizable: Scalars['Boolean'];
-  isCustomized: Scalars['Boolean'];
-  label?: Maybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  isCustomizable: Scalars['Boolean']['output'];
+  isCustomized: Scalars['Boolean']['output'];
+  label?: Maybe<Scalars['String']['output']>;
   /** ID of parameter in the node's namespace */
-  localId?: Maybe<Scalars['ID']>;
+  localId?: Maybe<Scalars['ID']['output']>;
   node?: Maybe<NodeInterface>;
-  nodeRelativeId?: Maybe<Scalars['ID']>;
+  nodeRelativeId?: Maybe<Scalars['ID']['output']>;
 };
 
 export type UpdateFrameworkConfigMutation = {
   __typename?: 'UpdateFrameworkConfigMutation';
   frameworkConfig?: Maybe<FrameworkConfig>;
-  ok?: Maybe<Scalars['Boolean']>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type UpdateMeasureDataPoint = {
   __typename?: 'UpdateMeasureDataPoint';
   measureDataPoint?: Maybe<MeasureDataPoint>;
-  ok?: Maybe<Scalars['Boolean']>;
+  ok?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type UpdateMeasureDataPoints = {
   __typename?: 'UpdateMeasureDataPoints';
   createdDataPoints?: Maybe<Array<Maybe<MeasureDataPoint>>>;
-  deletedDataPointCount: Scalars['Int'];
-  ok?: Maybe<Scalars['Boolean']>;
+  deletedDataPointCount: Scalars['Int']['output'];
+  ok?: Maybe<Scalars['Boolean']['output']>;
   updatedDataPoints?: Maybe<Array<Maybe<MeasureDataPoint>>>;
 };
 
 export type UserFrameworkRole = {
   __typename?: 'UserFrameworkRole';
-  frameworkId: Scalars['ID'];
-  orgId?: Maybe<Scalars['String']>;
-  orgSlug?: Maybe<Scalars['String']>;
-  roleId?: Maybe<Scalars['String']>;
+  frameworkId: Scalars['ID']['output'];
+  orgId?: Maybe<Scalars['String']['output']>;
+  orgSlug?: Maybe<Scalars['String']['output']>;
+  roleId?: Maybe<Scalars['String']['output']>;
 };
 
 /** Permissions for a user on a model instance. */
 export type UserPermissions = {
   __typename?: 'UserPermissions';
   actions: Array<Maybe<ModelAction>>;
-  change: Scalars['Boolean'];
-  creatableRelatedModels: Array<Maybe<Scalars['String']>>;
-  delete: Scalars['Boolean'];
-  otherPermissions: Array<Maybe<Scalars['String']>>;
-  view: Scalars['Boolean'];
+  change: Scalars['Boolean']['output'];
+  creatableRelatedModels: Array<Maybe<Scalars['String']['output']>>;
+  delete: Scalars['Boolean']['output'];
+  otherPermissions: Array<Maybe<Scalars['String']['output']>>;
+  view: Scalars['Boolean']['output'];
 };
 
 export type UserType = {
   __typename?: 'UserType';
-  email: Scalars['String'];
-  firstName: Scalars['String'];
+  email: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
   frameworkRoles?: Maybe<Array<UserFrameworkRole>>;
-  id: Scalars['ID'];
-  lastName: Scalars['String'];
+  id: Scalars['ID']['output'];
+  lastName: Scalars['String']['output'];
+};
+
+export type VisualizationEntry = {
+  id: Scalars['ID']['output'];
+  kind: VisualizationKind;
+  label?: Maybe<Scalars['String']['output']>;
+};
+
+export type VisualizationGroup = VisualizationEntry & {
+  __typename?: 'VisualizationGroup';
+  children: Array<VisualizationEntry>;
+  id: Scalars['ID']['output'];
+  kind: VisualizationKind;
+  label?: Maybe<Scalars['String']['output']>;
+};
+
+export enum VisualizationKind {
+  Group = 'group',
+  Node = 'node'
+}
+
+export type VisualizationNodeDimension = {
+  __typename?: 'VisualizationNodeDimension';
+  categories?: Maybe<Array<Scalars['String']['output']>>;
+  flatten?: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['String']['output'];
+};
+
+export type VisualizationNodeOutput = VisualizationEntry & {
+  __typename?: 'VisualizationNodeOutput';
+  desiredOutcome: DesiredOutcome;
+  dimensions: Array<VisualizationNodeDimension>;
+  id: Scalars['ID']['output'];
+  kind: VisualizationKind;
+  label?: Maybe<Scalars['String']['output']>;
+  metricDim?: Maybe<DimensionalMetricType>;
+  nodeId: Scalars['String']['output'];
+  scenarios?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export type YearlyValue = {
   __typename?: 'YearlyValue';
-  value: Scalars['Float'];
-  year: Scalars['Int'];
+  value: Scalars['Float']['output'];
+  year: Scalars['Int']['output'];
 };
 
 export type SetNormalizationFromWidgetMutationVariables = Exact<{
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
@@ -2127,10 +2209,10 @@ export type SetNormalizationFromWidgetMutation = (
 );
 
 export type SetParameterMutationVariables = Exact<{
-  parameterId: Scalars['ID'];
-  boolValue?: InputMaybe<Scalars['Boolean']>;
-  numberValue?: InputMaybe<Scalars['Float']>;
-  stringValue?: InputMaybe<Scalars['String']>;
+  parameterId: Scalars['ID']['input'];
+  boolValue?: InputMaybe<Scalars['Boolean']['input']>;
+  numberValue?: InputMaybe<Scalars['Float']['input']>;
+  stringValue?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -2149,7 +2231,7 @@ export type SetParameterMutation = (
 );
 
 export type ActivateScenarioMutationVariables = Exact<{
-  scenarioId: Scalars['ID'];
+  scenarioId: Scalars['ID']['input'];
 }>;
 
 
@@ -2165,10 +2247,10 @@ export type ActivateScenarioMutation = (
 );
 
 export type SetGlobalParameterFromActionSummaryMutationVariables = Exact<{
-  parameterId: Scalars['ID'];
-  boolValue?: InputMaybe<Scalars['Boolean']>;
-  numberValue?: InputMaybe<Scalars['Float']>;
-  stringValue?: InputMaybe<Scalars['String']>;
+  parameterId: Scalars['ID']['input'];
+  boolValue?: InputMaybe<Scalars['Boolean']['input']>;
+  numberValue?: InputMaybe<Scalars['Float']['input']>;
+  stringValue?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -2187,10 +2269,10 @@ export type SetGlobalParameterFromActionSummaryMutation = (
 );
 
 export type SetGlobalParameterMutationVariables = Exact<{
-  parameterId: Scalars['ID'];
-  boolValue?: InputMaybe<Scalars['Boolean']>;
-  numberValue?: InputMaybe<Scalars['Float']>;
-  stringValue?: InputMaybe<Scalars['String']>;
+  parameterId: Scalars['ID']['input'];
+  boolValue?: InputMaybe<Scalars['Boolean']['input']>;
+  numberValue?: InputMaybe<Scalars['Float']['input']>;
+  stringValue?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -2209,7 +2291,7 @@ export type SetGlobalParameterMutation = (
 );
 
 export type SetNormalizationMutationVariables = Exact<{
-  id?: InputMaybe<Scalars['ID']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
@@ -2222,7 +2304,7 @@ export type SetNormalizationMutation = (
 );
 
 export type GetInstanceGoalOutcomeQueryVariables = Exact<{
-  goal: Scalars['ID'];
+  goal: Scalars['ID']['input'];
 }>;
 
 
@@ -2345,7 +2427,7 @@ type ActionParameter_UnknownParameterType_Fragment = (
 export type ActionParameterFragment = ActionParameter_BoolParameterType_Fragment | ActionParameter_NumberParameterType_Fragment | ActionParameter_StringParameterType_Fragment | ActionParameter_UnknownParameterType_Fragment;
 
 export type DimensionalMetricFragment = (
-  { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+  { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
     { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
       { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
       & { __typename?: 'MetricDimensionCategoryType' }
@@ -2365,7 +2447,7 @@ export type DimensionalMetricFragment = (
     & { __typename?: 'UnitType' }
   ), normalizedBy?: (
     { id: string, name: string }
-    & { __typename?: 'Node' }
+    & { __typename?: 'NormalizerNodeType' }
   ) | null }
   & { __typename?: 'DimensionalMetricType' }
 );
@@ -2402,7 +2484,7 @@ type CausalGridNode_ActionNode_Fragment = (
     ) | null }
     & { __typename?: 'ForecastMetricType' }
   ) | null, metricDim?: (
-    { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+    { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
       { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
         { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
         & { __typename?: 'MetricDimensionCategoryType' }
@@ -2422,7 +2504,7 @@ type CausalGridNode_ActionNode_Fragment = (
       & { __typename?: 'UnitType' }
     ), normalizedBy?: (
       { id: string, name: string }
-      & { __typename?: 'Node' }
+      & { __typename?: 'NormalizerNodeType' }
     ) | null }
     & { __typename?: 'DimensionalMetricType' }
   ) | null, parameters: Array<(
@@ -2500,7 +2582,7 @@ type CausalGridNode_Node_Fragment = (
     ) | null }
     & { __typename?: 'ForecastMetricType' }
   ) | null, metricDim?: (
-    { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+    { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
       { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
         { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
         & { __typename?: 'MetricDimensionCategoryType' }
@@ -2520,7 +2602,7 @@ type CausalGridNode_Node_Fragment = (
       & { __typename?: 'UnitType' }
     ), normalizedBy?: (
       { id: string, name: string }
-      & { __typename?: 'Node' }
+      & { __typename?: 'NormalizerNodeType' }
     ) | null }
     & { __typename?: 'DimensionalMetricType' }
   ) | null, parameters: Array<(
@@ -2572,8 +2654,8 @@ type CausalGridNode_Node_Fragment = (
 export type CausalGridNodeFragment = CausalGridNode_ActionNode_Fragment | CausalGridNode_Node_Fragment;
 
 export type GetNodeContentQueryVariables = Exact<{
-  node: Scalars['ID'];
-  goal: Scalars['ID'];
+  node: Scalars['ID']['input'];
+  goal: Scalars['ID']['input'];
 }>;
 
 
@@ -2610,7 +2692,7 @@ export type GetNodeContentQuery = (
       ) | null }
       & { __typename?: 'ForecastMetricType' }
     ) | null, metricDim?: (
-      { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+      { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
         { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
           { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
           & { __typename?: 'MetricDimensionCategoryType' }
@@ -2630,7 +2712,7 @@ export type GetNodeContentQuery = (
         & { __typename?: 'UnitType' }
       ), normalizedBy?: (
         { id: string, name: string }
-        & { __typename?: 'Node' }
+        & { __typename?: 'NormalizerNodeType' }
       ) | null }
       & { __typename?: 'DimensionalMetricType' }
     ) | null, parameters: Array<(
@@ -2706,7 +2788,7 @@ export type GetNodeContentQuery = (
       ) | null }
       & { __typename?: 'ForecastMetricType' }
     ) | null, metricDim?: (
-      { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+      { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
         { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
           { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
           & { __typename?: 'MetricDimensionCategoryType' }
@@ -2726,7 +2808,7 @@ export type GetNodeContentQuery = (
         & { __typename?: 'UnitType' }
       ), normalizedBy?: (
         { id: string, name: string }
-        & { __typename?: 'Node' }
+        & { __typename?: 'NormalizerNodeType' }
       ) | null }
       & { __typename?: 'DimensionalMetricType' }
     ) | null, parameters: Array<(
@@ -2778,7 +2860,7 @@ export type GetNodeContentQuery = (
 );
 
 export type GetNodeInfoQueryVariables = Exact<{
-  node: Scalars['ID'];
+  node: Scalars['ID']['input'];
 }>;
 
 
@@ -2792,7 +2874,7 @@ export type GetNodeInfoQuery = (
 
 export type DimensionalNodeMetricFragment = (
   { metricDim?: (
-    { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+    { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
       { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
         { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
         & { __typename?: 'MetricDimensionCategoryType' }
@@ -2812,7 +2894,7 @@ export type DimensionalNodeMetricFragment = (
       & { __typename?: 'UnitType' }
     ), normalizedBy?: (
       { id: string, name: string }
-      & { __typename?: 'Node' }
+      & { __typename?: 'NormalizerNodeType' }
     ) | null }
     & { __typename?: 'DimensionalMetricType' }
   ) | null }
@@ -2866,7 +2948,7 @@ export type OutcomeNodeFieldsFragment = (
     ) | null }
     & { __typename?: 'ActionNode' }
   )> | null, metricDim?: (
-    { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+    { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
       { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
         { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
         & { __typename?: 'MetricDimensionCategoryType' }
@@ -2886,7 +2968,7 @@ export type OutcomeNodeFieldsFragment = (
       & { __typename?: 'UnitType' }
     ), normalizedBy?: (
       { id: string, name: string }
-      & { __typename?: 'Node' }
+      & { __typename?: 'NormalizerNodeType' }
     ) | null }
     & { __typename?: 'DimensionalMetricType' }
   ) | null }
@@ -2894,8 +2976,8 @@ export type OutcomeNodeFieldsFragment = (
 );
 
 export type GetOutcomeNodeContentQueryVariables = Exact<{
-  node: Scalars['ID'];
-  goal?: InputMaybe<Scalars['ID']>;
+  node: Scalars['ID']['input'];
+  goal?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
@@ -2948,7 +3030,7 @@ export type GetOutcomeNodeContentQuery = (
         ) | null }
         & { __typename?: 'ActionNode' }
       )> | null, metricDim?: (
-        { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+        { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
           { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
             { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
             & { __typename?: 'MetricDimensionCategoryType' }
@@ -2968,7 +3050,7 @@ export type GetOutcomeNodeContentQuery = (
           & { __typename?: 'UnitType' }
         ), normalizedBy?: (
           { id: string, name: string }
-          & { __typename?: 'Node' }
+          & { __typename?: 'NormalizerNodeType' }
         ) | null }
         & { __typename?: 'DimensionalMetricType' }
       ) | null }
@@ -3023,7 +3105,7 @@ export type GetOutcomeNodeContentQuery = (
         ) | null }
         & { __typename?: 'ActionNode' }
       )> | null, metricDim?: (
-        { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+        { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
           { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
             { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
             & { __typename?: 'MetricDimensionCategoryType' }
@@ -3043,7 +3125,7 @@ export type GetOutcomeNodeContentQuery = (
           & { __typename?: 'UnitType' }
         ), normalizedBy?: (
           { id: string, name: string }
-          & { __typename?: 'Node' }
+          & { __typename?: 'NormalizerNodeType' }
         ) | null }
         & { __typename?: 'DimensionalMetricType' }
       ) | null }
@@ -3094,7 +3176,7 @@ export type GetOutcomeNodeContentQuery = (
       ) | null }
       & { __typename?: 'ActionNode' }
     )> | null, metricDim?: (
-      { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+      { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
         { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
           { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
           & { __typename?: 'MetricDimensionCategoryType' }
@@ -3114,7 +3196,7 @@ export type GetOutcomeNodeContentQuery = (
         & { __typename?: 'UnitType' }
       ), normalizedBy?: (
         { id: string, name: string }
-        & { __typename?: 'Node' }
+        & { __typename?: 'NormalizerNodeType' }
       ) | null }
       & { __typename?: 'DimensionalMetricType' }
     ) | null }
@@ -3124,8 +3206,8 @@ export type GetOutcomeNodeContentQuery = (
 );
 
 export type GetPageQueryVariables = Exact<{
-  path: Scalars['String'];
-  goal?: InputMaybe<Scalars['ID']>;
+  path: Scalars['String']['input'];
+  goal?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
@@ -3185,7 +3267,7 @@ export type GetPageQuery = (
           ) | null }
           & { __typename?: 'ActionNode' }
         )> | null, metricDim?: (
-          { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+          { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
             { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
               { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
               & { __typename?: 'MetricDimensionCategoryType' }
@@ -3205,7 +3287,7 @@ export type GetPageQuery = (
             & { __typename?: 'UnitType' }
           ), normalizedBy?: (
             { id: string, name: string }
-            & { __typename?: 'Node' }
+            & { __typename?: 'NormalizerNodeType' }
           ) | null }
           & { __typename?: 'DimensionalMetricType' }
         ) | null }
@@ -3256,7 +3338,7 @@ export type GetPageQuery = (
         ) | null }
         & { __typename?: 'ActionNode' }
       )> | null, metricDim?: (
-        { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number | null>, dimensions: Array<(
+        { id: string, name: string, stackable: boolean, forecastFrom?: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
           { id: string, label: string, originalId?: string | null, helpText?: string | null, categories: Array<(
             { id: string, originalId?: string | null, label: string, color?: string | null, order?: number | null, group?: string | null }
             & { __typename?: 'MetricDimensionCategoryType' }
@@ -3276,7 +3358,7 @@ export type GetPageQuery = (
           & { __typename?: 'UnitType' }
         ), normalizedBy?: (
           { id: string, name: string }
-          & { __typename?: 'Node' }
+          & { __typename?: 'NormalizerNodeType' }
         ) | null }
         & { __typename?: 'DimensionalMetricType' }
       ) | null }
