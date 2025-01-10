@@ -48,6 +48,10 @@
       "TextBlock",
       "TimeBlock",
       "URLBlock"
+    ],
+    "VisualizationEntry": [
+      "VisualizationGroup",
+      "VisualizationNodeOutput"
     ]
   }
 }
