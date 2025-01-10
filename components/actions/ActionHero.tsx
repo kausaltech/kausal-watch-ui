@@ -292,31 +292,33 @@ function ActionHero(props: ActionHeroProps) {
                           </IndexLink>
                         </a>
                       </ActionListLink>
-                      <div>
-                        {previousAction && (
-                          <ActionLink action={previousAction}>
-                            <a>
-                              <Icon.ArrowLeft
-                                color={theme.linkColor}
-                                aria-hidden="true"
-                              />{' '}
-                              {t('previous')}
-                            </a>
-                          </ActionLink>
-                        )}
-                        {nextAction && previousAction && <NavDivider />}
-                        {nextAction && (
-                          <ActionLink action={nextAction}>
-                            <a>
-                              {t('next')}
-                              <Icon.ArrowRight
-                                color={theme.linkColor}
-                                aria-hidden="true"
-                              />
-                            </a>
-                          </ActionLink>
-                        )}
-                      </div>
+                      {theme.settings?.actionView?.showPaginationTop && (
+                        <div>
+                          {previousAction && (
+                            <ActionLink action={previousAction}>
+                              <a>
+                                <Icon.ArrowLeft
+                                  color={theme.linkColor}
+                                  aria-hidden="true"
+                                />{' '}
+                                {t('previous')}
+                              </a>
+                            </ActionLink>
+                          )}
+                          {nextAction && previousAction && <NavDivider />}
+                          {nextAction && (
+                            <ActionLink action={nextAction}>
+                              <a>
+                                {t('next')}
+                                <Icon.ArrowRight
+                                  color={theme.linkColor}
+                                  aria-hidden="true"
+                                />
+                              </a>
+                            </ActionLink>
+                          )}
+                        </div>
+                      )}
                     </ActionsNav>
                     <ActionCategories categories={categories} />
                     <ActionHeadline>
