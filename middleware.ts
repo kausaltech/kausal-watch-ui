@@ -173,7 +173,8 @@ export async function middleware(request: NextRequest) {
 
   if (isRestrictedPlan(parsedPlan) || !isPlanPublished(parsedPlan)) {
     // Pass the status message to the unpublished page as search params
-    const message = parsedPlan.domain?.statusMessage;
+    const message =
+      parsedPlan.domain?.statusMessage ?? parsedPlan.statusMessage;
     const queryParams = message
       ? `?${new URLSearchParams({
           message,
