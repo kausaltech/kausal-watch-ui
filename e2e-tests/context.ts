@@ -312,8 +312,7 @@ export function getIdentifiersToTest(): string[] {
 
 export function getPageBaseUrlToTest(planId: string): string {
   let baseUrl =
-    process.env.TEST_PAGE_BASE_URL ||
-    `http://{planId}.watch.staging.kausal.tech`;
+    process.env.TEST_PAGE_BASE_URL || `http://{planId}.watch-test.kausal.tech`;
   baseUrl = baseUrl.replace('{planId}', planId);
   return baseUrl;
 }
