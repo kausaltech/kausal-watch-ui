@@ -8,10 +8,12 @@ import { getMetricChange, getMetricValue } from '@/common/paths/preprocess';
 import ContentLoader from '@/components/common/ContentLoader';
 import DashCard from '@/components/paths/DashCard';
 
-const StyledTab = styled.div`
+const StyledTab = styled.div<{ $disabled: boolean }>`
   flex: 0 0 175px;
   margin: 0 0.25rem 0;
-  cursor: pointer;
+  cursor: ${(props) => (props.$disabled ? 'default' : 'pointer')};
+  opacity: ${(props) => (props.$disabled ? 0.5 : 1)};
+  pointer-events: ${(props) => (props.$disabled ? 'none' : 'auto')};
 
   &:first-child {
     margin-left: 0;
@@ -138,6 +140,7 @@ type OutcomeCardProps = {
   negativeTotal: number;
   refetching: boolean;
   hideForecast: boolean | null;
+  disabled: boolean;
 };
 
 const OutcomeCard = (props: OutcomeCardProps) => {
@@ -156,6 +159,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
     negativeTotal,
     refetching,
     hideForecast,
+    disabled,
   } = props;
 
   const cardRef = useRef<HTMLDivElement>(null);
@@ -198,12 +202,14 @@ const OutcomeCard = (props: OutcomeCardProps) => {
       key={node.id}
       role="tab"
       tabIndex={0}
-      onMouseEnter={() => onHover(node.id)}
-      onMouseLeave={() => onHover(undefined)}
-      onClick={handleClickTab}
-      onKeyDown={handleKeyDownOnTab}
+      $disabled={disabled}
+      onMouseEnter={() => (disabled ? undefined : onHover(node.id))}
+      onMouseLeave={() => (disabled ? undefined : onHover(undefined))}
+      onClick={disabled ? undefined : handleClickTab}
+      onKeyDown={disabled ? undefined : handleKeyDownOnTab}
       aria-selected={active}
       aria-controls={`tabpanel-${node.id}`}
+      aria-disabled={disabled}
     >
       <DashCard
         state={state}
@@ -215,7 +221,11 @@ const OutcomeCard = (props: OutcomeCardProps) => {
         {refetching && <ContentLoader />}
 
         <ProportionBar
-          size={goalOutcomeValue / total}
+          size={
+            goalOutcomeValue || goalOutcomeValue === 0
+              ? goalOutcomeValue / total
+              : 0
+          }
           color={displayColor}
           active={active}
           offset={negativeTotal < 0 ? Math.abs(negativeTotal / total) : 0}
@@ -234,7 +244,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
                 : t('table-historical')}{' '}
               {endYear}
             </Label>
-            {goalOutcomeValue ? (
+            {goalOutcomeValue !== undefined ? (
               <>
                 {format.number(goalOutcomeValue, {
                   maximumSignificantDigits: 2,
