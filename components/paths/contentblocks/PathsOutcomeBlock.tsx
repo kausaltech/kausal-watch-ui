@@ -16,6 +16,12 @@ import { usePaths } from '@/context/paths/paths';
 import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
+import {
+  ActionNode,
+  GetOutcomeNodeContentQuery,
+  NodeInterface,
+  OutcomeNodeFieldsFragment,
+} from '@/common/__generated__/paths/graphql';
 import ContentLoader from 'react-content-loader';
 
 const OutcomeBlockLoader = (props) => (
@@ -84,14 +90,18 @@ const findVisibleNodes = (allNodes, lastNodeId: string, visibleNodes) => {
   return visibleNodes;
 };
 
+export interface OutcomenodeType extends OutcomeNodeFieldsFragment {
+  upstreamNodes: OutcomeNodeFieldsFragment[];
+}
+
 export default function PathsOutcomeBlock(props) {
-  const { heading, helpText, outcomeNodeId } = props;
+  const { heading } = props;
   const t = useTranslations();
   const pathsInstance = usePaths();
   const yearRange = useReactiveVar(yearRangeVar);
   const activeGoal = useReactiveVar(activeGoalVar);
   const activeScenario = useReactiveVar(activeScenarioVar);
-  const path = '';
+  //const path = '';
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -119,11 +129,10 @@ export default function PathsOutcomeBlock(props) {
         { scroll: false }
       );
     }
-    // router clear query ?
-  }, [lastActiveNodeId, queryNodeId]);
+  }, [lastActiveNodeId, queryNodeId, router, pathname, createQueryString]);
 
   // router.push(pathname + '?' + createQueryString('sort', 'asc'))
-  const queryResp = useQuery(GET_OUTCOME_NODE, {
+  const queryResp = useQuery<GetOutcomeNodeContentQuery>(GET_OUTCOME_NODE, {
     variables: { node: 'net_emissions', goal: activeGoal?.id ?? null },
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
@@ -141,7 +150,8 @@ export default function PathsOutcomeBlock(props) {
   if (error) return <p>Error : {error.message}</p>;
   const data = queryResp.data ?? previousData;
 
-  const getVisibleNodes = (outcomeNode) => {
+  const getVisibleNodes = (outcomeNode: OutcomenodeType) => {
+    if (!outcomeNode) return { visible: [], all: new Map() };
     const upstreamNodes = outcomeNode?.upstreamNodes ?? [];
 
     const allNodes = new Map(upstreamNodes.map((node) => [node.id, node]));
@@ -162,7 +172,7 @@ export default function PathsOutcomeBlock(props) {
   };
 
   const nodes = data?.node
-    ? getVisibleNodes(data.node ?? null)
+    ? getVisibleNodes(data.node as OutcomenodeType)
     : { visible: [], all: new Map() };
 
   return (

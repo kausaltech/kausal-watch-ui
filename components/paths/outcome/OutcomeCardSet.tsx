@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
 
-import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
 import { setUniqueColors } from '@/common/paths/colors';
@@ -9,6 +8,7 @@ import OutcomeCard from '@/components/paths/outcome/OutcomeCard';
 import OutcomeNodeContent from '@/components/paths/outcome/OutcomeNodeContent';
 import { activeGoalVar } from '@/context/paths/cache';
 import { useReactiveVar } from '@apollo/client';
+import { OutcomenodeType } from '../contentblocks/PathsOutcomeBlock';
 
 const CardSet = styled.div<{
   $color?: string;
@@ -92,88 +92,40 @@ const BarSeparator = styled.div`
   background-color: ${(props) => props.theme.graphColors.grey070};
 `;
 
-const OutcomeBar = (props) => {
-  const {
-    nodes,
-    date,
-    hovered,
-    onHover,
-    handleClick,
-    activeNode,
-    parentColor,
-  } = props;
-  const t = useTranslations();
-  const nodesTotal = getOutcomeTotal(nodes, date);
-  // Let's get the outcome type from first node and use it with translate to give bar a title
-  // TODO: get title from API
-  const outcomeType = nodes[0].quantity;
-  const negativeNodes = nodes.filter((node) => getMetricValue(node, date) < 0);
-  const positiveNodes = nodes.filter((node) => getMetricValue(node, date) >= 0);
-
-  return (
-    <>
-      <BarHeader>{`${t(outcomeType)} ${date}`}</BarHeader>
-      <Bar color={parentColor}>
-        {positiveNodes.map((node) => (
-          <Segment
-            key={node.id}
-            style={{
-              width: `${(getMetricValue(node, date) / nodesTotal) * 100 || 0}%`,
-              backgroundColor: node.color || parentColor,
-              display: `${getMetricValue(node, date) ? '' : 'none'}`,
-            }}
-            className={`${hovered === node.id ? 'hovered' : ''} ${
-              activeNode === node.id ? 'active' : ''
-            }`}
-            onMouseEnter={() => onHover(node.id)}
-            onMouseLeave={() => onHover(undefined)}
-            onClick={() => handleClick(node.id)}
-          />
-        ))}
-        {negativeNodes?.length > 0 && <BarSeparator />}
-        {negativeNodes.map((node) => (
-          <Segment
-            key={node.id}
-            style={{
-              width: `${
-                (-getMetricValue(node, date) / nodesTotal) * 100 || 0
-              }%`,
-              backgroundColor: node.color || parentColor,
-              display: `${getMetricValue(node, date) ? '' : 'none'}`,
-            }}
-            className={`${hovered === node.id ? 'hovered' : ''} ${
-              activeNode === node.id ? 'active' : ''
-            }`}
-            onMouseEnter={() => onHover(node.id)}
-            onMouseLeave={() => onHover(undefined)}
-            onClick={() => handleClick(node.id)}
-          />
-        ))}
-        {nodes.length < 2 && (
-          <Segment
-            style={{
-              width: '100%',
-              backgroundColor: parentColor,
-            }}
-          />
-        )}
-      </Bar>
-    </>
-  );
-};
-
 const DEFAULT_NODE_ORDER = 100;
 
 function orderByMetric(nodes) {
+  // We use the most recent value to sort the nodes
   function getLastValue(node) {
     const { metric } = node;
-    if (!metric) return 0;
+    // TODO: Use metricDim
+    if (!metric) return undefined;
     const lastValue =
       metric.historicalValues[metric.historicalValues.length - 1]?.value;
-    if (lastValue == undefined) return 0;
+    // if the metric has no last historical value undefined should be returned
     return lastValue;
   }
+
+  // We order the nodes by default their order field ascending
+  // If no order is set, we use the most recent historical value to sort the nodes descending
+  // If there is no value for the metric, it should be ordered last
   nodes.sort((a, b) => {
+    const aVal = getLastValue(a);
+    const bVal = getLastValue(b);
+
+    // Make sure undefined values are last
+    if (aVal === undefined && bVal === undefined) {
+      return 0;
+    }
+    if (aVal === undefined) {
+      return 1;
+    }
+    if (bVal === undefined) {
+      return -1;
+    }
+
+    // If both nodes have order, sort by order
+
     // First sort by the order field
     let aOrder = a.order ?? DEFAULT_NODE_ORDER;
     let bOrder = b.order ?? DEFAULT_NODE_ORDER;
@@ -183,8 +135,6 @@ function orderByMetric(nodes) {
       return aOrder - bOrder;
     }
     // or if order is the same, use metric values
-    const aVal = getLastValue(a);
-    const bVal = getLastValue(b);
     if (a.order != null && b.order != null) {
       return b.order - a.order;
     }
@@ -193,8 +143,8 @@ function orderByMetric(nodes) {
 }
 
 type OutcomeCardSetProps = {
-  nodeMap: any;
-  rootNode: any;
+  nodeMap: Map<string, OutcomenodeType>;
+  rootNode: OutcomenodeType;
   parentColor: string;
   startYear: number;
   endYear: number;
@@ -245,7 +195,7 @@ const OutcomeCardSet = ({
       cardNodes,
       subNodeMap,
     };
-  }, [nodeMap]);
+  }, [nodeMap, rootNode.inputNodes]);
 
   const activeGoal = useReactiveVar(activeGoalVar);
   // We have a different group for indirect emissions (hack)
@@ -254,14 +204,6 @@ const OutcomeCardSet = ({
   const inputNodes = rootNode.inputNodes.filter(
     (node) => !nodeMap.has(node.id)
   );
-  // Hide outcome bar. TODO: make this configurable
-  const showOutcomeBar = false;
-  // If this is the last active scenario, scroll to view after render
-  /*
-  useEffect(() => {
-    if (lastActiveNodeId === rootNode.id) scrollTo(document.querySelector(`#${lastActiveNodeId}`), -150);
-  }, []);
-  */
 
   const handleHover = useCallback(
     (evt) => {
@@ -289,7 +231,6 @@ const OutcomeCardSet = ({
     endYear
   );
 
-  // console.log("card nodes" , cardNodes);
   return (
     <>
       <CardSet
@@ -309,19 +250,6 @@ const OutcomeCardSet = ({
             separateYears={separateYears}
           />
         </ContentArea>
-        {showOutcomeBar && (
-          <>
-            <OutcomeBar
-              nodes={cardNodes}
-              date={endYear}
-              hovered={hoveredNodeId}
-              onHover={handleHover}
-              handleClick={handleClick}
-              activeNode={activeNodeId}
-              parentColor={parentColor}
-            />
-          </>
-        )}
         {cardNodes.length > 0 && (
           <SubNodes>
             <BarHeader>{subNodesTitle}</BarHeader>
@@ -347,6 +275,10 @@ const OutcomeCardSet = ({
                   negativeTotal={negativeNodesTotal}
                   refetching={refetching}
                   hideForecast={hideForecast}
+                  disabled={
+                    node.metric?.forecastValues?.length === 0 &&
+                    node.metric?.historicalValues?.length === 0
+                  }
                 />
               ))}
             </CardDeck>
