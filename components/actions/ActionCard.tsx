@@ -65,6 +65,9 @@ const SecondaryIcon = styled(SVG)`
 `;
 
 const SecondaryIconsContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
   text-align: right;
   padding: 0 ${(props) => props.theme.spaces.s050}
     ${(props) => props.theme.spaces.s050};
@@ -75,6 +78,9 @@ const ActionCardElement = styled.div<{
   $isHighlighted: boolean;
 }>`
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   width: 100%;
   background: ${(props) => props.theme.themeColors.white};
   border-width: ${(props) => props.theme.cardBorderWidth};
