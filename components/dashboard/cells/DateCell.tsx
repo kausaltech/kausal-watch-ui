@@ -5,7 +5,7 @@ interface Props {
   date: string | null;
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) =>
     `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
