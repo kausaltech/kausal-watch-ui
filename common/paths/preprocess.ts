@@ -39,7 +39,10 @@ type NodeMetric = {
   historicalValues: MetricValue[];
 };
 
-export const getMetricValue = (node: { metric: NodeMetric }, year: number) =>
+export const getMetricValue: (
+  node: { metric: NodeMetric },
+  year: number
+) => number | undefined = (node, year) =>
   node.metric.forecastValues.find((dataPoint) => dataPoint.year === year)
     ?.value ??
   node.metric.historicalValues.find((dataPoint) => dataPoint.year === year)
