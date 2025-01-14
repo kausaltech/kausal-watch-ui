@@ -26,6 +26,7 @@ import ResponsiblePartiesCell from './cells/ResponsiblePartiesCell';
 import StatusCell from './cells/StatusCell';
 import TasksStatusCell from './cells/TasksStatusCell';
 import UpdatedAtCell from './cells/UpdatedAtCell';
+import DateCell from './cells/DateCell';
 import { ActionListAction, ColumnBlock } from './dashboard.types';
 
 const getPlanUrl = (mergedWith, actionPlan, planId) => {
@@ -181,16 +182,14 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     sortable: true,
     headerKey: 'startDate',
     renderHeader: (t, _, label) => label || t('action-start-date'),
-    renderCell: (action) =>
-      action.startDate != null && dayjs(action.startDate).format('l'),
+    renderCell: (action) => <DateCell date={action.startDate} />,
   },
 
   EndDateColumnBlock: {
     sortable: true,
     headerKey: 'endDate',
     renderHeader: (t, _, label) => label || t('action-end-date'),
-    renderCell: (action) =>
-      action.endDate != null && dayjs(action.endDate).format('l'),
+    renderCell: (action) => <DateCell date={action.endDate} />,
   },
 
   FieldColumnBlock: {
