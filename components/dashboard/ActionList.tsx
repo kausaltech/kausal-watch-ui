@@ -334,7 +334,7 @@ const actionFragment = gql`
         }
       }
     }
-    contactPersons {
+    contactPersons @skip(if: $relatedPlanActions) {
       id
       person {
         organization {
