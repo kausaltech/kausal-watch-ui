@@ -117,6 +117,7 @@ const createLayout = (
     },
     ...yaxes,
     ...xaxes,
+    hovermode: 'x unified',
     paper_bgcolor: theme.themeColors.white,
     plot_bgcolor: graphCustomBackground || theme.themeColors.white,
     autosize: true,
@@ -213,6 +214,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
   const allXValues = [];
 
   const newTraces = traces.map((trace, idx) => {
+    console.log('trace', trace);
     // Here we are excluding some properties from the trace
     const { xType, dataType, ...plotlyTrace } = trace;
     const modTrace: Data = { ...plotlyTrace };
@@ -246,7 +248,10 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
 
       modTrace.line = {
         width: trace.dataType === 'total' ? 3 : 2, // TODO extension trace total vs dimension
-        color: plotColors.mainScale[idx % numColors],
+        color:
+          trace.dataType === 'total'
+            ? plotColors.trace
+            : plotColors.mainScale[idx % numColors],
       };
 
       // if we prefer smooth lines, set spline shape
@@ -258,10 +263,13 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       modTrace.marker = {
         size: 8,
         symbol: plotColors.symbols[idx % numSymbols],
-        color: '#ffffff',
+        color: plotColors.fillMarkers ? undefined : '#ffffff',
         line: {
           width: 2,
-          color: plotColors.mainScale[idx % numColors],
+          color:
+            trace.dataType === 'total'
+              ? plotColors.trace
+              : plotColors.mainScale[idx % numColors],
         },
       };
     }
@@ -279,11 +287,14 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     const theme = useTheme();
     const roundIndicatorValue =
       theme.settings?.graphs?.roundIndicatorValue ?? true;
-    modTrace.hovertemplate = `(%{x|${timeFormat}})<br> ${trace.name}: ${
+    modTrace.hovertemplate = `${trace.name}: ${
       roundIndicatorValue === false ? '%{y:,.f}' : '%{y:,.3r}'
     } ${unit}`;
     modTrace.hoverlabel = {
-      bgcolor: plotColors.mainScale[idx % numColors],
+      bgcolor:
+        trace.dataType === 'total'
+          ? plotColors.trace
+          : plotColors.mainScale[idx % numColors],
       namelength: 0,
     };
     return modTrace;
@@ -392,43 +403,15 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   } = props;
 
   const plotColors = {
-    trace: theme.graphColors.red070,
-    trend: theme.graphColors.red030,
-    goalScale: [
-      theme.graphColors.green070,
-      theme.graphColors.green030,
-      theme.graphColors.green050,
-      theme.graphColors.green090,
-      theme.graphColors.green010,
-    ],
-    mainScale: [
-      theme.graphColors.red070,
-      theme.graphColors.blue050,
-      theme.graphColors.yellow030,
-      theme.graphColors.green030,
-      theme.graphColors.blue030,
-      theme.graphColors.yellow070,
-      theme.graphColors.green070,
-      theme.graphColors.red030,
-      theme.graphColors.green090,
-      theme.graphColors.yellow010,
-    ],
-    symbols: [
-      'circle',
-      'square',
-      'diamond',
-      'pentagon',
-      'hexagram',
-      'star-diamond',
-      'hash',
-      'y-down',
-    ],
+    trace: theme.settings.graphs.totalLineColor,
+    trend: theme.settings.graphs.trendLineColor,
+    goalScale: theme.settings.graphs.goalLineColors,
+    mainScale: theme.settings.graphs.categoryColors,
+    fillMarkers: theme.settings.graphs.fillMarkers,
+    symbols: theme.settings.graphs.categorySymbols,
+    goalSymbol: theme.settings.graphs.goalSymbol,
+    goalLine: theme.settings.graphs.drawGoalLine,
   };
-
-  /* Override goal line color from theme, only supports single color */
-  if (theme.settings?.graphs?.goalLineColor) {
-    plotColors.goalScale = [theme.settings.graphs.goalLineColor];
-  }
 
   // TODO: these ought to be set in the backend
   const lineShape = theme.settings?.graphs?.lineShape || 'spline';
@@ -535,21 +518,23 @@ function IndicatorGraph(props: IndicatorGraphProps) {
         color: plotColors.trend,
         dash: 'dash',
       },
-      //info: 'none',
+      hoverinfo: 'none',
       ...trendTrace,
     });
 
   // add goals if defined
   if (!isComparison && goalTraces.length) {
     goalTraces.forEach((goalTrace, idx) => {
+      console.log('goaltrace', goalTrace);
       plotlyData.push({
         x: goalTrace.x,
         y: goalTrace.y,
         name: goalTrace.name,
         type: 'scatter',
         cliponaxis: false,
-        mode: goalTrace.scenario ? 'markers' : 'lines+markers',
-        ...(!goalTrace.scenario && {
+        // TODO: check legacy intention with different rendering of scenario goals
+        mode: plotColors.goalLine ? 'lines+markers' : 'markers',
+        ...(plotColors.goalLine && {
           line: {
             width: 3,
             dash: 'dash',
@@ -558,11 +543,11 @@ function IndicatorGraph(props: IndicatorGraphProps) {
         }),
         marker: {
           size: 12,
-          symbol: 'x',
+          symbol: plotColors.goalSymbol,
           color: plotColors.goalScale[idx % plotColors.goalScale.length],
         },
-        opacity: 0.7,
-        hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
+        opacity: 0.5,
+        hovertemplate: `${goalTrace.name}: %{y} ${yRange.unit}`,
         hoverlabel: {
           namelength: 0,
           bgcolor: '#fff',
@@ -586,6 +571,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     ? layoutConfig.grid.rows * 300
     : 450 + (!hasTimeDimension ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0);
 
+  console.log('plotlyData', plotlyData);
   return (
     <PlotContainer
       data-element="indicator-graph-plot-container"
