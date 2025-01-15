@@ -114,7 +114,7 @@ export class MetricSlice {
     const viewUnitLabel = unitLabel ?? 'Unit';
     const viewHistoricalLabel = historicalLabel ?? 'Historical';
     const viewForecastLabel = forecastLabel ?? 'Forecast';
-
+    const NO_VALUE = '';
     const header = [
       { key: 'year', label: viewYearLabel },
       { key: 'type', label: viewTypeLabel },
@@ -138,17 +138,20 @@ export class MetricSlice {
       this.categoryValues.forEach((cv) => {
         if (historicalYearIndex >= 0) {
           const value = cv.historicalValues[historicalYearIndex] || null;
-          row[cv.category.id] = parseFloat(value?.toPrecision(2) || '') ?? null;
+          row[cv.category.id] =
+            value !== null ? parseFloat(value?.toPrecision(2) || '') : NO_VALUE;
           total += value || 0;
         } else if (forecastYearIndex >= 0) {
           const value = cv.forecastValues[forecastYearIndex] || null;
-          row[cv.category.id] = parseFloat(value?.toPrecision(2) || '') ?? null;
+          row[cv.category.id] =
+            value !== null ? parseFloat(value?.toPrecision(2) || '') : NO_VALUE;
           total += value || 0;
         } else {
-          row[cv.category.id] = null;
+          row[cv.category.id] = NO_VALUE;
         }
       });
-      row.total = parseFloat(total.toPrecision(2) || '') ?? null;
+      // TODO: parseFloat returns NaN if total is undefined or null
+      row.total = parseFloat(total.toPrecision(2) || '') ?? NO_VALUE;
       row.type =
         historicalYearIndex >= 0 ? viewHistoricalLabel : viewForecastLabel;
       return row;
