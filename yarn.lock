@@ -3977,10 +3977,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kausal/themes-private@npm:^0.5.26":
-  version: 0.5.26
-  resolution: "@kausal/themes-private@npm:0.5.26"
-  checksum: f8ddc069a8509a1e212a1a4ccab31c038e270bfbf0cc79b5c601873b980c3f325cf1dbbcb383a2a2d7f5e92a4c98f082032db606906029add095d444cdbf6b93
+"@kausal/themes-private@npm:^0.5.27":
+  version: 0.5.27
+  resolution: "@kausal/themes-private@npm:0.5.27"
+  checksum: 79cfc78fad3a1d3eeaf801820a3730362ce44ad74ebae8a87fc9384856897836b67575b16e17693957ce544cfde9b29bc426e337dde76a2dd2823bb265b7eba4
   languageName: node
   linkType: hard
 
@@ -17738,7 +17738,7 @@ __metadata:
     "@kausal/mapboxgl-legend": ^1.7.2
     "@kausal/plotly-custom": ^2.32.0
     "@kausal/themes": ^0.8.2
-    "@kausal/themes-private": ^0.5.26
+    "@kausal/themes-private": ^0.5.27
     "@n8tb1t/use-scroll-position": ^2.0.3
     "@next/bundle-analyzer": ^12.1.6
     "@playwright/test": ^1.39.0
