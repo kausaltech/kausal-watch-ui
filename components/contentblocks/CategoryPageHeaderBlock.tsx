@@ -7,7 +7,7 @@ import {
 } from 'common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
 import AttributesBlock, { Attributes } from 'components/common/AttributesBlock';
-import { Breadcrumbs } from 'components/common/Breadcrumbs';
+import Breadcrumbs from 'components/common/Breadcrumbs';
 import CategoryPageStreamField, {
   CategoryPage,
 } from 'components/common/CategoryPageStreamField';

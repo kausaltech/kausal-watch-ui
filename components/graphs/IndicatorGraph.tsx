@@ -29,7 +29,7 @@ const createLayout = (
   const fontFamily =
     '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, ' +
     'helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
-  const hasCategories = !hasTimeDimension;
+  const hasCategories = false;
 
   // With Plotly you have choice between one significant digit precision for y axis ticks (.1r)
   // then on smaller (first digit) ranges you get repeated numbers on ticks.
@@ -117,6 +117,7 @@ const createLayout = (
     },
     ...yaxes,
     ...xaxes,
+    hovermode: 'x unified',
     paper_bgcolor: theme.themeColors.white,
     plot_bgcolor: graphCustomBackground || theme.themeColors.white,
     autosize: true,
@@ -219,7 +220,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     allXValues.push(...trace.x);
 
     // we have multiple categories in one time point - draw bar groups
-    if (!hasTimeDimension) {
+    if (false) {
       modTrace.x = modTrace.x.map((name) => splitLines(name));
       modTrace.type = 'bar';
       modTrace.marker = {
@@ -233,7 +234,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       layoutConfig.xaxis!.tickvals = undefined;
     }
     // we have one or more categories as time series - draw lines and markers
-    if (hasTimeDimension) {
+    if (true) {
       modTrace.type = 'scatter';
       // we fill traces if there is only one trace and area graph is enabled
       if (traceCount === 1 && useAreaGraph) {
@@ -258,7 +259,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       modTrace.marker = {
         size: 8,
         symbol: plotColors.symbols[idx % numSymbols],
-        color: '#ffffff',
+        //color: '#ffffff',
         line: {
           width: 2,
           color: plotColors.mainScale[idx % numColors],
@@ -395,17 +396,17 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     trace: theme.graphColors.red070,
     trend: theme.graphColors.red030,
     goalScale: [
-      theme.graphColors.green070,
-      theme.graphColors.green030,
       theme.graphColors.green050,
+      theme.graphColors.green030,
+      theme.graphColors.green070,
       theme.graphColors.green090,
       theme.graphColors.green010,
     ],
     mainScale: [
-      theme.graphColors.red070,
-      theme.graphColors.blue050,
+      theme.graphColors.blue070,
       theme.graphColors.yellow030,
       theme.graphColors.green030,
+      theme.graphColors.red070,
       theme.graphColors.blue030,
       theme.graphColors.yellow070,
       theme.graphColors.green070,
@@ -468,11 +469,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       styleCount = 1;
     }
   }
-  if (!hasTimeDimension) {
-    // For bar graphs, the red color looks too heavy.
-    // Shift to blue.
-    plotColors.mainScale.shift();
-  }
+
   const mainTraces = createTraces({
     traces,
     unit: yRange.unit,
@@ -537,6 +534,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       },
       //info: 'none',
       ...trendTrace,
+      hoverinfo: 'skip',
     });
 
   // add goals if defined
@@ -548,21 +546,20 @@ function IndicatorGraph(props: IndicatorGraphProps) {
         name: goalTrace.name,
         type: 'scatter',
         cliponaxis: false,
-        mode: goalTrace.scenario ? 'markers' : 'lines+markers',
-        ...(!goalTrace.scenario && {
-          line: {
-            width: 3,
-            dash: 'dash',
-            color: plotColors.goalScale[idx % plotColors.goalScale.length],
-          },
-        }),
-        marker: {
-          size: 12,
-          symbol: 'x',
+        mode: 'lines+markers',
+
+        line: {
+          width: 3,
+          dash: 'dash',
           color: plotColors.goalScale[idx % plotColors.goalScale.length],
         },
-        opacity: 0.7,
-        hovertemplate: `(%{x}) ${goalTrace.name}: %{y} ${yRange.unit}`,
+        marker: {
+          size: 12,
+          symbol: 'circle',
+          color: plotColors.goalScale[idx % plotColors.goalScale.length],
+        },
+        opacity: 0.5,
+        hovertemplate: `${goalTrace.name}: %{y} ${yRange.unit}`,
         hoverlabel: {
           namelength: 0,
           bgcolor: '#fff',
