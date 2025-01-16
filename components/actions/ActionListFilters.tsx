@@ -378,26 +378,29 @@ function ActionListFilterBadges({
     value: SingleFilterValue
   ): Badge | null {
     let label: string;
+
     if (item.id === 'name') {
-      label = value ?? '';
-    } else label = item.getLabel(t);
-    if (item.options) {
+      if (!value || typeof value !== 'string' || value.trim() === '') {
+        return null;
+      }
+      label = value;
+    } else if (item.options) {
       const matchingFilters = enabled.filter((i) => i.id === item.id);
-      let activeOption: any = undefined;
+      let activeOption: ActionListFilterOption | undefined;
+
       for (const filter of matchingFilters) {
-        activeOption = filter.options?.find(
-          (opt) => opt.id === value
-        ) as ActionListFilterOption;
-        if (activeOption !== undefined) break;
+        activeOption = filter.options?.find((opt) => opt.id === value);
+        if (activeOption) break;
       }
 
       if (!activeOption) {
         return null;
       }
-
       label = activeOption.label;
       // Handle boolean type filters
-    } else if (typeof value !== 'boolean') {
+    } else if (typeof value === 'boolean') {
+      label = item.getLabel(t);
+    } else {
       return null;
     }
     return {
