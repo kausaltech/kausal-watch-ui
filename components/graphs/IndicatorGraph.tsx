@@ -214,7 +214,6 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
   const allXValues = [];
 
   const newTraces = traces.map((trace, idx) => {
-    console.log('trace', trace);
     // Here we are excluding some properties from the trace
     const { xType, dataType, ...plotlyTrace } = trace;
     const modTrace: Data = { ...plotlyTrace };
@@ -525,7 +524,6 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   // add goals if defined
   if (!isComparison && goalTraces.length) {
     goalTraces.forEach((goalTrace, idx) => {
-      console.log('goaltrace', goalTrace);
       plotlyData.push({
         x: goalTrace.x,
         y: goalTrace.y,
@@ -571,7 +569,6 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     ? layoutConfig.grid.rows * 300
     : 450 + (!hasTimeDimension ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0);
 
-  console.log('plotlyData', plotlyData);
   return (
     <PlotContainer
       data-element="indicator-graph-plot-container"
