@@ -239,10 +239,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       // we fill traces if there is only one trace and area graph is enabled
       if (traceCount === 1 && useAreaGraph) {
         modTrace.fill = 'tozeroy';
-        modTrace.fillcolor = transparentize(
-          0.8,
-          plotColors.mainScale[idx % numColors]
-        );
+        modTrace.fillcolor = transparentize(0.8, plotColors.trace);
       }
 
       modTrace.line = {
