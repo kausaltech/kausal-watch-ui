@@ -117,7 +117,7 @@ export function ActionLink({
     : action.identifier;
 
   const actionLink = usePrependPlanAndLocale(
-    `${ACTIONS_PATH}/${targetIdentifier}`
+    `${planUrl ?? ''}${ACTIONS_PATH}/${targetIdentifier}`
   );
 
   if (crossPlan && viewUrl) {

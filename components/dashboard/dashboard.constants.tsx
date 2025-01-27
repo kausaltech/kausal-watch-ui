@@ -87,7 +87,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
         <ActionLink
           action={action}
           viewUrl={action.mergedWith?.viewUrl ?? action.viewUrl}
-          planUrl={getPlanUrl(mergedWith, action.plan, plan.id)}
+          planUrl={getPlanUrl(mergedWith, action.plan, plan.id) ?? planViewUrl}
           crossPlan={fromOtherPlan || mergedWithActionFromOtherPlan}
         >
           <a>{action.name}</a>
