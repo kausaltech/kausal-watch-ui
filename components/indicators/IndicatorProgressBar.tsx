@@ -140,9 +140,9 @@ const CHART_WIDTHS = {
   md: 800,
 };
 
-function useChartWidth() {
+function useChartWidth(): number {
   const theme = useTheme();
-  const { width: windowWidth } = useWindowSize(400);
+  const { width: windowWidth } = useWindowSize(400) as { width: number };
   const [width, setWidth] = useState(CHART_WIDTHS.md);
 
   useEffect(() => {
@@ -351,7 +351,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
       [
         '.start-bar',
         {
-          attrX: bars.w - roundedValues.start * scale,
+          x: bars.w - roundedValues.start * scale,
           width: roundedValues.start * scale,
         },
         { duration: reductionCounterDuration },
@@ -367,7 +367,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
       [
         '.latest-bar',
         {
-          attrX: bars.w - latestBar.w,
+          x: bars.w - latestBar.w,
           width: latestBar.w,
         },
         { at: 0, duration: reductionCounterDuration },
@@ -495,7 +495,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                 className="start-bar"
                 width={bars.w}
                 y={startBar.y}
-                attrX={0}
+                x={0}
                 height={barHeight - barMargin}
                 fill={startColor}
               />
@@ -557,7 +557,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
           <motion.rect
             className="latest-bar"
             y={latestBar.y}
-            attrX="0"
+            x="0"
             width={bars.w}
             height={barHeight - barMargin}
             opacity={0}
@@ -710,7 +710,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
           )}
         </svg>
         {theme.section.indicatorShowcase.linkToSource && (
-          <SourceLink role="button" tabindex="0" className="text-end mt-3">
+          <SourceLink role="button" tabIndex="0" className="text-end mt-3">
             <IndicatorLink id={indicatorId}>{note}</IndicatorLink>
           </SourceLink>
         )}

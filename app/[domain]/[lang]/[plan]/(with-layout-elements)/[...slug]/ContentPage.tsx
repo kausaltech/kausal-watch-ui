@@ -54,7 +54,6 @@ const PageHeaderBlock = ({ color, page }: PageHeaderBlockProps) => {
       if (!category) {
         throw new Error('Category page without category configured');
       }
-      console.log('category', category);
       const headerImage =
         (category.image as MultiUseImageFragmentFragment | null) ||
         (category.parent?.image as MultiUseImageFragmentFragment | null);
