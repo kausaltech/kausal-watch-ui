@@ -5,6 +5,7 @@ import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
 import { ApolloWrapper } from '@/components/providers/ApolloWrapper';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import defaultTheme from '@/public/static/themes/default/theme.json';
+import { Theme } from '@kausal/themes/types';
 import { DayjsLocaleProvider } from '@/common/dayjs';
 import '@/styles/default/main.scss';
 import { AuthProvider } from '@/components/providers/AuthProvider';
@@ -34,7 +35,7 @@ export default function LangLayout({ params, children }: Props) {
         </Script>
         {/* Initially provide the default theme since the plan theme identifier is loaded asynchronously.
             This prevents errors in root components such as loaders that require a theme */}
-        <ThemeProvider theme={defaultTheme}>
+        <ThemeProvider theme={defaultTheme as Theme}>
           <NextIntlClientProvider locale={params.lang} messages={messages}>
             <StyledComponentsRegistry>
               <DayjsLocaleProvider locale={params.lang}>

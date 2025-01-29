@@ -3,14 +3,10 @@ import { Container, Row } from 'reactstrap';
 import styled, { css } from 'styled-components';
 
 import StreamField from 'components/common/StreamField';
-import { GetContentPageQuery } from 'common/__generated__/graphql';
+import { CategoryPage } from 'common/__generated__/graphql';
 import CategoryPageStreamField, {
   checkAttributeHasValueByType,
 } from 'components/common/CategoryPageStreamField';
-
-type GeneralPlanPage = NonNullable<GetContentPageQuery['planPage']>;
-
-type CategoryPage = { __typename: 'CategoryPage' } & GeneralPlanPage;
 
 const MainContent = styled.div``;
 

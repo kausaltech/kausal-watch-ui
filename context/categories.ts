@@ -1,7 +1,8 @@
 import { useContext, createContext } from 'react';
-import type { CategoryListBlockCategory } from 'components/contentblocks/CategoryListBlock';
+import { Category } from '@/common/__generated__/graphql';
+//import type { CategoryListBlockCategory } from 'components/contentblocks/CategoryListBlock';
 
-type CategoriesContext = Array<CategoryListBlockCategory>;
+type CategoriesContext = Array<Category> | [];
 
 const CategoriesContext = createContext<CategoriesContext>([]);
 

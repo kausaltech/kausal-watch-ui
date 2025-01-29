@@ -2,6 +2,7 @@ import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import { Link } from 'common/links';
 import Icon from 'components/common/Icon';
+import { PageInterface } from '@/common/__generated__/graphql';
 
 const NavigationContainer = styled(Container)`
   @media (min-width: ${(props) => props.theme.breakpointLg}) {
@@ -53,15 +54,9 @@ const NavItem = styled.li<{ $isActive: boolean }>`
   }
 `;
 
-export interface SecondaryNavigationLink {
-  id: string;
-  title: string;
-  urlPath: string;
-}
-
 interface SecondaryNavigationProps {
-  links: SecondaryNavigationLink[];
-  activeLink: string;
+  links: PageInterface[];
+  activeLink?: string | null;
   title?: string;
 }
 
