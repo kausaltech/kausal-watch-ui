@@ -4,6 +4,7 @@ import {
   Category,
   CategoryFragmentFragment,
   AttributeRichText,
+  AttributeText,
 } from 'common/__generated__/graphql';
 import { InstanceType } from 'common/__generated__/paths/graphql';
 import { Link } from 'common/links';
@@ -90,18 +91,28 @@ type CategoryCardProps = {
 const CategoryCard = (props: CategoryCardProps) => {
   const { category, group, pathsInstance, onLoaded } = props;
 
+  // TODO: Have a backend setting for the main goal attribute
   const mainGoalAttribute: AttributeRichText = category.attributes?.find(
-    (attr) => attr.key === 'Hauptziel'
+    (attr) => attr.id === '5750'
   ) as AttributeRichText;
 
   const mainGoalLabel = mainGoalAttribute?.key || 'Main Goal';
   const mainGoalValue = mainGoalAttribute?.value;
 
   const flattenHTML = (html: string) => html.replace(/<\/?p[^>]*>/g, '');
-
   const flattenedMainGoalValue = mainGoalValue
     ? flattenHTML(mainGoalValue)
     : null;
+
+  // TODO: Have a backend setting for the main indicator attribute
+  const mainIndicatorAttribute: AttributeText = category.attributes?.find(
+    (attr) => attr.id === '5688'
+  ) as AttributeText;
+
+  const mainIndicatorId: string | null =
+    mainIndicatorAttribute?.value ||
+    (category.indicators?.length > 0 && category.indicators[0].id) ||
+    null;
 
   return (
     <Card>
@@ -146,8 +157,8 @@ const CategoryCard = (props: CategoryCardProps) => {
                 </p>
               </CardGoalBlock>
             )}
-            {category.indicators?.length > 0 && (
-              <IndicatorSparkline indicatorId={category.indicators[0].id} />
+            {mainIndicatorId && (
+              <IndicatorSparkline indicatorId={mainIndicatorId} />
             )}
           </CardContentBlock>
         </CardDataBlock>

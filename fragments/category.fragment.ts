@@ -54,8 +54,12 @@ export const CATEGORY_FRAGMENT = gql`
       hideCategoryIdentifiers
     }
     attributes {
+      id
       key
       ... on AttributeRichText {
+        value
+      }
+      ... on AttributeText {
         value
       }
     }
