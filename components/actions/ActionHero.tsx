@@ -114,12 +114,16 @@ const ImageCredit = styled.span`
 `;
 
 const ActionHeadline = styled.h1`
-  hyphens: manual;
+  hyphens: auto;
   display: flex;
   flex-wrap: wrap;
   margin: ${(props) => props.theme.spaces.s100} 0;
   font-size: ${(props) => props.theme.fontSizeLg};
   color: ${(props) => props.theme.textColor.primary} !important;
+
+  :lang(fi) & {
+    hyphens: manual;
+  }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     font-size: ${(props) => props.theme.fontSizeXl};

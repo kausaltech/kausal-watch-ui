@@ -57,8 +57,12 @@ const StyledCardTitle = styled(CardTitle)`
   font-size: ${(props) => props.theme.fontSizeMd};
   color: ${(props) => props.theme.neutralDark};
   text-align: left;
-  hyphens: manual;
+  hyphens: auto;
   margin-bottom: 0;
+
+  :lang(fi) & {
+    hyphens: manual;
+  }
 `;
 
 const ImgArea = styled.div<{ $bgcolor?: string }>`
