@@ -103,6 +103,9 @@ export const ACTION_TABLE_COLUMN_FRAGMENT = gql`
       ... on EndDateColumnBlock {
         columnLabel
       }
+      ... on ScheduleContinuousColumnBlock {
+        columnLabel
+      }
       ... on OrganizationColumnBlock {
         columnLabel
       }

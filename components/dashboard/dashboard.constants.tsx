@@ -2,6 +2,7 @@ import dayjs from 'common/dayjs';
 import React, { ReactNode } from 'react';
 
 import { PlanContextFragment } from 'common/__generated__/graphql';
+import Icon from 'components/common/Icon';
 import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
 import { ActionLink } from 'common/links';
 import ActionAttribute from 'components/common/ActionAttribute';
@@ -41,6 +42,7 @@ interface Column {
   headerKey?: keyof ActionListAction;
   rowHeader?: boolean;
   renderTooltipContent?: (
+    t: TFunction,
     action: ActionListAction,
     plan: PlanContextFragment,
     attribute?: any // TODO: tighter type
@@ -53,6 +55,7 @@ interface Column {
     label?: string | null
   ) => ReactNode;
   renderCell: (
+    t: TFunction,
     action: ActionListAction,
     plan: PlanContextFragment,
     planViewUrl?: string | null,
@@ -64,12 +67,12 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   // TODO: Add tooltip?
   StatusColumnBlock: {
     renderHeader: (t, _, label) => label || t('status'),
-    renderCell: (action, plan) => <StatusCell action={action} plan={plan} />,
+    renderCell: (_, action, plan) => <StatusCell action={action} plan={plan} />,
   },
 
   IdentifierColumnBlock: {
     renderHeader: (t, _, label) => <abbr>{label || t('action-id')}</abbr>,
-    renderCell: (action) => action.identifier,
+    renderCell: (_, action) => action.identifier,
   },
 
   NameColumnBlock: {
@@ -78,7 +81,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     rowHeader: true,
     renderHeader: (t, plan, label) =>
       label || t('action-name-title', getActionTermContext(plan)),
-    renderCell: (action, plan, planViewUrl) => {
+    renderCell: (_, action, plan, planViewUrl) => {
       const { mergedWith } = action;
       const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
       const mergedWithActionFromOtherPlan =
@@ -99,8 +102,8 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   OrganizationColumnBlock: {
     headerClassName: 'logo-column',
     renderHeader: (t, _, label) => label || t('logo'),
-    renderCell: (action) => <OrganizationCell action={action} />,
-    renderTooltipContent: (action) => (
+    renderCell: (_, action) => <OrganizationCell action={action} />,
+    renderTooltipContent: (_, action) => (
       <OrganizationTooltipContent action={action} />
     ),
   },
@@ -109,7 +112,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     sortable: true,
     headerKey: 'implementationPhase',
     renderHeader: (t, _, label) => label || t('action-implementation-phase'),
-    renderCell: (action, plan) => {
+    renderCell: (_, action, plan) => {
       const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
       return (
         <ImplementationPhaseCell
@@ -118,7 +121,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
         />
       );
     },
-    renderTooltipContent: (action, plan) => {
+    renderTooltipContent: (_, action, plan) => {
       const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
       return (
         <ImplementationPhaseTooltipContent
@@ -132,10 +135,10 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   TasksColumnBlock: {
     renderHeader: (t, plan, label) =>
       label || t('action-tasks', getActionTaskTermContext(plan)),
-    renderCell: (action, plan) => (
+    renderCell: (_, action, plan) => (
       <TasksStatusCell action={action} plan={plan} />
     ),
-    renderTooltipContent: (action, plan) => {
+    renderTooltipContent: (_, action, plan) => {
       const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
       return (
         <TasksTooltipContent
@@ -148,8 +151,8 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
 
   ResponsiblePartiesColumnBlock: {
     renderHeader: (t, _, label) => label || t('action-responsibles-short'),
-    renderCell: (action) => <ResponsiblePartiesCell action={action} />,
-    renderTooltipContent: (action, plan) => {
+    renderCell: (_, action) => <ResponsiblePartiesCell action={action} />,
+    renderTooltipContent: (_, action, plan) => {
       const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
       return (
         <ResponsiblePartiesTooltipContent
@@ -162,8 +165,8 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
 
   IndicatorsColumnBlock: {
     renderHeader: (t, _, label) => label || t('indicators'),
-    renderCell: (action) => <IndicatorsCell action={action} />,
-    renderTooltipContent: (action) => (
+    renderCell: (_, action) => <IndicatorsCell action={action} />,
+    renderTooltipContent: (_, action) => (
       <IndicatorsTooltipContent action={action} />
     ),
   },
@@ -172,8 +175,8 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     sortable: true,
     headerKey: 'updatedAt',
     renderHeader: (t, _, label) => label || t('action-last-updated'),
-    renderCell: (action) => <UpdatedAtCell action={action} />,
-    renderTooltipContent: (action) => (
+    renderCell: (_, action) => <UpdatedAtCell action={action} />,
+    renderTooltipContent: (_, action) => (
       <LastUpdatedTooltipContent action={action} />
     ),
   },
@@ -182,19 +185,39 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     sortable: true,
     headerKey: 'startDate',
     renderHeader: (t, _, label) => label || t('action-start-date'),
-    renderCell: (action) => <DateCell date={action.startDate} />,
+    renderCell: (_, action) => <DateCell date={action.startDate} />,
   },
 
   EndDateColumnBlock: {
     sortable: true,
     headerKey: 'endDate',
     renderHeader: (t, _, label) => label || t('action-end-date'),
-    renderCell: (action) => <DateCell date={action.endDate} />,
+    renderCell: (_, action) => <DateCell date={action.endDate} />,
+  },
+
+  ScheduleContinuousColumnBlock: {
+    sortable: true,
+    headerKey: 'scheduleContinuous',
+    renderHeader: (t, _, label) => label || t('action-continuous'),
+    renderCell: (t, action) => (
+      <Icon
+        name={action.scheduleContinuous ? 'check-circle' : 'circle-outline'}
+        alt={
+          action.scheduleContinuous
+            ? t('action-continuous')
+            : t('action-not-continuous')
+        }
+      />
+    ),
+    renderTooltipContent: (t, action) =>
+      action.scheduleContinuous
+        ? t('action-continuous')
+        : t('action-not-continuous'),
   },
 
   FieldColumnBlock: {
     renderHeader: (t, _, label) => label,
-    renderCell: (action, _, __, attributeType) => {
+    renderCell: (_, action, __, ___, attributeType) => {
       const attributeContent = action.attributes.find(
         (a) => a.type.id === attributeType.id
       );
@@ -208,7 +231,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
         />
       );
     },
-    renderTooltipContent: (action, _, attributeType) => {
+    renderTooltipContent: (_, action, __, attributeType) => {
       const attributeContent = action.attributes.find(
         (a) => a.type.id === attributeType.id
       );
@@ -223,7 +246,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   },
   PlanColumnBlock: {
     renderHeader: (t, _, label) => label || t('filter-plan'),
-    renderCell: (action, plan) =>
+    renderCell: (_, action, plan) =>
       action.plan?.shortIdentifier ||
       plan?.shortIdentifier || (
         <PlanChip
@@ -233,7 +256,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
           size="lg"
         />
       ),
-    renderTooltipContent: (action, plan) => (
+    renderTooltipContent: (_, action, plan) => (
       <PlanTooltipContent action={action} plan={plan} />
     ),
   },
