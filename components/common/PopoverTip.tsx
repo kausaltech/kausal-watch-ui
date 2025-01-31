@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-//import { Button } from 'reactstrap';
 import { useTranslations } from 'next-intl';
 import { Button, TooltipTrigger } from 'react-aria-components';
 import styled from 'styled-components';
@@ -38,19 +37,11 @@ const PopoverTip = (props: PopoverTipProps) => {
   const { content, identifier, invert = false } = props;
   const t = useTranslations();
   const id = `tt-${identifier}`;
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-  const toggle = () => setTooltipOpen(!tooltipOpen);
 
   return (
     <>
       <TooltipTrigger>
-        <InfoButton
-          $invert={invert.toString()}
-          id={id}
-          aria-describedby={
-            tooltipOpen ? `tt-content-${identifier}` : undefined
-          }
-        >
+        <InfoButton $invert={invert.toString()} id={id}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="12"

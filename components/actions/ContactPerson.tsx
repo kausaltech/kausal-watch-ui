@@ -79,7 +79,7 @@ const PersonOrg = styled.div`
 
 const Avatar = styled.div<{
   src?: string;
-  hasAvatar: boolean;
+  $hasAvatar: boolean;
   $isLeader: boolean;
 }>`
   width: 5em;
@@ -217,7 +217,7 @@ function ContactPerson({ person, leader = false }: ContactPersonProps) {
               person.avatarUrl ||
               getThemeStaticURL(theme.defaultAvatarUserImage)
             }
-            hasAvatar={hasAvatar}
+            $hasAvatar={hasAvatar}
             $isLeader={leader}
             aria-label={`${role} ${fullName}`}
           />

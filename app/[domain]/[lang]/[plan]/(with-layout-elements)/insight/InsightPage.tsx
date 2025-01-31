@@ -5,9 +5,9 @@ import { useLocale } from 'next-intl';
 
 import { usePlan } from '@/context/plan';
 import { isValidIndicatorId } from '@/utils/indicators';
-import VisPage from './VisPage';
+import InsightPageContent from '@/components/graphs/InsightPageContent';
 
-export function InsightPage() {
+function InsightPage() {
   const plan = usePlan();
   const locale = useLocale();
   const searchParams = useSearchParams();
@@ -16,7 +16,7 @@ export function InsightPage() {
   const filterByIndicator = searchParams.get('indicator');
 
   return (
-    <VisPage
+    <InsightPageContent
       planId={plan.id}
       locale={locale}
       router={router}
@@ -29,3 +29,5 @@ export function InsightPage() {
     />
   );
 }
+
+export default InsightPage;

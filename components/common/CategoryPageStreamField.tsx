@@ -6,7 +6,7 @@ import { useTheme } from 'styled-components';
 import {
   CategoryPageMainBottomBlock,
   CategoryPageMainTopBlock,
-  GetContentPageQuery,
+  CategoryPage,
 } from 'common/__generated__/graphql';
 import ActionAttribute from 'components/common/ActionAttribute';
 import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
@@ -15,10 +15,6 @@ import StreamField from 'components/common/StreamField';
 import ActionStatusGraphsBlock from 'components/contentblocks/ActionStatusGraphsBlock';
 import PlanDatasetsBlock from 'components/contentblocks/PlanDatasetsBlock';
 import { ChartType } from 'components/dashboard/ActionStatusGraphs';
-
-export type CategoryPage = { __typename: 'CategoryPage' } & NonNullable<
-  GetContentPageQuery['planPage']
->;
 
 type OmitUnion<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
 

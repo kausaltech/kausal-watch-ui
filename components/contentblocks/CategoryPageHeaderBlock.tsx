@@ -114,12 +114,12 @@ const ImageCredit = styled.span`
 
 const HeaderContent = styled.div<{
   $alignWithContent?: boolean;
-  hasImage: boolean;
+  $hasImage: boolean;
 }>`
   position: relative;
   max-width: ${(props) => props.theme.breakpointMd};
-  margin-top: ${({ hasImage }) => (hasImage ? '-2rem' : '1rem')};
-  margin-bottom: ${({ hasImage }) => (hasImage ? '0' : undefined)};
+  margin-top: ${({ $hasImage }) => ($hasImage ? '-2rem' : '1rem')};
+  margin-bottom: ${({ $hasImage }) => ($hasImage ? '0' : undefined)};
   margin-left: ${({ $alignWithContent, theme }) =>
     $alignWithContent ? `-${theme.spaces.s200}` : 'auto'};
   margin-right: ${({ $alignWithContent, theme }) =>
@@ -152,7 +152,7 @@ const HeaderContent = styled.div<{
   }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    margin-top: ${({ hasImage }) => (hasImage ? '14rem' : '3rem')};
+    margin-top: ${({ $hasImage }) => ($hasImage ? '14rem' : '3rem')};
     margin-bottom: 3rem;
 
     h1 {
@@ -331,7 +331,7 @@ function CategoryPageHeaderBlock(props: Props) {
           <Col {...columnSizing}>
             <HeaderContent
               $alignWithContent={theme.settings.leftAlignCategoryPages}
-              hasImage={!!headerImage}
+              $hasImage={!!headerImage}
             >
               {showLevel && <CategoryLevelName>{level}</CategoryLevelName>}
 

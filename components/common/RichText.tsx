@@ -109,6 +109,7 @@ function RichTextImage(props: RichTextImageProps) {
     alt,
     height,
     width,
+    class: className,
     'data-original-src': originalSrc,
     'data-original-width': originalWidth,
     'data-original-height': originalHeight,
@@ -132,7 +133,7 @@ function RichTextImage(props: RichTextImageProps) {
       alt={alt || 'Image'}
       height={height}
       width={width}
-      className={rest.className || 'richtext-image full-width'}
+      className={className || 'richtext-image full-width'}
       {...rest}
     />
   );
