@@ -1,13 +1,17 @@
 import React from 'react';
-import styled from 'styled-components';
+
 import { OrganizationLink } from 'common/links';
 import { slugify } from 'common/utils';
 import BadgeTooltip, {
   BadgeTooltipProps,
 } from 'components/common/BadgeTooltip';
-import { ActionContentAction } from './ActionContent';
 import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
+import styled from 'styled-components';
+
+import { usePaths } from '@/context/paths/paths';
+
+import { ActionContentAction } from './ActionContent';
 
 const Responsibles = styled.div`
   a {
@@ -23,10 +27,14 @@ const ResponsiblesList = styled.ul`
   margin-bottom: ${(props) => props.theme.spaces.s150};
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: ${(props) => props.theme.spaces.s050};
 `;
 
 const ResponsibleItem = styled.li`
-  margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
@@ -46,9 +54,13 @@ const Address = styled.address`
 
 type ResponsibleBadgeProps = {
   responsibleParty: ActionContentAction['responsibleParties'][0];
+  linkToOrganization?: boolean;
 };
 
-function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
+function ResponsibleBadge({
+  responsibleParty,
+  linkToOrganization = true,
+}: ResponsibleBadgeProps) {
   const { organization: org, role, specifier } = responsibleParty;
   const t = useTranslations();
 
@@ -74,19 +86,31 @@ function ResponsibleBadge({ responsibleParty }: ResponsibleBadgeProps) {
 
   return (
     <ResponsibleItem>
-      <OrganizationLink organizationId={org.id}>
-        <a>
-          <BadgeTooltip
-            id={`org-${slugify(org.id)}`}
-            tooltip={org.abbreviation !== '' ? org.name : undefined}
-            ariaLabel={ariaLabel}
-            content={org.abbreviation || org.name}
-            size={size}
-            color="brandDark"
-            isLink
-          />
-        </a>
-      </OrganizationLink>
+      {linkToOrganization ? (
+        <OrganizationLink organizationId={org.id}>
+          <a>
+            <BadgeTooltip
+              id={`org-${slugify(org.id)}`}
+              tooltip={org.abbreviation !== '' ? org.name : undefined}
+              ariaLabel={ariaLabel}
+              content={org.abbreviation || org.name}
+              size={size}
+              color="brandDark"
+              isLink
+            />
+          </a>
+        </OrganizationLink>
+      ) : (
+        <BadgeTooltip
+          id={`org-${slugify(org.id)}`}
+          tooltip={org.abbreviation !== '' ? org.name : undefined}
+          ariaLabel={ariaLabel}
+          content={org.abbreviation || org.name}
+          size={size}
+          color="brandDark"
+          isLink
+        />
+      )}
       {specifier && <ResponsibleSpecifier>{specifier}</ResponsibleSpecifier>}
       {org.email && (
         <Address>
@@ -105,6 +129,9 @@ function ResponsibleList(props: ResponsibleListProps) {
   const { heading, responsibleParties } = props;
   const t = useTranslations();
   const plan = usePlan();
+  const pathsInstance = usePaths();
+  // TODO: Remove this once we have a proper way to check if org page is supported
+  const linkToOrganization = pathsInstance ? false : true;
   const { organizationTerm } = plan.generalContent;
   /* TODO: a11y - this should probably be a list markup */
 
@@ -115,7 +142,11 @@ function ResponsibleList(props: ResponsibleListProps) {
       </h3>
       <ResponsiblesList>
         {responsibleParties.map((item) => (
-          <ResponsibleBadge key={item.id} responsibleParty={item} />
+          <ResponsibleBadge
+            key={item.id}
+            responsibleParty={item}
+            linkToOrganization={linkToOrganization}
+          />
         ))}
       </ResponsiblesList>
     </Responsibles>

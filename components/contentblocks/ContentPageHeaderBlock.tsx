@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-const HeaderImage = styled.div`
-  background-image: url(${(props) => props.image});
+const HeaderImage = styled.div<{ $image: string; $imageAlign: string }>`
+  background-image: url(${(props) => props.$image});
   background-size: cover;
   background-position: ${(props) => props.theme.$imageAlign};
   color: ${(props) => props.theme.themeColors.white};
@@ -59,13 +59,22 @@ export const ImageCredit = styled.span`
     `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
-const ContentPageHeaderBlock = (props) => {
+type Props = {
+  title: string;
+  lead?: string | null;
+  headerImage?: string | null | undefined;
+  imageAlign?: string;
+  altText?: string;
+  imageCredit?: string;
+};
+
+const ContentPageHeaderBlock = (props: Props) => {
   const {
     title,
     lead = null,
     headerImage = null,
     imageAlign = 'center',
-    altText,
+    altText = '',
     imageCredit,
   } = props;
 
@@ -76,7 +85,7 @@ const ContentPageHeaderBlock = (props) => {
       {/* TODO: animate image entry? */}
       <HeaderBg>
         {headerImage && (
-          <HeaderImage image={headerImage} $imageAlign={imageAlign} />
+          <HeaderImage $image={headerImage} $imageAlign={imageAlign} />
         )}
         {altText && (
           <span className="sr-only" role="img" aria-label={altText} />
