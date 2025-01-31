@@ -18,7 +18,7 @@ import { GlobalStyles } from '@/styles/GlobalStyles';
 import { tryRequest } from '@/utils/api.utils';
 import { getMetaTitles } from '@/utils/metadata';
 import { captureException } from '@sentry/nextjs';
-
+import { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 type Props = {
   params: { plan: string; domain: string; lang: string };
   children: ReactNode;
@@ -94,13 +94,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 async function getPathsData(pathsInstance: string) {
   if (pathsInstance) {
-    const { data: pathsData } = await tryRequest(
+    const { data: pathsData } = await tryRequest<GetInstanceContextQuery>(
       getPathsInstance(pathsInstance)
     );
     if (pathsData?.instance) {
       // console.log('pathsData', pathsData);
       return pathsData;
-    } else return { instance: { id: 'unknown' } };
+    } else return undefined;
   }
   return undefined;
 }

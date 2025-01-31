@@ -1,11 +1,6 @@
 import React, { useContext } from 'react';
 
-import {
-  InstanceType,
-  NormalizationType,
-  ParameterInterface,
-  ScenarioType,
-} from '@/common/__generated__/paths/graphql';
+import { PathsInstanceType } from '@/components/providers/PathsProvider';
 
 export type SiteI18nConfig = {
   locale: string;
@@ -13,16 +8,9 @@ export type SiteI18nConfig = {
   supportedLocales: string[];
 };
 
-export type PathsContextType =
-  | {
-      instance: InstanceType;
-      availableNormalizations: NormalizationType[];
-      parameters: ParameterInterface[];
-      scenarios: ScenarioType[];
-    }
-  | undefined;
-
-const PathsContext = React.createContext<PathsContextType>(null!);
+const PathsContext = React.createContext<PathsInstanceType | undefined>(
+  undefined
+);
 
 export const usePaths = () => {
   return useContext(PathsContext);

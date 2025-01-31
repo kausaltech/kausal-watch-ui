@@ -154,7 +154,9 @@ export default function PathsOutcomeBlock(props) {
     if (!outcomeNode) return { visible: [], all: new Map() };
     const upstreamNodes = outcomeNode?.upstreamNodes ?? [];
 
-    const allNodes = new Map(upstreamNodes.map((node) => [node.id, node]));
+    const allNodes = new Map(
+      upstreamNodes.map((node) => [node.id, node as OutcomenodeType])
+    );
 
     allNodes.set(outcomeNode.id, outcomeNode);
     //setLastActiveNodeId(outcomeNode.id);
