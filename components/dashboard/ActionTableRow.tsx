@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { PlanContextFragment } from 'common/__generated__/graphql';
 import { UncontrolledTooltip } from 'reactstrap';
 import styled from 'styled-components';
+import { useTranslations } from 'next-intl';
 
 import { COLUMN_CONFIG } from './dashboard.constants';
 import { ActionListAction, ColumnConfig } from './dashboard.types';
@@ -108,6 +109,7 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
    */
   const [rowEl, setRowEl] = useState(null);
   const rowRef = useCallback((rowEl) => setRowEl(rowEl), []);
+  const t = useTranslations();
 
   return (
     <StyledRow ref={rowRef}>
@@ -122,6 +124,7 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
           columnConfig;
         const hasTooltip = !!renderTooltipContent;
         const content = renderCell(
+          t,
           action,
           plan,
           planViewUrl,
@@ -133,7 +136,7 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
         } ${rowHeader ? 'row-title' : ''}`;
         const tooltip = hasTooltip && (
           <UncontrolledTooltip container={rowEl ?? undefined} target={id}>
-            {renderTooltipContent(action, plan, column?.attributeType)}
+            {renderTooltipContent(t, action, plan, column?.attributeType)}
           </UncontrolledTooltip>
         );
 

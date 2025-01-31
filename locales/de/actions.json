@@ -1,6 +1,7 @@
 {
     "action-completion-percentage": "Fertigstellung",
     "action-continuous": "Laufend",
+    "action-not-continuous": "Nicht laufend",
     "actions-show-continuous": "Nur laufende Maßnahmen anzeigen",
     "action-description": "Beschreibung",
     "action-description-official": "Offizielle Beschreibung",
