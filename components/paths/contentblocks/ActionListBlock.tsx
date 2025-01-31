@@ -80,18 +80,6 @@ const ActionTab = styled.button<{
   }
 `;
 
-const DisabledActionTab = styled.button`
-  display: inline-flex;
-  align-items: flex-start;
-  flex-direction: column;
-  flex: 1 1 90px;
-  margin-right: 5px;
-  padding: 0.75rem 0.75rem 1.25rem 0.75rem;
-  text-align: left;
-  border: 0;
-  color: ${({ theme }) => theme.textColor.primary};
-`;
-
 const TabTitle = styled.h3`
   display: flex;
   font-size: ${({ theme }) => theme.fontSizeBase};
@@ -129,7 +117,7 @@ const actionsWithCategory = (
 
 const getParentCategoryOfLevel = (cat, levelId: string) => {
   const catParents = getDeepParents(cat);
-  return catParents.find((parent) => parent.level.id === levelId);
+  return catParents.find((parent) => parent?.level?.id === levelId);
 };
 
 type TabbedActionListProps = {
@@ -166,6 +154,8 @@ const TabbedActionList = (props: TabbedActionListProps) => {
       <ActionCardList
         actions={actionsWithCategory(actions, activeTab)}
         showOtherCategory={false}
+        includeRelatedPlans={false}
+        headingHierarchyDepth={2}
       />
     </>
   );
@@ -176,10 +166,12 @@ type ActionListBlockProps = {
   lead?: string;
   groupByLevel?: CategoryLevel;
   categoryId: string;
+  id: string;
 };
 
 const ActionListBlock = (props: ActionListBlockProps) => {
-  const { categoryId, lead, heading, groupByLevel, id } = props;
+  const { categoryId, heading, groupByLevel, id } = props;
+  // TODO: Maybe handle 'lead' ?
   const t = useTranslations();
 
   const plan = usePlan();
@@ -198,10 +190,9 @@ const ActionListBlock = (props: ActionListBlockProps) => {
   if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
 
+  if (!data || !data.planActions) return null;
+
   const { planActions } = data;
-  if (!planActions) {
-    return <>NO ACTIONS</>;
-  }
 
   const actionGroups: Category[] = [];
 

@@ -9,10 +9,7 @@ import {
 import Icon from '@/components/common/Icon';
 import styled from 'styled-components';
 
-import type {
-  DimensionalNodeMetricFragment,
-  OutcomeNodeFieldsFragment,
-} from '@/common/__generated__/paths/graphql';
+import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
 import {
   DimensionalMetric,
   MetricSlice,
@@ -90,9 +87,6 @@ const DataTable = (props: DataTableProps) => {
     setSliceConfig(newDefault);
   }, [activeGoal, cube, sliceConfig]);
 
-  const sliceableDims = cube.dimensions.filter(
-    (dim) => !sliceConfig.categories[dim.id]
-  );
   const slicedDim = cube.dimensions.find(
     (dim) => dim.id === sliceConfig.dimensionId
   );
@@ -104,7 +98,7 @@ const DataTable = (props: DataTableProps) => {
       (_, i) => startYear + i
     );
 
-  let slice: MetricSlice;
+  let slice: MetricSlice | null = null;
   if (slicedDim) {
     slice = cube.sliceBy(
       slicedDim.id,
@@ -116,6 +110,8 @@ const DataTable = (props: DataTableProps) => {
   } else {
     slice = cube.flatten(sliceConfig.categories, years);
   }
+
+  if (!slice) return null;
 
   const forecastLabel =
     activeScenario && !separateYears

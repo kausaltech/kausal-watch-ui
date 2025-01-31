@@ -12,6 +12,7 @@ import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { gql } from '@apollo/client';
 
 import PathsNodeSummary from '../PathsNodeSummary';
+import { Category } from '@/common/__generated__/graphql';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
   query GetCategoryAttributeTypes($plan: ID!) {
@@ -81,7 +82,10 @@ function CategoryPageHeaderBlock(props: CategoryPageHeaderProps) {
   const headerImage = page.category?.image || page.category?.parent?.image;
 
   const breadcrumbs = page.category?.parent
-    ? getBreadcrumbsFromCategoryHierarchy([page.category.parent], false)
+    ? getBreadcrumbsFromCategoryHierarchy(
+        [page.category.parent as Category],
+        false
+      )
     : [];
 
   /*
