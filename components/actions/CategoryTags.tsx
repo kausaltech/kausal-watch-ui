@@ -145,8 +145,11 @@ type CategoryTagsProps = {
 
 function CategoryTags(props: CategoryTagsProps) {
   const { categories, types, noLink = false } = props;
-  // const typeById = new Map(types.map(ct => [ct.id, ct]));
-  const groupElements = types.map((ct) => {
+  // Remove duplicate category types by filtering unique IDs
+  const filteredTypes = Array.from(
+    new Map(types.map((t) => [t.id, t])).values()
+  );
+  const groupElements = filteredTypes.map((ct) => {
     const cats = categories.filter((cat) => cat.type.id === ct.id);
     if (!cats.length) return null;
     /* If category type seems to have levels,
