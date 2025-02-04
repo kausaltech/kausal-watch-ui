@@ -139,24 +139,23 @@ export const CategoryContent = (props: CategoryContentProps) => {
 
 type CategoryTagsProps = {
   categories: CategoryRecursiveFragmentFragment[];
-  types: CategoryTypeFragmentFragment[];
   noLink?: boolean;
 };
 
 function CategoryTags(props: CategoryTagsProps) {
-  const { categories, types, noLink = false } = props;
-  // Remove duplicate category types by filtering unique IDs
-  const filteredTypes = Array.from(
-    new Map(types.map((t) => [t.id, t])).values()
+  const { categories, noLink = false } = props;
+  const categoryTypes = Array.from(
+    new Map(categories.map((cat) => [cat.type.id, cat.type])).values()
   );
-  const groupElements = filteredTypes.map((ct) => {
+
+  const groupElements = categoryTypes.map((ct) => {
     const cats = categories.filter((cat) => cat.type.id === ct.id);
     if (!cats.length) return null;
     /* If category type seems to have levels,
         use the level name of the first selected categoory
         as section header */
     const categoryTypeHeader =
-      ct.levels.length > 0 ? cats[0].level?.name : ct.name;
+      ct.levels?.length > 0 ? cats[0].level?.name : ct.name;
 
     return (
       <div key={ct.id} className="mb-4">

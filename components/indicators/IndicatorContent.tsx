@@ -81,11 +81,7 @@ function IndicatorDetails({ indicator }: Props) {
             <RichText html={indicator.description} />
           </Col>
           <Col md="5" lg="4" className="mb-5">
-            <CategoryTags
-              categories={indicator.categories}
-              types={indicator.categories.map((c) => c.type)}
-              noLink={true}
-            />
+            <CategoryTags categories={indicator.categories} noLink={true} />
           </Col>
         </Row>
         {(indicator.latestGraph ||
