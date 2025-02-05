@@ -205,8 +205,8 @@ function SearchResultItem({ hit }) {
   }
   const showPlanChip = true;
   const hitImage =
-    primaryOrg?.logo?.rendition.src ||
-    hit.plan.image?.rendition.src ||
+    primaryOrg?.logo?.rendition?.src ||
+    hit.plan.image?.rendition?.src ||
     'https://via.placeholder.com/64/AAAAAA/EEEEEE';
   const hitOrganization = primaryOrg?.name || hit.plan.organization.name;
 

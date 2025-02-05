@@ -223,7 +223,7 @@ const PrimaryIcon = (props) => {
   const { category } = props;
   if (!category) return null;
   if (category.iconSvgUrl) return <PrimarySvgIcon src={category.iconSvgUrl} />;
-  if (category.iconImage)
+  if (category.iconImage?.rendition)
     return <PrimaryImageIcon imagesrc={category.iconImage.rendition.src} />;
   else return null;
 };

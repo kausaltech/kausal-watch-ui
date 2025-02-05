@@ -22,14 +22,14 @@ export const getBgImageAlignment = (image) => {
 export function getActionImage(plan, action) {
   let image;
 
-  if (action.image?.rendition.src) {
+  if (action.image?.rendition?.src) {
     image = action.image;
   } else {
     action.categories.forEach((cat) => {
       if (image) return;
       let parent = cat;
       while (parent) {
-        if (parent.image?.rendition.src) {
+        if (parent.image?.rendition?.src) {
           image = parent.image;
           return;
         }

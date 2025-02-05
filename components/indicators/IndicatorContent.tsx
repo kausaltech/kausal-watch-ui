@@ -60,7 +60,7 @@ function IndicatorDetails({ indicator }: Props) {
       allOrgs.push({
         id: common.id,
         identifier: common.identifier,
-        image: common.organization.logo?.rendition.src,
+        image: common.organization.logo?.rendition?.src,
         name: common.organization.name,
         shortName: common.organization.abbreviation,
         active: common.organization.id === indicator.organization.id,

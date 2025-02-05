@@ -84,7 +84,7 @@ const CardListBlock = (props) => {
             >
               <a href={card.link} className="card-wrapper">
                 <Card
-                  imageUrl={card.image && card.image.rendition.src}
+                  imageUrl={card.image?.rendition && card.image.rendition.src}
                   imageAlign="center"
                   customBackgroundColor={theme.brandDark}
                   customColor={readableColor(
