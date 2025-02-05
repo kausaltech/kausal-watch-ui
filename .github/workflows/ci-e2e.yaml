@@ -23,15 +23,15 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/ms-playwright
@@ -76,7 +76,7 @@ jobs:
           TEST_PAGE_BASE_URL: ${{ env.FRONTEND_BASE_URL }}
           APLANS_API_BASE_URL: ${{ env.APLANS_API_BASE_URL }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
