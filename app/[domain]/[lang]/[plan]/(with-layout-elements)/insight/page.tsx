@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 
-import { InsightPage } from './InsightPage';
+import InsightPage from './InsightPage';
 
 type Props = {
   params: { lang: string };

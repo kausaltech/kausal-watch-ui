@@ -36,27 +36,46 @@ function makeAbsoluteUrl(url) {
   return new URL(url, baseUrl);
 }
 
-const FeedbackForm = ({
-  planIdentifier,
-  actionId = null,
-  categoryId = null,
-  heading,
-  description,
-  emailVisible = true,
-  emailRequired = true,
-  feedbackVisible = true,
-  feedbackRequired = true,
-  prompt,
-  formContext = null,
-  additionalFields = [],
-  block_id,
-  pageId,
-}) => {
+type FeedbackFormProps = {
+  planIdentifier: string;
+  actionId?: string | null;
+  categoryId?: string | null;
+  heading?: string;
+  description?: string;
+  emailVisible?: boolean;
+  emailRequired?: boolean;
+  feedbackVisible?: boolean;
+  feedbackRequired?: boolean;
+  prompt?: string;
+  formContext?: string | null;
+  additionalFields?: any[];
+  block_id?: string | null;
+  pageId?: number | null;
+};
+
+const FeedbackForm = (props: FeedbackFormProps) => {
   const {
     control,
     formState: { errors },
     handleSubmit,
   } = useForm();
+
+  const {
+    planIdentifier,
+    actionId = null,
+    categoryId = null,
+    heading,
+    description,
+    emailVisible = true,
+    emailRequired = true,
+    feedbackVisible = true,
+    feedbackRequired = true,
+    prompt,
+    formContext = null,
+    additionalFields = [],
+    block_id,
+    pageId,
+  } = props;
 
   const t = useTranslations();
   const [sent, setSent] = useState(false);

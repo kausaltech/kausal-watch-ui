@@ -1,8 +1,12 @@
-import { getContentPage } from '@/queries/get-content-page';
-import { notFound } from 'next/navigation';
 import React from 'react';
-import { Content } from './ContentPage';
+
 import { Metadata, ResolvingMetadata } from 'next';
+import { notFound } from 'next/navigation';
+
+import { GetContentPageQuery } from 'common/__generated__/graphql';
+import { GeneralPlanPage } from './ContentPage';
+import { getContentPage } from '@/queries/get-content-page';
+import { Content } from './ContentPage';
 import { getMetaDescription, getMetaImage } from '@/utils/metadata';
 import { tryRequest } from '@/utils/api.utils';
 
@@ -20,7 +24,9 @@ export async function generateMetadata(
   const { slug, plan } = params;
   const path = getPath(slug);
 
-  const { data } = await tryRequest(getContentPage(plan, path));
+  const { data } = await tryRequest<GetContentPageQuery>(
+    getContentPage(plan, path)
+  );
 
   if (!data?.planPage) {
     return {};
@@ -44,11 +50,12 @@ export default async function ContentPage({ params }: Props) {
   const { slug, plan } = params;
   const path = getPath(slug);
 
-  const { data } = await tryRequest(getContentPage(plan, path));
+  const { data } = await tryRequest<GetContentPageQuery>(
+    getContentPage(plan, path)
+  );
 
   if (!data?.planPage) {
     return notFound();
   }
-
-  return <Content page={data.planPage} />;
+  return <Content page={data.planPage as GeneralPlanPage} />;
 }

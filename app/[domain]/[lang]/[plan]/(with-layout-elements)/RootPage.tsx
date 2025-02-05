@@ -2,20 +2,18 @@
 
 import { useTranslations } from 'next-intl';
 
-import { GetHomePageQuery } from '@/common/__generated__/graphql';
+import { GetHomePageQuery, Category } from '@/common/__generated__/graphql';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import StreamField from '@/components/common/StreamField';
 import CategoriesContext from '@/context/categories';
 
 type HomePageProps = {
-  primaryActionClassification: NonNullable<
-    GetHomePageQuery['plan']
-  >['primaryActionClassification'];
+  categories: Category[];
   page: NonNullable<GetHomePageQuery['planPage']>;
 };
 
-function HomePage({ primaryActionClassification, page }: HomePageProps) {
-  const categories = primaryActionClassification?.categories;
+function HomePage({ categories, page }: HomePageProps) {
+  //const categories = primaryActionClassification?.categories;
 
   if (page.__typename != 'PlanRootPage') {
     throw new Error('Invalid home page type');
@@ -38,15 +36,11 @@ export function RootPage({ data }: Props) {
   const t = useTranslations();
 
   const { planPage, plan: queriedPlan } = data;
-
+  const categories = queriedPlan?.primaryActionClassification
+    ?.categories as Category[];
   if (!planPage) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
 
-  return (
-    <HomePage
-      page={planPage}
-      primaryActionClassification={queriedPlan?.primaryActionClassification}
-    />
-  );
+  return <HomePage page={planPage} categories={categories} />;
 }

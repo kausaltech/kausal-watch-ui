@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
-import { Badge, Tooltip } from 'reactstrap';
+import React from 'react';
+import { Badge } from 'reactstrap';
 import SVG from 'react-inlinesvg';
+import { Button, TooltipTrigger } from 'react-aria-components';
 import styled from 'styled-components';
+
+import Tooltip from './Tooltip';
 import { shade, readableColor } from 'polished';
 
-const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
-  color: string;
-  isLink: boolean;
-}>`
+const WrapperButton = styled(Button)`
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  border: none;
+`;
+
+const StyledBadge = styled(Badge)<{ color: string; $isLink: boolean }>`
   background-color: ${(props) => props.theme[props.color]} !important;
   color: ${(props) =>
     readableColor(
@@ -16,8 +23,10 @@ const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
       props.theme.themeColors.white
     )};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
-  padding: ${(props) => props.theme.badgePaddingY}
-    ${(props) => props.theme.badgePaddingX};
+  padding-top: ${(props) => props.theme.badgePaddingY};
+  padding-bottom: ${(props) => props.theme.badgePaddingY};
+  padding-left: ${(props) => props.theme.badgePaddingX};
+  padding-right: ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
   line-height: 1.5;
   max-width: 100%;
@@ -29,7 +38,7 @@ const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
 
   &:hover {
     background-color: ${(props) =>
-      props.isLink && shade(0.05, props.theme[props.color])} !important;
+      props.$isLink && shade(0.05, props.theme[props.color])} !important;
   }
 
   &.lg {
@@ -50,7 +59,7 @@ const TruncatedContent = styled.span<{ $maxLines: number }>`
   overflow: hidden;
 `;
 
-const IconBadge = styled.div<{ color: string; isLink: boolean }>`
+const IconBadge = styled.div<{ color: string; $isLink: boolean }>`
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -66,7 +75,7 @@ const IconBadge = styled.div<{ color: string; isLink: boolean }>`
 
   &:hover {
     background-color: ${(props) =>
-      props.isLink && shade(0.05, props.theme[props.color])} !important;
+      props.$isLink && shade(0.05, props.theme[props.color])} !important;
   }
 `;
 
@@ -134,12 +143,12 @@ const BadgeContent = (props: BadgeContentProps) => {
       className={size}
       aria-label={ariaLabel}
       color={color}
-      isLink={isLink}
+      $isLink={isLink}
     >
       {renderContent}
     </StyledBadge>
   ) : (
-    <IconBadge color={color} isLink={isLink}>
+    <IconBadge color={color} $isLink={isLink}>
       {iconSvg ? (
         <IconImage>
           <IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" />
@@ -160,27 +169,15 @@ export interface BadgeTooltipProps extends BadgeContentProps {
 const BadgeTooltip = (props: BadgeTooltipProps) => {
   const { tooltip, id, ...badgeContentProps } = props;
   const badgeId = `btt${id.replace(/[: ]/g, '_')}`;
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-  const toggle = () => setTooltipOpen(!tooltipOpen);
 
   return (
     <span id={badgeId}>
-      <BadgeContent
-        aria-describedby={`tt-content-${badgeId}`}
-        {...badgeContentProps}
-      />
-      {tooltip && (
-        <Tooltip
-          placement="top"
-          isOpen={tooltipOpen}
-          target={badgeId}
-          toggle={toggle}
-          role="tooltip"
-          id={`tt-content-${badgeId}`}
-        >
-          {tooltip}
-        </Tooltip>
-      )}
+      <TooltipTrigger>
+        <WrapperButton>
+          <BadgeContent {...badgeContentProps} />
+        </WrapperButton>
+        {tooltip && <Tooltip>{tooltip}</Tooltip>}
+      </TooltipTrigger>
     </span>
   );
 };
