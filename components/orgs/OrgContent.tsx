@@ -161,7 +161,7 @@ function OrgContent({ org, planFromOrgQuery }: Props) {
           <Row>
             {org.logo?.rendition?.src && (
               <Col md="2">
-                <OrgLogo src={org.logo?.rendition.src} />
+                <OrgLogo src={org.logo?.rendition?.src} />
               </Col>
             )}
             <Col md="8" xl="7" className="mb-5">

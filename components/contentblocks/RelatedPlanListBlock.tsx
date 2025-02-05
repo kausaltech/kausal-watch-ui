@@ -66,7 +66,7 @@ const RelatedPlanListBlock = ({ id }: Props) => {
           {!isParentPlan && (
             <a href={plan.viewUrl} key={plan.identifier}>
               <PlanChip
-                planImage={plan.image?.rendition.src}
+                planImage={plan.image?.rendition?.src}
                 planShortName={plan.shortName}
                 organization={
                   theme.settings?.multiplan?.hideLongPlanNames
@@ -81,7 +81,7 @@ const RelatedPlanListBlock = ({ id }: Props) => {
           {siblingsOrChildren.map((pl) => (
             <a href={pl.viewUrl} key={pl.identifier}>
               <PlanChip
-                planImage={pl.image?.rendition.src}
+                planImage={pl.image?.rendition?.src}
                 planShortName={pl.shortName}
                 organization={
                   theme.settings?.multiplan?.hideLongPlanNames
