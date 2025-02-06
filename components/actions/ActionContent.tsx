@@ -215,7 +215,12 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       );
     case 'ActionLeadParagraphBlock':
       if (!action.leadParagraph) return null;
-      return <ActionLeadParagraphBlock content={action.leadParagraph} />;
+      return (
+        <ActionLeadParagraphBlock
+          content={action.leadParagraph}
+          fieldLabel={block.fieldLabel}
+        />
+      );
     case 'ActionOfficialNameBlock':
       return (
         <ActionOfficialNameBlock plan={plan} block={block} action={action} />
