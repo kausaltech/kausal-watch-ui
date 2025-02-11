@@ -344,6 +344,10 @@ const GET_ACTION_DETAILS = gql`
       fieldLabel
       fieldHelpText
     }
+    ... on ActionLeadParagraphBlock {
+      fieldLabel
+      fieldHelpText
+    }
     ... on ActionDependenciesBlock {
       fieldLabel
       fieldHelpText
