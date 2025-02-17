@@ -120,16 +120,21 @@ function fetchWithLogging(
  * host (e.g. in the middleware Apollo Client), we fall back to interacting
  * with the backend GraphQL API directly.
  */
-export const getHttpLink = () =>
-  new HttpLink({
-    uri: !isServer ? API_PROXY_PATH : gqlUrl,
-    credentials: 'same-origin',
-    fetchOptions: {
-      mode: 'same-origin',
-      next: { revalidate: 0 },
-    },
-    fetch: logGraphqlQueries ? fetchWithLogging : undefined,
+export const getHttpLink = () => {
+  return new ApolloLink((operation) => {
+    const token = operation.getContext().authToken;
+    return new HttpLink({
+      uri: !isServer ? API_PROXY_PATH : gqlUrl,
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      credentials: 'same-origin',
+      fetchOptions: {
+        mode: 'same-origin',
+        next: { revalidate: 0 },
+      },
+      fetch: logGraphqlQueries ? fetchWithLogging : undefined,
+    }).request(operation);
   });
+};
 
 export const headersMiddleware = new ApolloLink((operation, forward) => {
   const context = operation.getContext();
