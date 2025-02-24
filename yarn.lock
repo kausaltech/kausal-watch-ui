@@ -3458,15 +3458,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@internationalized/string@npm:^3.2.5":
-  version: 3.2.5
-  resolution: "@internationalized/string@npm:3.2.5"
-  dependencies:
-    "@swc/helpers": ^0.5.0
-  checksum: e1ad90f418e8a35f49b6fe91cc91ea5230083808b337feaff60f8a0a8a32ee33895728bc4024cdfe93bf6596b3a3dc72cd5f8b7daba29962fbc68827c816fecd
-  languageName: node
-  linkType: hard
-
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -21298,41 +21289,6 @@ __metadata:
 "react-stately@npm:^3.35.0":
   version: 3.35.0
   resolution: "react-stately@npm:3.35.0"
-  dependencies:
-    "@react-stately/calendar": ^3.7.0
-    "@react-stately/checkbox": ^3.6.11
-    "@react-stately/collections": ^3.12.1
-    "@react-stately/color": ^3.8.2
-    "@react-stately/combobox": ^3.10.2
-    "@react-stately/data": ^3.12.1
-    "@react-stately/datepicker": ^3.12.0
-    "@react-stately/disclosure": ^3.0.1
-    "@react-stately/dnd": ^3.5.1
-    "@react-stately/form": ^3.1.1
-    "@react-stately/list": ^3.11.2
-    "@react-stately/menu": ^3.9.1
-    "@react-stately/numberfield": ^3.9.9
-    "@react-stately/overlays": ^3.6.13
-    "@react-stately/radio": ^3.10.10
-    "@react-stately/searchfield": ^3.5.9
-    "@react-stately/select": ^3.6.10
-    "@react-stately/selection": ^3.19.0
-    "@react-stately/slider": ^3.6.1
-    "@react-stately/table": ^3.13.1
-    "@react-stately/tabs": ^3.7.1
-    "@react-stately/toggle": ^3.8.1
-    "@react-stately/tooltip": ^3.5.1
-    "@react-stately/tree": ^3.8.7
-    "@react-types/shared": ^3.27.0
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-  checksum: cb01501b862ccc0426241d699742cd90aeec7e26d440f628ba159ab70a3560a25af678e0da226d1cbe8d99cb3c32fc382c1c875d3171a4fb4c514654e16a83e1
-  languageName: node
-  linkType: hard
-
-"react-stately@npm:^3.33.0":
-  version: 3.33.0
-  resolution: "react-stately@npm:3.33.0"
   dependencies:
     "@react-stately/calendar": ^3.7.0
     "@react-stately/checkbox": ^3.6.11

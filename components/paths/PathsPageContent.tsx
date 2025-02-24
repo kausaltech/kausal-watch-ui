@@ -1,15 +1,11 @@
 import React from 'react';
 
-import { GetContentPageQuery } from 'common/__generated__/graphql';
 import StreamField from 'components/paths/StreamField';
 import styled, { css } from 'styled-components';
+import { GeneralPlanPage } from '@/app/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 
 import { ActionListPage } from '@/app/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import CategoryPageHeaderBlock from '@/components/paths/contentblocks/CategoryPageHeaderBlock';
-
-type GeneralPlanPage = NonNullable<GetContentPageQuery['planPage']>;
-
-type CategoryPage = { __typename: 'CategoryPage' } & GeneralPlanPage;
 
 const MainContent = styled.div`
   position: relative;

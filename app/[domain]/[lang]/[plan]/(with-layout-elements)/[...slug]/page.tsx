@@ -4,13 +4,10 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { GetContentPageQuery } from 'common/__generated__/graphql';
-import { GeneralPlanPage } from './ContentPage';
 import { getContentPage } from '@/queries/get-content-page';
-import { Content } from './ContentPage';
 import { getMetaDescription, getMetaImage } from '@/utils/metadata';
 import { tryRequest } from '@/utils/api.utils';
-
-import { PathsContent } from './PathsPage';
+import { Content, GeneralPlanPage } from '../[...slug]/ContentPage';
 
 type Props = {
   params: { slug: string[]; plan: string };
@@ -55,12 +52,10 @@ export default async function ContentPage({ params }: Props) {
   const { data } = await tryRequest<GetContentPageQuery>(
     getContentPage(plan, path)
   );
-  // TODO: Get pathsInstance from plan data or move to child component
-  const pathsInstance = 'sunnydale';
 
   if (!data?.planPage) {
     return notFound();
   }
-  if (pathsInstance) return <PathsContent page={data.planPage} />;
+
   return <Content page={data.planPage as GeneralPlanPage} />;
 }
