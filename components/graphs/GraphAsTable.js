@@ -4,7 +4,7 @@ import dayjs from 'common/dayjs';
 import { Table, Collapse, Button } from 'reactstrap';
 import { beautifyValue } from 'common/data/format';
 import Icon from 'components/common/Icon';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 
 const CollapsibleTable = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
@@ -12,7 +12,6 @@ const CollapsibleTable = styled.div`
 `;
 
 const Trigger = styled.div`
-  padding-bottom: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.theme.cardBackground.primary};
   text-align: center;
 `;
@@ -56,6 +55,7 @@ const TriggerButton = styled(Button)`
 
 function GraphAsTable(props) {
   const t = useTranslations();
+  const format = useFormatter();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
@@ -83,14 +83,25 @@ function GraphAsTable(props) {
     tableRows.sort((a, b) => dayjs(a).diff(dayjs(b)));
   }
 
-  const dateFormat = timeResolution === 'YEAR' ? 'YYYY' : 'l';
+  const dateFormat =
+    timeResolution === 'YEAR'
+      ? {
+          year: 'numeric',
+        }
+      : {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+        };
 
   // Create table data row by row
   const tableData = [];
   tableRows.map((row, i) => {
     const rowObj = {};
     rowObj.label =
-      data[0].xType === 'time' ? dayjs(row).format(dateFormat) : row;
+      data[0].xType === 'time'
+        ? format.dateTime(new Date(row), dateFormat)
+        : row;
     rowObj.values = [];
     data.map((trace, i) => {
       const indexOfX = trace.x.indexOf(row);
