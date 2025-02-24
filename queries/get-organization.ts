@@ -210,6 +210,9 @@ const GET_ORG_DETAILS = gql`
         }
       }
     }
+    generalContent {
+      organizationTerm
+    }
   }
 
   ${ACTION_TABLE_COLUMN_FRAGMENT}
