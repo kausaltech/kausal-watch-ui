@@ -1,16 +1,17 @@
 'use client';
 
 import React from 'react';
+
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
-import { Card, CardBody, Container, Row, Col } from 'reactstrap';
 
 import Button from '@/components/common/Button';
-import Link from 'next/link';
 
-export const ErrorBackground = styled.div<{ isFullPage?: boolean }>`
+export const ErrorBackground = styled.div<{ $isFullPage?: boolean }>`
   background-color: ${(props) => props.theme.brandDark};
-  min-height: ${({ isFullPage }) => (isFullPage ? '800px' : undefined)};
+  min-height: ${({ $isFullPage }) => ($isFullPage ? '800px' : undefined)};
   padding: 5rem 0;
 `;
 
@@ -57,7 +58,7 @@ export function ErrorPage({ message, type = 'page' }: Props) {
   const t = useTranslations();
 
   return (
-    <ErrorBackground isFullPage={type === 'page'}>
+    <ErrorBackground $isFullPage={type === 'page'}>
       <Container>
         <Row>
           <Col md={{ size: 6, offset: 3 }}>

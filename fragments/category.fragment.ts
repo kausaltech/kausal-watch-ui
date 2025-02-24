@@ -1,3 +1,5 @@
+import images from 'common/images';
+
 import { gql } from '@apollo/client';
 
 export const CATEGORY_FRAGMENT = gql`
@@ -7,6 +9,7 @@ export const CATEGORY_FRAGMENT = gql`
     name
     leadParagraph
     order
+    kausalPathsNodeUuid
     level {
       id
       name
@@ -15,6 +18,21 @@ export const CATEGORY_FRAGMENT = gql`
     image {
       id
       ...MultiUseImageFragment
+    }
+    indicators {
+      id
+      values {
+        date
+        value
+      }
+      goals {
+        date
+        value
+      }
+      unit {
+        name
+        shortName
+      }
     }
     color
     iconSvgUrl
@@ -35,7 +53,18 @@ export const CATEGORY_FRAGMENT = gql`
       identifier
       hideCategoryIdentifiers
     }
+    attributes {
+      id
+      key
+      ... on AttributeRichText {
+        value
+      }
+      ... on AttributeText {
+        value
+      }
+    }
   }
+  ${images.fragments.multiUseImage}
 `;
 
 export const RECURSIVE_CATEGORY_FRAGMENT = gql`
