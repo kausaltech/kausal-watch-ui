@@ -20,7 +20,7 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { captureMessage } from '@sentry/nextjs';
 
-export const GET_INDICATOR_GRAPH_DATA = gql`
+const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
     plan(id: $plan) {
       scenarios {
@@ -215,25 +215,14 @@ function generateCubeFromValues(
   return generateCube(indicatorGraphSpecification.dimensions, values);
 }
 
-function getTraces(
-  dimensions,
-  cube,
-  names,
-  hasTimeDimension,
-  i18n,
-  quantityName
-) {
-  // TODO: We could use quantity name but we can not tell if it's in the correct language
-  // const name = capitalizeFirstLetter(quantityName ?? i18n.t('value'));
-  const name = capitalizeFirstLetter(i18n.t('value'));
+function getTraces(dimensions, cube, names, hasTimeDimension, i18n) {
   if (dimensions.length === 0) {
     return [
       {
         xType: 'time',
-        name: name,
+        name: i18n.t('total'),
         dataType: 'total',
         x: cube.map((val) => {
-          const d = dayjs(val.date);
           return val.date;
         }),
         y: cube.map((val) => val.value),
@@ -457,7 +446,7 @@ function getIndicatorGraphSpecification(
   const times = new Set(
     indicators.map((i) => i.values.map((x) => x.date)).flat()
   );
-  const hasTime = times.size > 1;
+  const hasTime = times.size > 1 && dimensions.length > 0;
 
   if (hasTime) {
     dimensions.forEach((d) => {
