@@ -29,7 +29,7 @@ const createLayout = (
   const fontFamily =
     '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, ' +
     'helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
-  const hasCategories = false;
+  const hasCategories = !hasTimeDimension;
 
   // With Plotly you have choice between one significant digit precision for y axis ticks (.1r)
   // then on smaller (first digit) ranges you get repeated numbers on ticks.
@@ -183,7 +183,6 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     timeResolution,
     lineShape,
     useAreaGraph,
-    graphCustomBackground,
   } = params;
 
   // Figure out what we need to draw depending on dataset
@@ -220,7 +219,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     allXValues.push(...trace.x);
 
     // we have multiple categories in one time point - draw bar groups
-    if (false) {
+    if (!hasTimeDimension) {
       modTrace.x = modTrace.x.map((name) => splitLines(name));
       modTrace.type = 'bar';
       modTrace.marker = {
@@ -234,7 +233,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       layoutConfig.xaxis!.tickvals = undefined;
     }
     // we have one or more categories as time series - draw lines and markers
-    if (true) {
+    if (hasTimeDimension) {
       modTrace.type = 'scatter';
       // we fill traces if there is only one trace and area graph is enabled
       if (traceCount === 1 && useAreaGraph) {
@@ -423,10 +422,14 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   const comparisonAxis = specification.axes.filter(
     (a) => a[0] === 'comparison'
   );
-  const hasTimeDimension =
-    specification.axes.filter((a) => a[0] === 'time').length > 0;
   const categoryCount =
     specification.axes.length > 0 ? specification.axes[0][1] : 0;
+
+  // Defines if we draw time series or bar graphs
+  // Only multiple categories with single time point are bar graphs
+  const hasTimeDimension =
+    specification.axes.filter((a) => a[0] === 'time').length > 0 ||
+    categoryCount == 0;
   let styleCount = undefined;
   const xAxisIsUsedForCategories =
     specification.axes[0] != null &&
@@ -447,7 +450,11 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       styleCount = 1;
     }
   }
-
+  if (!hasTimeDimension) {
+    // For bar graphs, the red color looks too heavy.
+    // Shift to blue.
+    plotColors.mainScale.shift();
+  }
   const mainTraces = createTraces({
     traces,
     unit: yRange.unit,
@@ -510,9 +517,8 @@ function IndicatorGraph(props: IndicatorGraphProps) {
         color: plotColors.trend,
         dash: 'dash',
       },
-      hoverinfo: 'none',
-      ...trendTrace,
       hoverinfo: 'skip',
+      ...trendTrace,
     });
 
   // add goals if defined
