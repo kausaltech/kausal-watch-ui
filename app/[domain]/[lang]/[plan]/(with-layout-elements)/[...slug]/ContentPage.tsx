@@ -40,6 +40,8 @@ export type GeneralPlanPage =
   | StaticPage
   | EmptyPage
   | PageWithLeadContent;
+import PathsPageContent from '@/components/paths/PathsPageContent';
+import { usePaths } from '@/context/paths/paths';
 
 type PageHeaderBlockProps = {
   page: GeneralPlanPage;
@@ -103,6 +105,7 @@ const PageHeaderBlock = ({ color, page }: PageHeaderBlockProps) => {
 export const Content = ({ page }: { page: GeneralPlanPage }) => {
   // TODO: Resolve shareImageUrl by pagetype
 
+  const pathsInstance = usePaths();
   const theme = useTheme();
   const isCategoryPage = page.__typename === 'CategoryPage';
 
@@ -110,6 +113,8 @@ export const Content = ({ page }: { page: GeneralPlanPage }) => {
     page.__typename === 'AccessibilityStatementPage' ||
     page.__typename === 'StaticPage' ||
     page.__typename === 'CategoryPage';
+
+  const isStaticPage = page.__typename === 'StaticPage';
   const categoryColor =
     isCategoryPage && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.themeColors.light;
@@ -133,49 +138,57 @@ export const Content = ({ page }: { page: GeneralPlanPage }) => {
 
   // Restrict the secondary nav to be shown on StaticPages only currently
   const siblings =
-    hasSecondaryNav && page.__typename === 'StaticPage'
-      ? page?.parent?.children ?? []
-      : [];
+    hasSecondaryNav && isStaticPage ? page?.parent?.children ?? [] : [];
 
-  return (
-    <article>
-      <PageHeaderBlock
-        page={page}
-        color={isCategoryPage ? categoryColor : undefined}
-      />
+  if (pathsInstance)
+    return (
+      <article>
+        <PathsPageContent page={page} />
+      </article>
+    );
+  else
+    return (
+      <article>
+        <PageHeaderBlock
+          page={page}
+          color={isCategoryPage ? categoryColor : undefined}
+        />
 
-      {isCategoryPage ? (
-        <CategoryPageContent page={page} pageSectionColor={pageSectionColor} />
-      ) : (
-        <div className="content-area">
-          {isPageWithLeadContent && page.leadContent && (
-            <Container className="my-5">
-              <Row>
-                <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
-                  <RichText html={page.leadContent} />
-                </Col>
-              </Row>
-            </Container>
-          )}
+        {isCategoryPage ? (
+          <CategoryPageContent
+            page={page}
+            pageSectionColor={pageSectionColor}
+          />
+        ) : (
+          <div className="content-area">
+            {isPageWithLeadContent && page.leadContent && (
+              <Container className="my-5">
+                <Row>
+                  <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+                    <RichText html={page.leadContent} />
+                  </Col>
+                </Row>
+              </Container>
+            )}
 
-          {siblings.length > 1 && (
-            <SecondaryNavigation
-              links={siblings}
-              activeLink={page.id}
-              title={page?.parent?.title || ''}
-            />
-          )}
+            {siblings.length > 1 && (
+              <SecondaryNavigation
+                links={siblings}
+                activeLink={page.id}
+                title={page?.parent?.title || ''}
+              />
+            )}
 
-          {isPageWithBody && page.body && (
-            <StreamField
-              page={page}
-              blocks={page.body}
-              color={pageSectionColor}
-              hasSidebar={siblings.length > 1}
-            />
-          )}
-        </div>
-      )}
-    </article>
-  );
+            {isPageWithBody && page.body && (
+              <StreamField
+                page={page}
+                blocks={page.body}
+                color={pageSectionColor}
+                hasSidebar={siblings.length > 1}
+              />
+            )}
+          </div>
+        )}
+      </article>
+    );
 };
