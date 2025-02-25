@@ -14,6 +14,12 @@ module.exports = {
       'pages/**/*.{js,ts,tsx}',
       'queries/**/*.{js,ts,tsx}',
     ],
+    excludes: [
+      'common/paths/**/*.{js,ts,tsx}',
+      'components/paths/**/*.{js,ts,tsx}',
+      'context/paths/**/*.{js,ts,tsx}',
+      'queries/paths/**/*.{js,ts,tsx}',
+    ],
     service: {
       name: 'kausal-watch-backend',
       url: `${apiUrl}/graphql/`,
