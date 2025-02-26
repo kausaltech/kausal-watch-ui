@@ -419,11 +419,6 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         <AccessibilityStatementPreparationInformationBlock {...block} id={id} />
       );
     }
-    case 'AccessibilityStatementPreparationInformationBlock': {
-      return (
-        <AccessibilityStatementPreparationInformationBlock {...block} id={id} />
-      );
-    }
     case 'PathsOutcomeBlock': {
       const { heading, helpText, outcomeNodeId } = block;
       return (
