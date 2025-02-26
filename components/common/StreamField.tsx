@@ -29,6 +29,7 @@ import { Col, ColProps, Container, Row } from 'reactstrap';
 import { ColumnProps } from 'reactstrap/types/lib/Col';
 import styled, { useTheme } from 'styled-components';
 
+import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBlock';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
 import { ErrorBoundary } from './ErrorBoundary';
@@ -416,6 +417,16 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'AccessibilityStatementPreparationInformationBlock': {
       return (
         <AccessibilityStatementPreparationInformationBlock {...block} id={id} />
+      );
+    }
+    case 'PathsOutcomeBlock': {
+      const { heading, helpText, outcomeNodeId } = block;
+      return (
+        <PathsOutcomeBlock
+          heading={heading}
+          helpText={helpText}
+          outcomenodeId={outcomeNodeId}
+        />
       );
     }
     default:
