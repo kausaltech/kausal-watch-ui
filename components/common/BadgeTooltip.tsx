@@ -93,6 +93,8 @@ const IconImage = styled.div<{ $imageSrc?: string }>`
     !!props.$imageSrc && `background-image: url(${props.$imageSrc});`};
   background-size: cover;
   background-position: center center;
+  min-width: ${(props) =>
+    props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
 `;
 
 const IconSvg = styled(SVG)`
@@ -104,7 +106,7 @@ const IconSvg = styled(SVG)`
 const IconName = styled.div`
   padding: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeBase};
-  line-height: ${(props) => props.theme.lineHeightSm};
+  line-height: ${(props) => props.theme.lineHeightBase};
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
