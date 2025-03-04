@@ -144,11 +144,12 @@ function ActionHighlightCard(props: ActionHighlightCardProps) {
           <ImgArea $bgcolor={statusColor}>
             {imageUrl && <ImgBg $background={imageUrl} />}
             <ImgOverlay>
-              {!hideIdentifier && (
-                <ActionNumber>
-                  <span>{action.identifier}</span>
-                </ActionNumber>
-              )}
+              {!hideIdentifier &&
+                !theme.settings.hideActionHighlightIdentifier && (
+                  <ActionNumber>
+                    <span>{action.identifier}</span>
+                  </ActionNumber>
+                )}
             </ImgOverlay>
           </ImgArea>
           {statusText && (
