@@ -23,15 +23,15 @@ const VersionSelect = styled.div`
   }
 `;
 
-const VersionDropdownItem = styled.a`
+const VersionDropdownItem = styled.a<{ active?: boolean }>`
   display: block;
   padding: 0.25rem 0.75rem 0.25rem 0.25rem;
   margin: 0 0.5rem 0.5rem;
   border: 1px solid ${(props) => props.theme.themeColors.light};
   border-radius: 0.5rem;
   text-decoration: none !important;
-  /*font-weight: ${(props) =>
-    props.latest === true ? props.theme.fontWeightBold : 'inherit'};*/
+  font-weight: ${(props) =>
+    props.active ? props.theme.fontWeightBold : 'inherit'};
   /*background: ${(props) =>
     props.active === true ? props.theme.themeColors.light : 'none'};*/
 
@@ -155,6 +155,7 @@ const PlanVersionSelector = (props) => {
               href={v.viewUrl}
               key={v.identifier}
               latest={v.identifier === latestVersion.identifier}
+              active={v.active}
             >
               <VersionDate>{v.versionName}</VersionDate>
             </VersionDropdownItem>
