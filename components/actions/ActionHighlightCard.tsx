@@ -13,6 +13,7 @@ import Icon from 'components/common/Icon';
 import ActionStatus from 'components/actions/ActionStatus';
 
 const StyledCard = styled(Card)`
+  position: relative;
   width: 100%;
   transition: all 0.5s ease;
   overflow: hidden;
@@ -83,25 +84,21 @@ const ImgBg = styled.div<{ $background: string }>`
   }
 `;
 
-const ImgOverlay = styled.div`
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 9rem;
-  top: 0;
-`;
-
 const ActionNumber = styled.div`
-  text-align: center;
-  font-size: ${(props) => props.theme.fontSizeXl};
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  z-index: 2;
+  padding: ${(props) => props.theme.spaces.s050}
+    ${(props) => props.theme.spaces.s100};
+  font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: ${(props) => props.theme.fontWeightBold};
-  color: ${(props) => props.theme.themeColors.light};
-  background: ${(props) => transparentize(0.1, props.theme.brandDark)};
-  line-height: 1;
-  padding: 0.5rem 1rem;
-  border-radius: 1.75rem;
+  line-height: ${(props) => props.theme.lineHeightSm};
+  color: ${(props) => props.theme.themeColors.black};
+  background: ${(props) => props.theme.themeColors.white};
+  border-radius: ${(props) => props.theme.cardBorderRadius} 0
+    ${(props) => props.theme.cardBorderRadius} 0;
 
   &:after {
     content: '.';
@@ -141,15 +138,9 @@ function ActionHighlightCard(props: ActionHighlightCardProps) {
     <ActionLink action={action} prefetch={false}>
       <CardLink href target={embed.active ? '_blank' : undefined}>
         <StyledCard>
+          {!hideIdentifier && <ActionNumber>{action.identifier}</ActionNumber>}
           <ImgArea $bgcolor={statusColor}>
             {imageUrl && <ImgBg $background={imageUrl} />}
-            <ImgOverlay>
-              {!hideIdentifier && (
-                <ActionNumber>
-                  <span>{action.identifier}</span>
-                </ActionNumber>
-              )}
-            </ImgOverlay>
           </ImgArea>
           {statusText && (
             <StyledActionStatus
