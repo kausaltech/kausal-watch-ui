@@ -432,10 +432,12 @@ function ActionContentProgressContainer({
 
   return (
     <>
-      <StyledProgressHeaderContainer>
-        <PrimaryHeaderInline>{t('action-progress')}</PrimaryHeaderInline>
-        {isBadgeVisible && <StatusBadge {...commonStatusBadgeProps} />}
-      </StyledProgressHeaderContainer>
+      {(!!action.implementationPhase || isBadgeVisible) && (
+        <StyledProgressHeaderContainer>
+          <PrimaryHeaderInline>{t('action-progress')}</PrimaryHeaderInline>
+          {isBadgeVisible && <StatusBadge {...commonStatusBadgeProps} />}
+        </StyledProgressHeaderContainer>
+      )}
 
       {!!action.implementationPhase && (
         <StyledProgressCard>
@@ -742,16 +744,18 @@ function ActionContent(props: ActionContentProps) {
           <IndicatorCausalVisualisation actionId={action.id} />
         </div>
       )}
-      <Container>
-        <Row>
-          <Col sm="12" className="mb-5">
-            <ActionPager
-              nextAction={action.nextAction}
-              previousAction={action.previousAction}
-            />
-          </Col>
-        </Row>
-      </Container>
+      {theme.settings?.actionView?.showPaginationBottom && (
+        <Container>
+          <Row>
+            <Col sm="12" className="mb-5">
+              <ActionPager
+                nextAction={action.nextAction}
+                previousAction={action.previousAction}
+              />
+            </Col>
+          </Row>
+        </Container>
+      )}
     </div>
   );
 }

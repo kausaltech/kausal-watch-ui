@@ -219,12 +219,11 @@ function getTraces(dimensions, cube, names, hasTimeDimension, i18n) {
   if (dimensions.length === 0) {
     return [
       {
-        xType: cube.length === 1 ? 'category' : 'time',
+        xType: 'time',
         name: i18n.t('total'),
         dataType: 'total',
         x: cube.map((val) => {
-          const d = dayjs(val.date);
-          return cube.length < 2 ? d.year() : val.date;
+          return val.date;
         }),
         y: cube.map((val) => val.value),
       },
@@ -447,7 +446,7 @@ function getIndicatorGraphSpecification(
   const times = new Set(
     indicators.map((i) => i.values.map((x) => x.date)).flat()
   );
-  const hasTime = times.size > 1;
+  const hasTime = times.size > 1 && dimensions.length > 0;
 
   if (hasTime) {
     dimensions.forEach((d) => {
