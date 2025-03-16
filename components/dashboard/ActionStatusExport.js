@@ -11,8 +11,9 @@ export default function ActionStatusExport({ actions }) {
   const t = useTranslations();
   const plan = usePlan();
   const url = plan.actionReportExportViewUrl;
-  const csvExportUrl = `${url}?format=csv`;
-  const excelExportUrl = `${url}?format=xlsx`;
+  const actionIds = actions.map(({ id }) => id).join(',');
+  const csvExportUrl = `${url}?actions=${actionIds}&format=csv`;
+  const excelExportUrl = `${url}?actions=${actionIds}&format=xlsx`;
   return (
     <UncontrolledDropdown>
       <DropdownToggle caret>{t('export')}</DropdownToggle>
