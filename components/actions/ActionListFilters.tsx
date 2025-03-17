@@ -482,6 +482,7 @@ type ActionListFilterOption = {
 
 export interface ActionListFilter<Value extends FilterValue = FilterValue> {
   id: string;
+  useValueFilterId: string | undefined;
   filterAction: (value: Value, action: ActionListAction) => boolean;
   getLabel: (t: TFunction) => string;
   getHelpText: (t: TFunction) => string | undefined;
@@ -502,6 +503,7 @@ abstract class DefaultFilter<Value extends FilterValue>
   implements ActionListFilter<Value>
 {
   id: string;
+  useValueFilterId: string | undefined;
   sm = undefined;
   md = 6;
   lg = 4;
@@ -628,6 +630,52 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
   }
   getShowAllLabel(t: TFunction) {
     return t('filter-all-organizations', this.getOrgTermContext());
+  }
+}
+
+class PrimaryResponsiblePartyFilter extends DefaultFilter<string | undefined> {
+  id = 'primary_responsible_party';
+  useValueFilterId = 'responsible_party';
+  options: ActionListFilterOption[];
+
+  filterAction(value: string | undefined, action: ActionListAction) {
+    if (!value) return true;
+    return action.responsibleParties.some(
+      (rp) => rp.role === 'PRIMARY' && rp.organization.id === value
+    );
+  }
+
+  getLabel(t: TFunction) {
+    return t('filter-primary-responsible-party');
+  }
+
+  getHelpText(t: TFunction) {
+    return t('filter-primary-responsible-party-help');
+  }
+
+  getShowAllLabel(t: TFunction) {
+    return t('filter-all-organizations');
+  }
+
+  render(
+    value: string | undefined,
+    onChange: FilterChangeCallback<string | undefined>,
+    t: TFunction
+  ) {
+    return (
+      <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
+        <FormGroup switch className="mb-4">
+          <Input
+            type="switch"
+            role="switch"
+            id={this.id}
+            checked={value ? true : false}
+            onChange={(e) => onChange(this.id, e.target.checked)}
+          />
+          <label htmlFor={this.id}>{this.getLabel(t)}</label>
+        </FormGroup>
+      </FilterColumn>
+    );
   }
 }
 
@@ -826,6 +874,8 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
     this.actionTermContext = getActionTermContext(plan, actionTerm);
     this.ref = createRef();
   }
+  useValueFilterId: string | undefined;
+  options?: ActionListFilterOption[] | undefined;
 
   filterAction(value: string, action: ActionListAction) {
     const searchStr = escapeStringRegexp(value.toLowerCase());
@@ -873,6 +923,9 @@ class ContinuousActionFilter implements ActionListFilter<string | undefined> {
     this.id = id;
     this.label = label;
   }
+  useValueFilterId: string | undefined;
+  options?: ActionListFilterOption[] | undefined;
+  debounce?: number | undefined;
   getLabel(t: TFunction) {
     return t('actions-show-continuous');
   }
@@ -1113,6 +1166,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
       switch (block.__typename) {
         case 'ResponsiblePartyFilterBlock':
           filters.push(new ResponsiblePartyFilter(orgs, plan));
+          filters.push(new PrimaryResponsiblePartyFilter());
           break;
         case 'CategoryTypeFilterBlock':
           filters.push(new CategoryFilter(block, filterByCommonCategory, plan));
