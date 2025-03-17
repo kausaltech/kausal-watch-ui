@@ -39,6 +39,7 @@
     "filter-status": "Κατάσταση",
     "filter-text": "{context, select, STRATEGY {Στρατηγικές αναζήτησης} CASE_STUDY {Αναζήτηση μελετών περίπτωσης} other {Αναζήτηση ενεργειών}}",
     "filter-text-default": "Αναζήτηση με λέξη-κλειδί",
+    "filter-primary-responsible-party": "Εμφάνιση ενεργειών από τον κύριο οργανισμό",
     "front-page": "Πρώτη σελίδα",
     "give-feedback": "Δώστε ανατροφοδότηση",
     "goal": "στόχος",

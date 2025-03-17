@@ -44,6 +44,7 @@
     "filter-schedule": "Tidsram",
     "filter-text": "{context, select, STRATEGY {Sökstrategier} CASE_STUDY {Sök efter fallstudier} INDICATOR {Sök indicatorer} other {Sök åtgärder}}",
     "filter-text-default": "Sök efter nyckelord",
+    "filter-primary-responsible-party": "Visa åtgärder av den primära organisationen",
     "front-page": "Framsida",
     "give-feedback": "Ge respons",
     "goal": "mål",

@@ -653,10 +653,6 @@ class PrimaryResponsiblePartyFilter extends DefaultFilter<string | undefined> {
     return t('filter-primary-responsible-party-help');
   }
 
-  getShowAllLabel(t: TFunction) {
-    return t('filter-all-organizations');
-  }
-
   render(
     value: string | undefined,
     onChange: FilterChangeCallback<string | undefined>,
@@ -673,6 +669,10 @@ class PrimaryResponsiblePartyFilter extends DefaultFilter<string | undefined> {
             onChange={(e) => onChange(this.id, e.target.checked)}
           />
           <label htmlFor={this.id}>{this.getLabel(t)}</label>
+          <PopoverTip
+            identifier="primary-responsible-party-tooltip"
+            content={this.getHelpText(t)}
+          />
         </FormGroup>
       </FilterColumn>
     );
