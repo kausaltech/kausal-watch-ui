@@ -668,11 +668,13 @@ class PrimaryResponsiblePartyFilter extends DefaultFilter<string | undefined> {
             checked={value ? true : false}
             onChange={(e) => onChange(this.id, e.target.checked)}
           />
-          <label htmlFor={this.id}>{this.getLabel(t)}</label>
-          <PopoverTip
-            identifier="primary-responsible-party-tooltip"
-            content={this.getHelpText(t)}
-          />
+          <label htmlFor={this.id}>
+            {this.getLabel(t)}
+            <PopoverTip
+              identifier="primary-responsible-party-tooltip"
+              content={this.getHelpText(t)}
+            />
+          </label>
         </FormGroup>
       </FilterColumn>
     );

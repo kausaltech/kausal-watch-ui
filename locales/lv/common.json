@@ -27,6 +27,7 @@
     "filter-schedule-help": "Rādīt rīcības, kas aptver visu atlasīto grafiku",
     "filter-status-help": "Rādīt rīcības ar atlasīto statusu",
     "filter-primary-responsible-party": "Rādīt darbības pēc primārās organizācijas",
+    "filter-primary-responsible-party-help": "Vispirms izvēlieties organizāciju",
     "navigation-home": "Sākums",
     "graph-hideTable": "Paslēpt tabulu",
     "definition": "Definīcija",

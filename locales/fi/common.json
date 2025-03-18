@@ -49,6 +49,7 @@
     "filter-text": "Tekstihaku",
     "filter-text-default": "Etsi otsikoista",
     "filter-primary-responsible-party": "Näytä vain toimenpiteet, joissa valittu organisaatio on päävastuutahona",
+    "filter-primary-responsible-party-help": "Valitse ensin vastuuorganisaatio",
     "front-page": "Etusivu",
     "give-feedback": "Anna palautetta",
     "goal": "tavoite",
