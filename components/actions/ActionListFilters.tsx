@@ -1163,12 +1163,14 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
     blocks: ActionListFilterFragment[]
   ) {
     const filters: ActionListFilter[] = [];
+    let primaryResponsiblePartyFilter: PrimaryResponsiblePartyFilter | null =
+      null;
 
     blocks.forEach((block) => {
       switch (block.__typename) {
         case 'ResponsiblePartyFilterBlock':
           filters.push(new ResponsiblePartyFilter(orgs, plan));
-          filters.push(new PrimaryResponsiblePartyFilter());
+          primaryResponsiblePartyFilter = new PrimaryResponsiblePartyFilter();
           break;
         case 'CategoryTypeFilterBlock':
           filters.push(new CategoryFilter(block, filterByCommonCategory, plan));
@@ -1283,6 +1285,9 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           break;
       }
     });
+    if (primaryResponsiblePartyFilter) {
+      filters.push(primaryResponsiblePartyFilter);
+    }
 
     if (id === 'main') {
       if (plan.actionImpacts.length) {
