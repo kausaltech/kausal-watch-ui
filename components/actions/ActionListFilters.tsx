@@ -617,7 +617,18 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
     onChange: FilterChangeCallback<string | undefined>,
     t: TFunction
   ) {
-    return super.render(value, onChange, t);
+    return (
+      <>
+        {super.render(value, onChange, t)}
+        {value ? (
+          <PrimaryResponsiblePartyFilter
+            responsibleParty={value}
+            onChange={onChange}
+            t={t}
+          />
+        ) : null}
+      </>
+    );
   }
   private getOrgTermContext() {
     return { context: this.plan.generalContent.organizationTerm };
@@ -633,7 +644,11 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
   }
 }
 
-class PrimaryResponsiblePartyFilter extends DefaultFilter<string | undefined> {
+class PrimaryResponsiblePartyFilter extends React.Component<{
+  responsibleParty: string;
+  onChange: FilterChangeCallback<string | undefined>;
+  t: TFunction;
+}> {
   id = 'primary_responsible_party';
   useValueFilterId = 'responsible_party';
   options: ActionListFilterOption[];
@@ -653,20 +668,19 @@ class PrimaryResponsiblePartyFilter extends DefaultFilter<string | undefined> {
     return t('filter-primary-responsible-party-help');
   }
 
-  render(
-    value: string | undefined,
-    onChange: FilterChangeCallback<string | undefined>,
-    t: TFunction
-  ) {
+  render() {
+    if (!this.props || !this.props.responsibleParty) return null;
+    const { responsibleParty, onChange, t } = this.props;
     return (
-      <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
+      <FilterColumn>
         <FormGroup switch className="mb-4">
           <Input
             type="switch"
             role="switch"
             id={this.id}
-            checked={value ? true : false}
-            onChange={(e) => onChange(this.id, e.target.checked)}
+            onChange={(e) =>
+              onChange(this.id, e.target.checked ? responsibleParty : undefined)
+            }
           />
           <label htmlFor={this.id}>
             {this.getLabel(t)}
@@ -1030,6 +1044,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
           [id]: val,
         };
       });
+
       if (debounce) {
         debouncedFilterChange(id, val);
       } else {
