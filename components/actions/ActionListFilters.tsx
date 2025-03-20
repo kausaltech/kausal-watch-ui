@@ -380,7 +380,7 @@ function ActionListFilterBadges({
     let label: string;
 
     if (item.id === 'primary_responsible_party') {
-      if (!value) return null;
+      if (!value || !activeFilters['responsible_party']) return null;
       label = item.getLabel(t);
     } else if (item.id === 'name') {
       if (!value || typeof value !== 'string' || value.trim() === '') {
@@ -426,6 +426,7 @@ function ActionListFilterBadges({
   });
   if (
     activeFilters['primary_responsible_party'] &&
+    activeFilters['responsible_party'] &&
     !badgesToCreate.some((b) => b.id === 'primary_responsible_party')
   ) {
     badgesToCreate.push({
@@ -1042,10 +1043,13 @@ function ActionListFilters(props: ActionListFiltersProps) {
   const onFilterChange = useCallback(
     (id: string, val: FilterValue, debounce: number = 0) => {
       setFilterState((state) => {
-        return {
-          ...state,
-          [id]: val,
-        };
+        const newState = { ...state, [id]: val };
+
+        if (id === 'responsible_party') {
+          newState['primary_responsible_party'] = undefined;
+        }
+
+        return newState;
       });
 
       if (debounce) {
@@ -1067,6 +1071,9 @@ function ActionListFilters(props: ActionListFiltersProps) {
 
   const onReset = useCallback(
     (id: string, value: SingleFilterValue) => {
+      if (id === 'responsible_party') {
+        onFilterChange('primary_responsible_party', undefined);
+      }
       onFilterChange(id, deleteFilterValues(id, value));
     },
     [onFilterChange, deleteFilterValues]
