@@ -677,10 +677,6 @@ class PrimaryResponsiblePartyFilter extends React.Component<{
     return t('filter-primary-responsible-party');
   }
 
-  getHelpText(t: TFunction) {
-    return t('filter-primary-responsible-party-help');
-  }
-
   render() {
     if (!this.props || !this.props.responsibleParty) return null;
     const { responsibleParty, onChange, t } = this.props;
@@ -695,13 +691,7 @@ class PrimaryResponsiblePartyFilter extends React.Component<{
               onChange(this.id, e.target.checked ? responsibleParty : undefined)
             }
           />
-          <label htmlFor={this.id}>
-            {this.getLabel(t)}
-            <PopoverTip
-              identifier="primary-responsible-party-tooltip"
-              content={this.getHelpText(t)}
-            />
-          </label>
+          <label htmlFor={this.id}>{this.getLabel(t)}</label>
         </FormGroup>
       </FilterColumn>
     );
