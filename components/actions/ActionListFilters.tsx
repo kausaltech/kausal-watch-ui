@@ -379,7 +379,10 @@ function ActionListFilterBadges({
   ): Badge | null {
     let label: string;
 
-    if (item.id === 'name') {
+    if (item.id === 'primary_responsible_party') {
+      if (!value) return null;
+      label = item.getLabel(t);
+    } else if (item.id === 'name') {
       if (!value || typeof value !== 'string' || value.trim() === '') {
         return null;
       }
@@ -421,6 +424,15 @@ function ActionListFilterBadges({
     seenFilterKeyValues.add(uniqueKey);
     return true;
   });
+  if (
+    activeFilters['primary_responsible_party'] &&
+    !badgesToCreate.some((b) => b.id === 'primary_responsible_party')
+  ) {
+    badgesToCreate.push({
+      id: 'primary_responsible_party',
+      getLabel: (t: TFunction) => t('filter-primary-responsible-party'),
+    } as ActionListFilter);
+  }
   const badges = badgesToCreate
     .map((item: ActionListFilter) => {
       const value = activeFilters[item.id];
@@ -430,6 +442,7 @@ function ActionListFilterBadges({
     })
     .flat()
     .filter((item): item is Badge => item != null);
+
   return (
     <FiltersList aria-live="assertive">
       <span className="count">
