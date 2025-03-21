@@ -379,7 +379,10 @@ function ActionListFilterBadges({
   ): Badge | null {
     let label: string;
 
-    if (item.id === 'name') {
+    if (item.id === 'primary_responsible_party') {
+      if (!value || !activeFilters['responsible_party']) return null;
+      label = item.getLabel(t);
+    } else if (item.id === 'name') {
       if (!value || typeof value !== 'string' || value.trim() === '') {
         return null;
       }
@@ -421,6 +424,16 @@ function ActionListFilterBadges({
     seenFilterKeyValues.add(uniqueKey);
     return true;
   });
+  if (
+    activeFilters['primary_responsible_party'] &&
+    activeFilters['responsible_party'] &&
+    !badgesToCreate.some((b) => b.id === 'primary_responsible_party')
+  ) {
+    badgesToCreate.push({
+      id: 'primary_responsible_party',
+      getLabel: (t: TFunction) => t('filter-primary-responsible-party'),
+    } as ActionListFilter);
+  }
   const badges = badgesToCreate
     .map((item: ActionListFilter) => {
       const value = activeFilters[item.id];
@@ -430,6 +443,7 @@ function ActionListFilterBadges({
     })
     .flat()
     .filter((item): item is Badge => item != null);
+
   return (
     <FiltersList aria-live="assertive">
       <span className="count">
@@ -482,6 +496,7 @@ type ActionListFilterOption = {
 
 export interface ActionListFilter<Value extends FilterValue = FilterValue> {
   id: string;
+  useValueFilterId: string | undefined;
   filterAction: (value: Value, action: ActionListAction) => boolean;
   getLabel: (t: TFunction) => string;
   getHelpText: (t: TFunction) => string | undefined;
@@ -502,6 +517,7 @@ abstract class DefaultFilter<Value extends FilterValue>
   implements ActionListFilter<Value>
 {
   id: string;
+  useValueFilterId: string | undefined;
   sm = undefined;
   md = 6;
   lg = 4;
@@ -615,7 +631,18 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
     onChange: FilterChangeCallback<string | undefined>,
     t: TFunction
   ) {
-    return super.render(value, onChange, t);
+    return (
+      <>
+        {super.render(value, onChange, t)}
+        {value ? (
+          <PrimaryResponsiblePartyFilter
+            responsibleParty={value}
+            onChange={onChange}
+            t={t}
+          />
+        ) : null}
+      </>
+    );
   }
   private getOrgTermContext() {
     return { context: this.plan.generalContent.organizationTerm };
@@ -628,6 +655,47 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
   }
   getShowAllLabel(t: TFunction) {
     return t('filter-all-organizations', this.getOrgTermContext());
+  }
+}
+
+class PrimaryResponsiblePartyFilter extends React.Component<{
+  responsibleParty: string;
+  onChange: FilterChangeCallback<string | undefined>;
+  t: TFunction;
+}> {
+  id = 'primary_responsible_party';
+  useValueFilterId = 'responsible_party';
+  options: ActionListFilterOption[];
+
+  filterAction(value: string | undefined, action: ActionListAction) {
+    if (!value) return true;
+    return action.responsibleParties.some(
+      (rp) => rp.role === 'PRIMARY' && rp.organization.id === value
+    );
+  }
+
+  getLabel(t: TFunction) {
+    return t('filter-primary-responsible-party');
+  }
+
+  render() {
+    if (!this.props || !this.props.responsibleParty) return null;
+    const { responsibleParty, onChange, t } = this.props;
+    return (
+      <FilterColumn>
+        <FormGroup switch className="mb-4">
+          <Input
+            type="switch"
+            role="switch"
+            id={this.id}
+            onChange={(e) =>
+              onChange(this.id, e.target.checked ? responsibleParty : undefined)
+            }
+          />
+          <label htmlFor={this.id}>{this.getLabel(t)}</label>
+        </FormGroup>
+      </FilterColumn>
+    );
   }
 }
 
@@ -826,6 +894,8 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
     this.actionTermContext = getActionTermContext(plan, actionTerm);
     this.ref = createRef();
   }
+  useValueFilterId: string | undefined;
+  options?: ActionListFilterOption[] | undefined;
 
   filterAction(value: string, action: ActionListAction) {
     const searchStr = escapeStringRegexp(value.toLowerCase());
@@ -873,6 +943,9 @@ class ContinuousActionFilter implements ActionListFilter<string | undefined> {
     this.id = id;
     this.label = label;
   }
+  useValueFilterId: string | undefined;
+  options?: ActionListFilterOption[] | undefined;
+  debounce?: number | undefined;
   getLabel(t: TFunction) {
     return t('actions-show-continuous');
   }
@@ -970,11 +1043,15 @@ function ActionListFilters(props: ActionListFiltersProps) {
   const onFilterChange = useCallback(
     (id: string, val: FilterValue, debounce: number = 0) => {
       setFilterState((state) => {
-        return {
-          ...state,
-          [id]: val,
-        };
+        const newState = { ...state, [id]: val };
+
+        if (id === 'responsible_party') {
+          newState['primary_responsible_party'] = undefined;
+        }
+
+        return newState;
       });
+
       if (debounce) {
         debouncedFilterChange(id, val);
       } else {
@@ -994,6 +1071,9 @@ function ActionListFilters(props: ActionListFiltersProps) {
 
   const onReset = useCallback(
     (id: string, value: SingleFilterValue) => {
+      if (id === 'responsible_party') {
+        onFilterChange('primary_responsible_party', undefined);
+      }
       onFilterChange(id, deleteFilterValues(id, value));
     },
     [onFilterChange, deleteFilterValues]
@@ -1108,11 +1188,14 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
     blocks: ActionListFilterFragment[]
   ) {
     const filters: ActionListFilter[] = [];
+    let primaryResponsiblePartyFilter: PrimaryResponsiblePartyFilter | null =
+      null;
 
     blocks.forEach((block) => {
       switch (block.__typename) {
         case 'ResponsiblePartyFilterBlock':
           filters.push(new ResponsiblePartyFilter(orgs, plan));
+          primaryResponsiblePartyFilter = new PrimaryResponsiblePartyFilter();
           break;
         case 'CategoryTypeFilterBlock':
           filters.push(new CategoryFilter(block, filterByCommonCategory, plan));
@@ -1227,6 +1310,9 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           break;
       }
     });
+    if (primaryResponsiblePartyFilter) {
+      filters.push(primaryResponsiblePartyFilter);
+    }
 
     if (id === 'main') {
       if (plan.actionImpacts.length) {
