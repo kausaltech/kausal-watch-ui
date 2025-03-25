@@ -216,18 +216,21 @@ const GET_CONTENT_PAGE = gql`
             schema {
               uuid
               timeResolution
-              # unit
-              # dimensionCategories {
-              #   order
-              #   category {
-              #     uuid
-              #     label
-              #     dimension {
-              #       name
-              #       uuid
-              #     }
-              #   }
-              # }
+              metrics {
+                unit
+              }
+              dimensions {
+                order
+                dimension {
+                  name
+                  uuid
+                  categories {
+                    order
+                    uuid
+                    label
+                  }
+                }
+              }
             }
             uuid
             dataPoints {
