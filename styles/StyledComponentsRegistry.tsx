@@ -2,14 +2,15 @@
 
 import React, { useState } from 'react';
 import { useServerInsertedHTML } from 'next/navigation';
-
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 
-type Props = {
+export default function StyledComponentsRegistry({
+  children,
+}: {
   children: React.ReactNode;
-};
-
-export function StyledComponentsRegistry({ children }: Props) {
+}) {
+  // Only create stylesheet once with lazy initial state
+  // x-ref: https://reactjs.org/docs/hooks-reference.html#lazy-initial-state
   const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet());
 
   useServerInsertedHTML(() => {
@@ -21,10 +22,7 @@ export function StyledComponentsRegistry({ children }: Props) {
   if (typeof window !== 'undefined') return <>{children}</>;
 
   return (
-    <StyleSheetManager
-      enableVendorPrefixes
-      sheet={styledComponentsStyleSheet.instance}
-    >
+    <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
       {children}
     </StyleSheetManager>
   );

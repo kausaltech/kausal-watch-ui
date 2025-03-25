@@ -5,9 +5,7 @@ import {
   SentrySampler,
   SentrySpanProcessor,
 } from '@sentry/opentelemetry';
-import type { IntegrationFn } from '@sentry/types';
-import { serializeEnvelope } from '@sentry/utils';
-import { type Configuration, registerOTel } from '@vercel/otel';
+import type { IntegrationFn, serializeEnvelope } from '@sentry/core';
 import { makeEnvPublic } from 'next-runtime-env';
 
 import {
@@ -115,21 +113,6 @@ export const register = async () => {
     );
   }
   const sentryClient = await initSentry();
-  let sentryOtel: Configuration | {};
-  if (process.env.NEXT_RUNTIME === 'nodejs') {
-    const nodeOtel = await import('./instrumentation-node');
-
-    sentryOtel = nodeOtel.getSentryOtelNodeConfig();
-  } else {
-    sentryOtel = {};
-  }
-  registerOTel({
-    serviceName: 'next-app',
-    ...sentryOtel,
-    propagators: [new SentryPropagator()],
-    traceSampler: new SentrySampler(sentryClient as NodeClient),
-    spanProcessors: [new SentrySpanProcessor()],
-  });
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     Sentry.validateOpenTelemetrySetup();
   }

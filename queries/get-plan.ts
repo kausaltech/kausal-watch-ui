@@ -296,8 +296,9 @@ export const getPlan = async (
   hostname: string,
   planIdentifier: string,
   clientUrl: string
-) =>
-  await getClient().query<GetPlanContextQuery>({
+) => {
+  const client = await getClient();
+  return client.query<GetPlanContextQuery>({
     query: GET_PLAN_CONTEXT,
     variables: {
       identifier: planIdentifier,
@@ -306,3 +307,4 @@ export const getPlan = async (
     },
     fetchPolicy: 'no-cache',
   });
+};

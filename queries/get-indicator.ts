@@ -5,13 +5,10 @@ import {
 import { gql } from '@apollo/client';
 
 import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
-import { getClient } from '../utils/apollo-rsc-client';
+import { apolloQuery } from '../utils/apollo-rsc-client';
 
 export const getIndicatorDetails = async (plan: string, indicatorId: string) =>
-  await getClient().query<
-    IndicatorDetailsQuery,
-    IndicatorDetailsQueryVariables
-  >({
+  await apolloQuery<IndicatorDetailsQuery, IndicatorDetailsQueryVariables>({
     query: GET_INDICATOR_DETAILS,
     variables: {
       plan,

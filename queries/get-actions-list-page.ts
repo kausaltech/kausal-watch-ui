@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
-import { getClient } from '../utils/apollo-rsc-client';
+import { apolloQuery, getClient } from '../utils/apollo-rsc-client';
 import { ALL_ACTION_LIST_FILTERS } from '../fragments/action-list.fragment';
-import {
+import type {
   GetActionListPageIncludeRelatedQuery,
   GetActionListPageIncludeRelatedQueryVariables,
   GetActionListPageQuery,
@@ -19,7 +19,7 @@ const GET_INCLUDE_RELATED_ACTIONS = gql`
 `;
 
 export const getIncludeRelatedActions = async (plan: string) =>
-  await getClient().query<
+  await apolloQuery<
     GetActionListPageIncludeRelatedQuery,
     GetActionListPageIncludeRelatedQueryVariables
   >({
@@ -54,10 +54,7 @@ export const getActionsListPage = async (
   plan: string,
   excludeCategoriesWithoutActions: boolean
 ) =>
-  await getClient().query<
-    GetActionListPageQuery,
-    GetActionListPageQueryVariables
-  >({
+  await apolloQuery<GetActionListPageQuery, GetActionListPageQueryVariables>({
     query: GET_ACTIONS_LIST_PAGE,
     variables: {
       plan,

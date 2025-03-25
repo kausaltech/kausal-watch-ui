@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
-import { Badge, Tooltip } from 'reactstrap';
+import { Badge, Tooltip, type BadgeProps } from 'reactstrap';
 import SVG from 'react-inlinesvg';
 import styled from 'styled-components';
 import { shade, readableColor } from 'polished';
 
-const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
+type StyledBadgeProps = {
   color: string;
-  isLink: boolean;
-}>`
+  $isLink: boolean;
+} & BadgeProps;
+
+const StyledBadge = styled(({ $isLink, ...rest }: StyledBadgeProps) => (
+  <Badge {...rest} />
+))`
   background-color: ${(props) => props.theme[props.color]} !important;
+  // prettier-ignore
   color: ${(props) =>
     readableColor(
       props.theme[props.color],
@@ -16,8 +21,9 @@ const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
       props.theme.themeColors.white
     )};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
-  padding: ${(props) => props.theme.badgePaddingY}
-    ${(props) => props.theme.badgePaddingX};
+  // prettier-ignore
+  padding: ${(props) => props.theme.badgePaddingY} ${(props) =>
+    props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
   max-width: 100%;
   word-break: break-all;
@@ -27,8 +33,9 @@ const StyledBadge = styled(({ isLink, ...rest }) => <Badge {...rest} />)<{
   text-align: left;
 
   &:hover {
+    // prettier-ignore
     background-color: ${(props) =>
-      props.isLink && shade(0.05, props.theme[props.color])} !important;
+      props.$isLink && shade(0.05, props.theme[props.color])} !important;
   }
 
   &.lg {
@@ -49,7 +56,7 @@ const TruncatedContent = styled.span<{ $maxLines: number }>`
   overflow: hidden;
 `;
 
-const IconBadge = styled.div<{ color: string; isLink: boolean }>`
+const IconBadge = styled.div<{ color: string; $isLink: boolean }>`
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -65,7 +72,7 @@ const IconBadge = styled.div<{ color: string; isLink: boolean }>`
 
   &:hover {
     background-color: ${(props) =>
-      props.isLink && shade(0.05, props.theme[props.color])} !important;
+      props.$isLink && shade(0.05, props.theme[props.color])} !important;
   }
 `;
 
@@ -133,12 +140,12 @@ const BadgeContent = (props: BadgeContentProps) => {
       className={size}
       aria-label={ariaLabel}
       color={color}
-      isLink={isLink}
+      $isLink={isLink}
     >
       {renderContent}
     </StyledBadge>
   ) : (
-    <IconBadge color={color} isLink={isLink}>
+    <IconBadge color={color} $isLink={isLink}>
       {iconSvg ? (
         <IconImage>
           <IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" />

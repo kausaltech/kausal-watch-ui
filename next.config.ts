@@ -47,7 +47,7 @@ async function initializeThemes() {
     try {
       const {
         generateThemeSymlinks: generateThemeSymlinksPrivate,
-      } = require('@kausal/themes-private/setup.cjs');
+      } = require('@kausal-private/themes-private/setup.cjs');
       generateThemeSymlinksPrivate(destPath, { verbose: false });
       themesLinked = true;
     } catch (error) {
@@ -68,7 +68,7 @@ async function initializeThemes() {
   }
 }
 
-await initializeThemes();
+void initializeThemes();
 
 const standaloneBuild = process.env.NEXTJS_STANDALONE_BUILD === '1';
 // NextJS doesn't support runtime asset prefix, so we'll need to replace the
@@ -97,10 +97,19 @@ let config: NextConfigObject = {
     ignoreBuildErrors: true,
   },
   productionBrowserSourceMaps: true,
-  swcMinify: false,
   compiler: {
     // Enables the styled-components SWC transform
     styledComponents: true,
+  },
+  sassOptions: {
+    quietDeps: true,
+    silenceDeprecations: [
+      'import',
+      'legacy-js-api',
+      'color-functions',
+      'global-builtin',
+      'color-4-api',
+    ],
   },
   outputFileTracingIncludes: standaloneBuild
     ? {

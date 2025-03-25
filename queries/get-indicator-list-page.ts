@@ -1,9 +1,10 @@
 import { gql } from '@apollo/client';
-import { getClient } from '../utils/apollo-rsc-client';
+
 import {
-  GetPlanPageIndicatorListQuery,
-  GetPlanPageIndicatorListQueryVariables,
+  type GetPlanPageIndicatorListQuery,
+  type GetPlanPageIndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
+import { apolloQuery } from '../utils/apollo-rsc-client';
 
 const GET_INDICATOR_LIST_PAGE = gql`
   query GetPlanPageIndicatorList($plan: ID!, $path: String!) {
@@ -22,7 +23,7 @@ const GET_INDICATOR_LIST_PAGE = gql`
 `;
 
 export const getIndicatorListPage = async (plan: string) =>
-  await getClient().query<
+  await apolloQuery<
     GetPlanPageIndicatorListQuery,
     GetPlanPageIndicatorListQueryVariables
   >({

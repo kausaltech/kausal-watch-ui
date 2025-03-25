@@ -12,7 +12,7 @@ import {
   GetActionDetailsQuery,
   GetActionDetailsQueryVariables,
 } from '@/common/__generated__/graphql';
-import { getClient } from '../utils/apollo-rsc-client';
+import { apolloQuery } from '../utils/apollo-rsc-client';
 
 export const getActionDetails = async (
   plan: string,
@@ -20,10 +20,7 @@ export const getActionDetails = async (
   clientUrl: string,
   workflow?: string
 ) =>
-  await getClient().query<
-    GetActionDetailsQuery,
-    GetActionDetailsQueryVariables
-  >({
+  await apolloQuery<GetActionDetailsQuery, GetActionDetailsQueryVariables>({
     query: GET_ACTION_DETAILS,
     variables: {
       plan,

@@ -70,3 +70,10 @@ export const { getClient } = registerApolloClient(async () => {
     ]),
   });
 });
+
+export const apolloQuery: typeof ApolloClient.prototype.query = async (
+  ...args
+) => {
+  const client = await getClient();
+  return client.query(...args);
+};

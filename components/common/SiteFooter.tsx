@@ -91,14 +91,12 @@ const Branding = styled.div`
 `;
 
 const Logo = styled.div`
-  height: calc(
-    ${(props) => props.theme.footerLogoSize} *
-      ${(props) => props.theme.spaces.s400}
-  );
-  max-width: calc(
-    ${(props) => props.theme.footerLogoSize} * 4 *
-      ${(props) => props.theme.spaces.s300}
-  );
+  // prettier-ignore
+  height: calc(${(props) => props.theme.footerLogoSize} * ${(props) =>
+    props.theme.spaces.s400});
+  // prettier-ignore
+  max-width: calc(${(props) => props.theme.footerLogoSize} * 4 * ${(props) =>
+    props.theme.spaces.s300});
   margin-right: ${(props) => props.theme.spaces.s200};
   margin: ${(props) => props.theme.spaces.s150}
     ${(props) => props.theme.spaces.s200} ${(props) => props.theme.spaces.s150}
@@ -146,8 +144,9 @@ const FooterNavItems = styled.ul`
   margin-bottom: ${(props) => props.theme.spaces.s300};
 
   @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    gap: ${(props) => props.theme.spaces.s300}
-      ${(props) => props.theme.spaces.s200};
+    // prettier-ignore
+    gap: ${(props) => props.theme.spaces.s300} ${(props) =>
+      props.theme.spaces.s200};
     justify-content: center;
     width: 100%;
   }
@@ -284,11 +283,12 @@ const BaseColumn = styled.ul`
 `;
 
 const BaseItem = styled.li`
-  margin: 0 0 ${(props) => props.theme.spaces.s100}
-    ${(props) => props.theme.spaces.s050};
+  // prettier-ignore
+  margin: 0 0 ${(props) => props.theme.spaces.s100} ${(props) =>
+    props.theme.spaces.s050};
 
   &:before {
-    content: '\\2022';
+    content: '•';
     margin-right: ${(props) => props.theme.spaces.s050};
   }
 
@@ -654,12 +654,7 @@ function SiteFooter(props: SiteFooterProps) {
         </UtilitySection>
         <BaseSection>
           <BaseColumn>
-            {copyrightText && (
-              <BaseItem>
-                &copy;
-                {copyrightText}
-              </BaseItem>
-            )}
+            {copyrightText && <BaseItem>© {copyrightText}</BaseItem>}
             {creativeCommonsLicense && (
               <BaseItem>{creativeCommonsLicense}</BaseItem>
             )}

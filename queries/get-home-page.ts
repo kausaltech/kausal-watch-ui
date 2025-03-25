@@ -2,8 +2,8 @@ import { gql } from '@apollo/client';
 
 import images from '@/common/images';
 import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
-import { GetHomePageQuery } from '@/common/__generated__/graphql';
-import { getClient } from '../utils/apollo-rsc-client';
+import type { GetHomePageQuery } from '@/common/__generated__/graphql';
+import { apolloQuery } from '../utils/apollo-rsc-client';
 
 export const GET_HOME_PAGE = gql`
   query GetHomePage($plan: ID!, $path: String!) {
@@ -58,7 +58,7 @@ export const GET_HOME_PAGE = gql`
 `;
 
 export const getHomePage = async (plan: string) =>
-  await getClient().query<GetHomePageQuery>({
+  await apolloQuery<GetHomePageQuery>({
     query: GET_HOME_PAGE,
     variables: {
       plan,

@@ -16,7 +16,7 @@ import { AuthProvider } from '@/components/providers/AuthProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import { auth } from '@/config/auth';
 import defaultTheme from '@/public/static/themes/default/theme.json';
-import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
+import StyledComponentsRegistry from '@/styles/StyledComponentsRegistry';
 
 type Props = {
   params: Promise<{ lang: string }>;

@@ -60,7 +60,7 @@ async function importLocales(locale: string) {
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
 
-  const messages = await importLocales(locale);
+  const messages = await importLocales(locale!);
 
   return { messages };
 });
