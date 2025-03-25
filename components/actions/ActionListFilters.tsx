@@ -629,7 +629,8 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
   render(
     value: string | undefined,
     onChange: FilterChangeCallback<string | undefined>,
-    t: TFunction
+    t: TFunction,
+    primaryValue?: string | undefined
   ) {
     return (
       <>
@@ -637,6 +638,7 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
         {value ? (
           <PrimaryResponsiblePartyFilter
             responsibleParty={value}
+            value={primaryValue}
             onChange={onChange}
             t={t}
           />
@@ -660,6 +662,7 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
 
 class PrimaryResponsiblePartyFilter extends React.Component<{
   responsibleParty: string;
+  value: string | undefined;
   onChange: FilterChangeCallback<string | undefined>;
   t: TFunction;
 }> {
@@ -688,6 +691,7 @@ class PrimaryResponsiblePartyFilter extends React.Component<{
             type="switch"
             role="switch"
             id={this.id}
+            checked={this.props.value === this.props.responsibleParty}
             onChange={(e) =>
               onChange(this.id, e.target.checked ? responsibleParty : undefined)
             }
@@ -917,7 +921,8 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
   render(
     value: string | undefined,
     onChange: FilterChangeCallback<string | undefined>,
-    t: TFunction
+    t: TFunction,
+    primaryValue?: string | undefined
   ) {
     return (
       <FilterColumn m={this.sm} md={this.md} lg={this.lg} key={this.id}>
@@ -990,14 +995,24 @@ type FilterColProps = {
   filter: ActionListFilter;
   onFilterChange: (id: string, val: FilterValue, debounce: number) => void;
   state: FilterValue;
+  primaryResponsibleParty?: string | undefined;
 };
 const FilterCol = React.memo(function FilterCol({
   filter,
   onFilterChange,
   state,
+  primaryResponsibleParty,
 }: FilterColProps) {
   const t = useTranslations();
 
+  if (filter.id === 'responsible_party') {
+    return (filter as ResponsiblePartyFilter).render(
+      state,
+      onFilterChange,
+      t,
+      primaryResponsibleParty
+    );
+  }
   // eslint-disable-next-line react/prop-types
   return filter.render(state, onFilterChange, t);
 });
@@ -1108,6 +1123,9 @@ function ActionListFilters(props: ActionListFiltersProps) {
                     filter={filter}
                     onFilterChange={onFilterChange}
                     state={filterState[filter.id]}
+                    primaryResponsibleParty={
+                      filterState['primary_responsible_party']
+                    }
                   />
                 ))}
                 {section.id === 'main' && (
