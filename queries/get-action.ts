@@ -224,18 +224,18 @@ const GET_ACTION_DETAILS = gql`
         schema {
           uuid
           timeResolution
-          unit
-          dimensionCategories {
-            order
-            category {
-              uuid
-              label
-              dimension {
-                name
-                uuid
-              }
-            }
-          }
+          # unit
+          # dimensionCategories {
+          #   order
+          #   category {
+          #     uuid
+          #     label
+          #     dimension {
+          #       name
+          #       uuid
+          #     }
+          #   }
+          # }
         }
         uuid
         dataPoints {
