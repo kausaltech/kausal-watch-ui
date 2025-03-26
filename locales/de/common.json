@@ -48,6 +48,7 @@
     "filter-schedule": "Zeitplan",
     "filter-text": "{context, select, CASE_STUDY {Fallstudien durchsuchen} STRATEGY {Strategien durchsuchen} INDICATOR {Indikatoren durchsuchen} other {Maßnahmen durchsuchen}}",
     "filter-text-default": "Nach Schlüsselwort suchen",
+    "filter-primary-responsible-party": "als primäre Organisation",
     "front-page": "Titelseite",
     "give-feedback": "Feedback geben",
     "goal": "Ziel",

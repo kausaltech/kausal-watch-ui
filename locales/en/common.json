@@ -152,6 +152,7 @@
   "filter-phase-help": "Show actions in selected implementation phase",
   "filter-plan-help": "Show actions in selected plan",
   "filter-primary-organization-help": "{context, select, DIVISION {Show actions of selected division} other {Show actions of selected municipality}}",
+  "filter-primary-responsible-party": "as the primary organization",
   "filter-schedule-help": "Show actions spanning across selected schedule",
   "filter-status-help": "Show actions with selected status",
   "additional-filters": "Additional filters",
