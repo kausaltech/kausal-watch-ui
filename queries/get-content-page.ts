@@ -225,7 +225,6 @@ const GET_CONTENT_PAGE = gql`
                   name
                   uuid
                   categories {
-                    order
                     uuid
                     label
                   }
