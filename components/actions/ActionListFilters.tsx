@@ -633,17 +633,37 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
     primaryValue?: string | undefined
   ) {
     return (
-      <>
-        {super.render(value, onChange, t)}
-        {value ? (
-          <PrimaryResponsiblePartyFilter
-            responsibleParty={value}
-            value={primaryValue}
-            onChange={onChange}
-            t={t}
-          />
-        ) : null}
-      </>
+      <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
+        <ActionListDropdownInput
+          isMulti={false}
+          id={this.id}
+          label={this.getLabel(t)}
+          helpText={this.getHelpText(t)}
+          showAllLabel={this.getShowAllLabel(t)}
+          currentValue={value}
+          onChange={onChange}
+          options={this.options}
+        />
+        {value && (
+          <FormGroup switch>
+            <Input
+              type="switch"
+              role="switch"
+              id="primary_responsible_party"
+              checked={primaryValue === value}
+              onChange={(e) =>
+                onChange(
+                  'primary_responsible_party',
+                  e.target.checked ? value : undefined
+                )
+              }
+            />
+            <label htmlFor="primary_responsible_party">
+              {t('filter-primary-responsible-party')}
+            </label>
+          </FormGroup>
+        )}
+      </FilterColumn>
     );
   }
   private getOrgTermContext() {
