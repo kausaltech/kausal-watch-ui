@@ -31,6 +31,7 @@ import { readableColor } from 'polished';
 import { Alert, Col, Container, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
+import { usePaths } from '@/context/paths/paths';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 import {
   ACTION_TABLE_COLUMN_FRAGMENT,
@@ -446,6 +447,10 @@ const ActionList = (props: ActionListProps) => {
   const t = useTranslations();
   const theme = useTheme();
   const plan = usePlan();
+  const pathsInstance = usePaths();
+  // TODO: Remove this once we have a proper way to check if the dashboard is supported
+  const supportDashboard = pathsInstance ? false : true;
+
   const displayDashboard =
     activeFilters.view === 'dashboard' ||
     (activeFilters.view == null && defaultView === 'DASHBOARD');
@@ -567,31 +572,33 @@ const ActionList = (props: ActionListProps) => {
       </ActionListSection>
       <IndicatorsTabs>
         <Container>
-          <div role="tablist">
-            <Tab
-              className={`nav-link ${!displayDashboard ? 'active' : ''}`}
-              onClick={() => handleChange('view', 'list')}
-              role="tab"
-              tabIndex={0}
-              aria-selected={!displayDashboard}
-              aria-controls="list-view"
-              id="list-tab"
-            >
-              {t('actions-as-list')}
-            </Tab>
+          {supportDashboard && (
+            <div role="tablist">
+              <Tab
+                className={`nav-link ${!displayDashboard ? 'active' : ''}`}
+                onClick={() => handleChange('view', 'list')}
+                role="tab"
+                tabIndex={0}
+                aria-selected={!displayDashboard}
+                aria-controls="list-view"
+                id="list-tab"
+              >
+                {t('actions-as-list')}
+              </Tab>
 
-            <Tab
-              className={`nav-link ${displayDashboard ? 'active' : ''}`}
-              onClick={() => handleChange('view', 'dashboard')}
-              role="tab"
-              tabIndex={0}
-              aria-selected={displayDashboard}
-              aria-controls="dashboard-view"
-              id="dashboard-tab"
-            >
-              {t('dashboard')}
-            </Tab>
-          </div>
+              <Tab
+                className={`nav-link ${displayDashboard ? 'active' : ''}`}
+                onClick={() => handleChange('view', 'dashboard')}
+                role="tab"
+                tabIndex={0}
+                aria-selected={displayDashboard}
+                aria-controls="dashboard-view"
+                id="dashboard-tab"
+              >
+                {t('dashboard')}
+              </Tab>
+            </div>
+          )}
         </Container>
       </IndicatorsTabs>
       <Container fluid="lg">

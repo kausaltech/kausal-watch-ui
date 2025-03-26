@@ -29,7 +29,7 @@ const createLayout = (
   const fontFamily =
     '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, ' +
     'helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif';
-  const hasCategories = !hasTimeDimension;
+  const hasCategories = false;
 
   // With Plotly you have choice between one significant digit precision for y axis ticks (.1r)
   // then on smaller (first digit) ranges you get repeated numbers on ticks.
@@ -220,7 +220,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     allXValues.push(...trace.x);
 
     // we have multiple categories in one time point - draw bar groups
-    if (!hasTimeDimension) {
+    if (false) {
       modTrace.x = modTrace.x.map((name) => splitLines(name));
       modTrace.type = 'bar';
       modTrace.marker = {
@@ -234,7 +234,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       layoutConfig.xaxis!.tickvals = undefined;
     }
     // we have one or more categories as time series - draw lines and markers
-    if (hasTimeDimension) {
+    if (true) {
       modTrace.type = 'scatter';
       // we fill traces if there is only one trace and area graph is enabled
       if (traceCount === 1 && useAreaGraph) {
@@ -447,11 +447,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       styleCount = 1;
     }
   }
-  if (!hasTimeDimension) {
-    // For bar graphs, the red color looks too heavy.
-    // Shift to blue.
-    plotColors.mainScale.shift();
-  }
+
   const mainTraces = createTraces({
     traces,
     unit: yRange.unit,
@@ -516,6 +512,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       },
       hoverinfo: 'none',
       ...trendTrace,
+      hoverinfo: 'skip',
     });
 
   // add goals if defined

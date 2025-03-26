@@ -1,7 +1,8 @@
-import { gql } from '@apollo/client';
-import { getClient } from '../utils/apollo-rsc-client';
-import images from '@/common/images';
 import { GetPlanContextQuery } from '@/common/__generated__/graphql';
+import images from '@/common/images';
+import { gql } from '@apollo/client';
+
+import { getClient } from '../utils/apollo-rsc-client';
 
 const GET_PLAN_CONTEXT = gql`
   query GetPlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
@@ -25,6 +26,7 @@ const GET_PLAN_CONTEXT = gql`
     otherLanguages
     hideActionIdentifiers
     publishedAt
+    kausalPathsInstanceUuid
     viewUrl(clientUrl: $clientUrl)
     actionReportExportViewUrl
     primaryActionClassification {
