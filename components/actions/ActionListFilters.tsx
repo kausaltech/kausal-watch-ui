@@ -694,8 +694,11 @@ class PrimaryResponsiblePartyFilter extends React.Component<{
 
   filterAction(value: string | undefined, action: ActionListAction) {
     if (!value) return true;
-    return action.responsibleParties.some(
-      (rp) => rp.role === 'PRIMARY' && rp.organization.id === value
+    return (
+      action.primaryOrg?.id === value ||
+      action.responsibleParties.some(
+        (rp) => rp.role === 'PRIMARY' && rp.organization.id === value
+      )
     );
   }
 
