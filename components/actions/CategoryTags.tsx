@@ -143,19 +143,15 @@ type CategoryTagsProps = {
 };
 
 function CategoryTags(props: CategoryTagsProps) {
-  const { categories, noLink = false } = props;
-  const categoryTypes = Array.from(
-    new Map(categories.map((cat) => [cat.type.id, cat.type])).values()
-  );
-
-  const groupElements = categoryTypes.map((ct) => {
+  const { categories, types, noLink = false } = props;
+  const groupElements = types.map((ct) => {
     const cats = categories.filter((cat) => cat.type.id === ct.id);
     if (!cats.length) return null;
     /* If category type seems to have levels,
         use the level name of the first selected categoory
         as section header */
     const categoryTypeHeader =
-      ct.levels?.length > 0 ? cats[0].level?.name : ct.name;
+      ct.levels.length > 0 ? cats[0].level?.name : ct.name;
 
     return (
       <div key={ct.id} className="mb-4">

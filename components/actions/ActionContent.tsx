@@ -294,7 +294,9 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       const categories = action.categories.filter(
         (cat) => cat.type.id === block.categoryType.id
       );
-      return <CategoryTags categories={categories} />;
+      return (
+        <CategoryTags categories={categories} types={[block.categoryType]} />
+      );
     }
     case 'ActionContentAttributeTypeBlock': {
       const attribute = action.attributes.find(
