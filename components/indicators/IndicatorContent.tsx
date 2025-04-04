@@ -68,6 +68,9 @@ function IndicatorDetails({ indicator }: Props) {
       });
   });
 
+  const uniqueTypes = Array.from(
+    new Map(indicator.categories.map((c) => [c.type.id, c.type])).values()
+  );
   return (
     <div className="mb-5">
       <IndicatorHero
@@ -83,7 +86,7 @@ function IndicatorDetails({ indicator }: Props) {
           <Col md="5" lg="4" className="mb-5">
             <CategoryTags
               categories={indicator.categories}
-              types={indicator.categories.map((c) => c.type)}
+              types={uniqueTypes}
               noLink={true}
             />
           </Col>
