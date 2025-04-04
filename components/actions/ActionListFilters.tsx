@@ -616,9 +616,10 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
     }));
   }
   filterAction(value: string | undefined, action: ActionListAction) {
+    if (!value) return true;
+    if (action.primaryOrg?.id === value) return true;
     return action.responsibleParties.some((rp) => {
-      // @ts-ignore
-      let org: ActionListOrganization = rp.organization;
+      let org = rp.organization as ActionListOrganization;
       while (org) {
         if (org.id === value) return true;
         org = org.parent;
@@ -626,6 +627,7 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
       return false;
     });
   }
+
   render(
     value: string | undefined,
     onChange: FilterChangeCallback<string | undefined>,
@@ -692,8 +694,11 @@ class PrimaryResponsiblePartyFilter extends React.Component<{
 
   filterAction(value: string | undefined, action: ActionListAction) {
     if (!value) return true;
-    return action.responsibleParties.some(
-      (rp) => rp.role === 'PRIMARY' && rp.organization.id === value
+    return (
+      action.primaryOrg?.id === value ||
+      action.responsibleParties.some(
+        (rp) => rp.role === 'PRIMARY' && rp.organization.id === value
+      )
     );
   }
 
