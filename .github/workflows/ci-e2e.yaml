@@ -1,80 +1,150 @@
 name: E2e-tests
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       plan_identifiers:
         description: 'Comma separated list of plan identifiers'
         required: true
         default: 'sunnydale'
-      frontend_base_url:
-        description: 'Base url for environment to run tests against'
+        type: string
+      ui_image:
+        description: 'UI image to test (full path including registry, repo and tag)'
         required: true
-        default: 'http://{planId}.watch-test.kausal.tech'
-      backend_base_url:
-        description: 'Base url for backend API'
+        type: string
+      backend_image:
+        description: 'Backend image to test (full path including registry, repo and tag)'
         required: true
-        default: 'https://api.watch.kausal.tech/v1'
-  schedule:
-    - cron: '0 21 * * 1-5' # 21:00 UTC, 00:00 EEST
+        default: '${{ vars.DOCKER_REGISTRY }}/watch-backend/watch-backend:latest'
+        type: string
+      backend_repo:
+        description: 'Backend GitHub repo'
+        required: true
+        default: 'kausaltech/kausal-watch-private'
+        type: string
+      backend_repo_ref:
+        description: 'Backend source revision'
+        required: true
+        default: 'main'
+        type: string
+  # schedule:
+  #   - cron: '0 21 * * 1-5' # 21:00 UTC, 00:00 EEST
+
+env:
+  POSTGRES_PASSWORD: abcd
+  POSTGRES_USER: app
+  POSTGRES_DATABASE: app
 
 jobs:
   e2e_test:
     name: Run tests
-    runs-on: ubuntu-22.04
+    runs-on: runner-prod
+    services:
+      ui:
+        image: ${{ inputs.ui_image }}
+        env:
+          NEXT_PUBLIC_WILDCARD_DOMAINS: localhost
+          NEXT_PUBLIC_DEPLOYMENT_TYPE: testing
+          NEXT_PUBLIC_API_URL: http://localhost:8000/v1
+          TEST_PLAN_IDENTIFIERS: ${{ inputs.plan_identifiers }}
+          TEST_PAGE_BASE_URL: 'http://{instanceId}.localhost:3001'
+          AUTH_SECRET: abcd
+          AUTH_TRUST_HOST: true
+          HOSTNAME: 0.0.0.0
+
+      postgres:
+        image: postgis/postgis:16-3.4-alpine
+        env:
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_DATABASE: ${{ env.POSTGRES_DATABASE }}
+
+      redis:
+        image: redis:7-alpine
+
+      backend:
+        image: ${{ inputs.backend_image }}
+        env:
+          DATABASE_URL: postgresql://${{env.POSTGRES_USER}}:${{env.POSTGRES_PASSWORD}}@localhost:5432/${{env.POSTGRES_DATABASE}}
+          REDIS_URL: redis://localhost
+          DB_ENDPOINT: localhost:5432
+          ALLOWED_HOSTS: localhost
+          KUBERNETES_LOGGING: 1
+          TEST_MODE: 1
+          TEST_TYPE: watch
+          CI: 1
+          TEST_PLAN_IDENTIFIERS: ${{ inputs.plan_identifiers }}
+          SECRET_KEY: abcd
+          SENTRY_DSN: ${{ vars.SENTRY_DSN }}
+          SENTRY_ENVIRONMENT: ci
+
+    container:
+      image: harbor.kausal.tech/library/playwright:v1.46.1
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
+      - name: Wait for backend to get ready
+        run: wait-for-it.sh -t 180 localhost:8000
 
-      - name: Cache node modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/ms-playwright
-            node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install yarn
+      - name: Populate backend with test data
         run: |
-          corepack enable
-          yarn set version 3.2.1
-          yarn config set nodeLinker 'node-modules'
-          yarn config set npmScopes.kausal.npmRegistryServer "${{ secrets.NPM_REGISTRY_SERVER }}"
-          yarn config set npmScopes.kausal.npmAlwaysAuth true
-          yarn config set npmScopes.kausal.npmAuthIdent ${{ secrets.NPM_AUTH_IDENT }}
+          ./populate_test_plans.sh http://localhost:8000/v1/graphql/ ${{ inputs.plan_identifiers }}
 
-      - name: Install dependencies
+
+      # Install any additional dependencies needed for your tests
+      # If your tests don't require additional dependencies beyond what's in the container, this can be removed
+      - name: Install test dependencies
         run: yarn install
 
-      - name: Playwright install
-        run: node_modules/.bin/playwright install --with-deps
-
-      - name: Set TEST_PLAN_IDENTIFIERS for each job
+      - name: Set environment variables
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "TEST_PLAN_IDENTIFIERS=${{ github.event.inputs.plan_identifiers }}" >> $GITHUB_ENV
-            echo "FRONTEND_BASE_URL=${{ github.event.inputs.frontend_base_url }}" >> $GITHUB_ENV
+          echo "TEST_PLAN_IDENTIFIERS=${{ inputs.plan_identifiers }}" >> $GITHUB_ENV
+          echo "TEST_PAGE_BASE_URL=http://{instanceId}.localhost:3001" >> $GITHUB_ENV
+          echo "APLANS_API_BASE_URL=http://localhost:8000/v1" >> $GITHUB_ENV
+
+      - name: Start coverage tracking
+        run: |
+          apt-get update && apt-get install -y jq bc
+          START_COVERAGE_QUERY='mutation { testMode { startCoverageTracking } }'
+          RESPONSE=$(curl -s -X POST -H "Content-Type: application/json" \
+            -d "{\"query\": \"$START_COVERAGE_QUERY\"}" \
+            http://localhost:8000/v1/graphql/)
+          START_RESULT=$(echo $RESPONSE | jq -r '.data.testMode.startCoverageTracking')
+          if [ "$START_RESULT" = "true" ]; then
+            echo "Coverage tracking started successfully"
           else
-            echo "TEST_PLAN_IDENTIFIERS=${{ secrets.TEST_PLAN_IDENTIFIERS }}" >> $GITHUB_ENV
-            IFS=',' read -ra PLAN_IDS <<< "$TEST_PLAN_IDENTIFIERS"
-            for PLAN_ID in "${PLAN_IDS[@]}"
-            do
-              FRONTEND_BASE_URL="http://${PLAN_ID}.watch-test.kausal.tech"
-              echo "Running tests for plan $PLAN_ID with FRONTEND_BASE_URL=$FRONTEND_BASE_URL"
-              echo "APLANS_API_BASE_URL=https://api.watch.kausal.tech/v1" >> $GITHUB_ENV
-            done
+            echo "Failed to start coverage tracking"
+            exit 1
           fi
+        shell: bash
 
       - name: Running Playwright e2e tests
-        run: node_modules/.bin/playwright test
+        run: npx playwright test
+        id: playwright_test
         env:
           TEST_PLAN_IDENTIFIERS: ${{ env.TEST_PLAN_IDENTIFIERS }}
-          TEST_PAGE_BASE_URL: ${{ env.FRONTEND_BASE_URL }}
+          TEST_PAGE_BASE_URL: ${{ env.TEST_PAGE_BASE_URL }}
           APLANS_API_BASE_URL: ${{ env.APLANS_API_BASE_URL }}
+
+      - name: Stop coverage tracking and collect data
+        if: always() && !cancelled()
+        run: |
+          mkdir -p coverage-data
+          STOP_COVERAGE_QUERY='mutation { testMode { stopCoverageTracking { xml } } }'
+          RESPONSE=$(curl -s -X POST -H "Content-Type: application/json" \
+            -d "{\"query\": \"$STOP_COVERAGE_QUERY\"}" \
+            http://localhost:8000/v1/graphql/)
+          XML_REPORT=$(echo $RESPONSE | jq -r '.data.testMode.stopCoverageTracking.xml')
+          if [ -z "$XML_REPORT" ] || [ "$XML_REPORT" = "null" ]; then
+            echo "Warning: No XML report was generated"
+          else
+            echo "$XML_REPORT" > coverage-data/coverage.xml
+            COVERAGE_PERCENTAGE=$(grep -o 'line-rate="[0-9.]*"' coverage-data/coverage.xml | head -1 | grep -o '[0-9.]*')
+            COVERAGE_PERCENTAGE=$(echo "$COVERAGE_PERCENTAGE * 100" | bc)
+            echo "Coverage data collected for e2e tests. Test coverage of backend: $COVERAGE_PERCENTAGE%"
+          fi
+        shell: bash
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -82,3 +152,39 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 5
+
+      - name: Upload coverage report as artifact
+        if: always() && !cancelled()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: ./coverage-data/coverage.xml
+          retention-days: 1
+
+  upload-coverage:
+    name: Upload coverage report to Codecov
+    needs: e2e_test
+    runs-on: ubuntu-latest
+    if: always() && !cancelled()
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.backend_repo }}
+          ref: ${{ inputs.backend_repo_ref }}
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Download coverage report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-coverage
+          path: ./coverage-data
+
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage-data/coverage.xml
+          url: https://codecoverage.kausal.dev
+          flags: e2e-tests
+          recurse_submodules: true
