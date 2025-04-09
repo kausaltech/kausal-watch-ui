@@ -234,3 +234,24 @@ export function rewriteUrl(
 
   return response;
 }
+
+export const HOSTNAMES_TO_IGNORE = /^(api|_next|static)$/;
+
+/**
+ * Checks if the domain parameter matches hostnames that should be ignored
+ *
+ * Can be used in page and layout components to avoid processing invalid requests
+ * (Due to the internal nextjs implementation, 404 results for
+ *  missing files served at _next/static and similar end up in application
+ *  pages and layouts.)
+ *
+ * @param params Route parameters from Next.js
+ * @returns boolean indicating if the request should be ignored
+ *
+ * TODO: remove all uses of this function
+ * after having moved to serve the static files outside nextjs
+ * and after ensuring old asset files are kept for robustness
+ */
+export function shouldIgnoreRequest(params: { domain?: string }): boolean {
+  return !!params.domain?.match(HOSTNAMES_TO_IGNORE);
+}
