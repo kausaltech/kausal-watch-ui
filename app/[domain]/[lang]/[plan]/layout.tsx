@@ -13,7 +13,6 @@ import { SharedIcons } from '@/components/common/Icon';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { getMetaTitles } from '@/utils/metadata';
 import { tryRequest } from '@/utils/api.utils';
-import { shouldIgnoreRequest } from '@/utils/middleware.utils';
 import { UpdateApolloContext } from './UpdateApolloContext';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { WorkflowProvider } from '@/context/workflow-selector';
@@ -30,10 +29,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const origin = `${protocol}://${params.domain}`;
   const url = new URL(urlHeader || origin);
 
-  if (shouldIgnoreRequest(params)) {
-    return {};
-  }
-
   if (!urlHeader) {
     captureException(
       new Error(
@@ -41,7 +36,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       )
     );
   }
-
   const { data } = await tryRequest(
     getPlan(params.domain, params.plan, origin)
   );
@@ -101,11 +95,6 @@ export default async function PlanLayout({ params, children }: Props) {
   const headersList = headers();
   const cookieStore = cookies();
   const protocol = headersList.get('x-forwarded-proto');
-
-  if (shouldIgnoreRequest(params)) {
-    return {};
-  }
-
   const { data } = await tryRequest(
     getPlan(domain, plan, `${protocol}://${domain}`)
   );

@@ -9,10 +9,9 @@ import { getContentPage } from '@/queries/get-content-page';
 import { Content } from './ContentPage';
 import { getMetaDescription, getMetaImage } from '@/utils/metadata';
 import { tryRequest } from '@/utils/api.utils';
-import { shouldIgnoreRequest } from '@/utils/middleware.utils';
 
 type Props = {
-  params: { slug: string[]; plan: string; domain: string };
+  params: { slug: string[]; plan: string };
 };
 
 const getPath = (slug: string[]) =>
@@ -24,9 +23,6 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug, plan } = params;
   const path = getPath(slug);
-  if (shouldIgnoreRequest(params)) {
-    return {};
-  }
 
   const { data } = await tryRequest<GetContentPageQuery>(
     getContentPage(plan, path)
@@ -51,9 +47,6 @@ export async function generateMetadata(
 }
 
 export default async function ContentPage({ params }: Props) {
-  if (shouldIgnoreRequest(params)) {
-    return {};
-  }
   const { slug, plan } = params;
   const path = getPath(slug);
 
