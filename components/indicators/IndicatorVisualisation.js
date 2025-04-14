@@ -233,7 +233,6 @@ function getTraces(
         name: name,
         dataType: 'total',
         x: cube.map((val) => {
-          const d = dayjs(val.date);
           return val.date;
         }),
         y: cube.map((val) => val.value),
@@ -457,7 +456,7 @@ function getIndicatorGraphSpecification(
   const times = new Set(
     indicators.map((i) => i.values.map((x) => x.date)).flat()
   );
-  const hasTime = times.size > 1;
+  const hasTime = times.size > 1 && dimensions.length > 0;
 
   if (hasTime) {
     dimensions.forEach((d) => {

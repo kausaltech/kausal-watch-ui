@@ -515,9 +515,17 @@ const ActionList = (props: ActionListProps) => {
 
   let filteredActions = mappedActions;
   enabledFilters.forEach((filter) => {
-    filteredActions = filteredActions.filter((action) =>
-      filter.filterAction(activeFilters[filter.id], action)
-    );
+    filteredActions = filteredActions.filter((action) => {
+      if (filter.useValueFilterId) {
+        if (!activeFilters[filter.id]) return false;
+        return filter.filterAction(
+          activeFilters[filter.useValueFilterId],
+          action
+        );
+      } else {
+        return filter.filterAction(activeFilters[filter.id], action);
+      }
+    });
   });
 
   let groupBy = 'category';

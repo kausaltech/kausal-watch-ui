@@ -68,6 +68,9 @@ function IndicatorDetails({ indicator }: Props) {
       });
   });
 
+  const uniqueTypes = Array.from(
+    new Map(indicator.categories.map((c) => [c.type.id, c.type])).values()
+  );
   return (
     <div className="mb-5">
       <IndicatorHero
@@ -81,7 +84,11 @@ function IndicatorDetails({ indicator }: Props) {
             <RichText html={indicator.description} />
           </Col>
           <Col md="5" lg="4" className="mb-5">
-            <CategoryTags categories={indicator.categories} noLink={true} />
+            <CategoryTags
+              categories={indicator.categories}
+              types={uniqueTypes}
+              noLink={true}
+            />
           </Col>
         </Row>
         {(indicator.latestGraph ||

@@ -180,7 +180,7 @@ export async function middleware(request: NextRequest) {
         }).toString()}`
       : '';
     const rewrittenUrl = new URL(
-      `/${hostname}/${parsedLocale}${UNPUBLISHED_PATH}${queryParams}`,
+      `/root/${hostname}/${parsedLocale}${UNPUBLISHED_PATH}${queryParams}`,
       request.url
     );
 
@@ -196,7 +196,7 @@ export async function middleware(request: NextRequest) {
   const searchParams = getSearchParamsString(request);
   const strippedPath = stripLocaleAndPlan(parsedPlan, parsedLocale, pathname);
   const rewrittenUrl = new URL(
-    `/${hostname}/${parsedLocale}/${parsedPlan.id}/${strippedPath}${searchParams}`,
+    `/root/${hostname}/${parsedLocale}/${parsedPlan.id}/${strippedPath}${searchParams}`,
     request.url
   );
 

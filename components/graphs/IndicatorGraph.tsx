@@ -183,7 +183,6 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     timeResolution,
     lineShape,
     useAreaGraph,
-    graphCustomBackground,
   } = params;
 
   // Figure out what we need to draw depending on dataset
@@ -423,10 +422,14 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   const comparisonAxis = specification.axes.filter(
     (a) => a[0] === 'comparison'
   );
-  const hasTimeDimension =
-    specification.axes.filter((a) => a[0] === 'time').length > 0;
   const categoryCount =
     specification.axes.length > 0 ? specification.axes[0][1] : 0;
+
+  // Defines if we draw time series or bar graphs
+  // Only multiple categories with single time point are bar graphs
+  const hasTimeDimension =
+    specification.axes.filter((a) => a[0] === 'time').length > 0 ||
+    categoryCount == 0;
   let styleCount = undefined;
   const xAxisIsUsedForCategories =
     specification.axes[0] != null &&
@@ -510,7 +513,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
         color: plotColors.trend,
         dash: 'dash',
       },
-      hoverinfo: 'none',
+      hoverinfo: 'skip',
       ...trendTrace,
       hoverinfo: 'skip',
     });
