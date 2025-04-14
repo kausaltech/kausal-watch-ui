@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import {
   type DatasetSchema,
+  type DimensionCategory,
   ActionDateFormat,
   DataPoint,
 } from 'common/__generated__/graphql';
@@ -94,14 +95,6 @@ type TableContent = {
   totals: number[];
 }[];
 
-const getDimensionTypes = (
-  schema: DatasetSchema['dimensionCategories']
-): string[] => {
-  const names = schema.map((item) => item.category.dimension.uuid);
-  const uniqueNames = new Set(names);
-  return Array.from(uniqueNames);
-};
-
 const getDates = (data: DataPoint[]): string[] => {
   const allDates = data.map((item) => item.date);
   const uniqueDates = new Set(allDates);
@@ -142,32 +135,39 @@ const PlanDatasetsBlock: React.FC = (props: PlanDatasetsBlockProps) => {
   const locale = useLocale();
   const t = useTranslations();
 
-  const { unit } = schema;
-  const dimensionTypes = getDimensionTypes(schema.dimensionCategories);
+  const unit = schema.metrics[0]?.unit ?? '';
 
-  const dimensionsByType = dimensionTypes.map((type) => {
-    return schema.dimensionCategories
-      .filter((item) => item.category.dimension.uuid === type)
+  const categoriesGroupedByDimension: Map<string, DimensionCategory> =
+    schema.dimensions
       .sort((a, b) => a.order - b.order)
-      .map((item) => ({
-        label: item.category.label,
-        uuid: item.category.uuid,
-      }));
-  });
+      .map((schemaDimension) =>
+        schemaDimension.dimension.categories.map(({ label, uuid }) => ({
+          label,
+          uuid,
+        }))
+      );
+
   const dates = getDates(data);
 
-  const tableData: TableContent = dimensionsByType[0].map((dimension) => ({
-    label: dimension.label,
-    rows: dimensionsByType[1].map((subDimension) => ({
-      label: subDimension.label,
-      cells: dates.map((date) => ({
-        value: getDatum(data, date, [dimension.uuid, subDimension.uuid]),
+  const tableData: TableContent = categoriesGroupedByDimension[0].map(
+    (category) => ({
+      label: category.label,
+      rows: categoriesGroupedByDimension[1].map((subCategory) => ({
+        label: subCategory.label,
+        cells: dates.map((date) => ({
+          value: getDatum(data, date, [category.uuid, subCategory.uuid]),
+        })),
       })),
-    })),
-    totals: dates.map((date) =>
-      sumDataPoints(data, date, dimension.uuid, dimensionsByType[1])
-    ),
-  }));
+      totals: dates.map((date) =>
+        sumDataPoints(
+          data,
+          date,
+          category.uuid,
+          categoriesGroupedByDimension[1]
+        )
+      ),
+    })
+  );
 
   // TODO: Use timeResolution to format dates
   const formattedDates = dates.map((date) =>

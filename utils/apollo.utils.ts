@@ -43,6 +43,9 @@ function logError(
       variables: JSON.stringify(operation.variables, null, 2),
       ...sentryExtras,
     },
+    tags: {
+      hostname: operation?.variables?.hostname,
+    },
   });
 }
 

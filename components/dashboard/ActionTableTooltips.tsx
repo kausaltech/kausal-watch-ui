@@ -178,7 +178,7 @@ export const ResponsiblePartiesTooltipContent = ({
 }: TooltipWithPlanProps) => {
   const t = useTranslations();
   const theme = useTheme();
-  const { organizationTerm } = plan.generalContent;
+  const organizationTerm = plan?.generalContent?.organizationTerm;
 
   const parties = action.responsibleParties;
 
