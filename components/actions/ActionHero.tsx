@@ -4,7 +4,7 @@ import { Category } from 'common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
 import { getActionTermContext } from 'common/i18n';
 import { ActionLink, ActionListLink, OrganizationLink } from 'common/links';
-import { Breadcrumbs } from 'components/common/Breadcrumbs';
+import Breadcrumbs from 'components/common/Breadcrumbs';
 import Icon from 'components/common/Icon';
 import { usePlan } from 'context/plan';
 import { useSession } from 'next-auth/react';
@@ -292,31 +292,33 @@ function ActionHero(props: ActionHeroProps) {
                           </IndexLink>
                         </a>
                       </ActionListLink>
-                      <div>
-                        {previousAction && (
-                          <ActionLink action={previousAction}>
-                            <a>
-                              <Icon.ArrowLeft
-                                color={theme.linkColor}
-                                aria-hidden="true"
-                              />{' '}
-                              {t('previous')}
-                            </a>
-                          </ActionLink>
-                        )}
-                        {nextAction && previousAction && <NavDivider />}
-                        {nextAction && (
-                          <ActionLink action={nextAction}>
-                            <a>
-                              {t('next')}
-                              <Icon.ArrowRight
-                                color={theme.linkColor}
-                                aria-hidden="true"
-                              />
-                            </a>
-                          </ActionLink>
-                        )}
-                      </div>
+                      {theme.settings?.actionView?.showPaginationTop && (
+                        <div>
+                          {previousAction && (
+                            <ActionLink action={previousAction}>
+                              <a>
+                                <Icon.ArrowLeft
+                                  color={theme.linkColor}
+                                  aria-hidden="true"
+                                />{' '}
+                                {t('previous')}
+                              </a>
+                            </ActionLink>
+                          )}
+                          {nextAction && previousAction && <NavDivider />}
+                          {nextAction && (
+                            <ActionLink action={nextAction}>
+                              <a>
+                                {t('next')}
+                                <Icon.ArrowRight
+                                  color={theme.linkColor}
+                                  aria-hidden="true"
+                                />
+                              </a>
+                            </ActionLink>
+                          )}
+                        </div>
+                      )}
                     </ActionsNav>
                     <ActionCategories categories={categories} />
                     <ActionHeadline>

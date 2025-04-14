@@ -55,13 +55,13 @@ const CopyLink = styled.button`
 
 const TriggerIcon = styled.span`
   display: inline-block;
-  flex-basis: ${(props) => props.theme.spaces.s150};
+  flex-basis: ${(props) => props.theme.spaces.s200};
   flex-grow: 0;
   flex-shrink: 0;
   margin-right: ${(props) => props.theme.spaces.s050};
   color: ${(props) => props.theme.linkColor};
   font-size: 2.5rem;
-  line-height: 1.75rem;
+  line-height: 1.5rem;
   font-weight: ${(props) => props.theme.fontWeightNormal};
   text-align: center;
 `;

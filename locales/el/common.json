@@ -122,6 +122,7 @@
     "supported-by": "Υποστηρίζεται από",
     "tactical-indicator": "Τακτικός δείκτης",
     "total": "σύνολο",
+    "value": "τιμή",
     "type": "Τύπος",
     "updated": "Ενημερωμένο",
     "see-all-actions": "{context, select, CASE_STUDY {Δείτε όλες τις μελέτες περιπτώσεων} STRATEGY {Δείτε όλες τις στρατηγικές} other {Δείτε όλες τις δράσεις}}",
