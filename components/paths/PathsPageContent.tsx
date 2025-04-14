@@ -2,9 +2,9 @@ import React from 'react';
 
 import StreamField from 'components/paths/StreamField';
 import styled, { css } from 'styled-components';
-import { GeneralPlanPage } from '@/app/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
+import { GeneralPlanPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 
-import { ActionListPage } from '@/app/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
+import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import CategoryPageHeaderBlock from '@/components/paths/contentblocks/CategoryPageHeaderBlock';
 
 const MainContent = styled.div`
