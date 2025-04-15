@@ -219,7 +219,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     allXValues.push(...trace.x);
 
     // we have multiple categories in one time point - draw bar groups
-    if (false) {
+    if (!hasTimeDimension) {
       modTrace.x = modTrace.x.map((name) => splitLines(name));
       modTrace.type = 'bar';
       modTrace.marker = {
@@ -233,7 +233,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       layoutConfig.xaxis!.tickvals = undefined;
     }
     // we have one or more categories as time series - draw lines and markers
-    if (true) {
+    if (hasTimeDimension) {
       modTrace.type = 'scatter';
       // we fill traces if there is only one trace and area graph is enabled
       if (traceCount === 1 && useAreaGraph) {
@@ -250,7 +250,8 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       };
 
       // if we prefer smooth lines, set spline shape
-      if (lineShape === 'spline') {
+      // TODO: 'smooth' is a wrong term we use in theme, we should use 'spline'
+      if (lineShape === 'spline' || lineShape === 'smooth') {
         modTrace.line.shape = 'spline';
         modTrace.line.smoothing = 1.3;
       }
@@ -414,7 +415,6 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   const showTrendline = theme.settings?.graphs?.showTrendline ?? true;
   const graphCustomBackground = theme.settings?.graphs?.customBackground;
 
-  let isComparison = false;
   const subplotsNeeded =
     specification.axes.filter((a) =>
       ['comparison', 'categories'].includes(a[0])
@@ -422,6 +422,8 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   const comparisonAxis = specification.axes.filter(
     (a) => a[0] === 'comparison'
   );
+  const isComparison = comparisonAxis.length > 0;
+
   const categoryCount =
     specification.axes.length > 0 ? specification.axes[0][1] : 0;
 
@@ -430,14 +432,13 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   const hasTimeDimension =
     specification.axes.filter((a) => a[0] === 'time').length > 0 ||
     categoryCount == 0;
-  let styleCount = undefined;
+  let styleCount = -1;
   const xAxisIsUsedForCategories =
     specification.axes[0] != null &&
     specification.axes[0][0] === 'categories' &&
     specification.dimensions[0] != null;
-  if (comparisonAxis.length > 0) {
+  if (isComparison) {
     styleCount = comparisonAxis[0][1] + 1;
-    isComparison = true;
   } else if (!hasTimeDimension && !subplotsNeeded) {
     if (categoryCount > 1 || xAxisIsUsedForCategories) {
       /* We want to use colors (styles) for categories, either because
