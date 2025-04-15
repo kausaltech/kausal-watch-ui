@@ -1,22 +1,24 @@
 import { ReactNode } from 'react';
-import { notFound } from 'next/navigation';
+
 import { Metadata } from 'next';
 import { cookies, headers } from 'next/headers';
-import { captureException } from '@sentry/nextjs';
+import { notFound } from 'next/navigation';
 
-import ThemeProvider from '@/components/providers/ThemeProvider';
-import PlanProvider from '@/components/providers/PlanProvider';
-import { getPlan } from '@/queries/get-plan';
-import { GlobalStyles } from '@/styles/GlobalStyles';
 import { getThemeStaticURL, loadTheme } from '@/common/theme';
 import { SharedIcons } from '@/components/common/Icon';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
-import { getMetaTitles } from '@/utils/metadata';
-import { tryRequest } from '@/utils/api.utils';
-import { UpdateApolloContext } from './UpdateApolloContext';
+import PathsProvider from '@/components/providers/PathsProvider';
+import PlanProvider from '@/components/providers/PlanProvider';
+import ThemeProvider from '@/components/providers/ThemeProvider';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { WorkflowProvider } from '@/context/workflow-selector';
-
+import { getPlan } from '@/queries/get-plan';
+import { getPathsInstance } from '@/queries/paths/get-paths-instance';
+import { GlobalStyles } from '@/styles/GlobalStyles';
+import { tryRequest } from '@/utils/api.utils';
+import { getMetaTitles } from '@/utils/metadata';
+import { captureException } from '@sentry/nextjs';
+import { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 type Props = {
   params: { plan: string; domain: string; lang: string };
   children: ReactNode;
@@ -90,22 +92,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+async function getPathsData(pathsInstance: string) {
+  if (pathsInstance) {
+    const { data: pathsData } = await tryRequest<GetInstanceContextQuery>(
+      getPathsInstance(pathsInstance)
+    );
+    if (pathsData?.instance) {
+      // console.log('pathsData', pathsData);
+      return pathsData;
+    } else return undefined;
+  }
+  return undefined;
+}
+
 export default async function PlanLayout({ params, children }: Props) {
   const { plan, domain } = params;
   const headersList = headers();
   const cookieStore = cookies();
   const protocol = headersList.get('x-forwarded-proto');
-  const { data } = await tryRequest(
+  const { data: planData } = await tryRequest(
     getPlan(domain, plan, `${protocol}://${domain}`)
   );
 
-  if (!data?.plan) {
+  if (!planData?.plan) {
     notFound();
   }
 
-  const theme = await loadTheme(data.plan.themeIdentifier || params.plan);
-  const matomoAnalyticsUrl = data.plan.domain?.matomoAnalyticsUrl ?? undefined;
+  const theme = await loadTheme(planData.plan.themeIdentifier || params.plan);
+  const matomoAnalyticsUrl =
+    planData.plan.domain?.matomoAnalyticsUrl ?? undefined;
   const selectedWorkflow = cookieStore.get(SELECTED_WORKFLOW_COOKIE_KEY);
+
+  const pathsData = await getPathsData(planData.plan?.kausalPathsInstanceUuid);
 
   return (
     <>
@@ -124,14 +142,15 @@ export default async function PlanLayout({ params, children }: Props) {
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         <SharedIcons />
-        <PlanProvider plan={data.plan}>
-          <WorkflowProvider
-            initialWorkflow={selectedWorkflow?.value as string | undefined}
-            workflowStates={data.workflowStates}
-          >
-            <UpdateApolloContext domain={domain} />
-            {children}
-          </WorkflowProvider>
+        <PlanProvider plan={planData.plan}>
+          <PathsProvider instance={pathsData}>
+            <WorkflowProvider
+              initialWorkflow={selectedWorkflow?.value as string | undefined}
+              workflowStates={planData.workflowStates}
+            >
+              {children}
+            </WorkflowProvider>
+          </PathsProvider>
         </PlanProvider>
       </ThemeProvider>
     </>
