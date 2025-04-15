@@ -9,7 +9,7 @@ const FALLBACKS = {
   default: 'en',
 };
 
-type LocaleFiles = 'common' | 'actions' | 'a11y';
+type LocaleFiles = 'common' | 'actions' | 'paths' | 'a11y';
 
 async function importLocale(locale: string, file: LocaleFiles) {
   try {
@@ -30,6 +30,7 @@ async function importLocales(locale: string) {
   const translations = {
     ...(await importLocale(locale, 'common')),
     ...(await importLocale(locale, 'actions')),
+    ...(await importLocale(locale, 'paths')),
     ...(await importLocale(locale, 'a11y')),
   };
 
