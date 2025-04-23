@@ -26,7 +26,7 @@
     "filter-primary-organization-help": "{context, select, DIVISION {Parādīt atlasītās nodaļas rīcības} other {Parādīt izvēlētās pašvaldības rīcības}}",
     "filter-schedule-help": "Rādīt rīcības, kas aptver visu atlasīto grafiku",
     "filter-status-help": "Rādīt rīcības ar atlasīto statusu",
-    "filter-primary-responsible-party": "kā primārā organizācija",
+    "filter-primary-responsible-party": "kā atbildīgā puse",
     "navigation-home": "Sākums",
     "graph-hideTable": "Paslēpt tabulu",
     "definition": "Definīcija",
