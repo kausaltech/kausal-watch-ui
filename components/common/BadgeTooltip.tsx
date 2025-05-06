@@ -97,16 +97,21 @@ const IconImage = styled.div<{ $imageSrc?: string }>`
     props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300};
 `;
 
-const IconSvg = styled(SVG)`
+const IconSvg = styled(SVG)<{ $color?: string }>`
   height: ${(props) => props.theme.spaces.s200};
   margin: ${(props) => props.theme.spaces.s050};
-  fill: ${(props) => props.theme.brandDark};
+  fill: ${(props) => props.$color || props.theme.brandDark} !important;
+  path,
+  stroke {
+    fill: ${(props) => props.$color || props.theme.brandDark} !important;
+  }
 `;
 
 const IconName = styled.div`
-  padding: ${(props) => props.theme.spaces.s050};
+  padding: ${({ theme }) =>
+    `${theme.spaces.s050} ${theme.spaces.s100} ${theme.spaces.s050} ${theme.spaces.s050}`};
   font-size: ${(props) => props.theme.fontSizeBase};
-  line-height: ${(props) => props.theme.lineHeightBase};
+  line-height: ${(props) => props.theme.lineHeightMd};
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 

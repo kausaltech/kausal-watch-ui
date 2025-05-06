@@ -44,24 +44,32 @@ const PrimarySvgIcon = styled(SVG)`
   right: ${(props) => props.theme.spaces.s050};
   top: ${(props) => props.theme.spaces.s050};
   width: ${(props) => props.theme.spaces.s300};
-  fill: white;
+  fill: white !important;
+  path,
+  stroke {
+    fill: white !important;
+  }
 `;
 
-const PrimaryImageIcon = styled.div`
+const PrimaryImageIcon = styled.div<{ $imagesrc: string }>`
   position: absolute;
   right: ${(props) => props.theme.spaces.s050};
   top: ${(props) => props.theme.spaces.s050};
   width: ${(props) => props.theme.spaces.s300};
   height: ${(props) => props.theme.spaces.s300};
-  background-image: url(${(props) => props.imagesrc || 'none'});
+  background-image: url(${(props) => props.$imagesrc || 'none'});
   background-size: cover;
   background-position: center center;
 `;
 
-const SecondaryIcon = styled(SVG)`
+const SecondaryIcon = styled(SVG)<{ $color: string }>`
   width: ${(props) => props.theme.spaces.s100};
   margin-right: ${(props) => props.theme.spaces.s050};
-  fill: ${(props) => props.color};
+  fill: ${(props) => props.$color};
+  path,
+  stroke {
+    fill: ${(props) => props.$color};
+  }
 `;
 
 const SecondaryIconsContainer = styled.div`
@@ -69,8 +77,7 @@ const SecondaryIconsContainer = styled.div`
   justify-content: flex-end;
   margin-top: auto;
   text-align: right;
-  padding: 0 ${(props) => props.theme.spaces.s050}
-    ${(props) => props.theme.spaces.s050};
+  padding: 0 ${({ theme }) => `${theme.spaces.s050} ${theme.spaces.s050}`};
 `;
 
 const ActionCardElement = styled.div<{
@@ -185,8 +192,8 @@ const ActionOrgAvatar = styled.div`
 
 const ActionOrgName = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) =>
-    `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
+  font-family: ${({ theme }) =>
+    `${theme.fontFamilyTiny}, ${theme.fontFamilyFallback}`};
   color: ${(props) => props.theme.themeColors.dark};
   line-height: 1;
 `;
@@ -224,7 +231,7 @@ const PrimaryIcon = (props) => {
   if (!category) return null;
   if (category.iconSvgUrl) return <PrimarySvgIcon src={category.iconSvgUrl} />;
   if (category.iconImage?.rendition)
-    return <PrimaryImageIcon imagesrc={category.iconImage.rendition.src} />;
+    return <PrimaryImageIcon $imagesrc={category.iconImage.rendition.src} />;
   else return null;
 };
 
@@ -241,11 +248,11 @@ const SecondaryIcons = (props) => {
     <SecondaryIconsContainer>
       {secondaryIcons.map((cat) => (
         <SecondaryIcon
-          color={cat.color ? cat.color : 'black'}
+          $color={cat.color ? cat.color : 'black'}
           key={cat.id}
           src={cat.iconSvgUrl}
           preserveAspectRatio="xMinYMid meet"
-          alt={cat.name}
+          title={cat.name}
         />
       ))}
     </SecondaryIconsContainer>
