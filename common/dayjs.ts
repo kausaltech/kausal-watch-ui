@@ -15,10 +15,12 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { ReactNode } from 'react';
+import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
+dayjs.extend(utc);
 
 export function DayjsLocaleProvider({
   locale,

@@ -98,22 +98,16 @@ function GraphAsTable(props) {
   const tableData = [];
   tableRows.map((row, i) => {
     const rowObj = {};
-    rowObj.label =
-      data[0].xType === 'time'
-        ? format.dateTime(new Date(row), dateFormat)
-        : row;
+    rowObj.raw = row;
+    rowObj.label = dayjs.utc(row).format('YYYY');
     rowObj.values = [];
     data.map((trace, i) => {
-      const indexOfX = trace.x.indexOf(row);
-      trace.y[indexOfX]
-        ? rowObj.values.push(trace.y[indexOfX])
-        : rowObj.values.push(null);
+      const indexOfX = trace.x.indexOf(rowObj.raw);
+      rowObj.values.push(indexOfX !== -1 ? trace.y[indexOfX] : null);
     });
     goalTraces.map((trace, i) => {
-      const indexOfX = trace.x.indexOf(row);
-      trace.y[indexOfX]
-        ? rowObj.values.push(trace.y[indexOfX])
-        : rowObj.values.push(null);
+      const indexOfX = trace.x.indexOf(rowObj.raw);
+      rowObj.values.push(indexOfX !== -1 ? trace.y[indexOfX] : null);
     });
     tableData.push(rowObj);
   });
