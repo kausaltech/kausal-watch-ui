@@ -1,4 +1,5 @@
 import React from 'react';
+import SVG from 'react-inlinesvg';
 
 import {
   CategoryPageMainTopBlock,
@@ -183,6 +184,16 @@ const CategoryIconImage = styled.img<{ size?: IconSize }>`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
+const CategoryIconSvg = styled(SVG)<{ size?: IconSize; $color?: string }>`
+  max-height: ${({ theme, size }) => getIconHeight(size, theme)};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+  fill: ${(props) => props.$color || props.theme.brandDark} !important;
+  path,
+  stroke {
+    fill: ${(props) => props.$color || props.theme.brandDark} !important;
+  }
+`;
+
 const CategoryLevelName = styled.div`
   color: ${(props) => props.theme.textColor.tertiary};
   margin-bottom: ${(props) => props.theme.spaces.s100};
@@ -319,6 +330,7 @@ function CategoryPageHeaderBlock(props: Props) {
   const showLevel =
     level && !theme.settings.categories.categoryPageHideCategoryLabel;
 
+  console.log('props', props);
   return (
     <CategoryHeader $bg={color} $hasImage={!!headerImage}>
       <CategoryHeaderImage
@@ -344,13 +356,21 @@ function CategoryPageHeaderBlock(props: Props) {
                 />
               )}
 
-              {iconImage && (
-                <CategoryIconImage
-                  size={(page?.layout?.iconSize as IconSize) ?? undefined}
-                  src={iconImage}
-                  alt=""
-                />
-              )}
+              {iconImage &&
+                (iconImage.toLowerCase().split('?')[0].endsWith('.svg') ? (
+                  <CategoryIconSvg
+                    size={(page?.layout?.iconSize as IconSize) ?? undefined}
+                    src={iconImage}
+                    title=""
+                    $color={color}
+                  />
+                ) : (
+                  <CategoryIconImage
+                    size={(page?.layout?.iconSize as IconSize) ?? undefined}
+                    src={iconImage}
+                    alt=""
+                  />
+                ))}
               <h1>
                 {identifier && <Identifier>{identifier}.</Identifier>} {title}
               </h1>
