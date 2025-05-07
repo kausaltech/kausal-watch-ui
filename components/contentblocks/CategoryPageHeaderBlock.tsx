@@ -304,7 +304,6 @@ function CategoryPageHeaderBlock(props: Props) {
   const theme = useTheme();
   const t = useTranslations();
 
-  console.log('props', props);
   const showIdentifiers =
     !plan.primaryActionClassification?.hideCategoryIdentifiers;
 
@@ -331,6 +330,7 @@ function CategoryPageHeaderBlock(props: Props) {
   const showLevel =
     level && !theme.settings.categories.categoryPageHideCategoryLabel;
 
+  console.log('props', props);
   return (
     <CategoryHeader $bg={color} $hasImage={!!headerImage}>
       <CategoryHeaderImage
@@ -357,7 +357,7 @@ function CategoryPageHeaderBlock(props: Props) {
               )}
 
               {iconImage &&
-                (iconImage.toLowerCase().includes('.svg') ? (
+                (iconImage.toLowerCase().split('?')[0].endsWith('.svg') ? (
                   <CategoryIconSvg
                     size={(page?.layout?.iconSize as IconSize) ?? undefined}
                     src={iconImage}
