@@ -456,7 +456,7 @@ function getIndicatorGraphSpecification(
   const times = new Set(
     indicators.map((i) => i.values.map((x) => x.date)).flat()
   );
-  const hasTime = times.size > 1 && dimensions.length > 0;
+  const hasTime = times.size > 1;
 
   if (hasTime) {
     dimensions.forEach((d) => {
