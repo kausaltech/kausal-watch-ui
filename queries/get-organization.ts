@@ -131,6 +131,37 @@ const GET_ORG_DETAILS = gql`
       startDate
       endDate
       order
+      attributes {
+        __typename
+        id
+        type {
+          id
+          identifier
+          name
+          unit {
+            id
+            name
+            shortName
+          }
+          format
+        }
+        ... on AttributeChoice {
+          choice {
+            id
+            name
+          }
+          text
+        }
+        ... on AttributeText {
+          value
+        }
+        ... on AttributeRichText {
+          value
+        }
+        ... on AttributeNumericValue {
+          numericValue: value
+        }
+      }
       plan {
         id
         viewUrl(clientUrl: $clientUrl)
