@@ -143,12 +143,9 @@ export default async function PlanLayout({ params, children }: Props) {
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         <SharedIcons />
-        <IntroModal
-          videoUrls={{
-            en: 'https://youtu.be/hcx0UeKdMDE',
-            es: 'https://youtu.be/Eyy1uDTXsd8',
-          }}
-        />
+        {theme.introModal?.videoUrls && (
+          <IntroModal videoUrls={theme.introModal.videoUrls} />
+        )}
         <PlanProvider plan={planData.plan}>
           <PathsProvider instance={pathsData}>
             <WorkflowProvider
