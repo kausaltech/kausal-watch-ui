@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'reactstrap';
 import styled from 'styled-components';
@@ -118,6 +118,12 @@ function ActionCardList({
     theme,
     t
   );
+  const actionsById = useMemo(
+    () => new Map(actions.map((a) => [a.id, a])),
+    [actions]
+  );
+
+  const getFullAction = (id) => actionsById.get(id);
 
   return (
     <ActionsList>
@@ -161,10 +167,12 @@ function ActionCardList({
                     action={item}
                     showPlan={includeRelatedPlans}
                     size="xs"
-                    showActionDependencies={
-                      !!item.dependencyRole?.id &&
-                      !!item.allDependencyRelationships?.length
-                    }
+                    showActionDependencies={true}
+                    getFullAction={getFullAction}
+                    // showActionDependencies={
+                    //   !!item.dependencyRole?.id &&
+                    //   !!item.allDependencyRelationships?.length
+                    // }
                   />
                 </Col>
               ))}

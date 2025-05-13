@@ -37,7 +37,6 @@ import {
   ACTION_TABLE_COLUMN_FRAGMENT,
   ALL_ACTION_LIST_FILTERS,
 } from '@/fragments/action-list.fragment';
-import { mapActionsToExpandDependencies } from '@/utils/actions.utils';
 import { gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
@@ -200,19 +199,8 @@ const actionFragment = gql`
     name(hyphenated: true)
     viewUrl @include(if: $relatedPlanActions)
     color
+    hasDependencyRelationships
     manualStatusReason
-    dependencyRole {
-      id
-      name
-    }
-    allDependencyRelationships {
-      preceding {
-        id
-      }
-      dependent {
-        id
-      }
-    }
     status {
       id
       identifier
@@ -495,13 +483,10 @@ const ActionList = (props: ActionListProps) => {
     [onFilterChange]
   );
 
-  const actionsWithDependencies =
-    actions?.map(mapActionsToExpandDependencies) ?? [];
-
   const actionsWithRps = mapResponsibleParties<
     ActionListAction,
     ActionListOrganization
-  >(actionsWithDependencies, orgs);
+  >(actions, orgs);
   const mappedActions: ActionListAction[] = mapActionCategories<
     ActionListCategoryType,
     ActionListCategory,

@@ -1,10 +1,14 @@
-import React from 'react';
+import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import React, { useEffect, Suspense } from 'react';
+import ErrorMessage from 'components/common/ErrorMessage';
 import styled, { css } from 'styled-components';
 import { filter, groupBy, map, sortBy, uniqBy } from 'lodash';
+import { gql } from '@apollo/client';
 import {
   ActionCardFragment,
   GetActionDetailsQuery,
   GetPlanContextQuery,
+  ActionDependenciesQuery,
 } from '@/common/__generated__/graphql';
 import { ActionDependenciesGroup } from './ActionDependenciesGroup';
 import Icon from '@/components/common/Icon';
@@ -22,12 +26,13 @@ type ActionGroup = {
 };
 
 type Props = {
+  action: Action;
   activeActionId?: string;
   size?: 'default' | 'small';
-  actionGroups: ActionGroup[];
   showTitle?: boolean;
   title?: string;
   helpText?: string;
+  getFullAction: (id: string) => Action;
 };
 
 const StyledIcon = styled(Icon)``;
@@ -81,7 +86,8 @@ export function mapActionToDependencyGroups(
   action: Action | ActionCardFragment,
   actionDependencyRoles: NonNullable<
     GetPlanContextQuery['plan']
-  >['actionDependencyRoles']
+  >['actionDependencyRoles'],
+  getFullAction: (id: string) => Action
 ): ActionGroup[] {
   if (
     !action.dependencyRole ||
@@ -106,8 +112,12 @@ export function mapActionToDependencyGroups(
     []
   );
   const uniqueActions = uniqBy(flatDependencyList, 'id');
+  const expandedActions = uniqueActions.map((a) =>
+    Object.assign({}, getFullAction(a.id), a)
+  );
+
   const groupedActionsByRole = groupBy(
-    filter(uniqueActions, 'dependencyRole.id'),
+    filter(expandedActions, 'dependencyRole.id'),
     'dependencyRole.id'
   );
   const sortedGroupedActions = sortBy(
@@ -122,21 +132,69 @@ export function mapActionToDependencyGroups(
   return sortedGroupedActions;
 }
 
+const GET_ACTION_DEPS = gql`
+  query ActionDependencies($action: ID!) {
+    action(id: $action) {
+      dependencyRole {
+        id
+        name
+      }
+      allDependencyRelationships {
+        preceding {
+          id
+          dependencyRole {
+            id
+          }
+        }
+        dependent {
+          id
+          dependencyRole {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
+
 export function ActionDependenciesBlock({
+  action,
   activeActionId,
-  actionGroups,
   size = 'default',
   showTitle = false,
   title,
   helpText,
+  getFullAction,
 }: Props) {
   const t = useTranslations();
   const plan = usePlan();
+  const { error, data } = useSuspenseQuery<ActionDependenciesQuery>(
+    GET_ACTION_DEPS,
+    {
+      variables: {
+        plan: plan.identifier,
+        action: activeActionId,
+        // workflow, TODO workflow
+      },
+    }
+  );
+
+  if (error)
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+      />
+    );
+
+  const actionGroups = mapActionToDependencyGroups(
+    data.action,
+    plan.actionDependencyRoles,
+    getFullAction
+  );
 
   if (!actionGroups.length) {
     return null;
   }
-
   return (
     <div>
       {showTitle && (

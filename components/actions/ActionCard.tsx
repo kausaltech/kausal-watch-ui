@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import styled, { css } from 'styled-components';
@@ -20,10 +20,7 @@ import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
 import { captureException } from '@sentry/nextjs';
 import Icon from '../common/Icon';
 import { Tooltip } from 'reactstrap';
-import {
-  ActionDependenciesBlock,
-  mapActionToDependencyGroups,
-} from './blocks/action-dependencies/ActionDependenciesBlock';
+import { ActionDependenciesBlock } from './blocks/action-dependencies/ActionDependenciesBlock';
 
 const StyledActionLink = styled.a`
   text-decoration: none;
@@ -278,6 +275,7 @@ function ActionCard({
   isLink = true,
   isHighlighted = false,
   showActionDependencies = false,
+  getFullAction,
 }: ActionCardProps) {
   const plan = usePlan();
   const t = useTranslations();
@@ -349,12 +347,9 @@ function ActionCard({
     return 'IN_HERO';
   }
 
-  const actionDependencyGroups = showActionDependencies
-    ? mapActionToDependencyGroups(action, plan.actionDependencyRoles)
-    : [];
-
   const identifierPosition = getidentifierPosition(showPlan, variant, plan);
   const statusColor = getStatusColorForAction(action, plan, theme);
+  // useEffect(() => console.log(action.hasDependencyRelationships));
 
   const actionCard = (
     <ActionCardElement $isLink={isLink} $isHighlighted={isHighlighted}>
@@ -432,37 +427,40 @@ function ActionCard({
         />
       )}
 
-      {variant === 'primary' &&
-        showActionDependencies &&
-        !!actionDependencyGroups.length && (
-          <>
-            <StyledActionDependencyIconWrapper
-              id={getDependencyTooltipId(action.id)}
-            >
-              <Icon.ActionDependency
-                width="24px"
-                height="24px"
-                role="presentation"
-              />
-            </StyledActionDependencyIconWrapper>
-            <StyledTooltip
-              target={getDependencyTooltipId(action.id)}
-              role="tooltip"
-              autohide={false}
-              placement="top"
-              id={`tt-content-${getDependencyTooltipId(action.id)}`}
-              isOpen={tooltipOpen}
-              toggle={toggle}
+      {variant === 'primary' && action.hasDependencyRelationships && (
+        <>
+          <StyledActionDependencyIconWrapper
+            id={getDependencyTooltipId(action.id)}
+          >
+            <Icon.ActionDependency
+              width="24px"
+              height="24px"
+              role="presentation"
+            />
+          </StyledActionDependencyIconWrapper>
+          <StyledTooltip
+            target={getDependencyTooltipId(action.id)}
+            role="tooltip"
+            autohide={false}
+            placement="top"
+            id={`tt-content-${getDependencyTooltipId(action.id)}`}
+            isOpen={tooltipOpen}
+            toggle={toggle}
+          >
+            <Suspense
+              fallback={<Spinner size="sm" color="light" className="me-3" />}
             >
               <ActionDependenciesBlock
+                action={action}
                 size="small"
                 activeActionId={action.id}
-                actionGroups={actionDependencyGroups}
+                getFullAction={getFullAction}
                 showTitle
               />
-            </StyledTooltip>
-          </>
-        )}
+            </Suspense>
+          </StyledTooltip>
+        </>
+      )}
     </ActionCardElement>
   );
 
