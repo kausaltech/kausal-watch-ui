@@ -12,7 +12,6 @@ import { Container } from 'reactstrap';
 import styled from 'styled-components';
 
 import { useWorkflowSelector } from '@/context/workflow-selector';
-import { mapActionsToExpandDependencies } from '@/utils/actions.utils';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 
@@ -81,9 +80,6 @@ const ActionListBlock = (props) => {
   }
   const groupBy = plan.primaryOrgs.length > 0 ? 'primaryOrg' : 'none';
 
-  const actionsWithDependencies =
-    planActions?.map(mapActionsToExpandDependencies) ?? [];
-
   const displayHeader = heading
     ? heading
     : t('actions', getActionTermContext(plan));
@@ -95,7 +91,7 @@ const ActionListBlock = (props) => {
           <SectionHeader>{displayHeader}</SectionHeader>
         ) : null}
         <ActionCardList
-          actions={actionsWithDependencies}
+          actions={planActions}
           groupBy={groupBy}
           showOtherCategory={false}
         />

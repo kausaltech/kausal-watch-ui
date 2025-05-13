@@ -15,18 +15,7 @@ export const ACTION_CARD_FRAGMENT = gql`
       name
       color
     }
-    dependencyRole {
-      id
-      name
-    }
-    allDependencyRelationships {
-      preceding {
-        id
-      }
-      dependent {
-        id
-      }
-    }
+    hasDependencyRelationships
     completion
     categories {
       ...CategoryRecursiveFragment
