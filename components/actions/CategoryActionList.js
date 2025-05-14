@@ -16,6 +16,7 @@ const GET_ACTION_LIST = gql`
   query GetActionList($plan: ID!, $clientUrl: String!) {
     planActions(plan: $plan) {
       ...ActionCard
+      hasDependencyRelationships
       image {
         id
         rendition(size: "600x300") {

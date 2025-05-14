@@ -297,10 +297,10 @@ const GET_ACTION_DETAILS = gql`
     }
     allDependencyRelationships {
       preceding {
-        ...ActionCard
+        ...ActionCardWithDependencyRole
       }
       dependent {
-        ...ActionCard
+        ...ActionCardWithDependencyRole
       }
     }
   }
@@ -491,6 +491,14 @@ const GET_ACTION_DETAILS = gql`
           }
         }
       }
+    }
+  }
+
+  fragment ActionCardWithDependencyRole on Action {
+    ...ActionCard
+    dependencyRole {
+      id
+      name
     }
   }
 

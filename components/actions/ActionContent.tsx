@@ -47,10 +47,7 @@ import ActionImpact from './ActionImpact';
 import ActionPager from './ActionPager';
 import ActionStatus from './ActionStatus';
 import ActionUpdatesList from './ActionUpdatesList';
-import {
-  ActionDependenciesBlock,
-  mapActionToDependencyGroups, // TODO REMEMBER THIS USAGE
-} from './blocks/action-dependencies/ActionDependenciesBlock';
+import { ActionDependenciesBlock } from './blocks/action-dependencies/ActionDependenciesBlock';
 import RestrictedBlockWrapper from './blocks/RestrictedBlockWrapper';
 import CategoryTags from './CategoryTags';
 import EmissionScopeIcon from './EmissionScopeIcon';
@@ -195,13 +192,10 @@ function ActionContentBlock(props: ActionContentBlockProps) {
 
       return (
         <ActionDependenciesBlock
+          action={action}
           activeActionId={action.id}
           title={block.fieldLabel || undefined}
           helpText={block.fieldHelpText || undefined}
-          actionGroups={mapActionToDependencyGroups(
-            action,
-            plan.actionDependencyRoles
-          )}
           showTitle
         />
       );

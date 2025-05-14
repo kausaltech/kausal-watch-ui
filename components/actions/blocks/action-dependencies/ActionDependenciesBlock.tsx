@@ -3,7 +3,7 @@ import React, { useEffect, Suspense } from 'react';
 import ErrorMessage from 'components/common/ErrorMessage';
 import styled, { css } from 'styled-components';
 import { filter, groupBy, map, sortBy, uniqBy } from 'lodash';
-import { gql } from '@apollo/client';
+import { gql, skipToken } from '@apollo/client';
 import {
   ActionCardFragment,
   GetActionDetailsQuery,
@@ -87,7 +87,7 @@ export function mapActionToDependencyGroups(
   actionDependencyRoles: NonNullable<
     GetPlanContextQuery['plan']
   >['actionDependencyRoles'],
-  getFullAction: (id: string) => Action
+  getFullAction?: (id: string) => Action
 ): ActionGroup[] {
   if (
     !action.dependencyRole ||
@@ -112,9 +112,12 @@ export function mapActionToDependencyGroups(
     []
   );
   const uniqueActions = uniqBy(flatDependencyList, 'id');
-  const expandedActions = uniqueActions.map((a) =>
-    Object.assign({}, getFullAction(a.id), a)
-  );
+  let expandedActions = uniqueActions;
+  if (getFullAction != null) {
+    expandedActions = uniqueActions.map((a) =>
+      Object.assign({}, getFullAction(a.id), a)
+    );
+  }
 
   const groupedActionsByRole = groupBy(
     filter(expandedActions, 'dependencyRole.id'),
@@ -168,15 +171,24 @@ export function ActionDependenciesBlock({
 }: Props) {
   const t = useTranslations();
   const plan = usePlan();
+  const skipFetchingDependencies =
+    skeleton === true ||
+    (action?.dependencyRole != null &&
+      action?.allDependencyRelationships != null);
+
+  const { workflow } = useWorkflowSelector();
+
   const { error, data } = useSuspenseQuery<ActionDependenciesQuery>(
     GET_ACTION_DEPS,
-    {
-      variables: {
-        plan: plan.identifier,
-        action: activeActionId,
-        // workflow, TODO workflow
-      },
-    }
+    skipFetchingDependencies
+      ? skipToken
+      : {
+          variables: {
+            plan: plan.identifier,
+            action: activeActionId,
+            // workflow, TODO workflow
+          },
+        }
   );
 
   if (error)
@@ -187,7 +199,7 @@ export function ActionDependenciesBlock({
     );
 
   const actionGroups = mapActionToDependencyGroups(
-    data.action,
+    skipFetchingDependencies ? action : data.action,
     plan.actionDependencyRoles,
     getFullAction
   );
