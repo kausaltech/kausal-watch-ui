@@ -29,6 +29,7 @@ const GET_ACTION_LIST_FOR_BLOCK = gql`
   ) @workflow(state: $workflow) {
     planActions(plan: $plan, category: $category) {
       ...ActionCard
+      hasDependencyRelationships
     }
   }
   ${ActionCard.fragments.action}
