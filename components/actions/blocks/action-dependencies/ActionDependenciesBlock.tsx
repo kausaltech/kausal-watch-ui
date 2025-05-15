@@ -33,9 +33,37 @@ type Props = {
   title?: string;
   helpText?: string;
   getFullAction: (id: string) => Action;
+  skeleton?: boolean;
 };
 
 const StyledIcon = styled(Icon)``;
+
+const SkeletonBox = styled.div`
+  width: 1000px; // This always needs to be wider than the popup in the ActionCard
+  height: 80px;
+  background: linear-gradient(
+    90deg,
+    ${({ theme }) => theme.cardBackground.secondary} 0%,
+    ${({ theme }) => theme.themeColors.white} 50%,
+    ${({ theme }) => theme.cardBackground.secondary} 100%
+  );
+  background-size: 200% 100%;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+
+  @keyframes skeletonPulse {
+    0% {
+      background-position: 100% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+`;
+
+const ClippingWrapper = styled.div`
+  width: 100%;
+  overflow-x: clip;
+`;
 
 const StyledWrapper = styled.div<{ $isVertical: boolean; $isSmall: boolean }>`
   display: flex;
@@ -168,6 +196,7 @@ export function ActionDependenciesBlock({
   title,
   helpText,
   getFullAction,
+  skeleton = false,
 }: Props) {
   const t = useTranslations();
   const plan = usePlan();
@@ -190,6 +219,31 @@ export function ActionDependenciesBlock({
           },
         }
   );
+
+  if (skeleton === true) {
+    return (
+      <div>
+        <SectionHeader>
+          {title || t('action-dependencies', getActionTermContext(plan))}
+          {helpText && (
+            <PopoverTip
+              content={helpText}
+              identifier="action-dependencies-help"
+            />
+          )}
+        </SectionHeader>
+        <StyledWrapper className="mb-5" $isVertical={true} $isSmall={true}>
+          <ClippingWrapper>
+            <SkeletonBox />
+            <StyledIcon name="arrow-right" width="2em" height="2em" />
+            <SkeletonBox />
+            <StyledIcon name="arrow-right" width="2em" height="2em" />
+            <SkeletonBox />
+          </ClippingWrapper>
+        </StyledWrapper>
+      </div>
+    );
+  }
 
   if (error)
     return (
