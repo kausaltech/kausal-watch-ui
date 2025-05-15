@@ -5,7 +5,13 @@ import dayjs from 'common/dayjs';
 import { useWindowSize } from 'common/hooks/use-window-size';
 import { IndicatorLink } from 'common/links';
 import Switch from 'components/common/Switch';
-import { animate, motion, useAnimate, useInView } from 'framer-motion';
+import {
+  animate,
+  motion,
+  useAnimate,
+  useInView,
+  AnimationSequence,
+} from 'framer-motion';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import styled, { useTheme } from 'styled-components';
@@ -26,13 +32,13 @@ const BarBase = styled.rect``;
 const DateText = styled.tspan`
   fill: ${(props) => props.theme.section.indicatorShowcase.color};
   font-family: '${(props) => props.theme.fontFamily}';
-  font-size: 14px;
+  font-size: 13px;
 `;
 
 const ValueText = styled.tspan`
   fill: ${(props) => props.theme.themeColors.black};
   font-family: '${(props) => props.theme.fontFamily}';
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
 
   &.negative {
@@ -43,7 +49,7 @@ const ValueText = styled.tspan`
 const UnitText = styled.tspan`
   fill: ${(props) => props.theme.themeColors.black};
   font-family: '${(props) => props.theme.fontFamily}';
-  font-size: 14px;
+  font-size: 11px;
 
   &.negative {
     fill: ${(props) => props.theme.section.indicatorShowcase.color};
@@ -53,7 +59,7 @@ const UnitText = styled.tspan`
 const SegmentHeader = styled.tspan`
   fill: ${(props) => props.theme.section.indicatorShowcase.color};
   font-family: '${(props) => props.theme.fontFamily}';
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
 `;
 
@@ -61,6 +67,14 @@ const SegmentValue = styled.tspan`
   fill: ${(props) => props.theme.section.indicatorShowcase.color};
   font-family: '${(props) => props.theme.fontFamily}';
   font-size: 14px;
+  font-weight: bold;
+`;
+
+const SegmentUnit = styled.tspan`
+  fill: ${(props) => props.theme.section.indicatorShowcase.color};
+  font-family: '${(props) => props.theme.fontFamily}';
+  font-size: 11px;
+  font-weight: normal;
 `;
 
 const SourceLink = styled.div`
@@ -79,12 +93,18 @@ const NormalizerChooser = styled.div`
     border-color: ${({ theme }) => theme.section.indicatorShowcase.color};
   }
 `;
-
-const formatValue = (value, locale) => {
-  return parseFloat(Number(value)).toLocaleString(locale);
+const formatValue = (
+  value: number | string,
+  locale: string,
+  precision?: number
+): string => {
+  const precisionValue = precision ?? 2;
+  return Number(value).toLocaleString(locale, {
+    maximumFractionDigits: precisionValue,
+  });
 };
 
-const findPrecision = (comparableValues) => {
+const findPrecision = (comparableValues: Array<number | string>) => {
   for (let i = 2; i < 4; i++) {
     const set = new Set(
       comparableValues.map((value) =>
@@ -98,16 +118,21 @@ const findPrecision = (comparableValues) => {
   return 4;
 };
 
-interface ValueGroup extends SVGTextElement {
+interface ValueGroupProps {
   value: string;
   unit: string;
   negative: boolean;
+  transform?: string;
+  textAnchor?: string;
+  startDate?: string;
+  date?: string;
+  locale?: string;
+  opacity?: number;
 }
 
-const ValueGroup = (props: ValueGroup) => {
+const ValueGroup = (props: ValueGroupProps) => {
   const { value, unit, negative, ...rest } = props;
   return (
-    //@ts-expect-error style attribute complex to check
     <text {...rest}>
       <ValueText x="0" dy="16" className={negative ? 'negative' : ''}>
         {value}
@@ -118,7 +143,7 @@ const ValueGroup = (props: ValueGroup) => {
 };
 
 function Counter({ from, to, duration, locale, precision }) {
-  const ref = useRef();
+  const ref = useRef<SVGTSpanElement>(null);
 
   useEffect(() => {
     const controls = animate(from, to, {
@@ -130,7 +155,7 @@ function Counter({ from, to, duration, locale, precision }) {
       },
     });
     return () => controls.stop();
-  }, [from, to]);
+  }, [from, to, duration, locale, precision]);
 
   return <tspan ref={ref} />;
 }
@@ -159,6 +184,7 @@ function useChartWidth(): number {
   return width;
 }
 
+/*
 type IndicatorType = {
   id: string;
   name: string;
@@ -174,7 +200,7 @@ type IndicatorType = {
     value: number;
   }>;
 };
-
+*/
 interface IndicatorProgressBarProps {
   indicatorId;
   normalize: boolean;
@@ -216,11 +242,14 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const isInView = useInView(scope, { once: true });
   const [isNormalized, setIsNormalized] = useState(false);
 
+  // Normalize by default if non normalized latest value is larger than base value
+  const normalizeByDefault = normalize && baseValue.value < lastValue.value;
+
   useEffect(() => {
     if (normalize) {
-      setIsNormalized(false);
+      setIsNormalized(normalizeByDefault);
     }
-  }, [normalize]);
+  }, [normalize, normalizeByDefault]);
 
   // The bar is built for showing reduction goals
   // we swap the goal and start values if the goal is to increase
@@ -229,10 +258,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const startValue: number =
     goalValue.value < baseValue.value
       ? isNormalized
-        ? baseValue.normalizedValue
+        ? baseValue.normalizedValue ?? baseValue.value
         : baseValue.value
       : isNormalized
-      ? goalValue.normalizedValue
+      ? goalValue.normalizedValue ?? goalValue.value
       : goalValue.value;
 
   const latestDate = lastValue.date;
@@ -252,8 +281,8 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
 
   const minPrecision = findPrecision([
     startValue,
-    latestValue,
-    goalDisplayValue,
+    latestValue ?? 0,
+    goalDisplayValue ?? 0,
   ]);
 
   const roundedValues = {
@@ -264,6 +293,11 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
       : undefined,
   };
 
+  const largestValue = Math.max(
+    roundedValues.start,
+    roundedValues.latest,
+    Number(roundedValues.goal) ?? 0
+  );
   const displayUnit = isNormalized ? unit.normalizedName : unit.name;
 
   const theme = useTheme();
@@ -276,7 +310,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const rightMargin = 50;
   const topMargin = 0;
   const bars = { w: width - rightMargin, h: 3 * barHeight };
-  const scale = bars.w / roundedValues.start;
+  const scale = bars.w / largestValue;
   const segmentsY = bars.h + barMargin * 2;
   const goalColor = theme.section.indicatorShowcase.goalColor;
   const latestColor = theme.section.indicatorShowcase.latestColor;
@@ -285,9 +319,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
     w: bars.w + rightMargin,
     h: bars.h + topMargin + bottomMargin,
   };
+  const hasIncreased = roundedValues.latest > roundedValues.start;
   //const hasStartValue = Math.abs(startValue - latestValue)/latestValue > 0.01;
   const hasStartValue = true;
-  const showReduction = true; // show reduction if change is more than 20%
+  const showReduction = !hasIncreased; // show reduction if change is more than 20%
 
   // For simplicity, currently only supports indicators
   // where the goal is towards reduction of a value
@@ -297,11 +332,16 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   // assuming the other values will always be larger for now
   const MIN_BAR_WIDTH = 3;
   const startBar = {
-    x: 0,
+    name: 'start',
+    x: bars.w - Math.max(MIN_BAR_WIDTH, +roundedValues.start * scale),
     y: topMargin,
-    w: roundedValues.start * scale,
+    w:
+      roundedValues.start && +roundedValues.start > 0
+        ? Math.max(MIN_BAR_WIDTH, +roundedValues.start * scale)
+        : 0,
   };
   const latestBar = {
+    name: 'latest',
     x: bars.w - Math.max(MIN_BAR_WIDTH, +roundedValues.latest * scale),
     y: topMargin + barHeight,
     w:
@@ -310,7 +350,8 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
         : 0,
   };
   const goalBar = {
-    x: bars.w - Math.max(MIN_BAR_WIDTH, +roundedValues.goal * scale),
+    name: 'goal',
+    x: bars.w - Math.max(MIN_BAR_WIDTH, +(roundedValues.goal || 0) * scale),
     y: topMargin + 2 * barHeight,
     w:
       roundedValues.goal && +roundedValues.goal > 0
@@ -319,14 +360,15 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   };
 
   const reductionCounterFrom = 0;
-  const reductionCounterTo = roundedValues.start - roundedValues.latest;
+  const reductionCounterTo = Math.abs(
+    roundedValues.start - roundedValues.latest
+  );
   // Animation length relative to animated bar length
-  const reductionCounterDuration = showReduction
-    ? 10 * (latestBar.x / bars.w)
-    : 0;
+  const reductionCounterDuration =
+    (10 * Math.abs(startBar.w - latestBar.w)) / bars.w;
 
   useEffect(() => {
-    const sequence = [
+    const sequence: AnimationSequence = [
       [
         '.latest-text',
         {
@@ -349,14 +391,6 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
         { duration: 0 },
       ],
       [
-        '.start-bar',
-        {
-          x: bars.w - roundedValues.start * scale,
-          width: roundedValues.start * scale,
-        },
-        { duration: reductionCounterDuration },
-      ],
-      [
         '.completed-line',
         {
           x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
@@ -367,7 +401,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
       [
         '.latest-bar',
         {
-          x: bars.w - latestBar.w,
+          x: latestBar.x - startBar.x,
           width: latestBar.w,
         },
         { at: 0, duration: reductionCounterDuration },
@@ -397,10 +431,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
       [
         '.latest-text',
         {
-          translateX: spaceTextBlock(bars.w - Math.max(10, latestBar.w), [
+          x: spaceTextBlock(bars.w - Math.max(10, latestBar.w), [
             '.reduced-text',
           ]),
-          translateY: segmentsY + barMargin * 3,
+          y: segmentsY + barMargin * 3,
         },
         { duration: 0 },
       ],
@@ -415,18 +449,32 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
     if (isInView) {
       animate(sequence);
     }
-  }, [isInView, isNormalized]);
+  }, [
+    animate,
+    bars.w,
+    isInView,
+    isNormalized,
+    latestBar.w,
+    latestBar.x,
+    reductionCounterDuration,
+    segmentsY,
+    startBar.x,
+  ]);
 
   const graphValues = {
     name: note,
     startYear: dayjs(startDate).format('YYYY'),
     latestYear: dayjs(latestDate).format('YYYY'),
     goalYear: dayjs(goalDate).format('YYYY'),
-    startValue: `${roundedValues.start} ${displayUnit}`,
-    latestValue: `${roundedValues.latest} ${displayUnit}`,
-    goalValue: `${roundedValues.goal} ${displayUnit}`,
-    reduced: `${reductionCounterTo.toFixed(1)} ${displayUnit}`,
-    toBeReduced: `${roundedValues.latest - roundedValues.goal} ${displayUnit}`,
+    startValue: `${roundedValues.start} ${displayUnit ?? ''}`,
+    latestValue: `${roundedValues.latest} ${displayUnit ?? ''}`,
+    goalValue: `${roundedValues.goal} ${displayUnit ?? ''}`,
+    reduced: `${reductionCounterTo.toFixed(1)} ${displayUnit ?? ''}`,
+    toBeReduced: roundedValues.goal
+      ? `${roundedValues.latest - Number(roundedValues.goal)} ${
+          displayUnit ?? ''
+        }`
+      : '',
   };
   /*
     On the year {{startYear}} {{name}} was {{startValue}}.
@@ -491,47 +539,49 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
           {/* completed bar */}
           {hasStartValue && (
             <>
-              <motion.rect
-                className="start-bar"
-                width={bars.w}
-                y={startBar.y}
-                x={0}
-                height={barHeight - barMargin}
-                fill={startColor}
-              />
-              <line
-                className="completed-line"
-                y1={segmentsY}
-                y2={segmentsY}
-                x1={-15}
-                x2={-14}
-                stroke={startColor}
-                strokeWidth="2"
-                markerEnd="url(#reducedArrow)"
-              />
-              <line
-                x1={startBar.x + 1}
-                y1={startBar.y}
-                x2={startBar.x + 1}
-                y2={segmentsY}
-                stroke={startColor}
-                strokeWidth="2"
-                strokeDasharray="2,4"
-              />
-              <ValueGroup
-                transform={`translate(${startBar.x + 4} 0)`}
-                date={graphValues.startYear}
-                value={formatValue(roundedValues.start, locale)}
-                unit={displayUnit}
-                locale={locale}
-                negative={
-                  readableColor(
-                    startColor,
-                    theme.themeColors.black,
-                    theme.themeColors.white
-                  ) === theme.themeColors.white
-                }
-              />
+              <g className="start-content">
+                <rect
+                  className="start-bar"
+                  width={roundedValues.start * scale}
+                  y={startBar.y}
+                  x={bars.w - roundedValues.start * scale}
+                  height={barHeight - barMargin}
+                  fill={startColor}
+                />
+                <line
+                  className="completed-line"
+                  y1={segmentsY}
+                  y2={segmentsY}
+                  x1={-15}
+                  x2={-14}
+                  stroke={startColor}
+                  strokeWidth="2"
+                  markerEnd="url(#reducedArrow)"
+                />
+                <line
+                  x1={startBar.x + 1}
+                  y1={startBar.y}
+                  x2={startBar.x + 1}
+                  y2={segmentsY}
+                  stroke={startColor}
+                  strokeWidth="2"
+                  strokeDasharray="2,4"
+                />
+                <ValueGroup
+                  transform={`translate(${startBar.x + 4}, 0)`}
+                  startDate={graphValues.startYear}
+                  value={formatValue(roundedValues.start, locale)}
+                  unit={displayUnit ?? ''}
+                  locale={locale}
+                  negative={
+                    readableColor(
+                      startColor,
+                      theme.themeColors.black,
+                      theme.themeColors.white
+                    ) === theme.themeColors.white
+                  }
+                />
+              </g>
               {showReduction && (
                 <text
                   className="reduced-text"
@@ -547,7 +597,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                       locale={locale}
                       precision={minPrecision}
                     />{' '}
-                    {displayUnit}
+                    <SegmentUnit>{displayUnit ?? ''}</SegmentUnit>
                   </SegmentValue>
                 </text>
               )}
@@ -557,10 +607,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
           <motion.rect
             className="latest-bar"
             y={latestBar.y}
-            x="0"
-            width={bars.w}
+            x={startBar.x}
+            width={startBar.w}
             height={barHeight - barMargin}
-            opacity={0}
+            opacity={1}
             fill={latestColor}
           />
           {goalValue && latestBar.w - goalBar.w > 24 && (
@@ -595,7 +645,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
               opacity={0}
               date={graphValues.latestYear}
               value={formatValue(roundedValues.latest, locale)}
-              unit={displayUnit}
+              unit={displayUnit ?? ''}
               locale={locale}
               negative={
                 readableColor(
@@ -613,8 +663,11 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
           >
             <SegmentHeader>{t('to-reduce')}</SegmentHeader>
             <SegmentValue x="0" dy="16">
-              {formatValue(roundedValues.latest - roundedValues.goal, locale)}{' '}
-              {displayUnit}
+              {formatValue(
+                Number(roundedValues.latest) - Number(roundedValues.goal ?? 0),
+                locale
+              )}{' '}
+              <SegmentUnit>{displayUnit ?? ''}</SegmentUnit>
             </SegmentValue>
           </motion.text>
           {/* Goal bar */}
@@ -652,8 +705,8 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
               goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8
             } ${goalBar.y})`}
             date={graphValues.goalYear}
-            value={formatValue(roundedValues.goal, locale)}
-            unit={displayUnit}
+            value={formatValue(roundedValues.goal ?? 0, locale)}
+            unit={displayUnit ?? ''}
             locale={locale}
             negative={
               readableColor(
@@ -710,8 +763,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
           )}
         </svg>
         {theme.section.indicatorShowcase.linkToSource && (
-          <SourceLink role="button" tabIndex="0" className="text-end mt-3">
-            <IndicatorLink id={indicatorId}>{note}</IndicatorLink>
+          <SourceLink role="button" tabIndex={0} className="text-end mt-3">
+            <IndicatorLink id={indicatorId} href={`/indicator/${indicatorId}`}>
+              {note}
+            </IndicatorLink>
           </SourceLink>
         )}
       </div>
