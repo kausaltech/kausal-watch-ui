@@ -447,9 +447,7 @@ function ActionCard({
             isOpen={tooltipOpen}
             toggle={toggle}
           >
-            <Suspense
-              fallback={<Spinner size="sm" color="light" className="me-3" />}
-            >
+            <Suspense fallback={<ActionDependenciesBlock skeleton={true} />}>
               <ActionDependenciesBlock
                 action={action}
                 size="small"
