@@ -18,8 +18,7 @@ export const isEmptyFilter = (val) => val == null || val === '';
 
 const IndicatorType = styled(Badge)<{ $level: string }>`
   border-radius: ${(props) => props.theme.badgeBorderRadius};
-  padding: ${(props) => props.theme.badgePaddingY}
-    ${(props) => props.theme.badgePaddingX};
+  padding: ${({ theme }) => `${theme.badgePaddingY} ${theme.badgePaddingX}`};
   font-weight: ${(props) => props.theme.badgeFontWeight};
 
   color: ${(props) => {
@@ -61,8 +60,7 @@ const StyledBadge = styled(Badge)`
   margin-right: ${(props) => props.theme.spaces.s050};
   margin-bottom: ${(props) => props.theme.spaces.s050};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
-  padding: ${(props) => props.theme.badgePaddingY}
-    ${(props) => props.theme.badgePaddingX};
+  padding: ${({ theme }) => `${theme.badgePaddingY} ${theme.badgePaddingX}`};
   font-weight: ${(props) => props.theme.badgeFontWeight};
   background-color: ${(props) => props.theme.themeColors.light} !important;
   color: ${(props) => props.theme.themeColors.black};
@@ -71,7 +69,7 @@ const StyledBadge = styled(Badge)`
 const SectionButton = (props) => {
   if (props.linkTo != null) {
     return (
-      <IndicatorLink id={props.linkTo}>
+      <IndicatorLink id={props.linkTo} href="">
         <a>{props.children}</a>
       </IndicatorLink>
     );
@@ -98,11 +96,6 @@ const StyledSectionButton = styled(SectionButton)`
 const IndicatorName = styled.div`
   display: flex;
   align-items: center;
-
-  a,
-  .indicator-name {
-    color: ${(props) => props.theme.themeColors.black};
-  }
 `;
 
 const IndentableTable = styled(Table)`
@@ -140,6 +133,10 @@ const IndentableCellContentWrapper = styled.div<{
         : props.theme.themeColors.white};
   background-color: ${(props) =>
     props.$sectionHeader === true ? props.theme.themeColors.light : 'inherit'};
+
+  a {
+    color: ${(props) => props.theme.themeColors.black};
+  }
 `;
 
 const IndentableTableCell = (props) => (
@@ -345,7 +342,7 @@ function sortIndicators(
 
 const DEFAULT_UNCOLLAPSED_DEPTH = 1;
 
-const defaultVisibleByParent = (indicators, hierarchy) => {
+const defaultVisibleByParent = (indicators, hierarchy: Hierarchy) => {
   const collapsibleCommonIndicators = Object.values(hierarchy).filter(
     (v) => v.children.length > 0
   );
@@ -534,7 +531,7 @@ const IndicatorListFiltered = (props) => {
         {sortedIndicators.map((group, idx) => {
           const expanded = visibleGroups[idx] === true;
           const expandKey = `common-indicator-section-${idx}`;
-          const headers = [];
+          const headers: JSX.Element[] = [];
           if (indicatorNameColumnEnabled) {
             headers.push(
               <IndentableTableHeader key="hr-name">
@@ -636,7 +633,7 @@ const IndicatorListFiltered = (props) => {
                   <tr>
                     <IndentableTableHeader
                       sectionHeader={true}
-                      onClick={(event) => toggleHidden(idx)}
+                      onClick={() => toggleHidden(idx)}
                       colSpan={headers.length}
                       indent={indentationLevel(group[0])}
                     >
@@ -734,7 +731,7 @@ const IndicatorListFiltered = (props) => {
                           firstCol
                           visibleIndentation={true}
                         >
-                          <IndicatorLink id={item.id}>
+                          <IndicatorLink id={item.id} href="">
                             <a>{item.organization.name}</a>
                           </IndicatorLink>
                         </IndentableTableCell>
@@ -760,7 +757,7 @@ const IndicatorListFiltered = (props) => {
                         )}
                       </IndentableTableCell>
                       <IndentableTableCell numeric>
-                        <IndicatorLink id={item.id}>
+                        <IndicatorLink id={item.id} href="">
                           <a>
                             <Value>
                               {item.latestValue
@@ -775,7 +772,7 @@ const IndicatorListFiltered = (props) => {
                       </IndentableTableCell>
                       {displayNormalizedValues && (
                         <IndentableTableCell numeric>
-                          <IndicatorLink id={item.id}>
+                          <IndicatorLink id={item.id} href="">
                             <a>
                               <Value>
                                 {beautifyValue(normalizedValue, locale)}
