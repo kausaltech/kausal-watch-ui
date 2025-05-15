@@ -19,6 +19,7 @@ import { tryRequest } from '@/utils/api.utils';
 import { getMetaTitles } from '@/utils/metadata';
 import { captureException } from '@sentry/nextjs';
 import { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
+import IntroModal from '@/components/custom/IntroModal';
 type Props = {
   params: { plan: string; domain: string; lang: string };
   children: ReactNode;
@@ -142,6 +143,9 @@ export default async function PlanLayout({ params, children }: Props) {
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         <SharedIcons />
+        {theme.introModal?.videoUrls && (
+          <IntroModal videoUrls={theme.introModal.videoUrls} />
+        )}
         <PlanProvider plan={planData.plan}>
           <PathsProvider instance={pathsData}>
             <WorkflowProvider
