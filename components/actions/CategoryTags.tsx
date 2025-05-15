@@ -151,7 +151,9 @@ function CategoryTags(props: CategoryTagsProps) {
         use the level name of the first selected categoory
         as section header */
     const categoryTypeHeader =
-      ct.levels.length > 0 ? cats[0].level?.name : ct.name;
+      ct.levels.length > 0 && cats[0].level?.name
+        ? cats[0].level.name
+        : ct.name;
 
     return (
       <div key={ct.id} className="mb-4">
