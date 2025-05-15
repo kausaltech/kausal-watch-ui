@@ -33,6 +33,7 @@
       "EmailBlock",
       "EmbedBlock",
       "FloatBlock",
+      "ImageBlock",
       "ImageChooserBlock",
       "IntegerBlock",
       "ListBlock",

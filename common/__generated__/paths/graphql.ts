@@ -19,8 +19,16 @@ export type Scalars = {
   UUID: { input: any; output: any; }
 };
 
-export type ActionEfficiency = {
-  __typename?: 'ActionEfficiency';
+export type ActionGroupType = {
+  __typename?: 'ActionGroupType';
+  actions: Array<ActionNode>;
+  color?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type ActionImpact = {
+  __typename?: 'ActionImpact';
   action: ActionNode;
   costDim: DimensionalMetricType;
   costValues: Array<Maybe<YearlyValue>>;
@@ -28,34 +36,6 @@ export type ActionEfficiency = {
   impactDim: DimensionalMetricType;
   impactValues: Array<Maybe<YearlyValue>>;
   unitAdjustmentMultiplier?: Maybe<Scalars['Float']['output']>;
-};
-
-export type ActionEfficiencyPairType = {
-  __typename?: 'ActionEfficiencyPairType';
-  actions: Array<ActionEfficiency>;
-  costCutpoint?: Maybe<Scalars['Float']['output']>;
-  costNode: Node;
-  costUnit: UnitType;
-  efficiencyUnit: UnitType;
-  graphType?: Maybe<Scalars['String']['output']>;
-  id: Scalars['ID']['output'];
-  impactNode: Node;
-  impactUnit: UnitType;
-  indicatorCutpoint?: Maybe<Scalars['Float']['output']>;
-  indicatorUnit: UnitType;
-  invertCost: Scalars['Boolean']['output'];
-  invertImpact: Scalars['Boolean']['output'];
-  label: Scalars['String']['output'];
-  plotLimitEfficiency?: Maybe<Scalars['Float']['output']>;
-  plotLimitForIndicator?: Maybe<Scalars['Float']['output']>;
-};
-
-export type ActionGroupType = {
-  __typename?: 'ActionGroupType';
-  actions: Array<ActionNode>;
-  color?: Maybe<Scalars['String']['output']>;
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
 };
 
 export type ActionListPage = PageInterface & {
@@ -676,6 +656,17 @@ export enum FrameworksMeasureTemplatePriorityChoices {
   Medium = 'MEDIUM'
 }
 
+export type ImageBlock = StreamFieldInterface & {
+  __typename?: 'ImageBlock';
+  altText?: Maybe<Scalars['String']['output']>;
+  blockType: Scalars['String']['output'];
+  decorative?: Maybe<Scalars['Boolean']['output']>;
+  field: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<ImageObjectType>;
+  rawValue: Scalars['String']['output'];
+};
+
 export type ImageChooserBlock = StreamFieldInterface & {
   __typename?: 'ImageChooserBlock';
   blockType: Scalars['String']['output'];
@@ -750,6 +741,33 @@ export type ImageRenditionObjectType = {
   width: Scalars['Int']['output'];
 };
 
+export type ImpactOverviewType = {
+  __typename?: 'ImpactOverviewType';
+  actions: Array<ActionImpact>;
+  costCutpoint?: Maybe<Scalars['Float']['output']>;
+  costNode: Node;
+  costUnit: UnitType;
+  effectNode: Node;
+  effectUnit: UnitType;
+  /** @deprecated Use indicatorUnit instead */
+  efficiencyUnit: UnitType;
+  graphType?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  /** @deprecated Use effectNode instead. */
+  impactNode: Node;
+  /** @deprecated Use effectUnit instead */
+  impactUnit: UnitType;
+  indicatorCutpoint?: Maybe<Scalars['Float']['output']>;
+  indicatorUnit: UnitType;
+  invertCost: Scalars['Boolean']['output'];
+  invertImpact: Scalars['Boolean']['output'];
+  label: Scalars['String']['output'];
+  /** @deprecated Use plot_limit_indicator instead */
+  plotLimitEfficiency?: Maybe<Scalars['Float']['output']>;
+  plotLimitForIndicator?: Maybe<Scalars['Float']['output']>;
+  plotLimitIndicator?: Maybe<Scalars['Float']['output']>;
+};
+
 export type InstanceBasicConfiguration = {
   __typename?: 'InstanceBasicConfiguration';
   defaultLanguage: Scalars['String']['output'];
@@ -774,8 +792,10 @@ export type InstanceFeaturesType = {
   maximumFractionDigits?: Maybe<Scalars['Int']['output']>;
   requiresAuthentication: Scalars['Boolean']['output'];
   showAccumulatedEffects: Scalars['Boolean']['output'];
+  showExplanations: Scalars['Boolean']['output'];
   showRefreshPrompt: Scalars['Boolean']['output'];
   showSignificantDigits?: Maybe<Scalars['Int']['output']>;
+  useDatasetsFromDb: Scalars['Boolean']['output'];
 };
 
 export type InstanceGoalDimension = {
@@ -1687,7 +1707,8 @@ export type PlaceHolderDataPoint = {
 export type Query = {
   __typename?: 'Query';
   action?: Maybe<ActionNode>;
-  actionEfficiencyPairs: Array<ActionEfficiencyPairType>;
+  /** @deprecated Use impactOverviews instead */
+  actionEfficiencyPairs: Array<ImpactOverviewType>;
   actions: Array<ActionNode>;
   activeNormalization?: Maybe<NormalizationType>;
   activeScenario: ScenarioType;
@@ -1695,7 +1716,7 @@ export type Query = {
   availableNormalizations: Array<NormalizationType>;
   framework?: Maybe<Framework>;
   frameworks?: Maybe<Array<Framework>>;
-  impactOverviews: Array<ActionEfficiencyPairType>;
+  impactOverviews: Array<ImpactOverviewType>;
   instance: InstanceType;
   me?: Maybe<UserType>;
   node?: Maybe<NodeInterface>;
@@ -2097,6 +2118,7 @@ export type UnitType = {
   htmlShort: Scalars['String']['output'];
   long: Scalars['String']['output'];
   short: Scalars['String']['output'];
+  standard: Scalars['String']['output'];
 };
 
 export type UnknownParameterType = ParameterInterface & {
@@ -2348,7 +2370,7 @@ export type GetInstanceContextQuery = (
     { id: string, name: string, themeIdentifier?: string | null, owner?: string | null, defaultLanguage: string, supportedLanguages: Array<string>, targetYear?: number | null, modelEndYear: number, referenceYear?: number | null, minimumHistoricalYear: number, maximumHistoricalYear?: number | null, leadTitle?: string | null, leadParagraph?: string | null, features: (
       { baselineVisibleInGraphs: boolean, hideNodeDetails: boolean, maximumFractionDigits?: number | null, showAccumulatedEffects: boolean, showSignificantDigits?: number | null }
       & { __typename?: 'InstanceFeaturesType' }
-    ), introContent?: Array<{ __typename?: 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'ImageChooserBlock' | 'IntegerBlock' | 'ListBlock' | 'PageChooserBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'SnippetChooserBlock' | 'StaticBlock' } | { __typename?: 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | (
+    ), introContent?: Array<{ __typename?: 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'IntegerBlock' | 'ListBlock' | 'PageChooserBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'SnippetChooserBlock' } | { __typename?: 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | (
       { field: string, value: string }
       & { __typename?: 'RichTextBlock' }
     )> | null, goals: Array<(
