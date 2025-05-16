@@ -14,6 +14,7 @@ import PlanChip from 'components/plans/PlanChip';
 import {
   ActionCardFragment,
   PlanContextFragment,
+  GetActionDetailsQuery,
 } from 'common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
 import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
@@ -259,6 +260,8 @@ const SecondaryIcons = (props) => {
 const getDependencyTooltipId = (actionId: string) =>
   `dependency-tooltip-${actionId}`;
 
+type Action = NonNullable<GetActionDetailsQuery['action']>;
+
 type ActionCardProps = {
   action: ActionCardFragment;
   showPlan?: boolean;
@@ -266,6 +269,7 @@ type ActionCardProps = {
   isLink?: boolean;
   isHighlighted?: boolean;
   showActionDependencies?: boolean;
+  getFullAction?: (id: string) => Action;
 };
 
 function ActionCard({
