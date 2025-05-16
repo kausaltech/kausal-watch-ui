@@ -268,7 +268,6 @@ type ActionCardProps = {
   variant?: 'primary' | 'mini' | 'text-only';
   isLink?: boolean;
   isHighlighted?: boolean;
-  showActionDependencies?: boolean;
   getFullAction?: (id: string) => Action;
 };
 
@@ -278,7 +277,6 @@ function ActionCard({
   variant = 'primary',
   isLink = true,
   isHighlighted = false,
-  showActionDependencies = false,
   getFullAction,
 }: ActionCardProps) {
   const plan = usePlan();
@@ -353,7 +351,6 @@ function ActionCard({
 
   const identifierPosition = getidentifierPosition(showPlan, variant, plan);
   const statusColor = getStatusColorForAction(action, plan, theme);
-  // useEffect(() => console.log(action.hasDependencyRelationships));
 
   const actionCard = (
     <ActionCardElement $isLink={isLink} $isHighlighted={isHighlighted}>

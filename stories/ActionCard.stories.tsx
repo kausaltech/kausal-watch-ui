@@ -35,5 +35,5 @@ export const WithoutLink: Story = {
 
 // TODO: Add action dependency data to mock actions
 export const WithActionDependencies: Story = {
-  args: { ...MOCK_PROPS, showActionDependencies: true },
+  args: { ...MOCK_PROPS },
 };

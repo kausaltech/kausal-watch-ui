@@ -167,12 +167,7 @@ function ActionCardList({
                     action={item}
                     showPlan={includeRelatedPlans}
                     size="xs"
-                    showActionDependencies={true}
                     getFullAction={getFullAction}
-                    // showActionDependencies={ // TODO TODO
-                    //   !!item.dependencyRole?.id &&
-                    //   !!item.allDependencyRelationships?.length
-                    // }
                   />
                 </Col>
               ))}
