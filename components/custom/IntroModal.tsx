@@ -74,7 +74,7 @@ const IntroModal = ({ videoUrls }: IntroModalProps) => {
   const lang = locale.startsWith('es') ? 'es' : 'en';
 
   const [enabled, setEnabled] = useState<boolean | null>(null);
-  const [isChecked, setIsChecked] = useState(true);
+  const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
     const show = localStorage.getItem('show-intro-modal');
