@@ -34,7 +34,7 @@ type Props = {
   title?: string;
   helpText?: string;
   getFullAction: (id: string) => Action;
-  skeleton?: boolean;
+  loading?: boolean;
 };
 
 const StyledIcon = styled(Icon)``;
@@ -198,12 +198,12 @@ export function ActionDependenciesBlock({
   title,
   helpText,
   getFullAction,
-  skeleton = false,
+  loading = false,
 }: Props) {
   const t = useTranslations();
   const plan = usePlan();
   const skipFetchingDependencies =
-    skeleton === true ||
+    loading === true ||
     (action?.dependencyRole != null &&
       action?.allDependencyRelationships != null);
 
@@ -222,7 +222,7 @@ export function ActionDependenciesBlock({
         }
   );
 
-  if (skeleton === true) {
+  if (loading === true) {
     return (
       <div>
         <SectionHeader>
