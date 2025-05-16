@@ -141,12 +141,9 @@ export function mapActionToDependencyGroups(
     []
   );
   const uniqueActions = uniqBy(flatDependencyList, 'id');
-  let expandedActions = uniqueActions;
-  if (getFullAction != null) {
-    expandedActions = uniqueActions.map((a) =>
-      Object.assign({}, getFullAction(a.id), a)
-    );
-  }
+  const expandedActions = getFullAction
+    ? uniqueActions.map((a) => Object.assign({}, getFullAction(a.id), a))
+    : uniqueActions;
 
   const groupedActionsByRole = groupBy(
     filter(expandedActions, 'dependencyRole.id'),
