@@ -448,7 +448,7 @@ function ActionCard({
             isOpen={tooltipOpen}
             toggle={toggle}
           >
-            <Suspense fallback={<ActionDependenciesBlock skeleton={true} />}>
+            <Suspense fallback={<ActionDependenciesBlock loading={true} />}>
               <ActionDependenciesBlock
                 action={action}
                 size="small"
