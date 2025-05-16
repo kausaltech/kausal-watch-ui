@@ -5,6 +5,7 @@ import {
   CATEGORY_FRAGMENT,
   RECURSIVE_CATEGORY_FRAGMENT,
 } from './category.fragment';
+import { DASHBOARD_INDICATOR_BLOCK_FRAGMENT } from './dashboard-indicator-block.fragment';
 
 export const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamFieldFragment on StreamFieldInterface {
@@ -310,8 +311,12 @@ export const STREAM_FIELD_FRAGMENT = gql`
         }
       }
     }
+    ... on DashboardRowBlock {
+      ...DashboardIndicatorBlockFragment
+    }
   }
   ${images.fragments.multiUseImage}
   ${CATEGORY_FRAGMENT}
   ${RECURSIVE_CATEGORY_FRAGMENT}
+  ${DASHBOARD_INDICATOR_BLOCK_FRAGMENT}
 `;

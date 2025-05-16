@@ -23,6 +23,7 @@ import QuestionAnswerBlock from 'components/contentblocks/QuestionAnswerBlock';
 import RelatedIndicatorsBlock from 'components/contentblocks/RelatedIndicatorsBlock';
 import RelatedPlanListBlock from 'components/contentblocks/RelatedPlanListBlock';
 import { ImageCredit } from 'components/contentblocks/ContentPageHeaderBlock';
+import DashboardRowBlock from 'components/contentblocks/DashboardRowBlock';
 import { useTranslations } from 'next-intl';
 import { usePlan } from 'context/plan';
 import { Col, ColProps, Container, Row } from 'reactstrap';
@@ -119,10 +120,21 @@ type StreamFieldBlockProps = {
   color: string;
   hasSidebar: boolean;
   columnProps?: ColProps;
+  previousBlockType?: string;
+  nextBlockType?: string;
 };
 
 function StreamFieldBlock(props: StreamFieldBlockProps) {
-  const { id, page, block, color, hasSidebar, columnProps } = props;
+  const {
+    id,
+    page,
+    block,
+    color,
+    hasSidebar,
+    columnProps,
+    previousBlockType,
+    nextBlockType,
+  } = props;
   const { __typename } = block;
   const plan = usePlan();
   const theme = useTheme();
@@ -429,6 +441,16 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         />
       );
     }
+    case 'DashboardRowBlock': {
+      return (
+        <DashboardRowBlock
+          {...block}
+          id={id}
+          topMargin={previousBlockType !== 'DashboardRowBlock'}
+          bottomMargin={nextBlockType !== 'DashboardRowBlock'}
+        />
+      );
+    }
     default:
       return <div id={id}>{`Component for ${__typename} does not exist`}</div>;
   }
@@ -463,6 +485,8 @@ function StreamField(props: StreamFieldProps) {
             color={color}
             hasSidebar={hasSidebar}
             columnProps={columnProps}
+            previousBlockType={blocks[index - 1]?.__typename}
+            nextBlockType={blocks[index + 1]?.__typename}
           />
         </ErrorBoundary>
       ))}
