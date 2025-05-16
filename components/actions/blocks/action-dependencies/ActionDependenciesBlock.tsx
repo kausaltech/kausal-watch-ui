@@ -16,6 +16,7 @@ import { ACTION_CONTENT_MAIN_BOTTOM } from '@/constants/containers';
 import { useTranslations } from 'next-intl';
 import { getActionTermContext } from '@/common/i18n';
 import { usePlan } from '@/context/plan';
+import { useWorkflowSelector } from '@/context/workflow-selector';
 import PopoverTip from '@/components/common/PopoverTip';
 import { SectionHeader } from '../../ActionContent';
 
@@ -164,7 +165,8 @@ export function mapActionToDependencyGroups(
 }
 
 const GET_ACTION_DEPS = gql`
-  query ActionDependencies($action: ID!) {
+  query ActionDependencies($action: ID!, $workflow: WorkflowState)
+  @workflow(state: $workflow) {
     action(id: $action) {
       dependencyRole {
         id
@@ -215,7 +217,7 @@ export function ActionDependenciesBlock({
           variables: {
             plan: plan.identifier,
             action: activeActionId,
-            // workflow, TODO workflow
+            workflow,
           },
         }
   );
