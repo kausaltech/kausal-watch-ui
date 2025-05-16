@@ -118,11 +118,7 @@ function ActionCardList({
     theme,
     t
   );
-  const actionsById = useMemo(
-    () => new Map(actions.map((a) => [a.id, a])),
-    [actions]
-  );
-
+  const actionsById = new Map(actions.map((a) => [a.id, a]));
   const getFullAction = (id) => actionsById.get(id);
 
   return (
