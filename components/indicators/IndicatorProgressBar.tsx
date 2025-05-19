@@ -288,9 +288,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const roundedValues = {
     start: Number(startValue?.toPrecision(minPrecision)),
     latest: Number(latestValue?.toPrecision(minPrecision)),
-    goal: goalDisplayValue
-      ? goalDisplayValue.toPrecision(isNormalized ? minPrecision : 4)
-      : undefined,
+    goal:
+      goalDisplayValue != null
+        ? Number(goalDisplayValue.toPrecision(isNormalized ? minPrecision : 4))
+        : undefined,
   };
 
   const largestValue = Math.max(
