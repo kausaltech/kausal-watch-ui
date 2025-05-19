@@ -11,6 +11,7 @@ import {
   DashboardIndicatorSummaryBlock,
 } from '@/common/__generated__/graphql';
 import Card from '../common/Card';
+import DashboardIndicatorPieChartBlockComponent from './indicator-chart/DashboardIndicatorPieChartBlock';
 
 const DashboardRowSection = styled.div<{
   $topMargin?: boolean;
@@ -43,12 +44,15 @@ function getBlockComponent(block: DashboardBlock) {
   switch (block.blockType) {
     case 'DashboardParagraphBlock': {
       const paragraphBlock = block as DashboardParagraphBlock;
-
       return paragraphBlock.text ? (
         <div dangerouslySetInnerHTML={{ __html: paragraphBlock.text }} />
       ) : null;
     }
-    case 'DashboardIndicatorPieChartBlock':
+    case 'DashboardIndicatorPieChartBlock': {
+      const pieChartBlock = block as DashboardIndicatorPieChartBlock;
+
+      return <DashboardIndicatorPieChartBlockComponent {...pieChartBlock} />;
+    }
     case 'DashboardIndicatorAreaChartBlock':
     case 'DashboardIndicatorBarChartBlock':
     case 'DashboardIndicatorLineChartBlock':
@@ -81,7 +85,6 @@ const DashboardRowBlock = ({
   bottomMargin = true,
 }: DashboardRowBlockProps) => {
   const columnWidth = 12 / blocks.length;
-  console.log(blocks);
 
   return (
     <DashboardRowSection
