@@ -40,6 +40,10 @@ interface DashboardRowBlockProps extends Omit<TDashboardRowBlock, 'rawValue'> {
   blocks: DashboardBlock[];
 }
 
+const StyledRow = styled(Row)`
+  --bs-gutter-y: ${({ theme }) => theme.spaces.s200};
+`;
+
 function getBlockComponent(block: DashboardBlock) {
   switch (block.blockType) {
     case 'DashboardParagraphBlock': {
@@ -93,7 +97,7 @@ const DashboardRowBlock = ({
       $bottomMargin={bottomMargin}
     >
       <Container>
-        <Row>
+        <StyledRow>
           {blocks.map((block, index) => (
             <Col key={`${block.id}-${index}`} md={columnWidth}>
               <Card outline>
@@ -101,7 +105,7 @@ const DashboardRowBlock = ({
               </Card>
             </Col>
           ))}
-        </Row>
+        </StyledRow>
       </Container>
     </DashboardRowSection>
   );
