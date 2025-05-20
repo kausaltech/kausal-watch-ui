@@ -4,22 +4,82 @@ import { PieChart } from 'echarts/charts';
 import type { PieSeriesOption } from 'echarts/charts';
 import * as echarts from 'echarts/core';
 import Chart, { ECOption } from '@/components/paths/graphs/Chart';
-import { DashboardIndicatorPieChartBlock as TDashboardIndicatorPieChartBlock } from '@/common/__generated__/graphql';
+import {
+  Indicator,
+  DashboardIndicatorPieChartBlock as TDashboardIndicatorPieChartBlock,
+  Unit,
+} from '@/common/__generated__/graphql';
+import { CallbackDataParams } from 'echarts/types/dist/shared';
 
 echarts.use([PieChart]);
 
+interface SeriesData {
+  name: string;
+  value: number;
+}
 interface DashboardIndicatorPieChartBlockProps
   extends TDashboardIndicatorPieChartBlock {}
 
 function getLatestYear(
   chartSeries: DashboardIndicatorPieChartBlockProps['chartSeries']
 ) {
-  return chartSeries?.[0]?.values?.[chartSeries?.[0]?.values.length - 1]?.date;
+  const lastDate =
+    chartSeries?.[0]?.values?.[chartSeries?.[0]?.values.length - 1]?.date;
+
+  if (!lastDate) {
+    return undefined;
+  }
+
+  return new Date(lastDate).getFullYear();
+}
+
+function doYearsMatch(year: number, date: string) {
+  const yearFromDate = new Date(date).getFullYear();
+
+  return yearFromDate === year;
+}
+
+/**
+ * Determine if we should show the segmented percentage in addition to the value.
+ * If the indicator is already a percentage that sums to 100, we don't want to show the segmented percentage.
+ */
+function showSegmentedPercentage(unit: Unit | undefined, values: SeriesData[]) {
+  if (!unit) {
+    return true;
+  }
+
+  const isPercentage = unit.name === '%';
+  const valuesSumTo100 =
+    values.reduce((acc, curr) => acc + curr.value, 0) === 100;
+
+  if (isPercentage && valuesSumTo100) {
+    return false;
+  }
+
+  return true;
+}
+
+function createTooltipFormatter(
+  indicator: Indicator | null,
+  seriesData: SeriesData[]
+) {
+  const showPercentage = showSegmentedPercentage(indicator?.unit, seriesData);
+
+  return (tooltipParams: CallbackDataParams) => {
+    const nameAndValue = `${tooltipParams.name}: ${tooltipParams.value}`;
+
+    if (!showPercentage || !tooltipParams.percent) {
+      return nameAndValue;
+    }
+
+    return `${nameAndValue} (${Math.round(tooltipParams.percent)}%)`;
+  };
 }
 
 const DashboardIndicatorPieChartBlock = ({
   chartSeries,
   dimension,
+  indicator,
   year,
 }: DashboardIndicatorPieChartBlockProps) => {
   const theme = useTheme();
@@ -37,7 +97,8 @@ const DashboardIndicatorPieChartBlock = ({
 
       const categoryName = series.dimensionCategory.name;
       const valueForYear = series.values?.find(
-        (v): v is NonNullable<typeof v> => v !== null && v.date === assertedYear
+        (v): v is NonNullable<typeof v> =>
+          v?.date != null && doYearsMatch(assertedYear, v.date)
       )?.value;
 
       const value = valueForYear ?? 0;
@@ -49,22 +110,22 @@ const DashboardIndicatorPieChartBlock = ({
           value: value,
         },
       ];
-    }, [] as { name: string; value: number }[]) ?? [];
+    }, [] as SeriesData[]) ?? [];
 
   const option: ECOption & { series: PieSeriesOption[] } = {
     tooltip: {
+      appendTo: 'body',
       trigger: 'item',
-      formatter: '{b}: {c} ({d}%)',
+      formatter: createTooltipFormatter(indicator ?? null, seriesData),
     },
     series: [
       {
         type: 'pie',
-        radius: ['40%', '70%'],
         avoidLabelOverlap: true,
         itemStyle: {
-          borderRadius: 10,
+          borderRadius: 0,
           borderColor: theme.themeColors.white,
-          borderWidth: 2,
+          borderWidth: 0,
         },
         label: {
           show: true,
