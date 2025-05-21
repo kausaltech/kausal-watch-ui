@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTheme } from 'styled-components';
 import { PieChart } from 'echarts/charts';
+import { LegendComponent } from 'echarts/components';
 import type { PieSeriesOption } from 'echarts/charts';
 import * as echarts from 'echarts/core';
 import Chart, { ECOption } from '@/components/paths/graphs/Chart';
@@ -10,8 +11,9 @@ import {
   Unit,
 } from '@/common/__generated__/graphql';
 import { CallbackDataParams } from 'echarts/types/dist/shared';
+import { getDefaultColors } from './indicator-chart-colors';
 
-echarts.use([PieChart]);
+echarts.use([PieChart, LegendComponent]);
 
 interface SeriesData {
   name: string;
@@ -108,6 +110,10 @@ const DashboardIndicatorPieChartBlock = ({
         {
           name: categoryName,
           value: value,
+          itemStyle: {
+            // An unset defaultColor is returned as an empty string
+            color: series.dimensionCategory.defaultColor || undefined,
+          },
         },
       ];
     }, [] as SeriesData[]) ?? [];
@@ -118,6 +124,23 @@ const DashboardIndicatorPieChartBlock = ({
       trigger: 'item',
       formatter: createTooltipFormatter(indicator ?? null, seriesData),
     },
+    legend: {
+      show: true,
+      orient: 'horizontal',
+      bottom: 0,
+      left: 'center',
+      type: 'plain',
+      selectedMode: false,
+      textStyle: {
+        color: theme.textColor.primary,
+      },
+      pageTextStyle: {
+        color: theme.textColor.primary,
+      },
+      pageIconColor: theme.textColor.primary,
+      pageIconInactiveColor: theme.textColor.tertiary,
+    },
+    color: getDefaultColors(theme),
     series: [
       {
         type: 'pie',
@@ -127,23 +150,35 @@ const DashboardIndicatorPieChartBlock = ({
           borderColor: theme.themeColors.white,
           borderWidth: 0,
         },
+
         label: {
           show: true,
-          formatter: '{b}\n{d}%',
+          formatter: (params: CallbackDataParams) =>
+            `${params.name}\n${
+              params.percent ? `${Math.round(params.percent)}%` : ''
+            }`,
         },
+
         emphasis: {
           label: {
             show: true,
-            fontSize: 14,
             fontWeight: 'bold',
           },
         },
+
         data: seriesData,
       },
     ],
   };
 
-  return <Chart data={option} isLoading={false} height="300px" />;
+  return (
+    <>
+      <h5>
+        {dimension?.name} ({assertedYear})
+      </h5>
+      <Chart data={option} isLoading={false} height="300px" />
+    </>
+  );
 };
 
 export default DashboardIndicatorPieChartBlock;

@@ -21,13 +21,10 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
           dimensionCategory {
             id
             name
+            defaultColor
           }
           values {
             id
-            categories {
-              id
-              name
-            }
             value
             date
           }

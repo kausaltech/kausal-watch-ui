@@ -44,6 +44,10 @@ const StyledRow = styled(Row)`
   --bs-gutter-y: ${({ theme }) => theme.spaces.s200};
 `;
 
+const StyledCard = styled(Card)`
+  height: 100%;
+`;
+
 function getBlockComponent(block: DashboardBlock) {
   switch (block.blockType) {
     case 'DashboardParagraphBlock': {
@@ -100,9 +104,9 @@ const DashboardRowBlock = ({
         <StyledRow>
           {blocks.map((block, index) => (
             <Col key={`${block.id}-${index}`} md={columnWidth}>
-              <Card outline>
+              <StyledCard outline>
                 <DashboardCardContents block={block} />
-              </Card>
+              </StyledCard>
             </Col>
           ))}
         </StyledRow>
