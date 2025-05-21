@@ -121,7 +121,12 @@ interface BadgeContentProps {
   ariaLabel?: string;
   iconSvg?: string;
   iconImage?: string;
-  color?: 'brandDark' | 'brandLight' | 'neutralDark' | 'neutralLight';
+  color?:
+    | 'badgeColor'
+    | 'brandDark'
+    | 'brandLight'
+    | 'neutralDark'
+    | 'neutralLight';
   isLink: boolean;
   maxLines?: number;
 }
@@ -133,7 +138,7 @@ const BadgeContent = (props: BadgeContentProps) => {
     iconSvg,
     iconImage,
     ariaLabel,
-    color = 'brandDark',
+    color = 'badgeColor',
     isLink = false,
     maxLines,
   } = props;
