@@ -38,6 +38,7 @@ const ValueBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 `;
 
 const YearLabel = styled.div`
@@ -55,6 +56,11 @@ const Unit = styled.span`
   font-size: 1.5rem;
 `;
 
+const MissingValue = styled.span`
+  color: ${(props) => props.theme.textColor.secondary};
+  cursor: help;
+`;
+
 const DashboardIndicatorSummaryBlock = ({ indicator }) => {
   const locale = useLocale();
   const theme = useTheme();
@@ -67,13 +73,14 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
 
   const latestFormatted = latestValue
     ? beautifyValue(latestValue.value, locale)
-    : '-';
-
-  const latestYear = latestValue ? dayjs(latestValue.date).format('YYYY') : '';
+    : null;
+  const latestYear = latestValue
+    ? dayjs(latestValue.date).format('YYYY')
+    : null;
 
   const goal = goals?.[0];
-  const goalFormatted = goal ? beautifyValue(goal.value, locale) : '-';
-  const goalYear = goal ? dayjs(goal.date).format('YYYY') : '';
+  const goalFormatted = goal ? beautifyValue(goal.value, locale) : null;
+  const goalYear = goal ? dayjs(goal.date).format('YYYY') : null;
 
   return (
     <Container>
@@ -83,12 +90,21 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
       )}
       <SummaryRow>
         <ValueBlock>
-          <YearLabel>{latestYear}</YearLabel>
+          {latestYear && <YearLabel>{latestYear}</YearLabel>}
           <ValueText>
-            {latestFormatted}
-            <Unit>{shortUnit}</Unit>
+            {latestFormatted ? (
+              <>
+                {latestFormatted}
+                <Unit>{shortUnit}</Unit>
+              </>
+            ) : (
+              <MissingValue title="Value not available">
+                – <Unit>{shortUnit}</Unit>
+              </MissingValue>
+            )}
           </ValueText>
         </ValueBlock>
+
         <div style={{ marginTop: '2.5rem' }}>
           <Icon.ArrowRight
             size={24}
@@ -96,11 +112,20 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
             aria-hidden="true"
           />
         </div>
+
         <ValueBlock>
-          <YearLabel>{goalYear}</YearLabel>
+          {goalYear && <YearLabel>{goalYear}</YearLabel>}
           <ValueText>
-            {goalFormatted}
-            <Unit>{shortUnit}</Unit>
+            {goalFormatted ? (
+              <>
+                {goalFormatted}
+                <Unit>{shortUnit}</Unit>
+              </>
+            ) : (
+              <MissingValue title="Goal not available">
+                – <Unit>{shortUnit}</Unit>
+              </MissingValue>
+            )}
           </ValueText>
         </ValueBlock>
       </SummaryRow>
