@@ -3,6 +3,20 @@ import { gql } from '@apollo/client';
 export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
   fragment DashboardIndicatorFragment on Indicator {
     name
+    description
+    latestValue {
+      value
+      date
+    }
+    goals {
+      value
+      date
+    }
+    unit {
+      name
+      shortName
+    }
+    desiredTrend
   }
 
   fragment DashboardIndicatorBlockFragment on DashboardRowBlock {
@@ -54,8 +68,22 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
 
       ... on DashboardIndicatorSummaryBlock {
         id
+        blockType
         indicator {
-          ...DashboardIndicatorFragment
+          name
+          description
+          unit {
+            name
+            shortName
+          }
+          latestValue {
+            value
+            date
+          }
+          goals {
+            value
+            date
+          }
         }
       }
     }
