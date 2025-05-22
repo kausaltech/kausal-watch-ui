@@ -60,8 +60,6 @@ function getBlockComponent(block: DashboardBlock) {
     case 'DashboardIndicatorBarChartBlock':
     case 'DashboardIndicatorLineChartBlock':
       // TODO: Add component for each block type
-      return <pre>{JSON.stringify(block, null, 2)}</pre>;
-    default:
       return null;
   }
 }

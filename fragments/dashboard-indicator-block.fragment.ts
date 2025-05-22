@@ -70,20 +70,7 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
         id
         blockType
         indicator {
-          name
-          description
-          unit {
-            name
-            shortName
-          }
-          latestValue {
-            value
-            date
-          }
-          goals {
-            value
-            date
-          }
+          ...DashboardIndicatorFragment
         }
       }
     }

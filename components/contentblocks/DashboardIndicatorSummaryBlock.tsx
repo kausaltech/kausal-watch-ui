@@ -6,7 +6,7 @@ import Icon from 'components/common/Icon';
 import dayjs from '../../common/dayjs';
 
 const Container = styled.div`
-  padding: 2rem;
+  padding: 1rem;
   color: ${(props) => props.theme.themeColors.dark};
 `;
 
@@ -47,16 +47,11 @@ const YearLabel = styled.div`
 `;
 
 const ValueText = styled.div`
-  font-size: 2rem;
+  font-size: ${(props) => props.theme.fontSizeLg};
   font-weight: bold;
 `;
 
-const Unit = styled.span`
-  margin-left: 0.25rem;
-  font-size: 1.5rem;
-`;
-
-const MissingValue = styled.span`
+const Missing = styled.span`
   color: ${(props) => props.theme.textColor.secondary};
   cursor: help;
 `;
@@ -68,19 +63,20 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
   if (!indicator) return null;
 
   const { name, description, latestValue, goals, unit } = indicator;
+  const now = dayjs();
 
-  const shortUnit = unit?.shortName || unit?.name || '%';
+  const shortUnit = unit?.shortName || unit?.name || '';
 
   const latestFormatted = latestValue
     ? beautifyValue(latestValue.value, locale)
     : null;
-  const latestYear = latestValue
+  const latestYear = latestValue?.date
     ? dayjs(latestValue.date).format('YYYY')
     : null;
 
-  const goal = goals?.[0];
-  const goalFormatted = goal ? beautifyValue(goal.value, locale) : null;
-  const goalYear = goal ? dayjs(goal.date).format('YYYY') : null;
+  const nextGoal = goals?.find((goal) => dayjs(goal.date).isSameOrAfter(now));
+  const goalFormatted = nextGoal ? beautifyValue(nextGoal.value, locale) : null;
+  const goalYear = nextGoal?.date ? dayjs(nextGoal.date).format('YYYY') : null;
 
   return (
     <Container>
@@ -88,6 +84,7 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
       {description && (
         <Description dangerouslySetInnerHTML={{ __html: description }} />
       )}
+
       <SummaryRow>
         <ValueBlock>
           {latestYear && <YearLabel>{latestYear}</YearLabel>}
@@ -95,12 +92,10 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
             {latestFormatted ? (
               <>
                 {latestFormatted}
-                <Unit>{shortUnit}</Unit>
+                {shortUnit && ` ${shortUnit}`}
               </>
             ) : (
-              <MissingValue title="Value not available">
-                – <Unit>{shortUnit}</Unit>
-              </MissingValue>
+              <Missing title="Data is not available">–</Missing>
             )}
           </ValueText>
         </ValueBlock>
@@ -119,12 +114,10 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
             {goalFormatted ? (
               <>
                 {goalFormatted}
-                <Unit>{shortUnit}</Unit>
+                {shortUnit && ` ${shortUnit}`}
               </>
             ) : (
-              <MissingValue title="Goal not available">
-                – <Unit>{shortUnit}</Unit>
-              </MissingValue>
+              <Missing title="Data is not available">–</Missing>
             )}
           </ValueText>
         </ValueBlock>
