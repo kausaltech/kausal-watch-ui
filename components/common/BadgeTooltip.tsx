@@ -12,6 +12,7 @@ const WrapperButton = styled(Button)`
   margin: 0;
   background-color: transparent;
   border: none;
+  text-align: left;
 `;
 
 const StyledBadge = styled(Badge)<{ color: string; $isLink: boolean }>`
@@ -28,7 +29,7 @@ const StyledBadge = styled(Badge)<{ color: string; $isLink: boolean }>`
   padding-left: ${(props) => props.theme.badgePaddingX};
   padding-right: ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
-  line-height: 1.5;
+  line-height: ${(props) => props.theme.lineHeightMd};
   max-width: 100%;
   word-break: break-all;
   word-break: break-word;
