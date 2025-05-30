@@ -40,6 +40,7 @@ enum EmbedProvider {
   YOUTUBE = 'YouTube',
   PLOTLY = 'Plotly Chart Studio',
   POWERBI = 'PowerBI',
+  DEFAULT = 'default',
 }
 
 const ResponsiveStyles = styled.div`
@@ -95,6 +96,24 @@ const ResponsiveStyles = styled.div`
   }
 
   .responsive-object[data-embed-provider='${EmbedProvider.POWERBI}'] {
+    &.responsive-object-small {
+      iframe {
+        height: 400px;
+      }
+    }
+    &.responsive-object-medium {
+      iframe {
+        height: 600px;
+      }
+    }
+    &.responsive-object-large {
+      iframe {
+        height: 800px;
+      }
+    }
+  }
+
+  .responsive-object[data-embed-provider='${EmbedProvider.DEFAULT}'] {
     &.responsive-object-small {
       iframe {
         height: 400px;
