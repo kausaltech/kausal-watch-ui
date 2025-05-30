@@ -100,6 +100,7 @@ interface CardProps {
   children: React.ReactNode;
   outline?: boolean;
   altText?: string;
+  className?: string;
 }
 
 const Card = (props: CardProps) => {
@@ -113,6 +114,7 @@ const Card = (props: CardProps) => {
     customColor,
     children,
     outline,
+    className = '',
   } = props;
   const t = useTranslations();
 
@@ -145,7 +147,7 @@ const Card = (props: CardProps) => {
 
   return (
     <StyledCard
-      className={outline && 'outline'}
+      className={`${className} ${outline ? 'outline' : ''}`}
       $customColor={customColor}
       $customBackgroundColor={customBackgroundColor}
       data-testid="card"
