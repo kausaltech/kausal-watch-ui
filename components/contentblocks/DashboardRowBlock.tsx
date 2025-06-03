@@ -8,9 +8,10 @@ import {
   DashboardIndicatorAreaChartBlock,
   DashboardIndicatorBarChartBlock,
   DashboardIndicatorLineChartBlock,
-  DashboardIndicatorSummaryBlock,
+  DashboardIndicatorSummaryBlock as TDashboardIndicatorSummaryBlock,
 } from '@/common/__generated__/graphql';
 import Card from '../common/Card';
+import DashboardIndicatorSummaryBlock from './DashboardIndicatorSummaryBlock';
 import DashboardIndicatorPieChartBlockComponent from './indicator-chart/DashboardIndicatorPieChartBlock';
 
 const DashboardRowSection = styled.div<{
@@ -32,7 +33,7 @@ type DashboardBlock =
   | DashboardIndicatorAreaChartBlock
   | DashboardIndicatorBarChartBlock
   | DashboardIndicatorLineChartBlock
-  | DashboardIndicatorSummaryBlock;
+  | TDashboardIndicatorSummaryBlock;
 
 interface DashboardRowBlockProps extends Omit<TDashboardRowBlock, 'rawValue'> {
   topMargin?: boolean;
@@ -56,6 +57,12 @@ function getBlockComponent(block: DashboardBlock) {
         <div dangerouslySetInnerHTML={{ __html: paragraphBlock.text }} />
       ) : null;
     }
+    case 'DashboardIndicatorSummaryBlock': {
+      const summaryBlock = block as TDashboardIndicatorSummaryBlock;
+      return (
+        <DashboardIndicatorSummaryBlock indicator={summaryBlock.indicator} />
+      );
+    }
     case 'DashboardIndicatorPieChartBlock': {
       const pieChartBlock = block as DashboardIndicatorPieChartBlock;
 
@@ -64,17 +71,18 @@ function getBlockComponent(block: DashboardBlock) {
     case 'DashboardIndicatorAreaChartBlock':
     case 'DashboardIndicatorBarChartBlock':
     case 'DashboardIndicatorLineChartBlock':
-    case 'DashboardIndicatorSummaryBlock':
       // TODO: Add component for each block type
-      return <pre>{JSON.stringify(block, null, 2)}</pre>;
-    default:
       return null;
   }
 }
 
 const DashboardCardContents = ({ block }: { block: DashboardBlock }) => {
-  const title = 'indicator' in block ? block.indicator?.name : undefined;
-  const helpText = 'helpText' in block ? block.helpText : undefined;
+  const isSummaryBlock = block.blockType === 'DashboardIndicatorSummaryBlock';
+  const title =
+    !isSummaryBlock && 'indicator' in block ? block.indicator?.name : undefined;
+
+  const helpText =
+    !isSummaryBlock && 'helpText' in block ? block.helpText : undefined;
   const component = getBlockComponent(block);
 
   return (
