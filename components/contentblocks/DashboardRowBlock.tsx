@@ -12,6 +12,7 @@ import {
 } from '@/common/__generated__/graphql';
 import Card from '../common/Card';
 import DashboardIndicatorSummaryBlock from './DashboardIndicatorSummaryBlock';
+import DashboardIndicatorPieChartBlockComponent from './indicator-chart/DashboardIndicatorPieChartBlock';
 
 const DashboardRowSection = styled.div<{
   $topMargin?: boolean;
@@ -40,11 +41,18 @@ interface DashboardRowBlockProps extends Omit<TDashboardRowBlock, 'rawValue'> {
   blocks: DashboardBlock[];
 }
 
+const StyledRow = styled(Row)`
+  --bs-gutter-y: ${({ theme }) => theme.spaces.s200};
+`;
+
+const StyledCard = styled(Card)`
+  height: 100%;
+`;
+
 function getBlockComponent(block: DashboardBlock) {
   switch (block.blockType) {
     case 'DashboardParagraphBlock': {
       const paragraphBlock = block as DashboardParagraphBlock;
-
       return paragraphBlock.text ? (
         <div dangerouslySetInnerHTML={{ __html: paragraphBlock.text }} />
       ) : null;
@@ -55,7 +63,11 @@ function getBlockComponent(block: DashboardBlock) {
         <DashboardIndicatorSummaryBlock indicator={summaryBlock.indicator} />
       );
     }
-    case 'DashboardIndicatorPieChartBlock':
+    case 'DashboardIndicatorPieChartBlock': {
+      const pieChartBlock = block as DashboardIndicatorPieChartBlock;
+
+      return <DashboardIndicatorPieChartBlockComponent {...pieChartBlock} />;
+    }
     case 'DashboardIndicatorAreaChartBlock':
     case 'DashboardIndicatorBarChartBlock':
     case 'DashboardIndicatorLineChartBlock':
@@ -89,7 +101,6 @@ const DashboardRowBlock = ({
   bottomMargin = true,
 }: DashboardRowBlockProps) => {
   const columnWidth = 12 / blocks.length;
-  console.log(blocks);
 
   return (
     <DashboardRowSection
@@ -98,15 +109,15 @@ const DashboardRowBlock = ({
       $bottomMargin={bottomMargin}
     >
       <Container>
-        <Row>
+        <StyledRow>
           {blocks.map((block, index) => (
             <Col key={`${block.id}-${index}`} md={columnWidth}>
-              <Card outline>
+              <StyledCard outline>
                 <DashboardCardContents block={block} />
-              </Card>
+              </StyledCard>
             </Col>
           ))}
-        </Row>
+        </StyledRow>
       </Container>
     </DashboardRowSection>
   );
