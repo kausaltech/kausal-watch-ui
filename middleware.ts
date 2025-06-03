@@ -127,6 +127,8 @@ export default async function (request: NextAuthRequest) {
       query: GET_PLANS_BY_HOSTNAME,
       context: { authToken: session?.idToken },
       variables: { hostname },
+      fetchPolicy:
+        session == null || session.user == null ? 'cache-first' : 'no-cache',
     })
   );
 
