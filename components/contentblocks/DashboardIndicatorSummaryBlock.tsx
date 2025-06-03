@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { useTheme } from 'styled-components';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { beautifyValue } from '../../common/data/format';
 import Icon from 'components/common/Icon';
 import dayjs from '../../common/dayjs';
@@ -37,18 +37,30 @@ const SummaryRow = styled.div`
 const ValueBlock = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
+`;
+
+const ValueLabel = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+  font-size: ${(props) => props.theme.fontSizeBase};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
 const YearLabel = styled.div`
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-weight: normal;
   margin-bottom: 0.25rem;
 `;
 
 const ValueText = styled.div`
   font-size: ${(props) => props.theme.fontSizeLg};
   font-weight: bold;
+`;
+const UnitText = styled.span`
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-weight: normal;
 `;
 
 const Missing = styled.span`
@@ -59,6 +71,7 @@ const Missing = styled.span`
 const DashboardIndicatorSummaryBlock = ({ indicator }) => {
   const locale = useLocale();
   const theme = useTheme();
+  const t = useTranslations();
 
   if (!indicator) return null;
 
@@ -87,15 +100,16 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
 
       <SummaryRow>
         <ValueBlock>
+          <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
           {latestYear && <YearLabel>{latestYear}</YearLabel>}
           <ValueText>
             {latestFormatted ? (
               <>
                 {latestFormatted}
-                {shortUnit && ` ${shortUnit}`}
+                {shortUnit && <UnitText>{` ${shortUnit}`}</UnitText>}
               </>
             ) : (
-              <Missing title="Data is not available">–</Missing>
+              <Missing title={t('data-not-available')}>–</Missing>
             )}
           </ValueText>
         </ValueBlock>
@@ -109,15 +123,16 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
         </div>
 
         <ValueBlock>
+          <ValueLabel>{t('indicator-goal')}</ValueLabel>
           {goalYear && <YearLabel>{goalYear}</YearLabel>}
           <ValueText>
             {goalFormatted ? (
               <>
                 {goalFormatted}
-                {shortUnit && ` ${shortUnit}`}
+                {shortUnit && <UnitText>{` ${shortUnit}`}</UnitText>}
               </>
             ) : (
-              <Missing title="Data is not available">–</Missing>
+              <Missing title={t('data-not-available')}>–</Missing>
             )}
           </ValueText>
         </ValueBlock>
