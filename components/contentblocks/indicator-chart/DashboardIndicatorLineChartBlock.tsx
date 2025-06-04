@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTheme } from 'styled-components';
+import { useTranslations } from 'next-intl';
 import { LineChart, ScatterChart } from 'echarts/charts';
 import {
   GridComponent,
@@ -39,19 +40,20 @@ const X_SYMBOL =
   '-0.192399 20.7783 0.979174L13.0001 8.75735L5.22191 0.979175C4.05033 -0.192398 2.15084 -0.192398 0.979266 0.979175C-0.192307 ' +
   '2.15075 -0.192307 4.05024 0.979266 5.22182L8.75744 13L0.979266 20.7782Z';
 
-const DashboardIndicatorLineChartBlock: React.FC<Props> = ({
+const DashboardIndicatorLineChartBlock = ({
   chartSeries,
   indicator,
   dimension,
   showTotalLine,
-}) => {
+}: Props) => {
   const theme = useTheme();
+  const t = useTranslations();
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
   const unit = indicator?.unit?.name ?? '';
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
 
   if (!chartSeries?.length) {
-    return <div>No data</div>;
+    return <div>{t('data-not-available')}</div>;
   }
 
   const dimCategoryMap = new Map<
@@ -218,14 +220,14 @@ const DashboardIndicatorLineChartBlock: React.FC<Props> = ({
       appendTo: 'body',
       axisPointer: { type: 'line' },
       formatter: (params) => {
-        const seen = new Set<string>();
-        const ary = Array.isArray(params) ? params : [params];
-        const year = ary[0]?.data?.[0];
-        const rows = ary
+        const paramsArrayn = new Set<string>();
+        const paramsArray = Array.isArray(params) ? params : [params];
+        const year = paramsArray[0]?.data?.[0];
+        const rows = paramsArray
           .filter((p) => {
             if (!legendData.includes(p.seriesName)) return false;
-            if (seen.has(p.seriesName)) return false;
-            seen.add(p.seriesName);
+            if (paramsArrayn.has(p.seriesName)) return false;
+            paramsArrayn.add(p.seriesName);
             return true;
           })
           .map((p) => {
@@ -238,7 +240,6 @@ const DashboardIndicatorLineChartBlock: React.FC<Props> = ({
     grid: { left: 20, right: 20, top: 40, bottom: 60, containLabel: true },
     xAxis: {
       type: 'category',
-      name: 'Year',
       data: xCategories,
       boundaryGap: false,
       axisLabel: { color: theme.textColor.primary },
