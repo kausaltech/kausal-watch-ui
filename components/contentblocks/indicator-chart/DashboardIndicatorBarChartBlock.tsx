@@ -11,7 +11,11 @@ import * as echarts from 'echarts/core';
 import Chart, { ECOption } from '@/components/paths/graphs/Chart';
 import { DashboardIndicatorBarChartBlock as TDashboardIndicatorBarChartBlock } from '@/common/__generated__/graphql';
 import { getDefaultColors } from './indicator-chart-colors';
-import { buildDimSeries } from './indicator-charts-utility';
+import {
+  buildDimSeries,
+  buildTotalSeries,
+  buildTooltipFormatter,
+} from './indicator-charts-utility';
 
 echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
 
@@ -36,13 +40,11 @@ const DashboardIndicatorBarChartBlock = ({
   const dimSeries = dimension
     ? buildDimSeries(chartSeries, palette)
     : [
-        {
-          name: indicator.name ?? t('total'),
-          color: palette[0],
-          raw: chartSeries.flatMap((s) =>
-            s.values.map((v) => [new Date(v.date).getFullYear(), v.value])
-          ),
-        },
+        buildTotalSeries(
+          chartSeries,
+          graphsTheme.totalLineColor ?? palette[0],
+          indicator.name ?? t('total')
+        ),
       ];
 
   const xCategoriesSet = new Set<string>();
@@ -50,9 +52,8 @@ const DashboardIndicatorBarChartBlock = ({
 
   dimSeries.forEach(({ name, raw }) => {
     seriesDataMap[name] = [];
-    raw.forEach(([year, value]) => {
-      const yearStr = String(year);
-      xCategoriesSet.add(yearStr);
+    raw.forEach(([year]) => {
+      xCategoriesSet.add(String(year));
     });
   });
 
@@ -88,25 +89,7 @@ const DashboardIndicatorBarChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'shadow' },
-      formatter: (params: any[]) => {
-        const processedSeries = new Set<string>();
-        const paramsArray = Array.isArray(params) ? params : [params];
-        const year = paramsArray[0]?.axisValue;
-        const rows = paramsArray
-          .filter((p) => {
-            if (!legendData.includes(p.seriesName)) return false;
-            if (processedSeries.has(p.seriesName)) return false;
-            processedSeries.add(p.seriesName);
-            return true;
-          })
-          .map((p) => {
-            const value = typeof p.data === 'number' ? p.data.toFixed(1) : '-';
-            const name = dimension ? p.seriesName : t('total');
-            return `${p.marker} ${name}: ${value} ${unit}`;
-          });
-
-        return `<strong>${year}</strong><br/>${rows.join('<br/>')}`;
-      },
+      formatter: buildTooltipFormatter(unit, legendData, t, dimension),
     },
     grid: { left: 20, right: 20, top: 40, bottom: 60, containLabel: true },
     xAxis: {

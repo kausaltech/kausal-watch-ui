@@ -1,5 +1,6 @@
 import { linearRegression } from 'common/math';
 import { DashboardIndicatorLineChartBlock as TDashboardIndicatorLineChartBlock } from '@/common/__generated__/graphql';
+import { TFunction } from 'next-intl';
 
 export const X_SYMBOL =
   'path://M0.979266 20.7782C-0.192306 21.9497 -0.192307 23.8492 0.979266 25.0208C2.15084 26.1924 4.05033 26.1924 5.22191 ' +
@@ -135,4 +136,32 @@ export function buildTrendSeries(
         },
       ]
     : [];
+}
+
+export function buildTooltipFormatter(
+  unit: string,
+  legendData: string[],
+  t: TFunction,
+  dimension?: { name: string }
+) {
+  return (params: any[]) => {
+    const processedSeries = new Set<string>();
+    const paramsArray = Array.isArray(params) ? params : [params];
+    const year = paramsArray[0]?.axisValue;
+
+    const rows = paramsArray
+      .filter((p) => {
+        if (!legendData.includes(p.seriesName)) return false;
+        if (processedSeries.has(p.seriesName)) return false;
+        processedSeries.add(p.seriesName);
+        return true;
+      })
+      .map((p) => {
+        const value = typeof p.data === 'number' ? p.data.toFixed(1) : '-';
+        const name = dimension ? p.seriesName : t('total');
+        return `${p.marker} ${name}: ${value} ${unit}`;
+      });
+
+    return `${year}<br/>${rows.join('<br/>')}`;
+  };
 }
