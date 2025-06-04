@@ -56,6 +56,35 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
         }
       }
 
+      ... on DashboardIndicatorLineChartBlock {
+        id
+        helpText
+        showTotalLine
+        chartSeries {
+          dimensionCategory {
+            id
+            name
+            defaultColor
+          }
+          values {
+            id
+            value
+            date
+          }
+        }
+        dimension {
+          id
+          name
+          categories {
+            id
+            name
+          }
+        }
+        indicator {
+          ...DashboardIndicatorFragment
+        }
+      }
+
       ... on DashboardIndicatorAreaChartBlock {
         id
         indicator {
@@ -64,13 +93,6 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
       }
 
       ... on DashboardIndicatorBarChartBlock {
-        id
-        indicator {
-          ...DashboardIndicatorFragment
-        }
-      }
-
-      ... on DashboardIndicatorLineChartBlock {
         id
         indicator {
           ...DashboardIndicatorFragment
