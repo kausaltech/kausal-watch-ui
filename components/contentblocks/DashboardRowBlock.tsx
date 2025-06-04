@@ -14,6 +14,7 @@ import Card from '../common/Card';
 import DashboardIndicatorSummaryBlock from './DashboardIndicatorSummaryBlock';
 import DashboardIndicatorPieChartBlockComponent from './indicator-chart/DashboardIndicatorPieChartBlock';
 import DashboardIndicatorLineChartBlockComponent from './indicator-chart/DashboardIndicatorLineChartBlock';
+import DashboardIndicatorBarChartBlockComponent from './indicator-chart/DashboardIndicatorBarChartBlock';
 
 const DashboardRowSection = styled.div<{
   $topMargin?: boolean;
@@ -73,8 +74,11 @@ function getBlockComponent(block: DashboardBlock) {
       const lineChartBlock = block as DashboardIndicatorLineChartBlock;
       return <DashboardIndicatorLineChartBlockComponent {...lineChartBlock} />;
     }
+    case 'DashboardIndicatorBarChartBlock': {
+      const barChartBlock = block as DashboardIndicatorBarChartBlock;
+      return <DashboardIndicatorBarChartBlockComponent {...barChartBlock} />;
+    }
     case 'DashboardIndicatorAreaChartBlock':
-    case 'DashboardIndicatorBarChartBlock':
       // TODO: Add component for each block type
       return null;
   }
