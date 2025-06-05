@@ -87,6 +87,27 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
 
       ... on DashboardIndicatorAreaChartBlock {
         id
+        helpText
+        chartSeries {
+          dimensionCategory {
+            id
+            name
+            defaultColor
+          }
+          values {
+            id
+            value
+            date
+          }
+        }
+        dimension {
+          id
+          name
+          categories {
+            id
+            name
+          }
+        }
         indicator {
           ...DashboardIndicatorFragment
         }
