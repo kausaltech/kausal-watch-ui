@@ -17,6 +17,15 @@ export function usePrependPlanAndLocale(path: string) {
   return prependPlanAndLocale(plan, path, locale);
 }
 
+export function disablePrefetch(linkProps: Omit<LinkProps, 'href'>) {
+  if (!('prefetch' in linkProps))
+    return {
+      ...linkProps,
+      prefetch: false,
+    };
+  return linkProps;
+}
+
 export function prependPlanAndLocale(
   plan: PlanContextFragment,
   path: string,
@@ -89,7 +98,13 @@ export function IndicatorLink({
 }: { id: string | number; children: ReactNode } & LinkProps) {
   const href = usePrependPlanAndLocale(getIndicatorLinkProps(id).href);
 
-  return <NextLink passHref {...other} href={href} legacyBehavior />;
+  if (!('prefetch' in other)) {
+    other.prefetch = false;
+  }
+
+  return (
+    <NextLink passHref {...disablePrefetch(other)} href={href} legacyBehavior />
+  );
 }
 
 export function PathsNodeLink({
@@ -140,7 +155,12 @@ export function ActionLink({
     });
   }
   return (
-    <NextLink passHref {...other} href={actionLink} legacyBehavior>
+    <NextLink
+      passHref
+      {...disablePrefetch(other)}
+      href={actionLink}
+      legacyBehavior
+    >
       {children}
     </NextLink>
   );
@@ -152,7 +172,9 @@ export function OrganizationLink(
   const { organizationId, ...other } = props;
   const href = usePrependPlanAndLocale(`/organizations/${organizationId}`);
 
-  return <NextLink passHref {...other} href={href} legacyBehavior />;
+  return (
+    <NextLink passHref {...disablePrefetch(other)} href={href} legacyBehavior />
+  );
 }
 
 type ActionListLinkProps = {
@@ -177,7 +199,7 @@ export function ActionListLink(
     <NextLink
       href={{ ...href, pathname }}
       passHref
-      {...linkProps}
+      {...disablePrefetch(linkProps)}
       legacyBehavior
     />
   );
@@ -208,7 +230,9 @@ export function IndicatorListLink(
 ) {
   const href = usePrependPlanAndLocale(INDICATORS_PATH);
 
-  return <NextLink href={href} passHref {...props} legacyBehavior />;
+  return (
+    <NextLink href={href} passHref {...disablePrefetch(props)} legacyBehavior />
+  );
 }
 
 type StaticPageLinkProps =
@@ -230,7 +254,7 @@ export function StaticPageLink({
 }: PropsWithChildren<OtherLinkProps & StaticPageLinkProps>) {
   const href = usePrependPlanAndLocale(slug ?? page!.urlPath);
 
-  return <NextLink href={href} {...other} legacyBehavior />;
+  return <NextLink href={href} {...disablePrefetch(other)} legacyBehavior />;
 }
 
 type NavigationLinkProps = PropsWithChildren<OtherLinkProps & { slug: string }>;
@@ -253,7 +277,7 @@ export function NavigationLink({
   const href = prependPlanAndLocale(plan, slug, locale);
 
   return (
-    <NextLink href={href} {...other}>
+    <NextLink href={href} {...disablePrefetch(other)}>
       {children}
     </NextLink>
   );
@@ -272,7 +296,7 @@ export function Link({
   const href = usePrependPlanAndLocale(rawHref);
 
   return (
-    <NextLink href={href} {...linkProps}>
+    <NextLink href={href} {...disablePrefetch(linkProps)}>
       {children}
     </NextLink>
   );

@@ -183,6 +183,7 @@ const LanguageSelector = (props: LanguageSelectorProps) => {
                 <Link
                   locale={locale}
                   href={getLocaleHref(locale)}
+                  prefetch={false}
                   // Reset the cache so that stale locale cache isn't used. Required because the
                   // locale isn't passed to query calls as an argument.
                   onClick={() => apolloClient.clearStore()}
