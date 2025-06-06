@@ -53,7 +53,6 @@ const ResponsiveStyles = styled.div`
   .responsive-object object,
   .responsive-object embed {
     width: 100%;
-    height: 100%;
   }
 
   .responsive-object[data-embed-provider='${EmbedProvider.YOUTUBE}'] {
