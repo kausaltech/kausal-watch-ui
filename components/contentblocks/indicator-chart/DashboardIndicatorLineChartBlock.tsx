@@ -19,6 +19,7 @@ import {
   buildGoalSeries,
   buildTotalSeries,
   buildTrendSeries,
+  buildTooltipFormatter,
 } from './indicator-charts-utility';
 
 echarts.use([
@@ -107,7 +108,7 @@ const DashboardIndicatorLineChartBlock = ({
 
   const legendData = [
     ...dimSeries.map((d) => d.name),
-    ...(seriesTotal.length ? ['Total'] : []),
+    ...(showTotalLine && totalRaw.length ? [totalDef.name] : []),
     ...(goalSeries.length ? ['Goal'] : []),
     ...(trendSeries.length ? ['Trend'] : []),
   ];
@@ -124,23 +125,13 @@ const DashboardIndicatorLineChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'line' },
-      formatter: (params) => {
-        const processedSeries = new Set<string>();
-        const paramsArray = Array.isArray(params) ? params : [params];
-        const year = paramsArray[0]?.data?.[0];
-        const rows = paramsArray
-          .filter((p) => {
-            if (!legendData.includes(p.seriesName)) return false;
-            if (processedSeries.has(p.seriesName)) return false;
-            processedSeries.add(p.seriesName);
-            return true;
-          })
-          .map((p) => {
-            const v = (p.data as any[])[1] as number;
-            return `${p.marker} ${p.seriesName}: ${v.toFixed(1)} ${unit}`;
-          });
-        return `<strong>${year}</strong><br/>${rows.join('<br/>')}`;
-      },
+      formatter: buildTooltipFormatter(
+        unit,
+        legendData,
+        t,
+        dimension,
+        indicator?.valueRounding
+      ),
     },
     grid: { left: 20, right: 20, top: 40, bottom: 60, containLabel: true },
     xAxis: {

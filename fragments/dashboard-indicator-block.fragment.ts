@@ -4,6 +4,7 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
   fragment DashboardIndicatorFragment on Indicator {
     name
     description
+    valueRounding
     latestValue {
       value
       date

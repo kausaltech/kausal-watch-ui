@@ -13,7 +13,11 @@ import * as echarts from 'echarts/core';
 import Chart, { ECOption } from '@/components/paths/graphs/Chart';
 import { DashboardIndicatorAreaChartBlock as TDashboardIndicatorAreaChartBlock } from '@/common/__generated__/graphql';
 import { getDefaultColors } from './indicator-chart-colors';
-import { buildDimSeries, buildTotalSeries } from './indicator-charts-utility';
+import {
+  buildDimSeries,
+  buildTotalSeries,
+  buildTooltipFormatter,
+} from './indicator-charts-utility';
 
 echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent]);
 
@@ -72,17 +76,13 @@ const DashboardIndicatorAreaChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'line' },
-      formatter: (params: any[]) => {
-        const year = params[0]?.data?.[0] ?? '';
-        const rows = params
-          .filter((p) => legendData.includes(p.seriesName))
-          .map((p) => {
-            const value =
-              typeof p.data?.[1] === 'number' ? p.data[1].toFixed(1) : '-';
-            return `${p.marker} ${p.seriesName}: ${value} ${unit}`;
-          });
-        return `<strong>${year}</strong><br/>${rows.join('<br/>')}`;
-      },
+      formatter: buildTooltipFormatter(
+        unit,
+        legendData,
+        t,
+        dimension,
+        indicator?.valueRounding
+      ),
     },
     grid: { left: 20, right: 20, top: 40, bottom: 60, containLabel: true },
     xAxis: {

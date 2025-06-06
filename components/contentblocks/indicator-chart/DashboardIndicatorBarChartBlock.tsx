@@ -89,7 +89,13 @@ const DashboardIndicatorBarChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'shadow' },
-      formatter: buildTooltipFormatter(unit, legendData, t, dimension),
+      formatter: buildTooltipFormatter(
+        unit,
+        legendData,
+        t,
+        dimension,
+        indicator?.valueRounding
+      ),
     },
     grid: { left: 20, right: 20, top: 40, bottom: 60, containLabel: true },
     xAxis: {

@@ -138,12 +138,25 @@ export function buildTrendSeries(
     : [];
 }
 
+export function buildValueFormatter(valueRounding?: number) {
+  return (value: number) => {
+    return valueRounding != null
+      ? value.toLocaleString(undefined, {
+          maximumSignificantDigits: valueRounding,
+        })
+      : `${value}`;
+  };
+}
+
 export function buildTooltipFormatter(
   unit: string,
   legendData: string[],
   t: TFunction,
-  dimension?: { name: string }
+  dimension?: { name: string },
+  valueRounding?: number
 ) {
+  const formatValue = buildValueFormatter(valueRounding);
+
   return (params: any[]) => {
     const processedSeries = new Set<string>();
     const paramsArray = Array.isArray(params) ? params : [params];
@@ -157,11 +170,16 @@ export function buildTooltipFormatter(
         return true;
       })
       .map((p) => {
-        const value = typeof p.data === 'number' ? p.data.toFixed(1) : '-';
+        const value =
+          Array.isArray(p.data) && typeof p.data[1] === 'number'
+            ? formatValue(p.data[1])
+            : typeof p.data === 'number'
+            ? formatValue(p.data)
+            : '-';
         const name = dimension ? p.seriesName : t('total');
         return `${p.marker} ${name}: ${value} ${unit}`;
       });
 
-    return `${year}<br/>${rows.join('<br/>')}`;
+    return `<strong>${year}</strong><br/>${rows.join('<br/>')}`;
   };
 }
