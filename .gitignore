@@ -30,3 +30,4 @@ build-storybook.log
 
 # Sentry Config File
 .sentryclirc
+**/node_modules/

@@ -30,11 +30,19 @@ const authMiddleware = setContext(
   }
 );
 
-function makeClient(initialLocale: string, sessionToken?: string) {
+function makeClient(config: {
+  initialLocale: string;
+  sessionToken?: string;
+  planIdentifier: string;
+  planDomain: string;
+}) {
+  const { initialLocale, sessionToken, planIdentifier, planDomain } = config;
   return new NextSSRApolloClient({
     defaultContext: {
       locale: initialLocale,
       sessionToken,
+      planIdentifier,
+      planDomain,
     },
     cache: new NextSSRInMemoryCache(),
     link: ApolloLink.from([
@@ -70,15 +78,29 @@ function UpdateLocale({ children }: React.PropsWithChildren) {
 
 type Props = {
   initialLocale: string;
+  planIdentifier: string;
+  planDomain: string;
 } & React.PropsWithChildren;
 
-export function ApolloWrapper({ initialLocale, children }: Props) {
+export function ApolloWrapper({
+  initialLocale,
+  planIdentifier,
+  planDomain,
+  children,
+}: Props) {
   const session = useSession();
   const token =
     session.status === 'authenticated' ? session.data.idToken : undefined;
 
+  const clientConfig = {
+    initialLocale,
+    sessionToken: token,
+    planIdentifier,
+    planDomain,
+  };
+
   return (
-    <ApolloNextAppProvider makeClient={() => makeClient(initialLocale, token)}>
+    <ApolloNextAppProvider makeClient={() => makeClient(clientConfig)}>
       <UpdateLocale>{children}</UpdateLocale>
     </ApolloNextAppProvider>
   );

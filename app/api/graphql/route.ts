@@ -16,8 +16,9 @@ export const POST = async (request: NextAuthRequest) => {
     method: 'POST',
     headers: {
       'User-Agent': headersList.get('user-agent') ?? '',
-      'x-plan-domain': headersList.get('x-plan-domain') ?? '',
-      'x-plan-identifier': headersList.get('x-plan-identifier') ?? '',
+      'x-cache-plan-domain': headersList.get('x-cache-plan-domain') ?? '',
+      'x-cache-plan-identifier':
+        headersList.get('x-cache-plan-identifier') ?? '',
       Authorization: headersList.get('Authorization') ?? '',
       'Content-Type': 'application/json',
     },

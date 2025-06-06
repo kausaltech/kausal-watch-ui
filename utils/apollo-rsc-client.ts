@@ -1,9 +1,9 @@
-import { ApolloClient, ApolloLink, InMemoryCache, from } from '@apollo/client';
+import { ApolloClient, InMemoryCache, from } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
 import possibleTypes from '@/common/__generated__/possible_types.json';
 
-import { cookies, headers as getHeaders, headers } from 'next/headers';
+import { cookies, headers as getHeaders } from 'next/headers';
 import {
   errorLink,
   localeMiddleware,

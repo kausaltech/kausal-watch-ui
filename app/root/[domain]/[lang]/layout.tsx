@@ -11,6 +11,7 @@ import '@/styles/default/main.scss';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { auth } from '@/config/auth';
 import Script from 'next/script';
+import { headers } from 'next/headers';
 
 type Props = {
   params: { lang: string };
@@ -25,6 +26,9 @@ async function AsyncAuthProvider({ children }) {
 
 export default function LangLayout({ params, children }: Props) {
   const messages = useMessages();
+  const incomingHeaders = headers();
+  const planIdentifier = incomingHeaders.get('x-plan-identifier')!;
+  const planDomain = incomingHeaders.get('x-plan-domain')!;
 
   return (
     <html lang={params.lang}>
@@ -40,7 +44,11 @@ export default function LangLayout({ params, children }: Props) {
             <StyledComponentsRegistry>
               <DayjsLocaleProvider locale={params.lang}>
                 <AsyncAuthProvider>
-                  <ApolloWrapper initialLocale={params.lang}>
+                  <ApolloWrapper
+                    initialLocale={params.lang}
+                    planIdentifier={planIdentifier}
+                    planDomain={planDomain}
+                  >
                     {children}
                   </ApolloWrapper>
                 </AsyncAuthProvider>
