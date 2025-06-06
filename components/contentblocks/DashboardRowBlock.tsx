@@ -19,13 +19,16 @@ const DashboardRowSection = styled.div<{
   $topMargin?: boolean;
   $bottomMargin?: boolean;
 }>`
-  background-color: ${(props) => props.theme.themeColors.white};
+  background-color: ${(props) => props.theme.themeColors.light};
   color: ${(props) => props.theme.neutralDark};
   position: relative;
-  padding: ${(props) => props.theme.spaces.s100} 0;
+  padding-top: ${(props) =>
+    props.$topMargin ? props.theme.spaces.s300 : props.theme.spaces.s100};
+  padding-bottom: ${(props) =>
+    props.$bottomMargin ? props.theme.spaces.s300 : props.theme.spaces.s100};
   margin-top: ${(props) => (props.$topMargin ? props.theme.spaces.s400 : 0)};
   margin-bottom: ${(props) =>
-    props.$bottomMargin ? props.theme.spaces.s400 : 0};
+    props.$bottomMargin ? props.theme.spaces.s200 : 0};
 `;
 
 type DashboardBlock =
@@ -46,8 +49,16 @@ const StyledRow = styled(Row)`
   --bs-gutter-y: ${({ theme }) => theme.spaces.s200};
 `;
 
+/* Style richtext content slightly smaller on dashboard cards*/
 const StyledCard = styled(Card)`
   height: 100%;
+
+  h2 {
+    font-size: ${({ theme }) => theme.fontSizeLg};
+  }
+  h3 {
+    font-size: ${({ theme }) => theme.fontSizeMd};
+  }
 `;
 
 function getBlockComponent(block: DashboardBlock) {
