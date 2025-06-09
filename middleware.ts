@@ -184,9 +184,11 @@ export default auth(async (request: NextAuthRequest) => {
     // Pass the status message to the unpublished page as search params
     const message =
       parsedPlan.domain?.statusMessage ?? parsedPlan.statusMessage;
+    const loginEnabled = parsedPlan.loginEnabled ?? false;
     const queryParams = message
       ? `?${new URLSearchParams({
           message,
+          loginEnabled,
         }).toString()}`
       : '';
     const rewrittenUrl = new URL(
