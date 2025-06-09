@@ -184,12 +184,41 @@ export function buildTooltipFormatter(
   };
 }
 
-export function getYAxisBounds(
-  minValue?: number | null,
-  maxValue?: number | null
+export function buildYAxisConfig(
+  unit: string,
+  indicator?: {
+    minValue?: number | null;
+    maxValue?: number | null;
+    ticksCount?: number | null;
+    ticksRounding?: number | null;
+  },
+  color?: string
 ) {
-  return {
-    min: typeof minValue === 'number' ? minValue : undefined,
-    max: typeof maxValue === 'number' ? maxValue : undefined,
+  const yAxis: any = {
+    type: 'value',
+    name: unit,
+    axisLabel: {
+      color,
+      formatter: (value: number) => {
+        const rounding = indicator?.ticksRounding;
+        if (rounding != null) {
+          const rounded = Number(value).toPrecision(rounding);
+          return Number(rounded).toLocaleString();
+        }
+        return value;
+      },
+    },
   };
+
+  if (typeof indicator?.minValue === 'number') {
+    yAxis.min = indicator.minValue;
+  }
+  if (typeof indicator?.maxValue === 'number') {
+    yAxis.max = indicator.maxValue;
+  }
+  if (typeof indicator?.ticksCount === 'number') {
+    yAxis.splitNumber = indicator.ticksCount;
+  }
+
+  return yAxis;
 }

@@ -7,6 +7,8 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
     valueRounding
     minValue
     maxValue
+    ticksCount
+    ticksRounding
     latestValue {
       value
       date

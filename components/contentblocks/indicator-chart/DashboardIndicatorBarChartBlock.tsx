@@ -15,7 +15,7 @@ import {
   buildDimSeries,
   buildTotalSeries,
   buildTooltipFormatter,
-  getYAxisBounds,
+  buildYAxisConfig,
 } from './indicator-charts-utility';
 
 echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -104,12 +104,11 @@ const DashboardIndicatorBarChartBlock = ({
       data: xCategories,
       axisLabel: { color: theme.textColor.primary },
     },
-    yAxis: {
-      type: 'value',
-      ...getYAxisBounds(indicator?.minValue, indicator?.maxValue),
-      name: unit,
-      axisLabel: { color: theme.textColor.primary },
-    },
+    yAxis: buildYAxisConfig(
+      indicator?.unit?.name ?? '',
+      indicator,
+      theme.textColor.primary
+    ),
     series,
   };
 

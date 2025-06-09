@@ -20,7 +20,7 @@ import {
   buildTotalSeries,
   buildTrendSeries,
   buildTooltipFormatter,
-  getYAxisBounds,
+  buildYAxisConfig,
 } from './indicator-charts-utility';
 
 echarts.use([
@@ -141,13 +141,11 @@ const DashboardIndicatorLineChartBlock = ({
       boundaryGap: false,
       axisLabel: { color: theme.textColor.primary },
     },
-    yAxis: {
-      type: 'value',
-      name: unit,
-      ...getYAxisBounds(indicator?.minValue, indicator?.maxValue),
-      min: 0,
-      axisLabel: { color: theme.textColor.primary },
-    },
+    yAxis: buildYAxisConfig(
+      indicator?.unit?.name ?? '',
+      indicator,
+      theme.textColor.primary
+    ),
     series: [...seriesLines, ...seriesTotal, ...goalSeries, ...trendSeries],
   };
 
