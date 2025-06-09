@@ -183,3 +183,13 @@ export function buildTooltipFormatter(
     return `<strong>${year}</strong><br/>${rows.join('<br/>')}`;
   };
 }
+
+export function getYAxisBounds(
+  minValue?: number | null,
+  maxValue?: number | null
+) {
+  return {
+    min: typeof minValue === 'number' ? minValue : undefined,
+    max: typeof maxValue === 'number' ? maxValue : undefined,
+  };
+}
