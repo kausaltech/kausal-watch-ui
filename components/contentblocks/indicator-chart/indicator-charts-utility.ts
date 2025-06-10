@@ -176,8 +176,15 @@ export function buildTooltipFormatter(
             : typeof p.data === 'number'
             ? formatValue(p.data)
             : '-';
-        const name = dimension ? p.seriesName : t('total');
-        return `${p.marker} ${name}: ${value} ${unit}`;
+
+        const label =
+          p.seriesName === 'Goal'
+            ? t('goal')
+            : dimension
+            ? p.seriesName
+            : t('total');
+
+        return `${p.marker} ${label}: ${value} ${unit}`;
       });
 
     return `<strong>${year}</strong><br/>${rows.join('<br/>')}`;

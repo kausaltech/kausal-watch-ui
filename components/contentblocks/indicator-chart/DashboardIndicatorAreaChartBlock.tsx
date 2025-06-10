@@ -18,6 +18,7 @@ import {
   buildTotalSeries,
   buildTooltipFormatter,
   buildYAxisConfig,
+  buildTrendSeries,
 } from './indicator-charts-utility';
 
 echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -39,32 +40,62 @@ const DashboardIndicatorAreaChartBlock = ({
     return <div>{t('data-not-available')}</div>;
   }
 
-  const dimSeries = dimension
-    ? buildDimSeries(chartSeries, palette)
-    : [
-        buildTotalSeries(
-          chartSeries,
-          graphsTheme.totalLineColor ?? palette[0],
-          indicator.name ?? t('total')
-        ),
-      ];
+  const hasDimension = !!dimension;
+  const dimSeries = hasDimension ? buildDimSeries(chartSeries, palette) : [];
 
-  const legendData = dimSeries.map((d) => d.name);
+  const totalDef = buildTotalSeries(
+    chartSeries,
+    graphsTheme.totalLineColor ?? palette[0],
+    indicator.name ?? t('total')
+  );
+  const totalRaw = totalDef.raw;
+
+  const trendSeries =
+    indicator?.showTrendline && totalRaw.length >= 2
+      ? buildTrendSeries(
+          totalRaw,
+          indicator,
+          graphsTheme.trendLineColor ?? '#aaa'
+        )
+      : [];
+
+  const legendData = [
+    ...(hasDimension ? dimSeries.map((d) => d.name) : [totalDef.name]),
+    ...(trendSeries.length ? ['Trend'] : []),
+  ];
 
   const xCategories = Array.from(
-    new Set(dimSeries.flatMap((d) => d.raw.map(([y]) => String(y))))
+    new Set([
+      ...(hasDimension
+        ? dimSeries.flatMap((d) => d.raw.map(([y]) => String(y)))
+        : totalRaw.map(([y]) => String(y))),
+    ])
   ).sort();
 
-  const series = dimSeries.map((d) => ({
-    name: d.name,
-    type: 'line' as const,
-    areaStyle: {},
-    symbol: 'none' as const,
-    data: d.raw.map(([year, value]) => [String(year), value]),
-    itemStyle: { color: d.color },
-    lineStyle: { color: d.color },
-    emphasis: { focus: 'series' },
-  }));
+  const series = hasDimension
+    ? dimSeries.map((d) => ({
+        name: d.name,
+        type: 'line' as const,
+        areaStyle: {},
+        symbol: 'none' as const,
+        data: d.raw.map(([year, value]) => [String(year), value]),
+        itemStyle: { color: d.color },
+        lineStyle: { color: d.color },
+        emphasis: { focus: 'series' },
+      }))
+    : [
+        {
+          name: totalDef.name,
+          type: 'line' as const,
+          areaStyle: {},
+          symbol: 'circle' as const,
+          symbolSize: 6,
+          data: totalRaw.map(([year, value]) => [String(year), value]),
+          itemStyle: { color: totalDef.color },
+          lineStyle: { color: totalDef.color },
+          emphasis: { focus: 'series' },
+        },
+      ];
 
   const option: ECOption = {
     legend: {
@@ -97,7 +128,7 @@ const DashboardIndicatorAreaChartBlock = ({
       indicator,
       theme.textColor.primary
     ),
-    series,
+    series: [...series, ...trendSeries],
   };
 
   return (
