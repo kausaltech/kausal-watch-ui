@@ -1,6 +1,5 @@
 import createIntlMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import type { NextAuthRequest } from 'next-auth/lib';
 import { ApolloClient, InMemoryCache, from } from '@apollo/client';
 
 import possibleTypes from './common/__generated__/possible_types.json';
@@ -29,8 +28,6 @@ import {
   rewriteUrl,
 } from './utils/middleware.utils';
 import { tryRequest } from './utils/api.utils';
-
-import { auth } from './config/auth';
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
@@ -76,7 +73,7 @@ const clearCacheIfTimedOut = (function handleCacheTTL() {
   };
 })();
 
-export default auth(async (request: NextAuthRequest) => {
+export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
 
@@ -118,7 +115,6 @@ export default auth(async (request: NextAuthRequest) => {
   }
 
   clearCacheIfTimedOut();
-  const token = request.auth?.idToken;
 
   const { data, error } = await tryRequest(
     apolloClient.query<
@@ -126,12 +122,7 @@ export default auth(async (request: NextAuthRequest) => {
       GetPlansByHostnameQueryVariables
     >({
       query: GET_PLANS_BY_HOSTNAME,
-      context: { headers: token ? { Authorization: `Bearer ${token}` } : {} },
       variables: { hostname },
-      fetchPolicy:
-        token == null || request.auth?.user == null
-          ? 'cache-first'
-          : 'no-cache',
     })
   );
 
@@ -180,7 +171,7 @@ export default auth(async (request: NextAuthRequest) => {
 
   const response = handleI18nRouting(request);
 
-  if (isRestrictedPlan(parsedPlan)) {
+  if (isRestrictedPlan(parsedPlan) || !isPlanPublished(parsedPlan)) {
     // Pass the status message to the unpublished page as search params
     const message =
       parsedPlan.domain?.statusMessage ?? parsedPlan.statusMessage;
@@ -217,4 +208,4 @@ export default auth(async (request: NextAuthRequest) => {
     rewrittenUrl,
     parsedPlan.identifier
   );
-});
+}

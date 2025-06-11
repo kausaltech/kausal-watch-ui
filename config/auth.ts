@@ -1,5 +1,3 @@
-import { NextRequest } from 'next/server';
-
 import { headers } from 'next/headers';
 
 import type { OIDCConfig } from '@auth/core/providers';
@@ -14,7 +12,7 @@ type Profile = {
 export const {
   handlers: { GET, POST },
   auth,
-} = NextAuth((req?: NextRequest) => {
+} = NextAuth(() => {
   const headersList = headers();
   const protocol = headersList.get('x-forwarded-proto');
   const host = headersList.get('host');
@@ -68,6 +66,5 @@ export const {
     secret: process.env.AUTH_SECRET,
     redirectProxyUrl: url,
     trustHost: true,
-    basePath: '/api/auth',
   };
 });
