@@ -17,7 +17,6 @@ export const GET_PLANS_BY_HOSTNAME = gql`
       }
       primaryLanguage
       statusMessage
-      loginEnabled
       ... on Plan {
         id
         identifier

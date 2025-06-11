@@ -3,10 +3,7 @@ import type { Metadata } from 'next';
 import UnpublishedPlan from '@/components/plans/UnpublishedPlan';
 
 type Props = {
-  searchParams: {
-    message: string;
-    loginEnabled: string;
-  };
+  searchParams: { message: string };
 };
 
 export const metadata: Metadata = {
