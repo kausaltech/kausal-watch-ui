@@ -16,7 +16,6 @@ export const GET_PLANS_BY_HOSTNAME = gql`
         statusMessage
       }
       primaryLanguage
-      statusMessage
       ... on Plan {
         id
         identifier
