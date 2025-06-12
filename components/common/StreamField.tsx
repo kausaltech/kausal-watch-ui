@@ -40,6 +40,7 @@ enum EmbedProvider {
   YOUTUBE = 'YouTube',
   PLOTLY = 'Plotly Chart Studio',
   POWERBI = 'PowerBI',
+  ARCGIS = 'ArcGIS',
   DEFAULT = 'default',
 }
 
@@ -108,6 +109,24 @@ const ResponsiveStyles = styled.div`
     &.responsive-object-large {
       iframe {
         height: 800px;
+      }
+    }
+  }
+
+  .responsive-object[data-embed-provider='${EmbedProvider.ARCGIS}'] {
+    &.responsive-object-small {
+      iframe {
+        height: 400px !important;
+      }
+    }
+    &.responsive-object-medium {
+      iframe {
+        height: 600px !important;
+      }
+    }
+    &.responsive-object-large {
+      iframe {
+        height: 800px !important;
       }
     }
   }
