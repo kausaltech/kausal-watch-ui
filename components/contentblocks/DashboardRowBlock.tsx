@@ -8,21 +8,29 @@ import {
   DashboardIndicatorAreaChartBlock,
   DashboardIndicatorBarChartBlock,
   DashboardIndicatorLineChartBlock,
-  DashboardIndicatorSummaryBlock,
+  DashboardIndicatorSummaryBlock as TDashboardIndicatorSummaryBlock,
 } from '@/common/__generated__/graphql';
 import Card from '../common/Card';
+import DashboardIndicatorSummaryBlock from './DashboardIndicatorSummaryBlock';
+import DashboardIndicatorPieChartBlockComponent from './indicator-chart/DashboardIndicatorPieChartBlock';
+import DashboardIndicatorLineChartBlockComponent from './indicator-chart/DashboardIndicatorLineChartBlock';
+import DashboardIndicatorBarChartBlockComponent from './indicator-chart/DashboardIndicatorBarChartBlock';
+import DashboardIndicatorAreaChartBlockComponent from './indicator-chart/DashboardIndicatorAreaChartBlock';
 
 const DashboardRowSection = styled.div<{
   $topMargin?: boolean;
   $bottomMargin?: boolean;
 }>`
-  background-color: ${(props) => props.theme.themeColors.white};
+  background-color: ${(props) => props.theme.themeColors.light};
   color: ${(props) => props.theme.neutralDark};
   position: relative;
-  padding: ${(props) => props.theme.spaces.s100} 0;
+  padding-top: ${(props) =>
+    props.$topMargin ? props.theme.spaces.s300 : props.theme.spaces.s100};
+  padding-bottom: ${(props) =>
+    props.$bottomMargin ? props.theme.spaces.s300 : props.theme.spaces.s100};
   margin-top: ${(props) => (props.$topMargin ? props.theme.spaces.s400 : 0)};
   margin-bottom: ${(props) =>
-    props.$bottomMargin ? props.theme.spaces.s400 : 0};
+    props.$bottomMargin ? props.theme.spaces.s200 : 0};
 `;
 
 type DashboardBlock =
@@ -31,7 +39,7 @@ type DashboardBlock =
   | DashboardIndicatorAreaChartBlock
   | DashboardIndicatorBarChartBlock
   | DashboardIndicatorLineChartBlock
-  | DashboardIndicatorSummaryBlock;
+  | TDashboardIndicatorSummaryBlock;
 
 interface DashboardRowBlockProps extends Omit<TDashboardRowBlock, 'rawValue'> {
   topMargin?: boolean;
@@ -39,30 +47,63 @@ interface DashboardRowBlockProps extends Omit<TDashboardRowBlock, 'rawValue'> {
   blocks: DashboardBlock[];
 }
 
+const StyledRow = styled(Row)`
+  --bs-gutter-y: ${({ theme }) => theme.spaces.s200};
+`;
+
+/* Style richtext content slightly smaller on dashboard cards*/
+const StyledCard = styled(Card)`
+  height: 100%;
+
+  h2 {
+    font-size: ${({ theme }) => theme.fontSizeLg};
+  }
+  h3 {
+    font-size: ${({ theme }) => theme.fontSizeMd};
+  }
+`;
+
 function getBlockComponent(block: DashboardBlock) {
   switch (block.blockType) {
     case 'DashboardParagraphBlock': {
       const paragraphBlock = block as DashboardParagraphBlock;
-
       return paragraphBlock.text ? (
         <div dangerouslySetInnerHTML={{ __html: paragraphBlock.text }} />
       ) : null;
     }
-    case 'DashboardIndicatorPieChartBlock':
-    case 'DashboardIndicatorAreaChartBlock':
-    case 'DashboardIndicatorBarChartBlock':
-    case 'DashboardIndicatorLineChartBlock':
-    case 'DashboardIndicatorSummaryBlock':
-      // TODO: Add component for each block type
-      return <pre>{JSON.stringify(block, null, 2)}</pre>;
-    default:
-      return null;
+    case 'DashboardIndicatorSummaryBlock': {
+      const summaryBlock = block as TDashboardIndicatorSummaryBlock;
+      return (
+        <DashboardIndicatorSummaryBlock indicator={summaryBlock.indicator} />
+      );
+    }
+    case 'DashboardIndicatorPieChartBlock': {
+      const pieChartBlock = block as DashboardIndicatorPieChartBlock;
+
+      return <DashboardIndicatorPieChartBlockComponent {...pieChartBlock} />;
+    }
+    case 'DashboardIndicatorLineChartBlock': {
+      const lineChartBlock = block as DashboardIndicatorLineChartBlock;
+      return <DashboardIndicatorLineChartBlockComponent {...lineChartBlock} />;
+    }
+    case 'DashboardIndicatorBarChartBlock': {
+      const barChartBlock = block as DashboardIndicatorBarChartBlock;
+      return <DashboardIndicatorBarChartBlockComponent {...barChartBlock} />;
+    }
+    case 'DashboardIndicatorAreaChartBlock': {
+      const areaChartBlock = block as DashboardIndicatorAreaChartBlock;
+      return <DashboardIndicatorAreaChartBlockComponent {...areaChartBlock} />;
+    }
   }
 }
 
 const DashboardCardContents = ({ block }: { block: DashboardBlock }) => {
-  const title = 'indicator' in block ? block.indicator?.name : undefined;
-  const helpText = 'helpText' in block ? block.helpText : undefined;
+  const isSummaryBlock = block.blockType === 'DashboardIndicatorSummaryBlock';
+  const title =
+    !isSummaryBlock && 'indicator' in block ? block.indicator?.name : undefined;
+
+  const helpText =
+    !isSummaryBlock && 'helpText' in block ? block.helpText : undefined;
   const component = getBlockComponent(block);
 
   return (
@@ -81,7 +122,6 @@ const DashboardRowBlock = ({
   bottomMargin = true,
 }: DashboardRowBlockProps) => {
   const columnWidth = 12 / blocks.length;
-  console.log(blocks);
 
   return (
     <DashboardRowSection
@@ -90,15 +130,15 @@ const DashboardRowBlock = ({
       $bottomMargin={bottomMargin}
     >
       <Container>
-        <Row>
+        <StyledRow>
           {blocks.map((block, index) => (
             <Col key={`${block.id}-${index}`} md={columnWidth}>
-              <Card outline>
+              <StyledCard outline>
                 <DashboardCardContents block={block} />
-              </Card>
+              </StyledCard>
             </Col>
           ))}
-        </Row>
+        </StyledRow>
       </Container>
     </DashboardRowSection>
   );
