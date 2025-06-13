@@ -19,6 +19,8 @@ import {
   buildGoalSeries,
   buildTotalSeries,
   buildTrendSeries,
+  buildTooltipFormatter,
+  buildYAxisConfig,
 } from './indicator-charts-utility';
 
 echarts.use([
@@ -43,6 +45,10 @@ const DashboardIndicatorLineChartBlock = ({
   const unit = indicator?.unit?.name ?? '';
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
 
+  const totalLabel = t('total');
+  const goalLabel = t('goal');
+  const trendLabel = t('current-trend');
+
   if (!chartSeries?.length) {
     return <div>{t('data-not-available')}</div>;
   }
@@ -50,7 +56,8 @@ const DashboardIndicatorLineChartBlock = ({
   const dimSeries = buildDimSeries(chartSeries, palette);
   const totalDef = buildTotalSeries(
     chartSeries,
-    graphsTheme.totalLineColor ?? '#000'
+    graphsTheme.totalLineColor ?? '#000',
+    totalLabel
   );
   const totalRaw = totalDef.raw;
 
@@ -97,19 +104,21 @@ const DashboardIndicatorLineChartBlock = ({
   const trendSeries = buildTrendSeries(
     totalRaw,
     indicator,
-    graphsTheme.trendLineColor ?? '#aaa'
+    graphsTheme.trendLineColor ?? '#aaa',
+    trendLabel
   );
   const goalSeries = buildGoalSeries(
     indicator,
     unit,
-    graphsTheme.goalLineColors ?? []
+    graphsTheme.goalLineColors ?? [],
+    goalLabel
   );
 
   const legendData = [
     ...dimSeries.map((d) => d.name),
-    ...(seriesTotal.length ? ['Total'] : []),
-    ...(goalSeries.length ? ['Goal'] : []),
-    ...(trendSeries.length ? ['Trend'] : []),
+    ...(showTotalLine && totalRaw.length ? [totalLabel] : []),
+    ...(goalSeries.length ? [goalLabel] : []),
+    ...(trendSeries.length ? [trendLabel] : []),
   ];
 
   const option: ECOption = {
@@ -124,23 +133,13 @@ const DashboardIndicatorLineChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'line' },
-      formatter: (params) => {
-        const processedSeries = new Set<string>();
-        const paramsArray = Array.isArray(params) ? params : [params];
-        const year = paramsArray[0]?.data?.[0];
-        const rows = paramsArray
-          .filter((p) => {
-            if (!legendData.includes(p.seriesName)) return false;
-            if (processedSeries.has(p.seriesName)) return false;
-            processedSeries.add(p.seriesName);
-            return true;
-          })
-          .map((p) => {
-            const v = (p.data as any[])[1] as number;
-            return `${p.marker} ${p.seriesName}: ${v.toFixed(1)} ${unit}`;
-          });
-        return `<strong>${year}</strong><br/>${rows.join('<br/>')}`;
-      },
+      formatter: buildTooltipFormatter(
+        unit,
+        legendData,
+        t,
+        dimension,
+        indicator?.valueRounding
+      ),
     },
     grid: { left: 20, right: 20, top: 40, bottom: 60, containLabel: true },
     xAxis: {
@@ -149,12 +148,11 @@ const DashboardIndicatorLineChartBlock = ({
       boundaryGap: false,
       axisLabel: { color: theme.textColor.primary },
     },
-    yAxis: {
-      type: 'value',
-      name: unit,
-      min: 0,
-      axisLabel: { color: theme.textColor.primary },
-    },
+    yAxis: buildYAxisConfig(
+      indicator?.unit?.name ?? '',
+      indicator,
+      theme.textColor.primary
+    ),
     series: [...seriesLines, ...seriesTotal, ...goalSeries, ...trendSeries],
   };
 

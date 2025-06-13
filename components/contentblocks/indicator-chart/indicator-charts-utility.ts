@@ -1,6 +1,8 @@
 import { linearRegression } from 'common/math';
 import { DashboardIndicatorLineChartBlock as TDashboardIndicatorLineChartBlock } from '@/common/__generated__/graphql';
 
+type TFunction = (key: string) => string;
+
 export const X_SYMBOL =
   'path://M0.979266 20.7782C-0.192306 21.9497 -0.192307 23.8492 0.979266 25.0208C2.15084 26.1924 4.05033 26.1924 5.22191 ' +
   '25.0208L13.0001 17.2426L20.7783 25.0208C21.9498 26.1924 23.8493 26.1924 25.0209 25.0208C26.1925 23.8492 26.1925 21.9497 ' +
@@ -59,7 +61,8 @@ export function buildDimSeries(
 
 export function buildTotalSeries(
   chartSeries: TDashboardIndicatorLineChartBlock['chartSeries'],
-  totalLineColor: string
+  totalLineColor: string,
+  label = 'Total'
 ) {
   const totalMap = new Map<number, number>();
   chartSeries
@@ -73,7 +76,7 @@ export function buildTotalSeries(
 
   const totalRaw = Array.from(totalMap.entries()).sort((a, b) => a[0] - b[0]);
   return {
-    name: 'Total',
+    name: label,
     color: totalLineColor,
     raw: totalRaw,
   };
@@ -82,13 +85,14 @@ export function buildTotalSeries(
 export function buildGoalSeries(
   indicator: TDashboardIndicatorLineChartBlock['indicator'],
   unit: string,
-  goalLineColors: string[]
+  goalLineColors: string[],
+  label = 'Goal'
 ) {
   return (
     indicator?.goals?.map((g) => {
       const y = new Date(g.date).getFullYear();
       return {
-        name: 'Goal',
+        name: label,
         type: 'scatter' as const,
         symbol: X_SYMBOL,
         symbolSize: 10,
@@ -103,7 +107,8 @@ export function buildGoalSeries(
 export function buildTrendSeries(
   totalRaw: [number, number][],
   indicator: TDashboardIndicatorLineChartBlock['indicator'],
-  trendLineColor: string
+  trendLineColor: string,
+  label = 'Trend'
 ) {
   const regData = totalRaw.slice(-Math.min(totalRaw.length, 10));
   const predictedYears = regData.map(([yr]) => yr);
@@ -121,7 +126,7 @@ export function buildTrendSeries(
   return regData.length >= 2 && (indicator?.showTrendline ?? true)
     ? [
         {
-          name: 'Trend',
+          name: label,
           type: 'line' as const,
           symbol: 'none',
           showSymbol: false,
@@ -135,4 +140,91 @@ export function buildTrendSeries(
         },
       ]
     : [];
+}
+
+export function buildValueFormatter(valueRounding?: number) {
+  return (value: number) => {
+    return valueRounding != null
+      ? value.toLocaleString(undefined, {
+          maximumSignificantDigits: valueRounding,
+        })
+      : `${value}`;
+  };
+}
+
+export function buildTooltipFormatter(
+  unit: string,
+  legendData: string[],
+  t: TFunction,
+  dimension?: { name: string },
+  valueRounding?: number
+) {
+  const formatValue = buildValueFormatter(valueRounding);
+
+  return (params: any[]) => {
+    const processedSeries = new Set<string>();
+    const paramsArray = Array.isArray(params) ? params : [params];
+    const year = paramsArray[0]?.axisValue;
+
+    const rows = paramsArray
+      .filter((p) => {
+        if (!legendData.includes(p.seriesName)) return false;
+        if (processedSeries.has(p.seriesName)) return false;
+        processedSeries.add(p.seriesName);
+        return true;
+      })
+      .map((p) => {
+        const value =
+          Array.isArray(p.data) && typeof p.data[1] === 'number'
+            ? formatValue(p.data[1])
+            : typeof p.data === 'number'
+            ? formatValue(p.data)
+            : '-';
+
+        const label = dimension ? p.seriesName : p.seriesName;
+
+        return `${p.marker} ${label}: ${value} ${unit}`;
+      });
+
+    return `<strong>${year}</strong><br/>${rows.join('<br/>')}`;
+  };
+}
+
+export function buildYAxisConfig(
+  unit: string,
+  indicator?: {
+    minValue?: number | null;
+    maxValue?: number | null;
+    ticksCount?: number | null;
+    ticksRounding?: number | null;
+  },
+  color?: string
+) {
+  const yAxis: any = {
+    type: 'value',
+    name: unit,
+    axisLabel: {
+      color,
+      formatter: (value: number) => {
+        const rounding = indicator?.ticksRounding;
+        if (rounding != null) {
+          const rounded = Number(value).toPrecision(rounding);
+          return Number(rounded).toLocaleString();
+        }
+        return value;
+      },
+    },
+  };
+
+  if (typeof indicator?.minValue === 'number') {
+    yAxis.min = indicator.minValue;
+  }
+  if (typeof indicator?.maxValue === 'number') {
+    yAxis.max = indicator.maxValue;
+  }
+  if (typeof indicator?.ticksCount === 'number') {
+    yAxis.splitNumber = indicator.ticksCount;
+  }
+
+  return yAxis;
 }

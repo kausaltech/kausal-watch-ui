@@ -4,6 +4,12 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
   fragment DashboardIndicatorFragment on Indicator {
     name
     description
+    showTrendline
+    valueRounding
+    minValue
+    maxValue
+    ticksCount
+    ticksRounding
     latestValue {
       value
       date
@@ -87,6 +93,27 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
 
       ... on DashboardIndicatorAreaChartBlock {
         id
+        helpText
+        chartSeries {
+          dimensionCategory {
+            id
+            name
+            defaultColor
+          }
+          values {
+            id
+            value
+            date
+          }
+        }
+        dimension {
+          id
+          name
+          categories {
+            id
+            name
+          }
+        }
         indicator {
           ...DashboardIndicatorFragment
         }
@@ -94,6 +121,28 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
 
       ... on DashboardIndicatorBarChartBlock {
         id
+        barType
+        helpText
+        chartSeries {
+          dimensionCategory {
+            id
+            name
+            defaultColor
+          }
+          values {
+            id
+            value
+            date
+          }
+        }
+        dimension {
+          id
+          name
+          categories {
+            id
+            name
+          }
+        }
         indicator {
           ...DashboardIndicatorFragment
         }
