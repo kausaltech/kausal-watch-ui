@@ -45,6 +45,10 @@ const DashboardIndicatorLineChartBlock = ({
   const unit = indicator?.unit?.name ?? '';
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
 
+  const totalLabel = t('total');
+  const goalLabel = t('goal');
+  const trendLabel = t('current-trend');
+
   if (!chartSeries?.length) {
     return <div>{t('data-not-available')}</div>;
   }
@@ -52,7 +56,8 @@ const DashboardIndicatorLineChartBlock = ({
   const dimSeries = buildDimSeries(chartSeries, palette);
   const totalDef = buildTotalSeries(
     chartSeries,
-    graphsTheme.totalLineColor ?? '#000'
+    graphsTheme.totalLineColor ?? '#000',
+    totalLabel
   );
   const totalRaw = totalDef.raw;
 
@@ -99,19 +104,21 @@ const DashboardIndicatorLineChartBlock = ({
   const trendSeries = buildTrendSeries(
     totalRaw,
     indicator,
-    graphsTheme.trendLineColor ?? '#aaa'
+    graphsTheme.trendLineColor ?? '#aaa',
+    trendLabel
   );
   const goalSeries = buildGoalSeries(
     indicator,
     unit,
-    graphsTheme.goalLineColors ?? []
+    graphsTheme.goalLineColors ?? [],
+    goalLabel
   );
 
   const legendData = [
     ...dimSeries.map((d) => d.name),
-    ...(showTotalLine && totalRaw.length ? [totalDef.name] : []),
-    ...(goalSeries.length ? ['Goal'] : []),
-    ...(trendSeries.length ? ['Trend'] : []),
+    ...(showTotalLine && totalRaw.length ? [totalLabel] : []),
+    ...(goalSeries.length ? [goalLabel] : []),
+    ...(trendSeries.length ? [trendLabel] : []),
   ];
 
   const option: ECOption = {

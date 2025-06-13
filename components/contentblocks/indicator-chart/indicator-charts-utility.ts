@@ -1,6 +1,7 @@
 import { linearRegression } from 'common/math';
 import { DashboardIndicatorLineChartBlock as TDashboardIndicatorLineChartBlock } from '@/common/__generated__/graphql';
-import { TFunction } from 'next-intl';
+
+type TFunction = (key: string) => string;
 
 export const X_SYMBOL =
   'path://M0.979266 20.7782C-0.192306 21.9497 -0.192307 23.8492 0.979266 25.0208C2.15084 26.1924 4.05033 26.1924 5.22191 ' +
@@ -60,7 +61,8 @@ export function buildDimSeries(
 
 export function buildTotalSeries(
   chartSeries: TDashboardIndicatorLineChartBlock['chartSeries'],
-  totalLineColor: string
+  totalLineColor: string,
+  label = 'Total'
 ) {
   const totalMap = new Map<number, number>();
   chartSeries
@@ -74,7 +76,7 @@ export function buildTotalSeries(
 
   const totalRaw = Array.from(totalMap.entries()).sort((a, b) => a[0] - b[0]);
   return {
-    name: 'Total',
+    name: label,
     color: totalLineColor,
     raw: totalRaw,
   };
@@ -83,13 +85,14 @@ export function buildTotalSeries(
 export function buildGoalSeries(
   indicator: TDashboardIndicatorLineChartBlock['indicator'],
   unit: string,
-  goalLineColors: string[]
+  goalLineColors: string[],
+  label = 'Goal'
 ) {
   return (
     indicator?.goals?.map((g) => {
       const y = new Date(g.date).getFullYear();
       return {
-        name: 'Goal',
+        name: label,
         type: 'scatter' as const,
         symbol: X_SYMBOL,
         symbolSize: 10,
@@ -104,7 +107,8 @@ export function buildGoalSeries(
 export function buildTrendSeries(
   totalRaw: [number, number][],
   indicator: TDashboardIndicatorLineChartBlock['indicator'],
-  trendLineColor: string
+  trendLineColor: string,
+  label = 'Trend'
 ) {
   const regData = totalRaw.slice(-Math.min(totalRaw.length, 10));
   const predictedYears = regData.map(([yr]) => yr);
@@ -122,7 +126,7 @@ export function buildTrendSeries(
   return regData.length >= 2 && (indicator?.showTrendline ?? true)
     ? [
         {
-          name: 'Trend',
+          name: label,
           type: 'line' as const,
           symbol: 'none',
           showSymbol: false,
@@ -177,12 +181,7 @@ export function buildTooltipFormatter(
             ? formatValue(p.data)
             : '-';
 
-        const label =
-          p.seriesName === 'Goal'
-            ? t('goal')
-            : dimension
-            ? p.seriesName
-            : t('total');
+        const label = dimension ? p.seriesName : p.seriesName;
 
         return `${p.marker} ${label}: ${value} ${unit}`;
       });

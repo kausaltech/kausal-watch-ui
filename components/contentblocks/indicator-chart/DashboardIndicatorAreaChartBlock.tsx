@@ -36,6 +36,9 @@ const DashboardIndicatorAreaChartBlock = ({
   const unit = indicator?.unit?.name ?? '';
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
 
+  const totalLabel = t('total');
+  const trendLabel = t('current-trend');
+
   if (!chartSeries?.length) {
     return <div>{t('data-not-available')}</div>;
   }
@@ -46,7 +49,7 @@ const DashboardIndicatorAreaChartBlock = ({
   const totalDef = buildTotalSeries(
     chartSeries,
     graphsTheme.totalLineColor ?? palette[0],
-    indicator.name ?? t('total')
+    totalLabel
   );
   const totalRaw = totalDef.raw;
 
@@ -55,13 +58,14 @@ const DashboardIndicatorAreaChartBlock = ({
       ? buildTrendSeries(
           totalRaw,
           indicator,
-          graphsTheme.trendLineColor ?? '#aaa'
+          graphsTheme.trendLineColor ?? '#aaa',
+          trendLabel
         )
       : [];
 
   const legendData = [
-    ...(hasDimension ? dimSeries.map((d) => d.name) : [totalDef.name]),
-    ...(trendSeries.length ? ['Trend'] : []),
+    ...(hasDimension ? dimSeries.map((d) => d.name) : [totalLabel]),
+    ...(trendSeries.length ? [trendLabel] : []),
   ];
 
   const xCategories = Array.from(

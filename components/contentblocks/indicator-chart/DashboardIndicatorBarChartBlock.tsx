@@ -34,6 +34,8 @@ const DashboardIndicatorBarChartBlock = ({
   const unit = indicator?.unit?.name ?? '';
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
 
+  const totalLabel = t('total');
+
   if (!chartSeries?.length) {
     return <div>{t('data-not-available')}</div>;
   }
@@ -44,7 +46,7 @@ const DashboardIndicatorBarChartBlock = ({
         buildTotalSeries(
           chartSeries,
           graphsTheme.totalLineColor ?? palette[0],
-          indicator.name ?? t('total')
+          totalLabel
         ),
       ];
 
