@@ -33,10 +33,15 @@ const StyledCard = styled(BSCard)<{
     padding-bottom: 0.5rem;
   }
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 4px 4px 8px
-      ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
+  /* Styles when the Card is clickable */
+  a & {
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 4px 4px 8px
+        ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
+    }
   }
 
   /* Deprecated */
@@ -100,6 +105,7 @@ interface CardProps {
   children: React.ReactNode;
   outline?: boolean;
   altText?: string;
+  className?: string;
 }
 
 const Card = (props: CardProps) => {
@@ -113,6 +119,7 @@ const Card = (props: CardProps) => {
     customColor,
     children,
     outline,
+    className = '',
   } = props;
   const t = useTranslations();
 
@@ -145,7 +152,7 @@ const Card = (props: CardProps) => {
 
   return (
     <StyledCard
-      className={outline && 'outline'}
+      className={`${className} ${outline ? 'outline' : ''}`}
       $customColor={customColor}
       $customBackgroundColor={customBackgroundColor}
       data-testid="card"

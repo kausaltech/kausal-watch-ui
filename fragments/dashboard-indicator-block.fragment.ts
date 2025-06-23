@@ -3,6 +3,26 @@ import { gql } from '@apollo/client';
 export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
   fragment DashboardIndicatorFragment on Indicator {
     name
+    description
+    showTrendline
+    valueRounding
+    minValue
+    maxValue
+    ticksCount
+    ticksRounding
+    latestValue {
+      value
+      date
+    }
+    goals {
+      value
+      date
+    }
+    unit {
+      name
+      shortName
+    }
+    desiredTrend
   }
 
   fragment DashboardIndicatorBlockFragment on DashboardRowBlock {
@@ -17,29 +37,26 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
       ... on DashboardIndicatorPieChartBlock {
         helpText
         year
-        # chartSeries {
-        #   dimensionCategory {
-        #     id
-        #   }
-        #   values {
-        #     value
-        #     date
-        #   }
-        # }
-        indicator {
-          ...DashboardIndicatorFragment
+        chartSeries {
+          dimensionCategory {
+            id
+            name
+            defaultColor
+          }
+          values {
+            id
+            value
+            date
+          }
         }
-      }
-
-      ... on DashboardIndicatorAreaChartBlock {
-        id
-        indicator {
-          ...DashboardIndicatorFragment
+        dimension {
+          id
+          name
+          categories {
+            id
+            name
+          }
         }
-      }
-
-      ... on DashboardIndicatorBarChartBlock {
-        id
         indicator {
           ...DashboardIndicatorFragment
         }
@@ -47,6 +64,85 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
 
       ... on DashboardIndicatorLineChartBlock {
         id
+        helpText
+        showTotalLine
+        chartSeries {
+          dimensionCategory {
+            id
+            name
+            defaultColor
+          }
+          values {
+            id
+            value
+            date
+          }
+        }
+        dimension {
+          id
+          name
+          categories {
+            id
+            name
+          }
+        }
+        indicator {
+          ...DashboardIndicatorFragment
+        }
+      }
+
+      ... on DashboardIndicatorAreaChartBlock {
+        id
+        helpText
+        chartSeries {
+          dimensionCategory {
+            id
+            name
+            defaultColor
+          }
+          values {
+            id
+            value
+            date
+          }
+        }
+        dimension {
+          id
+          name
+          categories {
+            id
+            name
+          }
+        }
+        indicator {
+          ...DashboardIndicatorFragment
+        }
+      }
+
+      ... on DashboardIndicatorBarChartBlock {
+        id
+        barType
+        helpText
+        chartSeries {
+          dimensionCategory {
+            id
+            name
+            defaultColor
+          }
+          values {
+            id
+            value
+            date
+          }
+        }
+        dimension {
+          id
+          name
+          categories {
+            id
+            name
+          }
+        }
         indicator {
           ...DashboardIndicatorFragment
         }
@@ -54,6 +150,7 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
 
       ... on DashboardIndicatorSummaryBlock {
         id
+        blockType
         indicator {
           ...DashboardIndicatorFragment
         }
