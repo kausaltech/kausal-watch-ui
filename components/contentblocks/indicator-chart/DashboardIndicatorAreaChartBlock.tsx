@@ -44,6 +44,7 @@ const DashboardIndicatorAreaChartBlock = ({
   }
 
   const hasDimension = !!dimension;
+  const stackable = indicator?.dataCategoriesAreStackable;
   const dimSeries = hasDimension ? buildDimSeries(chartSeries, palette) : [];
 
   const totalDef = buildTotalSeries(
@@ -101,6 +102,10 @@ const DashboardIndicatorAreaChartBlock = ({
         },
       ];
 
+  const seriesWithStack = stackable
+    ? series.map((s) => ({ ...s, stack: 'categories' }))
+    : series;
+
   const option: ECOption = {
     legend: {
       show: true,
@@ -132,7 +137,7 @@ const DashboardIndicatorAreaChartBlock = ({
       indicator,
       theme.textColor.primary
     ),
-    series: [...series, ...trendSeries],
+    series: [...seriesWithStack, ...trendSeries],
   };
 
   return (
