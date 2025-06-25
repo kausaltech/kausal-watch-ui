@@ -5,9 +5,15 @@ import { beautifyValue } from '../../common/data/format';
 import Icon from 'components/common/Icon';
 import dayjs from '../../common/dayjs';
 
-const Container = styled.div`
+const Container = styled.div<{ hasDescription: boolean }>`
   padding: 1rem;
   color: ${(props) => props.theme.themeColors.dark};
+  display: flex;
+  flex-direction: column;
+  justify-content: ${({ hasDescription }) =>
+    hasDescription ? 'flex-start' : 'center'};
+  height: 100%;
+  align-items: flex-start;
 `;
 
 const IndicatorTitle = styled.h4`
@@ -24,8 +30,12 @@ const Description = styled.div`
   }
 `;
 
-const SummaryRow = styled.div`
+const SummaryRow = styled.div<{ hasDescription: boolean }>`
   margin-top: 2rem;
+  ${({ hasDescription, theme }) =>
+    hasDescription
+      ? `margin-top: ${theme.spaces.s200};`
+      : `margin-top: auto; margin-bottom: auto;`}
   font-size: 2rem;
   font-weight: bold;
   display: flex;
@@ -55,7 +65,7 @@ const YearLabel = styled.div`
 `;
 
 const ValueText = styled.div`
-  font-size: ${(props) => props.theme.fontSizeLg};
+  font-size: ${(props) => props.theme.fontSizeXl};
   font-weight: bold;
 `;
 const UnitText = styled.span`
@@ -92,13 +102,13 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
   const goalYear = nextGoal?.date ? dayjs(nextGoal.date).format('YYYY') : null;
 
   return (
-    <Container>
+    <Container hasDescription={!!description}>
       <IndicatorTitle>{name}</IndicatorTitle>
       {description && (
         <Description dangerouslySetInnerHTML={{ __html: description }} />
       )}
 
-      <SummaryRow>
+      <SummaryRow hasDescription={!!description}>
         <ValueBlock>
           <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
           {latestYear && <YearLabel>{latestYear}</YearLabel>}
