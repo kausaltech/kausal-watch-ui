@@ -31,7 +31,6 @@ const Description = styled.div`
 `;
 
 const SummaryRow = styled.div<{ hasDescription: boolean }>`
-  margin-top: 2rem;
   ${({ hasDescription, theme }) =>
     hasDescription
       ? `margin-top: ${theme.spaces.s200};`
