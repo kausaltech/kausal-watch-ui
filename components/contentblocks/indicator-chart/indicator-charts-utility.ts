@@ -203,6 +203,11 @@ export function buildYAxisConfig(
   const yAxis: any = {
     type: 'value',
     name: unit,
+    nameTextStyle: {
+      align: 'left',
+      padding: [0, 0, 0, -25],
+      fontSize: 12,
+    },
     axisLabel: {
       color,
       formatter: (value: number) => {

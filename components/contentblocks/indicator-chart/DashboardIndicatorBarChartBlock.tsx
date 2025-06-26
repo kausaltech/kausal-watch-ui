@@ -100,7 +100,13 @@ const DashboardIndicatorBarChartBlock = ({
         indicator?.valueRounding
       ),
     },
-    grid: { left: 20, right: 20, top: 40, bottom: 60, containLabel: true },
+    grid: {
+      left: 20,
+      right: 20,
+      top: 40,
+      bottom: 60,
+      containLabel: true,
+    },
     xAxis: {
       type: 'category',
       data: xCategories,
