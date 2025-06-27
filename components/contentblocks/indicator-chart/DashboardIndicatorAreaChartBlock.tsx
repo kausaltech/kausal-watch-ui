@@ -44,6 +44,7 @@ const DashboardIndicatorAreaChartBlock = ({
   }
 
   const hasDimension = !!dimension;
+  const stackable = indicator?.dataCategoriesAreStackable;
   const dimSeries = hasDimension ? buildDimSeries(chartSeries, palette) : [];
 
   const totalDef = buildTotalSeries(
@@ -80,7 +81,7 @@ const DashboardIndicatorAreaChartBlock = ({
     ? dimSeries.map((d) => ({
         name: d.name,
         type: 'line' as const,
-        areaStyle: {},
+        areaStyle: { opacity: 0.9 },
         symbol: 'none' as const,
         data: d.raw.map(([year, value]) => [String(year), value]),
         itemStyle: { color: d.color },
@@ -91,7 +92,7 @@ const DashboardIndicatorAreaChartBlock = ({
         {
           name: totalDef.name,
           type: 'line' as const,
-          areaStyle: {},
+          areaStyle: { opacity: 0.9 },
           symbol: 'circle' as const,
           symbolSize: 6,
           data: totalRaw.map(([year, value]) => [String(year), value]),
@@ -100,6 +101,10 @@ const DashboardIndicatorAreaChartBlock = ({
           emphasis: { focus: 'series' },
         },
       ];
+
+  const seriesWithStack = stackable
+    ? series.map((s) => ({ ...s, stack: 'categories' }))
+    : series;
 
   const option: ECOption = {
     legend: {
@@ -138,7 +143,7 @@ const DashboardIndicatorAreaChartBlock = ({
       indicator,
       theme.textColor.primary
     ),
-    series: [...series, ...trendSeries],
+    series: [...seriesWithStack, ...trendSeries],
   };
 
   return (

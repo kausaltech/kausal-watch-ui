@@ -14,6 +14,7 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
       value
       date
     }
+    dataCategoriesAreStackable
     goals {
       value
       date
