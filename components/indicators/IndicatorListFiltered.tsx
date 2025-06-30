@@ -508,10 +508,12 @@ const IndicatorListFiltered = (props) => {
       options
     );
   };
-  const indentationLevel = (item) =>
-    item.common == null
-      ? 1
-      : (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
+  const indentationLevel = (item) => {
+    if (!item.common || !hierarchy[item.common.id]) {
+      return 0;
+    }
+    return (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
+  };
 
   const hierarchyEnabled =
     hierarchy != null && Object.keys(hierarchy).length > 1;
