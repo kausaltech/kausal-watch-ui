@@ -6,7 +6,8 @@ import Icon from 'components/common/Icon';
 import dayjs from '../../common/dayjs';
 
 const Container = styled.div<{ hasDescription: boolean }>`
-  padding: 1rem;
+  padding: 0;
+  margin: 0;
   color: ${(props) => props.theme.themeColors.dark};
   display: flex;
   flex-direction: column;
@@ -16,7 +17,7 @@ const Container = styled.div<{ hasDescription: boolean }>`
   align-items: flex-start;
 `;
 
-const IndicatorTitle = styled.h4`
+const IndicatorTitle = styled.h2`
   font-weight: bold;
   font-size: ${(props) => props.theme.fontSizeLg};
 `;
