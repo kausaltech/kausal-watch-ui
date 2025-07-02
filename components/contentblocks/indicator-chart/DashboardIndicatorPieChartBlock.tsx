@@ -144,6 +144,7 @@ const DashboardIndicatorPieChartBlock = ({
     series: [
       {
         type: 'pie',
+        center: ['50%', '45%'],
         avoidLabelOverlap: true,
         itemStyle: {
           borderRadius: 0,

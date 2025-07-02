@@ -108,7 +108,7 @@ const DashboardCardContents = ({ block }: { block: DashboardBlock }) => {
 
   return (
     <>
-      {!!title && <h3>{title}</h3>}
+      {!!title && <h2>{title}</h2>}
       {!!helpText && <p>{helpText}</p>}
       {component}
     </>
