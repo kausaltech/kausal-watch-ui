@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
 import {
@@ -54,12 +55,34 @@ const StyledRow = styled(Row)`
 /* Style richtext content slightly smaller on dashboard cards*/
 const StyledCard = styled(Card)`
   height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 
   h2 {
     font-size: ${({ theme }) => theme.fontSizeLg};
   }
   h3 {
     font-size: ${({ theme }) => theme.fontSizeMd};
+  }
+`;
+
+const StyledLink = styled(Link)`
+  margin-top: auto;
+  padding-top: ${({ theme }) => theme.spaces.s200};
+  align-self: flex-end;
+  font-size: ${({ theme }) => theme.fontSizeSm};
+  text-decoration: none;
+  color: ${({ theme }) => theme.linkColor};
+
+  &:hover {
+    text-decoration: underline;
+    color: ${({ theme }) => theme.linkColor};
   }
 `;
 
@@ -79,7 +102,6 @@ function getBlockComponent(block: DashboardBlock) {
     }
     case 'DashboardIndicatorPieChartBlock': {
       const pieChartBlock = block as DashboardIndicatorPieChartBlock;
-
       return <DashboardIndicatorPieChartBlockComponent {...pieChartBlock} />;
     }
     case 'DashboardIndicatorLineChartBlock': {
@@ -101,7 +123,6 @@ const DashboardCardContents = ({ block }: { block: DashboardBlock }) => {
   const isSummaryBlock = block.blockType === 'DashboardIndicatorSummaryBlock';
   const title =
     !isSummaryBlock && 'indicator' in block ? block.indicator?.name : undefined;
-
   const helpText =
     !isSummaryBlock && 'helpText' in block ? block.helpText : undefined;
   const component = getBlockComponent(block);
@@ -122,6 +143,12 @@ const DashboardRowBlock = ({
   bottomMargin = true,
 }: DashboardRowBlockProps) => {
   const columnWidth = 12 / blocks.length;
+  const chartTypes = [
+    'DashboardIndicatorPieChartBlock',
+    'DashboardIndicatorLineChartBlock',
+    'DashboardIndicatorBarChartBlock',
+    'DashboardIndicatorAreaChartBlock',
+  ];
 
   return (
     <DashboardRowSection
@@ -131,13 +158,27 @@ const DashboardRowBlock = ({
     >
       <Container>
         <StyledRow>
-          {blocks.map((block, index) => (
-            <Col key={`${block.id}-${index}`} md={columnWidth}>
-              <StyledCard outline>
-                <DashboardCardContents block={block} />
-              </StyledCard>
-            </Col>
-          ))}
+          {blocks.map((block) => {
+            const { blockType } = block;
+            const isChart = chartTypes.includes(blockType);
+            const indicatorId =
+              isChart && 'indicator' in block && block.indicator
+                ? block.indicator.id
+                : undefined;
+
+            return (
+              <Col key={block.id} md={columnWidth}>
+                <StyledCard outline>
+                  <DashboardCardContents block={block} />
+                  {isChart && indicatorId && (
+                    <StyledLink href={`/indicators/${indicatorId}`}>
+                      See full data →
+                    </StyledLink>
+                  )}
+                </StyledCard>
+              </Col>
+            );
+          })}
         </StyledRow>
       </Container>
     </DashboardRowSection>
