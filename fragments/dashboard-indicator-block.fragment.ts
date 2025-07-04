@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 
 export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
   fragment DashboardIndicatorFragment on Indicator {
+    id
     name
     description
     showTrendline
