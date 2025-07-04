@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Container, Row, Col } from 'reactstrap';
 import styled from 'styled-components';
+import { useTranslations } from 'next-intl';
 import {
   DashboardRowBlock as TDashboardRowBlock,
   DashboardParagraphBlock,
@@ -142,6 +143,7 @@ const DashboardRowBlock = ({
   topMargin = true,
   bottomMargin = true,
 }: DashboardRowBlockProps) => {
+  const t = useTranslations();
   const columnWidth = 12 / blocks.length;
   const chartTypes = [
     'DashboardIndicatorPieChartBlock',
@@ -172,7 +174,7 @@ const DashboardRowBlock = ({
                   <DashboardCardContents block={block} />
                   {isChart && indicatorId && (
                     <StyledLink href={`/indicators/${indicatorId}`}>
-                      See full data →
+                      {t('see-full-data')}
                     </StyledLink>
                   )}
                 </StyledCard>
