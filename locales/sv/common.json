@@ -16,7 +16,7 @@
     "copied-to-clipboard": "Kopierad!",
     "copy-to-clipboard": "Kopiera länk till urklipp",
     "current-trend": "trend",
-    "data-not-available": "Data är inte tillgängliga",
+    "data-not-available": "Ingen data. Fel i blockkonfigurationen.",
     "dashboard": "Instrumentbräda",
     "email": "E-post",
     "error-email-format": "Ange en giltig e-postadress",
