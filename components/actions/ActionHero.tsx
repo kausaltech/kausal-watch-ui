@@ -240,13 +240,13 @@ function ActionHero(props: ActionHeroProps) {
   // If category or its parent has color defined
   const categoryWithColor = categories.find(
     (cat) =>
-      cat.color !== null || (cat.parent !== null && cat.parent.color !== null)
+      cat?.color !== null || (cat.parent !== null && cat.parent?.color !== null)
   );
   // Override overlay color with that
   if (categoryWithColor && theme.imageOverlay !== 'rgb(255, 255, 255)') {
     categoryColor = categoryWithColor.color
-      ? categoryWithColor.color
-      : categoryWithColor?.parent.color;
+      ? categoryWithColor?.color
+      : categoryWithColor?.parent?.color;
   }
 
   return (
