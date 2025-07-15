@@ -1,21 +1,25 @@
-/* eslint-disable no-restricted-syntax */
 const { secrets } = require('docker-secret');
 const { mkdir } = require('node:fs/promises');
 const lockfile = require('proper-lockfile');
-
+const { CycloneDxWebpackPlugin } = require('@cyclonedx/webpack-plugin');
 const path = require('path');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 const withNextIntl = require('next-intl/plugin')('./config/i18n.ts');
 
+const { getProjectIdFromPackageJson } = require('./kausal_common/src/env/project.cjs');
+
 if (process.env.DOTENV_CONFIG_PATH) {
   // Load CI environment variables defined in Ansible
   require('dotenv').config({ path: process.env.DOTENV_CONFIG_PATH });
 }
 
-const sentryAuthToken =
-  secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
+const sentryAuthToken = secrets.SENTRY_AUTH_TOKEN || process.env.SENTRY_AUTH_TOKEN;
+
+const isProd = process.env.NODE_ENV === 'production';
+const standaloneBuild = process.env.NEXTJS_STANDALONE_BUILD === '1';
+const prodAssetPrefix = isProd ? process.env.NEXTJS_ASSET_PREFIX : undefined;
 
 console.log(`
   ⚙ Kausal Watch UI
@@ -35,7 +39,7 @@ async function initializeThemes() {
     try {
       const {
         generateThemeSymlinks: generateThemeSymlinksPrivate,
-      } = require('@kausal/themes-private/setup.cjs');
+      } = require('@kausal-private/themes-private/setup.cjs');
       generateThemeSymlinksPrivate(destPath, { verbose: false });
       themesLinked = true;
     } catch (error) {
@@ -56,7 +60,7 @@ async function initializeThemes() {
   }
 }
 
-initializeThemes();
+void initializeThemes();
 
 /**
  * @type {import('next').NextConfig}
@@ -67,16 +71,11 @@ let config = {
       fullUrl: true,
     },
   },
+  output: standaloneBuild ? 'standalone' : undefined,
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
     ignoreBuildErrors: true,
   },
   productionBrowserSourceMaps: true,
@@ -93,23 +92,37 @@ let config = {
       },
     ],
   },
-  webpack(config, { webpack }) {
-    if (process.env.NODE_ENV !== 'development') {
-      // Disable Apollo Client development mode
-      config.plugins.push(
-        new webpack.DefinePlugin({
-          'globalThis.__DEV__': false,
+  webpack(cfg, context) {
+    const { webpack, isServer, nextRuntime } = context;
+    const isEdge = isServer && nextRuntime === 'edge';
+    cfg.plugins.push(
+      new webpack.DefinePlugin({
+        ...getCommonDefines(context.dir, true),
+      })
+    );
+    if (isProd) {
+      const sbomComponent = isServer ? (isEdge ? 'edge' : 'node') : 'browser';
+      const webpackOutputPath = cfg.output.path;
+      const sbomOutputPath = `${context.dir}/public/static/sbom/${sbomComponent}`;
+      const buildVersion = (process.env.BUILD_ID || 'unknown').replaceAll('_', '-');
+      cfg.plugins.push(
+        new CycloneDxWebpackPlugin({
+          outputLocation: path.relative(webpackOutputPath, sbomOutputPath),
+          rootComponentVersion: `1.0.0-${buildVersion}`,
+          rootComponentAutodetect: false,
+          rootComponentName: `${getProjectIdFromPackageJson(context.dir)}-${sbomComponent}`,
+          includeWellknown: false,
         })
       );
     }
 
-    return config;
+    return cfg;
   },
 };
 
 module.exports = withNextIntl(config);
 
-if (sentryAuthToken) {
+if (true) {
   const { withSentryConfig } = require('@sentry/nextjs');
 
   // Injected content via Sentry wizard below
@@ -129,9 +142,7 @@ if (sentryAuthToken) {
         // When an error occurs during release creation or sourcemaps
         // upload, the plugin will call this function. Without this
         // handler, the build would fail completely.
-        console.error(
-          '⚠️  There was an error communicating with the Sentry API'
-        );
+        console.error('⚠️  There was an error communicating with the Sentry API');
         console.error(error.message);
       },
     },
@@ -146,19 +157,39 @@ if (sentryAuthToken) {
       transpileClientSDK: true,
 
       // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-      tunnelRoute: '/monitoring',
+      tunnelRoute: undefined,
 
       // Hides source maps from generated client bundles
       hideSourceMaps: true,
-
       // Automatically tree-shake Sentry logger statements to reduce bundle size
       disableLogger: true,
-
-      // Enables automatic instrumentation of Vercel Cron Monitors.
-      // See the following for more information:
-      // https://docs.sentry.io/product/crons/
-      // https://vercel.com/docs/cron-jobs
-      automaticVercelMonitors: true,
+      automaticVercelMonitors: false,
     }
   );
+}
+
+function getCommonDefines(projectRoot, stringify) {
+  function maybeStringify(value) {
+    return stringify ? JSON.stringify(value) : value;
+  }
+
+  const defines = {
+    'globalThis.__DEV__': isProd ? 'false' : 'true',
+    'process.env.PROJECT_ID': maybeStringify(getProjectIdFromPackageJson(projectRoot)),
+    'process.env.NEXTJS_ASSET_PREFIX': maybeStringify(prodAssetPrefix || ''),
+    ...getSentryWebpackDefines(stringify),
+  };
+  return defines;
+}
+
+function getSentryWebpackDefines(stringify) {
+  const defines = {};
+  function setIfDefined(key, value) {
+    if (!value) return;
+    defines[`process.env.${key}`] = stringify ? JSON.stringify(value) : value;
+  }
+  const sentryDsnPlaceholder = process.env.SENTRY_DSN_PLACEHOLDER;
+  const sentryDsn = process.env.SENTRY_DSN;
+  setIfDefined('SENTRY_DSN', sentryDsnPlaceholder ?? sentryDsn);
+  return defines;
 }

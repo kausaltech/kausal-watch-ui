@@ -2,18 +2,19 @@
 
 import React from 'react';
 
-import { usePlan } from 'context/plan';
-import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
+
+import { useTranslations } from 'next-intl';
 import { useTheme } from 'styled-components';
 
-import { PlanContextFragment } from '@/common/__generated__/graphql';
+import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import { deploymentType } from '@/common/environment';
 import MonsidoAccessibility from '@/components/MonsidoAccessibility';
+import { usePlan } from '@/context/plan';
 import { getMetaTitles } from '@/utils/metadata';
 
 import ApplicationStateBanner from './common/ApplicationStateBanner';
-import SiteFooter, { UtilityLink } from './common/SiteFooter';
+import SiteFooter, { type UtilityLink } from './common/SiteFooter';
 import { useCustomComponent } from './paths/custom';
 
 type NavItem = NonNullable<PlanContextFragment['footer']>['items'][0];
@@ -71,9 +72,7 @@ function Footer() {
 
   // TODO: Remove this when we have a proper way to add custom links
   const additionalLinks = theme.settings?.customAdditionalLinks || [];
-  const hasCustomAccessibilityPage = additionalLinks?.find(
-    (link) => link.id === 'accessibility'
-  );
+  const hasCustomAccessibilityPage = additionalLinks?.find((link) => link.id === 'accessibility');
 
   plan.additionalLinks?.items?.map((link) =>
     additionalLinks.push({
@@ -122,10 +121,7 @@ function Footer() {
       name: t('give-feedback'),
       slug: plan.externalFeedbackUrl,
     });
-  } else if (
-    pathname !== '/feedback' &&
-    theme.settings.showFeedbackLink !== false
-  ) {
+  } else if (pathname !== '/feedback' && theme.settings.showFeedbackLink !== false) {
     const url = getFeedbackUrl(pathname);
     if (url != null) {
       utilityLinks.push({ id: '2', name: t('give-feedback'), slug: url });
