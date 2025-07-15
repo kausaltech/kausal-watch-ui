@@ -2,15 +2,17 @@
 
 import React, { useMemo } from 'react';
 
+import { usePathname } from 'next/navigation';
+
+import type { MainMenu, MenuItem } from 'common/__generated__/graphql';
 import { getActiveBranch } from 'common/links';
+import GoogleAnalytics from 'components/GoogleAnalytics';
 import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
 import GlobalNav from 'components/common/GlobalNav';
 import SkipToContent from 'components/common/SkipToContent';
-import GoogleAnalytics from 'components/GoogleAnalytics';
 import { usePlan } from 'context/plan';
 import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
-import { usePathname } from 'next/navigation';
 import { useTheme } from 'styled-components';
 
 import { deploymentType } from '@/common/environment';
@@ -18,8 +20,6 @@ import { getMetaTitles } from '@/utils/metadata';
 
 import TopToolBar from './common/TopToolBar';
 import { useCustomComponent } from './paths/custom';
-
-import { MainMenu, MenuItem } from 'common/__generated__/graphql';
 
 export type NavItem = {
   id: string;
@@ -59,9 +59,7 @@ const setActivePages = (navLinks, pathname, activeBranch) => {
       if (activeChild) childHasActivePage = true;
     }
     page.active =
-      activeBranch === page.slug ||
-      decodeURI(pathname) === page.urlPath ||
-      childHasActivePage;
+      activeBranch === page.slug || decodeURI(pathname) === page.urlPath || childHasActivePage;
     if (page.active) hasActivePage = true;
   });
   return hasActivePage;
@@ -142,9 +140,7 @@ function Header() {
         activeBranch={activeBranch}
         activePath={pathname}
         siteTitle={siteTitle}
-        ownerName={
-          plan.generalContent ? plan.generalContent.ownerName : plan.name
-        }
+        ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}
         navItems={navLinks}
         externalItems={externalLinks}
         customToolbarItems={theme.settings.customNavbarTools || []}
