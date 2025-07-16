@@ -40,7 +40,7 @@ const createLayout = (
     yaxis: {
       automargin: true,
       hoverformat: ',.3r',
-      tickformat: yRange.ticksRounding
+      tickformat: typeof yRange.ticksRounding === 'number'
         ? `,.${yRange.ticksRounding}~r`
         : ',.2~r',
       fixedrange: true,
