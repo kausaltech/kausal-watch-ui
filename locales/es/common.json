@@ -166,5 +166,6 @@
     "select-sector-for-actions": "Seleccione un sector de emisión para ver acciones relacionadas",
     "no-phase": "Sin fase",
     "no-status": "Sin estado",
-    "content-could-not-be-displayed": "No podemos mostrar este contenido en este momento. Por favor, intente actualizar la página. Se ha enviado un informe a nuestro equipo para investigar el problema."
+    "content-could-not-be-displayed": "No podemos mostrar este contenido en este momento. Por favor, intente actualizar la página. Se ha enviado un informe a nuestro equipo para investigar el problema.",
+    "do-not-show-video-again": "No volver a mostrar el video"
 }

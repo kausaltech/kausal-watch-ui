@@ -113,7 +113,7 @@ const IntroModal = ({ videoUrls }: IntroModalProps) => {
               checked={isChecked}
               onChange={(e) => setIsChecked(e.target.checked)}
             />
-            {t('do-not-show-again')}
+            {t('do-not-show-video-again')}
           </CheckboxLabel>
           <Button color="primary" onClick={handleClose}>
             {t('close')}
