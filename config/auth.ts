@@ -1,9 +1,10 @@
-import { NextRequest } from 'next/server';
-
 import { headers } from 'next/headers';
+import { NextRequest } from 'next/server';
 
 import type { OIDCConfig } from '@auth/core/providers';
 import NextAuth from 'next-auth';
+
+import { getAuthIssuer } from '@/kausal_common/src/env';
 
 type Profile = {
   name: string;
@@ -24,6 +25,8 @@ export const {
     console.error('Invalid request url');
     return { providers: [] };
   }
+
+  const issuer = getAuthIssuer();
 
   return {
     callbacks: {
@@ -56,7 +59,7 @@ export const {
         id: 'watch-oidc-provider',
         name: 'Kausal Watch Provider',
         type: 'oidc',
-        issuer: process.env.AUTH_ISSUER,
+        issuer,
         clientId: process.env.AUTH_CLIENT_ID,
         clientSecret: process.env.AUTH_CLIENT_SECRET,
         profile(profile) {
