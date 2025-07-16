@@ -17,6 +17,7 @@ export type Scalars = {
   PositiveInt: { input: any; output: any; }
   RichText: { input: any; output: any; }
   UUID: { input: any; output: any; }
+  _Any: { input: any; output: any; }
 };
 
 export type ActionGroupType = {
@@ -31,9 +32,13 @@ export type ActionImpact = {
   __typename?: 'ActionImpact';
   action: ActionNode;
   costDim: DimensionalMetricType;
+  /** @deprecated Use costDim instead. */
   costValues: Array<Maybe<YearlyValue>>;
+  effectDim: DimensionalMetricType;
   efficiencyDivisor?: Maybe<Scalars['Float']['output']>;
+  /** @deprecated Use effectDim instead. */
   impactDim: DimensionalMetricType;
+  /** @deprecated Use effectDim instead. */
   impactValues: Array<Maybe<YearlyValue>>;
   unitAdjustmentMultiplier?: Maybe<Scalars['Float']['output']>;
 };
@@ -137,6 +142,7 @@ export type ActionNode = NodeInterface & {
   group?: Maybe<ActionGroupType>;
   id: Scalars['ID']['output'];
   impactMetric?: Maybe<ForecastMetricType>;
+  impactMetrics: Array<ForecastMetricType>;
   indicatorNode?: Maybe<Node>;
   inputNodes: Array<NodeInterface>;
   /** @deprecated Use __typeName instead */
@@ -166,6 +172,8 @@ export type ActionNode = NodeInterface & {
 
 export type ActionNodeDownstreamNodesArgs = {
   maxDepth?: InputMaybe<Scalars['Int']['input']>;
+  onlyOutcome?: InputMaybe<Scalars['Boolean']['input']>;
+  untilNode?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -301,6 +309,11 @@ export type CollectionObjectType = {
   path: Scalars['String']['output'];
 };
 
+export type CoverageOutput = {
+  __typename?: 'CoverageOutput';
+  xml?: Maybe<Scalars['String']['output']>;
+};
+
 export type CreateFrameworkConfigMutation = {
   __typename?: 'CreateFrameworkConfigMutation';
   /** The created framework config instance */
@@ -398,6 +411,7 @@ export type DimensionalMetricType = {
   forecastFrom?: Maybe<Scalars['Int']['output']>;
   goals: Array<DimensionalMetricGoalEntry>;
   id: Scalars['ID']['output'];
+  measureDatapointYears: Array<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
   normalizedBy?: Maybe<NormalizerNodeType>;
   stackable: Scalars['Boolean']['output'];
@@ -744,9 +758,14 @@ export type ImageRenditionObjectType = {
 export type ImpactOverviewType = {
   __typename?: 'ImpactOverviewType';
   actions: Array<ActionImpact>;
+  costCategoryLabel?: Maybe<Scalars['String']['output']>;
   costCutpoint?: Maybe<Scalars['Float']['output']>;
+  costLabel?: Maybe<Scalars['String']['output']>;
   costNode: Node;
   costUnit: UnitType;
+  description?: Maybe<Scalars['String']['output']>;
+  effectCategoryLabel?: Maybe<Scalars['String']['output']>;
+  effectLabel?: Maybe<Scalars['String']['output']>;
   effectNode: Node;
   effectUnit: UnitType;
   /** @deprecated Use indicatorUnit instead */
@@ -755,11 +774,16 @@ export type ImpactOverviewType = {
   id: Scalars['ID']['output'];
   /** @deprecated Use effectNode instead. */
   impactNode: Node;
-  /** @deprecated Use effectUnit instead */
+  /** @deprecated Use indicatorUnit instead */
   impactUnit: UnitType;
   indicatorCutpoint?: Maybe<Scalars['Float']['output']>;
+  indicatorLabel?: Maybe<Scalars['String']['output']>;
   indicatorUnit: UnitType;
+  /** @deprecated Not needed */
   invertCost: Scalars['Boolean']['output'];
+  /** @deprecated Not needed */
+  invertEffect: Scalars['Boolean']['output'];
+  /** @deprecated Not needed */
   invertImpact: Scalars['Boolean']['output'];
   label: Scalars['String']['output'];
   /** @deprecated Use plot_limit_indicator instead */
@@ -777,6 +801,13 @@ export type InstanceBasicConfiguration = {
   requiresAuthentication: Scalars['Boolean']['output'];
   supportedLanguages: Array<Scalars['String']['output']>;
   themeIdentifier: Scalars['String']['output'];
+};
+
+export type InstanceChange = {
+  __typename?: 'InstanceChange';
+  id: Scalars['ID']['output'];
+  identifier: Scalars['String']['output'];
+  modifiedAt: Scalars['DateTime']['output'];
 };
 
 export type InstanceContext = {
@@ -1047,7 +1078,10 @@ export type MeasureTemplate = {
   __typename?: 'MeasureTemplate';
   defaultDataPoints: Array<MeasureTemplateDefaultDataPoint>;
   defaultValueSource: Scalars['String']['output'];
+  helpText: Scalars['String']['output'];
+  hidden: Scalars['Boolean']['output'];
   id: Scalars['ID']['output'];
+  includeInProgressTracker: Scalars['Boolean']['output'];
   maxValue?: Maybe<Scalars['Float']['output']>;
   measure?: Maybe<Measure>;
   minValue?: Maybe<Scalars['Float']['output']>;
@@ -1145,15 +1179,14 @@ export enum ModelAction {
   View = 'VIEW'
 }
 
-export type Mutations = {
-  __typename?: 'Mutations';
+export type Mutation = {
+  __typename?: 'Mutation';
   activateScenario?: Maybe<ActivateScenarioMutation>;
   createFrameworkConfig?: Maybe<CreateFrameworkConfigMutation>;
   createNzcFrameworkConfig?: Maybe<CreateNzcFrameworkConfigMutation>;
   deleteFrameworkConfig?: Maybe<DeleteFrameworkConfigMutation>;
-  registerUser?: Maybe<RegisterUser>;
   resetParameter?: Maybe<ResetParameterMutation>;
-  setNormalizer?: Maybe<SetNormalizerMutation>;
+  setNormalizer: SetNormalizerMutation;
   setParameter?: Maybe<SetParameterMutation>;
   updateFrameworkConfig?: Maybe<UpdateFrameworkConfigMutation>;
   updateMeasureDataPoint?: Maybe<UpdateMeasureDataPoint>;
@@ -1161,12 +1194,12 @@ export type Mutations = {
 };
 
 
-export type MutationsActivateScenarioArgs = {
+export type MutationActivateScenarioArgs = {
   id: Scalars['ID']['input'];
 };
 
 
-export type MutationsCreateFrameworkConfigArgs = {
+export type MutationCreateFrameworkConfigArgs = {
   baselineYear: Scalars['Int']['input'];
   frameworkId: Scalars['ID']['input'];
   instanceIdentifier: Scalars['ID']['input'];
@@ -1176,34 +1209,28 @@ export type MutationsCreateFrameworkConfigArgs = {
 };
 
 
-export type MutationsCreateNzcFrameworkConfigArgs = {
+export type MutationCreateNzcFrameworkConfigArgs = {
   configInput: FrameworkConfigInput;
   nzcData: NzcCityEssentialData;
 };
 
 
-export type MutationsDeleteFrameworkConfigArgs = {
+export type MutationDeleteFrameworkConfigArgs = {
   id: Scalars['ID']['input'];
 };
 
 
-export type MutationsRegisterUserArgs = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
-};
-
-
-export type MutationsResetParameterArgs = {
+export type MutationResetParameterArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
-export type MutationsSetNormalizerArgs = {
+export type MutationSetNormalizerArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
-export type MutationsSetParameterArgs = {
+export type MutationSetParameterArgs = {
   boolValue?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['ID']['input'];
   numberValue?: InputMaybe<Scalars['Float']['input']>;
@@ -1211,7 +1238,7 @@ export type MutationsSetParameterArgs = {
 };
 
 
-export type MutationsUpdateFrameworkConfigArgs = {
+export type MutationUpdateFrameworkConfigArgs = {
   baselineYear?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['ID']['input'];
   organizationIdentifier?: InputMaybe<Scalars['String']['input']>;
@@ -1221,7 +1248,7 @@ export type MutationsUpdateFrameworkConfigArgs = {
 };
 
 
-export type MutationsUpdateMeasureDataPointArgs = {
+export type MutationUpdateMeasureDataPointArgs = {
   frameworkInstanceId: Scalars['ID']['input'];
   internalNotes?: InputMaybe<Scalars['String']['input']>;
   measureTemplateId: Scalars['ID']['input'];
@@ -1230,7 +1257,7 @@ export type MutationsUpdateMeasureDataPointArgs = {
 };
 
 
-export type MutationsUpdateMeasureDataPointsArgs = {
+export type MutationUpdateMeasureDataPointsArgs = {
   frameworkConfigId: Scalars['ID']['input'];
   measures: Array<MeasureInput>;
 };
@@ -1255,6 +1282,7 @@ export type Node = NodeInterface & {
   goals: Array<NodeGoal>;
   id: Scalars['ID']['output'];
   impactMetric?: Maybe<ForecastMetricType>;
+  impactMetrics: Array<ForecastMetricType>;
   inputNodes: Array<NodeInterface>;
   /** @deprecated Use __typeName instead */
   isAction: Scalars['Boolean']['output'];
@@ -1281,6 +1309,8 @@ export type Node = NodeInterface & {
 
 export type NodeDownstreamNodesArgs = {
   maxDepth?: InputMaybe<Scalars['Int']['input']>;
+  onlyOutcome?: InputMaybe<Scalars['Boolean']['input']>;
+  untilNode?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -1334,6 +1364,7 @@ export type NodeInterface = {
   goals: Array<NodeGoal>;
   id: Scalars['ID']['output'];
   impactMetric?: Maybe<ForecastMetricType>;
+  impactMetrics: Array<ForecastMetricType>;
   inputNodes: Array<NodeInterface>;
   /** @deprecated Use __typeName instead */
   isAction: Scalars['Boolean']['output'];
@@ -1359,6 +1390,8 @@ export type NodeInterface = {
 
 export type NodeInterfaceDownstreamNodesArgs = {
   maxDepth?: InputMaybe<Scalars['Int']['input']>;
+  onlyOutcome?: InputMaybe<Scalars['Boolean']['input']>;
+  untilNode?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -1706,11 +1739,13 @@ export type PlaceHolderDataPoint = {
 
 export type Query = {
   __typename?: 'Query';
+  _service: _Service;
   action?: Maybe<ActionNode>;
   /** @deprecated Use impactOverviews instead */
   actionEfficiencyPairs: Array<ImpactOverviewType>;
   actions: Array<ActionNode>;
   activeNormalization?: Maybe<NormalizationType>;
+  activeNormalizations: Array<NormalizationType>;
   activeScenario: ScenarioType;
   availableInstances: Array<InstanceBasicConfiguration>;
   availableNormalizations: Array<NormalizationType>;
@@ -1743,7 +1778,7 @@ export type QueryActionsArgs = {
 
 
 export type QueryAvailableInstancesArgs = {
-  hostname?: InputMaybe<Scalars['String']['input']>;
+  hostname: Scalars['String']['input'];
 };
 
 
@@ -1799,11 +1834,6 @@ export type RegexBlock = StreamFieldInterface & {
   value: Scalars['String']['output'];
 };
 
-export type RegisterUser = {
-  __typename?: 'RegisterUser';
-  user?: Maybe<UserType>;
-};
-
 export type ResetParameterMutation = {
   __typename?: 'ResetParameterMutation';
   ok?: Maybe<Scalars['Boolean']['output']>;
@@ -1829,7 +1859,7 @@ export enum ScenarioKind {
 export type ScenarioType = {
   __typename?: 'ScenarioType';
   actualHistoricalYears?: Maybe<Array<Scalars['Int']['output']>>;
-  id?: Maybe<Scalars['ID']['output']>;
+  id: Scalars['ID']['output'];
   isActive: Scalars['Boolean']['output'];
   isDefault: Scalars['Boolean']['output'];
   isSelectable: Scalars['Boolean']['output'];
@@ -1855,8 +1885,10 @@ export type Section = {
   children: Array<Section>;
   descendants: Array<Section>;
   description: Scalars['String']['output'];
+  helpText: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   identifier?: Maybe<Scalars['String']['output']>;
+  maxTotal?: Maybe<Scalars['Float']['output']>;
   measureTemplates: Array<MeasureTemplate>;
   name: Scalars['String']['output'];
   parent?: Maybe<Section>;
@@ -1875,7 +1907,7 @@ export type ServerDeployment = {
 
 export type SetNormalizerMutation = {
   __typename?: 'SetNormalizerMutation';
-  activeNormalization?: Maybe<NormalizationType>;
+  activeNormalizer: NormalizationType;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -2074,10 +2106,27 @@ export type StructBlock = StreamFieldInterface & {
   rawValue: Scalars['String']['output'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  availableInstances: InstanceChange;
+};
+
 export type TagObjectType = {
   __typename?: 'TagObjectType';
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+};
+
+export type TestModeMutation = {
+  __typename?: 'TestModeMutation';
+  startCoverageTracking: Scalars['Boolean']['output'];
+  stopCoverageTracking: CoverageOutput;
+  switchCoverageContext: Scalars['Boolean']['output'];
+};
+
+
+export type TestModeMutationSwitchCoverageContextArgs = {
+  context: Scalars['String']['input'];
 };
 
 export type TextBlock = StreamFieldInterface & {
@@ -2227,17 +2276,22 @@ export type YearlyValue = {
   year: Scalars['Int']['output'];
 };
 
+export type _Service = {
+  __typename?: '_Service';
+  sdl: Scalars['String']['output'];
+};
+
 export type SetNormalizationFromWidgetMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
 export type SetNormalizationFromWidgetMutation = (
-  { setNormalizer?: (
+  { setNormalizer: (
     { ok: boolean }
     & { __typename?: 'SetNormalizerMutation' }
-  ) | null }
-  & { __typename?: 'Mutations' }
+  ) }
+  & { __typename?: 'Mutation' }
 );
 
 export type SetParameterMutationVariables = Exact<{
@@ -2259,7 +2313,7 @@ export type SetParameterMutation = (
     ) | null }
     & { __typename?: 'SetParameterMutation' }
   ) | null }
-  & { __typename?: 'Mutations' }
+  & { __typename?: 'Mutation' }
 );
 
 export type ActivateScenarioMutationVariables = Exact<{
@@ -2270,12 +2324,12 @@ export type ActivateScenarioMutationVariables = Exact<{
 export type ActivateScenarioMutation = (
   { activateScenario?: (
     { ok?: boolean | null, activeScenario?: (
-      { id?: string | null, name: string }
+      { id: string, name: string }
       & { __typename?: 'ScenarioType' }
     ) | null }
     & { __typename?: 'ActivateScenarioMutation' }
   ) | null }
-  & { __typename?: 'Mutations' }
+  & { __typename?: 'Mutation' }
 );
 
 export type SetGlobalParameterFromActionSummaryMutationVariables = Exact<{
@@ -2297,7 +2351,7 @@ export type SetGlobalParameterFromActionSummaryMutation = (
     ) | null }
     & { __typename?: 'SetParameterMutation' }
   ) | null }
-  & { __typename?: 'Mutations' }
+  & { __typename?: 'Mutation' }
 );
 
 export type SetGlobalParameterMutationVariables = Exact<{
@@ -2319,7 +2373,7 @@ export type SetGlobalParameterMutation = (
     ) | null }
     & { __typename?: 'SetParameterMutation' }
   ) | null }
-  & { __typename?: 'Mutations' }
+  & { __typename?: 'Mutation' }
 );
 
 export type SetNormalizationMutationVariables = Exact<{
@@ -2328,11 +2382,11 @@ export type SetNormalizationMutationVariables = Exact<{
 
 
 export type SetNormalizationMutation = (
-  { setNormalizer?: (
+  { setNormalizer: (
     { ok: boolean }
     & { __typename?: 'SetNormalizerMutation' }
-  ) | null }
-  & { __typename?: 'Mutations' }
+  ) }
+  & { __typename?: 'Mutation' }
 );
 
 export type GetInstanceGoalOutcomeQueryVariables = Exact<{
@@ -2358,7 +2412,7 @@ export type GetInstanceGoalOutcomeQuery = (
 );
 
 export type ScenarioFragmentFragment = (
-  { id?: string | null, isActive: boolean, isDefault: boolean, name: string }
+  { id: string, isActive: boolean, isDefault: boolean, name: string }
   & { __typename?: 'ScenarioType' }
 );
 
@@ -2385,7 +2439,7 @@ export type GetInstanceContextQuery = (
     )> }
     & { __typename?: 'InstanceType' }
   ), scenarios: Array<(
-    { id?: string | null, isActive: boolean, isDefault: boolean, name: string }
+    { id: string, isActive: boolean, isDefault: boolean, name: string }
     & { __typename?: 'ScenarioType' }
   )>, availableNormalizations: Array<(
     { id: string, label: string, isActive: boolean }
@@ -3245,7 +3299,7 @@ export type GetPageQueryVariables = Exact<{
 
 export type GetPageQuery = (
   { activeScenario: (
-    { id?: string | null }
+    { id: string }
     & { __typename?: 'ScenarioType' }
   ), page?: (
     { id?: string | null, title: string }
@@ -3444,7 +3498,7 @@ export type GetScenariosQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetScenariosQuery = (
   { scenarios: Array<(
-    { id?: string | null, name: string, isActive: boolean, isDefault: boolean }
+    { id: string, name: string, isActive: boolean, isDefault: boolean }
     & { __typename?: 'ScenarioType' }
   )> }
   & { __typename?: 'Query' }
