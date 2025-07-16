@@ -1,13 +1,11 @@
 import { ApolloLink, HttpLink, Operation } from '@apollo/client';
-import {
-  gqlUrl,
-  isLocal,
-  isServer,
-  logGraphqlQueries,
-} from '@/common/environment';
-import { API_PROXY_PATH } from '@/constants/routes';
 import { onError } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
+
+import { gqlUrl, isLocal, isServer, logGraphqlQueries } from '@/common/environment';
+import { API_PROXY_PATH } from '@/constants/routes';
+import { WILDCARD_DOMAINS_HEADER } from '@/kausal_common/src/constants/headers.mjs';
+import { getWildcardDomains } from '@/kausal_common/src/env';
 
 /**
  * The current locale is passed to Apollo links as context,
@@ -30,10 +28,7 @@ function logError(
   sentryExtras: { [key: string]: unknown }
 ) {
   if (isLocal) {
-    console.error(
-      `An error occurred while querying ${operation.operationName}: ${message}`,
-      error
-    );
+    console.error(`An error occurred while querying ${operation.operationName}: ${message}`, error);
   }
 
   captureException(message, {
@@ -49,24 +44,22 @@ function logError(
   });
 }
 
-export const errorLink = onError(
-  ({ networkError, graphQLErrors, operation }) => {
-    if (networkError) {
-      logError(operation, networkError.message, networkError, {
-        cause: networkError.cause,
-        name: networkError.name,
-      });
-    }
-
-    if (graphQLErrors) {
-      graphQLErrors.forEach((error) => {
-        logError(operation, error.message, error, {
-          errorPath: error.path,
-        });
-      });
-    }
+export const errorLink = onError(({ networkError, graphQLErrors, operation }) => {
+  if (networkError) {
+    logError(operation, networkError.message, networkError, {
+      cause: networkError.cause,
+      name: networkError.name,
+    });
   }
-);
+
+  if (graphQLErrors) {
+    graphQLErrors.forEach((error) => {
+      logError(operation, error.message, error, {
+        errorPath: error.path,
+      });
+    });
+  }
+});
 
 export const operationStart = new ApolloLink((operation, forward) => {
   operation.setContext({ start: Date.now() });
@@ -96,12 +89,8 @@ export const operationEnd = new ApolloLink((operation, forward) => {
  * Log the outgoing GraphQL queries and variables server-side. Useful for debugging
  * purposes and enabled by setting the LOG_GRAPHQL_QUERIES env variable.
  */
-function fetchWithLogging(
-  input: RequestInfo,
-  init: RequestInit = {}
-): Promise<Response> {
-  const body =
-    typeof init.body === 'string' ? JSON.parse(init.body) : init.body;
+function fetchWithLogging(input: RequestInfo, init: RequestInit = {}): Promise<Response> {
+  const body = typeof init.body === 'string' ? JSON.parse(init.body) : init.body;
 
   if (body) {
     console.log(
@@ -132,6 +121,9 @@ export const getHttpLink = () =>
       next: { revalidate: 0 },
     },
     fetch: logGraphqlQueries ? fetchWithLogging : undefined,
+    headers: {
+      [WILDCARD_DOMAINS_HEADER]: getWildcardDomains().join(','),
+    },
   });
 
 export const headersMiddleware = new ApolloLink((operation, forward) => {
@@ -160,11 +152,7 @@ export const localeMiddleware = new ApolloLink((operation, forward) => {
   const definition = definitions[0];
   const locale = context.locale;
 
-  if (
-    !locale ||
-    definition.kind !== 'OperationDefinition' ||
-    definition.operation !== 'query'
-  ) {
+  if (!locale || definition.kind !== 'OperationDefinition' || definition.operation !== 'query') {
     return forward(operation);
   }
 
