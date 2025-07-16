@@ -5,7 +5,7 @@ import React from 'react';
 import { splitLines } from 'common/utils';
 import { merge } from 'lodash';
 import dynamic from 'next/dynamic';
-import { Data, Layout } from 'plotly.js';
+import type { Data, Layout, PlotData } from 'plotly.js';
 import { transparentize } from 'polished';
 import styled, { useTheme } from 'styled-components';
 
@@ -40,9 +40,12 @@ const createLayout = (
     yaxis: {
       automargin: true,
       hoverformat: ',.3r',
-      tickformat: ',.1r',
+      tickformat: typeof yRange.ticksRounding === 'number'
+        ? `,.${yRange.ticksRounding}~r`
+        : ',.2~r',
       fixedrange: true,
-      nticks: 6,
+      tickmode: 'auto',
+      nticks: yRange.ticksCount ?? 5,
       tickfont: {
         family: fontFamily,
         size: 14,
@@ -165,6 +168,7 @@ interface CreateTracesParams {
   lineShape: string;
   useAreaGraph?: boolean | undefined;
   graphCustomBackground?: string | undefined;
+  valueRounding: number | undefined;
 }
 
 interface TracesOutput {
@@ -183,6 +187,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     timeResolution,
     lineShape,
     useAreaGraph,
+    valueRounding,
   } = params;
 
   // Figure out what we need to draw depending on dataset
@@ -215,7 +220,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
   const newTraces = traces.map((trace, idx) => {
     // Here we are excluding some properties from the trace
     const { xType, dataType, ...plotlyTrace } = trace;
-    const modTrace: Data = { ...plotlyTrace };
+    const modTrace: PlotData = { ...plotlyTrace };
     allXValues.push(...trace.x);
 
     // we have multiple categories in one time point - draw bar groups
@@ -273,18 +278,25 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     if (modTrace.type === 'scatter') {
       if (trace.x.length > 30) {
         modTrace.mode = 'lines';
-        delete modTrace.marker;
+        modTrace.marker = { size: 0 };
       } else {
         modTrace.mode = 'lines+markers';
         modTrace.cliponaxis = false;
       }
     }
-    const timeFormat = timeResolution === 'YEAR' ? '%Y' : '%x';
+
     const theme = useTheme();
-    const roundIndicatorValue =
-      theme.settings?.graphs?.roundIndicatorValue ?? true;
+    // Theme setting is a hack for single user. Should be deprecated and use admin setting only.
+    // If valueRounding for this indicator is defined we use it
+    // If valueRounding is not defined we check if theme doesn't want rounding
+    // Otherwise we default to 3 significant digits
+    const significantDigits =
+      theme.settings?.graphs?.roundIndicatorValue !== false
+        ? valueRounding ?? 3
+        : undefined;
+
     modTrace.hovertemplate = `${trace.name}: ${
-      roundIndicatorValue === false ? '%{y:,.f}' : '%{y:,.3r}'
+      significantDigits ? `%{y:,.${significantDigits}r}` : '%{y:,.f}'
     } ${unit}`;
     modTrace.hoverlabel = {
       bgcolor:
@@ -370,7 +382,16 @@ const getXInterval = (dataset, timeResolution) => {
 };
 
 interface IndicatorGraphProps {
-  yRange: any;
+  yRange: {
+    unit: string;
+    minDigits: number;
+    maxDigits: number;
+    ticksCount: number | undefined;
+    ticksRounding: number | undefined;
+    valueRounding: number | undefined;
+    includeZero: boolean;
+    range: number[];
+  };
   timeResolution?: 'YEAR' | 'MONTH';
   traces: any;
   goalTraces: any;
@@ -463,6 +484,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     lineShape,
     useAreaGraph,
     graphCustomBackground,
+    valueRounding: yRange.valueRounding,
   });
 
   if (subplotsNeeded) {

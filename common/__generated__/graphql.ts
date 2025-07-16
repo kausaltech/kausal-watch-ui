@@ -509,7 +509,7 @@ export type ActionImpact = {
 
 export type ActionImplementationPhase = {
   __typename?: 'ActionImplementationPhase';
-  color?: Maybe<Scalars['String']['output']>;
+  color: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   identifier: Scalars['String']['output'];
   name: Scalars['String']['output'];
@@ -927,7 +927,7 @@ export type ActionStartDateBlock = FieldBlockMetaInterface & StreamFieldInterfac
 /** The current status for the action ("on time", "late", "completed", etc.). */
 export type ActionStatus = {
   __typename?: 'ActionStatus';
-  color?: Maybe<Scalars['String']['output']>;
+  color: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   identifier: Scalars['String']['output'];
   isCompleted: Scalars['Boolean']['output'];
@@ -1384,7 +1384,7 @@ export type Category = {
   categoryPages: Array<CategoryPage>;
   children: Array<Category>;
   /** Set if the category has a theme color */
-  color?: Maybe<Scalars['String']['output']>;
+  color: Scalars['String']['output'];
   common?: Maybe<CommonCategory>;
   datasets?: Maybe<Array<Maybe<Dataset>>>;
   externalIdentifier?: Maybe<Scalars['String']['output']>;
@@ -1881,7 +1881,7 @@ export type CommonCategory = {
   __typename?: 'CommonCategory';
   categoryInstances: Array<Category>;
   /** Set if the category has a theme color */
-  color?: Maybe<Scalars['String']['output']>;
+  color: Scalars['String']['output'];
   helpText: Scalars['String']['output'];
   iconImage?: Maybe<Image>;
   iconSvgUrl?: Maybe<Scalars['String']['output']>;
@@ -2576,7 +2576,7 @@ export type ImageRendition = {
 export type ImpactGroup = {
   __typename?: 'ImpactGroup';
   actions: Array<ImpactGroupAction>;
-  color?: Maybe<Scalars['String']['output']>;
+  color: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   identifier: Scalars['String']['output'];
   name: Scalars['String']['output'];
@@ -2735,9 +2735,9 @@ export type Indicator = {
   latestGraph?: Maybe<IndicatorGraph>;
   latestValue?: Maybe<IndicatorValue>;
   level?: Maybe<Scalars['String']['output']>;
-  /** What is the maximum value this indicator can reach? It is used in visualizations as the Y axis maximum. */
+  /** Used in visualizations as the Y axis maximum */
   maxValue?: Maybe<Scalars['Float']['output']>;
-  /** What is the minimum value this indicator can reach? It is used in visualizations as the Y axis minimum. */
+  /** Used in visualizations as the Y axis minimum */
   minValue?: Maybe<Scalars['Float']['output']>;
   name: Scalars['String']['output'];
   organization: Organization;
@@ -2748,7 +2748,9 @@ export type Indicator = {
   relatedActions: Array<ActionIndicator>;
   relatedCauses: Array<RelatedIndicator>;
   relatedEffects: Array<RelatedIndicator>;
+  /** Data categories can be summed to form total for the indicator (draw stacked chart as default) */
   showTotalLine: Scalars['Boolean']['output'];
+  /** Automatically create a trend line for the indicator's total value */
   showTrendline: Scalars['Boolean']['output'];
   /** Number of steps on the y-axis */
   ticksCount?: Maybe<Scalars['Int']['output']>;
@@ -3577,10 +3579,11 @@ export type Plan = PlanInterface & {
   identifier: Scalars['String']['output'];
   image?: Maybe<Image>;
   impactGroups: Array<Maybe<ImpactGroup>>;
-  indicatorLevels: Array<IndicatorLevel>;
+  indicatorLevels: Array<Maybe<IndicatorLevel>>;
   /** UUID of the corresponding Kausal Paths instance for Kausal Paths integration */
   kausalPathsInstanceUuid: Scalars['String']['output'];
   lastActionIdentifier?: Maybe<Scalars['ID']['output']>;
+  loginEnabled?: Maybe<Scalars['Boolean']['output']>;
   mainMenu?: Maybe<MainMenu>;
   monitoringQualityPoints: Array<MonitoringQualityPoint>;
   /** The official plan name in full form */
@@ -3605,6 +3608,7 @@ export type Plan = PlanInterface & {
   shortIdentifier?: Maybe<Scalars['String']['output']>;
   /** A shorter version of the plan name */
   shortName?: Maybe<Scalars['String']['output']>;
+  statusMessage?: Maybe<Scalars['String']['output']>;
   /** Set if this plan is superseded by another plan */
   supersededBy?: Maybe<Plan>;
   supersededPlans: Array<Plan>;
@@ -3797,8 +3801,10 @@ export type PlanFilterBlock = StreamFieldInterface & {
 export type PlanInterface = {
   domain?: Maybe<PlanDomain>;
   domains?: Maybe<Array<Maybe<PlanDomain>>>;
+  loginEnabled?: Maybe<Scalars['Boolean']['output']>;
   primaryLanguage: Scalars['String']['output'];
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  statusMessage?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -4383,8 +4389,10 @@ export type RestrictedPlanNode = PlanInterface & {
   __typename?: 'RestrictedPlanNode';
   domain?: Maybe<PlanDomain>;
   domains?: Maybe<Array<Maybe<PlanDomain>>>;
+  loginEnabled?: Maybe<Scalars['Boolean']['output']>;
   primaryLanguage: Scalars['String']['output'];
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  statusMessage?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -5092,7 +5100,7 @@ export type ActionHightlightListQuery = (
       { id: string }
       & { __typename?: 'Plan' }
     ), status?: (
-      { id: string, identifier: string, name: string, color?: string | null }
+      { id: string, identifier: string, name: string, color: string }
       & { __typename?: 'ActionStatus' }
     ) | null, statusSummary: (
       { identifier: ActionStatusSummaryIdentifier }
@@ -5197,29 +5205,17 @@ export type GetActionListQueryVariables = Exact<{
 
 export type GetActionListQuery = (
   { planActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, image?: (
+    { hasDependencyRelationships?: boolean | null, id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, image?: (
       { id: string, rendition?: (
         { id: string, width: number, height: number, src: string, alt: string }
         & { __typename?: 'ImageRendition' }
       ) | null }
       & { __typename?: 'Image' }
     ) | null, status?: (
-      { id: string, identifier: string, name: string, color?: string | null }
+      { id: string, identifier: string, name: string, color: string }
       & { __typename?: 'ActionStatus' }
-    ) | null, dependencyRole?: (
-      { id: string, name: string }
-      & { __typename?: 'ActionDependencyRole' }
-    ) | null, allDependencyRelationships: Array<(
-      { preceding: (
-        { id: string }
-        & { __typename?: 'Action' }
-      ), dependent: (
-        { id: string }
-        & { __typename?: 'Action' }
-      ) }
-      & { __typename?: 'ActionDependencyRelationship' }
-    )>, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    ) | null, categories: Array<(
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -5271,9 +5267,9 @@ export type GetActionListQuery = (
         { value: string, id: string, key: string }
         & { __typename?: 'AttributeRichText' | 'AttributeText' }
       )> | null, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -5492,6 +5488,38 @@ export type ContactDetailsQuery = (
   & { __typename?: 'Query' }
 );
 
+export type ActionDependenciesQueryVariables = Exact<{
+  action: Scalars['ID']['input'];
+  workflow?: InputMaybe<WorkflowState>;
+}>;
+
+
+export type ActionDependenciesQuery = (
+  { action?: (
+    { dependencyRole?: (
+      { id: string, name: string }
+      & { __typename?: 'ActionDependencyRole' }
+    ) | null, allDependencyRelationships: Array<(
+      { preceding: (
+        { id: string, dependencyRole?: (
+          { id: string }
+          & { __typename?: 'ActionDependencyRole' }
+        ) | null }
+        & { __typename?: 'Action' }
+      ), dependent: (
+        { id: string, dependencyRole?: (
+          { id: string }
+          & { __typename?: 'ActionDependencyRole' }
+        ) | null }
+        & { __typename?: 'Action' }
+      ) }
+      & { __typename?: 'ActionDependencyRelationship' }
+    )> }
+    & { __typename?: 'Action' }
+  ) | null }
+  & { __typename?: 'Query' }
+);
+
 export type CreateUserFeedbackMutationVariables = Exact<{
   input: UserFeedbackMutationInput;
 }>;
@@ -5521,23 +5549,11 @@ export type GetActionListForBlockQueryVariables = Exact<{
 
 export type GetActionListForBlockQuery = (
   { planActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
-      { id: string, identifier: string, name: string, color?: string | null }
+    { hasDependencyRelationships?: boolean | null, id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
+      { id: string, identifier: string, name: string, color: string }
       & { __typename?: 'ActionStatus' }
-    ) | null, dependencyRole?: (
-      { id: string, name: string }
-      & { __typename?: 'ActionDependencyRole' }
-    ) | null, allDependencyRelationships: Array<(
-      { preceding: (
-        { id: string }
-        & { __typename?: 'Action' }
-      ), dependent: (
-        { id: string }
-        & { __typename?: 'Action' }
-      ) }
-      & { __typename?: 'ActionDependencyRelationship' }
-    )>, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    ) | null, categories: Array<(
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -5589,9 +5605,9 @@ export type GetActionListForBlockQuery = (
         { value: string, id: string, key: string }
         & { __typename?: 'AttributeRichText' | 'AttributeText' }
       )> | null, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -5842,7 +5858,7 @@ export type GetCategoriesForTreeMapQueryVariables = Exact<{
 
 export type GetCategoriesForTreeMapQuery = (
   { planCategories?: Array<(
-    { id: string, name: string, leadParagraph: string, color?: string | null, image?: (
+    { id: string, name: string, leadParagraph: string, color: string, image?: (
       { id: string, title: string, imageCredit: string, altText: string, rendition?: (
         { id: string, width: number, height: number, src: string, alt: string }
         & { __typename?: 'ImageRendition' }
@@ -5886,7 +5902,7 @@ export type PlanFragmentFragment = (
       { identifier: string, name: string, hideCategoryIdentifiers: boolean }
       & { __typename?: 'CommonCategoryType' }
     ) | null, categories: Array<(
-      { id: string, identifier: string, order: number, name: string, color?: string | null, iconSvgUrl?: string | null, parent?: (
+      { id: string, identifier: string, order: number, name: string, color: string, iconSvgUrl?: string | null, parent?: (
         { id: string }
         & { __typename?: 'Category' }
       ) | null, iconImage?: (
@@ -5913,20 +5929,8 @@ export type PlanFragmentFragment = (
 );
 
 export type ActionFragmentFragment = (
-  { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, dependencyRole?: (
-    { id: string, name: string }
-    & { __typename?: 'ActionDependencyRole' }
-  ) | null, allDependencyRelationships: Array<(
-    { preceding: (
-      { id: string }
-      & { __typename?: 'Action' }
-    ), dependent: (
-      { id: string }
-      & { __typename?: 'Action' }
-    ) }
-    & { __typename?: 'ActionDependencyRelationship' }
-  )>, status?: (
-    { id: string, identifier: string, name: string, color?: string | null }
+  { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, hasDependencyRelationships?: boolean | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, status?: (
+    { id: string, identifier: string, name: string, color: string }
     & { __typename?: 'ActionStatus' }
   ) | null, categories: Array<(
     { id: string, common?: (
@@ -5954,7 +5958,7 @@ export type ActionFragmentFragment = (
       { actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
       & { __typename?: 'SiteGeneralContent' }
     ), actionImplementationPhases: Array<(
-      { id: string, identifier: string, name: string, order: number, color?: string | null }
+      { id: string, identifier: string, name: string, order: number, color: string }
       & { __typename?: 'ActionImplementationPhase' }
     )> }
     & { __typename?: 'Plan' }
@@ -6057,7 +6061,7 @@ export type DashboardActionListQuery = (
         { identifier: string, name: string, hideCategoryIdentifiers: boolean }
         & { __typename?: 'CommonCategoryType' }
       ) | null, categories: Array<(
-        { id: string, identifier: string, order: number, name: string, color?: string | null, iconSvgUrl?: string | null, parent?: (
+        { id: string, identifier: string, order: number, name: string, color: string, iconSvgUrl?: string | null, parent?: (
           { id: string }
           & { __typename?: 'Category' }
         ) | null, iconImage?: (
@@ -6082,20 +6086,8 @@ export type DashboardActionListQuery = (
     ) | null> }
     & { __typename?: 'Plan' }
   ) | null, planActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, dependencyRole?: (
-      { id: string, name: string }
-      & { __typename?: 'ActionDependencyRole' }
-    ) | null, allDependencyRelationships: Array<(
-      { preceding: (
-        { id: string }
-        & { __typename?: 'Action' }
-      ), dependent: (
-        { id: string }
-        & { __typename?: 'Action' }
-      ) }
-      & { __typename?: 'ActionDependencyRelationship' }
-    )>, status?: (
-      { id: string, identifier: string, name: string, color?: string | null }
+    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, hasDependencyRelationships?: boolean | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, status?: (
+      { id: string, identifier: string, name: string, color: string }
       & { __typename?: 'ActionStatus' }
     ) | null, categories: Array<(
       { id: string, common?: (
@@ -6123,7 +6115,7 @@ export type DashboardActionListQuery = (
         { actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
         & { __typename?: 'SiteGeneralContent' }
       ), actionImplementationPhases: Array<(
-        { id: string, identifier: string, name: string, order: number, color?: string | null }
+        { id: string, identifier: string, name: string, order: number, color: string }
         & { __typename?: 'ActionImplementationPhase' }
       )> }
       & { __typename?: 'Plan' }
@@ -6199,20 +6191,8 @@ export type DashboardActionListQuery = (
     ) | null }
     & { __typename?: 'Action' }
   )> | null, relatedPlanActions?: Array<(
-    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, dependencyRole?: (
-      { id: string, name: string }
-      & { __typename?: 'ActionDependencyRole' }
-    ) | null, allDependencyRelationships: Array<(
-      { preceding: (
-        { id: string }
-        & { __typename?: 'Action' }
-      ), dependent: (
-        { id: string }
-        & { __typename?: 'Action' }
-      ) }
-      & { __typename?: 'ActionDependencyRelationship' }
-    )>, status?: (
-      { id: string, identifier: string, name: string, color?: string | null }
+    { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, hasDependencyRelationships?: boolean | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, status?: (
+      { id: string, identifier: string, name: string, color: string }
       & { __typename?: 'ActionStatus' }
     ) | null, categories: Array<(
       { id: string, common?: (
@@ -6240,7 +6220,7 @@ export type DashboardActionListQuery = (
         { actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
         & { __typename?: 'SiteGeneralContent' }
       ), actionImplementationPhases: Array<(
-        { id: string, identifier: string, name: string, order: number, color?: string | null }
+        { id: string, identifier: string, name: string, order: number, color: string }
         & { __typename?: 'ActionImplementationPhase' }
       )> }
       & { __typename?: 'Plan' }
@@ -6379,7 +6359,7 @@ export type GetEmbedActionQuery = (
       { identifier: ActionStatusSummaryIdentifier }
       & { __typename?: 'ActionStatusSummary' }
     ), status?: (
-      { id: string, identifier: string, name: string, color?: string | null }
+      { id: string, identifier: string, name: string, color: string }
       & { __typename?: 'ActionStatus' }
     ) | null, implementationPhase?: (
       { id: string, identifier: string }
@@ -6527,7 +6507,7 @@ export type IndicatorListQuery = (
         & { __typename?: 'Indicator' }
       ) }
       & { __typename?: 'IndicatorLevel' }
-    )>, categoryTypes: Array<(
+    ) | null>, categoryTypes: Array<(
       { name: string, id: string, identifier: string, categories: Array<(
         { id: string, identifier: string, order: number, name: string, parent?: (
           { id: string }
@@ -6631,7 +6611,7 @@ export type IndicatorGraphDataQuery = (
     )> }
     & { __typename?: 'Plan' }
   ) | null, indicator?: (
-    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, showTotalLine: boolean, desiredTrend?: IndicatorDesiredTrend | null, reference?: string | null, minValue?: number | null, maxValue?: number | null, organization: (
+    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, showTotalLine: boolean, desiredTrend?: IndicatorDesiredTrend | null, reference?: string | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, valueRounding?: number | null, dataCategoriesAreStackable: boolean, organization: (
       { id: string, name: string, abbreviation: string }
       & { __typename?: 'Organization' }
     ), quantity?: (
@@ -6790,7 +6770,7 @@ export type PlaywrightGetPlanInfoQuery = (
 
 type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
   { id: string, categories: Array<(
-    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
       { id: string, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
     ) | null, image?: (
@@ -6842,9 +6822,9 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
       { value: string, id: string, key: string }
       & { __typename?: 'AttributeRichText' | 'AttributeText' }
     )> | null, parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -7075,7 +7055,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
     )> }
     & { __typename: 'AttributeType' }
   ), categories: Array<(
-    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
       { id: string, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
     ) | null, image?: (
@@ -7127,9 +7107,9 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
       { value: string, id: string, key: string }
       & { __typename?: 'AttributeRichText' | 'AttributeText' }
     )> | null, parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -7343,22 +7323,10 @@ export type AttributesBlockAttributeWithNestedTypeFragment = AttributesBlockAttr
 
 export type ActionCardFragment = (
   { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
-    { id: string, identifier: string, name: string, color?: string | null }
+    { id: string, identifier: string, name: string, color: string }
     & { __typename?: 'ActionStatus' }
-  ) | null, dependencyRole?: (
-    { id: string, name: string }
-    & { __typename?: 'ActionDependencyRole' }
-  ) | null, allDependencyRelationships: Array<(
-    { preceding: (
-      { id: string }
-      & { __typename?: 'Action' }
-    ), dependent: (
-      { id: string }
-      & { __typename?: 'Action' }
-    ) }
-    & { __typename?: 'ActionDependencyRelationship' }
-  )>, categories: Array<(
-    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+  ) | null, categories: Array<(
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
       { id: string, name: string, namePlural?: string | null }
       & { __typename?: 'CategoryLevel' }
     ) | null, image?: (
@@ -7410,9 +7378,9 @@ export type ActionCardFragment = (
       { value: string, id: string, key: string }
       & { __typename?: 'AttributeRichText' | 'AttributeText' }
     )> | null, parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -7796,7 +7764,7 @@ export type CategoryTypeFragmentFragment = (
 );
 
 export type CategoryFragmentFragment = (
-  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
     { id: string, name: string, namePlural?: string | null }
     & { __typename?: 'CategoryLevel' }
   ) | null, image?: (
@@ -7853,9 +7821,9 @@ export type CategoryFragmentFragment = (
 
 export type CategoryWithParentsFragmentFragment = (
   { parent?: (
-    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -8019,7 +7987,7 @@ export type CategoryWithParentsFragmentFragment = (
 );
 
 export type CategoryRecursiveFragmentFragment = (
-  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
     { id: string, name: string, namePlural?: string | null }
     & { __typename?: 'CategoryLevel' }
   ) | null, image?: (
@@ -8071,9 +8039,9 @@ export type CategoryRecursiveFragmentFragment = (
     { value: string, id: string, key: string }
     & { __typename?: 'AttributeRichText' | 'AttributeText' }
   )> | null, parent?: (
-    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -8237,7 +8205,16 @@ export type CategoryRecursiveFragmentFragment = (
 );
 
 export type DashboardIndicatorFragmentFragment = (
-  { name: string }
+  { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+    { value: number, date?: string | null }
+    & { __typename?: 'IndicatorValue' }
+  ) | null, goals?: Array<(
+    { value: number, date?: string | null }
+    & { __typename?: 'IndicatorGoal' }
+  ) | null> | null, unit: (
+    { name: string, shortName?: string | null }
+    & { __typename?: 'Unit' }
+  ) }
   & { __typename?: 'Indicator' }
 );
 
@@ -8261,21 +8238,12 @@ export type DashboardIndicatorBlockFragmentFragment = (
     { blockType: string }
     & { __typename?: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
   ) | (
-    { id?: string | null, blockType: string, indicator?: (
-      { name: string }
-      & { __typename?: 'Indicator' }
-    ) | null }
-    & { __typename?: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorSummaryBlock' }
-  ) | (
-    { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+    { id?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
       { dimensionCategory?: (
-        { id: string, name: string }
+        { id: string, name: string, defaultColor: string }
         & { __typename?: 'DimensionCategory' }
       ) | null, values: Array<(
-        { id: string, value: number, date?: string | null, categories: Array<(
-          { id: string, name: string, defaultColor: string }
-          & { __typename?: 'DimensionCategory' }
-        )> }
+        { id: string, value: number, date?: string | null }
         & { __typename?: 'IndicatorValue' }
       ) | null> }
       & { __typename?: 'DashboardIndicatorChartSeries' }
@@ -8286,10 +8254,124 @@ export type DashboardIndicatorBlockFragmentFragment = (
       )> }
       & { __typename?: 'Dimension' }
     ) | null, indicator?: (
-      { name: string }
+      { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null, goals?: Array<(
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    ) | null }
+    & { __typename?: 'DashboardIndicatorAreaChartBlock' }
+  ) | (
+    { id?: string | null, barType?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
+      { dimensionCategory?: (
+        { id: string, name: string, defaultColor: string }
+        & { __typename?: 'DimensionCategory' }
+      ) | null, values: Array<(
+        { id: string, value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> }
+      & { __typename?: 'DashboardIndicatorChartSeries' }
+    ) | null> | null, dimension?: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename?: 'DimensionCategory' }
+      )> }
+      & { __typename?: 'Dimension' }
+    ) | null, indicator?: (
+      { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null, goals?: Array<(
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    ) | null }
+    & { __typename?: 'DashboardIndicatorBarChartBlock' }
+  ) | (
+    { id?: string | null, helpText?: string | null, showTotalLine?: boolean | null, blockType: string, chartSeries?: Array<(
+      { dimensionCategory?: (
+        { id: string, name: string, defaultColor: string }
+        & { __typename?: 'DimensionCategory' }
+      ) | null, values: Array<(
+        { id: string, value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> }
+      & { __typename?: 'DashboardIndicatorChartSeries' }
+    ) | null> | null, dimension?: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename?: 'DimensionCategory' }
+      )> }
+      & { __typename?: 'Dimension' }
+    ) | null, indicator?: (
+      { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null, goals?: Array<(
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    ) | null }
+    & { __typename?: 'DashboardIndicatorLineChartBlock' }
+  ) | (
+    { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+      { dimensionCategory?: (
+        { id: string, name: string, defaultColor: string }
+        & { __typename?: 'DimensionCategory' }
+      ) | null, values: Array<(
+        { id: string, value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> }
+      & { __typename?: 'DashboardIndicatorChartSeries' }
+    ) | null> | null, dimension?: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename?: 'DimensionCategory' }
+      )> }
+      & { __typename?: 'Dimension' }
+    ) | null, indicator?: (
+      { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null, goals?: Array<(
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
       & { __typename?: 'Indicator' }
     ) | null }
     & { __typename?: 'DashboardIndicatorPieChartBlock' }
+  ) | (
+    { id?: string | null, blockType: string, indicator?: (
+      { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null, goals?: Array<(
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    ) | null }
+    & { __typename?: 'DashboardIndicatorSummaryBlock' }
   ) | (
     { text?: string | null, blockType: string }
     & { __typename?: 'DashboardParagraphBlock' }
@@ -8432,7 +8514,7 @@ type StreamFieldFragment_CartographyVisualisationBlock_Fragment = (
 type StreamFieldFragment_CategoryListBlock_Fragment = (
   { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
     { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -8484,9 +8566,9 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
         { value: string, id: string, key: string }
         & { __typename?: 'AttributeRichText' | 'AttributeText' }
       )> | null, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -8651,7 +8733,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
     & { __typename?: 'CategoryType' }
   ) | null, category?: (
     { id: string, children: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -8733,7 +8815,7 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
     & { __typename?: 'CategoryLevel' }
   ) | null, categoryBlockType: (
     { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
         { id: string, name: string, values?: Array<(
           { date?: string | null, value: number }
           & { __typename?: 'IndicatorValue' }
@@ -8785,9 +8867,9 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
         { value: string, id: string, key: string }
         & { __typename?: 'AttributeRichText' | 'AttributeText' }
       )> | null, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -8987,21 +9069,12 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
     { blockType: string }
     & { __typename?: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
   ) | (
-    { id?: string | null, blockType: string, indicator?: (
-      { name: string }
-      & { __typename?: 'Indicator' }
-    ) | null }
-    & { __typename?: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorSummaryBlock' }
-  ) | (
-    { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+    { id?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
       { dimensionCategory?: (
-        { id: string, name: string }
+        { id: string, name: string, defaultColor: string }
         & { __typename?: 'DimensionCategory' }
       ) | null, values: Array<(
-        { id: string, value: number, date?: string | null, categories: Array<(
-          { id: string, name: string, defaultColor: string }
-          & { __typename?: 'DimensionCategory' }
-        )> }
+        { id: string, value: number, date?: string | null }
         & { __typename?: 'IndicatorValue' }
       ) | null> }
       & { __typename?: 'DashboardIndicatorChartSeries' }
@@ -9012,10 +9085,124 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
       )> }
       & { __typename?: 'Dimension' }
     ) | null, indicator?: (
-      { name: string }
+      { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null, goals?: Array<(
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    ) | null }
+    & { __typename?: 'DashboardIndicatorAreaChartBlock' }
+  ) | (
+    { id?: string | null, barType?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
+      { dimensionCategory?: (
+        { id: string, name: string, defaultColor: string }
+        & { __typename?: 'DimensionCategory' }
+      ) | null, values: Array<(
+        { id: string, value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> }
+      & { __typename?: 'DashboardIndicatorChartSeries' }
+    ) | null> | null, dimension?: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename?: 'DimensionCategory' }
+      )> }
+      & { __typename?: 'Dimension' }
+    ) | null, indicator?: (
+      { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null, goals?: Array<(
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    ) | null }
+    & { __typename?: 'DashboardIndicatorBarChartBlock' }
+  ) | (
+    { id?: string | null, helpText?: string | null, showTotalLine?: boolean | null, blockType: string, chartSeries?: Array<(
+      { dimensionCategory?: (
+        { id: string, name: string, defaultColor: string }
+        & { __typename?: 'DimensionCategory' }
+      ) | null, values: Array<(
+        { id: string, value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> }
+      & { __typename?: 'DashboardIndicatorChartSeries' }
+    ) | null> | null, dimension?: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename?: 'DimensionCategory' }
+      )> }
+      & { __typename?: 'Dimension' }
+    ) | null, indicator?: (
+      { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null, goals?: Array<(
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    ) | null }
+    & { __typename?: 'DashboardIndicatorLineChartBlock' }
+  ) | (
+    { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+      { dimensionCategory?: (
+        { id: string, name: string, defaultColor: string }
+        & { __typename?: 'DimensionCategory' }
+      ) | null, values: Array<(
+        { id: string, value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> }
+      & { __typename?: 'DashboardIndicatorChartSeries' }
+    ) | null> | null, dimension?: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename?: 'DimensionCategory' }
+      )> }
+      & { __typename?: 'Dimension' }
+    ) | null, indicator?: (
+      { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null, goals?: Array<(
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
       & { __typename?: 'Indicator' }
     ) | null }
     & { __typename?: 'DashboardIndicatorPieChartBlock' }
+  ) | (
+    { id?: string | null, blockType: string, indicator?: (
+      { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorValue' }
+      ) | null, goals?: Array<(
+        { value: number, date?: string | null }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    ) | null }
+    & { __typename?: 'DashboardIndicatorSummaryBlock' }
   ) | (
     { text?: string | null, blockType: string }
     & { __typename?: 'DashboardParagraphBlock' }
@@ -9236,7 +9423,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename?: 'Action' }
     )>, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
         { id: string, name: string, namePlural?: string | null }
         & { __typename?: 'CategoryLevel' }
       ) | null, image?: (
@@ -9288,9 +9475,9 @@ export type GetActionDetailsQuery = (
         { value: string, id: string, key: string }
         & { __typename?: 'AttributeRichText' | 'AttributeText' }
       )> | null, parent?: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -9482,7 +9669,7 @@ export type GetActionDetailsQuery = (
       { id: string, name: string, dueAt: any, dateFormat?: ActionTaskDateFormat | null, completedAt?: any | null, comment?: string | null, state: ActionTaskState }
       & { __typename?: 'ActionTask' }
     )>, status?: (
-      { id: string, identifier: string, name: string, color?: string | null }
+      { id: string, identifier: string, name: string, color: string }
       & { __typename?: 'ActionStatus' }
     ) | null, implementationPhase?: (
       { id: string, identifier: string, name: string }
@@ -9516,22 +9703,10 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'ActionIndicator' }
     )>, relatedActions: Array<(
       { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string, color?: string | null }
+        { id: string, identifier: string, name: string, color: string }
         & { __typename?: 'ActionStatus' }
-      ) | null, dependencyRole?: (
-        { id: string, name: string }
-        & { __typename?: 'ActionDependencyRole' }
-      ) | null, allDependencyRelationships: Array<(
-        { preceding: (
-          { id: string }
-          & { __typename?: 'Action' }
-        ), dependent: (
-          { id: string }
-          & { __typename?: 'Action' }
-        ) }
-        & { __typename?: 'ActionDependencyRelationship' }
-      )>, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      ) | null, categories: Array<(
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -9583,9 +9758,9 @@ export type GetActionDetailsQuery = (
           { value: string, id: string, key: string }
           & { __typename?: 'AttributeRichText' | 'AttributeText' }
         )> | null, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -9786,22 +9961,10 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'Action' }
     ) | null, supersededBy?: (
       { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string, color?: string | null }
+        { id: string, identifier: string, name: string, color: string }
         & { __typename?: 'ActionStatus' }
-      ) | null, dependencyRole?: (
-        { id: string, name: string }
-        & { __typename?: 'ActionDependencyRole' }
-      ) | null, allDependencyRelationships: Array<(
-        { preceding: (
-          { id: string }
-          & { __typename?: 'Action' }
-        ), dependent: (
-          { id: string }
-          & { __typename?: 'Action' }
-        ) }
-        & { __typename?: 'ActionDependencyRelationship' }
-      )>, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      ) | null, categories: Array<(
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -9853,9 +10016,9 @@ export type GetActionDetailsQuery = (
           { value: string, id: string, key: string }
           & { __typename?: 'AttributeRichText' | 'AttributeText' }
         )> | null, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -10050,22 +10213,10 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'Action' }
     ) | null, supersededActions: Array<(
       { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string, color?: string | null }
+        { id: string, identifier: string, name: string, color: string }
         & { __typename?: 'ActionStatus' }
-      ) | null, dependencyRole?: (
-        { id: string, name: string }
-        & { __typename?: 'ActionDependencyRole' }
-      ) | null, allDependencyRelationships: Array<(
-        { preceding: (
-          { id: string }
-          & { __typename?: 'Action' }
-        ), dependent: (
-          { id: string }
-          & { __typename?: 'Action' }
-        ) }
-        & { __typename?: 'ActionDependencyRelationship' }
-      )>, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      ) | null, categories: Array<(
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -10117,9 +10268,9 @@ export type GetActionDetailsQuery = (
           { value: string, id: string, key: string }
           & { __typename?: 'AttributeRichText' | 'AttributeText' }
         )> | null, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -10320,7 +10471,7 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'Action' }
     ) | null, attributes: Array<(
       { id: string, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -10372,9 +10523,9 @@ export type GetActionDetailsQuery = (
           { value: string, id: string, key: string }
           & { __typename?: 'AttributeRichText' | 'AttributeText' }
         )> | null, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -10614,23 +10765,14 @@ export type GetActionDetailsQuery = (
       & { __typename?: 'ActionDependencyRole' }
     ) | null, allDependencyRelationships: Array<(
       { preceding: (
-        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
-          { id: string, identifier: string, name: string, color?: string | null }
-          & { __typename?: 'ActionStatus' }
-        ) | null, dependencyRole?: (
+        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, dependencyRole?: (
           { id: string, name: string }
           & { __typename?: 'ActionDependencyRole' }
-        ) | null, allDependencyRelationships: Array<(
-          { preceding: (
-            { id: string }
-            & { __typename?: 'Action' }
-          ), dependent: (
-            { id: string }
-            & { __typename?: 'Action' }
-          ) }
-          & { __typename?: 'ActionDependencyRelationship' }
-        )>, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        ) | null, status?: (
+          { id: string, identifier: string, name: string, color: string }
+          & { __typename?: 'ActionStatus' }
+        ) | null, categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -10682,9 +10824,9 @@ export type GetActionDetailsQuery = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -10878,23 +11020,14 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'Action' }
       ), dependent: (
-        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
-          { id: string, identifier: string, name: string, color?: string | null }
-          & { __typename?: 'ActionStatus' }
-        ) | null, dependencyRole?: (
+        { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, dependencyRole?: (
           { id: string, name: string }
           & { __typename?: 'ActionDependencyRole' }
-        ) | null, allDependencyRelationships: Array<(
-          { preceding: (
-            { id: string }
-            & { __typename?: 'Action' }
-          ), dependent: (
-            { id: string }
-            & { __typename?: 'Action' }
-          ) }
-          & { __typename?: 'ActionDependencyRelationship' }
-        )>, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        ) | null, status?: (
+          { id: string, identifier: string, name: string, color: string }
+          & { __typename?: 'ActionStatus' }
+        ) | null, categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -10946,9 +11079,9 @@ export type GetActionDetailsQuery = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -11249,7 +11382,7 @@ export type GetActionDetailsQuery = (
             { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
               { attribute?: (
                 { id: string, categories: Array<(
-                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                     { id: string, name: string, namePlural?: string | null }
                     & { __typename?: 'CategoryLevel' }
                   ) | null, image?: (
@@ -11301,9 +11434,9 @@ export type GetActionDetailsQuery = (
                     { value: string, id: string, key: string }
                     & { __typename?: 'AttributeRichText' | 'AttributeText' }
                   )> | null, parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                           { id: string, name: string, namePlural?: string | null }
                           & { __typename?: 'CategoryLevel' }
                         ) | null, image?: (
@@ -11557,7 +11690,7 @@ export type GetActionDetailsQuery = (
           { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
             { attribute?: (
               { id: string, categories: Array<(
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -11609,9 +11742,9 @@ export type GetActionDetailsQuery = (
                   { value: string, id: string, key: string }
                   & { __typename?: 'AttributeRichText' | 'AttributeText' }
                 )> | null, parent?: (
-                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                         { id: string, name: string, namePlural?: string | null }
                         & { __typename?: 'CategoryLevel' }
                       ) | null, image?: (
@@ -11927,7 +12060,7 @@ export type GetActionDetailsQuery = (
             { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
               { attribute?: (
                 { id: string, categories: Array<(
-                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                     { id: string, name: string, namePlural?: string | null }
                     & { __typename?: 'CategoryLevel' }
                   ) | null, image?: (
@@ -11979,9 +12112,9 @@ export type GetActionDetailsQuery = (
                     { value: string, id: string, key: string }
                     & { __typename?: 'AttributeRichText' | 'AttributeText' }
                   )> | null, parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                           { id: string, name: string, namePlural?: string | null }
                           & { __typename?: 'CategoryLevel' }
                         ) | null, image?: (
@@ -12235,7 +12368,7 @@ export type GetActionDetailsQuery = (
           { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
             { attribute?: (
               { id: string, categories: Array<(
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -12287,9 +12420,9 @@ export type GetActionDetailsQuery = (
                   { value: string, id: string, key: string }
                   & { __typename?: 'AttributeRichText' | 'AttributeText' }
                 )> | null, parent?: (
-                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                         { id: string, name: string, namePlural?: string | null }
                         & { __typename?: 'CategoryLevel' }
                       ) | null, image?: (
@@ -12568,23 +12701,14 @@ export type ActionDependenciesFragment = (
     & { __typename?: 'ActionDependencyRole' }
   ) | null, allDependencyRelationships: Array<(
     { preceding: (
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string, color?: string | null }
-        & { __typename?: 'ActionStatus' }
-      ) | null, dependencyRole?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, dependencyRole?: (
         { id: string, name: string }
         & { __typename?: 'ActionDependencyRole' }
-      ) | null, allDependencyRelationships: Array<(
-        { preceding: (
-          { id: string }
-          & { __typename?: 'Action' }
-        ), dependent: (
-          { id: string }
-          & { __typename?: 'Action' }
-        ) }
-        & { __typename?: 'ActionDependencyRelationship' }
-      )>, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      ) | null, status?: (
+        { id: string, identifier: string, name: string, color: string }
+        & { __typename?: 'ActionStatus' }
+      ) | null, categories: Array<(
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -12636,9 +12760,9 @@ export type ActionDependenciesFragment = (
           { value: string, id: string, key: string }
           & { __typename?: 'AttributeRichText' | 'AttributeText' }
         )> | null, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -12832,23 +12956,14 @@ export type ActionDependenciesFragment = (
       ) }
       & { __typename?: 'Action' }
     ), dependent: (
-      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string, color?: string | null }
-        & { __typename?: 'ActionStatus' }
-      ) | null, dependencyRole?: (
+      { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, dependencyRole?: (
         { id: string, name: string }
         & { __typename?: 'ActionDependencyRole' }
-      ) | null, allDependencyRelationships: Array<(
-        { preceding: (
-          { id: string }
-          & { __typename?: 'Action' }
-        ), dependent: (
-          { id: string }
-          & { __typename?: 'Action' }
-        ) }
-        & { __typename?: 'ActionDependencyRelationship' }
-      )>, categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+      ) | null, status?: (
+        { id: string, identifier: string, name: string, color: string }
+        & { __typename?: 'ActionStatus' }
+      ) | null, categories: Array<(
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -12900,9 +13015,9 @@ export type ActionDependenciesFragment = (
           { value: string, id: string, key: string }
           & { __typename?: 'AttributeRichText' | 'AttributeText' }
         )> | null, parent?: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                 { id: string, name: string, namePlural?: string | null }
                 & { __typename?: 'CategoryLevel' }
               ) | null, image?: (
@@ -13258,7 +13373,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
       { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
         { attribute?: (
           { id: string, categories: Array<(
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
               { id: string, name: string, namePlural?: string | null }
               & { __typename?: 'CategoryLevel' }
             ) | null, image?: (
@@ -13310,9 +13425,9 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
               { value: string, id: string, key: string }
               & { __typename?: 'AttributeRichText' | 'AttributeText' }
             )> | null, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                     { id: string, name: string, namePlural?: string | null }
                     & { __typename?: 'CategoryLevel' }
                   ) | null, image?: (
@@ -13578,7 +13693,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
     { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
       { attribute?: (
         { id: string, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -13630,9 +13745,9 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -13858,7 +13973,7 @@ export type ReportComparisonBlockActionContentFragment = (
     { identifier: string, name: string, startDate: any, endDate: any, valuesForAction?: Array<(
       { attribute?: (
         { id: string, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -13910,9 +14025,9 @@ export type ReportComparisonBlockActionContentFragment = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -14126,6 +14241,263 @@ export type ReportComparisonBlockActionContentFragment = (
     & { __typename?: 'Report' }
   ) | null> | null }
   & { __typename?: 'ReportComparisonBlock' }
+);
+
+export type ActionCardWithDependencyRoleFragment = (
+  { id: string, identifier: string, name: string, viewUrl: string, color?: string | null, scheduleContinuous: boolean, completion?: number | null, dependencyRole?: (
+    { id: string, name: string }
+    & { __typename?: 'ActionDependencyRole' }
+  ) | null, status?: (
+    { id: string, identifier: string, name: string, color: string }
+    & { __typename?: 'ActionStatus' }
+  ) | null, categories: Array<(
+    { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
+      { id: string, name: string, namePlural?: string | null }
+      & { __typename?: 'CategoryLevel' }
+    ) | null, image?: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, large?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, small?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, social?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null, rendition?: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, indicators: Array<(
+      { id: string, values?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorValue' }
+      ) | null> | null, goals?: Array<(
+        { date?: string | null, value: number }
+        & { __typename?: 'IndicatorGoal' }
+      ) | null> | null, unit: (
+        { name: string, shortName?: string | null }
+        & { __typename?: 'Unit' }
+      ) }
+      & { __typename?: 'Indicator' }
+    )>, iconImage?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null, categoryPage?: (
+      { id?: string | null, title: string, urlPath: string, live: boolean }
+      & { __typename?: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+      & { __typename?: 'CategoryType' }
+    ), attributes?: Array<(
+      { id: string, key: string }
+      & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+    ) | (
+      { value: string, id: string, key: string }
+      & { __typename?: 'AttributeRichText' | 'AttributeText' }
+    )> | null, parent?: (
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, name: string, namePlural?: string | null }
+            & { __typename?: 'CategoryLevel' }
+          ) | null, image?: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, large?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, small?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, social?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null, rendition?: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, indicators: Array<(
+            { id: string, values?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorValue' }
+            ) | null> | null, goals?: Array<(
+              { date?: string | null, value: number }
+              & { __typename?: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName?: string | null }
+              & { __typename?: 'Unit' }
+            ) }
+            & { __typename?: 'Indicator' }
+          )>, iconImage?: (
+            { rendition?: (
+              { src: string }
+              & { __typename?: 'ImageRendition' }
+            ) | null }
+            & { __typename?: 'Image' }
+          ) | null, categoryPage?: (
+            { id?: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename?: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename?: 'CategoryType' }
+          ), attributes?: Array<(
+            { id: string, key: string }
+            & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+          ) | (
+            { value: string, id: string, key: string }
+            & { __typename?: 'AttributeRichText' | 'AttributeText' }
+          )> | null }
+          & { __typename?: 'Category' }
+        ) | null, level?: (
+          { id: string, name: string, namePlural?: string | null }
+          & { __typename?: 'CategoryLevel' }
+        ) | null, image?: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, large?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, small?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, social?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null, rendition?: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, indicators: Array<(
+          { id: string, values?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> | null, goals?: Array<(
+            { date?: string | null, value: number }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        )>, iconImage?: (
+          { rendition?: (
+            { src: string }
+            & { __typename?: 'ImageRendition' }
+          ) | null }
+          & { __typename?: 'Image' }
+        ) | null, categoryPage?: (
+          { id?: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename?: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename?: 'CategoryType' }
+        ), attributes?: Array<(
+          { id: string, key: string }
+          & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+        ) | (
+          { value: string, id: string, key: string }
+          & { __typename?: 'AttributeRichText' | 'AttributeText' }
+        )> | null }
+        & { __typename?: 'Category' }
+      ) | null, level?: (
+        { id: string, name: string, namePlural?: string | null }
+        & { __typename?: 'CategoryLevel' }
+      ) | null, image?: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, large?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, small?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, social?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null, rendition?: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, indicators: Array<(
+        { id: string, values?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorValue' }
+        ) | null> | null, goals?: Array<(
+          { date?: string | null, value: number }
+          & { __typename?: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName?: string | null }
+          & { __typename?: 'Unit' }
+        ) }
+        & { __typename?: 'Indicator' }
+      )>, iconImage?: (
+        { rendition?: (
+          { src: string }
+          & { __typename?: 'ImageRendition' }
+        ) | null }
+        & { __typename?: 'Image' }
+      ) | null, categoryPage?: (
+        { id?: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename?: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename?: 'CategoryType' }
+      ), attributes?: Array<(
+        { id: string, key: string }
+        & { __typename?: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+      ) | (
+        { value: string, id: string, key: string }
+        & { __typename?: 'AttributeRichText' | 'AttributeText' }
+      )> | null }
+      & { __typename?: 'Category' }
+    ) | null }
+    & { __typename?: 'Category' }
+  )>, statusSummary: (
+    { identifier: ActionStatusSummaryIdentifier }
+    & { __typename?: 'ActionStatusSummary' }
+  ), implementationPhase?: (
+    { id: string, identifier: string, name: string }
+    & { __typename?: 'ActionImplementationPhase' }
+  ) | null, primaryOrg?: (
+    { id: string, abbreviation: string, name: string, logo?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null }
+    & { __typename?: 'Organization' }
+  ) | null, mergedWith?: (
+    { id: string, identifier: string, plan: (
+      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null }
+      & { __typename?: 'Plan' }
+    ) }
+    & { __typename?: 'Action' }
+  ) | null, plan: (
+    { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+      { rendition?: (
+        { src: string }
+        & { __typename?: 'ImageRendition' }
+      ) | null }
+      & { __typename?: 'Image' }
+    ) | null }
+    & { __typename?: 'Plan' }
+  ) }
+  & { __typename?: 'Action' }
 );
 
 export type GetActionListPageIncludeRelatedQueryVariables = Exact<{
@@ -14418,7 +14790,7 @@ export type GetContentPageQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -14470,9 +14842,9 @@ export type GetContentPageQuery = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -14637,7 +15009,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -14715,7 +15087,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryLevel' }
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
             { id: string, name: string, values?: Array<(
               { date?: string | null, value: number }
               & { __typename?: 'IndicatorValue' }
@@ -14767,9 +15139,9 @@ export type GetContentPageQuery = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -14963,21 +15335,12 @@ export type GetContentPageQuery = (
         { blockType: string }
         & { __typename?: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
       ) | (
-        { id?: string | null, blockType: string, indicator?: (
-          { name: string }
-          & { __typename?: 'Indicator' }
-        ) | null }
-        & { __typename?: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorSummaryBlock' }
-      ) | (
-        { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+        { id?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
           { dimensionCategory?: (
-            { id: string, name: string }
+            { id: string, name: string, defaultColor: string }
             & { __typename?: 'DimensionCategory' }
           ) | null, values: Array<(
-            { id: string, value: number, date?: string | null, categories: Array<(
-              { id: string, name: string, defaultColor: string }
-              & { __typename?: 'DimensionCategory' }
-            )> }
+            { id: string, value: number, date?: string | null }
             & { __typename?: 'IndicatorValue' }
           ) | null> }
           & { __typename?: 'DashboardIndicatorChartSeries' }
@@ -14988,10 +15351,124 @@ export type GetContentPageQuery = (
           )> }
           & { __typename?: 'Dimension' }
         ) | null, indicator?: (
-          { name: string }
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorAreaChartBlock' }
+      ) | (
+        { id?: string | null, barType?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorBarChartBlock' }
+      ) | (
+        { id?: string | null, helpText?: string | null, showTotalLine?: boolean | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorLineChartBlock' }
+      ) | (
+        { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
           & { __typename?: 'Indicator' }
         ) | null }
         & { __typename?: 'DashboardIndicatorPieChartBlock' }
+      ) | (
+        { id?: string | null, blockType: string, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorSummaryBlock' }
       ) | (
         { text?: string | null, blockType: string }
         & { __typename?: 'DashboardParagraphBlock' }
@@ -15244,7 +15721,7 @@ export type GetContentPageQuery = (
     & { __typename: 'ActionListPage' }
   ) | (
     { id?: string | null, slug: string, title: string, lastPublishedAt?: any | null, category?: (
-      { id: string, identifier: string, name: string, kausalPathsNodeUuid: string, leadParagraph: string, color?: string | null, iconSvgUrl?: string | null, categoryPage?: (
+      { id: string, identifier: string, name: string, kausalPathsNodeUuid: string, leadParagraph: string, color: string, iconSvgUrl?: string | null, categoryPage?: (
         { id?: string | null, urlPath: string }
         & { __typename?: 'CategoryPage' }
       ) | null, level?: (
@@ -15281,7 +15758,7 @@ export type GetContentPageQuery = (
         ) | null }
         & { __typename?: 'Image' }
       ) | null, children: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
           { id: string, name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -15335,7 +15812,7 @@ export type GetContentPageQuery = (
         )> | null }
         & { __typename?: 'Category' }
       )>, parent?: (
-        { id: string, identifier: string, name: string, color?: string | null, iconSvgUrl?: string | null, level?: (
+        { id: string, identifier: string, name: string, color: string, iconSvgUrl?: string | null, level?: (
           { name: string, namePlural?: string | null }
           & { __typename?: 'CategoryLevel' }
         ) | null, image?: (
@@ -15417,7 +15894,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'AttributeType' }
         ), categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -15469,9 +15946,9 @@ export type GetContentPageQuery = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -15813,7 +16290,7 @@ export type GetContentPageQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -15865,9 +16342,9 @@ export type GetContentPageQuery = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -16032,7 +16509,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -16110,7 +16587,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryLevel' }
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
             { id: string, name: string, values?: Array<(
               { date?: string | null, value: number }
               & { __typename?: 'IndicatorValue' }
@@ -16162,9 +16639,9 @@ export type GetContentPageQuery = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -16358,21 +16835,12 @@ export type GetContentPageQuery = (
         { blockType: string }
         & { __typename?: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
       ) | (
-        { id?: string | null, blockType: string, indicator?: (
-          { name: string }
-          & { __typename?: 'Indicator' }
-        ) | null }
-        & { __typename?: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorSummaryBlock' }
-      ) | (
-        { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+        { id?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
           { dimensionCategory?: (
-            { id: string, name: string }
+            { id: string, name: string, defaultColor: string }
             & { __typename?: 'DimensionCategory' }
           ) | null, values: Array<(
-            { id: string, value: number, date?: string | null, categories: Array<(
-              { id: string, name: string, defaultColor: string }
-              & { __typename?: 'DimensionCategory' }
-            )> }
+            { id: string, value: number, date?: string | null }
             & { __typename?: 'IndicatorValue' }
           ) | null> }
           & { __typename?: 'DashboardIndicatorChartSeries' }
@@ -16383,10 +16851,124 @@ export type GetContentPageQuery = (
           )> }
           & { __typename?: 'Dimension' }
         ) | null, indicator?: (
-          { name: string }
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorAreaChartBlock' }
+      ) | (
+        { id?: string | null, barType?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorBarChartBlock' }
+      ) | (
+        { id?: string | null, helpText?: string | null, showTotalLine?: boolean | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorLineChartBlock' }
+      ) | (
+        { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
           & { __typename?: 'Indicator' }
         ) | null }
         & { __typename?: 'DashboardIndicatorPieChartBlock' }
+      ) | (
+        { id?: string | null, blockType: string, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorSummaryBlock' }
       ) | (
         { text?: string | null, blockType: string }
         & { __typename?: 'DashboardParagraphBlock' }
@@ -16725,7 +17307,7 @@ export type GetContentPageQuery = (
     ) | (
       { style?: string | null, heading?: string | null, lead?: string | null, id?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -16777,9 +17359,9 @@ export type GetContentPageQuery = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -16944,7 +17526,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -17022,7 +17604,7 @@ export type GetContentPageQuery = (
         & { __typename?: 'CategoryLevel' }
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
             { id: string, name: string, values?: Array<(
               { date?: string | null, value: number }
               & { __typename?: 'IndicatorValue' }
@@ -17074,9 +17656,9 @@ export type GetContentPageQuery = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -17270,21 +17852,12 @@ export type GetContentPageQuery = (
         { blockType: string }
         & { __typename?: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
       ) | (
-        { id?: string | null, blockType: string, indicator?: (
-          { name: string }
-          & { __typename?: 'Indicator' }
-        ) | null }
-        & { __typename?: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorSummaryBlock' }
-      ) | (
-        { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+        { id?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
           { dimensionCategory?: (
-            { id: string, name: string }
+            { id: string, name: string, defaultColor: string }
             & { __typename?: 'DimensionCategory' }
           ) | null, values: Array<(
-            { id: string, value: number, date?: string | null, categories: Array<(
-              { id: string, name: string, defaultColor: string }
-              & { __typename?: 'DimensionCategory' }
-            )> }
+            { id: string, value: number, date?: string | null }
             & { __typename?: 'IndicatorValue' }
           ) | null> }
           & { __typename?: 'DashboardIndicatorChartSeries' }
@@ -17295,10 +17868,124 @@ export type GetContentPageQuery = (
           )> }
           & { __typename?: 'Dimension' }
         ) | null, indicator?: (
-          { name: string }
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorAreaChartBlock' }
+      ) | (
+        { id?: string | null, barType?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorBarChartBlock' }
+      ) | (
+        { id?: string | null, helpText?: string | null, showTotalLine?: boolean | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorLineChartBlock' }
+      ) | (
+        { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
           & { __typename?: 'Indicator' }
         ) | null }
         & { __typename?: 'DashboardIndicatorPieChartBlock' }
+      ) | (
+        { id?: string | null, blockType: string, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorSummaryBlock' }
       ) | (
         { text?: string | null, blockType: string }
         & { __typename?: 'DashboardParagraphBlock' }
@@ -17646,7 +18333,7 @@ export type GetHomePageQuery = (
     ) | (
       { id?: string | null, style?: string | null, heading?: string | null, lead?: string | null, blockType: string, field: string, categoryType?: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -17698,9 +18385,9 @@ export type GetHomePageQuery = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -17865,7 +18552,7 @@ export type GetHomePageQuery = (
         & { __typename?: 'CategoryType' }
       ) | null, category?: (
         { id: string, children: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
             { id: string, name: string, namePlural?: string | null }
             & { __typename?: 'CategoryLevel' }
           ) | null, image?: (
@@ -17943,7 +18630,7 @@ export type GetHomePageQuery = (
         & { __typename?: 'CategoryLevel' }
       ) | null, categoryBlockType: (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, indicators: Array<(
             { id: string, name: string, values?: Array<(
               { date?: string | null, value: number }
               & { __typename?: 'IndicatorValue' }
@@ -17995,9 +18682,9 @@ export type GetHomePageQuery = (
             { value: string, id: string, key: string }
             & { __typename?: 'AttributeRichText' | 'AttributeText' }
           )> | null, parent?: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, parent?: (
-                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color?: string | null, iconSvgUrl?: string | null, helpText: string, level?: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, parent?: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl?: string | null, helpText: string, level?: (
                   { id: string, name: string, namePlural?: string | null }
                   & { __typename?: 'CategoryLevel' }
                 ) | null, image?: (
@@ -18191,21 +18878,12 @@ export type GetHomePageQuery = (
         { blockType: string }
         & { __typename?: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
       ) | (
-        { id?: string | null, blockType: string, indicator?: (
-          { name: string }
-          & { __typename?: 'Indicator' }
-        ) | null }
-        & { __typename?: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorSummaryBlock' }
-      ) | (
-        { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+        { id?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
           { dimensionCategory?: (
-            { id: string, name: string }
+            { id: string, name: string, defaultColor: string }
             & { __typename?: 'DimensionCategory' }
           ) | null, values: Array<(
-            { id: string, value: number, date?: string | null, categories: Array<(
-              { id: string, name: string, defaultColor: string }
-              & { __typename?: 'DimensionCategory' }
-            )> }
+            { id: string, value: number, date?: string | null }
             & { __typename?: 'IndicatorValue' }
           ) | null> }
           & { __typename?: 'DashboardIndicatorChartSeries' }
@@ -18216,10 +18894,124 @@ export type GetHomePageQuery = (
           )> }
           & { __typename?: 'Dimension' }
         ) | null, indicator?: (
-          { name: string }
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorAreaChartBlock' }
+      ) | (
+        { id?: string | null, barType?: string | null, helpText?: string | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorBarChartBlock' }
+      ) | (
+        { id?: string | null, helpText?: string | null, showTotalLine?: boolean | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorLineChartBlock' }
+      ) | (
+        { helpText?: string | null, year?: number | null, blockType: string, chartSeries?: Array<(
+          { dimensionCategory?: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename?: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null> }
+          & { __typename?: 'DashboardIndicatorChartSeries' }
+        ) | null> | null, dimension?: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename?: 'DimensionCategory' }
+          )> }
+          & { __typename?: 'Dimension' }
+        ) | null, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
           & { __typename?: 'Indicator' }
         ) | null }
         & { __typename?: 'DashboardIndicatorPieChartBlock' }
+      ) | (
+        { id?: string | null, blockType: string, indicator?: (
+          { name: string, description?: string | null, showTrendline: boolean, valueRounding?: number | null, minValue?: number | null, maxValue?: number | null, ticksCount?: number | null, ticksRounding?: number | null, dataCategoriesAreStackable: boolean, desiredTrend?: IndicatorDesiredTrend | null, latestValue?: (
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorValue' }
+          ) | null, goals?: Array<(
+            { value: number, date?: string | null }
+            & { __typename?: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName?: string | null }
+            & { __typename?: 'Unit' }
+          ) }
+          & { __typename?: 'Indicator' }
+        ) | null }
+        & { __typename?: 'DashboardIndicatorSummaryBlock' }
       ) | (
         { text?: string | null, blockType: string }
         & { __typename?: 'DashboardParagraphBlock' }
@@ -18380,7 +19172,7 @@ export type GetHomePageQuery = (
   ) | null, plan?: (
     { id: string, primaryActionClassification?: (
       { categories: Array<(
-        { id: string, identifier: string, name: string, leadParagraph: string, color?: string | null, image?: (
+        { id: string, identifier: string, name: string, leadParagraph: string, color: string, image?: (
           { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX?: number | null, focalPointY?: number | null, full?: (
             { id: string, width: number, height: number, src: string }
             & { __typename?: 'ImageRendition' }
@@ -18501,7 +19293,7 @@ export type IndicatorDetailsQuery = (
       & { __typename?: 'IndicatorGoal' }
     ) | null> | null, actions?: Array<(
       { id: string, identifier: string, name: string, color?: string | null, completion?: number | null, status?: (
-        { id: string, identifier: string, name: string, color?: string | null }
+        { id: string, identifier: string, name: string, color: string }
         & { __typename?: 'ActionStatus' }
       ) | null, implementationPhase?: (
         { id: string, identifier: string, name: string }
@@ -18543,7 +19335,7 @@ export type IndicatorDetailsQuery = (
 
 export type ActionsTableRowFragmentFragment = (
   { id: string, identifier: string, name: string, color?: string | null, completion?: number | null, status?: (
-    { id: string, identifier: string, name: string, color?: string | null }
+    { id: string, identifier: string, name: string, color: string }
     & { __typename?: 'ActionStatus' }
   ) | null, implementationPhase?: (
     { id: string, identifier: string, name: string }
@@ -18660,7 +19452,7 @@ export type OrganizationDetailsQuery = (
           { id: string }
           & { __typename?: 'ActionSchedule' }
         )>, status?: (
-          { id: string, identifier: string, name: string, color?: string | null }
+          { id: string, identifier: string, name: string, color: string }
           & { __typename?: 'ActionStatus' }
         ) | null, implementationPhase?: (
           { id: string, identifier: string, name: string, order: number }
@@ -18824,7 +19616,7 @@ export type OrganizationDetailsQuery = (
         { id: string }
         & { __typename?: 'ActionSchedule' }
       )>, status?: (
-        { id: string, identifier: string, name: string, color?: string | null }
+        { id: string, identifier: string, name: string, color: string }
         & { __typename?: 'ActionStatus' }
       ) | null, implementationPhase?: (
         { id: string, identifier: string, name: string, order: number }
@@ -18963,7 +19755,7 @@ export type OrgContentPlanFragment = (
       { id: string }
       & { __typename?: 'ActionSchedule' }
     )>, status?: (
-      { id: string, identifier: string, name: string, color?: string | null }
+      { id: string, identifier: string, name: string, color: string }
       & { __typename?: 'ActionStatus' }
     ) | null, implementationPhase?: (
       { id: string, identifier: string, name: string, order: number }
@@ -19065,7 +19857,7 @@ export type GetPlanContextQuery = (
       { id: string, name: string, beginsAt: any, endsAt?: any | null }
       & { __typename?: 'ActionSchedule' }
     )>, actionImplementationPhases: Array<(
-      { id: string, identifier: string, name: string, order: number, color?: string | null }
+      { id: string, identifier: string, name: string, order: number, color: string }
       & { __typename?: 'ActionImplementationPhase' }
     )>, actionDependencyRoles: Array<(
       { id: string, name: string }
@@ -19261,7 +20053,7 @@ export type PlanContextFragment = (
     { id: string, name: string, beginsAt: any, endsAt?: any | null }
     & { __typename?: 'ActionSchedule' }
   )>, actionImplementationPhases: Array<(
-    { id: string, identifier: string, name: string, order: number, color?: string | null }
+    { id: string, identifier: string, name: string, order: number, color: string }
     & { __typename?: 'ActionImplementationPhase' }
   )>, actionDependencyRoles: Array<(
     { id: string, name: string }
@@ -19424,7 +20216,7 @@ export type GetPlansByHostnameQueryVariables = Exact<{
 
 export type GetPlansByHostnameQuery = (
   { plansForHostname?: Array<(
-    { id: string, identifier: string, otherLanguages: Array<string>, primaryLanguage: string, domain?: (
+    { id: string, identifier: string, otherLanguages: Array<string>, primaryLanguage: string, statusMessage?: string | null, loginEnabled?: boolean | null, domain?: (
       { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }
       & { __typename?: 'PlanDomain' }
     ) | null, domains?: Array<(
@@ -19433,7 +20225,7 @@ export type GetPlansByHostnameQuery = (
     ) | null> | null }
     & { __typename?: 'Plan' }
   ) | (
-    { primaryLanguage: string, domain?: (
+    { primaryLanguage: string, statusMessage?: string | null, loginEnabled?: boolean | null, domain?: (
       { hostname: string, basePath?: string | null, status?: PublicationStatus | null, statusMessage?: string | null }
       & { __typename?: 'PlanDomain' }
     ) | null, domains?: Array<(
