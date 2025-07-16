@@ -1,6 +1,8 @@
 import type { Theme } from '@kausal/themes/types';
 import 'styled-components';
 
+import { getAssetPrefix } from '@/kausal_common/src/env';
+
 declare module 'styled-components' {
   export interface DefaultTheme extends Theme {}
 }
@@ -21,6 +23,15 @@ export async function loadTheme(themeIdentifier: string): Promise<Theme> {
   }
 }
 
+export function formatStaticUrl(url: string) {
+  if (!url) return url;
+  if (url.startsWith('/')) {
+    const pathPrefix = getAssetPrefix() || '';
+    return `${pathPrefix}${url}`;
+  }
+  return url;
+}
+
 export function getThemeStaticURL(path: string) {
-  return `/static/themes/${path}`;
+  return formatStaticUrl(`/static/themes/${path}`);
 }

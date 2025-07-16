@@ -1,10 +1,12 @@
 import React, { PropsWithChildren, ReactElement, ReactNode } from 'react';
 
-import { useLocale } from 'next-intl';
 import NextLink, { LinkProps } from 'next/link';
+
+import { useLocale } from 'next-intl';
 
 import { ACTIONS_PATH, INDICATORS_PATH } from '@/constants/routes';
 import { usePlan } from '@/context/plan';
+import { getAssetPrefix } from '@/kausal_common/src/env';
 import { isAbsoluteUrl, stripLocaleAndPlan, stripSlashes } from '@/utils/urls';
 
 import { PlanContextFragment } from './__generated__/graphql';
@@ -26,18 +28,12 @@ export function disablePrefetch(linkProps: Omit<LinkProps, 'href'>) {
   return linkProps;
 }
 
-export function prependPlanAndLocale(
-  plan: PlanContextFragment,
-  path: string,
-  locale: string
-) {
+export function prependPlanAndLocale(plan: PlanContextFragment, path: string, locale: string) {
   if (typeof path !== 'string' || isAbsoluteUrl(path)) {
     return path;
   }
 
-  const basePath = plan.domain?.basePath
-    ? stripSlashes(plan.domain.basePath)
-    : undefined;
+  const basePath = plan.domain?.basePath ? stripSlashes(plan.domain.basePath) : undefined;
   const strippedPath = stripLocaleAndPlan(plan, locale, path);
   const shouldPrependBasePath = !!basePath;
   const shouldPrependLocale = locale !== plan.primaryLanguage;
@@ -102,9 +98,7 @@ export function IndicatorLink({
     other.prefetch = false;
   }
 
-  return (
-    <NextLink passHref {...disablePrefetch(other)} href={href} legacyBehavior />
-  );
+  return <NextLink passHref {...disablePrefetch(other)} href={href} legacyBehavior />;
 }
 
 export function PathsNodeLink({
@@ -138,13 +132,9 @@ export function ActionLink({
 }: ActionLinkProps) {
   // If this action is merged with another, replace all links with
   // a link to the master action.
-  const targetIdentifier = action.mergedWith
-    ? action.mergedWith.identifier
-    : action.identifier;
+  const targetIdentifier = action.mergedWith ? action.mergedWith.identifier : action.identifier;
 
-  const actionLink = usePrependPlanAndLocale(
-    `${planUrl ?? ''}${ACTIONS_PATH}/${targetIdentifier}`
-  );
+  const actionLink = usePrependPlanAndLocale(`${planUrl ?? ''}${ACTIONS_PATH}/${targetIdentifier}`);
 
   if (crossPlan && viewUrl) {
     // nextjs NextLink doesn't properly handle links across plans in some cases,
@@ -155,12 +145,7 @@ export function ActionLink({
     });
   }
   return (
-    <NextLink
-      passHref
-      {...disablePrefetch(other)}
-      href={actionLink}
-      legacyBehavior
-    >
+    <NextLink passHref {...disablePrefetch(other)} href={actionLink} legacyBehavior>
       {children}
     </NextLink>
   );
@@ -172,9 +157,7 @@ export function OrganizationLink(
   const { organizationId, ...other } = props;
   const href = usePrependPlanAndLocale(`/organizations/${organizationId}`);
 
-  return (
-    <NextLink passHref {...disablePrefetch(other)} href={href} legacyBehavior />
-  );
+  return <NextLink passHref {...disablePrefetch(other)} href={href} legacyBehavior />;
 }
 
 type ActionListLinkProps = {
@@ -189,9 +172,7 @@ type ActionListLinkProps = {
 
 type OtherLinkProps = Omit<LinkProps, 'href' | 'as'>;
 
-export function ActionListLink(
-  props: PropsWithChildren<OtherLinkProps & ActionListLinkProps>
-) {
+export function ActionListLink(props: PropsWithChildren<OtherLinkProps & ActionListLinkProps>) {
   const pathname = usePrependPlanAndLocale(ACTIONS_PATH);
   const { href, ...linkProps } = ActionListLink.getLinkProps(props);
 
@@ -204,17 +185,12 @@ export function ActionListLink(
     />
   );
 }
-ActionListLink.getLinkProps = (
-  opts: ActionListLinkProps,
-  rest?: OtherLinkProps
-) => {
+ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps) => {
   const { categoryFilters, organizationFilter, ...other } = opts;
 
   const query = {};
   if (categoryFilters) {
-    categoryFilters.forEach(
-      (f) => (query[getCategoryString(f.typeIdentifier)] = f.categoryId)
-    );
+    categoryFilters.forEach((f) => (query[getCategoryString(f.typeIdentifier)] = f.categoryId));
   }
   if (organizationFilter) {
     query['responsible_party'] = organizationFilter.id;
@@ -225,14 +201,10 @@ ActionListLink.getLinkProps = (
   return { ...opts, ...(rest || {}), href };
 };
 
-export function IndicatorListLink(
-  props: Omit<LinkProps, 'href'> & { children: ReactElement }
-) {
+export function IndicatorListLink(props: Omit<LinkProps, 'href'> & { children: ReactElement }) {
   const href = usePrependPlanAndLocale(INDICATORS_PATH);
 
-  return (
-    <NextLink href={href} passHref {...disablePrefetch(props)} legacyBehavior />
-  );
+  return <NextLink href={href} passHref {...disablePrefetch(props)} legacyBehavior />;
 }
 
 type StaticPageLinkProps =
@@ -258,11 +230,7 @@ export function StaticPageLink({
 }
 
 type NavigationLinkProps = PropsWithChildren<OtherLinkProps & { slug: string }>;
-export function NavigationLink({
-  slug,
-  children,
-  ...other
-}: NavigationLinkProps) {
+export function NavigationLink({ slug, children, ...other }: NavigationLinkProps) {
   const plan = usePlan();
   const locale = useLocale();
 
