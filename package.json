@@ -91,7 +91,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json --incremental false",
     "typecheck:intl": "npm run typecheck | grep \"MessageKeys\"",
     "prettier:fix": "prettier ./ --write",
-    "prepare": "node .husky/install.mjs || true"
+    "prepare": "[ -f .husky/install.mjs ] && node .husky/install.mjs || true"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.8.3",

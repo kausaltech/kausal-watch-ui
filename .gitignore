@@ -22,13 +22,13 @@ build-storybook.log
 /.envrc
 /public/static/themes/
 /public/static/themes
+/public/static/sbom/
 /.rgignore
 /test-results/
 /playwright-report/
 /playwright/.cache/
 /e2e-tests/*-snapshots/
 /.secrets/
-/public/static/sbom/
 /.env*
 
 # Sentry Config File
