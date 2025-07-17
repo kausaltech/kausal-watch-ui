@@ -31,15 +31,28 @@ jobs:
   dokku-deploy:
     needs: [build, deploy]
     # FIXME: Should be configurable
-    if: needs.build.outputs.deployment_env == 'production' && vars.DOKKU_DEPLOY_PRODUCTION_GIT_URL != ''
+    if: needs.build.outputs.deployment_env
     runs-on: runner-prod
     container:
       image: dokku/ci-docker-image:latest
     steps:
+      - name: Determine git remote url
+        run: |
+          deployment_env=${{ needs.build.outputs.deployment_env }}
+          if [ "$deployment_env" == "production" ]; then
+            echo "GIT_REMOTE_URL=${{ vars.DOKKU_DEPLOY_PRODUCTION_GIT_URL }}" >> $GITHUB_ENV
+          elif [ "$deployment_env" == "testing" ]; then
+            echo "GIT_REMOTE_URL=${{ vars.DOKKU_DEPLOY_TESTING_GIT_URL }}" >> $GITHUB_ENV
+          elif [ "$deployment_env" == "staging" ]; then
+            echo "GIT_REMOTE_URL=${{ vars.DOKKU_DEPLOY_STAGING_GIT_URL }}" >> $GITHUB_ENV
+          elif [ "$deployment_env" == "wip" ]; then
+            echo "GIT_REMOTE_URL=${{ vars.DOKKU_DEPLOY_WIP_GIT_URL }}" >> $GITHUB_ENV
+          fi
       - name: Push to dokku
         run: dokku-deploy
+        if: env.GIT_REMOTE_URL
         env:
-          GIT_REMOTE_URL: ${{ vars.DOKKU_DEPLOY_PRODUCTION_GIT_URL }}
+          GIT_REMOTE_URL: ${{ env.GIT_REMOTE_URL }}
           SSH_PRIVATE_KEY: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
           DEPLOY_DOCKER_IMAGE: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.image_tag }}
           # For debugging
