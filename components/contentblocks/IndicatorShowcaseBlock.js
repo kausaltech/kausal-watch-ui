@@ -1,15 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
+
 import RichText from 'components/common/RichText';
 import IndicatorProgressBar from 'components/indicators/IndicatorProgressBar';
 import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
+import PropTypes from 'prop-types';
+import { Col, Container, Row } from 'reactstrap';
+import styled from 'styled-components';
 
 const IndicatorShowcase = styled.div`
   padding: ${(props) => props.theme.spaces.s400} 0;
-  background-color: ${({ theme }) =>
-    theme.section.indicatorShowcase.background};
+  background-color: ${({ theme }) => theme.section.indicatorShowcase.background};
   color: ${({ theme }) => theme.section.indicatorShowcase.color};
   text-align: center;
 
@@ -46,9 +46,7 @@ const getNormalizedUnit = (indicator) => {
     (normalization) => normalization.normalizer.identifier === 'population'
   );
   if (populationNormalizer) {
-    return (
-      populationNormalizer.unit.shortName || populationNormalizer.unit.name
-    );
+    return populationNormalizer.unit.shortName || populationNormalizer.unit.name;
   } else {
     return '';
   }
@@ -63,9 +61,11 @@ const IndicatorShowcaseBlock = (props) => {
 
   const indicatorHasGoal = indicator.goals.length > 0;
 
+  // Only show normalization if all values including goal are available as normalized
   const canNormalize =
     getNormalizedValue(firstValue, indicator) &&
-    getNormalizedValue(lastValue, indicator);
+    getNormalizedValue(lastValue, indicator) &&
+    getNormalizedValue(lastGoal, indicator);
 
   const baseValue = {
     date: firstValue.date,

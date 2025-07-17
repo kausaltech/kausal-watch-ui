@@ -1,15 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Container } from 'reactstrap';
-import styled from 'styled-components';
+
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-
 import ActionCard from 'components/actions/ActionCard';
 import ContentLoader from 'components/common/ContentLoader';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
+import PropTypes from 'prop-types';
+import { Container } from 'reactstrap';
+import styled from 'styled-components';
+
 import { getActionTermContext } from '@/common/i18n';
 
 const GET_ACTION_LIST = gql`
@@ -34,8 +35,7 @@ const GET_ACTION_LIST = gql`
 
 const ActionListSection = styled.div`
   background-color: ${(props) => props.color};
-  padding: ${(props) => props.theme.spaces.s200} 0
-    ${(props) => props.theme.spaces.s400};
+  padding: ${(props) => props.theme.spaces.s200} 0 ${(props) => props.theme.spaces.s400};
 `;
 
 const SectionHeader = styled.h2`
@@ -90,16 +90,12 @@ const childIds = (categoryID, cats) => {
     if (categoryID === 0) return cat.parent === null;
     return cat.parent?.id === categoryID;
   });
-  return immediateChildren.length > 0
-    ? immediateChildren.map((child) => child.id)
-    : null;
+  return immediateChildren.length > 0 ? immediateChildren.map((child) => child.id) : null;
 };
 
 const findAllChildren = (categoryID, cats, children = []) => {
   const immediateChildren = childIds(categoryID, cats);
-  let allChildren = immediateChildren
-    ? children.concat(immediateChildren)
-    : children;
+  let allChildren = immediateChildren ? children.concat(immediateChildren) : children;
   if (immediateChildren?.length > 0)
     immediateChildren.forEach((element) => {
       allChildren = findAllChildren(element, cats, allChildren);
@@ -110,9 +106,7 @@ const findAllChildren = (categoryID, cats, children = []) => {
 const filterByCategory = (actions, catId, categories, categoryIsRoot) => {
   // For the root category, don't show _all_ actions recursively but
   // only the ones which are directly connected to the root category.
-  const recursiveCategories = categoryIsRoot
-    ? []
-    : findAllChildren(catId, categories);
+  const recursiveCategories = categoryIsRoot ? [] : findAllChildren(catId, categories);
   recursiveCategories.push(catId);
   return actions.filter((action) =>
     action.categories.find((cat) => recursiveCategories.indexOf(cat.id) > -1)
@@ -154,7 +148,6 @@ const CategoryActionList = (props) => {
   }
   const heading = t('filter-result-actions', getActionTermContext(plan));
 
-  // const MotionCard = motion(ActionCard);
   return (
     <ActionListSection>
       <Container>
@@ -163,7 +156,6 @@ const CategoryActionList = (props) => {
             {filteredActions.length} {heading}
           </SectionHeader>
         )}
-        {/* TODO: animate transition with Framer */}
         <ListRow>
           {filteredActions.map((action) => (
             <ListColumn

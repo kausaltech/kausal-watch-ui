@@ -1,12 +1,12 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import styled from 'styled-components';
+
+import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
 import { Link } from 'common/links';
 import Icon from 'components/common/Icon';
-import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
+import styled from 'styled-components';
 
-const CardContent = styled(motion.div)`
+const CardContent = styled.div`
   a {
     cursor: pointer;
   }
@@ -42,10 +42,7 @@ const CategoryCardContent = (props: CategoryCardContentProps) => {
   const textcontent = category?.leadParagraph;
   const catImageSrc = category?.image?.rendition?.src;
   const categoryEmissions = category?.attributes?.[0]?.value;
-  const emissionShare = formatEmissionSharePercent(
-    categoryEmissions,
-    sumValues
-  );
+  const emissionShare = formatEmissionSharePercent(categoryEmissions, sumValues);
   const ofAllLabel = t('common-of-all-emissions');
 
   return (
@@ -54,10 +51,7 @@ const CategoryCardContent = (props: CategoryCardContentProps) => {
       <p>{category?.level?.name}</p>
       <h3>{category?.name}</h3>
       {!isRoot && <h5>{`${emissionShare} ${ofAllLabel}`}</h5>}
-      <CategoryText
-        className="text-content"
-        dangerouslySetInnerHTML={{ __html: textcontent }}
-      />
+      <CategoryText className="text-content" dangerouslySetInnerHTML={{ __html: textcontent }} />
       {category?.categoryPage?.urlPath ? (
         <Link href={category?.categoryPage?.urlPath} legacyBehavior>
           <a>

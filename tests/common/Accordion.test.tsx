@@ -1,8 +1,9 @@
 import React from 'react';
+
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { render } from '../test-utils';
+
 import Accordion from '../../components/common/Accordion';
-import { filterProps } from 'framer-motion';
+import { render } from '../test-utils';
 
 describe('<Accordion />', () => {
   it('renders without crashing', () => {

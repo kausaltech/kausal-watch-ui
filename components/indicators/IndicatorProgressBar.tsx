@@ -5,13 +5,8 @@ import dayjs from 'common/dayjs';
 import { useWindowSize } from 'common/hooks/use-window-size';
 import { IndicatorLink } from 'common/links';
 import Switch from 'components/common/Switch';
-import {
-  animate,
-  motion,
-  useAnimate,
-  useInView,
-  AnimationSequence,
-} from 'framer-motion';
+import type { AnimationSequence } from 'motion/react';
+import { animate, useAnimate, useInView } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import styled, { useTheme } from 'styled-components';
@@ -86,18 +81,13 @@ const NormalizerChooser = styled.div`
   justify-content: flex-end;
   gap: ${(props) => props.theme.spaces.s100};
   margin-top: ${(props) => props.theme.spaces.s200};
-  padding: ${(props) =>
-    `${props.theme.spaces.s050} ${props.theme.spaces.s150}`};
+  padding: ${(props) => `${props.theme.spaces.s050} ${props.theme.spaces.s150}`};
 
   .form-check-input {
     border-color: ${({ theme }) => theme.section.indicatorShowcase.color};
   }
 `;
-const formatValue = (
-  value: number | string,
-  locale: string,
-  precision?: number
-): string => {
+const formatValue = (value: number | string, locale: string, precision?: number): string => {
   const precisionValue = precision ?? 2;
   return Number(value).toLocaleString(locale, {
     maximumFractionDigits: precisionValue,
@@ -107,9 +97,7 @@ const formatValue = (
 const findPrecision = (comparableValues: Array<number | string>) => {
   for (let i = 2; i < 4; i++) {
     const set = new Set(
-      comparableValues.map((value) =>
-        typeof value === 'number' ? value.toPrecision(i) : value
-      )
+      comparableValues.map((value) => (typeof value === 'number' ? value.toPrecision(i) : value))
     );
     if (set.size === comparableValues.length) {
       return i;
@@ -131,10 +119,10 @@ interface ValueGroupProps {
 }
 
 const ValueGroup = (props: ValueGroupProps) => {
-  const { value, unit, negative, ...rest } = props;
+  const { value, unit, negative, startDate, date, locale, opacity, ...rest } = props;
   return (
     <text {...rest}>
-      <ValueText x="0" dy="16" className={negative ? 'negative' : ''}>
+      <ValueText x="0" y="16" className={negative ? 'negative' : ''}>
         {value}
       </ValueText>
       <UnitText className={negative ? 'negative' : ''}> {unit}</UnitText>
@@ -172,9 +160,7 @@ function useChartWidth(): number {
 
   useEffect(() => {
     const nextWidth =
-      windowWidth < parseInt(theme.breakpointMd)
-        ? CHART_WIDTHS.sm
-        : CHART_WIDTHS.md;
+      windowWidth < parseInt(theme.breakpointMd) ? CHART_WIDTHS.sm : CHART_WIDTHS.md;
 
     if (width !== nextWidth) {
       setWidth(nextWidth);
@@ -227,15 +213,7 @@ interface IndicatorProgressBarProps {
 }
 
 function IndicatorProgressBar(props: IndicatorProgressBarProps) {
-  const {
-    indicatorId,
-    normalize,
-    baseValue,
-    lastValue,
-    goalValue,
-    unit,
-    note,
-  } = props;
+  const { indicatorId, normalize, baseValue, lastValue, goalValue, unit, note } = props;
 
   const width = useChartWidth();
   const [scope, animate] = useAnimate();
@@ -258,16 +236,14 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const startValue: number =
     goalValue.value < baseValue.value
       ? isNormalized
-        ? baseValue.normalizedValue ?? baseValue.value
+        ? (baseValue.normalizedValue ?? baseValue.value)
         : baseValue.value
       : isNormalized
-      ? goalValue.normalizedValue ?? goalValue.value
-      : goalValue.value;
+        ? (goalValue.normalizedValue ?? goalValue.value)
+        : goalValue.value;
 
   const latestDate = lastValue.date;
-  const latestValue = isNormalized
-    ? lastValue.normalizedValue
-    : lastValue.value;
+  const latestValue = isNormalized ? lastValue.normalizedValue : lastValue.value;
 
   const goalDate = goalValue.date;
   const goalDisplayValue =
@@ -276,14 +252,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
         ? goalValue.normalizedValue
         : goalValue.value
       : isNormalized
-      ? baseValue.normalizedValue
-      : baseValue.value;
+        ? baseValue.normalizedValue
+        : baseValue.value;
 
-  const minPrecision = findPrecision([
-    startValue,
-    latestValue ?? 0,
-    goalDisplayValue ?? 0,
-  ]);
+  const minPrecision = findPrecision([startValue, latestValue ?? 0, goalDisplayValue ?? 0]);
 
   const roundedValues = {
     start: Number(startValue?.toPrecision(minPrecision)),
@@ -361,106 +333,114 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   };
 
   const reductionCounterFrom = 0;
-  const reductionCounterTo = Math.abs(
-    roundedValues.start - roundedValues.latest
-  );
+  const reductionCounterTo = Math.abs(roundedValues.start - roundedValues.latest);
   // Animation length relative to animated bar length
-  const reductionCounterDuration =
-    (10 * Math.abs(startBar.w - latestBar.w)) / bars.w;
+  const reductionCounterDuration = (10 * Math.abs(startBar.w - latestBar.w)) / bars.w;
+
+  const resetSequence: AnimationSequence = [
+    'reset',
+    [
+      '.latest-content text',
+      {
+        opacity: 0,
+      },
+      { duration: 0 },
+    ],
+    [
+      '.latest-line',
+      {
+        x1: 0,
+      },
+      { duration: 0 },
+    ],
+    [
+      '.latest-content > line',
+      {
+        x1: 0,
+        x2: 0,
+      },
+      { duration: 0 },
+    ],
+    [
+      '.latest-content > text',
+      {
+        opacity: 0,
+      },
+      { duration: 0 },
+    ],
+    [
+      '.latest-bar',
+      {
+        x: startBar.x,
+        width: startBar.w,
+      },
+      { duration: 0 },
+    ],
+    [
+      '.completed-line',
+      {
+        x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
+        x2: 0,
+      },
+      { duration: 0 },
+    ],
+  ];
+
+  const animateSequence: AnimationSequence = [
+    'execute',
+    [
+      '.latest-bar',
+      {
+        x: latestBar.x,
+        width: latestBar.w,
+      },
+      { duration: reductionCounterDuration },
+    ],
+    [
+      '.completed-line',
+      {
+        x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
+        x2: latestBar.x - 13,
+      },
+      { at: 0, duration: reductionCounterDuration },
+    ],
+    [
+      '.latest-line',
+      {
+        x1: latestBar.x + 1,
+      },
+      { at: 0, duration: reductionCounterDuration },
+    ],
+    [
+      '.latest-content > line',
+      {
+        x1: latestBar.x + 1,
+        x2: latestBar.x + 1,
+      },
+      { at: 0, duration: reductionCounterDuration },
+    ],
+    [
+      '.latest-content text',
+      {
+        opacity: 1,
+      },
+      { at: reductionCounterDuration, duration: 1 },
+    ],
+  ];
+
+  // Reset animation to initial state on component mount
+  useEffect(() => {
+    animate(resetSequence);
+  }, [animate, isNormalized]);
 
   useEffect(() => {
-    const sequence: AnimationSequence = [
-      [
-        '.latest-text',
-        {
-          opacity: 0,
-        },
-        { duration: 0 },
-      ],
-      [
-        '.latest-bar',
-        {
-          opacity: 1,
-        },
-        { duration: 0 },
-      ],
-      [
-        '.latest-content > text',
-        {
-          opacity: 0,
-        },
-        { duration: 0 },
-      ],
-      [
-        '.completed-line',
-        {
-          x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
-          x2: latestBar.x - 13,
-        },
-        { at: 0, duration: reductionCounterDuration },
-      ],
-      [
-        '.latest-bar',
-        {
-          x: latestBar.x - startBar.x,
-          width: latestBar.w,
-        },
-        { at: 0, duration: reductionCounterDuration },
-      ],
-      [
-        '.latest-line',
-        {
-          x1: latestBar.x + 1,
-        },
-        { at: 0, duration: reductionCounterDuration },
-      ],
-      [
-        '.latest-content > line',
-        {
-          x1: latestBar.x + 1,
-          x2: latestBar.x + 1,
-        },
-        { at: 0, duration: reductionCounterDuration },
-      ],
-      [
-        '.latest-content > text',
-        {
-          opacity: 1,
-        },
-        { duration: 1 },
-      ],
-      [
-        '.latest-text',
-        {
-          x: spaceTextBlock(bars.w - Math.max(10, latestBar.w), [
-            '.reduced-text',
-          ]),
-          y: segmentsY + barMargin * 3,
-        },
-        { duration: 0 },
-      ],
-      [
-        '.latest-text',
-        {
-          opacity: 1,
-        },
-        { at: reductionCounterDuration, duration: 1 },
-      ],
-    ];
     if (isInView) {
-      animate(sequence);
+      animate(animateSequence);
+    } else {
+      // Reset to initial state when out of view
+      animate(resetSequence);
     }
-  }, [
-    animate,
-    bars.w,
-    isInView,
-    isNormalized,
-    latestBar.w,
-    latestBar.x,
-    reductionCounterDuration,
-    segmentsY,
-    startBar.x,
-  ]);
+  }, [animate, isInView, isNormalized]);
 
   const graphValues = {
     name: note,
@@ -472,9 +452,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
     goalValue: `${roundedValues.goal} ${displayUnit ?? ''}`,
     reduced: `${reductionCounterTo.toFixed(1)} ${displayUnit ?? ''}`,
     toBeReduced: roundedValues.goal
-      ? `${roundedValues.latest - Number(roundedValues.goal)} ${
-          displayUnit ?? ''
-        }`
+      ? `${roundedValues.latest - Number(roundedValues.goal)} ${displayUnit ?? ''}`
       : '',
   };
   /*
@@ -553,8 +531,8 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                   className="completed-line"
                   y1={segmentsY}
                   y2={segmentsY}
-                  x1={-15}
-                  x2={-14}
+                  x1={0}
+                  x2={latestBar.x - 14}
                   stroke={startColor}
                   strokeWidth="2"
                   markerEnd="url(#reducedArrow)"
@@ -575,11 +553,8 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                   unit={displayUnit ?? ''}
                   locale={locale}
                   negative={
-                    readableColor(
-                      startColor,
-                      theme.themeColors.black,
-                      theme.themeColors.white
-                    ) === theme.themeColors.white
+                    readableColor(startColor, theme.themeColors.black, theme.themeColors.white) ===
+                    theme.themeColors.white
                   }
                 />
               </g>
@@ -590,7 +565,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                   textAnchor="start"
                 >
                   <SegmentHeader>{t('reduced')}</SegmentHeader>
-                  <SegmentValue x="0" dy="16">
+                  <SegmentValue x="0" y="16">
                     <Counter
                       from={reductionCounterFrom}
                       to={reductionCounterTo}
@@ -605,20 +580,24 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
             </>
           )}
           {/* pending from goal bar */}
-          <motion.rect
+          <rect
             className="latest-bar"
             y={latestBar.y}
-            x={startBar.x}
-            width={startBar.w}
+            width={latestBar.w}
             height={barHeight - barMargin}
             opacity={1}
             fill={latestColor}
+            transform={`translate(${latestBar.x} 0)`}
+            style={{
+              transformOrigin: '50% 50%',
+              transformBox: 'fill-box',
+            }}
           />
           {goalValue && latestBar.w - goalBar.w > 24 && (
             <line
               className="latest-line"
               y1={segmentsY}
-              x1={0}
+              x1={latestBar.x}
               x2={goalBar.x - 14}
               y2={segmentsY}
               stroke={latestColor}
@@ -629,8 +608,8 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
           <g className="latest-content">
             {latestBar.w > 24 && (
               <line
-                x1={0}
-                x2={0}
+                x1={latestBar.x}
+                x2={latestBar.x}
                 y1={latestBar.y}
                 y2={segmentsY}
                 stroke={latestColor}
@@ -649,28 +628,22 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
               unit={displayUnit ?? ''}
               locale={locale}
               negative={
-                readableColor(
-                  startColor,
-                  theme.themeColors.black,
-                  theme.themeColors.white
-                ) === theme.themeColors.white || latestBar.w < 120
+                readableColor(startColor, theme.themeColors.black, theme.themeColors.white) ===
+                  theme.themeColors.white || latestBar.w < 120
               }
             />
           </g>
-          <motion.text
+          <text
             className="latest-text"
-            opacity={0}
             textAnchor={latestBar.w > 120 ? 'start' : 'end'}
+            transform={`translate(${spaceTextBlock(bars.w - Math.max(10, latestBar.w), ['.reduced-text'])} ${segmentsY + barMargin * 3})`}
           >
             <SegmentHeader>{t('to-reduce')}</SegmentHeader>
-            <SegmentValue x="0" dy="16">
-              {formatValue(
-                Number(roundedValues.latest) - Number(roundedValues.goal ?? 0),
-                locale
-              )}{' '}
+            <SegmentValue x="0" y="16">
+              {formatValue(Number(roundedValues.latest) - Number(roundedValues.goal ?? 0), locale)}{' '}
               <SegmentUnit>{displayUnit ?? ''}</SegmentUnit>
             </SegmentValue>
-          </motion.text>
+          </text>
           {/* Goal bar */}
           {goalValue && (
             <BarBase
@@ -702,19 +675,14 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
           />
           <ValueGroup
             textAnchor={goalBar.w > 120 ? 'start' : 'end'}
-            transform={`translate(${
-              goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8
-            } ${goalBar.y})`}
+            transform={`translate(${goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8} ${goalBar.y})`}
             date={graphValues.goalYear}
             value={formatValue(roundedValues.goal ?? 0, locale)}
             unit={displayUnit ?? ''}
             locale={locale}
             negative={
-              readableColor(
-                startColor,
-                theme.themeColors.black,
-                theme.themeColors.white
-              ) === theme.themeColors.white || goalBar.w < 120
+              readableColor(startColor, theme.themeColors.black, theme.themeColors.white) ===
+                theme.themeColors.white || goalBar.w < 120
             }
           />
           <text
@@ -736,27 +704,21 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
           />
           {hasStartValue && (
             <text
-              transform={`translate(${canvas.w - 10} ${
-                startBar.y + barHeight / 2
-              })`}
+              transform={`translate(${canvas.w - 10} ${startBar.y + barHeight / 2})`}
               textAnchor="end"
             >
               <DateText>{graphValues.startYear}</DateText>
             </text>
           )}
           <text
-            transform={`translate(${canvas.w - 10} ${
-              latestBar.y + barHeight / 2
-            })`}
+            transform={`translate(${canvas.w - 10} ${latestBar.y + barHeight / 2})`}
             textAnchor="end"
           >
             <DateText>{graphValues.latestYear}</DateText>
           </text>
           {goalValue && (
             <text
-              transform={`translate(${canvas.w - 10} ${
-                goalBar.y + barHeight / 2
-              })`}
+              transform={`translate(${canvas.w - 10} ${goalBar.y + barHeight / 2})`}
               textAnchor="end"
             >
               <DateText>{graphValues.goalYear}</DateText>
