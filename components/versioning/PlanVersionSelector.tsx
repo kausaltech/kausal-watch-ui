@@ -1,13 +1,10 @@
 import React, { useContext } from 'react';
-import styled from 'styled-components';
-import {
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from 'reactstrap';
+
 import Icon from 'components/common/Icon';
 import { useTranslations } from 'next-intl';
+import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
+import styled from 'styled-components';
+
 import { deploymentType } from '@/common/environment';
 
 const VersionSelect = styled.div`
@@ -23,17 +20,15 @@ const VersionSelect = styled.div`
   }
 `;
 
-const VersionDropdownItem = styled.a<{ active?: boolean }>`
+const VersionDropdownItem = styled.a<{ $isActive?: boolean }>`
   display: block;
   padding: 0.25rem 0.75rem 0.25rem 0.25rem;
   margin: 0 0.5rem 0.5rem;
   border: 1px solid ${(props) => props.theme.themeColors.light};
   border-radius: 0.5rem;
   text-decoration: none !important;
-  font-weight: ${(props) =>
-    props.active ? props.theme.fontWeightBold : 'inherit'};
-  /*background: ${(props) =>
-    props.active === true ? props.theme.themeColors.light : 'none'};*/
+  font-weight: ${(props) => (props.$isActive ? props.theme.fontWeightBold : 'inherit')};
+  /*background: ${(props) => (props.$isActive === true ? props.theme.themeColors.light : 'none')};*/
 
   &:last-child {
     margin-bottom: 0;
@@ -65,8 +60,7 @@ const StyledDropdownToggle = styled(DropdownToggle)<{ islatest?: string }>`
   border-radius: 1.75rem;
   font-size: 1rem;
   color: ${(props) => props.theme.themeColors.dark};
-  background: ${(props) =>
-    props.islatest === 'true' ? 'none' : props.theme.graphColors.red010};
+  background: ${(props) => (props.islatest === 'true' ? 'none' : props.theme.graphColors.red010)};
   font: inherit;
   cursor: pointer;
   outline: inherit;
@@ -135,16 +129,9 @@ const PlanVersionSelector = (props) => {
         <StyledDropdownToggle
           data-toggle="dropdown"
           tag="button"
-          islatest={(
-            activeVersion.identifier === latestVersion.identifier
-          ).toString()}
+          islatest={(activeVersion.identifier === latestVersion.identifier).toString()}
         >
-          <Icon
-            name="version"
-            className="me-2"
-            width="1.25rem"
-            height="1.25rem"
-          />
+          <Icon name="version" className="me-2" width="1.25rem" height="1.25rem" />
           {activeVersion.versionName}
           <Icon.AngleDown />
         </StyledDropdownToggle>
@@ -154,8 +141,8 @@ const PlanVersionSelector = (props) => {
             <VersionDropdownItem
               href={v.viewUrl}
               key={v.identifier}
-              latest={v.identifier === latestVersion.identifier}
-              active={v.active}
+              // $isLatest={v.identifier === latestVersion.identifier}
+              $isActive={v.active}
             >
               <VersionDate>{v.versionName}</VersionDate>
             </VersionDropdownItem>
