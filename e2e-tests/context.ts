@@ -1,13 +1,13 @@
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import AxeBuilder from '@axe-core/playwright';
-import { expect, Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
+
 import type {
   PlaywrightGetPlanBasicsQuery,
   PlaywrightGetPlanBasicsQueryVariables,
   PlaywrightGetPlanInfoQuery,
   PlaywrightGetPlanInfoQueryVariables,
-} from 'common/__generated__/graphql';
-
+} from '@/common/__generated__/graphql';
 import { apiUrl } from '@/common/environment';
 
 const API_BASE = apiUrl;
@@ -173,9 +173,7 @@ export class PlanContext {
     return item;
   }
 
-  getCategoryMenuItems(
-    parentId: string | null | undefined
-  ): CategoryMenuItem[] {
+  getCategoryMenuItems(parentId: string | null | undefined): CategoryMenuItem[] {
     if (!parentId) return [];
 
     function isCategoryItem(item: MainMenuItem): item is CategoryMenuItem {
@@ -184,8 +182,7 @@ export class PlanContext {
       if (item.parent.id !== parentId) return false;
       return true;
     }
-    const items =
-      (this.plan.mainMenu?.items ?? []).filter(isCategoryItem) || [];
+    const items = (this.plan.mainMenu?.items ?? []).filter(isCategoryItem) || [];
     return items;
   }
 
@@ -195,8 +192,7 @@ export class PlanContext {
       if (item.page.__typename !== 'EmptyPage') return false;
       return true;
     }
-    const item =
-      (this.plan.mainMenu?.items ?? []).find(isEmptyPageType) || null;
+    const item = (this.plan.mainMenu?.items ?? []).find(isEmptyPageType) || null;
     return item;
   }
 
@@ -210,14 +206,10 @@ export class PlanContext {
     ): item is CategoryMenuItem | StaticPageMenuItem {
       if (item?.__typename !== 'PageMenuItem') return false;
       if (item.parent?.id !== parentId) return false;
-      return (
-        item.page.__typename === 'CategoryPage' ||
-        item.page.__typename === 'StaticPage'
-      );
+      return item.page.__typename === 'CategoryPage' || item.page.__typename === 'StaticPage';
     }
 
-    const items =
-      (this.plan.mainMenu?.items ?? []).filter(isEmptyPageChildItem) || [];
+    const items = (this.plan.mainMenu?.items ?? []).filter(isEmptyPageChildItem) || [];
     return items;
   }
 
@@ -229,21 +221,17 @@ export class PlanContext {
       //if (item.parent.page.__typename !== 'PlanRootPage') return false;
       return true;
     }
-    const items =
-      (this.plan.mainMenu?.items ?? []).filter(isStaticPageItem) || [];
+    const items = (this.plan.mainMenu?.items ?? []).filter(isStaticPageItem) || [];
     return items;
   }
 
   getIndicatorListMenuItem(): IndicatorListMenuItem | null {
-    function isIndicatorList(
-      item: MainMenuItem
-    ): item is IndicatorListMenuItem {
+    function isIndicatorList(item: MainMenuItem): item is IndicatorListMenuItem {
       if (item?.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'IndicatorListPage') return false;
       return true;
     }
-    const item =
-      (this.plan.mainMenu?.items ?? []).find(isIndicatorList) || null;
+    const item = (this.plan.mainMenu?.items ?? []).find(isIndicatorList) || null;
     return item;
   }
 
@@ -256,10 +244,7 @@ export class PlanContext {
     if (this.plan.parent?.name) {
       await expect(siteName).toHaveAttribute('content', this.plan.parent?.name);
     } else {
-      await expect(siteName).toHaveAttribute(
-        'content',
-        this.plan.generalContent.siteTitle
-      );
+      await expect(siteName).toHaveAttribute('content', this.plan.generalContent.siteTitle);
     }
   }
 
@@ -296,10 +281,7 @@ export class PlanContext {
     );
 
     if (criticalAndSeriousViolations.length > 0) {
-      console.error(
-        'Critical and serious accessibility violations:',
-        criticalAndSeriousViolations
-      );
+      console.error('Critical and serious accessibility violations:', criticalAndSeriousViolations);
     }
     //expect(criticalAndSeriousViolations).toEqual([]);
   }
@@ -311,8 +293,7 @@ export function getIdentifiersToTest(): string[] {
 }
 
 export function getPageBaseUrlToTest(planId: string): string {
-  let baseUrl =
-    process.env.TEST_PAGE_BASE_URL || `http://{planId}.watch-test.kausal.tech`;
+  let baseUrl = process.env.TEST_PAGE_BASE_URL || `http://{planId}.watch-test.kausal.tech`;
   baseUrl = baseUrl.replace('{planId}', planId);
   return baseUrl;
 }

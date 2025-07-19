@@ -1,0 +1,3 @@
+[submodule "kausal_common"]
+	path = kausal_common
+	url = https://github.com/kausaltech/kausal-ui-common.git

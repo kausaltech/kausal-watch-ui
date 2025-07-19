@@ -8,32 +8,54 @@ React UI for browsing and visualizing action plans. Built using [Next.js](https:
 
 ## Development
 
-#### Prerequisites
+### Prerequisites
 
-- [Node.js](https://nodejs.org/) 18.x
-- [Yarn](https://yarnpkg.com/) 3.2.1
+- [Node.js](https://nodejs.org/) 24.x
 
-#### Getting Started
+### Initial setup and subsequent updates
 
-Clone the repository, install the dependencies and run the development server locally:
+0. When cloning the repo, you should pass `--recurse-submodules` to the `git clone` invocation to ensure you also
+   get the `kausal_common` submodule checked out. If you have a pre-existing clone, you can update the submodule with:
 
-    yarn set version 3.2.1
-    yarn config set nodeLinker 'node-modules'
-    yarn install
-    yarn dev
+```bash
+git submodule update --init
+```
 
-Preview the application locally at http://localhost:3000/
+1. Install nvm if you don't have it yet.
+2. Activate the right node version (you can do all steps from 2 to 5 to make sure that the update does not fail).
 
-#### Environment Variables
+```bash
+nvm use
+```
 
-Define the following variables in `.env` if you need to override them for local development.
-Variables prefixed with `NEXT_PUBLIC_` are build-time variables, which are available in client components.
-When using environment variables in client-side code, import them from `@/common/environment` to support fallbacks.
+3. Make sure the package manager version is controlled with corepack:
 
-- `NEXT_PUBLIC_API_URL` (previously APLANS_API_BASE_URL): Configure a custom API URL, e.g. staging or a local backend.
-- `NEXT_PUBLIC_DEPLOYMENT_TYPE`: Change the deployment type, e.g. `staging` or `production`.
+```bash
+corepack enable
+```
 
-#### End-to-end Testing
+4. If you need access to the Kausal private themes:
+
+```
+npx verdaccio-openid@latest --registry https://npm.kausal.tech
+npm config set @kausal-private:registry https://npm.kausal.tech
+```
+
+5. Install dependencies:
+
+```bash
+pnpm install
+```
+
+Make sure that your installation does not give errors about missing files. If it does, there is probably something wrong in step 4.
+
+6. To run local development against a Kausal Watch backend, create an `.env` file with the following env variable set to the GraphQL API URL. Ask a teammate for this value.
+
+```
+WATCH_BACKEND_URL=
+```
+
+### End-to-end Testing
 
 Before the first run, ensure the browsers Playwright needs are installed:
 
@@ -59,7 +81,7 @@ suite like this:
 
     node_modules/.bin/playwright test
 
-#### Building the custom version of plotly.js
+### Building the custom version of plotly.js
 
 If you need to add new plot types, or update to the upstream version of plotly.js,
 clone the [plotly.js GitHub repository](https://github.com/plotly/plotly.js) and
@@ -73,7 +95,7 @@ run the following commands:
     npm run custom-bundle -- --traces ${TRACES}
     npm publish --access public
 
-#### Debugging
+### Debugging
 
 Debug server side GraphQL queries by setting the `LOG_GRAPHQL_QUERIES=true` environment variable. This will log all outgoing queries and variables in your dev server console.
 
@@ -81,9 +103,9 @@ Debug server side GraphQL queries by setting the `LOG_GRAPHQL_QUERIES=true` envi
 
 To run the app in production mode:
 
-    yarn install
-    yarn build
-    yarn start
+    npm ci
+    npm run build
+    npm start
 
 ## Maintainers
 
