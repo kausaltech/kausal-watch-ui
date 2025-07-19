@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 
-import dayjs from 'common/dayjs';
 import { linearRegression } from 'common/math';
 import { capitalizeFirstLetter } from 'common/utils';
 import ContentLoader from 'components/common/ContentLoader';
@@ -39,6 +38,10 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
       reference
       minValue
       maxValue
+      ticksCount
+      ticksRounding
+      valueRounding
+      dataCategoriesAreStackable
       organization {
         id
         name
@@ -720,6 +723,9 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
     unit: unitLabel,
     minDigits: 0,
     maxDigits: 0,
+    ticksCount: indicator.ticksCount ?? undefined,
+    ticksRounding: indicator.ticksRounding ?? undefined,
+    valueRounding: indicator.valueRounding ?? undefined,
     includeZero: false,
     range: [],
   };
