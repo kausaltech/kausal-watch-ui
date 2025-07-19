@@ -28,10 +28,10 @@ git submodule update --init
 nvm use
 ```
 
-3. Make sure the npm version is controlled with corepack:
+3. Make sure the package manager version is controlled with corepack:
 
 ```bash
-corepack enable npm
+corepack enable
 ```
 
 4. If you need access to the Kausal private themes:
@@ -44,7 +44,7 @@ npm config set @kausal-private:registry https://npm.kausal.tech
 5. Install dependencies:
 
 ```bash
-npm i
+pnpm install
 ```
 
 Make sure that your installation does not give errors about missing files. If it does, there is probably something wrong in step 4.
