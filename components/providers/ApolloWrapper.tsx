@@ -1,34 +1,35 @@
 'use client';
 
-import { useLocale } from 'next-intl';
 import { ApolloLink, useApolloClient } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import {
   ApolloNextAppProvider,
-  NextSSRInMemoryCache,
   NextSSRApolloClient,
+  NextSSRInMemoryCache,
   SSRMultipartLink,
 } from '@apollo/experimental-nextjs-app-support/ssr';
+import { useSession } from 'next-auth/react';
+import { useLocale } from 'next-intl';
+
+import { isServer } from '@/common/environment';
+import { createSentryLink, logOperationLink } from '@/kausal_common/src/apollo/links';
+import { getWatchGraphQLUrl } from '@/kausal_common/src/env';
 
 import {
   errorLink,
-  localeMiddleware,
   getHttpLink,
   headersMiddleware,
+  localeMiddleware,
 } from '../../utils/apollo.utils';
-import { isServer } from '@/common/environment';
-import { setContext } from '@apollo/client/link/context';
-import { useSession } from 'next-auth/react';
 
-const authMiddleware = setContext(
-  (_, { sessionToken, headers: initialHeaders = {} }) => {
-    return {
-      headers: {
-        ...initialHeaders,
-        ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
-      },
-    };
-  }
-);
+const authMiddleware = setContext((_, { sessionToken, headers: initialHeaders = {} }) => {
+  return {
+    headers: {
+      ...initialHeaders,
+      ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
+    },
+  };
+});
 
 function makeClient(config: {
   initialLocale: string;
@@ -46,7 +47,8 @@ function makeClient(config: {
     },
     cache: new NextSSRInMemoryCache(),
     link: ApolloLink.from([
-      errorLink,
+      logOperationLink,
+      createSentryLink(getWatchGraphQLUrl()),
       localeMiddleware,
       authMiddleware,
       headersMiddleware,
@@ -82,15 +84,9 @@ type Props = {
   planDomain: string;
 } & React.PropsWithChildren;
 
-export function ApolloWrapper({
-  initialLocale,
-  planIdentifier,
-  planDomain,
-  children,
-}: Props) {
+export function ApolloWrapper({ initialLocale, planIdentifier, planDomain, children }: Props) {
   const session = useSession();
-  const token =
-    session.status === 'authenticated' ? session.data.idToken : undefined;
+  const token = session.status === 'authenticated' ? session.data.idToken : undefined;
 
   const clientConfig = {
     initialLocale,

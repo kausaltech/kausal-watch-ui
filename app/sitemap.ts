@@ -1,33 +1,27 @@
-import { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
-import { ApolloClient, InMemoryCache, from, gql } from '@apollo/client';
 
-import possibleTypes from '@/common/__generated__/possible_types.json';
-import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
-import {
+import { ApolloClient, InMemoryCache, from, gql } from '@apollo/client';
+import type { MetadataRoute } from 'next';
+
+import type {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
   GetSitemapQuery,
   GetSitemapQueryVariables,
 } from '@/common/__generated__/graphql';
-import {
-  ACTIONS_PATH,
-  INDICATORS_PATH,
-  STATIC_ROUTES,
-} from '@/constants/routes';
-import {
-  getHttpLink,
-  operationEnd,
-  operationStart,
-} from '@/utils/apollo.utils';
+import possibleTypes from '@/common/__generated__/possible_types.json';
+import { ACTIONS_PATH, INDICATORS_PATH, STATIC_ROUTES } from '@/constants/routes';
+import { logOperationLink } from '@/kausal_common/src/apollo/links';
+import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 import { tryRequest } from '@/utils/api.utils';
+import { getHttpLink } from '@/utils/apollo.utils';
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
     // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
     possibleTypes: possibleTypes.possibleTypes,
   }),
-  link: from([operationStart, operationEnd, getHttpLink()]),
+  link: from([logOperationLink, getHttpLink()]),
 });
 
 const GET_SITEMAP_CONTENTS = gql`
@@ -48,9 +42,7 @@ const GET_SITEMAP_CONTENTS = gql`
   }
 `;
 
-type PossiblePlanForHostname = NonNullable<
-  GetPlansByHostnameQuery['plansForHostname']
->[0];
+type PossiblePlanForHostname = NonNullable<GetPlansByHostnameQuery['plansForHostname']>[0];
 
 type PlanForHostname = PossiblePlanForHostname & { __typename: 'Plan' };
 
@@ -58,25 +50,20 @@ type Indicator = NonNullable<GetSitemapQuery['planIndicators']>[0] & {
   __typename: 'Indicator';
 };
 
-type Page = NonNullable<
-  NonNullable<NonNullable<GetSitemapQuery['plan']>['pages']>[0]
-> & {
+type Page = NonNullable<NonNullable<NonNullable<GetSitemapQuery['plan']>['pages']>[0]> & {
   __typename: string;
 };
 
 const isPlan = (plan: PossiblePlanForHostname): plan is PlanForHostname =>
   plan?.__typename === 'Plan';
 
-function getDefaultPlanId(
-  plans: NonNullable<GetPlansByHostnameQuery['plansForHostname']>
-) {
+function getDefaultPlanId(plans: NonNullable<GetPlansByHostnameQuery['plansForHostname']>) {
   if (plans.length === 1 && isPlan(plans[0])) {
     return plans[0].id;
   }
 
   const defaultPlan = plans.find(
-    (plan) =>
-      isPlan(plan) && plan.domains?.find((domain) => domain?.basePath === null)
+    (plan) => isPlan(plan) && plan.domains?.find((domain) => domain?.basePath === null)
   );
 
   if (defaultPlan && isPlan(defaultPlan)) {
@@ -93,10 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const url = new URL(`${protocol}://${host}`);
 
   const { data: plansData, error: plansError } = await tryRequest(
-    apolloClient.query<
-      GetPlansByHostnameQuery,
-      GetPlansByHostnameQueryVariables
-    >({
+    apolloClient.query<GetPlansByHostnameQuery, GetPlansByHostnameQueryVariables>({
       query: GET_PLANS_BY_HOSTNAME,
       variables: { hostname: url.hostname },
     })
@@ -131,10 +115,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...STATIC_ROUTES.map((route) => ({ url: `${baseUrl}${route}` })),
 
     ...(data.planIndicators
-      ?.filter(
-        (indicator): indicator is Indicator =>
-          indicator?.__typename === 'Indicator'
-      )
+      ?.filter((indicator): indicator is Indicator => indicator?.__typename === 'Indicator')
       .map((indicator) => ({
         url: `${baseUrl}${INDICATORS_PATH}/${indicator.id}`,
       })) ?? []),

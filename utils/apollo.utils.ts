@@ -1,9 +1,13 @@
-import { ApolloLink, HttpLink, Operation } from '@apollo/client';
+import type { Operation } from '@apollo/client';
+import { ApolloLink, HttpLink } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
+import { type DirectiveNode, OperationTypeNode } from 'graphql';
+import { Kind } from 'graphql/language/kinds';
 
 import { gqlUrl, isLocal, isServer, logGraphqlQueries } from '@/common/environment';
 import { API_PROXY_PATH } from '@/constants/routes';
+import type { DefaultApolloContext } from '@/kausal_common/src/apollo';
 import { WILDCARD_DOMAINS_HEADER } from '@/kausal_common/src/constants/headers.mjs';
 import { getWildcardDomains } from '@/kausal_common/src/env';
 
@@ -12,7 +16,7 @@ import { getWildcardDomains } from '@/kausal_common/src/env';
  * allowing us to inject the "@locale" directive in all queries.
  */
 declare module '@apollo/client' {
-  export interface DefaultContext {
+  export interface DefaultContext extends Partial<DefaultApolloContext> {
     locale?: string;
     planIdentifier?: string;
     planDomain?: string;
@@ -152,21 +156,25 @@ export const localeMiddleware = new ApolloLink((operation, forward) => {
   const definition = definitions[0];
   const locale = context.locale;
 
-  if (!locale || definition.kind !== 'OperationDefinition' || definition.operation !== 'query') {
+  if (
+    !locale ||
+    definition.kind !== Kind.OPERATION_DEFINITION ||
+    definition.operation !== OperationTypeNode.QUERY
+  ) {
     return forward(operation);
   }
 
-  const localeDirective = {
-    kind: 'Directive',
+  const localeDirective: DirectiveNode = {
+    kind: Kind.DIRECTIVE,
     name: {
-      kind: 'Name',
+      kind: Kind.NAME,
       value: 'locale',
     },
     arguments: [
       {
-        kind: 'Argument',
-        name: { kind: 'Name', value: 'lang' },
-        value: { kind: 'StringValue', value: locale, block: false },
+        kind: Kind.ARGUMENT,
+        name: { kind: Kind.NAME, value: 'lang' },
+        value: { kind: Kind.STRING, value: locale, block: false },
       },
     ],
   };
