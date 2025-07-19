@@ -1,15 +1,32 @@
-import {
+import type { NextRequest, NextResponse } from 'next/server';
+
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client';
+import * as Sentry from '@sentry/nextjs';
+import type { NextAuthRequest } from 'next-auth/lib';
+import type { Logger } from 'pino';
+
+import type {
   GetPlansByHostnameQuery,
-  PublicationStatus,
+  GetPlansByHostnameQueryVariables,
 } from '@/common/__generated__/graphql';
-import { NextRequest, NextResponse } from 'next/server';
+import { PublicationStatus } from '@/common/__generated__/graphql';
+import possibleTypes from '@/common/__generated__/possible_types.json';
+import type { ApolloClientType } from '@/kausal_common/src/apollo';
+import { createSentryLink, logOperationLink } from '@/kausal_common/src/apollo/links';
+import {
+  FORWARDED_HEADER,
+  WILDCARD_DOMAINS_HEADER,
+} from '@/kausal_common/src/constants/headers.mjs';
+import { getWatchGraphQLUrl, getWildcardDomains } from '@/kausal_common/src/env';
+import { getClientIP } from '@/kausal_common/src/utils';
+import LRUCache from '@/kausal_common/src/utils/lru-cache';
+import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
+
 import { stripSlashes } from './urls';
 
 const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
 
-type PlanForHostname = NonNullable<
-  GetPlansByHostnameQuery['plansForHostname']
->[0];
+type PlanForHostname = NonNullable<GetPlansByHostnameQuery['plansForHostname']>[0];
 
 export type PlanFromPlansQuery = PlanForHostname & { __typename: 'Plan' };
 
@@ -22,8 +39,7 @@ export function getSearchParamsString(request: NextRequest) {
 export const isRestrictedPlan = (plan: PlanForHostname) =>
   plan?.__typename === 'RestrictedPlanNode';
 
-const isPlan = (plan: PlanForHostname) =>
-  plan?.__typename === 'Plan' || isRestrictedPlan(plan);
+const isPlan = (plan: PlanForHostname) => plan?.__typename === 'Plan' || isRestrictedPlan(plan);
 
 export const isPlanPublished = (plan: PlanFromPlansQuery) =>
   !plan.domain?.status || // No status indicates the plan is published
@@ -43,9 +59,7 @@ export function getParsedPlan(
     (plan) =>
       isPlan(plan) &&
       plan.domains?.find(
-        (domain) =>
-          domain?.basePath &&
-          possiblePlans.includes(stripSlashes(domain.basePath))
+        (domain) => domain?.basePath && possiblePlans.includes(stripSlashes(domain.basePath))
       )
   );
 
@@ -56,30 +70,22 @@ export function getParsedPlan(
   // If no plan is found by path, return the default plan
   return (
     plans.find(
-      (plan) =>
-        isPlan(plan) &&
-        plan.domains?.find((domain) => domain?.basePath === null)
+      (plan) => isPlan(plan) && plan.domains?.find((domain) => domain?.basePath === null)
     ) ?? undefined
   );
 }
 
-export function getParsedLocale(
-  localePossibilities: string[],
-  plan: PlanFromPlansQuery
-) {
-  const locale = [plan.primaryLanguage, ...(plan.otherLanguages ?? [])].find(
-    (locale) =>
-      localePossibilities
-        .map((possibleLocale) => possibleLocale.toLowerCase())
-        .includes(locale.toLowerCase())
+export function getParsedLocale(localePossibilities: string[], plan: PlanFromPlansQuery) {
+  const locale = [plan.primaryLanguage, ...(plan.otherLanguages ?? [])].find((locale) =>
+    localePossibilities
+      .map((possibleLocale) => possibleLocale.toLowerCase())
+      .includes(locale.toLowerCase())
   );
 
   const isCaseInvalid =
     !!locale &&
     !localePossibilities.includes(locale) &&
-    localePossibilities
-      .map((locale) => locale.toLowerCase())
-      .includes(locale.toLowerCase());
+    localePossibilities.map((locale) => locale.toLowerCase()).includes(locale.toLowerCase());
 
   return { parsedLocale: locale || plan.primaryLanguage, isCaseInvalid };
 }
@@ -104,7 +110,7 @@ function getAuthenticationForPlan(hostname: string):
     return undefined;
   }
 
-  const [authHostname, username, password] = planAuthConfig.split(':');
+  const [_authHostname, username, password] = planAuthConfig.split(':');
 
   return { username, password };
 }
@@ -120,9 +126,7 @@ export function isAuthenticated(request: NextRequest, hostname: string) {
 
   if (basicAuth) {
     const authValue = basicAuth.split(' ')[1];
-    const [username, password] = Buffer.from(authValue, 'base64')
-      .toString('utf-8')
-      .split(':');
+    const [username, password] = Buffer.from(authValue, 'base64').toString('utf-8').split(':');
 
     if (username === authConfig.username && password === authConfig.password) {
       return true;
@@ -152,10 +156,7 @@ export function getLocaleAndPlan(pathname: string, plans: PlanForHostname[]) {
     return { parsedPlan: undefined, parsedLocale: undefined };
   }
 
-  const { parsedLocale, isCaseInvalid } = getParsedLocale(
-    possibleLocaleAndPlan,
-    parsedPlan
-  );
+  const { parsedLocale, isCaseInvalid } = getParsedLocale(possibleLocaleAndPlan, parsedPlan);
 
   return { parsedPlan, parsedLocale, isLocaleCaseInvalid: isCaseInvalid };
 }
@@ -174,10 +175,7 @@ export function isLegacyPathStructure(
     return false;
   }
 
-  return new RegExp(
-    `/${stripSlashes(plan.domain.basePath)}/${locale}(/|$)`,
-    'i'
-  ).test(pathname);
+  return new RegExp(`/${stripSlashes(plan.domain.basePath)}/${locale}(/|$)`, 'i').test(pathname);
 }
 
 export function convertPathnameFromLegacy(
@@ -195,18 +193,13 @@ export function convertPathnameFromLegacy(
   return `/${parsedLocale}/${parsedPlan.domain?.basePath}/${slug}`;
 }
 
-export function convertPathnameFromInvalidLocaleCasing(
-  pathname: string,
-  locale: string
-) {
+export function convertPathnameFromInvalidLocaleCasing(pathname: string, locale: string) {
   return (
     pathname
       .split('/')
       // Replace incorrect locale casing with the correctly cased locale
       .map((path, i) =>
-        (i === 0 || i === 1) && path.toLowerCase() === locale.toLowerCase()
-          ? locale
-          : path
+        (i === 0 || i === 1) && path.toLowerCase() === locale.toLowerCase() ? locale : path
       )
       .join('/')
   );
@@ -233,4 +226,113 @@ export function rewriteUrl(
   response.headers.set('x-plan-identifier', plan);
 
   return response;
+}
+
+function createApolloClient(req: NextAuthRequest, logger: Logger) {
+  const uri = getWatchGraphQLUrl();
+  const httpLink = new HttpLink({
+    uri,
+    credentials: 'include',
+    fetchOptions: {
+      referrerPolicy: 'unsafe-url',
+    },
+  });
+
+  const client: ApolloClientType = new ApolloClient({
+    ssrMode: false,
+    link: ApolloLink.from([
+      logOperationLink,
+      createSentryLink(uri),
+      new ApolloLink((operation, forward) => {
+        operation.setContext(({ headers = {} }) => {
+          const ctxHeaders: Record<string, string> = {};
+          const clientIp = getClientIP(req);
+          if (clientIp) {
+            headers[FORWARDED_HEADER] = `for="${clientIp}"`;
+          }
+          const wildcardDomains = getWildcardDomains();
+          if (wildcardDomains.length > 0) {
+            ctxHeaders[WILDCARD_DOMAINS_HEADER] = wildcardDomains.join(',');
+          }
+          if (req.auth?.idToken) {
+            ctxHeaders['Authorization'] = `Bearer ${req.auth.idToken}`;
+          }
+          const newHeaders = {
+            ...headers,
+            ...ctxHeaders,
+          };
+          return {
+            headers: newHeaders,
+          };
+        });
+        return forward(operation);
+      }),
+      httpLink,
+    ]),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Plan: {
+          /**
+           * Prevent cache conflicts between multi-plan plans when visited via basePath
+           * (e.g. umbrella.city.gov/x-plan) vs a dedicated plan subdomain (e.g. x-plan.city.gov/)
+           */
+          keyFields: ['id', 'domain', ['hostname']],
+        },
+      },
+      // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
+      possibleTypes: possibleTypes.possibleTypes,
+    }),
+    defaultContext: {
+      logger: logger,
+    },
+  });
+  return client;
+}
+
+async function queryPlansForHostname(req: NextAuthRequest, logger: Logger, hostname: string) {
+  const apolloClient = createApolloClient(req, logger);
+  try {
+    const { data, error } = await apolloClient.query<
+      GetPlansByHostnameQuery,
+      GetPlansByHostnameQueryVariables
+    >({
+      query: GET_PLANS_BY_HOSTNAME,
+      variables: { hostname },
+      fetchPolicy: 'no-cache',
+    });
+    return { plans: error ? null : data?.plansForHostname || [], error };
+  } catch (error) {
+    Sentry.captureException(error);
+    return { plans: null, error: error as Error };
+  }
+}
+
+const DEFAULT_TTL = 30 * 60 * 1000;
+
+const hostnamePlanCache = new LRUCache<string, PlanForHostname[]>();
+
+export async function getPlansForHostname(req: NextAuthRequest, logger: Logger, hostname: string) {
+  hostnamePlanCache.print((plans) =>
+    plans
+      .map((plan) => `${plan!.__typename} ${plan!.__typename == 'Plan' ? plan!.id : ''}`)
+      .join(', ')
+  );
+  const cacheEntry = hostnamePlanCache.getMetadata(hostname);
+  if (cacheEntry) {
+    const now = Date.now();
+    const age = now - cacheEntry.createdAt;
+    if (age < cacheEntry.ttl) {
+      return { plans: cacheEntry.value as PlanForHostname[], error: null };
+    }
+  }
+  const { plans, error } = await queryPlansForHostname(req, logger, hostname);
+  if (plans) {
+    hostnamePlanCache.set(hostname, plans, undefined, DEFAULT_TTL);
+    return { plans, error: null };
+  }
+  return { plans: null, error };
+}
+
+export function clearHostnameCache() {
+  hostnamePlanCache.clearAll();
 }

@@ -1,53 +1,30 @@
-import createIntlMiddleware from 'next-intl/middleware';
-import { NextRequest, NextResponse } from 'next/server';
-import type { NextAuthRequest } from 'next-auth/lib';
-import { ApolloClient, InMemoryCache, from } from '@apollo/client';
+import { NextResponse } from 'next/server';
 
-import possibleTypes from './common/__generated__/possible_types.json';
-import { GET_PLANS_BY_HOSTNAME } from './queries/get-plans';
-import {
-  GetPlansByHostnameQuery,
-  GetPlansByHostnameQueryVariables,
-} from './common/__generated__/graphql';
-import { stripLocaleAndPlan } from './utils/urls';
+import * as Sentry from '@sentry/nextjs';
+import type { NextAuthRequest } from 'next-auth/lib';
+import createIntlMiddleware from 'next-intl/middleware';
+
+import { generateCorrelationID, getLogger } from '@common/logging';
+
+import { auth } from './config/auth';
 import { UNPUBLISHED_PATH } from './constants/routes';
+import { HEALTH_CHECK_PUBLIC_PATH } from './kausal_common/src/constants/routes.mjs';
+import { getDeploymentType, getSpotlightUrl } from './kausal_common/src/env';
+import { LOGGER_SPAN_ID, LOGGER_TRACE_ID } from './kausal_common/src/logging/init';
+import { LOGGER_CORRELATION_ID } from './kausal_common/src/logging/logger';
 import {
-  getHttpLink,
-  operationEnd,
-  operationStart,
-} from './utils/apollo.utils';
-import { captureException } from '@sentry/nextjs';
-import {
+  clearHostnameCache,
   convertPathnameFromInvalidLocaleCasing,
   convertPathnameFromLegacy,
   getLocaleAndPlan,
+  getPlansForHostname,
   getSearchParamsString,
   isAuthenticated,
   isLegacyPathStructure,
-  isPlanPublished,
   isRestrictedPlan,
   rewriteUrl,
 } from './utils/middleware.utils';
-import { tryRequest } from './utils/api.utils';
-
-import { auth } from './config/auth';
-
-const apolloClient = new ApolloClient({
-  cache: new InMemoryCache({
-    typePolicies: {
-      Plan: {
-        /**
-         * Prevent cache conflicts between multi-plan plans when visited via basePath
-         * (e.g. umbrella.city.gov/x-plan) vs a dedicated plan subdomain (e.g. x-plan.city.gov/)
-         */
-        keyFields: ['id', 'domain', ['hostname']],
-      },
-    },
-    // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
-    possibleTypes: possibleTypes.possibleTypes,
-  }),
-  link: from([operationStart, operationEnd, getHttpLink()]),
-});
+import { stripLocaleAndPlan } from './utils/urls';
 
 export const config = {
   matcher: [
@@ -62,50 +39,66 @@ export const config = {
   ],
 };
 
-const clearCacheIfTimedOut = (function handleCacheTTL() {
-  let timeCached: number | null = null;
-  const THIRTY_MINS = 30 * 60 * 1000;
-
-  return () => {
-    if (!timeCached) {
-      timeCached = Date.now();
-    } else if (Date.now() - timeCached > THIRTY_MINS) {
-      timeCached = Date.now();
-      apolloClient.clearStore();
-    }
-  };
-})();
+function getMiddlewareLogger(request: NextAuthRequest, host: string, pathname: string) {
+  const reqId = request.headers.get('X-Correlation-ID') || generateCorrelationID();
+  const span = Sentry.getActiveSpan();
+  const spanBindings = {};
+  if (span) {
+    spanBindings[LOGGER_TRACE_ID] = span.spanContext().traceId;
+    spanBindings[LOGGER_SPAN_ID] = span.spanContext().spanId;
+    spanBindings['sampled'] = span.isRecording();
+  }
+  const logger = getLogger({
+    name: 'middleware',
+    bindings: {
+      ...spanBindings,
+      [LOGGER_CORRELATION_ID]: reqId,
+      host,
+      path: pathname,
+    },
+    request,
+  });
+  // If spotlight is enabled, we enrich the span with the request headers
+  // for nicer debug experience.
+  if (span && getSpotlightUrl()) {
+    request.headers.forEach((headerValue, headerName) => {
+      const key = `http.request.header.${headerName}`;
+      span.setAttribute(key, headerValue);
+    });
+  }
+  return logger;
+}
 
 export default auth(async (request: NextAuthRequest) => {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
 
-  const host = request.headers.get('host');
+  const host =
+    request.headers.get('host') || request.headers.get('x-forwarded-host') || request.nextUrl.host;
+  const hostname = host.split(':')[0];
   const protocol = request.headers.get('x-forwarded-proto');
   const hostUrl = new URL(`${protocol}://${host}`);
-  const hostname = hostUrl.hostname;
 
-  console.log(`
-  ⚙ Middleware ${url}
-    ↝ protocol: ${protocol}
-    ↝ pathname: ${pathname}
-    ↝ hostname: ${hostname}
-  `);
+  if (request.nextUrl.pathname === HEALTH_CHECK_PUBLIC_PATH) {
+    return NextResponse.json({ status: 'OK' });
+  }
+  if (
+    request.nextUrl.pathname === '/__nextjs_original-stack-frame' ||
+    request.nextUrl.pathname.startsWith('/_next/static/')
+  ) {
+    return NextResponse.next();
+  }
+
+  const logger = getMiddlewareLogger(request, host, pathname);
+  logger.info({ method: request.method }, `${request.method} ${request.nextUrl.pathname}`);
 
   // Redirect the root application locally to `sunnydale` tenant
   if (hostname === 'localhost') {
     return NextResponse.redirect(new URL(`http://sunnydale.${host}`));
   }
 
-  if (pathname === '/_health') {
-    url.pathname = '/api/health';
-
-    return NextResponse.rewrite(url);
-  }
-
   if (pathname === '/_invalidate-middleware-cache') {
-    await apolloClient.clearStore();
-
+    clearHostnameCache();
     return NextResponse.json({
       message: 'Middleware cache cleared',
     });
@@ -117,56 +110,37 @@ export default auth(async (request: NextAuthRequest) => {
     return NextResponse.rewrite(url);
   }
 
-  clearCacheIfTimedOut();
-  const token = request.auth?.idToken;
-
-  const { data, error } = await tryRequest(
-    apolloClient.query<
-      GetPlansByHostnameQuery,
-      GetPlansByHostnameQueryVariables
-    >({
-      query: GET_PLANS_BY_HOSTNAME,
-      context: { headers: token ? { Authorization: `Bearer ${token}` } : {} },
-      variables: { hostname },
-      fetchPolicy:
-        token == null || request.auth?.user == null
-          ? 'cache-first'
-          : 'no-cache',
-    })
-  );
-
-  if (error || !data?.plansForHostname?.length) {
-    if (error) {
-      captureException(error, { extra: { hostname, ...error } });
+  const { plans, error } = await getPlansForHostname(request, logger, hostname);
+  if (error) {
+    const errorPreamble = `Error fetching plans for hostname ${hostname}`;
+    // If we're not in production, we'll return the error to the user for easier debugging.
+    if (getDeploymentType() !== 'production') {
+      if (error instanceof Error) {
+        return new NextResponse(`${errorPreamble} (${error.name}: ${error.message})`, {
+          status: 500,
+        });
+      }
+      return new NextResponse(`${errorPreamble} (${String(error)})`, { status: 500 });
     }
-
+  }
+  if (!plans || plans.length === 0) {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
-  const { parsedLocale, parsedPlan, isLocaleCaseInvalid } = getLocaleAndPlan(
-    pathname,
-    data.plansForHostname
-  );
+  const { parsedLocale, parsedPlan, isLocaleCaseInvalid } = getLocaleAndPlan(pathname, plans);
 
   if (!parsedPlan) {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
   if (isLegacyPathStructure(pathname, parsedLocale, parsedPlan)) {
-    const newPathname = convertPathnameFromLegacy(
-      pathname,
-      parsedLocale,
-      parsedPlan
-    );
+    const newPathname = convertPathnameFromLegacy(pathname, parsedLocale, parsedPlan);
 
     return NextResponse.redirect(new URL(newPathname, request.url));
   }
 
   if (isLocaleCaseInvalid) {
-    const newPathname = convertPathnameFromInvalidLocaleCasing(
-      pathname,
-      parsedLocale
-    );
+    const newPathname = convertPathnameFromInvalidLocaleCasing(pathname, parsedLocale);
 
     return NextResponse.redirect(new URL(newPathname, request.url));
   }
@@ -182,8 +156,7 @@ export default auth(async (request: NextAuthRequest) => {
 
   if (isRestrictedPlan(parsedPlan)) {
     // Pass the status message to the unpublished page as search params
-    const message =
-      parsedPlan.domain?.statusMessage ?? parsedPlan.statusMessage;
+    const message = parsedPlan.domain?.statusMessage ?? parsedPlan.statusMessage;
     const loginEnabled = parsedPlan.loginEnabled ?? false;
     const queryParams = message
       ? `?${new URLSearchParams({
@@ -196,13 +169,7 @@ export default auth(async (request: NextAuthRequest) => {
       request.url
     );
 
-    return rewriteUrl(
-      request,
-      response,
-      hostUrl,
-      rewrittenUrl,
-      parsedPlan.identifier
-    );
+    return rewriteUrl(request, response, hostUrl, rewrittenUrl, parsedPlan.identifier);
   }
 
   const searchParams = getSearchParamsString(request);
@@ -212,11 +179,5 @@ export default auth(async (request: NextAuthRequest) => {
     request.url
   );
 
-  return rewriteUrl(
-    request,
-    response,
-    hostUrl,
-    rewrittenUrl,
-    parsedPlan.identifier
-  );
+  return rewriteUrl(request, response, hostUrl, rewrittenUrl, parsedPlan.identifier);
 });
