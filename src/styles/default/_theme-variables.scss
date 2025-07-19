@@ -1,0 +1,157 @@
+/**
+ * _theme-variables.scss
+ *
+ * These are extended set of Bootstrap style variables. They are used
+ * for building a themed Bootstrap base stylesheet for Reactstrap
+ *
+ * All these variables are also parsed as theme object for Styled
+ * Components and they are referenced in most of the UI components.
+ * This file has to be self-contained and can not refer to variables
+ * from the other theme files.
+ *
+ */
+
+$name: 'default';
+
+// Theme specific brand colors
+// brand-light/brand-dark should have contrast ratio over 4.5
+// brand-light/theme.dark should have contrast ratio over 4.5
+// brand-dark/theme.light should have contrast ratio over 4.5
+$brand-light: #d4ebff;
+$brand-dark: #107251;
+$neutral-light: #e1dfda;
+$neutral-dark: #5c5853;
+
+// Application color mappings:
+$theme-colors: (
+  'primary': $brand-dark,
+  'secondary': $brand-light,
+  'success': #107251,
+  'info': #336d94,
+  'warning': #f4ce73,
+  'danger': #a73939,
+  'light': #eceae6,
+  'dark': #46423e,
+  'black': #1a1817,
+  'white': #f7f6f3,
+);
+
+$image-overlay: $brand-dark;
+
+// Fonts
+$font-url: '/static/fonts/default/fonts.css';
+$font-family: 'Inter';
+$headings-font-family: $font-family;
+$headings-font-weight: 700;
+$headings-color: #1a1817;
+
+$font-family-fallback:
+  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+  'Helvetica Neue', sans-serif;
+$headings-font-family-fallback: $font-family-fallback;
+
+$font-size-sm: 0.75rem;
+$font-size-base: 1rem;
+$font-size-md: 1.25rem;
+$font-size-lg: 1.5rem;
+$font-size-xl: 2rem;
+$font-size-xxl: 3rem;
+
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+$font-weight-base: $font-weight-normal !default;
+
+$line-height-base: 1.666;
+$line-height-sm: 1;
+$line-height-md: 1.2;
+$line-height-lg: 1.75;
+
+// Links
+//
+// Style anchor elements.
+
+$link-color: $brand-dark;
+$link-hover-color: darken($brand-dark, 7%);
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+//$component-active-color:      #ffffff !default;
+$component-active-bg: $brand-dark;
+
+$nav-pills-link-active-bg: $brand-dark;
+
+$list-group-active-bg: $component-active-bg;
+$list-group-active-border-color: $list-group-active-bg;
+
+/////// BUTTONS
+
+$input-btn-focus-color: #4e80a6;
+$input-btn-padding-y: 0.5rem;
+$input-btn-padding-x: 0.75rem;
+$btn-border-radius: 0.25rem;
+$btn-border-width: 1px;
+
+/////// FORMS
+
+$input-padding-y: $input-btn-padding-y;
+$input-padding-x: $input-btn-padding-x;
+$input-bg: #ffffff;
+$input-border-width: 1px;
+$input-line-height: 1.5;
+$input-border-radius: 4px;
+$custom-select-indicator: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTExLjg5NiAzTDcgNy44NDIgMi4xMDQgMyAwIDUuMDggNyAxMmw3LTYuOTJMMTEuODk2IDN6IiBmaWxsPSIjMDAwIi8+PC9zdmc+') !default;
+$form-label-font-weight: 400;
+
+/////// NAV
+
+$brand-nav-color: #f7f6f3;
+$brand-nav-background: $neutral-dark;
+
+/////// CARDS
+
+$card-border-width: 1px;
+$card-border-radius: 0.5rem;
+
+/////// BADGES
+
+$badge-background: $brand-dark;
+$badge-color: #f7f6f3;
+$badge-border-radius: 3px;
+$badge-padding-y: 0.5em;
+$badge-padding-x: 0.75em;
+$badge-font-weight: 700;
+
+/////// TABLES
+
+$table-head-bg: transparent;
+$table-hover-bg: #f7f6f3;
+
+/////// PROGRESS BAR
+
+$progress-border-radius: 0;
+
+// Indicators
+$action-color: #145070;
+$operational-indicator-color: #4e80a6;
+$tactical-indicator-color: #aac5db;
+$strategic-indicator-color: #cbe2f6;
+
+$action-color-fg: #f7f6f3;
+$operational-indicator-color-fg: #f7f6f3;
+$tactical-indicator-color-fg: #1a1817;
+$strategic-indicator-color-fg: #1a1817;
+
+$causality-increases-color: #279a6d;
+$causality-decreases-color: #d46262;
+$causality-is-part-of-color: #88847c;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+$popover-max-width: 480px;
