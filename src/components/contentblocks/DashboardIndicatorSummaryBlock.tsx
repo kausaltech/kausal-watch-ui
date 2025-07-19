@@ -1,8 +1,9 @@
 import React from 'react';
 
-import Icon from 'components/common/Icon';
 import { useLocale, useTranslations } from 'next-intl';
 import styled, { useTheme } from 'styled-components';
+
+import Icon from '@/components/common/Icon';
 
 import { beautifyValue } from '../../common/data/format';
 import dayjs from '../../common/dayjs';

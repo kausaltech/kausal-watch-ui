@@ -5,19 +5,20 @@ import React, { useState } from 'react';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { captureMessage } from '@sentry/nextjs';
-import { linearRegression } from 'common/math';
-import { capitalizeFirstLetter } from 'common/utils';
-import ContentLoader from 'components/common/ContentLoader';
-import RichText from 'components/common/RichText';
-import GraphAsTable from 'components/graphs/GraphAsTable';
-import IndicatorGraph from 'components/graphs/IndicatorGraph';
-import IndicatorComparisonSelect from 'components/indicators/IndicatorComparisonSelect';
-import IndicatorNormalizationSelect from 'components/indicators/IndicatorNormalizationSelect';
-import { usePlan } from 'context/plan';
 import { isEqual } from 'lodash';
 import { useLocale, useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Alert } from 'reactstrap';
+
+import { linearRegression } from '@/common/math';
+import { capitalizeFirstLetter } from '@/common/utils';
+import ContentLoader from '@/components/common/ContentLoader';
+import RichText from '@/components/common/RichText';
+import GraphAsTable from '@/components/graphs/GraphAsTable';
+import IndicatorGraph from '@/components/graphs/IndicatorGraph';
+import IndicatorComparisonSelect from '@/components/indicators/IndicatorComparisonSelect';
+import IndicatorNormalizationSelect from '@/components/indicators/IndicatorNormalizationSelect';
+import { usePlan } from '@/context/plan';
 
 export const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {

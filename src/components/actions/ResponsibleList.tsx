@@ -1,14 +1,14 @@
 import React from 'react';
 
-import { OrganizationLink } from 'common/links';
-import { slugify } from 'common/utils';
-import BadgeTooltip, { BadgeTooltipProps } from 'components/common/BadgeTooltip';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
 import { ActionResponsiblePartiesBlock } from '@/common/__generated__/graphql';
+import { OrganizationLink } from '@/common/links';
+import { slugify } from '@/common/utils';
+import BadgeTooltip, { BadgeTooltipProps } from '@/components/common/BadgeTooltip';
 import { usePaths } from '@/context/paths/paths';
+import { usePlan } from '@/context/plan';
 
 import { ActionContentAction } from './ActionContent';
 

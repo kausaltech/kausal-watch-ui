@@ -1,18 +1,18 @@
 import React from 'react';
 
 import { Theme } from '@kausal/themes/types';
-import { MultiUseImageFragmentFragment } from 'common/__generated__/graphql';
-import { CommonContentBlockProps } from 'common/blocks.types';
-import { getBgImageAlignment } from 'common/images';
-import { Link } from 'common/links';
-import Card from 'components/common/Card';
-import RichText from 'components/common/RichText';
-import { SectionHeader } from 'components/contentblocks/ActionListBlock';
-import { useFallbackCategories } from 'context/categories';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import { MultiUseImageFragmentFragment } from '@/common/__generated__/graphql';
+import { CommonContentBlockProps } from '@/common/blocks.types';
+import { getBgImageAlignment } from '@/common/images';
+import { Link } from '@/common/links';
+import Card from '@/components/common/Card';
+import RichText from '@/components/common/RichText';
+import { SectionHeader } from '@/components/contentblocks/ActionListBlock';
+import { useFallbackCategories } from '@/context/categories';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
 
 const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>

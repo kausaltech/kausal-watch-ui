@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 
-import { ActionLink } from 'common/links';
-import Icon from 'components/common/Icon';
 import { useTranslations } from 'next-intl';
 import { Button, Collapse } from 'reactstrap';
 import styled from 'styled-components';
 
 import { deploymentType } from '@/common/environment';
+import { ActionLink } from '@/common/links';
+import Icon from '@/components/common/Icon';
 
 import { ActionContentAction } from '../actions/ActionContent';
 

@@ -2,13 +2,13 @@ import React, { useMemo, useState } from 'react';
 
 import Script from 'next/script';
 
-import { NavigationLink } from 'common/links';
 import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';
 import { Collapse, Nav, NavItem, Navbar } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
 import { deploymentType } from '@/common/environment';
+import { NavigationLink } from '@/common/links';
 import { getThemeStaticURL } from '@/common/theme';
 import { NavItem as NavItemType } from '@/components/Header';
 import Icon from '@/components/common/Icon';

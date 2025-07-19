@@ -4,11 +4,12 @@ import React from 'react';
 
 import dynamic from 'next/dynamic';
 
-import { splitLines } from 'common/utils';
 import { merge } from 'lodash';
 import type { Data, Layout, PlotData } from 'plotly.js';
 import { transparentize } from 'polished';
 import styled, { useTheme } from 'styled-components';
+
+import { splitLines } from '@/common/utils';
 
 const PlotContainer = styled.div<{ $vizHeight: number }>`
   height: ${(props) => props.$vizHeight}px;

@@ -1,24 +1,24 @@
 import React from 'react';
 
 import type { Theme } from '@kausal/themes/types';
-import { getStatusSummary } from 'common/ActionStatusSummary';
-import {
-  ActionTimeliness,
-  ActionTimelinessIdentifier,
-  Comparison,
-  Sentiment,
-} from 'common/__generated__/graphql';
-import { getPhaseData, getStatusData } from 'common/preprocess';
-import BarChart from 'components/common/BarChart';
-import StatusDonut from 'components/graphs/StatusDonut';
-import { usePlan } from 'context/plan';
 import { useLocale, useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
 
+import { getStatusSummary } from '@/common/ActionStatusSummary';
+import {
+  ActionTimeliness,
+  ActionTimelinessIdentifier,
+  Comparison,
+  Sentiment,
+} from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import { TFunction } from '@/common/i18n';
+import { getPhaseData, getStatusData } from '@/common/preprocess';
+import BarChart from '@/components/common/BarChart';
+import StatusDonut from '@/components/graphs/StatusDonut';
+import { usePlan } from '@/context/plan';
 
 import type { ActionListAction } from './ActionList';
 

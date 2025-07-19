@@ -2,9 +2,9 @@ import React from 'react';
 
 import { notFound } from 'next/navigation';
 
-import { GetContentPageQuery } from 'common/__generated__/graphql';
 import { Metadata, ResolvingMetadata } from 'next';
 
+import { GetContentPageQuery } from '@/common/__generated__/graphql';
 import { getContentPage } from '@/queries/get-content-page';
 import { tryRequest } from '@/utils/api.utils';
 import { getMetaDescription, getMetaImage } from '@/utils/metadata';

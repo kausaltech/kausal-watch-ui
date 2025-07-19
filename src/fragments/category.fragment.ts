@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
-import images from 'common/images';
+
+import images from '@/common/images';
 
 export const CATEGORY_FRAGMENT = gql`
   fragment CategoryFragment on Category {

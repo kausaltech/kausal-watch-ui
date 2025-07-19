@@ -1,15 +1,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useRef, useState } from 'react';
 
-import dayjs from 'common/dayjs';
-import { useWindowSize } from 'common/hooks/use-window-size';
-import { IndicatorLink } from 'common/links';
-import Switch from 'components/common/Switch';
 import type { AnimationSequence } from 'motion/react';
 import { animate, useAnimate, useInView } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import styled, { useTheme } from 'styled-components';
+
+import dayjs from '@/common/dayjs';
+import { useWindowSize } from '@/common/hooks/use-window-size';
+import { IndicatorLink } from '@/common/links';
+import Switch from '@/components/common/Switch';
 
 const ProgressBarWrapper = styled.div`
   a {

@@ -1,11 +1,12 @@
 import React from 'react';
 
-import RichText from 'components/common/RichText';
-import IndicatorProgressBar from 'components/indicators/IndicatorProgressBar';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
+
+import RichText from '@/components/common/RichText';
+import IndicatorProgressBar from '@/components/indicators/IndicatorProgressBar';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 
 const IndicatorShowcase = styled.div`
   padding: ${(props) => props.theme.spaces.s400} 0;

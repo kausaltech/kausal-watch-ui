@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
-import { PathsNodeLink } from 'common/links';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Nav, NavItem, NavLink, TabContent } from 'reactstrap';
 import styled from 'styled-components';
 
 import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
+import { PathsNodeLink } from '@/common/links';
 import { getMetricChange, getMetricValue } from '@/common/paths/preprocess';
 import Icon from '@/components/common/Icon';
 import HighlightValue from '@/components/paths/HighlightValue';

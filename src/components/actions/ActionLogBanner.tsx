@@ -1,8 +1,8 @@
-import dayjs from 'common/dayjs';
 import { useTranslations } from 'next-intl';
 import { Spinner } from 'reactstrap';
 import styled from 'styled-components';
 
+import dayjs from '@/common/dayjs';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 
 const DraftBanner = styled.div`

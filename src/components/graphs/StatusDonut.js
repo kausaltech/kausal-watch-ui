@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import ContentLoader from 'components/common/ContentLoader';
-import Icon from 'components/common/Icon';
-import Modal from 'components/common/Modal';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
+
+import ContentLoader from '@/components/common/ContentLoader';
+import Icon from '@/components/common/Icon';
+import Modal from '@/components/common/Modal';
 
 const GraphCard = styled.div`
   display: flex;

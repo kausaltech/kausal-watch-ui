@@ -1,10 +1,11 @@
 import React from 'react';
 
 import LegendControl from '@kausal/mapboxgl-legend';
-import { CommonContentBlockProps } from 'common/blocks.types';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Map, { NavigationControl, useControl, useMap } from 'react-map-gl';
 import { Col, Container, Row } from 'reactstrap';
+
+import { CommonContentBlockProps } from '@/common/blocks.types';
 
 interface CartographyVisualisationBlockProps extends CommonContentBlockProps {
   styleUrl: string;

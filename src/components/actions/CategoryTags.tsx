@@ -1,15 +1,15 @@
 import React, { PropsWithChildren } from 'react';
 
-import {
-  CategoryRecursiveFragmentFragment,
-  CategoryTypeFragmentFragment,
-} from 'common/__generated__/graphql';
-import { ActionListLink, StaticPageLink } from 'common/links';
-import BadgeTooltip from 'components/common/BadgeTooltip';
-import PopoverTip from 'components/common/PopoverTip';
 import { readableColor } from 'polished';
 import styled from 'styled-components';
 
+import {
+  CategoryRecursiveFragmentFragment,
+  CategoryTypeFragmentFragment,
+} from '@/common/__generated__/graphql';
+import { ActionListLink, StaticPageLink } from '@/common/links';
+import BadgeTooltip from '@/components/common/BadgeTooltip';
+import PopoverTip from '@/components/common/PopoverTip';
 import { CATEGORY_TYPE_FRAGMENT } from '@/fragments/category-tags.fragment';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
 

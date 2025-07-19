@@ -3,16 +3,16 @@ import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { useReactiveVar } from '@apollo/client';
-import type { DimensionalNodeMetricFragment } from 'common/__generated__/paths/graphql';
 import { isEqual } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'styled-components';
 
+import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
 import { activeGoalVar } from '@/context/paths/cache';
 //import type { InstanceGoal } from 'common/instance';
 import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';
 
-const Plot = dynamic(() => import('components/graphs/Plot'), { ssr: false });
+const Plot = dynamic(() => import('@/components/graphs/Plot'), { ssr: false });
 
 function getDefaultSliceConfig(cube: DimensionalMetric, activeGoal: InstanceGoal | null) {
   /**

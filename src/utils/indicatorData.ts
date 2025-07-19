@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const GET_INDICATOR_GRAPH_DATA = gql`
-  query IndicatorGraphData($id: ID, $plan: ID) {
+  query IndicatorSparklineGraphData($id: ID, $plan: ID) {
     plan(id: $plan) {
       scenarios {
         id

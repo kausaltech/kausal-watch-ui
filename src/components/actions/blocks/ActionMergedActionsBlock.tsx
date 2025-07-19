@@ -1,11 +1,12 @@
-import { getActionTermContext } from 'common/i18n';
-import type { ActionContentAction } from 'components/actions/ActionContent';
-import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Badge, Col, Row } from 'reactstrap';
 import styled from 'styled-components';
+
+import { getActionTermContext } from '@/common/i18n';
+import type { ActionContentAction } from '@/components/actions/ActionContent';
+import { ActionSection, SectionHeader } from '@/components/actions/ActionContent';
+import { usePlan } from '@/context/plan';
 
 const ActionNumberBadge = styled(Badge)`
   font-size: ${(props) => props.theme.fontSizeBase};

@@ -4,11 +4,12 @@ import { ApolloClient, InMemoryCache, from } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
 
+import { createSentryLink, logOperationLink } from '@common/apollo/links';
+import { getWatchGraphQLUrl } from '@common/env';
+
 import possibleTypes from '@/common/__generated__/possible_types.json';
 import { auth } from '@/config/auth';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
-import { createSentryLink, logOperationLink } from '@/kausal_common/src/apollo/links';
-import { getWatchGraphQLUrl } from '@/kausal_common/src/env';
 
 import { getHttpLink, headersMiddleware, localeMiddleware } from './apollo.utils';
 

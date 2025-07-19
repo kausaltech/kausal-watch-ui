@@ -1,11 +1,12 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import { GetEmbedActionQuery } from 'common/__generated__/graphql';
-import images from 'common/images';
-import ActionHighlightCard from 'components/actions/ActionHighlightCard';
-import { InvalidEmbedAddressError } from 'context/embed';
-import { usePlan } from 'context/plan';
 import styled from 'styled-components';
+
+import { GetEmbedActionQuery } from '@/common/__generated__/graphql';
+import images from '@/common/images';
+import ActionHighlightCard from '@/components/actions/ActionHighlightCard';
+import { InvalidEmbedAddressError } from '@/context/embed';
+import { usePlan } from '@/context/plan';
 
 const GET_ACTION = gql`
   query GetEmbedAction($plan: ID!, $identifier: ID!) {

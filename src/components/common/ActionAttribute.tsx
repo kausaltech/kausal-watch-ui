@@ -1,17 +1,17 @@
 import React, { ReactElement } from 'react';
 
+import { useLocale } from 'next-intl';
+import styled from 'styled-components';
+
 import {
   AttributesBlockAttributeFragment,
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
-} from 'common/__generated__/graphql';
-import { CategoryContent } from 'components/actions/CategoryTags';
-import Icon from 'components/common/Icon';
-import PopoverTip from 'components/common/PopoverTip';
-import RichText from 'components/common/RichText';
-import { useLocale } from 'next-intl';
-import styled from 'styled-components';
-
+} from '@/common/__generated__/graphql';
+import { CategoryContent } from '@/components/actions/CategoryTags';
+import Icon from '@/components/common/Icon';
+import PopoverTip from '@/components/common/PopoverTip';
+import RichText from '@/components/common/RichText';
 import {
   ATTRIBUTE_FRAGMENT,
   ATTRIBUTE_TYPE_FRAGMENT,

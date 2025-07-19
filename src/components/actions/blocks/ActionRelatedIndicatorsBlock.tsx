@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
 
-import { ActionLink, IndicatorLink } from 'common/links';
-import { SectionHeader } from 'components/actions/ActionContent';
-import Icon from 'components/common/Icon';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
-import PlanContext, { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { readableColor, shade } from 'polished';
 import { Badge as BaseBadge, Card as BaseCard, CardBody, CardFooter, Col, Row } from 'reactstrap';
 import styled from 'styled-components';
+
+import { ActionLink, IndicatorLink } from '@/common/links';
+import { SectionHeader } from '@/components/actions/ActionContent';
+import Icon from '@/components/common/Icon';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
+import PlanContext, { usePlan } from '@/context/plan';
 
 const IndicatorsSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s400};

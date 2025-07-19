@@ -2,18 +2,18 @@
 
 import React from 'react';
 
-import { getActionTermContext } from 'common/i18n';
-import ActionsTable from 'components/actions/ActionsTable';
-import CategoryTags from 'components/actions/CategoryTags';
-import RichText from 'components/common/RichText';
-import CausalNavigation from 'components/indicators/CausalNavigation';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
+import { getActionTermContext } from '@/common/i18n';
+import ActionsTable from '@/components/actions/ActionsTable';
+import CategoryTags from '@/components/actions/CategoryTags';
+import RichText from '@/components/common/RichText';
+import CausalNavigation from '@/components/indicators/CausalNavigation';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
+import { usePlan } from '@/context/plan';
 
 import IndicatorHero from './IndicatorHero';
 

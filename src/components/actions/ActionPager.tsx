@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
+
+import { usePlan } from '@/context/plan';
 
 import { getActionTermContext } from '../../common/i18n';
 import { ActionLink, ActionLinkProps } from '../../common/links';

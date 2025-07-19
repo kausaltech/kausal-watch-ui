@@ -4,11 +4,6 @@ import dynamic from 'next/dynamic';
 
 import { useReactiveVar } from '@apollo/client';
 import chroma from 'chroma-js';
-import type {
-  DimensionalNodeMetricFragment,
-  InstanceGoalEntry,
-} from 'common/__generated__/paths/graphql';
-import SelectDropdown from 'components/common/SelectDropdown';
 import { isEqual } from 'lodash';
 import { useTranslations } from 'next-intl';
 import type { LayoutAxis } from 'plotly.js';
@@ -22,6 +17,10 @@ import {
 } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
+import type {
+  DimensionalNodeMetricFragment,
+  InstanceGoalEntry,
+} from '@/common/__generated__/paths/graphql';
 import { genColorsFromTheme, setUniqueColors } from '@/common/paths/colors';
 //import {
 //  type InstanceGoal,
@@ -30,6 +29,7 @@ import { genColorsFromTheme, setUniqueColors } from '@/common/paths/colors';
 //} from 'common/instance';
 import { getRange } from '@/common/paths/preprocess';
 import Icon from '@/components/common/Icon';
+import SelectDropdown from '@/components/common/SelectDropdown';
 import { activeGoalVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import {
@@ -39,7 +39,7 @@ import {
   type SliceConfig,
 } from '@/utils/paths/metric';
 
-const Plot = dynamic(() => import('components/graphs/Plot'), { ssr: false });
+const Plot = dynamic(() => import('@/components/graphs/Plot'), { ssr: false });
 
 const Tools = styled.div`
   padding: 0 1rem 0.5rem;
@@ -78,7 +78,7 @@ function formatHover(
     hovertemplate: `${name}<br />` +
                    `%{x|%Y}: <b>%{y:,.3r}</b> ` +
                    `${unit}` +
-                   `${predText}` + 
+                   `${predText}` +
                    `<extra></extra>`,
     */
     hovertemplate:

@@ -2,13 +2,13 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { gql, useMutation, useReactiveVar } from '@apollo/client';
 import { useFocusable } from '@react-aria/focus';
-import Button from 'components/common/Button';
-import Icon from 'components/common/Icon';
 import { useTranslations } from 'next-intl';
 import { Range, getTrackBackground } from 'react-range';
 import styled, { useTheme } from 'styled-components';
 
 import { ParameterInterface } from '@/common/__generated__/paths/graphql';
+import Button from '@/components/common/Button';
+import Icon from '@/components/common/Icon';
 import Tooltip, { TooltipTrigger } from '@/components/common/Tooltip';
 import { activeScenarioVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';

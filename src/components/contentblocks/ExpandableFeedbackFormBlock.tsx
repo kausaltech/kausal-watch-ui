@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
-import { ActionContentAction } from 'components/actions/ActionContent';
-import FeedbackForm from 'components/common/FeedbackForm';
-import Icon from 'components/common/Icon';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { Collapse } from 'reactstrap';
 import styled from 'styled-components';
+
+import { ActionContentAction } from '@/components/actions/ActionContent';
+import FeedbackForm from '@/components/common/FeedbackForm';
+import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
 
 const FeedbackFormSection = styled.div`
   padding: ${(props) => (props.size === 'sm' ? props.theme.spaces.s050 : props.theme.spaces.s100)};

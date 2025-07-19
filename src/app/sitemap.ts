@@ -3,6 +3,8 @@ import { headers } from 'next/headers';
 import { ApolloClient, InMemoryCache, from, gql } from '@apollo/client';
 import type { MetadataRoute } from 'next';
 
+import { logOperationLink } from '@common/apollo/links';
+
 import type {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
@@ -11,7 +13,6 @@ import type {
 } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
 import { ACTIONS_PATH, INDICATORS_PATH, STATIC_ROUTES } from '@/constants/routes';
-import { logOperationLink } from '@/kausal_common/src/apollo/links';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 import { tryRequest } from '@/utils/api.utils';
 import { getHttpLink } from '@/utils/apollo.utils';

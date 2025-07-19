@@ -4,14 +4,14 @@ import * as Sentry from '@sentry/nextjs';
 import type { NextAuthRequest } from 'next-auth/lib';
 import createIntlMiddleware from 'next-intl/middleware';
 
+import { HEALTH_CHECK_PUBLIC_PATH } from '@common/constants/routes.mjs';
+import { getDeploymentType, getSpotlightUrl } from '@common/env';
 import { generateCorrelationID, getLogger } from '@common/logging';
+import { LOGGER_SPAN_ID, LOGGER_TRACE_ID } from '@common/logging/init';
+import { LOGGER_CORRELATION_ID } from '@common/logging/logger';
 
 import { auth } from './config/auth';
 import { UNPUBLISHED_PATH } from './constants/routes';
-import { HEALTH_CHECK_PUBLIC_PATH } from './kausal_common/src/constants/routes.mjs';
-import { getDeploymentType, getSpotlightUrl } from './kausal_common/src/env';
-import { LOGGER_SPAN_ID, LOGGER_TRACE_ID } from './kausal_common/src/logging/init';
-import { LOGGER_CORRELATION_ID } from './kausal_common/src/logging/logger';
 import {
   clearHostnameCache,
   convertPathnameFromInvalidLocaleCasing,
@@ -161,7 +161,7 @@ export default auth(async (request: NextAuthRequest) => {
     const queryParams = message
       ? `?${new URLSearchParams({
           message,
-          loginEnabled,
+          loginEnabled: String(loginEnabled),
         }).toString()}`
       : '';
     const rewrittenUrl = new URL(

@@ -6,6 +6,9 @@ import { ReadonlyURLSearchParams, useSearchParams } from 'next/navigation';
 
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { useTranslations } from 'next-intl';
+import { Container } from 'reactstrap';
+
 import {
   Category,
   CategoryType,
@@ -14,18 +17,15 @@ import {
   Indicator,
   IndicatorListPage,
   IndicatorListQuery,
-} from 'common/__generated__/graphql';
-import { getCategoryString } from 'common/categories';
+} from '@/common/__generated__/graphql';
+import { getCategoryString } from '@/common/categories';
+import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
 import ActionListFilters, {
   ActionListFilterSection,
   FilterValue,
-} from 'components/actions/ActionListFilters';
-import ContentLoader from 'components/common/ContentLoader';
-import ErrorMessage from 'components/common/ErrorMessage';
-import { useTranslations } from 'next-intl';
-import { Container } from 'reactstrap';
-
-import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
+} from '@/components/actions/ActionListFilters';
+import ContentLoader from '@/components/common/ContentLoader';
+import ErrorMessage from '@/components/common/ErrorMessage';
 
 import { usePlan } from '../../context/plan';
 import IndicatorListFiltered from './IndicatorListFiltered';

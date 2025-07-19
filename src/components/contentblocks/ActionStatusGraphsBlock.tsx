@@ -2,16 +2,17 @@ import React, { useContext } from 'react';
 
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import { CommonContentBlockProps } from 'common/blocks.types';
-import ContentLoader from 'components/common/ContentLoader';
-import ErrorMessage from 'components/common/ErrorMessage';
-import ActionStatusGraphs, {
-  ActionsStatusGraphsProps,
-} from 'components/dashboard/ActionStatusGraphs';
-import PlanContext, { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 import { useTheme } from 'styled-components';
+
+import { CommonContentBlockProps } from '@/common/blocks.types';
+import ContentLoader from '@/components/common/ContentLoader';
+import ErrorMessage from '@/components/common/ErrorMessage';
+import ActionStatusGraphs, {
+  ActionsStatusGraphsProps,
+} from '@/components/dashboard/ActionStatusGraphs';
+import PlanContext, { usePlan } from '@/context/plan';
 
 const GET_ACTION_LIST_FOR_GRAPHS = gql`
   query GetActionListForGraphs($plan: ID!, $categoryId: ID) {

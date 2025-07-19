@@ -1,14 +1,14 @@
 import { NetworkStatus, gql, useQuery, useReactiveVar } from '@apollo/client';
-import {
-  GetInstanceGoalOutcomeQuery,
-  GetInstanceGoalOutcomeQueryVariables,
-} from 'common/__generated__/paths/graphql';
 import _ from 'lodash';
 import { useFormatter, useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 import { Button, CardBody, Spinner, UncontrolledCollapse } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
+import {
+  GetInstanceGoalOutcomeQuery,
+  GetInstanceGoalOutcomeQueryVariables,
+} from '@/common/__generated__/paths/graphql';
 import Icon from '@/components/common/Icon';
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';

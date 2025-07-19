@@ -1,14 +1,15 @@
 import React from 'react';
 
-import { beautifyValue } from 'common/data/format';
-import { getActionTermContext } from 'common/i18n';
-import { IndicatorLink } from 'common/links';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import { readableColor } from 'polished';
 import { Card, CardBody, CardImgOverlay, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
+
+import { beautifyValue } from '@/common/data/format';
+import { getActionTermContext } from '@/common/i18n';
+import { IndicatorLink } from '@/common/links';
+import { usePlan } from '@/context/plan';
 
 import { getIndicatorTranslation } from './IndicatorCard';
 

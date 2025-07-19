@@ -3,7 +3,6 @@ import React, { useCallback, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { useApolloClient } from '@apollo/client';
-import { usePlan } from 'context/plan';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import {
@@ -18,6 +17,7 @@ import styled from 'styled-components';
 
 import { WorkflowState, WorkflowStateDescription } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 import { useHandleSignOut } from '@/utils/auth.utils';
 import { hasSessionExpired } from '@/utils/session.utils';

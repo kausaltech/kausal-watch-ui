@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
-import GoalSelector from 'components/paths/GoalSelector';
-import RangeSelector from 'components/paths/RangeSelector';
-import ScenarioSelector from 'components/paths/ScenarioSelector';
-import GoalOutcomeBar from 'components/paths/toolbar/GoalOutcomeBar';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Popover, PopoverBody, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import GoalSelector from '@/components/paths/GoalSelector';
+import RangeSelector from '@/components/paths/RangeSelector';
+import ScenarioSelector from '@/components/paths/ScenarioSelector';
+import GoalOutcomeBar from '@/components/paths/toolbar/GoalOutcomeBar';
 import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 

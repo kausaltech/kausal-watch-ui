@@ -1,8 +1,9 @@
 import React, { ReactNode, useEffect, useRef } from 'react';
 
-import Icon from 'components/common/Icon';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
+
+import Icon from '@/components/common/Icon';
 
 const ModalOverlay = styled.div`
   position: fixed;

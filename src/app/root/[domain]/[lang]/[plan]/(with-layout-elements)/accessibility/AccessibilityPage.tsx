@@ -2,14 +2,15 @@
 
 import React from 'react';
 
-import AccessibilityStatementComplianceStatusBlock from 'components/contentblocks/AccessibilityStatementComplianceStatusBlock';
-import AccessibilityStatementContactInformationBlock from 'components/contentblocks/AccessibilityStatementContactInformationBlock';
-import AccessibilityStatementPreparationInformationBlock from 'components/contentblocks/AccessibilityStatementPreparationInformationBlock';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
+
+import AccessibilityStatementComplianceStatusBlock from '@/components/contentblocks/AccessibilityStatementComplianceStatusBlock';
+import AccessibilityStatementContactInformationBlock from '@/components/contentblocks/AccessibilityStatementContactInformationBlock';
+import AccessibilityStatementPreparationInformationBlock from '@/components/contentblocks/AccessibilityStatementPreparationInformationBlock';
+import { usePlan } from '@/context/plan';
 
 const HeaderBg = styled.div`
   background-color: ${(props) => props.theme.brandDark};

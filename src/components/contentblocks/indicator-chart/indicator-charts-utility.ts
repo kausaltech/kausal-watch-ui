@@ -1,6 +1,5 @@
-import { linearRegression } from 'common/math';
-
 import { DashboardIndicatorLineChartBlock as TDashboardIndicatorLineChartBlock } from '@/common/__generated__/graphql';
+import { linearRegression } from '@/common/math';
 
 type TFunction = (key: string) => string;
 

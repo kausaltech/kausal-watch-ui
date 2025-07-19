@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
-import dayjs from 'common/dayjs';
-import ActionAttribute from 'components/common/ActionAttribute';
-import Icon from 'components/common/Icon';
 import { useTranslations } from 'next-intl';
 import { Button, Col, Collapse, Row } from 'reactstrap';
 import styled from 'styled-components';
+
+import dayjs from '@/common/dayjs';
+import ActionAttribute from '@/components/common/ActionAttribute';
+import Icon from '@/components/common/Icon';
 
 const ReportSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};

@@ -1,9 +1,10 @@
 import React from 'react';
 
-import Accordion from 'components/common/Accordion';
-import RichText from 'components/common/RichText';
 import { Col, ColProps, Container, Row } from 'reactstrap';
 import styled, { css } from 'styled-components';
+
+import Accordion from '@/components/common/Accordion';
+import RichText from '@/components/common/RichText';
 
 const inlineStyles = ({ theme }) => css`
   h2 {

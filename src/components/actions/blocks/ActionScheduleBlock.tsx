@@ -1,14 +1,15 @@
+import { useTranslations } from 'next-intl';
+import styled from 'styled-components';
+
 import {
   ActionDateFormat,
   GetActionDetailsQuery,
   PlanContextFragment,
-} from 'common/__generated__/graphql';
-import { ActionSection } from 'components/actions/ActionContent';
-import ScheduleTimeline from 'components/graphs/ScheduleTimeline';
-import Timeline from 'components/graphs/Timeline';
-import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
-import { getDateFormat } from 'utils/dates.utils';
+} from '@/common/__generated__/graphql';
+import { ActionSection } from '@/components/actions/ActionContent';
+import ScheduleTimeline from '@/components/graphs/ScheduleTimeline';
+import Timeline from '@/components/graphs/Timeline';
+import { getDateFormat } from '@/utils/dates.utils';
 
 const SideHeader = styled.h3`
   font-size: ${(props) => props.theme.fontSizeBase};

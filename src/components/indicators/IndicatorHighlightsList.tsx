@@ -3,14 +3,15 @@ import React from 'react';
 
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import type { IndicatorHightlightListQuery } from 'common/__generated__/graphql';
-import { IndicatorListLink } from 'common/links';
-import Button from 'components/common/Button';
-import ContentLoader from 'components/common/ContentLoader';
-import Icon from 'components/common/Icon';
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
 import styled from 'styled-components';
+
+import type { IndicatorHightlightListQuery } from '@/common/__generated__/graphql';
+import { IndicatorListLink } from '@/common/links';
+import Button from '@/components/common/Button';
+import ContentLoader from '@/components/common/ContentLoader';
+import Icon from '@/components/common/Icon';
 
 import IndicatorHighlightCard from './IndicatorHighlightCard';
 

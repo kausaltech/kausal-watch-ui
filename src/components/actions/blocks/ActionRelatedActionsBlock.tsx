@@ -1,9 +1,10 @@
-import ActionCard from 'components/actions/ActionCard';
-import { SectionHeader } from 'components/actions/ActionContent';
-import PopoverTip from 'components/common/PopoverTip';
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
 import styled from 'styled-components';
+
+import ActionCard from '@/components/actions/ActionCard';
+import { SectionHeader } from '@/components/actions/ActionContent';
+import PopoverTip from '@/components/common/PopoverTip';
 
 const RelatedActionList = styled(Row)`
   padding-left: 0;

@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Progress } from 'components/dashboard/ActionStatusGraphs';
 import styled from 'styled-components';
+
+import { Progress } from '@/components/dashboard/ActionStatusGraphs';
 
 const BarChartWrapper = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};

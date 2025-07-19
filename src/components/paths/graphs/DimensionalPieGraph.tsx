@@ -4,11 +4,11 @@ import dynamic from 'next/dynamic';
 
 import { useReactiveVar } from '@apollo/client';
 import chroma from 'chroma-js';
-import type { DimensionalNodeMetricFragment } from 'common/__generated__/paths/graphql';
 import { isEqual } from 'lodash';
 import { useFormatter, useTranslations } from 'next-intl';
 import styled, { useTheme } from 'styled-components';
 
+import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
 import { activeGoalVar } from '@/context/paths/cache';
 //import type { InstanceGoal } from 'common/instance';
 import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';
@@ -24,7 +24,7 @@ const Subplot = styled.div`
   color: ${({ theme }) => theme.textColor.tertiary};
 `;
 
-const Plot = dynamic(() => import('components/graphs/Plot'), { ssr: false });
+const Plot = dynamic(() => import('@/components/graphs/Plot'), { ssr: false });
 
 type DimensionalPieGraphProps = {
   metric: NonNullable<DimensionalNodeMetricFragment['metricDim']>;

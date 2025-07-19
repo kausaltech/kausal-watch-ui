@@ -1,9 +1,10 @@
-import { getActionTaskTermContext } from 'common/i18n';
-import { ActionSection, SectionHeader } from 'components/actions/ActionContent';
-import TaskList from 'components/actions/TaskList';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
+
+import { getActionTaskTermContext } from '@/common/i18n';
+import { ActionSection, SectionHeader } from '@/components/actions/ActionContent';
+import TaskList from '@/components/actions/TaskList';
+import { usePlan } from '@/context/plan';
 
 const ActionTasksBlock = (props) => {
   const { tasks } = props;

@@ -1,8 +1,9 @@
-import { PlanContextFragment } from 'common/__generated__/graphql';
-import { getActionTermContext } from 'common/i18n';
-import StatusBadge from 'components/common/StatusBadge';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
+
+import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { getActionTermContext } from '@/common/i18n';
+import StatusBadge from '@/components/common/StatusBadge';
 
 import { ActionListAction } from '../dashboard.types';
 

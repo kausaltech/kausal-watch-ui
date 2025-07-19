@@ -6,8 +6,8 @@ import { useTheme } from 'styled-components';
 
 export const CUSTOM_COMPONENTS = {
   zurich: {
-    GlobalNav: dynamic(() => import('components/paths/custom/zurich/GlobalNav')),
-    Footer: dynamic(() => import('components/paths/custom/zurich/Footer')),
+    GlobalNav: dynamic(() => import('@/components/paths/custom/zurich/GlobalNav')),
+    Footer: dynamic(() => import('@/components/paths/custom/zurich/Footer')),
   },
 };
 

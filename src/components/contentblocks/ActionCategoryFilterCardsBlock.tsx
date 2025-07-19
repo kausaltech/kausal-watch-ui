@@ -1,13 +1,14 @@
 import React from 'react';
 
-import { CommonContentBlockProps } from 'common/blocks.types';
-import { getCategoryString } from 'common/categories';
-import { Link } from 'common/links';
-import Card from 'components/common/Card';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
+
+import { CommonContentBlockProps } from '@/common/blocks.types';
+import { getCategoryString } from '@/common/categories';
+import { Link } from '@/common/links';
+import Card from '@/components/common/Card';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.brandDark};

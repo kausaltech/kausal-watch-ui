@@ -6,15 +6,17 @@ import { useFormatter, useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 import styled, { useTheme } from 'styled-components';
 
-import {
+import type {
   IndicatorGoal,
   IndicatorGraphDataQuery,
+  IndicatorSparklineGraphDataQuery,
+  IndicatorSparklineGraphDataQueryVariables,
   IndicatorValue,
 } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
 import Unit from '@/components/indicators/Unit';
-import Chart, { ECOption } from '@/components/paths/graphs/Chart';
+import Chart, { type ECOption } from '@/components/paths/graphs/Chart';
 import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/utils/indicatorData';
 
@@ -66,7 +68,10 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   const t = useTranslations();
   const format = useFormatter();
   const plan = usePlan();
-  const { loading, error, data } = useQuery<IndicatorGraphDataQuery>(GET_INDICATOR_GRAPH_DATA, {
+  const { loading, error, data } = useQuery<
+    IndicatorSparklineGraphDataQuery,
+    IndicatorSparklineGraphDataQueryVariables
+  >(GET_INDICATOR_GRAPH_DATA, {
     variables: {
       id: indicatorId,
       plan: plan.identifier,

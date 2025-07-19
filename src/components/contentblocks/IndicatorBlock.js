@@ -1,9 +1,10 @@
 import React from 'react';
 
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
+
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.light};

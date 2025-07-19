@@ -1,11 +1,12 @@
 import React from 'react';
 
-import PlanChip from 'components/plans/PlanChip';
-import { usePlan } from 'context/plan';
 import { transparentize } from 'polished';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
+
+import PlanChip from '@/components/plans/PlanChip';
+import { usePlan } from '@/context/plan';
 
 const PlanListSection = styled.div`
   background-color: ${(props) => props.theme.themeColors.dark};

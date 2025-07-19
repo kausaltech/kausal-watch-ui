@@ -1,9 +1,10 @@
 import React from 'react';
 
-import Switch from 'components/common/Switch';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
+import Switch from '@/components/common/Switch';
 
 const NormalizerChooser = styled.div`
   display: flex;

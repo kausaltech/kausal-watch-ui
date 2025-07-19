@@ -2,13 +2,13 @@ import React from 'react';
 
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import RichText from 'components/common/RichText';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Col, Media, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import { getThemeStaticURL } from '@/common/theme';
+import RichText from '@/components/common/RichText';
 
 import dayjs from '../../common/dayjs';
 import { usePlan } from '../../context/plan';

@@ -39,16 +39,16 @@ const UnknownEmbedPlaceholder = () => {
   );
 };
 
-const RecentActionsEmbed = dynamic(() => import('components/embed/RecentActionsEmbed'), {
+const RecentActionsEmbed = dynamic(() => import('@/components/embed/RecentActionsEmbed'), {
   // TODO: try to enable real React 18 mode and enable suspense
   //suspense: true,
 });
 
-const ActionEmbed = dynamic(() => import('components/embed/ActionEmbed'), {
+const ActionEmbed = dynamic(() => import('@/components/embed/ActionEmbed'), {
   //suspense: true,
 });
 
-const IndicatorEmbed = dynamic(() => import('components/embed/IndicatorEmbed'), {
+const IndicatorEmbed = dynamic(() => import('@/components/embed/IndicatorEmbed'), {
   //suspense: true,
 });
 

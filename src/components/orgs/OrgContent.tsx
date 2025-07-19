@@ -2,16 +2,17 @@
 
 import React, { useState } from 'react';
 
-import { OrganizationDetailsQuery } from 'common/__generated__/graphql';
-import { OrganizationLink } from 'common/links';
-import RichText from 'components/common/RichText';
-import ActionStatusTable from 'components/dashboard/ActionStatusTable';
-import PlanChip from 'components/plans/PlanChip';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Nav, NavItem, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
+
+import { OrganizationDetailsQuery } from '@/common/__generated__/graphql';
+import { OrganizationLink } from '@/common/links';
+import RichText from '@/components/common/RichText';
+import ActionStatusTable from '@/components/dashboard/ActionStatusTable';
+import PlanChip from '@/components/plans/PlanChip';
+import { usePlan } from '@/context/plan';
 
 const Tab = styled.button`
   background: ${(props) => props.theme.orgPageBackgroundColor};

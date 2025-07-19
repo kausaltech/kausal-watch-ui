@@ -1,15 +1,15 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
+import { useTranslations } from 'next-intl';
+import { FormGroup, Input, Label } from 'reactstrap';
+import styled from 'styled-components';
+
 import {
   GetParametersQuery,
   SetNormalizationMutation,
   SetNormalizationMutationVariables,
-} from 'common/__generated__/paths/graphql';
-import { useTranslations } from 'next-intl';
-import { GET_PARAMETERS } from 'queries/paths/get-paths-parameters';
-import { FormGroup, Input, Label } from 'reactstrap';
-import styled from 'styled-components';
-
+} from '@/common/__generated__/paths/graphql';
 import { usePaths } from '@/context/paths/paths';
+import { GET_PARAMETERS } from '@/queries/paths/get-paths-parameters';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 
 const SwitchWrapper = styled.div`

@@ -1,11 +1,12 @@
 import React from 'react';
 
-import dayjs from 'common/dayjs';
 import { Dayjs } from 'dayjs';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Badge } from 'reactstrap';
 import styled from 'styled-components';
+
+import dayjs from '@/common/dayjs';
 
 const StatusTitle = styled.div`
   text-align: left;

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 
 import { usePathname } from 'next/navigation';
 
-import { isServer } from 'common/environment';
-import Icon from 'components/common/Icon';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Collapse, UncontrolledTooltip } from 'reactstrap';
 import styled from 'styled-components';
+
+import { isServer } from '@/common/environment';
+import Icon from '@/components/common/Icon';
 
 import { replaceHashWithoutScrolling } from '../../common/links';
 

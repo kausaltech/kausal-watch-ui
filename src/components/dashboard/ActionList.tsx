@@ -4,29 +4,33 @@ import dynamic from 'next/dynamic';
 
 import { gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import {
-  ActionListPageFiltersFragment,
-  ActionListPageView,
-  DashboardActionListQuery,
-} from 'common/__generated__/graphql';
-import { constructCatHierarchy, getCategoryString, mapActionCategories } from 'common/categories';
-import { getActionTermContext } from 'common/i18n';
-import { constructOrgHierarchy, mapResponsibleParties, orgHasActions } from 'common/organizations';
-import ActionCardList from 'components/actions/ActionCardList';
-import ActionListFilters, {
-  ActionListFilterSection,
-  FilterValue,
-  Filters,
-} from 'components/actions/ActionListFilters';
-import ErrorMessage from 'components/common/ErrorMessage';
-import RichText from 'components/common/RichText';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Alert, Col, Container, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
+import {
+  ActionListPageFiltersFragment,
+  ActionListPageView,
+  DashboardActionListQuery,
+} from '@/common/__generated__/graphql';
+import { constructCatHierarchy, getCategoryString, mapActionCategories } from '@/common/categories';
+import { getActionTermContext } from '@/common/i18n';
+import {
+  constructOrgHierarchy,
+  mapResponsibleParties,
+  orgHasActions,
+} from '@/common/organizations';
+import ActionCardList from '@/components/actions/ActionCardList';
+import ActionListFilters, {
+  ActionListFilterSection,
+  FilterValue,
+  Filters,
+} from '@/components/actions/ActionListFilters';
+import ErrorMessage from '@/components/common/ErrorMessage';
+import RichText from '@/components/common/RichText';
 import { usePaths } from '@/context/paths/paths';
+import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 import {
   ACTION_TABLE_COLUMN_FRAGMENT,

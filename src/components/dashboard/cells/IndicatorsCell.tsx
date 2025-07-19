@@ -1,5 +1,6 @@
-import Icon from 'components/common/Icon';
 import styled, { useTheme } from 'styled-components';
+
+import Icon from '@/components/common/Icon';
 
 import { ActionListAction } from '../dashboard.types';
 

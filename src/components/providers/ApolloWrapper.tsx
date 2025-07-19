@@ -11,16 +11,12 @@ import {
 import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 
-import { isServer } from '@/common/environment';
-import { createSentryLink, logOperationLink } from '@/kausal_common/src/apollo/links';
-import { getWatchGraphQLUrl } from '@/kausal_common/src/env';
+import { createSentryLink, logOperationLink } from '@common/apollo/links';
+import { getWatchGraphQLUrl } from '@common/env';
 
-import {
-  errorLink,
-  getHttpLink,
-  headersMiddleware,
-  localeMiddleware,
-} from '../../utils/apollo.utils';
+import { isServer } from '@/common/environment';
+
+import { getHttpLink, headersMiddleware, localeMiddleware } from '../../utils/apollo.utils';
 
 const authMiddleware = setContext((_, { sessionToken, headers: initialHeaders = {} }) => {
   return {

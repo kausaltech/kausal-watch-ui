@@ -1,16 +1,17 @@
 import React, { useContext } from 'react';
 
-import { getStatusColorForAction } from 'common/ActionStatusSummary';
-import { ActionLink } from 'common/links';
-import { cleanActionStatus } from 'common/preprocess';
-import ActionStatus from 'components/actions/ActionStatus';
-import Icon from 'components/common/Icon';
-import EmbedContext from 'context/embed';
-import PlanContext, { usePlan } from 'context/plan';
 import { transparentize } from 'polished';
 import { Badge, Card, CardBody, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
+
+import { getStatusColorForAction } from '@/common/ActionStatusSummary';
+import { ActionLink } from '@/common/links';
+import { cleanActionStatus } from '@/common/preprocess';
+import ActionStatus from '@/components/actions/ActionStatus';
+import Icon from '@/components/common/Icon';
+import EmbedContext from '@/context/embed';
+import PlanContext, { usePlan } from '@/context/plan';
 
 import { ActionHighlightListAction } from './ActionHighlightsList';
 

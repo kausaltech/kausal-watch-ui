@@ -5,11 +5,12 @@ import { captureException } from '@sentry/nextjs';
 import { type DirectiveNode, OperationTypeNode } from 'graphql';
 import { Kind } from 'graphql/language/kinds';
 
+import type { DefaultApolloContext } from '@common/apollo';
+import { WILDCARD_DOMAINS_HEADER } from '@common/constants/headers.mjs';
+import { getWildcardDomains } from '@common/env';
+
 import { gqlUrl, isLocal, isServer, logGraphqlQueries } from '@/common/environment';
 import { API_PROXY_PATH } from '@/constants/routes';
-import type { DefaultApolloContext } from '@/kausal_common/src/apollo';
-import { WILDCARD_DOMAINS_HEADER } from '@/kausal_common/src/constants/headers.mjs';
-import { getWildcardDomains } from '@/kausal_common/src/env';
 
 /**
  * The current locale is passed to Apollo links as context,

@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 
-import dayjs from 'common/dayjs';
-import Icon from 'components/common/Icon';
-import RichText from 'components/common/RichText';
-import { usePlan } from 'context/plan';
 import { useLocale, useTranslations } from 'next-intl';
 import { PropTypes } from 'prop-types';
 import {
@@ -14,7 +10,12 @@ import {
 } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
-import { getDateFormat } from 'utils/dates.utils';
+
+import dayjs from '@/common/dayjs';
+import Icon from '@/components/common/Icon';
+import RichText from '@/components/common/RichText';
+import { usePlan } from '@/context/plan';
+import { getDateFormat } from '@/utils/dates.utils';
 
 const StyledDate = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};

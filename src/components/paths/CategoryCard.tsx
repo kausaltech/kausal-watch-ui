@@ -1,15 +1,16 @@
 import React from 'react';
 
+import { readableColor, transparentize } from 'polished';
+import styled from 'styled-components';
+
 import {
   AttributeRichText,
   AttributeText,
   Category,
   CategoryFragmentFragment,
-} from 'common/__generated__/graphql';
-import { InstanceType } from 'common/__generated__/paths/graphql';
-import { Link } from 'common/links';
-import { readableColor, transparentize } from 'polished';
-import styled from 'styled-components';
+} from '@/common/__generated__/graphql';
+import { InstanceType } from '@/common/__generated__/paths/graphql';
+import { Link } from '@/common/links';
 
 import PathsNodeSummary from './PathsNodeSummary';
 import IndicatorSparkline from './graphs/IndicatorSparkline';

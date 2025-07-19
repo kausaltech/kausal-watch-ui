@@ -1,19 +1,19 @@
 import React from 'react';
 
-import {
-  Indicator,
-  IndicatorGroupBlock as TIndicatorGroupBlock,
-} from 'common/__generated__/graphql';
-import { IndicatorLink, IndicatorListLink } from 'common/links';
-import Button from 'components/common/Button';
-import Icon from 'components/common/Icon';
-import IndicatorHighlightCard from 'components/indicators/IndicatorHighlightCard';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import {
+  Indicator,
+  IndicatorGroupBlock as TIndicatorGroupBlock,
+} from '@/common/__generated__/graphql';
+import { IndicatorLink, IndicatorListLink } from '@/common/links';
+import Button from '@/components/common/Button';
+import Icon from '@/components/common/Icon';
+import IndicatorHighlightCard from '@/components/indicators/IndicatorHighlightCard';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 import { usePlan } from '@/context/plan';
 
 import { SectionHeader } from './ActionListBlock';

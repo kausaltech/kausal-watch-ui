@@ -3,13 +3,13 @@ import {
   ActionListFilterFragment,
   DashboardActionListQuery,
   Plan,
-} from 'common/__generated__/graphql';
+} from '@/common/__generated__/graphql';
 import {
   CategoryHierarchyMember,
   CategoryMappedAction,
   CategoryTypeHierarchy,
-} from 'common/categories';
-import { OrgMappedAction, OrganizationHierarchyMember } from 'common/organizations';
+} from '@/common/categories';
+import { OrgMappedAction, OrganizationHierarchyMember } from '@/common/organizations';
 
 type OrganizationInput = NonNullable<DashboardActionListQuery['planOrganizations']>[0];
 

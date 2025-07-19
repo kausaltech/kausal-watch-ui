@@ -1,5 +1,5 @@
-import { ActionSection } from 'components/actions/ActionContent';
-import ResponsibleList from 'components/actions/ResponsibleList';
+import { ActionSection } from '@/components/actions/ActionContent';
+import ResponsibleList from '@/components/actions/ResponsibleList';
 
 const ActionResponsiblePartiesBlock = (props) => {
   const { block, responsibleParties } = props;

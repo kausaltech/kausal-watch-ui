@@ -1,13 +1,14 @@
 import React from 'react';
 
-import dayjs from 'common/dayjs';
-import { TFunction, getActionTermContext } from 'common/i18n';
-import { IndicatorLink } from 'common/links';
-import { usePlan } from 'context/plan';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
+
+import dayjs from '@/common/dayjs';
+import { TFunction, getActionTermContext } from '@/common/i18n';
+import { IndicatorLink } from '@/common/links';
+import { usePlan } from '@/context/plan';
 
 const IndicatorValueDisplay = styled.div`
   margin-top: 1em;

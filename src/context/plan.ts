@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import type { PlanContextFragment } from 'common/__generated__/graphql';
+import type { PlanContextFragment } from '@/common/__generated__/graphql';
 
 export type PlanContextType = PlanContextFragment;
 

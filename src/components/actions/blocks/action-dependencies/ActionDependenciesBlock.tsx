@@ -2,7 +2,6 @@ import React, { Suspense, useEffect } from 'react';
 
 import { gql, skipToken } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import ErrorMessage from 'components/common/ErrorMessage';
 import { filter, groupBy, map, sortBy, uniqBy } from 'lodash';
 import { useTranslations } from 'next-intl';
 import styled, { css } from 'styled-components';
@@ -14,6 +13,7 @@ import {
   GetPlanContextQuery,
 } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
+import ErrorMessage from '@/components/common/ErrorMessage';
 import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
 import { ACTION_CONTENT_MAIN_BOTTOM } from '@/constants/containers';

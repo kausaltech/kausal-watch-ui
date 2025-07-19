@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { ActionWithStatusSummary, getStatusColorForAction } from 'common/ActionStatusSummary';
-import type { PlanContextType } from 'context/plan';
 import { setLightness } from 'polished';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
+
+import { ActionWithStatusSummary, getStatusColorForAction } from '@/common/ActionStatusSummary';
+import type { PlanContextType } from '@/context/plan';
 
 type StatusProps = {
   $subtle?: boolean;

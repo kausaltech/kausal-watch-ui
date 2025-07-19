@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { CommonContentBlockProps } from 'common/blocks.types';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
+
+import { CommonContentBlockProps } from '@/common/blocks.types';
+import { usePlan } from '@/context/plan';
 
 interface Props extends CommonContentBlockProps {
   content?: unknown[]; // TODO: Type this prop

@@ -1,7 +1,7 @@
 import { useSearchParams } from 'next/navigation';
 
-import ActionHighlightsList from 'components/actions/ActionHighlightsList';
-import { usePlan } from 'context/plan';
+import ActionHighlightsList from '@/components/actions/ActionHighlightsList';
+import { usePlan } from '@/context/plan';
 
 const DEFAULT_COUNT = 3;
 const DEFAULT_DISPLAY_HEADER = true;

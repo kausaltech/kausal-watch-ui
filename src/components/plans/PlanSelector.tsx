@@ -1,12 +1,12 @@
 import { CSSProperties } from 'react';
 
-import Icon from 'components/common/Icon';
-import { usePlan } from 'context/plan';
 import { transparentize } from 'polished';
 import { DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
 import { getThemeStaticURL } from '@/common/theme';
+import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
 
 import PlanLink from './PlanLink';
 

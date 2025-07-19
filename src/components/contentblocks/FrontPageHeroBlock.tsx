@@ -1,7 +1,7 @@
 import React from 'react';
 
-import HeroFullImage from 'components/home/HeroFullImage';
-import HeroSmallImage from 'components/home/HeroSmallImage';
+import HeroFullImage from '@/components/home/HeroFullImage';
+import HeroSmallImage from '@/components/home/HeroSmallImage';
 
 interface FrontPageHeroProps {
   id: string;

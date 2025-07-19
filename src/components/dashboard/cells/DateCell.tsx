@@ -1,5 +1,6 @@
-import dayjs from 'common/dayjs';
 import styled from 'styled-components';
+
+import dayjs from '@/common/dayjs';
 
 interface Props {
   date: string | null;

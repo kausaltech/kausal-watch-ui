@@ -4,18 +4,18 @@ import React, { useMemo } from 'react';
 
 import { usePathname } from 'next/navigation';
 
-import type { MainMenu, MenuItem } from 'common/__generated__/graphql';
-import { getActiveBranch } from 'common/links';
-import GoogleAnalytics from 'components/GoogleAnalytics';
-import ApplicationStateBanner from 'components/common/ApplicationStateBanner';
-import GlobalNav from 'components/common/GlobalNav';
-import SkipToContent from 'components/common/SkipToContent';
-import { usePlan } from 'context/plan';
 import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 import { useTheme } from 'styled-components';
 
+import type { MainMenu, MenuItem } from '@/common/__generated__/graphql';
 import { deploymentType } from '@/common/environment';
+import { getActiveBranch } from '@/common/links';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
+import ApplicationStateBanner from '@/components/common/ApplicationStateBanner';
+import GlobalNav from '@/components/common/GlobalNav';
+import SkipToContent from '@/components/common/SkipToContent';
+import { usePlan } from '@/context/plan';
 import { getMetaTitles } from '@/utils/metadata';
 
 import TopToolBar from './common/TopToolBar';

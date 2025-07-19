@@ -1,7 +1,8 @@
-import RichText from 'components/common/RichText';
 import { useTranslations } from 'next-intl';
 import { Col, Container } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
+
+import RichText from '@/components/common/RichText';
 
 const Hero = styled.div`
   width: 100%;

@@ -1,9 +1,10 @@
 import { Theme } from '@kausal/themes/types';
-import RichText from 'components/common/RichText';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Container } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
+
+import RichText from '@/components/common/RichText';
 
 /**
  * Pulls the specified hero height from the theme if defined

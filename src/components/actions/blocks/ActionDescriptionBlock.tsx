@@ -1,7 +1,8 @@
-import { ActionSection } from 'components/actions/ActionContent';
-import RichText from 'components/common/RichText';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'styled-components';
+
+import { ActionSection } from '@/components/actions/ActionContent';
+import RichText from '@/components/common/RichText';
 
 const ActionDescriptionBlock = (props) => {
   const { content, fieldLabel } = props;

@@ -13,7 +13,7 @@ type LocaleFiles = 'common' | 'actions' | 'paths' | 'a11y';
 
 async function importLocale(locale: string, file: LocaleFiles) {
   try {
-    const translations = (await import(`../locales/${locale}/${file}.json`)).default;
+    const translations = (await import(`../../locales/${locale}/${file}.json`)).default;
 
     return translations;
   } catch {

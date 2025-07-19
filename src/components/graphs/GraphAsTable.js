@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
-import { beautifyValue } from 'common/data/format';
-import dayjs from 'common/dayjs';
-import Icon from 'components/common/Icon';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Button, Collapse, Table } from 'reactstrap';
 import styled from 'styled-components';
+
+import { beautifyValue } from '@/common/data/format';
+import dayjs from '@/common/dayjs';
+import Icon from '@/components/common/Icon';
 
 const CollapsibleTable = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};

@@ -1,19 +1,20 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import { headers } from 'next/headers';
 import Script from 'next/script';
 import type { Metadata } from 'next/types';
 
-import { Theme } from '@kausal/themes/types';
+import type { Theme } from '@kausal/themes/types';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import 'react-medium-image-zoom/dist/styles.css';
+
+import { getPublicEnvAsMeta } from '@common/env';
 
 import { DayjsLocaleProvider } from '@/common/dayjs';
 import { ApolloWrapper } from '@/components/providers/ApolloWrapper';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import { auth } from '@/config/auth';
-import { getPublicEnvAsMeta } from '@/kausal_common/src/env';
 import defaultTheme from '@/public/static/themes/default/theme.json';
 import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
 import '@/styles/default/main.scss';

@@ -2,12 +2,12 @@
 
 import React, { Suspense } from 'react';
 
-import { CategoryFragmentFragment } from 'common/__generated__/graphql';
-import { CommonContentBlockProps } from 'common/blocks.types';
-import { useFallbackCategories } from 'context/categories';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import { CategoryFragmentFragment } from '@/common/__generated__/graphql';
+import { CommonContentBlockProps } from '@/common/blocks.types';
+import { useFallbackCategories } from '@/context/categories';
 import { usePaths } from '@/context/paths/paths';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
 

@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { NavigationLink } from 'common/links';
-import { usePlan } from 'context/plan';
 import { useLocale, useTranslations } from 'next-intl';
 import { Collapse, Nav, NavItem, Navbar } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
+
+import { NavigationLink } from '@/common/links';
+import { usePlan } from '@/context/plan';
 
 const BotNav = styled(Navbar)`
   background-color: ${(props) => props.theme.siteNavBackground};

@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 
-import Icon from 'components/common/Icon';
 import { useTranslations } from 'next-intl';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 import styled from 'styled-components';
 
 import { deploymentType } from '@/common/environment';
+import Icon from '@/components/common/Icon';
 
 const VersionSelect = styled.div`
   display: flex;

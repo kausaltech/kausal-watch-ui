@@ -2,11 +2,11 @@ import React from 'react';
 
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 import { captureException } from '@sentry/nextjs';
-import { InstanceType } from 'common/__generated__/paths/graphql';
 import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
 
+import { InstanceType } from '@/common/__generated__/paths/graphql';
 import { activeGoalVar } from '@/context/paths/cache';
 import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';

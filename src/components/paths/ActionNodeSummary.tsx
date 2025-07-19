@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
-import { ActionNode, InstanceGoalEntry } from 'common/__generated__/paths/graphql';
-import ActionParameters from 'components/paths/ActionParameters';
 import { useFormatter, useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
+import { ActionNode, InstanceGoalEntry } from '@/common/__generated__/paths/graphql';
+import ActionParameters from '@/components/paths/ActionParameters';
 import HighlightValue from '@/components/paths/HighlightValue';
 import { yearRangeVar } from '@/context/paths/cache';
 import PathsActionNode from '@/utils/paths/PathsActionNode';

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import PopoverTip from 'components/common/PopoverTip';
 import Highlighter from 'react-highlight-words';
 import Select, {
   DropdownIndicatorProps,
@@ -12,6 +11,8 @@ import Select, {
 } from 'react-select';
 import { Label as BSLabel, FormGroup } from 'reactstrap';
 import styled, { DefaultTheme, useTheme } from 'styled-components';
+
+import PopoverTip from '@/components/common/PopoverTip';
 
 const Label = styled(BSLabel)`
   font-weight: ${(props) => props.theme.formLabelFontWeight};

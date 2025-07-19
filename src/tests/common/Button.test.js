@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 import '@testing-library/jest-dom';
-import Button from 'components/common/Button';
+
+import Button from '@/components/common/Button';
 
 import { render, screen } from '../test-utils';
 

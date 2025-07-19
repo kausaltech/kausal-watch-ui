@@ -1,14 +1,15 @@
 import React from 'react';
 
-import { getStatusSummary } from 'common/ActionStatusSummary';
-import { getActionTermContext } from 'common/i18n';
-import { ActionLink } from 'common/links';
-import ActionImpact from 'components/actions/ActionImpact';
-import StatusBadge from 'components/common/StatusBadge';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
+
+import { getStatusSummary } from '@/common/ActionStatusSummary';
+import { getActionTermContext } from '@/common/i18n';
+import { ActionLink } from '@/common/links';
+import ActionImpact from '@/components/actions/ActionImpact';
+import StatusBadge from '@/components/common/StatusBadge';
+import { usePlan } from '@/context/plan';
 
 function ActionsTable(props) {
   const t = useTranslations();

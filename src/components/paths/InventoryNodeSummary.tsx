@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
-import { CausalGridNodeFragment, InstanceGoalEntry } from 'common/__generated__/paths/graphql';
 import { useFormatter } from 'next-intl';
 import styled from 'styled-components';
 
+import { CausalGridNodeFragment, InstanceGoalEntry } from '@/common/__generated__/paths/graphql';
 import HighlightValue from '@/components/paths/HighlightValue';
 import { yearRangeVar } from '@/context/paths/cache';
 import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';

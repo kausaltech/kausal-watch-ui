@@ -2,16 +2,17 @@ import { useContext, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import { OutcomeNodeFieldsFragment } from 'common/__generated__/graphql';
-import { useInstance } from 'common/instance';
-import { getRange, metricToPlot } from 'common/preprocess';
-import SiteContext from 'context/site';
 import { tint } from 'polished';
 import type { PlotParams } from 'react-plotly.js';
 import { Spinner } from 'reactstrap';
 import styled, { ThemeContext } from 'styled-components';
 
-const Plot = dynamic(() => import('components/graphs/Plot'), { ssr: false });
+import { OutcomeNodeFieldsFragment } from '@/common/__generated__/graphql';
+import { useInstance } from '@/common/instance';
+import { getRange, metricToPlot } from '@/common/preprocess';
+import SiteContext from '@/context/site';
+
+const Plot = dynamic(() => import('@/components/graphs/Plot'), { ssr: false });
 
 const smoothingFactor = 0.8;
 

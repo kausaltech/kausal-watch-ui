@@ -1,4 +1,6 @@
-import { getPhaseData } from '../common/preprocess';
+import { describe, expect, it } from '@jest/globals';
+
+import { getPhaseData } from '@/common/preprocess';
 
 const defaultPhases = [
   {

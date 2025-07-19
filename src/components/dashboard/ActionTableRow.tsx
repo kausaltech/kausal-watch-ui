@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react';
 
-import { PlanContextFragment } from 'common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
 import { UncontrolledTooltip } from 'reactstrap';
 import styled from 'styled-components';
+
+import { PlanContextFragment } from '@/common/__generated__/graphql';
 
 import { COLUMN_CONFIG } from './dashboard.constants';
 import { ActionListAction, ColumnConfig } from './dashboard.types';

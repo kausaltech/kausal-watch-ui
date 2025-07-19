@@ -3,14 +3,15 @@ import { useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { gql, useMutation } from '@apollo/client';
-import Button from 'components/common/Button';
-import CheckboxInput from 'components/common/CheckboxInput';
-import SelectInput from 'components/common/SelectInput';
-import TextInput from 'components/common/TextInput';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Controller, useForm } from 'react-hook-form';
 import { Alert, Spinner } from 'reactstrap';
+
+import Button from '@/components/common/Button';
+import CheckboxInput from '@/components/common/CheckboxInput';
+import SelectInput from '@/components/common/SelectInput';
+import TextInput from '@/components/common/TextInput';
 
 const CREATE_USER_FEEDBACK = gql`
   mutation CreateUserFeedback($input: UserFeedbackMutationInput!) {

@@ -3,14 +3,14 @@ import React from 'react';
 import Image from 'next/image';
 
 import { gql } from '@apollo/client';
-import Breadcrumbs from 'components/common/Breadcrumbs';
-import { CategoryPage } from 'components/common/CategoryPageStreamField';
-import { usePaths } from 'context/paths/paths';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 
 import { Category } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
+import Breadcrumbs from '@/components/common/Breadcrumbs';
+import { CategoryPage } from '@/components/common/CategoryPageStreamField';
+import { usePaths } from '@/context/paths/paths';
 
 import PathsNodeSummary from '../PathsNodeSummary';
 

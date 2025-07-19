@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 
-import { ActionLink, PathsNodeLink } from 'common/links';
 import styled from 'styled-components';
+
+import { ActionLink, PathsNodeLink } from '@/common/links';
 
 const ActionsList = styled.ul`
   font-size: 0.9rem;

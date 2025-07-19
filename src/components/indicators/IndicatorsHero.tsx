@@ -2,11 +2,12 @@ import React from 'react';
 
 import { usePathname } from 'next/navigation';
 
-import RichText from 'components/common/RichText';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Nav, NavItem, Row } from 'reactstrap';
 import styled from 'styled-components';
+
+import RichText from '@/components/common/RichText';
 
 import { NavigationLink } from '../../common/links';
 

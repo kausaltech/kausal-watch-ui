@@ -1,26 +1,27 @@
 {
   "extends": "./kausal_common/configs/tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./*"],
+      "@/public/*": ["./public/*"],
+      "@/*": ["./src/*"],
       "@common/*": ["./kausal_common/src/*"]
     },
     "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.js",
-    "**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.js",
+    "src/**/*.jsx",
     "./*.mjs",
+    "./*.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "embed"]
+  "exclude": ["node_modules", "src/embed"]
 }

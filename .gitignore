@@ -30,7 +30,6 @@ build-storybook.log
 /e2e-tests/*-snapshots/
 /.secrets/
 /.env*
-
-# Sentry Config File
 .sentryclirc
+/.eslintcache
 **/node_modules/

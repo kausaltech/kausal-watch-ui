@@ -1,13 +1,13 @@
 import { useCallback } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
-import RangeSelector from 'components/paths/RangeSelector';
 import { useTranslations } from 'next-intl';
 import { Button, CardBody, Col, Container, Row, UncontrolledCollapse } from 'reactstrap';
 import styled from 'styled-components';
 
 import Icon from '@/components/common/Icon';
 import GoalSelector from '@/components/paths/GoalSelector';
+import RangeSelector from '@/components/paths/RangeSelector';
 import ScenarioSelector from '@/components/paths/ScenarioSelector';
 import GoalOutcomeBar from '@/components/paths/toolbar/GoalOutcomeBar';
 import { activeScenarioVar, yearRangeVar } from '@/context/paths/cache';

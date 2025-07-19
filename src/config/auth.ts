@@ -1,10 +1,10 @@
 import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 
-import type { OIDCConfig } from '@auth/core/providers';
 import NextAuth from 'next-auth';
+import type { OIDCConfig } from 'next-auth/providers';
 
-import { getAuthIssuer } from '@/kausal_common/src/env';
+import { getAuthIssuer } from '@common/env';
 
 type Profile = {
   name: string;

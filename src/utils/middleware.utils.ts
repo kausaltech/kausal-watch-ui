@@ -5,21 +5,19 @@ import * as Sentry from '@sentry/nextjs';
 import type { NextAuthRequest } from 'next-auth/lib';
 import type { Logger } from 'pino';
 
+import type { ApolloClientType } from '@common/apollo';
+import { createSentryLink, logOperationLink } from '@common/apollo/links';
+import { FORWARDED_HEADER, WILDCARD_DOMAINS_HEADER } from '@common/constants/headers.mjs';
+import { getWatchGraphQLUrl, getWildcardDomains, isLocalDev } from '@common/env';
+import { getClientIP } from '@common/utils';
+import LRUCache from '@common/utils/lru-cache';
+
 import type {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
 } from '@/common/__generated__/graphql';
 import { PublicationStatus } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
-import type { ApolloClientType } from '@/kausal_common/src/apollo';
-import { createSentryLink, logOperationLink } from '@/kausal_common/src/apollo/links';
-import {
-  FORWARDED_HEADER,
-  WILDCARD_DOMAINS_HEADER,
-} from '@/kausal_common/src/constants/headers.mjs';
-import { getWatchGraphQLUrl, getWildcardDomains } from '@/kausal_common/src/env';
-import { getClientIP } from '@/kausal_common/src/utils';
-import LRUCache from '@/kausal_common/src/utils/lru-cache';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 
 import { stripSlashes } from './urls';
@@ -312,11 +310,13 @@ const DEFAULT_TTL = 30 * 60 * 1000;
 const hostnamePlanCache = new LRUCache<string, PlanForHostname[]>();
 
 export async function getPlansForHostname(req: NextAuthRequest, logger: Logger, hostname: string) {
-  hostnamePlanCache.print((plans) =>
-    plans
-      .map((plan) => `${plan!.__typename} ${plan!.__typename == 'Plan' ? plan!.id : ''}`)
-      .join(', ')
-  );
+  if (false && isLocalDev) {
+    hostnamePlanCache.print((plans) =>
+      plans
+        .map((plan) => `${plan!.__typename} ${plan!.__typename == 'Plan' ? plan!.id : ''}`)
+        .join(', ')
+    );
+  }
   const cacheEntry = hostnamePlanCache.getMetadata(hostname);
   if (cacheEntry) {
     const now = Date.now();

@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { CommonContentBlockProps } from 'common/blocks.types';
-import FeedbackForm from 'components/common/FeedbackForm';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
+
+import { CommonContentBlockProps } from '@/common/blocks.types';
+import FeedbackForm from '@/components/common/FeedbackForm';
+import { usePlan } from '@/context/plan';
 
 const AccessibilityStatementContactFormBlock = ({ id = '' }: CommonContentBlockProps) => {
   const t = useTranslations();

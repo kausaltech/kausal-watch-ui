@@ -3,21 +3,22 @@ import React from 'react';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { Theme } from '@kausal/themes/types';
-import {
-  CategoryPageMainTopBlock,
-  CategoryTypePageLevelLayout,
-  GetCategoryAttributeTypesQuery,
-} from 'common/__generated__/graphql';
-import { getBreadcrumbsFromCategoryHierarchy } from 'common/categories';
-import AttributesBlock, { Attributes } from 'components/common/AttributesBlock';
-import Breadcrumbs from 'components/common/Breadcrumbs';
-import CategoryPageStreamField, { CategoryPage } from 'components/common/CategoryPageStreamField';
-import { ChartType } from 'components/dashboard/ActionStatusGraphs';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';
 import { Col, Container, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
+
+import {
+  CategoryPageMainTopBlock,
+  CategoryTypePageLevelLayout,
+  GetCategoryAttributeTypesQuery,
+} from '@/common/__generated__/graphql';
+import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
+import AttributesBlock, { Attributes } from '@/components/common/AttributesBlock';
+import Breadcrumbs from '@/components/common/Breadcrumbs';
+import CategoryPageStreamField, { CategoryPage } from '@/components/common/CategoryPageStreamField';
+import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
+import { usePlan } from '@/context/plan';
 
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
 

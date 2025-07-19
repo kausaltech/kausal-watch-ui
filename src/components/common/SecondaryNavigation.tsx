@@ -1,9 +1,9 @@
-import { Link } from 'common/links';
-import Icon from 'components/common/Icon';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import { PageInterface } from '@/common/__generated__/graphql';
+import { Link } from '@/common/links';
+import Icon from '@/components/common/Icon';
 
 const NavigationContainer = styled(Container)`
   @media (min-width: ${(props) => props.theme.breakpointLg}) {

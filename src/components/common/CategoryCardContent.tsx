@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { GetCategoriesForTreeMapQuery } from 'common/__generated__/graphql';
-import { Link } from 'common/links';
-import Icon from 'components/common/Icon';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
+
+import { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
+import { Link } from '@/common/links';
+import Icon from '@/components/common/Icon';
 
 const CardContent = styled.div`
   a {

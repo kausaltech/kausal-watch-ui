@@ -1,6 +1,6 @@
-import { ActionSection } from 'components/actions/ActionContent';
-import ContactPersons from 'components/actions/ContactPersons';
-import { usePlan } from 'context/plan';
+import { ActionSection } from '@/components/actions/ActionContent';
+import ContactPersons from '@/components/actions/ContactPersons';
+import { usePlan } from '@/context/plan';
 
 import RestrictedBlockWrapper from './RestrictedBlockWrapper';
 

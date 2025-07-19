@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
-import { usePlan } from 'context/plan';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import PropTypes from 'prop-types';
 import { Alert, Badge, Table } from 'reactstrap';
 import styled from 'styled-components';
+
+import { usePlan } from '@/context/plan';
 
 import { beautifyValue } from '../../common/data/format';
 import dayjs from '../../common/dayjs';

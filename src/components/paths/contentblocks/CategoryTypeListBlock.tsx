@@ -2,11 +2,11 @@
 
 import React, { useMemo, useState } from 'react';
 
-import { Category, CategoryFragmentFragment } from 'common/__generated__/graphql';
 import { useTranslations } from 'next-intl';
 import { Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import { Category, CategoryFragmentFragment } from '@/common/__generated__/graphql';
 import { getDeepParents } from '@/common/categories';
 import { TFunction } from '@/common/i18n';
 import { usePaths } from '@/context/paths/paths';

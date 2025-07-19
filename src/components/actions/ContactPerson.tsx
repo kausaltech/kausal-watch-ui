@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import {
-  PlanContextFragment,
-  PlanFeaturesContactPersonsPublicData,
-} from 'common/__generated__/graphql';
-import Icon from 'components/common/Icon';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Button, Collapse } from 'reactstrap';
 import styled, { css, useTheme } from 'styled-components';
 
+import {
+  PlanContextFragment,
+  PlanFeaturesContactPersonsPublicData,
+} from '@/common/__generated__/graphql';
 import { getThemeStaticURL } from '@/common/theme';
+import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
 
 const Person = styled.div<{
   $isLeader: boolean;

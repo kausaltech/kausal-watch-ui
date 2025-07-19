@@ -1,12 +1,13 @@
 import React from 'react';
 
-import { CategoryPage } from 'common/__generated__/graphql';
-import CategoryPageStreamField, {
-  checkAttributeHasValueByType,
-} from 'components/common/CategoryPageStreamField';
-import StreamField from 'components/common/StreamField';
 import { Container, Row } from 'reactstrap';
 import styled, { css } from 'styled-components';
+
+import { CategoryPage } from '@/common/__generated__/graphql';
+import CategoryPageStreamField, {
+  checkAttributeHasValueByType,
+} from '@/components/common/CategoryPageStreamField';
+import StreamField from '@/components/common/StreamField';
 
 const MainContent = styled.div``;
 

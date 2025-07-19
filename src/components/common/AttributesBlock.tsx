@@ -1,12 +1,13 @@
 import React from 'react';
 
+import { Col, Row } from 'reactstrap';
+import styled, { css } from 'styled-components';
+
 import {
   AttributesBlockAttributeFragment,
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
-} from 'common/__generated__/graphql';
-import { Col, Row } from 'reactstrap';
-import styled, { css } from 'styled-components';
+} from '@/common/__generated__/graphql';
 
 import RestrictedBlockWrapper from '../actions/blocks/RestrictedBlockWrapper';
 import ActionAttribute from './ActionAttribute';

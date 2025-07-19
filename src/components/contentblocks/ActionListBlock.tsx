@@ -2,17 +2,17 @@ import React, { useEffect } from 'react';
 
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import { getActionTermContext } from 'common/i18n';
-import ActionCard from 'components/actions/ActionCard';
-import ActionCardList from 'components/actions/ActionCardList';
-import ContentLoader from 'components/common/ContentLoader';
-import ErrorMessage from 'components/common/ErrorMessage';
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 
+import { getActionTermContext } from '@/common/i18n';
+import ActionCard from '@/components/actions/ActionCard';
+import ActionCardList from '@/components/actions/ActionCardList';
+import ContentLoader from '@/components/common/ContentLoader';
+import ErrorMessage from '@/components/common/ErrorMessage';
+import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 
 const GET_ACTION_LIST_FOR_BLOCK = gql`

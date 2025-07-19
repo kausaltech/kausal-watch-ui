@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 
-import { CommonContentBlockProps } from 'common/blocks.types';
-import ActionHighlightsList from 'components/actions/ActionHighlightsList';
-import PlanContext, { usePlan } from 'context/plan';
 import { readableColor } from 'polished';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
+
+import { CommonContentBlockProps } from '@/common/blocks.types';
+import ActionHighlightsList from '@/components/actions/ActionHighlightsList';
+import PlanContext, { usePlan } from '@/context/plan';
 
 const ActionsSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};

@@ -3,19 +3,20 @@ import React, { useContext } from 'react';
 
 import { gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { useTranslations } from 'next-intl';
+import { Col, Row } from 'reactstrap';
+import styled from 'styled-components';
+
 import {
   ActionHightlightListQuery,
   ActionHightlightListQueryVariables,
   PlanContextFragment,
-} from 'common/__generated__/graphql';
-import { getActionTermContext } from 'common/i18n';
-import images, { getActionImage } from 'common/images';
-import { ActionListLink } from 'common/links';
-import Button from 'components/common/Button';
-import EmbedContext from 'context/embed';
-import { useTranslations } from 'next-intl';
-import { Col, Row } from 'reactstrap';
-import styled from 'styled-components';
+} from '@/common/__generated__/graphql';
+import { getActionTermContext } from '@/common/i18n';
+import images, { getActionImage } from '@/common/images';
+import { ActionListLink } from '@/common/links';
+import Button from '@/components/common/Button';
+import EmbedContext from '@/context/embed';
 
 import Icon from '../common/Icon';
 import ActionHighlightCard from './ActionHighlightCard';

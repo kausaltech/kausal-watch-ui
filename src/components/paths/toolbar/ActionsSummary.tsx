@@ -1,11 +1,15 @@
 import { NetworkStatus, gql, useQuery, useReactiveVar } from '@apollo/client';
-import type { GetActionListQuery, GetActionListQueryVariables } from 'common/__generated__/graphql';
-import { activeGoalVar } from 'common/cache';
-import { findActionEnabledParam } from 'common/preprocess';
-import ContentLoader from 'components/common/ContentLoader';
-import { GET_ACTION_LIST } from 'queries/getActionList';
 import { useTranslation } from 'react-i18next';
 import styled, { useTheme } from 'styled-components';
+
+import type {
+  GetActionListQuery,
+  GetActionListQueryVariables,
+} from '@/common/__generated__/graphql';
+import { activeGoalVar } from '@/common/cache';
+import { findActionEnabledParam } from '@/common/preprocess';
+import ContentLoader from '@/components/common/ContentLoader';
+import { GET_ACTION_LIST } from '@/queries/getActionList';
 
 import ParameterWidget from './ParameterWidget';
 

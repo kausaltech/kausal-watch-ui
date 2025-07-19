@@ -1,31 +1,5 @@
 import React, { Ref, createRef, useCallback, useMemo, useState } from 'react';
 
-import {
-  ActionListFilterFragment,
-  ActionListPageFiltersFragment,
-  CategoryTypeSelectWidget,
-} from 'common/__generated__/graphql';
-import {
-  CategoryHierarchyMember,
-  CategoryTypeHierarchy,
-  constructCatHierarchy,
-  getCategoryString,
-} from 'common/categories';
-import { getActionTermContext } from 'common/i18n';
-import Button from 'components/common/Button';
-import Icon from 'components/common/Icon';
-import PopoverTip from 'components/common/PopoverTip';
-import SelectDropdown, { SelectDropdownOption } from 'components/common/SelectDropdown';
-import TextInput from 'components/common/TextInput';
-import {
-  ActionListAction,
-  ActionListActionAttributeTypeFilterBlock,
-  ActionListCategory,
-  ActionListCategoryTypeFilterBlock,
-  ActionListOrganization,
-  ActionListPrimaryOrg,
-} from 'components/dashboard/ActionList';
-import { PlanContextType, usePlan } from 'context/plan';
 import escapeStringRegexp from 'escape-string-regexp';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -36,7 +10,33 @@ import { ButtonGroup, Collapse, Button as RButton } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
 
+import {
+  ActionListFilterFragment,
+  ActionListPageFiltersFragment,
+  CategoryTypeSelectWidget,
+} from '@/common/__generated__/graphql';
+import {
+  CategoryHierarchyMember,
+  CategoryTypeHierarchy,
+  constructCatHierarchy,
+  getCategoryString,
+} from '@/common/categories';
+import { getActionTermContext } from '@/common/i18n';
 import { TFunction } from '@/common/i18n';
+import Button from '@/components/common/Button';
+import Icon from '@/components/common/Icon';
+import PopoverTip from '@/components/common/PopoverTip';
+import SelectDropdown, { SelectDropdownOption } from '@/components/common/SelectDropdown';
+import TextInput from '@/components/common/TextInput';
+import {
+  ActionListAction,
+  ActionListActionAttributeTypeFilterBlock,
+  ActionListCategory,
+  ActionListCategoryTypeFilterBlock,
+  ActionListOrganization,
+  ActionListPrimaryOrg,
+} from '@/components/dashboard/ActionList';
+import { PlanContextType, usePlan } from '@/context/plan';
 
 type MultipleFilterValue = string[];
 type SingleFilterValue = string | undefined;

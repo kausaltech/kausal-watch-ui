@@ -1,6 +1,6 @@
-import { getIndicatorLinkProps } from 'common/links';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
-import { InvalidEmbedAddressError } from 'context/embed';
+import { getIndicatorLinkProps } from '@/common/links';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
+import { InvalidEmbedAddressError } from '@/context/embed';
 
 interface IndicatorEmbedPropsType {
   path: string[];

@@ -4,43 +4,43 @@ import React, { useCallback, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import {
-  type ActionAsideContentBlocksFragmentFragment,
-  type ActionMainContentBlocksFragmentFragment,
-  ActionStatusSummaryIdentifier,
-  type GetActionDetailsQuery,
-} from 'common/__generated__/graphql';
-import dayjs from 'common/dayjs';
-import { getActionTermContext } from 'common/i18n';
-import { getActionImage, getBgImageAlignment } from 'common/images';
-import { getActionLinkProps } from 'common/links';
-import ActionContactPersonsBlock from 'components/actions/blocks/ActionContactPersonsBlock';
-import ActionDescriptionBlock from 'components/actions/blocks/ActionDescriptionBlock';
-import ActionLeadParagraphBlock from 'components/actions/blocks/ActionLeadParagraphBlock';
-import ActionLinksBlock from 'components/actions/blocks/ActionLinksBlock';
-import ActionMergedActionsBlock from 'components/actions/blocks/ActionMergedActionsBlock';
-import ActionOfficialNameBlock from 'components/actions/blocks/ActionOfficialNameBlock';
-import ActionRelatedActionsBlock from 'components/actions/blocks/ActionRelatedActionsBlock';
-import ActionRelatedIndicatorsBlock from 'components/actions/blocks/ActionRelatedIndicatorsBlock';
-import ActionResponsiblePartiesBlock from 'components/actions/blocks/ActionResponsiblePartiesBlock';
-import ActionScheduleBlock from 'components/actions/blocks/ActionScheduleBlock';
-import ActionTasksBlock from 'components/actions/blocks/ActionTasksBlock';
-import ReportComparisonBlock from 'components/actions/blocks/ReportComparisonBlock';
-import ActionAttribute from 'components/common/ActionAttribute';
-import AttributesBlock from 'components/common/AttributesBlock';
-import PopoverTip from 'components/common/PopoverTip';
-import StatusBadge from 'components/common/StatusBadge';
-import ExpandableFeedbackFormBlock from 'components/contentblocks/ExpandableFeedbackFormBlock';
-import PlanDatasetsBlock from 'components/contentblocks/PlanDatasetsBlock';
-import IndicatorCausalVisualisation from 'components/indicators/IndicatorCausalVisualisation';
-import ActionVersionHistory from 'components/versioning/ActionVersionHistory';
-import { PlanContextType, usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Col, Container, Row } from 'reactstrap';
 import styled, { css, useTheme } from 'styled-components';
 
+import {
+  type ActionAsideContentBlocksFragmentFragment,
+  type ActionMainContentBlocksFragmentFragment,
+  ActionStatusSummaryIdentifier,
+  type GetActionDetailsQuery,
+} from '@/common/__generated__/graphql';
+import dayjs from '@/common/dayjs';
+import { getActionTermContext } from '@/common/i18n';
+import { getActionImage, getBgImageAlignment } from '@/common/images';
+import { getActionLinkProps } from '@/common/links';
+import ActionContactPersonsBlock from '@/components/actions/blocks/ActionContactPersonsBlock';
+import ActionDescriptionBlock from '@/components/actions/blocks/ActionDescriptionBlock';
+import ActionLeadParagraphBlock from '@/components/actions/blocks/ActionLeadParagraphBlock';
+import ActionLinksBlock from '@/components/actions/blocks/ActionLinksBlock';
+import ActionMergedActionsBlock from '@/components/actions/blocks/ActionMergedActionsBlock';
+import ActionOfficialNameBlock from '@/components/actions/blocks/ActionOfficialNameBlock';
+import ActionRelatedActionsBlock from '@/components/actions/blocks/ActionRelatedActionsBlock';
+import ActionRelatedIndicatorsBlock from '@/components/actions/blocks/ActionRelatedIndicatorsBlock';
+import ActionResponsiblePartiesBlock from '@/components/actions/blocks/ActionResponsiblePartiesBlock';
+import ActionScheduleBlock from '@/components/actions/blocks/ActionScheduleBlock';
+import ActionTasksBlock from '@/components/actions/blocks/ActionTasksBlock';
+import ReportComparisonBlock from '@/components/actions/blocks/ReportComparisonBlock';
+import ActionAttribute from '@/components/common/ActionAttribute';
+import AttributesBlock from '@/components/common/AttributesBlock';
+import PopoverTip from '@/components/common/PopoverTip';
+import StatusBadge from '@/components/common/StatusBadge';
+import ExpandableFeedbackFormBlock from '@/components/contentblocks/ExpandableFeedbackFormBlock';
+import PlanDatasetsBlock from '@/components/contentblocks/PlanDatasetsBlock';
+import IndicatorCausalVisualisation from '@/components/indicators/IndicatorCausalVisualisation';
+import ActionVersionHistory from '@/components/versioning/ActionVersionHistory';
 import { ACTION_CONTENT_MAIN_BOTTOM } from '@/constants/containers';
+import { PlanContextType, usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 
 import ActionHero from './ActionHero';

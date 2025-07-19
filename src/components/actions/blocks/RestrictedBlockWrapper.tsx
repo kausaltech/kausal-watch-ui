@@ -1,9 +1,10 @@
 import React from 'react';
 import { ReactNode } from 'react';
 
-import Icon from 'components/common/Icon';
 import { transparentize } from 'polished';
 import styled from 'styled-components';
+
+import Icon from '@/components/common/Icon';
 
 const WrapperContainer = styled.div`
   background-color: ${({ theme }) => transparentize(0.5, theme.graphColors.red010)};

@@ -6,7 +6,7 @@ const path = require('path');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
-const withNextIntl = require('next-intl/plugin')('./config/i18n.ts');
+const withNextIntl = require('next-intl/plugin')('./src/config/i18n.ts');
 
 const { getProjectIdFromPackageJson } = require('./kausal_common/src/env/project.cjs');
 

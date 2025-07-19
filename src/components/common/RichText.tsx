@@ -1,15 +1,16 @@
 import React, { ReactElement, useCallback, useState } from 'react';
 
 import { withScope } from '@sentry/nextjs';
-import Button from 'components/common/Button';
-import Icon from 'components/common/Icon';
-import { usePlan } from 'context/plan';
 import parse, { DOMNode, Element, HTMLReactParserOptions, domToReact } from 'html-react-parser';
 import { useTranslations } from 'next-intl';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 import { Collapse } from 'reactstrap';
 import styled from 'styled-components';
+
+import Button from '@/components/common/Button';
+import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
 
 const BreakPoint = styled.div<{ fade: boolean }>`
   text-align: center;

@@ -1,21 +1,22 @@
 import React from 'react';
 
+import { Col, ColProps, Container, Row } from 'reactstrap';
+import { useTheme } from 'styled-components';
+
 import {
   CategoryPage,
   CategoryPageMainBottomBlock,
   CategoryPageMainTopBlock,
-} from 'common/__generated__/graphql';
-import ActionAttribute from 'components/common/ActionAttribute';
-import { attributeHasValue } from 'components/common/AttributesBlock';
-import StreamField from 'components/common/StreamField';
-import ActionStatusGraphsBlock from 'components/contentblocks/ActionStatusGraphsBlock';
-import CategoryListBlock from 'components/contentblocks/CategoryListBlock';
-import ExpandableFeedbackFormBlock from 'components/contentblocks/ExpandableFeedbackFormBlock';
-import PlanDatasetsBlock from 'components/contentblocks/PlanDatasetsBlock';
-import { ChartType } from 'components/dashboard/ActionStatusGraphs';
-import { usePlan } from 'context/plan';
-import { Col, ColProps, Container, Row } from 'reactstrap';
-import { useTheme } from 'styled-components';
+} from '@/common/__generated__/graphql';
+import ActionAttribute from '@/components/common/ActionAttribute';
+import { attributeHasValue } from '@/components/common/AttributesBlock';
+import StreamField from '@/components/common/StreamField';
+import ActionStatusGraphsBlock from '@/components/contentblocks/ActionStatusGraphsBlock';
+import CategoryListBlock from '@/components/contentblocks/CategoryListBlock';
+import ExpandableFeedbackFormBlock from '@/components/contentblocks/ExpandableFeedbackFormBlock';
+import PlanDatasetsBlock from '@/components/contentblocks/PlanDatasetsBlock';
+import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
+import { usePlan } from '@/context/plan';
 
 type OmitUnion<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
 

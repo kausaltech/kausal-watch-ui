@@ -1,9 +1,10 @@
 import React from 'react';
 
-import DropDown from 'components/common/DropDown';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
+import DropDown from '@/components/common/DropDown';
 
 const CompareChooser = styled.div`
   display: flex;

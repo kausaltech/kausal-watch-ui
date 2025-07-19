@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { getStatusSummary } from 'common/ActionStatusSummary';
 import { Progress } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
+import { getStatusSummary } from '@/common/ActionStatusSummary';
 import { ActionStatusSummary, Plan } from '@/common/__generated__/graphql';
 
 const Status = styled.div`

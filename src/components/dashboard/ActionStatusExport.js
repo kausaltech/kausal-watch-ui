@@ -1,6 +1,7 @@
-import { usePlan } from 'context/plan';
 import { useTranslations } from 'next-intl';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
+
+import { usePlan } from '@/context/plan';
 
 export default function ActionStatusExport({ actions }) {
   const t = useTranslations();

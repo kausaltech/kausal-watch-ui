@@ -1,13 +1,12 @@
 import React, { ReactNode } from 'react';
 
-import { PlanContextFragment } from 'common/__generated__/graphql';
-import dayjs from 'common/dayjs';
-import { getActionTaskTermContext, getActionTermContext } from 'common/i18n';
-import { ActionLink } from 'common/links';
-import ActionAttribute from 'components/common/ActionAttribute';
-import Icon from 'components/common/Icon';
-
+import { PlanContextFragment } from '@/common/__generated__/graphql';
+import dayjs from '@/common/dayjs';
+import { getActionTaskTermContext, getActionTermContext } from '@/common/i18n';
 import { TFunction } from '@/common/i18n';
+import { ActionLink } from '@/common/links';
+import ActionAttribute from '@/components/common/ActionAttribute';
+import Icon from '@/components/common/Icon';
 
 import PlanChip from '../plans/PlanChip';
 import {

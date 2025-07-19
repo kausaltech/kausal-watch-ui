@@ -1,13 +1,14 @@
 import React from 'react';
 
-import { Link } from 'common/links';
-import Icon from 'components/common/Icon';
-import IndicatorVisualisation from 'components/indicators/IndicatorVisualisation';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
+
+import { Link } from '@/common/links';
+import Icon from '@/components/common/Icon';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
