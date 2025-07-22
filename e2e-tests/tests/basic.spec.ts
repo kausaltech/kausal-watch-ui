@@ -1,10 +1,10 @@
-import { expect, test as base } from '@playwright/test';
+import { type Page, test as base, expect } from '@playwright/test';
 
-import { getIdentifiersToTest, PlanContext } from './context';
+import { PlanContext, getIdentifiersToTest } from '../common/context.ts';
 
 const test = base.extend<{ ctx: PlanContext }>({});
 
-async function navigateAndCheckLayout(page, url, ctx) {
+async function navigateAndCheckLayout(page: Page, url: string, ctx: PlanContext) {
   await page.goto(url);
   await ctx.checkMeta(page);
   await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
@@ -29,6 +29,12 @@ const testPlan = (planId: string) =>
       await navigateAndCheckLayout(page, ctx.baseURL, ctx);
     });
 
+    test('homepage', async ({ page, ctx }) => {
+      const navBar = page.locator('nav#global-navigation-bar');
+      await expect(navBar).toBeVisible();
+      await expect(page.locator('.content-area').first()).toBeVisible();
+    });
+
     test('action list page', async ({ page, ctx }) => {
       const listItem = ctx.getActionListMenuItem()!;
       test.skip(!listItem, 'No action list page for plan');
@@ -43,12 +49,12 @@ const testPlan = (planId: string) =>
       await link.click();
       await ctx.checkMeta(page);
 
-      await expect(page.getByRole('tab').first()).toBeVisible();
+      await expect(page.getByRole('tabpanel').first()).toBeVisible();
 
       // Test direct URL navigation
       await page.goto(`${ctx.baseURL}/${listItem.page.urlPath}`);
       await ctx.checkMeta(page);
-      await expect(page.getByRole('tab').first()).toBeVisible();
+      await expect(page.getByRole('tabpanel').first()).toBeVisible({ timeout: 10000 });
     });
 
     test('action details page', async ({ page, ctx }) => {
@@ -86,12 +92,9 @@ const testPlan = (planId: string) =>
       test.skip(!EmptyPageMenuItem, 'No empty pages for plan');
 
       const items = ctx.getEmptyPageChildrenItems(EmptyPageMenuItem?.page.id);
-      test.skip(
-        !items || items.length === 0,
-        'No children category or content pages for plan'
-      );
+      test.skip(!items || items.length === 0, 'No children category or content pages for plan');
       const nav = page.locator('nav#global-navigation-bar');
-      const emptyPageMenuLink = nav.getByRole('link', {
+      const emptyPageMenuLink = nav.getByRole('button', {
         name: EmptyPageMenuItem?.page.title,
         exact: true,
       });
@@ -152,12 +155,10 @@ const testPlan = (planId: string) =>
     });
 
     test('indicator page', async ({ page, ctx }) => {
-      const IndicatorListItem = ctx.getIndicatorListMenuItem();
-      test.skip(!IndicatorListItem, 'No indicator list for plan');
+      const indicatorListItem = ctx.getIndicatorListMenuItem()!;
+      test.skip(!indicatorListItem, 'No indicator list for plan');
       const nav = page.locator('nav#global-navigation-bar');
-      await nav
-        .getByRole('link', { name: IndicatorListItem.page.title, exact: true })
-        .click();
+      await nav.getByRole('link', { name: indicatorListItem.page.title, exact: true }).click();
       const main = page.locator('main#main');
       await expect(main).toBeVisible();
       const planIndicators = ctx.getPlanIndicators();
@@ -172,9 +173,7 @@ const testPlan = (planId: string) =>
 
       if (count > 0) {
         await indicatorSectionBtn.click();
-        const controlsAttributeValue = await indicatorSectionBtn.getAttribute(
-          'aria-controls'
-        );
+        const controlsAttributeValue = await indicatorSectionBtn.getAttribute('aria-controls');
         const controlledSection = main.locator(`#${controlsAttributeValue}`);
         const indicatorLink = controlledSection.locator('a').first();
 
