@@ -93,7 +93,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
 
   const { attribute, attributeType, fontSize, notitle = false, minimized = false } = props;
   const type = attributeType ?? attribute.type;
-  let dataElement: ReactElement;
+  let dataElement: ReactElement<any>;
   const MAX_MINIMIZED_TEXT_LENGTH = 50;
 
   switch (attribute.__typename) {

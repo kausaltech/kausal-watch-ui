@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from 'react';
+import React, { type JSX, ReactElement, useCallback, useState } from 'react';
 
 import { withScope } from '@sentry/nextjs';
 import parse, { DOMNode, Element, HTMLReactParserOptions, domToReact } from 'html-react-parser';
@@ -152,8 +152,8 @@ const clipRichText = (parsedContent: string | JSX.Element | JSX.Element[], break
     };
   }
   // Make sure we do not break inside html elements, only break after <p> tags
-  const intro: ReactElement[] = [];
-  const restOfContent: ReactElement[] = [];
+  const intro: ReactElement<any>[] = [];
+  const restOfContent: ReactElement<any>[] = [];
   let previousNodeType: string | React.JSXElementConstructor<any> = '';
   let introLength = 0;
   Array.isArray(parsedContent) &&

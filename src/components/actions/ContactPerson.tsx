@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
-import PropTypes from 'prop-types';
 import { Button, Collapse } from 'reactstrap';
 import styled, { css, useTheme } from 'styled-components';
 
-import {
+import type {
+  ContactDetailsQuery,
+  ContactDetailsQueryVariables,
   PlanContextFragment,
   PlanFeaturesContactPersonsPublicData,
 } from '@/common/__generated__/graphql';
@@ -15,10 +15,12 @@ import { getThemeStaticURL } from '@/common/theme';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
-const Person = styled.div<{
+type PersonProps = {
   $isLeader: boolean;
   $withoutAvatar: boolean;
-}>`
+};
+
+const Person = styled.div<PersonProps>`
   display: flex;
   margin-top: 1em;
   padding-bottom: 1em;
@@ -75,11 +77,13 @@ const PersonOrg = styled.div`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const Avatar = styled.div<{
+type AvatarProps = {
   src?: string;
   $hasAvatar: boolean;
   $isLeader: boolean;
-}>`
+};
+
+const Avatar = styled.div<AvatarProps>`
   width: 5em;
   height: 5em;
   border-radius: 50%;
@@ -117,6 +121,7 @@ const GET_CONTACT_DETAILS = gql`
         id
         name
         ancestors {
+          id
           name
           classification {
             id
@@ -133,24 +138,37 @@ interface ContactDetailsProps {
   plan: PlanContextFragment;
 }
 
+interface ContactDetailsProps {
+  id: string;
+}
+
 function ContactDetails({ id, plan }: ContactDetailsProps) {
   const t = useTranslations();
-  const { loading, error, data } = useQuery(GET_CONTACT_DETAILS, {
-    variables: { id },
-  });
+  const { loading, error, data } = useQuery<ContactDetailsQuery, ContactDetailsQueryVariables>(
+    GET_CONTACT_DETAILS,
+    {
+      variables: { id },
+    }
+  );
 
-  if (loading) return <span>{t('loading')}</span>;
   if (error) return <span>{error.message}</span>;
+  if (loading || !data) return <span>{t('loading')}</span>;
   const { person } = data;
+  if (!person) return null;
 
-  let orgAncestors;
+  let orgAncestors: { id: string; name: string }[] = [];
 
   if (person.organization && person.organization.ancestors) {
     orgAncestors = person.organization.ancestors
       .filter(
         (org) => org.classification?.name !== 'Valtuusto' && org.classification?.name !== 'Hallitus'
       )
-      .map((org) => ({ id: org.id, name: org.name }));
+      .map((org) => {
+        return {
+          id: org.id,
+          name: org.name,
+        };
+      });
     orgAncestors.push({
       id: person.organization.id,
       name: person.organization.name,
@@ -178,19 +196,19 @@ function ContactDetails({ id, plan }: ContactDetailsProps) {
   );
 }
 
-interface ContactPersonProps {
+type ContactPersonProps = {
   person: {
     id: string;
     firstName: string;
     lastName: string;
     avatarUrl?: string;
-    title: string;
+    title?: string;
     organization?: {
-      name: string;
+      name?: string;
     };
   };
   leader?: boolean;
-}
+};
 
 function ContactPerson({ person, leader = false }: ContactPersonProps) {
   const plan = usePlan();
@@ -239,23 +257,5 @@ function ContactPerson({ person, leader = false }: ContactPersonProps) {
     </Person>
   );
 }
-
-ContactDetails.propTypes = {
-  id: PropTypes.string.isRequired,
-};
-
-ContactPerson.propTypes = {
-  person: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    avatarUrl: PropTypes.string,
-    title: PropTypes.string,
-    organization: PropTypes.shape({
-      name: PropTypes.string,
-    }),
-  }).isRequired,
-  leader: PropTypes.bool,
-};
 
 export default ContactPerson;

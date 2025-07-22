@@ -1,12 +1,11 @@
-import React, { Suspense, useEffect } from 'react';
+import React from 'react';
 
-import { gql, skipToken } from '@apollo/client';
-import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, skipToken, useSuspenseQuery } from '@apollo/client';
 import { filter, groupBy, map, sortBy, uniqBy } from 'lodash';
 import { useTranslations } from 'next-intl';
 import styled, { css } from 'styled-components';
 
-import {
+import type {
   ActionCardFragment,
   ActionDependenciesQuery,
   GetActionDetailsQuery,

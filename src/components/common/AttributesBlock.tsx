@@ -3,7 +3,7 @@ import React from 'react';
 import { Col, Row } from 'reactstrap';
 import styled, { css } from 'styled-components';
 
-import {
+import type {
   AttributesBlockAttributeFragment,
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
@@ -13,7 +13,7 @@ import RestrictedBlockWrapper from '../actions/blocks/RestrictedBlockWrapper';
 import ActionAttribute from './ActionAttribute';
 
 type AttributeProps = {
-  $vertical: boolean;
+  $vertical?: boolean;
 };
 
 export const Attributes = styled.div<AttributeProps>`

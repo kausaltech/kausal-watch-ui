@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useQuery } from '@apollo/client';
 import { captureMessage } from '@sentry/nextjs';
 import { isEqual } from 'lodash';
 import { useLocale, useTranslations } from 'next-intl';

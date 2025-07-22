@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import { Theme } from '@kausal/themes/types';
+import type { Theme } from '@kausal/themes/types';
 import { captureException } from '@sentry/nextjs';
 import { CardBody, Col, Container, Row } from 'reactstrap';
 
@@ -25,7 +25,7 @@ export default function GlobalError({ error }: Props) {
       <body>
         <ThemeProvider theme={defaultTheme as Theme}>
           <StyledComponentsRegistry>
-            <ErrorBackground isFullPage>
+            <ErrorBackground $isFullPage={true}>
               <Container>
                 <Row>
                   <Col md={{ size: 6, offset: 3 }}>

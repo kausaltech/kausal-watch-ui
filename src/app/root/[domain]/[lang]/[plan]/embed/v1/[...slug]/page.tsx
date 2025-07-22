@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { type JSX, use, useEffect, useRef } from 'react';
 
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
@@ -63,12 +63,13 @@ const validateUrl = (slug: string[] | undefined): InvalidEmbedAddressError | nul
 };
 
 type Props = {
-  params: {
+  params: Promise<{
     slug: string[];
-  };
+  }>;
 };
 
-const EmbeddablePage = ({ params }: Props) => {
+const EmbeddablePage = (props: Props) => {
+  const params = use(props.params);
   const slug = params.slug.map(decodeURIComponent);
   const wrapperElement = useRef<HTMLDivElement>(null);
   const query = useSearchParams();

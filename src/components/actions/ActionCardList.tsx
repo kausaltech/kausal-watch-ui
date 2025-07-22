@@ -1,11 +1,15 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
+import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
-import PropTypes from 'prop-types';
 import { Col, Row } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
 
+import type { ActionCardFragment } from '@/common/__generated__/graphql';
+import type { TFunction } from '@/common/i18n';
+
+import type { ActionListAction, ActionListCategory } from '../dashboard/dashboard.types';
 import ActionCard from './ActionCard';
 
 const ActionsList = styled.ul`
@@ -41,16 +45,38 @@ const ActionGroupList = styled(Row)`
 `;
 const OTHER_GROUP_ID = 'other';
 
-const groupActions = (groupBy, depth, actions, theme, t) => {
-  const groupMap = {};
-  const groups = [];
-  const noGroupItems = [];
+type ActionGroup<T extends ActionListAction | ActionCardFragment> = {
+  id: string;
+  crumb: string[] | null;
+  displayIdentifier: string;
+  name: string;
+  identifier: string;
+  order: number;
+  elements: T[];
+};
+
+function groupActions<T extends ActionListAction | ActionCardFragment>(
+  groupBy: ActionCardListProps<T>['groupBy'],
+  depth: number,
+  actions: T[],
+  theme: Theme,
+  t: TFunction
+) {
+  const groupMap: Record<string, ActionGroup<T>> = {};
+  const groups: ActionGroup<T>[] = [];
+  const noGroupItems: T[] = [];
 
   actions.forEach((action) => {
-    const { primaryCategories } = action;
-    let cat = undefined;
-    let categoryCrumb = undefined;
-    if (primaryCategories !== undefined) {
+    const primaryCategories = 'primaryCategories' in action ? action.primaryCategories : undefined;
+    let cat:
+      | ActionListAction['primaryOrg']
+      | false
+      | ActionListAction['plan']
+      | ActionCardFragment['plan']
+      | ActionListCategory
+      | undefined;
+    let categoryCrumb: string[] | undefined;
+    if (primaryCategories) {
       const idx = Math.max(0, primaryCategories.length - 1);
       cat = primaryCategories[idx];
       categoryCrumb =
@@ -62,7 +88,7 @@ const groupActions = (groupBy, depth, actions, theme, t) => {
     if (groupBy === 'none') cat = false;
     if (groupBy === 'plan') cat = action.plan;
 
-    let group;
+    let group: ActionGroup<T>;
 
     if (!cat) {
       noGroupItems.push(action);
@@ -71,16 +97,16 @@ const groupActions = (groupBy, depth, actions, theme, t) => {
     if (cat.id in groupMap) {
       group = groupMap[cat.id];
     } else {
+      const identifier = 'identifier' in cat && cat.identifier;
+      const hideCategoryIdentifiers = 'type' in cat && cat.type.hideCategoryIdentifiers;
       group = {
         id: cat.id,
-        crumb: categoryCrumb,
-        displayIdentifier: `${
-          cat.identifier && !cat.type.hideCategoryIdentifiers ? cat.identifier : ''
-        }`,
+        crumb: categoryCrumb || null,
+        displayIdentifier: `${identifier && !hideCategoryIdentifiers ? identifier : ''}`,
         // if cat=plan prefer shortName
-        name: cat?.shortName || cat.name,
-        identifier: cat.identifier || cat.name,
-        order: cat.order,
+        name: ('shortName' in cat && cat.shortName) || cat.name,
+        identifier: ('identifier' in cat && cat.identifier) || cat.name,
+        order: ('order' in cat && cat.order) || 0,
         elements: [],
       };
       groupMap[cat.id] = group;
@@ -97,23 +123,32 @@ const groupActions = (groupBy, depth, actions, theme, t) => {
       crumb: null,
       identifier: OTHER_GROUP_ID,
       elements: noGroupItems,
+      order: Infinity,
     });
 
   return groups.sort((g1, g2) => g1.order - g2.order);
+}
+
+type ActionCardListProps<ActionT extends ActionListAction | ActionCardFragment> = {
+  actions: ActionT[];
+  groupBy: 'category' | 'primaryOrg' | 'none' | 'plan';
+  headingHierarchyDepth: number;
+  includeRelatedPlans: boolean;
+  showOtherCategory?: boolean;
 };
 
-function ActionCardList({
+function ActionCardList<ActionT extends ActionListAction | ActionCardFragment>({
   actions,
   groupBy = 'category',
   headingHierarchyDepth,
   includeRelatedPlans,
   showOtherCategory = true,
-}) {
+}: ActionCardListProps<ActionT>) {
   const theme = useTheme();
   const t = useTranslations();
   const groups = groupActions(groupBy, headingHierarchyDepth, actions, theme, t);
   const actionsById = new Map(actions.map((a) => [a.id, a]));
-  const getFullAction = (id) => actionsById.get(id);
+  const getFullAction = (id: string) => actionsById.get(id);
 
   return (
     <ActionsList>
@@ -163,11 +198,5 @@ function ActionCardList({
     </ActionsList>
   );
 }
-
-ActionCardList.propTypes = {
-  actions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  groupBy: PropTypes.string,
-  showOtherCategory: PropTypes.bool,
-};
 
 export default ActionCardList;

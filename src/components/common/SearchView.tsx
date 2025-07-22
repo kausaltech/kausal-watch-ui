@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import PropTypes from 'prop-types';
 import { Alert, Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import type { SearchQueryQuery, SearchQueryQueryVariables } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { Link } from '@/common/links';
+import { SEARCH_QUERY } from '@/common/search';
 import Button from '@/components/common/Button';
 import TextInput from '@/components/common/TextInput';
 import PlanChip from '@/components/plans/PlanChip';
@@ -17,58 +17,6 @@ import { usePlan } from '@/context/plan';
 
 import { trackSearch } from '../MatomoAnalytics';
 import ContentLoader from './ContentLoader';
-
-const SEARCH_QUERY = gql`
-  query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean, $clientUrl: String) {
-    search(plan: $plan, query: $query, includeRelatedPlans: true, onlyOtherPlans: $onlyOtherPlans) {
-      hits {
-        title
-        url(clientUrl: $clientUrl)
-        highlight
-        plan {
-          identifier
-          image {
-            rendition(size: "128x128", crop: true) {
-              src
-            }
-          }
-          name
-          shortName
-          organization {
-            name
-          }
-        }
-        object {
-          __typename
-          ... on Action {
-            identifier
-            primaryOrg {
-              name
-              logo {
-                rendition(size: "128x128", crop: true) {
-                  src
-                }
-              }
-            }
-          }
-          ... on Indicator {
-            id
-          }
-        }
-        page {
-          title
-          ... on CategoryPage {
-            category {
-              level {
-                name
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
 
 const SearchSection = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s050};
@@ -162,11 +110,15 @@ const ResultExcerpt = styled.div`
   }
 `;
 
-function SearchResultItem({ hit }) {
+type SearchResultItemProps = {
+  hit: NonNullable<NonNullable<SearchQueryQuery['search']>['hits']>[number];
+};
+
+function SearchResultItem({ hit }: SearchResultItemProps) {
   const t = useTranslations();
   const plan = usePlan();
   const { object, page } = hit;
-  const primaryOrg = object?.primaryOrg;
+  const primaryOrg = object && 'primaryOrg' in object ? object.primaryOrg : undefined;
   let hitTypeName;
 
   if (object) {
@@ -177,7 +129,7 @@ function SearchResultItem({ hit }) {
       hitTypeName = t('indicator');
     }
   } else if (page) {
-    if (page.category) {
+    if ('category' in page && page.category) {
       hitTypeName = page.category.level?.name;
     }
     if (!hitTypeName) hitTypeName = t('page');
@@ -202,13 +154,17 @@ function SearchResultItem({ hit }) {
         )}
         {hitTypeName && <HitType>{hitTypeName}</HitType>}
       </SearchResultMeta>
-      <Link href={hit.url} passHref legacyBehavior>
-        <a>
-          <h3>{hit.title}</h3>
-        </a>
-      </Link>
+      {hit.url ? (
+        <Link href={hit.url} passHref legacyBehavior>
+          <a>
+            <h3>{hit.title}</h3>
+          </a>
+        </Link>
+      ) : (
+        <h3>{hit.title}</h3>
+      )}
       <ResultExcerpt>
-        <span dangerouslySetInnerHTML={{ __html: hit.highlight }} />
+        <span dangerouslySetInnerHTML={{ __html: hit.highlight || '' }} />
         ...
       </ResultExcerpt>
       {/* TODO: Add ellipsis or indication for truncated text */}
@@ -216,22 +172,27 @@ function SearchResultItem({ hit }) {
   );
 }
 
-const searchProps = PropTypes.shape({
-  q: PropTypes.string,
-  onlyOtherPlans: PropTypes.bool,
-});
+type SearchResultsProps = {
+  search: {
+    q: string;
+    onlyOtherPlans: boolean;
+  };
+};
 
-function SearchResults({ search }) {
+function SearchResults({ search }: SearchResultsProps) {
   const plan = usePlan();
   const t = useTranslations();
-  const { error, loading, data } = useQuery(SEARCH_QUERY, {
-    variables: {
-      plan: plan.identifier,
-      query: search.q,
-      onlyOtherPlans: search.onlyOtherPlans,
-      clientUrl: plan.viewUrl,
-    },
-  });
+  const { error, loading, data } = useQuery<SearchQueryQuery, SearchQueryQueryVariables>(
+    SEARCH_QUERY,
+    {
+      variables: {
+        plan: plan.identifier,
+        query: search.q,
+        onlyOtherPlans: search.onlyOtherPlans,
+        clientUrl: plan.viewUrl,
+      },
+    }
+  );
 
   useEffect(() => {
     if (search.q && data?.search?.hits) {
@@ -256,7 +217,7 @@ function SearchResults({ search }) {
       </ResultsHeader>
     );
   }
-  const { hits } = data.search;
+  const { hits } = data?.search!;
 
   return (
     <Row>
@@ -278,13 +239,18 @@ function SearchResults({ search }) {
     </Row>
   );
 }
-SearchResults.propTypes = {
-  search: searchProps.isRequired,
+
+type SearchViewProps = {
+  search: {
+    q: string;
+    onlyOtherPlans: boolean;
+  };
+  onSearchChange: (search: { q: string; onlyOtherPlans: boolean }) => void;
 };
 
-function SearchView(props) {
+function SearchView(props: SearchViewProps) {
   const { search, onSearchChange } = props;
-  const [userSearch, setUserSearch] = useState(null);
+  const [userSearch, setUserSearch] = useState<SearchResultsProps['search'] | null>(null);
   const t = useTranslations();
 
   useEffect(() => {
@@ -302,7 +268,7 @@ function SearchView(props) {
     }
     // We use form- as a prefix to avoid name collisions with other components
     setUserSearch({
-      ...userSearch,
+      ...(userSearch || {}),
       [name.replace('form-', '')]: value,
     });
   };

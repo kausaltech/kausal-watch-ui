@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { Col, ColProps, Container, Row } from 'reactstrap';
+import * as Sentry from '@sentry/nextjs';
+import { Col, type ColProps, Container, Row } from 'reactstrap';
 import { useTheme } from 'styled-components';
 
-import {
+import type {
   CategoryPage,
   CategoryPageMainBottomBlock,
   CategoryPageMainTopBlock,
@@ -64,12 +65,15 @@ interface Props {
   block: OmitFields<CategoryPageMainTopBlock> | OmitFields<CategoryPageMainBottomBlock>;
 }
 
-const findAttributeByType = (attributeTypeIdentifier: string, page) =>
+const findAttributeByType = (attributeTypeIdentifier: string, page: CategoryPage) =>
   page.category?.attributes?.find(
     (attribute) => attribute.type.identifier === attributeTypeIdentifier
   );
 
-export const checkAttributeHasValueByType = (attributeTypeIdentifier: string, page) => {
+export const checkAttributeHasValueByType = (
+  attributeTypeIdentifier: string,
+  page: CategoryPage
+) => {
   const attribute = findAttributeByType(attributeTypeIdentifier, page);
 
   return attribute && attributeHasValue(attribute);
@@ -207,6 +211,11 @@ export const CategoryPageStreamField = ({
     }
 
     default:
+      Sentry.captureMessage(`Unknown block type: ${block.__typename}`, {
+        extra: {
+          block,
+        },
+      });
       return null;
   }
 };

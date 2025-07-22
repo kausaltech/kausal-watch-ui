@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { type JSX, useState } from 'react';
 
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import PropTypes from 'prop-types';
 import { Alert, Badge, Table } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -364,7 +363,16 @@ const descendantIds = (indicator, hierarchy) => {
   return descendants.join(' ');
 };
 
-const IndicatorListFiltered = (props) => {
+interface IndicatorListFilteredProps {
+  categoryColumnLabel?: string;
+  indicators: object[];
+  shouldDisplayCategory?(...args: unknown[]): unknown;
+  displayLevel?: boolean;
+  includePlanRelatedIndicators?: boolean;
+  commonCategories?: object[];
+}
+
+const IndicatorListFiltered = (props: IndicatorListFilteredProps) => {
   const t = useTranslations();
   const {
     indicators,
@@ -716,15 +724,6 @@ const IndicatorListFiltered = (props) => {
       </IndentableTable>
     </div>
   );
-};
-
-IndicatorListFiltered.propTypes = {
-  categoryColumnLabel: PropTypes.string,
-  indicators: PropTypes.arrayOf(PropTypes.object).isRequired,
-  shouldDisplayCategory: PropTypes.func,
-  displayLevel: PropTypes.bool,
-  includePlanRelatedIndicators: PropTypes.bool,
-  commonCategories: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default IndicatorListFiltered;

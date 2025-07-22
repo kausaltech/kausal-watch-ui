@@ -126,7 +126,7 @@ export type ActionLinkProps = {
   planUrl?: string;
   viewUrl?: string;
   crossPlan?: boolean;
-  children: React.ReactElement;
+  children: React.ReactElement<any>;
 };
 
 export function ActionLink({
@@ -208,7 +208,9 @@ ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps)
   return { ...opts, ...(rest || {}), href };
 };
 
-export function IndicatorListLink(props: Omit<LinkProps, 'href'> & { children: ReactElement }) {
+export function IndicatorListLink(
+  props: Omit<LinkProps, 'href'> & { children: ReactElement<any> }
+) {
   const href = usePrependPlanAndLocale(INDICATORS_PATH);
 
   return <NextLink href={href} passHref {...disablePrefetch(props)} legacyBehavior />;

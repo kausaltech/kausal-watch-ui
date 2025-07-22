@@ -1,14 +1,14 @@
 import React from 'react';
 
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
-import { Theme } from '@kausal/themes/types';
+import { gql, useQuery } from '@apollo/client';
+import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';
 import { Col, Container, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
-import {
+import type {
+  CategoryPage,
   CategoryPageMainTopBlock,
   CategoryTypePageLevelLayout,
   GetCategoryAttributeTypesQuery,
@@ -16,7 +16,7 @@ import {
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import AttributesBlock, { Attributes } from '@/components/common/AttributesBlock';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
-import CategoryPageStreamField, { CategoryPage } from '@/components/common/CategoryPageStreamField';
+import CategoryPageStreamField from '@/components/common/CategoryPageStreamField';
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
 import { usePlan } from '@/context/plan';
 
@@ -48,10 +48,7 @@ enum IconSize {
   L = 'L',
 }
 
-const CategoryHeader = styled.div<{
-  $bg?: string;
-  $hasImage?: boolean;
-}>`
+const CategoryHeader = styled.div<{ $bg?: string; $hasImage?: boolean }>`
   width: 100%;
   position: relative;
   background-color: ${({ $bg, theme }) => ($bg ? $bg : theme.themeColors.white)};
@@ -73,11 +70,7 @@ const CategoryHeader = styled.div<{
   }
 `;
 
-const CategoryHeaderImage = styled.div<{
-  $bg?: string;
-  $image?: string;
-  $imageAlign?: string;
-}>`
+const CategoryHeaderImage = styled.div<{ $bg?: string; $image?: string; $imageAlign?: string }>`
   min-height: ${(props) => (props.$image ? '14rem' : '0')};
   margin: 0 -1rem;
   background-size: cover;
@@ -108,10 +101,7 @@ const ImageCredit = styled.span`
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
-const HeaderContent = styled.div<{
-  $alignWithContent?: boolean;
-  $hasImage: boolean;
-}>`
+const HeaderContent = styled.div<{ $alignWithContent?: boolean; $hasImage: boolean }>`
   position: relative;
   max-width: ${(props) => props.theme.breakpointMd};
   margin-top: ${({ $hasImage }) => ($hasImage ? '-2rem' : '1rem')};
@@ -311,7 +301,6 @@ function CategoryPageHeaderBlock(props: Props) {
 
   const showLevel = level && !theme.settings.categories.categoryPageHideCategoryLabel;
 
-  console.log('props', props);
   return (
     <CategoryHeader $bg={color} $hasImage={!!headerImage}>
       <CategoryHeaderImage $bg={color} $imageAlign={imageAlign} $image={headerImage?.large?.src} />

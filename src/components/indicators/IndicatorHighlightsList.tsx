@@ -1,8 +1,6 @@
-/* eslint-disable max-classes-per-file */
 import React from 'react';
 
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
 import styled from 'styled-components';
@@ -46,8 +44,9 @@ const ListHeader = styled(Col)`
     margin-bottom: ${(props) => props.theme.spaces.s300};
     font-size: ${(props) => props.theme.fontSizeLg};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeXl};
+    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+      font-size: ${(props) => props.theme.fontSizeXl};
+    }
   }
 `;
 

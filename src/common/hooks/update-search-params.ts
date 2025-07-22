@@ -5,16 +5,19 @@ import { usePathname, useRouter } from 'next/navigation';
 import debounce from 'lodash/debounce';
 import omitBy from 'lodash/omitBy';
 
-import { Filters } from '@/components/actions/ActionListFilters';
+import type { Filters } from '@/components/actions/ActionListFilters';
 
-const isEmptyOrArray = (val) => val == null || val === '' || val instanceof Array;
+function isEmptyOrArray(val: unknown): val is string | Array<unknown> | null {
+  return val == null || val === '' || val instanceof Array;
+}
 
 export function useUpdateSearchParams() {
   const router = useRouter();
   const pathname = usePathname();
 
   function updateSearchParams(filters: Filters) {
-    const searchParams = new URLSearchParams(omitBy(filters, isEmptyOrArray));
+    const nonEmptyFilters = omitBy(filters, isEmptyOrArray) as Record<string, string>;
+    const searchParams = new URLSearchParams(nonEmptyFilters);
 
     /**
      * Append arrays to search params separately, as our approach is to add multiple
@@ -33,7 +36,8 @@ export function useUpdateSearchParams() {
     router.replace(`${pathname}${query}`, { scroll: false });
   }
 
-  const debouncedUpdateSearchParams = useRef(debounce(updateSearchParams, 300)).current;
+  const debouncedUpdate = debounce(updateSearchParams, 300);
+  const debouncedUpdateSearchParams = useRef(debouncedUpdate).current;
 
   useEffect(() => {
     return () => {

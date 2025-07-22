@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-import { GetPlanContextQuery } from '@/common/__generated__/graphql';
+import type { GetPlanContextQuery } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 
 import { getClient } from '../utils/apollo-rsc-client';
@@ -297,7 +297,9 @@ const GET_PLAN_CONTEXT = gql`
 `;
 
 export const getPlan = async (hostname: string, planIdentifier: string, clientUrl: string) =>
-  await getClient().query<GetPlanContextQuery>({
+  await (
+    await getClient()
+  ).query<GetPlanContextQuery>({
     query: GET_PLAN_CONTEXT,
     variables: {
       identifier: planIdentifier,

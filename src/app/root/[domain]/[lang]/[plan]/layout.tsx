@@ -1,12 +1,15 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { captureException } from '@sentry/nextjs';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
-import { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
+import { getRequestOrigin } from '@common/utils/request.server';
+
+import type { WorkflowState } from '@/common/__generated__/graphql';
+import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import { getThemeStaticURL, loadTheme } from '@/common/theme';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { SharedIcons } from '@/components/common/Icon';
@@ -23,15 +26,15 @@ import { tryRequest } from '@/utils/api.utils';
 import { getMetaTitles } from '@/utils/metadata';
 
 type Props = {
-  params: { plan: string; domain: string; lang: string };
+  params: Promise<{ plan: string; domain: string; lang: string }>;
   children: ReactNode;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const headersList = headers();
-  const protocol = headersList.get('x-forwarded-proto');
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+  const origin = await getRequestOrigin();
+  const headersList = await headers();
   const urlHeader = headersList.get('x-url'); // The full user facing URL with path
-  const origin = `${protocol}://${params.domain}`;
   const url = new URL(urlHeader || origin);
 
   if (!urlHeader) {
@@ -106,12 +109,15 @@ async function getPathsData(pathsInstance: string) {
   return undefined;
 }
 
-export default async function PlanLayout({ params, children }: Props) {
+export default async function PlanLayout(props: Props) {
+  const params = await props.params;
+
+  const { children } = props;
+
   const { plan, domain } = params;
-  const headersList = headers();
-  const cookieStore = cookies();
-  const protocol = headersList.get('x-forwarded-proto');
-  const { data: planData } = await tryRequest(getPlan(domain, plan, `${protocol}://${domain}`));
+  const cookieStore = await cookies();
+  const origin = await getRequestOrigin();
+  const { data: planData } = await tryRequest(getPlan(domain, plan, origin));
 
   if (!planData?.plan) {
     notFound();
@@ -138,7 +144,7 @@ export default async function PlanLayout({ params, children }: Props) {
         <PlanProvider plan={planData.plan}>
           <PathsProvider instance={pathsData}>
             <WorkflowProvider
-              initialWorkflow={selectedWorkflow?.value as string | undefined}
+              initialWorkflow={selectedWorkflow?.value as WorkflowState | undefined}
               workflowStates={planData.workflowStates}
             >
               {children}

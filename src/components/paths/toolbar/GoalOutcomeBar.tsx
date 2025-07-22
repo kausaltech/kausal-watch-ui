@@ -1,14 +1,15 @@
 import { NetworkStatus, gql, useQuery, useReactiveVar } from '@apollo/client';
-import _ from 'lodash';
+import { max, min, sortBy } from 'lodash';
 import { useFormatter, useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
-import { Button, CardBody, Spinner, UncontrolledCollapse } from 'reactstrap';
+import { Button, CardBody, UncontrolledCollapse } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
-import {
+import type {
   GetInstanceGoalOutcomeQuery,
   GetInstanceGoalOutcomeQueryVariables,
 } from '@/common/__generated__/paths/graphql';
+import type { TFunction } from '@/common/i18n';
 import Icon from '@/components/common/Icon';
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
@@ -78,7 +79,7 @@ const OutcomeText = styled.div`
   line-height: ${({ theme }) => theme.lineHeightMd};
 `;
 
-const EmissionsBar = styled.div<{ $disabled: boolean }>`
+const EmissionsBar = styled.div<{ $disabled?: boolean }>`
   position: relative;
   margin: 2.5rem auto;
   max-width: 500px;
@@ -86,12 +87,14 @@ const EmissionsBar = styled.div<{ $disabled: boolean }>`
   opacity: ${({ $disabled = false }) => ($disabled ? 0.5 : 1)};
 `;
 
-const BarLabel = styled.div<{
+type BarLabelProps = {
   $side?: 'top' | undefined;
   $negative: boolean;
   $placement: number;
   $small?: boolean;
-}>`
+};
+
+const BarLabel = styled.div<BarLabelProps>`
   font-size: 0.75rem;
   text-align: ${(props) => (props.$small ? 'right' : 'left')};
   white-space: nowrap;
@@ -125,12 +128,14 @@ const Unit = styled.span`
   font-size: 0.75rem;
 `;
 
-const EmissionBar = styled.div<{
+type EmissionBarProps = {
   $barWidth: number;
   $barColor: string;
   $placement: number;
   $zeroOffset: number;
-}>`
+};
+
+const EmissionBar = styled.div<EmissionBarProps>`
   position: absolute;
   top: ${(props) => props.$placement * 7}px;
   right: ${(props) => (props.$barWidth < 0 ? 0 : `${Math.abs(props.$zeroOffset)}%`)};
@@ -148,7 +153,21 @@ const Card = styled.div`
   padding: 1rem;
 `;
 
-const BarWithLabel = (props) => {
+type Formatter = ReturnType<typeof useFormatter>;
+
+type BarWithLabelProps = {
+  label: string;
+  value: number;
+  unit: string;
+  barWidth: number;
+  barColor: string;
+  labelSide?: 'top' | undefined;
+  placement: number;
+  zeroOffset: number;
+  format: Formatter;
+};
+
+function BarWithLabel(props: BarWithLabelProps) {
   const { label, value, unit, barWidth, barColor, labelSide, placement, zeroOffset, format } =
     props;
 
@@ -173,19 +192,19 @@ const BarWithLabel = (props) => {
       </BarLabel>
     </EmissionBar>
   );
-};
+}
 
-const outcomeAsText = (
-  isForecast,
-  scenarioName,
-  goalType,
-  selectedYear,
-  selectedYearDifference,
-  selectedYearValue,
-  nearestGoalYear,
-  nearestGoalValue,
-  t
-) => {
+function outcomeAsText(
+  isForecast: boolean,
+  scenarioName: string,
+  goalType: string,
+  selectedYear: number,
+  selectedYearDifference: string,
+  selectedYearValue: string,
+  nearestGoalYear: number,
+  nearestGoalValue: string,
+  t: TFunction
+) {
   if (isForecast)
     return t.markup('outcome-bar-summary-forecast', {
       scenarioName: scenarioName,
@@ -206,13 +225,23 @@ const outcomeAsText = (
     strong: (chunks) => `<b>${chunks}</b>`,
     interpolation: { escapeValue: false },
   });
-};
+}
 
 type GoalOutcomeBarProps = {
   compact?: boolean;
 };
 
-const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
+type GoalOutcomeBarBar = {
+  label: string;
+  value: number;
+  unit: string;
+  barColor: string;
+  barWidth: number;
+  labelSide?: 'top';
+  placement?: number;
+};
+
+function GoalOutcomeBar(props: GoalOutcomeBarProps) {
   const { compact } = props;
   const t = useTranslations();
   const format = useFormatter();
@@ -259,8 +288,8 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
   // const comparisonGoal = goalValues[goalValues.length - 1];
   const comparisonActual = valuesByYear.get(yearRange[1])!;
 
-  const maxOutcome = _.max([outcomeNow.actual, comparisonActual.actual, comparisonGoal.goal])!;
-  const minOutcome = _.min([outcomeNow.actual, comparisonActual.actual, comparisonGoal.goal])!;
+  const maxOutcome = max([outcomeNow.actual, comparisonActual.actual, comparisonGoal.goal])!;
+  const minOutcome = min([outcomeNow.actual, comparisonActual.actual, comparisonGoal.goal])!;
   const totalRange = minOutcome < 0 ? maxOutcome - minOutcome : maxOutcome;
   const zeroOffset = minOutcome < 0 ? (minOutcome / totalRange) * 100 : 0;
   const outcomeColor =
@@ -271,7 +300,7 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
   const outcomeTotalWidth = (comparisonActual.actual! / totalRange) * 100;
   const outcomeTargetWidth = (comparisonGoal.goal! / totalRange) * 100;
 
-  const bars = _.sortBy(
+  const bars: GoalOutcomeBarBar[] = sortBy(
     [
       {
         label: `${t('emissions')} ${outcomeNow.year}`,
@@ -280,7 +309,7 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
         barColor: theme.graphColors.grey030,
         barWidth: outcomeNowWidth,
         labelSide: undefined,
-      },
+      } satisfies GoalOutcomeBarBar,
       {
         label: `${
           isForecast ? t('scenario-outcome') : t('historical-outcome')
@@ -290,7 +319,7 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
         barColor: outcomeColor,
         barWidth: outcomeTotalWidth,
         labelSide: 'top',
-      },
+      } satisfies GoalOutcomeBarBar,
       {
         label: `${t('target')} ${comparisonGoal.year}`,
         value: comparisonGoal.goal!,
@@ -298,7 +327,7 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
         barColor: theme.graphColors.green050,
         barWidth: outcomeTargetWidth,
         labelSide: undefined,
-      },
+      } satisfies GoalOutcomeBarBar,
     ],
     [(bar) => -bar.value]
   );
@@ -309,24 +338,24 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
   // FIXME: Nasty hack to show 'CO2e' where it might be applicable until
   // the backend gets proper support for unit specifiers.
   if (unit === 't∕(Einw.·a)') {
-    longUnit = t.raw('tco2-e-inhabitant');
+    longUnit = t.raw('tco2-e-inhabitant') as string;
   } else if (unit === 'kt∕a') {
-    longUnit = t.raw('ktco2-e');
+    longUnit = t.raw('ktco2-e') as string;
   }
 
   const verbalizedOutcome = outcomeAsText(
     isForecast,
     activeScenario.name,
-    activeGoal.label,
+    activeGoal.label || '',
     yearRange[1],
     `${format.number(missingFromTarget, {
       maximumSignificantDigits: 2,
     })} ${longUnit}`,
-    `${format.number(comparisonActual.actual, {
+    `${format.number(comparisonActual.actual!, {
       maximumSignificantDigits: 2,
     })} ${longUnit}`,
     comparisonGoal.year,
-    `${format.number(comparisonGoal.goal, {
+    `${format.number(comparisonGoal.goal!, {
       maximumSignificantDigits: 2,
     })} ${longUnit}`,
     t
@@ -355,7 +384,7 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
               <h4>{isForecast ? t('scenario-outcome') : t('historical-outcome')}</h4>
               <OutcomeText dangerouslySetInnerHTML={{ __html: verbalizedOutcome }} />
             </div>
-            <Icon name="angleDown" width="24px" height="24px" />
+            <Icon name="angle-down" width="24px" height="24px" />
           </AccordionHeader>
           <UncontrolledCollapse toggler="#outcome-toggler" defaultOpen>
             <Card>
@@ -380,6 +409,6 @@ const GoalOutcomeBar: React.FC<GoalOutcomeBarProps> = (props) => {
       )}
     </>
   );
-};
+}
 
 export default GoalOutcomeBar;

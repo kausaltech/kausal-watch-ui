@@ -2,9 +2,9 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
 import { trackSearch } from '@/components/MatomoAnalytics';
 
-import { PlanContextFragment } from './__generated__/graphql';
+import type { PlanContextFragment } from './__generated__/graphql';
 
-const SEARCH_QUERY = gql`
+export const SEARCH_QUERY = gql`
   query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean, $clientUrl: String) {
     search(plan: $plan, query: $query, includeRelatedPlans: true, onlyOtherPlans: $onlyOtherPlans) {
       hits {
