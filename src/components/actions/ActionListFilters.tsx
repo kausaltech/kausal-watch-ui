@@ -1,34 +1,35 @@
-import React, { Ref, createRef, useCallback, useMemo, useState } from 'react';
+import type { Ref } from 'react';
+import React, { type JSX, createRef, useCallback, useMemo, useState } from 'react';
 
 import escapeStringRegexp from 'escape-string-regexp';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { createFilter } from 'react-select';
-import { Badge, CloseButton, Col, FormGroup, Input, Row } from 'reactstrap';
+import { Badge as BadgeComponent, CloseButton, Col, FormGroup, Input, Row } from 'reactstrap';
 import { ButtonGroup, Collapse, Button as RButton } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
 
-import {
+import type {
   ActionListFilterFragment,
   ActionListPageFiltersFragment,
-  CategoryTypeSelectWidget,
 } from '@/common/__generated__/graphql';
 import {
-  CategoryHierarchyMember,
-  CategoryTypeHierarchy,
-  constructCatHierarchy,
-  getCategoryString,
-} from '@/common/categories';
+  ActionResponsiblePartyRole,
+  CategoryTypeSelectWidget,
+} from '@/common/__generated__/graphql';
+import type { CategoryHierarchyMember, CategoryTypeHierarchy } from '@/common/categories';
+import { constructCatHierarchy, getCategoryString } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
-import { TFunction } from '@/common/i18n';
+import type { TFunction } from '@/common/i18n';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
-import SelectDropdown, { SelectDropdownOption } from '@/components/common/SelectDropdown';
+import type { SelectDropdownOption } from '@/components/common/SelectDropdown';
+import SelectDropdown from '@/components/common/SelectDropdown';
 import TextInput from '@/components/common/TextInput';
-import {
+import type {
   ActionListAction,
   ActionListActionAttributeTypeFilterBlock,
   ActionListCategory,
@@ -36,7 +37,8 @@ import {
   ActionListOrganization,
   ActionListPrimaryOrg,
 } from '@/components/dashboard/ActionList';
-import { PlanContextType, usePlan } from '@/context/plan';
+import type { PlanContextType } from '@/context/plan';
+import { usePlan } from '@/context/plan';
 
 type MultipleFilterValue = string[];
 type SingleFilterValue = string | undefined;
@@ -102,7 +104,7 @@ const FilterSectionDivider = styled.div`
   border-bottom: 1px solid #333;
 `;
 
-const StyledBadge = styled(Badge)<{ $color?: string }>`
+const StyledBadge = styled(BadgeComponent)<{ $color?: string }>`
   display: inline-flex;
   max-width: 100%;
   white-space: normal;
@@ -284,7 +286,7 @@ function ActionListDropdownInput<Value extends FilterValue>(props: ActionListDro
         return;
       }
     },
-    [id, onChange]
+    [id, onChange, isMulti]
   );
 
   let selectedOption: SelectDropdownOption[] | SelectDropdownOption | null;
@@ -568,7 +570,7 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
     if (!value) return true;
     if (action.primaryOrg?.id === value) return true;
     return action.responsibleParties.some((rp) => {
-      let org = rp.organization as ActionListOrganization;
+      let org: ActionListOrganization | null = rp.organization as ActionListOrganization;
       while (org) {
         if (org.id === value) return true;
         org = org.parent;
@@ -581,7 +583,7 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
     value: string | undefined,
     onChange: FilterChangeCallback<string | undefined>,
     t: TFunction,
-    primaryValue?: string | undefined
+    primaryValue?: string
   ) {
     return (
       <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
@@ -636,13 +638,15 @@ class PrimaryResponsiblePartyFilter extends React.Component<{
 }> {
   id = 'primary_responsible_party';
   useValueFilterId = 'responsible_party';
-  options: ActionListFilterOption[];
+  options: ActionListFilterOption[] = [];
 
   filterAction(value: string | undefined, action: ActionListAction) {
     if (!value) return true;
     return (
       action.primaryOrg?.id === value ||
-      action.responsibleParties.some((rp) => rp.role === 'PRIMARY' && rp.organization.id === value)
+      action.responsibleParties.some(
+        (rp) => rp.role === ActionResponsiblePartyRole.Primary && rp.organization.id === value
+      )
     );
   }
 
@@ -684,6 +688,7 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
   filterByCommonCategory: boolean;
   catById: Map<string, FilterCategory>;
   hasMultipleValues: boolean;
+  depth: number;
   private actionTermContext?: { context: string };
 
   constructor(
@@ -693,12 +698,11 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
   ) {
     super();
     this.ct = config.categoryType!;
-    this.id = getCategoryString(this.ct!.identifier);
+    this.id = getCategoryString(this.ct.identifier);
     this.showAllLabel = config.showAllLabel;
-    this.hasMultipleValues = this.ct!.selectionType === CategoryTypeSelectWidget.Multiple;
+    this.hasMultipleValues = this.ct.selectionType === CategoryTypeSelectWidget.Multiple;
     this.filterByCommonCategory = filterByCommonCategory;
     this.actionTermContext = getActionTermContext(plan);
-    //@ts-ignore
     const style = config.style === 'dropdown' ? 'dropdown' : 'buttons';
     this.style = style;
     this.depth = config.depth ?? (this.style === 'dropdown' ? 2 : 1);
@@ -782,7 +786,7 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
     return this.ct.helpText;
   }
   getShowAllLabel(t: TFunction) {
-    return this.showAllLabel || t('filter-all-categories')!;
+    return this.showAllLabel || t('filter-all-categories');
   }
 }
 
@@ -826,7 +830,7 @@ class AttributeTypeFilter extends DefaultFilter<string | undefined> {
     return this.att.helpText;
   }
   getShowAllLabel(t: TFunction) {
-    return this.showAllLabel || t('filter-all-categories')!;
+    return this.showAllLabel || t('filter-all-categories');
   }
 }
 
@@ -870,7 +874,7 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
     value: string | undefined,
     onChange: FilterChangeCallback<string | undefined>,
     t: TFunction,
-    primaryValue?: string | undefined
+    _primaryValue?: string
   ) {
     return (
       <FilterColumn m={this.sm} md={this.md} lg={this.lg} key={this.id}>
@@ -892,7 +896,9 @@ class ContinuousActionFilter implements ActionListFilter<string | undefined> {
   sm = undefined;
   md = 6;
   lg = 4;
-  constructor(id, label) {
+  label: string;
+
+  constructor(id: string, label: string) {
     this.id = id;
     this.label = label;
   }
@@ -911,11 +917,7 @@ class ContinuousActionFilter implements ActionListFilter<string | undefined> {
   filterAction(value: FilterValue, action: ActionListAction) {
     return action?.scheduleContinuous === !!value;
   }
-  render(
-    value: string | undefined,
-    onChange: FilterChangeCallback<string | undefined>,
-    t: TFunction
-  ) {
+  render(value: string | undefined, onChange: FilterChangeCallback<string | undefined>) {
     return (
       <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
         <FormGroup switch className="mb-4">
@@ -923,8 +925,8 @@ class ContinuousActionFilter implements ActionListFilter<string | undefined> {
             type="switch"
             role="switch"
             id={this.id}
-            checked={value || false} // Assuming the filterState tracks whether checked as true/false
-            onChange={(e) => onChange(this.id, e.target.checked)}
+            checked={value === '1'}
+            onChange={(e) => onChange(this.id, e.target.checked ? '1' : '0')}
           />
           <label htmlFor={this.id}>{this.label}</label>
         </FormGroup>
@@ -955,13 +957,13 @@ const FilterCol = React.memo(function FilterCol({
 
   if (filter.id === 'responsible_party') {
     return (filter as ResponsiblePartyFilter).render(
-      state,
+      state as string | undefined,
       onFilterChange,
       t,
       primaryResponsibleParty
     );
   }
-  // eslint-disable-next-line react/prop-types
+
   return filter.render(state, onFilterChange, t);
 });
 
@@ -1014,13 +1016,16 @@ function ActionListFilters(props: ActionListFiltersProps) {
     [setFilterState, onChange, debouncedFilterChange]
   );
 
-  const deleteFilterValues = (id: string, value: SingleFilterValue) => {
-    const filterVal = filterState[id];
-    if (Array.isArray(filterVal)) {
-      return filterVal.filter((valueId) => value !== valueId);
-    }
-    return undefined;
-  };
+  const deleteFilterValues = useCallback(
+    (id: string, value: SingleFilterValue) => {
+      const filterVal = filterState[id];
+      if (Array.isArray(filterVal)) {
+        return filterVal.filter((valueId) => value !== valueId);
+      }
+      return undefined;
+    },
+    [filterState]
+  );
 
   const onReset = useCallback(
     (id: string, value: SingleFilterValue) => {
@@ -1154,7 +1159,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               label: obj.name,
             })),
             label: t('filter-phase'),
-            helpText: t('filter-phase-help', ''),
+            helpText: t('filter-phase-help') || '',
             showAllLabel: t('filter-all-phases'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.implementationPhase?.id === val) return true;
@@ -1172,7 +1177,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               label: obj.name,
             })),
             label: t('filter-status'),
-            helpText: t('filter-status-help', ''),
+            helpText: t('filter-status-help') || '',
             showAllLabel: t('filter-all-statuses'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.status?.id === val) return true;
@@ -1189,7 +1194,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               label: obj.abbreviation || obj.name,
             })),
             label: t('filter-primary-organization'),
-            helpText: t('filter-primary-organization-help', ''),
+            helpText: t('filter-primary-organization-help') || '',
             showAllLabel: t('filter-all-organizations'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.primaryOrg?.id === val) return true;
@@ -1207,7 +1212,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               label: obj.name,
             })),
             label: t('filter-schedule'),
-            helpText: t('filter-schedule-help', ''),
+            helpText: t('filter-schedule-help') || '',
             showAllLabel: t('filter-all-schedules'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.schedule.some((sch) => sch.id === val)) return true;
@@ -1223,9 +1228,9 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             id: 'plan',
             options: relatedPlans.map((p) => ({ id: p.id, label: p.name })),
             label: t('filter-plan'),
-            helpText: t('filter-plan-help', ''),
+            helpText: t('filter-plan-help') || '',
             showAllLabel: t('filter-all-plans'),
-            filterAction: (val: string, act: ActionListAction) => act.plan.id === val,
+            filterAction: (val: string, act: ActionListAction) => act.plan?.id === val,
           };
           filters.push(new GenericSelectFilter(planOpts));
           break;
@@ -1248,7 +1253,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             label: obj.name,
           })),
           label: t('filter-impact'),
-          helpText: t('filter-impact-help', ''),
+          helpText: t('filter-impact-help') || '',
           showAllLabel: t('filter-all-impacts'),
           filterAction: (val: string, act: ActionListAction) => {
             if (act.impact?.id === val) return true;

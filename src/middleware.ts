@@ -5,7 +5,7 @@ import type { NextAuthRequest } from 'next-auth/lib';
 import createIntlMiddleware from 'next-intl/middleware';
 
 import { HEALTH_CHECK_PUBLIC_PATH } from '@common/constants/routes.mjs';
-import { getDeploymentType, getSpotlightUrl } from '@common/env';
+import { getDeploymentType, getSpotlightUrl, isLocalDev } from '@common/env';
 import { generateCorrelationID, getLogger } from '@common/logging';
 import { LOGGER_SPAN_ID, LOGGER_TRACE_ID } from '@common/logging/init';
 import { LOGGER_CORRELATION_ID } from '@common/logging/logger';
@@ -69,7 +69,7 @@ function getMiddlewareLogger(request: NextAuthRequest, host: string, pathname: s
   return logger;
 }
 
-export default auth(async (request: NextAuthRequest) => {
+const middleware = auth(async (request: NextAuthRequest) => {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
 
@@ -91,6 +91,13 @@ export default auth(async (request: NextAuthRequest) => {
 
   const logger = getMiddlewareLogger(request, host, pathname);
   logger.info({ method: request.method }, `${request.method} ${request.nextUrl.pathname}`);
+
+  if (isLocalDev && pathname === '/.well-known/appspecific/com.chrome.devtools.json') {
+    return NextResponse.json({
+      root: process.env.PWD,
+      uuid: 'b03cc551-04f7-4eb3-bb80-89b81607eafe',
+    });
+  }
 
   // Redirect the root application locally to `sunnydale` tenant
   if (hostname === 'localhost') {
@@ -181,3 +188,5 @@ export default auth(async (request: NextAuthRequest) => {
 
   return rewriteUrl(request, response, hostUrl, rewrittenUrl, parsedPlan.identifier);
 });
+
+export default middleware;

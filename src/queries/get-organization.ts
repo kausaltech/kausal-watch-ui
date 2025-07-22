@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 import {
-  OrganizationDetailsQuery,
-  OrganizationDetailsQueryVariables,
+  type OrganizationDetailsQuery,
+  type OrganizationDetailsQueryVariables,
 } from '@/common/__generated__/graphql';
 
 import { ACTION_TABLE_COLUMN_FRAGMENT } from '../fragments/action-list.fragment';
@@ -13,7 +13,9 @@ export const getOrganizationDetails = async (
   organizationId: string,
   clientUrl: string
 ) =>
-  await getClient().query<OrganizationDetailsQuery, OrganizationDetailsQueryVariables>({
+  await (
+    await getClient()
+  ).query<OrganizationDetailsQuery, OrganizationDetailsQueryVariables>({
     query: GET_ORG_DETAILS,
     variables: {
       plan,

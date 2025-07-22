@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { useTranslations } from 'next-intl';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Switch from '@/components/common/Switch';
@@ -14,7 +13,12 @@ const NormalizerChooser = styled.div`
   padding: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s150};
 `;
 
-const IndicatorNormalizationSelect = (props) => {
+interface IndicatorNormalizationSelectProps {
+  handleChange(...args: unknown[]): unknown;
+  currentValue?: boolean;
+}
+
+const IndicatorNormalizationSelect = (props: IndicatorNormalizationSelectProps) => {
   const { handleChange, currentValue } = props;
   const t = useTranslations();
 
@@ -33,8 +37,3 @@ const IndicatorNormalizationSelect = (props) => {
 };
 
 export default IndicatorNormalizationSelect;
-
-IndicatorNormalizationSelect.propTypes = {
-  handleChange: PropTypes.func.isRequired,
-  currentValue: PropTypes.bool,
-};

@@ -1,9 +1,13 @@
-import { DocumentNode, gql } from '@apollo/client';
+import type { DocumentNode } from '@apollo/client';
+import { gql } from '@apollo/client';
 import dayjs from 'dayjs';
-import { Font, Style } from 'exceljs';
+import type { Font, Style } from 'exceljs';
 
 //import { DimensionalMetricFragment } from 'queries/paths/get-paths-page';
-import { DimensionalMetricFragment, InstanceGoalEntry } from '@/common/__generated__/paths/graphql';
+import type {
+  DimensionalMetricFragment,
+  InstanceGoalEntry,
+} from '@/common/__generated__/paths/graphql';
 import { slugify } from '@/common/utils';
 
 type CatValue = number | null;

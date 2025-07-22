@@ -1,20 +1,19 @@
-import {
+import type {
   ActionDashboardColumnBlock,
   ActionListFilterFragment,
   DashboardActionListQuery,
   Plan,
 } from '@/common/__generated__/graphql';
-import {
+import type {
   CategoryHierarchyMember,
   CategoryMappedAction,
   CategoryTypeHierarchy,
 } from '@/common/categories';
-import { OrgMappedAction, OrganizationHierarchyMember } from '@/common/organizations';
+import type { OrgMappedAction, OrganizationWithHierarchy } from '@/common/organizations';
 
 type OrganizationInput = NonNullable<DashboardActionListQuery['planOrganizations']>[0];
 
-export type ActionListOrganization = OrganizationInput &
-  OrganizationHierarchyMember<OrganizationInput>;
+export type ActionListOrganization = OrganizationWithHierarchy<OrganizationInput>;
 
 type QueryAction = NonNullable<DashboardActionListQuery['planActions']>[0];
 

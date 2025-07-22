@@ -46,10 +46,12 @@ const ActionTabs = styled.div`
   overflow-x: auto;
 `;
 
-const ActionTab = styled.button<{
+type ActionTabProps = {
   $isActive: boolean;
   $isEnabled?: boolean;
-}>`
+};
+
+const ActionTab = styled.button<ActionTabProps>`
   display: inline-flex;
   align-items: flex-start;
   flex-direction: column;
@@ -107,7 +109,7 @@ const actionsWithCategory = (actions: ActionCardFragment[], activeTab: string) =
   return actions.filter((action) => action.categories.findIndex((cat) => cat.id === activeTab));
 };
 
-const getParentCategoryOfLevel = (cat, levelId: string) => {
+const getParentCategoryOfLevel = (cat: Category, levelId: string) => {
   const catParents = getDeepParents(cat);
   return catParents.find((parent) => parent?.level?.id === levelId);
 };

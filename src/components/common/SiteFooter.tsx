@@ -3,10 +3,9 @@ import React from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
-import PropTypes from 'prop-types';
 import SVG from 'react-inlinesvg';
 import { Container, Spinner } from 'reactstrap';
-import styled, { useTheme } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 
 import { Link, NavigationLink } from '@/common/links';
 import { getThemeStaticURL } from '@/common/theme';
@@ -15,7 +14,7 @@ import { usePlan } from '@/context/plan';
 import { useHandleSignOut } from '@/utils/auth.utils';
 
 import Button from './Button';
-import Icon from './Icon';
+import Icon, { type ValidIconName } from './Icon';
 
 const StyledButton = styled(Button)`
   &.btn-link {
@@ -70,7 +69,7 @@ const StyledFooter = styled.footer`
 const Branding = styled.div`
   display: flex;
   flex-direction: ${(props) => {
-    let direction;
+    let direction: 'row' | 'column';
     switch (props.theme.footerLogoPlacement) {
       case 'left':
         direction = 'row';
@@ -92,22 +91,24 @@ const Branding = styled.div`
 `;
 
 const Logo = styled.div`
-  height: calc(${(props) => props.theme.footerLogoSize} * ${(props) => props.theme.spaces.s400});
-  max-width: calc(
-    ${(props) => props.theme.footerLogoSize} * 4 * ${(props) => props.theme.spaces.s300}
-  );
-  margin-right: ${(props) => props.theme.spaces.s200};
-  margin: ${(props) => props.theme.spaces.s150} ${(props) => props.theme.spaces.s200}
-    ${(props) => props.theme.spaces.s150} 0;
+  ${css`
+    height: calc(${(props) => props.theme.footerLogoSize} * ${(props) => props.theme.spaces.s400});
+    max-width: calc(
+      ${(props) => props.theme.footerLogoSize} * 4 * ${(props) => props.theme.spaces.s300}
+    );
+    margin-right: ${(props) => props.theme.spaces.s200};
+    margin: ${(props) => props.theme.spaces.s150} ${(props) => props.theme.spaces.s200}
+      ${(props) => props.theme.spaces.s150} 0;
 
-  svg {
-    height: 100%;
-    max-width: 100%;
-  }
+    svg {
+      height: 100%;
+      max-width: 100%;
+    }
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    margin: 0 auto ${(props) => props.theme.spaces.s200};
-  }
+    @media (max-width: ${(props) => props.theme.breakpointMd}) {
+      margin: 0 auto ${(props) => props.theme.spaces.s200};
+    }
+  `}
 `;
 
 const ServiceTitle = styled.div`
@@ -277,12 +278,10 @@ const BaseColumn = styled.ul`
 
 const BaseItem = styled.li`
   margin: 0 0 ${(props) => props.theme.spaces.s100} ${(props) => props.theme.spaces.s050};
-
   &:before {
-    content: '\\2022';
+    content: '•';
     margin-right: ${(props) => props.theme.spaces.s050};
   }
-
   &:first-child {
     margin-left: 0;
 
@@ -452,18 +451,19 @@ function SiteFooter(props: SiteFooterProps) {
   const isAuthLoading = session.status === 'loading';
   const isAuthenticated = session.status === 'authenticated';
 
-  const OrgLogo = () => {
+  const OrgLogo = (props: Omit<SVG.Props, 'src'>) => {
     return (
       <SVG
         src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
         preserveAspectRatio="xMinYMid meet"
         title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
         style={{ display: 'block' }}
+        {...props}
       />
     );
   };
 
-  function scrollToTop(e) {
+  function scrollToTop(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     window.scrollTo(0, 0);
   }
@@ -595,7 +595,7 @@ function SiteFooter(props: SiteFooterProps) {
                   <NavigationLink slug={page.slug}>
                     {page.icon && (
                       <Icon
-                        name={page.icon}
+                        name={page.icon as ValidIconName}
                         color={theme.footerColor}
                         aria-hidden="true"
                         className="me-1"
@@ -611,7 +611,7 @@ function SiteFooter(props: SiteFooterProps) {
                   disabled={isAuthLoading}
                   color="link"
                   onClick={() =>
-                    isAuthenticated ? handleSignOut() : signIn('watch-oidc-provider')
+                    isAuthenticated ? handleSignOut() : void signIn('watch-oidc-provider')
                   }
                 >
                   {isAuthLoading ? (
@@ -638,13 +638,13 @@ function SiteFooter(props: SiteFooterProps) {
         </UtilitySection>
         <BaseSection>
           <BaseColumn>
-            {copyrightText && (
+            {copyrightText ? (
               <BaseItem>
                 &copy;
                 {copyrightText}
               </BaseItem>
-            )}
-            {creativeCommonsLicense && <BaseItem>{creativeCommonsLicense}</BaseItem>}
+            ) : null}
+            {creativeCommonsLicense ? <BaseItem>{creativeCommonsLicense}</BaseItem> : null}
           </BaseColumn>
           <BaseColumn>
             {additionalLinks &&
@@ -723,20 +723,5 @@ function SiteFooter(props: SiteFooterProps) {
     </StyledFooter>
   );
 }
-
-SiteFooter.propTypes = {
-  siteTitle: PropTypes.string.isRequired,
-  ownerUrl: PropTypes.string.isRequired,
-  ownerName: PropTypes.string.isRequired,
-  creativeCommonsLicense: PropTypes.string.isRequired,
-  copyrightText: PropTypes.string.isRequired,
-  navItems: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  utilityLinks: PropTypes.arrayOf(PropTypes.shape({})),
-  additionalLinks: PropTypes.arrayOf(PropTypes.shape({})),
-  fundingInstruments: PropTypes.arrayOf(PropTypes.shape({})),
-  otherLogos: PropTypes.arrayOf(PropTypes.shape({})),
-  footerStatement: PropTypes.string,
-  ownerLinks: PropTypes.arrayOf(PropTypes.shape({})),
-};
 
 export default SiteFooter;

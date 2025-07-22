@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 
-import { ReadonlyURLSearchParams, useSearchParams } from 'next/navigation';
+import type { ReadonlyURLSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
 
-import {
+import type {
   Category,
   CategoryType,
   CommonCategory,
@@ -17,13 +17,12 @@ import {
   Indicator,
   IndicatorListPage,
   IndicatorListQuery,
+  IndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
 import { getCategoryString } from '@/common/categories';
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
-import ActionListFilters, {
-  ActionListFilterSection,
-  FilterValue,
-} from '@/components/actions/ActionListFilters';
+import type { ActionListFilterSection, FilterValue } from '@/components/actions/ActionListFilters';
+import ActionListFilters from '@/components/actions/ActionListFilters';
 import ContentLoader from '@/components/common/ContentLoader';
 import ErrorMessage from '@/components/common/ErrorMessage';
 
@@ -308,14 +307,14 @@ const filterIndicators = (
   includeRelatedPlans: boolean,
   categoryIdentifier?: string
 ) => {
-  const filterByCategory = (indicator) =>
+  const filterByCategory = (indicator: Indicator) =>
     !categoryIdentifier ||
     !filters[getCategoryString(categoryIdentifier)] ||
     !!indicator.categories.find(
       ({ type, id }) => filters[getCategoryString(type.identifier)] === id
     );
 
-  const filterByCommonCategory = (indicator) => {
+  const filterByCommonCategory = (indicator: Indicator) => {
     const activeFilters = Object.entries(filters).filter(
       ([key, value]) => value !== undefined && value !== null
     );
@@ -334,7 +333,7 @@ const filterIndicators = (
     });
   };
 
-  const filterBySearch = (indicator) =>
+  const filterBySearch = (indicator: Indicator) =>
     !filters['name'] || indicator.name.toLowerCase().includes(filters['name'].toLowerCase());
 
   return indicators.filter((indicator) => {
@@ -372,12 +371,15 @@ const IndicatorList = ({
   const t = useTranslations();
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
-  const { loading, error, data } = useQuery<IndicatorListQuery>(GET_INDICATOR_LIST, {
-    variables: {
-      plan: plan.identifier,
-      relatedPlanIndicators: includeRelatedPlans,
-    },
-  });
+  const { loading, error, data } = useQuery<IndicatorListQuery, IndicatorListQueryVariables>(
+    GET_INDICATOR_LIST,
+    {
+      variables: {
+        plan: plan.identifier,
+        relatedPlanIndicators: includeRelatedPlans ?? false,
+      },
+    }
+  );
 
   const getObjectFromSearchParams = (searchParams: ReadonlyURLSearchParams | null) =>
     searchParams ? Object.fromEntries(searchParams) : {};
@@ -392,21 +394,21 @@ const IndicatorList = ({
     });
   };
 
-  const hasInsights = (data) => {
+  const hasInsights = (data: IndicatorListQuery) => {
     const { plan } = data;
-    return plan.hasIndicatorRelationships === true;
+    return plan?.hasIndicatorRelationships === true;
   };
 
-  const getIndicatorListProps = (data) => {
+  const getIndicatorListProps = (data: IndicatorListQuery) => {
     const { plan, relatedPlanIndicators } = data;
-    const displayMunicipality = plan.features.hasActionPrimaryOrgs === true;
+    const displayMunicipality = plan?.features.hasActionPrimaryOrgs === true;
     const displayNormalizedValues =
       undefined !==
-      plan.indicatorLevels.find(
-        (l) => l.indicator?.common != null && l.indicator.common.normalizations.length > 0
+      plan!.indicatorLevels.find(
+        (l) => l.indicator?.common != null && l.indicator!.common!.normalizations.length > 0
       );
-    const generalContent = plan.generalContent || {};
-    const { indicatorLevels, categoryTypes } = plan;
+    const generalContent = plan?.generalContent || {};
+    const { indicatorLevels } = plan!;
 
     const indicators = indicatorLevels.map((il) => {
       const { indicator, level } = il;
@@ -422,8 +424,8 @@ const IndicatorList = ({
     };
   };
 
-  if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
+  if (loading || !data) return <ContentLoader />;
 
   const indicatorListProps = getIndicatorListProps(data);
 
