@@ -344,9 +344,4 @@ SearchView.getSearchFromQuery = (query) => {
   };
 };
 
-SearchView.propTypes = {
-  search: searchProps.isRequired,
-  onSearchChange: PropTypes.func.isRequired,
-};
-
 export default SearchView;
