@@ -287,7 +287,7 @@ const ResultList = (props) => {
           </Link>
         ) : (
           <Link prefetch={false} href={`/search`} legacyBehavior>
-            <a onClick={closeSearch} data-testId="search-advanced">
+            <a onClick={closeSearch} data-testid="search-advanced">
               {t('search-advanced')} <Icon.ArrowRight />
             </a>
           </Link>

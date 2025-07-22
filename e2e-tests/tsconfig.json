@@ -1,0 +1,21 @@
+{
+  "extends": "../kausal_common/configs/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@common/*": ["../kausal_common/src/*"],
+      "@/*": ["./*"]
+    },
+    "outDir": "tests-out",
+    "noEmit": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": false,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "moduleDetection": "auto",
+    "rewriteRelativeImportExtensions": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["*.ts", "tests/**/*.ts", "common/**/*.ts"],
+  "exclude": ["node_modules", "**/__generated__/**"]
+}

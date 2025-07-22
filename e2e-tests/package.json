@@ -1,0 +1,24 @@
+{
+  "name": "kausal-watch-ui-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for Kausal Watch UI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "AGPL-3.0-or-later",
+  "private": true,
+  "packageManager": "pnpm@10.13.1",
+  "type": "module",
+  "dependencies": {
+    "@apollo/client": "^3.13.8",
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.54.1",
+    "dotenv": "^17.2.0",
+    "playwright": "^1.54.1",
+    "playwright-lighthouse": "^4.0.0",
+    "typescript": "^5.8.3"
+  }
+}

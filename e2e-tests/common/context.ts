@@ -1,20 +1,24 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import * as apolloModule from '@apollo/client';
 import AxeBuilder from '@axe-core/playwright';
-import { Page, expect } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 
 import type {
   PlaywrightGetPlanBasicsQuery,
   PlaywrightGetPlanBasicsQueryVariables,
   PlaywrightGetPlanInfoQuery,
   PlaywrightGetPlanInfoQueryVariables,
-} from '@/common/__generated__/graphql';
-import { apiUrl } from '@/common/environment';
+} from '../__generated__/graphql.ts';
 
-const API_BASE = apiUrl;
+const { ApolloClient, InMemoryCache, gql } = apolloModule.default as typeof apolloModule;
+
+const GRAPHQL_API_URL = process.env.WATCH_BACKEND_URL
+  ? `${process.env.WATCH_BACKEND_URL}/v1/graphql/`
+  : 'https://api.watch.kausal.tech/v1/graphql/';
+const BASE_URL = process.env.TEST_PAGE_BASE_URL || `http://{planId}.localhost:3000`;
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: API_BASE + '/graphql/',
+  uri: GRAPHQL_API_URL,
 });
 
 const GET_PLAN_BASICS = gql`
@@ -240,7 +244,8 @@ export class PlanContext {
   }
 
   async checkMeta(page: Page) {
-    const siteName = page.locator('head meta[property="og:site_name"]');
+    const siteName = page.locator('meta[property="og:site_name"]');
+    await expect(siteName).toBeAttached();
     if (this.plan.parent?.name) {
       await expect(siteName).toHaveAttribute('content', this.plan.parent?.name);
     } else {
@@ -293,7 +298,16 @@ export function getIdentifiersToTest(): string[] {
 }
 
 export function getPageBaseUrlToTest(planId: string): string {
-  let baseUrl = process.env.TEST_PAGE_BASE_URL || `http://{planId}.watch-test.kausal.tech`;
+  let baseUrl = BASE_URL;
   baseUrl = baseUrl.replace('{planId}', planId);
   return baseUrl;
+}
+
+export function displayConfiguration() {
+  const p = (s: string) => (s + ':').padEnd(22);
+
+  console.log(p('GraphQL URL'), GRAPHQL_API_URL);
+  console.log(p('Instances to test'), getIdentifiersToTest().join(', '));
+  console.log(p('Base URL'), BASE_URL);
+  console.log(p('  URL for Sunnydale'), getPageBaseUrlToTest('sunnydale'));
 }
