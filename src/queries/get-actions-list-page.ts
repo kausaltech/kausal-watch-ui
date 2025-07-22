@@ -21,10 +21,9 @@ const GET_INCLUDE_RELATED_ACTIONS = gql`
 `;
 
 export const getIncludeRelatedActions = async (plan: string) =>
-  await getClient().query<
-    GetActionListPageIncludeRelatedQuery,
-    GetActionListPageIncludeRelatedQueryVariables
-  >({
+  await (
+    await getClient()
+  ).query<GetActionListPageIncludeRelatedQuery, GetActionListPageIncludeRelatedQueryVariables>({
     query: GET_INCLUDE_RELATED_ACTIONS,
     variables: { plan },
     fetchPolicy: 'no-cache',
@@ -53,7 +52,9 @@ const GET_ACTIONS_LIST_PAGE = gql`
 `;
 
 export const getActionsListPage = async (plan: string, excludeCategoriesWithoutActions: boolean) =>
-  await getClient().query<GetActionListPageQuery, GetActionListPageQueryVariables>({
+  await (
+    await getClient()
+  ).query<GetActionListPageQuery, GetActionListPageQueryVariables>({
     query: GET_ACTIONS_LIST_PAGE,
     variables: {
       plan,

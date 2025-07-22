@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 import { useTranslations } from 'next-intl';
-import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Collapse, UncontrolledTooltip } from 'reactstrap';
 import styled from 'styled-components';
@@ -141,7 +140,21 @@ const LinkCopyButton = ({ identifier }: { identifier: string }) => {
   );
 };
 
-const AccordionHeader = ({ children, onClick, isOpen, identifier, small = false }) => (
+interface AccordionHeaderProps {
+  children: React.ReactElement<any> | string;
+  isOpen?: boolean;
+  onClick?(...args: unknown[]): unknown;
+  identifier?: string;
+  small?: boolean;
+}
+
+const AccordionHeader = ({
+  children,
+  onClick,
+  isOpen,
+  identifier,
+  small = false,
+}: AccordionHeaderProps) => (
   <Header className={isOpen && 'is-open'} $small={small}>
     <QuestionTrigger
       className="question-trigger"
@@ -157,15 +170,13 @@ const AccordionHeader = ({ children, onClick, isOpen, identifier, small = false 
   </Header>
 );
 
-AccordionHeader.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
-  isOpen: PropTypes.bool,
-  onClick: PropTypes.func,
-  identifier: PropTypes.string,
-  small: PropTypes.bool,
-};
+interface AccordionBodyProps {
+  isOpen?: boolean;
+  identifier?: string;
+  children: React.ReactNode;
+}
 
-const AccordionBody = ({ children, isOpen, identifier }) => (
+const AccordionBody = ({ children, isOpen, identifier }: AccordionBodyProps) => (
   <AccordionContent
     isOpen={isOpen}
     role="region"
@@ -177,13 +188,14 @@ const AccordionBody = ({ children, isOpen, identifier }) => (
   </AccordionContent>
 );
 
-AccordionBody.propTypes = {
-  isOpen: PropTypes.bool,
-  identifier: PropTypes.string,
-  children: PropTypes.node.isRequired,
-};
+interface AccordionItemProps {
+  isOpen?: boolean;
+  onClick?(...args: unknown[]): unknown;
+  identifier?: string;
+  children?: React.ReactNode;
+}
 
-const AccordionItem = ({ children, isOpen, onClick, identifier }) => (
+const AccordionItem = ({ children, isOpen, onClick, identifier }: AccordionItemProps) => (
   <div id={`q${identifier}`}>
     {React.Children.map(children, (child) => {
       if (child.type === AccordionHeader) {
@@ -199,14 +211,12 @@ const AccordionItem = ({ children, isOpen, onClick, identifier }) => (
   </div>
 );
 
-AccordionItem.propTypes = {
-  isOpen: PropTypes.bool,
-  onClick: PropTypes.func,
-  identifier: PropTypes.string,
-  children: PropTypes.node,
-};
+interface AccordionProps {
+  open?: string;
+  children: React.ReactNode;
+}
 
-function Accordion(props) {
+function Accordion(props: AccordionProps) {
   const { open, children } = props;
   const [openItem, setOpenItem] = useState(open);
 
@@ -245,11 +255,6 @@ function Accordion(props) {
     </div>
   );
 }
-
-Accordion.propTypes = {
-  open: PropTypes.string,
-  children: PropTypes.node.isRequired,
-};
 
 Accordion.Item = AccordionItem;
 Accordion.Header = AccordionHeader;

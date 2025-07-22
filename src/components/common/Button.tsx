@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { readableColor, shade, transparentize } from 'polished';
-import { Button as BSButton } from 'reactstrap';
+import { Button as BSButton, type ButtonProps as BSButtonProps } from 'reactstrap';
 import styled from 'styled-components';
 
 const StyledButton = styled(BSButton)`
@@ -142,7 +142,7 @@ const StyledButton = styled(BSButton)`
   }
 `;
 
-interface ButtonProps {
+type ButtonProps = BSButtonProps & {
   /**
    * Button rendered as outline
    */
@@ -181,7 +181,7 @@ interface ButtonProps {
    */
   onClick?: () => void;
   children: React.ReactNode;
-}
+};
 
 const Button = React.forwardRef<typeof StyledButton, ButtonProps>((props, ref) => {
   const { children } = props;

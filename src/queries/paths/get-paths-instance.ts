@@ -1,5 +1,9 @@
 import { gql } from '@apollo/client';
 
+import type {
+  GetInstanceContextQuery,
+  GetInstanceContextQueryVariables,
+} from '@/common/__generated__/paths/graphql';
 import { getClient } from '@/utils/apollo-rsc-client';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 
@@ -81,10 +85,12 @@ export default GET_INSTANCE_CONTEXT;
 const gqlUrl = 'https://api.paths.kausal.dev/v1/graphql/';
 
 export const getPathsInstance = async (pathsInstance: string) =>
-  await getClient().query({
+  await (
+    await getClient()
+  ).query<GetInstanceContextQuery, GetInstanceContextQueryVariables>({
     query: GET_INSTANCE_CONTEXT,
     fetchPolicy: 'no-cache',
-    variables: { path: '', goal: null },
+    variables: {},
     context: {
       uri: gqlUrl,
       headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),

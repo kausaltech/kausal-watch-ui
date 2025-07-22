@@ -4,7 +4,6 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 import { gql, useMutation } from '@apollo/client';
 import { useTranslations } from 'next-intl';
-import PropTypes from 'prop-types';
 import { Controller, useForm } from 'react-hook-form';
 import { Alert, Spinner } from 'reactstrap';
 
@@ -329,22 +328,6 @@ const FeedbackForm = (props: FeedbackFormProps) => {
       )}
     </div>
   );
-};
-
-FeedbackForm.propTypes = {
-  planIdentifier: PropTypes.string.isRequired,
-  actionId: PropTypes.string,
-  categoryId: PropTypes.string,
-  heading: PropTypes.string,
-  description: PropTypes.string,
-  emailVisible: PropTypes.bool,
-  emailRequired: PropTypes.bool,
-  feedbackVisible: PropTypes.bool,
-  feedbackRequired: PropTypes.bool,
-  prompt: PropTypes.string,
-  formContext: PropTypes.string,
-  additionalFields: PropTypes.arrayOf(PropTypes.object),
-  pageId: PropTypes.number,
 };
 
 export default FeedbackForm;

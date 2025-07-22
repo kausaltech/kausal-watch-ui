@@ -1,12 +1,15 @@
 import React from 'react';
 
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { captureException } from '@sentry/nextjs';
-import { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
+import { getRequestOrigin } from '@common/utils/request.server';
+
+import type { WorkflowState } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { getActionImage } from '@/common/images';
 import ActionContent from '@/components/actions/ActionContent';
@@ -15,29 +18,26 @@ import { getActionDetails } from '@/queries/get-action';
 import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
     lang: string;
     plan: string;
     domain: string;
-  };
+  }>;
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   const t = await getTranslations({ locale: params.lang });
 
-  const { id, plan, domain } = params;
+  const { id, plan } = params;
   const decodedId = decodeURIComponent(id);
-  const headersList = headers();
-  const cookiesList = cookies();
-  const protocol = headersList.get('x-forwarded-proto');
+  const origin = await getRequestOrigin();
+  const cookiesList = await cookies();
   const workflow = cookiesList.get(SELECTED_WORKFLOW_COOKIE_KEY);
 
   const { data } = await tryRequest(
-    getActionDetails(plan, decodedId, `${protocol}://${domain}`, workflow?.value)
+    getActionDetails(plan, decodedId, origin, workflow?.value as WorkflowState | undefined)
   );
 
   if (!data?.action) {
@@ -63,16 +63,20 @@ export async function generateMetadata(
   };
 }
 
-export default async function ActionPage({ params }: Props) {
-  const { id, plan, domain } = params;
-  const headersList = headers();
-  const cookiesList = cookies();
-  const protocol = headersList.get('x-forwarded-proto');
+export default async function ActionPage(props: Props) {
+  const params = await props.params;
+  const { id, plan } = params;
+  const cookiesList = await cookies();
   const workflow = cookiesList.get(SELECTED_WORKFLOW_COOKIE_KEY);
   const decodedId = decodeURIComponent(id);
 
   const { data, error } = await tryRequest(
-    getActionDetails(plan, decodedId, `${protocol}://${domain}`, workflow?.value)
+    getActionDetails(
+      plan,
+      decodedId,
+      await getRequestOrigin(),
+      workflow?.value as WorkflowState | undefined
+    )
   );
 
   if (error || !data?.action || !data.plan) {

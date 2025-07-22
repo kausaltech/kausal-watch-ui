@@ -3,10 +3,10 @@ import type { Metadata } from 'next';
 import UnpublishedPlan from '@/components/plans/UnpublishedPlan';
 
 type Props = {
-  searchParams: {
+  searchParams: Promise<{
     message: string;
     loginEnabled: string;
-  };
+  }>;
 };
 
 export const metadata: Metadata = {
@@ -14,7 +14,8 @@ export const metadata: Metadata = {
   robots: 'noindex',
 };
 
-export default function UnpublishedPage({ searchParams }: Props) {
+export default async function UnpublishedPage(props: Props) {
+  const searchParams = await props.searchParams;
   const loginEnabled = searchParams.loginEnabled === 'true';
   const message = searchParams.message;
   return <UnpublishedPlan message={message} loginEnabled={loginEnabled} />;

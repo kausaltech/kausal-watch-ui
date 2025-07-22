@@ -2,7 +2,6 @@ import React from 'react';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -65,7 +64,14 @@ type Props = {
   imageCredit?: string;
 };
 
-const ContentPageHeaderBlock = (props: Props) => {
+interface ContentPageHeaderBlockProps {
+  title: string;
+  lead?: string;
+  headerImage?: string;
+  imageAlign?: string;
+}
+
+const ContentPageHeaderBlock = (props: ContentPageHeaderBlockProps) => {
   const {
     title,
     lead = null,
@@ -99,13 +105,6 @@ const ContentPageHeaderBlock = (props: Props) => {
       </HeaderBg>
     </>
   );
-};
-
-ContentPageHeaderBlock.propTypes = {
-  title: PropTypes.string.isRequired,
-  lead: PropTypes.string,
-  headerImage: PropTypes.string,
-  imageAlign: PropTypes.string,
 };
 
 export default ContentPageHeaderBlock;

@@ -1,18 +1,20 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 import { useTheme } from 'styled-components';
 
-import { CommonContentBlockProps } from '@/common/blocks.types';
+import type {
+  GetActionListForGraphsQuery,
+  GetActionListForGraphsQueryVariables,
+} from '@/common/__generated__/graphql';
+import type { CommonContentBlockProps } from '@/common/blocks.types';
 import ContentLoader from '@/components/common/ContentLoader';
 import ErrorMessage from '@/components/common/ErrorMessage';
-import ActionStatusGraphs, {
-  ActionsStatusGraphsProps,
-} from '@/components/dashboard/ActionStatusGraphs';
-import PlanContext, { usePlan } from '@/context/plan';
+import type { ActionsStatusGraphsProps } from '@/components/dashboard/ActionStatusGraphs';
+import ActionStatusGraphs from '@/components/dashboard/ActionStatusGraphs';
+import { usePlan } from '@/context/plan';
 
 const GET_ACTION_LIST_FOR_GRAPHS = gql`
   query GetActionListForGraphs($plan: ID!, $categoryId: ID) {
@@ -49,15 +51,18 @@ const ActionStatusGraphsBlock = (props: Props) => {
   const showUpdateStatus =
     theme.settings.dashboard?.showActionUpdateStatus === false ? false : true;
 
-  const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_GRAPHS, {
+  const { loading, error, data } = useQuery<
+    GetActionListForGraphsQuery,
+    GetActionListForGraphsQueryVariables
+  >(GET_ACTION_LIST_FOR_GRAPHS, {
     variables: {
       plan: plan.identifier,
       categoryId,
     },
   });
 
-  if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
+  if (loading || !data) return <ContentLoader />;
   const { planActions } = data;
   if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;

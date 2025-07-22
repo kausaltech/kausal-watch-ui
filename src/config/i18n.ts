@@ -55,8 +55,12 @@ async function importLocales(locale: string) {
   return translations;
 }
 
-export default getRequestConfig(async ({ locale }) => {
+export default getRequestConfig(async ({ requestLocale }) => {
+  const locale = (await requestLocale) ?? 'en';
   const messages = await importLocales(locale);
 
-  return { messages };
+  return {
+    locale,
+    messages,
+  };
 });

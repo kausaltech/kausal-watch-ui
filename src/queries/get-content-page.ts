@@ -1,6 +1,9 @@
 import { gql } from '@apollo/client';
 
-import { GetContentPageQuery, GetContentPageQueryVariables } from '@/common/__generated__/graphql';
+import type {
+  GetContentPageQuery,
+  GetContentPageQueryVariables,
+} from '@/common/__generated__/graphql';
 import images from '@/common/images';
 import { ALL_ACTION_LIST_FILTERS } from '@/fragments/action-list.fragment';
 
@@ -10,7 +13,9 @@ import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
 
 export const getContentPage = async (plan: string, path: string) =>
-  await getClient().query<GetContentPageQuery, GetContentPageQueryVariables>({
+  await (
+    await getClient()
+  ).query<GetContentPageQuery, GetContentPageQueryVariables>({
     query: GET_CONTENT_PAGE,
     variables: {
       plan,

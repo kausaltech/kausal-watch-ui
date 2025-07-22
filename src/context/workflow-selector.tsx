@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import { createContext, useContext } from 'react';
 
+import type { GetPlanContextQuery, WorkflowState } from '@/common/__generated__/graphql';
 import { useCookie } from '@/common/hooks/use-cookie';
 import { SELECTED_WORKFLOW_COOKIE_KEY, WORKFLOW_DEFAULT } from '@/constants/workflow';
 
 interface WorkflowSelectorValue {
-  workflow: string | null;
-  setWorkflow: React.Dispatch<React.SetStateAction<string | null>>;
-  workflowStates: any; //  TODO
+  workflow: WorkflowState | null;
+  setWorkflow: React.Dispatch<React.SetStateAction<WorkflowState | null>>;
+  workflowStates: GetPlanContextQuery['workflowStates'];
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -17,8 +18,8 @@ interface WorkflowSelectorValue {
 const WorkflowSelectorContext = createContext<WorkflowSelectorValue | undefined>(undefined);
 
 type Props = {
-  initialWorkflow?: string;
-  workflowStates: any; // TODO
+  initialWorkflow?: WorkflowState;
+  workflowStates: GetPlanContextQuery['workflowStates'];
 } & React.PropsWithChildren;
 
 export function WorkflowProvider({
@@ -26,7 +27,10 @@ export function WorkflowProvider({
   initialWorkflow = WORKFLOW_DEFAULT,
   workflowStates,
 }: Props) {
-  const [workflow, setWorkflow] = useCookie<string>(SELECTED_WORKFLOW_COOKIE_KEY, initialWorkflow);
+  const [workflow, setWorkflow] = useCookie<WorkflowState>(
+    SELECTED_WORKFLOW_COOKIE_KEY,
+    initialWorkflow
+  );
   const [loading, setLoading] = useState(false);
 
   return (
