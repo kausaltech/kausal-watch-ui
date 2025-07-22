@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@apollo/client':
         specifier: ^3.13.8
-        version: 3.13.8(graphql@16.11.0)
+        version: 3.13.8(graphql@16.11.0)(react@19.1.0)
       '@axe-core/playwright':
         specifier: ^4.10.2
         version: 4.10.2(playwright-core@1.54.1)
@@ -26,6 +26,9 @@ importers:
       playwright-lighthouse:
         specifier: ^4.0.0
         version: 4.0.0(lighthouse@12.8.0)(playwright-core@1.54.1)
+      react:
+        specifier: ^19.1.0
+        version: 19.1.0
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -823,6 +826,10 @@ packages:
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
+  react@19.1.0:
+    resolution: {integrity: sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==}
+    engines: {node: '>=0.10.0'}
+
   rehackt@0.1.0:
     resolution: {integrity: sha512-7kRDOuLHB87D/JESKxQoRwv4DzbIdwkAGQ7p6QKGdVlY1IZheUnVhlk/4UZlNUVxdAXpyxikE3URsG067ybVzw==}
     peerDependencies:
@@ -1024,7 +1031,7 @@ packages:
 
 snapshots:
 
-  '@apollo/client@3.13.8(graphql@16.11.0)':
+  '@apollo/client@3.13.8(graphql@16.11.0)(react@19.1.0)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.11.0)
       '@wry/caches': 1.0.1
@@ -1035,11 +1042,13 @@ snapshots:
       hoist-non-react-statics: 3.3.2
       optimism: 0.18.1
       prop-types: 15.8.1
-      rehackt: 0.1.0
+      rehackt: 0.1.0(react@19.1.0)
       symbol-observable: 4.0.0
       ts-invariant: 0.10.3
       tslib: 2.8.1
       zen-observable-ts: 1.2.5
+    optionalDependencies:
+      react: 19.1.0
     transitivePeerDependencies:
       - '@types/react'
 
@@ -1943,7 +1952,11 @@ snapshots:
 
   react-is@16.13.1: {}
 
-  rehackt@0.1.0: {}
+  react@19.1.0: {}
+
+  rehackt@0.1.0(react@19.1.0):
+    optionalDependencies:
+      react: 19.1.0
 
   require-directory@2.1.1: {}
 
