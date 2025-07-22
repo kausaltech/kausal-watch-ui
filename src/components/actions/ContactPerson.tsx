@@ -5,10 +5,10 @@ import { useTranslations } from 'next-intl';
 import { Button, Collapse } from 'reactstrap';
 import styled, { css, useTheme } from 'styled-components';
 
-import type {
-  ContactDetailsQuery,
-  ContactDetailsQueryVariables,
-  PlanContextFragment,
+import {
+  type ContactDetailsQuery,
+  type ContactDetailsQueryVariables,
+  type PlanContextFragment,
   PlanFeaturesContactPersonsPublicData,
 } from '@/common/__generated__/graphql';
 import { getThemeStaticURL } from '@/common/theme';
