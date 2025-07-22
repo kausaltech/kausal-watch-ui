@@ -8,6 +8,17 @@ import apolloConfig from './apollo.config.js';
 const tsoConfig: TypeScriptDocumentsPluginConfig & TypeScriptPluginConfig = {
   arrayInputCoercion: false,
   mergeFragmentTypes: true,
+  onlyOperationTypes: true,
+  preResolveTypes: true,
+  avoidOptionals: true,
+  nonOptionalTypename: true,
+  scalars: {
+    UUID: 'string',
+    RichText: 'string',
+    PositiveInt: 'number',
+    DateTime: 'string',
+    JSONString: 'string',
+  },
 };
 
 const watchConfigDocs = [
@@ -51,6 +62,16 @@ const config: CodegenConfig = {
       documents: pathsConfigDocs,
       plugins: ['typescript', 'typescript-operations'],
       config: tsoConfig,
+    },
+    'e2e-tests/__generated__/graphql.ts': {
+      schema: apolloConfig.client.service.url,
+      plugins: ['typescript', 'typescript-operations'],
+      config: {
+        ...tsoConfig,
+        onlyOperationTypes: true,
+        useTypeImports: true,
+      } satisfies TypeScriptDocumentsPluginConfig,
+      documents: ['./e2e-tests/**/*.ts'],
     },
   },
 };

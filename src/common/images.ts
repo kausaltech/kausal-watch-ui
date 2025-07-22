@@ -2,13 +2,15 @@ import { gql } from '@apollo/client';
 
 import type { MultiUseImageFragmentFragment } from './__generated__/graphql';
 
-export const getBgImageAlignment = (image: {
-  focalPointX: number | null;
-  focalPointY: number | null;
-  width: number;
-  height: number;
-}) => {
-  if (!image.focalPointX || !image.focalPointY) return 'center center';
+export const getBgImageAlignment = (
+  image: {
+    focalPointX: number | null;
+    focalPointY: number | null;
+    width: number;
+    height: number;
+  } | null
+) => {
+  if (!image || !image.focalPointX || !image.focalPointY) return 'center center';
   const focalCentre = [image.focalPointX, image.focalPointY];
   const imageCentre = [image.width / 2, image.height / 2];
   const imageAlignment = ['center', 'center'];
