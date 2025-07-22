@@ -1,14 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useQuery } from '@apollo/client';
 import { concat } from 'lodash';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
-import { CommonContentBlockProps } from '@/common/blocks.types';
+import type { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
+import type { CommonContentBlockProps } from '@/common/blocks.types';
 import CategoryActionList from '@/components/actions/CategoryActionList';
 import CategoryCardContent from '@/components/common/CategoryCardContent';
 import ContentLoader from '@/components/common/ContentLoader';

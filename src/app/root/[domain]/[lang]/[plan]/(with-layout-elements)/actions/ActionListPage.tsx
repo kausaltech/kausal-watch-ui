@@ -4,9 +4,9 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
-import { GetActionListPageQuery } from '@/common/__generated__/graphql';
+import type { GetActionListPageQuery } from '@/common/__generated__/graphql';
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
-import { FilterValue, Filters } from '@/components/actions/ActionListFilters';
+import type { FilterValue, Filters } from '@/components/actions/ActionListFilters';
 import ActionList from '@/components/dashboard/ActionList';
 
 type Props = {
@@ -42,7 +42,6 @@ export function ActionListPage({ actionListPage }: Props) {
 
         return newFilters;
       });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [setFilters, updateSearchParams]
   );

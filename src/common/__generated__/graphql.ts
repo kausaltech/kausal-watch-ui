@@ -2835,7 +2835,7 @@ export type IndicatorGoal = {
   date?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   indicator: Indicator;
-  normalizedValues?: Maybe<Array<Maybe<NormalizedValue>>>;
+  normalizedValues: Array<NormalizedValue>;
   scenario?: Maybe<Scenario>;
   value: Scalars['Float']['output'];
 };
@@ -3039,7 +3039,7 @@ export type IndicatorValue = {
   date?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   indicator: Indicator;
-  normalizedValues?: Maybe<Array<Maybe<NormalizedValue>>>;
+  normalizedValues: Array<NormalizedValue>;
   value: Scalars['Float']['output'];
 };
 
@@ -3177,12 +3177,12 @@ export type Organization = {
   /** Number of actions this organization is responsible for */
   actionCount: Scalars['Int']['output'];
   adminButtons: Array<AdminButton>;
-  ancestors?: Maybe<Array<Maybe<Organization>>>;
+  ancestors: Array<Organization>;
   /** An organization category, e.g. committee */
   classification?: Maybe<OrganizationClass>;
   /** Number of contact persons that are associated with this organization */
   contactPersonCount: Scalars['Int']['output'];
-  descendants?: Maybe<Array<Maybe<Organization>>>;
+  descendants: Array<Organization>;
   description: Scalars['String']['output'];
   /** A distinct name for this organization (generated automatically) */
   distinctName?: Maybe<Scalars['String']['output']>;
@@ -3555,7 +3555,7 @@ export type Plan = PlanInterface & {
   actionsLocked: Scalars['Boolean']['output'];
   additionalLinks?: Maybe<AdditionalLinks>;
   adminUrl?: Maybe<Scalars['String']['output']>;
-  allRelatedPlans: Array<Maybe<Plan>>;
+  allRelatedPlans: Array<Plan>;
   categoryType?: Maybe<CategoryType>;
   categoryTypes: Array<CategoryType>;
   children: Array<Plan>;
@@ -3571,15 +3571,15 @@ export type Plan = PlanInterface & {
   footer?: Maybe<Footer>;
   generalContent: SiteGeneralContent;
   hasIndicatorRelationships?: Maybe<Scalars['Boolean']['output']>;
-  hideActionIdentifiers?: Maybe<Scalars['Boolean']['output']>;
-  hideActionLeadParagraph?: Maybe<Scalars['Boolean']['output']>;
-  hideActionOfficialName?: Maybe<Scalars['Boolean']['output']>;
+  hideActionIdentifiers: Scalars['Boolean']['output'];
+  hideActionLeadParagraph: Scalars['Boolean']['output'];
+  hideActionOfficialName: Scalars['Boolean']['output'];
   id: Scalars['ID']['output'];
   /** A unique identifier for the plan used internally to distinguish between plans. This becomes part of the test site URL: https://[identifier].watch-test.kausal.tech. Use lowercase letters and dashes. */
   identifier: Scalars['String']['output'];
   image?: Maybe<Image>;
-  impactGroups: Array<Maybe<ImpactGroup>>;
-  indicatorLevels: Array<Maybe<IndicatorLevel>>;
+  impactGroups: Array<ImpactGroup>;
+  indicatorLevels: Array<IndicatorLevel>;
   /** UUID of the corresponding Kausal Paths instance for Kausal Paths integration */
   kausalPathsInstanceUuid: Scalars['String']['output'];
   lastActionIdentifier?: Maybe<Scalars['ID']['output']>;
@@ -3591,12 +3591,12 @@ export type Plan = PlanInterface & {
   /** The main organization for the plan */
   organization: Organization;
   otherLanguages: Array<Scalars['String']['output']>;
-  pages?: Maybe<Array<Maybe<PageInterface>>>;
+  pages?: Maybe<Array<PageInterface>>;
   parent?: Maybe<Plan>;
   /** Used for primary navigation and grouping of actions */
   primaryActionClassification?: Maybe<CategoryType>;
   primaryLanguage: Scalars['String']['output'];
-  primaryOrgs: Array<Maybe<Organization>>;
+  primaryOrgs: Array<Organization>;
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
   relatedPlans: Array<Plan>;
   reportTypes: Array<ReportType>;
@@ -3757,7 +3757,7 @@ export type PlanFeatures = {
   contactPersonsShowPicture: Scalars['Boolean']['output'];
   /** Set to enable comparing indicators between organizations */
   enableIndicatorComparison: Scalars['Boolean']['output'];
-  enableModerationWorkflow?: Maybe<Scalars['Boolean']['output']>;
+  enableModerationWorkflow: Scalars['Boolean']['output'];
   /** Enable site-wide search functionality */
   enableSearch: Scalars['Boolean']['output'];
   /** Set if there are separate contact persons with publishing rights and others who can only suggest changes */
@@ -4080,13 +4080,13 @@ export type Query = {
   plan?: Maybe<Plan>;
   planActions?: Maybe<Array<Action>>;
   planCategories?: Maybe<Array<Maybe<Category>>>;
-  planIndicators?: Maybe<Array<Maybe<Indicator>>>;
-  planOrganizations?: Maybe<Array<Organization>>;
+  planIndicators?: Maybe<Array<Indicator>>;
+  planOrganizations: Array<Organization>;
   planPage?: Maybe<PageInterface>;
   plansForHostname?: Maybe<Array<Maybe<PlanInterface>>>;
   relatedPlanActions?: Maybe<Array<Action>>;
   relatedPlanIndicators?: Maybe<Array<Indicator>>;
-  search?: Maybe<SearchResults>;
+  search: SearchResults;
   workflowStates?: Maybe<Array<Maybe<WorkflowStateDescription>>>;
 };
 
@@ -4442,12 +4442,12 @@ export type ScheduleContinuousColumnBlock = DashboardColumnInterface & FieldBloc
 export type SearchHit = {
   __typename?: 'SearchHit';
   highlight?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
+  id: Scalars['ID']['output'];
   object?: Maybe<SearchHitObject>;
   page?: Maybe<PageInterface>;
-  plan?: Maybe<Plan>;
-  relevance?: Maybe<Scalars['Float']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
+  plan: Plan;
+  relevance: Scalars['Float']['output'];
+  title: Scalars['String']['output'];
   url?: Maybe<Scalars['String']['output']>;
 };
 
@@ -4466,7 +4466,7 @@ export enum SearchOperatorEnum {
 
 export type SearchResults = {
   __typename?: 'SearchResults';
-  hits?: Maybe<Array<Maybe<SearchHit>>>;
+  hits: Array<SearchHit>;
 };
 
 /** An enumeration. */
@@ -4928,7 +4928,7 @@ export type WorkflowInfoNode = {
   __typename?: 'WorkflowInfoNode';
   /** The internal Wagtail workflow state of the action. The current action data returned does not necessarily match this workflowstate. */
   currentWorkflowState?: Maybe<WorkflowStateInfo>;
-  hasUnpublishedChanges?: Maybe<Scalars['Boolean']['output']>;
+  hasUnpublishedChanges: Scalars['Boolean']['output'];
   latestRevision?: Maybe<Revision>;
   /** The actual version of the action returned when fulfilling this query, based on both the requested workflow directive value used when querying an action, and the available versions of the action itself. */
   matchingVersion?: Maybe<WorkflowStateDescription>;
@@ -4947,14 +4947,14 @@ export enum WorkflowState {
 export type WorkflowStateDescription = {
   __typename?: 'WorkflowStateDescription';
   description?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
 };
 
 /** Tracks the status of a started Workflow on an object. */
 export type WorkflowStateInfo = {
   __typename?: 'WorkflowStateInfo';
   status: WorkflowStateStatus;
-  statusMessage?: Maybe<Scalars['String']['output']>;
+  statusMessage: Scalars['String']['output'];
 };
 
 /** An enumeration. */
@@ -4978,14 +4978,14 @@ export type GetSitemapQuery = (
   { planIndicators?: Array<(
     { id: string }
     & { __typename?: 'Indicator' }
-  ) | null> | null, plan?: (
+  )> | null, plan?: (
     { primaryLanguage: string, otherLanguages: Array<string>, actions: Array<(
       { identifier: string }
       & { __typename?: 'Action' }
     )>, pages?: Array<(
       { urlPath: string }
       & { __typename?: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-    ) | null> | null }
+    )> | null }
     & { __typename?: 'Plan' }
   ) | null }
   & { __typename?: 'Query' }
@@ -5020,9 +5020,9 @@ export type SearchQueryQueryVariables = Exact<{
 
 
 export type SearchQueryQuery = (
-  { search?: (
-    { hits?: Array<(
-      { title?: string | null, url?: string | null, highlight?: string | null, plan?: (
+  { search: (
+    { hits: Array<(
+      { title: string, url?: string | null, highlight?: string | null, plan: (
         { identifier: string, name: string, shortName?: string | null, image?: (
           { rendition?: (
             { src: string }
@@ -5034,7 +5034,7 @@ export type SearchQueryQuery = (
           & { __typename?: 'Organization' }
         ) }
         & { __typename?: 'Plan' }
-      ) | null, object?: (
+      ), object?: (
         { identifier: string, primaryOrg?: (
           { name: string, logo?: (
             { rendition?: (
@@ -5063,9 +5063,9 @@ export type SearchQueryQuery = (
         & { __typename?: 'CategoryPage' }
       ) | null }
       & { __typename?: 'SearchHit' }
-    ) | null> | null }
+    )> }
     & { __typename?: 'SearchResults' }
-  ) | null }
+  ) }
   & { __typename?: 'Query' }
 );
 
@@ -5452,7 +5452,7 @@ export type GetActionListQuery = (
       ) }
       & { __typename?: 'Action' }
     ) | null, plan: (
-      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -5474,13 +5474,13 @@ export type ContactDetailsQueryVariables = Exact<{
 export type ContactDetailsQuery = (
   { person?: (
     { email: string, organization: (
-      { id: string, name: string, ancestors?: Array<(
-        { name: string, classification?: (
+      { id: string, name: string, ancestors: Array<(
+        { id: string, name: string, classification?: (
           { id: string, name: string }
           & { __typename?: 'OrganizationClass' }
         ) | null }
         & { __typename?: 'Organization' }
-      ) | null> | null }
+      )> }
       & { __typename?: 'Organization' }
     ) }
     & { __typename?: 'Person' }
@@ -5518,25 +5518,6 @@ export type ActionDependenciesQuery = (
     & { __typename?: 'Action' }
   ) | null }
   & { __typename?: 'Query' }
-);
-
-export type CreateUserFeedbackMutationVariables = Exact<{
-  input: UserFeedbackMutationInput;
-}>;
-
-
-export type CreateUserFeedbackMutation = (
-  { createUserFeedback?: (
-    { feedback?: (
-      { createdAt: any }
-      & { __typename?: 'UserFeedbackNode' }
-    ) | null, errors: Array<(
-      { field: string, messages: Array<string> }
-      & { __typename?: 'ErrorType' }
-    )> }
-    & { __typename?: 'UserFeedbackMutationPayload' }
-  ) | null }
-  & { __typename?: 'Mutation' }
 );
 
 export type GetActionListForBlockQueryVariables = Exact<{
@@ -5790,7 +5771,7 @@ export type GetActionListForBlockQuery = (
       ) }
       & { __typename?: 'Action' }
     ) | null, plan: (
-      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -5924,7 +5905,7 @@ export type PlanFragmentFragment = (
   )>, primaryOrgs: Array<(
     { id: string, abbreviation: string, name: string }
     & { __typename?: 'Organization' }
-  ) | null> }
+  )> }
   & { __typename?: 'Plan' }
 );
 
@@ -5948,7 +5929,7 @@ export type ActionFragmentFragment = (
     { identifier: ActionTimelinessIdentifier }
     & { __typename?: 'ActionTimeliness' }
   ), plan?: (
-    { id: string, shortName?: string | null, name: string, shortIdentifier?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+    { id: string, shortName?: string | null, name: string, shortIdentifier?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
       { rendition?: (
         { src: string }
         & { __typename?: 'ImageRendition' }
@@ -6083,7 +6064,7 @@ export type DashboardActionListQuery = (
     )>, primaryOrgs: Array<(
       { id: string, abbreviation: string, name: string }
       & { __typename?: 'Organization' }
-    ) | null> }
+    )> }
     & { __typename?: 'Plan' }
   ) | null, planActions?: Array<(
     { id: string, identifier: string, name: string, viewUrl?: string, color?: string | null, hasDependencyRelationships?: boolean | null, manualStatusReason?: string | null, completion?: number | null, officialName?: string | null, updatedAt: any, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, order: number, indicatorsCount?: number | null, hasIndicatorsWithGoals?: boolean | null, status?: (
@@ -6105,7 +6086,7 @@ export type DashboardActionListQuery = (
       { identifier: ActionTimelinessIdentifier }
       & { __typename?: 'ActionTimeliness' }
     ), plan?: (
-      { id: string, shortName?: string | null, name: string, shortIdentifier?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+      { id: string, shortName?: string | null, name: string, shortIdentifier?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -6210,7 +6191,7 @@ export type DashboardActionListQuery = (
       { identifier: ActionTimelinessIdentifier }
       & { __typename?: 'ActionTimeliness' }
     ), plan?: (
-      { id: string, shortName?: string | null, name: string, shortIdentifier?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+      { id: string, shortName?: string | null, name: string, shortIdentifier?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -6313,7 +6294,7 @@ export type DashboardActionListQuery = (
       & { __typename: 'FieldColumnBlock' }
     )> | null }
     & { __typename: 'ActionListPage' }
-  ) | null, planOrganizations?: Array<(
+  ) | null, planOrganizations: Array<(
     { id: string, abbreviation: string, name: string, contactPersonCount: number, actionCount: number, classification?: (
       { name: string }
       & { __typename?: 'OrganizationClass' }
@@ -6322,7 +6303,7 @@ export type DashboardActionListQuery = (
       & { __typename?: 'Organization' }
     ) | null }
     & { __typename?: 'Organization' }
-  )> | null }
+  )> }
   & { __typename?: 'Query' }
 );
 
@@ -6450,7 +6431,7 @@ export type IndicatorHightlightListQuery = (
       & { __typename?: 'IndicatorValue' }
     ) | null }
     & { __typename?: 'Indicator' }
-  ) | null> | null }
+  )> | null }
   & { __typename?: 'Query' }
 );
 
@@ -6495,10 +6476,10 @@ export type IndicatorListQuery = (
           { id: string }
           & { __typename?: 'IndicatorGraph' }
         ) | null, latestValue?: (
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null }
+          )> }
           & { __typename?: 'IndicatorValue' }
         ) | null, unit: (
           { shortName?: string | null }
@@ -6507,7 +6488,7 @@ export type IndicatorListQuery = (
         & { __typename?: 'Indicator' }
       ) }
       & { __typename?: 'IndicatorLevel' }
-    ) | null>, categoryTypes: Array<(
+    )>, categoryTypes: Array<(
       { name: string, id: string, identifier: string, categories: Array<(
         { id: string, identifier: string, order: number, name: string, parent?: (
           { id: string }
@@ -6548,7 +6529,7 @@ export type IndicatorListQuery = (
       & { __typename?: 'CommonIndicator' }
     ) | null }
     & { __typename?: 'Indicator' }
-  ) | null> | null, relatedPlanIndicators?: Array<(
+  )> | null, relatedPlanIndicators?: Array<(
     { id: string, name: string, level?: string | null, timeResolution: IndicatorTimeResolution, organization: (
       { id: string, name: string }
       & { __typename?: 'Organization' }
@@ -6568,10 +6549,10 @@ export type IndicatorListQuery = (
       { id: string }
       & { __typename?: 'IndicatorGraph' }
     ) | null, latestValue?: (
-      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+      { id: string, date?: string | null, value: number, normalizedValues: Array<(
         { normalizerId?: string | null, value?: number | null }
         & { __typename?: 'NormalizedValue' }
-      ) | null> | null }
+      )> }
       & { __typename?: 'IndicatorValue' }
     ) | null, unit: (
       { shortName?: string | null }
@@ -6618,10 +6599,10 @@ export type IndicatorGraphDataQuery = (
       { id: string, name: string }
       & { __typename?: 'Quantity' }
     ) | null, values?: Array<(
-      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+      { id: string, date?: string | null, value: number, normalizedValues: Array<(
         { normalizerId?: string | null, value?: number | null }
         & { __typename?: 'NormalizedValue' }
-      ) | null> | null, categories: Array<(
+      )>, categories: Array<(
         { id: string }
         & { __typename?: 'DimensionCategory' }
       )> }
@@ -6636,10 +6617,10 @@ export type IndicatorGraphDataQuery = (
       ) }
       & { __typename?: 'IndicatorDimension' }
     )>, goals?: Array<(
-      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+      { id: string, date?: string | null, value: number, normalizedValues: Array<(
         { normalizerId?: string | null, value?: number | null }
         & { __typename?: 'NormalizedValue' }
-      ) | null> | null, scenario?: (
+      )>, scenario?: (
         { id: string }
         & { __typename?: 'Scenario' }
       ) | null }
@@ -6665,10 +6646,10 @@ export type IndicatorGraphDataQuery = (
           { id: string, name: string }
           & { __typename?: 'Quantity' }
         ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null, categories: Array<(
+          )>, categories: Array<(
             { id: string }
             & { __typename?: 'DimensionCategory' }
           )> }
@@ -6683,10 +6664,10 @@ export type IndicatorGraphDataQuery = (
           ) }
           & { __typename?: 'IndicatorDimension' }
         )>, goals?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null, scenario?: (
+          )>, scenario?: (
             { id: string }
             & { __typename?: 'Scenario' }
           ) | null }
@@ -7499,7 +7480,7 @@ export type ActionCardFragment = (
     ) }
     & { __typename?: 'Action' }
   ) | null, plan: (
-    { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+    { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
       { rendition?: (
         { src: string }
         & { __typename?: 'ImageRendition' }
@@ -9227,19 +9208,19 @@ type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
       { id: string, date?: string | null, value: number }
       & { __typename?: 'IndicatorValue' }
     ) | null, values?: Array<(
-      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+      { id: string, date?: string | null, value: number, normalizedValues: Array<(
         { normalizerId?: string | null, value?: number | null }
         & { __typename?: 'NormalizedValue' }
-      ) | null> | null, categories: Array<(
+      )>, categories: Array<(
         { id: string }
         & { __typename?: 'DimensionCategory' }
       )> }
       & { __typename?: 'IndicatorValue' }
     ) | null> | null, goals?: Array<(
-      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+      { id: string, date?: string | null, value: number, normalizedValues: Array<(
         { normalizerId?: string | null, value?: number | null }
         & { __typename?: 'NormalizedValue' }
-      ) | null> | null }
+      )> }
       & { __typename?: 'IndicatorGoal' }
     ) | null> | null, common?: (
       { id: string, normalizations?: Array<(
@@ -9324,7 +9305,7 @@ export type GetActionDetailsQuery = (
   { action?: (
     { id: string, identifier: string, name: string, officialName?: string | null, leadParagraph: string, description?: string | null, completion?: number | null, color?: string | null, updatedAt: any, manualStatusReason?: string | null, scheduleContinuous: boolean, startDate?: any | null, endDate?: any | null, dateFormat?: ActionDateFormat | null, workflowStatus?: (
       { matchingVersion?: (
-        { id?: string | null, description?: string | null }
+        { id: string, description?: string | null }
         & { __typename?: 'WorkflowStateDescription' }
       ) | null }
       & { __typename?: 'WorkflowInfoNode' }
@@ -9879,7 +9860,7 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'Action' }
       ) | null, plan: (
-        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -10137,7 +10118,7 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'Action' }
       ) | null, plan: (
-        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -10389,7 +10370,7 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename?: 'Action' }
       ) | null, plan: (
-        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -10688,7 +10669,7 @@ export type GetActionDetailsQuery = (
       )> }
       & { __typename?: 'Dataset' }
     ) | null> | null, plan: (
-      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, image?: (
+      { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, image?: (
         { rendition?: (
           { src: string }
           & { __typename?: 'ImageRendition' }
@@ -10945,7 +10926,7 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename?: 'Action' }
         ) | null, plan: (
-          { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+          { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -11200,7 +11181,7 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename?: 'Action' }
         ) | null, plan: (
-          { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+          { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
             { rendition?: (
               { src: string }
               & { __typename?: 'ImageRendition' }
@@ -12881,7 +12862,7 @@ export type ActionDependenciesFragment = (
         ) }
         & { __typename?: 'Action' }
       ) | null, plan: (
-        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -13136,7 +13117,7 @@ export type ActionDependenciesFragment = (
         ) }
         & { __typename?: 'Action' }
       ) | null, plan: (
-        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+        { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
           { rendition?: (
             { src: string }
             & { __typename?: 'ImageRendition' }
@@ -14424,7 +14405,7 @@ export type ActionCardWithDependencyRoleFragment = (
     ) }
     & { __typename?: 'Action' }
   ) | null, plan: (
-    { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, image?: (
+    { id: string, shortName?: string | null, versionName: string, viewUrl?: string | null, hideActionIdentifiers: boolean, publishedAt?: any | null, image?: (
       { rendition?: (
         { src: string }
         & { __typename?: 'ImageRendition' }
@@ -15485,19 +15466,19 @@ export type GetContentPageQuery = (
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorValue' }
         ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null, categories: Array<(
+          )>, categories: Array<(
             { id: string }
             & { __typename?: 'DimensionCategory' }
           )> }
           & { __typename?: 'IndicatorValue' }
         ) | null> | null, goals?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null }
+          )> }
           & { __typename?: 'IndicatorGoal' }
         ) | null> | null, common?: (
           { id: string, normalizations?: Array<(
@@ -16985,19 +16966,19 @@ export type GetContentPageQuery = (
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorValue' }
         ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null, categories: Array<(
+          )>, categories: Array<(
             { id: string }
             & { __typename?: 'DimensionCategory' }
           )> }
           & { __typename?: 'IndicatorValue' }
         ) | null> | null, goals?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null }
+          )> }
           & { __typename?: 'IndicatorGoal' }
         ) | null> | null, common?: (
           { id: string, normalizations?: Array<(
@@ -18002,19 +17983,19 @@ export type GetContentPageQuery = (
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorValue' }
         ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null, categories: Array<(
+          )>, categories: Array<(
             { id: string }
             & { __typename?: 'DimensionCategory' }
           )> }
           & { __typename?: 'IndicatorValue' }
         ) | null> | null, goals?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null }
+          )> }
           & { __typename?: 'IndicatorGoal' }
         ) | null> | null, common?: (
           { id: string, normalizations?: Array<(
@@ -19028,19 +19009,19 @@ export type GetHomePageQuery = (
           { id: string, date?: string | null, value: number }
           & { __typename?: 'IndicatorValue' }
         ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null, categories: Array<(
+          )>, categories: Array<(
             { id: string }
             & { __typename?: 'DimensionCategory' }
           )> }
           & { __typename?: 'IndicatorValue' }
         ) | null> | null, goals?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null }
+          )> }
           & { __typename?: 'IndicatorGoal' }
         ) | null> | null, common?: (
           { id: string, normalizations?: Array<(
@@ -19307,17 +19288,17 @@ export type OrganizationDetailsQuery = (
     { id: string, name: string, abbreviation: string, distinctName?: string | null, description: string, url: string, actionCount: number, contactPersonCount: number, classification?: (
       { id: string, name: string, identifier: string }
       & { __typename?: 'OrganizationClass' }
-    ) | null, ancestors?: Array<(
+    ) | null, ancestors: Array<(
       { id: string }
       & { __typename?: 'Organization' }
-    ) | null> | null, plansWithActionResponsibilities: Array<(
+    )>, plansWithActionResponsibilities: Array<(
       { id: string, name: string, shortName?: string | null, versionName: string, viewUrl?: string | null, organization: (
         { id: string, name: string, abbreviation: string }
         & { __typename?: 'Organization' }
       ), primaryOrgs: Array<(
         { id: string, name: string }
         & { __typename?: 'Organization' }
-      ) | null>, actionImpacts: Array<(
+      )>, actionImpacts: Array<(
         { id: string }
         & { __typename?: 'ActionImpact' }
       )>, actionStatusSummaries: Array<(
@@ -19481,7 +19462,7 @@ export type OrganizationDetailsQuery = (
     ), primaryOrgs: Array<(
       { id: string, name: string }
       & { __typename?: 'Organization' }
-    ) | null>, actionImpacts: Array<(
+    )>, actionImpacts: Array<(
       { id: string }
       & { __typename?: 'ActionImpact' }
     )>, actionStatusSummaries: Array<(
@@ -19620,7 +19601,7 @@ export type OrgContentPlanFragment = (
   ), primaryOrgs: Array<(
     { id: string, name: string }
     & { __typename?: 'Organization' }
-  ) | null>, actionImpacts: Array<(
+  )>, actionImpacts: Array<(
     { id: string }
     & { __typename?: 'ActionImpact' }
   )>, actionStatusSummaries: Array<(
@@ -19759,7 +19740,7 @@ export type GetPlanContextQueryVariables = Exact<{
 
 export type GetPlanContextQuery = (
   { plan?: (
-    { id: string, identifier: string, name: string, shortName?: string | null, versionName: string, themeIdentifier?: string | null, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, kausalPathsInstanceUuid: string, viewUrl?: string | null, actionReportExportViewUrl?: string | null, serveFileBaseUrl: string, adminUrl?: string | null, accessibilityStatementUrl?: string | null, externalFeedbackUrl?: string | null, primaryActionClassification?: (
+    { id: string, identifier: string, name: string, shortName?: string | null, versionName: string, themeIdentifier?: string | null, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers: boolean, publishedAt?: any | null, kausalPathsInstanceUuid: string, viewUrl?: string | null, actionReportExportViewUrl?: string | null, serveFileBaseUrl: string, adminUrl?: string | null, accessibilityStatementUrl?: string | null, externalFeedbackUrl?: string | null, primaryActionClassification?: (
       { id: string, identifier: string, hideCategoryIdentifiers: boolean, common?: (
         { identifier: string }
         & { __typename?: 'CommonCategoryType' }
@@ -19813,10 +19794,10 @@ export type GetPlanContextQuery = (
     )>, impactGroups: Array<(
       { id: string }
       & { __typename?: 'ImpactGroup' }
-    ) | null>, primaryOrgs: Array<(
+    )>, primaryOrgs: Array<(
       { id: string }
       & { __typename?: 'Organization' }
-    ) | null>, generalContent: (
+    )>, generalContent: (
       { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm, sitewideAnnouncement?: string | null }
       & { __typename?: 'SiteGeneralContent' }
     ), mainMenu?: (
@@ -19867,7 +19848,7 @@ export type GetPlanContextQuery = (
         & { __typename?: 'Organization' }
       ) }
       & { __typename?: 'Plan' }
-    ) | null>, supersededBy?: (
+    )>, supersededBy?: (
       { name: string, shortName?: string | null, versionName: string, identifier: string, viewUrl?: string | null, publishedAt?: any | null }
       & { __typename?: 'Plan' }
     ) | null, supersededPlans: Array<(
@@ -19948,14 +19929,14 @@ export type GetPlanContextQuery = (
     ) | null }
     & { __typename?: 'Plan' }
   ) | null, workflowStates?: Array<(
-    { id?: string | null, description?: string | null }
+    { id: string, description?: string | null }
     & { __typename?: 'WorkflowStateDescription' }
   ) | null> | null }
   & { __typename?: 'Query' }
 );
 
 export type PlanContextFragment = (
-  { id: string, identifier: string, name: string, shortName?: string | null, versionName: string, themeIdentifier?: string | null, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers?: boolean | null, publishedAt?: any | null, kausalPathsInstanceUuid: string, viewUrl?: string | null, actionReportExportViewUrl?: string | null, serveFileBaseUrl: string, adminUrl?: string | null, accessibilityStatementUrl?: string | null, externalFeedbackUrl?: string | null, primaryActionClassification?: (
+  { id: string, identifier: string, name: string, shortName?: string | null, versionName: string, themeIdentifier?: string | null, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers: boolean, publishedAt?: any | null, kausalPathsInstanceUuid: string, viewUrl?: string | null, actionReportExportViewUrl?: string | null, serveFileBaseUrl: string, adminUrl?: string | null, accessibilityStatementUrl?: string | null, externalFeedbackUrl?: string | null, primaryActionClassification?: (
     { id: string, identifier: string, hideCategoryIdentifiers: boolean, common?: (
       { identifier: string }
       & { __typename?: 'CommonCategoryType' }
@@ -20009,10 +19990,10 @@ export type PlanContextFragment = (
   )>, impactGroups: Array<(
     { id: string }
     & { __typename?: 'ImpactGroup' }
-  ) | null>, primaryOrgs: Array<(
+  )>, primaryOrgs: Array<(
     { id: string }
     & { __typename?: 'Organization' }
-  ) | null>, generalContent: (
+  )>, generalContent: (
     { id: string, siteTitle: string, siteDescription: string, officialNameDescription: string, copyrightText: string, creativeCommonsLicense: string, ownerUrl: string, ownerName: string, actionTerm: SiteGeneralContentActionTerm, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm, sitewideAnnouncement?: string | null }
     & { __typename?: 'SiteGeneralContent' }
   ), mainMenu?: (
@@ -20063,7 +20044,7 @@ export type PlanContextFragment = (
       & { __typename?: 'Organization' }
     ) }
     & { __typename?: 'Plan' }
-  ) | null>, supersededBy?: (
+  )>, supersededBy?: (
     { name: string, shortName?: string | null, versionName: string, identifier: string, viewUrl?: string | null, publishedAt?: any | null }
     & { __typename?: 'Plan' }
   ) | null, supersededPlans: Array<(
@@ -20194,10 +20175,10 @@ export type IndicatorSparklineGraphDataQuery = (
       { id: string, name: string }
       & { __typename?: 'Quantity' }
     ) | null, values?: Array<(
-      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+      { id: string, date?: string | null, value: number, normalizedValues: Array<(
         { normalizerId?: string | null, value?: number | null }
         & { __typename?: 'NormalizedValue' }
-      ) | null> | null, categories: Array<(
+      )>, categories: Array<(
         { id: string }
         & { __typename?: 'DimensionCategory' }
       )> }
@@ -20212,10 +20193,10 @@ export type IndicatorSparklineGraphDataQuery = (
       ) }
       & { __typename?: 'IndicatorDimension' }
     )>, goals?: Array<(
-      { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+      { id: string, date?: string | null, value: number, normalizedValues: Array<(
         { normalizerId?: string | null, value?: number | null }
         & { __typename?: 'NormalizedValue' }
-      ) | null> | null, scenario?: (
+      )>, scenario?: (
         { id: string }
         & { __typename?: 'Scenario' }
       ) | null }
@@ -20241,10 +20222,10 @@ export type IndicatorSparklineGraphDataQuery = (
           { id: string, name: string }
           & { __typename?: 'Quantity' }
         ) | null, values?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null, categories: Array<(
+          )>, categories: Array<(
             { id: string }
             & { __typename?: 'DimensionCategory' }
           )> }
@@ -20259,10 +20240,10 @@ export type IndicatorSparklineGraphDataQuery = (
           ) }
           & { __typename?: 'IndicatorDimension' }
         )>, goals?: Array<(
-          { id: string, date?: string | null, value: number, normalizedValues?: Array<(
+          { id: string, date?: string | null, value: number, normalizedValues: Array<(
             { normalizerId?: string | null, value?: number | null }
             & { __typename?: 'NormalizedValue' }
-          ) | null> | null, scenario?: (
+          )>, scenario?: (
             { id: string }
             & { __typename?: 'Scenario' }
           ) | null }

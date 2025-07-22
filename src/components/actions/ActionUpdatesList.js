@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Col, Media, Row } from 'reactstrap';

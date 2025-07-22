@@ -245,7 +245,7 @@ function PhaseIndicator({
 function useOverrideLayout<T extends HTMLElement>(
   initialLayout: NonNullable<PhaseTimelineProps['layout']>,
   phaseCount: number,
-  ref: RefObject<T>
+  ref: RefObject<T | null>
 ) {
   const [isVerticalForced, setIsVerticalForced] = useState(false);
 

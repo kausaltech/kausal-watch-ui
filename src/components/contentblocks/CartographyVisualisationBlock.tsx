@@ -1,26 +1,35 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 
-import LegendControl from '@kausal/mapboxgl-legend';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import Map, { NavigationControl, useControl, useMap } from 'react-map-gl';
+import LegendControl, { type MapboxMap } from 'mapboxgl-legend';
+import 'mapboxgl-legend/dist/style.css';
+import Map, { NavigationControl, useMap } from 'react-map-gl/mapbox';
 import { Col, Container, Row } from 'reactstrap';
+import styled from 'styled-components';
 
-import { CommonContentBlockProps } from '@/common/blocks.types';
+import type { CommonContentBlockProps } from '@/common/blocks.types';
 
 interface CartographyVisualisationBlockProps extends CommonContentBlockProps {
   styleUrl: string;
   accessToken: string;
   hasSidebar: boolean;
-  styleOverrides: object;
+  styleOverrides: string | null;
 }
 
 const DEFAULT_LABELS = { other: false };
 
-const applyStyleOverrides = (style, overrides) => {
+type StyleOverride = {
+  labels: Record<string, Record<string, string>>;
+  selections: {
+    layers: Record<string, boolean>;
+  };
+};
+
+const applyStyleOverrides = (style: mapboxgl.Style, overrides: StyleOverride | null) => {
   style.layers
-    .filter((l) => l.source !== undefined && l.source !== 'composite')
+    .filter((l) => 'source' in l && l.source !== undefined && l.source !== 'composite')
     .forEach((layer) => {
-      if (layer?.paint === undefined) {
+      if (!('paint' in layer) || layer.paint === undefined) {
         return;
       }
       let labelOverrides = {};
@@ -55,13 +64,16 @@ const applyStyleOverrides = (style, overrides) => {
   return style;
 };
 
-const LegendWithOverrides = ({ styleOverrides }) => {
-  const overrides = styleOverrides && styleOverrides.length > 0 ? JSON.parse(styleOverrides) : null;
+const LegendWithOverrides = ({ styleOverrides }: { styleOverrides: string | null }) => {
+  const overrides =
+    styleOverrides && styleOverrides.length > 0
+      ? (JSON.parse(styleOverrides) as StyleOverride)
+      : null;
   const { current: map } = useMap();
-  let mapLegendApplied = false;
-  map?.getMap().on('styledata', () => {
-    const style = map.getStyle();
-
+  const mapInstance = map?.getMap() as MapboxMap | undefined;
+  const styleLoadHandler = useCallback(() => {
+    if (!map || !mapInstance) return;
+    const style = mapInstance.getStyle();
     const center = style.center;
     if (center && center.length === 2) {
       map.setCenter([center[0], center[1]]);
@@ -69,21 +81,33 @@ const LegendWithOverrides = ({ styleOverrides }) => {
     if (style.zoom) {
       map.setZoom(style.zoom);
     }
-    if (mapLegendApplied) return;
 
     applyStyleOverrides(style, overrides);
     const layersToAdd = style.layers
-      .filter((l) => overrides.labels === undefined || (overrides.labels[l.id] ?? {})[l.id] !== '-')
+      .filter(
+        (l) =>
+          overrides !== null &&
+          (overrides.labels === undefined || (overrides.labels[l.id] ?? {})[l.id] !== '-')
+      )
       .map((l) => l.id);
 
     const legend = new LegendControl({ layers: layersToAdd });
-    map.getMap().addControl(legend, 'top-left');
-    map.getMap().setStyle(style, { diff: false });
-
-    mapLegendApplied = true;
-  });
+    mapInstance.addControl(legend, 'top-left');
+    mapInstance.setStyle(style, { diff: false });
+  }, [map, mapInstance, overrides]);
+  useEffect(() => {
+    if (!mapInstance) return;
+    mapInstance.once('style.load', styleLoadHandler);
+    return () => {
+      mapInstance.off('style.load', styleLoadHandler);
+    };
+  }, [mapInstance, styleLoadHandler]);
   return null;
 };
+
+const CSSOverride = styled.div`
+  --map-legend-label-color: #111;
+`;
 
 const CartographyVisualisationBlock = (props: CartographyVisualisationBlockProps) => {
   const { id = '', styleUrl, accessToken, styleOverrides, hasSidebar } = props;
@@ -99,15 +123,17 @@ const CartographyVisualisationBlock = (props: CartographyVisualisationBlockProps
           lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
           md={{ size: 10, offset: 1 }}
         >
-          <Map
-            style={{ width: '100%', height: 500 }}
-            mapboxAccessToken={accessToken}
-            cooperativeGestures={true}
-            mapStyle={`mapbox://styles/ilmastogis/${styleUrl}` ?? ''}
-          >
-            <LegendWithOverrides styleOverrides={styleOverrides} />
-            <NavigationControl showZoom={true} showCompass={false} />
-          </Map>
+          <CSSOverride>
+            <Map
+              style={{ width: '100%', height: 500 }}
+              mapboxAccessToken={accessToken}
+              cooperativeGestures={true}
+              mapStyle={`mapbox://styles/ilmastogis/${styleUrl}`}
+            >
+              <LegendWithOverrides styleOverrides={styleOverrides} />
+              <NavigationControl showZoom={true} showCompass={false} />
+            </Map>
+          </CSSOverride>
         </Col>
       </Row>
     </Container>

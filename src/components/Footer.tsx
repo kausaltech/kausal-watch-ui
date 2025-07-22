@@ -19,7 +19,7 @@ import { useCustomComponent } from './paths/custom';
 
 type NavItem = NonNullable<PlanContextFragment['footer']>['items'][0];
 
-const getFeedbackUrl = (currentURL) => {
+const getFeedbackUrl = (currentURL: string) => {
   const feedbackPageUrlBase = '/feedback';
   if (currentURL.startsWith(feedbackPageUrlBase)) {
     return null;

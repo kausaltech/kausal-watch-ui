@@ -1,11 +1,12 @@
 import { redirect } from 'next/navigation';
 
 type Props = {
-  params: {
+  params: Promise<{
     lang: string;
-  };
+  }>;
 };
 
-export default function AccessibilityLegacyPage({ params }: Props) {
+export default async function AccessibilityLegacyPage(props: Props) {
+  const params = await props.params;
   redirect(`/${params.lang}/accessibility`);
 }
