@@ -98,7 +98,7 @@ const IntroModal = ({ videoUrls }: IntroModalProps) => {
   if (!enabled) return null;
 
   return (
-    <Overlay>
+    <Overlay data-testid="intro-modal">
       <ModalBox>
         <VideoWrapper>
           <StyledIframe
@@ -112,6 +112,7 @@ const IntroModal = ({ videoUrls }: IntroModalProps) => {
             <input
               type="checkbox"
               checked={isChecked}
+              data-testid="intro-modal-no-show"
               onChange={(e) => setIsChecked(e.target.checked)}
             />
             {t('do-not-show-video-again')}

@@ -280,7 +280,7 @@ const ResultList = (props) => {
       <ResultsFooter>
         {results.length > 0 ? (
           <Link prefetch={false} href={`/search?q=${searchTerm}`} legacyBehavior>
-            <a onClick={closeSearch}>
+            <a onClick={closeSearch} data-testid="search-advanced">
               {t('see-all-results', { count: results.length })}
               <Icon.ArrowRight />
             </a>

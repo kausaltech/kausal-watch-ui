@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { type Page, test as base, expect } from '@playwright/test';
 
 import { PlanContext, getIdentifiersToTest } from '../common/context.ts';
@@ -27,6 +28,13 @@ const testPlan = (planId: string) =>
 
     test.beforeEach(async ({ page, ctx }) => {
       await navigateAndCheckLayout(page, ctx.baseURL, ctx);
+      const modalLocator = page.getByTestId('intro-modal');
+      const hasModal = await modalLocator.isVisible({ timeout: 100 });
+      if (hasModal) {
+        await modalLocator.getByTestId('intro-modal-no-show').click();
+        await modalLocator.getByRole('button').click();
+        await expect(modalLocator).toBeHidden({ timeout: 1000 });
+      }
     });
 
     test('homepage', async ({ page, ctx }) => {
@@ -196,22 +204,19 @@ const testPlan = (planId: string) =>
     });
 
     test('search', async ({ page, ctx }) => {
-      const searchButton = page.locator('data-testid=nav-search-btn');
-      const isSearchButtonVisible = await searchButton.isVisible();
-      if (isSearchButtonVisible) {
-        const searchInput = page.locator('role=combobox');
-        await expect(searchInput).toBeHidden();
-        await searchButton.click();
-        await expect(searchInput).toBeVisible();
+      const searchButton = page.getByTestId('nav-search-btn');
+      await expect(searchButton).toBeVisible();
 
-        await searchInput.fill('test');
-        const searchLink = page.locator('data-testid=search-advanced');
-        await searchLink.click();
-        await page.waitForURL('**/search');
-        await expect(page.locator('data-testid=search-form')).toBeVisible();
-      } else {
-        console.log('No search button for the plan');
-      }
+      const searchInput = page.getByRole('combobox');
+      await expect(searchInput).toBeHidden();
+      await searchButton.click();
+      await expect(searchInput).toBeVisible();
+
+      await searchInput.fill('test');
+      const searchLink = page.getByTestId('search-advanced');
+      await searchLink.click();
+      await page.waitForURL('**/search');
+      await expect(page.getByTestId('search-form')).toBeVisible();
     });
   });
 
