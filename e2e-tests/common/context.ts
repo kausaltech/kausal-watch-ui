@@ -9,7 +9,8 @@ import type {
   PlaywrightGetPlanInfoQueryVariables,
 } from '../__generated__/graphql.ts';
 
-const { ApolloClient, InMemoryCache, gql } = apolloModule.default as typeof apolloModule;
+const { ApolloClient, InMemoryCache, gql } =
+  'default' in apolloModule ? (apolloModule.default as typeof apolloModule) : apolloModule;
 
 const GRAPHQL_API_URL = process.env.WATCH_BACKEND_URL
   ? `${process.env.WATCH_BACKEND_URL}/v1/graphql/`
