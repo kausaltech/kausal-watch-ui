@@ -33,3 +33,4 @@ build-storybook.log
 .sentryclirc
 /.eslintcache
 **/node_modules/
+*.tsbuildinfo

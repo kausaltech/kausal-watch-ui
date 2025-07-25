@@ -7,7 +7,7 @@ import { readableColor } from 'polished';
 import { Col, Container, Nav, NavItem, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
-import { OrganizationDetailsQuery } from '@/common/__generated__/graphql';
+import type { OrganizationDetailsQuery } from '@/common/__generated__/graphql';
 import { OrganizationLink } from '@/common/links';
 import RichText from '@/components/common/RichText';
 import ActionStatusTable from '@/components/dashboard/ActionStatusTable';
@@ -214,7 +214,7 @@ function OrgContent({ org, planFromOrgQuery }: Props) {
         </OrgTabs>
       </OrgHeader>
       {allPlans.length ? (
-        <Container fluid="lg">
+        <Container fluid="lg" data-testid="org-actions-container">
           <ActionTableHeader>
             <h2>
               {t('org-responsible-in-actions', {
