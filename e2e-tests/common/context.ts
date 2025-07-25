@@ -36,6 +36,10 @@ const GET_PLAN_BASICS = gql`
 const GET_PLAN_INFO = gql`
   query PlaywrightGetPlanInfo($plan: ID!, $locale: String!, $clientURL: String!)
   @locale(lang: $locale) {
+    planOrganizations(plan: $plan, forResponsibleParties: true, forContactPersons: true) {
+      id
+      name
+    }
     plan(id: $plan) {
       id
       identifier
@@ -99,6 +103,7 @@ const GET_PLAN_INFO = gql`
 
 type PlanInfo = NonNullable<PlaywrightGetPlanInfoQuery['plan']>;
 type PlanIndicators = NonNullable<PlaywrightGetPlanInfoQuery['planIndicators']>;
+type PlanOrganizations = NonNullable<PlaywrightGetPlanInfoQuery['planOrganizations']>;
 type ActionInfo = PlanInfo['actions'][0];
 
 export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][0] & {
@@ -145,11 +150,13 @@ export type IndicatorListMenuItem = PageMenuItem & {
 
 export class PlanContext {
   plan: PlanInfo;
+  planOrganizations: PlanOrganizations;
   planIndicators: PlanIndicators;
   baseURL: string;
 
-  constructor(plan: PlanInfo, baseURL: string, planIndicators: PlanIndicators) {
-    this.plan = plan;
+  constructor(data: PlaywrightGetPlanInfoQuery, baseURL: string, planIndicators: PlanIndicators) {
+    this.plan = data.plan!;
+    this.planOrganizations = data.planOrganizations ?? [];
     this.baseURL = baseURL;
     this.planIndicators = planIndicators;
   }
@@ -262,7 +269,7 @@ export class PlanContext {
       query: GET_PLAN_BASICS,
       variables: { plan: planId },
     });
-    const primaryLanguage = langRes.data!.plan!.primaryLanguage;
+    const primaryLanguage = langRes.data.plan!.primaryLanguage;
     const baseURL = getPageBaseUrlToTest(planId);
     const res = await apolloClient.query<
       PlaywrightGetPlanInfoQuery,
@@ -271,8 +278,8 @@ export class PlanContext {
       query: GET_PLAN_INFO,
       variables: { plan: planId, locale: primaryLanguage, clientURL: baseURL },
     });
-    const data = res.data!.plan!;
-    const planIndicators = res.data!.planIndicators!;
+    const data = res.data;
+    const planIndicators = res.data.planIndicators!;
     return new PlanContext(data, baseURL, planIndicators);
   }
 
