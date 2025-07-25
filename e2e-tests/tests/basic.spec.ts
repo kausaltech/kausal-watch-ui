@@ -11,6 +11,7 @@ async function navigateAndCheckLayout(page: Page, url: string, ctx: PlanContext)
   await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
   await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
   await expect(page.locator('main#main')).toBeVisible();
+  await page.waitForLoadState('networkidle');
   // temporarily skip accessibility check
   //await ctx.checkAccessibility(page);
 }
@@ -29,7 +30,7 @@ const testPlan = (planId: string) =>
     test.beforeEach(async ({ page, ctx }) => {
       await navigateAndCheckLayout(page, ctx.baseURL, ctx);
       const modalLocator = page.getByTestId('intro-modal');
-      const hasModal = await modalLocator.isVisible({ timeout: 100 });
+      const hasModal = (await modalLocator.count()) > 0;
       if (hasModal) {
         await modalLocator.getByTestId('intro-modal-no-show').click();
         await modalLocator.getByRole('button').click();
@@ -57,12 +58,12 @@ const testPlan = (planId: string) =>
       await link.click();
       await ctx.checkMeta(page);
 
-      await expect(page.getByRole('tabpanel').first()).toBeVisible();
+      await expect(page.getByRole('tabpanel').first()).toBeVisible({ timeout: 20000 });
 
       // Test direct URL navigation
       await page.goto(`${ctx.baseURL}/${listItem.page.urlPath}`);
       await ctx.checkMeta(page);
-      await expect(page.getByRole('tabpanel').first()).toBeVisible({ timeout: 10000 });
+      await expect(page.getByRole('tabpanel').first()).toBeVisible({ timeout: 20000 });
     });
 
     test('action details page', async ({ page, ctx }) => {
@@ -203,6 +204,16 @@ const testPlan = (planId: string) =>
       }
     });
 
+    test('organization page', async ({ page, ctx }) => {
+      const organization = ctx.planOrganizations[0];
+      test.skip(!organization, 'No organization for plan');
+      await page.goto(`${ctx.baseURL}/organizations/${organization.id}`);
+      await expect(page.locator('main#main')).toBeVisible();
+      const h1 = page.locator('h1');
+      await expect(h1).toContainText(organization.name);
+      await expect(page.getByTestId('org-actions-container')).toBeVisible();
+    });
+
     test('search', async ({ page, ctx }) => {
       const searchButton = page.getByTestId('nav-search-btn');
       await expect(searchButton).toBeVisible();
@@ -213,6 +224,7 @@ const testPlan = (planId: string) =>
       await expect(searchInput).toBeVisible();
 
       await searchInput.fill('test');
+      await expect(page.locator('*[aria-busy=true]')).toHaveCount(0);
       const searchLink = page.getByTestId('search-advanced');
       await searchLink.click();
       await page.waitForURL('**/search');

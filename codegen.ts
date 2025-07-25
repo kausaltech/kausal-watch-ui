@@ -3,7 +3,7 @@ import type { TypeScriptPluginConfig } from '@graphql-codegen/typescript';
 import type { TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations';
 
 import pathsApolloConfig from './apollo-paths.config';
-import apolloConfig from './apollo.config.js';
+import apolloConfig from './apollo.config.cjs';
 
 const tsoConfig: TypeScriptDocumentsPluginConfig & TypeScriptPluginConfig = {
   arrayInputCoercion: false,
@@ -22,7 +22,7 @@ const tsoConfig: TypeScriptDocumentsPluginConfig & TypeScriptPluginConfig = {
 };
 
 const watchConfigDocs = [
-  ...apolloConfig.client.includes,
+  ...apolloConfig.client.includes.filter((include) => !include.includes('e2e-tests')),
   ...apolloConfig.client.excludes.map((exclude) => `!${exclude}`),
 ];
 

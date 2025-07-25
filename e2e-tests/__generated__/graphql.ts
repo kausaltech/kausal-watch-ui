@@ -386,7 +386,10 @@ export type PlaywrightGetPlanInfoQueryVariables = Exact<{
 
 
 export type PlaywrightGetPlanInfoQuery = (
-  { plan: (
+  { planOrganizations: Array<(
+    { id: string, name: string }
+    & { __typename: 'Organization' }
+  )> | null, plan: (
     { id: string, identifier: string, name: string, shortName: string | null, primaryLanguage: string, otherLanguages: Array<string>, parent: (
       { identifier: string, name: string }
       & { __typename: 'Plan' }
