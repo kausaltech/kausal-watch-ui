@@ -256,12 +256,18 @@ export default function RichText(props: RichTextProps) {
             </a>
           );
         }
+        const href = attribs?.href;
+
+        if (!href || typeof href !== 'string') {
+          return <span>{domToReact(children, options)}</span>;
+        }
+
         // Internal link
         if (
-          cutHttp(attribs.href.split('.')[0]) === currentDomain ||
-          attribs.href.startsWith('#')
+          cutHttp(href.split('.')[0]) === currentDomain ||
+          href.startsWith('#')
         ) {
-          return <a href={attribs.href}>{domToReact(children, options)}</a>;
+          return <a href={href}>{domToReact(children, options)}</a>;
         }
         // Assumed external link, open in new tab
         return (
