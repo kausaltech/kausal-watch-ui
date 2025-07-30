@@ -26,6 +26,9 @@ importers:
       '@kausal/themes':
         specifier: ^0.8.4
         version: 0.8.4
+      '@kausal/themes-private':
+        specifier: ^0.5.50
+        version: 0.5.50
       '@n8tb1t/use-scroll-position':
         specifier: ^2.0.3
         version: 2.0.3(@types/react@18.3.23)(react@18.2.0)
@@ -2046,6 +2049,9 @@ packages:
 
   '@kausal/plotly-custom@2.35.2':
     resolution: {integrity: sha512-LTuhiMsKd36/1y2zebV9RcskUqLbKdPFiN0H2C/7UMUjtIW9sI+JkVL0d0jz6VlmQdhk6xoVA6pcFiXEa+0UPg==}
+
+  '@kausal/themes-private@0.5.50':
+    resolution: {integrity: sha512-G31aSe43RweS4cCqI9SrsHoCXNNtG2VgpvMgr4hwDRyPpmeaylnQyB4dfk8YZUhRLI3oS7c7bzNbSoDDEsjbPg==}
 
   '@kausal/themes@0.8.4':
     resolution: {integrity: sha512-FrZDLaTUuSLF+VNCgGpsPbR9+HkqnzquPYt4Ay3jfMpR0ca7io44dF3RvNed5ry/on1Pxwcnly2PFb5G+Qrrxw==}
@@ -12580,6 +12586,8 @@ snapshots:
       - mapbox-gl
       - supports-color
       - webpack
+
+  '@kausal/themes-private@0.5.50': {}
 
   '@kausal/themes@0.8.4': {}
 

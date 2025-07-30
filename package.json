@@ -10,6 +10,7 @@
     "@kausal/mapboxgl-legend": "^1.7.2",
     "@kausal/plotly-custom": "^2.32.0",
     "@kausal/themes": "^0.8.4",
+    "@kausal/themes-private": "^0.5.50",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@next/bundle-analyzer": "^12.1.6",
     "@opentelemetry/sdk-trace-node": "^1.30.1",
