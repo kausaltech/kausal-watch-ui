@@ -15,7 +15,7 @@ import { usePlan } from '@/context/plan';
 import { useHandleSignOut } from '@/utils/auth.utils';
 
 import Button from './Button';
-import Icon from './Icon';
+import Icon, { type ValidIconName } from './Icon';
 
 const StyledButton = styled(Button)`
   &.btn-link {
@@ -100,7 +100,7 @@ const Logo = styled.div`
   margin: ${(props) => props.theme.spaces.s150} ${(props) => props.theme.spaces.s200}
     ${(props) => props.theme.spaces.s150} 0;
 
-  svg {
+  .footer-org-logo {
     height: 100%;
     max-width: 100%;
   }
@@ -453,14 +453,26 @@ function SiteFooter(props: SiteFooterProps) {
   const isAuthenticated = session.status === 'authenticated';
 
   const OrgLogo = () => {
-    return (
-      <SVG
-        src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
-        preserveAspectRatio="xMinYMid meet"
-        title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
-        style={{ display: 'block' }}
-      />
-    );
+    if (theme.themeLogoWhiteUrl.endsWith('.png')) {
+      return (
+        <img
+          src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
+          alt={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+          className="footer-org-logo"
+          aria-hidden="true"
+        />
+      );
+    } else {
+      return (
+        <SVG
+          src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
+          title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+          preserveAspectRatio="xMinYMid meet"
+          className="footer-org-logo"
+          aria-hidden="true"
+        />
+      );
+    }
   };
 
   function scrollToTop(e) {
@@ -493,10 +505,10 @@ function SiteFooter(props: SiteFooterProps) {
               <Logo>
                 {theme?.footerLogoLink ? (
                   <a href={theme.footerLogoLink}>
-                    <OrgLogo aria-hidden="true" className="footer-org-logo" />
+                    <OrgLogo />
                   </a>
                 ) : (
-                  <OrgLogo aria-hidden="true" className="footer-org-logo" />
+                  <OrgLogo />
                 )}
               </Logo>
             )}
@@ -512,7 +524,7 @@ function SiteFooter(props: SiteFooterProps) {
               navItems.map((page) => (
                 <FooterNavItem key={page.id}>
                   {!page.children?.length && page.slug && (
-                    <NavigationLink slug={page.slug} className="parent-item">
+                    <NavigationLink slug={page.slug}>
                       <>
                         {theme?.navLinkIcons && (
                           <Icon.AngleRight
@@ -595,7 +607,7 @@ function SiteFooter(props: SiteFooterProps) {
                   <NavigationLink slug={page.slug}>
                     {page.icon && (
                       <Icon
-                        name={page.icon}
+                        name={page.icon as ValidIconName}
                         color={theme.footerColor}
                         aria-hidden="true"
                         className="me-1"

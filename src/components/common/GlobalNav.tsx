@@ -26,7 +26,7 @@ import PlanSelector from '@/components/plans/PlanSelector';
 import PlanVersionSelector from '@/components/versioning/PlanVersionSelector';
 import { usePlan } from '@/context/plan';
 
-import Icon from './Icon';
+import Icon, { type ValidIconName } from './Icon';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 
@@ -166,7 +166,7 @@ const HomeLink = styled.a<{ $hideLogoOnMobile?: boolean }>`
     color: ${(props) => props.theme.brandNavColor};
   }
 
-  svg {
+  .org-logo {
     display: ${(props) => (!props.$hideLogoOnMobile ? 'block' : 'none')};
     max-width: 6em;
     height: ${(props) => props.theme.spaces.s200};
@@ -174,8 +174,16 @@ const HomeLink = styled.a<{ $hideLogoOnMobile?: boolean }>`
       ${(props) => props.theme.spaces.s050} 0;
   }
 
+  // Support png logos. PNG logos are always full height.
+  img.org-logo {
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 100%;
+    max-height: ${({ theme }) => theme.spaces.s600};
+  }
+
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    svg {
+    .org-logo {
       display: block;
       max-width: 10em;
       height: calc(${(props) => props.theme.spaces.s200} + ${(props) => props.theme.spaces.s050});
@@ -292,7 +300,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     .dropdown-toggle.nav-link {
       color: ${(props) => props.theme.siteNavColor};
       &::after {
-        border-top-color: ${(props) => props.theme.sitenavHighlightColor};
+        border-top-color: ${(props) => props.theme.siteNavHighlightColor};
       }
     }
   }
@@ -313,7 +321,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     }
 
     &:hover {
-    background-color: transparent;
+      background-color: transparent;
 
       .highlighter {
         border-bottom: 5px solid ${(props) => props.theme.siteNavHighlightColor};
@@ -323,8 +331,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     .dropdown-menu {
-      box-shadow: 3px 3px 6px 2px ${(props) =>
-        transparentize(0.85, props.theme.themeColors.black)}};
+      box-shadow: 3px 3px 6px 2px ${(props) => transparentize(0.85, props.theme.themeColors.black)};
     }
 
     .dropdown-item {
@@ -354,6 +361,7 @@ const NavbarToggler = styled.button`
   background: transparent;
   border-radius: 0;
   -webkit-appearance: none;
+  appearance: none;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     display: none;
@@ -361,7 +369,7 @@ const NavbarToggler = styled.button`
 `;
 
 type CustomToolbarProps = {
-  items: { slug: string; name: string; id: string; icon: string }[];
+  items: { slug: string; name: string; id: string; icon: ValidIconName }[];
   mobile?: boolean;
 };
 
@@ -523,23 +531,33 @@ function GlobalNav(props) {
   } = useStickyNavigation(sticky);
 
   const OrgLogo = () => {
-    const logoElement = theme.navLogoVisible ? (
-      <SVG
-        src={getThemeStaticURL(theme.themeLogoUrl)}
-        title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
-        preserveAspectRatio="xMinYMid meet"
-      />
-    ) : (
-      <EmptyLogo />
-    );
-    return logoElement;
+    if (theme.navLogoVisible === false) {
+      return <EmptyLogo />;
+    } else if (theme.themeLogoUrl.endsWith('.png')) {
+      return (
+        <img
+          src={getThemeStaticURL(theme.themeLogoUrl)}
+          alt={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+          className="org-logo"
+        />
+      );
+    } else {
+      return (
+        <SVG
+          src={getThemeStaticURL(theme.themeLogoUrl)}
+          title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+          preserveAspectRatio="xMinYMid meet"
+          className="org-logo"
+        />
+      );
+    }
   };
 
   const handleClose = () => setIsOpen(false);
 
   const homeLink = theme.settings.homeLink || false;
 
-  const siblings = plan.allRelatedPlans.filter((pl) => pl.id !== plan.parent?.id);
+  const siblings = plan.allRelatedPlans.filter((pl) => pl?.id !== plan.parent?.id);
   const hideLogoOnMobile = !!(theme.navTitleVisible && siblings.length);
 
   const logoLink = theme?.footerLogoLink || rootLink;
@@ -557,7 +575,7 @@ function GlobalNav(props) {
           <Site>
             <Link href={logoLink} passHref legacyBehavior>
               <HomeLink $hideLogoOnMobile={hideLogoOnMobile}>
-                <OrgLogo className="org-logo" />
+                <OrgLogo />
               </HomeLink>
             </Link>
             <Link href={rootLink} passHref legacyBehavior>
