@@ -39,7 +39,7 @@ async function initializeThemes() {
     try {
       const {
         generateThemeSymlinks: generateThemeSymlinksPrivate,
-      } = require('@kausal-private/themes-private/setup.cjs');
+      } = require('@kausal/themes-private/setup.cjs');
       generateThemeSymlinksPrivate(destPath, { verbose: false });
       themesLinked = true;
     } catch (error) {
