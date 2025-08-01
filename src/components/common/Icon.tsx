@@ -109,11 +109,9 @@ export enum AvailableIcons {
   Times = 'times',
   User = 'user',
   Version = 'version',
-  SimpleLanguage = 'simple-language',
-  SignLanguage = 'sign-language',
 }
 
-type ValidIconName = `${AvailableIcons}`;
+export type ValidIconName = `${AvailableIcons}`;
 
 type Props = {
   color?: string;
