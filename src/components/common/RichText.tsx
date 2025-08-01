@@ -221,20 +221,24 @@ export default function RichText(props: RichTextProps) {
       const { name, attribs, children } = element;
       // Rewrite <a> tags to point to the FQDN
       if (name === 'a') {
+        const href = attribs?.href;
+
+        if (!href) {
+          return <span>{domToReact(children, options)}</span>;
+        }
+
         // File link
         if (attribs['data-link-type']) {
           // FIXME: Add icon based on attribs['data-file-extension']
-          return (
-            <a href={`${plan.serveFileBaseUrl}${attribs.href}`}>{domToReact(children, options)}</a>
-          );
+          return <a href={`${plan.serveFileBaseUrl}${href}`}>{domToReact(children, options)}</a>;
         }
         // Internal link
-        if (cutHttp(attribs.href.split('.')[0]) === currentDomain || attribs.href.startsWith('#')) {
-          return <a href={attribs.href}>{domToReact(children, options)}</a>;
+        if (cutHttp(href.split('.')[0]) === currentDomain || href.startsWith('#')) {
+          return <a href={href}>{domToReact(children, options)}</a>;
         }
         // Assumed external link, open in new tab
         return (
-          <a target="_blank" href={attribs.href} rel="noreferrer">
+          <a target="_blank" href={href} rel="noreferrer">
             <Icon.ArrowUpRightFromSquare />
             {domToReact(children, options)}
           </a>
