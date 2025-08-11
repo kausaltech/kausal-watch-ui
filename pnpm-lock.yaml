@@ -380,8 +380,8 @@ importers:
         version: 8.37.0(eslint@9.31.0(jiti@2.4.2))(typescript@5.8.3)
     optionalDependencies:
       '@kausal-private/themes-private':
-        specifier: ^0.5.50
-        version: 0.5.50
+        specifier: ^0.5.51
+        version: 0.5.51
 
 packages:
 
@@ -2038,8 +2038,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.29':
     resolution: {integrity: sha512-uw6guiW/gcAGPDhLmd77/6lW8QLeiV5RUTsAX46Db6oLhGaVj4lhnPwb184s1bkc8kdVg/+h988dro8GRDpmYQ==}
 
-  '@kausal-private/themes-private@0.5.50':
-    resolution: {integrity: sha512-wBwpz7LUpplF9LYUtyTk4l7/YfbeiYGfiQou35PrLL6NzXA7WCJGBvuMV0mmsvq3XpuQDZjjX5v9yXkvtGw0lw==}
+  '@kausal-private/themes-private@0.5.51':
+    resolution: {integrity: sha512-AHQcqJcGnFvco0+Z/46sL1BuNQ+2TluDalWF6GYBglzqJn+uAOVsMOpI1vGlkEGUCvpandW0s71lJkESKWhKwg==}
 
   '@kausal/mapboxgl-legend@1.7.2':
     resolution: {integrity: sha512-qmjchiPrcer3gCLkln7z2e0o8i5XK2BNRbMMdr6/KHMxDTSeOOaN1PvRjXzrTAtewOyxztHxnyYH9KaoC5LJdQ==}
@@ -8973,6 +8973,11 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
+  sass@1.90.0:
+    resolution: {integrity: sha512-9GUyuksjw70uNpb1MTYWsH9MQHOHY6kwfnkafC24+7aOMZn9+rVMBxRbLvw756mrBFbIsFg6Xw9IkR2Fnn3k+Q==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
   sax@1.4.1:
     resolution: {integrity: sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==}
 
@@ -12516,7 +12521,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.4
 
-  '@kausal-private/themes-private@0.5.50':
+  '@kausal-private/themes-private@0.5.51':
     optional: true
 
   '@kausal/mapboxgl-legend@1.7.2': {}
@@ -15162,7 +15167,7 @@ snapshots:
 
   '@types/sass@1.45.0':
     dependencies:
-      sass: 1.89.2
+      sass: 1.90.0
 
   '@types/semver@7.7.0': {}
 
@@ -21462,6 +21467,14 @@ snapshots:
       webpack: 5.100.2(esbuild@0.25.7)
 
   sass@1.89.2:
+    dependencies:
+      chokidar: 4.0.3
+      immutable: 5.1.3
+      source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.5.1
+
+  sass@1.90.0:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.3
