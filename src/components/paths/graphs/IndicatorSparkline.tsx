@@ -6,6 +6,8 @@ import { useFormatter, useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 import styled, { useTheme } from 'styled-components';
 
+import { Chart, type ECOption } from '@common/components/Chart';
+
 import type {
   IndicatorGoal,
   IndicatorGraphDataQuery,
@@ -16,7 +18,6 @@ import type {
 import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
 import Unit from '@/components/indicators/Unit';
-import Chart, { type ECOption } from '@/components/paths/graphs/Chart';
 import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/utils/indicatorData';
 

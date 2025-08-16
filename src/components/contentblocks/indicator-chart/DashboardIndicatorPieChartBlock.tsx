@@ -7,12 +7,13 @@ import * as echarts from 'echarts/core';
 import { CallbackDataParams } from 'echarts/types/dist/shared';
 import { useTheme } from 'styled-components';
 
+import { Chart, type ECOption } from '@common/components/Chart';
+
 import {
   Indicator,
   DashboardIndicatorPieChartBlock as TDashboardIndicatorPieChartBlock,
   Unit,
 } from '@/common/__generated__/graphql';
-import Chart, { ECOption } from '@/components/paths/graphs/Chart';
 
 import { getDefaultColors } from './indicator-chart-colors';
 

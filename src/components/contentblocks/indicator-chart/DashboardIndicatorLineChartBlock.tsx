@@ -8,8 +8,9 @@ import * as echarts from 'echarts/core';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'styled-components';
 
+import { Chart, type ECOption } from '@common/components/Chart';
+
 import { DashboardIndicatorLineChartBlock as TDashboardIndicatorLineChartBlock } from '@/common/__generated__/graphql';
-import Chart, { ECOption } from '@/components/paths/graphs/Chart';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
