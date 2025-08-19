@@ -95,6 +95,43 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
   }
 `;
 
+export const PlanDatasetsBlockFragment = gql`
+  fragment PlanDatasetsBlockFragment on Dataset {
+    schema {
+      uuid
+      name
+      timeResolution
+      metrics {
+        unit
+      }
+      dimensions {
+        order
+        dimension {
+          name
+          uuid
+          categories {
+            uuid
+            label
+          }
+        }
+      }
+    }
+    uuid
+    dataPoints {
+      uuid
+      value
+      date
+      dimensionCategories {
+        uuid
+        label
+        dimension {
+          uuid
+        }
+      }
+    }
+  }
+`;
+
 const GET_CONTENT_PAGE = gql`
   query GetContentPage($plan: ID!, $path: String!, $onlyWithActions: Boolean = true) {
     planPage(plan: $plan, path: $path) {
@@ -219,37 +256,7 @@ const GET_CONTENT_PAGE = gql`
             ...AttributesBlockAttributeWithNestedType
           }
           datasets {
-            schema {
-              uuid
-              timeResolution
-              metrics {
-                unit
-              }
-              dimensions {
-                order
-                dimension {
-                  name
-                  uuid
-                  categories {
-                    uuid
-                    label
-                  }
-                }
-              }
-            }
-            uuid
-            dataPoints {
-              uuid
-              value
-              date
-              dimensionCategories {
-                uuid
-                label
-                dimension {
-                  uuid
-                }
-              }
-            }
+            ...PlanDatasetsBlockFragment
           }
         }
         body {
@@ -269,6 +276,7 @@ const GET_CONTENT_PAGE = gql`
       lastPublishedAt
     }
   }
+  ${PlanDatasetsBlockFragment}
   ${TEMPLATED_CATEGORY_PAGE_FRAGMENT}
   ${STREAM_FIELD_FRAGMENT}
   ${images.fragments.multiUseImage}

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { gql } from '@apollo/client';
 
 export const GET_PLANS_BY_HOSTNAME = gql`

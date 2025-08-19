@@ -385,6 +385,22 @@ export type UtilityLink = {
   icon?: string;
 };
 
+export type FooterNavItem = {
+  id: string;
+  name: string;
+  slug: string;
+  children?: FooterNavItem[];
+};
+
+export type FooterAdditionalLink = {
+  id: string;
+  name: string;
+  slug: string;
+  url?: string;
+  viewUrl?: string;
+  crossPlanLink?: boolean;
+};
+
 type SiteFooterProps = {
   siteTitle: string;
   ownerUrl: string;
@@ -393,35 +409,19 @@ type SiteFooterProps = {
   copyrightText: string;
   footerStatement: string;
   ownerLinks: { id: string; title: string; url: string }[];
-  navItems: {
-    id: string;
-    name: string;
-    slug: string;
-    children: {
-      id: string;
-      name: string;
-      slug: string;
-    }[];
-  }[];
+  navItems: FooterNavItem[];
   utilityLinks: UtilityLink[];
-  additionalLinks: {
-    id: string;
-    name: string;
-    slug: string;
-    url: string;
-    crossPlanLink: boolean;
-    viewUrl: string;
-  }[];
+  additionalLinks: FooterAdditionalLink[];
   fundingInstruments: {
     id: string;
     name: string;
-    link: string;
+    link?: string | null;
     logo: string;
   }[];
   otherLogos: {
     id: string;
     name: string;
-    link: string;
+    link?: string | null;
     logo: string;
   }[];
 };
@@ -536,7 +536,7 @@ function SiteFooter(props: SiteFooterProps) {
                       </>
                     </NavigationLink>
                   )}
-                  {page.children?.length > 0 && (
+                  {page.children && page.children?.length > 0 && (
                     <>
                       <span className="parent-item">{page.name}</span>
                       <FooterSubnav>
@@ -693,7 +693,7 @@ function SiteFooter(props: SiteFooterProps) {
                 <FundingHeader>{t('supported-by')}</FundingHeader>
                 {fundingInstruments.map((funder) => (
                   <FundingInstrumentContainer key={funder.id}>
-                    <a href={funder.link} target="_blank" rel="noreferrer">
+                    <a href={funder.link ?? undefined} target="_blank" rel="noreferrer">
                       <SVG
                         src={getThemeStaticURL(funder.logo)}
                         preserveAspectRatio="xMidYMid meet"
