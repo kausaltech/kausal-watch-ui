@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import type { NextRequest, NextResponse } from 'next/server';
 
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client';

@@ -6,9 +6,12 @@ import { gql, useQuery } from '@apollo/client';
 import { captureMessage } from '@sentry/nextjs';
 import { isEqual } from 'lodash';
 import { useLocale, useTranslations } from 'next-intl';
-import PropTypes from 'prop-types';
 import { Alert } from 'reactstrap';
 
+import type {
+  IndicatorGraphDataQuery,
+  IndicatorGraphDataQueryVariables,
+} from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
 import { capitalizeFirstLetter } from '@/common/utils';
 import ContentLoader from '@/components/common/ContentLoader';
@@ -524,7 +527,12 @@ function normalizeValuesByNormalizer(values, normalizerId) {
   );
 }
 
-function IndicatorVisualisation({ indicatorId, indicatorLink }) {
+type IndicatorVisualisationProps = {
+  indicatorId: string;
+  indicatorLink?: string;
+};
+
+function IndicatorVisualisation({ indicatorId, indicatorLink }: IndicatorVisualisationProps) {
   const plan = usePlan();
   const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
   const t = useTranslations();
@@ -537,7 +545,10 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
   const [compareTo, setCompareTo] = useState(undefined);
   const [preferNormalizeByPopulation, setPreferNormalizeByPopulation] = useState(NORMALIZE_DEFAULT);
 
-  const { loading, error, data } = useQuery(GET_INDICATOR_GRAPH_DATA, {
+  const { loading, error, data } = useQuery<
+    IndicatorGraphDataQuery,
+    IndicatorGraphDataQueryVariables
+  >(GET_INDICATOR_GRAPH_DATA, {
     variables: {
       id: indicatorId,
       plan: plan.identifier,
@@ -546,6 +557,7 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
 
   if (loading) return <ContentLoader />;
   if (error) return <Alert color="danger">{`${t('error')}: ${error.message}`}</Alert>;
+  if (!data || !data.plan) return null;
 
   const {
     indicator,
@@ -568,7 +580,7 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
   let canBeNormalized = false;
   if (populationNormalizer !== undefined) {
     let values = indicator.values;
-    if (comparisonIndicator != null) {
+    if (!!comparisonIndicator) {
       values = values.concat(comparisonIndicator.values);
     }
     if (
@@ -586,7 +598,7 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
   }
 
   const setNormalizeByPopulation = normalizeByPopulationSetter(setPreferNormalizeByPopulation);
-  let normalizeByPopulation = canBeNormalized
+  const normalizeByPopulation = canBeNormalized
     ? getNormalizeByPopulation(preferNormalizeByPopulation, comparisonIndicator)
     : false;
 
@@ -594,12 +606,14 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
     indicator,
     compareTo,
     t,
-    normalizeByPopulation ? populationNormalizer.normalizer.id : null
+    normalizeByPopulation ? populationNormalizer!.normalizer.id : null
   );
 
   /// Determine Indicator unit label and y-axis range
-  const { unit } = normalizeByPopulation ? populationNormalizer : indicator;
-  const unitLabel = unit.name === 'no unit' ? '' : unit.shortName || unit.name;
+  const { unit } = normalizeByPopulation ? populationNormalizer! : indicator;
+  const unitHasName = 'name' in unit;
+  const unitLabel =
+    unitHasName && unit.name === 'no unit' ? '' : unit.shortName || (unitHasName ? unit.name : '');
 
   /// Handle object type indicator name (?)
   let plotTitle = '';
@@ -733,10 +747,5 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }) {
     </div>
   );
 }
-
-IndicatorVisualisation.propTypes = {
-  indicatorId: PropTypes.string.isRequired,
-  indicatorLink: PropTypes.string,
-};
 
 export default IndicatorVisualisation;

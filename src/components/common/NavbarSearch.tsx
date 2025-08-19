@@ -383,8 +383,6 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
     setSearchOpen(false);
   };
 
-  console.log(isLoading);
-
   // Close results modal if clicked outside search ui
   useEffect(() => {
     const handlePageClick = (e: MouseEvent) => {

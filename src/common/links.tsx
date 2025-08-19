@@ -260,16 +260,18 @@ export function NavigationLink({ slug, children, ...other }: NavigationLinkProps
   );
 }
 
+type AllLinkProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> &
+  LinkProps & {
+    children?: ReactNode;
+    href: string;
+  };
+
 /**
  * Wraps next/link and ensures the plan basePath is prepended to the href
  * if necessary. Note: This should *not* be used if linking to other
  * locales, as the locale is before plan in the pathname.
  */
-export function Link({
-  href: rawHref,
-  children,
-  ...linkProps
-}: LinkProps & { children?: ReactNode; href: string }) {
+export function Link({ href: rawHref, children, ...linkProps }: AllLinkProps) {
   const href = usePrependPlanAndLocale(rawHref);
 
   return (

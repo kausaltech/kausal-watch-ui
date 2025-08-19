@@ -8,7 +8,9 @@ import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 import { useTheme } from 'styled-components';
 
-import type { MainMenu, MenuItem } from '@/common/__generated__/graphql';
+import { getDeploymentType } from '@common/env';
+
+import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import { deploymentType } from '@/common/environment';
 import { getActiveBranch } from '@/common/links';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
@@ -21,6 +23,9 @@ import { getMetaTitles } from '@/utils/metadata';
 import TopToolBar from './common/TopToolBar';
 import { useCustomComponent } from './paths/custom';
 
+type MainMenu = PlanContextFragment['mainMenu'];
+type MenuItem = NonNullable<PlanContextFragment['mainMenu']>['items'][number];
+
 export type NavItem = {
   id: string;
   name: string;
@@ -32,7 +37,7 @@ export type NavItem = {
 
 export type NavItems = NavItem[] | null;
 
-const getMenuStructure: NavItems = (pages, rootId: string) => {
+const getMenuStructure = (pages: MenuItem[], rootId: string): NavItems => {
   const menuLevelItems: NavItems = [];
   pages.forEach((page) => {
     if (page.parent.id === rootId) {
@@ -65,8 +70,8 @@ const setActivePages = (navLinks, pathname, activeBranch) => {
   return hasActivePage;
 };
 
-function createLocalizeMenuItem(currentLocale, primaryLocale) {
-  return function (menuItem) {
+function createLocalizeMenuItem(currentLocale: string, primaryLocale: string) {
+  return function (menuItem: MenuItem) {
     if (currentLocale === primaryLocale) {
       return menuItem;
     }
@@ -95,7 +100,7 @@ function Header() {
   const navLinks: NavItems = useMemo(() => {
     let links = [];
 
-    const mainMenu = plan.mainMenu as MainMenu;
+    const mainMenu = plan.mainMenu;
     const pageMenuItems: MenuItem[] = mainMenu.items
       .filter((item) => item?.__typename == 'PageMenuItem')
       .map(createLocalizeMenuItem(locale, plan.primaryLanguage));
@@ -134,7 +139,7 @@ function Header() {
   return (
     <header style={{ position: 'relative' }}>
       <SkipToContent />
-      <ApplicationStateBanner deploymentType={deploymentType} />
+      <ApplicationStateBanner deploymentType={getDeploymentType()} />
       {isAuthenticated && <TopToolBar />}
       <NavComponent
         activeBranch={activeBranch}

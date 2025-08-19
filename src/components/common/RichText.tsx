@@ -1,7 +1,9 @@
-import React, { type JSX, ReactElement, useCallback, useState } from 'react';
+import type { ReactElement } from 'react';
+import React, { type JSX, useCallback, useState } from 'react';
 
 import { withScope } from '@sentry/nextjs';
-import parse, { DOMNode, Element, HTMLReactParserOptions, domToReact } from 'html-react-parser';
+import type { DOMNode, Element, HTMLReactParserOptions } from 'html-react-parser';
+import parse, { domToReact } from 'html-react-parser';
 import { useTranslations } from 'next-intl';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
@@ -12,14 +14,14 @@ import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
-const BreakPoint = styled.div<{ fade: boolean }>`
+const BreakPoint = styled.div<{ $fade: boolean }>`
   text-align: center;
   margin-bottom: ${(props) => props.theme.spaces.s150};
   position: relative;
 
   &:before {
     content: '';
-    display: ${(props) => (props.fade ? 'none' : 'block')};
+    display: ${(props) => (props.$fade ? 'none' : 'block')};
     position: absolute;
     height: 75px;
     top: -90px;
@@ -189,7 +191,7 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
       {restOfContent.length > 0 && (
         <>
           <Collapse isOpen={isOpen}>{restOfContent}</Collapse>
-          <BreakPoint fade={isOpen}>
+          <BreakPoint $fade={isOpen}>
             <ToggleButton color="link" onClick={toggle} className={isOpen ? 'open' : ''}>
               {isOpen ? t('close') : t('read-more')}
               <Icon name={isOpen ? 'angle-up' : 'angle-down'} />

@@ -3,7 +3,7 @@ import React from 'react';
 import { Container, Row } from 'reactstrap';
 import styled, { css } from 'styled-components';
 
-import { CategoryPage } from '@/common/__generated__/graphql';
+import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import CategoryPageStreamField, {
   checkAttributeHasValueByType,
 } from '@/components/common/CategoryPageStreamField';
@@ -61,21 +61,23 @@ const columnLayout = css`
   }
 `;
 
-const ContentArea = styled.div<{
+type ContentAreaProps = {
   $columnLayout?: boolean;
   $backgroundColor?: string;
-}>`
+};
+
+const ContentArea = styled.div<ContentAreaProps>`
   ${({ $columnLayout }) => $columnLayout && columnLayout};
   background-color: ${({ $backgroundColor }) => $backgroundColor};
 `;
 
-const CategoryPageContent = ({
+export default function CategoryPageContent({
   page,
   pageSectionColor,
 }: {
   page: CategoryPage;
   pageSectionColor: string;
-}) => {
+}) {
   const hasMainContentTemplate = !!page.layout?.layoutMainBottom?.length;
   const hasAsideTemplate = !!page.layout?.layoutAside;
   const hasAside =
@@ -99,7 +101,7 @@ const CategoryPageContent = ({
                 hasAsideColumn={hasAside}
               />
             ))
-          : page.body && <StreamField page={page} blocks={page.body} color={pageSectionColor} />}
+          : page.body && <StreamField page={page} blocks={page.body} />}
       </MainContent>
 
       {hasAside && (
@@ -120,6 +122,4 @@ const CategoryPageContent = ({
       )}
     </ContentArea>
   );
-};
-
-export default CategoryPageContent;
+}

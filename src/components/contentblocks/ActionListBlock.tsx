@@ -53,9 +53,9 @@ export const SectionHeader = styled.h2`
 
 type ActionListBlockProps = {
   id?: string;
-  categoryId?: string;
-  heading?: string;
-  lead?: string;
+  categoryId: string;
+  heading?: string | null;
+  lead?: string | null;
 };
 
 const ActionListBlock = (props: ActionListBlockProps) => {

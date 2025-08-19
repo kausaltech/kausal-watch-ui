@@ -4,19 +4,19 @@ import { useTranslations } from 'next-intl';
 import { Collapse } from 'reactstrap';
 import styled from 'styled-components';
 
-import { ActionContentAction } from '@/components/actions/ActionContent';
-import FeedbackForm from '@/components/common/FeedbackForm';
+import type { ActionContentAction } from '@/components/actions/ActionContent';
+import FeedbackForm, { type FeedbackFormAdditionalField } from '@/components/common/FeedbackForm';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
-const FeedbackFormSection = styled.div`
-  padding: ${(props) => (props.size === 'sm' ? props.theme.spaces.s050 : props.theme.spaces.s100)};
+const FeedbackFormSection = styled.div<{ $size: 'sm' | 'md' }>`
+  padding: ${(props) => (props.$size === 'sm' ? props.theme.spaces.s050 : props.theme.spaces.s100)};
   background-color: ${(props) => props.theme.graphColors.blue010};
   margin-bottom: ${(props) => props.theme.spaces.s400};
 
   h2 {
     font-size: ${(props) =>
-      props.size === 'sm' ? props.theme.fontSizeMd : props.theme.fontSizeLg};
+      props.$size === 'sm' ? props.theme.fontSizeMd : props.theme.fontSizeLg};
   }
 `;
 
@@ -47,9 +47,8 @@ interface Props {
   feedbackRequired?: boolean;
   emailVisible?: boolean;
   emailRequired?: boolean;
-  fields?: [];
-  id: string;
-  pageId: number;
+  fields?: FeedbackFormAdditionalField[];
+  pageId: string | null;
 }
 
 const ExpandableFeedbackFormBlock = ({
@@ -63,7 +62,6 @@ const ExpandableFeedbackFormBlock = ({
   emailVisible = true,
   emailRequired = true,
   fields,
-  id,
   pageId,
 }: Props) => {
   const t = useTranslations();
@@ -82,7 +80,7 @@ const ExpandableFeedbackFormBlock = ({
     : t('feedback-on-category-description');
 
   return (
-    <FeedbackFormSection size={size}>
+    <FeedbackFormSection $size={size}>
       <ContactTriggerButton color="link" onClick={toggle}>
         <Icon.Commenting width="2rem" height="2rem" />
         <div>
@@ -105,7 +103,6 @@ const ExpandableFeedbackFormBlock = ({
           prompt=""
           formContext={isAction ? 'action' : 'category'}
           additionalFields={fields}
-          block_id={id}
           pageId={pageId}
         />
       </Collapse>

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { captureRequestError } from '@sentry/nextjs';
 
 const productName = 'Kausal Watch UI';

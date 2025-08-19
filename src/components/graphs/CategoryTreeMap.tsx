@@ -2,22 +2,34 @@ import React, { useCallback } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 
-import { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
+import type { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
 
-function makeTrace(catsIn, i18n, unit, heading) {
-  const { language } = i18n;
-  const numberFormat = new Intl.NumberFormat(language, {
+type CategoryInput = NonNullable<GetCategoriesForTreeMapQuery['planCategories']>[number];
+type Category = CategoryInput & {
+  value: number;
+  children: Category[];
+};
+
+function makeTrace(
+  catsIn: CategoryInput[],
+  locale: string,
+  unit: { shortName: string | null } | null,
+  heading: string | null
+): Plotly.Data {
+  const numberFormat = new Intl.NumberFormat(locale, {
     maximumSignificantDigits: 3,
   });
-  const cats = catsIn.map((cat) => ({ ...cat, value: 0, children: [] }));
+  const cats: Category[] = catsIn.map(
+    (cat) => ({ ...cat, value: 0, children: [] }) satisfies Category
+  );
 
   const catMap = new Map(cats.map((cat) => [cat.id, cat]));
   cats.forEach((cat) => {
     if (cat.parent) {
-      const parent = catMap.get(cat.parent.id);
+      const parent = catMap.get(cat.parent.id)!;
       parent.children.push(cat);
     }
   });
@@ -28,7 +40,7 @@ function makeTrace(catsIn, i18n, unit, heading) {
       let { parent } = cat;
       cat.value = cat.attributes[0].value;
       while (parent) {
-        const p = catMap.get(parent.id);
+        const p = catMap.get(parent.id)!;
         p.value += cat.value;
         parent = p.parent;
       }
@@ -43,7 +55,7 @@ function makeTrace(catsIn, i18n, unit, heading) {
     type: 'icicle',
     name: heading || '',
     labels: cats.map((cat) => `<b>${cat.name}</b>`),
-    text: cats.map((cat) => `${numberFormat.format(cat.value)} ${unit.shortName}`),
+    text: cats.map((cat) => `${numberFormat.format(cat.value)} ${unit?.shortName || ''}`),
     ids: cats.map((cat) => cat.id),
     parents: cats.map((cat) => cat.parent?.id),
     values: cats.map((cat) => cat.value),
@@ -74,25 +86,26 @@ function makeTrace(catsIn, i18n, unit, heading) {
 }
 
 type CategoryTreeMapProps = {
-  data: GetCategoriesForTreeMapQuery['planCategories'];
-  heading?: string;
+  data: CategoryInput[];
+  heading?: string | null;
   valueAttribute: {
     unit: {
-      shortName: string;
-    };
+      shortName: string | null;
+    } | null;
   };
   onChangeSection: (cat: string) => void;
 };
 const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeMapProps) {
+  const { data, onChangeSection, valueAttribute, heading } = props;
+  const locale = useLocale();
+
   const isServer = typeof window === 'undefined';
   if (isServer) {
     return null;
   }
-  const { data, onChangeSection, valueAttribute, heading } = props;
-  const i18n = useTranslations();
 
   const Plot = dynamic(() => import('./Plot'));
-  const trace = makeTrace(data, i18n, valueAttribute.unit, heading);
+  const trace = makeTrace(data, locale, valueAttribute.unit, heading ?? null);
 
   const layout = {
     showlegend: false,

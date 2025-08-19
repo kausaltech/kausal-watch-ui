@@ -21,7 +21,7 @@ const IndicatorGraphSection = styled.div`
     )};
 `;
 
-const IndicatorItem = (props) => {
+const IndicatorItem = (props: { indicator: string; indicatorCount: number }) => {
   const { indicator, indicatorCount } = props;
   const t = useTranslations();
   const singleIndicator = indicatorCount === 1;
@@ -44,7 +44,7 @@ const IndicatorItem = (props) => {
   );
 };
 
-const RelatedIndicatorsblock = (props) => {
+const RelatedIndicatorsblock = (props: { id?: string; indicators: { id: string }[] }) => {
   const { id = '', indicators } = props;
   return (
     <IndicatorGraphSection id={id}>
@@ -57,11 +57,6 @@ const RelatedIndicatorsblock = (props) => {
       </Container>
     </IndicatorGraphSection>
   );
-};
-
-RelatedIndicatorsblock.propTypes = {
-  id: PropTypes.string,
-  indicators: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 export default RelatedIndicatorsblock;

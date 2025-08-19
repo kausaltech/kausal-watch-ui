@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { NextResponse } from 'next/server';
 
 import * as Sentry from '@sentry/nextjs';

@@ -7,6 +7,10 @@ import { useTranslations } from 'next-intl';
 import { Controller, useForm } from 'react-hook-form';
 import { Alert, Spinner } from 'reactstrap';
 
+import type {
+  CreateUserFeedbackMutation,
+  CreateUserFeedbackMutationVariables,
+} from '@/common/__generated__/graphql';
 import Button from '@/components/common/Button';
 import CheckboxInput from '@/components/common/CheckboxInput';
 import SelectInput from '@/components/common/SelectInput';
@@ -26,8 +30,8 @@ const CREATE_USER_FEEDBACK = gql`
   }
 `;
 
-function makeAbsoluteUrl(url) {
-  let baseUrl = null;
+function makeAbsoluteUrl(url: string) {
+  let baseUrl: string | null = null;
   if (window?.location?.href === undefined) {
     baseUrl = 'https://unknown.site.kausal.tech';
   } else {
@@ -48,9 +52,19 @@ type FeedbackFormProps = {
   feedbackRequired?: boolean;
   prompt?: string;
   formContext?: string | null;
-  additionalFields?: any[];
-  block_id?: string | null;
-  pageId?: number | null;
+  additionalFields?: FeedbackFormAdditionalField[];
+  pageId?: string | null;
+};
+
+export type FeedbackFormAdditionalField = {
+  id: string;
+  fieldType: 'text' | 'checkbox' | 'dropdown';
+  fieldLabel: string;
+  fieldRequired: boolean;
+  choices: {
+    choiceValue: string;
+    choiceLabel: string;
+  }[];
 };
 
 const FeedbackForm = (props: FeedbackFormProps) => {
@@ -73,7 +87,6 @@ const FeedbackForm = (props: FeedbackFormProps) => {
     prompt,
     formContext = null,
     additionalFields = [],
-    block_id,
     pageId,
   } = props;
 
@@ -91,9 +104,17 @@ const FeedbackForm = (props: FeedbackFormProps) => {
   const [
     createUserFeedback,
     { loading: mutationLoading, error: mutationError, data: mutationData },
-  ] = useMutation(CREATE_USER_FEEDBACK);
+  ] = useMutation<CreateUserFeedbackMutation, CreateUserFeedbackMutationVariables>(
+    CREATE_USER_FEEDBACK
+  );
 
-  const onSubmit = (formData) => {
+  const onSubmit = (formData: {
+    id: string;
+    name: string;
+    email: string;
+    comment: string;
+    [key: string]: string | string[] | null | undefined;
+  }) => {
     const { name, email, comment, ...additionalResponse } = formData;
 
     const isCommentEmpty = !comment || comment.trim() === '';
@@ -120,22 +141,24 @@ const FeedbackForm = (props: FeedbackFormProps) => {
 
     const data = {
       name,
-      email: emailVisible ? email : undefined,
-      comment: feedbackVisible ? comment : undefined,
+      email: emailVisible ? email : null,
+      comment: feedbackVisible ? comment : null,
       additionalFields: JSON.stringify(additionalResponse),
-      pageId,
+      pageId: pageId?.toString() ?? null,
       type: formContext,
       plan: planIdentifier,
       action: actionId,
       category: categoryId,
-      url: makeAbsoluteUrl(decodeURIComponent(searchParams.get('lastUrl') || pathname)),
+      url: makeAbsoluteUrl(decodeURIComponent(searchParams.get('lastUrl') || pathname)).toString(),
+      id: null,
+      clientMutationId: null,
     };
     setSent(true);
     setFormEmptyError(false);
-    createUserFeedback({ variables: { input: data } });
+    void createUserFeedback({ variables: { input: data } });
   };
 
-  const renderAdditionalField = (field) => {
+  const renderAdditionalField = (field: FeedbackFormAdditionalField) => {
     const requiredMessage = ` (${t('required-field')})`;
 
     switch (field.fieldType) {
@@ -238,7 +261,7 @@ const FeedbackForm = (props: FeedbackFormProps) => {
       )}
       {(!sent || mutationError) && (
         <div className="mt-4">
-          <form onSubmit={handleSubmit(onSubmit)} autoComplete="true">
+          <form onSubmit={() => void handleSubmit(onSubmit)} autoComplete="true">
             <Controller
               render={({ field }) => (
                 <TextInput {...field} id="name-field" autoComplete="name" label={t('name')} />

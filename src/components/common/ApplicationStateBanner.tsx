@@ -1,8 +1,7 @@
-import React from 'react';
-
 import { useTranslations } from 'next-intl';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
+import type { DeploymentType } from '@common/env';
 
 import { AnnouncementBannerWithRichTextMessage } from '@/components/common/AnnouncementBanner';
 import PlanVersionBanner from '@/components/versioning/PlanVersionBanner';
@@ -39,7 +38,7 @@ const Banner = styled.div`
   }
 `;
 
-const Label = styled.strong`
+const Label = styled.strong<{ type: DeploymentType }>`
   color: goldenrod;
   margin-right: 0.5em;
 
@@ -48,22 +47,28 @@ const Label = styled.strong`
     content: ${(props) => {
       switch (props.type) {
         case 'production':
+        case 'staging':
           return '';
         case 'testing':
-          return '"\\1F50D"'; /* magnifying emoji for test */
+        case 'preview':
+          return '"🔍"';
+        case 'ci':
+          return '"🤖"';
+        case 'wip':
+          return '"🚧"';
         default:
-          return '"\\1F6A7"'; /* construction emoji for dev */
+          return '"🚧"'; /* construction emoji for dev */
       }
     }};
   }
 `;
 
-function ApplicationStateBanner(props) {
+function ApplicationStateBanner(props: { deploymentType: DeploymentType }) {
   const { deploymentType = 'development' } = props;
   const t = useTranslations();
 
-  let typeLabel;
-  let typeMessage;
+  let typeLabel: string | null = null;
+  let typeMessage: string | null = null;
 
   const plan = usePlan();
 
@@ -112,9 +117,5 @@ function ApplicationStateBanner(props) {
     </>
   );
 }
-
-ApplicationStateBanner.propTypes = {
-  deploymentType: PropTypes.oneOf(['production', 'testing', 'staging', 'development']),
-};
 
 export default ApplicationStateBanner;

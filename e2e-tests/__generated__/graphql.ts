@@ -12,12 +12,13 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  Date: { input: any; output: any; }
+  Date: { input: string; output: string; }
   DateTime: { input: string; output: string; }
   JSONString: { input: string; output: string; }
   PointScalar: { input: any; output: any; }
   PositiveInt: { input: number; output: number; }
   UUID: { input: string; output: string; }
+  _Any: { input: any; output: any; }
 };
 
 /** An enumeration. */
@@ -201,6 +202,12 @@ export enum IndicatorTimeResolution {
   Year = 'YEAR'
 }
 
+export type InstanceContext = {
+  hostname: InputMaybe<Scalars['String']['input']>;
+  identifier: InputMaybe<Scalars['ID']['input']>;
+  locale: InputMaybe<Scalars['String']['input']>;
+};
+
 /** An enumeration. */
 export enum PlanFeaturesContactPersonsPublicData {
   /** Show all information */
@@ -343,13 +350,9 @@ export type UserFeedbackMutationInput = {
   url: Scalars['String']['input'];
 };
 
-/** An enumeration. */
 export enum WorkflowState {
-  /** Approved */
   Approved = 'APPROVED',
-  /** Draft */
   Draft = 'DRAFT',
-  /** Published */
   Published = 'PUBLISHED'
 }
 
@@ -419,9 +422,9 @@ export type PlaywrightGetPlanInfoQuery = (
         ) | null, children: Array<(
           { id: string, page: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } }
           & { __typename: 'PageMenuItem' }
-        ) | null> | null }
+        )> | null }
         & { __typename: 'PageMenuItem' }
-      ) | null> }
+      )> }
       & { __typename: 'MainMenu' }
     ) | null }
     & { __typename: 'Plan' }

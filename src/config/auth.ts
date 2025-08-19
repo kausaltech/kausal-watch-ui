@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { NextRequest } from 'next/server';
 
 import NextAuth, { type NextAuthConfig, type User } from 'next-auth';

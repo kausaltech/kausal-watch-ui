@@ -8,7 +8,7 @@ import styled from 'styled-components';
 const HeaderImage = styled.div<{ $image: string; $imageAlign: string }>`
   background-image: url(${(props) => props.$image});
   background-size: cover;
-  background-position: ${(props) => props.theme.$imageAlign};
+  background-position: ${(props) => props.$imageAlign};
   color: ${(props) => props.theme.themeColors.white};
   height: calc(4 * ${(props) => props.theme.spaces.s400});
   background-color: ${(props) => props.theme.brandDark};
@@ -64,14 +64,7 @@ type Props = {
   imageCredit?: string;
 };
 
-interface ContentPageHeaderBlockProps {
-  title: string;
-  lead?: string;
-  headerImage?: string;
-  imageAlign?: string;
-}
-
-const ContentPageHeaderBlock = (props: ContentPageHeaderBlockProps) => {
+export default function ContentPageHeaderBlock(props: Props) {
   const {
     title,
     lead = null,
@@ -105,6 +98,4 @@ const ContentPageHeaderBlock = (props: ContentPageHeaderBlockProps) => {
       </HeaderBg>
     </>
   );
-};
-
-export default ContentPageHeaderBlock;
+}
