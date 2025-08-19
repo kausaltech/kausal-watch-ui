@@ -4,11 +4,7 @@ import * as Sentry from '@sentry/nextjs';
 import { Col, type ColProps, Container, Row } from 'reactstrap';
 import { useTheme } from 'styled-components';
 
-import type {
-  CategoryPage,
-  CategoryPageMainBottomBlock,
-  CategoryPageMainTopBlock,
-} from '@/common/__generated__/graphql';
+import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import ActionAttribute from '@/components/common/ActionAttribute';
 import { attributeHasValue } from '@/components/common/AttributesBlock';
 import StreamField from '@/components/common/StreamField';
@@ -56,6 +52,13 @@ const TIGHT_COL_PROPS = {
   className: 'my-4',
 };
 
+type CategoryPageLayout = NonNullable<CategoryPage['layout']>;
+
+export type CategoryPageMainTopBlock = NonNullable<CategoryPageLayout['layoutMainTop']>[number];
+export type CategoryPageMainBottomBlock = NonNullable<
+  CategoryPageLayout['layoutMainBottom']
+>[number];
+
 interface Props {
   page: CategoryPage;
   context?: 'hero' | 'main' | 'aside';
@@ -79,17 +82,16 @@ export const checkAttributeHasValueByType = (
   return attribute && attributeHasValue(attribute);
 };
 
-export const CategoryPageStreamField = ({
+export default function CategoryPageStreamField({
   block,
   page,
   context = 'main',
   columnProps: customColumnProps,
   hasAsideColumn = false,
-}: Props) => {
+}: Props) {
   const theme = useTheme();
   const plan = usePlan();
   const columnProps = context === 'main' && hasAsideColumn ? TIGHT_COL_PROPS : DEFAULT_COL_PROPS;
-  console.log(block.id);
   switch (block.__typename) {
     case 'CategoryPageAttributeTypeBlock': {
       const withContainer = context === 'main';
@@ -115,12 +117,12 @@ export const CategoryPageStreamField = ({
             <ExpandableFeedbackFormBlock
               heading={block.heading || undefined}
               description={block.description || undefined}
-              emailVisible={block.emailVisible}
-              emailRequired={block.emailRequired}
-              feedbackVisible={block.feedbackVisible}
-              feedbackRequired={block.feedbackRequired}
+              emailVisible={block.emailVisible ?? undefined}
+              emailRequired={block.emailRequired ?? undefined}
+              feedbackVisible={block.feedbackVisible ?? undefined}
+              feedbackRequired={block.feedbackRequired ?? undefined}
               categoryId={page.category?.id || undefined}
-              fields={block.fields || undefined}
+              fields={block.fields ?? []}
               id={block.id}
               pageId={page.id}
             />
@@ -158,13 +160,13 @@ export const CategoryPageStreamField = ({
     }
 
     case 'CategoryPageBodyBlock': {
-      const color = page.category?.color || page.category?.parent?.color || theme.brandLight;
-
+      if (!page.body) {
+        return null;
+      }
       return (
         <StreamField
           page={page}
           blocks={page.body}
-          color={color}
           hasSidebar={hasAsideColumn}
           columnProps={columnProps}
         />
@@ -181,7 +183,6 @@ export const CategoryPageStreamField = ({
           <CategoryListBlock
             fallbackImage={fallbackImage || undefined}
             categories={childCategories}
-            color={color}
           />
         );
       }
@@ -193,9 +194,9 @@ export const CategoryPageStreamField = ({
       const { heading, helpText, datasetSchema } = block;
       const dataset =
         page.category?.datasets && datasetSchema?.uuid
-          ? page.category.datasets.find((set) => set?.schema.uuid === datasetSchema.uuid)
+          ? page.category.datasets.find((set) => set?.schema?.uuid === datasetSchema.uuid)
           : undefined;
-      if (!dataset) return null;
+      if (!dataset || !dataset.schema) return null;
       return (
         <Wrapper>
           <Col {...columnProps} {...customColumnProps}>
@@ -211,13 +212,11 @@ export const CategoryPageStreamField = ({
     }
 
     default:
-      Sentry.captureMessage(`Unknown block type: ${block.__typename}`, {
+      Sentry.captureMessage(`Unknown block type: ${(block as { __typename: string }).__typename}`, {
         extra: {
           block,
         },
       });
       return null;
   }
-};
-
-export default CategoryPageStreamField;
+}

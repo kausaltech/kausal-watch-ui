@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { Theme } from '@kausal/themes/types';
+import type { Theme } from '@kausal/themes/types';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import { MultiUseImageFragmentFragment } from '@/common/__generated__/graphql';
-import { CommonContentBlockProps } from '@/common/blocks.types';
+import type { MultiUseImageFragmentFragment } from '@/common/__generated__/graphql';
+import type { CommonContentBlockProps } from '@/common/blocks.types';
 import { getBgImageAlignment } from '@/common/images';
 import { Link } from '@/common/links';
 import Card from '@/components/common/Card';
@@ -87,16 +87,16 @@ export type CategoryListBlockCategory = {
   iconImage?: {
     rendition: {
       src: string;
-    };
-  };
+    } | null;
+  } | null;
   identifier: string;
   name: string;
   shortDescription?: string;
   leadParagraph?: string;
-  categoryPage: {
+  categoryPage?: {
     urlPath: string;
     live: boolean;
-  };
+  } | null;
   type: {
     hideCategoryIdentifiers: boolean;
   };
@@ -104,14 +104,15 @@ export type CategoryListBlockCategory = {
 
 interface CategoryListBlockProps extends CommonContentBlockProps {
   categories?: Array<CategoryListBlockCategory>;
-  fallbackImage?: MultiUseImageFragmentFragment;
+  fallbackImage?: MultiUseImageFragmentFragment | null;
   heading?: string;
-  lead: string;
+  lead?: string | null;
   style?: 'treemap' | 'cards';
 }
 
-const CategoryListBlock = (props: CategoryListBlockProps) => {
+function CategoryListBlock(props: CategoryListBlockProps) {
   const fallbackCategories = useFallbackCategories();
+
   const { id = '', fallbackImage, heading, lead, categories = fallbackCategories } = props;
 
   /*
@@ -139,15 +140,15 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
       return {
         type: 'image',
         src: categryImageSrc || fallbackImage?.small?.src,
-        alignment: getBgImageAlignment(category.image || fallbackImage),
+        alignment: getBgImageAlignment(category.image || fallbackImage || null),
       };
   };
 
   return (
     <CategoryListSection id={id}>
       <Container>
-        {heading && <SectionHeader>{heading}</SectionHeader>}
-        <RichText html={lead} className="lead-text" />
+        {heading ? <SectionHeader>{heading}</SectionHeader> : null}
+        {lead ? <RichText html={lead} className="lead-text" /> : null}
         <Row tag="ul" className="justify-content-center">
           {categories
             ?.filter((cat) => cat?.categoryPage?.live)
@@ -162,26 +163,24 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
                     key={cat.id}
                     className="mb-5 d-flex align-items-stretch"
                   >
-                    <Link href={cat.categoryPage.urlPath} legacyBehavior>
-                      <a className="card-wrapper">
-                        <Card
-                          imageUrl={getCardImage(cat).src}
-                          imageAlign={getCardImage(cat).alignment}
-                          imageType={getCardImage(cat).type}
-                          colorEffect={cat.color ?? undefined}
-                          altText={cat.image?.altText}
-                        >
-                          <div>
-                            <CardHeader className="card-title">
-                              {!cat?.type.hideCategoryIdentifiers && (
-                                <Identifier>{cat.identifier}. </Identifier>
-                              )}
-                              {cat.name}
-                            </CardHeader>
-                            {cat.leadParagraph && <p>{cat.leadParagraph}</p>}
-                          </div>
-                        </Card>
-                      </a>
+                    <Link href={cat.categoryPage.urlPath} className="card-wrapper">
+                      <Card
+                        imageUrl={getCardImage(cat).src}
+                        imageAlign={getCardImage(cat).alignment}
+                        imageType={getCardImage(cat).type}
+                        colorEffect={cat.color ?? undefined}
+                        altText={cat.image?.altText}
+                      >
+                        <div>
+                          <CardHeader className="card-title">
+                            {!cat?.type.hideCategoryIdentifiers && (
+                              <Identifier>{cat.identifier}. </Identifier>
+                            )}
+                            {cat.name}
+                          </CardHeader>
+                          {cat.leadParagraph && <p>{cat.leadParagraph}</p>}
+                        </div>
+                      </Card>
                     </Link>
                   </Col>
                 )
@@ -190,7 +189,7 @@ const CategoryListBlock = (props: CategoryListBlockProps) => {
       </Container>
     </CategoryListSection>
   );
-};
+}
 
 CategoryListBlock.fragments = {
   category: CATEGORY_FRAGMENT,

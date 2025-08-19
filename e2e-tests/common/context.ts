@@ -283,6 +283,11 @@ export class PlanContext {
     return new PlanContext(data, baseURL, planIndicators);
   }
 
+  async waitForLoadingFinished(page: Page) {
+    await expect(page.locator('*[aria-busy=true]')).toHaveCount(0, { timeout: 30000 });
+    await page.waitForLoadState('networkidle');
+  }
+
   async checkAccessibility(page: Page) {
     await page.waitForLoadState('networkidle');
     const results = await new AxeBuilder({ page }).analyze();

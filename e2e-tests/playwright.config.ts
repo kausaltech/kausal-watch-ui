@@ -85,7 +85,7 @@ export default defineConfig({
   webServer: process.env.TEST_PAGE_BASE_URL
     ? undefined
     : {
-        command: process.env.TEST_DEVSERVER ? 'cd .. && pnpm dev' : 'cd .. && pnpm start',
+        command: process.env.TEST_DEVSERVER ? 'cd .. && pnpm dev' : 'cd .. && nyc pnpm start',
         url: 'http://localhost:3000/_health',
         reuseExistingServer: true,
         env: {

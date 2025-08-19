@@ -7,14 +7,19 @@ import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'styled-components';
 
+import { getDeploymentType } from '@common/env';
+
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
-import { deploymentType } from '@/common/environment';
 import MonsidoAccessibility from '@/components/MonsidoAccessibility';
 import { usePlan } from '@/context/plan';
 import { getMetaTitles } from '@/utils/metadata';
 
 import ApplicationStateBanner from './common/ApplicationStateBanner';
-import SiteFooter, { type UtilityLink } from './common/SiteFooter';
+import SiteFooter, {
+  type FooterAdditionalLink,
+  type FooterNavItem,
+  type UtilityLink,
+} from './common/SiteFooter';
 import { useCustomComponent } from './paths/custom';
 
 type NavItem = NonNullable<PlanContextFragment['footer']>['items'][0];
@@ -52,7 +57,7 @@ function Footer() {
   const { fundingInstruments, otherLogos, footerStatement } = theme.settings;
   const t = useTranslations();
 
-  const navLinks = (plan.footer?.items || [])
+  const navLinks: FooterNavItem[] = (plan.footer?.items || [])
     .filter((navItem): navItem is NonNullable<typeof navItem> => !!navItem)
     .map((navItem) => {
       if (!navItem || !('id' in navItem)) {
@@ -67,11 +72,11 @@ function Footer() {
             ? undefined
             : navItem.page.urlPath,
         children: getNavChildren(navItem),
-      };
+      } satisfies FooterNavItem;
     });
 
   // TODO: Remove this when we have a proper way to add custom links
-  const additionalLinks = theme.settings?.customAdditionalLinks || [];
+  const additionalLinks: FooterAdditionalLink[] = theme.settings?.customAdditionalLinks || [];
   const hasCustomAccessibilityPage = additionalLinks?.find((link) => link.id === 'accessibility');
 
   plan.additionalLinks?.items?.map((link) =>
@@ -82,7 +87,7 @@ function Footer() {
       url: link.page.url,
       crossPlanLink: link.crossPlanLink,
       viewUrl: link.viewUrl,
-    })
+    } satisfies FooterAdditionalLink)
   );
 
   const ownerLinks = theme.settings?.footerOwnerLinks;
@@ -90,8 +95,10 @@ function Footer() {
   // If there is no custom a11y page set, or if there is no external a11y statement link
   // use the standard a11y statement
   if (
-    !plan.additionalLinks.items.find(
-      (link) => link.page.__typename === 'AccessibilityStatementPage'
+    !plan.additionalLinks?.items.find(
+      (link) =>
+        link.__typename !== 'ExternalLinkMenuItem' &&
+        link.page.__typename === 'AccessibilityStatementPage'
     )
   ) {
     if (plan.accessibilityStatementUrl) {
@@ -99,21 +106,17 @@ function Footer() {
         id: '1',
         name: t('accessibility'),
         slug: plan.accessibilityStatementUrl,
-      });
+      } satisfies FooterAdditionalLink);
     } else if (!hasCustomAccessibilityPage) {
       additionalLinks.push({
         id: '1',
         name: t('accessibility'),
         slug: '/accessibility',
-      });
+      } satisfies FooterAdditionalLink);
     }
   }
 
   const utilityLinks: UtilityLink[] = [];
-
-  if (plan.contactLink) {
-    utilityLinks.push({ id: '1', name: t('contact'), slug: plan.contactLink });
-  }
 
   if (plan.externalFeedbackUrl) {
     utilityLinks.push({
@@ -155,7 +158,7 @@ function Footer() {
         footerStatement={footerStatement}
         ownerLinks={ownerLinks}
       />
-      <ApplicationStateBanner deploymentType={deploymentType} />
+      <ApplicationStateBanner deploymentType={getDeploymentType()} />
       {monsidoToken && <MonsidoAccessibility token={monsidoToken} />}
     </>
   );

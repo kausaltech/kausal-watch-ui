@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { type Page, test as base, expect } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 
 import { PlanContext, getIdentifiersToTest } from '../common/context.ts';
+import { test as coverageTest } from '../common/coverage.ts';
 
-const test = base.extend<{ ctx: PlanContext }>({});
+const test = coverageTest.extend<{ ctx: PlanContext }>({});
 
 async function navigateAndCheckLayout(page: Page, url: string, ctx: PlanContext) {
   await page.goto(url);
@@ -11,6 +12,7 @@ async function navigateAndCheckLayout(page: Page, url: string, ctx: PlanContext)
   await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
   await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
   await expect(page.locator('main#main')).toBeVisible();
+  await expect(page.locator('*[aria-busy=true]')).toHaveCount(0, { timeout: 30000 });
   await page.waitForLoadState('networkidle');
   // temporarily skip accessibility check
   //await ctx.checkAccessibility(page);
@@ -198,6 +200,8 @@ const testPlan = (planId: string) =>
         });
         await firstIndicatorLink.waitFor();
         await firstIndicatorLink.click();
+        await page.waitForURL(/.*\/indicators\/[0-9]+/);
+        await ctx.waitForLoadingFinished(page);
         await expect(main).toBeVisible();
         const h1Span = page.locator('h1 >> span');
         await expect(h1Span).toContainText(indicatorName);

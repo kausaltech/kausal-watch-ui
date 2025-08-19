@@ -1,0 +1,7 @@
+runner:
+  eslint:
+    cmd: npm run lint:baseline --
+    format: eslint
+  typecheck:
+    cmd: npm run typecheck:baseline --
+    format: tsc

@@ -14,7 +14,6 @@ export const GET_HOME_PAGE = gql`
       slug
       ... on PlanRootPage {
         body {
-          id
           ...StreamFieldFragment
         }
       }

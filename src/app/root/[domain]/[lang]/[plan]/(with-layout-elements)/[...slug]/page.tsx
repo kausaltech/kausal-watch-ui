@@ -1,15 +1,13 @@
-import React from 'react';
-
 import { notFound } from 'next/navigation';
 
-import { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 
-import { GetContentPageQuery } from '@/common/__generated__/graphql';
+import type { GetContentPageQuery } from '@/common/__generated__/graphql';
 import { getContentPage } from '@/queries/get-content-page';
 import { tryRequest } from '@/utils/api.utils';
 import { getMetaDescription, getMetaImage } from '@/utils/metadata';
 
-import { Content, GeneralPlanPage } from '../[...slug]/ContentPage';
+import ContentPage from '../[...slug]/ContentPage';
 
 type Props = {
   params: Promise<{ slug: string[]; plan: string }>;
@@ -42,7 +40,7 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
   };
 }
 
-export default async function ContentPage(props: Props) {
+export default async function SlugPage(props: Props) {
   const params = await props.params;
   const { slug, plan } = params;
   const path = getPath(slug);
@@ -53,5 +51,5 @@ export default async function ContentPage(props: Props) {
     return notFound();
   }
 
-  return <Content page={data.planPage as GeneralPlanPage} />;
+  return <ContentPage page={data.planPage} />;
 }

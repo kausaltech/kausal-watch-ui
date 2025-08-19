@@ -18,6 +18,7 @@ const tsoConfig: TypeScriptDocumentsPluginConfig & TypeScriptPluginConfig = {
     PositiveInt: 'number',
     DateTime: 'string',
     JSONString: 'string',
+    Date: 'string',
   },
 };
 
@@ -46,7 +47,11 @@ const config: CodegenConfig = {
     'src/common/__generated__/graphql.ts': {
       schema: apolloConfig.client.service.url,
       documents: watchConfigDocs,
-      plugins: ['typescript', 'typescript-operations'],
+      plugins: [
+        { add: { content: '/* istanbul ignore file */' } },
+        'typescript',
+        'typescript-operations',
+      ],
       config: tsoConfig,
     },
     'src/common/__generated__/paths/possible_types.json': {

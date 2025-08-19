@@ -30,7 +30,11 @@ import Icon, { type ValidIconName } from './Icon';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 
-const getRootLink = (plan, locale, primaryLanguage) => {
+const getRootLink = (
+  plan: { parent?: { viewUrl?: string } | null },
+  locale: string,
+  primaryLanguage: string
+) => {
   if (plan.parent && plan.parent.viewUrl) {
     const shouldAppendLocale =
       locale !== primaryLanguage && !plan.parent.viewUrl.includes(`/${locale}`);

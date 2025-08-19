@@ -30,7 +30,7 @@ export const getActionDetails = async (
       plan,
       clientUrl,
       id,
-      workflow,
+      workflow: workflow ?? null,
     },
     fetchPolicy: 'no-cache',
   });
@@ -220,6 +220,7 @@ const GET_ACTION_DETAILS = gql`
       datasets {
         schema {
           uuid
+          name
           timeResolution
           metrics {
             unit

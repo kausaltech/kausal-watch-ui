@@ -1,6 +1,6 @@
 /* Common utility functions */
 
-export function slugify(text) {
+export function slugify(text: string) {
   return text
     .toString()
     .toLowerCase()
@@ -11,14 +11,14 @@ export function slugify(text) {
     .replace(/-+$/, ''); // Trim - from end of text
 }
 
-export function capitalizeFirstLetter(s) {
+export function capitalizeFirstLetter(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 const MAX_WORDS_PER_LINE = 2;
 const MIN_CHARACTERS_PER_WORD = 4;
 
-export function splitLines(text, lineSeparator = '<br>') {
+export function splitLines(text: string, lineSeparator = '<br>') {
   if (text == null || typeof text != 'string') {
     return text;
   }
@@ -26,8 +26,8 @@ export function splitLines(text, lineSeparator = '<br>') {
   if (words.length === 1) {
     return text;
   }
-  const lines = [];
-  let line = [];
+  const lines: string[][] = [];
+  let line: string[] = [];
   for (const word of words) {
     line.push(word);
     if (
@@ -43,3 +43,14 @@ export function splitLines(text, lineSeparator = '<br>') {
 }
 
 export const stripTrailingSlash = (path: string) => path.replace(/\/$/, '');
+
+export function excludeNullish<T>(array: T[]): NonNullable<T>[] {
+  return array.filter((item) => item !== null && item !== undefined) as NonNullable<T>[];
+}
+
+export function typenameMatches<T extends { __typename: string }, U extends T['__typename'][]>(
+  item: T,
+  ...typenames: U
+): item is T & { __typename: U[number] } {
+  return typenames.includes(item.__typename as U[number]);
+}

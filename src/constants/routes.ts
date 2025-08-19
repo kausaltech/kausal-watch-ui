@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export const INDICATORS_PATH = '/indicators';
 
 export const ACTIONS_PATH = '/actions';
