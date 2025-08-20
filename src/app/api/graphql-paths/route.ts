@@ -69,9 +69,6 @@ export async function POST(request: NextRequest) {
       errorMessage = await backendResponse.text();
       data = { errors: [{ message: errorMessage }] };
     }
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(data);
-    }
     return NextResponse.json(data, {
       status: backendResponse.status,
       headers: responseHeaders,
