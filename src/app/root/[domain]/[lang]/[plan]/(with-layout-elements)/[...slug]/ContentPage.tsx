@@ -178,8 +178,6 @@ export default function ContentPage({ page }: { page: GeneralPlanPage }) {
       </article>
     );
 
-  console.log('render content page', page);
-
   return (
     <article>
       {typenameMatches(page, 'CategoryPage', 'StaticPage') ? (
