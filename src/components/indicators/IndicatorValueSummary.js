@@ -180,9 +180,7 @@ function IndicatorValueSummary(props) {
     const prefix = difference > 0 ? '+' : '-';
     differenceDisplay = (
       <div className="mb-4">
-        <ValueLabel>
-          {t(goalReached ? 'indicator-goal-exceeded' : 'indicator-time-to-goal')}
-        </ValueLabel>
+        <ValueLabel>{t(goalReached ? 'indicator-goal-exceeded' : 'indicator-to-goal')}</ValueLabel>
         <ValueDate>{goalReached ? '-' : timeToGoal}</ValueDate>
         <ValueDisplay>
           {goalReached ? '' : prefix}

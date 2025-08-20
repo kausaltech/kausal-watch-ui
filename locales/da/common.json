@@ -65,7 +65,7 @@
     "indicator-related-actions": "{context, select, STRATEGY {Strategier, der påvirker denne indikator} other {Handlinger, der påvirker denne indikator}}",
     "indicator-resolution-years": "flere år",
     "indicator-time-no-goals": "Ingen mål",
-    "indicator-time-to-goal": "Tid til mål",
+    "indicator-to-goal": "Til mål",
     "indicator-value": "Værdi",
     "indicator": "Indikator",
     "indicators": "Indikatorer",

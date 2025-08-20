@@ -65,7 +65,7 @@
     "indicator-related-actions": "{context, select, STRATEGY {Mittariin vaikuttavat strategiat} other {Mittariin vaikuttavat toimenpiteet}}",
     "indicator-resolution-years": "vuotta",
     "indicator-time-no-goals": "Ei tavoitearvoja",
-    "indicator-time-to-goal": "Tavoitteeseen matkaa",
+    "indicator-to-goal": "Tavoitteeseen",
     "indicator-goal-exceeded": "Tavoite jo ylitetty",
     "indicator-value": "Havainto",
     "indicator": "Mittari",

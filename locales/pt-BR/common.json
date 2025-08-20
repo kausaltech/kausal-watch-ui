@@ -68,7 +68,7 @@
     "indicator-related-actions": "{context, select, CASE_STUDY {Estudos de caso que afetam esse indicador} STRATEGY {Estratégias que afetam esse indicador} other {Ações que afetam esse indicador}}",
     "indicator-resolution-years": "anos",
     "indicator-time-no-goals": "Sem metas",
-    "indicator-time-to-goal": "Tempo até a meta",
+    "indicator-to-goal": "Até a meta",
     "indicator-value": "Valor",
     "indicator": "Indicador",
     "indicators": "Indicadores",

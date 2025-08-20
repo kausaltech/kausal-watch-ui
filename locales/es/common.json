@@ -65,7 +65,7 @@
     "indicator-related-actions": "{context, select, STRATEGY {Estrategias que inciden en este indicador} other {Acciones que repercuten en este indicador}}",
     "indicator-resolution-years": "años",
     "indicator-time-no-goals": "Sin objetivos",
-    "indicator-time-to-goal": "Tiempo hasta el objetivo",
+    "indicator-to-goal": "Al objetivo",
     "indicator-value": "Valor",
     "indicator": "Indicador",
     "indicators": "Indicadores",

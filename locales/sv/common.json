@@ -61,7 +61,7 @@
     "indicator-related-actions": "{context, select, CASE_STUDY {Handlingar som påverkar denna indikator} STRATEGY {Strategier som påverkar denna indikator} other {Åtgärderna som påverkar denna indikator}}",
     "indicator-resolution-years": "år",
     "indicator-time-no-goals": "Inga mål",
-    "indicator-time-to-goal": "Dags till mål",
+    "indicator-to-goal": "Till mål",
     "indicator-value": "Värdet",
     "indicators": "Indikatorer",
     "indicators-as-insight": "Som insikter",
