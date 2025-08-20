@@ -4,6 +4,8 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
+import PopoverTip from '@/components/common/PopoverTip';
+
 import { beautifyValue } from '../../common/data/format';
 import dayjs from '../../common/dayjs';
 
@@ -49,6 +51,15 @@ const ChangeSymbol = styled.span`
   margin-right: 0.5em;
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
+`;
+
+const TooltipContent = styled.div`
+  color: ${(props) => props.theme.themeColors.white};
+
+  a {
+    color: ${(props) => props.theme.themeColors.white};
+    text-decoration: underline;
+  }
 `;
 
 function determineDesirableDirection(desiredTrend, values, goals) {
@@ -163,6 +174,7 @@ function IndicatorValueSummary(props) {
   let differenceDisplay = undefined;
   if (values.length > 0 && nextGoal) {
     const difference = nextGoal.value - values[values.length - 1].value;
+    const isPercentagePoint = unit?.name === '%';
     const goalReached = desirableDirection === '+' ? difference <= 0 : difference >= 0;
     const timeToGoal = dayjs(now).to(dayjs(nextGoal.date));
     const prefix = difference > 0 ? '+' : '-';
@@ -175,7 +187,27 @@ function IndicatorValueSummary(props) {
         <ValueDisplay>
           {goalReached ? '' : prefix}
           {beautifyValue(Math.abs(difference), locale)}
-          <ValueUnit>{diffUnitName}</ValueUnit>
+          <span style={{ display: 'inline-flex' }}>
+            <ValueUnit>{diffUnitName}</ValueUnit>
+            {isPercentagePoint && (
+              <PopoverTip
+                compact
+                identifier="pp-explainer"
+                content={
+                  <TooltipContent>
+                    {t('percentage-point-explainer')}{' '}
+                    <a
+                      href="https://en.wikipedia.org/wiki/Percentage_point"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {t('read-more')}
+                    </a>
+                  </TooltipContent>
+                }
+              />
+            )}
+          </span>
         </ValueDisplay>
       </div>
     );
