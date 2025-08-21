@@ -32,11 +32,9 @@ const IndicatorItem = (props: { indicator: string; indicatorCount: number }) => 
       <IndicatorVisualisation indicatorId={indicator} />
       {showLink && (
         <div className="mt-2 text-right">
-          <Link href={`/indicators/${indicator}`} legacyBehavior>
-            <a>
-              {t('read-more')}
-              <Icon.ArrowRight />
-            </a>
+          <Link href={`/indicators/${indicator}`}>
+            {t('read-more')}
+            <Icon.ArrowRight />
           </Link>
         </div>
       )}

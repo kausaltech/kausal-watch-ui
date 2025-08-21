@@ -107,10 +107,12 @@ const StyledCardContainer = styled(ReactStrapCol)<{ $embed?: { active: boolean }
   }
 `;
 
-export type ActionHighlightListAction = NonNullable<ActionHightlightListQuery['planActions']>;
+export type ActionHighlightListAction = NonNullable<
+  NonNullable<ActionHightlightListQuery['planActions']>[number]
+>;
 
 type ActionCardListProps = {
-  actions: ActionHighlightListAction;
+  actions: ActionHighlightListAction[];
   plan: PlanContextFragment;
   displayHeader?: boolean;
 };

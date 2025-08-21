@@ -6,7 +6,8 @@ import styled from 'styled-components';
 import { usePlan } from '@/context/plan';
 
 import { getActionTermContext } from '../../common/i18n';
-import { ActionLink, ActionLinkProps } from '../../common/links';
+import type { ActionLinkProps } from '../../common/links';
+import { ActionLink } from '../../common/links';
 import Button from '../common/Button';
 import Icon from '../common/Icon';
 
@@ -46,24 +47,20 @@ const ActionPager = ({ nextAction = null, previousAction = null }: Props) => {
       <Previous>
         {previousAction && (
           <ActionLink action={previousAction}>
-            <a>
-              <PageButton color="primary" outline>
-                <Icon.ArrowLeft />
-                {t('action-previous', getActionTermContext(plan))}
-              </PageButton>
-            </a>
+            <PageButton color="primary" outline>
+              <Icon.ArrowLeft />
+              {t('action-previous', getActionTermContext(plan))}
+            </PageButton>
           </ActionLink>
         )}
       </Previous>
       <Next>
         {nextAction && (
           <ActionLink action={nextAction}>
-            <a>
-              <PageButton color="primary" outline>
-                {t('action-next', getActionTermContext(plan))}
-                <Icon.ArrowRight />
-              </PageButton>
-            </a>
+            <PageButton color="primary" outline>
+              {t('action-next', getActionTermContext(plan))}
+              <Icon.ArrowRight />
+            </PageButton>
           </ActionLink>
         )}
       </Next>

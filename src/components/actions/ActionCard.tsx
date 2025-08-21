@@ -9,7 +9,7 @@ import styled, { css } from 'styled-components';
 import { useTheme } from 'styled-components';
 
 import { getStatusColorForAction } from '@/common/ActionStatusSummary';
-import {
+import type {
   ActionCardFragment,
   GetActionDetailsQuery,
   PlanContextFragment,
@@ -25,7 +25,7 @@ import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
 import Icon from '../common/Icon';
 import { ActionDependenciesBlock } from './blocks/action-dependencies/ActionDependenciesBlock';
 
-const StyledActionLink = styled.a`
+const StyledActionLink = styled(ActionLink)`
   text-decoration: none;
   display: flex;
   width: 100%;
@@ -80,10 +80,12 @@ const SecondaryIconsContainer = styled.div`
   padding: 0 ${({ theme }) => `${theme.spaces.s050} ${theme.spaces.s050}`};
 `;
 
-const ActionCardElement = styled.div<{
+type ActionCardElementProps = {
   $isLink: boolean;
   $isHighlighted: boolean;
-}>`
+};
+
+const ActionCardElement = styled.div<ActionCardElementProps>`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -141,10 +143,12 @@ const ActionStatusArea = styled.div<{ $statusColor: string; $isMini: boolean }>`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const StyledActionPhase = styled.div<{
+type StyledActionPhaseProps = {
   $hasStatus: boolean;
   $statusColor: string;
-}>`
+};
+
+const StyledActionPhase = styled.div<StyledActionPhaseProps>`
   background-color: ${({ $hasStatus, theme, $statusColor }) =>
     $hasStatus ? theme.themeColors.light : $statusColor};
   color: ${(props) => props.theme.themeColors.dark};
@@ -219,7 +223,11 @@ const StyledActionDependencyIconWrapper = styled.span`
   margin: ${(props) => props.theme.spaces.s100};
 `;
 
-const PrimaryIcon = (props) => {
+type PrimaryIconProps = {
+  category: ActionCardFragment['categories'][number];
+};
+
+const PrimaryIcon = (props: PrimaryIconProps) => {
   const { category } = props;
   if (!category) return null;
   if (category.iconSvgUrl) return <PrimarySvgIcon src={category.iconSvgUrl} />;
@@ -228,7 +236,12 @@ const PrimaryIcon = (props) => {
   else return null;
 };
 
-const SecondaryIcons = (props) => {
+type SecondaryIconsProps = {
+  actionCategories: ActionCardFragment['categories'];
+  secondaryClassificationId: string;
+};
+
+const SecondaryIcons = (props: SecondaryIconsProps) => {
   const { actionCategories, secondaryClassificationId } = props;
   const secondaryIcons = actionCategories?.filter(
     (cat) => cat.type.id === secondaryClassificationId && cat.iconSvgUrl !== null
@@ -242,7 +255,7 @@ const SecondaryIcons = (props) => {
         <SecondaryIcon
           $color={cat.color ? cat.color : 'black'}
           key={cat.id}
-          src={cat.iconSvgUrl}
+          src={cat.iconSvgUrl!}
           preserveAspectRatio="xMinYMid meet"
           title={cat.name}
         />
@@ -440,14 +453,14 @@ function ActionCard({
   const mergedWithActionFromOtherPlan = mergedWith != null && mergedWith.plan.id !== plan.id;
 
   return (
-    <ActionLink
+    <StyledActionLink
       action={action}
       viewUrl={action.mergedWith?.viewUrl ?? action.viewUrl}
       planUrl={getPlanUrl(mergedWith, action.plan, plan.id)}
       crossPlan={fromOtherPlan || mergedWithActionFromOtherPlan}
     >
-      <StyledActionLink>{actionCard}</StyledActionLink>
-    </ActionLink>
+      {actionCard}
+    </StyledActionLink>
   );
 }
 

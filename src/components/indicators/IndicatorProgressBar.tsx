@@ -189,7 +189,7 @@ type IndicatorType = {
 };
 */
 interface IndicatorProgressBarProps {
-  indicatorId;
+  indicatorId: string;
   normalize: boolean;
   baseValue: {
     value: number;
@@ -728,9 +728,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
         </svg>
         {theme.section.indicatorShowcase.linkToSource && (
           <SourceLink role="button" tabIndex={0} className="text-end mt-3">
-            <IndicatorLink id={indicatorId} href={`/indicator/${indicatorId}`}>
-              {note}
-            </IndicatorLink>
+            <IndicatorLink id={indicatorId}>{note}</IndicatorLink>
           </SourceLink>
         )}
       </div>
