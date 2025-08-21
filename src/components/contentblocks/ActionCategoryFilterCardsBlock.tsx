@@ -77,26 +77,24 @@ const CategoryListBlock = ({ id = '', cards }: Props) => {
               style={{ transition: 'all 0.5s ease' }}
             >
               <Link
-                legacyBehavior
+                className="card-wrapper"
                 href={`/actions?${getCategoryString(
                   card.category.type.identifier
                 )}=${card.category.id}`}
               >
-                <a className="card-wrapper">
-                  <Card
-                    customBackgroundColor={theme.brandDark}
-                    customColor={readableColor(
-                      theme.brandDark,
-                      theme.themeColors.black,
-                      theme.themeColors.white
-                    )}
-                  >
-                    <div>
-                      <CardHeader className="card-title">{card.heading}</CardHeader>
-                      <CardLead>{card.lead}</CardLead>
-                    </div>
-                  </Card>
-                </a>
+                <Card
+                  customBackgroundColor={theme.brandDark}
+                  customColor={readableColor(
+                    theme.brandDark,
+                    theme.themeColors.black,
+                    theme.themeColors.white
+                  )}
+                >
+                  <div>
+                    <CardHeader className="card-title">{card.heading}</CardHeader>
+                    <CardLead>{card.lead}</CardLead>
+                  </div>
+                </Card>
               </Link>
             </Col>
           ))}

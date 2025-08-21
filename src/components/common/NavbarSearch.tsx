@@ -297,17 +297,17 @@ const ResultList = (props: ResultListProps) => {
       )}
       <ResultsFooter>
         {results.length > 0 ? (
-          <Link prefetch={false} href={`/search?q=${searchTerm}`} legacyBehavior>
-            <a onClick={closeSearch} data-testid="search-advanced">
-              {t('see-all-results', { count: results.length })}
-              <Icon.ArrowRight />
-            </a>
+          <Link
+            href={`/search?q=${searchTerm}`}
+            onClick={closeSearch}
+            data-testid="search-advanced"
+          >
+            {t('see-all-results', { count: results.length })}
+            <Icon.ArrowRight />
           </Link>
         ) : (
-          <Link prefetch={false} href={`/search`} legacyBehavior>
-            <a onClick={closeSearch} data-testid="search-advanced">
-              {t('search-advanced')} <Icon.ArrowRight />
-            </a>
+          <Link href={`/search`} onClick={closeSearch} data-testid="search-advanced">
+            {t('search-advanced')} <Icon.ArrowRight />
           </Link>
         )}
       </ResultsFooter>

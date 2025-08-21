@@ -210,6 +210,14 @@ export type InstanceContext = {
 };
 
 /** An enumeration. */
+export enum ModelAction {
+  Add = 'ADD',
+  Change = 'CHANGE',
+  Delete = 'DELETE',
+  View = 'VIEW'
+}
+
+/** An enumeration. */
 export enum PlanFeaturesContactPersonsPublicData {
   /** Show all information */
   All = 'ALL',
@@ -837,7 +845,7 @@ export type GetActionListQuery = (
       { id: string, identifier: string, name: string }
       & { __typename: 'ActionImplementationPhase' }
     ) | null, primaryOrg: (
-      { id: string, abbreviation: string, name: string, logo: (
+      { id: string, abbreviation: string | null, name: string, logo: (
         { rendition: (
           { src: string }
           & { __typename: 'ImageRendition' }
@@ -880,7 +888,7 @@ export type ContactDetailsQuery = (
           & { __typename: 'OrganizationClass' }
         ) | null }
         & { __typename: 'Organization' }
-      )> }
+      ) | null> | null }
       & { __typename: 'Organization' }
     ) }
     & { __typename: 'Person' }
@@ -1175,7 +1183,7 @@ export type GetActionListForBlockQuery = (
       { id: string, identifier: string, name: string }
       & { __typename: 'ActionImplementationPhase' }
     ) | null, primaryOrg: (
-      { id: string, abbreviation: string, name: string, logo: (
+      { id: string, abbreviation: string | null, name: string, logo: (
         { rendition: (
           { src: string }
           & { __typename: 'ImageRendition' }
@@ -1322,7 +1330,7 @@ export type PlanFragmentFragment = (
     )> }
     & { __typename: 'CategoryType' }
   )>, primaryOrgs: Array<(
-    { id: string, abbreviation: string, name: string }
+    { id: string, abbreviation: string | null, name: string }
     & { __typename: 'Organization' }
   )> }
   & { __typename: 'Plan' }
@@ -1409,12 +1417,12 @@ export type ActionFragmentFragment = (
     & { __typename: 'AttributeRichText' | 'AttributeText' }
   )>, responsibleParties: Array<(
     { id: string, role: ActionResponsiblePartyRole | null, hasContactPerson: boolean, organization: (
-      { id: string, abbreviation: string, name: string }
+      { id: string, abbreviation: string | null, name: string }
       & { __typename: 'Organization' }
     ) }
     & { __typename: 'ActionResponsibleParty' }
   )>, primaryOrg: (
-    { id: string, abbreviation: string, name: string, logo: (
+    { id: string, abbreviation: string | null, name: string, logo: (
       { rendition: (
         { src: string }
         & { __typename: 'ImageRendition' }
@@ -1436,7 +1444,7 @@ export type ActionFragmentFragment = (
 );
 
 export type OrganizationFragmentFragment = (
-  { id: string, abbreviation: string, name: string, contactPersonCount: number, actionCount: number, classification: (
+  { id: string, abbreviation: string | null, name: string, contactPersonCount: number, actionCount: number, classification: (
     { name: string }
     & { __typename: 'OrganizationClass' }
   ) | null, parent: (
@@ -1481,7 +1489,7 @@ export type DashboardActionListQuery = (
       )> }
       & { __typename: 'CategoryType' }
     )>, primaryOrgs: Array<(
-      { id: string, abbreviation: string, name: string }
+      { id: string, abbreviation: string | null, name: string }
       & { __typename: 'Organization' }
     )> }
     & { __typename: 'Plan' }
@@ -1566,12 +1574,12 @@ export type DashboardActionListQuery = (
       & { __typename: 'AttributeRichText' | 'AttributeText' }
     )>, responsibleParties: Array<(
       { id: string, role: ActionResponsiblePartyRole | null, hasContactPerson: boolean, organization: (
-        { id: string, abbreviation: string, name: string }
+        { id: string, abbreviation: string | null, name: string }
         & { __typename: 'Organization' }
       ) }
       & { __typename: 'ActionResponsibleParty' }
     )>, primaryOrg: (
-      { id: string, abbreviation: string, name: string, logo: (
+      { id: string, abbreviation: string | null, name: string, logo: (
         { rendition: (
           { src: string }
           & { __typename: 'ImageRendition' }
@@ -1671,12 +1679,12 @@ export type DashboardActionListQuery = (
       & { __typename: 'AttributeRichText' | 'AttributeText' }
     )>, responsibleParties: Array<(
       { id: string, role: ActionResponsiblePartyRole | null, hasContactPerson: boolean, organization: (
-        { id: string, abbreviation: string, name: string }
+        { id: string, abbreviation: string | null, name: string }
         & { __typename: 'Organization' }
       ) }
       & { __typename: 'ActionResponsibleParty' }
     )>, primaryOrg: (
-      { id: string, abbreviation: string, name: string, logo: (
+      { id: string, abbreviation: string | null, name: string, logo: (
         { rendition: (
           { src: string }
           & { __typename: 'ImageRendition' }
@@ -1714,7 +1722,7 @@ export type DashboardActionListQuery = (
     )> | null }
     & { __typename: 'ActionListPage' }
   ) | null, planOrganizations: Array<(
-    { id: string, abbreviation: string, name: string, contactPersonCount: number, actionCount: number, classification: (
+    { id: string, abbreviation: string | null, name: string, contactPersonCount: number, actionCount: number, classification: (
       { name: string }
       & { __typename: 'OrganizationClass' }
     ) | null, parent: (
@@ -2012,7 +2020,7 @@ export type IndicatorGraphDataQuery = (
     & { __typename: 'Plan' }
   ) | null, indicator: (
     { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, showTotalLine: boolean, desiredTrend: IndicatorDesiredTrend | null, reference: string | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, valueRounding: number | null, dataCategoriesAreStackable: boolean, organization: (
-      { id: string, name: string, abbreviation: string }
+      { id: string, name: string, abbreviation: string | null }
       & { __typename: 'Organization' }
     ), quantity: (
       { id: string, name: string }
@@ -2059,7 +2067,7 @@ export type IndicatorGraphDataQuery = (
         & { __typename: 'CommonIndicatorNormalization' }
       )>, indicators: Array<(
         { id: string, timeResolution: IndicatorTimeResolution, minValue: number | null, maxValue: number | null, organization: (
-          { id: string, name: string, abbreviation: string }
+          { id: string, name: string, abbreviation: string | null }
           & { __typename: 'Organization' }
         ), quantity: (
           { id: string, name: string }
@@ -2884,7 +2892,7 @@ export type ActionCardFragment = (
     { id: string, identifier: string, name: string }
     & { __typename: 'ActionImplementationPhase' }
   ) | null, primaryOrg: (
-    { id: string, abbreviation: string, name: string, logo: (
+    { id: string, abbreviation: string | null, name: string, logo: (
       { rendition: (
         { src: string }
         & { __typename: 'ImageRendition' }
@@ -3541,7 +3549,7 @@ export type CategoryRecursiveFragmentFragment = (
 );
 
 export type DashboardIndicatorFragmentFragment = (
-  { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+  { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
     { value: number, date: string | null }
     & { __typename: 'IndicatorValue' }
   ) | null, goals: Array<(
@@ -3590,7 +3598,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -3620,7 +3628,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -3650,7 +3658,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -3680,7 +3688,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -3695,7 +3703,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
     & { __typename: 'DashboardIndicatorPieChartBlock' }
   ) | (
     { id: string | null, blockType: string, indicator: (
-      { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -4421,7 +4429,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -4451,7 +4459,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -4481,7 +4489,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -4511,7 +4519,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -4526,7 +4534,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
     & { __typename: 'DashboardIndicatorPieChartBlock' }
   ) | (
     { id: string | null, blockType: string, indicator: (
-      { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -4578,7 +4586,7 @@ type StreamFieldFragment_IndicatorBlock_Fragment = (
 );
 
 type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
-  { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' } | { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardIndicatorAreaChartBlock' } | { __typename: 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' } | { __typename: 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCausalChainBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' } | { __typename: 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | { __typename: 'UpdatedAtColumnBlock' } | (
+  { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<(
     { style: string | null, indicator: (
       { id: string, identifier: string | null, name: string, description: string | null, timeResolution: IndicatorTimeResolution, level: string | null, unit: (
         { id: string, name: string }
@@ -4593,7 +4601,7 @@ type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
       & { __typename: 'Indicator' }
     ) | null }
     & { __typename: 'IndicatorBlock' }
-  ) | null> | null }
+  )> | null }
   & { __typename: 'IndicatorGroupBlock' }
 );
 
@@ -4987,7 +4995,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename: 'ActionContactPerson' }
     )>, primaryOrg: (
-      { id: string, abbreviation: string, name: string, logo: (
+      { id: string, abbreviation: string | null, name: string, logo: (
         { rendition: (
           { src: string }
           & { __typename: 'ImageRendition' }
@@ -4997,7 +5005,7 @@ export type GetActionDetailsQuery = (
       & { __typename: 'Organization' }
     ) | null, responsibleParties: Array<(
       { id: string, role: ActionResponsiblePartyRole | null, specifier: string, organization: (
-        { id: string, abbreviation: string, name: string, email: string }
+        { id: string, abbreviation: string | null, name: string, email: string }
         & { __typename: 'Organization' }
       ) }
       & { __typename: 'ActionResponsibleParty' }
@@ -5264,7 +5272,7 @@ export type GetActionDetailsQuery = (
         { id: string, identifier: string, name: string }
         & { __typename: 'ActionImplementationPhase' }
       ) | null, primaryOrg: (
-        { id: string, abbreviation: string, name: string, logo: (
+        { id: string, abbreviation: string | null, name: string, logo: (
           { rendition: (
             { src: string }
             & { __typename: 'ImageRendition' }
@@ -5522,7 +5530,7 @@ export type GetActionDetailsQuery = (
         { id: string, identifier: string, name: string }
         & { __typename: 'ActionImplementationPhase' }
       ) | null, primaryOrg: (
-        { id: string, abbreviation: string, name: string, logo: (
+        { id: string, abbreviation: string | null, name: string, logo: (
           { rendition: (
             { src: string }
             & { __typename: 'ImageRendition' }
@@ -5774,7 +5782,7 @@ export type GetActionDetailsQuery = (
         { id: string, identifier: string, name: string }
         & { __typename: 'ActionImplementationPhase' }
       ) | null, primaryOrg: (
-        { id: string, abbreviation: string, name: string, logo: (
+        { id: string, abbreviation: string | null, name: string, logo: (
           { rendition: (
             { src: string }
             & { __typename: 'ImageRendition' }
@@ -6330,7 +6338,7 @@ export type GetActionDetailsQuery = (
           { id: string, identifier: string, name: string }
           & { __typename: 'ActionImplementationPhase' }
         ) | null, primaryOrg: (
-          { id: string, abbreviation: string, name: string, logo: (
+          { id: string, abbreviation: string | null, name: string, logo: (
             { rendition: (
               { src: string }
               & { __typename: 'ImageRendition' }
@@ -6585,7 +6593,7 @@ export type GetActionDetailsQuery = (
           { id: string, identifier: string, name: string }
           & { __typename: 'ActionImplementationPhase' }
         ) | null, primaryOrg: (
-          { id: string, abbreviation: string, name: string, logo: (
+          { id: string, abbreviation: string | null, name: string, logo: (
             { rendition: (
               { src: string }
               & { __typename: 'ImageRendition' }
@@ -8266,7 +8274,7 @@ export type ActionDependenciesFragment = (
         { id: string, identifier: string, name: string }
         & { __typename: 'ActionImplementationPhase' }
       ) | null, primaryOrg: (
-        { id: string, abbreviation: string, name: string, logo: (
+        { id: string, abbreviation: string | null, name: string, logo: (
           { rendition: (
             { src: string }
             & { __typename: 'ImageRendition' }
@@ -8521,7 +8529,7 @@ export type ActionDependenciesFragment = (
         { id: string, identifier: string, name: string }
         & { __typename: 'ActionImplementationPhase' }
       ) | null, primaryOrg: (
-        { id: string, abbreviation: string, name: string, logo: (
+        { id: string, abbreviation: string | null, name: string, logo: (
           { rendition: (
             { src: string }
             & { __typename: 'ImageRendition' }
@@ -9809,7 +9817,7 @@ export type ActionCardWithDependencyRoleFragment = (
     { id: string, identifier: string, name: string }
     & { __typename: 'ActionImplementationPhase' }
   ) | null, primaryOrg: (
-    { id: string, abbreviation: string, name: string, logo: (
+    { id: string, abbreviation: string | null, name: string, logo: (
       { rendition: (
         { src: string }
         & { __typename: 'ImageRendition' }
@@ -10933,7 +10941,7 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'CategoryListBlock' }
     ) | (
-      { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' } | { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardIndicatorAreaChartBlock' } | { __typename: 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' } | { __typename: 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCausalChainBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' } | { __typename: 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | { __typename: 'UpdatedAtColumnBlock' } | (
+      { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<(
         { style: string | null, indicator: (
           { id: string, identifier: string | null, name: string, description: string | null, timeResolution: IndicatorTimeResolution, level: string | null, unit: (
             { id: string, name: string }
@@ -10948,7 +10956,7 @@ export type GetContentPageQuery = (
           & { __typename: 'Indicator' }
         ) | null }
         & { __typename: 'IndicatorBlock' }
-      ) | null> | null }
+      )> | null }
       & { __typename: 'IndicatorGroupBlock' }
     ) | (
       { heading: string | null, id: string | null, blockType: string, field: string, questions: Array<(
@@ -11601,7 +11609,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -11631,7 +11639,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -11661,7 +11669,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -11691,7 +11699,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -11706,7 +11714,7 @@ export type GetContentPageQuery = (
         & { __typename: 'DashboardIndicatorPieChartBlock' }
       ) | (
         { id: string | null, blockType: string, indicator: (
-          { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -11725,7 +11733,7 @@ export type GetContentPageQuery = (
       )> }
       & { __typename: 'DashboardRowBlock' }
     ) | (
-      { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' } | { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardIndicatorAreaChartBlock' } | { __typename: 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' } | { __typename: 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCausalChainBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' } | { __typename: 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | { __typename: 'UpdatedAtColumnBlock' } | (
+      { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<(
         { style: string | null, indicator: (
           { id: string, identifier: string | null, name: string, description: string | null, timeResolution: IndicatorTimeResolution, level: string | null, unit: (
             { id: string, name: string }
@@ -11740,7 +11748,7 @@ export type GetContentPageQuery = (
           & { __typename: 'Indicator' }
         ) | null }
         & { __typename: 'IndicatorBlock' }
-      ) | null> | null }
+      )> | null }
       & { __typename: 'IndicatorGroupBlock' }
     ) | (
       { width: string | null, id: string | null, blockType: string, field: string, image: (
@@ -12216,7 +12224,7 @@ export type GetHomePageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -12246,7 +12254,7 @@ export type GetHomePageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -12276,7 +12284,7 @@ export type GetHomePageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -12306,7 +12314,7 @@ export type GetHomePageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -12321,7 +12329,7 @@ export type GetHomePageQuery = (
         & { __typename: 'DashboardIndicatorPieChartBlock' }
       ) | (
         { id: string | null, blockType: string, indicator: (
-          { name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -12361,7 +12369,7 @@ export type GetHomePageQuery = (
       ) | null }
       & { __typename: 'FrontPageHeroBlock' }
     ) | (
-      { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' } | { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardIndicatorAreaChartBlock' } | { __typename: 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' } | { __typename: 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCausalChainBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' } | { __typename: 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | { __typename: 'UpdatedAtColumnBlock' } | (
+      { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<(
         { style: string | null, indicator: (
           { id: string, identifier: string | null, name: string, description: string | null, timeResolution: IndicatorTimeResolution, level: string | null, unit: (
             { id: string, name: string }
@@ -12376,7 +12384,7 @@ export type GetHomePageQuery = (
           & { __typename: 'Indicator' }
         ) | null }
         & { __typename: 'IndicatorBlock' }
-      ) | null> | null }
+      )> | null }
       & { __typename: 'IndicatorGroupBlock' }
     ) | (
       { title: string | null, body: string | null, id: string | null, blockType: string, field: string, blocks: Array<(
@@ -12551,7 +12559,7 @@ export type IndicatorDetailsQueryVariables = Exact<{
 export type IndicatorDetailsQuery = (
   { indicator: (
     { id: string, identifier: string | null, name: string, level: string | null, description: string | null, timeResolution: IndicatorTimeResolution, desiredTrend: IndicatorDesiredTrend | null, organization: (
-      { id: string, name: string, abbreviation: string, classification: (
+      { id: string, name: string, abbreviation: string | null, classification: (
         { id: string, name: string }
         & { __typename: 'OrganizationClass' }
       ) | null, logo: (
@@ -12574,7 +12582,7 @@ export type IndicatorDetailsQuery = (
     )>, common: (
       { id: string, indicators: Array<(
         { id: string, identifier: string | null, organization: (
-          { id: string, name: string, abbreviation: string, classification: (
+          { id: string, name: string, abbreviation: string | null, classification: (
             { id: string, name: string }
             & { __typename: 'OrganizationClass' }
           ) | null, logo: (
@@ -12681,15 +12689,15 @@ export type OrganizationDetailsQueryVariables = Exact<{
 
 export type OrganizationDetailsQuery = (
   { organization: (
-    { id: string, name: string, abbreviation: string, distinctName: string | null, description: string, url: string, actionCount: number, contactPersonCount: number, classification: (
+    { id: string, name: string, abbreviation: string | null, distinctName: string | null, description: string, url: string, actionCount: number, contactPersonCount: number, classification: (
       { id: string, name: string, identifier: string }
       & { __typename: 'OrganizationClass' }
     ) | null, ancestors: Array<(
       { id: string }
       & { __typename: 'Organization' }
-    )>, plansWithActionResponsibilities: Array<(
+    ) | null> | null, plansWithActionResponsibilities: Array<(
       { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, organization: (
-        { id: string, name: string, abbreviation: string }
+        { id: string, name: string, abbreviation: string | null }
         & { __typename: 'Organization' }
       ), primaryOrgs: Array<(
         { id: string, name: string }
@@ -12778,12 +12786,12 @@ export type OrganizationDetailsQuery = (
           & { __typename: 'Category' }
         )>, responsibleParties: Array<(
           { id: string, organization: (
-            { id: string, abbreviation: string, name: string }
+            { id: string, abbreviation: string | null, name: string }
             & { __typename: 'Organization' }
           ) }
           & { __typename: 'ActionResponsibleParty' }
         )>, primaryOrg: (
-          { id: string, abbreviation: string, name: string, logo: (
+          { id: string, abbreviation: string | null, name: string, logo: (
             { rendition: (
               { src: string }
               & { __typename: 'ImageRendition' }
@@ -12853,7 +12861,7 @@ export type OrganizationDetailsQuery = (
       )> | null }
       & { __typename: 'ActionListPage' }
     ) | null, organization: (
-      { id: string, name: string, abbreviation: string }
+      { id: string, name: string, abbreviation: string | null }
       & { __typename: 'Organization' }
     ), primaryOrgs: Array<(
       { id: string, name: string }
@@ -12942,12 +12950,12 @@ export type OrganizationDetailsQuery = (
         & { __typename: 'Category' }
       )>, responsibleParties: Array<(
         { id: string, organization: (
-          { id: string, abbreviation: string, name: string }
+          { id: string, abbreviation: string | null, name: string }
           & { __typename: 'Organization' }
         ) }
         & { __typename: 'ActionResponsibleParty' }
       )>, primaryOrg: (
-        { id: string, abbreviation: string, name: string, logo: (
+        { id: string, abbreviation: string | null, name: string, logo: (
           { rendition: (
             { src: string }
             & { __typename: 'ImageRendition' }
@@ -12992,7 +13000,7 @@ export type OrganizationDetailsQuery = (
 
 export type OrgContentPlanFragment = (
   { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, organization: (
-    { id: string, name: string, abbreviation: string }
+    { id: string, name: string, abbreviation: string | null }
     & { __typename: 'Organization' }
   ), primaryOrgs: Array<(
     { id: string, name: string }
@@ -13081,12 +13089,12 @@ export type OrgContentPlanFragment = (
       & { __typename: 'Category' }
     )>, responsibleParties: Array<(
       { id: string, organization: (
-        { id: string, abbreviation: string, name: string }
+        { id: string, abbreviation: string | null, name: string }
         & { __typename: 'Organization' }
       ) }
       & { __typename: 'ActionResponsibleParty' }
     )>, primaryOrg: (
-      { id: string, abbreviation: string, name: string, logo: (
+      { id: string, abbreviation: string | null, name: string, logo: (
         { rendition: (
           { src: string }
           & { __typename: 'ImageRendition' }
@@ -13198,7 +13206,7 @@ export type GetPlanContextQuery = (
       & { __typename: 'SiteGeneralContent' }
     ), mainMenu: (
       { items: Array<(
-        { id: string, linkText: string, url: string }
+        { linkText: string, url: string }
         & { __typename: 'ExternalLinkMenuItem' }
       ) | (
         { id: string, page: (
@@ -13394,7 +13402,7 @@ export type PlanContextFragment = (
     & { __typename: 'SiteGeneralContent' }
   ), mainMenu: (
     { items: Array<(
-      { id: string, linkText: string, url: string }
+      { linkText: string, url: string }
       & { __typename: 'ExternalLinkMenuItem' }
     ) | (
       { id: string, page: (
@@ -13565,7 +13573,7 @@ export type IndicatorSparklineGraphDataQuery = (
     & { __typename: 'Plan' }
   ) | null, indicator: (
     { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, desiredTrend: IndicatorDesiredTrend | null, reference: string | null, minValue: number | null, maxValue: number | null, organization: (
-      { id: string, name: string, abbreviation: string }
+      { id: string, name: string, abbreviation: string | null }
       & { __typename: 'Organization' }
     ), quantity: (
       { id: string, name: string }
@@ -13612,7 +13620,7 @@ export type IndicatorSparklineGraphDataQuery = (
         & { __typename: 'CommonIndicatorNormalization' }
       )>, indicators: Array<(
         { id: string, timeResolution: IndicatorTimeResolution, minValue: number | null, maxValue: number | null, organization: (
-          { id: string, name: string, abbreviation: string }
+          { id: string, name: string, abbreviation: string | null }
           & { __typename: 'Organization' }
         ), quantity: (
           { id: string, name: string }

@@ -12,8 +12,10 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Date: { input: string; output: string; }
   DateTime: { input: string; output: string; }
   JSONString: { input: string; output: string; }
+  PointScalar: { input: any; output: any; }
   PositiveInt: { input: number; output: number; }
   RichText: { input: string; output: string; }
   UUID: { input: string; output: string; }
@@ -29,6 +31,20 @@ export enum ActionSortOrder {
   /** Standard */
   Standard = 'STANDARD'
 }
+
+export type CreateOrganizationMutationInput = {
+  /** A simplified short version of name for the general public */
+  abbreviation: InputMaybe<Scalars['String']['input']>;
+  classification: InputMaybe<Scalars['ID']['input']>;
+  clientMutationId: InputMaybe<Scalars['String']['input']>;
+  /** A date of dissolution */
+  dissolutionDate: InputMaybe<Scalars['Date']['input']>;
+  /** A date of founding */
+  foundingDate: InputMaybe<Scalars['Date']['input']>;
+  /** A primary name, e.g. a legally recognized name */
+  name: Scalars['String']['input'];
+  parent: InputMaybe<Scalars['ID']['input']>;
+};
 
 /** An enumeration. */
 export enum DecisionLevel {
@@ -130,6 +146,21 @@ export enum SearchOperatorEnum {
   And = 'AND',
   Or = 'OR'
 }
+
+export type UpdateOrganizationMutationInput = {
+  /** A simplified short version of name for the general public */
+  abbreviation: InputMaybe<Scalars['String']['input']>;
+  classification: InputMaybe<Scalars['ID']['input']>;
+  clientMutationId: InputMaybe<Scalars['String']['input']>;
+  /** A date of dissolution */
+  dissolutionDate: InputMaybe<Scalars['Date']['input']>;
+  /** A date of founding */
+  foundingDate: InputMaybe<Scalars['Date']['input']>;
+  id: InputMaybe<Scalars['ID']['input']>;
+  /** A primary name, e.g. a legally recognized name */
+  name: Scalars['String']['input'];
+  parent: InputMaybe<Scalars['ID']['input']>;
+};
 
 export enum VisualizationKind {
   Group = 'group',
@@ -279,7 +310,7 @@ export type GetInstanceContextQuery = (
     { id: string, name: string, themeIdentifier: string | null, owner: string | null, defaultLanguage: string, supportedLanguages: Array<string>, targetYear: number | null, modelEndYear: number, referenceYear: number | null, minimumHistoricalYear: number, maximumHistoricalYear: number | null, leadTitle: string | null, leadParagraph: string | null, features: (
       { baselineVisibleInGraphs: boolean, hideNodeDetails: boolean, maximumFractionDigits: number | null, showAccumulatedEffects: boolean, showSignificantDigits: number | null }
       & { __typename: 'InstanceFeaturesType' }
-    ), introContent: Array<{ __typename: 'BlockQuoteBlock' | 'BooleanBlock' | 'CardListBlock' | 'CharBlock' | 'ChoiceBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'IntegerBlock' | 'ListBlock' | 'PageChooserBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'SnippetChooserBlock' } | { __typename: 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | (
+    ), introContent: Array<{ __typename: 'ActionImpactBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CallToActionBlock' | 'CardListBlock' | 'CategoryBreakdownBlock' | 'CharBlock' | 'ChoiceBlock' | 'CurrentProgressBarBlock' | 'DashboardCardBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'GoalProgressBarBlock' | 'ImageBlock' | 'ImageChooserBlock' } | { __typename: 'IntegerBlock' | 'ListBlock' | 'PageChooserBlock' | 'RawHTMLBlock' | 'ReferenceProgressBarBlock' | 'RegexBlock' | 'ScenarioProgressBarBlock' | 'SnippetChooserBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | (
       { field: string, value: string }
       & { __typename: 'RichTextBlock' }
     )> | null, goals: Array<(
@@ -1158,7 +1189,7 @@ export type GetPageQuery = (
     & { __typename: 'ScenarioType' }
   ), page: (
     { id: string | null, title: string }
-    & { __typename: 'ActionListPage' | 'InstanceRootPage' | 'Page' | 'StaticPage' }
+    & { __typename: 'ActionListPage' | 'DashboardPage' | 'InstanceRootPage' | 'Page' | 'StaticPage' }
   ) | (
     { leadTitle: string, leadParagraph: string, id: string | null, title: string, outcomeNode: (
       { id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, targetYearGoal: number | null, quantity: string | null, upstreamNodes: Array<{ __typename: 'ActionNode' } | (

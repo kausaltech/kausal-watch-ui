@@ -5,6 +5,10 @@ import images from '@/common/images';
 
 import { getClient } from '../utils/apollo-rsc-client';
 
+export type ActionStatusSummary = NonNullable<
+  NonNullable<GetPlanContextQuery['plan']>['actionStatusSummaries']
+>[number];
+
 const GET_PLAN_CONTEXT = gql`
   query GetPlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
     plan(id: $identifier) {

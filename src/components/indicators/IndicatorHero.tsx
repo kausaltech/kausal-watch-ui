@@ -164,9 +164,7 @@ function IndicatorHero(props: IndicatorHeroProps) {
                       </PrimaryOrg>
                     )}
                     <IndicatorListLink>
-                      <a>
-                        <IndexLink>{t('indicators')}</IndexLink>
-                      </a>
+                      <IndexLink>{t('indicators')}</IndexLink>
                     </IndicatorListLink>
                     <IndicatorHeadline>
                       <span>{indicator.name}</span>
@@ -180,10 +178,10 @@ function IndicatorHero(props: IndicatorHeroProps) {
                         desiredTrend={indicator.desiredTrend}
                       />
                     )}
-                    {indicator.level && (
+                    {indicator.level && indicatorType && (
                       <IndicatorLevel $level={indicator.level}>
                         <IndicatorListLink>
-                          <a>{indicatorType}</a>
+                          <span>{indicatorType}</span>
                         </IndicatorListLink>
                       </IndicatorLevel>
                     )}
