@@ -161,7 +161,12 @@ const ResponsiveStyles = styled.div`
 `;
 
 type StreamFieldBlockPage = {
-  __typename: 'CategoryPage' | 'ContentPage' | 'AccessibilityStatementPage' | 'StaticPage';
+  __typename:
+    | 'CategoryPage'
+    | 'ContentPage'
+    | 'AccessibilityStatementPage'
+    | 'StaticPage'
+    | 'PlanRootPage';
   slug: string;
   category?: {
     id: string;
@@ -285,10 +290,6 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         categories = categoryType.categories.filter((cat) => cat.parent == null);
       } else if (pageCategory) {
         categories = pageCategory.children;
-      }
-      if (!categories) {
-        Sentry.captureMessage('CategoryListBlock missing categories', { tags: logContext });
-        return null;
       }
       const fallbackImage = pageCategory?.image || plan.image;
       return (
@@ -497,7 +498,7 @@ interface StreamFieldProps {
   columnProps?: ColProps;
 }
 
-function StreamField(props: StreamFieldProps) {
+export default function StreamField(props: StreamFieldProps) {
   const { page, blocks, hasSidebar = false, columnProps } = props;
 
   return (
@@ -529,5 +530,3 @@ function StreamField(props: StreamFieldProps) {
 StreamField.fragments = {
   streamField: STREAM_FIELD_FRAGMENT,
 };
-
-export default StreamField;
