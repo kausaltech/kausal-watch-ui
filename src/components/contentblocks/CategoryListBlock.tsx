@@ -103,17 +103,17 @@ export type CategoryListBlockCategory = {
 };
 
 interface CategoryListBlockProps extends CommonContentBlockProps {
-  categories?: Array<CategoryListBlockCategory>;
+  categories?: Array<CategoryListBlockCategory> | null;
   fallbackImage?: MultiUseImageFragmentFragment | null;
   heading?: string;
   lead?: string | null;
   style?: 'treemap' | 'cards';
 }
 
-function CategoryListBlock(props: CategoryListBlockProps) {
+export default function CategoryListBlock(props: CategoryListBlockProps) {
   const fallbackCategories = useFallbackCategories();
-
-  const { id = '', fallbackImage, heading, lead, categories = fallbackCategories } = props;
+  const { id = '', fallbackImage, heading, lead, categories: providedCategories } = props;
+  const categories = providedCategories ?? fallbackCategories;
 
   /*
     Determine what image to use on category card
@@ -194,5 +194,3 @@ function CategoryListBlock(props: CategoryListBlockProps) {
 CategoryListBlock.fragments = {
   category: CATEGORY_FRAGMENT,
 };
-
-export default CategoryListBlock;
