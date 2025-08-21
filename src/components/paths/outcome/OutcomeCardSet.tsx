@@ -9,12 +9,14 @@ import OutcomeCard from '@/components/paths/outcome/OutcomeCard';
 import OutcomeNodeContent from '@/components/paths/outcome/OutcomeNodeContent';
 import { activeGoalVar } from '@/context/paths/cache';
 
-import { OutcomenodeType } from '../contentblocks/PathsOutcomeBlock';
+import type { OutcomenodeType } from '../contentblocks/PathsOutcomeBlock';
 
-const CardSet = styled.div<{
-  $color?: string;
-  $haschildren?: boolean;
-}>`
+type CardSetProps = {
+  $color: string;
+  $haschildren: boolean;
+};
+
+const CardSet = styled.div<CardSetProps>`
   position: relative;
   padding-bottom: ${(props) => (props.$haschildren ? '190px' : '1rem')};
   background-color: ${({ theme }) => theme.cardBackground.secondary};

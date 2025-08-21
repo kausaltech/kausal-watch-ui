@@ -11,9 +11,9 @@ import { cleanActionStatus } from '@/common/preprocess';
 import ActionStatus from '@/components/actions/ActionStatus';
 import Icon from '@/components/common/Icon';
 import EmbedContext from '@/context/embed';
-import PlanContext, { usePlan } from '@/context/plan';
+import { usePlan } from '@/context/plan';
 
-import { ActionHighlightListAction } from './ActionHighlightsList';
+import type { ActionHighlightListAction } from './ActionHighlightsList';
 
 const StyledCard = styled(Card)`
   position: relative;
@@ -34,7 +34,7 @@ const StyledActionStatus = styled(ActionStatus)`
   border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
 `;
 
-const CardLink = styled.a`
+const StyledActionCardLink = styled(ActionLink)`
   text-decoration: none;
   color: ${(props) => props.theme.neutralDark};
   width: 100%;
@@ -119,7 +119,6 @@ function ActionHighlightCard(props: ActionHighlightCardProps) {
   const embed = useContext(EmbedContext);
   const theme = useTheme();
   const actionStatus = cleanActionStatus(action, plan.actionStatuses);
-
   let statusText = actionStatus.name || null;
   const statusColor = getStatusColorForAction(action, plan, theme);
 
@@ -135,32 +134,30 @@ function ActionHighlightCard(props: ActionHighlightCardProps) {
   let actionName = action.name;
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
   return (
-    <ActionLink action={action} prefetch={false}>
-      <CardLink href target={embed.active ? '_blank' : undefined}>
-        <StyledCard>
-          {!hideIdentifier && <ActionNumber>{action.identifier}</ActionNumber>}
-          <ImgArea $bgcolor={statusColor}>{imageUrl && <ImgBg $background={imageUrl} />}</ImgArea>
-          {statusText && (
-            <StyledActionStatus
-              statusSummary={action.statusSummary}
-              completion={action.completion}
-              text={statusText}
-              plan={plan}
-            />
+    <StyledActionCardLink action={action} target={embed.active ? '_blank' : undefined}>
+      <StyledCard>
+        {!hideIdentifier && <ActionNumber>{action.identifier}</ActionNumber>}
+        <ImgArea $bgcolor={statusColor}>{imageUrl && <ImgBg $background={imageUrl} />}</ImgArea>
+        {statusText && (
+          <StyledActionStatus
+            statusSummary={action.statusSummary}
+            completion={action.completion}
+            text={statusText}
+            plan={plan}
+          />
+        )}
+        <CardBody>
+          {actionStatus && actionStatus.identifier === 'completed' && (
+            <ReadyBadge pill>
+              <Icon.Check color="#ffffff" width="2em" height="2em" />
+            </ReadyBadge>
           )}
-          <CardBody>
-            {actionStatus && actionStatus.identifier === 'completed' && (
-              <ReadyBadge pill>
-                <Icon.Check color="#ffffff" width="2em" height="2em" />
-              </ReadyBadge>
-            )}
-            <StyledCardTitle tag="h3" className="card-title">
-              {actionName}
-            </StyledCardTitle>
-          </CardBody>
-        </StyledCard>
-      </CardLink>
-    </ActionLink>
+          <StyledCardTitle tag="h3" className="card-title">
+            {actionName}
+          </StyledCardTitle>
+        </CardBody>
+      </StyledCard>
+    </StyledActionCardLink>
   );
 }
 

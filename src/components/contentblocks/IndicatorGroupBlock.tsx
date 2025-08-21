@@ -5,10 +5,7 @@ import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import {
-  Indicator,
-  IndicatorGroupBlock as TIndicatorGroupBlock,
-} from '@/common/__generated__/graphql';
+import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
 import { IndicatorLink, IndicatorListLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
@@ -49,13 +46,18 @@ const IndicatorContainer = styled.div`
   }
 `;
 
+type IndicatorGroupItems = NonNullable<
+  NonNullable<StreamFieldFragmentFragment & { __typename: 'IndicatorGroupBlock' }>['indicators']
+>;
+type IndicatorGroupItem = IndicatorGroupItems[number];
+
 type IndicatorItemProps = {
-  indicator: Indicator;
-  display: IndicatorStyle;
+  indicator: NonNullable<IndicatorGroupItem['indicator']>;
+  display: IndicatorGroupItem['style'];
   linkToPage?: boolean;
 };
 
-const IndicatorItem = (props: IndicatorItemProps) => {
+function IndicatorItem(props: IndicatorItemProps) {
   const { indicator, display, linkToPage = true } = props;
   if (display === 'graph')
     return (
@@ -63,12 +65,10 @@ const IndicatorItem = (props: IndicatorItemProps) => {
         <IndicatorContainer>
           {linkToPage ? (
             <IndicatorLink id={indicator.id}>
-              <a>
-                <h3>
-                  {indicator.name}
-                  <Icon.ArrowRight color="" />
-                </h3>
-              </a>
+              <h3>
+                {indicator.name}
+                <Icon.ArrowRight color="" />
+              </h3>
             </IndicatorLink>
           ) : (
             <h3>{indicator.name}</h3>
@@ -89,7 +89,7 @@ const IndicatorItem = (props: IndicatorItemProps) => {
       />
     </Col>
   );
-};
+}
 
 const StyledColCentered = styled(Col)`
   display: flex;
@@ -103,11 +103,12 @@ const StyledRow = styled(Row)`
 type Props = {
   id?: string;
   title?: string;
-  indicators: NonNullable<TIndicatorGroupBlock['indicators']>;
+  indicators: IndicatorGroupItems;
 };
 
 // TODO: Format as list for a11y
-const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
+export default function IndicatorGroupBlock(props: Props) {
+  const { id = '', title, indicators } = props;
   const t = useTranslations();
   const displayHeader = title === '-' ? null : title || t('indicators');
   const plan = usePlan();
@@ -120,20 +121,22 @@ const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
       <Container>
         {displayHeader ? <SectionHeader>{displayHeader}</SectionHeader> : null}
         <StyledRow className="justify-content-center">
-          {indicators.map((item) => (
-            <IndicatorItem
-              indicator={item.indicator}
-              display={item.style}
-              key={item.indicator.id}
-              linkToPage={hasIndicatorsPage}
-            />
-          ))}
+          {indicators.map((item) =>
+            item.indicator ? (
+              <IndicatorItem
+                indicator={item.indicator}
+                display={item.style}
+                key={item.indicator.id}
+                linkToPage={hasIndicatorsPage}
+              />
+            ) : null
+          )}
         </StyledRow>
         {hasIndicatorsPage && (
           <Row>
             <StyledColCentered>
               <IndicatorListLink>
-                <Button color="primary" tag="a">
+                <Button color="primary">
                   {t('see-all-indicators')} <Icon.ArrowRight />
                 </Button>
               </IndicatorListLink>
@@ -143,6 +146,4 @@ const IndicatorGroupBlock = ({ id = '', title, indicators }: Props) => {
       </Container>
     </IndicatorGraphSection>
   );
-};
-
-export default IndicatorGroupBlock;
+}

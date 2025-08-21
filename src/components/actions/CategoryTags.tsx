@@ -64,11 +64,7 @@ function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
   if (noLink) return <>{children}</>;
 
   if (category.categoryPage) {
-    return (
-      <StaticPageLink page={category.categoryPage}>
-        <a>{children}</a>
-      </StaticPageLink>
-    );
+    return <StaticPageLink page={category.categoryPage}>{children}</StaticPageLink>;
   } else {
     const filters = [
       {
@@ -76,11 +72,7 @@ function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
         categoryId: category.id,
       },
     ];
-    return (
-      <ActionListLink categoryFilters={filters}>
-        <a>{children}</a>
-      </ActionListLink>
-    );
+    return <ActionListLink categoryFilters={filters}>{children}</ActionListLink>;
   }
 }
 

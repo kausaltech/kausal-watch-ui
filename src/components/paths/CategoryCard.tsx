@@ -3,13 +3,8 @@ import React from 'react';
 import { readableColor, transparentize } from 'polished';
 import styled from 'styled-components';
 
-import {
-  AttributeRichText,
-  AttributeText,
-  Category,
-  CategoryFragmentFragment,
-} from '@/common/__generated__/graphql';
-import { InstanceType } from '@/common/__generated__/paths/graphql';
+import type { CategoryFragmentFragment } from '@/common/__generated__/graphql';
+import type { InstanceType } from '@/common/__generated__/paths/graphql';
 import { Link } from '@/common/links';
 
 import PathsNodeSummary from './PathsNodeSummary';
@@ -80,7 +75,7 @@ const CardGoalBlock = styled.div`
 `;
 
 type CategoryCardProps = {
-  category: Category;
+  category: CategoryFragmentFragment;
   group?: CategoryFragmentFragment;
   pathsInstance?: InstanceType;
   onLoaded: (id: string, impact: number) => void;
@@ -119,15 +114,13 @@ const CategoryCard = (props: CategoryCardProps) => {
       )}
       <CardContent>
         <CardHeaderBlock>
-          <Link href={category?.categoryPage?.urlPath || ''} legacyBehavior>
-            <a className="card-wrapper">
-              <CardHeader className="card-title">
-                {!category?.type.hideCategoryIdentifiers && (
-                  <Identifier>{category.identifier}. </Identifier>
-                )}
-                {category.name}
-              </CardHeader>
-            </a>
+          <Link className="card-wrapper" href={category?.categoryPage?.urlPath || ''}>
+            <CardHeader className="card-title">
+              {!category?.type.hideCategoryIdentifiers && (
+                <Identifier>{category.identifier}. </Identifier>
+              )}
+              {category.name}
+            </CardHeader>
           </Link>
           {/* Leave this out for now */}
           {category.leadParagraph && false && (

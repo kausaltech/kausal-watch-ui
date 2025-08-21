@@ -86,6 +86,10 @@ function ApplicationStateBanner(props: { deploymentType: DeploymentType }) {
       typeLabel = t('instance-type-testing-label');
       typeMessage = t('instance-type-testing-message');
       break;
+    case 'preview':
+      typeLabel = t('instance-type-preview-label');
+      typeMessage = t('instance-type-preview-message');
+      break;
     case 'staging':
       typeLabel = t('instance-type-staging-label');
       typeMessage = t('instance-type-staging-message');

@@ -30,7 +30,9 @@ type ActionWithImage = {
   image: MultiUseImageFragmentFragment | null;
   categories: {
     image: MultiUseImageFragmentFragment | null;
-    parent: ActionWithImage['categories'][number] | null;
+    parent?: {
+      image: MultiUseImageFragmentFragment | null;
+    } | null;
   }[];
 };
 
@@ -47,7 +49,7 @@ export function getActionImage(
   } else {
     action.categories.forEach((cat) => {
       if (image) return;
-      let parent: typeof cat | null = cat;
+      let parent: typeof cat | null | undefined = cat;
       while (parent) {
         if (parent.image?.rendition?.src) {
           image = parent.image;
@@ -61,10 +63,6 @@ export function getActionImage(
     image = plan.image;
   }
   return image;
-}
-
-export function resizeImageUrl(plan) {
-  return plan;
 }
 
 const images = {

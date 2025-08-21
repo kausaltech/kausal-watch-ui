@@ -209,6 +209,14 @@ export type InstanceContext = {
 };
 
 /** An enumeration. */
+export enum ModelAction {
+  Add = 'ADD',
+  Change = 'CHANGE',
+  Delete = 'DELETE',
+  View = 'VIEW'
+}
+
+/** An enumeration. */
 export enum PlanFeaturesContactPersonsPublicData {
   /** Show all information */
   All = 'ALL',

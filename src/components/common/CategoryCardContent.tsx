@@ -54,11 +54,9 @@ const CategoryCardContent = (props: CategoryCardContentProps) => {
       {!isRoot && <h5>{`${emissionShare} ${ofAllLabel}`}</h5>}
       <CategoryText className="text-content" dangerouslySetInnerHTML={{ __html: textcontent }} />
       {category?.categoryPage?.urlPath ? (
-        <Link href={category?.categoryPage?.urlPath} legacyBehavior>
-          <a>
-            {t('read-more')}
-            <Icon.ArrowRight />
-          </a>
+        <Link href={category?.categoryPage?.urlPath}>
+          {t('read-more')}
+          <Icon.ArrowRight />
         </Link>
       ) : null}
     </CardContent>

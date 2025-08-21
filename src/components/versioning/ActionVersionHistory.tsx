@@ -103,12 +103,10 @@ const ActionVersionHistory = ({ action }: Props) => {
                 crossPlan={'viewUrl' in v && action?.plan && action.plan.id !== v.plan.id}
                 viewUrl={'viewUrl' in v ? v.viewUrl : undefined}
               >
-                <a>
-                  <VersionHistoryListItemName>
-                    {v.plan?.hideActionIdentifiers !== true && `${v.identifier}. `}
-                    {v.name} {'viewUrl' in v ? v.viewUrl : null}
-                  </VersionHistoryListItemName>
-                </a>
+                <VersionHistoryListItemName>
+                  {v.plan?.hideActionIdentifiers !== true && `${v.identifier}. `}
+                  {v.name}
+                </VersionHistoryListItemName>
               </ActionLink>
             </StyledVersionHistoryListItem>
           ))}

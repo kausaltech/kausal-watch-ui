@@ -120,7 +120,7 @@ type OutcomeNodeContentProps = {
   separateYears: number[] | null;
 };
 
-const OutcomeNodeContent = ({
+export default function OutcomeNodeContent({
   node,
   subNodes,
   color,
@@ -129,7 +129,7 @@ const OutcomeNodeContent = ({
   activeScenario,
   refetching,
   separateYears,
-}: OutcomeNodeContentProps) => {
+}: OutcomeNodeContentProps) {
   const t = useTranslations();
   const format = useFormatter();
   const [activeTabId, setActiveTabId] = useState('graph');
@@ -164,7 +164,7 @@ const OutcomeNodeContent = ({
       node.metricDim ? (
         <DimensionalNodePlot
           node={node}
-          metric={node.metricDim!}
+          metric={node.metricDim}
           startYear={startYear}
           endYear={endYear}
           separateYears={separateYears}
@@ -354,6 +354,4 @@ const OutcomeNodeContent = ({
       </CardContent>
     </div>
   );
-};
-
-export default OutcomeNodeContent;
+}

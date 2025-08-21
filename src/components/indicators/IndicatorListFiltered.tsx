@@ -1,4 +1,4 @@
-import React, { type JSX, useState } from 'react';
+import React, { type JSX, type PropsWithChildren, useState } from 'react';
 
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
@@ -66,30 +66,29 @@ const StyledBadge = styled(Badge)`
   color: ${(props) => props.theme.themeColors.black};
 `;
 
-const SectionButton = (props) => {
-  if (props.linkTo != null) {
-    return (
-      <IndicatorLink id={props.linkTo} href="">
-        <a>{props.children}</a>
-      </IndicatorLink>
-    );
-  }
-  if (props['aria-controls'] == null) {
-    return <div className="indicator-name">{props.children}</div>;
-  }
-  const buttonProps = Object.assign({}, props);
-  delete buttonProps.sectionHeading;
-  delete buttonProps.linkTo;
-  return <button {...buttonProps} />;
+type SectionButtonProps = JSX.IntrinsicElements['button'] & {
+  linkTo?: string;
+  'aria-controls'?: string;
 };
 
-const StyledSectionButton = styled(SectionButton)`
+function SectionButton(props: SectionButtonProps) {
+  const { linkTo, 'aria-controls': ariaControls, children, ...buttonProps } = props;
+  if (linkTo != null) {
+    return <IndicatorLink id={linkTo}>{children}</IndicatorLink>;
+  }
+  if (ariaControls == null) {
+    return <div className="indicator-name">{children}</div>;
+  }
+  return <button aria-controls={ariaControls} {...buttonProps} />;
+}
+
+const StyledSectionButton = styled(SectionButton)<{ $sectionHeading: boolean }>`
   border: none;
   background: none;
   padding-left: 0;
   text-align: left;
   color: ${(props) => props.theme.themeColors.black};
-  font-weight: ${(props) => (props.sectionHeading ? props.theme.fontWeightBold : 'normal')};
+  font-weight: ${(props) => (props.$sectionHeading ? props.theme.fontWeightBold : 'normal')};
 `;
 
 const IndicatorName = styled.div`
@@ -108,20 +107,22 @@ const IndentableTable = styled(Table)`
   }
 `;
 
-const IndentableCellContentWrapper = styled.div<{
+type IndentableCellContentWrapperProps = {
   $visibleIndentation?: boolean;
   $sectionHeader?: boolean;
   $numeric: boolean;
-  $firstCol: number;
-  $indent: number;
-}>`
+  $firstCol?: boolean;
+  $indent?: number;
+};
+
+const IndentableCellContentWrapper = styled.div<IndentableCellContentWrapperProps>`
   padding: ${(props) =>
     props.$sectionHeader ? `.5rem` : `0.5rem 0.5rem .5rem ${+(props.$firstCol ?? 0) + 0.5}rem`};
   text-align: ${(props) => (props.$numeric ? 'right' : 'left')};
   font-weight: ${(props) =>
     props.$sectionHeader ? props.theme.fontWeightBold : props.theme.fontWeightNormal};
   line-height: ${(props) => props.theme.lineHeightMd};
-  border-left: ${(props) => 24 * props.$indent}px solid
+  border-left: ${(props) => 24 * (props.$indent ?? 0)}px solid
     ${(props) =>
       props.$sectionHeader || props.$visibleIndentation
         ? props.theme.themeColors.light
@@ -134,11 +135,19 @@ const IndentableCellContentWrapper = styled.div<{
   }
 `;
 
-const IndentableTableCell = (props) => (
+type IndentableTableCellProps = {
+  onClick?: () => void;
+  indent?: number;
+  numeric?: boolean;
+  firstCol?: boolean;
+  visibleIndentation?: boolean;
+};
+
+const IndentableTableCell = (props: PropsWithChildren<IndentableTableCellProps>) => (
   <td onClick={props.onClick}>
     <IndentableCellContentWrapper
-      $indent={props.indent}
-      $numeric={props.numeric}
+      $indent={props.indent ?? 0}
+      $numeric={props.numeric ?? false}
       $firstCol={props.firstCol}
       $visibleIndentation={props.visibleIndentation ?? false}
     >
@@ -180,9 +189,18 @@ const ExpandIcon = styled(Icon)<{ $expanded: boolean }>`
   transform: rotate(${({ $expanded }) => ($expanded ? '90deg' : '0deg')});
 `;
 
-const IndentableTableHeader = (props) => {
+type IndentableTableHeaderProps = {
+  onClick?: () => void;
+  colSpan?: number;
+  indent?: number;
+  sectionHeader?: boolean;
+  numeric?: boolean;
+  firstCol?: boolean;
+};
+
+const IndentableTableHeader = (props: PropsWithChildren<IndentableTableHeaderProps>) => {
   // const theme = useTheme();
-  const { onClick, colSpan, indent, sectionHeader, numeric, firstCol, children } = props;
+  const { onClick, colSpan, indent, sectionHeader, numeric = false, firstCol, children } = props;
   return (
     <th scope="col" onClick={onClick} colSpan={colSpan}>
       <IndentableCellContentWrapper
@@ -422,7 +440,14 @@ const IndicatorListFiltered = (props: IndicatorListFilteredProps) => {
   const allIndicatorsHaveSameLevel =
     new Set(sortedIndicators.flat().map((i) => i.level)).size === 1;
 
-  const indicatorElement = (item, collapsible, itemName, expanded, expandKey, options) =>
+  const indicatorElement = (
+    item,
+    collapsible,
+    itemName,
+    expanded: boolean,
+    expandKey: string,
+    options
+  ) =>
     itemName && (
       <IndicatorName>
         {collapsible && (
@@ -438,7 +463,7 @@ const IndicatorListFiltered = (props: IndicatorListFilteredProps) => {
           aria-controls={expandKey}
           aria-expanded={expanded}
           linkTo={options?.linkTo}
-          sectionHeading={options?.type === 'section'}
+          $sectionHeading={options?.type === 'section'}
         >
           {itemName}
         </StyledSectionButton>
@@ -670,9 +695,7 @@ const IndicatorListFiltered = (props: IndicatorListFilteredProps) => {
                           firstCol
                           visibleIndentation={true}
                         >
-                          <IndicatorLink id={item.id} href="">
-                            <a>{item.organization.name}</a>
-                          </IndicatorLink>
+                          <IndicatorLink id={item.id}>{item.organization.name}</IndicatorLink>
                         </IndentableTableCell>
                       )}
                       {includePlanRelatedIndicators ? (
@@ -693,24 +716,18 @@ const IndicatorListFiltered = (props: IndicatorListFilteredProps) => {
                         )}
                       </IndentableTableCell>
                       <IndentableTableCell numeric>
-                        <IndicatorLink id={item.id} href="">
-                          <a>
-                            <Value>
-                              {item.latestValue
-                                ? beautifyValue(item.latestValue.value, locale)
-                                : '-'}
-                            </Value>
-                            {item.latestValue && <Unit>{item.unit?.shortName ?? ''}</Unit>}
-                          </a>
+                        <IndicatorLink id={item.id}>
+                          <Value>
+                            {item.latestValue ? beautifyValue(item.latestValue.value, locale) : '-'}
+                          </Value>
+                          {item.latestValue && <Unit>{item.unit?.shortName ?? ''}</Unit>}
                         </IndicatorLink>
                       </IndentableTableCell>
                       {displayNormalizedValues && (
                         <IndentableTableCell numeric>
-                          <IndicatorLink id={item.id} href="">
-                            <a>
-                              <Value>{beautifyValue(normalizedValue, locale)}</Value>
-                              <Unit>{normalizedUnit ?? ''}</Unit>
-                            </a>
+                          <IndicatorLink id={item.id}>
+                            <Value>{beautifyValue(normalizedValue, locale)}</Value>
+                            <Unit>{normalizedUnit ?? ''}</Unit>
                           </IndicatorLink>
                         </IndentableTableCell>
                       )}
