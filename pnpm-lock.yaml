@@ -380,8 +380,8 @@ importers:
         version: 8.37.0(eslint@9.31.0(jiti@2.4.2))(typescript@5.8.3)
     optionalDependencies:
       '@kausal-private/themes-private':
-        specifier: ^0.5.53
-        version: 0.5.53
+        specifier: ^0.5.55
+        version: 0.5.55
 
 packages:
 
@@ -2038,8 +2038,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.29':
     resolution: {integrity: sha512-uw6guiW/gcAGPDhLmd77/6lW8QLeiV5RUTsAX46Db6oLhGaVj4lhnPwb184s1bkc8kdVg/+h988dro8GRDpmYQ==}
 
-  '@kausal-private/themes-private@0.5.53':
-    resolution: {integrity: sha512-4wn0v6HZ5oOxp31kqzKCIdl2wJ8kSY5UMDZ/1jLFns49RpOotONSLB8FrtHKguaaM4YP6j4iGzXaJMQTcDeqVw==}
+  '@kausal-private/themes-private@0.5.55':
+    resolution: {integrity: sha512-Xvzm1kNqB/6w/Lbv9Pi4od8w7Cy44U+Pm9uoHAxSdJ6UH4VpuOLTdfJ5m+pLh0q33GxiMikH0GerHYzYB5pVDg==}
 
   '@kausal/mapboxgl-legend@1.7.2':
     resolution: {integrity: sha512-qmjchiPrcer3gCLkln7z2e0o8i5XK2BNRbMMdr6/KHMxDTSeOOaN1PvRjXzrTAtewOyxztHxnyYH9KaoC5LJdQ==}
@@ -12521,7 +12521,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.4
 
-  '@kausal-private/themes-private@0.5.53':
+  '@kausal-private/themes-private@0.5.55':
     optional: true
 
   '@kausal/mapboxgl-legend@1.7.2': {}
