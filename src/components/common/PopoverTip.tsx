@@ -6,8 +6,8 @@ import styled from 'styled-components';
 
 import Tooltip from './Tooltip';
 
-const InfoButton = styled(Button)<{ $invert: string }>`
-  padding: 0 0.25rem 0.1rem;
+const InfoButton = styled(Button)<{ $invert: string; $compact?: boolean }>`
+  padding: ${(p) => (p.$compact ? '0' : '0 0.25rem 0.1rem')};
   line-height: 0.5rem;
   opacity: 0.75;
   background-color: transparent;
@@ -26,20 +26,21 @@ const InfoButton = styled(Button)<{ $invert: string }>`
 /* TODO: make this accessible */
 /* TODO: Use icon from theme */
 type PopoverTipProps = {
-  content: string;
+  content: React.ReactNode;
   identifier: string;
   invert?: boolean;
+  compact?: boolean;
 };
 
 const PopoverTip = (props: PopoverTipProps) => {
-  const { content, identifier, invert = false } = props;
+  const { content, identifier, invert = false, compact = false } = props;
   const t = useTranslations();
   const id = `tt-${identifier}`;
 
   return (
     <>
       <TooltipTrigger>
-        <InfoButton $invert={invert.toString()} id={id}>
+        <InfoButton $invert={invert.toString()} $compact={compact} id={id}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="12"
