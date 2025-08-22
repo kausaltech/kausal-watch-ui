@@ -10,12 +10,7 @@ import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
 
 import type {
-  Category,
-  CategoryType,
-  CommonCategory,
-  CommonCategoryType,
-  Indicator,
-  IndicatorListPage,
+  GetPlanPageIndicatorListQuery,
   IndicatorListQuery,
   IndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
@@ -31,13 +26,21 @@ import IndicatorListFiltered from './IndicatorListFiltered';
 import IndicatorsHero from './IndicatorsHero';
 import { processCommonIndicatorHierarchy } from './process-indicators';
 
-const createFilterUnusedCategories = (indicators: Indicator[]) => (category: Category) =>
-  indicators.find(({ categories }) =>
-    categories.find(({ id, parent }) => id === category.id || parent?.id === category.id)
-  );
+export type IndicatorListIndicator = NonNullable<
+  IndicatorListQuery['plan']
+>['indicatorLevels'][number]['indicator'];
+type Category = NonNullable<IndicatorListIndicator['categories']>[number];
+type CategoryType = NonNullable<IndicatorListQuery['plan']>['categoryTypes'][number];
+type CommonCategory = NonNullable<NonNullable<CategoryType['categories']>[number]['common']>;
+
+const createFilterUnusedCategories =
+  (indicators: IndicatorListIndicator[]) => (category: Category) =>
+    indicators.find(({ categories }) =>
+      categories.find(({ id, parent }) => id === category.id || parent?.id === category.id)
+    );
 
 const createFilterUnusedCommonCategories =
-  (indicators: Indicator[]) => (commonCategory: CommonCategory) =>
+  (indicators: IndicatorListIndicator[]) => (commonCategory: CommonCategory) =>
     indicators.find(({ categories }) =>
       categories.find((category) => category.common && category.common.id === commonCategory.id)
     );
@@ -53,10 +56,12 @@ interface CollectedCommonCategory {
   type: CommonCategoryType;
 }
 
-const collectCommonCategories = (indicators: Indicator[]): CollectedCommonCategory[] => {
+const collectCommonCategories = (
+  indicators: IndicatorListIndicator[]
+): CollectedCommonCategory[] => {
   const commonCategories: Record<string, CommonCategoryGroup> = {};
 
-  indicators.forEach((indicator: Indicator) => {
+  indicators.forEach((indicator: IndicatorListIndicator) => {
     indicator.categories.forEach((category: Category) => {
       if (category.common) {
         const typeIdentifier: string = category.common.type.identifier;
@@ -82,7 +87,7 @@ const collectCommonCategories = (indicators: Indicator[]): CollectedCommonCatego
 
 const getFilterConfig = (
   categoryType: CategoryType,
-  indicators: Indicator[],
+  indicators: IndicatorListIndicator[],
   commonCategories: CollectedCommonCategory[] | null
 ) => ({
   mainFilters: [
@@ -301,20 +306,20 @@ interface Filters {
   [category: string]: FilterValue;
 }
 
-const filterIndicators = (
-  indicators: Indicator[],
+function filterIndicators<I extends IndicatorListIndicator>(
+  indicators: I[],
   filters: Filters,
   includeRelatedPlans: boolean,
   categoryIdentifier?: string
-) => {
-  const filterByCategory = (indicator: Indicator) =>
+): I[] {
+  const filterByCategory = (indicator: I) =>
     !categoryIdentifier ||
     !filters[getCategoryString(categoryIdentifier)] ||
     !!indicator.categories.find(
       ({ type, id }) => filters[getCategoryString(type.identifier)] === id
     );
 
-  const filterByCommonCategory = (indicator: Indicator) => {
+  const filterByCommonCategory = (indicator: I) => {
     const activeFilters = Object.entries(filters).filter(
       ([key, value]) => value !== undefined && value !== null
     );
@@ -333,7 +338,7 @@ const filterIndicators = (
     });
   };
 
-  const filterBySearch = (indicator: Indicator) =>
+  const filterBySearch = (indicator: I) =>
     !filters['name'] || indicator.name.toLowerCase().includes(filters['name'].toLowerCase());
 
   return indicators.filter((indicator) => {
@@ -342,17 +347,21 @@ const filterIndicators = (
     const searchResult = filterBySearch(indicator);
     return (!includeRelatedPlans ? categoryResult : commonCategoryResult) && searchResult;
   });
-};
+}
 
 const getFirstUsableCategoryType = (
   categoryTypes: CategoryType[],
-  indicators: Indicator[]
+  indicators: IndicatorListIndicator[]
 ): CategoryType | undefined =>
   categoryTypes.find((categoryType) =>
     indicators.find((indicator) =>
       indicator.categories.find(({ type }) => type.id === categoryType.id)
     )
   );
+
+type IndicatorListPage = NonNullable<GetPlanPageIndicatorListQuery['planPage']> & {
+  __typename: 'IndicatorListPage';
+};
 
 interface Props {
   leadContent: IndicatorListPage['leadContent'];

@@ -13,6 +13,7 @@ import { getActionTermContext } from '../../common/i18n';
 import { IndicatorLink } from '../../common/links';
 import Icon from '../common/Icon';
 import { getIndicatorTranslation } from './IndicatorCard';
+import type { IndicatorListIndicator } from './IndicatorList';
 
 export const isEmptyFilter = (val) => val == null || val === '';
 
@@ -79,7 +80,11 @@ function SectionButton(props: SectionButtonProps) {
   if (ariaControls == null) {
     return <div className="indicator-name">{children}</div>;
   }
-  return <button aria-controls={ariaControls} {...buttonProps} />;
+  return (
+    <button aria-controls={ariaControls} {...buttonProps}>
+      {children}
+    </button>
+  );
 }
 
 const StyledSectionButton = styled(SectionButton)<{ $sectionHeading: boolean }>`
@@ -383,14 +388,17 @@ const descendantIds = (indicator, hierarchy) => {
 
 interface IndicatorListFilteredProps {
   categoryColumnLabel?: string;
-  indicators: object[];
-  shouldDisplayCategory?(...args: unknown[]): unknown;
-  displayLevel?: boolean;
+  indicators: IndicatorListIndicator[];
+  shouldDisplayCategory?(cat: Category): boolean;
+  displayLevel?: boolean | null;
   includePlanRelatedIndicators?: boolean;
   commonCategories?: object[];
+  displayMunicipality?: boolean;
+  hierarchy?: Hierarchy;
+  displayNormalizedValues?: boolean;
 }
 
-const IndicatorListFiltered = (props: IndicatorListFilteredProps) => {
+export default function IndicatorListFiltered(props: IndicatorListFilteredProps) {
   const t = useTranslations();
   const {
     indicators,
@@ -415,6 +423,9 @@ const IndicatorListFiltered = (props: IndicatorListFilteredProps) => {
   );
 
   const toggleVisibility = (indicator) => {
+    if (!indicator.common) {
+      return;
+    }
     setVisibleByParent((prev) => {
       const cid = indicator.common.id;
       const previouslyVisible = prev[cid];
@@ -592,7 +603,6 @@ const IndicatorListFiltered = (props: IndicatorListFilteredProps) => {
               })}
             </IndentableTableCell>
           );
-
           return (
             <React.Fragment key={`indicator-group-${idx}`}>
               {!indicatorNameColumnEnabled && (
@@ -741,6 +751,4 @@ const IndicatorListFiltered = (props: IndicatorListFilteredProps) => {
       </IndentableTable>
     </div>
   );
-};
-
-export default IndicatorListFiltered;
+}
