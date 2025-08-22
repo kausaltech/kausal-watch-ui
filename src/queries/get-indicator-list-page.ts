@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-import {
+import type {
   GetPlanPageIndicatorListQuery,
   GetPlanPageIndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
