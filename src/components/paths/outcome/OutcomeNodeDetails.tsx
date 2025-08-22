@@ -2,6 +2,9 @@ import { useMemo } from 'react';
 
 import styled from 'styled-components';
 
+import type { GetPlanContextQuery } from '@/common/__generated__/graphql';
+import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
+import type { TFunction } from '@/common/i18n';
 import { ActionLink, PathsNodeLink } from '@/common/links';
 
 const ActionsList = styled.ul`
@@ -46,7 +49,13 @@ const ActionsListCard = styled.li<{ active: boolean; $groupColor: string }>`
   }
 `;
 
-const ActionListItem = (props) => {
+type Action = NonNullable<NonNullable<OutcomeNodeFieldsFragment>['upstreamActions']>[number];
+
+type ActionListItemProps = {
+  action: Action;
+};
+
+const ActionListItem = (props: ActionListItemProps) => {
   const { action } = props;
   const isActive = action.parameters.find(
     (param) => param.id == `${param.node.id}.enabled`
@@ -66,12 +75,18 @@ const ActionListItem = (props) => {
   );
 };
 
-const OutcomeNodeDetails = (props) => {
+type OutcomeNodeDetailsProps = {
+  node: OutcomeNodeFieldsFragment;
+  t: TFunction;
+};
+
+export default function OutcomeNodeDetails(props: OutcomeNodeDetailsProps) {
   const { node, t } = props;
   //console.log("OutcomeNodeDetails", props)
 
   const actions = useMemo(() => {
-    const upstreamActions = [].concat(node.upstreamActions);
+    if (!node.upstreamActions) return [];
+    const upstreamActions = [...node.upstreamActions];
     upstreamActions.sort((a, b) => (a.group?.id > b.group?.id ? 1 : -1));
     return upstreamActions;
   }, [node.upstreamActions]);
@@ -96,6 +111,4 @@ const OutcomeNodeDetails = (props) => {
       </p>
     </div>
   );
-};
-
-export default OutcomeNodeDetails;
+}

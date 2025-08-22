@@ -1,13 +1,14 @@
+'use client';
+
+import { gql } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import { Table } from 'reactstrap';
 import styled from 'styled-components';
 
-import {
+import type {
   ActionDateFormat,
-  DataPoint,
-  type DatasetSchema,
-  type DimensionCategory,
+  PlanDatasetsBlockFragmentFragment,
 } from '@/common/__generated__/graphql';
 import { beautifyValue } from '@/common/data/format';
 import { SectionHeader } from '@/components/actions/ActionContent';
@@ -76,9 +77,12 @@ const TotalsRow = styled.tr`
   }
 `;
 
+type DatasetSchema = NonNullable<PlanDatasetsBlockFragmentFragment['schema']>;
+type DataPoint = NonNullable<PlanDatasetsBlockFragmentFragment['dataPoints']>[number];
+
 interface PlanDatasetsBlockProps {
-  heading?: string;
-  helpText?: string;
+  heading?: string | null;
+  helpText?: string | null;
   data: DataPoint[];
   schema: DatasetSchema;
 }
@@ -129,14 +133,14 @@ const sumDataPoints = (
   return total;
 };
 
-const PlanDatasetsBlock: React.FC = (props: PlanDatasetsBlockProps) => {
+export default function PlanDatasetsBlock(props: PlanDatasetsBlockProps) {
   const { heading, helpText, data, schema } = props;
   const locale = useLocale();
   const t = useTranslations();
 
   const unit = schema.metrics[0]?.unit ?? '';
 
-  const categoriesGroupedByDimension: Map<string, DimensionCategory> = schema.dimensions
+  const categoriesGroupedByDimension = schema.dimensions
     .sort((a, b) => a.order - b.order)
     .map((schemaDimension) =>
       schemaDimension.dimension.categories.map(({ label, uuid }) => ({
@@ -209,6 +213,4 @@ const PlanDatasetsBlock: React.FC = (props: PlanDatasetsBlockProps) => {
       </StyledTable>
     </TableContainer>
   );
-};
-
-export default PlanDatasetsBlock;
+}

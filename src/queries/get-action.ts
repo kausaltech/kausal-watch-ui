@@ -1,8 +1,9 @@
 import { gql } from '@apollo/client';
 
-import {
+import type {
   GetActionDetailsQuery,
   GetActionDetailsQueryVariables,
+  WorkflowState,
 } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 
@@ -19,15 +20,17 @@ export const getActionDetails = async (
   plan: string,
   id: string,
   clientUrl: string,
-  workflow?: string
+  workflow?: WorkflowState
 ) =>
-  await getClient().query<GetActionDetailsQuery, GetActionDetailsQueryVariables>({
+  await (
+    await getClient()
+  ).query<GetActionDetailsQuery, GetActionDetailsQueryVariables>({
     query: GET_ACTION_DETAILS,
     variables: {
       plan,
       clientUrl,
       id,
-      workflow,
+      workflow: workflow ?? null,
     },
     fetchPolicy: 'no-cache',
   });
@@ -217,6 +220,7 @@ const GET_ACTION_DETAILS = gql`
       datasets {
         schema {
           uuid
+          name
           timeResolution
           metrics {
             unit

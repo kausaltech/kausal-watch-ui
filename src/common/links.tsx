@@ -18,7 +18,9 @@ export function usePrependPlanAndLocale(path: string) {
   return prependPlanAndLocale(plan, path, locale);
 }
 
-export function disablePrefetch(linkProps: Omit<LinkProps, 'href'>) {
+type LinkPropsWithoutHref = Omit<Parameters<typeof NextLink>[0], 'href'>;
+
+export function disablePrefetch(linkProps: LinkPropsWithoutHref) {
   if (!('prefetch' in linkProps))
     return {
       ...linkProps,
@@ -90,14 +92,9 @@ export const replaceHashWithoutScrolling = (hash) =>
 export function IndicatorLink({
   id,
   ...other
-}: { id: string | number; children: ReactNode } & LinkProps) {
+}: { id: string | number; children: ReactNode } & LinkPropsWithoutHref) {
   const href = usePrependPlanAndLocale(getIndicatorLinkProps(id).href);
-
-  if (!('prefetch' in other)) {
-    other.prefetch = false;
-  }
-
-  return <NextLink passHref {...disablePrefetch(other)} href={href} legacyBehavior />;
+  return <NextLink passHref {...disablePrefetch(other)} href={href} />;
 }
 
 export function PathsNodeLink({
@@ -108,17 +105,16 @@ export function PathsNodeLink({
   return <span {...other} data-id={id} />;
 }
 
-export type ActionLinkProps = {
+export type ActionLinkProps = LinkPropsWithoutHref & {
   action: {
     identifier: string;
     mergedWith?: {
       identifier: string;
     } | null;
   };
-  planUrl?: string;
+  planUrl?: string | null;
   viewUrl?: string;
   crossPlan?: boolean;
-  children: React.ReactElement;
 };
 
 export function ActionLink({
@@ -139,12 +135,10 @@ export function ActionLink({
     // nextjs NextLink doesn't properly handle links across plans in some cases,
     // specifically when we are in a plan without basepath and the link is to
     // a plan in the same hostname but with a basepath.
-    return React.cloneElement(React.Children.only(children), {
-      href: viewUrl,
-    });
+    return <a href={viewUrl}>{children}</a>;
   }
   return (
-    <NextLink passHref {...disablePrefetch(other)} href={actionLink} legacyBehavior>
+    <NextLink passHref {...disablePrefetch(other)} href={actionLink}>
       {children}
     </NextLink>
   );
@@ -156,7 +150,7 @@ export function OrganizationLink(
   const { organizationId, ...other } = props;
   const href = usePrependPlanAndLocale(`/organizations/${organizationId}`);
 
-  return <NextLink passHref {...disablePrefetch(other)} href={href} legacyBehavior />;
+  return <NextLink passHref {...disablePrefetch(other)} href={href} />;
 }
 
 type ActionListLinkProps = {
@@ -175,14 +169,7 @@ export function ActionListLink(props: PropsWithChildren<OtherLinkProps & ActionL
   const pathname = usePrependPlanAndLocale(ACTIONS_PATH);
   const { href, ...linkProps } = ActionListLink.getLinkProps(props);
 
-  return (
-    <NextLink
-      href={{ ...href, pathname }}
-      passHref
-      {...disablePrefetch(linkProps)}
-      legacyBehavior
-    />
-  );
+  return <NextLink href={{ ...href, pathname }} passHref {...disablePrefetch(linkProps)} />;
 }
 ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps) => {
   const { categoryFilters, organizationFilter, ...other } = opts;
@@ -197,13 +184,15 @@ ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps)
   const href = {
     query,
   };
-  return { ...opts, ...(rest || {}), href };
+  return { ...other, ...(rest || {}), href };
 };
 
-export function IndicatorListLink(props: Omit<LinkProps, 'href'> & { children: ReactElement }) {
+export function IndicatorListLink(
+  props: Omit<LinkProps, 'href'> & { children: ReactElement<any> }
+) {
   const href = usePrependPlanAndLocale(INDICATORS_PATH);
 
-  return <NextLink href={href} passHref {...disablePrefetch(props)} legacyBehavior />;
+  return <NextLink href={href} passHref {...disablePrefetch(props)} />;
 }
 
 type StaticPageLinkProps =
@@ -225,7 +214,7 @@ export function StaticPageLink({
 }: PropsWithChildren<OtherLinkProps & StaticPageLinkProps>) {
   const href = usePrependPlanAndLocale(slug ?? page!.urlPath);
 
-  return <NextLink href={href} {...disablePrefetch(other)} legacyBehavior />;
+  return <NextLink href={href} {...disablePrefetch(other)} />;
 }
 
 type NavigationLinkProps = PropsWithChildren<OtherLinkProps & { slug: string }>;
@@ -250,16 +239,18 @@ export function NavigationLink({ slug, children, ...other }: NavigationLinkProps
   );
 }
 
+type AllLinkProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> &
+  LinkProps & {
+    children?: ReactNode;
+    href: string;
+  };
+
 /**
  * Wraps next/link and ensures the plan basePath is prepended to the href
  * if necessary. Note: This should *not* be used if linking to other
  * locales, as the locale is before plan in the pathname.
  */
-export function Link({
-  href: rawHref,
-  children,
-  ...linkProps
-}: LinkProps & { children?: ReactNode; href: string }) {
+export function Link({ href: rawHref, children, ...linkProps }: AllLinkProps) {
   const href = usePrependPlanAndLocale(rawHref);
 
   return (

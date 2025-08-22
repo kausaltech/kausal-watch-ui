@@ -99,7 +99,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ... on CartographyVisualisationBlock {
-      style
+      cartographyStyle: style
       styleOverrides
       account {
         provider
@@ -283,7 +283,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
           shortName
         }
       }
-      categoryType: categoryType {
+      treeMapCategoryType: categoryType {
         identifier
       }
     }

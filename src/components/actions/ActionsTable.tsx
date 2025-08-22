@@ -1,26 +1,27 @@
 import React from 'react';
 
 import { useTranslations } from 'next-intl';
-import PropTypes from 'prop-types';
 import { Table } from 'reactstrap';
 
 import { getStatusSummary } from '@/common/ActionStatusSummary';
+import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { ActionLink } from '@/common/links';
 import ActionImpact from '@/components/actions/ActionImpact';
 import StatusBadge from '@/components/common/StatusBadge';
 import { usePlan } from '@/context/plan';
 
-function ActionsTable(props) {
+type Action = NonNullable<NonNullable<IndicatorDetailsQuery['indicator']>['actions']>[number];
+
+export default function ActionsTable({ actions }: { actions: Action[] }) {
   const t = useTranslations();
-  const { actions } = props;
   const plan = usePlan();
 
   return (
     <Table hover responsive>
       <thead>
         <tr>
-          <th colSpan="2" scope="col">
+          <th colSpan={2} scope="col">
             {t('action', getActionTermContext(plan))}
           </th>
           <th scope="col">{t('action-progress')}</th>
@@ -60,9 +61,3 @@ function ActionsTable(props) {
     </Table>
   );
 }
-
-ActionsTable.propTypes = {
-  actions: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
-
-export default ActionsTable;

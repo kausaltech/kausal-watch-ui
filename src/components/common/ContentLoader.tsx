@@ -38,7 +38,7 @@ function ContentLoader({ initiallyVisible = false }: Props) {
   }
 
   return (
-    <Loader>
+    <Loader aria-busy="true">
       <StyledSpinner type="grow" className="mx-1" />
       <StyledSpinner type="grow" className="mx-1" />
       <StyledSpinner type="grow" className="mx-1" />

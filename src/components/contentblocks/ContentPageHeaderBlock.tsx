@@ -2,14 +2,13 @@ import React from 'react';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 const HeaderImage = styled.div<{ $image: string; $imageAlign: string }>`
   background-image: url(${(props) => props.$image});
   background-size: cover;
-  background-position: ${(props) => props.theme.$imageAlign};
+  background-position: ${(props) => props.$imageAlign};
   color: ${(props) => props.theme.themeColors.white};
   height: calc(4 * ${(props) => props.theme.spaces.s400});
   background-color: ${(props) => props.theme.brandDark};
@@ -65,7 +64,7 @@ type Props = {
   imageCredit?: string;
 };
 
-const ContentPageHeaderBlock = (props: Props) => {
+export default function ContentPageHeaderBlock(props: Props) {
   const {
     title,
     lead = null,
@@ -99,13 +98,4 @@ const ContentPageHeaderBlock = (props: Props) => {
       </HeaderBg>
     </>
   );
-};
-
-ContentPageHeaderBlock.propTypes = {
-  title: PropTypes.string.isRequired,
-  lead: PropTypes.string,
-  headerImage: PropTypes.string,
-  imageAlign: PropTypes.string,
-};
-
-export default ContentPageHeaderBlock;
+}

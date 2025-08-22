@@ -1,5 +1,5 @@
 import { RequestCookie, parseSetCookie } from 'next/dist/compiled/@edge-runtime/cookies';
-import { cookies } from 'next/headers';
+import { type UnsafeUnwrappedCookies, cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 
 export type BackendCookieOptions = {
@@ -29,13 +29,15 @@ export function getClientCookieAsHeader(
   return cookies.map((cookie) => `${cookie.name}=${encodeURIComponent(cookie.value)}`).join('; ');
 }
 
-export function forwardSetCookie(
+export async function forwardSetCookie(
   clientReq: NextRequest,
   backendResponse: Response,
   opts: BackendCookieOptions
 ) {
   const setCookieHeaders = backendResponse.headers.getSetCookie();
   if (!setCookieHeaders.length) return;
+
+  const clientCookies = await cookies();
 
   // Pass cookies to the client, modify some of the attributes along the way
   setCookieHeaders.forEach((header) => {
@@ -45,6 +47,6 @@ export function forwardSetCookie(
     cookie.sameSite = 'strict';
     cookie.secure = process.env.NODE_ENV === 'production';
     cookie.name = `${opts.prefix}${cookie.name}`;
-    cookies().set(cookie);
+    clientCookies.set(cookie);
   });
 }

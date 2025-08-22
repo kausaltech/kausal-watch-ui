@@ -1,20 +1,25 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import * as apolloModule from '@apollo/client';
 import AxeBuilder from '@axe-core/playwright';
-import { Page, expect } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 
 import type {
   PlaywrightGetPlanBasicsQuery,
   PlaywrightGetPlanBasicsQueryVariables,
   PlaywrightGetPlanInfoQuery,
   PlaywrightGetPlanInfoQueryVariables,
-} from '@/common/__generated__/graphql';
-import { apiUrl } from '@/common/environment';
+} from '../__generated__/graphql.ts';
 
-const API_BASE = apiUrl;
+const { ApolloClient, InMemoryCache, gql } =
+  'default' in apolloModule ? (apolloModule.default as typeof apolloModule) : apolloModule;
+
+const GRAPHQL_API_URL = process.env.WATCH_BACKEND_URL
+  ? `${process.env.WATCH_BACKEND_URL}/v1/graphql/`
+  : 'https://api.watch.kausal.tech/v1/graphql/';
+const BASE_URL = process.env.TEST_PAGE_BASE_URL || `http://{planId}.localhost:3000`;
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: API_BASE + '/graphql/',
+  uri: GRAPHQL_API_URL,
 });
 
 const GET_PLAN_BASICS = gql`
@@ -31,6 +36,10 @@ const GET_PLAN_BASICS = gql`
 const GET_PLAN_INFO = gql`
   query PlaywrightGetPlanInfo($plan: ID!, $locale: String!, $clientURL: String!)
   @locale(lang: $locale) {
+    planOrganizations(plan: $plan, forResponsibleParties: true, forContactPersons: true) {
+      id
+      name
+    }
     plan(id: $plan) {
       id
       identifier
@@ -94,6 +103,7 @@ const GET_PLAN_INFO = gql`
 
 type PlanInfo = NonNullable<PlaywrightGetPlanInfoQuery['plan']>;
 type PlanIndicators = NonNullable<PlaywrightGetPlanInfoQuery['planIndicators']>;
+type PlanOrganizations = NonNullable<PlaywrightGetPlanInfoQuery['planOrganizations']>;
 type ActionInfo = PlanInfo['actions'][0];
 
 export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][0] & {
@@ -140,11 +150,13 @@ export type IndicatorListMenuItem = PageMenuItem & {
 
 export class PlanContext {
   plan: PlanInfo;
+  planOrganizations: PlanOrganizations;
   planIndicators: PlanIndicators;
   baseURL: string;
 
-  constructor(plan: PlanInfo, baseURL: string, planIndicators: PlanIndicators) {
-    this.plan = plan;
+  constructor(data: PlaywrightGetPlanInfoQuery, baseURL: string, planIndicators: PlanIndicators) {
+    this.plan = data.plan!;
+    this.planOrganizations = data.planOrganizations ?? [];
     this.baseURL = baseURL;
     this.planIndicators = planIndicators;
   }
@@ -240,7 +252,8 @@ export class PlanContext {
   }
 
   async checkMeta(page: Page) {
-    const siteName = page.locator('head meta[property="og:site_name"]');
+    const siteName = page.locator('meta[property="og:site_name"]');
+    await expect(siteName).toBeAttached();
     if (this.plan.parent?.name) {
       await expect(siteName).toHaveAttribute('content', this.plan.parent?.name);
     } else {
@@ -256,7 +269,7 @@ export class PlanContext {
       query: GET_PLAN_BASICS,
       variables: { plan: planId },
     });
-    const primaryLanguage = langRes.data!.plan!.primaryLanguage;
+    const primaryLanguage = langRes.data.plan!.primaryLanguage;
     const baseURL = getPageBaseUrlToTest(planId);
     const res = await apolloClient.query<
       PlaywrightGetPlanInfoQuery,
@@ -265,9 +278,14 @@ export class PlanContext {
       query: GET_PLAN_INFO,
       variables: { plan: planId, locale: primaryLanguage, clientURL: baseURL },
     });
-    const data = res.data!.plan!;
-    const planIndicators = res.data!.planIndicators!;
+    const data = res.data;
+    const planIndicators = res.data.planIndicators!;
     return new PlanContext(data, baseURL, planIndicators);
+  }
+
+  async waitForLoadingFinished(page: Page) {
+    await expect(page.locator('*[aria-busy=true]')).toHaveCount(0, { timeout: 30000 });
+    await page.waitForLoadState('networkidle');
   }
 
   async checkAccessibility(page: Page) {
@@ -293,7 +311,16 @@ export function getIdentifiersToTest(): string[] {
 }
 
 export function getPageBaseUrlToTest(planId: string): string {
-  let baseUrl = process.env.TEST_PAGE_BASE_URL || `http://{planId}.watch-test.kausal.tech`;
+  let baseUrl = BASE_URL;
   baseUrl = baseUrl.replace('{planId}', planId);
   return baseUrl;
+}
+
+export function displayConfiguration() {
+  const p = (s: string) => (s + ':').padEnd(22);
+
+  console.log(p('GraphQL URL'), GRAPHQL_API_URL);
+  console.log(p('Instances to test'), getIdentifiersToTest().join(', '));
+  console.log(p('Base URL'), BASE_URL);
+  console.log(p('  URL for Sunnydale'), getPageBaseUrlToTest('sunnydale'));
 }

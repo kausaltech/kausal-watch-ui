@@ -27,9 +27,13 @@ import ResponsiblePartiesCell from './cells/ResponsiblePartiesCell';
 import StatusCell from './cells/StatusCell';
 import TasksStatusCell from './cells/TasksStatusCell';
 import UpdatedAtCell from './cells/UpdatedAtCell';
-import { ActionListAction, ColumnBlock } from './dashboard.types';
+import type { ActionListAction, ColumnBlock } from './dashboard.types';
 
-const getPlanUrl = (mergedWith, actionPlan, planId) => {
+const getPlanUrl = (
+  mergedWith: ActionListAction['mergedWith'],
+  actionPlan: ActionListAction['plan'],
+  planId: string
+) => {
   if (mergedWith && mergedWith?.plan.id !== planId) return mergedWith.plan.viewUrl;
   if (actionPlan.id !== planId) return actionPlan.viewUrl;
   return undefined;
@@ -85,7 +89,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
           planUrl={getPlanUrl(mergedWith, action.plan, plan.id) ?? planViewUrl}
           crossPlan={fromOtherPlan || mergedWithActionFromOtherPlan}
         >
-          <a>{action.name}</a>
+          {action.name}
         </ActionLink>
       );
     },

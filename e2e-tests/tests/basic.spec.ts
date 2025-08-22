@@ -1,15 +1,19 @@
-import { expect, test as base } from '@playwright/test';
+/* eslint-disable react-hooks/rules-of-hooks */
+import { type Page, expect } from '@playwright/test';
 
-import { getIdentifiersToTest, PlanContext } from './context';
+import { PlanContext, getIdentifiersToTest } from '../common/context.ts';
+import { test as coverageTest } from '../common/coverage.ts';
 
-const test = base.extend<{ ctx: PlanContext }>({});
+const test = coverageTest.extend<{ ctx: PlanContext }>({});
 
-async function navigateAndCheckLayout(page, url, ctx) {
+async function navigateAndCheckLayout(page: Page, url: string, ctx: PlanContext) {
   await page.goto(url);
   await ctx.checkMeta(page);
   await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
   await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
   await expect(page.locator('main#main')).toBeVisible();
+  await expect(page.locator('*[aria-busy=true]')).toHaveCount(0, { timeout: 30000 });
+  await page.waitForLoadState('networkidle');
   // temporarily skip accessibility check
   //await ctx.checkAccessibility(page);
 }
@@ -27,6 +31,19 @@ const testPlan = (planId: string) =>
 
     test.beforeEach(async ({ page, ctx }) => {
       await navigateAndCheckLayout(page, ctx.baseURL, ctx);
+      const modalLocator = page.getByTestId('intro-modal');
+      const hasModal = (await modalLocator.count()) > 0;
+      if (hasModal) {
+        await modalLocator.getByTestId('intro-modal-no-show').click();
+        await modalLocator.getByRole('button').click();
+        await expect(modalLocator).toBeHidden({ timeout: 1000 });
+      }
+    });
+
+    test('homepage', async ({ page, ctx }) => {
+      const navBar = page.locator('nav#global-navigation-bar');
+      await expect(navBar).toBeVisible();
+      await expect(page.locator('.content-area').first()).toBeVisible();
     });
 
     test('action list page', async ({ page, ctx }) => {
@@ -43,12 +60,12 @@ const testPlan = (planId: string) =>
       await link.click();
       await ctx.checkMeta(page);
 
-      await expect(page.getByRole('tab').first()).toBeVisible();
+      await expect(page.getByRole('tabpanel').first()).toBeVisible({ timeout: 20000 });
 
       // Test direct URL navigation
       await page.goto(`${ctx.baseURL}/${listItem.page.urlPath}`);
       await ctx.checkMeta(page);
-      await expect(page.getByRole('tab').first()).toBeVisible();
+      await expect(page.getByRole('tabpanel').first()).toBeVisible({ timeout: 20000 });
     });
 
     test('action details page', async ({ page, ctx }) => {
@@ -86,12 +103,9 @@ const testPlan = (planId: string) =>
       test.skip(!EmptyPageMenuItem, 'No empty pages for plan');
 
       const items = ctx.getEmptyPageChildrenItems(EmptyPageMenuItem?.page.id);
-      test.skip(
-        !items || items.length === 0,
-        'No children category or content pages for plan'
-      );
+      test.skip(!items || items.length === 0, 'No children category or content pages for plan');
       const nav = page.locator('nav#global-navigation-bar');
-      const emptyPageMenuLink = nav.getByRole('link', {
+      const emptyPageMenuLink = nav.getByRole('button', {
         name: EmptyPageMenuItem?.page.title,
         exact: true,
       });
@@ -152,12 +166,10 @@ const testPlan = (planId: string) =>
     });
 
     test('indicator page', async ({ page, ctx }) => {
-      const IndicatorListItem = ctx.getIndicatorListMenuItem();
-      test.skip(!IndicatorListItem, 'No indicator list for plan');
+      const indicatorListItem = ctx.getIndicatorListMenuItem()!;
+      test.skip(!indicatorListItem, 'No indicator list for plan');
       const nav = page.locator('nav#global-navigation-bar');
-      await nav
-        .getByRole('link', { name: IndicatorListItem.page.title, exact: true })
-        .click();
+      await nav.getByRole('link', { name: indicatorListItem.page.title, exact: true }).click();
       const main = page.locator('main#main');
       await expect(main).toBeVisible();
       const planIndicators = ctx.getPlanIndicators();
@@ -172,9 +184,7 @@ const testPlan = (planId: string) =>
 
       if (count > 0) {
         await indicatorSectionBtn.click();
-        const controlsAttributeValue = await indicatorSectionBtn.getAttribute(
-          'aria-controls'
-        );
+        const controlsAttributeValue = await indicatorSectionBtn.getAttribute('aria-controls');
         const controlledSection = main.locator(`#${controlsAttributeValue}`);
         const indicatorLink = controlledSection.locator('a').first();
 
@@ -190,29 +200,39 @@ const testPlan = (planId: string) =>
         });
         await firstIndicatorLink.waitFor();
         await firstIndicatorLink.click();
+        await page.waitForURL(/.*\/indicators\/[0-9]+/);
+        await ctx.waitForLoadingFinished(page);
         await expect(main).toBeVisible();
         const h1Span = page.locator('h1 >> span');
         await expect(h1Span).toContainText(indicatorName);
       }
     });
 
-    test('search', async ({ page, ctx }) => {
-      const searchButton = page.locator('data-testid=nav-search-btn');
-      const isSearchButtonVisible = await searchButton.isVisible();
-      if (isSearchButtonVisible) {
-        const searchInput = page.locator('role=combobox');
-        await expect(searchInput).toBeHidden();
-        await searchButton.click();
-        await expect(searchInput).toBeVisible();
+    test('organization page', async ({ page, ctx }) => {
+      const organization = ctx.planOrganizations[0];
+      test.skip(!organization, 'No organization for plan');
+      await page.goto(`${ctx.baseURL}/organizations/${organization.id}`);
+      await expect(page.locator('main#main')).toBeVisible();
+      const h1 = page.locator('h1');
+      await expect(h1).toContainText(organization.name);
+      await expect(page.getByTestId('org-actions-container')).toBeVisible();
+    });
 
-        await searchInput.fill('test');
-        const searchLink = page.locator('data-testid=search-advanced');
-        await searchLink.click();
-        await page.waitForURL('**/search');
-        await expect(page.locator('data-testid=search-form')).toBeVisible();
-      } else {
-        console.log('No search button for the plan');
-      }
+    test('search', async ({ page, ctx }) => {
+      const searchButton = page.getByTestId('nav-search-btn');
+      await expect(searchButton).toBeVisible();
+
+      const searchInput = page.getByRole('combobox');
+      await expect(searchInput).toBeHidden();
+      await searchButton.click();
+      await expect(searchInput).toBeVisible();
+
+      await searchInput.fill('test');
+      await expect(page.locator('*[aria-busy=true]')).toHaveCount(0);
+      const searchLink = page.getByTestId('search-advanced');
+      await searchLink.click();
+      await page.waitForURL('**/search');
+      await expect(page.getByTestId('search-form')).toBeVisible();
     });
   });
 
