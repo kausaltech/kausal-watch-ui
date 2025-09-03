@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import { usePlan } from '@/context/plan';
+
 import IndicatorCard from './IndicatorCard';
 
 const CausalNavigationWrapper = styled.div`
@@ -24,6 +26,30 @@ const CardWrapper = styled.div`
 function CausalNavigation(props) {
   const t = useTranslations();
   const { effects, causes } = props;
+  const currentPlan = usePlan();
+
+  const getIndicatorLink = (indicator) => {
+    // If the indicator has no plans, or current plan includes the indicator, default behaviour.
+    // If the indicator is connected only to another plan, link to the correct indicator page.
+    if (!indicator.plans || !Array.isArray(indicator.plans) || indicator.plans.length === 0) {
+      return null;
+    }
+
+    const currentPlanInList = indicator.plans.some(
+      (plan) => plan.identifier === currentPlan.identifier
+    );
+
+    if (currentPlanInList) {
+      return null;
+    }
+
+    const rootPlan = indicator.plans.find((plan) => !plan.parent);
+    if (rootPlan) {
+      return rootPlan.viewUrl;
+    }
+
+    return indicator.plans[0].viewUrl;
+  };
 
   return (
     <CausalNavigationWrapper>
@@ -39,6 +65,7 @@ function CausalNavigation(props) {
                       objectid={cause.causalIndicator.id}
                       name={cause.causalIndicator.name}
                       level={cause.causalIndicator.level}
+                      customHref={getIndicatorLink(cause.causalIndicator)}
                     />
                   </CardWrapper>
                 ))}
@@ -56,6 +83,7 @@ function CausalNavigation(props) {
                       objectid={effect.effectIndicator.id}
                       name={effect.effectIndicator.name}
                       level={effect.effectIndicator.level}
+                      customHref={getIndicatorLink(effect.effectIndicator)}
                     />
                   </CardWrapper>
                 ))}

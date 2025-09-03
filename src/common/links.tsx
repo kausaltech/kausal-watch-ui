@@ -87,14 +87,23 @@ export const replaceHashWithoutScrolling = (hash) =>
     hash ? `#${hash}` : `${window.location.pathname}${window.location.search}`
   );
 
-export function IndicatorLink({
-  id,
-  ...other
-}: { id: string | number; children: ReactNode } & LinkProps) {
-  const href = usePrependPlanAndLocale(getIndicatorLinkProps(id).href);
+export type IndicatorLinkProps = {
+  id: string | number;
+  viewUrl?: string;
+  children: ReactNode;
+} & LinkProps;
+
+export function IndicatorLink({ id, viewUrl, ...other }: IndicatorLinkProps) {
+  let href = usePrependPlanAndLocale(getIndicatorLinkProps(id).href);
 
   if (!('prefetch' in other)) {
     other.prefetch = false;
+  }
+
+  if (viewUrl) {
+    // For cross-plan, use the external URL
+    const indicatorPath = getIndicatorLinkProps(id).href;
+    href = `${viewUrl}${indicatorPath}`;
   }
 
   return <NextLink passHref {...disablePrefetch(other)} href={href} legacyBehavior />;

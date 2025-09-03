@@ -107,6 +107,13 @@ const GET_INDICATOR_DETAILS = gql`
         causalIndicator {
           id
           name
+          plans {
+            identifier
+            viewUrl
+            parent {
+              identifier
+            }
+          }
           level(plan: $plan)
         }
       }
@@ -117,6 +124,13 @@ const GET_INDICATOR_DETAILS = gql`
         effectIndicator {
           id
           name
+          plans {
+            identifier
+            viewUrl
+            parent {
+              identifier
+            }
+          }
           level(plan: $plan)
         }
       }
