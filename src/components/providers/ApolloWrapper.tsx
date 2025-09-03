@@ -8,6 +8,7 @@ import {
   SSRMultipartLink,
 } from '@apollo/client-integration-nextjs';
 import { setContext } from '@apollo/client/link/context';
+import { disableFragmentWarnings } from 'graphql-tag';
 import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 
@@ -90,6 +91,10 @@ export function ApolloWrapper({ initialLocale, planIdentifier, planDomain, child
     planIdentifier,
     planDomain,
   };
+
+  // Disable fragment warnings for now.
+  // https://github.com/apollographql/apollo-client-integrations/issues/328
+  disableFragmentWarnings();
 
   return (
     <ApolloNextAppProvider makeClient={() => makeClient(clientConfig)}>

@@ -149,7 +149,7 @@ function ActionCardList(props: ActionCardListProps) {
       {!embed.active && (
         <Col xs="12" className="mt-5 mb-5">
           <ActionListLink>
-            <Button color="primary" tag="a">
+            <Button color="primary">
               {t('see-all-actions', getActionTermContext(plan) || {})} <Icon.ArrowRight />
             </Button>
           </ActionListLink>
