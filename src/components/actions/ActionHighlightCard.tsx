@@ -113,7 +113,7 @@ type ActionHighlightCardProps = {
 
 // TODO: FIX typechecking
 
-function ActionHighlightCard(props: ActionHighlightCardProps) {
+export default function ActionHighlightCard(props: ActionHighlightCardProps) {
   const { action, imageUrl, hideIdentifier } = props;
   const plan = usePlan();
   const embed = useContext(EmbedContext);
@@ -160,5 +160,3 @@ function ActionHighlightCard(props: ActionHighlightCardProps) {
     </StyledActionCardLink>
   );
 }
-
-export default React.memo(ActionHighlightCard);
