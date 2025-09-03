@@ -380,8 +380,8 @@ importers:
         version: 8.37.0(eslint@9.31.0(jiti@2.4.2))(typescript@5.8.3)
     optionalDependencies:
       '@kausal-private/themes-private':
-        specifier: ^0.5.55
-        version: 0.5.55
+        specifier: ^0.5.56
+        version: 0.5.56
 
 packages:
 
@@ -2038,8 +2038,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.29':
     resolution: {integrity: sha512-uw6guiW/gcAGPDhLmd77/6lW8QLeiV5RUTsAX46Db6oLhGaVj4lhnPwb184s1bkc8kdVg/+h988dro8GRDpmYQ==}
 
-  '@kausal-private/themes-private@0.5.55':
-    resolution: {integrity: sha512-Xvzm1kNqB/6w/Lbv9Pi4od8w7Cy44U+Pm9uoHAxSdJ6UH4VpuOLTdfJ5m+pLh0q33GxiMikH0GerHYzYB5pVDg==}
+  '@kausal-private/themes-private@0.5.56':
+    resolution: {integrity: sha512-1+JOPK44Nn1cyHA3GwFYpvRy+MVQoqT8JcbbrJckJ/p9rkKLdDKUfEGZaZi+pp6H8JUg4zsoB4m7ccbUT38+Ag==}
 
   '@kausal/mapboxgl-legend@1.7.2':
     resolution: {integrity: sha512-qmjchiPrcer3gCLkln7z2e0o8i5XK2BNRbMMdr6/KHMxDTSeOOaN1PvRjXzrTAtewOyxztHxnyYH9KaoC5LJdQ==}
@@ -8973,8 +8973,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  sass@1.90.0:
-    resolution: {integrity: sha512-9GUyuksjw70uNpb1MTYWsH9MQHOHY6kwfnkafC24+7aOMZn9+rVMBxRbLvw756mrBFbIsFg6Xw9IkR2Fnn3k+Q==}
+  sass@1.92.0:
+    resolution: {integrity: sha512-KDNI0BxgIRDAfJgzNm5wuy+4yOCIZyrUbjSpiU/JItfih+KGXAVefKL53MTml054MmBA3DDKIBMSI/7XLxZJ3A==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -12521,7 +12521,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.4
 
-  '@kausal-private/themes-private@0.5.55':
+  '@kausal-private/themes-private@0.5.56':
     optional: true
 
   '@kausal/mapboxgl-legend@1.7.2': {}
@@ -15167,7 +15167,7 @@ snapshots:
 
   '@types/sass@1.45.0':
     dependencies:
-      sass: 1.90.0
+      sass: 1.92.0
 
   '@types/semver@7.7.0': {}
 
@@ -21474,7 +21474,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.1
 
-  sass@1.90.0:
+  sass@1.92.0:
     dependencies:
       chokidar: 4.0.3
       immutable: 5.1.3
