@@ -171,15 +171,23 @@ function IndicatorValue({
   );
 }
 
-function CardLink(props) {
-  const { level, indicatorId, children } = props;
+interface CardLinkProps {
+  level?: string | null;
+  indicatorId: string;
+  children: React.ReactNode;
+  customHref: string | null;
+}
 
-  if (level !== 'action')
+function CardLink(props: CardLinkProps) {
+  const { level, indicatorId, children, customHref } = props;
+
+  if (level !== 'action') {
     return (
-      <IndicatorLink id={indicatorId}>
+      <IndicatorLink id={indicatorId} viewUrl={customHref}>
         <StyledLink href>{children}</StyledLink>
       </IndicatorLink>
     );
+  }
   return <>{children}</>;
 }
 
@@ -200,6 +208,7 @@ interface IndicatorCardProps {
     unit: string;
   } | null;
   disabled?: boolean | null;
+  customHref: string | null;
 }
 
 export function getIndicatorTranslation(level: string | null, t: TFunction) {
@@ -226,6 +235,7 @@ function IndicatorCard({
   resolution = 'day',
   goalValue = null,
   disabled = false,
+  customHref,
 }: IndicatorCardProps) {
   const plan = usePlan();
   const t = useTranslations();
@@ -238,7 +248,7 @@ function IndicatorCard({
       : getIndicatorTranslation(level, t);
 
   return (
-    <CardLink level={level} indicatorId={objectid}>
+    <CardLink level={level} indicatorId={objectid} customHref={customHref}>
       <StyledIndicator $level={level} disabled={disabled}>
         <CardBody>
           <div>

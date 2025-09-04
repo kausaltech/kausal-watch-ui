@@ -11,7 +11,12 @@ import { isAbsoluteUrl, stripLocaleAndPlan, stripSlashes } from '@/utils/urls';
 import type { PlanContextFragment } from './__generated__/graphql';
 import { getCategoryString } from './categories';
 
-export function usePrependPlanAndLocale(path: string) {
+export function usePrependPlanAndLocale(path: string, viewUrl: string | null) {
+  // If cross plan link, use the viewUrl instead of the plan basePath
+  if (viewUrl) {
+    return `${viewUrl}${path}`;
+  }
+
   const plan = usePlan();
   const locale = useLocale();
 
@@ -87,11 +92,14 @@ export const replaceHashWithoutScrolling = (hash) =>
     hash ? `#${hash}` : `${window.location.pathname}${window.location.search}`
   );
 
-export function IndicatorLink({
-  id,
-  ...other
-}: { id: string | number; children: ReactNode } & LinkProps) {
-  const href = usePrependPlanAndLocale(getIndicatorLinkProps(id).href);
+export type IndicatorLinkProps = {
+  id: string | number;
+  viewUrl: string | null;
+  children: ReactNode;
+} & LinkProps;
+
+export function IndicatorLink({ id, viewUrl, ...other }: IndicatorLinkProps) {
+  const href = usePrependPlanAndLocale(getIndicatorLinkProps(id).href, viewUrl);
 
   if (!('prefetch' in other)) {
     other.prefetch = false;
