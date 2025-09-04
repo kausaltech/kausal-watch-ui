@@ -3,7 +3,12 @@
 import React from 'react';
 
 import { LineChart } from 'echarts/charts';
-import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
+import {
+  GridComponent,
+  LegendComponent,
+  type LegendComponentOption,
+  TooltipComponent,
+} from 'echarts/components';
 import * as echarts from 'echarts/core';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'styled-components';
@@ -55,10 +60,20 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
       ? buildTrendSeries(totalRaw, indicator, graphsTheme.trendLineColor ?? '#aaa', trendLabel)
       : [];
 
-  const legendData = [
+  const legendLabels: string[] = [
     ...(hasDimension ? dimSeries.map((d) => d.name) : [totalLabel]),
     ...(trendSeries.length ? [trendLabel] : []),
   ];
+
+  const areaLegendItems: LegendComponentOption['data'] = hasDimension
+    ? dimSeries.map((d) => ({ name: d.name, icon: 'roundRect' as const }))
+    : [{ name: totalLabel, icon: 'roundRect' as const }];
+
+  const trendLegendItems: LegendComponentOption['data'] = trendSeries.length
+    ? [{ name: trendLabel }]
+    : [];
+
+  const legendData: LegendComponentOption['data'] = [...areaLegendItems, ...trendLegendItems];
 
   const xCategories = Array.from(
     new Set([
@@ -106,7 +121,7 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'line' },
-      formatter: buildTooltipFormatter(unit, legendData, t, dimension, indicator?.valueRounding),
+      formatter: buildTooltipFormatter(unit, legendLabels, t, dimension, indicator?.valueRounding),
     },
     grid: {
       left: 20,
