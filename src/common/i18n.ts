@@ -14,7 +14,7 @@ export function getActionTermContext(
   if (!actionTerm) {
     actionTerm = plan.generalContent?.actionTerm;
   }
-  return actionTerm === 'ACTION' ? { context: undefined } : { context: actionTerm };
+  return actionTerm === 'ACTION' ? { context: '' } : { context: actionTerm || '' };
 }
 
 export function getActionTaskTermContext(plan: {

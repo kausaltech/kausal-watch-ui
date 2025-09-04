@@ -1,15 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { useTranslations } from 'next-intl';
 import { readableColor, shade } from 'polished';
 import { Badge as BaseBadge, Card as BaseCard, CardBody, CardFooter, Col, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
 import { ActionLink, IndicatorLink } from '@/common/links';
 import { SectionHeader } from '@/components/actions/ActionContent';
 import Icon from '@/components/common/Icon';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
-import PlanContext, { usePlan } from '@/context/plan';
+import { usePlan } from '@/context/plan';
 
 const IndicatorsSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s400};
@@ -63,7 +64,14 @@ const IndicatorActionListItem = styled.li`
   display: inline-block;
 `;
 
-function ActionIndicator(props) {
+type RelatedIndicator = NonNullable<GetActionDetailsQuery['action']>['relatedIndicators'][number];
+
+type ActionIndicatorProps = {
+  relatedIndicator: RelatedIndicator;
+  actionId: string;
+};
+
+function ActionIndicator(props: ActionIndicatorProps) {
   const t = useTranslations();
   const { relatedIndicator, actionId } = props;
   const { indicator } = relatedIndicator;
@@ -74,12 +82,10 @@ function ActionIndicator(props) {
     <Card className="mb-4">
       <CardBody>
         <IndicatorLink id={indicator.id}>
-          <a>
-            <h3>
-              {indicator.name}
-              <Icon.ArrowRight color="" />
-            </h3>
-          </a>
+          <h3>
+            {indicator.name}
+            <Icon.ArrowRight color="" />
+          </h3>
         </IndicatorLink>
         {indicator.latestGraph || indicator.latestValue ? (
           <IndicatorVisualisation indicatorId={indicator.id} />
@@ -90,13 +96,11 @@ function ActionIndicator(props) {
           <IndicatorActionsList title={t('indicator-also-for-actions')}>
             {actions.map((action) => (
               <IndicatorActionListItem key={action.identifier}>
-                <ActionLink action={action}>
-                  <a className="me-2">
-                    <Badge>
-                      {!plan.hideActionIdentifiers && `${action.identifier}. `}
-                      {action.name}
-                    </Badge>
-                  </a>
+                <ActionLink action={action} className="me-2">
+                  <Badge>
+                    {!plan.hideActionIdentifiers && `${action.identifier}. `}
+                    {action.name}
+                  </Badge>
                 </ActionLink>
               </IndicatorActionListItem>
             ))}
@@ -109,7 +113,7 @@ function ActionIndicator(props) {
 
 // FIXME: Type properly
 type ActionRelatedIndicatorsBlockProps = {
-  indicators: any[];
+  indicators: RelatedIndicator[];
   actionId: string;
 };
 

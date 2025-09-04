@@ -1,43 +1,46 @@
-export interface OrganizationInput<Type> {
+export interface OrganizationInput {
   id: string;
   classification?: {
     name: string;
-  };
+  } | null;
   parent?: {
     id: string;
-  };
+  } | null;
   actionCount: number;
   contactPersonCount: number;
 }
 
-export interface OrganizationHierarchyMember<Type> extends Omit<OrganizationInput<Type>, 'parent'> {
+export interface OrganizationHierarchyMember<OrgT extends Omit<OrganizationInput, 'parent'>> {
   descendantActionCount: number;
   descendantContactPersonCount: number;
   depth: number;
-  parent: null | this;
-  children: this[];
+  parent: null | (OrgT & OrganizationHierarchyMember<OrgT>);
+  children: (OrgT & OrganizationHierarchyMember<OrgT>)[];
 }
 
-export function constructOrgHierarchy<Type extends OrganizationHierarchyMember<Type>>(
-  orgsIn: OrganizationInput<Type>[]
-) {
-  const orgsById = new Map();
+export type OrganizationWithHierarchy<OrgT extends OrganizationInput> = OrgT &
+  OrganizationHierarchyMember<OrgT>;
+
+export function constructOrgHierarchy<OrgT extends OrganizationInput>(
+  orgsIn: OrgT[]
+): OrganizationWithHierarchy<OrgT>[] {
+  const orgsById = new Map<string, OrganizationWithHierarchy<OrgT>>();
   const skipClasses = ['Hallitus', 'Valtuusto', 'Lautakunta', 'Jaosto'];
 
-  function isSkippedOrg(org: OrganizationInput<Type>) {
+  function isSkippedOrg(org: OrganizationWithHierarchy<OrgT>) {
     if (!org.classification) return false;
     return skipClasses.indexOf(org.classification.name) >= 0;
   }
 
-  let orgs: Type[] = orgsIn.map((org) => {
-    // @ts-ignore
-    const newOrg: Type = {
+  let orgs = orgsIn.map((org) => {
+    const newOrg = {
       ...org,
+      parent: org.parent ?? null,
       children: [],
       descendantActionCount: 0,
       descendantContactPersonCount: 0,
       depth: 0,
-    };
+    } as OrganizationWithHierarchy<OrgT>;
     orgsById.set(newOrg.id, newOrg);
     return newOrg;
   });
@@ -46,9 +49,10 @@ export function constructOrgHierarchy<Type extends OrganizationHierarchyMember<T
     // Check if org or its parents is one of the skipped organization types
     // and yank them out of the org hierarchy
     if (isSkippedOrg(org)) return;
-    let parent = orgsById.get(org.parent.id);
+    let parent = orgsById.get(org.parent.id)!;
     while (isSkippedOrg(parent)) {
-      parent = orgsById.get(parent.parent.id);
+      if (!parent.parent) break;
+      parent = orgsById.get(parent.parent.id)!;
     }
     parent.children.push(org);
     org.parent = parent;
@@ -70,20 +74,21 @@ export function constructOrgHierarchy<Type extends OrganizationHierarchyMember<T
 
     let actionCount = 0;
     let contactPersonCount = 0;
-    while (org) {
-      org.descendantActionCount += actionCount;
-      org.descendantContactPersonCount += contactPersonCount;
-      if (org.actionCount) actionCount += org.actionCount;
-      if (org.contactPersonCount) contactPersonCount += org.contactPersonCount;
-      org = org.parent;
+    let orgIter: typeof org | null = org;
+    while (orgIter) {
+      orgIter.descendantActionCount += actionCount;
+      orgIter.descendantContactPersonCount += contactPersonCount;
+      if (orgIter.actionCount) actionCount += orgIter.actionCount;
+      if (orgIter.contactPersonCount) contactPersonCount += orgIter.contactPersonCount;
+      orgIter = orgIter.parent;
     }
   });
   return orgs;
 }
 
-export interface OrgMappedAction<OrgType extends OrganizationHierarchyMember<OrgType>> {
+export interface OrgMappedAction<OrgT extends OrganizationInput> {
   responsibleParties: {
-    organization: OrgType;
+    organization: OrganizationWithHierarchy<OrgT>;
   }[];
 }
 
@@ -96,26 +101,28 @@ export interface ActionInput {
 }
 
 export function mapResponsibleParties<
-  ActionType extends OrgMappedAction<OrgType>,
-  OrgType extends OrganizationHierarchyMember<OrgType>,
->(actions: ActionInput[], orgs: OrgType[]) {
+  ActionType extends ActionInput,
+  OrgType extends OrganizationInput,
+>(actions: ActionType[], orgs: OrganizationWithHierarchy<OrgType>[]) {
   const orgsById = new Map(orgs.map((org) => [org.id, org]));
-  const mappedActions: ActionType[] = actions.map((action) => {
+  const mappedActions = actions.map((action) => {
     const rps = action.responsibleParties.map((rp) => {
-      const organization = orgsById.get(rp.organization.id);
-      const mappedRp: ActionType['responsibleParties'][0] = {
+      const organization = orgsById.get(rp.organization.id)!;
+      const mappedRp: OrgMappedAction<OrgType>['responsibleParties'][0] = {
         ...rp,
         organization,
       };
-      return mappedRp;
+      return mappedRp satisfies OrgMappedAction<OrgType>['responsibleParties'][0];
     });
-    const mappedAction: ActionType = { ...action, responsibleParties: rps };
+    const mappedAction: OrgMappedAction<OrgType> = { ...action, responsibleParties: rps };
     return mappedAction;
   });
-  return mappedActions;
+  return mappedActions as (ActionType & OrgMappedAction<OrgType>)[];
 }
 
-export function orgHasActions<Type>(org: OrganizationHierarchyMember<Type>) {
+export function orgHasActions<Type extends OrganizationInput>(
+  org: OrganizationWithHierarchy<Type>
+) {
   if (org.actionCount || org.descendantActionCount) return true;
   return false;
 }

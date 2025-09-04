@@ -1,10 +1,10 @@
-import { Category, PlanContextFragment } from './__generated__/graphql';
+import type { Category, PlanContextFragment } from './__generated__/graphql';
 
 export interface CategoryInput {
   id: string;
   parent?: {
     id: string;
-  };
+  } | null;
 }
 
 export interface CategoryTypeInput {

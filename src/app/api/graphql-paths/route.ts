@@ -1,5 +1,6 @@
 import { headers } from 'next/headers';
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 import { captureException } from '@sentry/nextjs';
 
@@ -22,7 +23,7 @@ const PASS_HEADERS = [
 const PATHS_COOKIE_PREFIX = 'paths_api_';
 
 export async function POST(request: NextRequest) {
-  const headersList = headers();
+  const headersList = await headers();
   const requestData = await request.json();
   const backendCookieHeader = getClientCookieAsHeader(request, {
     prefix: PATHS_COOKIE_PREFIX,
@@ -68,9 +69,6 @@ export async function POST(request: NextRequest) {
       errorMessage = await backendResponse.text();
       data = { errors: [{ message: errorMessage }] };
     }
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(data);
-    }
     return NextResponse.json(data, {
       status: backendResponse.status,
       headers: responseHeaders,
@@ -79,7 +77,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const data = await backendResponse.json();
-    forwardSetCookie(request, backendResponse, { prefix: PATHS_COOKIE_PREFIX });
+    await forwardSetCookie(request, backendResponse, { prefix: PATHS_COOKIE_PREFIX });
     return NextResponse.json(data, { status: 200, headers: responseHeaders });
   } catch (error) {
     return NextResponse.json(

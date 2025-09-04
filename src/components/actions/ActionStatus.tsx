@@ -4,7 +4,8 @@ import { Progress } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
 import { getStatusSummary } from '@/common/ActionStatusSummary';
-import { ActionStatusSummary, Plan } from '@/common/__generated__/graphql';
+import type { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
+import type { PlanContextType } from '@/context/plan';
 
 const Status = styled.div`
   color: ${(props) => props.theme.themeColors.black};
@@ -19,7 +20,7 @@ const StatusTitle = styled.div`
   line-height: ${(props) => props.theme.spaces.s150};
 `;
 
-const ActionProgress = styled(Progress)`
+const ActionProgress = styled(Progress)<{ color: string }>`
   position: relative;
   height: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.color};
@@ -31,9 +32,11 @@ const ActionProgress = styled(Progress)`
 `;
 
 interface ActionStatusProps {
-  plan: Plan;
-  statusSummary: ActionStatusSummary;
-  completion?: number;
+  plan: PlanContextType;
+  statusSummary: {
+    identifier: ActionStatusSummaryIdentifier;
+  };
+  completion?: number | null;
   text?: string;
 }
 

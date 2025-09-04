@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { type JSX } from 'react';
 
+import { captureMessage } from '@sentry/nextjs';
 import SVG from 'react-inlinesvg';
 import { useTheme } from 'styled-components';
 
@@ -10,26 +11,34 @@ import defaultTheme from '@/public/static/themes/default/theme.json';
 
 const makeIconId = (name: string): string => `symbol-icon-${name}`;
 
-export function HiddenReusableIcon(props) {
+type HiddenReusableIconProps = {
+  key: string;
+  name: ValidIconName;
+};
+
+export function HiddenReusableIcon(props: HiddenReusableIconProps) {
   // There needs to be one of these in the DOM for each available icon
   // so they can be referenced through the SVG use mechanism at the
   // site of use. Include the SharedIcons component to the layout add
   // these to the DOM
-  const theme = useTheme();
   const { name } = props;
   const iconFilename = name.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
-  const icon = defaultTheme.icons[iconFilename];
+  if (!defaultTheme.icons[iconFilename]) {
+    captureMessage(`Icon ${iconFilename} not found in default theme`);
+    return null;
+  }
+  const icon = defaultTheme.icons[iconFilename] as string;
   return (
     <SVG
       src={getThemeStaticURL(icon)}
       id={makeIconId(name)}
       onError={(error) => console.log(error.message)}
-      key={`${theme.name}-${name}`}
+      key={`${name}`}
     />
   );
 }
 
-export function SharedIcons(props: React.PropsWithChildren) {
+export function SharedIcons() {
   const iconReferences = Object.values(AvailableIcons);
   const hiddenIcons = iconReferences.map((iconRef) => (
     <HiddenReusableIcon key={iconRef} name={iconRef} />
@@ -40,8 +49,6 @@ export function SharedIcons(props: React.PropsWithChildren) {
     </div>
   );
 }
-
-const camelToKebabCase = (s) => s.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 
 export enum AvailableIcons {
   ActionDependency = 'action-dependency',
@@ -98,8 +105,6 @@ export enum AvailableIcons {
   ScopeGlobal = 'scope-global',
   ScopeLocal = 'scope-local',
   Search = 'search',
-  SignLanguage = 'sign-language',
-  SimpleLanguage = 'simple-language',
   Sort = 'sort',
   SortDown = 'sort-down',
   SortUp = 'sort-up',
@@ -154,8 +159,9 @@ type IconsInterface = {
   [K in keyof typeof AvailableIcons]: (props: Props) => JSX.Element;
 } & typeof IconComponent;
 
-for (const [key, val] of Object.entries(AvailableIcons)) {
-  const fn = (props: Props) => <IconComponent name={AvailableIcons[key]} {...props} />;
+for (const [key, _val] of Object.entries(AvailableIcons)) {
+  const iconName = AvailableIcons[key] as ValidIconName;
+  const fn = ({ name, ...rest }: Props) => <IconComponent name={iconName} {...rest} />;
   IconComponent[key] = fn;
 }
 

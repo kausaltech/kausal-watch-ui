@@ -4,6 +4,7 @@ import { ApolloClient, InMemoryCache, from, gql } from '@apollo/client';
 import type { MetadataRoute } from 'next';
 
 import { logOperationLink } from '@common/apollo/links';
+import { getRequestOrigin } from '@common/utils/request.server';
 
 import type {
   GetPlansByHostnameQuery,
@@ -75,10 +76,8 @@ function getDefaultPlanId(plans: NonNullable<GetPlansByHostnameQuery['plansForHo
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const headersList = headers();
-  const host = headersList.get('host');
-  const protocol = headersList.get('x-forwarded-proto');
-  const url = new URL(`${protocol}://${host}`);
+  const origin = await getRequestOrigin();
+  const url = new URL(origin);
 
   const { data: plansData, error: plansError } = await tryRequest(
     apolloClient.query<GetPlansByHostnameQuery, GetPlansByHostnameQueryVariables>({

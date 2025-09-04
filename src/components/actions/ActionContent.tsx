@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect } from 'react';
+import React, { type JSX, useCallback, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 

@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
-import { Category } from '@/common/__generated__/graphql';
+import type { ActionCardFragment } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
 import { ActionLink, ActionListLink, OrganizationLink } from '@/common/links';
@@ -29,11 +29,13 @@ const Hero = styled.header<{ $bgColor: string }>`
   }
 `;
 
-const ActionBgImage = styled.div<{
+type ActionBgImageProps = {
   $bgColor: string;
   $bgImage: string;
   $imageAlign: string;
-}>`
+};
+
+const ActionBgImage = styled.div<ActionBgImageProps>`
   background-color: ${(props) => props.$bgColor};
   background-image: url(${(props) => props.$bgImage});
   background-position: ${(props) => props.$imageAlign};
@@ -147,14 +149,20 @@ const ActionName = styled.span`
   max-width: 100%;
 `;
 
+type Category = ActionCardFragment['categories'][number];
+
 /**
  * Check whether multiple categories at different levels of a single category type hierarchy
  * have been added to an action. Required to filter duplicate categories from the breadcrumb.
  */
-const isCategoryInSiblingsParentTree = (category: Category, siblingParentCategory: Category) =>
-  category.id === siblingParentCategory.id ||
-  (siblingParentCategory.parent &&
-    isCategoryInSiblingsParentTree(category, siblingParentCategory.parent));
+function isCategoryInSiblingsParentTree(
+  category: Category,
+  siblingParentCategory: Category
+): boolean {
+  if (category.id === siblingParentCategory.id) return true;
+  if (!siblingParentCategory.parent) return false;
+  return isCategoryInSiblingsParentTree(category, siblingParentCategory.parent);
+}
 
 function ActionCategories({ categories }: { categories: Category[] }) {
   const plan = usePlan();
@@ -270,27 +278,25 @@ function ActionHero(props: ActionHeroProps) {
                     )}
                     <ActionsNav aria-label={t('nav-actions-pager')}>
                       <ActionListLink>
-                        <a>
-                          <IndexLink>{t('actions', getActionTermContext(plan))}</IndexLink>
-                        </a>
+                        <IndexLink>{t('actions', getActionTermContext(plan))}</IndexLink>
                       </ActionListLink>
                       {theme.settings?.actionView?.showPaginationTop && (
                         <div>
                           {previousAction && (
                             <ActionLink action={previousAction}>
-                              <a>
+                              <>
                                 <Icon.ArrowLeft color={theme.linkColor} aria-hidden="true" />{' '}
                                 {t('previous')}
-                              </a>
+                              </>
                             </ActionLink>
                           )}
                           {nextAction && previousAction && <NavDivider />}
                           {nextAction && (
                             <ActionLink action={nextAction}>
-                              <a>
+                              <>
                                 {t('next')}
                                 <Icon.ArrowRight color={theme.linkColor} aria-hidden="true" />
-                              </a>
+                              </>
                             </ActionLink>
                           )}
                         </div>

@@ -19,21 +19,37 @@ const StyledLabel = styled.label`
   width: 100%;
 `;
 
-function InsightFilter(props) {
+type InsightFilterProps = {
+  nodes: {
+    id: string;
+    name: string;
+    indicator_level: string;
+  }[];
+  activeFilterNode: string | null;
+  onFilterNode: (nodeId: string | null) => void;
+};
+
+type TypeaheadOption = {
+  id: string;
+  label: string;
+};
+
+function InsightFilter(props: InsightFilterProps) {
   const t = useTranslations();
   const { nodes, activeFilterNode } = props;
-  const options = nodes
+  const options: TypeaheadOption[] = nodes
     .filter((node) => node.indicator_level === 'strategic' || node.id == activeFilterNode)
     .map((node) => {
-      const out = {};
-      out.id = node.id;
-      out.label = node.name;
+      const out: TypeaheadOption = {
+        id: node.id,
+        label: node.name,
+      };
       return out;
     });
 
-  function handleChange(data) {
+  function handleChange(data: TypeaheadOption[]) {
     const selectedNode = data[0];
-    let nodeId;
+    let nodeId: string | null;
 
     if (selectedNode) {
       nodeId = selectedNode.id;
@@ -43,7 +59,7 @@ function InsightFilter(props) {
     props.onFilterNode(nodeId);
   }
 
-  let defaultSelected;
+  let defaultSelected: TypeaheadOption[];
   if (activeFilterNode) {
     defaultSelected = options.filter((opt) => opt.id === activeFilterNode);
   } else {

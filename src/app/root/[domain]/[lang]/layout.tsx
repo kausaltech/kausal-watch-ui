@@ -1,3 +1,4 @@
+import { use } from 'react';
 import type { ReactNode } from 'react';
 
 import { headers } from 'next/headers';
@@ -20,7 +21,7 @@ import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
 import '@/styles/default/main.scss';
 
 type Props = {
-  params: { lang: string };
+  params: Promise<{ lang: string }>;
   children: ReactNode;
 };
 
@@ -34,9 +35,13 @@ async function AsyncAuthProvider({ children }) {
   return <AuthProvider session={session}>{children}</AuthProvider>;
 }
 
-export default function LangLayout({ params, children }: Props) {
+export default function LangLayout(props: Props) {
+  const params = use(props.params);
+
+  const { children } = props;
+
   const messages = useMessages();
-  const incomingHeaders = headers();
+  const incomingHeaders = use(headers());
   const planIdentifier = incomingHeaders.get('x-plan-identifier')!;
   const planDomain = incomingHeaders.get('x-plan-domain')!;
 
