@@ -56,7 +56,8 @@ const createLayout = (
 
   // Define y-axis range
   yaxes.yaxis.title = { text: yRange.unit };
-  if (yRange.includeZero) {
+  if (yRange.includeZero && yRange.range[0] == null) {
+    yaxes.yaxis.fixedrange = false;
     yaxes.yaxis.rangemode = 'tozero';
   }
 

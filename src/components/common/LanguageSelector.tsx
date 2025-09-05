@@ -6,7 +6,7 @@ import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
 
-import { PlanContextFragment } from '@/common/__generated__/graphql';
+import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import { usePlan } from '@/context/plan';
 
 import Icon from './Icon';
@@ -171,12 +171,11 @@ const LanguageSelector = (props: LanguageSelectorProps) => {
             <DropdownItem key={locale} tag="div" active={locale === currentLocale}>
               {locale !== currentLocale ? (
                 <Link
-                  locale={locale}
                   href={getLocaleHref(locale)}
                   prefetch={false}
                   // Reset the cache so that stale locale cache isn't used. Required because the
                   // locale isn't passed to query calls as an argument.
-                  onClick={() => apolloClient.clearStore()}
+                  onClick={() => void apolloClient.clearStore()}
                 >
                   {languageNames[locale.split('-')[0]]}
                 </Link>

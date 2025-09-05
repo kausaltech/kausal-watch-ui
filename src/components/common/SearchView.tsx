@@ -299,7 +299,7 @@ function SearchView(props: SearchViewProps) {
                       type="switch"
                       id="other-plans-only"
                       name="onlyOtherPlans"
-                      checked={userSearch?.onlyOtherPlans}
+                      checked={userSearch?.onlyOtherPlans ?? false}
                       onChange={handleValueChange}
                     />
                     <Label for="other-plans-only">{t('other-plans-only')}</Label>
