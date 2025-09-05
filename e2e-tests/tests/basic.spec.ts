@@ -18,8 +18,18 @@ async function navigateAndCheckLayout(page: Page, url: string, ctx: PlanContext)
   //await ctx.checkAccessibility(page);
 }
 
-const testPlan = (planId: string) =>
-  test.describe(planId, () => {
+const testPlan = (planId: string) => {
+  const annotatations = [
+    {
+      type: 'plan',
+      description: planId,
+    },
+    {
+      type: 'url',
+      description: PlanContext.getBaseURL(planId),
+    },
+  ];
+  test.describe(planId, { annotation: annotatations }, () => {
     test.describe.configure({ mode: 'serial' });
 
     test.use({
@@ -30,6 +40,7 @@ const testPlan = (planId: string) =>
     });
 
     test.beforeEach(async ({ page, ctx }) => {
+      ctx.beforeEach(page);
       await navigateAndCheckLayout(page, ctx.baseURL, ctx);
       const modalLocator = page.getByTestId('intro-modal');
       const hasModal = (await modalLocator.count()) > 0;
@@ -61,9 +72,10 @@ const testPlan = (planId: string) =>
       await ctx.checkMeta(page);
 
       await expect(page.getByRole('tabpanel').first()).toBeVisible({ timeout: 20000 });
+      await ctx.waitForLoadingFinished(page);
 
       // Test direct URL navigation
-      await page.goto(`${ctx.baseURL}/${listItem.page.urlPath}`);
+      await page.goto(`${ctx.baseURL}${listItem.page.urlPath}`);
       await ctx.checkMeta(page);
       await expect(page.getByRole('tabpanel').first()).toBeVisible({ timeout: 20000 });
     });
@@ -130,6 +142,8 @@ const testPlan = (planId: string) =>
       for (const staticPageItem of staticPageItems) {
         const nav = page.locator('nav#global-navigation-bar');
 
+        console.log('testing static page', staticPageItem);
+
         const parent = staticPageItem.parent;
         if (parent?.page.__typename !== 'PlanRootPage') {
           const parentButton = nav.getByRole('button', {
@@ -170,6 +184,8 @@ const testPlan = (planId: string) =>
       test.skip(!indicatorListItem, 'No indicator list for plan');
       const nav = page.locator('nav#global-navigation-bar');
       await nav.getByRole('link', { name: indicatorListItem.page.title, exact: true }).click();
+      await page.waitForURL(/.*\/indicators/);
+      await ctx.waitForLoadingFinished(page);
       const main = page.locator('main#main');
       await expect(main).toBeVisible();
       const planIndicators = ctx.getPlanIndicators();
@@ -231,9 +247,11 @@ const testPlan = (planId: string) =>
       await expect(page.locator('*[aria-busy=true]')).toHaveCount(0);
       const searchLink = page.getByTestId('search-advanced');
       await searchLink.click();
+      await ctx.waitForLoadingFinished(page);
       await page.waitForURL('**/search');
       await expect(page.getByTestId('search-form')).toBeVisible();
     });
   });
+};
 
 getIdentifiersToTest().forEach((plan) => testPlan(plan));
