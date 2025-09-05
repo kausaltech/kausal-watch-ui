@@ -1,6 +1,6 @@
 import * as apolloModule from '@apollo/client';
 import AxeBuilder from '@axe-core/playwright';
-import { type Page, expect } from '@playwright/test';
+import { type ConsoleMessage, type Page, expect } from '@playwright/test';
 
 import type {
   PlaywrightGetPlanBasicsQuery,
@@ -161,6 +161,30 @@ export class PlanContext {
     this.planIndicators = planIndicators;
   }
 
+  beforeEach(page: Page) {
+    page.on('console', (msg) => {
+      const IGNORE_STARTSWITH = [
+        'Public environment',
+        '[Client Instrumentation Hook]',
+        'Maximum update depth exceeded',
+      ];
+      const IGNORE_INCLUDES = [
+        'Download the React DevTools',
+        '[Fast Refresh]',
+        'Failed to initialize WebGL',
+        'Download the Apollo DevTools',
+      ];
+      const text = msg.text();
+      if (
+        IGNORE_STARTSWITH.some((startsWith) => text.startsWith(startsWith)) ||
+        IGNORE_INCLUDES.some((includes) => text.includes(includes))
+      )
+        return;
+      console.log(`Console message (${msg.type()}):\n`, msg);
+      throw new Error('Test produced console output');
+    });
+  }
+
   getActionListMenuItem(): ActionListMenuItem | null {
     function isActionList(item: MainMenuItem): item is ActionListMenuItem {
       if (item?.__typename !== 'PageMenuItem') return false;
@@ -261,6 +285,10 @@ export class PlanContext {
     }
   }
 
+  static getBaseURL(planId: string) {
+    return getPageBaseUrlToTest(planId);
+  }
+
   static async fromPlanId(planId: string) {
     const langRes = await apolloClient.query<
       PlaywrightGetPlanBasicsQuery,
@@ -313,6 +341,8 @@ export function getIdentifiersToTest(): string[] {
 export function getPageBaseUrlToTest(planId: string): string {
   let baseUrl = BASE_URL;
   baseUrl = baseUrl.replace('{planId}', planId);
+  // strip tailing slash
+  baseUrl = baseUrl.replace(/\/$/, '');
   return baseUrl;
 }
 
