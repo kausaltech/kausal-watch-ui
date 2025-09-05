@@ -30,32 +30,36 @@ export default function ActionsTable({ actions }: { actions: Action[] }) {
       </thead>
       <tbody>
         {actions.map((action) => (
-          <ActionLink action={action} key={action.id}>
-            <tr>
-              <td>
-                <strong>{action.identifier}</strong>
-              </td>
-              <td>
+          <tr key={action.id}>
+            <td>
+              {plan.features.hasActionIdentifiers ? (
+                <ActionLink action={action} key={action.id}>
+                  <strong>{action.identifier}</strong>
+                </ActionLink>
+              ) : null}
+            </td>
+            <td>
+              <ActionLink action={action} key={action.id}>
                 <strong>{action.name}</strong>
-              </td>
-              <td width="200">
-                {action.status && (
-                  <StatusBadge
-                    plan={plan}
-                    action={{
-                      ...action,
-                      statusSummary: getStatusSummary(plan, action.statusSummary),
-                    }}
-                  />
-                )}
-              </td>
-              <td>
-                {action.impact && (
-                  <ActionImpact identifier={action.impact.identifier} name={action.impact.name} />
-                )}
-              </td>
-            </tr>
-          </ActionLink>
+              </ActionLink>
+            </td>
+            <td width="200">
+              {action.status && (
+                <StatusBadge
+                  plan={plan}
+                  action={{
+                    ...action,
+                    statusSummary: getStatusSummary(plan, action.statusSummary),
+                  }}
+                />
+              )}
+            </td>
+            <td>
+              {action.impact && (
+                <ActionImpact identifier={action.impact.identifier} name={action.impact.name} />
+              )}
+            </td>
+          </tr>
         ))}
       </tbody>
     </Table>
