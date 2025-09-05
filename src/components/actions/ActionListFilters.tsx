@@ -1193,9 +1193,9 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               id: obj.id,
               label: obj.abbreviation || obj.name,
             })),
-            label: t('filter-primary-organization', ''),
-            helpText: t('filter-primary-organization-help', ''),
-            showAllLabel: t('filter-all-organizations', ''),
+            label: t('filter-primary-organization', { context: 'other' }),
+            helpText: t('filter-primary-organization-help', { context: 'other' }),
+            showAllLabel: t('filter-all-organizations', { context: 'other' }),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.primaryOrg?.id === val) return true;
               return false;
