@@ -172,9 +172,10 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
   switch (__typename) {
     case 'RichTextBlock': {
       const { value } = block;
+      const canCollapse =
+        page.__typename === 'CategoryPage' && theme.settings.categories.collapseLongTexts;
       const COLLAPSIBLE_BREAKPOINT = 1200;
-      const isCollapsible =
-        page.__typename === 'CategoryPage' && value.length > COLLAPSIBLE_BREAKPOINT;
+      const isCollapsible = canCollapse && value.length > COLLAPSIBLE_BREAKPOINT;
       return (
         <Container id={id}>
           <Row>
