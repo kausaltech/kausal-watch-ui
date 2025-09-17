@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-import { GetHomePageQuery } from '@/common/__generated__/graphql';
+import type { GetHomePageQuery } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 
 import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
@@ -14,7 +14,6 @@ export const GET_HOME_PAGE = gql`
       slug
       ... on PlanRootPage {
         body {
-          id
           ...StreamFieldFragment
         }
       }
@@ -59,7 +58,9 @@ export const GET_HOME_PAGE = gql`
 `;
 
 export const getHomePage = async (plan: string) =>
-  await getClient().query<GetHomePageQuery>({
+  await (
+    await getClient()
+  ).query<GetHomePageQuery>({
     query: GET_HOME_PAGE,
     variables: {
       plan,

@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 
 import { transparentize } from 'polished';
 import { DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
@@ -36,9 +36,11 @@ const PlanTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
-const StyledDropdownToggle = styled(DropdownToggle)<{
+type StyledDropdownToggleProps = {
   $color: CSSProperties['color'];
-}>`
+};
+
+const StyledDropdownToggle = styled(DropdownToggle)<StyledDropdownToggleProps>`
   display: flex;
   align-items: center;
   padding: 0.25rem;
@@ -71,7 +73,7 @@ interface PlanSelectorProps {
   color: CSSProperties['color'];
 }
 
-const PlanSelector = (props: PlanSelectorProps) => {
+export default function PlanSelector(props: PlanSelectorProps) {
   const { color } = props;
   const plan = usePlan();
   const { allRelatedPlans } = plan;
@@ -82,7 +84,6 @@ const PlanSelector = (props: PlanSelectorProps) => {
   const selectablePlans = [
     ...plan.allRelatedPlans.filter((pl) => pl?.id !== plan.id && pl?.id !== plan.parent?.id),
   ];
-
   return (
     <PlanSelect>
       <PlanDivider $color={color} />
@@ -101,6 +102,4 @@ const PlanSelector = (props: PlanSelectorProps) => {
       </UncontrolledDropdown>
     </PlanSelect>
   );
-};
-
-export default PlanSelector;
+}

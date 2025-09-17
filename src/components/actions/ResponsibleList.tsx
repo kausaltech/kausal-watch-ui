@@ -78,17 +78,15 @@ function ResponsibleBadge({ responsibleParty, linkToOrganization = true }: Respo
     <ResponsibleItem>
       {linkToOrganization ? (
         <OrganizationLink organizationId={org.id}>
-          <a>
-            <BadgeTooltip
-              id={`org-${slugify(org.id)}`}
-              tooltip={org.abbreviation !== '' ? org.name : undefined}
-              ariaLabel={ariaLabel}
-              content={org.abbreviation || org.name}
-              size={size}
-              color="badgeColor"
-              isLink
-            />
-          </a>
+          <BadgeTooltip
+            id={`org-${slugify(org.id)}`}
+            tooltip={org.abbreviation !== '' ? org.name : undefined}
+            ariaLabel={ariaLabel}
+            content={org.abbreviation || org.name}
+            size={size}
+            color="badgeColor"
+            isLink
+          />
         </OrganizationLink>
       ) : (
         <BadgeTooltip

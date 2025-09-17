@@ -1,14 +1,14 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useQuery } from '@apollo/client';
+import * as Sentry from '@sentry/nextjs';
 import { concat } from 'lodash';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
-import { CommonContentBlockProps } from '@/common/blocks.types';
+import type { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
+import type { CommonContentBlockProps } from '@/common/blocks.types';
 import CategoryActionList from '@/components/actions/CategoryActionList';
 import CategoryCardContent from '@/components/common/CategoryCardContent';
 import ContentLoader from '@/components/common/ContentLoader';
@@ -173,14 +173,15 @@ const GET_CATEGORIES_FOR_TREEMAP = gql`
 
 type CategoryTreeSectionProps = {
   id?: string;
-  heading?: string;
-  lead?: string;
-  sections: GetCategoriesForTreeMapQuery['planCategories'];
+  heading?: string | null;
+  lead?: string | null;
+  sections: NonNullable<GetCategoriesForTreeMapQuery['planCategories']>;
   valueAttribute: {
     unit: {
-      shortName: string;
-    };
+      shortName: string | null;
+    } | null;
   };
+  hasSidebar?: boolean;
 };
 
 const CategoryTreeSection = ({
@@ -191,7 +192,7 @@ const CategoryTreeSection = ({
   hasSidebar,
 }: CategoryTreeSectionProps) => {
   // console.log(sections);
-  const rootSection = sections.find((sect) => sect.parent === null);
+  const rootSection = sections.find((sect) => sect.parent === null)!;
   const [activeCategory, setCategory] = useState(rootSection);
 
   // useCallback, so function prop does not cause graph re-rendering
@@ -199,6 +200,7 @@ const CategoryTreeSection = ({
     (cat: string) => {
       const allSections = concat(rootSection, sections);
       const newCat = allSections.find((sect) => sect.id === cat);
+      if (!newCat) return;
       setCategory(newCat);
     },
     [sections, rootSection]
@@ -244,34 +246,39 @@ const CategoryTreeSection = ({
 };
 
 interface CategoryTreeBlockProps extends CommonContentBlockProps {
-  categoryType: {
+  treeMapCategoryType: {
     identifier: string;
   };
   valueAttribute: {
     identifier: string;
     unit: {
-      shortName: string;
-    };
+      shortName: string | null;
+    } | null;
   };
-  categories: GetCategoriesForTreeMapQuery['planCategories'];
   hasSidebar: boolean;
+  heading: string | null;
+  lead: string | null;
 }
 
-function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
+function CategoryTreeBlockBrowser(
+  props: CategoryTreeBlockProps & {
+    categories: NonNullable<GetCategoriesForTreeMapQuery['planCategories']>;
+  }
+) {
   const { id = '', categories: cats, heading, lead, hasSidebar } = props;
   const catMap = useMemo(() => new Map(cats.map((cat) => [cat.id, cat])), [cats]);
 
   const findFirstAncestorColor = useCallback(
-    (id) => {
-      const cat = catMap.get(id);
+    (id: string) => {
+      const cat = catMap.get(id)!;
       if (cat.color) return cat.color;
       let parentId = cat.parent?.id;
       while (parentId) {
-        const parent = catMap.get(parentId);
+        const parent = catMap.get(parentId)!;
         if (parent.color) return parent.color;
         parentId = parent.parent?.id;
       }
-      return null;
+      return '';
     },
     [catMap]
   );
@@ -298,26 +305,31 @@ function CategoryTreeBlockBrowser(props: CategoryTreeBlockProps) {
 }
 
 function CategoryTreeBlock(props: CategoryTreeBlockProps) {
-  const isServer = typeof window === 'undefined';
-  if (isServer) {
-    return null;
-  }
-
-  const { categoryType, valueAttribute, hasSidebar } = props;
+  const { treeMapCategoryType, valueAttribute, hasSidebar } = props;
   const plan = usePlan();
   const { data, loading, error } = useQuery<GetCategoriesForTreeMapQuery>(
     GET_CATEGORIES_FOR_TREEMAP,
     {
       variables: {
         plan: plan.identifier,
-        categoryType: categoryType.identifier,
+        categoryType: treeMapCategoryType.identifier,
         attributeType: valueAttribute.identifier,
       },
+      skip: typeof window === 'undefined',
     }
   );
 
+  const isServer = typeof window === 'undefined';
+  if (isServer) {
+    return null;
+  }
+
   if (error) return <ErrorMessage message={error.message} />;
-  if (loading) return <ContentLoader />;
+  if (loading || !data) return <ContentLoader />;
+  if (!data.planCategories) {
+    Sentry.captureMessage('CategoryTreeBlock missing categories');
+    return null;
+  }
 
   return (
     <CategoryTreeBlockBrowser categories={data.planCategories} {...props} hasSidebar={hasSidebar} />

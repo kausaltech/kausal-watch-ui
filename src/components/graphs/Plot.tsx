@@ -4,7 +4,7 @@ import React, { useEffect, useLayoutEffect, useRef } from 'react';
 
 import Plotly from '@kausal/plotly-custom/dist/plotly-custom';
 import { useLocale } from 'next-intl';
-import { Config, Data, Layout } from 'plotly.js';
+import type { Config, Data, Layout } from 'plotly.js';
 import * as cs from 'plotly.js-locales/cs';
 import * as da from 'plotly.js-locales/da';
 import * as de from 'plotly.js-locales/de';
@@ -16,6 +16,7 @@ import * as sv from 'plotly.js-locales/sv';
 import type { PlotParams } from 'react-plotly.js';
 import createPlotlyComponent from 'react-plotly.js/factory';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const locales = { sv, de, de_ch, cs, da, lv, pl, fi };
 
 const getSeparators = (locale: string): string | undefined => {
@@ -34,7 +35,7 @@ type PlotProps = PlotParams & {
 
 const Plot = (props: PlotProps) => {
   const { data } = props;
-  const config: NonNullable<PlotParams['config']> = props.config || {};
+  const config: NonNullable<PlotParams['config']> = { ...(props.config || {}) };
   const layout = props.layout || {};
 
   const lang = useLocale();
@@ -43,11 +44,14 @@ const Plot = (props: PlotProps) => {
 
   config.responsive = true;
   if (!props.noValidate) {
-    // @ts-ignore
     const ret = Plotly.validate(data, layout);
     if (ret && ret.length) {
       console.warn('Plotly validation returned errors');
       console.log(ret);
+      console.log('Plotly layout:');
+      console.log(layout);
+      console.log('Plotly data:');
+      console.log(data);
     }
   }
   props = {

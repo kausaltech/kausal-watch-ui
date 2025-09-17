@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { type PropsWithChildren } from 'react';
 
 import { Col, Row } from 'reactstrap';
 import styled, { css } from 'styled-components';
 
-import {
+import type {
   AttributesBlockAttributeFragment,
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
@@ -13,7 +13,7 @@ import RestrictedBlockWrapper from '../actions/blocks/RestrictedBlockWrapper';
 import ActionAttribute from './ActionAttribute';
 
 type AttributeProps = {
-  $vertical: boolean;
+  $vertical?: boolean;
 };
 
 export const Attributes = styled.div<AttributeProps>`
@@ -62,19 +62,20 @@ type AttributeContentNestedTypeProps = {
   attributeType: null | undefined;
 };
 
-type AttributesBlockProps = {
-  children?: any;
-  vertical?: boolean;
-} & (
-  | {
-      attributes: AttributeContentProps['attribute'][];
-      types: AttributeContentProps['attributeType'][];
-    }
-  | {
-      attributes: AttributeContentNestedTypeProps['attribute'][];
-      types: undefined;
-    }
-);
+type AttributesBlockProps = PropsWithChildren<
+  {
+    vertical?: boolean;
+  } & (
+    | {
+        attributes: AttributeContentProps['attribute'][];
+        types: AttributeContentProps['attributeType'][];
+      }
+    | {
+        attributes: AttributeContentNestedTypeProps['attribute'][];
+        types: undefined;
+      }
+  )
+>;
 
 function AttributesBlock(props: AttributesBlockProps) {
   const {

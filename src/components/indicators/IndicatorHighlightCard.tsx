@@ -21,18 +21,18 @@ const IndicatorType = styled.div`
   color: ${(props) => props.theme.neutralDark};
 `;
 
-const IndicatorBg = styled.div<{ $level: string }>`
+const IndicatorBg = styled.div<{ $level?: string | null }>`
   height: ${(props) => props.theme.spaces.s600};
-  background-color: ${(props) => {
-    switch (props.$level) {
+  background-color: ${({ theme, $level }) => {
+    switch ($level) {
       case 'action':
-        return props.theme.actionColor;
+        return theme.actionColor;
       case 'operational':
-        return props.theme.graphColors.blue070;
+        return theme.graphColors.blue070;
       case 'tactical':
-        return props.theme.graphColors.blue030;
+        return theme.graphColors.blue030;
       case 'strategic':
-        return props.theme.graphColors.blue010;
+        return theme.graphColors.blue010;
       default:
         return '#cccccc';
     }
@@ -55,7 +55,7 @@ const StyledCard = styled(Card)`
   }
 `;
 
-const IndicatorValue = styled.div<{ $level: string }>`
+const IndicatorValue = styled.div<{ $level?: string | null }>`
   margin-top: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeXl};
   font-weight: ${(props) => props.theme.fontWeightBold};
@@ -117,22 +117,18 @@ function IndicatorHighlightCard({
   return (
     <StyledCard>
       <IndicatorLink id={objectid} prefetch={false}>
-        <a>
-          <IndicatorBg $level={level} />
-          <CardImgOverlay>
-            <IndicatorValue $level={level} className="action-number">
-              {typeof value === 'number' ? beautifyValue(value, locale) : '-'}
-              <IndicatorUnit>{unit === 'no unit' ? '' : unit}</IndicatorUnit>
-            </IndicatorValue>
-          </CardImgOverlay>
-        </a>
+        <IndicatorBg $level={level} />
+        <CardImgOverlay>
+          <IndicatorValue $level={level} className="action-number">
+            {typeof value === 'number' ? beautifyValue(value, locale) : '-'}
+            <IndicatorUnit>{unit === 'no unit' ? '' : unit}</IndicatorUnit>
+          </IndicatorValue>
+        </CardImgOverlay>
       </IndicatorLink>
       <CardBody>
         <IndicatorType>{indicatorType}</IndicatorType>
         <IndicatorLink id={objectid}>
-          <a>
-            <StyledCardTitle tag="h3">{name}</StyledCardTitle>
-          </a>
+          <StyledCardTitle tag="h3">{name}</StyledCardTitle>
         </IndicatorLink>
       </CardBody>
     </StyledCard>

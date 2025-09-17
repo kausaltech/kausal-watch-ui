@@ -1,20 +1,25 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import * as apolloModule from '@apollo/client';
 import AxeBuilder from '@axe-core/playwright';
-import { Page, expect } from '@playwright/test';
+import { type ConsoleMessage, type Page, expect } from '@playwright/test';
 
 import type {
   PlaywrightGetPlanBasicsQuery,
   PlaywrightGetPlanBasicsQueryVariables,
   PlaywrightGetPlanInfoQuery,
   PlaywrightGetPlanInfoQueryVariables,
-} from '@/common/__generated__/graphql';
-import { apiUrl } from '@/common/environment';
+} from '../__generated__/graphql.ts';
 
-const API_BASE = apiUrl;
+const { ApolloClient, InMemoryCache, gql } =
+  'default' in apolloModule ? (apolloModule.default as typeof apolloModule) : apolloModule;
+
+const GRAPHQL_API_URL = process.env.WATCH_BACKEND_URL
+  ? `${process.env.WATCH_BACKEND_URL}/v1/graphql/`
+  : 'https://api.watch.kausal.tech/v1/graphql/';
+const BASE_URL = process.env.TEST_PAGE_BASE_URL || `http://{planId}.localhost:3000`;
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: API_BASE + '/graphql/',
+  uri: GRAPHQL_API_URL,
 });
 
 const GET_PLAN_BASICS = gql`
@@ -31,6 +36,10 @@ const GET_PLAN_BASICS = gql`
 const GET_PLAN_INFO = gql`
   query PlaywrightGetPlanInfo($plan: ID!, $locale: String!, $clientURL: String!)
   @locale(lang: $locale) {
+    planOrganizations(plan: $plan, forResponsibleParties: true, forContactPersons: true) {
+      id
+      name
+    }
     plan(id: $plan) {
       id
       identifier
@@ -63,12 +72,16 @@ const GET_PLAN_INFO = gql`
               title
               urlPath
               slug
+              showInMenus
+              live
             }
             parent {
               id
               page {
                 title
                 __typename
+                showInMenus
+                live
               }
             }
             children {
@@ -94,6 +107,7 @@ const GET_PLAN_INFO = gql`
 
 type PlanInfo = NonNullable<PlaywrightGetPlanInfoQuery['plan']>;
 type PlanIndicators = NonNullable<PlaywrightGetPlanInfoQuery['planIndicators']>;
+type PlanOrganizations = NonNullable<PlaywrightGetPlanInfoQuery['planOrganizations']>;
 type ActionInfo = PlanInfo['actions'][0];
 
 export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][0] & {
@@ -140,19 +154,49 @@ export type IndicatorListMenuItem = PageMenuItem & {
 
 export class PlanContext {
   plan: PlanInfo;
+  planOrganizations: PlanOrganizations;
   planIndicators: PlanIndicators;
   baseURL: string;
 
-  constructor(plan: PlanInfo, baseURL: string, planIndicators: PlanIndicators) {
-    this.plan = plan;
+  constructor(data: PlaywrightGetPlanInfoQuery, baseURL: string, planIndicators: PlanIndicators) {
+    this.plan = data.plan!;
+    this.planOrganizations = data.planOrganizations ?? [];
     this.baseURL = baseURL;
     this.planIndicators = planIndicators;
+  }
+
+  beforeEach(page: Page) {
+    page.on('console', (msg) => {
+      const IGNORE_STARTSWITH = [
+        'Public environment',
+        '[Client Instrumentation Hook]',
+        'Maximum update depth exceeded',
+      ];
+      const IGNORE_INCLUDES = [
+        'Download the React DevTools',
+        '[Fast Refresh]',
+        'Failed to initialize WebGL',
+        'Download the Apollo DevTools',
+      ];
+      const text = msg.text();
+      if (
+        IGNORE_STARTSWITH.some((startsWith) => text.startsWith(startsWith)) ||
+        IGNORE_INCLUDES.some((includes) => text.includes(includes))
+      )
+        return;
+      console.log(`Console message (${msg.type()}):\n`, msg);
+      if (false) {
+        // todo: enable this later
+        throw new Error('Test produced console output');
+      }
+    });
   }
 
   getActionListMenuItem(): ActionListMenuItem | null {
     function isActionList(item: MainMenuItem): item is ActionListMenuItem {
       if (item?.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'ActionListPage') return false;
+      if (!item.page.showInMenus) return false;
       return true;
     }
     const item = (this.plan.mainMenu?.items ?? []).find(isActionList) || null;
@@ -213,11 +257,14 @@ export class PlanContext {
     return items;
   }
 
-  getStaticPageMenuItem(): StaticPageMenuItem[] {
+  getStaticPageMenuItems(): StaticPageMenuItem[] {
     function isStaticPageItem(item: MainMenuItem): item is StaticPageMenuItem {
       if (item?.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'StaticPage') return false;
       if (item.children?.length) return false;
+      if (!item.page.showInMenus || !item.page.live) return false;
+      if (item.parent?.page && (!item.parent.page.showInMenus || !item.parent.page.live))
+        return false;
       //if (item.parent.page.__typename !== 'PlanRootPage') return false;
       return true;
     }
@@ -240,12 +287,17 @@ export class PlanContext {
   }
 
   async checkMeta(page: Page) {
-    const siteName = page.locator('head meta[property="og:site_name"]');
+    const siteName = page.locator('meta[property="og:site_name"]');
+    await expect(siteName).toBeAttached();
     if (this.plan.parent?.name) {
       await expect(siteName).toHaveAttribute('content', this.plan.parent?.name);
     } else {
       await expect(siteName).toHaveAttribute('content', this.plan.generalContent.siteTitle);
     }
+  }
+
+  static getBaseURL(planId: string) {
+    return getPageBaseUrlToTest(planId);
   }
 
   static async fromPlanId(planId: string) {
@@ -256,7 +308,7 @@ export class PlanContext {
       query: GET_PLAN_BASICS,
       variables: { plan: planId },
     });
-    const primaryLanguage = langRes.data!.plan!.primaryLanguage;
+    const primaryLanguage = langRes.data.plan!.primaryLanguage;
     const baseURL = getPageBaseUrlToTest(planId);
     const res = await apolloClient.query<
       PlaywrightGetPlanInfoQuery,
@@ -265,9 +317,14 @@ export class PlanContext {
       query: GET_PLAN_INFO,
       variables: { plan: planId, locale: primaryLanguage, clientURL: baseURL },
     });
-    const data = res.data!.plan!;
-    const planIndicators = res.data!.planIndicators!;
+    const data = res.data;
+    const planIndicators = res.data.planIndicators!;
     return new PlanContext(data, baseURL, planIndicators);
+  }
+
+  async waitForLoadingFinished(page: Page) {
+    await expect(page.locator('*[aria-busy=true]')).toHaveCount(0, { timeout: 30000 });
+    await page.waitForLoadState('networkidle');
   }
 
   async checkAccessibility(page: Page) {
@@ -293,7 +350,18 @@ export function getIdentifiersToTest(): string[] {
 }
 
 export function getPageBaseUrlToTest(planId: string): string {
-  let baseUrl = process.env.TEST_PAGE_BASE_URL || `http://{planId}.watch-test.kausal.tech`;
+  let baseUrl = BASE_URL;
   baseUrl = baseUrl.replace('{planId}', planId);
+  // strip tailing slash
+  baseUrl = baseUrl.replace(/\/$/, '');
   return baseUrl;
+}
+
+export function displayConfiguration() {
+  const p = (s: string) => (s + ':').padEnd(22);
+
+  console.log(p('GraphQL URL'), GRAPHQL_API_URL);
+  console.log(p('Instances to test'), getIdentifiersToTest().join(', '));
+  console.log(p('Base URL'), BASE_URL);
+  console.log(p('  URL for Sunnydale'), getPageBaseUrlToTest('sunnydale'));
 }

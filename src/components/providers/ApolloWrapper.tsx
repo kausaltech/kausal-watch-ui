@@ -1,13 +1,14 @@
 'use client';
 
 import { ApolloLink, useApolloClient } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
 import {
+  ApolloClient,
   ApolloNextAppProvider,
-  NextSSRApolloClient,
-  NextSSRInMemoryCache,
+  InMemoryCache,
   SSRMultipartLink,
-} from '@apollo/experimental-nextjs-app-support/ssr';
+} from '@apollo/client-integration-nextjs';
+import { setContext } from '@apollo/client/link/context';
+import { disableFragmentWarnings } from 'graphql-tag';
 import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 
@@ -34,14 +35,14 @@ function makeClient(config: {
   planDomain: string;
 }) {
   const { initialLocale, sessionToken, planIdentifier, planDomain } = config;
-  return new NextSSRApolloClient({
+  return new ApolloClient({
     defaultContext: {
       locale: initialLocale,
       sessionToken,
       planIdentifier,
       planDomain,
     },
-    cache: new NextSSRInMemoryCache(),
+    cache: new InMemoryCache(),
     link: ApolloLink.from([
       logOperationLink,
       createSentryLink(getWatchGraphQLUrl()),
@@ -90,6 +91,10 @@ export function ApolloWrapper({ initialLocale, planIdentifier, planDomain, child
     planIdentifier,
     planDomain,
   };
+
+  // Disable fragment warnings for now.
+  // https://github.com/apollographql/apollo-client-integrations/issues/328
+  disableFragmentWarnings();
 
   return (
     <ApolloNextAppProvider makeClient={() => makeClient(clientConfig)}>

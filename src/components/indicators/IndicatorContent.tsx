@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
+import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import ActionsTable from '@/components/actions/ActionsTable';
 import CategoryTags from '@/components/actions/CategoryTags';

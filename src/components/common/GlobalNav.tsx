@@ -30,7 +30,11 @@ import Icon, { type ValidIconName } from './Icon';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 
-const getRootLink = (plan, locale, primaryLanguage) => {
+const getRootLink = (
+  plan: { parent?: { viewUrl?: string } | null },
+  locale: string,
+  primaryLanguage: string
+) => {
   if (plan.parent && plan.parent.viewUrl) {
     const shouldAppendLocale =
       locale !== primaryLanguage && !plan.parent.viewUrl.includes(`/${locale}`);
@@ -152,7 +156,7 @@ const Site = styled.div`
   align-items: center;
 `;
 
-const HomeLink = styled.a<{ $hideLogoOnMobile?: boolean }>`
+const HomeLink = styled(Link)<{ $hideLogoOnMobile?: boolean }>`
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.brandNavColor};
@@ -573,16 +577,12 @@ function GlobalNav(props) {
           container={fullwidth ? 'fluid' : true}
         >
           <Site>
-            <Link href={logoLink} passHref legacyBehavior>
-              <HomeLink $hideLogoOnMobile={hideLogoOnMobile}>
-                <OrgLogo />
-              </HomeLink>
-            </Link>
-            <Link href={rootLink} passHref legacyBehavior>
-              <HomeLink>
-                <SiteTitle>{theme.navTitleVisible ? siteTitle : '\u00A0'}</SiteTitle>
-              </HomeLink>
-            </Link>
+            <HomeLink $hideLogoOnMobile={hideLogoOnMobile} href={logoLink}>
+              <OrgLogo />
+            </HomeLink>
+            <HomeLink href={rootLink}>
+              <SiteTitle>{theme.navTitleVisible ? siteTitle : '\u00A0'}</SiteTitle>
+            </HomeLink>
             <PlanSelector color={theme.brandNavColor} />
           </Site>
 

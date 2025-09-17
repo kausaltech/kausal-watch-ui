@@ -1,13 +1,11 @@
-/* eslint-disable max-classes-per-file */
 import React, { useContext } from 'react';
 
-import { gql } from '@apollo/client';
-import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useSuspenseQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
-import { Col, Row } from 'reactstrap';
+import { Col, type ColProps, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import {
+import type {
   ActionHightlightListQuery,
   ActionHightlightListQueryVariables,
   PlanContextFragment,
@@ -84,12 +82,13 @@ const ListHeader = styled(Col)`
     margin-bottom: ${(props) => props.theme.spaces.s300};
     font-size: ${(props) => props.theme.fontSizeLg};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    font-size: ${(props) => props.theme.fontSizeXl};
+    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+      font-size: ${(props) => props.theme.fontSizeXl};
+    }
   }
 `;
 
-const ReactStrapCol = (props) => {
+const ReactStrapCol = (props: React.PropsWithChildren<ColProps>) => {
   const childProps = Object.assign(
     // remove the embed prop so it won't end up as a DOM attribute
     {},
@@ -99,19 +98,21 @@ const ReactStrapCol = (props) => {
   return <Col {...childProps}>{props.children}</Col>;
 };
 
-const StyledCardContainer = styled(ReactStrapCol)`
+const StyledCardContainer = styled(ReactStrapCol)<{ $embed?: { active: boolean } }>`
   margin-bottom: ${(props) => props.theme.spaces.s150};
-  ${(props) => (props.embed.active ? '' : 'transition: all 0.5s ease;')}
+  ${(props) => (props.$embed?.active ? '' : 'transition: all 0.5s ease;')}
 
   .card {
     height: 100%;
   }
 `;
 
-export type ActionHighlightListAction = NonNullable<ActionHightlightListQuery['planActions']>;
+export type ActionHighlightListAction = NonNullable<
+  NonNullable<ActionHightlightListQuery['planActions']>[number]
+>;
 
 type ActionCardListProps = {
-  actions: ActionHighlightListAction;
+  actions: ActionHighlightListAction[];
   plan: PlanContextFragment;
   displayHeader?: boolean;
 };
@@ -136,11 +137,11 @@ function ActionCardList(props: ActionCardListProps) {
           lg="4"
           key={item.id}
           className="d-flex align-items-stretch"
-          embed={embed}
+          $embed={embed}
         >
           <ActionHighlightCard
             action={item}
-            imageUrl={getActionImage(plan, item)?.small.src}
+            imageUrl={getActionImage(plan, item)?.small?.src}
             hideIdentifier={plan.hideActionIdentifiers || false}
           />
         </StyledCardContainer>
@@ -148,7 +149,7 @@ function ActionCardList(props: ActionCardListProps) {
       {!embed.active && (
         <Col xs="12" className="mt-5 mb-5">
           <ActionListLink>
-            <Button color="primary" tag="a">
+            <Button color="primary">
               {t('see-all-actions', getActionTermContext(plan) || {})} <Icon.ArrowRight />
             </Button>
           </ActionListLink>

@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import { getRequestConfig } from 'next-intl/server';
 
 const FALLBACKS = {
@@ -16,9 +17,9 @@ async function importLocale(locale: string, file: LocaleFiles) {
     const translations = (await import(`../../locales/${locale}/${file}.json`)).default;
 
     return translations;
-  } catch {
+  } catch (error) {
     console.warn(`kausal-watch-ui > Failed to load ${file} translations for ${locale}`);
-
+    Sentry.captureException(error);
     return {};
   }
 }
@@ -55,8 +56,12 @@ async function importLocales(locale: string) {
   return translations;
 }
 
-export default getRequestConfig(async ({ locale }) => {
+export default getRequestConfig(async ({ requestLocale }) => {
+  const locale = (await requestLocale) ?? 'en';
   const messages = await importLocales(locale);
 
-  return { messages };
+  return {
+    locale,
+    messages,
+  };
 });

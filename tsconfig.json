@@ -20,6 +20,7 @@
     "src/**/*.js",
     "src/**/*.jsx",
     "./*.mjs",
+    "./*.cjs",
     "./*.ts",
     ".next/types/**/*.ts"
   ],

@@ -2,31 +2,55 @@ import type { Theme } from '@kausal/themes/types';
 import { cloneDeep } from 'lodash';
 
 import { getStatusSummary } from '../common/ActionStatusSummary';
-import { ActionListAction } from '../components/dashboard/ActionList';
 import type { Progress } from '../components/dashboard/ActionStatusGraphs';
 import type { PlanContextType } from '../context/plan';
-import {
-  ActionStatusSummary,
-  ActionStatusSummaryIdentifier,
-  Plan,
-  Sentiment,
-} from './__generated__/graphql';
-import { TFunction } from './i18n';
+import { ActionStatusSummaryIdentifier, Sentiment } from './__generated__/graphql';
+import type { TFunction } from './i18n';
+
+type PlanActionStatus = PlanContextType['actionStatuses'][number];
+type ActionStatusSummary = PlanContextType['actionStatusSummaries'][number];
+
+type ActionWithPhaseAndStatus = {
+  status: {
+    __typename: 'ActionStatus';
+    id: string;
+    identifier: string;
+    name: string;
+    color: string;
+  } | null;
+  implementationPhase: {
+    __typename: 'ActionImplementationPhase';
+    id: string;
+    identifier: string;
+    name: string;
+  } | null;
+  mergedWith?: {
+    viewUrl: string;
+  };
+};
+type ActionStatus = ActionWithPhaseAndStatus['status'] & {
+  isCompleted?: boolean;
+};
 
 // Clean up actionStatus so UI can handle edge cases
-const cleanActionStatus = (action, actionStatuses) => {
+const cleanActionStatus = (
+  action: ActionWithPhaseAndStatus,
+  actionStatuses: PlanActionStatus[]
+): ActionStatus => {
   const { status, implementationPhase } = action;
   // precaution not to mutate original object
-  const newStatus = status ? cloneDeep(status) : {};
-
-  // if status is missing, mark it as undefined
-  // if implementationPhase is completed, make status undefined
-  if (!status) {
-    newStatus.id = '404'; // not nice to invent ids, but we don't use ids as differentiator in the UI
-    newStatus.name = '';
-    newStatus.identifier = 'undefined';
-    newStatus.isCompleted = false;
-  }
+  const newStatus: ActionStatus = status
+    ? cloneDeep(status)
+    : {
+        // if status is missing, mark it as undefined
+        // if implementationPhase is completed, make status undefined
+        id: '404', // not nice to invent ids, but we don't use ids as differentiator in the UI
+        identifier: 'undefined',
+        name: '',
+        color: '',
+        isCompleted: false,
+        __typename: 'ActionStatus',
+      };
 
   // if implementationPhase is completed, make new status of completed
   if (implementationPhase?.identifier === 'completed') {
@@ -115,7 +139,10 @@ const getStatusData = (
           : label || unknownLabelText
       );
       progress.colors.push(theme.graphColors[colors.get(identifier) ?? color]);
-      if (sentiment === Sentiment.Positive || identifier === 'NOT_STARTED') {
+      if (
+        sentiment === Sentiment.Positive ||
+        identifier === ActionStatusSummaryIdentifier.NotStarted
+      ) {
         progress.good += statusCount;
       }
     }
@@ -131,14 +158,16 @@ const getStatusData = (
 const getPhaseData = (
   actions: ActionListAction[],
   plan: PlanContextType,
-  theme,
+  theme: Theme,
   t: TFunction
 ): Progress | null => {
   const phases = plan.actionImplementationPhases;
   if (phases.length == 0 || actions.length == 0) {
     return null;
   }
-  let phaseColors = phases.filter((p) => p.color != null).map((p) => theme.graphColors[p.color!]);
+  let phaseColors = phases
+    .filter((p) => p.color != null)
+    .map((p) => theme.graphColors[p.color] as string);
 
   /* We assume that if a custom color has not been set for *all*
      phases in a plan, the sparse colors will not form a coherent

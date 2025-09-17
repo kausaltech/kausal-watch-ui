@@ -15,6 +15,17 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
+  test:
+    needs: [build]
+    uses: ./.github/workflows/e2e-image.yaml
+    with:
+      image: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.image_tag }}
+      backend_base_url: https://api.watch.kausal.tech
+      build_id: ${{ needs.build.outputs.build_id }}
+      s3_endpoint: ${{ vars.BUILD_S3_ENDPOINT }}
+      s3_bucket: ${{ vars.BUILD_S3_BUCKET }}
+    secrets: inherit
+
   deploy:
     needs: [build]
     uses: kausaltech/github-actions/.github/workflows/deploy.yaml@main

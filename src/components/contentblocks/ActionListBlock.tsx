@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
-import PropTypes from 'prop-types';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 
+import type {
+  GetActionListForBlockQuery,
+  GetActionListForBlockQueryVariables,
+} from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';
 import ActionCardList from '@/components/actions/ActionCardList';
@@ -51,17 +53,21 @@ export const SectionHeader = styled.h2`
 
 type ActionListBlockProps = {
   id?: string;
-  categoryId?: string;
-  heading?: string;
-  lead?: string;
+  categoryId: string;
+  heading?: string | null;
+  lead?: string | null;
 };
-const ActionListBlock = (props) => {
+
+const ActionListBlock = (props: ActionListBlockProps) => {
   const { id = '', categoryId, heading, lead } = props;
   const t = useTranslations();
 
   const plan = usePlan();
   const { workflow, setLoading } = useWorkflowSelector();
-  const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_BLOCK, {
+  const { loading, error, data } = useQuery<
+    GetActionListForBlockQuery,
+    GetActionListForBlockQueryVariables
+  >(GET_ACTION_LIST_FOR_BLOCK, {
     variables: {
       plan: plan.identifier,
       category: categoryId,
@@ -72,8 +78,8 @@ const ActionListBlock = (props) => {
   useEffect(() => {
     if (!loading) setLoading(false);
   }, [loading]);
-  if (loading) return <ContentLoader />;
   if (error) return <ErrorMessage message={error.message} />;
+  if (loading || !data) return <ContentLoader />;
 
   const { planActions } = data;
   if (!planActions) {
@@ -93,12 +99,6 @@ const ActionListBlock = (props) => {
       </Container>
     </ActionListSection>
   );
-};
-
-ActionListBlock.propTypes = {
-  id: PropTypes.string,
-  categoryId: PropTypes.string.isRequired,
-  color: PropTypes.string,
 };
 
 export default ActionListBlock;

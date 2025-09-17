@@ -54,11 +54,9 @@ export default function AdminPage() {
                 <h1>{t('page-not-found')}</h1>
                 <h2>{t('admin-login-not-defined')}</h2>
                 <Link href="/">
-                  <a>
-                    <Button outline color="dark" size="sm">
-                      {t('return-to-front')}
-                    </Button>
-                  </a>
+                  <Button outline color="dark" size="sm">
+                    {t('return-to-front')}
+                  </Button>
                 </Link>
               </CardBody>
             </StyledCard>

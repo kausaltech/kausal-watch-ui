@@ -1,12 +1,21 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 
+import dynamic from 'next/dynamic';
+
+import * as Sentry from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
-import { Col, ColProps, Container, Row } from 'reactstrap';
-import { ColumnProps } from 'reactstrap/types/lib/Col';
+import type { ColProps } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
+import type { ColumnProps } from 'reactstrap/types/lib/Col';
 import styled, { useTheme } from 'styled-components';
 
-import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
+import type {
+  MultiUseImageFragmentFragment,
+  StreamFieldFragmentFragment,
+} from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
+import { excludeNullish } from '@/common/utils';
 import RichText from '@/components/common/RichText';
 import AccessibilityStatementComplianceStatusBlock from '@/components/contentblocks/AccessibilityStatementComplianceStatusBlock';
 import AccessibilityStatementContactFormBlock from '@/components/contentblocks/AccessibilityStatementContactFormBlock';
@@ -17,8 +26,9 @@ import ActionHighlightsBlock from '@/components/contentblocks/ActionHighlightsBl
 import ActionListBlock from '@/components/contentblocks/ActionListBlock';
 import ActionStatusGraphsBlock from '@/components/contentblocks/ActionStatusGraphsBlock';
 import CardListBlock from '@/components/contentblocks/CardListBlock';
-import CartographyVisualisationBlock from '@/components/contentblocks/CartographyVisualisationBlock';
-import CategoryListBlock from '@/components/contentblocks/CategoryListBlock';
+import CategoryListBlock, {
+  type CategoryListBlockCategory,
+} from '@/components/contentblocks/CategoryListBlock';
 import CategoryTreeBlock from '@/components/contentblocks/CategoryTreeBlock';
 import { ImageCredit } from '@/components/contentblocks/ContentPageHeaderBlock';
 import DashboardRowBlock from '@/components/contentblocks/DashboardRowBlock';
@@ -150,11 +160,28 @@ const ResponsiveStyles = styled.div`
   }
 `;
 
+type StreamFieldBlockPage = {
+  __typename:
+    | 'CategoryPage'
+    | 'ContentPage'
+    | 'AccessibilityStatementPage'
+    | 'StaticPage'
+    | 'PlanRootPage';
+  slug: string;
+  category?: {
+    id: string;
+    name: string;
+    children: CategoryListBlockCategory[];
+    image?: MultiUseImageFragmentFragment | null;
+    indicators: { id: string }[];
+  } | null;
+  body: StreamFieldFragmentFragment[] | null;
+};
+
 type StreamFieldBlockProps = {
   id: string;
-  page: any;
+  page: StreamFieldBlockPage;
   block: StreamFieldFragmentFragment;
-  color: string;
   hasSidebar: boolean;
   columnProps?: ColProps;
   previousBlockType?: string;
@@ -162,12 +189,16 @@ type StreamFieldBlockProps = {
 };
 
 function StreamFieldBlock(props: StreamFieldBlockProps) {
-  const { id, page, block, color, hasSidebar, columnProps, previousBlockType, nextBlockType } =
-    props;
+  const { id, page, block, hasSidebar, columnProps, previousBlockType, nextBlockType } = props;
   const { __typename } = block;
   const plan = usePlan();
   const theme = useTheme();
   const t = useTranslations();
+  const logContext = {
+    'page-type': page.__typename,
+    'block-type': __typename,
+    plan: plan.id,
+  };
 
   switch (__typename) {
     case 'RichTextBlock': {
@@ -201,8 +232,8 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           alignWithContent={
             page.__typename === 'CategoryPage' && theme.settings.leftAlignCategoryPages
           }
-          heading={heading}
-          questions={questions}
+          heading={heading ?? undefined}
+          questions={excludeNullish(questions ?? [])}
           hasSidebar={hasSidebar}
           columnProps={columnProps}
         />
@@ -231,10 +262,15 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'ActionListBlock': {
       const { categoryFilter } = block;
+      if (!categoryFilter || !page.category) {
+        Sentry.captureMessage('ActionListBlock missing categoryFilter or page.category', {
+          tags: logContext,
+        });
+        return null;
+      }
       return (
         <ActionListBlock
           categoryId={categoryFilter?.id || page.category.id}
-          color={color}
           heading={block.heading}
           lead={block.helpText}
         />
@@ -243,7 +279,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'CategoryListBlock': {
       const { heading, lead, categoryType, category } = block;
       const { category: pageCategory } = page;
-      let categories;
+      let categories: CategoryListBlockCategory[] | null = null;
 
       /* If the block specifies a category type, use cats from there.
        * Otherwise, fall back on the containing page's sub-categories.
@@ -261,10 +297,9 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         <CategoryListBlock
           id={id}
           categories={categories}
-          color={color}
           fallbackImage={fallbackImage}
           heading={heading ?? undefined}
-          lead={lead}
+          lead={lead ?? ''}
         />
       );
     }
@@ -274,7 +309,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return (
         <FrontPageHeroBlock
           id={id}
-          layout={layout}
+          layout={(layout as 'small_image' | 'big_image' | null) ?? 'small_image'}
           image={image}
           imageAlign={getBgImageAlignment(image)}
           heading={heading}
@@ -358,7 +393,12 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return <IndicatorHighlightsBlock id={id} />;
     }
     case 'RelatedIndicatorsBlock': {
-      return <RelatedIndicatorsBlock id={id} indicators={page?.category?.indicators} />;
+      const indicators = page?.category?.indicators;
+      if (!indicators) {
+        Sentry.captureMessage('RelatedIndicatorsBlock missing indicators', { tags: logContext });
+        return null;
+      }
+      return <RelatedIndicatorsBlock id={id} indicators={indicators} />;
     }
     case 'RelatedPlanListBlock': {
       return <RelatedPlanListBlock id={id} />;
@@ -402,12 +442,16 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'CartographyVisualisationBlock': {
-      const { account, style, styleOverrides } = block;
+      const { account, cartographyStyle, styleOverrides } = block;
       const accessToken = account?.publicAccessToken;
+      const CartographyVisualisationBlock = dynamic(
+        () => import('@/components/contentblocks/CartographyVisualisationBlock'),
+        { ssr: false }
+      );
       return (
         <CartographyVisualisationBlock
           id={id}
-          styleUrl={style}
+          styleUrl={cartographyStyle}
           accessToken={accessToken}
           styleOverrides={styleOverrides}
           hasSidebar={hasSidebar}
@@ -449,15 +493,14 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
 }
 
 interface StreamFieldProps {
-  color: string;
-  page: any;
-  blocks: any;
+  page: StreamFieldBlockPage;
+  blocks: StreamFieldFragmentFragment[];
   hasSidebar?: boolean;
   columnProps?: ColProps;
 }
 
-function StreamField(props: StreamFieldProps) {
-  const { page, blocks, color, hasSidebar = false, columnProps } = props;
+export default function StreamField(props: StreamFieldProps) {
+  const { page, blocks, hasSidebar = false, columnProps } = props;
 
   return (
     <div className={`custom-${page.slug}`}>
@@ -474,7 +517,6 @@ function StreamField(props: StreamFieldProps) {
             id={`section-${index + 1}`}
             block={block}
             page={page}
-            color={color}
             hasSidebar={hasSidebar}
             columnProps={columnProps}
             previousBlockType={blocks[index - 1]?.__typename}
@@ -489,5 +531,3 @@ function StreamField(props: StreamFieldProps) {
 StreamField.fragments = {
   streamField: STREAM_FIELD_FRAGMENT,
 };
-
-export default StreamField;

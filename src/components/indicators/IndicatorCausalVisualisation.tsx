@@ -214,21 +214,21 @@ const InteractiveCausalChain = (props: InteractiveCausalChainProps) => {
   const [cardHover, setCardHover] = useState(null);
 
   let column = 0;
-  const chain: ReactElement[] = [];
+  const chain: ReactElement<any>[] = [];
   const gridHeight = getGridHeight(nodes);
   let columnIndicators = nodes;
 
   const indicatorGoal = null; //FIXME: get goal value from API
 
   while (columnIndicators.length !== 0) {
-    const children: ReactElement[] = [];
+    const children: ReactElement<any>[] = [];
 
     columnIndicators = nodes.filter((item) => item.column === column);
 
     columnIndicators.forEach((indicator) => {
       let indicatorLevel = 'action';
       if (indicator.type !== 'action') indicatorLevel = indicator.indicator_level;
-      const connectionsTo: ReactElement[] = [];
+      const connectionsTo: ReactElement<any>[] = [];
       indicator.to.forEach((edge, index) => {
         const edgeElement = drawEdge(nodes, edge, index, gridHeight, theme, cardHover);
         if (!edgeElement) return;

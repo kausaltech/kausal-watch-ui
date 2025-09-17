@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type PropsWithChildren } from 'react';
 
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
@@ -6,7 +6,8 @@ import { Card, CardBody, CardTitle } from 'reactstrap';
 import styled from 'styled-components';
 
 import dayjs from '@/common/dayjs';
-import { TFunction, getActionTermContext } from '@/common/i18n';
+import type { TFunction } from '@/common/i18n';
+import { getActionTermContext } from '@/common/i18n';
 import { IndicatorLink } from '@/common/links';
 import { usePlan } from '@/context/plan';
 
@@ -38,7 +39,7 @@ const IndicatorValueTime = styled.div`
   font-weight: ${(props) => props.theme.fontWeightNormal};
 `;
 
-const StyledLink = styled.a`
+const StyledIndicatorLink = styled(IndicatorLink)`
   color: inherit;
 
   &:hover {
@@ -92,7 +93,7 @@ const StyledIndicator = styled(Card)<{ $level: string | null }>`
 
 const IndicatorType = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`}
+  font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   margin-bottom: 0.5em;
 `;
 
@@ -105,10 +106,10 @@ const IndicatorTitle = styled(CardTitle)`
   hyphens: auto;
 `;
 
-const formatTime = (date, resolution) => {
+const formatTime = (date: string, resolution: 'year' | 'month' | 'day') => {
   const time = dayjs(date, 'YYYY-MM-DD');
-  let tagVal;
-  let formattedTime;
+  let tagVal: string;
+  let formattedTime: string;
 
   if (resolution === 'year') {
     formattedTime = time.format('YYYY');
@@ -128,7 +129,7 @@ interface IndicatorValueProps {
   latestValue: string | null;
   date: string;
   unit: string;
-  resolution: string;
+  resolution: 'year' | 'month' | 'day';
   goalValue?: string | null;
   goalDate?: string | null;
 }
@@ -156,7 +157,7 @@ function IndicatorValue({
           </time>
         </IndicatorValueTime>
       </IndicatorValueDisplay>
-      {goalValue && (
+      {goalValue && goalDate ? (
         <IndicatorValueDisplay>
           <IndicatorValueType>{t('indicator-goal')}</IndicatorValueType>
           {goalValue} <IndicatorValueUnit>{unit}</IndicatorValueUnit>
@@ -166,7 +167,7 @@ function IndicatorValue({
             </time>
           </IndicatorValueTime>
         </IndicatorValueDisplay>
-      )}
+      ) : null}
     </IndicatorValues>
   );
 }
@@ -181,34 +182,13 @@ interface CardLinkProps {
 function CardLink(props: CardLinkProps) {
   const { level, indicatorId, children, customHref } = props;
 
-  if (level !== 'action') {
+  if (level !== 'action')
     return (
-      <IndicatorLink id={indicatorId} viewUrl={customHref}>
-        <StyledLink href>{children}</StyledLink>
-      </IndicatorLink>
+      <StyledIndicatorLink id={indicatorId} viewUrl={customHref}>
+        {children}
+      </StyledIndicatorLink>
     );
-  }
   return <>{children}</>;
-}
-
-interface IndicatorCardProps {
-  level?: string | null;
-  objectid: string;
-  name: string;
-  number?: number | null;
-  latestValue?: {
-    value: number;
-    date: string;
-    unit: string;
-  } | null;
-  resolution: string;
-  goalValue?: {
-    value: number;
-    date: string;
-    unit: string;
-  } | null;
-  disabled?: boolean | null;
-  customHref: string | null;
 }
 
 export function getIndicatorTranslation(level: string | null, t: TFunction) {
@@ -225,6 +205,27 @@ export function getIndicatorTranslation(level: string | null, t: TFunction) {
       return t('tactical-indicator');
   }
 }
+
+export type IndicatorTimeResolution = 'year' | 'month' | 'day';
+
+type IndicatorCardProps = {
+  level?: string | null;
+  objectid: string;
+  name: string;
+  number?: number | null;
+  latestValue?: {
+    value: number;
+    date: string;
+    unit: string;
+  } | null;
+  resolution: IndicatorTimeResolution;
+  goalValue?: {
+    value: number;
+    date: string;
+    unit: string;
+  } | null;
+  disabled?: boolean | null;
+};
 
 function IndicatorCard({
   level = null,

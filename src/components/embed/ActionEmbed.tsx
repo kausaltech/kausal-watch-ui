@@ -1,8 +1,10 @@
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useQuery } from '@apollo/client';
 import styled from 'styled-components';
 
-import { GetEmbedActionQuery } from '@/common/__generated__/graphql';
+import type {
+  GetEmbedActionQuery,
+  GetEmbedActionQueryVariables,
+} from '@/common/__generated__/graphql';
 import images from '@/common/images';
 import ActionHighlightCard from '@/components/actions/ActionHighlightCard';
 import { InvalidEmbedAddressError } from '@/context/embed';
@@ -83,12 +85,15 @@ const ActionEmbed = ({ path, maxWidth }: ActionEmbedPropsType) => {
   if (path.length < 1) {
     throw new InvalidEmbedAddressError('Could not retrieve action data');
   }
-  const { loading, error, data } = useQuery<GetEmbedActionQuery>(GET_ACTION, {
-    variables: {
-      plan: plan.identifier,
-      identifier: path[0],
-    },
-  });
+  const { loading, error, data } = useQuery<GetEmbedActionQuery, GetEmbedActionQueryVariables>(
+    GET_ACTION,
+    {
+      variables: {
+        plan: plan.identifier,
+        identifier: path[0],
+      },
+    }
+  );
   if (loading) return null;
   if (error || data == null || data.action == null) {
     throw new InvalidEmbedAddressError('Could not retrieve action data');

@@ -8,10 +8,11 @@ import { getIndicatorListPage } from '@/queries/get-indicator-list-page';
 import { tryRequest } from '@/utils/api.utils';
 
 type Props = {
-  params: { plan: string; lang: string };
+  params: Promise<{ plan: string; lang: string }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const t = await getTranslations({ locale: params.lang });
 
   return {
@@ -19,7 +20,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ActionsPage({ params }: Props) {
+export default async function ActionsPage(props: Props) {
+  const params = await props.params;
   const { data } = await tryRequest(getIndicatorListPage(params.plan));
 
   if (data?.planPage?.__typename !== 'IndicatorListPage') {

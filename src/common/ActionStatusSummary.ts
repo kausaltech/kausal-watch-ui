@@ -1,20 +1,19 @@
 import type { Theme } from '@kausal/themes/types';
 import { memoize } from 'lodash';
 
-import type {
-  ActionStatusSummary,
-  ActionStatusSummaryIdentifier,
-} from '@/common/__generated__/graphql';
+import { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
 import type { PlanContextType } from '@/context/plan';
 
 export type MinimalActionStatusSummary = {
   identifier: ActionStatusSummaryIdentifier;
 };
 
-const _getStatusSummary = (
+type ActionStatusSummary = PlanContextType['actionStatusSummaries'][number];
+
+function _getStatusSummary(
   plan: PlanContextType,
   statusSummary: MinimalActionStatusSummary
-): ActionStatusSummary => {
+): ActionStatusSummary {
   const { actionStatusSummaries } = plan;
   if (actionStatusSummaries == null) {
     throw new Error('Plan has no status summaries');
@@ -24,7 +23,7 @@ const _getStatusSummary = (
     throw new Error('No matching status summary found from plan');
   }
   return summary;
-};
+}
 
 const getCacheKey = (plan: PlanContextType, statusSummary: MinimalActionStatusSummary): string => {
   return `${plan.identifier}.${statusSummary.identifier}`;
@@ -32,21 +31,21 @@ const getCacheKey = (plan: PlanContextType, statusSummary: MinimalActionStatusSu
 
 export const getStatusSummary = memoize(_getStatusSummary, getCacheKey);
 
-export const getThemeColor = (color: string, theme: Theme) => {
+export const getThemeColor = (color: keyof Theme['graphColors'], theme: Theme) => {
   return theme.graphColors[color];
 };
 
 export interface ActionWithStatusSummary {
   status?: {
     color?: string;
-  };
+  } | null;
   statusSummary?: {
     color?: string;
     identifier?: ActionStatusSummaryIdentifier;
     label?: string;
-  };
+  } | null;
   color?: string | null;
-  scheduleContinuous: boolean;
+  scheduleContinuous?: boolean;
 }
 
 const DEFAULT_COLOR = 'grey050';
@@ -59,7 +58,7 @@ export const getStatusColorForAction = (
   const { color, statusSummary, scheduleContinuous } = action;
 
   // Override for continuous actions. TODO: move logic to backend
-  if (scheduleContinuous && statusSummary?.identifier == 'COMPLETED')
+  if (scheduleContinuous && statusSummary?.identifier === ActionStatusSummaryIdentifier.Completed)
     return theme.actionContinuousColor;
 
   if (color != null) {

@@ -1,8 +1,8 @@
 import { cookies, headers as getHeaders } from 'next/headers';
 
 import { ApolloClient, InMemoryCache, from } from '@apollo/client';
+import { registerApolloClient } from '@apollo/client-integration-nextjs';
 import { setContext } from '@apollo/client/link/context';
-import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
 
 import { createSentryLink, logOperationLink } from '@common/apollo/links';
 import { getWatchGraphQLUrl } from '@common/env';
@@ -29,9 +29,9 @@ const authMiddleware = setContext(async (_, { headers: initialHeaders = {} }) =>
  * Apollo client used in React Server Components (fully server-side). For client components
  * (which are also server-side rendered) use the separate useQuery hooks provided by ApolloWrapper.
  */
-export const { getClient } = registerApolloClient(() => {
-  const headers = getHeaders();
-  const cookiesList = cookies();
+export const { getClient } = registerApolloClient(async () => {
+  const headers = await getHeaders();
+  const cookiesList = await cookies();
   const locale = headers.get('x-next-intl-locale') ?? undefined;
   const plan = headers.get('x-plan-identifier') ?? undefined;
   const domain = headers.get('x-plan-domain') ?? undefined;

@@ -1,6 +1,9 @@
 import { gql } from '@apollo/client';
 
-import { GetContentPageQuery, GetContentPageQueryVariables } from '@/common/__generated__/graphql';
+import type {
+  GetContentPageQuery,
+  GetContentPageQueryVariables,
+} from '@/common/__generated__/graphql';
 import images from '@/common/images';
 import { ALL_ACTION_LIST_FILTERS } from '@/fragments/action-list.fragment';
 
@@ -10,7 +13,9 @@ import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
 
 export const getContentPage = async (plan: string, path: string) =>
-  await getClient().query<GetContentPageQuery, GetContentPageQueryVariables>({
+  await (
+    await getClient()
+  ).query<GetContentPageQuery, GetContentPageQueryVariables>({
     query: GET_CONTENT_PAGE,
     variables: {
       plan,
@@ -84,6 +89,43 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
           attributeType {
             identifier
           }
+        }
+      }
+    }
+  }
+`;
+
+export const PlanDatasetsBlockFragment = gql`
+  fragment PlanDatasetsBlockFragment on Dataset {
+    schema {
+      uuid
+      name
+      timeResolution
+      metrics {
+        unit
+      }
+      dimensions {
+        order
+        dimension {
+          name
+          uuid
+          categories {
+            uuid
+            label
+          }
+        }
+      }
+    }
+    uuid
+    dataPoints {
+      uuid
+      value
+      date
+      dimensionCategories {
+        uuid
+        label
+        dimension {
+          uuid
         }
       }
     }
@@ -214,37 +256,7 @@ const GET_CONTENT_PAGE = gql`
             ...AttributesBlockAttributeWithNestedType
           }
           datasets {
-            schema {
-              uuid
-              timeResolution
-              metrics {
-                unit
-              }
-              dimensions {
-                order
-                dimension {
-                  name
-                  uuid
-                  categories {
-                    uuid
-                    label
-                  }
-                }
-              }
-            }
-            uuid
-            dataPoints {
-              uuid
-              value
-              date
-              dimensionCategories {
-                uuid
-                label
-                dimension {
-                  uuid
-                }
-              }
-            }
+            ...PlanDatasetsBlockFragment
           }
         }
         body {
@@ -264,6 +276,7 @@ const GET_CONTENT_PAGE = gql`
       lastPublishedAt
     }
   }
+  ${PlanDatasetsBlockFragment}
   ${TEMPLATED_CATEGORY_PAGE_FRAGMENT}
   ${STREAM_FIELD_FRAGMENT}
   ${images.fragments.multiUseImage}

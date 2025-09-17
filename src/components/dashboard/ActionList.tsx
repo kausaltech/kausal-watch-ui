@@ -2,17 +2,16 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import { gql } from '@apollo/client';
-import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import { gql, useSuspenseQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Alert, Col, Container, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
 import {
-  ActionListPageFiltersFragment,
+  type ActionListPageFiltersFragment,
   ActionListPageView,
-  DashboardActionListQuery,
+  type DashboardActionListQuery,
 } from '@/common/__generated__/graphql';
 import { constructCatHierarchy, getCategoryString, mapActionCategories } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
@@ -22,11 +21,12 @@ import {
   orgHasActions,
 } from '@/common/organizations';
 import ActionCardList from '@/components/actions/ActionCardList';
-import ActionListFilters, {
+import type {
   ActionListFilterSection,
   FilterValue,
   Filters,
 } from '@/components/actions/ActionListFilters';
+import ActionListFilters from '@/components/actions/ActionListFilters';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import RichText from '@/components/common/RichText';
 import { usePaths } from '@/context/paths/paths';
@@ -38,7 +38,7 @@ import {
 } from '@/fragments/action-list.fragment';
 
 import ActionStatusGraphs from './ActionStatusGraphs';
-import {
+import type {
   ActionListAction,
   ActionListCategory,
   ActionListCategoryType,
@@ -397,7 +397,7 @@ export const GET_ACTION_LIST = gql`
 type FilterChangeCallback = (id: string, value: FilterValue) => void;
 
 type ActionListProps = {
-  actions: DashboardActionListQuery['planActions'];
+  actions: NonNullable<DashboardActionListQuery['planActions']>;
   columns: ColumnConfig[];
   categoryTypes: NonNullable<DashboardActionListQuery['plan']>['categoryTypes'];
   organizations: DashboardActionListQuery['planOrganizations'];
@@ -438,9 +438,9 @@ const ActionList = (props: ActionListProps) => {
 
   const displayDashboard =
     activeFilters.view === 'dashboard' ||
-    (activeFilters.view == null && defaultView === 'DASHBOARD');
+    (activeFilters.view == null && defaultView === ActionListPageView.Dashboard);
   const orgs: ActionListOrganization[] = useMemo(() => {
-    const result = constructOrgHierarchy<ActionListOrganization>(organizations);
+    const result = constructOrgHierarchy(organizations);
     if (includeRelatedPlans) {
       // Organizations can have actions in other plans
       return result;
@@ -452,7 +452,7 @@ const ActionList = (props: ActionListProps) => {
       categoryTypes,
       includeRelatedPlans
     );
-  }, [categoryTypes]);
+  }, [categoryTypes, includeRelatedPlans]);
   const primaryActionClassification = includeRelatedPlans
     ? plan.primaryActionClassification?.common
     : plan.primaryActionClassification;
@@ -478,10 +478,7 @@ const ActionList = (props: ActionListProps) => {
     [onFilterChange]
   );
 
-  const actionsWithRps = mapResponsibleParties<ActionListAction, ActionListOrganization>(
-    actions,
-    orgs
-  );
+  const actionsWithRps = mapResponsibleParties(actions, orgs);
   const mappedActions: ActionListAction[] = mapActionCategories<
     ActionListCategoryType,
     ActionListCategory,
@@ -503,7 +500,7 @@ const ActionList = (props: ActionListProps) => {
     });
   });
 
-  let groupBy = 'category';
+  let groupBy: 'category' | 'primaryOrg' | 'plan' = 'category';
   if (
     plan.features.hasActionPrimaryOrgs &&
     primaryCatType?.identifier &&
@@ -638,7 +635,7 @@ type StatusboardProps = {
   leadContent: string;
   defaultView: ActionListPageView;
   availableFilters: ActionListPageFiltersFragment;
-  filters: ActiveFilters;
+  filters: Filters;
   onFilterChange: FilterChangeCallback;
   headingHierarchyDepth: number;
   includeRelatedPlans: boolean;

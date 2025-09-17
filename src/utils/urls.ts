@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 type StripSlashConfig = {
   leading?: boolean;
   trailing?: boolean;

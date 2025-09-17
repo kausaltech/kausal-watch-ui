@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-import {
+import type {
   GetPlanPageIndicatorListQuery,
   GetPlanPageIndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
@@ -26,7 +26,9 @@ const GET_INDICATOR_LIST_PAGE = gql`
 `;
 
 export const getIndicatorListPage = async (plan: string) =>
-  await getClient().query<GetPlanPageIndicatorListQuery, GetPlanPageIndicatorListQueryVariables>({
+  await (
+    await getClient()
+  ).query<GetPlanPageIndicatorListQuery, GetPlanPageIndicatorListQueryVariables>({
     query: GET_INDICATOR_LIST_PAGE,
     variables: {
       plan,
