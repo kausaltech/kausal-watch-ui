@@ -57,7 +57,15 @@ WATCH_BACKEND_URL=
 
 ### End-to-end Testing
 
-Before the first run, ensure the browsers Playwright needs are installed:
+The tests live under the `e2e-tests/` directory. It has its own `package.json`,
+so the first thing to do is to install the dependencies:
+
+```bash
+cd e2e-tests
+pnpm install
+```
+
+Before the first test run, ensure the browsers Playwright needs are installed:
 
     node_modules/.bin/playwright install
 
@@ -79,7 +87,7 @@ test suite will start one for you (the dev server will be started if the
 `TEST_DEVSERVER` env variable is set). You should be able to run the test
 suite like this:
 
-    node_modules/.bin/playwright test
+    node_modules/.bin/playwright test -j 1 --project chromium
 
 ### Building the custom version of plotly.js
 
