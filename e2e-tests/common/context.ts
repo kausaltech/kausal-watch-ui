@@ -72,12 +72,16 @@ const GET_PLAN_INFO = gql`
               title
               urlPath
               slug
+              showInMenus
+              live
             }
             parent {
               id
               page {
                 title
                 __typename
+                showInMenus
+                live
               }
             }
             children {
@@ -181,7 +185,10 @@ export class PlanContext {
       )
         return;
       console.log(`Console message (${msg.type()}):\n`, msg);
-      throw new Error('Test produced console output');
+      if (false) {
+        // todo: enable this later
+        throw new Error('Test produced console output');
+      }
     });
   }
 
@@ -189,6 +196,7 @@ export class PlanContext {
     function isActionList(item: MainMenuItem): item is ActionListMenuItem {
       if (item?.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'ActionListPage') return false;
+      if (!item.page.showInMenus) return false;
       return true;
     }
     const item = (this.plan.mainMenu?.items ?? []).find(isActionList) || null;
@@ -249,11 +257,14 @@ export class PlanContext {
     return items;
   }
 
-  getStaticPageMenuItem(): StaticPageMenuItem[] {
+  getStaticPageMenuItems(): StaticPageMenuItem[] {
     function isStaticPageItem(item: MainMenuItem): item is StaticPageMenuItem {
       if (item?.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'StaticPage') return false;
       if (item.children?.length) return false;
+      if (!item.page.showInMenus || !item.page.live) return false;
+      if (item.parent?.page && (!item.parent.page.showInMenus || !item.parent.page.live))
+        return false;
       //if (item.parent.page.__typename !== 'PlanRootPage') return false;
       return true;
     }

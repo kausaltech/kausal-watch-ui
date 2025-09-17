@@ -84,8 +84,10 @@ const testPlan = (planId: string) => {
       test.skip(ctx.plan.actions.length == 0, 'No actions defined in plan');
       await page.goto(ctx.getActionURL(ctx.plan.actions[0]));
       await ctx.checkMeta(page);
+      await ctx.waitForLoadingFinished(page);
       const actionDetailsPage = page.locator('.action-main-top');
       await expect(actionDetailsPage).toBeVisible();
+      //await page.screenshot({ path: `${planId}_action-details.png` });
     });
 
     test('category page', async ({ page, ctx }) => {
@@ -136,7 +138,7 @@ const testPlan = (planId: string) => {
     });
 
     test('static pages', async ({ page, ctx }) => {
-      const staticPageItems = ctx.getStaticPageMenuItem();
+      const staticPageItems = ctx.getStaticPageMenuItems();
 
       test.skip(!staticPageItems, 'No static pages for plan');
       for (const staticPageItem of staticPageItems) {

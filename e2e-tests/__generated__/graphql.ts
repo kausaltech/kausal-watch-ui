@@ -419,11 +419,11 @@ export type PlaywrightGetPlanInfoQuery = (
         & { __typename: 'ExternalLinkMenuItem' }
       ) | (
         { page: (
-          { id: string | null, title: string, urlPath: string, slug: string }
+          { id: string | null, title: string, urlPath: string, slug: string, showInMenus: boolean, live: boolean }
           & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
         ), parent: (
           { id: string, page: (
-            { title: string }
+            { title: string, showInMenus: boolean, live: boolean }
             & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
           ) }
           & { __typename: 'PageMenuItem' }
