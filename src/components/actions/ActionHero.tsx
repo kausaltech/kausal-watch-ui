@@ -278,7 +278,7 @@ function ActionHero(props: ActionHeroProps) {
                     )}
                     <ActionsNav aria-label={t('nav-actions-pager', getActionTermContext(plan))}>
                       <ActionListLink>
-                        <IndexLink>{t('actions', getActionTermContext(plan))}</IndexLink>
+                        <IndexLink>{t('actions-plural', getActionTermContext(plan))}</IndexLink>
                       </ActionListLink>
                       {theme.settings?.actionView?.showPaginationTop && (
                         <div>
