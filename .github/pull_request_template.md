@@ -19,6 +19,7 @@ Describe or link possible requirements, dependencies and related PRs here
 
 ### Testing
 - [ ] **Built E2E tests** (if applicable. E2E tests added/updated)
+- [ ] **Mobile screen widths** tested for responsiveness
 - [ ] **Manually tested locally** (functionality verified)
     ##### Manual testing instructions
     If feature requires manual testing by reviewer, you can provide instructions here.
