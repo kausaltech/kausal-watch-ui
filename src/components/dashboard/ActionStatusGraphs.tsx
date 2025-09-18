@@ -1,10 +1,9 @@
 import React from 'react';
 
 import type { Theme } from '@kausal/themes/types';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 import { getStatusSummary } from '@/common/ActionStatusSummary';
 import {
@@ -14,7 +13,7 @@ import {
   Sentiment,
 } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
-import { TFunction } from '@/common/i18n';
+import { TFunction, getActionTermContext } from '@/common/i18n';
 import { getPhaseData, getStatusData } from '@/common/preprocess';
 import BarChart from '@/components/common/BarChart';
 import StatusDonut from '@/components/graphs/StatusDonut';
@@ -160,14 +159,18 @@ const DEFAULT_DATASETS: DatasetConfig = {
 const DAYS_IN_MONTH = 30.437;
 
 function getTimelinessHelpText(days: number, t: TFunction) {
+  const plan = usePlan();
+
   if (days < 30) {
     return t('actions-updated-help-days', {
       count: days,
+      ...getActionTermContext(plan),
     });
   }
 
   return t('actions-updated-help-months', {
     count: Math.round(days / DAYS_IN_MONTH),
+    ...getActionTermContext(plan),
   });
 }
 
@@ -205,9 +208,13 @@ const ActionsStatusGraphs = ({
   if (chart === ChartType.BAR) {
     return (
       <>
-        {progressData && <BarChart title={t('actions-status')} data={progressData} />}
+        {progressData && (
+          <BarChart title={t('actions-status', getActionTermContext(plan))} data={progressData} />
+        )}
 
-        {phaseData && <BarChart title={t('actions-phases')} data={phaseData} />}
+        {phaseData && (
+          <BarChart title={t('actions-phases', getActionTermContext(plan))} data={phaseData} />
+        )}
       </>
     );
   }
@@ -219,8 +226,8 @@ const ActionsStatusGraphs = ({
           data={{ values: phaseData.values, labels: phaseData.labels }}
           currentValue={showTotals ? phaseData.total : undefined}
           colors={phaseData.colors.length > 0 ? phaseData.colors : []}
-          header={t('actions-phases')}
-          helpText={t('actions-phases-help')}
+          header={t('actions-phases', getActionTermContext(plan))}
+          helpText={t('actions-phases-help', getActionTermContext(plan))}
         />
       )}
 
@@ -234,8 +241,8 @@ const ActionsStatusGraphs = ({
           }}
           currentValue={showTotals ? progressData.total : undefined}
           colors={progressData.colors.length > 0 ? progressData.colors : []}
-          header={t('actions-status')}
-          helpText={t('actions-status-help')}
+          header={t('actions-status', getActionTermContext(plan))}
+          helpText={t('actions-status-help', getActionTermContext(plan))}
         />
       )}
 
@@ -247,7 +254,7 @@ const ActionsStatusGraphs = ({
           }}
           currentValue={showTotals ? timelinessData.total : undefined}
           colors={timelinessData.colors.length > 0 ? timelinessData.colors : []}
-          header={t('actions-updated')}
+          header={t('actions-updated', getActionTermContext(plan))}
           helpText={getTimelinessHelpText(daysVisible, t)}
         />
       )}
