@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Collapse } from 'reactstrap';
 import styled from 'styled-components';
 
+import { getActionTermContext } from '@/common/i18n';
 import type { ActionContentAction } from '@/components/actions/ActionContent';
 import FeedbackForm, { type FeedbackFormAdditionalField } from '@/components/common/FeedbackForm';
 import Icon from '@/components/common/Icon';
@@ -74,9 +75,11 @@ const ExpandableFeedbackFormBlock = ({
   const isAction = !!action;
   const isCategory = !!categoryId;
 
-  const defaultHeading = isAction ? t('feedback-on-action') : t('feedback-on-category');
+  const defaultHeading = isAction
+    ? t('feedback-on-action', getActionTermContext(plan))
+    : t('feedback-on-category');
   const defaultDescription = isAction
-    ? t('feedback-on-action-description')
+    ? t('feedback-on-action-description', getActionTermContext(plan))
     : t('feedback-on-category-description');
 
   return (

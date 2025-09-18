@@ -8,6 +8,7 @@ import { Col, Container, Nav, NavItem, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
 import type { OrganizationDetailsQuery } from '@/common/__generated__/graphql';
+import { getActionTermContext } from '@/common/i18n';
 import { OrganizationLink } from '@/common/links';
 import RichText from '@/components/common/RichText';
 import ActionStatusTable from '@/components/dashboard/ActionStatusTable';
@@ -219,6 +220,7 @@ function OrgContent({ org, planFromOrgQuery }: Props) {
             <h2>
               {t('org-responsible-in-actions', {
                 actionCount: selectedPlan.actions.length,
+                ...getActionTermContext(plan),
               })}
             </h2>
           </ActionTableHeader>

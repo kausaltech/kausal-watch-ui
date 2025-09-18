@@ -6,6 +6,7 @@ import type { Progress } from '../components/dashboard/ActionStatusGraphs';
 import type { PlanContextType } from '../context/plan';
 import { ActionStatusSummaryIdentifier, Sentiment } from './__generated__/graphql';
 import type { TFunction } from './i18n';
+import { getActionTermContext } from './i18n';
 
 type PlanActionStatus = PlanContextType['actionStatuses'][number];
 type ActionStatusSummary = PlanContextType['actionStatusSummaries'][number];
@@ -207,7 +208,7 @@ const getPhaseData = (
   );
   const inactiveActionsDonutSector: DonutSector = new DonutSector(
     // Donut sector for inactive (cancelled, merged, etc.) actions
-    t('inactive-actions'),
+    t('inactive-actions', getActionTermContext(plan)),
     theme.graphColors.grey000,
     false
   );
@@ -262,4 +263,4 @@ const getPhaseData = (
 
 type StatusSummary = Plan['actionStatusSummaries'][0];
 
-export { cleanActionStatus, getStatusData, getPhaseData };
+export { cleanActionStatus, getPhaseData, getStatusData };

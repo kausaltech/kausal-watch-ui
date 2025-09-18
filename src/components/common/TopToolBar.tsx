@@ -16,6 +16,7 @@ import {
 import styled from 'styled-components';
 
 import { WorkflowState, WorkflowStateDescription } from '@/common/__generated__/graphql';
+import { getActionTermContext } from '@/common/i18n';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
@@ -154,7 +155,7 @@ export const TopToolBar = () => {
             {selectedWorkflow.description}
           </StyledDropdownToggle>
           <StyledDropdownMenu>
-            <DropdownHeader>{t('action-versions')}</DropdownHeader>
+            <DropdownHeader>{t('action-versions', getActionTermContext(plan))}</DropdownHeader>
             {workflows.map((workflow) => (
               <DropdownItem key={workflow.id} onClick={() => handleSelectWorkflow(workflow.id)}>
                 <DropdownItemText>

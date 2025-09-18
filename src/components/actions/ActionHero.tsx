@@ -276,7 +276,7 @@ function ActionHero(props: ActionHeroProps) {
                         </strong>
                       </PrimaryOrg>
                     )}
-                    <ActionsNav aria-label={t('nav-actions-pager')}>
+                    <ActionsNav aria-label={t('nav-actions-pager', getActionTermContext(plan))}>
                       <ActionListLink>
                         <IndexLink>{t('actions', getActionTermContext(plan))}</IndexLink>
                       </ActionListLink>
