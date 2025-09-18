@@ -87,7 +87,7 @@ const ActionListBlock = (props: ActionListBlockProps) => {
   }
   const groupBy = plan.primaryOrgs.length > 0 ? 'primaryOrg' : 'none';
 
-  const displayHeader = heading ? heading : t('actions', getActionTermContext(plan));
+  const displayHeader = heading ? heading : t('actions-plural', getActionTermContext(plan));
   return (
     <ActionListSection id={id}>
       <Container>

@@ -202,7 +202,7 @@ const ActionListBlock = (props: ActionListBlockProps) => {
       )
         actionGroups.push(groupingCategory);
     });
-  const displayHeading = heading || t('actions', getActionTermContext(plan));
+  const displayHeading = heading || t('actions-plural', getActionTermContext(plan));
 
   return (
     <ActionListSection id={id}>
