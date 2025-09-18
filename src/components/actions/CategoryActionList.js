@@ -141,7 +141,9 @@ const CategoryActionList = (props) => {
   if (filteredActions.length === 0) {
     return (
       <EmptyActionListHeader>
-        {isCategoryRoot ? t('select-sector-for-actions') : t('no-actions')}
+        {isCategoryRoot
+          ? t('select-sector-for-actions', getActionTermContext(plan))
+          : t('no-actions', getActionTermContext(plan))}
       </EmptyActionListHeader>
     );
   }

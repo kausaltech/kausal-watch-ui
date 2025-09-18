@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';
 import { SectionHeader } from '@/components/actions/ActionContent';
 import PopoverTip from '@/components/common/PopoverTip';
@@ -27,7 +28,7 @@ const ActionRelatedActionsBlock = (props) => {
       <Row>
         <Col>
           <SectionHeader>
-            {heading || t('related-actions')}
+            {heading || t('related-actions', getActionTermContext(plan))}
             {helpText && <PopoverTip identifier="related-actions-help" content={helpText} />}
           </SectionHeader>
           <RelatedActionList tag="ul">

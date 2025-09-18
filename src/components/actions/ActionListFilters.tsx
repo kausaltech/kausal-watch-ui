@@ -6,10 +6,18 @@ import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { createFilter } from 'react-select';
-import { Badge as BadgeComponent, CloseButton, Col, FormGroup, Input, Row } from 'reactstrap';
-import { ButtonGroup, Collapse, Button as RButton } from 'reactstrap';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
+import {
+  Badge as BadgeComponent,
+  ButtonGroup,
+  CloseButton,
+  Col,
+  Collapse,
+  FormGroup,
+  Input,
+  Button as RButton,
+  Row,
+} from 'reactstrap';
+import styled, { useTheme } from 'styled-components';
 
 import type {
   ActionListFilterFragment,
@@ -21,8 +29,8 @@ import {
 } from '@/common/__generated__/graphql';
 import type { CategoryHierarchyMember, CategoryTypeHierarchy } from '@/common/categories';
 import { constructCatHierarchy, getCategoryString } from '@/common/categories';
-import { getActionTermContext } from '@/common/i18n';
 import type { TFunction } from '@/common/i18n';
+import { getActionTermContext } from '@/common/i18n';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
@@ -906,7 +914,7 @@ class ContinuousActionFilter implements ActionListFilter<string | undefined> {
   options?: ActionListFilterOption[] | undefined;
   debounce?: number | undefined;
   getLabel(t: TFunction) {
-    return t('actions-show-continuous');
+    return t('actions-show-continuous', getActionTermContext(usePlan()));
   }
   getShowAllLabel(t: TFunction) {
     return t('filter-text-default');
@@ -1047,7 +1055,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
         }}
         role="search"
         autoComplete="off"
-        aria-label={t('form-action-filters')}
+        aria-label={t('form-action-filters', getActionTermContext(plan))}
       >
         <FiltersHeader>{t('actions-filter-by')}</FiltersHeader>
         {filterSections.map((section) => (
@@ -1159,7 +1167,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               label: obj.name,
             })),
             label: t('filter-phase'),
-            helpText: t('filter-phase-help') || '',
+            helpText: t('filter-phase-help', getActionTermContext(plan)) || '',
             showAllLabel: t('filter-all-phases'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.implementationPhase?.id === val) return true;
@@ -1177,7 +1185,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               label: obj.name,
             })),
             label: t('filter-status'),
-            helpText: t('filter-status-help') || '',
+            helpText: t('filter-status-help', getActionTermContext(plan)) || '',
             showAllLabel: t('filter-all-statuses'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.status?.id === val) return true;
@@ -1212,7 +1220,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               label: obj.name,
             })),
             label: t('filter-schedule'),
-            helpText: t('filter-schedule-help') || '',
+            helpText: t('filter-schedule-help', getActionTermContext(plan)) || '',
             showAllLabel: t('filter-all-schedules'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.schedule.some((sch) => sch.id === val)) return true;
@@ -1228,14 +1236,19 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             id: 'plan',
             options: relatedPlans.map((p) => ({ id: p.id, label: p.name })),
             label: t('filter-plan'),
-            helpText: t('filter-plan-help') || '',
+            helpText: t('filter-plan-help', getActionTermContext(plan)) || '',
             showAllLabel: t('filter-all-plans'),
             filterAction: (val: string, act: ActionListAction) => act.plan?.id === val,
           };
           filters.push(new GenericSelectFilter(planOpts));
           break;
         case 'ContinuousActionFilterBlock':
-          filters.push(new ContinuousActionFilter('continuous', t('actions-show-continuous')));
+          filters.push(
+            new ContinuousActionFilter(
+              'continuous',
+              t('actions-show-continuous', getActionTermContext(plan))
+            )
+          );
           break;
       }
     });
@@ -1253,7 +1266,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             label: obj.name,
           })),
           label: t('filter-impact'),
-          helpText: t('filter-impact-help') || '',
+          helpText: t('filter-impact-help', getActionTermContext(plan)) || '',
           showAllLabel: t('filter-all-impacts'),
           filterAction: (val: string, act: ActionListAction) => {
             if (act.impact?.id === val) return true;

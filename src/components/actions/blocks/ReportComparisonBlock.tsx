@@ -5,8 +5,10 @@ import { Button, Col, Collapse, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import dayjs from '@/common/dayjs';
+import { getActionTermContext } from '@/common/i18n';
 import ActionAttribute from '@/components/common/ActionAttribute';
 import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
 
 const ReportSection = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
@@ -91,6 +93,7 @@ const ReportComparisonBlock = (props) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const plan = usePlan();
 
   const { reportField, reportsToCompare } = block;
   // Augment each report with the field we're looking for
@@ -146,7 +149,7 @@ const ReportComparisonBlock = (props) => {
                     fontSize="fontSizeBase"
                   />
                 ) : (
-                  <div>{t('no-action-data-for-report')}</div>
+                  <div>{t('no-action-data-for-report', getActionTermContext(plan))}</div>
                 )}
               </ReportField>
             ))}
