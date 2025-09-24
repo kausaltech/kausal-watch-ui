@@ -934,7 +934,7 @@ class ContinuousActionFilter implements ActionListFilter<string | undefined> {
             role="switch"
             id={this.id}
             checked={value === '1'}
-            onChange={(e) => onChange(this.id, e.target.checked ? '1' : '0')}
+            onChange={(e) => onChange(this.id, e.target.checked ? '1' : '')}
           />
           <label htmlFor={this.id}>{this.label}</label>
         </FormGroup>
