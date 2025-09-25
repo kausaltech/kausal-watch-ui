@@ -1,7 +1,7 @@
 {
     "accessibility": "Barrierefreiheit",
     "action": "{context, select, STRATEGY {Strategie} CASE_STUDY {Fallstudie} other {Maßnahme}}",
-    "actions": "{context, select, STRATEGY {Strategien} CASE_STUDY {Fallstudien} other {Maßnahmen}}",
+    "actions-plural": "{context, select, STRATEGY {Strategien} CASE_STUDY {Fallstudien} other {Maßnahmen}}",
     "actions-as-list": "Als Liste",
     "active-filters": "Aktive Filter",
     "admin-login": "Admin Login",

@@ -1,7 +1,7 @@
 {
     "accessibility": "Tillgänglighetsredogörelse",
     "action": "{context, select, STRATEGY {Strategi} CASE_STUDY {Handling} other {Åtgärd}}",
-    "actions": "{context, select, CASE_STUDY {Handlingar} STRATEGY {Strategier} other {Åtgärder}}",
+    "actions-plural": "{context, select, CASE_STUDY {Handlingar} STRATEGY {Strategier} other {Åtgärder}}",
     "actions-as-list": "Som en lista",
     "active-filters": "Aktiva filter",
     "admin-login": "Administratör",

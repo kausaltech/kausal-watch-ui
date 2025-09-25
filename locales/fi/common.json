@@ -1,7 +1,7 @@
 {
     "accessibility": "Saavutettavuus",
     "action": "{context, select, STRATEGY {Strategia} other {Toimenpide}}",
-    "actions": "{context, select, STRATEGY {Strategiat} other {Toimenpiteet}}",
+    "actions-plural": "{context, select, STRATEGY {Strategiat} other {Toimenpiteet}}",
     "actions-as-list": "Listana",
     "active-filters": "Aktiiviset rajaukset",
     "admin-login": "Ylläpito",

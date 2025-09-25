@@ -1,7 +1,7 @@
 {
     "accessibility": "Προσβασιμότητα",
     "action": "{context, select, CASE_STUDY {Μελέτη περίπτωσης} STRATEGY {Στρατηγική} other {Δράση}}",
-    "actions": "{context, select, CASE_STUDY {Μελέτες περιπτώσεων} STRATEGY {Στρατηγικές} other {Actions}}",
+    "actions-plural": "{context, select, CASE_STUDY {Μελέτες περιπτώσεων} STRATEGY {Στρατηγικές} other {Actions}}",
     "actions-as-list": "Ως κατάλογος",
     "active-filters": "Ενεργά φίλτρα",
     "admin-login": "Σύνδεση διαχειριστή",

@@ -2,7 +2,7 @@
     "indicator-compare-to": "Compare com",
     "indicator-normalize-per-capita": "Exibição per capita",
     "nav-tools": "Ferramentas",
-    "actions": "{context, select, CASE_STUDY {Estudos de caso} STRATEGY {Estratégias} outros {Ações}}",
+    "actions-plural": "{context, select, CASE_STUDY {Estudos de caso} STRATEGY {Estratégias} outros {Ações}}",
     "actions-as-list": "Como uma lista",
     "active-filters": "Filtros ativos",
     "admin-login": "Login do administrador",

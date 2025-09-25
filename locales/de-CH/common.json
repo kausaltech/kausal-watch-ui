@@ -1,6 +1,6 @@
 {
     "action": "Massnahme",
-    "actions": "Massnahmen",
+    "actions-plural": "Massnahmen",
     "close": "Schliessen",
     "error-loading-actions": "Fehler beim Laden der Massnahmenliste",
     "filter-result-actions": "Massnahmen",

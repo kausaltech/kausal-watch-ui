@@ -1,7 +1,7 @@
 {
     "accessibility": "Tilgængelighed",
     "action": "{context, select, STRATEGY {Strategi} other {Handling}}",
-    "actions": "{context, select, STRATEGY {Strategier} other {Handlinger}}",
+    "actions-plural": "{context, select, STRATEGY {Strategier} other {Handlinger}}",
     "actions-as-list": "Som en liste",
     "active-filters": "Aktive filtre",
     "admin-login": "Admin login",

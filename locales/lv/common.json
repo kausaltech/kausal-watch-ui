@@ -1,6 +1,6 @@
 {
     "action": "{context, select, CASE_STUDY {Gadījuma izpēte} STRATEGY {Stratēģija} other {Rīcība}}",
-    "actions": "{context, select, CASE_STUDY {Gadījumu izpēte} STRATEGY {Stratēģijas} other {Rīcības}}",
+    "actions-plural": "{context, select, CASE_STUDY {Gadījumu izpēte} STRATEGY {Stratēģijas} other {Rīcības}}",
     "data-not-available": "Nav datu. Kļūda bloka konfigurācijā.",
     "select-sector-for-actions": "Izvēlieties emisiju nozari, lai skatītu saistītās rīcības",
     "no-phase": "Nav fāžu kopuma",

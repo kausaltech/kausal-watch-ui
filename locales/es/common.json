@@ -1,7 +1,7 @@
 {
     "accessibility": "Accesibilidad",
     "action": "{context, select, STRATEGY {Estrategia} other {Acción}}",
-    "actions": "{context, select, STRATEGY {Estrategias} other {Acciones}}",
+    "actions-plural": "{context, select, STRATEGY {Estrategias} other {Acciones}}",
     "actions-as-list": "Como una lista",
     "active-filters": "Filtros activos",
     "admin-login": "Inicio de sesión de administrador",
