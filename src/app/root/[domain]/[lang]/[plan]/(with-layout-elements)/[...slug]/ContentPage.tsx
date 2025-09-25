@@ -166,7 +166,7 @@ export default function ContentPage({ page }: { page: GeneralPlanPage }) {
 
   // Restrict the secondary nav to be shown on StaticPages only currently
   const siblings = secondaryNavParent
-    ? typenameMatches(secondaryNavParent, 'StaticPage')
+    ? typenameMatches(page, 'StaticPage')
       ? (secondaryNavParent.children ?? [])
       : []
     : [];
