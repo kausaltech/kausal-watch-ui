@@ -213,9 +213,7 @@ const testPlan = (planId: string) => {
         const h1Span = page.locator('h1 >> span');
         await expect(h1Span).toContainText(indicatorName);
       } else {
-        const firstIndicatorLink = main.locator(`a`, {
-          hasText: indicatorName,
-        });
+        const firstIndicatorLink = main.locator('a').getByText(indicatorName, { exact: true });
         await firstIndicatorLink.waitFor();
         await firstIndicatorLink.click();
         await page.waitForURL(/.*\/indicators\/[0-9]+/);
