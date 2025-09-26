@@ -261,7 +261,7 @@ const FeedbackForm = (props: FeedbackFormProps) => {
       )}
       {(!sent || mutationError) && (
         <div className="mt-4">
-          <form onSubmit={() => void handleSubmit(onSubmit)} autoComplete="true">
+          <form onSubmit={handleSubmit(onSubmit)} autoComplete="true">
             <Controller
               render={({ field }) => (
                 <TextInput {...field} id="name-field" autoComplete="name" label={t('name')} />
