@@ -12,7 +12,7 @@ import ActionsTable from '@/components/actions/ActionsTable';
 import CategoryTags from '@/components/actions/CategoryTags';
 import RichText from '@/components/common/RichText';
 import CausalNavigation from '@/components/indicators/CausalNavigation';
-import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisationNew';
 import { usePlan } from '@/context/plan';
 
 import IndicatorHero from './IndicatorHero';
