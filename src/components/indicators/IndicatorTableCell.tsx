@@ -1,6 +1,10 @@
 import type { IndicatorListIndicator } from './IndicatorList';
+import type { IndicatorTableColumn } from './IndicatorListFilteredNew';
 
-const IndicatorTableCell = (props: { column: string; indicator: IndicatorListIndicator }) => {
+const IndicatorTableCell = (props: {
+  column: IndicatorTableColumn;
+  indicator: IndicatorListIndicator;
+}) => {
   const { column, indicator } = props;
 
   switch (column) {
@@ -10,7 +14,7 @@ const IndicatorTableCell = (props: { column: string; indicator: IndicatorListInd
       return <td key={column}>{indicator.organization.name}</td>;
     case 'latestValue':
       return (
-        <td key={column}>
+        <td key={column} style={{ textAlign: 'right' }}>
           {indicator.latestValue?.value} {indicator.unit.shortName}
         </td>
       );
@@ -20,7 +24,11 @@ const IndicatorTableCell = (props: { column: string; indicator: IndicatorListInd
       return <td key={column}>{indicator['level']}</td>;
     case 'dimensions':
       const dimensionsCount = indicator.dimensions?.length || 0;
-      return <td key={column}>{dimensionsCount}</td>;
+      return (
+        <td key={column} style={{ textAlign: 'right' }}>
+          {dimensionsCount}
+        </td>
+      );
     case 'common':
       return <td key={column}>{indicator.common ? '✅' : '❌'}</td>;
     default:

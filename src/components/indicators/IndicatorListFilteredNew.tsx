@@ -20,6 +20,14 @@ type Hierarchy = {
   };
 };
 
+export type IndicatorTableColumn =
+  | 'name'
+  | 'timeResolution'
+  | 'level'
+  | 'organization'
+  | 'common'
+  | 'latestValue'
+  | 'dimensions';
 interface IndicatorListFilteredProps {
   categoryColumnLabel?: string;
   indicators: IndicatorListIndicator[];
@@ -46,15 +54,16 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
     );
   }
 
-  const indicatorColumns = [
+  const indicatorColumns: IndicatorTableColumn[] = [
     'name',
+    'organization',
     'timeResolution',
     'level',
-    'organization',
     'common',
     'latestValue',
     'dimensions',
   ];
+
   return (
     <div className="mt-5 mb-5 pb-5">
       <Table hover>
