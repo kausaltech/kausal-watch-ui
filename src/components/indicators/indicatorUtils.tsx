@@ -119,3 +119,13 @@ export function sortIndicators(
 
   return Array.from(grouped.values()).flat();
 }
+
+export const indentationLevel: (item: Indicators[0], hierarchy: Hierarchy) => number = (
+  item,
+  hierarchy
+) => {
+  if (!item.common || !hierarchy[item.common.id]) {
+    return 0;
+  }
+  return (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
+};
