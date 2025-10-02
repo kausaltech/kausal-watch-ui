@@ -6,7 +6,7 @@ import { Alert, Table } from 'reactstrap';
 import type { IndicatorCategory } from './IndicatorList';
 import IndicatorTableCell from './IndicatorTableCell';
 import IndicatorTableHeader from './IndicatorTableHeader';
-import { type Indicators, sortIndicators } from './indicatorUtils';
+import { type Indicators, indentationLevel, sortIndicators } from './indicatorUtils';
 
 export const isEmptyFilter = (val) => val == null || val === '';
 
@@ -19,6 +19,28 @@ type Hierarchy = {
     // Doesn't seem to be used
     pathNames: string[];
   };
+};
+
+const IndicatorTableRow = (props: {
+  indicator: Indicators[0];
+  indent: number;
+  children: React.ReactNode;
+}) => {
+  const { indicator, indent, children } = props;
+  return (
+    <tr key={indicator.id} style={{ paddingLeft: `${indent * 16}px` }}>
+      {children}
+    </tr>
+  );
+};
+
+const IndicatorNameCell = (props: { indicator: Indicators[0]; indent: number }) => {
+  const { indicator, indent } = props;
+  return (
+    <td key="name" style={{ paddingLeft: `${indent * 16}px` }}>
+      {indicator.name}
+    </td>
+  );
 };
 
 export type IndicatorTableColumn =
@@ -56,7 +78,6 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
   }
 
   const indicatorColumns: IndicatorTableColumn[] = [
-    'name',
     'organization',
     'timeResolution',
     'level',
@@ -79,13 +100,22 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
           </tr>
         </thead>
         <tbody>
-          {sortedIndicators.map((indicator) => (
-            <tr key={indicator.id}>
-              {indicatorColumns.map((column) => (
-                <IndicatorTableCell key={column} column={column} indicator={indicator} />
-              ))}
-            </tr>
-          ))}
+          {sortedIndicators.map((indicator) => {
+            const indent = hierarchy ? indentationLevel(indicator, hierarchy) : 0;
+            return (
+              <IndicatorTableRow key={indicator.id} indicator={indicator} indent={indent}>
+                <IndicatorNameCell indicator={indicator} indent={indent} />
+                {indicatorColumns.map((column) => (
+                  <IndicatorTableCell
+                    key={column}
+                    columnName={column}
+                    indicator={indicator}
+                    hierarchy={hierarchy}
+                  />
+                ))}
+              </IndicatorTableRow>
+            );
+          })}
         </tbody>
       </Table>
     </div>
