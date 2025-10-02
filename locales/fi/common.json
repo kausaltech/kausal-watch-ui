@@ -82,6 +82,8 @@
     "instance-type-staging-message": "Tämä on palvelun staging-versio",
     "instance-type-testing-label": "Testi",
     "instance-type-testing-message": "Tämä on palvelun testiversio",
+    "instance-type-preview-label": "Esikatselu",
+    "instance-type-preview-message": "Tämä on palvelun esikatseluversio",
     "loading": "Ladataan",
     "municipality": "Kunta",
     "name": "Nimi",

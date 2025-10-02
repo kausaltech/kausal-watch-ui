@@ -74,6 +74,8 @@
     "instance-type-development-message": "Detta är en utvecklingsversion av tjänsten",
     "instance-type-testing-label": "Testning",
     "instance-type-testing-message": "Detta är en testversion av tjänsten (under uppbyggnad)",
+    "instance-type-preview-label": "Förhandsvisning",
+    "instance-type-preview-message": "Detta är en förhandsversion av tjänsten",
     "loading": "Läser in",
     "municipality": "Kommun",
     "name": "Namn",
