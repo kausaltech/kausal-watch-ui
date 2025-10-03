@@ -94,6 +94,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
       <Table hover size="sm">
         <thead>
           <tr>
+            <IndicatorTableHeader column="name" />
             {indicatorColumns.map((column) => (
               <IndicatorTableHeader key={column} column={column} />
             ))}
