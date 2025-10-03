@@ -273,6 +273,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           categoryId={categoryFilter?.id || page.category.id}
           heading={block.heading}
           lead={block.helpText}
+          groupByLevel={block.groupByCategoryLevel}
         />
       );
     }
