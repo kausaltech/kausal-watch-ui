@@ -3738,6 +3738,56 @@ export type DashboardIndicatorBlockFragmentFragment = (
   & { __typename: 'DashboardRowBlock' }
 );
 
+export type IndicatorListIndicatorFragment = (
+  { id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
+    { id: string, name: string }
+    & { __typename: 'Organization' }
+  ), common: (
+    { id: string, name: string, normalizations: Array<(
+      { unit: (
+        { shortName: string | null }
+        & { __typename: 'Unit' }
+      ) | null, normalizer: (
+        { name: string, id: string, identifier: string | null }
+        & { __typename: 'CommonIndicator' }
+      ) | null }
+      & { __typename: 'CommonIndicatorNormalization' }
+    ) | null> | null }
+    & { __typename: 'CommonIndicator' }
+  ) | null, categories: Array<(
+    { id: string, name: string, parent: (
+      { id: string }
+      & { __typename: 'Category' }
+    ) | null, type: (
+      { id: string, identifier: string }
+      & { __typename: 'CategoryType' }
+    ) }
+    & { __typename: 'Category' }
+  )>, latestGraph: (
+    { id: string }
+    & { __typename: 'IndicatorGraph' }
+  ) | null, latestValue: (
+    { id: string, date: string | null, value: number, normalizedValues: Array<(
+      { normalizerId: string | null, value: number | null }
+      & { __typename: 'NormalizedValue' }
+    ) | null> | null }
+    & { __typename: 'IndicatorValue' }
+  ) | null, dimensions: Array<(
+    { dimension: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'Dimension' }
+    ) }
+    & { __typename: 'IndicatorDimension' }
+  )>, unit: (
+    { shortName: string | null }
+    & { __typename: 'Unit' }
+  ) }
+  & { __typename: 'Indicator' }
+);
+
 type StreamFieldFragment_CsWpOaD0dUEdhV96j5U9TnlDssZTxlWikakK8ZjePw_Fragment = (
   { id: string | null, blockType: string, field: string }
   & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
@@ -12664,7 +12714,22 @@ export type IndicatorListQuery = (
     ) | null }
     & { __typename: 'Indicator' }
   ) | null> | null, relatedPlanIndicators?: Array<(
-    { id: string, name: string, level: string | null, timeResolution: IndicatorTimeResolution, organization: (
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, categories: Array<(
+      { id: string, name: string, parent: (
+        { id: string }
+        & { __typename: 'Category' }
+      ) | null, type: (
+        { id: string, identifier: string, name: string }
+        & { __typename: 'CategoryType' }
+      ), common: (
+        { id: string, identifier: string, name: string, order: number, type: (
+          { identifier: string, name: string }
+          & { __typename: 'CommonCategoryType' }
+        ) }
+        & { __typename: 'CommonCategory' }
+      ) | null }
+      & { __typename: 'Category' }
+    )>, organization: (
       { id: string, name: string }
       & { __typename: 'Organization' }
     ), common: (
@@ -12700,22 +12765,7 @@ export type IndicatorListQuery = (
     )>, unit: (
       { shortName: string | null }
       & { __typename: 'Unit' }
-    ), categories: Array<(
-      { id: string, name: string, parent: (
-        { id: string }
-        & { __typename: 'Category' }
-      ) | null, type: (
-        { id: string, identifier: string, name: string }
-        & { __typename: 'CategoryType' }
-      ), common: (
-        { id: string, identifier: string, name: string, order: number, type: (
-          { identifier: string, name: string }
-          & { __typename: 'CommonCategoryType' }
-        ) }
-        & { __typename: 'CommonCategory' }
-      ) | null }
-      & { __typename: 'Category' }
-    )> }
+    ) }
     & { __typename: 'Indicator' }
   )> | null }
   & { __typename: 'Query' }

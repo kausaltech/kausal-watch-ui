@@ -1,5 +1,7 @@
 import { gql } from '@apollo/client';
 
+import { INDICATOR_LIST_INDICATOR_FRAGMENT } from '@/fragments/indicator-list-indicator.fragment';
+
 export const GET_INDICATOR_LIST = gql`
   query IndicatorList($plan: ID!, $relatedPlanIndicators: Boolean!) {
     plan(id: $plan) {
@@ -10,63 +12,7 @@ export const GET_INDICATOR_LIST = gql`
       indicatorLevels {
         level
         indicator {
-          id
-          name
-          timeResolution
-          organization {
-            id
-            name
-          }
-          common {
-            id
-            name
-            normalizations {
-              unit {
-                shortName
-              }
-              normalizer {
-                name
-                id
-                identifier
-              }
-            }
-          }
-          categories {
-            id
-            name
-            parent {
-              id
-            }
-            type {
-              id
-              identifier
-            }
-          }
-          latestGraph {
-            id
-          }
-          latestValue {
-            id
-            date
-            value
-            normalizedValues {
-              normalizerId
-              value
-            }
-          }
-          dimensions {
-            dimension {
-              id
-              name
-              categories {
-                id
-                name
-              }
-            }
-          }
-          unit {
-            shortName
-          }
+          ...IndicatorListIndicator
         }
       }
       categoryTypes(usableForIndicators: true) {
@@ -120,53 +66,8 @@ export const GET_INDICATOR_LIST = gql`
       }
     }
     relatedPlanIndicators(plan: $plan) @include(if: $relatedPlanIndicators) {
-      id
-      name
+      ...IndicatorListIndicator
       level(plan: $plan)
-      timeResolution
-      organization {
-        id
-        name
-      }
-      common {
-        id
-        name
-        normalizations {
-          unit {
-            shortName
-          }
-          normalizer {
-            name
-            id
-            identifier
-          }
-        }
-      }
-      latestGraph {
-        id
-      }
-      latestValue {
-        id
-        date
-        value
-        normalizedValues {
-          normalizerId
-          value
-        }
-      }
-      dimensions {
-        dimension {
-          id
-          name
-          categories {
-            id
-            name
-          }
-        }
-      }
-      unit {
-        shortName
-      }
       categories {
         id
         name
@@ -191,4 +92,5 @@ export const GET_INDICATOR_LIST = gql`
       }
     }
   }
+  ${INDICATOR_LIST_INDICATOR_FRAGMENT}
 `;
