@@ -11,6 +11,7 @@ import { Container } from 'reactstrap';
 
 import type {
   GetPlanPageIndicatorListQuery,
+  IndicatorListIndicatorFragment,
   IndicatorListQuery,
   IndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
@@ -27,9 +28,9 @@ import IndicatorListFiltered from './IndicatorListFilteredNew';
 import IndicatorsHero from './IndicatorsHero';
 import { processCommonIndicatorHierarchy } from './process-indicators';
 
-export type IndicatorListIndicator = NonNullable<
-  IndicatorListQuery['plan']
->['indicatorLevels'][number]['indicator'];
+export type IndicatorListIndicator = IndicatorListIndicatorFragment & {
+  level: string;
+};
 export type IndicatorCategory = NonNullable<IndicatorListIndicator['categories']>[number];
 type CategoryType = NonNullable<IndicatorListQuery['plan']>['categoryTypes'][number];
 type CommonCategory = NonNullable<NonNullable<CategoryType['categories']>[number]['common']>;
@@ -241,22 +242,27 @@ const IndicatorList = ({
   const getIndicatorListProps = (data: IndicatorListQuery) => {
     const { plan, relatedPlanIndicators } = data;
     const displayMunicipality = plan?.features.hasActionPrimaryOrgs === true;
+    const { indicatorLevels } = plan ?? {};
+
+    const indicators: (IndicatorListIndicator | null)[] = (indicatorLevels ?? [])
+      .filter((il) => il !== null && il.indicator !== null)
+      .map((il) => {
+        if (!il) return null;
+        const { indicator, level } = il;
+        return { ...indicator, level: level.toLowerCase() } as IndicatorListIndicator;
+      });
+
     const displayNormalizedValues =
       undefined !==
-      plan!.indicatorLevels.find(
-        (l) => l.indicator?.common != null && l.indicator.common.normalizations.length > 0
-      );
-    const generalContent = plan?.generalContent || {};
-    const { indicatorLevels } = plan!;
-
-    const indicators = indicatorLevels.map((il) => {
-      const { indicator, level } = il;
-      return { ...indicator, level: level.toLowerCase() };
-    });
+      indicators?.find((ind) => {
+        if (!ind) return false;
+        if (!ind.common) return false;
+        if (!ind.common.normalizations) return false;
+        return ind.common.normalizations?.length > 0;
+      });
 
     return {
       indicators,
-      leadContent: generalContent.indicatorListLeadContent,
       displayMunicipality,
       displayNormalizedValues,
       relatedPlanIndicators: includeRelatedPlans ? relatedPlanIndicators : [],
