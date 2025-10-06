@@ -160,6 +160,12 @@ const middleware = auth(async (request: NextAuthRequest) => {
     localeDetection: false,
   });
 
+  if (parsedPlan.domain?.redirectToHostname) {
+    const url = new URL(request.url);
+    url.hostname = parsedPlan.domain.redirectToHostname;
+    return NextResponse.redirect(url, { status: 301 });
+  }
+
   const response = handleI18nRouting(request);
 
   if (isRestrictedPlan(parsedPlan)) {

@@ -6,12 +6,14 @@ export const GET_PLANS_BY_HOSTNAME = gql`
     plansForHostname(hostname: $hostname) {
       domain {
         hostname
+        redirectToHostname
         basePath
         status
         statusMessage
       }
       domains {
         hostname
+        redirectToHostname
         basePath
         status
         statusMessage
