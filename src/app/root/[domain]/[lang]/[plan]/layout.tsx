@@ -11,8 +11,7 @@ import { getRequestOrigin } from '@common/utils/request.server';
 
 import type { WorkflowState } from '@/common/__generated__/graphql';
 import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
-import { loadTheme } from '@/common/load-theme.server';
-import { getThemeStaticURL } from '@/common/theme';
+import { getThemeStaticURL, loadTheme } from '@/common/theme';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { SharedIcons } from '@/components/common/Icon';
 import IntroModal from '@/components/custom/IntroModal';
