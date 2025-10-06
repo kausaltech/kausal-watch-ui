@@ -12,8 +12,8 @@ import type { TFunction } from '@/common/i18n';
 import type { ActionListAction, ActionListCategory } from '../dashboard/dashboard.types';
 import ActionCard from './ActionCard';
 
-const ActionsList = styled.ul`
-  margin-top: ${(props) => props.theme.spaces.s400};
+const ActionsList = styled.ul<{ $compactTop?: boolean }>`
+  margin-top: ${({ theme, $compactTop }) => ($compactTop ? 0 : theme.spaces.s400)};
   padding: 0;
 `;
 
@@ -135,6 +135,7 @@ type ActionCardListProps<ActionT extends ActionListAction | ActionCardFragment> 
   headingHierarchyDepth: number;
   includeRelatedPlans: boolean;
   showOtherCategory?: boolean;
+  compactTopMargin?: boolean;
 };
 
 function ActionCardList<ActionT extends ActionListAction | ActionCardFragment>({
@@ -143,6 +144,7 @@ function ActionCardList<ActionT extends ActionListAction | ActionCardFragment>({
   headingHierarchyDepth,
   includeRelatedPlans,
   showOtherCategory = true,
+  compactTopMargin = false,
 }: ActionCardListProps<ActionT>) {
   const theme = useTheme();
   const t = useTranslations();
@@ -151,7 +153,7 @@ function ActionCardList<ActionT extends ActionListAction | ActionCardFragment>({
   const getFullAction = (id: string) => actionsById.get(id);
 
   return (
-    <ActionsList>
+    <ActionsList $compactTop={compactTopMargin}>
       {groups.map((group) => (
         <ActionGroup key={group.id} tag="li">
           {(groups.length > 1 || (group.id === OTHER_GROUP_ID && showOtherCategory)) && (

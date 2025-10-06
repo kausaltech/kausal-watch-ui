@@ -54,13 +54,13 @@ export const SectionHeader = styled.h2`
 `;
 
 const ParentGroupHeading = styled.h3`
-  margin: ${({ theme }) => `${theme.spaces.s200} 0 ${theme.spaces.s050}`};
+  margin: ${({ theme }) => `${theme.spaces.s400} 0 ${theme.spaces.s400}`};
   font-size: ${({ theme }) => theme.fontSizeLg};
   color: ${({ theme }) => theme.headingsColor};
 `;
 
 const GroupHeading = styled.h4`
-  margin: ${({ theme }) => `${theme.spaces.s050} 0 ${theme.spaces.s100}`};
+  margin: ${({ theme }) => `${theme.spaces.s150} 0 ${theme.spaces.s150}`};
   font-size: ${({ theme }) => theme.fontSizeBase};
   color: ${({ theme }) => theme.textColor.primary};
 `;
@@ -242,6 +242,7 @@ const ActionListBlock = (props: ActionListBlockProps) => {
             headingHierarchyDepth={2}
             includeRelatedPlans={false}
             showOtherCategory={false}
+            compactTopMargin={false}
           />
         ) : groups.mode === 'oneLevel' ? (
           groups.oneLevel!.map(({ group, actions }) => (
@@ -253,6 +254,7 @@ const ActionListBlock = (props: ActionListBlockProps) => {
                 headingHierarchyDepth={2}
                 includeRelatedPlans={false}
                 showOtherCategory={false}
+                compactTopMargin={true}
               />
             </section>
           ))
@@ -269,6 +271,7 @@ const ActionListBlock = (props: ActionListBlockProps) => {
                     headingHierarchyDepth={2}
                     includeRelatedPlans={false}
                     showOtherCategory={false}
+                    compactTopMargin={true}
                   />
                 </section>
               ))}
