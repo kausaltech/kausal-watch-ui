@@ -4,13 +4,15 @@ import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { captureException } from '@sentry/nextjs';
+import * as Sentry from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
 import { getRequestOrigin } from '@common/utils/request.server';
 
 import type { WorkflowState } from '@/common/__generated__/graphql';
 import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
-import { getThemeStaticURL, loadTheme } from '@/common/theme';
+import { loadTheme } from '@/common/load-theme.server';
+import { getThemeStaticURL } from '@/common/theme';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { SharedIcons } from '@/components/common/Icon';
 import IntroModal from '@/components/custom/IntroModal';
@@ -115,6 +117,7 @@ export default async function PlanLayout(props: Props) {
   const { children } = props;
 
   const { plan, domain } = params;
+  Sentry.getIsolationScope().setTags({ 'plan.identifier': plan, 'plan.domain': domain });
   const cookieStore = await cookies();
   const origin = await getRequestOrigin();
   const { data: planData } = await tryRequest(getPlan(domain, plan, origin));
