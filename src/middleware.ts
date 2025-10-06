@@ -163,6 +163,7 @@ const middleware = auth(async (request: NextAuthRequest) => {
   if (parsedPlan.domain?.redirectToHostname) {
     const url = new URL(request.url);
     url.hostname = parsedPlan.domain.redirectToHostname;
+    url.port = '';
     return NextResponse.redirect(url, { status: 301 });
   }
 
