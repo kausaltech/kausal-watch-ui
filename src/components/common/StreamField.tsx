@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import dynamic from 'next/dynamic';
 
@@ -29,7 +29,6 @@ import CardListBlock from '@/components/contentblocks/CardListBlock';
 import CategoryListBlock, {
   type CategoryListBlockCategory,
 } from '@/components/contentblocks/CategoryListBlock';
-import CategoryTreeBlock from '@/components/contentblocks/CategoryTreeBlock';
 import { ImageCredit } from '@/components/contentblocks/ContentPageHeaderBlock';
 import DashboardRowBlock from '@/components/contentblocks/DashboardRowBlock';
 import FrontPageHeroBlock from '@/components/contentblocks/FrontPageHeroBlock';
@@ -43,8 +42,13 @@ import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBloc
 import { usePlan } from '@/context/plan';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
+import ContentLoader from './ContentLoader';
 import { ErrorBoundary } from './ErrorBoundary';
 import { ErrorPage } from './ErrorPage';
+
+const CategoryTreeBlock = dynamic(() => import('@/components/contentblocks/CategoryTreeBlock'), {
+  ssr: false,
+});
 
 enum EmbedProvider {
   YOUTUBE = 'YouTube',
@@ -513,15 +517,17 @@ export default function StreamField(props: StreamFieldProps) {
             block: JSON.stringify(block),
           }}
         >
-          <StreamFieldBlock
-            id={`section-${index + 1}`}
-            block={block}
-            page={page}
-            hasSidebar={hasSidebar}
-            columnProps={columnProps}
-            previousBlockType={blocks[index - 1]?.__typename}
-            nextBlockType={blocks[index + 1]?.__typename}
-          />
+          <Suspense fallback={<ContentLoader />}>
+            <StreamFieldBlock
+              id={`section-${index + 1}`}
+              block={block}
+              page={page}
+              hasSidebar={hasSidebar}
+              columnProps={columnProps}
+              previousBlockType={blocks[index - 1]?.__typename}
+              nextBlockType={blocks[index + 1]?.__typename}
+            />
+          </Suspense>
         </ErrorBoundary>
       ))}
     </div>

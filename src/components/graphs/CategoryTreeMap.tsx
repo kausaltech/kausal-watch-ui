@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { readableColor } from 'polished';
 
 import type { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
@@ -51,13 +51,13 @@ function makeTrace(
     segment ? readableColor(segment) : null
   );
 
-  const trace = {
+  const trace: Plotly.Data = {
     type: 'icicle',
     name: heading || '',
     labels: cats.map((cat) => `<b>${cat.name}</b>`),
     text: cats.map((cat) => `${numberFormat.format(cat.value)} ${unit?.shortName || ''}`),
     ids: cats.map((cat) => cat.id),
-    parents: cats.map((cat) => cat.parent?.id),
+    parents: cats.map((cat) => cat.parent?.id || ''),
     values: cats.map((cat) => cat.value),
     marker: {
       colors: segmentBgColors,
@@ -99,12 +99,7 @@ const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeM
   const { data, onChangeSection, valueAttribute, heading } = props;
   const locale = useLocale();
 
-  const isServer = typeof window === 'undefined';
-  if (isServer) {
-    return null;
-  }
-
-  const Plot = dynamic(() => import('./Plot'));
+  const Plot = dynamic(() => import('./Plot'), { ssr: false });
   const trace = makeTrace(data, locale, valueAttribute.unit, heading ?? null);
 
   const layout = {
@@ -120,7 +115,7 @@ const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeM
   };
 
   const handleSectionChange = useCallback(
-    (evt) => {
+    (evt: Readonly<Plotly.FrameAnimationEvent>) => {
       const newCat: string = evt.frame.data[0].level;
       onChangeSection(newCat);
     },

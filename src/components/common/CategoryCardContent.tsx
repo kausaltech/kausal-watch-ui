@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
-import { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
+import type { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
 import { Link } from '@/common/links';
 import Icon from '@/components/common/Icon';
 
@@ -47,7 +47,7 @@ const CategoryCardContent = (props: CategoryCardContentProps) => {
   const ofAllLabel = t('common-of-all-emissions');
 
   return (
-    <CardContent initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+    <CardContent>
       {catImageSrc && <CategoryImage src={catImageSrc} alt="" />}
       <p>{category?.level?.name}</p>
       <h3>{category?.name}</h3>

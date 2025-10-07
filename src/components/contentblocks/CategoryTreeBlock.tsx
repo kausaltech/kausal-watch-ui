@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { gql, useQuery } from '@apollo/client';
+import { gql, useSuspenseQuery } from '@apollo/client';
 import * as Sentry from '@sentry/nextjs';
 import { concat } from 'lodash';
 import { readableColor } from 'polished';
@@ -11,7 +11,6 @@ import type { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphq
 import type { CommonContentBlockProps } from '@/common/blocks.types';
 import CategoryActionList from '@/components/actions/CategoryActionList';
 import CategoryCardContent from '@/components/common/CategoryCardContent';
-import ContentLoader from '@/components/common/ContentLoader';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import CategoryTreeMap from '@/components/graphs/CategoryTreeMap';
 import { usePlan } from '@/context/plan';
@@ -307,7 +306,7 @@ function CategoryTreeBlockBrowser(
 function CategoryTreeBlock(props: CategoryTreeBlockProps) {
   const { treeMapCategoryType, valueAttribute, hasSidebar } = props;
   const plan = usePlan();
-  const { data, loading, error } = useQuery<GetCategoriesForTreeMapQuery>(
+  const { data, error } = useSuspenseQuery<GetCategoriesForTreeMapQuery>(
     GET_CATEGORIES_FOR_TREEMAP,
     {
       variables: {
@@ -315,19 +314,14 @@ function CategoryTreeBlock(props: CategoryTreeBlockProps) {
         categoryType: treeMapCategoryType.identifier,
         attributeType: valueAttribute.identifier,
       },
-      skip: typeof window === 'undefined',
     }
   );
 
-  const isServer = typeof window === 'undefined';
-  if (isServer) {
-    return null;
-  }
-
   if (error) return <ErrorMessage message={error.message} />;
-  if (loading || !data) return <ContentLoader />;
-  if (!data.planCategories) {
-    Sentry.captureMessage('CategoryTreeBlock missing categories');
+  if (!data || !data.planCategories) {
+    const errMsg = 'CategoryTreeBlock missing categories';
+    Sentry.captureMessage(errMsg);
+    console.error(errMsg);
     return null;
   }
 
