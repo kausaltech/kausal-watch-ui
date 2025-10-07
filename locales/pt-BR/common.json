@@ -84,6 +84,8 @@
     "instance-type-staging-message": "Esta é uma versão de teste do serviço",
     "instance-type-testing-label": "Testes",
     "instance-type-testing-message": "Esta é uma versão de teste do serviço",
+    "instance-type-preview-label": "Prévia",
+    "instance-type-preview-message": "Esta é uma versão prévia do serviço",
     "loading": "Carregamento",
     "municipality": "Município",
     "name": "Nome",

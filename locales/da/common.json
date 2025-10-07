@@ -81,6 +81,8 @@
     "instance-type-staging-message": "Dette er en iscenesættelse af tjenesten",
     "instance-type-testing-label": "Afprøvning",
     "instance-type-testing-message": "Dette er en testversion af tjenesten",
+    "instance-type-preview-label": "Forhåndsvisning",
+    "instance-type-preview-message": "Dette er en forhåndsversion af tjenesten",
     "loading": "Indlæser",
     "municipality": "Kommune",
     "name": "Navn",

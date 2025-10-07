@@ -84,6 +84,8 @@
     "instance-type-staging-message": "This is a staging version of the service",
     "instance-type-testing-label": "Testing",
     "instance-type-testing-message": "This is a test version of the service",
+    "instance-type-preview-label": "Preview",
+    "instance-type-preview-message": "This is a preview version of the service",
     "loading": "Loading",
     "municipality": "Municipality",
     "name": "Name",

@@ -78,6 +78,8 @@
     "instance-type-staging-message": "Αυτή είναι μια έκδοση σταδίου της υπηρεσίας",
     "instance-type-testing-label": "Δοκιμές",
     "instance-type-testing-message": "Αυτή είναι μια δοκιμαστική έκδοση της υπηρεσίας",
+    "instance-type-preview-label": "Προεπισκόπηση",
+    "instance-type-preview-message": "Αυτή είναι μια έκδοση προεπισκόπησης της υπηρεσίας",
     "contact-persons-missing": "Δεν υπάρχουν κατονομαζόμενα πρόσωπα επικοινωνίας",
     "feedback-description": "Ανακαλύψατε κάτι που δεν λειτουργεί; Ή έχετε ιδέες για κάτι που μπορούμε να βελτιώσουμε;",
     "feedback-prompt": "Παρακαλούμε ενημερώστε μας συμπληρώνοντας και αποστέλλοντας αυτή τη φόρμα.",

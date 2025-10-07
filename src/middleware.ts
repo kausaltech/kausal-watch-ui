@@ -118,6 +118,8 @@ const middleware = auth(async (request: NextAuthRequest) => {
     return NextResponse.rewrite(url);
   }
 
+  const requestScope = Sentry.getIsolationScope();
+  requestScope.setTag('plan.hostname', hostname);
   const { plans, error } = await getPlansForHostname(request, logger, hostname);
   if (error) {
     const errorPreamble = `Error fetching plans for hostname ${hostname}`;
@@ -141,6 +143,9 @@ const middleware = auth(async (request: NextAuthRequest) => {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
+  requestScope.setTag('plan.identifier', parsedPlan.identifier);
+  requestScope.setTag('locale', parsedLocale);
+
   if (isLegacyPathStructure(pathname, parsedLocale, parsedPlan)) {
     const newPathname = convertPathnameFromLegacy(pathname, parsedLocale, parsedPlan);
 
@@ -159,6 +164,13 @@ const middleware = auth(async (request: NextAuthRequest) => {
     localePrefix: 'as-needed',
     localeDetection: false,
   });
+
+  if (parsedPlan.domain?.redirectToHostname) {
+    const url = new URL(request.url);
+    url.hostname = parsedPlan.domain.redirectToHostname;
+    url.port = '';
+    return NextResponse.redirect(url, { status: 301 });
+  }
 
   const response = handleI18nRouting(request);
 

@@ -63,6 +63,8 @@
     "instance-type-development-message": "Šī ir pakalpojuma izstrādes versija",
     "instance-type-staging-label": "Iestudēšana",
     "instance-type-testing-message": "Šī ir pakalpojuma testa versija",
+    "instance-type-preview-label": "Priekšskatījums",
+    "instance-type-preview-message": "Šī ir pakalpojuma priekšskatījuma versija",
     "municipality": "Pašvaldība",
     "name": "Nosaukums",
     "nav-menu-close": "Aizvērt izvēlni",
