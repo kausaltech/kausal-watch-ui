@@ -78,7 +78,8 @@ function GraphAsTable(props) {
   const tableRows = allRows.filter((row, index, rows) => rows.indexOf(row) === index);
 
   // Sort rows by date if we are dealing with time series
-  if (data[0].xType === 'time') {
+  const isTime = data?.[0]?.xType === 'time';
+  if (isTime) {
     tableRows.sort((a, b) => dayjs(a).diff(dayjs(b)));
   }
 
@@ -98,15 +99,24 @@ function GraphAsTable(props) {
   tableRows.map((row, i) => {
     const rowObj = {};
     rowObj.raw = row;
-    rowObj.label = dayjs.utc(row).format('YYYY');
+    if (isTime) {
+      rowObj.label =
+        timeResolution === 'YEAR'
+          ? dayjs.utc(row).format('YYYY')
+          : dayjs.utc(row).format('YYYY-MM-DD');
+    } else {
+      rowObj.label = String(row);
+    }
     rowObj.values = [];
+    const normalize = (v) => (isTime ? String(v) : String(v));
+    const key = normalize(rowObj.raw);
     data.map((trace, i) => {
-      const indexOfX = trace.x.indexOf(rowObj.raw);
-      rowObj.values.push(indexOfX !== -1 ? trace.y[indexOfX] : null);
+      const idx = trace.x.map(normalize).indexOf(key);
+      rowObj.values.push(idx !== -1 ? trace.y[idx] : null);
     });
     goalTraces.map((trace, i) => {
-      const indexOfX = trace.x.indexOf(rowObj.raw);
-      rowObj.values.push(indexOfX !== -1 ? trace.y[indexOfX] : null);
+      const idx = trace.x.map(normalize).indexOf(key);
+      rowObj.values.push(idx !== -1 ? trace.y[idx] : null);
     });
     tableData.push(rowObj);
   });
