@@ -34,5 +34,5 @@ export default async function ActionsPage(props: Props) {
     return notFound();
   }
 
-  return <ActionListPage actionListPage={data.plan.actionListPage} />;
+  return <ActionListPage actionListPage={data.plan.actionListPage} testId="actions-list-page" />;
 }

@@ -17,5 +17,5 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 }
 
 export default function Page() {
-  return <InsightPage />;
+  return <InsightPage testId="insight-page" />;
 }

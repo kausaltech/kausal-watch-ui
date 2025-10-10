@@ -433,10 +433,11 @@ function ActionContentSectionBlock(props) {
 type ActionContentProps = {
   action: ActionContentAction;
   extraPlanData: NonNullable<GetActionDetailsQuery['plan']>;
+  testId?: string;
 };
 
 function ActionContent(props: ActionContentProps) {
-  const { action, extraPlanData } = props;
+  const { action, extraPlanData, testId } = props;
   const plan = usePlan();
   const theme = useTheme();
   const router = useRouter();
@@ -560,7 +561,7 @@ function ActionContent(props: ActionContentProps) {
   );
 
   return (
-    <div>
+    <div data-testid={testId}>
       <ActionHero
         matchingVersion={action.workflowStatus?.matchingVersion ?? null}
         updatedAt={action.updatedAt}

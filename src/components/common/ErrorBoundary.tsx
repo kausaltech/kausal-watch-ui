@@ -1,4 +1,4 @@
-import { Component, ReactNode } from 'react';
+import { Component, type ReactNode } from 'react';
 
 import { captureException } from '@sentry/nextjs';
 
@@ -13,7 +13,7 @@ type State = {
 };
 
 export class ErrorBoundary extends Component<Props, State> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = { hasError: false };
   }
@@ -28,7 +28,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback;
+      return <div data-testid="error-boundary">{this.props.fallback}</div>;
     }
 
     return this.props.children;

@@ -1,9 +1,9 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   robots: 'noindex',
 };
 
 export default function Layout({ children }) {
-  return children;
+  return <div data-testid="embed-layout">{children}</div>;
 }
