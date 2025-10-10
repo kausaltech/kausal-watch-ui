@@ -4,12 +4,12 @@ import { useTranslations } from 'next-intl';
 import { Button, Collapse, Table } from 'reactstrap';
 import styled from 'styled-components';
 
+import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { beautifyValue } from '@/common/data/format';
 import dayjs from '@/common/dayjs';
 import Icon from '@/components/common/Icon';
 
 type XValue = string | number | Date;
-type TimeResolution = 'YEAR' | 'MONTH' | 'DAY' | string;
 
 type Trace = {
   name: string;
@@ -24,7 +24,7 @@ type Spec = { unit?: string | null };
 type GraphAsTableProps = {
   data: Trace[];
   goalTraces: Trace[];
-  timeResolution: TimeResolution;
+  timeResolution: IndicatorTimeResolution;
   specification: Spec;
   title?: string;
   language: string;
@@ -70,11 +70,23 @@ const TriggerButton = styled(Button)`
 
 const normalize = (v: XValue): string => String(v);
 
-function formatLabel(raw: XValue, isTime: boolean, timeResolution: TimeResolution): string {
+function formatLabel(
+  raw: XValue,
+  isTime: boolean,
+  timeResolution: IndicatorTimeResolution
+): string {
   if (!isTime) return String(raw);
   const d = dayjs.utc(raw as string | number | Date);
   if (!d.isValid()) return String(raw);
-  return timeResolution === 'YEAR' ? d.format('YYYY') : d.format('YYYY-MM-DD');
+  switch (timeResolution) {
+    case IndicatorTimeResolution.Year:
+      return d.format('YYYY');
+    case IndicatorTimeResolution.Month:
+      return d.format('YYYY-MM');
+    case IndicatorTimeResolution.Day:
+    default:
+      return d.format('YYYY-MM-DD');
+  }
 }
 
 function GraphAsTable({
