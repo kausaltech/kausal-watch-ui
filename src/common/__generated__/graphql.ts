@@ -1859,149 +1859,6 @@ export type IndicatorHightlightListQuery = (
   & { __typename: 'Query' }
 );
 
-export type IndicatorListQueryVariables = Exact<{
-  plan: Scalars['ID']['input'];
-  relatedPlanIndicators: Scalars['Boolean']['input'];
-}>;
-
-
-export type IndicatorListQuery = (
-  { plan: (
-    { id: string, hasIndicatorRelationships: boolean | null, features: (
-      { hasActionPrimaryOrgs: boolean }
-      & { __typename: 'PlanFeatures' }
-    ), indicatorLevels: Array<(
-      { level: IndicatorLevelLevel, indicator: (
-        { id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
-          { id: string, name: string }
-          & { __typename: 'Organization' }
-        ), common: (
-          { id: string, name: string, normalizations: Array<(
-            { unit: (
-              { shortName: string | null }
-              & { __typename: 'Unit' }
-            ) | null, normalizer: (
-              { name: string, id: string, identifier: string | null }
-              & { __typename: 'CommonIndicator' }
-            ) | null }
-            & { __typename: 'CommonIndicatorNormalization' }
-          ) | null> | null }
-          & { __typename: 'CommonIndicator' }
-        ) | null, categories: Array<(
-          { id: string, name: string, parent: (
-            { id: string }
-            & { __typename: 'Category' }
-          ) | null, type: (
-            { id: string, identifier: string }
-            & { __typename: 'CategoryType' }
-          ) }
-          & { __typename: 'Category' }
-        )>, latestGraph: (
-          { id: string }
-          & { __typename: 'IndicatorGraph' }
-        ) | null, latestValue: (
-          { id: string, date: string | null, value: number, normalizedValues: Array<(
-            { normalizerId: string | null, value: number | null }
-            & { __typename: 'NormalizedValue' }
-          ) | null> | null }
-          & { __typename: 'IndicatorValue' }
-        ) | null, unit: (
-          { shortName: string | null }
-          & { __typename: 'Unit' }
-        ) }
-        & { __typename: 'Indicator' }
-      ) }
-      & { __typename: 'IndicatorLevel' }
-    ) | null>, categoryTypes: Array<(
-      { name: string, id: string, identifier: string, categories: Array<(
-        { id: string, identifier: string, order: number, name: string, parent: (
-          { id: string }
-          & { __typename: 'Category' }
-        ) | null, common?: (
-          { type: (
-            { identifier: string, name: string }
-            & { __typename: 'CommonCategoryType' }
-          ) }
-          & { __typename: 'CommonCategory' }
-        ) | null }
-        & { __typename: 'Category' }
-      )> }
-      & { __typename: 'CategoryType' }
-    )> }
-    & { __typename: 'Plan' }
-  ) | null, planIndicators?: Array<(
-    { id: string, common: (
-      { id: string, name: string, indicators: Array<(
-        { id: string, organization: (
-          { name: string }
-          & { __typename: 'Organization' }
-        ) }
-        & { __typename: 'Indicator' }
-      )>, relatedCauses: Array<(
-        { effectType: RelatedCommonIndicatorEffectType, causalIndicator: (
-          { id: string, name: string }
-          & { __typename: 'CommonIndicator' }
-        ) }
-        & { __typename: 'RelatedCommonIndicator' }
-      )>, relatedEffects: Array<(
-        { id: string, effectType: RelatedCommonIndicatorEffectType, effectIndicator: (
-          { id: string, name: string }
-          & { __typename: 'CommonIndicator' }
-        ) }
-        & { __typename: 'RelatedCommonIndicator' }
-      )> }
-      & { __typename: 'CommonIndicator' }
-    ) | null }
-    & { __typename: 'Indicator' }
-  ) | null> | null, relatedPlanIndicators?: Array<(
-    { id: string, name: string, level: string | null, timeResolution: IndicatorTimeResolution, organization: (
-      { id: string, name: string }
-      & { __typename: 'Organization' }
-    ), common: (
-      { id: string, name: string, normalizations: Array<(
-        { unit: (
-          { shortName: string | null }
-          & { __typename: 'Unit' }
-        ) | null, normalizer: (
-          { name: string, id: string, identifier: string | null }
-          & { __typename: 'CommonIndicator' }
-        ) | null }
-        & { __typename: 'CommonIndicatorNormalization' }
-      ) | null> | null }
-      & { __typename: 'CommonIndicator' }
-    ) | null, latestGraph: (
-      { id: string }
-      & { __typename: 'IndicatorGraph' }
-    ) | null, latestValue: (
-      { id: string, date: string | null, value: number, normalizedValues: Array<(
-        { normalizerId: string | null, value: number | null }
-        & { __typename: 'NormalizedValue' }
-      ) | null> | null }
-      & { __typename: 'IndicatorValue' }
-    ) | null, unit: (
-      { shortName: string | null }
-      & { __typename: 'Unit' }
-    ), categories: Array<(
-      { id: string, name: string, parent: (
-        { id: string }
-        & { __typename: 'Category' }
-      ) | null, type: (
-        { id: string, identifier: string, name: string }
-        & { __typename: 'CategoryType' }
-      ), common: (
-        { id: string, identifier: string, name: string, order: number, type: (
-          { identifier: string, name: string }
-          & { __typename: 'CommonCategoryType' }
-        ) }
-        & { __typename: 'CommonCategory' }
-      ) | null }
-      & { __typename: 'Category' }
-    )> }
-    & { __typename: 'Indicator' }
-  )> | null }
-  & { __typename: 'Query' }
-);
-
 export type IndicatorGraphDataQueryVariables = Exact<{
   id: InputMaybe<Scalars['ID']['input']>;
   plan: InputMaybe<Scalars['ID']['input']>;
@@ -3718,6 +3575,56 @@ export type DashboardIndicatorBlockFragmentFragment = (
     & { __typename: 'DashboardParagraphBlock' }
   )> }
   & { __typename: 'DashboardRowBlock' }
+);
+
+export type IndicatorListIndicatorFragment = (
+  { id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
+    { id: string, name: string }
+    & { __typename: 'Organization' }
+  ), common: (
+    { id: string, name: string, normalizations: Array<(
+      { unit: (
+        { shortName: string | null }
+        & { __typename: 'Unit' }
+      ) | null, normalizer: (
+        { name: string, id: string, identifier: string | null }
+        & { __typename: 'CommonIndicator' }
+      ) | null }
+      & { __typename: 'CommonIndicatorNormalization' }
+    ) | null> | null }
+    & { __typename: 'CommonIndicator' }
+  ) | null, categories: Array<(
+    { id: string, name: string, parent: (
+      { id: string }
+      & { __typename: 'Category' }
+    ) | null, type: (
+      { id: string, identifier: string }
+      & { __typename: 'CategoryType' }
+    ) }
+    & { __typename: 'Category' }
+  )>, latestGraph: (
+    { id: string }
+    & { __typename: 'IndicatorGraph' }
+  ) | null, latestValue: (
+    { id: string, date: string | null, value: number, normalizedValues: Array<(
+      { normalizerId: string | null, value: number | null }
+      & { __typename: 'NormalizedValue' }
+    ) | null> | null }
+    & { __typename: 'IndicatorValue' }
+  ) | null, dimensions: Array<(
+    { dimension: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'Dimension' }
+    ) }
+    & { __typename: 'IndicatorDimension' }
+  )>, unit: (
+    { shortName: string | null }
+    & { __typename: 'Unit' }
+  ) }
+  & { __typename: 'Indicator' }
 );
 
 type StreamFieldFragment_CsWpOaD0dUEdhV96j5U9TnlDssZTxlWikakK8ZjePw_Fragment = (
@@ -14566,6 +14473,167 @@ export type GetPlanPageIndicatorListQuery = (
     { leadContent: string | null, displayInsights: boolean | null, displayLevel: boolean | null, includeRelatedPlans: boolean | null, id: string | null, slug: string, title: string, lastPublishedAt: string | null }
     & { __typename: 'IndicatorListPage' }
   ) | null }
+  & { __typename: 'Query' }
+);
+
+export type IndicatorListQueryVariables = Exact<{
+  plan: Scalars['ID']['input'];
+  relatedPlanIndicators: Scalars['Boolean']['input'];
+}>;
+
+
+export type IndicatorListQuery = (
+  { plan: (
+    { id: string, hasIndicatorRelationships: boolean | null, features: (
+      { hasActionPrimaryOrgs: boolean }
+      & { __typename: 'PlanFeatures' }
+    ), indicatorLevels: Array<(
+      { level: IndicatorLevelLevel, indicator: (
+        { id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
+          { id: string, name: string }
+          & { __typename: 'Organization' }
+        ), common: (
+          { id: string, name: string, normalizations: Array<(
+            { unit: (
+              { shortName: string | null }
+              & { __typename: 'Unit' }
+            ) | null, normalizer: (
+              { name: string, id: string, identifier: string | null }
+              & { __typename: 'CommonIndicator' }
+            ) | null }
+            & { __typename: 'CommonIndicatorNormalization' }
+          ) | null> | null }
+          & { __typename: 'CommonIndicator' }
+        ) | null, categories: Array<(
+          { id: string, name: string, parent: (
+            { id: string }
+            & { __typename: 'Category' }
+          ) | null, type: (
+            { id: string, identifier: string }
+            & { __typename: 'CategoryType' }
+          ) }
+          & { __typename: 'Category' }
+        )>, latestGraph: (
+          { id: string }
+          & { __typename: 'IndicatorGraph' }
+        ) | null, latestValue: (
+          { id: string, date: string | null, value: number, normalizedValues: Array<(
+            { normalizerId: string | null, value: number | null }
+            & { __typename: 'NormalizedValue' }
+          ) | null> | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null, dimensions: Array<(
+          { dimension: (
+            { id: string, name: string, categories: Array<(
+              { id: string, name: string }
+              & { __typename: 'DimensionCategory' }
+            )> }
+            & { __typename: 'Dimension' }
+          ) }
+          & { __typename: 'IndicatorDimension' }
+        )>, unit: (
+          { shortName: string | null }
+          & { __typename: 'Unit' }
+        ) }
+        & { __typename: 'Indicator' }
+      ) }
+      & { __typename: 'IndicatorLevel' }
+    ) | null>, categoryTypes: Array<(
+      { name: string, id: string, identifier: string, categories: Array<(
+        { id: string, identifier: string, order: number, name: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common?: (
+          { type: (
+            { identifier: string, name: string }
+            & { __typename: 'CommonCategoryType' }
+          ) }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    )> }
+    & { __typename: 'Plan' }
+  ) | null, planIndicators?: Array<(
+    { id: string, common: (
+      { id: string, name: string, indicators: Array<(
+        { id: string, organization: (
+          { name: string }
+          & { __typename: 'Organization' }
+        ) }
+        & { __typename: 'Indicator' }
+      )>, relatedCauses: Array<(
+        { effectType: RelatedCommonIndicatorEffectType, causalIndicator: (
+          { id: string, name: string }
+          & { __typename: 'CommonIndicator' }
+        ) }
+        & { __typename: 'RelatedCommonIndicator' }
+      )>, relatedEffects: Array<(
+        { id: string, effectType: RelatedCommonIndicatorEffectType, effectIndicator: (
+          { id: string, name: string }
+          & { __typename: 'CommonIndicator' }
+        ) }
+        & { __typename: 'RelatedCommonIndicator' }
+      )> }
+      & { __typename: 'CommonIndicator' }
+    ) | null }
+    & { __typename: 'Indicator' }
+  ) | null> | null, relatedPlanIndicators?: Array<(
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, categories: Array<(
+      { id: string, name: string, parent: (
+        { id: string }
+        & { __typename: 'Category' }
+      ) | null, type: (
+        { id: string, identifier: string, name: string }
+        & { __typename: 'CategoryType' }
+      ), common: (
+        { id: string, identifier: string, name: string, order: number, type: (
+          { identifier: string, name: string }
+          & { __typename: 'CommonCategoryType' }
+        ) }
+        & { __typename: 'CommonCategory' }
+      ) | null }
+      & { __typename: 'Category' }
+    )>, organization: (
+      { id: string, name: string }
+      & { __typename: 'Organization' }
+    ), common: (
+      { id: string, name: string, normalizations: Array<(
+        { unit: (
+          { shortName: string | null }
+          & { __typename: 'Unit' }
+        ) | null, normalizer: (
+          { name: string, id: string, identifier: string | null }
+          & { __typename: 'CommonIndicator' }
+        ) | null }
+        & { __typename: 'CommonIndicatorNormalization' }
+      ) | null> | null }
+      & { __typename: 'CommonIndicator' }
+    ) | null, latestGraph: (
+      { id: string }
+      & { __typename: 'IndicatorGraph' }
+    ) | null, latestValue: (
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      ) | null> | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, dimensions: Array<(
+      { dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) }
+      & { __typename: 'IndicatorDimension' }
+    )>, unit: (
+      { shortName: string | null }
+      & { __typename: 'Unit' }
+    ) }
+    & { __typename: 'Indicator' }
+  )> | null }
   & { __typename: 'Query' }
 );
 
