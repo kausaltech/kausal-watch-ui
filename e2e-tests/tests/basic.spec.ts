@@ -54,7 +54,7 @@ const testPlan = (planId: string) => {
     test('homepage', async ({ page, ctx }) => {
       const navBar = page.locator('nav#global-navigation-bar');
       await expect(navBar).toBeVisible();
-      await expect(page.locator('.content-area').first()).toBeVisible();
+      await expect(page.getByTestId('root-layout')).toBeVisible();
     });
 
     test('action list page', async ({ page, ctx }) => {

@@ -33,6 +33,6 @@ function SearchPage() {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
 
-  return <SearchView search={search} onSearchChange={handleSearchChange} />;
+  return <SearchView search={search} onSearchChange={handleSearchChange} testId="search-page" />;
 }
 export default SearchPage;

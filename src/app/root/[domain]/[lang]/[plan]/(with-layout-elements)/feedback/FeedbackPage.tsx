@@ -34,7 +34,7 @@ const ContentHeader = styled.header`
   }
 `;
 
-export function FeedbackPage() {
+export function FeedbackPage({ testId }: { testId?: string }) {
   const t = useTranslations();
   const plan = usePlan();
 
@@ -51,7 +51,7 @@ export function FeedbackPage() {
           </Row>
         </Container>
       </HeaderBg>
-      <div className="content-area my-5">
+      <div className="my-5" data-testid={testId}>
         <Container className="pb-4">
           <Row>
             <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>

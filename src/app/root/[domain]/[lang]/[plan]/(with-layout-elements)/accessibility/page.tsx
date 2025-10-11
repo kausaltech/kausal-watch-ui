@@ -36,7 +36,7 @@ export default async function ContentPage(props: Props) {
   const { data } = await tryRequest(getContentPage(plan, '/accessibility'));
 
   if (data?.planPage && isAccessibilityPageWithBody(data.planPage)) {
-    return <Content page={data.planPage as GeneralPlanPage} />;
+    return <Content page={data.planPage as GeneralPlanPage} testId="accessibility-page" />;
   }
 
   return <AccessibilityPage />;
