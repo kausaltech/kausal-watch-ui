@@ -95,8 +95,8 @@ export const replaceHashWithoutScrolling = (hash) =>
   );
 
 export type IndicatorLinkProps = {
-  id: string | number;
-  viewUrl: string | null;
+  id?: string | number;
+  viewUrl?: string | null;
   children: ReactNode;
 } & LinkPropsWithoutHref;
 

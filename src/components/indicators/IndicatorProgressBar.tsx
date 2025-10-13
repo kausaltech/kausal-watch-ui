@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useRef, useState } from 'react';
 
 import type { AnimationSequence } from 'motion/react';
@@ -36,20 +35,12 @@ const ValueText = styled.tspan`
   font-family: '${(props) => props.theme.fontFamily}';
   font-size: 14px;
   font-weight: 700;
-
-  &.negative {
-    fill: ${(props) => props.theme.section.indicatorShowcase.color};
-  }
 `;
 
 const UnitText = styled.tspan`
   fill: ${(props) => props.theme.themeColors.black};
   font-family: '${(props) => props.theme.fontFamily}';
   font-size: 11px;
-
-  &.negative {
-    fill: ${(props) => props.theme.section.indicatorShowcase.color};
-  }
 `;
 
 const SegmentHeader = styled.tspan`
@@ -110,28 +101,40 @@ const findPrecision = (comparableValues: Array<number | string>) => {
 interface ValueGroupProps {
   value: string;
   unit: string;
-  negative: boolean;
   transform?: string;
   textAnchor?: string;
   startDate?: string;
   date?: string;
   locale?: string;
   opacity?: number;
+  textColor?: string;
 }
 
 const ValueGroup = (props: ValueGroupProps) => {
-  const { value, unit, negative, startDate, date, locale, opacity, ...rest } = props;
+  const { value, unit, startDate, date, locale, opacity, textColor = '#000000', ...rest } = props;
   return (
     <text {...rest}>
-      <ValueText x="0" y="16" className={negative ? 'negative' : ''}>
+      <ValueText x="0" y="16" style={{ fill: textColor }}>
         {value}
       </ValueText>
-      <UnitText className={negative ? 'negative' : ''}> {unit}</UnitText>
+      <UnitText style={{ fill: textColor }}> {unit}</UnitText>
     </text>
   );
 };
 
-function Counter({ from, to, duration, locale, precision }) {
+function Counter({
+  from,
+  to,
+  duration,
+  locale,
+  precision,
+}: {
+  from: number;
+  to: number;
+  duration: number;
+  locale: string;
+  precision: number;
+}) {
   const ref = useRef<SVGTSpanElement>(null);
 
   useEffect(() => {
@@ -444,7 +447,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   }, [animate, isInView, isNormalized]);
 
   const graphValues = {
-    name: note,
+    name: note ?? '',
     startYear: dayjs(startDate).format('YYYY'),
     latestYear: dayjs(latestDate).format('YYYY'),
     goalYear: dayjs(goalDate).format('YYYY'),
@@ -464,12 +467,21 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
     {{toBeReduced}} still needs to be reduced before the year {{goalYear}}.;
   */
 
-  const spaceTextBlock = (intendedX, elementsToCheck) => {
-    const isServer = typeof window === 'undefined';
+  const spaceTextBlock = (intendedX: number, elementsToCheck: string[]) => {
+    const isServer = typeof window === 'undefined' || !document;
     const margin = 12;
     if (isServer) return intendedX;
-    const widthOfBlockingElements = elementsToCheck
-      .map((el) => document.querySelector(el)?.getBBox().width)
+    const widthOfBlockingElements: number = elementsToCheck
+      .map((el) => {
+        try {
+          const element: SVGGraphicsElement | null = document.querySelector(el);
+          if (!element) return 0;
+          const elementWidth: number = element.getBBox().width ?? 0;
+          return elementWidth;
+        } catch {
+          return 0;
+        }
+      })
       .reduce((a, b) => a + b, 0);
     if (intendedX < widthOfBlockingElements)
       return widthOfBlockingElements + margin * elementsToCheck.length;
@@ -553,10 +565,11 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                   value={formatValue(roundedValues.start, locale)}
                   unit={displayUnit ?? ''}
                   locale={locale}
-                  negative={
-                    readableColor(startColor, theme.themeColors.black, theme.themeColors.white) ===
+                  textColor={readableColor(
+                    startColor,
+                    theme.themeColors.black,
                     theme.themeColors.white
-                  }
+                  )}
                 />
               </g>
               {showReduction && (
@@ -628,9 +641,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
               value={formatValue(roundedValues.latest, locale)}
               unit={displayUnit ?? ''}
               locale={locale}
-              negative={
-                readableColor(startColor, theme.themeColors.black, theme.themeColors.white) ===
-                  theme.themeColors.white || latestBar.w < 120
+              textColor={
+                latestBar.w > 120
+                  ? readableColor(latestColor, theme.themeColors.black, theme.themeColors.white)
+                  : theme.section.indicatorShowcase.color
               }
             />
           </g>
@@ -681,9 +695,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
             value={formatValue(roundedValues.goal ?? 0, locale)}
             unit={displayUnit ?? ''}
             locale={locale}
-            negative={
-              readableColor(startColor, theme.themeColors.black, theme.themeColors.white) ===
-                theme.themeColors.white || goalBar.w < 120
+            textColor={
+              goalBar.w > 120
+                ? readableColor(goalColor, theme.themeColors.black, theme.themeColors.white)
+                : theme.section.indicatorShowcase.color
             }
           />
           <text
@@ -697,11 +712,11 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
             <SegmentValue></SegmentValue>
           </text>
           <line
-            x1={bars.w - 1}
-            x2={bars.w - 1}
+            x1={bars.w + 1}
+            x2={bars.w + 1}
             y1={hasStartValue ? 0 : barHeight}
             y2={segmentsY + barMargin}
-            stroke={theme.themeColors.light}
+            stroke={theme.section.indicatorShowcase.color}
           />
           {hasStartValue && (
             <text
