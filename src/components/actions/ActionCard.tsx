@@ -169,8 +169,9 @@ const StyledCardTitle = styled.div<{ $isSmall: boolean }>`
   font-size: ${({ theme, $isSmall }) => ($isSmall ? theme.fontSizeSm : theme.fontSizeBase)};
   line-height: ${(props) => props.theme.lineHeightMd};
   text-align: left;
-  word-break: break-word;
-  hyphens: auto;
+  word-break: normal;
+  overflow-wrap: normal;
+  hyphens: none;
 
   :lang(fi) & {
     hyphens: manual;
