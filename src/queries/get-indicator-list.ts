@@ -9,12 +9,6 @@ export const GET_INDICATOR_LIST = gql`
       features {
         hasActionPrimaryOrgs
       }
-      indicatorLevels {
-        level
-        indicator {
-          ...IndicatorListIndicator
-        }
-      }
       categoryTypes(usableForIndicators: true) {
         name
         id
@@ -38,58 +32,12 @@ export const GET_INDICATOR_LIST = gql`
       hasIndicatorRelationships
     }
     planIndicators(plan: $plan) @skip(if: $relatedPlanIndicators) {
-      id
-      common {
-        id
-        name
-        indicators {
-          id
-          organization {
-            name
-          }
-        }
-        relatedCauses {
-          effectType
-          causalIndicator {
-            id
-            name
-          }
-        }
-        relatedEffects {
-          id
-          effectType
-          effectIndicator {
-            id
-            name
-          }
-        }
-      }
+      ...IndicatorListIndicator
+      level(plan: $plan)
     }
     relatedPlanIndicators(plan: $plan) @include(if: $relatedPlanIndicators) {
       ...IndicatorListIndicator
       level(plan: $plan)
-      categories {
-        id
-        name
-        parent {
-          id
-        }
-        type {
-          id
-          identifier
-          name
-        }
-        common {
-          id
-          identifier
-          name
-          order
-          type {
-            identifier
-            name
-          }
-        }
-      }
     }
   }
   ${INDICATOR_LIST_INDICATOR_FRAGMENT}

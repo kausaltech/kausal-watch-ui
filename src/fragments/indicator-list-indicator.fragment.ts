@@ -22,6 +22,20 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
           identifier
         }
       }
+      relatedCauses {
+        id
+        effectType
+        causalIndicator {
+          id
+        }
+      }
+      relatedEffects {
+        id
+        effectType
+        effectIndicator {
+          id
+        }
+      }
     }
     categories {
       id
@@ -32,6 +46,13 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
       type {
         id
         identifier
+      }
+      common {
+        id
+        type {
+          name
+          identifier
+        }
       }
     }
     latestGraph {
