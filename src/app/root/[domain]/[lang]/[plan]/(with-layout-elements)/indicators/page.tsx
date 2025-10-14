@@ -34,6 +34,7 @@ export default async function ActionsPage(props: Props) {
       displayInsights={data.planPage.displayInsights}
       displayLevel={data.planPage.displayLevel}
       includeRelatedPlans={data.planPage?.includeRelatedPlans}
+      testId="indicators-list-page"
     />
   );
 }

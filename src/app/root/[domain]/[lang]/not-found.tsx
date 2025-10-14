@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { Theme } from '@kausal/themes/types';
+import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 
 import { ErrorPage } from '@/components/common/ErrorPage';
@@ -14,7 +14,7 @@ export default function NotFound() {
 
   return (
     <ThemeProvider theme={defaultTheme as Theme}>
-      <ErrorPage message={t('page-not-found')} />
+      <ErrorPage message={t('page-not-found')} testId="root-404-boundary" />
     </ThemeProvider>
   );
 }

@@ -9,5 +9,5 @@ import { ErrorPage } from '@/components/common/ErrorPage';
 export default function NotFound() {
   const t = useTranslations();
 
-  return <ErrorPage message={t('page-not-found')} />;
+  return <ErrorPage message={t('page-not-found')} testId="root-404-boundary" />;
 }

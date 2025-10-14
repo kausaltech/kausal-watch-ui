@@ -79,14 +79,15 @@ interface Props {
   leadContent?: string;
   showInsights?: boolean;
   children?: React.ReactNode;
+  testId?: string;
 }
 
-function IndicatorsHero({ leadContent = '', showInsights = true, children }: Props) {
+function IndicatorsHero({ leadContent = '', showInsights = true, children, testId }: Props) {
   const t = useTranslations();
   const pathname = usePathname();
 
   return (
-    <div>
+    <div data-testid={testId}>
       <IndicatorsJumbo>
         <Container>
           <h1>{t('indicators')}</h1>

@@ -25,7 +25,7 @@ export default function GlobalError({ error }: Props) {
       <body>
         <ThemeProvider theme={defaultTheme as Theme}>
           <StyledComponentsRegistry>
-            <ErrorBackground $isFullPage={true}>
+            <ErrorBackground $isFullPage={true} data-testid="global-error-boundary">
               <Container>
                 <Row>
                   <Col md={{ size: 6, offset: 3 }}>

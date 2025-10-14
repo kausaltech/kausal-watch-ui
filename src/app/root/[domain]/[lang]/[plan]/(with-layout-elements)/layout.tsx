@@ -25,7 +25,9 @@ export default async function Layout(props: Props) {
     <>
       <JsonLd domain={params.domain} />
       <Header />
-      <StyledMain id="main">{children}</StyledMain>
+      <StyledMain id="main" data-testid="root-layout">
+        {children}
+      </StyledMain>
       <Footer />
       <SettingsPanelFull />
     </>

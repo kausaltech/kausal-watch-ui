@@ -19,5 +19,5 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 }
 
 export default function Page() {
-  return <FeedbackPage />;
+  return <FeedbackPage testId="feedback-page" />;
 }

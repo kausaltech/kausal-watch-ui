@@ -12,9 +12,10 @@ type HomePageProps = {
     NonNullable<GetHomePageQuery['plan']>['primaryActionClassification']
   >['categories'];
   page: NonNullable<GetHomePageQuery['planPage']>;
+  testId?: string;
 };
 
-function HomePage({ categories, page }: HomePageProps) {
+function HomePage({ categories, page, testId }: HomePageProps) {
   //const categories = primaryActionClassification?.categories;
   if (page.__typename != 'PlanRootPage') {
     throw new Error('Invalid home page type');
@@ -22,23 +23,21 @@ function HomePage({ categories, page }: HomePageProps) {
 
   return (
     <CategoriesContext.Provider value={categories ?? []}>
-      <div className="content-area">
-        {page.body && <StreamField page={page} blocks={page.body} />}
-      </div>
+      <div data-testid={testId}>{page.body && <StreamField page={page} blocks={page.body} />}</div>
     </CategoriesContext.Provider>
   );
 }
 
-type Props = { data: GetHomePageQuery };
+type Props = { data: GetHomePageQuery; testId?: string };
 
-export function RootPage({ data }: Props) {
+export function RootPage({ data, testId }: Props) {
   const t = useTranslations();
 
   const { planPage, plan: queriedPlan } = data;
-  const categories = queriedPlan?.primaryActionClassification?.categories as Category[];
+  const categories = queriedPlan?.primaryActionClassification?.categories ?? [];
   if (!planPage) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
 
-  return <HomePage page={planPage} categories={categories} />;
+  return <HomePage page={planPage} categories={categories} testId={testId} />;
 }

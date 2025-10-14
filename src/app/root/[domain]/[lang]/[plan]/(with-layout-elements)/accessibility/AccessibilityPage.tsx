@@ -56,7 +56,7 @@ export const AccessibilityPage = () => {
           </Row>
         </Container>
       </HeaderBg>
-      <div className="content-area text-content my-2">
+      <div className="text-content my-2" data-testid="accessibility-page">
         <Container>
           <Row>
             <Col

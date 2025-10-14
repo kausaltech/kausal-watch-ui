@@ -8,7 +8,7 @@ import InsightPageContent from '@/components/graphs/InsightPageContent';
 import { usePlan } from '@/context/plan';
 import { isValidIndicatorId } from '@/utils/indicators';
 
-function InsightPage() {
+function InsightPage({ testId }: { testId?: string }) {
   const plan = usePlan();
   const locale = useLocale();
   const searchParams = useSearchParams();
@@ -27,6 +27,7 @@ function InsightPage() {
             ? parseInt(filterByIndicator)
             : null,
       }}
+      testId={testId}
     />
   );
 }
