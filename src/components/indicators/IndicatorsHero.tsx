@@ -93,7 +93,7 @@ function IndicatorsHero({ leadContent = '', showInsights = true, children, testI
           <h1>{t('indicators')}</h1>
           {leadContent && (
             <Row>
-              <Col sm="12" md="8" className="mb-1">
+              <Col sm="12" md="8" className="mb-3">
                 <RichText html={leadContent} />
               </Col>
             </Row>

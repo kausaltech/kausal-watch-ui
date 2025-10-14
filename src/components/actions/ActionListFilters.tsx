@@ -1134,11 +1134,11 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
   const { mainConfig, plan, t, orgs, primaryOrgs, filterByCommonCategory, actionTerm } = opts;
   const { primaryFilters, mainFilters, advancedFilters } = mainConfig;
 
-  function makeSection(id: string, hidden: boolean, blocks: ActionListFilterFragment[]) {
+  function makeSection(id: string, hidden: boolean, blocks: ActionListFilterFragment[] | null) {
     const filters: ActionListFilter[] = [];
     let primaryResponsiblePartyFilter: PrimaryResponsiblePartyFilter | null = null;
 
-    blocks.forEach((block) => {
+    blocks?.forEach((block) => {
       switch (block.__typename) {
         case 'ResponsiblePartyFilterBlock':
           filters.push(new ResponsiblePartyFilter(orgs, plan));
@@ -1288,7 +1288,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
 
   const sections: ActionListFilterSection[] = [];
   if (primaryFilters?.length) sections.push(makeSection('primary', false, primaryFilters));
-  if (mainFilters?.length) sections.push(makeSection('main', false, mainFilters));
+  sections.push(makeSection('main', false, mainFilters));
   if (advancedFilters?.length) sections.push(makeSection('advanced', true, advancedFilters));
 
   return sections;
