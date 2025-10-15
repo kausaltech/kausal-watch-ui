@@ -16,6 +16,7 @@ import type {
   IndicatorListQuery,
   IndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
+import { CategoryTypeSelectWidget } from '@/common/__generated__/graphql';
 import { getCategoryString } from '@/common/categories';
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
 import type { ActionListFilterSection, FilterValue } from '@/components/actions/ActionListFilters';
@@ -35,31 +36,26 @@ export type IndicatorListIndicator = IndicatorListIndicatorFragment & {
 };
 export type IndicatorCategory = NonNullable<IndicatorListIndicator['categories']>[number];
 type CategoryType = NonNullable<IndicatorListQuery['plan']>['categoryTypes'][number];
-type CommonCategory = NonNullable<NonNullable<CategoryType['categories']>[number]['common']>;
 
 const createFilterUnusedCategories =
-  (indicators: IndicatorListIndicator[]) => (category: IndicatorCategory) =>
+  (indicators: IndicatorListIndicator[]) =>
+  (category: { id: string; parent?: { id: string } | null }) =>
     indicators.find(({ categories }) =>
       categories.find(({ id, parent }) => id === category.id || parent?.id === category.id)
     );
 
 const createFilterUnusedCommonCategories =
-  (indicators: IndicatorListIndicator[]) => (commonCategory: CommonCategory) =>
-    indicators.find(({ categories }) =>
-      categories.find(
-        (category) =>
-          category.common && category.common.type.identifier === commonCategory.type.identifier
-      )
-    );
+  (indicators: IndicatorListIndicator[]) => (category: IndicatorCategory) =>
+    indicators.find(({ categories }) => categories.find((cat) => cat.id === category.id));
 
 interface CommonCategoryGroup {
-  categories: Set<CommonCategory>;
+  categories: Set<IndicatorCategory>;
   type: NonNullable<IndicatorListIndicatorFragment['categories'][number]['common']>['type'];
 }
 
 interface CollectedCommonCategory {
   typeIdentifier: string;
-  categories: CommonCategory[];
+  categories: IndicatorCategory[];
   type: NonNullable<IndicatorListIndicatorFragment['categories'][number]['common']>['type'];
 }
 
@@ -74,11 +70,11 @@ const collectCommonCategories = (
         const typeIdentifier: string = category.common.type.identifier;
         if (!commonCategories[typeIdentifier]) {
           commonCategories[typeIdentifier] = {
-            categories: new Set<CommonCategory>(),
+            categories: new Set<IndicatorCategory>(),
             type: { ...category.common.type },
           };
         }
-        commonCategories[typeIdentifier].categories.add(category.common);
+        commonCategories[typeIdentifier].categories.add(category);
       }
     });
   });
@@ -104,23 +100,36 @@ const getFilterConfig = (
       mainFilters: [],
       primaryFilters: [],
       advancedFilters: [],
+      __typename: 'ActionListPage',
     };
   }
 
-  const mainTypeFilter = {
-    __typename: 'CategoryTypeFilterBlock',
-    field: 'category',
-    id: '817256d7-a6fb-4af1-bbba-096171eb0d36',
-    style: 'dropdown',
-    showAllLabel: '',
-    depth: null,
-    categoryType: {
-      ...categoryType,
-      categories: categoryType?.categories.filter(createFilterUnusedCategories(indicators)),
-      hideCategoryIdentifiers: true,
-      selectionType: 'SINGLE',
-    },
-  };
+  const mainTypeFilter = categoryType
+    ? {
+        __typename: 'CategoryTypeFilterBlock' as const,
+        field: 'category',
+        id: '817256d7-a6fb-4af1-bbba-096171eb0d36',
+        style: 'dropdown',
+        showAllLabel: '',
+        depth: null,
+        categoryType: {
+          id: categoryType.id,
+          identifier: categoryType.identifier,
+          name: categoryType.name,
+          helpText: '',
+          categories: categoryType.categories
+            .filter(createFilterUnusedCategories(indicators))
+            .map((cat) => ({
+              ...cat,
+              helpText: '',
+              common: cat.common ? { id: cat.id, __typename: 'CommonCategory' as const } : null,
+            })),
+          hideCategoryIdentifiers: true,
+          selectionType: CategoryTypeSelectWidget.Single,
+          __typename: 'CategoryType' as const,
+        },
+      }
+    : null;
 
   const commonCategoryFilters = commonCategories
     ? commonCategories.map((cat) => {
@@ -133,23 +142,37 @@ const getFilterConfig = (
           showAllLabel: '',
           depth: null,
           categoryType: {
-            id: type.common?.id,
-            identifier: type.common?.identifier,
-            name: type.common?.name || typeIdentifier,
-            helpText: type.common?.helpText || '',
-            categories: categories.filter(createFilterUnusedCommonCategories(indicators)),
+            id: type?.identifier || typeIdentifier,
+            identifier: type?.identifier || typeIdentifier,
+            name: type?.name || typeIdentifier,
+            helpText: '',
+            selectionType: CategoryTypeSelectWidget.Single,
+            categories: categories
+              .filter(createFilterUnusedCommonCategories(indicators))
+              .map((cat, index) => ({
+                id: cat.id,
+                identifier: cat.common?.id || cat.id,
+                name: cat.name,
+                order: index,
+                helpText: '',
+                parent: cat.parent,
+                common: cat.common,
+                __typename: 'Category' as const,
+              })),
             hideCategoryIdentifiers: true,
-            selectionType: type.common?.selectionType,
-            __typename: 'CommonCategoryType' as const,
+            __typename: 'CategoryType' as const,
           },
         };
       })
     : [];
 
   return {
-    mainFilters: [...(commonCategories ? commonCategoryFilters : [mainTypeFilter])],
+    mainFilters: [
+      ...(commonCategories ? commonCategoryFilters : mainTypeFilter ? [mainTypeFilter] : []),
+    ],
     primaryFilters: [],
     advancedFilters: [],
+    __typename: 'ActionListPage',
   };
 };
 
@@ -173,14 +196,14 @@ function filterIndicators<I extends IndicatorListIndicator>(
 
   const filterByCommonCategory = (indicator: I) => {
     const activeFilters = Object.entries(filters).filter(
-      ([key, value]) => value !== undefined && value !== null
+      ([_key, value]) => value !== undefined && value !== null
     );
 
     if (activeFilters.length === 0) {
       return true;
     }
 
-    return activeFilters.every(([filterKey, filterValue]) => {
+    return activeFilters.every(([_filterKey, filterValue]) => {
       return indicator.categories.some((category) => {
         if (category.common) {
           return category.common.id === filterValue;
