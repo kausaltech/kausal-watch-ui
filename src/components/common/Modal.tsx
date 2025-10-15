@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef } from 'react';
+import React, { type ReactNode, useEffect, useRef } from 'react';
 
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
