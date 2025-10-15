@@ -5,55 +5,58 @@ import React, { useState } from 'react';
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
 
 import type {
+  ActionListPageFiltersFragment,
   GetPlanPageIndicatorListQuery,
+  IndicatorListIndicatorFragment,
   IndicatorListQuery,
   IndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
+import { CategoryTypeSelectWidget } from '@/common/__generated__/graphql';
 import { getCategoryString } from '@/common/categories';
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
 import type { ActionListFilterSection, FilterValue } from '@/components/actions/ActionListFilters';
 import ActionListFilters from '@/components/actions/ActionListFilters';
 import ContentLoader from '@/components/common/ContentLoader';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { GET_INDICATOR_LIST } from '@/queries/get-indicator-list';
 
 import { usePlan } from '../../context/plan';
-import IndicatorListFiltered from './IndicatorListFiltered';
+import IndicatorListFiltered from './IndicatorListFilteredNew';
 import IndicatorsHero from './IndicatorsHero';
 import { processCommonIndicatorHierarchy } from './process-indicators';
 
-export type IndicatorListIndicator = NonNullable<
-  IndicatorListQuery['plan']
->['indicatorLevels'][number]['indicator'];
-type Category = NonNullable<IndicatorListIndicator['categories']>[number];
-type CategoryType = NonNullable<IndicatorListQuery['plan']>['categoryTypes'][number];
-type CommonCategory = NonNullable<NonNullable<CategoryType['categories']>[number]['common']>;
+/* We augment the IndicatorListIndicatorFragment with a level property */
+export type IndicatorListIndicator = IndicatorListIndicatorFragment & {
+  level: string;
+};
+export type IndicatorCategory = NonNullable<IndicatorListIndicator['categories']>[number];
+export type CategoryType = NonNullable<IndicatorListQuery['plan']>['categoryTypes'][number];
 
 const createFilterUnusedCategories =
-  (indicators: IndicatorListIndicator[]) => (category: Category) =>
+  (indicators: IndicatorListIndicator[]) =>
+  (category: { id: string; parent?: { id: string } | null }) =>
     indicators.find(({ categories }) =>
       categories.find(({ id, parent }) => id === category.id || parent?.id === category.id)
     );
 
 const createFilterUnusedCommonCategories =
-  (indicators: IndicatorListIndicator[]) => (commonCategory: CommonCategory) =>
-    indicators.find(({ categories }) =>
-      categories.find((category) => category.common && category.common.id === commonCategory.id)
-    );
+  (indicators: IndicatorListIndicator[]) => (category: IndicatorCategory) =>
+    indicators.find(({ categories }) => categories.find((cat) => cat.id === category.id));
 
 interface CommonCategoryGroup {
-  categories: Set<CommonCategory>;
-  type: CommonCategoryType;
+  categories: Set<IndicatorCategory>;
+  type: NonNullable<IndicatorListIndicatorFragment['categories'][number]['common']>['type'];
 }
 
 interface CollectedCommonCategory {
   typeIdentifier: string;
-  categories: CommonCategory[];
-  type: CommonCategoryType;
+  categories: IndicatorCategory[];
+  type: NonNullable<IndicatorListIndicatorFragment['categories'][number]['common']>['type'];
 }
 
 const collectCommonCategories = (
@@ -62,244 +65,116 @@ const collectCommonCategories = (
   const commonCategories: Record<string, CommonCategoryGroup> = {};
 
   indicators.forEach((indicator: IndicatorListIndicator) => {
-    indicator.categories.forEach((category: Category) => {
+    indicator.categories.forEach((category: IndicatorCategory) => {
       if (category.common) {
         const typeIdentifier: string = category.common.type.identifier;
         if (!commonCategories[typeIdentifier]) {
           commonCategories[typeIdentifier] = {
-            categories: new Set<CommonCategory>(),
+            categories: new Set<IndicatorCategory>(),
             type: { ...category.common.type },
           };
         }
-        commonCategories[typeIdentifier].categories.add(category.common);
+        commonCategories[typeIdentifier].categories.add(category);
       }
     });
   });
 
   return Object.entries(commonCategories).map(
-    ([typeIdentifier, data]): CollectedCommonCategory => ({
+    ([typeIdentifier, catGroup]): CollectedCommonCategory => ({
       typeIdentifier,
-      categories: Array.from(data?.categories),
-      type: data?.type,
+      categories: Array.from(catGroup.categories),
+      type: catGroup.type,
     })
   );
 };
 
 const getFilterConfig = (
-  categoryType: CategoryType,
+  categoryType: CategoryType | null | undefined,
   indicators: IndicatorListIndicator[],
   commonCategories: CollectedCommonCategory[] | null
-) => ({
-  mainFilters: [
-    ...(commonCategories
-      ? commonCategories.map(({ typeIdentifier, categories, type }) => ({
-          __typename: 'CategoryTypeFilterBlock',
+): ActionListPageFiltersFragment => {
+  // Common categories is null if we are not including related plans
+
+  if (!commonCategories && !categoryType) {
+    return {
+      mainFilters: [],
+      primaryFilters: [],
+      advancedFilters: [],
+      __typename: 'ActionListPage',
+    };
+  }
+
+  const mainTypeFilter = categoryType
+    ? {
+        __typename: 'CategoryTypeFilterBlock' as const,
+        field: 'category',
+        id: '817256d7-a6fb-4af1-bbba-096171eb0d36',
+        style: 'dropdown',
+        showAllLabel: '',
+        depth: null,
+        categoryType: {
+          id: categoryType.id,
+          identifier: categoryType.identifier,
+          name: categoryType.name,
+          helpText: '',
+          categories: categoryType.categories
+            .filter(createFilterUnusedCategories(indicators))
+            .map((cat) => ({
+              ...cat,
+              helpText: '',
+              common: cat.common ? { id: cat.id, __typename: 'CommonCategory' as const } : null,
+            })),
+          hideCategoryIdentifiers: true,
+          selectionType: CategoryTypeSelectWidget.Single,
+          __typename: 'CategoryType' as const,
+        },
+      }
+    : null;
+
+  const commonCategoryFilters = commonCategories
+    ? commonCategories.map((cat) => {
+        const { typeIdentifier, categories, type } = cat;
+        return {
+          __typename: 'CategoryTypeFilterBlock' as const,
           field: 'category',
           id: `common_${typeIdentifier}`,
           style: 'dropdown',
           showAllLabel: '',
           depth: null,
           categoryType: {
-            ...type,
-            name: type.name || typeIdentifier,
-            categories: categories.filter(createFilterUnusedCommonCategories(indicators)),
+            id: type?.identifier || typeIdentifier,
+            identifier: type?.identifier || typeIdentifier,
+            name: type?.name || typeIdentifier,
+            helpText: '',
+            selectionType: CategoryTypeSelectWidget.Single,
+            categories: categories
+              .filter(createFilterUnusedCommonCategories(indicators))
+              .map((cat, index) => ({
+                id: cat.id,
+                identifier: cat.common?.id || cat.id,
+                name: cat.name,
+                order: index,
+                helpText: '',
+                parent: cat.parent,
+                common: cat.common,
+                __typename: 'Category' as const,
+              })),
             hideCategoryIdentifiers: true,
-            selectionType: 'SINGLE',
+            __typename: 'CategoryType' as const,
           },
-        }))
-      : [
-          {
-            __typename: 'CategoryTypeFilterBlock',
-            field: 'category',
-            id: '817256d7-a6fb-4af1-bbba-096171eb0d36',
-            style: 'dropdown',
-            showAllLabel: '',
-            depth: null,
-            categoryType: {
-              ...categoryType,
-              categories: categoryType.categories.filter(createFilterUnusedCategories(indicators)),
-              hideCategoryIdentifiers: true,
-              selectionType: 'SINGLE',
-            },
-          },
-        ]),
-  ],
-  primaryFilters: [],
-  advancedFilters: [],
-});
+        };
+      })
+    : [];
 
-const GET_INDICATOR_LIST = gql`
-  query IndicatorList($plan: ID!, $relatedPlanIndicators: Boolean!) {
-    plan(id: $plan) {
-      id
-      features {
-        hasActionPrimaryOrgs
-      }
-      indicatorLevels {
-        level
-        indicator {
-          id
-          name
-          timeResolution
-          organization {
-            id
-            name
-          }
-          common {
-            id
-            name
-            normalizations {
-              unit {
-                shortName
-              }
-              normalizer {
-                name
-                id
-                identifier
-              }
-            }
-          }
-          categories {
-            id
-            name
-            parent {
-              id
-            }
-            type {
-              id
-              identifier
-            }
-          }
-          latestGraph {
-            id
-          }
-          latestValue {
-            id
-            date
-            value
-            normalizedValues {
-              normalizerId
-              value
-            }
-          }
-          unit {
-            shortName
-          }
-        }
-      }
-      categoryTypes(usableForIndicators: true) {
-        name
-        id
-        identifier
-        categories {
-          id
-          identifier
-          order
-          name
-          parent {
-            id
-          }
-          common @include(if: $relatedPlanIndicators) {
-            type {
-              identifier
-              name
-            }
-          }
-        }
-      }
-      hasIndicatorRelationships
-    }
-    planIndicators(plan: $plan) @skip(if: $relatedPlanIndicators) {
-      id
-      common {
-        id
-        name
-        indicators {
-          id
-          organization {
-            name
-          }
-        }
-        relatedCauses {
-          effectType
-          causalIndicator {
-            id
-            name
-          }
-        }
-        relatedEffects {
-          id
-          effectType
-          effectIndicator {
-            id
-            name
-          }
-        }
-      }
-    }
-    relatedPlanIndicators(plan: $plan) @include(if: $relatedPlanIndicators) {
-      id
-      name
-      level(plan: $plan)
-      timeResolution
-      organization {
-        id
-        name
-      }
-      common {
-        id
-        name
-        normalizations {
-          unit {
-            shortName
-          }
-          normalizer {
-            name
-            id
-            identifier
-          }
-        }
-      }
-      latestGraph {
-        id
-      }
-      latestValue {
-        id
-        date
-        value
-        normalizedValues {
-          normalizerId
-          value
-        }
-      }
-      unit {
-        shortName
-      }
-      categories {
-        id
-        name
-        parent {
-          id
-        }
-        type {
-          id
-          identifier
-          name
-        }
-        common {
-          id
-          identifier
-          name
-          order
-          type {
-            identifier
-            name
-          }
-        }
-      }
-    }
-  }
-`;
+  return {
+    mainFilters: [
+      ...(commonCategories ? commonCategoryFilters : mainTypeFilter ? [mainTypeFilter] : []),
+    ],
+    primaryFilters: [],
+    advancedFilters: [],
+    __typename: 'ActionListPage',
+  };
+};
 
 interface Filters {
   name?: string;
@@ -321,14 +196,14 @@ function filterIndicators<I extends IndicatorListIndicator>(
 
   const filterByCommonCategory = (indicator: I) => {
     const activeFilters = Object.entries(filters).filter(
-      ([key, value]) => value !== undefined && value !== null
+      ([_key, value]) => value !== undefined && value !== null
     );
 
     if (activeFilters.length === 0) {
       return true;
     }
 
-    return activeFilters.every(([filterKey, filterValue]) => {
+    return activeFilters.every(([_filterKey, filterValue]) => {
       return indicator.categories.some((category) => {
         if (category.common) {
           return category.common.id === filterValue;
@@ -349,20 +224,21 @@ function filterIndicators<I extends IndicatorListIndicator>(
   });
 }
 
-const getFirstUsableCategoryType = (
-  categoryTypes: CategoryType[],
+const getFirstUsablePlanCategoryType = (
+  categoryTypes: CategoryType[] | null | undefined,
   indicators: IndicatorListIndicator[]
 ): CategoryType | undefined =>
-  categoryTypes.find((categoryType) =>
-    indicators.find((indicator) =>
-      indicator.categories.find(({ type }) => type.id === categoryType.id)
-    )
-  );
+  categoryTypes
+    ? categoryTypes.find((categoryType) =>
+        indicators.find((indicator) =>
+          indicator.categories.find(({ type }) => type.id === categoryType.id)
+        )
+      )
+    : undefined;
 
 type IndicatorListPage = NonNullable<GetPlanPageIndicatorListQuery['planPage']> & {
   __typename: 'IndicatorListPage';
 };
-
 interface Props {
   leadContent: IndicatorListPage['leadContent'];
   displayInsights: IndicatorListPage['displayInsights'];
@@ -382,6 +258,10 @@ const IndicatorList = ({
   const t = useTranslations();
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
+  const getObjectFromSearchParams = (searchParams: ReadonlyURLSearchParams | null) =>
+    searchParams ? Object.fromEntries(searchParams) : {};
+
+  const [filters, setFilters] = useState<Filters>(() => getObjectFromSearchParams(searchParams));
   const { loading, error, data } = useQuery<IndicatorListQuery, IndicatorListQueryVariables>(
     GET_INDICATOR_LIST,
     {
@@ -392,11 +272,6 @@ const IndicatorList = ({
     }
   );
 
-  const getObjectFromSearchParams = (searchParams: ReadonlyURLSearchParams | null) =>
-    searchParams ? Object.fromEntries(searchParams) : {};
-
-  const [filters, setFilters] = useState<Filters>(() => getObjectFromSearchParams(searchParams));
-
   const handleFilterChange = (id: string, val: FilterValue) => {
     setFilters((state) => {
       const newFilters = { ...state, [id]: val };
@@ -405,56 +280,42 @@ const IndicatorList = ({
     });
   };
 
-  const hasInsights = (data: IndicatorListQuery) => {
-    const { plan } = data;
-    return plan?.hasIndicatorRelationships === true;
-  };
-
-  const getIndicatorListProps = (data: IndicatorListQuery) => {
-    const { plan, relatedPlanIndicators } = data;
-    const displayMunicipality = plan?.features.hasActionPrimaryOrgs === true;
-    const displayNormalizedValues =
-      undefined !==
-      plan!.indicatorLevels.find(
-        (l) => l.indicator?.common != null && l.indicator!.common!.normalizations.length > 0
-      );
-    const generalContent = plan?.generalContent || {};
-    const { indicatorLevels } = plan!;
-
-    const indicators = indicatorLevels.map((il) => {
-      const { indicator, level } = il;
-      return { ...indicator, level: level.toLowerCase() };
-    });
-
-    return {
-      indicators,
-      leadContent: generalContent.indicatorListLeadContent,
-      displayMunicipality,
-      displayNormalizedValues,
-      relatedPlanIndicators: includeRelatedPlans ? relatedPlanIndicators : [],
-    };
-  };
-
   if (error) return <ErrorMessage message={error.message} />;
   if (loading || !data) return <ContentLoader />;
 
-  const indicatorListProps = getIndicatorListProps(data);
+  const showInsights = data.plan?.hasIndicatorRelationships === true && (displayInsights ?? true);
 
-  const indicators = includeRelatedPlans
-    ? indicatorListProps.relatedPlanIndicators
-    : indicatorListProps.indicators;
+  const indicators: IndicatorListIndicator[] = (
+    (includeRelatedPlans ?? false) ? data.relatedPlanIndicators : data.planIndicators
+  ) as IndicatorListIndicator[];
 
+  const displayMunicipality = plan?.features.hasActionPrimaryOrgs === true;
+
+  const displayNormalizedValues =
+    undefined !==
+    indicators?.find((ind) => {
+      if (!ind) return false;
+      if (!ind.common) return false;
+      if (!ind.common.normalizations) return false;
+      return ind.common.normalizations?.length > 0;
+    });
+
+  const hierarchy = processCommonIndicatorHierarchy(indicators);
+
+  /* This collects the common categories from the indicators that belong to different plans */
   const commonCategories = collectCommonCategories(indicators);
-  const hierarchy = processCommonIndicatorHierarchy(
-    includeRelatedPlans ? indicatorListProps.relatedPlanIndicators : data?.planIndicators
+  /* We support only one category type for indicators, it is guessed here */
+  const categoryType: CategoryType | undefined = getFirstUsablePlanCategoryType(
+    data?.plan?.categoryTypes,
+    indicators
   );
-  const showInsights = (displayInsights ?? true) && hasInsights(data);
 
-  const categoryType = getFirstUsableCategoryType(data?.plan?.categoryTypes, indicators);
-
-  const filterConfig = categoryType
-    ? getFilterConfig(categoryType, indicators, includeRelatedPlans ? commonCategories : null)
-    : {};
+  /* Create category filter */
+  const filterConfig = getFilterConfig(
+    categoryType,
+    indicators,
+    includeRelatedPlans ? commonCategories : null
+  );
 
   const filterSections: ActionListFilterSection[] = ActionListFilters.constructFilters({
     mainConfig: filterConfig,
@@ -469,7 +330,7 @@ const IndicatorList = ({
   const filteredIndicators = filterIndicators(
     indicators,
     filters,
-    includeRelatedPlans,
+    includeRelatedPlans ?? false,
     categoryType?.identifier
   );
 
@@ -491,14 +352,14 @@ const IndicatorList = ({
 
       <Container>
         <IndicatorListFiltered
-          {...indicatorListProps}
-          categoryColumnLabel={categoryType?.name}
+          displayMunicipality={displayMunicipality}
+          displayNormalizedValues={displayNormalizedValues}
+          categoryType={categoryType}
           indicators={filteredIndicators}
-          filters={filters}
+          //filters={filters}
           hierarchy={hierarchy}
-          shouldDisplayCategory={(category: Category) => category.type.id === categoryType?.id}
           displayLevel={displayLevel}
-          includePlanRelatedIndicators={includeRelatedPlans}
+          includePlanRelatedIndicators={includeRelatedPlans ?? false}
           commonCategories={commonCategories}
         />
       </Container>

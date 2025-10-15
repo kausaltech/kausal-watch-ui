@@ -1,5 +1,12 @@
 {
   "possibleTypes": {
+    "AccessibilityStatementPageBodyUnion": [
+      "AccessibilityStatementComplianceStatusBlock",
+      "AccessibilityStatementContactFormBlock",
+      "AccessibilityStatementContactInformationBlock",
+      "AccessibilityStatementPreparationInformationBlock",
+      "RichTextBlock"
+    ],
     "ActionAsideContentBlock": [
       "ActionContactPersonsBlock",
       "ActionContentAttributeTypeBlock",
@@ -64,6 +71,15 @@
     ],
     "CategoryPageAsideBlock": [
       "CategoryPageAttributeTypeBlock"
+    ],
+    "CategoryPageBodyUnion": [
+      "ActionListBlock",
+      "AdaptiveEmbedBlock",
+      "CategoryListBlock",
+      "IndicatorGroupBlock",
+      "QuestionAnswerBlock",
+      "RelatedIndicatorsBlock",
+      "RichTextBlock"
     ],
     "CategoryPageMainBottomBlock": [
       "CategoryPageAttributeTypeBlock",
@@ -160,6 +176,24 @@
       "Plan",
       "RestrictedPlanNode"
     ],
+    "PlanRootPageBodyUnion": [
+      "ActionCategoryFilterCardsBlock",
+      "ActionHighlightsBlock",
+      "ActionStatusGraphsBlock",
+      "AdaptiveEmbedBlock",
+      "CardListBlock",
+      "CategoryListBlock",
+      "CategoryTreeMapBlock",
+      "DashboardRowBlock",
+      "FrontPageHeroBlock",
+      "IndicatorGroupBlock",
+      "IndicatorHighlightsBlock",
+      "IndicatorShowcaseBlock",
+      "LargeImageBlock",
+      "PathsOutcomeBlock",
+      "RelatedPlanListBlock",
+      "RichTextBlock"
+    ],
     "ReportFieldBlock": [
       "ActionAttributeTypeReportFieldBlock",
       "ActionCategoryReportFieldBlock",
@@ -190,6 +224,19 @@
       "Indicator"
     ],
     "SnippetInterface": [],
+    "StaticPageBodyUnion": [
+      "AdaptiveEmbedBlock",
+      "CartographyVisualisationBlock",
+      "CategoryListBlock",
+      "CategoryTreeMapBlock",
+      "CategoryTypeLevelListBlock",
+      "DashboardRowBlock",
+      "IndicatorGroupBlock",
+      "LargeImageBlock",
+      "PathsOutcomeBlock",
+      "QuestionAnswerBlock",
+      "RichTextBlock"
+    ],
     "StreamFieldInterface": [
       "AccessibilityStatementComplianceStatusBlock",
       "AccessibilityStatementContactFormBlock",
