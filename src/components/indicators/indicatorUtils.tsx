@@ -1,6 +1,23 @@
 import type { IndicatorListIndicator } from './IndicatorList';
 import type { Hierarchy } from './process-indicators';
 
+export enum IndicatorTableColumnId {
+  Name = 'name',
+  TimeResolution = 'timeResolution',
+  Level = 'level',
+  Organization = 'organization',
+  Common = 'common',
+  LatestValue = 'latestValue',
+  Dimensions = 'dimensions',
+  Categories = 'categories',
+}
+
+export type IndicatorTableColumn = {
+  id: IndicatorTableColumnId;
+  label: string;
+  categoryTypeId?: string;
+};
+
 const levels: Record<string, { fi: string; index: number }> = {
   operational: { fi: 'toiminnallinen', index: 1 },
   tactical: { fi: 'taktinen', index: 2 },

@@ -35,7 +35,7 @@ export type IndicatorListIndicator = IndicatorListIndicatorFragment & {
   level: string;
 };
 export type IndicatorCategory = NonNullable<IndicatorListIndicator['categories']>[number];
-type CategoryType = NonNullable<IndicatorListQuery['plan']>['categoryTypes'][number];
+export type CategoryType = NonNullable<IndicatorListQuery['plan']>['categoryTypes'][number];
 
 const createFilterUnusedCategories =
   (indicators: IndicatorListIndicator[]) =>
@@ -354,13 +354,10 @@ const IndicatorList = ({
         <IndicatorListFiltered
           displayMunicipality={displayMunicipality}
           displayNormalizedValues={displayNormalizedValues}
-          categoryColumnLabel={categoryType?.name}
+          categoryType={categoryType}
           indicators={filteredIndicators}
           //filters={filters}
           hierarchy={hierarchy}
-          shouldDisplayCategory={(category: IndicatorCategory) =>
-            category.type.id === categoryType?.id
-          }
           displayLevel={displayLevel}
           includePlanRelatedIndicators={includeRelatedPlans ?? false}
           commonCategories={commonCategories}
