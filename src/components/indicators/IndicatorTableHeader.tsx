@@ -1,12 +1,15 @@
-import type { IndicatorTableColumn } from './IndicatorListFilteredNew';
+import { IndicatorTableColumnId } from './indicatorUtils';
 
-const numericColumns: IndicatorTableColumn[] = ['latestValue', 'dimensions'];
+const numericColumns: IndicatorTableColumnId[] = [
+  IndicatorTableColumnId.LatestValue,
+  IndicatorTableColumnId.Dimensions,
+];
 
-const IndicatorTableHeader = (props: { column: IndicatorTableColumn }) => {
-  const { column } = props;
+const IndicatorTableHeader = (props: { columnId: IndicatorTableColumnId; columnLabel: string }) => {
+  const { columnId, columnLabel } = props;
   return (
-    <th key={column} style={{ textAlign: numericColumns.includes(column) ? 'right' : 'left' }}>
-      {column}
+    <th key={columnId} style={{ textAlign: numericColumns.includes(columnId) ? 'right' : 'left' }}>
+      {columnLabel}
     </th>
   );
 };

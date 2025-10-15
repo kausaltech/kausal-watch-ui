@@ -3,10 +3,15 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Alert, Table } from 'reactstrap';
 
-import type { IndicatorCategory, IndicatorListIndicator } from './IndicatorList';
+import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
 import IndicatorTableCell from './IndicatorTableCell';
 import IndicatorTableHeader from './IndicatorTableHeader';
-import { indentationLevel, sortIndicators } from './indicatorUtils';
+import {
+  type IndicatorTableColumn,
+  IndicatorTableColumnId,
+  indentationLevel,
+  sortIndicators,
+} from './indicatorUtils';
 import type { Hierarchy } from './process-indicators';
 
 export const isEmptyFilter = (val) => val == null || val === '';
@@ -33,18 +38,9 @@ const IndicatorNameCell = (props: { indicator: IndicatorListIndicator; indent: n
   );
 };
 
-export type IndicatorTableColumn =
-  | 'name'
-  | 'timeResolution'
-  | 'level'
-  | 'organization'
-  | 'common'
-  | 'latestValue'
-  | 'dimensions';
 interface IndicatorListFilteredProps {
-  categoryColumnLabel?: string;
+  categoryType?: CategoryType;
   indicators: IndicatorListIndicator[];
-  shouldDisplayCategory?(cat: IndicatorCategory): boolean;
   displayLevel?: boolean | null;
   includePlanRelatedIndicators?: boolean;
   commonCategories?: object[];
@@ -57,7 +53,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
   const t = useTranslations();
   const { indicators, hierarchy, displayMunicipality } = props;
 
-  //console.log('props', props);
+  console.log('props', props);
 
   if (indicators.flat().length === 0) {
     return (
@@ -68,13 +64,21 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
   }
 
   const indicatorColumns: IndicatorTableColumn[] = [
-    'organization',
-    'timeResolution',
-    'level',
-    'common',
-    'latestValue',
-    'dimensions',
+    { id: IndicatorTableColumnId.Organization, label: 'Organization' },
+    { id: IndicatorTableColumnId.TimeResolution, label: 'Resolution' },
+    { id: IndicatorTableColumnId.Level, label: 'Level' },
+    { id: IndicatorTableColumnId.Common, label: 'Has common' },
+    { id: IndicatorTableColumnId.LatestValue, label: 'Latest value' },
+    { id: IndicatorTableColumnId.Dimensions, label: 'Dimensions' },
   ];
+
+  if (props.categoryType) {
+    indicatorColumns.push({
+      id: IndicatorTableColumnId.Categories,
+      label: props.categoryType.name,
+      categoryTypeId: props.categoryType.id,
+    });
+  }
 
   const sortedIndicators = sortIndicators(hierarchy, indicators, displayMunicipality ?? false);
   //console.log('indicators', indicators);
@@ -84,9 +88,13 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
       <Table hover size="sm">
         <thead>
           <tr>
-            <IndicatorTableHeader column="name" />
+            <IndicatorTableHeader columnId={IndicatorTableColumnId.Name} columnLabel="Name" />
             {indicatorColumns.map((column) => (
-              <IndicatorTableHeader key={column} column={column} />
+              <IndicatorTableHeader
+                key={column.id}
+                columnId={column.id}
+                columnLabel={column.label}
+              />
             ))}
           </tr>
         </thead>
@@ -97,7 +105,13 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
               <IndicatorTableRow key={indicator.id} indicator={indicator} indent={indent}>
                 <IndicatorNameCell indicator={indicator} indent={indent} />
                 {indicatorColumns.map((column) => (
-                  <IndicatorTableCell key={column} columnName={column} indicator={indicator} />
+                  <IndicatorTableCell
+                    key={column.id}
+                    columnName={column.id}
+                    columnLabel={column.label}
+                    categoryTypeId={column.categoryTypeId}
+                    indicator={indicator}
+                  />
                 ))}
               </IndicatorTableRow>
             );
