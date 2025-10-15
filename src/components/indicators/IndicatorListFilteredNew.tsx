@@ -3,6 +3,8 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Alert, Table } from 'reactstrap';
 
+import { IndicatorLink } from '@/common/links';
+
 import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
 import IndicatorTableCell from './IndicatorTableCell';
 import IndicatorTableHeader from './IndicatorTableHeader';
@@ -33,11 +35,10 @@ const IndicatorNameCell = (props: { indicator: IndicatorListIndicator; indent: n
   const { indicator, indent } = props;
   return (
     <td key="name" style={{ paddingLeft: `${indent * 16}px` }}>
-      {indicator.name}
+      <IndicatorLink id={indicator.id}>{indicator.name}</IndicatorLink>
     </td>
   );
 };
-
 interface IndicatorListFilteredProps {
   categoryType?: CategoryType;
   indicators: IndicatorListIndicator[];

@@ -11,8 +11,6 @@ const IndicatorTableCell = (props: {
   const { columnName, indicator, categoryTypeId } = props;
 
   switch (columnName) {
-    case IndicatorTableColumnId.Name:
-      return <td key={columnName}>{indicator.name}</td>;
     case IndicatorTableColumnId.Organization:
       return <td key={columnName}>{indicator.organization.name}</td>;
     case IndicatorTableColumnId.LatestValue:
