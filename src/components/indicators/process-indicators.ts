@@ -12,9 +12,10 @@ export type Hierarchy = {
     id: string;
     isRoot: boolean;
     children: string[];
-    path?: string[];
+    path: string[];
     // Doesn't seem to be used
     pathNames?: string[];
+    descendants?: string[];
   };
 };
 
@@ -43,6 +44,7 @@ export const processCommonIndicatorHierarchy = (
         .filter((e) => e.effectType === RelatedCommonIndicatorEffectType.PartOf)
         .filter((e) => uniqueCommonIndicators[e.causalIndicator.id] != null)
         .map((e) => e.causalIndicator.id),
+      path: [],
     };
   };
 
@@ -53,16 +55,16 @@ export const processCommonIndicatorHierarchy = (
       .filter(([, v]) => v !== null) as [string, NonNullable<ReturnType<typeof makeLinks>>][]
   );
 
-  const expandPaths = (indicators, path) => {
-    let descendants = [];
+  const expandPaths = (indicators: Hierarchy[string][], path: string[]): string[] => {
+    let descendants: string[] = [];
     indicators.forEach((indicator) => {
       const newPath = [...path, indicator.id];
       indicator.path = newPath;
-      indicator.pathNames = newPath.map((p) => uniqueCommonIndicators[p].name);
-      indicator.descendants = expandPaths(
-        indicator.children.map((c) => processedHierarchy[c]),
-        newPath
-      );
+      indicator.pathNames = newPath.map((p) => uniqueCommonIndicators[p]?.name || '');
+      const childrenIndicators = indicator.children
+        .map((c) => processedHierarchy[c])
+        .filter((c): c is Hierarchy[string] => c != null);
+      indicator.descendants = expandPaths(childrenIndicators, newPath);
 
       descendants = descendants.concat(indicator.descendants, [indicator.id]);
     });

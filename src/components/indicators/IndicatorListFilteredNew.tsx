@@ -6,13 +6,13 @@ import { Alert, Table } from 'reactstrap';
 import type { IndicatorCategory, IndicatorListIndicator } from './IndicatorList';
 import IndicatorTableCell from './IndicatorTableCell';
 import IndicatorTableHeader from './IndicatorTableHeader';
-import { type Indicators, indentationLevel, sortIndicators } from './indicatorUtils';
+import { indentationLevel, sortIndicators } from './indicatorUtils';
 import type { Hierarchy } from './process-indicators';
 
 export const isEmptyFilter = (val) => val == null || val === '';
 
 const IndicatorTableRow = (props: {
-  indicator: Indicators[0];
+  indicator: IndicatorListIndicator;
   indent: number;
   children: React.ReactNode;
 }) => {
@@ -24,7 +24,7 @@ const IndicatorTableRow = (props: {
   );
 };
 
-const IndicatorNameCell = (props: { indicator: Indicators[0]; indent: number }) => {
+const IndicatorNameCell = (props: { indicator: IndicatorListIndicator; indent: number }) => {
   const { indicator, indent } = props;
   return (
     <td key="name" style={{ paddingLeft: `${indent * 16}px` }}>
@@ -97,12 +97,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
               <IndicatorTableRow key={indicator.id} indicator={indicator} indent={indent}>
                 <IndicatorNameCell indicator={indicator} indent={indent} />
                 {indicatorColumns.map((column) => (
-                  <IndicatorTableCell
-                    key={column}
-                    columnName={column}
-                    indicator={indicator}
-                    hierarchy={hierarchy}
-                  />
+                  <IndicatorTableCell key={column} columnName={column} indicator={indicator} />
                 ))}
               </IndicatorTableRow>
             );
