@@ -25,6 +25,7 @@ import { GET_INDICATOR_LIST } from '@/queries/get-indicator-list';
 import { usePlan } from '../../context/plan';
 import IndicatorListFiltered from './IndicatorListFilteredNew';
 import IndicatorListFilters from './IndicatorListFilters';
+import IndicatorModal from './IndicatorModal';
 import IndicatorsHero from './IndicatorsHero';
 import { processCommonIndicatorHierarchy } from './process-indicators';
 
@@ -138,7 +139,7 @@ const getFirstUsablePlanCategoryType = (
 type IndicatorListPage = NonNullable<GetPlanPageIndicatorListQuery['planPage']> & {
   __typename: 'IndicatorListPage';
 };
-interface Props {
+interface IndicatorListProps {
   leadContent: IndicatorListPage['leadContent'];
   displayInsights: IndicatorListPage['displayInsights'];
   displayLevel: IndicatorListPage['displayLevel'];
@@ -152,15 +153,26 @@ const IndicatorList = ({
   displayLevel,
   includeRelatedPlans,
   testId,
-}: Props) => {
+}: IndicatorListProps) => {
   const plan = usePlan();
   const t = useTranslations();
+  const openIndicatorsInModal = true;
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
   const getObjectFromSearchParams = (searchParams: ReadonlyURLSearchParams | null) =>
     searchParams ? Object.fromEntries(searchParams) : {};
 
   const [filters, setFilters] = useState<Filters>(() => getObjectFromSearchParams(searchParams));
+  const [indicatorModalId, setIndicatorModalId] = useState<string | null>(null);
+
+  const handleOpenModal = (id: string) => {
+    setIndicatorModalId(id);
+  };
+
+  const handleCloseModal = () => {
+    setIndicatorModalId(null);
+  };
+
   const { loading, error, data } = useQuery<IndicatorListQuery, IndicatorListQueryVariables>(
     GET_INDICATOR_LIST,
     {
@@ -243,11 +255,15 @@ const IndicatorList = ({
       </IndicatorsHero>
 
       <Container>
+        {indicatorModalId && (
+          <IndicatorModal indicatorId={indicatorModalId} onClose={handleCloseModal} />
+        )}
         <IndicatorListFiltered
           displayMunicipality={displayMunicipality}
           displayNormalizedValues={displayNormalizedValues}
           categoryType={categoryType}
           indicators={filteredIndicators}
+          openIndicatorsInModal={openIndicatorsInModal && handleOpenModal}
           //filters={filters}
           hierarchy={hierarchy}
           displayLevel={displayLevel}
