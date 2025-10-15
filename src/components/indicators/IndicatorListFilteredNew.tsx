@@ -2,6 +2,7 @@ import React from 'react';
 
 import { useTranslations } from 'next-intl';
 import { Alert, Table } from 'reactstrap';
+import { Button } from 'reactstrap';
 
 import { IndicatorLink } from '@/common/links';
 
@@ -31,11 +32,22 @@ const IndicatorTableRow = (props: {
   );
 };
 
-const IndicatorNameCell = (props: { indicator: IndicatorListIndicator; indent: number }) => {
-  const { indicator, indent } = props;
+const IndicatorNameCell = (props: {
+  indicator: IndicatorListIndicator;
+  indent: number;
+  openIndicatorsInModal?: (id: string) => void | null;
+}) => {
+  const { indicator, indent, openIndicatorsInModal } = props;
+  const IndicatorTrigger: React.ReactNode = openIndicatorsInModal ? (
+    <Button color="link" onClick={() => openIndicatorsInModal(indicator.id)}>
+      {indicator.name}
+    </Button>
+  ) : (
+    <IndicatorLink id={indicator.id}>{indicator.name}</IndicatorLink>
+  );
   return (
     <td key="name" style={{ paddingLeft: `${indent * 16}px` }}>
-      <IndicatorLink id={indicator.id}>{indicator.name}</IndicatorLink>
+      {IndicatorTrigger}
     </td>
   );
 };
@@ -48,11 +60,12 @@ interface IndicatorListFilteredProps {
   displayMunicipality?: boolean;
   hierarchy?: Hierarchy;
   displayNormalizedValues?: boolean;
+  openIndicatorsInModal?: (id: string) => void | null;
 }
 
 export default function IndicatorListFiltered(props: IndicatorListFilteredProps) {
   const t = useTranslations();
-  const { indicators, hierarchy, displayMunicipality } = props;
+  const { indicators, hierarchy, displayMunicipality, openIndicatorsInModal } = props;
 
   console.log('props', props);
 
@@ -104,7 +117,11 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
             const indent = hierarchy ? indentationLevel(indicator, hierarchy) : 0;
             return (
               <IndicatorTableRow key={indicator.id} indicator={indicator} indent={indent}>
-                <IndicatorNameCell indicator={indicator} indent={indent} />
+                <IndicatorNameCell
+                  indicator={indicator}
+                  indent={indent}
+                  openIndicatorsInModal={openIndicatorsInModal}
+                />
                 {indicatorColumns.map((column) => (
                   <IndicatorTableCell
                     key={column.id}
