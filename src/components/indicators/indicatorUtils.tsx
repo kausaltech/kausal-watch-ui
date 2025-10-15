@@ -1,25 +1,5 @@
 import type { IndicatorListIndicator } from './IndicatorList';
-
-export type Hierarchy = {
-  [key: string]: {
-    id: string;
-    isRoot: boolean;
-    children: string[];
-    path: string[];
-  };
-};
-
-export type Indicators = {
-  id: string;
-  name: string;
-  level: string;
-  organization: {
-    name: string;
-  };
-  common: {
-    id: string;
-  };
-}[];
+import type { Hierarchy } from './process-indicators';
 
 const levels: Record<string, { fi: string; index: number }> = {
   operational: { fi: 'toiminnallinen', index: 1 },
@@ -28,11 +8,11 @@ const levels: Record<string, { fi: string; index: number }> = {
 };
 
 export function groupIndicatorsByHierarchy(
-  indicators: Indicators,
+  indicators: IndicatorListIndicator[],
   hierarchy: Hierarchy
 ): {
-  nonHierarchicalIndicators: Indicators;
-  hierarchicalIndicators: Indicators;
+  nonHierarchicalIndicators: IndicatorListIndicator[];
+  hierarchicalIndicators: IndicatorListIndicator[];
 } {
   return indicators.reduce(
     (groups, indicator) =>
@@ -54,9 +34,9 @@ export function groupIndicatorsByHierarchy(
 
 export function sortIndicators(
   hierarchy: Hierarchy | null | undefined,
-  indicators: Indicators,
+  indicators: IndicatorListIndicator[],
   displayMunicipality: boolean
-): Indicators {
+): IndicatorListIndicator[] {
   const isHierarchical = !!hierarchy && Object.keys(hierarchy).length > 0;
   const sortedIndicators = [...indicators]
     .sort((a, b) => a.name.localeCompare(b.name))
@@ -111,18 +91,18 @@ export function sortIndicators(
     return [...nonHierarchicalIndicators, ...hierarchicalIndicators];
   }
 
-  const grouped = new Map<string, Indicators>();
+  const grouped = new Map<string, IndicatorListIndicator[]>();
 
   [...nonHierarchicalIndicators, ...hierarchicalIndicators].forEach((indicator) => {
     const commonId = indicator.common?.id;
-    const group: Indicators | [] = grouped.get(commonId) ?? [];
-    grouped.set(commonId, [...group, indicator]);
+    const group: IndicatorListIndicator[] | [] = grouped.get(commonId ?? '') ?? [];
+    grouped.set(commonId ?? '', [...group, indicator]);
   });
 
   return Array.from(grouped.values()).flat();
 }
 
-export const indentationLevel: (item: Indicators[0], hierarchy: Hierarchy) => number = (
+export const indentationLevel: (item: IndicatorListIndicator, hierarchy: Hierarchy) => number = (
   item,
   hierarchy
 ) => {
