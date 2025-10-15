@@ -169,13 +169,16 @@ const StyledCardTitle = styled.div<{ $isSmall: boolean }>`
   font-size: ${({ theme, $isSmall }) => ($isSmall ? theme.fontSizeSm : theme.fontSizeBase)};
   line-height: ${(props) => props.theme.lineHeightMd};
   text-align: left;
-  word-break: normal;
-  overflow-wrap: normal;
-  hyphens: none;
+  word-break: break-word;
+  hyphens: auto;
 
   :lang(fi) & {
     hyphens: manual;
   }
+
+  :lang(en) & {
+    word-break: normal;
+    hyphens: none;
 `;
 
 const ActionOrg = styled.div`
