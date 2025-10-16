@@ -876,6 +876,7 @@ export type GetActionListQuery = (
 
 export type ContactDetailsQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  plan: Scalars['ID']['input'];
 }>;
 
 
@@ -3644,7 +3645,10 @@ export type IndicatorListIndicatorFragment = (
   )>, unit: (
     { shortName: string | null }
     & { __typename: 'Unit' }
-  ) }
+  ), plans: Array<(
+    { id: string }
+    & { __typename: 'Plan' }
+  )> }
   & { __typename: 'Indicator' }
 );
 
@@ -12555,7 +12559,10 @@ export type IndicatorListQuery = (
     )>, unit: (
       { shortName: string | null }
       & { __typename: 'Unit' }
-    ) }
+    ), plans: Array<(
+      { id: string }
+      & { __typename: 'Plan' }
+    )> }
     & { __typename: 'Indicator' }
   )> | null, relatedPlanIndicators?: Array<(
     { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
@@ -12621,7 +12628,10 @@ export type IndicatorListQuery = (
     )>, unit: (
       { shortName: string | null }
       & { __typename: 'Unit' }
-    ) }
+    ), plans: Array<(
+      { id: string }
+      & { __typename: 'Plan' }
+    )> }
     & { __typename: 'Indicator' }
   )> | null }
   & { __typename: 'Query' }
