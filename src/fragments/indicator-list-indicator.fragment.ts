@@ -80,5 +80,8 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
     unit {
       shortName
     }
+    plans {
+      id
+    }
   }
 `;

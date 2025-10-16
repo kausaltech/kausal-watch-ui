@@ -27,6 +27,7 @@ import IndicatorListFiltered from './IndicatorListFilteredNew';
 import IndicatorListFilters from './IndicatorListFilters';
 import IndicatorModal from './IndicatorModal';
 import IndicatorsHero from './IndicatorsHero';
+import { sortIndicators } from './indicatorUtils';
 import { processCommonIndicatorHierarchy } from './process-indicators';
 
 /* We augment the IndicatorListIndicatorFragment with a level property */
@@ -136,6 +137,22 @@ const getFirstUsablePlanCategoryType = (
       )
     : undefined;
 
+const getNextIndicatorId = (
+  indicators: IndicatorListIndicator[],
+  indicatorId: string
+): string | undefined => {
+  const index = indicators.findIndex((indicator) => indicator.id === indicatorId);
+  return index < indicators.length - 1 ? indicators[index + 1].id : undefined;
+};
+
+const getPrevIndicatorId = (
+  indicators: IndicatorListIndicator[],
+  indicatorId: string
+): string | undefined => {
+  const index = indicators.findIndex((indicator) => indicator.id === indicatorId);
+  return index > 0 ? indicators[index - 1].id : undefined;
+};
+
 type IndicatorListPage = NonNullable<GetPlanPageIndicatorListQuery['planPage']> & {
   __typename: 'IndicatorListPage';
 };
@@ -165,12 +182,8 @@ const IndicatorList = ({
   const [filters, setFilters] = useState<Filters>(() => getObjectFromSearchParams(searchParams));
   const [indicatorModalId, setIndicatorModalId] = useState<string | null>(null);
 
-  const handleOpenModal = (id: string) => {
-    setIndicatorModalId(id);
-  };
-
-  const handleCloseModal = () => {
-    setIndicatorModalId(null);
+  const handleChangeModal = (indicatorId?: string | null) => {
+    setIndicatorModalId(indicatorId ?? null);
   };
 
   const { loading, error, data } = useQuery<IndicatorListQuery, IndicatorListQueryVariables>(
@@ -221,8 +234,9 @@ const IndicatorList = ({
     indicators
   );
 
+  const sortedIndicators = sortIndicators(hierarchy, indicators, displayMunicipality ?? false);
   const filteredIndicators = filterIndicators(
-    indicators,
+    sortedIndicators,
     filters,
     includeRelatedPlans ?? false,
     categoryType?.identifier
@@ -230,6 +244,18 @@ const IndicatorList = ({
 
   return (
     <>
+      {indicatorModalId && (
+        <IndicatorModal
+          indicatorId={indicatorModalId}
+          planIdentifier={
+            indicators.find((indicator) => indicator.id === indicatorModalId)?.plans?.[0]?.id ??
+            plan.identifier
+          }
+          onChange={(indicatorId) => handleChangeModal(indicatorId)}
+          nextIndicatorId={getNextIndicatorId(filteredIndicators, indicatorModalId)}
+          prevIndicatorId={getPrevIndicatorId(filteredIndicators, indicatorModalId)}
+        />
+      )}
       <IndicatorsHero
         leadContent={leadContent || undefined}
         showInsights={showInsights}
@@ -255,15 +281,12 @@ const IndicatorList = ({
       </IndicatorsHero>
 
       <Container>
-        {indicatorModalId && (
-          <IndicatorModal indicatorId={indicatorModalId} onClose={handleCloseModal} />
-        )}
         <IndicatorListFiltered
           displayMunicipality={displayMunicipality}
           displayNormalizedValues={displayNormalizedValues}
           categoryType={categoryType}
           indicators={filteredIndicators}
-          openIndicatorsInModal={openIndicatorsInModal && handleOpenModal}
+          openIndicatorsInModal={openIndicatorsInModal && handleChangeModal}
           //filters={filters}
           hierarchy={hierarchy}
           displayLevel={displayLevel}

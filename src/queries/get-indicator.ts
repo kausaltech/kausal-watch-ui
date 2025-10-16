@@ -1,26 +1,8 @@
 import { gql } from '@apollo/client';
 
-import type {
-  IndicatorDetailsQuery,
-  IndicatorDetailsQueryVariables,
-} from '@/common/__generated__/graphql';
-
 import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
-import { getClient } from '../utils/apollo-rsc-client';
 
-export const getIndicatorDetails = async (plan: string, indicatorId: string) =>
-  await (
-    await getClient()
-  ).query<IndicatorDetailsQuery, IndicatorDetailsQueryVariables>({
-    query: GET_INDICATOR_DETAILS,
-    variables: {
-      plan,
-      id: indicatorId,
-    },
-    fetchPolicy: 'no-cache',
-  });
-
-const GET_INDICATOR_DETAILS = gql`
+export const GET_INDICATOR_DETAILS = gql`
   query IndicatorDetails($id: ID, $plan: ID) {
     indicator(plan: $plan, id: $id) {
       id

@@ -13,7 +13,6 @@ import {
   type IndicatorTableColumn,
   IndicatorTableColumnId,
   indentationLevel,
-  sortIndicators,
 } from './indicatorUtils';
 import type { Hierarchy } from './process-indicators';
 
@@ -39,7 +38,11 @@ const IndicatorNameCell = (props: {
 }) => {
   const { indicator, indent, openIndicatorsInModal } = props;
   const IndicatorTrigger: React.ReactNode = openIndicatorsInModal ? (
-    <Button color="link" onClick={() => openIndicatorsInModal(indicator.id)}>
+    <Button
+      color="link"
+      onClick={() => openIndicatorsInModal(indicator.id)}
+      style={{ padding: 0, textAlign: 'left' }}
+    >
       {indicator.name}
     </Button>
   ) : (
@@ -94,9 +97,8 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
     });
   }
 
-  const sortedIndicators = sortIndicators(hierarchy, indicators, displayMunicipality ?? false);
   //console.log('indicators', indicators);
-  //console.log('sortedIndicators', sortedIndicators);
+  //console.log('indicators', indicators);
   return (
     <div className="mt-5 mb-5 pb-5">
       <Table hover size="sm">
@@ -113,7 +115,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
           </tr>
         </thead>
         <tbody>
-          {sortedIndicators.map((indicator) => {
+          {indicators.map((indicator) => {
             const indent = hierarchy ? indentationLevel(indicator, hierarchy) : 0;
             return (
               <IndicatorTableRow key={indicator.id} indicator={indicator} indent={indent}>
