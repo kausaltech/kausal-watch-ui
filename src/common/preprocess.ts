@@ -249,16 +249,19 @@ const getPhaseData = (
     inactiveActionsDonutSector,
   ].filter((s) => s.count > 0);
 
+  const totalAll = allSectors.reduce((sum, s) => sum + s.count, 0);
+  const ongoingAndCompleted = allSectors
+    .filter((s) => s.includeInTotal)
+    .reduce((s, x) => s + x.count, 0);
+
   return {
     labels: allSectors.map((s) => s.label),
     values: allSectors.map((s) => s.count),
     colors: allSectors.map((s) => s.color),
-    good: 0,
-    total: allSectors
-      .filter((s) => s?.includeInTotal)
-      .reduce((prev, cur) => prev + (cur?.count ?? 0), 0)
-      .toString(),
-  };
+    good: ongoingAndCompleted,
+    total: String(totalAll),
+    ongoingAndCompleted,
+  } as Progress;
 };
 
 type StatusSummary = Plan['actionStatusSummaries'][0];
