@@ -67,6 +67,7 @@ export type Progress = {
   hoverTexts?: string[];
   good: number;
   total: string;
+  ongoingAndCompleted?: number;
 };
 
 function getTimelinessLabel(days: number, comparison: Comparison, t: TFunction) {
@@ -224,7 +225,9 @@ const ActionsStatusGraphs = ({
       {phaseData && (
         <StatusDonut
           data={{ values: phaseData.values, labels: phaseData.labels }}
-          currentValue={showTotals ? phaseData.total : undefined}
+          currentValue={
+            showTotals ? `${phaseData.ongoingAndCompleted}/${phaseData.total}` : undefined
+          }
           colors={phaseData.colors.length > 0 ? phaseData.colors : []}
           header={t('actions-phases', getActionTermContext(plan))}
           helpText={t('actions-phases-help', getActionTermContext(plan))}
