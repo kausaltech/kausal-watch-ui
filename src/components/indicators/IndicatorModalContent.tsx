@@ -4,11 +4,7 @@ import styled from 'styled-components';
 
 import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 
-interface IndicatorModalContentProps {
-  indicator?: IndicatorDetailsQuery['indicator'] | null;
-  loading: boolean;
-  error: ApolloError | undefined;
-}
+import IndicatorValueSummary from './IndicatorValueSummary';
 
 const ContentLoader = styled.div`
   position: absolute;
@@ -23,25 +19,52 @@ const ContentLoader = styled.div`
   z-index: 1000;
 `;
 
+const ContentWrapper = styled.div`
+  position: relative;
+  padding: 20px;
+  width: 100%;
+  flex: 1;
+`;
+
+interface IndicatorModalContentProps {
+  indicator?: IndicatorDetailsQuery['indicator'] | null;
+  loading: boolean;
+  error: ApolloError | undefined;
+}
+
 const IndicatorModalContent = ({ indicator, loading, error }: IndicatorModalContentProps) => {
-  if (loading && !indicator) return <div>Loading...</div>;
+  if (loading && !indicator)
+    return (
+      <ContentLoader>
+        <Spinner />
+      </ContentLoader>
+    );
   if (error) return <div>Error: {error.message}</div>;
   if (!indicator) return <div>No data</div>;
 
+  console.log('🪟 ---- indicator', indicator);
   const indicatorName = indicator.name;
   const indicatorDescription = indicator.description;
   const indicatorCategories = indicator.categories;
   const indicatorValues = indicator.values;
   const indicatorGoals = indicator.goals;
   return (
-    <div>
+    <ContentWrapper>
       {loading && (
         <ContentLoader>
           <Spinner />
         </ContentLoader>
       )}
-      <h5>{indicatorName}</h5>
-    </div>
+      <h3 id="indicator-modal-title">{indicatorName}</h3>
+      <IndicatorValueSummary
+        timeResolution={indicator.timeResolution || ''}
+        values={indicatorValues || []}
+        goals={indicatorGoals || []}
+        unit={indicator.unit || {}}
+        desiredTrend={indicator.desiredTrend || undefined}
+      />
+      <div dangerouslySetInnerHTML={{ __html: indicatorDescription || '' }} />
+    </ContentWrapper>
   );
 };
 

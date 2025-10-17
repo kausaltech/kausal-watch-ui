@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Dialog, Heading, Modal, ModalOverlay } from 'react-aria-components';
+import { Button as AriaButton, Dialog, Modal, ModalOverlay } from 'react-aria-components';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -19,7 +19,7 @@ const AriaModalOverlay = styled(ModalOverlay)<{ $bodyHeight: number }>`
   /* react-aria ModalOverlay SHOULD provide this as --page-height, but it doesn't */
   height: ${(props) => props.$bodyHeight}px;
   background: rgba(0 0 0 / 0.5);
-  z-index: 100;
+  z-index: 750;
   font-family: system-ui;
   font-size: 0.875rem;
 
@@ -34,7 +34,13 @@ const AriaModalOverlay = styled(ModalOverlay)<{ $bodyHeight: number }>`
 
 const AriaModal = styled(Modal)`
   position: sticky;
-  max-height: var(--visual-viewport-height);
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: stretch;
+  width: calc(100vw - 40px);
+  max-width: 720px;
+  height: calc(var(--visual-viewport-height) - 100px);
   top: calc(var(--visual-viewport-height) / 2);
   margin-left: 50vw;
   translate: -50% -50%;
@@ -42,10 +48,7 @@ const AriaModal = styled(Modal)`
   border-radius: 6px;
   background: var(--overlay-background);
   color: var(--text-color);
-  border: 1px solid var(--gray-400);
   outline: none;
-  width: max-content;
-  max-width: 300px;
 
   &[data-entering] {
     animation: modal-zoom 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -58,7 +61,17 @@ const AriaModal = styled(Modal)`
 
 const AriaDialog = styled(Dialog)`
   background-color: #eeeeee;
-  padding: 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+`;
+
+const ModalNavigation = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: ${(props) => props.theme.spaces.s100};
 `;
 
 interface IndicatorModalProps {
@@ -67,10 +80,11 @@ interface IndicatorModalProps {
   planIdentifier: string;
   prevIndicatorId?: string;
   nextIndicatorId?: string;
+  indicatorsOrder: string[];
 }
 
 const IndicatorModal = (props: IndicatorModalProps) => {
-  const { indicatorId, onChange, planIdentifier, prevIndicatorId, nextIndicatorId } = props;
+  const { indicatorId, onChange, planIdentifier, indicatorsOrder } = props;
 
   const { loading, error, data, previousData } = useQuery<
     IndicatorDetailsQuery,
@@ -83,6 +97,12 @@ const IndicatorModal = (props: IndicatorModalProps) => {
     fetchPolicy: 'no-cache',
   });
 
+  const currentIndicatorIndex = indicatorsOrder.indexOf(indicatorId);
+  const prevIndicatorId = indicatorsOrder[currentIndicatorIndex - 1];
+  const nextIndicatorId = indicatorsOrder[currentIndicatorIndex + 1];
+  const indicatorCount = indicatorsOrder.length;
+  const currentIndicatorNumber = currentIndicatorIndex + 1;
+
   return (
     <AriaModalOverlay
       isDismissable
@@ -91,17 +111,36 @@ const IndicatorModal = (props: IndicatorModalProps) => {
       $bodyHeight={document.body.clientHeight}
     >
       <AriaModal>
-        <AriaDialog>
-          <Heading slot="title">Indicator</Heading>
-
-          <Button onClick={() => onChange(null)}>X</Button>
+        <AriaDialog aria-labelledby="indicator-modal-title">
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <AriaButton slot="close" onClick={() => onChange(null)}>
+              X
+            </AriaButton>
+          </div>
           <IndicatorModalContent
             indicator={data?.indicator || previousData?.indicator}
             loading={loading}
             error={error}
           />
-          {prevIndicatorId && <Button onClick={() => onChange(prevIndicatorId)}>Previous</Button>}
-          {nextIndicatorId && <Button onClick={() => onChange(nextIndicatorId)}>Next</Button>}
+          <ModalNavigation>
+            <Button
+              onClick={() => onChange(prevIndicatorId)}
+              aria-label="Previous indicator"
+              disabled={!prevIndicatorId || loading}
+            >
+              Previous
+            </Button>
+            <span>
+              {currentIndicatorNumber}/{indicatorCount}
+            </span>
+            <Button
+              onClick={() => onChange(nextIndicatorId)}
+              aria-label="Next indicator"
+              disabled={!nextIndicatorId || loading}
+            >
+              Next
+            </Button>
+          </ModalNavigation>
         </AriaDialog>
       </AriaModal>
     </AriaModalOverlay>
