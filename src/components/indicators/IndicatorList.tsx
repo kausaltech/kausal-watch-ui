@@ -180,10 +180,13 @@ const IndicatorList = ({
     searchParams ? Object.fromEntries(searchParams) : {};
 
   const [filters, setFilters] = useState<Filters>(() => getObjectFromSearchParams(searchParams));
-  const [indicatorModalId, setIndicatorModalId] = useState<string | null>(null);
+  const [indicatorModalId, setIndicatorModalId] = useState<string | null>(
+    () => searchParams.get('indicator') ?? null
+  );
 
   const handleChangeModal = (indicatorId?: string | null) => {
     setIndicatorModalId(indicatorId ?? null);
+    updateSearchParams({ indicator: indicatorId ?? undefined });
   };
 
   const { loading, error, data } = useQuery<IndicatorListQuery, IndicatorListQueryVariables>(
@@ -252,8 +255,7 @@ const IndicatorList = ({
             plan.identifier
           }
           onChange={(indicatorId) => handleChangeModal(indicatorId)}
-          nextIndicatorId={getNextIndicatorId(filteredIndicators, indicatorModalId)}
-          prevIndicatorId={getPrevIndicatorId(filteredIndicators, indicatorModalId)}
+          indicatorsOrder={filteredIndicators.map((indicator) => indicator.id)}
         />
       )}
       <IndicatorsHero
