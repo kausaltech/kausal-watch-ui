@@ -87,5 +87,5 @@ export default async function ActionPage(props: Props) {
     return notFound();
   }
 
-  return <ActionContent action={data.action} extraPlanData={data.plan} />;
+  return <ActionContent action={data.action} extraPlanData={data.plan} testId="action-page" />;
 }

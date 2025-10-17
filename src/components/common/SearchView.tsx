@@ -244,10 +244,11 @@ type SearchViewProps = {
     onlyOtherPlans: boolean;
   };
   onSearchChange: (search: { q: string; onlyOtherPlans: boolean }) => void;
+  testId?: string;
 };
 
 function SearchView(props: SearchViewProps) {
-  const { search, onSearchChange } = props;
+  const { search, onSearchChange, testId } = props;
   const [userSearch, setUserSearch] = useState<SearchResultsProps['search'] | null>(null);
   const t = useTranslations();
 
@@ -277,7 +278,7 @@ function SearchView(props: SearchViewProps) {
 
   return (
     <>
-      <SearchSection id="search-results">
+      <SearchSection id="search-results" data-testid={testId}>
         <SearchHeader>
           <Container>
             <Row>

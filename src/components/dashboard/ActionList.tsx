@@ -427,6 +427,7 @@ const ActionList = (props: ActionListProps) => {
     primaryOrgs,
     includeRelatedPlans,
     columns,
+    testId,
   } = props;
 
   const t = useTranslations();
@@ -517,7 +518,7 @@ const ActionList = (props: ActionListProps) => {
 
   return (
     <>
-      <ActionListSection id="actions">
+      <ActionListSection id="actions" data-testid={testId}>
         <ActionListHeader>
           <Container>
             <h1>{title}</h1>
@@ -639,6 +640,7 @@ type StatusboardProps = {
   onFilterChange: FilterChangeCallback;
   headingHierarchyDepth: number;
   includeRelatedPlans: boolean;
+  testId?: string;
 };
 
 function ActionListLoader(props: StatusboardProps) {
@@ -651,6 +653,7 @@ function ActionListLoader(props: StatusboardProps) {
     availableFilters,
     headingHierarchyDepth,
     includeRelatedPlans,
+    testId,
   } = props;
   const plan = usePlan();
   const t = useTranslations();
@@ -687,6 +690,7 @@ function ActionListLoader(props: StatusboardProps) {
       categoryTypes={categoryTypes}
       primaryOrgs={primaryOrgs}
       includeRelatedPlans={includeRelatedPlans}
+      testId={testId}
     />
   );
 }

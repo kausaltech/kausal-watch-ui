@@ -44,6 +44,7 @@ export const StyledSubtitle = styled.h4`
 type Props = {
   message?: string;
   type?: 'page' | 'block';
+  testId?: string;
 };
 
 export const errorIcon = (
@@ -55,11 +56,11 @@ export const errorIcon = (
   </svg>
 );
 
-export function ErrorPage({ message, type = 'page' }: Props) {
+export function ErrorPage({ message, type = 'page', testId }: Props) {
   const t = useTranslations();
 
   return (
-    <ErrorBackground $isFullPage={type === 'page'}>
+    <ErrorBackground $isFullPage={type === 'page'} data-testid={testId}>
       <Container>
         <Row>
           <Col md={{ size: 6, offset: 3 }}>
