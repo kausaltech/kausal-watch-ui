@@ -1,4 +1,4 @@
-export function beautifyValue(x, locale) {
+export function beautifyValue(x: number | null, locale: string) {
   if (x == null) {
     return '-';
   }
