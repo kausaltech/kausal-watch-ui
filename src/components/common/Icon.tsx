@@ -105,6 +105,8 @@ export enum AvailableIcons {
   ScopeGlobal = 'scope-global',
   ScopeLocal = 'scope-local',
   Search = 'search',
+  SignLanguage = 'sign-language',
+  SimpleLanguage = 'simple-language',
   Sort = 'sort',
   SortDown = 'sort-down',
   SortUp = 'sort-up',
@@ -140,6 +142,7 @@ const IconComponent = ({
   ...rest
 }: IconProps) => {
   const theme = useTheme();
+
   return (
     <svg
       className={`icon ${className}`}
