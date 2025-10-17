@@ -131,7 +131,7 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
   }
 }
 
-export default function ContentPage({ page }: { page: GeneralPlanPage }) {
+export default function ContentPage({ page, testId }: { page: GeneralPlanPage; testId?: string }) {
   // TODO: Resolve shareImageUrl by pagetype
 
   const pathsInstance = usePaths();
@@ -173,13 +173,13 @@ export default function ContentPage({ page }: { page: GeneralPlanPage }) {
 
   if (pathsInstance)
     return (
-      <article>
+      <article data-testid={testId}>
         <PathsPageContent page={page} />
       </article>
     );
 
   return (
-    <article>
+    <article data-testid={testId}>
       {typenameMatches(page, 'CategoryPage', 'StaticPage') ? (
         <PageHeaderBlock page={page} color={isCategoryPage ? categoryColor : undefined} />
       ) : null}
@@ -187,7 +187,7 @@ export default function ContentPage({ page }: { page: GeneralPlanPage }) {
       {isCategoryPage ? (
         <CategoryPageContent page={page} pageSectionColor={pageSectionColor} />
       ) : (
-        <div className="content-area">
+        <div>
           {isPageWithLeadContent && 'leadContent' in page && page.leadContent && (
             <Container className="my-5">
               <Row>

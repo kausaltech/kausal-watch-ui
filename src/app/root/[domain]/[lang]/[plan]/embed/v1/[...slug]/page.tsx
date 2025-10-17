@@ -130,7 +130,7 @@ const EmbeddablePage = (props: Props) => {
   }
   return (
     <EmbedContext.Provider value={embedContext}>
-      <main>
+      <main data-testid="embed-page">
         <div ref={wrapperElement}>
           <EmbedContainer embedType={embedType}>{component}</EmbedContainer>
         </div>

@@ -3,7 +3,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 
 import { captureException } from '@sentry/nextjs';
-import { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 
 import IndicatorContent from '@/components/indicators/IndicatorContent';
 import { getIndicatorDetails } from '@/queries/get-indicator';
@@ -62,5 +62,5 @@ export default async function IndicatorPage(props: Props) {
     return notFound();
   }
 
-  return <IndicatorContent indicator={data.indicator} />;
+  return <IndicatorContent indicator={data.indicator} testId="indicator-page" />;
 }

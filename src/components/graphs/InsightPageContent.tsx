@@ -18,9 +18,16 @@ type InsightPageContentProps = {
   locale: string;
   filters: any;
   router: any;
+  testId?: string;
 };
 
-const InsightPageContent = ({ planId, locale, filters, router }: InsightPageContentProps) => {
+const InsightPageContent = ({
+  planId,
+  locale,
+  filters,
+  router,
+  testId,
+}: InsightPageContentProps) => {
   const [loading, setLoading] = useState(true);
   const [edges, setEdges] = useState([]);
   const [nodes, setNodes] = useState([]);
@@ -72,7 +79,7 @@ const InsightPageContent = ({ planId, locale, filters, router }: InsightPageCont
 
   return (
     <>
-      <IndicatorsHero />
+      <IndicatorsHero testId={testId} />
       {content}
     </>
   );

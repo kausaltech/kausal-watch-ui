@@ -16,5 +16,5 @@ export default async function PlanPage(props: Props) {
     return <ErrorPage message={error?.message} />;
   }
 
-  return <RootPage data={data} />;
+  return <RootPage data={data} testId="home-page" />;
 }
