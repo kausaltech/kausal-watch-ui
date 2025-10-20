@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
+import { RECURSIVE_CATEGORY_TAG_FRAGMENT } from '../fragments/category.fragment';
 
 export const GET_INDICATOR_DETAILS = gql`
   query IndicatorDetails($id: ID, $plan: ID) {
@@ -28,12 +28,7 @@ export const GET_INDICATOR_DETAILS = gql`
         }
       }
       categories {
-        identifier
-        name
-        id
-        type {
-          ...CategoryTypeFragment
-        }
+        ...CategoryTagRecursiveFragment
       }
       common {
         id
@@ -118,6 +113,41 @@ export const GET_INDICATOR_DETAILS = gql`
           level(plan: $plan)
         }
       }
+      plans {
+        id
+        identifier
+        name
+        shortName
+        supersededBy {
+          id
+        }
+        allRelatedPlans {
+          id
+        }
+        relatedPlans {
+          id
+        }
+        supersededPlans(recursive: true) {
+          id
+        }
+        supersedingPlans(recursive: true) {
+          id
+        }
+        parent {
+          id
+        }
+        children {
+          id
+        }
+        copyOf {
+          id
+        }
+        copies {
+          id
+        }
+        versionName
+        publishedAt
+      }
     }
   }
 
@@ -159,5 +189,5 @@ export const GET_INDICATOR_DETAILS = gql`
     }
   }
 
-  ${CATEGORY_TYPE_FRAGMENT}
+  ${RECURSIVE_CATEGORY_TAG_FRAGMENT}
 `;
