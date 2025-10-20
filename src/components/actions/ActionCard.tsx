@@ -175,6 +175,10 @@ const StyledCardTitle = styled.div<{ $isSmall: boolean }>`
   :lang(fi) & {
     hyphens: manual;
   }
+
+  :lang(en) & {
+    word-break: normal;
+    hyphens: none;
 `;
 
 const ActionOrg = styled.div`
