@@ -3409,6 +3409,159 @@ export type CategoryRecursiveFragmentFragment = (
   & { __typename: 'Category' }
 );
 
+export type CategoryTagFragmentFragment = (
+  { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+    { id: string, name: string, namePlural: string | null }
+    & { __typename: 'CategoryLevel' }
+  ) | null, iconImage: (
+    { rendition: (
+      { src: string }
+      & { __typename: 'ImageRendition' }
+    ) | null }
+    & { __typename: 'Image' }
+  ) | null, categoryPage: (
+    { id: string | null, title: string, urlPath: string, live: boolean }
+    & { __typename: 'CategoryPage' }
+  ) | null, type: (
+    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+    & { __typename: 'CategoryType' }
+  ) }
+  & { __typename: 'Category' }
+);
+
+export type CategoryTagWithParentsFragmentFragment = (
+  { parent: (
+    { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+      { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+        { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+          { id: string, name: string, namePlural: string | null }
+          & { __typename: 'CategoryLevel' }
+        ) | null, iconImage: (
+          { rendition: (
+            { src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null }
+          & { __typename: 'Image' }
+        ) | null, categoryPage: (
+          { id: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename: 'CategoryType' }
+        ) }
+        & { __typename: 'Category' }
+      ) | null, level: (
+        { id: string, name: string, namePlural: string | null }
+        & { __typename: 'CategoryLevel' }
+      ) | null, iconImage: (
+        { rendition: (
+          { src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null }
+        & { __typename: 'Image' }
+      ) | null, categoryPage: (
+        { id: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename: 'CategoryType' }
+      ) }
+      & { __typename: 'Category' }
+    ) | null, level: (
+      { id: string, name: string, namePlural: string | null }
+      & { __typename: 'CategoryLevel' }
+    ) | null, iconImage: (
+      { rendition: (
+        { src: string }
+        & { __typename: 'ImageRendition' }
+      ) | null }
+      & { __typename: 'Image' }
+    ) | null, categoryPage: (
+      { id: string | null, title: string, urlPath: string, live: boolean }
+      & { __typename: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+      & { __typename: 'CategoryType' }
+    ) }
+    & { __typename: 'Category' }
+  ) | null }
+  & { __typename: 'Category' }
+);
+
+export type CategoryTagRecursiveFragmentFragment = (
+  { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+    { id: string, name: string, namePlural: string | null }
+    & { __typename: 'CategoryLevel' }
+  ) | null, iconImage: (
+    { rendition: (
+      { src: string }
+      & { __typename: 'ImageRendition' }
+    ) | null }
+    & { __typename: 'Image' }
+  ) | null, categoryPage: (
+    { id: string | null, title: string, urlPath: string, live: boolean }
+    & { __typename: 'CategoryPage' }
+  ) | null, type: (
+    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+    & { __typename: 'CategoryType' }
+  ), parent: (
+    { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+      { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+        { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+          { id: string, name: string, namePlural: string | null }
+          & { __typename: 'CategoryLevel' }
+        ) | null, iconImage: (
+          { rendition: (
+            { src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null }
+          & { __typename: 'Image' }
+        ) | null, categoryPage: (
+          { id: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename: 'CategoryType' }
+        ) }
+        & { __typename: 'Category' }
+      ) | null, level: (
+        { id: string, name: string, namePlural: string | null }
+        & { __typename: 'CategoryLevel' }
+      ) | null, iconImage: (
+        { rendition: (
+          { src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null }
+        & { __typename: 'Image' }
+      ) | null, categoryPage: (
+        { id: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename: 'CategoryType' }
+      ) }
+      & { __typename: 'Category' }
+    ) | null, level: (
+      { id: string, name: string, namePlural: string | null }
+      & { __typename: 'CategoryLevel' }
+    ) | null, iconImage: (
+      { rendition: (
+        { src: string }
+        & { __typename: 'ImageRendition' }
+      ) | null }
+      & { __typename: 'Image' }
+    ) | null, categoryPage: (
+      { id: string | null, title: string, urlPath: string, live: boolean }
+      & { __typename: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+      & { __typename: 'CategoryType' }
+    ) }
+    & { __typename: 'Category' }
+  ) | null }
+  & { __typename: 'Category' }
+);
+
 export type DashboardIndicatorFragmentFragment = (
   { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
     { value: number, date: string | null }
@@ -12661,13 +12814,76 @@ export type IndicatorDetailsQuery = (
       ) | null }
       & { __typename: 'Organization' }
     ), categories: Array<(
-      { identifier: string, name: string, id: string, type: (
-        { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-          { id: string, order: number, name: string, namePlural: string | null }
-          & { __typename: 'CategoryLevel' }
-        )> }
+      { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+        { id: string, name: string, namePlural: string | null }
+        & { __typename: 'CategoryLevel' }
+      ) | null, iconImage: (
+        { rendition: (
+          { src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null }
+        & { __typename: 'Image' }
+      ) | null, categoryPage: (
+        { id: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
         & { __typename: 'CategoryType' }
-      ) }
+      ), parent: (
+        { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+          { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+            { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+              { id: string, name: string, namePlural: string | null }
+              & { __typename: 'CategoryLevel' }
+            ) | null, iconImage: (
+              { rendition: (
+                { src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, categoryPage: (
+              { id: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename: 'CategoryType' }
+            ) }
+            & { __typename: 'Category' }
+          ) | null, level: (
+            { id: string, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          ) | null, iconImage: (
+            { rendition: (
+              { src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, categoryPage: (
+            { id: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename: 'CategoryType' }
+          ) }
+          & { __typename: 'Category' }
+        ) | null, level: (
+          { id: string, name: string, namePlural: string | null }
+          & { __typename: 'CategoryLevel' }
+        ) | null, iconImage: (
+          { rendition: (
+            { src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null }
+          & { __typename: 'Image' }
+        ) | null, categoryPage: (
+          { id: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename: 'CategoryType' }
+        ) }
+        & { __typename: 'Category' }
+      ) | null }
       & { __typename: 'Category' }
     )>, common: (
       { id: string, indicators: Array<(
@@ -12750,6 +12966,36 @@ export type IndicatorDetailsQuery = (
         & { __typename: 'Indicator' }
       ) }
       & { __typename: 'RelatedIndicator' }
+    )>, plans: Array<(
+      { id: string, identifier: string, name: string, shortName: string | null, versionName: string, publishedAt: string | null, supersededBy: (
+        { id: string }
+        & { __typename: 'Plan' }
+      ) | null, allRelatedPlans: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )>, relatedPlans: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )>, supersededPlans: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )>, supersedingPlans: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )>, parent: (
+        { id: string }
+        & { __typename: 'Plan' }
+      ) | null, children: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )>, copyOf: (
+        { id: string }
+        & { __typename: 'Plan' }
+      ) | null, copies: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )> }
+      & { __typename: 'Plan' }
     )> }
     & { __typename: 'Indicator' }
   ) | null }
