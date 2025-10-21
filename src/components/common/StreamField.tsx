@@ -164,6 +164,14 @@ const ResponsiveStyles = styled.div`
   }
 `;
 
+const RichTextSection = styled.div<{ $topPadding: boolean; $bottomPadding: boolean }>`
+  padding-top: ${(props) =>
+    props.$topPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
+  padding-bottom: ${(props) =>
+    props.$bottomPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
+  background-color: ${({ theme }) => theme.section.richText.sectionBackground};
+`;
+
 type StreamFieldBlockPage = {
   __typename:
     | 'CategoryPage'
@@ -212,19 +220,31 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       const COLLAPSIBLE_BREAKPOINT = 1200;
       const isCollapsible = canCollapse && value.length > COLLAPSIBLE_BREAKPOINT;
       return (
-        <Container id={id}>
-          <Row>
-            <Col
-              xl={{ size: hasSidebar ? 7 : 6, offset: hasSidebar ? 4 : 3 }}
-              lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
-              md={{ size: 10, offset: 1 }}
-              className="my-4"
-              {...columnProps}
-            >
-              <RichText html={value} isCollapsible={isCollapsible} />
-            </Col>
-          </Row>
-        </Container>
+        <RichTextSection
+          $topPadding={
+            previousBlockType !== 'RichTextBlock' &&
+            theme.section.richText.sectionBackground !== theme.themeColors.white
+          }
+          $bottomPadding={
+            nextBlockType !== 'RichTextBlock' &&
+            theme.section.richText.sectionBackground !== theme.themeColors.white
+          }
+        >
+          <Container id={id}>
+            <Row>
+              <Col
+                xl={{ size: hasSidebar ? 7 : 8, offset: hasSidebar ? 4 : 2 }}
+                lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
+                md={{ size: 10, offset: 1 }}
+                className="py-4"
+                style={{ backgroundColor: theme.themeColors.white }}
+                {...columnProps}
+              >
+                <RichText html={value} isCollapsible={isCollapsible} />
+              </Col>
+            </Row>
+          </Container>
+        </RichTextSection>
       );
     }
     case 'QuestionAnswerBlock': {
@@ -487,8 +507,8 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         <DashboardRowBlock
           {...block}
           id={id}
-          topMargin={previousBlockType !== 'DashboardRowBlock'}
-          bottomMargin={nextBlockType !== 'DashboardRowBlock'}
+          topPadding={previousBlockType !== 'DashboardRowBlock'}
+          bottomPadding={nextBlockType !== 'DashboardRowBlock'}
         />
       );
     }
