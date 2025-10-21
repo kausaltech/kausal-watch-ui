@@ -144,16 +144,14 @@ type CategoryTagsProps = {
 
 function CategoryTags(props: CategoryTagsProps) {
   const { categories, types, noLink = false, compact = false } = props;
-  console.log('🪟 ---- categories', categories);
-  console.log('🪟 ---- types', types);
   const groupElements = types.map((ct) => {
     const cats = categories.filter((cat) => cat.type.id === ct.id);
-    if (!cats.length) return null;
+    if (!cats || !cats.length) return null;
     /* If category type seems to have levels,
         use the level name of the first selected categoory
         as section header */
     const categoryTypeHeader =
-      ct.levels.length > 0 && cats[0].level?.name ? cats[0].level.name : ct.name;
+      ct.levels?.length > 0 && cats[0].level?.name ? cats[0].level.name : ct.name;
 
     return (
       <CategoryGroup key={ct.id} $compact={compact}>

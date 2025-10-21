@@ -14,6 +14,8 @@ import ContentLoader from '@/components/common/ContentLoader';
 import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
 
+import IndicatorGraph from './IndicatorGraphNew';
+
 type IndicatorVisualisationProps = {
   indicatorId: string;
   indicatorLink?: string;
@@ -21,7 +23,7 @@ type IndicatorVisualisationProps = {
 
 function IndicatorVisualisation({ indicatorId, indicatorLink }: IndicatorVisualisationProps) {
   const plan = usePlan();
-  const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
+  //const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
   const t = useTranslations();
   const locale = useLocale();
 
@@ -51,7 +53,7 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }: IndicatorVisuali
   return (
     <div>
       <div aria-hidden="true">
-        <h1>GRAPH HERE</h1>
+        <IndicatorGraph />
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import type {
   IndicatorDetailsQuery,
   IndicatorDetailsQueryVariables,
 } from '@/common/__generated__/graphql';
+import Icon from '@/components/common/Icon';
 import { GET_INDICATOR_DETAILS } from '@/queries/get-indicator';
 
 import IndicatorModalContent from './IndicatorModalContent';
@@ -64,6 +65,7 @@ const AriaDialog = styled(Dialog)`
   padding: 0;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   width: 100%;
   height: 100%;
 `;
@@ -72,6 +74,7 @@ const ModalNavigation = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: ${(props) => props.theme.spaces.s100};
+  flex: 0 0 auto;
 `;
 
 interface IndicatorModalProps {
@@ -112,11 +115,20 @@ const IndicatorModal = (props: IndicatorModalProps) => {
     >
       <AriaModal>
         <AriaDialog aria-labelledby="indicator-modal-title">
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <AriaButton slot="close" onClick={() => onChange(null)}>
-              X
-            </AriaButton>
-          </div>
+          <AriaButton
+            slot="close"
+            onClick={() => onChange(null)}
+            style={{
+              position: 'absolute',
+              top: '5px',
+              right: '0',
+              zIndex: 1001,
+              border: 0,
+              background: 'transparent',
+            }}
+          >
+            <Icon.Times width="32px" height="32px" />
+          </AriaButton>
           <IndicatorModalContent
             indicator={data?.indicator || previousData?.indicator}
             loading={loading}
@@ -127,6 +139,7 @@ const IndicatorModal = (props: IndicatorModalProps) => {
               onClick={() => onChange(prevIndicatorId)}
               aria-label="Previous indicator"
               disabled={!prevIndicatorId || loading}
+              style={{ visibility: prevIndicatorId ? 'visible' : 'hidden' }}
             >
               Previous
             </Button>
@@ -137,6 +150,7 @@ const IndicatorModal = (props: IndicatorModalProps) => {
               onClick={() => onChange(nextIndicatorId)}
               aria-label="Next indicator"
               disabled={!nextIndicatorId || loading}
+              style={{ visibility: nextIndicatorId ? 'visible' : 'hidden' }}
             >
               Next
             </Button>

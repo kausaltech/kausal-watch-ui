@@ -2,6 +2,8 @@ import { gql } from '@apollo/client';
 
 import images from '@/common/images';
 
+/* Detailed category query for category card lists */
+
 export const CATEGORY_FRAGMENT = gql`
   fragment CategoryFragment on Category {
     id
@@ -118,8 +120,15 @@ export const CATEGORY_TAG_FRAGMENT = gql`
     }
     type {
       id
+      name
       identifier
       hideCategoryIdentifiers
+      helpText
+      levels {
+        id
+        name
+        namePlural
+      }
     }
   }
 `;
