@@ -3,44 +3,75 @@
  *          implicitly when calling `expandPaths`. This should be refactored
  *          or rewritten when implementing the next larger indicator page updates.
  */
-export const processCommonIndicatorHierarchy = (planIndicators) => {
-  const uniqueCommonIndicators = {};
+import { RelatedCommonIndicatorEffectType } from '@/common/__generated__/graphql';
+
+import type { IndicatorListIndicator } from './IndicatorList';
+
+export type Hierarchy = {
+  [key: string]: {
+    id: string;
+    isRoot: boolean;
+    children: string[];
+    path: string[];
+    // Doesn't seem to be used
+    pathNames?: string[];
+    descendants?: string[];
+  };
+};
+
+export const processCommonIndicatorHierarchy = (
+  planIndicators: IndicatorListIndicator[]
+): Hierarchy => {
+  const uniqueCommonIndicators: { [key: string]: IndicatorListIndicator['common'] } = {};
+
   planIndicators.forEach((i) => {
     if (i.common != null && !(i.common.id in uniqueCommonIndicators)) {
       uniqueCommonIndicators[i.common.id] = i.common;
     }
   });
-  const makeLinks = (commonIndicator) => ({
-    id: commonIndicator.id,
-    isRoot:
-      commonIndicator.relatedEffects
-        .filter((e) => e.effectType === 'PART_OF')
-        .filter((e) => uniqueCommonIndicators[e.effectIndicator.id] != null).length === 0,
-    children: commonIndicator.relatedCauses
-      .filter((e) => e.effectType === 'PART_OF')
-      .filter((e) => uniqueCommonIndicators[e.causalIndicator.id] != null)
-      .map((e) => e.causalIndicator.id),
-  });
-  const processed = Object.fromEntries(
-    Object.values(uniqueCommonIndicators).map((i) => [i.id, makeLinks(i)])
+
+  const makeLinks = (commonIndicator: IndicatorListIndicator['common']) => {
+    if (commonIndicator == null) {
+      return null;
+    }
+    return {
+      id: commonIndicator.id,
+      isRoot:
+        commonIndicator.relatedEffects
+          .filter((e) => e.effectType === RelatedCommonIndicatorEffectType.PartOf)
+          .filter((e) => uniqueCommonIndicators[e.effectIndicator.id] != null).length === 0,
+      children: commonIndicator.relatedCauses
+        .filter((e) => e.effectType === RelatedCommonIndicatorEffectType.PartOf)
+        .filter((e) => uniqueCommonIndicators[e.causalIndicator.id] != null)
+        .map((e) => e.causalIndicator.id),
+      path: [],
+    };
+  };
+
+  const processedHierarchy: Hierarchy = Object.fromEntries(
+    Object.values(uniqueCommonIndicators)
+      .filter((i) => i != null)
+      .map((i) => [i.id, makeLinks(i)])
+      .filter(([, v]) => v !== null) as [string, NonNullable<ReturnType<typeof makeLinks>>][]
   );
-  const expandPaths = (indicators, path) => {
-    let descendants = [];
+
+  const expandPaths = (indicators: Hierarchy[string][], path: string[]): string[] => {
+    let descendants: string[] = [];
     indicators.forEach((indicator) => {
       const newPath = [...path, indicator.id];
       indicator.path = newPath;
-      indicator.pathNames = newPath.map((p) => uniqueCommonIndicators[p].name);
-      indicator.descendants = expandPaths(
-        indicator.children.map((c) => processed[c]),
-        newPath
-      );
+      indicator.pathNames = newPath.map((p) => uniqueCommonIndicators[p]?.name || '');
+      const childrenIndicators = indicator.children
+        .map((c) => processedHierarchy[c])
+        .filter((c): c is Hierarchy[string] => c != null);
+      indicator.descendants = expandPaths(childrenIndicators, newPath);
 
       descendants = descendants.concat(indicator.descendants, [indicator.id]);
     });
     return descendants;
   };
 
-  const rootIndicators = Object.values(processed).filter((i) => i.isRoot);
+  const rootIndicators = Object.values(processedHierarchy).filter((i) => i.isRoot);
 
   if (rootIndicators.length === Object.keys(uniqueCommonIndicators).length) {
     // The hierarchy is flat because all the common indicators are root
@@ -49,5 +80,5 @@ export const processCommonIndicatorHierarchy = (planIndicators) => {
 
   expandPaths(rootIndicators, []);
 
-  return processed;
+  return processedHierarchy;
 };

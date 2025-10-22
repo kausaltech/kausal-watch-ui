@@ -114,8 +114,8 @@ const CollapseButton = styled(Button)`
 `;
 
 const GET_CONTACT_DETAILS = gql`
-  query ContactDetails($id: ID!) {
-    person(id: $id) {
+  query ContactDetails($id: ID!, $plan: ID!) {
+    person(id: $id, plan: $plan) {
       email
       organization {
         id
@@ -140,14 +140,16 @@ interface ContactDetailsProps {
 
 interface ContactDetailsProps {
   id: string;
+  plan: PlanContextFragment;
 }
 
 function ContactDetails({ id, plan }: ContactDetailsProps) {
   const t = useTranslations();
+  const planIdentifier = plan.identifier;
   const { loading, error, data } = useQuery<ContactDetailsQuery, ContactDetailsQueryVariables>(
     GET_CONTACT_DETAILS,
     {
-      variables: { id },
+      variables: { id, plan: planIdentifier },
     }
   );
 
