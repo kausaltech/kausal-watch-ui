@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import ThemeAccessibilityTest from '@/stories/components/ThemeAccessibilityTest';
+import ThemeAccessibilityTest from './components/ThemeAccessibilityTest';
 
 const meta = {
   title: 'Themes/ThemeAccessibilityTest',

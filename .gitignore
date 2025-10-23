@@ -17,7 +17,7 @@ build-storybook.log
 *~
 *.swp
 
-/.env
+.env*
 /Attic/
 /.envrc
 /public/static/themes/
@@ -28,8 +28,7 @@ build-storybook.log
 /playwright-report/
 /playwright/.cache/
 /e2e-tests/*-snapshots/
-/.secrets/
-/.env*
+.secrets/
 .sentryclirc
 /.eslintcache
 **/node_modules/

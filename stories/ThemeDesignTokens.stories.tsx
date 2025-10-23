@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import ThemeDesignTokens from '@/stories/components/ThemeDesignTokens';
+import ThemeDesignTokens from './components/ThemeDesignTokens';
 
 const meta = {
   title: 'Themes/ThemeDesignTokens',

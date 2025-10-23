@@ -7,7 +7,7 @@ const config = {
   ...defaultConfig,
   overrides: [
     {
-      files: ['common/__generated__/*'],
+      files: ['**/__generated__/*'],
       excludeFiles: ['**'],
     },
   ],
