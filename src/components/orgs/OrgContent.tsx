@@ -88,7 +88,7 @@ const OrgHeader = styled.div`
   }
 `;
 
-const SectionTitle = styled.p`
+const SectionTitle = styled.div`
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
@@ -104,7 +104,7 @@ const OrgLogo = styled.img`
   }
 `;
 
-const OrgDescription = styled.p`
+const OrgDescription = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 

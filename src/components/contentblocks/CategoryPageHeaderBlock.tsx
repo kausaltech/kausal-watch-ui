@@ -64,7 +64,7 @@ enum IconSize {
   L = 'L',
 }
 
-const CategoryHeader = styled.div<{ $bg: string | null | undefined; $hasImage?: boolean }>`
+const CategoryHeader = styled.div<{ $bg?: string | null | false; $hasImage?: boolean }>`
   width: 100%;
   position: relative;
   background-color: ${({ $bg }) => $bg};
@@ -323,16 +323,16 @@ interface Props {
   page: CategoryPage;
   title: string;
   categoryId: string;
-  identifier: string | null | undefined;
+  identifier?: string;
   lead?: string;
-  iconImage: string | null | undefined;
-  headerImage: MultiUseImageFragmentFragment | null | undefined;
+  iconImage?: string;
+  headerImage?: MultiUseImageFragmentFragment | null;
   imageAlign?: string;
-  color?: string | null | undefined;
-  attributes: AttributesBlockAttributeFragment[] | null | undefined;
+  color?: string | false | null;
+  attributes: AttributesBlockAttributeFragment[];
   typeId: string;
-  level: string | null | undefined;
-  layout?: CategoryPageMainTopBlock[] | null;
+  level?: string;
+  layout?: CategoryPageMainTopBlock[];
 }
 
 export default function CategoryPageHeaderBlock(props: Props) {
@@ -433,7 +433,7 @@ export default function CategoryPageHeaderBlock(props: Props) {
                     size={(page?.layout?.iconSize as IconSize) ?? undefined}
                     src={iconImage}
                     title=""
-                    $color={color}
+                    $color={color ? color : undefined}
                   />
                 ) : (
                   <CategoryIconImage

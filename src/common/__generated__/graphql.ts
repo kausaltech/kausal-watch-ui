@@ -585,295 +585,6 @@ export type ActionHightlightListQuery = (
   & { __typename: 'Query' }
 );
 
-export type ActionUpdatesQueryVariables = Exact<{
-  plan: Scalars['ID']['input'];
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type ActionUpdatesQuery = (
-  { action: (
-    { statusUpdates: Array<(
-      { id: string, title: string, date: string, content: string, author: (
-        { id: string, firstName: string, lastName: string, avatarUrl: string | null }
-        & { __typename: 'Person' }
-      ) | null }
-      & { __typename: 'ActionStatusUpdate' }
-    )> }
-    & { __typename: 'Action' }
-  ) | null }
-  & { __typename: 'Query' }
-);
-
-export type GetActionListQueryVariables = Exact<{
-  plan: Scalars['ID']['input'];
-  clientUrl: Scalars['String']['input'];
-}>;
-
-
-export type GetActionListQuery = (
-  { planActions: Array<(
-    { hasDependencyRelationships: boolean | null, id: string, identifier: string, name: string, viewUrl: string, color: string | null, scheduleContinuous: boolean, completion: number | null, image: (
-      { id: string, rendition: (
-        { id: string, width: number, height: number, src: string, alt: string }
-        & { __typename: 'ImageRendition' }
-      ) | null }
-      & { __typename: 'Image' }
-    ) | null, status: (
-      { id: string, identifier: string, name: string, color: string }
-      & { __typename: 'ActionStatus' }
-    ) | null, categories: Array<(
-      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
-        { id: string, name: string, namePlural: string | null }
-        & { __typename: 'CategoryLevel' }
-      ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null, large: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null, small: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null, social: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null, rendition: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null }
-        & { __typename: 'Image' }
-      ) | null, indicators: Array<(
-        { id: string, values: Array<(
-          { date: string | null, value: number }
-          & { __typename: 'IndicatorValue' }
-        )>, goals: Array<(
-          { date: string | null, value: number }
-          & { __typename: 'IndicatorGoal' }
-        ) | null> | null, unit: (
-          { name: string, shortName: string | null }
-          & { __typename: 'Unit' }
-        ) }
-        & { __typename: 'Indicator' }
-      )>, iconImage: (
-        { rendition: (
-          { src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null }
-        & { __typename: 'Image' }
-      ) | null, categoryPage: (
-        { id: string | null, title: string, urlPath: string, live: boolean }
-        & { __typename: 'CategoryPage' }
-      ) | null, type: (
-        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-        & { __typename: 'CategoryType' }
-      ), attributes: Array<(
-        { id: string, key: string }
-        & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
-      ) | (
-        { value: string, id: string, key: string }
-        & { __typename: 'AttributeRichText' | 'AttributeText' }
-      )>, parent: (
-        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
-          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
-            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
-              { id: string, name: string, namePlural: string | null }
-              & { __typename: 'CategoryLevel' }
-            ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename: 'ImageRendition' }
-              ) | null, large: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename: 'ImageRendition' }
-              ) | null, small: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename: 'ImageRendition' }
-              ) | null, social: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename: 'ImageRendition' }
-              ) | null, rendition: (
-                { id: string, width: number, height: number, src: string }
-                & { __typename: 'ImageRendition' }
-              ) | null }
-              & { __typename: 'Image' }
-            ) | null, indicators: Array<(
-              { id: string, values: Array<(
-                { date: string | null, value: number }
-                & { __typename: 'IndicatorValue' }
-              )>, goals: Array<(
-                { date: string | null, value: number }
-                & { __typename: 'IndicatorGoal' }
-              ) | null> | null, unit: (
-                { name: string, shortName: string | null }
-                & { __typename: 'Unit' }
-              ) }
-              & { __typename: 'Indicator' }
-            )>, iconImage: (
-              { rendition: (
-                { src: string }
-                & { __typename: 'ImageRendition' }
-              ) | null }
-              & { __typename: 'Image' }
-            ) | null, categoryPage: (
-              { id: string | null, title: string, urlPath: string, live: boolean }
-              & { __typename: 'CategoryPage' }
-            ) | null, type: (
-              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-              & { __typename: 'CategoryType' }
-            ), attributes: Array<(
-              { id: string, key: string }
-              & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
-            ) | (
-              { value: string, id: string, key: string }
-              & { __typename: 'AttributeRichText' | 'AttributeText' }
-            )> }
-            & { __typename: 'Category' }
-          ) | null, level: (
-            { id: string, name: string, namePlural: string | null }
-            & { __typename: 'CategoryLevel' }
-          ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename: 'ImageRendition' }
-            ) | null, large: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename: 'ImageRendition' }
-            ) | null, small: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename: 'ImageRendition' }
-            ) | null, social: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename: 'ImageRendition' }
-            ) | null, rendition: (
-              { id: string, width: number, height: number, src: string }
-              & { __typename: 'ImageRendition' }
-            ) | null }
-            & { __typename: 'Image' }
-          ) | null, indicators: Array<(
-            { id: string, values: Array<(
-              { date: string | null, value: number }
-              & { __typename: 'IndicatorValue' }
-            )>, goals: Array<(
-              { date: string | null, value: number }
-              & { __typename: 'IndicatorGoal' }
-            ) | null> | null, unit: (
-              { name: string, shortName: string | null }
-              & { __typename: 'Unit' }
-            ) }
-            & { __typename: 'Indicator' }
-          )>, iconImage: (
-            { rendition: (
-              { src: string }
-              & { __typename: 'ImageRendition' }
-            ) | null }
-            & { __typename: 'Image' }
-          ) | null, categoryPage: (
-            { id: string | null, title: string, urlPath: string, live: boolean }
-            & { __typename: 'CategoryPage' }
-          ) | null, type: (
-            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-            & { __typename: 'CategoryType' }
-          ), attributes: Array<(
-            { id: string, key: string }
-            & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
-          ) | (
-            { value: string, id: string, key: string }
-            & { __typename: 'AttributeRichText' | 'AttributeText' }
-          )> }
-          & { __typename: 'Category' }
-        ) | null, level: (
-          { id: string, name: string, namePlural: string | null }
-          & { __typename: 'CategoryLevel' }
-        ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename: 'ImageRendition' }
-          ) | null, large: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename: 'ImageRendition' }
-          ) | null, small: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename: 'ImageRendition' }
-          ) | null, social: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename: 'ImageRendition' }
-          ) | null, rendition: (
-            { id: string, width: number, height: number, src: string }
-            & { __typename: 'ImageRendition' }
-          ) | null }
-          & { __typename: 'Image' }
-        ) | null, indicators: Array<(
-          { id: string, values: Array<(
-            { date: string | null, value: number }
-            & { __typename: 'IndicatorValue' }
-          )>, goals: Array<(
-            { date: string | null, value: number }
-            & { __typename: 'IndicatorGoal' }
-          ) | null> | null, unit: (
-            { name: string, shortName: string | null }
-            & { __typename: 'Unit' }
-          ) }
-          & { __typename: 'Indicator' }
-        )>, iconImage: (
-          { rendition: (
-            { src: string }
-            & { __typename: 'ImageRendition' }
-          ) | null }
-          & { __typename: 'Image' }
-        ) | null, categoryPage: (
-          { id: string | null, title: string, urlPath: string, live: boolean }
-          & { __typename: 'CategoryPage' }
-        ) | null, type: (
-          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
-          & { __typename: 'CategoryType' }
-        ), attributes: Array<(
-          { id: string, key: string }
-          & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
-        ) | (
-          { value: string, id: string, key: string }
-          & { __typename: 'AttributeRichText' | 'AttributeText' }
-        )> }
-        & { __typename: 'Category' }
-      ) | null }
-      & { __typename: 'Category' }
-    )>, statusSummary: (
-      { identifier: ActionStatusSummaryIdentifier }
-      & { __typename: 'ActionStatusSummary' }
-    ), implementationPhase: (
-      { id: string, identifier: string, name: string }
-      & { __typename: 'ActionImplementationPhase' }
-    ) | null, primaryOrg: (
-      { id: string, abbreviation: string | null, name: string, logo: (
-        { rendition: (
-          { src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null }
-        & { __typename: 'Image' }
-      ) | null }
-      & { __typename: 'Organization' }
-    ) | null, mergedWith: (
-      { id: string, identifier: string, plan: (
-        { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
-        & { __typename: 'Plan' }
-      ) }
-      & { __typename: 'Action' }
-    ) | null, plan: (
-      { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-        { rendition: (
-          { src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null }
-        & { __typename: 'Image' }
-      ) | null }
-      & { __typename: 'Plan' }
-    ) }
-    & { __typename: 'Action' }
-  )> | null }
-  & { __typename: 'Query' }
-);
-
 export type ContactDetailsQueryVariables = Exact<{
   id: Scalars['ID']['input'];
   plan: Scalars['ID']['input'];
@@ -991,7 +702,7 @@ export type GetActionListForBlockQuery = (
           { date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -1045,7 +756,7 @@ export type GetActionListForBlockQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -1098,7 +809,7 @@ export type GetActionListForBlockQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -1151,7 +862,7 @@ export type GetActionListForBlockQuery = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -1885,7 +1596,7 @@ export type IndicatorListQuery = (
         ), common: (
           { id: string, name: string, normalizations: Array<(
             { unit: (
-              { shortName: string | null }
+              { id: string, shortName: string | null }
               & { __typename: 'Unit' }
             ), normalizer: (
               { name: string, id: string, identifier: string | null }
@@ -1913,7 +1624,7 @@ export type IndicatorListQuery = (
           )> }
           & { __typename: 'IndicatorValue' }
         ) | null, unit: (
-          { shortName: string | null }
+          { id: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -1967,7 +1678,7 @@ export type IndicatorListQuery = (
     ), common: (
       { id: string, name: string, normalizations: Array<(
         { unit: (
-          { shortName: string | null }
+          { id: string, shortName: string | null }
           & { __typename: 'Unit' }
         ), normalizer: (
           { name: string, id: string, identifier: string | null }
@@ -1986,7 +1697,7 @@ export type IndicatorListQuery = (
       )> }
       & { __typename: 'IndicatorValue' }
     ) | null, unit: (
-      { shortName: string | null }
+      { id: string, shortName: string | null }
       & { __typename: 'Unit' }
     ), categories: Array<(
       { id: string, name: string, parent: (
@@ -2017,7 +1728,7 @@ export type IndicatorGraphDataQueryVariables = Exact<{
 
 export type IndicatorGraphDataQuery = (
   { plan: (
-    { scenarios: Array<(
+    { id: string, scenarios: Array<(
       { id: string, identifier: string, name: string }
       & { __typename: 'Scenario' }
     )> }
@@ -2062,7 +1773,7 @@ export type IndicatorGraphDataQuery = (
     ), common: (
       { id: string, name: string, normalizations: Array<(
         { unit: (
-          { shortName: string | null }
+          { id: string, shortName: string | null }
           & { __typename: 'Unit' }
         ), normalizer: (
           { name: string, id: string, identifier: string | null }
@@ -2116,7 +1827,7 @@ export type IndicatorGraphDataQuery = (
   & { __typename: 'Query' }
 );
 
-type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
+export type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
   { id: string, categories: Array<(
     { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
       { id: string, name: string, namePlural: string | null }
@@ -2147,7 +1858,7 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
         { date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -2201,7 +1912,7 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -2254,7 +1965,7 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -2307,7 +2018,7 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
           { date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -2343,7 +2054,7 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
   & { __typename: 'AttributeCategoryChoice' }
 );
 
-type AttributesBlockAttribute_AttributeChoice_Fragment = (
+export type AttributesBlockAttribute_AttributeChoice_Fragment = (
   { text: string | null, id: string, choice: (
     { id: string, name: string }
     & { __typename: 'AttributeTypeChoiceOption' }
@@ -2357,7 +2068,7 @@ type AttributesBlockAttribute_AttributeChoice_Fragment = (
   & { __typename: 'AttributeChoice' }
 );
 
-type AttributesBlockAttribute_AttributeNumericValue_Fragment = (
+export type AttributesBlockAttribute_AttributeNumericValue_Fragment = (
   { id: string, numericValue: number, type: (
     { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
       { id: string, name: string, shortName: string | null }
@@ -2368,7 +2079,7 @@ type AttributesBlockAttribute_AttributeNumericValue_Fragment = (
   & { __typename: 'AttributeNumericValue' }
 );
 
-type AttributesBlockAttribute_AttributeRichText_AttributeText_Fragment = (
+export type AttributesBlockAttribute_AttributeRichText_AttributeText_Fragment = (
   { value: string, id: string, type: (
     { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
       { id: string, name: string, shortName: string | null }
@@ -2392,7 +2103,7 @@ export type AttributesBlockAttributeTypeFragment = (
   & { __typename: 'AttributeType' }
 );
 
-type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
+export type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
   { id: string, type: (
     { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
       { id: string, name: string, shortName: string | null }
@@ -2432,7 +2143,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
         { date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -2486,7 +2197,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -2539,7 +2250,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -2592,7 +2303,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
           { date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -2622,7 +2333,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
   & { __typename: 'AttributeCategoryChoice' }
 );
 
-type AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment = (
+export type AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment = (
   { text: string | null, id: string, type: (
     { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
       { id: string, name: string, shortName: string | null }
@@ -2639,7 +2350,7 @@ type AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment = (
   & { __typename: 'AttributeChoice' }
 );
 
-type AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment = (
+export type AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment = (
   { id: string, numericValue: number, type: (
     { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
       { id: string, name: string, shortName: string | null }
@@ -2653,7 +2364,7 @@ type AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment = (
   & { __typename: 'AttributeNumericValue' }
 );
 
-type AttributesBlockAttributeWithNestedType_AttributeRichText_AttributeText_Fragment = (
+export type AttributesBlockAttributeWithNestedType_AttributeRichText_AttributeText_Fragment = (
   { value: string, id: string, type: (
     { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
       { id: string, name: string, shortName: string | null }
@@ -2703,7 +2414,7 @@ export type ActionCardFragment = (
         { date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -2757,7 +2468,7 @@ export type ActionCardFragment = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -2810,7 +2521,7 @@ export type ActionCardFragment = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -2863,7 +2574,7 @@ export type ActionCardFragment = (
           { date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -2923,37 +2634,37 @@ export type ActionCardFragment = (
   & { __typename: 'Action' }
 );
 
-type ActionListFilter_JxzhEOvnBnIzLiXeAUm3xrfiKBjXFpDaL5C3p3Xgq4_Fragment = (
+export type ActionListFilter_JxzhEOvnBnIzLiXeAUm3xrfiKBjXFpDaL5C3p3Xgq4_Fragment = (
   { field: string, id: string | null }
   & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' }
 );
 
-type ActionListFilter_Zf5emmbUjQdAxoEd11HNfN7rZeObw5fUe9AKmN0dV8_Fragment = (
+export type ActionListFilter_Zf5emmbUjQdAxoEd11HNfN7rZeObw5fUe9AKmN0dV8_Fragment = (
   { field: string, id: string | null }
   & { __typename: 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' }
 );
 
-type ActionListFilter_93JyuwkcgTxyAd8Ze7B1Y1YdUFqF72beexGyp3vHk_Fragment = (
+export type ActionListFilter_93JyuwkcgTxyAd8Ze7B1Y1YdUFqF72beexGyp3vHk_Fragment = (
   { field: string, id: string | null }
   & { __typename: 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' }
 );
 
-type ActionListFilter_4HpjKhsrlTf6hxGNhz0QdoSkd5pDwAx5uXeu2jfvi0_Fragment = (
+export type ActionListFilter_4HpjKhsrlTf6hxGNhz0QdoSkd5pDwAx5uXeu2jfvi0_Fragment = (
   { field: string, id: string | null }
   & { __typename: 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' }
 );
 
-type ActionListFilter_2Txh4yO4W1VhIfyCaXIuih74QeLatg0aJbS1nrTEbc_Fragment = (
+export type ActionListFilter_2Txh4yO4W1VhIfyCaXIuih74QeLatg0aJbS1nrTEbc_Fragment = (
   { field: string, id: string | null }
   & { __typename: 'IndicatorCausalChainBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' }
 );
 
-type ActionListFilter_HlPesuqJy5ICdt8i9VuxaO76AiApLIuWcyaZnblsbuk_Fragment = (
+export type ActionListFilter_HlPesuqJy5ICdt8i9VuxaO76AiApLIuWcyaZnblsbuk_Fragment = (
   { field: string, id: string | null }
   & { __typename: 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
 );
 
-type ActionListFilter_ActionAttributeTypeFilterBlock_Fragment = (
+export type ActionListFilter_ActionAttributeTypeFilterBlock_Fragment = (
   { showAllLabel: string | null, field: string, id: string | null, attributeType: (
     { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
       { id: string, identifier: string, name: string }
@@ -2964,7 +2675,7 @@ type ActionListFilter_ActionAttributeTypeFilterBlock_Fragment = (
   & { __typename: 'ActionAttributeTypeFilterBlock' }
 );
 
-type ActionListFilter_CategoryTypeFilterBlock_Fragment = (
+export type ActionListFilter_CategoryTypeFilterBlock_Fragment = (
   { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
     { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
       { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
@@ -2981,7 +2692,7 @@ type ActionListFilter_CategoryTypeFilterBlock_Fragment = (
   & { __typename: 'CategoryTypeFilterBlock' }
 );
 
-type ActionListFilter_ContinuousActionFilterBlock_Fragment = (
+export type ActionListFilter_ContinuousActionFilterBlock_Fragment = (
   { id: string | null, field: string }
   & { __typename: 'ContinuousActionFilterBlock' }
 );
@@ -3141,7 +2852,7 @@ export type CategoryFragmentFragment = (
       { date: string | null, value: number }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -3200,7 +2911,7 @@ export type CategoryWithParentsFragmentFragment = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -3253,7 +2964,7 @@ export type CategoryWithParentsFragmentFragment = (
           { date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -3306,7 +3017,7 @@ export type CategoryWithParentsFragmentFragment = (
         { date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -3364,7 +3075,7 @@ export type CategoryRecursiveFragmentFragment = (
       { date: string | null, value: number }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -3418,7 +3129,7 @@ export type CategoryRecursiveFragmentFragment = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -3471,7 +3182,7 @@ export type CategoryRecursiveFragmentFragment = (
           { date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -3524,7 +3235,7 @@ export type CategoryRecursiveFragmentFragment = (
         { date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -3560,30 +3271,30 @@ export type DashboardIndicatorFragmentFragment = (
     { value: number, date: string | null }
     & { __typename: 'IndicatorGoal' }
   ) | null> | null, unit: (
-    { name: string, shortName: string | null }
+    { id: string, name: string, shortName: string | null }
     & { __typename: 'Unit' }
   ) }
   & { __typename: 'Indicator' }
 );
 
 export type DashboardIndicatorBlockFragmentFragment = (
-  { blockType: string, blocks: Array<(
-    { blockType: string }
+  { id: string | null, blockType: string, blocks: Array<(
+    { id: string | null, blockType: string }
     & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
   ) | (
-    { blockType: string }
+    { id: string | null, blockType: string }
     & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
   ) | (
-    { blockType: string }
+    { id: string | null, blockType: string }
     & { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardRowBlock' }
   ) | (
-    { blockType: string }
+    { id: string | null, blockType: string }
     & { __typename: 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCausalChainBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' }
   ) | (
-    { blockType: string }
+    { id: string | null, blockType: string }
     & { __typename: 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' }
   ) | (
-    { blockType: string }
+    { id: string | null, blockType: string }
     & { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
   ) | (
     { id: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
@@ -3609,7 +3320,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
         { value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -3639,7 +3350,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
         { value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -3669,14 +3380,14 @@ export type DashboardIndicatorBlockFragmentFragment = (
         { value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
     ) | null }
     & { __typename: 'DashboardIndicatorLineChartBlock' }
   ) | (
-    { helpText: string | null, year: number | null, blockType: string, chartSeries: Array<(
+    { helpText: string | null, year: number | null, id: string | null, blockType: string, chartSeries: Array<(
       { dimensionCategory: (
         { id: string, name: string, defaultColor: string }
         & { __typename: 'DimensionCategory' }
@@ -3699,7 +3410,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
         { value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -3714,50 +3425,50 @@ export type DashboardIndicatorBlockFragmentFragment = (
         { value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
     ) | null }
     & { __typename: 'DashboardIndicatorSummaryBlock' }
   ) | (
-    { text: string | null, blockType: string }
+    { text: string | null, id: string | null, blockType: string }
     & { __typename: 'DashboardParagraphBlock' }
   )> }
   & { __typename: 'DashboardRowBlock' }
 );
 
-type StreamFieldFragment_CsWpOaD0dUEdhV96j5U9TnlDssZTxlWikakK8ZjePw_Fragment = (
+export type StreamFieldFragment_CsWpOaD0dUEdhV96j5U9TnlDssZTxlWikakK8ZjePw_Fragment = (
   { id: string | null, blockType: string, field: string }
   & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
 );
 
-type StreamFieldFragment_LEuc4P34OuhAi5tditMvfwrwXsvb6mmls0YluNrk_Fragment = (
+export type StreamFieldFragment_LEuc4P34OuhAi5tditMvfwrwXsvb6mmls0YluNrk_Fragment = (
   { id: string | null, blockType: string, field: string }
   & { __typename: 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' }
 );
 
-type StreamFieldFragment_MRtVxdOlrc5lHVq5r6hSwNTpwdXOsPcNfUgGyy36kY_Fragment = (
+export type StreamFieldFragment_MRtVxdOlrc5lHVq5r6hSwNTpwdXOsPcNfUgGyy36kY_Fragment = (
   { id: string | null, blockType: string, field: string }
   & { __typename: 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'ContinuousActionFilterBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' }
 );
 
-type StreamFieldFragment_QrsC5ckYbmcynV5xfaqbUy6LqMiHUg0fwvYhjs13wIm_Fragment = (
+export type StreamFieldFragment_QrsC5ckYbmcynV5xfaqbUy6LqMiHUg0fwvYhjs13wIm_Fragment = (
   { id: string | null, blockType: string, field: string }
   & { __typename: 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCausalChainBlock' | 'IndicatorHighlightsBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' }
 );
 
-type StreamFieldFragment_4bH6KFsByZvxlHi4Ptyz1GwMbx8AesxU315SRsrMfA_Fragment = (
+export type StreamFieldFragment_4bH6KFsByZvxlHi4Ptyz1GwMbx8AesxU315SRsrMfA_Fragment = (
   { id: string | null, blockType: string, field: string }
   & { __typename: 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' }
 );
 
-type StreamFieldFragment_UpdatedAtColumnBlock_Fragment = (
+export type StreamFieldFragment_UpdatedAtColumnBlock_Fragment = (
   { id: string | null, blockType: string, field: string }
   & { __typename: 'UpdatedAtColumnBlock' }
 );
 
-type StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment = (
+export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment = (
   { id: string | null, blockType: string, field: string, blocks: Array<(
     { id: string | null, field: string }
     & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
@@ -3786,7 +3497,7 @@ type StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment 
   & { __typename: 'AccessibilityStatementContactInformationBlock' }
 );
 
-type StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment = (
+export type StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment = (
   { id: string | null, blockType: string, field: string, cards: Array<(
     { heading: string | null, lead: string | null, category: (
       { id: string, type: (
@@ -3800,7 +3511,7 @@ type StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment = (
   & { __typename: 'ActionCategoryFilterCardsBlock' }
 );
 
-type StreamFieldFragment_ActionListBlock_Fragment = (
+export type StreamFieldFragment_ActionListBlock_Fragment = (
   { id: string | null, heading: string | null, helpText: string | null, blockType: string, field: string, categoryFilter: (
     { id: string }
     & { __typename: 'Category' }
@@ -3811,7 +3522,7 @@ type StreamFieldFragment_ActionListBlock_Fragment = (
   & { __typename: 'ActionListBlock' }
 );
 
-type StreamFieldFragment_AdaptiveEmbedBlock_Fragment = (
+export type StreamFieldFragment_AdaptiveEmbedBlock_Fragment = (
   { fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
     { html: string | null }
     & { __typename: 'EmbedHTMLValue' }
@@ -3819,7 +3530,7 @@ type StreamFieldFragment_AdaptiveEmbedBlock_Fragment = (
   & { __typename: 'AdaptiveEmbedBlock' }
 );
 
-type StreamFieldFragment_CardListBlock_Fragment = (
+export type StreamFieldFragment_CardListBlock_Fragment = (
   { heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, cards: Array<(
     { heading: string | null, content: string | null, link: string | null, image: (
       { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
@@ -3845,7 +3556,7 @@ type StreamFieldFragment_CardListBlock_Fragment = (
   & { __typename: 'CardListBlock' }
 );
 
-type StreamFieldFragment_CartographyVisualisationBlock_Fragment = (
+export type StreamFieldFragment_CartographyVisualisationBlock_Fragment = (
   { styleOverrides: string | null, id: string | null, blockType: string, field: string, cartographyStyle: string | null, account: (
     { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
     & { __typename: 'CartographyProviderCredentials' }
@@ -3853,7 +3564,7 @@ type StreamFieldFragment_CartographyVisualisationBlock_Fragment = (
   & { __typename: 'CartographyVisualisationBlock' }
 );
 
-type StreamFieldFragment_CategoryListBlock_Fragment = (
+export type StreamFieldFragment_CategoryListBlock_Fragment = (
   { style: string | null, heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, categoryType: (
     { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
       { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
@@ -3885,7 +3596,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
           { date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -3939,7 +3650,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -3992,7 +3703,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -4045,7 +3756,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -4104,7 +3815,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
           { date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -4134,10 +3845,10 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
   & { __typename: 'CategoryListBlock' }
 );
 
-type StreamFieldFragment_CategoryTreeMapBlock_Fragment = (
+export type StreamFieldFragment_CategoryTreeMapBlock_Fragment = (
   { heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, valueAttribute: (
     { identifier: string, unit: (
-      { shortName: string | null }
+      { id: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) | null }
     & { __typename: 'AttributeType' }
@@ -4148,7 +3859,7 @@ type StreamFieldFragment_CategoryTreeMapBlock_Fragment = (
   & { __typename: 'CategoryTreeMapBlock' }
 );
 
-type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
+export type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
   { heading: string | null, helpText: string | null, id: string | null, blockType: string, field: string, categoryLevel: (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
@@ -4165,7 +3876,7 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
           { date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -4240,7 +3951,7 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -4293,7 +4004,7 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -4346,7 +4057,7 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -4378,12 +4089,12 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
   & { __typename: 'CategoryTypeLevelListBlock' }
 );
 
-type StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment = (
+export type StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment = (
   { value: string, id: string | null, blockType: string, field: string }
   & { __typename: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
 );
 
-type StreamFieldFragment_ChoiceBlock_Fragment = (
+export type StreamFieldFragment_ChoiceBlock_Fragment = (
   { value: string, id: string | null, blockType: string, field: string, choices: Array<(
     { key: string, value: string }
     & { __typename: 'ChoiceOption' }
@@ -4391,24 +4102,24 @@ type StreamFieldFragment_ChoiceBlock_Fragment = (
   & { __typename: 'ChoiceBlock' }
 );
 
-type StreamFieldFragment_DashboardRowBlock_Fragment = (
+export type StreamFieldFragment_DashboardRowBlock_Fragment = (
   { id: string | null, blockType: string, field: string, blocks: Array<(
-    { blockType: string }
+    { id: string | null, blockType: string }
     & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
   ) | (
-    { blockType: string }
+    { id: string | null, blockType: string }
     & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
   ) | (
-    { blockType: string }
+    { id: string | null, blockType: string }
     & { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardRowBlock' }
   ) | (
-    { blockType: string }
+    { id: string | null, blockType: string }
     & { __typename: 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCausalChainBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' }
   ) | (
-    { blockType: string }
+    { id: string | null, blockType: string }
     & { __typename: 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' }
   ) | (
-    { blockType: string }
+    { id: string | null, blockType: string }
     & { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
   ) | (
     { id: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
@@ -4434,7 +4145,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
         { value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -4464,7 +4175,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
         { value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -4494,14 +4205,14 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
         { value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
     ) | null }
     & { __typename: 'DashboardIndicatorLineChartBlock' }
   ) | (
-    { helpText: string | null, year: number | null, blockType: string, chartSeries: Array<(
+    { helpText: string | null, year: number | null, id: string | null, blockType: string, chartSeries: Array<(
       { dimensionCategory: (
         { id: string, name: string, defaultColor: string }
         & { __typename: 'DimensionCategory' }
@@ -4524,7 +4235,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
         { value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -4539,20 +4250,20 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
         { value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
     ) | null }
     & { __typename: 'DashboardIndicatorSummaryBlock' }
   ) | (
-    { text: string | null, blockType: string }
+    { text: string | null, id: string | null, blockType: string }
     & { __typename: 'DashboardParagraphBlock' }
   )> }
   & { __typename: 'DashboardRowBlock' }
 );
 
-type StreamFieldFragment_FrontPageHeroBlock_Fragment = (
+export type StreamFieldFragment_FrontPageHeroBlock_Fragment = (
   { layout: string, heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, image: (
     { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
       { id: string, width: number, height: number, src: string }
@@ -4575,7 +4286,7 @@ type StreamFieldFragment_FrontPageHeroBlock_Fragment = (
   & { __typename: 'FrontPageHeroBlock' }
 );
 
-type StreamFieldFragment_IndicatorBlock_Fragment = (
+export type StreamFieldFragment_IndicatorBlock_Fragment = (
   { style: string | null, id: string | null, blockType: string, field: string, indicator: (
     { id: string }
     & { __typename: 'Indicator' }
@@ -4583,7 +4294,7 @@ type StreamFieldFragment_IndicatorBlock_Fragment = (
   & { __typename: 'IndicatorBlock' }
 );
 
-type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
+export type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
   { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' } | { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardIndicatorAreaChartBlock' } | { __typename: 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' } | { __typename: 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCausalChainBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' } | { __typename: 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | { __typename: 'UpdatedAtColumnBlock' } | (
     { style: string | null, indicator: (
       { id: string, identifier: string | null, name: string, description: string | null, timeResolution: IndicatorTimeResolution, level: string | null, unit: (
@@ -4603,7 +4314,7 @@ type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
   & { __typename: 'IndicatorGroupBlock' }
 );
 
-type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
+export type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
   { title: string | null, body: string | null, id: string | null, blockType: string, field: string, blocks: Array<(
     { id: string | null }
     & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
@@ -4650,7 +4361,7 @@ type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
     ) | null> | null, common: (
       { id: string, normalizations: Array<(
         { unit: (
-          { shortName: string | null, name: string }
+          { id: string, shortName: string | null, name: string }
           & { __typename: 'Unit' }
         ), normalizer: (
           { name: string, id: string, identifier: string | null }
@@ -4692,7 +4403,7 @@ type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
   & { __typename: 'IndicatorShowcaseBlock' }
 );
 
-type StreamFieldFragment_LargeImageBlock_Fragment = (
+export type StreamFieldFragment_LargeImageBlock_Fragment = (
   { width: string | null, id: string | null, blockType: string, field: string, image: (
     { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
       { src: string }
@@ -4703,12 +4414,12 @@ type StreamFieldFragment_LargeImageBlock_Fragment = (
   & { __typename: 'LargeImageBlock' }
 );
 
-type StreamFieldFragment_PathsOutcomeBlock_Fragment = (
+export type StreamFieldFragment_PathsOutcomeBlock_Fragment = (
   { heading: string | null, helpText: string | null, outcomeNodeId: string | null, id: string | null, blockType: string, field: string }
   & { __typename: 'PathsOutcomeBlock' }
 );
 
-type StreamFieldFragment_QuestionAnswerBlock_Fragment = (
+export type StreamFieldFragment_QuestionAnswerBlock_Fragment = (
   { heading: string | null, id: string | null, blockType: string, field: string, questions: Array<(
     { question: string, answer: string }
     & { __typename: 'QuestionBlock' }
@@ -4794,7 +4505,7 @@ export type GetActionDetailsQuery = (
           { date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -4848,7 +4559,7 @@ export type GetActionDetailsQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -4901,7 +4612,7 @@ export type GetActionDetailsQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -4954,7 +4665,7 @@ export type GetActionDetailsQuery = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -5077,7 +4788,7 @@ export type GetActionDetailsQuery = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -5131,7 +4842,7 @@ export type GetActionDetailsQuery = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -5184,7 +4895,7 @@ export type GetActionDetailsQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -5237,7 +4948,7 @@ export type GetActionDetailsQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -5335,7 +5046,7 @@ export type GetActionDetailsQuery = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -5389,7 +5100,7 @@ export type GetActionDetailsQuery = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -5442,7 +5153,7 @@ export type GetActionDetailsQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -5495,7 +5206,7 @@ export type GetActionDetailsQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -5587,7 +5298,7 @@ export type GetActionDetailsQuery = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -5641,7 +5352,7 @@ export type GetActionDetailsQuery = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -5694,7 +5405,7 @@ export type GetActionDetailsQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -5747,7 +5458,7 @@ export type GetActionDetailsQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -5842,7 +5553,7 @@ export type GetActionDetailsQuery = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -5896,7 +5607,7 @@ export type GetActionDetailsQuery = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -5949,7 +5660,7 @@ export type GetActionDetailsQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -6002,7 +5713,7 @@ export type GetActionDetailsQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -6143,7 +5854,7 @@ export type GetActionDetailsQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -6197,7 +5908,7 @@ export type GetActionDetailsQuery = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -6250,7 +5961,7 @@ export type GetActionDetailsQuery = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -6303,7 +6014,7 @@ export type GetActionDetailsQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -6398,7 +6109,7 @@ export type GetActionDetailsQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -6452,7 +6163,7 @@ export type GetActionDetailsQuery = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -6505,7 +6216,7 @@ export type GetActionDetailsQuery = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -6558,7 +6269,7 @@ export type GetActionDetailsQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -6753,7 +6464,7 @@ export type GetActionDetailsQuery = (
                       { date: string | null, value: number }
                       & { __typename: 'IndicatorGoal' }
                     ) | null> | null, unit: (
-                      { name: string, shortName: string | null }
+                      { id: string, name: string, shortName: string | null }
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
@@ -6807,7 +6518,7 @@ export type GetActionDetailsQuery = (
                             { date: string | null, value: number }
                             & { __typename: 'IndicatorGoal' }
                           ) | null> | null, unit: (
-                            { name: string, shortName: string | null }
+                            { id: string, name: string, shortName: string | null }
                             & { __typename: 'Unit' }
                           ) }
                           & { __typename: 'Indicator' }
@@ -6860,7 +6571,7 @@ export type GetActionDetailsQuery = (
                           { date: string | null, value: number }
                           & { __typename: 'IndicatorGoal' }
                         ) | null> | null, unit: (
-                          { name: string, shortName: string | null }
+                          { id: string, name: string, shortName: string | null }
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
@@ -6913,7 +6624,7 @@ export type GetActionDetailsQuery = (
                         { date: string | null, value: number }
                         & { __typename: 'IndicatorGoal' }
                       ) | null> | null, unit: (
-                        { name: string, shortName: string | null }
+                        { id: string, name: string, shortName: string | null }
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
@@ -7061,7 +6772,7 @@ export type GetActionDetailsQuery = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -7115,7 +6826,7 @@ export type GetActionDetailsQuery = (
                           { date: string | null, value: number }
                           & { __typename: 'IndicatorGoal' }
                         ) | null> | null, unit: (
-                          { name: string, shortName: string | null }
+                          { id: string, name: string, shortName: string | null }
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
@@ -7168,7 +6879,7 @@ export type GetActionDetailsQuery = (
                         { date: string | null, value: number }
                         & { __typename: 'IndicatorGoal' }
                       ) | null> | null, unit: (
-                        { name: string, shortName: string | null }
+                        { id: string, name: string, shortName: string | null }
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
@@ -7221,7 +6932,7 @@ export type GetActionDetailsQuery = (
                       { date: string | null, value: number }
                       & { __typename: 'IndicatorGoal' }
                     ) | null> | null, unit: (
-                      { name: string, shortName: string | null }
+                      { id: string, name: string, shortName: string | null }
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
@@ -7431,7 +7142,7 @@ export type GetActionDetailsQuery = (
                       { date: string | null, value: number }
                       & { __typename: 'IndicatorGoal' }
                     ) | null> | null, unit: (
-                      { name: string, shortName: string | null }
+                      { id: string, name: string, shortName: string | null }
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
@@ -7485,7 +7196,7 @@ export type GetActionDetailsQuery = (
                             { date: string | null, value: number }
                             & { __typename: 'IndicatorGoal' }
                           ) | null> | null, unit: (
-                            { name: string, shortName: string | null }
+                            { id: string, name: string, shortName: string | null }
                             & { __typename: 'Unit' }
                           ) }
                           & { __typename: 'Indicator' }
@@ -7538,7 +7249,7 @@ export type GetActionDetailsQuery = (
                           { date: string | null, value: number }
                           & { __typename: 'IndicatorGoal' }
                         ) | null> | null, unit: (
-                          { name: string, shortName: string | null }
+                          { id: string, name: string, shortName: string | null }
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
@@ -7591,7 +7302,7 @@ export type GetActionDetailsQuery = (
                         { date: string | null, value: number }
                         & { __typename: 'IndicatorGoal' }
                       ) | null> | null, unit: (
-                        { name: string, shortName: string | null }
+                        { id: string, name: string, shortName: string | null }
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
@@ -7739,7 +7450,7 @@ export type GetActionDetailsQuery = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -7793,7 +7504,7 @@ export type GetActionDetailsQuery = (
                           { date: string | null, value: number }
                           & { __typename: 'IndicatorGoal' }
                         ) | null> | null, unit: (
-                          { name: string, shortName: string | null }
+                          { id: string, name: string, shortName: string | null }
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
@@ -7846,7 +7557,7 @@ export type GetActionDetailsQuery = (
                         { date: string | null, value: number }
                         & { __typename: 'IndicatorGoal' }
                       ) | null> | null, unit: (
-                        { name: string, shortName: string | null }
+                        { id: string, name: string, shortName: string | null }
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
@@ -7899,7 +7610,7 @@ export type GetActionDetailsQuery = (
                       { date: string | null, value: number }
                       & { __typename: 'IndicatorGoal' }
                     ) | null> | null, unit: (
-                      { name: string, shortName: string | null }
+                      { id: string, name: string, shortName: string | null }
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
@@ -8079,7 +7790,7 @@ export type ActionDependenciesFragment = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -8133,7 +7844,7 @@ export type ActionDependenciesFragment = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -8186,7 +7897,7 @@ export type ActionDependenciesFragment = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -8239,7 +7950,7 @@ export type ActionDependenciesFragment = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -8334,7 +8045,7 @@ export type ActionDependenciesFragment = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -8388,7 +8099,7 @@ export type ActionDependenciesFragment = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -8441,7 +8152,7 @@ export type ActionDependenciesFragment = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -8494,7 +8205,7 @@ export type ActionDependenciesFragment = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -8558,7 +8269,7 @@ export type ActionDependenciesFragment = (
   & { __typename: 'Action' }
 );
 
-type ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment = (
+export type ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment = (
   { id: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
@@ -8566,7 +8277,7 @@ type ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBl
   & { __typename: 'ActionContactPersonsBlock' | 'ActionScheduleBlock' }
 );
 
-type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
+export type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
   { id: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
@@ -8583,7 +8294,7 @@ type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment =
   & { __typename: 'ActionContentAttributeTypeBlock' }
 );
 
-type ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
+export type ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
   { id: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
@@ -8597,7 +8308,7 @@ type ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = 
   & { __typename: 'ActionContentCategoryTypeBlock' }
 );
 
-type ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment = (
+export type ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment = (
   { heading: string | null, id: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
@@ -8607,7 +8318,7 @@ type ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment = (
 
 export type ActionAsideContentBlocksFragmentFragment = ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment;
 
-type ActionMainContentBlocksFragment_ActionContactFormBlock_Fragment = (
+export type ActionMainContentBlocksFragment_ActionContactFormBlock_Fragment = (
   { id: string | null, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
@@ -8621,7 +8332,7 @@ type ActionMainContentBlocksFragment_ActionContactFormBlock_Fragment = (
   & { __typename: 'ActionContactFormBlock' }
 );
 
-type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
+export type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
   { id: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
@@ -8638,7 +8349,7 @@ type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = 
   & { __typename: 'ActionContentAttributeTypeBlock' }
 );
 
-type ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
+export type ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
   { id: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
@@ -8652,7 +8363,7 @@ type ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
   & { __typename: 'ActionContentCategoryTypeBlock' }
 );
 
-type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
+export type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
   { id: string | null, heading: string | null, helpText: string | null, layout: string | null, blocks: Array<(
     { id: string | null }
     & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' }
@@ -8744,7 +8455,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -8798,7 +8509,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                       { date: string | null, value: number }
                       & { __typename: 'IndicatorGoal' }
                     ) | null> | null, unit: (
-                      { name: string, shortName: string | null }
+                      { id: string, name: string, shortName: string | null }
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
@@ -8851,7 +8562,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -8904,7 +8615,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -8987,7 +8698,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
   & { __typename: 'ActionContentSectionBlock' }
 );
 
-type ActionMainContentBlocksFragment_YzBdkJlHhonWhqjd3WRxe2SdNvKg317QlqgPzcM_Fragment = (
+export type ActionMainContentBlocksFragment_YzBdkJlHhonWhqjd3WRxe2SdNvKg317QlqgPzcM_Fragment = (
   { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
@@ -8995,7 +8706,7 @@ type ActionMainContentBlocksFragment_YzBdkJlHhonWhqjd3WRxe2SdNvKg317QlqgPzcM_Fra
   & { __typename: 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionRelatedActionsBlock' }
 );
 
-type ActionMainContentBlocksFragment_UWgtElzWcIrkE20HqBetlMWpkiyr21UnWd1ytrejw0_Fragment = (
+export type ActionMainContentBlocksFragment_UWgtElzWcIrkE20HqBetlMWpkiyr21UnWd1ytrejw0_Fragment = (
   { id: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
@@ -9003,7 +8714,7 @@ type ActionMainContentBlocksFragment_UWgtElzWcIrkE20HqBetlMWpkiyr21UnWd1ytrejw0_
   & { __typename: 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
 );
 
-type ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment = (
+export type ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment = (
   { id: string | null, fieldLabel: string | null, caption: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
@@ -9011,7 +8722,7 @@ type ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment = (
   & { __typename: 'ActionOfficialNameBlock' }
 );
 
-type ActionMainContentBlocksFragment_IndicatorCausalChainBlock_Fragment = (
+export type ActionMainContentBlocksFragment_IndicatorCausalChainBlock_Fragment = (
   { id: string | null, field: string, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
@@ -9019,7 +8730,7 @@ type ActionMainContentBlocksFragment_IndicatorCausalChainBlock_Fragment = (
   & { __typename: 'IndicatorCausalChainBlock' }
 );
 
-type ActionMainContentBlocksFragment_PlanDatasetsBlock_Fragment = (
+export type ActionMainContentBlocksFragment_PlanDatasetsBlock_Fragment = (
   { id: string | null, heading: string | null, helpText: string | null, datasetSchema: (
     { uuid: string }
     & { __typename: 'DatasetSchema' }
@@ -9027,7 +8738,7 @@ type ActionMainContentBlocksFragment_PlanDatasetsBlock_Fragment = (
   & { __typename: 'PlanDatasetsBlock' }
 );
 
-type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
+export type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
   { id: string | null, reportField: string | null, reportType: (
     { name: string }
     & { __typename: 'ReportType' }
@@ -9064,7 +8775,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -9118,7 +8829,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -9171,7 +8882,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -9224,7 +8935,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -9344,7 +9055,7 @@ export type ReportComparisonBlockActionContentFragment = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -9398,7 +9109,7 @@ export type ReportComparisonBlockActionContentFragment = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -9451,7 +9162,7 @@ export type ReportComparisonBlockActionContentFragment = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -9504,7 +9215,7 @@ export type ReportComparisonBlockActionContentFragment = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -9622,7 +9333,7 @@ export type ActionCardWithDependencyRoleFragment = (
         { date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -9676,7 +9387,7 @@ export type ActionCardWithDependencyRoleFragment = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -9729,7 +9440,7 @@ export type ActionCardWithDependencyRoleFragment = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -9782,7 +9493,7 @@ export type ActionCardWithDependencyRoleFragment = (
           { date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -10000,12 +9711,6 @@ export type TemplatedCategoryPageFragmentFragment = (
         & { __typename: 'DatasetSchema' }
       ) }
       & { __typename: 'CategoryTypeDatasetsBlock' }
-    )> | null, layoutAside: Array<(
-      { attributeType: (
-        { identifier: string }
-        & { __typename: 'AttributeType' }
-      ) }
-      & { __typename: 'CategoryPageAttributeTypeBlock' }
     )> | null }
     & { __typename: 'CategoryTypePageLevelLayout' }
   ) | null }
@@ -10246,7 +9951,7 @@ export type GetContentPageQuery = (
             { date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -10382,7 +10087,7 @@ export type GetContentPageQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -10436,7 +10141,7 @@ export type GetContentPageQuery = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -10489,7 +10194,7 @@ export type GetContentPageQuery = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -10542,7 +10247,7 @@ export type GetContentPageQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -10685,7 +10390,7 @@ export type GetContentPageQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -10739,7 +10444,7 @@ export type GetContentPageQuery = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -10792,7 +10497,7 @@ export type GetContentPageQuery = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -10845,7 +10550,7 @@ export type GetContentPageQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -10904,7 +10609,7 @@ export type GetContentPageQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -10996,12 +10701,6 @@ export type GetContentPageQuery = (
           & { __typename: 'DatasetSchema' }
         ) }
         & { __typename: 'CategoryTypeDatasetsBlock' }
-      )> | null, layoutAside: Array<(
-        { attributeType: (
-          { identifier: string }
-          & { __typename: 'AttributeType' }
-        ) }
-        & { __typename: 'CategoryPageAttributeTypeBlock' }
       )> | null }
       & { __typename: 'CategoryTypePageLevelLayout' }
     ) | null }
@@ -11078,7 +10777,7 @@ export type GetContentPageQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -11132,7 +10831,7 @@ export type GetContentPageQuery = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -11185,7 +10884,7 @@ export type GetContentPageQuery = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -11238,7 +10937,7 @@ export type GetContentPageQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -11297,7 +10996,7 @@ export type GetContentPageQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -11328,7 +11027,7 @@ export type GetContentPageQuery = (
     ) | (
       { heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, valueAttribute: (
         { identifier: string, unit: (
-          { shortName: string | null }
+          { id: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) | null }
         & { __typename: 'AttributeType' }
@@ -11354,7 +11053,7 @@ export type GetContentPageQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -11429,7 +11128,7 @@ export type GetContentPageQuery = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -11482,7 +11181,7 @@ export type GetContentPageQuery = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -11535,7 +11234,7 @@ export type GetContentPageQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -11567,22 +11266,22 @@ export type GetContentPageQuery = (
       & { __typename: 'CategoryTypeLevelListBlock' }
     ) | (
       { id: string | null, blockType: string, field: string, blocks: Array<(
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
       ) | (
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
       ) | (
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardRowBlock' }
       ) | (
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCausalChainBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' }
       ) | (
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' }
       ) | (
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
       ) | (
         { id: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
@@ -11608,7 +11307,7 @@ export type GetContentPageQuery = (
             { value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -11638,7 +11337,7 @@ export type GetContentPageQuery = (
             { value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -11668,14 +11367,14 @@ export type GetContentPageQuery = (
             { value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         ) | null }
         & { __typename: 'DashboardIndicatorLineChartBlock' }
       ) | (
-        { helpText: string | null, year: number | null, blockType: string, chartSeries: Array<(
+        { helpText: string | null, year: number | null, id: string | null, blockType: string, chartSeries: Array<(
           { dimensionCategory: (
             { id: string, name: string, defaultColor: string }
             & { __typename: 'DimensionCategory' }
@@ -11698,7 +11397,7 @@ export type GetContentPageQuery = (
             { value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -11713,14 +11412,14 @@ export type GetContentPageQuery = (
             { value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         ) | null }
         & { __typename: 'DashboardIndicatorSummaryBlock' }
       ) | (
-        { text: string | null, blockType: string }
+        { text: string | null, id: string | null, blockType: string }
         & { __typename: 'DashboardParagraphBlock' }
       )> }
       & { __typename: 'DashboardRowBlock' }
@@ -11921,7 +11620,7 @@ export type GetHomePageQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -11975,7 +11674,7 @@ export type GetHomePageQuery = (
                     { date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
@@ -12028,7 +11727,7 @@ export type GetHomePageQuery = (
                   { date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
@@ -12081,7 +11780,7 @@ export type GetHomePageQuery = (
                 { date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
@@ -12140,7 +11839,7 @@ export type GetHomePageQuery = (
               { date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -12171,7 +11870,7 @@ export type GetHomePageQuery = (
     ) | (
       { heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, valueAttribute: (
         { identifier: string, unit: (
-          { shortName: string | null }
+          { id: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) | null }
         & { __typename: 'AttributeType' }
@@ -12182,22 +11881,22 @@ export type GetHomePageQuery = (
       & { __typename: 'CategoryTreeMapBlock' }
     ) | (
       { id: string | null, blockType: string, field: string, blocks: Array<(
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
       ) | (
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
       ) | (
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardRowBlock' }
       ) | (
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCausalChainBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' }
       ) | (
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'IndicatorShowcaseBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' }
       ) | (
-        { blockType: string }
+        { id: string | null, blockType: string }
         & { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
       ) | (
         { id: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
@@ -12223,7 +11922,7 @@ export type GetHomePageQuery = (
             { value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -12253,7 +11952,7 @@ export type GetHomePageQuery = (
             { value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -12283,14 +11982,14 @@ export type GetHomePageQuery = (
             { value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         ) | null }
         & { __typename: 'DashboardIndicatorLineChartBlock' }
       ) | (
-        { helpText: string | null, year: number | null, blockType: string, chartSeries: Array<(
+        { helpText: string | null, year: number | null, id: string | null, blockType: string, chartSeries: Array<(
           { dimensionCategory: (
             { id: string, name: string, defaultColor: string }
             & { __typename: 'DimensionCategory' }
@@ -12313,7 +12012,7 @@ export type GetHomePageQuery = (
             { value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -12328,14 +12027,14 @@ export type GetHomePageQuery = (
             { value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         ) | null }
         & { __typename: 'DashboardIndicatorSummaryBlock' }
       ) | (
-        { text: string | null, blockType: string }
+        { text: string | null, id: string | null, blockType: string }
         & { __typename: 'DashboardParagraphBlock' }
       )> }
       & { __typename: 'DashboardRowBlock' }
@@ -12425,7 +12124,7 @@ export type GetHomePageQuery = (
         ) | null> | null, common: (
           { id: string, normalizations: Array<(
             { unit: (
-              { shortName: string | null, name: string }
+              { id: string, shortName: string | null, name: string }
               & { __typename: 'Unit' }
             ), normalizer: (
               { name: string, id: string, identifier: string | null }
@@ -13294,9 +12993,9 @@ export type GetPlanContextQuery = (
       & { __typename: 'Plan' }
     ) | null, additionalLinks: (
       { items: Array<{ __typename: 'ExternalLinkMenuItem' } | (
-        { id: string, crossPlanLink: boolean | null, viewUrl: string | null, page: (
+        { crossPlanLink: boolean | null, viewUrl: string | null, page: (
           { title: string, url: string | null, urlPath: string, slug: string, body: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'RichTextBlock' } | (
-            { blocks: Array<(
+            { id: string | null, blocks: Array<(
               { field: string }
               & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
             ) | (
@@ -13490,9 +13189,9 @@ export type PlanContextFragment = (
     & { __typename: 'Plan' }
   ) | null, additionalLinks: (
     { items: Array<{ __typename: 'ExternalLinkMenuItem' } | (
-      { id: string, crossPlanLink: boolean | null, viewUrl: string | null, page: (
+      { crossPlanLink: boolean | null, viewUrl: string | null, page: (
         { title: string, url: string | null, urlPath: string, slug: string, body: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'RichTextBlock' } | (
-          { blocks: Array<(
+          { id: string | null, blocks: Array<(
             { field: string }
             & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
           ) | (
@@ -13541,7 +13240,7 @@ export type GetPlansByHostnameQueryVariables = Exact<{
 
 export type GetPlansByHostnameQuery = (
   { plansForHostname: Array<(
-    { id: string, identifier: string, otherLanguages: Array<string>, primaryLanguage: string, statusMessage: string | null, loginEnabled: boolean | null, domain: (
+    { loginEnabled: boolean | null, primaryLanguage: string, statusMessage: string | null, id: string, identifier: string, otherLanguages: Array<string>, domain: (
       { hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null }
       & { __typename: 'PlanDomain' }
     ) | null, domains: Array<(
@@ -13550,7 +13249,7 @@ export type GetPlansByHostnameQuery = (
     ) | null> | null }
     & { __typename: 'Plan' }
   ) | (
-    { primaryLanguage: string, statusMessage: string | null, loginEnabled: boolean | null, domain: (
+    { loginEnabled: boolean | null, primaryLanguage: string, statusMessage: string | null, domain: (
       { hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null }
       & { __typename: 'PlanDomain' }
     ) | null, domains: Array<(
@@ -13615,7 +13314,7 @@ export type IndicatorSparklineGraphDataQuery = (
     ), common: (
       { id: string, name: string, normalizations: Array<(
         { unit: (
-          { shortName: string | null }
+          { id: string, shortName: string | null }
           & { __typename: 'Unit' }
         ), normalizer: (
           { name: string, id: string, identifier: string | null }

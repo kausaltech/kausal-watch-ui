@@ -98,14 +98,14 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
           page={page}
           title={page.title}
           categoryId={category.id}
-          layout={page.layout?.layoutMainTop}
+          layout={page.layout?.layoutMainTop || undefined}
           identifier={!category.type.hideCategoryIdentifiers ? category.identifier : undefined}
           lead={category.leadParagraph}
           iconImage={iconImage}
           headerImage={headerImage}
           imageAlign={getBgImageAlignment(headerImage)}
           color={color || undefined}
-          attributes={category.attributes}
+          attributes={category.attributes || []}
           typeId={category.type.id}
           level={page.category?.level?.name}
         />

@@ -266,7 +266,6 @@ const GET_PLAN_CONTEXT = gql`
       ... on AdditionalLinks {
         items {
           ... on PageMenuItem {
-            id
             crossPlanLink
             viewUrl
             page {
@@ -277,6 +276,7 @@ const GET_PLAN_CONTEXT = gql`
               ... on AccessibilityStatementPage {
                 body {
                   ... on AccessibilityStatementContactInformationBlock {
+                    id
                     blocks {
                       field
                       ... on CharBlock {

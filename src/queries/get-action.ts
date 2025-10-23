@@ -109,6 +109,7 @@ const GET_ACTION_DETAILS = gql`
         abbreviation
         name
         logo {
+          id
           rendition(size: "128x128", crop: true) {
             src
           }
@@ -394,6 +395,7 @@ const GET_ACTION_DETAILS = gql`
           fieldType
           fieldRequired
           choices {
+            id
             ... on FormChoiceBlock {
               choiceLabel
               choiceValue

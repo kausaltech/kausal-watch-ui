@@ -1,25 +1,18 @@
-import { RefObject, useEffect, useRef, useState } from 'react';
+import type { RefObject } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { Theme } from '@kausal/themes/types';
+import type { Theme } from '@kausal/themes/types';
 import { debounce } from 'lodash';
 import get from 'lodash/get';
 import { useTranslations } from 'next-intl';
 import styled, { css, useTheme } from 'styled-components';
 
-import { ActionImplementationPhase } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
 
-import { ActionContentAction } from './ActionContent';
+import type { ActionContentAction } from './ActionContent';
 
 // Used to determine the style of icon visualizing a phase, not to be confused with phase identifiers
 type PhaseType = 'done' | 'current' | 'todo';
-
-type PhaseTimelineProps = {
-  activePhase: NonNullable<ActionContentAction['implementationPhase']>;
-  phases: ActionImplementationPhase[];
-  layout?: 'vertical' | 'horizontal' | 'mini';
-  isContinuous?: boolean;
-};
 
 type PhaseIndicatorProps = {
   phaseIdentifier: string;
@@ -77,11 +70,12 @@ const StyledMiniPhaseName = styled.div`
   margin-top: ${({ theme }) => theme.spaces.s050};
 `;
 
-const StyledPhaseName = styled(StyledMiniPhaseName)<{
+type StyledPhaseNameProps = {
   $isVertical?: boolean;
   $color?: string;
   $type: PhaseType;
-}>`
+};
+const StyledPhaseName = styled(StyledMiniPhaseName)<StyledPhaseNameProps>`
   text-align: center;
   padding: 0 ${({ theme }) => theme.spaces.s050};
   margin: ${({ theme, $isVertical }) => ($isVertical ? '4px 0 0' : `${theme.spaces.s050} 0 0`)};
@@ -125,12 +119,14 @@ const horizontalLineStyles = css<{ $hidden?: boolean; $isMini?: boolean }>`
   ${({ $hidden }) => $hidden && 'visibility: hidden;'}
 `;
 
-const StyledPhaseLine = styled.div<{
+type StyledPhaseLineProps = {
   $isMini?: boolean;
   $isVertical?: boolean;
   $hidden: boolean;
   $color: string;
-}>`
+};
+
+const StyledPhaseLine = styled.div<StyledPhaseLineProps>`
   background: ${({ $color }) => $color};
 
   ${({ $isVertical }) => ($isVertical ? verticalLineStyles : horizontalLineStyles)}
@@ -186,7 +182,7 @@ function getColorFromType(
 ) {
   const colorKey = PHASE_CONFIG[type][key];
 
-  return get(theme, colorKey);
+  return get(theme, colorKey) as string;
 }
 
 function getPhaseType(phaseIndex: number, activePhaseIndex: number): PhaseType {
@@ -279,6 +275,21 @@ function useOverrideLayout<T extends HTMLElement>(
 
   return isVerticalForced ? 'vertical' : initialLayout;
 }
+
+type ActionImplementationPhase = {
+  id: string;
+  identifier: string;
+  name: string;
+  order: number;
+  color: string;
+};
+
+type PhaseTimelineProps = {
+  activePhase: NonNullable<ActionContentAction['implementationPhase']>;
+  phases: ActionImplementationPhase[];
+  layout?: 'vertical' | 'horizontal' | 'mini';
+  isContinuous?: boolean;
+};
 
 export function PhaseTimeline({
   activePhase,

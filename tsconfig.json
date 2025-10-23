@@ -19,10 +19,14 @@
     "src/**/*.tsx",
     "src/**/*.js",
     "src/**/*.jsx",
+    ".storybook/*.tsx",
+    ".storybook/*.ts",
+    "stories/**/*.ts",
+    "stories/**/*.tsx",
     "./*.mjs",
     "./*.cjs",
     "./*.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "src/embed"]
+  "exclude": ["node_modules", "src/embed", ".storybook", "stories"]
 }

@@ -27,17 +27,23 @@ export const getContentPage = async (plan: string, path: string) =>
 const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
   fragment TemplatedCategoryPageFragment on CategoryPage {
     layout {
+      id
       __typename
       iconSize
       layoutMainTop {
+        ... on StreamFieldInterface {
+          id
+        }
         __typename
         ... on CategoryPageAttributeTypeBlock {
           attributeType {
+            id
             identifier
           }
         }
         ... on CategoryPageProgressBlock {
           blocks {
+            id
             ... on ChoiceBlock {
               value
             }
@@ -48,6 +54,7 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
         __typename
         ... on CategoryPageAttributeTypeBlock {
           attributeType {
+            id
             identifier
           }
         }
@@ -66,6 +73,7 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
               fieldType
               fieldRequired
               choices {
+                id
                 ... on FormChoiceBlock {
                   choiceLabel
                   choiceValue
@@ -206,7 +214,9 @@ const GET_CONTENT_PAGE = gql`
           color
           iconSvgUrl
           iconImage {
+            id
             rendition(size: "400x400", crop: false) {
+              id
               src
             }
           }
@@ -214,12 +224,13 @@ const GET_CONTENT_PAGE = gql`
             ...CategoryFragment
           }
           parent {
+            id
             ...CategoryParentFragment
             ...RecursiveCategoryParentFragment
-            id
             identifier
             name
             level {
+              id
               name
               namePlural
             }
@@ -230,7 +241,9 @@ const GET_CONTENT_PAGE = gql`
             color
             iconSvgUrl
             iconImage {
+              id
               rendition(size: "400x400", crop: false) {
+                id
                 src
               }
             }
@@ -278,9 +291,11 @@ const GET_CONTENT_PAGE = gql`
 
   fragment CategoryParentFragment on Category {
     parent {
+      id
       identifier
       name
       categoryPage {
+        id
         urlPath
       }
       type {
@@ -293,10 +308,13 @@ const GET_CONTENT_PAGE = gql`
   # Fetch basic parent category data up to three levels deep for breadcrumbs
   fragment RecursiveCategoryParentFragment on Category {
     parent {
+      id
       ...CategoryParentFragment
       parent {
+        id
         ...CategoryParentFragment
         parent {
+          id
           ...CategoryParentFragment
         }
       }

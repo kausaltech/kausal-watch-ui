@@ -138,7 +138,7 @@ function SearchResultItem({ hit }: SearchResultItemProps) {
   const hitImage =
     primaryOrg?.logo?.rendition?.src ||
     hit.plan.image?.rendition?.src ||
-    'https://via.placeholder.com/64/AAAAAA/EEEEEE';
+    'https://placehold.co/64/AAAAAA/EEEEEE?text=\\n';
   const hitOrganization = primaryOrg?.name || hit.plan.organization.name;
 
   return (
@@ -290,7 +290,7 @@ function SearchView(props: SearchViewProps) {
                     id="form-q"
                     name="q"
                     placeholder={t('search-from-plans')}
-                    value={userSearch?.q}
+                    value={userSearch?.q || ''}
                     onChange={handleValueChange}
                     aria-label={t('search')}
                     data-testid="search-form"

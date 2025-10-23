@@ -77,7 +77,6 @@ type TooltipProps = {
 };
 const Tooltip = (props: TooltipProps) => {
   const { children } = props;
-
   return (
     <StyledTooltip>
       <OverlayArrow>

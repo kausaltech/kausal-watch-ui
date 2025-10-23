@@ -11,8 +11,8 @@ import { useTheme } from 'styled-components';
 import { getDeploymentType } from '@common/env';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
-import { deploymentType } from '@/common/environment';
 import { getActiveBranch } from '@/common/links';
+import { typenameMatches } from '@/common/utils';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import ApplicationStateBanner from '@/components/common/ApplicationStateBanner';
 import GlobalNav from '@/components/common/GlobalNav';
@@ -23,8 +23,11 @@ import { getMetaTitles } from '@/utils/metadata';
 import TopToolBar from './common/TopToolBar';
 import { useCustomComponent } from './paths/custom';
 
-type MainMenu = PlanContextFragment['mainMenu'];
-type MenuItem = NonNullable<PlanContextFragment['mainMenu']>['items'][number];
+type MainMenu = NonNullable<NonNullable<PlanContextFragment['mainMenu']>>;
+type MenuItem = MainMenu['items'][number];
+type PageMenuItem = MenuItem & {
+  __typename: 'PageMenuItem';
+};
 
 export type NavItem = {
   id: string;
@@ -32,32 +35,32 @@ export type NavItem = {
   slug: string;
   urlPath: string;
   active: boolean;
-  children: MenuItem[] | null;
+  children: NavItem[] | null;
 };
 
 export type NavItems = NavItem[] | null;
 
-const getMenuStructure = (pages: MenuItem[], rootId: string): NavItems => {
+function getMenuStructure(items: MenuItem[], rootId: string): NavItems {
   const menuLevelItems: NavItems = [];
-  pages.forEach((page) => {
-    if (page.parent.id === rootId) {
-      menuLevelItems.push({
-        id: `${page.id}`,
-        name: page.page.title,
-        slug: page.page.slug,
-        urlPath: page.page.urlPath,
-        active: false,
-        children: getMenuStructure(pages, page.id),
-      });
-    }
+  items.forEach((item) => {
+    if (item.__typename !== 'PageMenuItem') return;
+    if (item.parent?.id !== rootId) return;
+    menuLevelItems.push({
+      id: `${item.id}`,
+      name: item.page.title,
+      slug: item.page.slug,
+      urlPath: item.page.urlPath,
+      active: false,
+      children: getMenuStructure(items, item.id),
+    });
   });
   return menuLevelItems.length > 0 ? menuLevelItems : null;
-};
+}
 
 // Set active page per pathname and active branch
-const setActivePages = (navLinks, pathname, activeBranch) => {
+function setActivePages(navLinks: NavItems, pathname: string, activeBranch: string) {
   let hasActivePage = false;
-  navLinks.forEach((page) => {
+  navLinks?.forEach((page) => {
     let childHasActivePage = false;
     if (page.children) {
       const activeChild = setActivePages(page.children, pathname, activeBranch);
@@ -68,10 +71,10 @@ const setActivePages = (navLinks, pathname, activeBranch) => {
     if (page.active) hasActivePage = true;
   });
   return hasActivePage;
-};
+}
 
 function createLocalizeMenuItem(currentLocale: string, primaryLocale: string) {
-  return function (menuItem: MenuItem) {
+  return function (menuItem: PageMenuItem) {
     if (currentLocale === primaryLocale) {
       return menuItem;
     }
@@ -98,34 +101,25 @@ function Header() {
   const { navigationTitle: siteTitle } = getMetaTitles(plan);
 
   const navLinks: NavItems = useMemo(() => {
-    let links = [];
-
     const mainMenu = plan.mainMenu;
-    const pageMenuItems: MenuItem[] = mainMenu.items
-      .filter((item) => item?.__typename == 'PageMenuItem')
+    if (!mainMenu) return [];
+    const pageMenuItems = mainMenu.items
+      .filter((item) => typenameMatches(item, 'PageMenuItem'))
       .map(createLocalizeMenuItem(locale, plan.primaryLanguage));
 
-    if (pageMenuItems.length > 0) {
-      // find one menu item with root as parent to access the id of the rootPage
-      const rootItemIndex = pageMenuItems.findIndex(
-        (page) => page.parent.page.__typename === 'PlanRootPage'
-      );
-      const staticPages = getMenuStructure(
-        pageMenuItems,
-        pageMenuItems[rootItemIndex].parent.id,
-        pathname,
-        activeBranch
-      );
-      links = links.concat(staticPages);
-    }
-    return links;
-  }, [activeBranch, plan.mainMenu]);
+    if (!(pageMenuItems.length > 0)) return [];
+
+    // find one menu item with root as parent to access the id of the rootPage
+    const rootItem = pageMenuItems.find((item) => item.parent?.page.__typename === 'PlanRootPage');
+    if (!rootItem || !rootItem.parent) return [];
+    return getMenuStructure(pageMenuItems, rootItem.parent.id);
+  }, [activeBranch, plan.mainMenu, locale]);
 
   setActivePages(navLinks, pathname, activeBranch);
 
   const externalLinks = useMemo(() => {
-    return plan.mainMenu.items
-      .filter((item) => item.__typename == 'ExternalLinkMenuItem')
+    return plan.mainMenu?.items
+      .filter((item) => typenameMatches(item, 'ExternalLinkMenuItem'))
       .map((item) => ({
         name: item.linkText,
         url: item.url,

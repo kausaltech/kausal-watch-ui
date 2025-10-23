@@ -5,7 +5,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 
 import { merge } from 'lodash';
-import type { Data, Layout, PlotData } from 'plotly.js';
+import type { Axis, Data, Layout, PlotData } from 'plotly.js';
 import { transparentize } from 'polished';
 import styled, { useTheme } from 'styled-components';
 
@@ -78,7 +78,7 @@ const createLayout = (
   }
 
   // X axis can be time or category
-  const xaxes = hasCategories
+  const xaxes: Partial<Layout> = hasCategories
     ? {
         xaxis: {
           automargin: true,
@@ -174,7 +174,7 @@ interface CreateTracesParams {
 }
 
 interface TracesOutput {
-  layoutConfig: any;
+  layoutConfig: Partial<Layout> | undefined;
   traces: Partial<Data>[];
 }
 
@@ -271,7 +271,8 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     if (modTrace.type === 'scatter') {
       if (trace.x.length > 30) {
         modTrace.mode = 'lines';
-        modTrace.marker = { size: 0 };
+        // @ts-expect-error
+        delete modTrace['marker'];
       } else {
         modTrace.mode = 'lines+markers';
         modTrace.cliponaxis = false;
@@ -388,7 +389,7 @@ interface IndicatorGraphProps {
 
 const Plot = dynamic(() => import('./Plot'));
 
-function IndicatorGraph(props: IndicatorGraphProps) {
+export default function IndicatorGraph(props: IndicatorGraphProps) {
   const theme = useTheme();
   const isServer = typeof window === 'undefined';
   if (isServer) {
@@ -576,5 +577,3 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     </PlotContainer>
   );
 }
-
-export default IndicatorGraph;

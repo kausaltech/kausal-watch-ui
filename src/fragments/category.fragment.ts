@@ -22,14 +22,17 @@ export const CATEGORY_FRAGMENT = gql`
     indicators {
       id
       values {
+        id
         date
         value
       }
       goals {
+        id
         date
         value
       }
       unit {
+        id
         name
         shortName
       }
@@ -38,7 +41,9 @@ export const CATEGORY_FRAGMENT = gql`
     iconSvgUrl
     helpText
     iconImage {
+      id
       rendition(size: "400x400", crop: false) {
+        id
         src
       }
     }
@@ -71,10 +76,13 @@ export const RECURSIVE_CATEGORY_FRAGMENT = gql`
   # Support parent categories up to two levels deep
   fragment CategoryWithParentsFragment on Category {
     parent {
+      id
       ...CategoryFragment
       parent {
+        id
         ...CategoryFragment
         parent {
+          id
           ...CategoryFragment
         }
       }

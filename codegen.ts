@@ -12,6 +12,7 @@ const tsoConfig: TypeScriptDocumentsPluginConfig & TypeScriptPluginConfig = {
   preResolveTypes: true,
   avoidOptionals: true,
   nonOptionalTypename: true,
+  exportFragmentSpreadSubTypes: true,
   scalars: {
     UUID: 'string',
     RichText: 'string',

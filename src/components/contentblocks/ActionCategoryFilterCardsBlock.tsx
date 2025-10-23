@@ -5,7 +5,11 @@ import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
 
-import { CommonContentBlockProps } from '@/common/blocks.types';
+import type {
+  StreamFieldFragmentFragment,
+  StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment,
+} from '@/common/__generated__/graphql';
+import { type CommonContentBlockProps } from '@/common/blocks.types';
 import { getCategoryString } from '@/common/categories';
 import { Link } from '@/common/links';
 import Card from '@/components/common/Card';
@@ -56,52 +60,56 @@ const CardHeader = styled.h3`
   font-size: ${(props) => props.theme.fontSizeMd};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
-interface Props extends CommonContentBlockProps {
-  cards: unknown; // TODO: Type this prop
+interface CategoryListBlockProps extends CommonContentBlockProps {
+  cards: StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment['cards'];
 }
+type CategoryListCard = NonNullable<CategoryListBlockProps['cards']>[number];
+type CategoryListCardWithCategory = CategoryListCard & {
+  category: NonNullable<CategoryListCard['category']>;
+};
 
-const CategoryListBlock = ({ id = '', cards }: Props) => {
+export default function CategoryListBlock({ id = '', cards }: CategoryListBlockProps) {
   const theme = useTheme();
   return (
-    <CategoryListSection id={id} bg={theme.themeColors.dark}>
+    <CategoryListSection id={id}>
       <Container>
         <Row tag="ul" className="justify-content-center">
-          {cards?.map((card) => (
-            <Col
-              tag="li"
-              xs="12"
-              sm="6"
-              lg="4"
-              key={card.category.id}
-              className="mb-2 d-flex align-items-stretch"
-              style={{ transition: 'all 0.5s ease' }}
-            >
-              <Link
-                className="card-wrapper"
-                href={`/actions?${getCategoryString(
-                  card.category.type.identifier
-                )}=${card.category.id}`}
+          {cards
+            ?.filter((card) => card.category !== null)
+            .map((card: CategoryListCardWithCategory) => (
+              <Col
+                tag="li"
+                xs="12"
+                sm="6"
+                lg="4"
+                key={card.category.id}
+                className="mb-2 d-flex align-items-stretch"
+                style={{ transition: 'all 0.5s ease' }}
               >
-                <Card
-                  customBackgroundColor={theme.brandDark}
-                  customColor={readableColor(
-                    theme.brandDark,
-                    theme.themeColors.black,
-                    theme.themeColors.white
-                  )}
+                <Link
+                  className="card-wrapper"
+                  href={`/actions?${getCategoryString(
+                    card.category.type.identifier
+                  )}=${card.category.id}`}
                 >
-                  <div>
-                    <CardHeader className="card-title">{card.heading}</CardHeader>
-                    <CardLead>{card.lead}</CardLead>
-                  </div>
-                </Card>
-              </Link>
-            </Col>
-          ))}
+                  <Card
+                    customBackgroundColor={theme.brandDark}
+                    customColor={readableColor(
+                      theme.brandDark,
+                      theme.themeColors.black,
+                      theme.themeColors.white
+                    )}
+                  >
+                    <div>
+                      <CardHeader className="card-title">{card.heading}</CardHeader>
+                      <CardLead>{card.lead}</CardLead>
+                    </div>
+                  </Card>
+                </Link>
+              </Col>
+            ))}
         </Row>
       </Container>
     </CategoryListSection>
   );
-};
-
-export default CategoryListBlock;
+}

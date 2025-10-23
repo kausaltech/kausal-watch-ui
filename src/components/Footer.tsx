@@ -10,6 +10,7 @@ import { useTheme } from 'styled-components';
 import { getDeploymentType } from '@common/env';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
+import { typenameMatches } from '@/common/utils';
 import MonsidoAccessibility from '@/components/MonsidoAccessibility';
 import { usePlan } from '@/context/plan';
 import { getMetaTitles } from '@/utils/metadata';
@@ -79,16 +80,18 @@ function Footer() {
   const additionalLinks: FooterAdditionalLink[] = theme.settings?.customAdditionalLinks || [];
   const hasCustomAccessibilityPage = additionalLinks?.find((link) => link.id === 'accessibility');
 
-  plan.additionalLinks?.items?.map((link) =>
-    additionalLinks.push({
-      id: link.id,
-      name: link.page.title,
-      slug: link.page.urlPath,
-      url: link.page.url,
-      crossPlanLink: link.crossPlanLink,
-      viewUrl: link.viewUrl,
-    } satisfies FooterAdditionalLink)
-  );
+  plan.additionalLinks?.items
+    ?.filter((item) => typenameMatches(item, 'PageMenuItem'))
+    .map((link) =>
+      additionalLinks.push({
+        id: link.id,
+        name: link.page.title,
+        slug: link.page.urlPath,
+        url: link.page.url ?? undefined,
+        crossPlanLink: link.crossPlanLink ?? false,
+        viewUrl: link.viewUrl ?? undefined,
+      } satisfies FooterAdditionalLink)
+    );
 
   const ownerLinks = theme.settings?.footerOwnerLinks;
 

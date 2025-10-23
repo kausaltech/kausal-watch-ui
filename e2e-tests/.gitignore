@@ -2,3 +2,4 @@ test-results/
 playwright-report/
 test-results*
 /.env*
+*.ts-snapshots/

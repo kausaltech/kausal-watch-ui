@@ -34,7 +34,7 @@ type PopoverTipProps = {
   compact?: boolean;
 };
 
-const PopoverTip = (props: PopoverTipProps) => {
+export default function PopoverTip(props: PopoverTipProps) {
   const { content, identifier, invert = false, compact = false } = props;
   const t = useTranslations();
   const id = `tt-${identifier}`;
@@ -59,6 +59,4 @@ const PopoverTip = (props: PopoverTipProps) => {
       </TooltipTrigger>
     </>
   );
-};
-
-export default PopoverTip;
+}

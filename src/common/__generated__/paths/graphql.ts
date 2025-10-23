@@ -15,7 +15,6 @@ export type Scalars = {
   Date: { input: string; output: string; }
   DateTime: { input: string; output: string; }
   JSONString: { input: string; output: string; }
-  PointScalar: { input: any; output: any; }
   PositiveInt: { input: number; output: number; }
   RichText: { input: string; output: string; }
   UUID: { input: string; output: string; }
@@ -361,7 +360,7 @@ export type GetInstanceContextQuery = (
   & { __typename: 'Query' }
 );
 
-type ActionParameter_BoolParameterType_Fragment = (
+export type ActionParameter_BoolParameterType_Fragment = (
   { id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null, node: (
     { id: string }
     & { __typename: 'ActionNode' | 'Node' }
@@ -369,7 +368,7 @@ type ActionParameter_BoolParameterType_Fragment = (
   & { __typename: 'BoolParameterType' }
 );
 
-type ActionParameter_NumberParameterType_Fragment = (
+export type ActionParameter_NumberParameterType_Fragment = (
   { minValue: number | null, maxValue: number | null, step: number | null, id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, numberValue: number | null, numberDefaultValue: number | null, unit: (
     { htmlShort: string }
     & { __typename: 'UnitType' }
@@ -380,7 +379,7 @@ type ActionParameter_NumberParameterType_Fragment = (
   & { __typename: 'NumberParameterType' }
 );
 
-type ActionParameter_StringParameterType_Fragment = (
+export type ActionParameter_StringParameterType_Fragment = (
   { id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, stringValue: string | null, stringDefaultValue: string | null, node: (
     { id: string }
     & { __typename: 'ActionNode' | 'Node' }
@@ -388,7 +387,7 @@ type ActionParameter_StringParameterType_Fragment = (
   & { __typename: 'StringParameterType' }
 );
 
-type ActionParameter_UnknownParameterType_Fragment = (
+export type ActionParameter_UnknownParameterType_Fragment = (
   { id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, node: (
     { id: string }
     & { __typename: 'ActionNode' | 'Node' }
@@ -424,7 +423,7 @@ export type DimensionalMetricFragment = (
   & { __typename: 'DimensionalMetricType' }
 );
 
-type CausalGridNode_ActionNode_Fragment = (
+export type CausalGridNode_ActionNode_Fragment = (
   { isEnabled: boolean, id: string, name: string, shortDescription: string | null, color: string | null, targetYearGoal: number | null, isVisible: boolean, quantity: string | null, group: (
     { id: string, name: string, color: string | null }
     & { __typename: 'ActionGroupType' }
@@ -525,7 +524,7 @@ type CausalGridNode_ActionNode_Fragment = (
   & { __typename: 'ActionNode' }
 );
 
-type CausalGridNode_Node_Fragment = (
+export type CausalGridNode_Node_Fragment = (
   { id: string, name: string, shortDescription: string | null, color: string | null, targetYearGoal: number | null, isVisible: boolean, quantity: string | null, unit: (
     { htmlShort: string }
     & { __typename: 'UnitType' }

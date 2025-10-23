@@ -396,7 +396,7 @@ export type UtilityLink = {
 export type FooterNavItem = {
   id: string;
   name: string;
-  slug: string;
+  slug?: string;
   children?: FooterNavItem[];
 };
 
@@ -408,6 +408,33 @@ export type FooterAdditionalLink = {
   viewUrl?: string;
   crossPlanLink?: boolean;
 };
+
+function OrgLogo(props: { ownerName: string; siteTitle: string }) {
+  const theme = useTheme();
+  const { ownerName, siteTitle } = props;
+  const t = useTranslations();
+  if (theme.themeLogoWhiteUrl.endsWith('.png')) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
+        alt={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+        className="footer-org-logo footer-logo-bitmap"
+        aria-hidden="true"
+      />
+    );
+  } else {
+    return (
+      <SVG
+        src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
+        title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+        preserveAspectRatio="xMinYMid meet"
+        className="footer-org-logo"
+        aria-hidden="true"
+      />
+    );
+  }
+}
 
 type SiteFooterProps = {
   siteTitle: string;
@@ -459,29 +486,6 @@ function SiteFooter(props: SiteFooterProps) {
   const isAuthLoading = session.status === 'loading';
   const isAuthenticated = session.status === 'authenticated';
 
-  const OrgLogo = () => {
-    if (theme.themeLogoWhiteUrl.endsWith('.png')) {
-      return (
-        <img
-          src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
-          alt={`${ownerName}, ${siteTitle} ${t('front-page')}`}
-          className="footer-org-logo footer-logo-bitmap"
-          aria-hidden="true"
-        />
-      );
-    } else {
-      return (
-        <SVG
-          src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
-          title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
-          preserveAspectRatio="xMinYMid meet"
-          className="footer-org-logo"
-          aria-hidden="true"
-        />
-      );
-    }
-  };
-
   function scrollToTop(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     window.scrollTo(0, 0);
@@ -502,7 +506,6 @@ function SiteFooter(props: SiteFooterProps) {
   }
 
   const absoluteLink = (link: string, slug: string) => `${appendPort(link)}${slug}`;
-
   return (
     <StyledFooter className="site-footer">
       <Container>
@@ -512,10 +515,10 @@ function SiteFooter(props: SiteFooterProps) {
               <Logo>
                 {theme?.footerLogoLink ? (
                   <a href={theme.footerLogoLink}>
-                    <OrgLogo />
+                    <OrgLogo ownerName={ownerName} siteTitle={siteTitle} />
                   </a>
                 ) : (
-                  <OrgLogo />
+                  <OrgLogo ownerName={ownerName} siteTitle={siteTitle} />
                 )}
               </Logo>
             )}
@@ -573,7 +576,7 @@ function SiteFooter(props: SiteFooterProps) {
         </FooterNav>
         <UtilitySection>
           <UtilityColumn>
-            <UtilityItem>
+            <UtilityItem key="owner-url">
               <OrgTitle>
                 {ownerUrl ? (
                   <a href={ownerUrl} target="_blank" rel="noreferrer">
@@ -592,8 +595,8 @@ function SiteFooter(props: SiteFooterProps) {
               </OrgTitle>
             </UtilityItem>
             {ownerLinks &&
-              ownerLinks.map((page) => (
-                <UtilityItem key={page.id}>
+              ownerLinks.map((page, idx) => (
+                <UtilityItem key={`owner-link-${idx}`}>
                   <NavigationLink slug={page.url}>
                     {theme?.navLinkIcons && (
                       <Icon.AngleRight

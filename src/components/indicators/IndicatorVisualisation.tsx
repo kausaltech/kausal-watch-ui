@@ -25,6 +25,7 @@ import { usePlan } from '@/context/plan';
 export const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
     plan(id: $plan) {
+      id
       scenarios {
         id
         identifier
@@ -100,6 +101,7 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
         name
         normalizations {
           unit {
+            id
             shortName
           }
           normalizer {

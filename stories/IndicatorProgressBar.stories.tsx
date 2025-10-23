@@ -1,8 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 
 import IndicatorProgressBar from '@/components/indicators/IndicatorProgressBar';
-
-import { themes } from '../.storybook/preview';
 
 const meta = {
   title: 'Indicators/IndicatorProgressBar',
@@ -16,7 +14,7 @@ const meta = {
   decorators: [
     (Story, context) => {
       const themeId = context.globals.theme || 'default';
-      const theme = themes[themeId];
+      const theme = context.loaded.themes[themeId];
       return (
         <div
           style={{

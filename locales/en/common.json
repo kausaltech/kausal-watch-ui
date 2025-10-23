@@ -156,7 +156,7 @@
     "filter-impact-help": "{context, select, CASE_STUDY {Show case studies with selected impact} STRATEGY {Show strategies with selected impact} other {Show actions with selected impact}}",
     "filter-organization-help": "{context, select, DIVISION {Show actions that the selected division is responsible for} other {Show actions that the selected organization is responsible for}}",
     "filter-phase-help": "{context, select, CASE_STUDY {Show case studies in selected implementation phase} STRATEGY {Show strategies in selected implementation phase} other {Show actions in selected implementation phase}}",
-    "filter-plan-help": "{context, select CASE_STUDY {Show case studies in selected plan} STRATEGY {Show strategies in selected plan} other {Show actions in selected plan}}",
+    "filter-plan-help": "{context, select, CASE_STUDY {Show case studies in selected plan} STRATEGY {Show strategies in selected plan} other {Show actions in selected plan}}",
     "filter-primary-organization-help": "{context, select, DIVISION {Show actions of selected division} other {Show actions of selected municipality}}",
     "filter-primary-responsible-party": "as the responsible party",
     "filter-schedule-help": "{context, select, CASE_STUDY {Show case studies spanning across selected schedule} STRATEGY {Show strategies spanning across selected schedule} other {Show actions spanning across selected schedule}}",

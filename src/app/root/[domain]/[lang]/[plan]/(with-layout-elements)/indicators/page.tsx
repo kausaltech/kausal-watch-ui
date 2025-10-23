@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
 import IndicatorList from '@/components/indicators/IndicatorList';
@@ -20,7 +20,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-export default async function ActionsPage(props: Props) {
+export default async function IndicatorsListPage(props: Props) {
   const params = await props.params;
   const { data } = await tryRequest(getIndicatorListPage(params.plan));
 

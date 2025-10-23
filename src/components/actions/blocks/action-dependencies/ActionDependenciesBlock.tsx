@@ -28,17 +28,6 @@ type ActionGroup = {
   actions: ActionCardFragment[];
 };
 
-type Props = {
-  action: Action;
-  activeActionId?: string;
-  size?: 'default' | 'small';
-  showTitle?: boolean;
-  title?: string;
-  helpText?: string;
-  getFullAction: (id: string) => Action;
-  loading?: boolean;
-};
-
 const StyledIcon = styled(Icon)``;
 
 const SkeletonBox = styled.div`
@@ -176,16 +165,28 @@ const GET_ACTION_DEPS = gql`
   }
 `;
 
-export function ActionDependenciesBlock({
-  action,
-  activeActionId,
-  size = 'default',
-  showTitle = false,
-  title,
-  helpText,
-  getFullAction,
-  loading = false,
-}: Props) {
+type ActionDependenciesBlockProps = {
+  action: Action;
+  activeActionId?: string;
+  size?: 'default' | 'small';
+  showTitle?: boolean;
+  title?: string;
+  helpText?: string;
+  getFullAction?: (id: string) => Action | undefined;
+  loading?: boolean;
+};
+
+export function ActionDependenciesBlock(props: ActionDependenciesBlockProps) {
+  const {
+    action,
+    activeActionId,
+    size = 'default',
+    showTitle = false,
+    title,
+    helpText,
+    getFullAction,
+    loading = false,
+  } = props;
   const t = useTranslations();
   const plan = usePlan();
   const skipFetchingDependencies =

@@ -2,15 +2,17 @@ import React, { type JSX, useEffect, useState } from 'react';
 
 import Highlighter from 'react-highlight-words';
 import Select, {
-  DropdownIndicatorProps,
-  MultiValueProps,
-  OptionProps,
-  Theme as SelectTheme,
-  ValueContainerProps,
+  type DropdownIndicatorProps,
+  type GroupBase,
+  type MultiValueProps,
+  type OptionProps,
+  type Theme as SelectTheme,
+  type StylesConfig,
+  type ValueContainerProps,
   components,
 } from 'react-select';
 import { Label as BSLabel, FormGroup } from 'reactstrap';
-import styled, { DefaultTheme, useTheme } from 'styled-components';
+import styled, { type DefaultTheme, useTheme } from 'styled-components';
 
 import PopoverTip from '@/components/common/PopoverTip';
 
@@ -45,17 +47,17 @@ const DropdownLabel = styled.div<{ $primary: boolean }>`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-function getSelectStyles<Option extends SelectDropdownOption>(
-  theme: DefaultTheme,
-  multi: boolean,
-  size: string = ''
-) {
+function getSelectStyles<
+  Option extends SelectDropdownOption,
+  IsMulti extends boolean = false,
+  Group extends GroupBase<Option> = GroupBase<Option>,
+>(theme: DefaultTheme, multi: IsMulti, size: string = '') {
   const suffix = size ? `-${size}` : '';
   const inputHeight =
     `calc((${theme.inputLineHeight}*${theme.fontSizeBase}) +` +
     ` (${theme.inputPaddingY}*2) + (${theme.inputBorderWidth}*2))`;
 
-  const styles: SelectDropdownProps<Option>['styles'] = {
+  const styles: StylesConfig<Option, IsMulti, Group> = {
     control: (provided, { isDisabled, isFocused }) => ({
       ...provided,
       backgroundColor: `var(--bs-select${isDisabled ? '-disabled' : ''}-bg)`,
@@ -175,32 +177,36 @@ const CountContainer = styled.span`
 
 const Counter = ({ count }: { count: number }) => <CountContainer> + {count}</CountContainer>;
 
-const ValueContainer = (props: ValueContainerProps) => {
+function ValueContainer(props: ValueContainerProps) {
   const { children, ...rest } = props;
-  const [firstChild, ...remainingChildren] = children;
+  const [firstChild, ...remainingChildren] = Array.isArray(children) ? children : [children];
   const realChildren =
     (firstChild?.length ?? 0) > 1
       ? [firstChild[0], <Counter count={firstChild.length - 1} />, ...remainingChildren]
       : children;
   return <components.ValueContainer {...rest}>{realChildren}</components.ValueContainer>;
-};
+}
 
-const MultiValue = (props: MultiValueProps) => {
+const MultiValue = (props: MultiValueProps<SelectDropdownOption>) => {
   const { data, ...rest } = props;
   const newData = {
     id: '__combined__',
     label: props.getValue()[0].label,
-    indent: Math.min(...props.getValue().map((v) => v.indent)),
+    indent: Math.min(...props.getValue().map((v) => v.indent ?? 0)),
   };
   return <components.SingleValue data={newData} {...rest}></components.SingleValue>;
 };
 
-const Option = (props: OptionProps) => {
+function Option<
+  Option extends SelectDropdownOption,
+  IsMulti extends boolean = false,
+  Group extends GroupBase<Option> = GroupBase<Option>,
+>(props: OptionProps<Option, IsMulti, Group>): JSX.Element {
   const { data, children, options } = props;
   const { indent } = data;
-  const isHierarchical: boolean = options.some((o) => o?.indent > 0);
+  const isHierarchical: boolean = options.some((o) => 'indent' in o && (o.indent ?? 0) > 0);
   const indents: JSX.Element[] = [];
-  for (let i = 0; i < indent; i++) {
+  for (let i = 0; i < (indent ?? 0); i++) {
     indents.push(<DropdownIndent key={`indent-${i}`} />);
   }
   return (
@@ -211,7 +217,7 @@ const Option = (props: OptionProps) => {
       </DropdownItem>
     </components.Option>
   );
-};
+}
 
 const getCustomComponents = (isMulti: boolean) =>
   Object.assign(
@@ -225,25 +231,33 @@ export interface SelectDropdownOption {
   indent?: number;
 }
 
-type SelectDropdownProps<Option extends SelectDropdownOption> = Parameters<
-  typeof Select<Option>
->[0] & {
+type SelectDropdownProps<
+  Option extends SelectDropdownOption,
+  IsMulti extends boolean = false,
+  Group extends GroupBase<Option> = GroupBase<Option>,
+> = Parameters<typeof Select<Option, IsMulti, Group>>[0] & {
   id: string;
   label?: string;
   size?: string;
   helpText?: string;
   invert?: boolean;
-  isMulti: boolean;
+  isMulti: IsMulti;
   value: SelectDropdownOption[] | SelectDropdownOption | null;
   onChange: (option: SelectDropdownOption[] | SelectDropdownOption | null) => void;
 };
 
-function SelectDropdown<Option extends SelectDropdownOption, IsMulti extends boolean>(
-  props: SelectDropdownProps<Option>
-) {
+function SelectDropdown<
+  Option extends SelectDropdownOption,
+  IsMulti extends boolean = false,
+  Group extends GroupBase<Option> = GroupBase<Option>,
+>(props: SelectDropdownProps<Option, IsMulti, Group>) {
   const { size, id, label, value, onChange, helpText, invert, isMulti = false, ...rest } = props;
   const theme = useTheme();
-  const styles = getSelectStyles(theme, props.isMulti === true, size);
+  const styles = getSelectStyles<Option, IsMulti, Group>(
+    theme,
+    (props.isMulti === true) as IsMulti,
+    size
+  );
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -273,9 +287,9 @@ function SelectDropdown<Option extends SelectDropdownOption, IsMulti extends boo
 
       {/* Select doesn't support SSR */}
       {isClient && (
-        <Select<SelectDropdownOption, IsMulti>
+        <Select<SelectDropdownOption, IsMulti, Group>
           inputId={id}
-          isMulti={isMulti}
+          isMulti={isMulti as IsMulti}
           components={getCustomComponents(isMulti)}
           theme={getSelectTheme}
           value={value}

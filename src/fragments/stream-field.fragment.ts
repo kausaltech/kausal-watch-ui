@@ -213,6 +213,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
           id
           normalizations {
             unit {
+              id
               shortName
               name
             }
@@ -270,6 +271,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
       valueAttribute {
         identifier
         unit {
+          id
           shortName
         }
       }

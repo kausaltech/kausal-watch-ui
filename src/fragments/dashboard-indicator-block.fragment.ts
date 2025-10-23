@@ -21,6 +21,7 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
       date
     }
     unit {
+      id
       name
       shortName
     }
@@ -28,8 +29,10 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
   }
 
   fragment DashboardIndicatorBlockFragment on DashboardRowBlock {
+    id
     blockType
     blocks {
+      id
       blockType
 
       ... on DashboardParagraphBlock {

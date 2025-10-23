@@ -1,0 +1,12 @@
+{
+  "extends": "../kausal_common/configs/tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": ["../src/*"],
+      "@common/*": ["../kausal_common/src/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "../.storybook/**/*.ts", "../.storybook/**/*.tsx"]
+}

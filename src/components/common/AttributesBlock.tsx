@@ -39,7 +39,9 @@ const AttributeItem = styled(Col)`
   display: block;
 `;
 
-export function attributeHasValue(attribute: AttributesBlockProps['attributes'][0]) {
+type AttributesBlockAttribute = NonNullable<AttributesBlockProps['attributes']>[number];
+
+export function attributeHasValue(attribute: AttributesBlockAttribute) {
   const { __typename } = attribute;
 
   if (__typename === 'AttributeChoice') {

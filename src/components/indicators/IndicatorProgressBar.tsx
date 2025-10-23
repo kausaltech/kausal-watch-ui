@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import type { AnimationSequence } from 'motion/react';
-import { animate, useAnimate, useInView } from 'motion/react';
+import { MotionConfig, animate, useAnimate, useInView, useReducedMotion } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import styled, { useTheme } from 'styled-components';
@@ -136,8 +136,15 @@ function Counter({
   precision: number;
 }) {
   const ref = useRef<SVGTSpanElement>(null);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
+    if (true || reducedMotion) {
+      if (ref.current) {
+        ref.current.textContent = formatValue(to, locale, precision);
+      }
+      return;
+    }
     const controls = animate(from, to, {
       duration: duration,
       onUpdate(value) {
@@ -147,7 +154,7 @@ function Counter({
       },
     });
     return () => controls.stop();
-  }, [from, to, duration, locale, precision]);
+  }, [from, to, duration, locale, precision, reducedMotion]);
 
   return <tspan ref={ref} />;
 }
@@ -490,263 +497,270 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
 
   return (
     <ProgressBarWrapper>
-      {normalize && (
-        <NormalizerChooser>
-          <Switch
-            label={t('indicator-normalize-per-capita')}
-            state={isNormalized || false}
-            onChange={() => setIsNormalized(!isNormalized)}
-            id="normalize-per-capita-switch"
-          />
-        </NormalizerChooser>
-      )}
+      <MotionConfig reducedMotion="user">
+        {normalize && (
+          <NormalizerChooser>
+            <Switch
+              label={t('indicator-normalize-per-capita')}
+              state={isNormalized || false}
+              onChange={() => setIsNormalized(!isNormalized)}
+              id="normalize-per-capita-switch"
+            />
+          </NormalizerChooser>
+        )}
 
-      <div ref={scope}>
-        <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`}>
-          <title>{t('indicator-progress-bar', graphValues)}</title>
-          <defs>
-            <marker
-              id="reducedArrow"
-              markerWidth="7"
-              markerHeight="7"
-              refX="0"
-              refY="3.5"
-              orient="auto"
-              fill={startColor}
-            >
-              <polygon points="0 0, 7 3.5, 0 7" />
-            </marker>
-            <marker
-              id="toBeReducedArrow"
-              markerWidth="7"
-              markerHeight="7"
-              refX="0"
-              refY="3.5"
-              orient="auto"
+        <div ref={scope}>
+          <svg viewBox={`0 0 ${canvas.w} ${canvas.h}`}>
+            <title>{t('indicator-progress-bar', graphValues)}</title>
+            <defs>
+              <marker
+                id="reducedArrow"
+                markerWidth="7"
+                markerHeight="7"
+                refX="0"
+                refY="3.5"
+                orient="auto"
+                fill={startColor}
+              >
+                <polygon points="0 0, 7 3.5, 0 7" />
+              </marker>
+              <marker
+                id="toBeReducedArrow"
+                markerWidth="7"
+                markerHeight="7"
+                refX="0"
+                refY="3.5"
+                orient="auto"
+                fill={latestColor}
+              >
+                <polygon points="0 0, 7 3.5, 0 7" />
+              </marker>
+            </defs>
+            {/* completed bar */}
+            {hasStartValue && (
+              <>
+                <g className="start-content">
+                  <rect
+                    className="start-bar"
+                    width={roundedValues.start * scale}
+                    y={startBar.y}
+                    x={bars.w - roundedValues.start * scale}
+                    height={barHeight - barMargin}
+                    fill={startColor}
+                  />
+                  <line
+                    className="completed-line"
+                    y1={segmentsY}
+                    y2={segmentsY}
+                    x1={0}
+                    x2={latestBar.x - 14}
+                    stroke={startColor}
+                    strokeWidth="2"
+                    markerEnd="url(#reducedArrow)"
+                  />
+                  <line
+                    x1={startBar.x + 1}
+                    y1={startBar.y}
+                    x2={startBar.x + 1}
+                    y2={segmentsY}
+                    stroke={startColor}
+                    strokeWidth="2"
+                    strokeDasharray="2,4"
+                  />
+                  <ValueGroup
+                    transform={`translate(${startBar.x + 4}, 0)`}
+                    startDate={graphValues.startYear}
+                    value={formatValue(roundedValues.start, locale)}
+                    unit={displayUnit ?? ''}
+                    locale={locale}
+                    textColor={readableColor(
+                      startColor,
+                      theme.themeColors.black,
+                      theme.themeColors.white
+                    )}
+                  />
+                </g>
+                {showReduction && (
+                  <text
+                    className="reduced-text"
+                    transform={`translate(0 ${segmentsY + barMargin * 3})`}
+                    textAnchor="start"
+                  >
+                    <SegmentHeader>{t('reduced')}</SegmentHeader>
+                    <SegmentValue x="0" y="16">
+                      <Counter
+                        from={reductionCounterFrom}
+                        to={reductionCounterTo}
+                        duration={reductionCounterDuration}
+                        locale={locale}
+                        precision={minPrecision}
+                      />{' '}
+                      <SegmentUnit>{displayUnit ?? ''}</SegmentUnit>
+                    </SegmentValue>
+                  </text>
+                )}
+              </>
+            )}
+            {/* pending from goal bar */}
+            <rect
+              className="latest-bar"
+              y={latestBar.y}
+              width={latestBar.w}
+              height={barHeight - barMargin}
+              opacity={1}
               fill={latestColor}
-            >
-              <polygon points="0 0, 7 3.5, 0 7" />
-            </marker>
-          </defs>
-          {/* completed bar */}
-          {hasStartValue && (
-            <>
-              <g className="start-content">
-                <rect
-                  className="start-bar"
-                  width={roundedValues.start * scale}
-                  y={startBar.y}
-                  x={bars.w - roundedValues.start * scale}
-                  height={barHeight - barMargin}
-                  fill={startColor}
-                />
+              transform={`translate(${latestBar.x} 0)`}
+              style={{
+                transformOrigin: '50% 50%',
+                transformBox: 'fill-box',
+              }}
+            />
+            {goalValue && latestBar.w - goalBar.w > 24 && (
+              <line
+                className="latest-line"
+                y1={segmentsY}
+                x1={latestBar.x}
+                x2={goalBar.x - 14}
+                y2={segmentsY}
+                stroke={latestColor}
+                strokeWidth="2"
+                markerEnd="url(#toBeReducedArrow)"
+              />
+            )}
+            <g className="latest-content">
+              {latestBar.w > 24 && (
                 <line
-                  className="completed-line"
-                  y1={segmentsY}
+                  x1={latestBar.x}
+                  x2={latestBar.x}
+                  y1={latestBar.y}
                   y2={segmentsY}
-                  x1={0}
-                  x2={latestBar.x - 14}
-                  stroke={startColor}
-                  strokeWidth="2"
-                  markerEnd="url(#reducedArrow)"
-                />
-                <line
-                  x1={startBar.x + 1}
-                  y1={startBar.y}
-                  x2={startBar.x + 1}
-                  y2={segmentsY}
-                  stroke={startColor}
+                  stroke={latestColor}
                   strokeWidth="2"
                   strokeDasharray="2,4"
                 />
-                <ValueGroup
-                  transform={`translate(${startBar.x + 4}, 0)`}
-                  startDate={graphValues.startYear}
-                  value={formatValue(roundedValues.start, locale)}
-                  unit={displayUnit ?? ''}
-                  locale={locale}
-                  textColor={readableColor(
-                    startColor,
-                    theme.themeColors.black,
-                    theme.themeColors.white
-                  )}
-                />
-              </g>
-              {showReduction && (
-                <text
-                  className="reduced-text"
-                  transform={`translate(0 ${segmentsY + barMargin * 3})`}
-                  textAnchor="start"
-                >
-                  <SegmentHeader>{t('reduced')}</SegmentHeader>
-                  <SegmentValue x="0" y="16">
-                    <Counter
-                      from={reductionCounterFrom}
-                      to={reductionCounterTo}
-                      duration={reductionCounterDuration}
-                      locale={locale}
-                      precision={minPrecision}
-                    />{' '}
-                    <SegmentUnit>{displayUnit ?? ''}</SegmentUnit>
-                  </SegmentValue>
-                </text>
               )}
-            </>
-          )}
-          {/* pending from goal bar */}
-          <rect
-            className="latest-bar"
-            y={latestBar.y}
-            width={latestBar.w}
-            height={barHeight - barMargin}
-            opacity={1}
-            fill={latestColor}
-            transform={`translate(${latestBar.x} 0)`}
-            style={{
-              transformOrigin: '50% 50%',
-              transformBox: 'fill-box',
-            }}
-          />
-          {goalValue && latestBar.w - goalBar.w > 24 && (
-            <line
-              className="latest-line"
-              y1={segmentsY}
-              x1={latestBar.x}
-              x2={goalBar.x - 14}
-              y2={segmentsY}
-              stroke={latestColor}
-              strokeWidth="2"
-              markerEnd="url(#toBeReducedArrow)"
-            />
-          )}
-          <g className="latest-content">
-            {latestBar.w > 24 && (
+              <ValueGroup
+                textAnchor={latestBar.w > 120 ? 'start' : 'end'}
+                transform={`translate(${
+                  latestBar.w > 120 ? latestBar.x + 4 : latestBar.x - 8
+                } ${latestBar.y})`}
+                opacity={0}
+                date={graphValues.latestYear}
+                value={formatValue(roundedValues.latest, locale)}
+                unit={displayUnit ?? ''}
+                locale={locale}
+                textColor={
+                  latestBar.w > 120
+                    ? readableColor(latestColor, theme.themeColors.black, theme.themeColors.white)
+                    : theme.section.indicatorShowcase.color
+                }
+              />
+            </g>
+            <text
+              className="latest-text"
+              textAnchor={latestBar.w > 120 ? 'start' : 'end'}
+              transform={`translate(${spaceTextBlock(bars.w - Math.max(10, latestBar.w), ['.reduced-text'])} ${segmentsY + barMargin * 3})`}
+              // FIXME: This is a temporary fix to suppress hydration warning
+              suppressHydrationWarning
+            >
+              <SegmentHeader>{t('to-reduce')}</SegmentHeader>
+              <SegmentValue x="0" y="16">
+                {formatValue(
+                  Number(roundedValues.latest) - Number(roundedValues.goal ?? 0),
+                  locale
+                )}{' '}
+                <SegmentUnit>{displayUnit ?? ''}</SegmentUnit>
+              </SegmentValue>
+            </text>
+            {/* Goal bar */}
+            {goalValue && (
+              <BarBase
+                x={goalBar.x}
+                y={goalBar.y}
+                width={goalBar.w}
+                height={barHeight - barMargin}
+                fill={goalColor}
+              />
+            )}
+            {goalBar.w > 3 && (
               <line
-                x1={latestBar.x}
-                x2={latestBar.x}
-                y1={latestBar.y}
+                x1={goalBar.x + 1}
+                y1={goalBar.y}
+                x2={goalBar.x + 1}
                 y2={segmentsY}
-                stroke={latestColor}
+                stroke={goalColor}
                 strokeWidth="2"
                 strokeDasharray="2,4"
               />
             )}
-            <ValueGroup
-              textAnchor={latestBar.w > 120 ? 'start' : 'end'}
-              transform={`translate(${
-                latestBar.w > 120 ? latestBar.x + 4 : latestBar.x - 8
-              } ${latestBar.y})`}
-              opacity={0}
-              date={graphValues.latestYear}
-              value={formatValue(roundedValues.latest, locale)}
-              unit={displayUnit ?? ''}
-              locale={locale}
-              textColor={
-                latestBar.w > 120
-                  ? readableColor(latestColor, theme.themeColors.black, theme.themeColors.white)
-                  : theme.section.indicatorShowcase.color
-              }
-            />
-          </g>
-          <text
-            className="latest-text"
-            textAnchor={latestBar.w > 120 ? 'start' : 'end'}
-            transform={`translate(${spaceTextBlock(bars.w - Math.max(10, latestBar.w), ['.reduced-text'])} ${segmentsY + barMargin * 3})`}
-          >
-            <SegmentHeader>{t('to-reduce')}</SegmentHeader>
-            <SegmentValue x="0" y="16">
-              {formatValue(Number(roundedValues.latest) - Number(roundedValues.goal ?? 0), locale)}{' '}
-              <SegmentUnit>{displayUnit ?? ''}</SegmentUnit>
-            </SegmentValue>
-          </text>
-          {/* Goal bar */}
-          {goalValue && (
-            <BarBase
-              x={goalBar.x}
-              y={goalBar.y}
-              width={goalBar.w}
-              height={barHeight - barMargin}
-              fill={goalColor}
-            />
-          )}
-          {goalBar.w > 3 && (
             <line
-              x1={goalBar.x + 1}
-              y1={goalBar.y}
-              x2={goalBar.x + 1}
+              x1={goalBar.x}
+              y1={segmentsY}
+              x2={goalBar.x + goalBar.w}
               y2={segmentsY}
               stroke={goalColor}
               strokeWidth="2"
-              strokeDasharray="2,4"
             />
-          )}
-          <line
-            x1={goalBar.x}
-            y1={segmentsY}
-            x2={goalBar.x + goalBar.w}
-            y2={segmentsY}
-            stroke={goalColor}
-            strokeWidth="2"
-          />
-          <ValueGroup
-            textAnchor={goalBar.w > 120 ? 'start' : 'end'}
-            transform={`translate(${goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8} ${goalBar.y})`}
-            date={graphValues.goalYear}
-            value={formatValue(roundedValues.goal ?? 0, locale)}
-            unit={displayUnit ?? ''}
-            locale={locale}
-            textColor={
-              goalBar.w > 120
-                ? readableColor(goalColor, theme.themeColors.black, theme.themeColors.white)
-                : theme.section.indicatorShowcase.color
-            }
-          />
-          <text
-            transform={`translate(${spaceTextBlock(goalBar.x, [
-              '.reduced-text',
-              '.latest-text',
-            ])} ${segmentsY + barMargin * 3})`}
-            textAnchor="start"
-          >
-            <SegmentHeader>{t('bar-goal')}</SegmentHeader>
-            <SegmentValue></SegmentValue>
-          </text>
-          <line
-            x1={bars.w + 1}
-            x2={bars.w + 1}
-            y1={hasStartValue ? 0 : barHeight}
-            y2={segmentsY + barMargin}
-            stroke={theme.section.indicatorShowcase.color}
-          />
-          {hasStartValue && (
+            <ValueGroup
+              textAnchor={goalBar.w > 120 ? 'start' : 'end'}
+              transform={`translate(${goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8} ${goalBar.y})`}
+              date={graphValues.goalYear}
+              value={formatValue(roundedValues.goal ?? 0, locale)}
+              unit={displayUnit ?? ''}
+              locale={locale}
+              textColor={
+                goalBar.w > 120
+                  ? readableColor(goalColor, theme.themeColors.black, theme.themeColors.white)
+                  : theme.section.indicatorShowcase.color
+              }
+            />
             <text
-              transform={`translate(${canvas.w - 10} ${startBar.y + barHeight / 2})`}
+              transform={`translate(${spaceTextBlock(goalBar.x, [
+                '.reduced-text',
+                '.latest-text',
+              ])} ${segmentsY + barMargin * 3})`}
+              textAnchor="start"
+            >
+              <SegmentHeader>{t('bar-goal')}</SegmentHeader>
+              <SegmentValue></SegmentValue>
+            </text>
+            <line
+              x1={bars.w + 1}
+              x2={bars.w + 1}
+              y1={hasStartValue ? 0 : barHeight}
+              y2={segmentsY + barMargin}
+              stroke={theme.section.indicatorShowcase.color}
+            />
+            {hasStartValue && (
+              <text
+                transform={`translate(${canvas.w - 10} ${startBar.y + barHeight / 2})`}
+                textAnchor="end"
+              >
+                <DateText>{graphValues.startYear}</DateText>
+              </text>
+            )}
+            <text
+              transform={`translate(${canvas.w - 10} ${latestBar.y + barHeight / 2})`}
               textAnchor="end"
             >
-              <DateText>{graphValues.startYear}</DateText>
+              <DateText>{graphValues.latestYear}</DateText>
             </text>
+            {goalValue && (
+              <text
+                transform={`translate(${canvas.w - 10} ${goalBar.y + barHeight / 2})`}
+                textAnchor="end"
+              >
+                <DateText>{graphValues.goalYear}</DateText>
+              </text>
+            )}
+          </svg>
+          {theme.section.indicatorShowcase.linkToSource && (
+            <SourceLink role="button" tabIndex={0} className="text-end mt-3">
+              <IndicatorLink id={indicatorId}>{note}</IndicatorLink>
+            </SourceLink>
           )}
-          <text
-            transform={`translate(${canvas.w - 10} ${latestBar.y + barHeight / 2})`}
-            textAnchor="end"
-          >
-            <DateText>{graphValues.latestYear}</DateText>
-          </text>
-          {goalValue && (
-            <text
-              transform={`translate(${canvas.w - 10} ${goalBar.y + barHeight / 2})`}
-              textAnchor="end"
-            >
-              <DateText>{graphValues.goalYear}</DateText>
-            </text>
-          )}
-        </svg>
-        {theme.section.indicatorShowcase.linkToSource && (
-          <SourceLink role="button" tabIndex={0} className="text-end mt-3">
-            <IndicatorLink id={indicatorId}>{note}</IndicatorLink>
-          </SourceLink>
-        )}
-      </div>
+        </div>
+      </MotionConfig>
     </ProgressBarWrapper>
   );
 }

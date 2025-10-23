@@ -50,6 +50,5 @@ export default async function SlugPage(props: Props) {
   if (!data?.planPage) {
     return notFound();
   }
-
   return <ContentPage page={data.planPage} testId="slug-page" />;
 }

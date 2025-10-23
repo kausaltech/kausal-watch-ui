@@ -10,11 +10,18 @@ dotenv.config({
   quiet: true,
 });
 
+const resultsPath = process.env.TEST_RESULTS_PATH ?? './test-results';
+const screenshotsPath = process.env.TEST_SCREENSHOTS_PATH;
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
   testDir: './tests',
+  outputDir: resultsPath,
+  snapshotPathTemplate: screenshotsPath
+    ? `${screenshotsPath}/{testFileName}-snapshots/{arg}{-projectName}{-snapshotSuffix}{ext}`
+    : undefined,
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -36,9 +43,12 @@ export default defineConfig({
     // baseURL: 'http://127.0.0.1:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
     actionTimeout: 2000,
     screenshot: 'on',
+    contextOptions: {
+      reducedMotion: 'reduce',
+    },
   },
   maxFailures: 10,
   globalSetup: path.resolve('./global-setup'),

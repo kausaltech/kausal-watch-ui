@@ -179,6 +179,7 @@ const StyledCardTitle = styled.div<{ $isSmall: boolean }>`
   :lang(en) & {
     word-break: normal;
     hyphens: none;
+  }
 `;
 
 const ActionOrg = styled.div`
@@ -278,7 +279,7 @@ type ActionCardProps = {
   variant?: 'primary' | 'mini' | 'text-only';
   isLink?: boolean;
   isHighlighted?: boolean;
-  getFullAction?: (id: string) => Action;
+  getFullAction?: (id: string) => Action | undefined;
 };
 
 function ActionCard({
@@ -326,13 +327,20 @@ function ActionCard({
       else statusText = status.name;
     }
   }
-  const getPlanUrl = (mergedWith, actionPlan, planId) => {
+  const getPlanUrl = (
+    mergedWith: ActionCardFragment['mergedWith'],
+    actionPlan: ActionCardFragment['plan'],
+    planId: string
+  ) => {
     if (mergedWith && mergedWith?.plan.id !== planId) return mergedWith.plan.viewUrl;
     if (actionPlan.id !== planId) return actionPlan.viewUrl;
     return undefined;
   };
 
-  const getMergedName = (mergedWith, planId) => {
+  const getMergedName = (
+    mergedWith: NonNullable<ActionCardFragment['mergedWith']>,
+    planId: string
+  ) => {
     if (mergedWith.plan.id !== planId)
       return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
     else return mergedWith.identifier;
@@ -403,7 +411,7 @@ function ActionCard({
         <ActionPlan>
           <PlanChip
             planImage={action.plan.image?.rendition?.src}
-            planShortName={action.plan.shortName || action.plan.name}
+            planShortName={action.plan.shortName || action.plan.versionName}
             size="xs"
           />
         </ActionPlan>

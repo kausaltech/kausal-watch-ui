@@ -285,6 +285,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
     case 'IndicatorCausalChainBlock':
       return null;
     default:
+      // @ts-expect-error no more typenames should be found
       console.error('Unknown action content block', block.__typename);
       return null;
   }

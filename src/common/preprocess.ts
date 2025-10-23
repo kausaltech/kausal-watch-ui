@@ -1,6 +1,8 @@
 import type { Theme } from '@kausal/themes/types';
 import { cloneDeep } from 'lodash';
 
+import type { ActionListAction } from '@/components/dashboard/dashboard.types';
+
 import { getStatusSummary } from '../common/ActionStatusSummary';
 import type { Progress } from '../components/dashboard/ActionStatusGraphs';
 import type { PlanContextType } from '../context/plan';
@@ -29,9 +31,7 @@ type ActionWithPhaseAndStatus = {
     identifier: string;
     name: string;
   } | null;
-  mergedWith?: {
-    viewUrl: string;
-  };
+  mergedWith?: object | null;
 };
 type ActionStatus = ActionWithPhaseAndStatus['status'] & {
   isCompleted?: boolean;
@@ -186,17 +186,20 @@ const getPhaseData = (
       theme.graphColors.green070,
       theme.graphColors.green050,
       theme.graphColors.green030,
-      theme.graphColors.green020,
       theme.graphColors.green010,
       theme.graphColors.grey030,
     ];
   }
-  const donutSectorFromPhase = (phase, idx, isNotStartedPhase) => {
+  const donutSectorFromPhase = (
+    phase: (typeof phases)[number],
+    idx: number,
+    isNotStartedPhase: boolean
+  ) => {
     return new DonutSector(
       phase.name,
       isNotStartedPhase
         ? theme.graphColors.grey020
-        : (phaseColors[idx] ?? theme.graphColors.yellow020),
+        : (phaseColors[idx] ?? theme.graphColors.yellow030),
       !isNotStartedPhase
     );
   };
@@ -216,7 +219,6 @@ const getPhaseData = (
     theme.graphColors.grey000,
     false
   );
-  inactiveActionsDonutSector;
   const phaselessActionsDonutSector: DonutSector = new DonutSector(
     // Donut sector for active actions without a phase
     t('no-phase'),
@@ -267,7 +269,5 @@ const getPhaseData = (
     ongoingAndCompleted,
   } as Progress;
 };
-
-type StatusSummary = Plan['actionStatusSummaries'][0];
 
 export { cleanActionStatus, getPhaseData, getStatusData };

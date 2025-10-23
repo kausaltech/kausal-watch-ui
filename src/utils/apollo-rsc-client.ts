@@ -44,7 +44,6 @@ export const { getClient } = registerApolloClient(async () => {
       planIdentifier: plan,
       selectedWorkflow: versionCookie?.value,
     },
-    connectToDevTools: false,
     cache: new InMemoryCache({
       // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
       possibleTypes: possibleTypes.possibleTypes,

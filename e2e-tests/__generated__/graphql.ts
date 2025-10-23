@@ -383,7 +383,7 @@ export type PlaywrightGetPlanBasicsQueryVariables = Exact<{
 
 export type PlaywrightGetPlanBasicsQuery = (
   { plan: (
-    { id: string, identifier: string, primaryLanguage: string, otherLanguages: Array<string> }
+    { id: string, identifier: string, primaryLanguage: string, otherLanguages: Array<string>, publishedAt: string | null, kausalPathsInstanceUuid: string }
     & { __typename: 'Plan' }
   ) | null }
   & { __typename: 'Query' }
@@ -401,10 +401,13 @@ export type PlaywrightGetPlanInfoQuery = (
     { id: string, name: string }
     & { __typename: 'Organization' }
   )> | null, plan: (
-    { id: string, identifier: string, name: string, shortName: string | null, primaryLanguage: string, otherLanguages: Array<string>, parent: (
+    { id: string, identifier: string, name: string, shortName: string | null, primaryLanguage: string, otherLanguages: Array<string>, publishedAt: string | null, kausalPathsInstanceUuid: string, parent: (
       { identifier: string, name: string }
       & { __typename: 'Plan' }
-    ) | null, generalContent: (
+    ) | null, features: (
+      { enableSearch: boolean }
+      & { __typename: 'PlanFeatures' }
+    ), generalContent: (
       { id: string, siteTitle: string, siteDescription: string }
       & { __typename: 'SiteGeneralContent' }
     ), actionListPage: (

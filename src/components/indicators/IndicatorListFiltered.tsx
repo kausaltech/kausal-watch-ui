@@ -283,6 +283,9 @@ function sortIndicators(
   const sortedIndicators = [...indicators]
     .sort((a, b) => a.name.localeCompare(b.name))
     .sort((a, b) => {
+      if (a.level === null || b.level === null) {
+        return 0;
+      }
       if (levels[a.level].index < levels[b.level].index) {
         return -1;
       }

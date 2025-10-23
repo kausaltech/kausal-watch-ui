@@ -172,7 +172,7 @@ const RichTextSection = styled.div<{ $topPadding: boolean; $bottomPadding: boole
     props.$topPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
   padding-bottom: ${(props) =>
     props.$bottomPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
-  background-color: ${({ theme }) => theme.section.richText.sectionBackground};
+  background-color: ${({ theme }) => theme.section.richText?.sectionBackground};
 `;
 
 type StreamFieldBlockPage = {
@@ -190,7 +190,7 @@ type StreamFieldBlockPage = {
     image?: MultiUseImageFragmentFragment | null;
     indicators: { id: string }[];
   } | null;
-  body: StreamFieldFragmentFragment[] | null;
+  body: (StreamFieldFragmentFragment | null)[] | null;
 };
 
 type StreamFieldBlockProps = {
@@ -226,11 +226,11 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         <RichTextSection
           $topPadding={
             previousBlockType !== 'RichTextBlock' &&
-            theme.section.richText.sectionBackground !== theme.themeColors.white
+            theme.section.richText?.sectionBackground !== theme.themeColors.white
           }
           $bottomPadding={
             nextBlockType !== 'RichTextBlock' &&
-            theme.section.richText.sectionBackground !== theme.themeColors.white
+            theme.section.richText?.sectionBackground !== theme.themeColors.white
           }
         >
           <Container id={id}>
@@ -260,7 +260,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
             page.__typename === 'CategoryPage' && theme.settings.layout.leftAlignCategoryPages
           }
           heading={heading ?? undefined}
-          questions={excludeNullish(questions ?? [])}
+          questions={questions ?? []}
           hasSidebar={hasSidebar}
           columnProps={columnProps}
         />
@@ -540,7 +540,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
 
 interface StreamFieldProps {
   page: StreamFieldBlockPage;
-  blocks: StreamFieldFragmentFragment[];
+  blocks: (StreamFieldFragmentFragment | null)[];
   hasSidebar?: boolean;
   columnProps?: ColProps;
 }

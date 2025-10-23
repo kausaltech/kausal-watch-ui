@@ -127,6 +127,7 @@ export const CategoryContent = (props: CategoryContentProps) => {
 type CategoryTagsProps = {
   categories: CategoryRecursiveFragmentFragment[];
   noLink?: boolean;
+  types: CategoryTypeFragmentFragment[];
 };
 
 function CategoryTags(props: CategoryTagsProps) {

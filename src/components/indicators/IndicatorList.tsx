@@ -150,6 +150,7 @@ const GET_INDICATOR_LIST = gql`
             name
             normalizations {
               unit {
+                id
                 shortName
               }
               normalizer {
@@ -183,6 +184,7 @@ const GET_INDICATOR_LIST = gql`
             }
           }
           unit {
+            id
             shortName
           }
         }
@@ -251,6 +253,7 @@ const GET_INDICATOR_LIST = gql`
         name
         normalizations {
           unit {
+            id
             shortName
           }
           normalizer {
@@ -273,6 +276,7 @@ const GET_INDICATOR_LIST = gql`
         }
       }
       unit {
+        id
         shortName
       }
       categories {
@@ -371,13 +375,13 @@ interface Props {
   testId?: string;
 }
 
-const IndicatorList = ({
+export default function IndicatorList({
   leadContent,
   displayInsights,
   displayLevel,
   includeRelatedPlans,
   testId,
-}: Props) => {
+}: Props) {
   const plan = usePlan();
   const t = useTranslations();
   const searchParams = useSearchParams();
@@ -474,11 +478,11 @@ const IndicatorList = ({
   );
 
   return (
-    <>
+    <div data-testid={testId}>
       <IndicatorsHero
         leadContent={leadContent || undefined}
         showInsights={showInsights}
-        testId={testId}
+        testId={`${testId}-hero`}
       >
         <ActionListFilters
           filterSections={filterSections}
@@ -502,8 +506,6 @@ const IndicatorList = ({
           commonCategories={commonCategories}
         />
       </Container>
-    </>
+    </div>
   );
-};
-
-export default IndicatorList;
+}

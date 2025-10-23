@@ -46,12 +46,7 @@ const Plot = (props: PlotProps) => {
   if (!props.noValidate) {
     const ret = Plotly.validate(data, layout);
     if (ret && ret.length) {
-      console.warn('Plotly validation returned errors');
-      console.log(ret);
-      console.log('Plotly layout:');
-      console.log(layout);
-      console.log('Plotly data:');
-      console.log(data);
+      console.warn('Plotly validation returned errors', ret, 'layout:', layout, 'data:', data);
     }
   }
   props = {
@@ -76,8 +71,7 @@ export function usePlotlyBasic({ data, layout, config, noValidate }: UsePlotlyAr
     // @ts-ignore
     const ret = Plotly.validate(data, layout);
     if (ret && ret.length) {
-      console.warn('Plotly validation errors:');
-      console.log(ret);
+      console.warn('Plotly validation errors:', ret);
     }
   }
   useLayoutEffect(() => {

@@ -102,7 +102,7 @@ export function mapActionCategories<
   primaryRootCT: CT | null = null,
   depth: number
 ) {
-  const useCommonCategories = primaryRootCT?.__typename === 'CommonCategoryType' ?? false;
+  const useCommonCategories = primaryRootCT?.__typename === 'CommonCategoryType';
   const categories = categoryTypes.map((ct) => ct.categories).flat();
 
   const categoriesById: Map<string, Cat> = new Map(categories.map((c) => [c.id, c]));

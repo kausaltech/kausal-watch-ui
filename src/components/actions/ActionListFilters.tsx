@@ -255,7 +255,7 @@ type ActionListDropdownProps<Value extends FilterValue> = {
   currentValue: Value;
   onChange: FilterChangeCallback<Value>;
   options: SelectDropdownOption[];
-  isMulti: Value extends MultipleFilterValue ? boolean : false;
+  isMulti: Value extends MultipleFilterValue ? true : false;
 };
 
 const filterOption = createFilter({
@@ -274,16 +274,12 @@ function ActionListDropdownInput<Value extends FilterValue>(props: ActionListDro
     readableColor(theme.neutralLight, theme.themeColors.black, theme.themeColors.white) ===
     theme.themeColors.white;
   const callback = useCallback(
-    (
-      option: Value extends MultipleFilterValue
-        ? SelectDropdownOption[]
-        : SelectDropdownOption | null
-    ) => {
+    (option: readonly SelectDropdownOption[] | SelectDropdownOption | null) => {
       // Found no way to automatically narrow the type of option (or currentValue)
       if (isMulti) {
         (onChange as FilterChangeCallback<MultipleFilterValue>)(
           id,
-          (option as SelectDropdownOption[])?.map((o) => o.id)
+          (option as readonly SelectDropdownOption[])?.map((o) => o.id)
         );
         return;
       } else {
@@ -494,9 +490,9 @@ abstract class DefaultFilter<Value extends FilterValue> implements ActionListFil
     value: Value,
     onChange: FilterChangeCallback<Value>,
     t: TFunction,
-    isMulti?: Value extends MultipleFilterValue ? boolean : false
+    isMulti?: Value extends MultipleFilterValue ? true : false
   ) {
-    const _isMulti = isMulti ?? false;
+    const _isMulti = (isMulti ?? false) as Value extends MultipleFilterValue ? true : false;
     return (
       <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
         <ActionListDropdownInput

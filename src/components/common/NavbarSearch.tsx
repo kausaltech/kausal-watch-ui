@@ -255,11 +255,12 @@ type ResultListProps = {
   results: SearchHit[];
   searchTerm: string;
   loading: boolean;
+  wasSearched: boolean;
   closeSearch: () => void;
 };
 
 const ResultList = (props: ResultListProps) => {
-  const { results, searchTerm, loading, closeSearch } = props;
+  const { results, searchTerm, loading, wasSearched, closeSearch } = props;
   const t = useTranslations();
   //const plan = usePlan();
   const _counts = [
@@ -288,13 +289,13 @@ const ResultList = (props: ResultListProps) => {
           {!loading && results.length === 0 && t('search-no-results')}
         </ResultCount>
       </ResultsHeader>
-      {!loading && (
+      {!loading && wasSearched ? (
         <HitList>
           {results.slice(0, RESULTS_LIMIT).map((r, i) => (
             <ResultItem key={i} hit={r} />
           ))}
         </HitList>
-      )}
+      ) : null}
       <ResultsFooter>
         {results.length > 0 ? (
           <Link
@@ -306,7 +307,11 @@ const ResultList = (props: ResultListProps) => {
             <Icon.ArrowRight />
           </Link>
         ) : (
-          <Link href={`/search`} onClick={closeSearch} data-testid="search-advanced">
+          <Link
+            href={`/search?q=${searchTerm}`}
+            onClick={closeSearch}
+            data-testid="search-advanced"
+          >
             {t('search-advanced')} <Icon.ArrowRight />
           </Link>
         )}
@@ -315,59 +320,15 @@ const ResultList = (props: ResultListProps) => {
   );
 };
 
-const NavbarSearch = React.memo(function NavbarSearch() {
-  const plan = usePlan();
-  const apolloClient = useApolloClient();
-
-  if (!plan.features.enableSearch) {
-    return null;
-  }
-
-  // TODO: Translate a11y text
-  const connector = new WatchSearchAPIConnector({ plan, apolloClient });
-  return (
-    <SearchProvider
-      config={{
-        apiConnector: connector,
-        debug: false,
-        hasA11yNotifications: true,
-        a11yNotificationMessages: {
-          searchResults: ({ totalResults, searchTerm }) =>
-            `Searching for "${searchTerm}". Showing first ${RESULTS_LIMIT} results out of ${totalResults}.`,
-        },
-      }}
-    >
-      <WithSearch
-        mapContextToProps={({ isLoading, searchTerm, setSearchTerm, results }) => ({
-          isLoading,
-          searchTerm,
-          setSearchTerm,
-          results,
-        })}
-      >
-        {(context) => {
-          return (
-            <Search
-              isLoading={context.isLoading}
-              searchTerm={context.searchTerm}
-              setSearchTerm={context.setSearchTerm}
-              results={context.results as SearchHit[]}
-            />
-          );
-        }}
-      </WithSearch>
-    </SearchProvider>
-  );
-});
-
 type SearchProps = {
   isLoading?: boolean;
   searchTerm?: string;
   setSearchTerm?: (searchTerm: string, options?: { debounce?: number }) => void;
   results?: SearchHit[];
+  wasSearched?: boolean;
 };
 
-function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) {
+function Search({ isLoading, searchTerm, setSearchTerm, results, wasSearched }: SearchProps) {
   const searchInput = useRef<HTMLInputElement>(null);
   const t = useTranslations();
   const router = useRouter();
@@ -425,7 +386,6 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
       closeSearch();
     } else closeSearch();
   };
-
   return (
     <NavBarSearchListItem className="nav-item" ref={searchElement}>
       <SearchControls ref={setReferenceElement}>
@@ -443,11 +403,11 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
               aria-expanded={searchTerm && searchTerm.length > 1 ? 'true' : 'false'}
               aria-haspopup="listbox"
               value={searchTerm}
-              onChange={(e) =>
+              onChange={(e) => {
                 setSearchTerm?.(e.target.value, {
                   debounce: 400,
-                })
-              }
+                });
+              }}
               onFocus={(_e) => setSearchOpen(true)}
               ref={searchInput}
               $isOpen={searchOpen}
@@ -473,6 +433,7 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
             aria-busy={isLoading ?? false}
             results={results ?? []}
             searchTerm={searchTerm}
+            wasSearched={wasSearched ?? false}
             loading={isLoading ?? false}
             closeSearch={closeSearch}
           />
@@ -482,4 +443,53 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
   );
 }
 
-export default NavbarSearch;
+export default function NavbarSearch() {
+  const plan = usePlan();
+  const apolloClient = useApolloClient();
+
+  if (!plan.features.enableSearch) {
+    return null;
+  }
+
+  // TODO: Translate a11y text
+  const connector = new WatchSearchAPIConnector({ plan, apolloClient });
+  return (
+    <SearchProvider
+      config={{
+        apiConnector: connector,
+        debug: false,
+        hasA11yNotifications: true,
+        trackUrlState: false,
+        a11yNotificationMessages: {
+          searchResults: ({ totalResults, searchTerm }) =>
+            `Searching for "${searchTerm}". Showing first ${RESULTS_LIMIT} results out of ${totalResults}.`,
+        },
+      }}
+    >
+      <WithSearch
+        mapContextToProps={(context) => {
+          const { isLoading, searchTerm, setSearchTerm, results, wasSearched } = context;
+          return {
+            isLoading,
+            searchTerm,
+            setSearchTerm,
+            results,
+            wasSearched,
+          };
+        }}
+      >
+        {(context) => {
+          return (
+            <Search
+              isLoading={context.isLoading}
+              searchTerm={context.searchTerm}
+              setSearchTerm={context.setSearchTerm}
+              results={context.results as SearchHit[]}
+              wasSearched={context.wasSearched}
+            />
+          );
+        }}
+      </WithSearch>
+    </SearchProvider>
+  );
+}

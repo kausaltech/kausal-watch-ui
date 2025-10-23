@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import { NextResponse } from 'next/server';
+import { type NextFetchEvent, type NextRequest, NextResponse } from 'next/server';
 
 import * as Sentry from '@sentry/nextjs';
 import type { NextAuthRequest } from 'next-auth/lib';
@@ -41,6 +41,7 @@ export const config = {
 };
 
 function getMiddlewareLogger(request: NextAuthRequest, host: string, pathname: string) {
+  debugger;
   const reqId = request.headers.get('X-Correlation-ID') || generateCorrelationID();
   const span = Sentry.getActiveSpan();
   const spanBindings = {};
@@ -70,7 +71,7 @@ function getMiddlewareLogger(request: NextAuthRequest, host: string, pathname: s
   return logger;
 }
 
-const middleware = auth(async (request: NextAuthRequest) => {
+async function handleRequest(request: NextAuthRequest, _event: NextFetchEvent) {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
 
@@ -143,7 +144,9 @@ const middleware = auth(async (request: NextAuthRequest) => {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
-  requestScope.setTag('plan.identifier', parsedPlan.identifier);
+  if ('identifier' in parsedPlan && parsedPlan.identifier) {
+    requestScope.setTag('plan.identifier', parsedPlan.identifier);
+  }
   requestScope.setTag('locale', parsedLocale);
 
   if (isLegacyPathStructure(pathname, parsedLocale, parsedPlan)) {
@@ -200,6 +203,12 @@ const middleware = auth(async (request: NextAuthRequest) => {
   );
 
   return rewriteUrl(request, response, hostUrl, rewrittenUrl, parsedPlan.identifier);
-});
+}
 
-export default middleware;
+async function proxy(request: NextRequest, event: NextFetchEvent) {
+  const handler = auth(handleRequest);
+
+  return handler(request, event);
+}
+
+export default proxy;

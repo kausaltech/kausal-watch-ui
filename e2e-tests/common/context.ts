@@ -1,6 +1,11 @@
 import * as apolloModule from '@apollo/client';
 import AxeBuilder from '@axe-core/playwright';
-import { type ConsoleMessage, type Page, expect } from '@playwright/test';
+import {
+  type ConsoleMessage,
+  type Page,
+  type PageScreenshotOptions,
+  expect,
+} from '@playwright/test';
 
 import type {
   PlaywrightGetPlanBasicsQuery,
@@ -29,6 +34,8 @@ const GET_PLAN_BASICS = gql`
       identifier
       primaryLanguage
       otherLanguages
+      publishedAt
+      kausalPathsInstanceUuid
     }
   }
 `;
@@ -47,9 +54,14 @@ const GET_PLAN_INFO = gql`
       shortName
       primaryLanguage
       otherLanguages
+      publishedAt
+      kausalPathsInstanceUuid
       parent {
         identifier
         name
+      }
+      features {
+        enableSearch
       }
       generalContent {
         id
@@ -157,12 +169,16 @@ export class PlanContext {
   planOrganizations: PlanOrganizations;
   planIndicators: PlanIndicators;
   baseURL: string;
+  enableScreenshots: boolean;
+  compareScreenshots: boolean;
 
   constructor(data: PlaywrightGetPlanInfoQuery, baseURL: string, planIndicators: PlanIndicators) {
     this.plan = data.plan!;
     this.planOrganizations = data.planOrganizations ?? [];
     this.baseURL = baseURL;
     this.planIndicators = planIndicators;
+    this.enableScreenshots = process.env.TEST_ENABLE_SCREENSHOTS === '1';
+    this.compareScreenshots = process.env.TEST_COMPARE_SCREENSHOTS === '1';
   }
 
   beforeEach(page: Page) {
@@ -171,12 +187,16 @@ export class PlanContext {
         'Public environment',
         '[Client Instrumentation Hook]',
         'Maximum update depth exceeded',
+        'You have Reduced Motion enabled on your device.',
+        'Plotly validation returned errors',
       ];
       const IGNORE_INCLUDES = [
         'Download the React DevTools',
         '[Fast Refresh]',
         'Failed to initialize WebGL',
         'Download the Apollo DevTools',
+        'was preloaded using link preload',
+        '[HMR] connected',
       ];
       const text = msg.text();
       if (
@@ -184,8 +204,8 @@ export class PlanContext {
         IGNORE_INCLUDES.some((includes) => text.includes(includes))
       )
         return;
-      console.log(`Console message (${msg.type()}):\n`, msg);
-      if (false) {
+      console.log(`[${this.plan.identifier}] Console message (${msg.type()}):\n`, msg);
+      if (true) {
         // todo: enable this later
         throw new Error('Test produced console output');
       }
@@ -341,6 +361,23 @@ export class PlanContext {
       console.error('Critical and serious accessibility violations:', criticalAndSeriousViolations);
     }
     //expect(criticalAndSeriousViolations).toEqual([]);
+  }
+
+  async takeScreenshot(
+    page: Page,
+    screenshotId: string,
+    opts?: Omit<PageScreenshotOptions, 'path'>
+  ) {
+    const path = `${this.plan.identifier}/${screenshotId}.png`;
+    if (this.compareScreenshots) {
+      await expect(page).toHaveScreenshot(path, { fullPage: true });
+    }
+    if (!this.enableScreenshots) return;
+    const finalOpts = {
+      fullPage: true,
+      ...(opts || {}),
+    };
+    await page.screenshot({ path: `screenshots/${path}`, ...finalOpts });
   }
 }
 

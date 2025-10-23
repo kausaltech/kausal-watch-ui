@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import RestrictedBlockWrapper from '../components/actions/blocks/RestrictedBlockWrapper';
+import RestrictedBlockWrapper from '@/components/actions/blocks/RestrictedBlockWrapper';
 
 const meta = {
   title: 'Blocks/RestrictedBlockWrapper',

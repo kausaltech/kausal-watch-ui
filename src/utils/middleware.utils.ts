@@ -46,8 +46,8 @@ export const isPlanPublished = (plan: PlanFromPlansQuery) =>
 
 export function getParsedPlan(
   possiblePlans: string[],
-  plans: PlanFromPlansQuery[]
-): PlanFromPlansQuery | undefined {
+  plans: PlanForHostname[]
+): PlanForHostname | undefined {
   // If only one plan exists return that
   if (plans.length === 1 && isPlan(plans[0])) {
     return plans[0];
@@ -74,7 +74,7 @@ export function getParsedPlan(
   );
 }
 
-export function getParsedLocale(localePossibilities: string[], plan: PlanFromPlansQuery) {
+export function getParsedLocale(localePossibilities: string[], plan: PlanForHostname) {
   const locale = [plan.primaryLanguage, ...(plan.otherLanguages ?? [])].find((locale) =>
     localePossibilities
       .map((possibleLocale) => possibleLocale.toLowerCase())
