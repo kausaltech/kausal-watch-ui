@@ -5,6 +5,7 @@ import { Alert, Table } from 'reactstrap';
 import { Button } from 'reactstrap';
 
 import { IndicatorLink } from '@/common/links';
+import { usePlan } from '@/context/plan';
 
 import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
 import IndicatorTableCell from './IndicatorTableCell';
@@ -68,6 +69,7 @@ interface IndicatorListFilteredProps {
 
 export default function IndicatorListFiltered(props: IndicatorListFilteredProps) {
   const t = useTranslations();
+
   const { indicators, hierarchy, displayMunicipality, openIndicatorsInModal } = props;
 
   console.log('props', props);

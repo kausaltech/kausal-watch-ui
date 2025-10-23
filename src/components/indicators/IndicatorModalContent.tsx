@@ -6,6 +6,7 @@ import type {
   CategoryRecursiveFragmentFragment,
   CategoryTypeFragmentFragment,
   IndicatorDetailsQuery,
+  IndicatorListQuery,
 } from '@/common/__generated__/graphql';
 
 import CategoryTags from '../actions/CategoryTags';
@@ -71,9 +72,15 @@ interface IndicatorModalContentProps {
   indicator?: IndicatorDetailsQuery['indicator'] | null;
   loading: boolean;
   error: ApolloError | undefined;
+  usableCategoryTypes: NonNullable<IndicatorListQuery['plan']>['categoryTypes'];
 }
 
-const IndicatorModalContent = ({ indicator, loading, error }: IndicatorModalContentProps) => {
+const IndicatorModalContent = ({
+  indicator,
+  loading,
+  error,
+  usableCategoryTypes,
+}: IndicatorModalContentProps) => {
   if (loading && !indicator)
     return (
       <ContentLoader>
@@ -89,7 +96,10 @@ const IndicatorModalContent = ({ indicator, loading, error }: IndicatorModalCont
   const uniqueTypes = Array.from(
     new Map(indicator.categories.map((c) => [c.type.id, c.type])).values()
   );
-  const indicatorCategories = indicator.categories.filter((cat) => uniqueTypes.includes(cat.type));
+
+  const indicatorCategories = indicator.categories
+    .filter((cat) => uniqueTypes.includes(cat.type))
+    .filter((cat) => usableCategoryTypes.some((type) => type.id === cat.type.id));
   const indicatorValues = indicator.values;
   const indicatorGoals = indicator.goals;
 

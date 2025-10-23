@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import type {
   IndicatorDetailsQuery,
   IndicatorDetailsQueryVariables,
+  IndicatorListQuery,
 } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
 import { GET_INDICATOR_DETAILS } from '@/queries/get-indicator';
@@ -84,10 +85,11 @@ interface IndicatorModalProps {
   prevIndicatorId?: string;
   nextIndicatorId?: string;
   indicatorsOrder: string[];
+  usableCategoryTypes: NonNullable<IndicatorListQuery['plan']>['categoryTypes'];
 }
 
 const IndicatorModal = (props: IndicatorModalProps) => {
-  const { indicatorId, onChange, planIdentifier, indicatorsOrder } = props;
+  const { indicatorId, onChange, planIdentifier, indicatorsOrder, usableCategoryTypes } = props;
 
   const { loading, error, data, previousData } = useQuery<
     IndicatorDetailsQuery,
@@ -133,6 +135,7 @@ const IndicatorModal = (props: IndicatorModalProps) => {
             indicator={data?.indicator || previousData?.indicator}
             loading={loading}
             error={error}
+            usableCategoryTypes={usableCategoryTypes}
           />
           <ModalNavigation>
             <Button

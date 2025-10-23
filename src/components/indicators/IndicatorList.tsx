@@ -256,6 +256,7 @@ const IndicatorList = ({
           }
           onChange={(indicatorId) => handleChangeModal(indicatorId)}
           indicatorsOrder={filteredIndicators.map((indicator) => indicator.id)}
+          usableCategoryTypes={data?.plan?.categoryTypes}
         />
       )}
       <IndicatorsHero
