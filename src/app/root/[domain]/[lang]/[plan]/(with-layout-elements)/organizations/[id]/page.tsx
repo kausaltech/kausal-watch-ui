@@ -31,5 +31,7 @@ export default async function OrganizationPage(props: Props) {
     return notFound();
   }
 
-  return <OrgContent org={data.organization} planFromOrgQuery={data.plan} />;
+  return (
+    <OrgContent org={data.organization} planFromOrgQuery={data.plan} testId="organization-page" />
+  );
 }

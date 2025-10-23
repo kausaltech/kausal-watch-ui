@@ -41,9 +41,10 @@ const GraphContainer = styled.div`
 
 type Props = {
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
+  testId?: string;
 };
 
-function IndicatorDetails({ indicator }: Props) {
+function IndicatorDetails({ indicator, testId }: Props) {
   const plan = usePlan();
   const t = useTranslations();
 
@@ -73,7 +74,7 @@ function IndicatorDetails({ indicator }: Props) {
     new Map(indicator.categories.map((c) => [c.type.id, c.type])).values()
   );
   return (
-    <div className="mb-5">
+    <div className="mb-5" data-testid={testId}>
       <IndicatorHero
         indicator={indicator}
         orgs={plan.features.hasActionPrimaryOrgs ? allOrgs : null}

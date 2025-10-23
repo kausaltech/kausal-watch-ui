@@ -92,6 +92,9 @@ const Branding = styled.div`
 
 const Logo = styled.div`
   ${css`
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     height: calc(${(props) => props.theme.footerLogoSize} * ${(props) => props.theme.spaces.s400});
     max-width: calc(
       ${(props) => props.theme.footerLogoSize} * 4 * ${(props) => props.theme.spaces.s300}
@@ -100,10 +103,15 @@ const Logo = styled.div`
     margin: ${(props) => props.theme.spaces.s150} ${(props) => props.theme.spaces.s200}
       ${(props) => props.theme.spaces.s150} 0;
 
-  .footer-org-logo {
-    height: 100%;
-    max-width: 100%;
-  }
+    .footer-org-logo {
+      height: 100%;
+      max-width: 100%;
+
+      &.footer-logo-bitmap {
+        height: auto;
+        max-height: 100%;
+      }
+    }
 
     @media (max-width: ${(props) => props.theme.breakpointMd}) {
       margin: 0 auto ${(props) => props.theme.spaces.s200};
@@ -457,7 +465,7 @@ function SiteFooter(props: SiteFooterProps) {
         <img
           src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
           alt={`${ownerName}, ${siteTitle} ${t('front-page')}`}
-          className="footer-org-logo"
+          className="footer-org-logo footer-logo-bitmap"
           aria-hidden="true"
         />
       );

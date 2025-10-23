@@ -18,5 +18,7 @@ export default async function UnpublishedPage(props: Props) {
   const searchParams = await props.searchParams;
   const loginEnabled = searchParams.loginEnabled === 'true';
   const message = searchParams.message;
-  return <UnpublishedPlan message={message} loginEnabled={loginEnabled} />;
+  return (
+    <UnpublishedPlan message={message} loginEnabled={loginEnabled} testId="unpublished-page" />
+  );
 }

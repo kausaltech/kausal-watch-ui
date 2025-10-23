@@ -103,7 +103,7 @@ const StatusDonut = (props) => {
       ? [
           {
             font: {
-              size: 20,
+              size: 16,
             },
             showarrow: false,
             text: currentValue,

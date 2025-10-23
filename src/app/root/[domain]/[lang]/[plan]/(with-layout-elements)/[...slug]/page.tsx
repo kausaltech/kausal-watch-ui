@@ -51,5 +51,5 @@ export default async function SlugPage(props: Props) {
     return notFound();
   }
 
-  return <ContentPage page={data.planPage} />;
+  return <ContentPage page={data.planPage} testId="slug-page" />;
 }

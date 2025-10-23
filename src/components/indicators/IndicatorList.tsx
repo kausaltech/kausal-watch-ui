@@ -368,6 +368,7 @@ interface Props {
   displayInsights: IndicatorListPage['displayInsights'];
   displayLevel: IndicatorListPage['displayLevel'];
   includeRelatedPlans: IndicatorListPage['includeRelatedPlans'];
+  testId?: string;
 }
 
 const IndicatorList = ({
@@ -375,6 +376,7 @@ const IndicatorList = ({
   displayInsights,
   displayLevel,
   includeRelatedPlans,
+  testId,
 }: Props) => {
   const plan = usePlan();
   const t = useTranslations();
@@ -473,7 +475,11 @@ const IndicatorList = ({
 
   return (
     <>
-      <IndicatorsHero leadContent={leadContent || undefined} showInsights={showInsights}>
+      <IndicatorsHero
+        leadContent={leadContent || undefined}
+        showInsights={showInsights}
+        testId={testId}
+      >
         <ActionListFilters
           filterSections={filterSections}
           activeFilters={filters}

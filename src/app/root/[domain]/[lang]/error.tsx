@@ -15,5 +15,5 @@ export default function Error({ error }: Props) {
     captureException(error);
   }, [error]);
 
-  return <ErrorPage />;
+  return <ErrorPage testId="root-error-page" />;
 }

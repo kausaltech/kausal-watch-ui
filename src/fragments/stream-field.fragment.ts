@@ -72,22 +72,12 @@ export const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ... on ActionListBlock {
+      id
       heading
       helpText
       categoryFilter {
         id
-        type {
-          id
-        }
       }
-      groupByCategoryLevel {
-        id
-        type {
-          id
-        }
-      }
-      heading
-      helpText
       groupByCategoryLevel {
         id
       }

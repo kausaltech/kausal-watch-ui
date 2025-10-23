@@ -1,10 +1,12 @@
 import React from 'react';
-import Link from 'next/link';
-import { Container, Row, Col } from 'reactstrap';
-import styled from 'styled-components';
-import { useTranslations } from 'next-intl';
 
-import {
+import Link from 'next/link';
+
+import { useTranslations } from 'next-intl';
+import { Col, Container, Row } from 'reactstrap';
+import styled from 'styled-components';
+
+import type {
   DashboardIndicatorAreaChartBlock,
   DashboardIndicatorBarChartBlock,
   DashboardIndicatorLineChartBlock,
@@ -22,17 +24,16 @@ import DashboardIndicatorLineChartBlockComponent from './indicator-chart/Dashboa
 import DashboardIndicatorPieChartBlockComponent from './indicator-chart/DashboardIndicatorPieChartBlock';
 
 const DashboardRowSection = styled.div<{
-  $topMargin?: boolean;
-  $bottomMargin?: boolean;
+  $topPadding?: boolean;
+  $bottomPadding?: boolean;
 }>`
   background-color: ${(props) => props.theme.themeColors.light};
   color: ${(props) => props.theme.neutralDark};
   position: relative;
-  padding-top: ${(props) => (props.$topMargin ? props.theme.spaces.s300 : props.theme.spaces.s100)};
+  padding-top: ${(props) =>
+    props.$topPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
   padding-bottom: ${(props) =>
-    props.$bottomMargin ? props.theme.spaces.s300 : props.theme.spaces.s100};
-  margin-top: ${(props) => (props.$topMargin ? props.theme.spaces.s400 : 0)};
-  margin-bottom: ${(props) => (props.$bottomMargin ? props.theme.spaces.s200 : 0)};
+    props.$bottomPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
 `;
 
 type DashboardBlock =
@@ -44,8 +45,8 @@ type DashboardBlock =
   | TDashboardIndicatorSummaryBlock;
 
 interface DashboardRowBlockProps extends Omit<TDashboardRowBlock, 'rawValue'> {
-  topMargin?: boolean;
-  bottomMargin?: boolean;
+  topPadding?: boolean;
+  bottomPadding?: boolean;
   blocks: DashboardBlock[];
 }
 
@@ -123,7 +124,6 @@ const DashboardCardContents = ({ block }: { block: DashboardBlock }) => {
   const title = !isSummaryBlock && 'indicator' in block ? block.indicator?.name : undefined;
   const helpText = !isSummaryBlock && 'helpText' in block ? block.helpText : undefined;
 
-
   const component = getBlockComponent(block);
 
   return (
@@ -138,8 +138,8 @@ const DashboardCardContents = ({ block }: { block: DashboardBlock }) => {
 const DashboardRowBlock = ({
   id,
   blocks,
-  topMargin = true,
-  bottomMargin = true,
+  topPadding = true,
+  bottomPadding = true,
 }: DashboardRowBlockProps) => {
   const t = useTranslations();
   const columnWidth = 12 / blocks.length;
@@ -151,16 +151,18 @@ const DashboardRowBlock = ({
   ];
 
   return (
-    <DashboardRowSection id={id ?? undefined} $topMargin={topMargin} $bottomMargin={bottomMargin}>
+    <DashboardRowSection
+      id={id ?? undefined}
+      $topPadding={topPadding}
+      $bottomPadding={bottomPadding}
+    >
       <Container>
         <StyledRow>
           {blocks.map((block) => {
             const { blockType } = block;
             const isChart = chartTypes.includes(blockType);
             const indicatorId =
-              isChart && 'indicator' in block && block.indicator
-                ? block.indicator.id
-                : undefined;
+              isChart && 'indicator' in block && block.indicator ? block.indicator.id : undefined;
 
             return (
               <Col key={block.id} md={columnWidth}>

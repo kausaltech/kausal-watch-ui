@@ -15,9 +15,10 @@ type Props = {
       __typename: 'ActionListPage';
     }
   >;
+  testId?: string;
 };
 
-export function ActionListPage({ actionListPage }: Props) {
+export function ActionListPage({ actionListPage, testId }: Props) {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<Filters<FilterValue>>(
     searchParams ? Object.fromEntries(searchParams) : {}
@@ -57,6 +58,7 @@ export function ActionListPage({ actionListPage }: Props) {
 
   return (
     <ActionList
+      data-testid={testId}
       title={actionListPage.title}
       leadContent={actionListPage.leadContent ?? ''}
       defaultView={actionListPage.defaultView}

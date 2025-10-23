@@ -131,9 +131,10 @@ const ActionTableContainer = styled.div`
 type Props = {
   org: NonNullable<OrganizationDetailsQuery['organization']>;
   planFromOrgQuery: NonNullable<OrganizationDetailsQuery['plan']>;
+  testId?: string;
 };
 
-function OrgContent({ org, planFromOrgQuery }: Props) {
+function OrgContent({ org, planFromOrgQuery, testId }: Props) {
   const plan = usePlan();
   const t = useTranslations();
   const theme = useTheme();
@@ -147,7 +148,7 @@ function OrgContent({ org, planFromOrgQuery }: Props) {
   const showUpdateStatus = theme.settings.dashboard?.showActionUpdateStatus;
 
   return (
-    <div className="mb-5">
+    <div className="mb-5" data-testid={testId}>
       <OrgHeader>
         <HeaderContainer>
           <Row>
