@@ -5,7 +5,11 @@ import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
 
-import { CommonContentBlockProps } from '@/common/blocks.types';
+import type {
+  StreamFieldFragmentFragment,
+  StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment,
+} from '@/common/__generated__/graphql';
+import { type CommonContentBlockProps } from '@/common/blocks.types';
 import { getCategoryString } from '@/common/categories';
 import { Link } from '@/common/links';
 import Card from '@/components/common/Card';
@@ -57,13 +61,13 @@ const CardHeader = styled.h3`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 interface Props extends CommonContentBlockProps {
-  cards: unknown; // TODO: Type this prop
+  cards: StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment['cards'];
 }
 
 const CategoryListBlock = ({ id = '', cards }: Props) => {
   const theme = useTheme();
   return (
-    <CategoryListSection id={id} bg={theme.themeColors.dark}>
+    <CategoryListSection id={id}>
       <Container>
         <Row tag="ul" className="justify-content-center">
           {cards?.map((card) => (

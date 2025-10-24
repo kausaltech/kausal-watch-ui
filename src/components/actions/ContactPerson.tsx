@@ -114,8 +114,8 @@ const CollapseButton = styled(Button)`
 `;
 
 const GET_CONTACT_DETAILS = gql`
-  query ContactDetails($id: ID!) {
-    person(id: $id) {
+  query ContactDetails($plan: ID!, $id: ID!) {
+    person(plan: $plan, id: $id) {
       email
       organization {
         id
@@ -147,7 +147,7 @@ function ContactDetails({ id, plan }: ContactDetailsProps) {
   const { loading, error, data } = useQuery<ContactDetailsQuery, ContactDetailsQueryVariables>(
     GET_CONTACT_DETAILS,
     {
-      variables: { id },
+      variables: { plan: plan.id, id },
     }
   );
 

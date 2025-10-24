@@ -23,10 +23,12 @@ import DashboardIndicatorBarChartBlockComponent from './indicator-chart/Dashboar
 import DashboardIndicatorLineChartBlockComponent from './indicator-chart/DashboardIndicatorLineChartBlock';
 import DashboardIndicatorPieChartBlockComponent from './indicator-chart/DashboardIndicatorPieChartBlock';
 
-const DashboardRowSection = styled.div<{
+type DashboardRowSectionProps = {
   $topPadding?: boolean;
   $bottomPadding?: boolean;
-}>`
+};
+
+const DashboardRowSection = styled.div<DashboardRowSectionProps>`
   background-color: ${(props) => props.theme.themeColors.light};
   color: ${(props) => props.theme.neutralDark};
   position: relative;
@@ -135,12 +137,12 @@ const DashboardCardContents = ({ block }: { block: DashboardBlock }) => {
   );
 };
 
-const DashboardRowBlock = ({
+export default function DashboardRowBlock({
   id,
   blocks,
   topPadding = true,
   bottomPadding = true,
-}: DashboardRowBlockProps) => {
+}: DashboardRowBlockProps) {
   const t = useTranslations();
   const columnWidth = 12 / blocks.length;
   const chartTypes = [
@@ -181,6 +183,4 @@ const DashboardRowBlock = ({
       </Container>
     </DashboardRowSection>
   );
-};
-
-export default DashboardRowBlock;
+}

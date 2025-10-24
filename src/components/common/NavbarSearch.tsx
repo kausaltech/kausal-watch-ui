@@ -306,7 +306,11 @@ const ResultList = (props: ResultListProps) => {
             <Icon.ArrowRight />
           </Link>
         ) : (
-          <Link href={`/search`} onClick={closeSearch} data-testid="search-advanced">
+          <Link
+            href={`/search?q=${searchTerm}`}
+            onClick={closeSearch}
+            data-testid="search-advanced"
+          >
             {t('search-advanced')} <Icon.ArrowRight />
           </Link>
         )}
@@ -314,51 +318,6 @@ const ResultList = (props: ResultListProps) => {
     </>
   );
 };
-
-const NavbarSearch = React.memo(function NavbarSearch() {
-  const plan = usePlan();
-  const apolloClient = useApolloClient();
-
-  if (!plan.features.enableSearch) {
-    return null;
-  }
-
-  // TODO: Translate a11y text
-  const connector = new WatchSearchAPIConnector({ plan, apolloClient });
-  return (
-    <SearchProvider
-      config={{
-        apiConnector: connector,
-        debug: false,
-        hasA11yNotifications: true,
-        a11yNotificationMessages: {
-          searchResults: ({ totalResults, searchTerm }) =>
-            `Searching for "${searchTerm}". Showing first ${RESULTS_LIMIT} results out of ${totalResults}.`,
-        },
-      }}
-    >
-      <WithSearch
-        mapContextToProps={({ isLoading, searchTerm, setSearchTerm, results }) => ({
-          isLoading,
-          searchTerm,
-          setSearchTerm,
-          results,
-        })}
-      >
-        {(context) => {
-          return (
-            <Search
-              isLoading={context.isLoading}
-              searchTerm={context.searchTerm}
-              setSearchTerm={context.setSearchTerm}
-              results={context.results as SearchHit[]}
-            />
-          );
-        }}
-      </WithSearch>
-    </SearchProvider>
-  );
-});
 
 type SearchProps = {
   isLoading?: boolean;
@@ -482,4 +441,47 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
   );
 }
 
-export default NavbarSearch;
+export default function NavbarSearch() {
+  const plan = usePlan();
+  const apolloClient = useApolloClient();
+
+  if (!plan.features.enableSearch) {
+    return null;
+  }
+
+  // TODO: Translate a11y text
+  const connector = new WatchSearchAPIConnector({ plan, apolloClient });
+  return (
+    <SearchProvider
+      config={{
+        apiConnector: connector,
+        debug: false,
+        hasA11yNotifications: true,
+        a11yNotificationMessages: {
+          searchResults: ({ totalResults, searchTerm }) =>
+            `Searching for "${searchTerm}". Showing first ${RESULTS_LIMIT} results out of ${totalResults}.`,
+        },
+      }}
+    >
+      <WithSearch
+        mapContextToProps={({ isLoading, searchTerm, setSearchTerm, results }) => ({
+          isLoading,
+          searchTerm,
+          setSearchTerm,
+          results,
+        })}
+      >
+        {(context) => {
+          return (
+            <Search
+              isLoading={context.isLoading}
+              searchTerm={context.searchTerm}
+              setSearchTerm={context.setSearchTerm}
+              results={context.results as SearchHit[]}
+            />
+          );
+        }}
+      </WithSearch>
+    </SearchProvider>
+  );
+}

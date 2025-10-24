@@ -141,7 +141,7 @@
     "indicator-compare-source": "Viser",
     "indicator-compare-to": "Sammenligne med",
     "indicator-normalize-per-capita": "Vis per capita",
-    "indicator-progress-bar": "På året {startYear} var {name} {startValue}. Senest observerede værdi i {latestYear} var {latestValue}. Målet for året {goalYear} er {goalValue}. Siden {startYear} er reduktionen {reduceret}. {toBeReduced} skal stadig reduceres inden året {goalYear}.",
+    "indicator-progress-bar": "På året {startYear} var {name} {startValue}. Senest observerede værdi i {latestYear} var {latestValue}. Målet for året {goalYear} er {goalValue}. Siden {startYear} er reduktionen {reduced}. {toBeReduced} skal stadig reduceres inden året {goalYear}.",
     "nav-actions-pager": "Handlinger bladring",
     "form-action-filters": "Aktionslistefiltre",
     "nav-tools": "Værktøjer",

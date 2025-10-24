@@ -271,7 +271,8 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     if (modTrace.type === 'scatter') {
       if (trace.x.length > 30) {
         modTrace.mode = 'lines';
-        modTrace.marker = { size: 0 };
+        // @ts-expect-error
+        delete modTrace['marker'];
       } else {
         modTrace.mode = 'lines+markers';
         modTrace.cliponaxis = false;
@@ -388,7 +389,7 @@ interface IndicatorGraphProps {
 
 const Plot = dynamic(() => import('./Plot'));
 
-function IndicatorGraph(props: IndicatorGraphProps) {
+export default function IndicatorGraph(props: IndicatorGraphProps) {
   const theme = useTheme();
   const isServer = typeof window === 'undefined';
   if (isServer) {
@@ -576,5 +577,3 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     </PlotContainer>
   );
 }
-
-export default IndicatorGraph;

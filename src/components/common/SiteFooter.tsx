@@ -502,7 +502,6 @@ function SiteFooter(props: SiteFooterProps) {
   }
 
   const absoluteLink = (link: string, slug: string) => `${appendPort(link)}${slug}`;
-
   return (
     <StyledFooter className="site-footer">
       <Container>
@@ -573,7 +572,7 @@ function SiteFooter(props: SiteFooterProps) {
         </FooterNav>
         <UtilitySection>
           <UtilityColumn>
-            <UtilityItem>
+            <UtilityItem key="owner-url">
               <OrgTitle>
                 {ownerUrl ? (
                   <a href={ownerUrl} target="_blank" rel="noreferrer">
@@ -592,8 +591,8 @@ function SiteFooter(props: SiteFooterProps) {
               </OrgTitle>
             </UtilityItem>
             {ownerLinks &&
-              ownerLinks.map((page) => (
-                <UtilityItem key={page.id}>
+              ownerLinks.map((page, idx) => (
+                <UtilityItem key={`owner-link-${idx}`}>
                   <NavigationLink slug={page.url}>
                     {theme?.navLinkIcons && (
                       <Icon.AngleRight

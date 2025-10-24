@@ -94,7 +94,7 @@
     "insight-filter-no-results": "Δεν υπάρχουν αποτελέσματα",
     "no-actions": "Καμία ενέργεια",
     "open": "ανοιχτό",
-    "number-of-search-results": "{count, πληθυντικός, =1 {ένα χτύπημα} άλλα {# χτυπήματα}} για αναζήτηση",
+    "number-of-search-results": "{count, plural, =1 {ένα χτύπημα} other {# χτυπήματα}} για αναζήτηση",
     "percent-point-abbreviation": "p.p.",
     "previous": "Προηγούμενο",
     "read-more": "Διαβάστε περισσότερα",
