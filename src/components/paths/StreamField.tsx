@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Col, ColProps, Container, Row } from 'reactstrap';
+import type { ColProps } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 
 import type {
   CategoryPage,
@@ -10,14 +11,8 @@ import type {
 } from '@/common/__generated__/graphql';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { ErrorPage } from '@/components/common/ErrorPage';
-import RichText from '@/components/common/RichText';
-import ActionCategoryFilterCardsBlock from '@/components/contentblocks/ActionCategoryFilterCardsBlock';
-import IndicatorGroupBlock from '@/components/contentblocks/IndicatorGroupBlock';
-import QuestionAnswerBlock from '@/components/contentblocks/QuestionAnswerBlock';
 import ActionListBlock from '@/components/paths/contentblocks/ActionListBlock';
 import CategoryListBlock from '@/components/paths/contentblocks/CategoryListBlock';
-import CategoryTypeListBlock from '@/components/paths/contentblocks/CategoryTypeListBlock';
-import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBlock';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
 type StreamFieldBlockProps = {
@@ -72,31 +67,6 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
 
-    case 'CategoryTypeLevelListBlock': {
-      const { heading, helpText, categoryLevel, groupByCategoryLevel, categoryBlockType } = block;
-
-      const allPlanCategories = categoryBlockType?.categories;
-      const categories = allPlanCategories
-        ? allPlanCategories.filter((cat) => cat?.level?.id === categoryLevel?.id)
-        : [];
-      if (!categories.length) return null;
-      return (
-        <CategoryTypeListBlock
-          id={id}
-          groupByLevelId={groupByCategoryLevel?.id}
-          categories={categories}
-          heading={heading ?? undefined}
-          lead={helpText}
-        />
-      );
-    }
-
-    case 'PathsOutcomeBlock': {
-      const { heading, helpText, outcomeNodeId } = block;
-      return (
-        <PathsOutcomeBlock heading={heading} helpText={helpText} outcomenodeId={outcomeNodeId} />
-      );
-    }
     case 'ActionCategoryFilterCardsBlock': {
       const { cards } = block;
       return <ActionCategoryFilterCardsBlock id={id} cards={cards} />;
@@ -114,24 +84,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         </div>
       );
     }
-    case 'RichTextBlock': {
-      const { value } = block;
-      // const COLLAPSIBLE_BREAKPOINT = 1200;
-      return (
-        <Container id={id}>
-          <Row>
-            <Col
-              xl={{ size: 6, offset: 3 }}
-              lg={{ size: 8, offset: 2 }}
-              md={{ size: 10, offset: 1 }}
-              className="my-4"
-            >
-              <RichText html={value} isCollapsible={false} />
-            </Col>
-          </Row>
-        </Container>
-      );
-    }
+
     case 'QuestionAnswerBlock': {
       const { heading, questions } = block;
 

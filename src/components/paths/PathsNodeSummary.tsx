@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
 
-import { InstanceType } from '@/common/__generated__/paths/graphql';
+import type { InstanceType } from '@/common/__generated__/paths/graphql';
 import { activeGoalVar } from '@/context/paths/cache';
 import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
@@ -47,6 +47,7 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
   const pathsInstanceId = pathsInstance.id;
   const activeGoal = useReactiveVar(activeGoalVar);
 
+  console.log('PathsNodeSummary', props);
   // Only show the impact of this type of goal
   const actionImpactGoal = pathsInstance.goals.find(
     (goal) => goal.id === 'net_emissions/emission_scope:direct+negative'
@@ -81,6 +82,7 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
     return null;
   }
 
+  console.log('data', data);
   if (data) {
     if (data.node.__typename === 'ActionNode') {
       return (

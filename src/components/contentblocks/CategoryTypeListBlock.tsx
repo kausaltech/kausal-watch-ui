@@ -3,16 +3,17 @@
 import React, { useMemo, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
+import { readableColor } from 'polished';
 import { Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import { Category, CategoryFragmentFragment } from '@/common/__generated__/graphql';
+import type { Category, CategoryFragmentFragment } from '@/common/__generated__/graphql';
 import { getDeepParents } from '@/common/categories';
-import { TFunction } from '@/common/i18n';
+import type { TFunction } from '@/common/i18n';
 import { usePaths } from '@/context/paths/paths';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
 
-import CategoryCard from '../CategoryCard';
+import CategoryCard from '../paths/CategoryCard';
 
 /*
 const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
@@ -42,7 +43,12 @@ const HeaderSection = styled.div`
   padding: 3rem 0;
   margin-bottom: 2rem;
   background-color: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
 `;
 
 const StyledTitle = styled.h1`

@@ -5,6 +5,7 @@ import React from 'react';
 import { Col, Container, Row } from 'reactstrap';
 import { useTheme } from 'styled-components';
 
+import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import type {
   GetContentPageQuery,
   MultiUseImageFragmentFragment,
@@ -145,9 +146,18 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
     'CategoryPage'
   );
 
+  const streamFieldBlockTypesThatHavePageHeader = ['CategoryTypeLevelListBlock'];
+  const pageHeaderinStreamField =
+    isPageWithBody &&
+    page.body &&
+    page.body[0]?.blockType &&
+    streamFieldBlockTypesThatHavePageHeader.includes(page.body[0]?.blockType);
+
+  console.log('pageHeaderinStreamField', pageHeaderinStreamField, page?.body);
   const categoryColor = isCategoryPage && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.themeColors.light;
 
+  /* Content pages can have a secondary side nav */
   const secondaryNavParent =
     typenameMatches(page, 'StaticPage') &&
     page.parent &&
@@ -158,7 +168,6 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
   const isPageWithLeadContent = typenameMatches(
     page,
     'AccessibilityStatementPage',
-    'ActionListPage',
     'ImpactGroupPage',
     'IndicatorListPage',
     'PrivacyPolicyPage'
@@ -171,16 +180,9 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
       : []
     : [];
 
-  if (pathsInstance)
-    return (
-      <article data-testid={testId}>
-        <PathsPageContent page={page} />
-      </article>
-    );
-
   return (
     <article data-testid={testId}>
-      {typenameMatches(page, 'CategoryPage', 'StaticPage') ? (
+      {typenameMatches(page, 'CategoryPage', 'StaticPage') && !pageHeaderinStreamField ? (
         <PageHeaderBlock page={page} color={isCategoryPage ? categoryColor : undefined} />
       ) : null}
 
@@ -188,6 +190,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
         <CategoryPageContent page={page} pageSectionColor={pageSectionColor} />
       ) : (
         <div>
+          {typenameMatches(page, 'ActionListPage') && <ActionListPage actionListPage={page} />}
           {isPageWithLeadContent && 'leadContent' in page && page.leadContent && (
             <Container className="my-5">
               <Row>
