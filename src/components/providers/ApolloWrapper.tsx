@@ -33,8 +33,9 @@ function makeClient(config: {
   sessionToken?: string;
   planIdentifier: string;
   planDomain: string;
+  noProxy?: boolean;
 }) {
-  const { initialLocale, sessionToken, planIdentifier, planDomain } = config;
+  const { initialLocale, sessionToken, planIdentifier, planDomain, noProxy } = config;
   return new ApolloClient({
     defaultContext: {
       locale: initialLocale,
@@ -56,7 +57,7 @@ function makeClient(config: {
             }),
           ]
         : []),
-      getHttpLink(),
+      getHttpLink(noProxy),
     ]),
   });
 }
@@ -90,6 +91,7 @@ export function ApolloWrapper({ initialLocale, planIdentifier, planDomain, child
     sessionToken: token,
     planIdentifier,
     planDomain,
+    noProxy: planIdentifier === 'minneapolis-climate',
   };
 
   // Disable fragment warnings for now.
