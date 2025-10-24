@@ -9,11 +9,21 @@ const test = coverageTest.extend<{ ctx: PlanContext }>({});
 async function navigateAndCheckLayout(page: Page, url: string, ctx: PlanContext) {
   await page.goto(url);
   await ctx.checkMeta(page);
-  await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
-  await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
+  if (ctx.plan.kausalPathsInstanceUuid) {
+    // In Patchenstein, the navbar is a div
+    // FIXME: Solve this more reasonably later
+    await expect(page.locator('div#branding-navigation-bar')).toBeVisible();
+  } else {
+    await expect(page.locator('nav#branding-navigation-bar')).toBeVisible();
+    await expect(page.locator('nav#global-navigation-bar')).toBeVisible();
+  }
   await expect(page.locator('main#main')).toBeVisible();
+  // Wait for loading indicators to finish
   await expect(page.locator('*[aria-busy=true]')).toHaveCount(0, { timeout: 30000 });
+  // Wait for loads to finish
   await page.waitForLoadState('networkidle');
+  // Check that no error components are present
+  await expect(page.locator('*[data-testid$="error-boundary"]')).toHaveCount(0);
   // temporarily skip accessibility check
   //await ctx.checkAccessibility(page);
 }
@@ -52,9 +62,14 @@ const testPlan = (planId: string) => {
     });
 
     test('homepage', async ({ page, ctx }) => {
-      const navBar = page.locator('nav#global-navigation-bar');
-      await expect(navBar).toBeVisible();
       await expect(page.getByTestId('root-layout')).toBeVisible();
+      const homePage = page.getByTestId('home-page');
+      await expect(homePage).toBeVisible();
+      const bbox = await homePage.boundingBox();
+      expect(bbox).toBeDefined();
+      expect(bbox?.width).toBeGreaterThan(100);
+      expect(bbox?.height).toBeGreaterThan(100);
+      await ctx.takeScreenshot(page, 'homepage');
     });
 
     test('action list page', async ({ page, ctx }) => {
@@ -78,6 +93,7 @@ const testPlan = (planId: string) => {
       await page.goto(`${ctx.baseURL}${listItem.page.urlPath}`);
       await ctx.checkMeta(page);
       await expect(page.getByRole('tabpanel').first()).toBeVisible({ timeout: 20000 });
+      await ctx.takeScreenshot(page, 'action-list');
     });
 
     test('action details page', async ({ page, ctx }) => {
@@ -85,9 +101,9 @@ const testPlan = (planId: string) => {
       await page.goto(ctx.getActionURL(ctx.plan.actions[0]));
       await ctx.checkMeta(page);
       await ctx.waitForLoadingFinished(page);
-      const actionDetailsPage = page.locator('.action-main-top');
+      const actionDetailsPage = page.getByTestId('action-page');
       await expect(actionDetailsPage).toBeVisible();
-      //await page.screenshot({ path: `${planId}_action-details.png` });
+      await ctx.takeScreenshot(page, 'action-details');
     });
 
     test('category page', async ({ page, ctx }) => {
@@ -109,7 +125,8 @@ const testPlan = (planId: string) => {
         exact: true,
       });
       await firstItemLink.click();
-      await expect(page.locator('main#main')).toBeVisible();
+      await expect(page.getByTestId('slug-page')).toBeVisible();
+      await ctx.takeScreenshot(page, 'category-page');
     });
 
     test('empty page', async ({ page, ctx }) => {
@@ -131,10 +148,11 @@ const testPlan = (planId: string) => {
       });
       await firstItemLink.click();
 
-      await expect(page.locator('main#main')).toBeVisible();
+      await expect(page.getByTestId('slug-page')).toBeVisible({ timeout: 20000 });
 
       const h1 = page.locator('h1');
       await expect(h1).toContainText(items[0].page.title);
+      await ctx.takeScreenshot(page, 'empty-page');
     });
 
     test('static pages', async ({ page, ctx }) => {
@@ -163,6 +181,7 @@ const testPlan = (planId: string) => {
         await staticPageLink.click();
 
         await expect(page.locator('main#main article')).toBeVisible();
+        await ctx.takeScreenshot(page, `static-page-${staticPageItem.page.id}`);
       }
     });
 
@@ -177,8 +196,8 @@ const testPlan = (planId: string) => {
       });
 
       await indicatorListLink.click();
-      const main = page.locator('main#main');
-      await expect(main).toBeVisible();
+      await expect(page.getByTestId('indicators-list-page')).toBeVisible();
+      await ctx.takeScreenshot(page, 'indicator-list');
     });
 
     test('indicator page', async ({ page, ctx }) => {
@@ -188,7 +207,8 @@ const testPlan = (planId: string) => {
       await nav.getByRole('link', { name: indicatorListItem.page.title, exact: true }).click();
       await page.waitForURL(/.*\/indicators/);
       await ctx.waitForLoadingFinished(page);
-      const main = page.locator('main#main');
+
+      const main = page.getByTestId('indicators-list-page');
       await expect(main).toBeVisible();
       const planIndicators = ctx.getPlanIndicators();
       test.skip(planIndicators.length === 0, 'No indicators defined in plan');
@@ -218,10 +238,12 @@ const testPlan = (planId: string) => {
         await firstIndicatorLink.click();
         await page.waitForURL(/.*\/indicators\/[0-9]+/);
         await ctx.waitForLoadingFinished(page);
-        await expect(main).toBeVisible();
+        const detailsMain = page.getByTestId('indicator-page');
+        await expect(detailsMain).toBeVisible();
         const h1Span = page.locator('h1 >> span');
         await expect(h1Span).toContainText(indicatorName);
       }
+      await ctx.takeScreenshot(page, 'indicator-page');
     });
 
     test('organization page', async ({ page, ctx }) => {
@@ -232,9 +254,11 @@ const testPlan = (planId: string) => {
       const h1 = page.locator('h1');
       await expect(h1).toContainText(organization.name);
       await expect(page.getByTestId('org-actions-container')).toBeVisible();
+      await ctx.takeScreenshot(page, 'organization-page');
     });
 
     test('search', async ({ page, ctx }) => {
+      test.skip(!ctx.plan?.features?.enableSearch, 'Search is not enabled for plan');
       const searchButton = page.getByTestId('nav-search-btn');
       await expect(searchButton).toBeVisible();
 
@@ -243,13 +267,18 @@ const testPlan = (planId: string) => {
       await searchButton.click();
       await expect(searchInput).toBeVisible();
 
+      const currentUrl = page.url();
+
       await searchInput.fill('test');
       await expect(page.locator('*[aria-busy=true]')).toHaveCount(0);
       const searchLink = page.getByTestId('search-advanced');
+      await expect(searchLink).toBeVisible({ timeout: 5000 });
+      await expect(searchLink).toHaveAttribute('href', /^\/search\?q=test$/);
       await searchLink.click();
       await ctx.waitForLoadingFinished(page);
-      await page.waitForURL('**/search');
-      await expect(page.getByTestId('search-form')).toBeVisible();
+      await page.waitForURL(`${currentUrl}search?q=test`, { timeout: 5000 });
+      await expect(page.getByTestId('search-form')).toBeVisible({ timeout: 10000 });
+      await ctx.takeScreenshot(page, 'search');
     });
   });
 };

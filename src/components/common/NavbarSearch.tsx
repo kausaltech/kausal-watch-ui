@@ -11,6 +11,8 @@ import { usePopper } from 'react-popper';
 import { InputGroup } from 'reactstrap';
 import styled from 'styled-components';
 
+import { getLogger } from '@common/logging';
+
 import { getActionTermContext } from '@/common/i18n';
 import { Link, usePrependPlanAndLocale } from '@/common/links';
 import WatchSearchAPIConnector, { type SearchHit } from '@/common/search';
@@ -255,11 +257,12 @@ type ResultListProps = {
   results: SearchHit[];
   searchTerm: string;
   loading: boolean;
+  wasSearched: boolean;
   closeSearch: () => void;
 };
 
 const ResultList = (props: ResultListProps) => {
-  const { results, searchTerm, loading, closeSearch } = props;
+  const { results, searchTerm, loading, wasSearched, closeSearch } = props;
   const t = useTranslations();
   //const plan = usePlan();
   const _counts = [
@@ -288,13 +291,13 @@ const ResultList = (props: ResultListProps) => {
           {!loading && results.length === 0 && t('search-no-results')}
         </ResultCount>
       </ResultsHeader>
-      {!loading && (
+      {!loading && wasSearched ? (
         <HitList>
           {results.slice(0, RESULTS_LIMIT).map((r, i) => (
             <ResultItem key={i} hit={r} />
           ))}
         </HitList>
-      )}
+      ) : null}
       <ResultsFooter>
         {results.length > 0 ? (
           <Link
@@ -324,9 +327,10 @@ type SearchProps = {
   searchTerm?: string;
   setSearchTerm?: (searchTerm: string, options?: { debounce?: number }) => void;
   results?: SearchHit[];
+  wasSearched?: boolean;
 };
 
-function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) {
+function Search({ isLoading, searchTerm, setSearchTerm, results, wasSearched }: SearchProps) {
   const searchInput = useRef<HTMLInputElement>(null);
   const t = useTranslations();
   const router = useRouter();
@@ -384,7 +388,6 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
       closeSearch();
     } else closeSearch();
   };
-
   return (
     <NavBarSearchListItem className="nav-item" ref={searchElement}>
       <SearchControls ref={setReferenceElement}>
@@ -402,11 +405,11 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
               aria-expanded={searchTerm && searchTerm.length > 1 ? 'true' : 'false'}
               aria-haspopup="listbox"
               value={searchTerm}
-              onChange={(e) =>
+              onChange={(e) => {
                 setSearchTerm?.(e.target.value, {
                   debounce: 400,
-                })
-              }
+                });
+              }}
               onFocus={(_e) => setSearchOpen(true)}
               ref={searchInput}
               $isOpen={searchOpen}
@@ -432,6 +435,7 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
             aria-busy={isLoading ?? false}
             results={results ?? []}
             searchTerm={searchTerm}
+            wasSearched={wasSearched ?? false}
             loading={isLoading ?? false}
             closeSearch={closeSearch}
           />
@@ -442,6 +446,7 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
 }
 
 export default function NavbarSearch() {
+  const logger = getLogger({ name: 'NavbarSearch' });
   const plan = usePlan();
   const apolloClient = useApolloClient();
 
@@ -457,6 +462,7 @@ export default function NavbarSearch() {
         apiConnector: connector,
         debug: false,
         hasA11yNotifications: true,
+        trackUrlState: false,
         a11yNotificationMessages: {
           searchResults: ({ totalResults, searchTerm }) =>
             `Searching for "${searchTerm}". Showing first ${RESULTS_LIMIT} results out of ${totalResults}.`,
@@ -464,12 +470,17 @@ export default function NavbarSearch() {
       }}
     >
       <WithSearch
-        mapContextToProps={({ isLoading, searchTerm, setSearchTerm, results }) => ({
-          isLoading,
-          searchTerm,
-          setSearchTerm,
-          results,
-        })}
+        mapContextToProps={(context) => {
+          const { isLoading, searchTerm, setSearchTerm, results, wasSearched } = context;
+          logger.info(context, 'search');
+          return {
+            isLoading,
+            searchTerm,
+            setSearchTerm,
+            results,
+            wasSearched,
+          };
+        }}
       >
         {(context) => {
           return (
@@ -478,6 +489,7 @@ export default function NavbarSearch() {
               searchTerm={context.searchTerm}
               setSearchTerm={context.setSearchTerm}
               results={context.results as SearchHit[]}
+              wasSearched={context.wasSearched}
             />
           );
         }}

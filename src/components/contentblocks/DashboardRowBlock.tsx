@@ -6,15 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import type {
-  DashboardIndicatorAreaChartBlock,
-  DashboardIndicatorBarChartBlock,
-  DashboardIndicatorLineChartBlock,
-  DashboardIndicatorPieChartBlock,
-  DashboardParagraphBlock,
-  DashboardIndicatorSummaryBlock as TDashboardIndicatorSummaryBlock,
-  DashboardRowBlock as TDashboardRowBlock,
-} from '@/common/__generated__/graphql';
+import type { StreamFieldFragment_DashboardRowBlock_Fragment } from '@/common/__generated__/graphql';
 
 import Card from '../common/Card';
 import DashboardIndicatorSummaryBlock from './DashboardIndicatorSummaryBlock';
@@ -22,6 +14,27 @@ import DashboardIndicatorAreaChartBlockComponent from './indicator-chart/Dashboa
 import DashboardIndicatorBarChartBlockComponent from './indicator-chart/DashboardIndicatorBarChartBlock';
 import DashboardIndicatorLineChartBlockComponent from './indicator-chart/DashboardIndicatorLineChartBlock';
 import DashboardIndicatorPieChartBlockComponent from './indicator-chart/DashboardIndicatorPieChartBlock';
+
+type TDashboardRowBlock = StreamFieldFragment_DashboardRowBlock_Fragment['blocks'][number];
+
+type DashboardIndicatorAreaChartBlock = TDashboardRowBlock & {
+  __typename: 'DashboardIndicatorAreaChartBlock';
+};
+type DashboardIndicatorBarChartBlock = TDashboardRowBlock & {
+  __typename: 'DashboardIndicatorBarChartBlock';
+};
+type DashboardIndicatorLineChartBlock = TDashboardRowBlock & {
+  __typename: 'DashboardIndicatorLineChartBlock';
+};
+type DashboardIndicatorPieChartBlock = TDashboardRowBlock & {
+  __typename: 'DashboardIndicatorPieChartBlock';
+};
+type DashboardParagraphBlock = TDashboardRowBlock & {
+  __typename: 'DashboardParagraphBlock';
+};
+type TDashboardIndicatorSummaryBlock = TDashboardRowBlock & {
+  __typename: 'DashboardIndicatorSummaryBlock';
+};
 
 type DashboardRowSectionProps = {
   $topPadding?: boolean;
