@@ -22,8 +22,10 @@ import CategoryPageStreamField, {
   type CategoryPageMainTopBlock,
 } from '@/components/common/CategoryPageStreamField';
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
+import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
 
+import PathsNodeSummary from '../paths/PathsNodeSummary';
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
@@ -62,10 +64,11 @@ enum IconSize {
   L = 'L',
 }
 
-const CategoryHeader = styled.div<{ $bg?: string | null | undefined; $hasImage?: boolean }>`
+const CategoryHeader = styled.div<{ $bg: string | null | undefined; $hasImage?: boolean }>`
   width: 100%;
   position: relative;
-  background-color: ${({ theme }) => theme.brandDark};
+  background-color: ${({ $bg }) => $bg};
+  min-height: 14rem;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     display: flex;
@@ -74,28 +77,45 @@ const CategoryHeader = styled.div<{ $bg?: string | null | undefined; $hasImage?:
   }
 
   @media (min-width: ${(props) => props.theme.breakpointLg}) {
-    ${(props) => (props.$hasImage ? '28rem' : '0')};
+    min-height: ${(props) => (props.$hasImage ? '28rem' : '0')};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointXl}) {
-    ${(props) => (props.$hasImage ? '30rem' : '0')};
+    min-height: ${(props) => (props.$hasImage ? '32rem' : '0')};
   }
 `;
 
 const HeaderImage = styled.div<{
   $imageAlign?: string | null | undefined;
 }>`
-  height: 420px;
+  height: 320px;
   width: 100%;
   position: relative;
   object-position: ${(props) => props.$imageAlign};
+  border-radius: ${(props) => props.theme.cardBorderRadius}
+    ${(props) => props.theme.cardBorderRadius} 0 0;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.brandDark};
 
   &.full-width {
     position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
-    height: 420px;
+    height: 14rem;
+    border-radius: 0;
+
+    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+      min-height: 20rem;
+    }
+
+    @media (min-width: ${(props) => props.theme.breakpointLg}) {
+      min-height: 28rem;
+    }
+
+    @media (min-width: ${(props) => props.theme.breakpointXl}) {
+      min-height: 32rem;
+    }
   }
 `;
 
@@ -113,18 +133,24 @@ const ImageCredit = styled.span`
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
-const HeaderContent = styled.div<{ $alignWithContent?: boolean; $hasImage: boolean }>`
+const HeaderContent = styled.div<{
+  $alignWithContent?: boolean;
+  $hasImage: boolean;
+  $moveDown?: boolean;
+}>`
   position: relative;
   text-align: ${({ $alignWithContent }) => ($alignWithContent ? 'left' : 'center')};
   padding: ${({ theme }) => theme.spaces.s200};
-  border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) => props.theme.themeColors.white};
+  border-radius: ${({ theme, $hasImage }) =>
+    $hasImage ? `0 0 ${theme.cardBorderRadius} ${theme.cardBorderRadius}` : theme.cardBorderRadius};
+  background-color: ${(props) => props.theme.cardBackground.primary};
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 100;
+  margin-top: ${({ $moveDown }) => ($moveDown ? '11rem' : '1rem')};
 
   h1 {
     font-size: ${(props) => props.theme.fontSizeLg};
-    margin-bottom: ${(props) => props.theme.spaces.s200};
+    margin-bottom: ${(props) => props.theme.spaces.s100};
 
     &:last-child {
       margin-bottom: 0;
@@ -150,6 +176,11 @@ const HeaderContent = styled.div<{ $alignWithContent?: boolean; $hasImage: boole
 const AttributesContainer = styled.div`
   max-width: ${(props) => props.theme.breakpointMd};
   margin: 0 ${({ theme }) => (theme.settings.layout.leftAlignCategoryPages ? '0' : 'auto')};
+`;
+
+const PathsContentWrapper = styled.div`
+  max-width: ${({ theme }) => theme.breakpointSm};
+  margin-top: ${({ theme }) => theme.spaces.s100};
 `;
 
 const getIconHeight = (size: IconSize = IconSize.M, theme: Theme) => {
@@ -278,9 +309,11 @@ export default function CategoryPageHeaderBlock(props: Props) {
   const plan = usePlan();
   const theme = useTheme();
   const t = useTranslations();
+  const paths = usePaths();
+  const pathsInstance = paths?.instance;
 
   const imageLayout = theme.settings.layout.containImages ? 'contained' : 'full-width';
-  const contentAlignment = theme.settings.layout.leftAlignCategoryPages ? 'left' : 'center';
+  //const contentAlignment = theme.settings.layout.leftAlignCategoryPages ? 'left' : 'center';
   const showIdentifiers = !plan.primaryActionClassification?.hideCategoryIdentifiers;
 
   const { data } = useQuery<GetCategoryAttributeTypesQuery>(GET_CATEGORY_ATTRIBUTE_TYPES, {
@@ -299,14 +332,19 @@ export default function CategoryPageHeaderBlock(props: Props) {
 
   const showLevel = level && !theme.settings.categories.categoryPageHideCategoryLabel;
   const parentCategory = page.category?.parent;
+
+  const pathsNodeId = page.category?.kausalPathsNodeUuid;
   return (
-    <CategoryHeader $bg={color} $hasImage={!!headerImage}>
+    <CategoryHeader
+      $bg={theme.settings.layout.containImages ? theme.brandDark : color}
+      $hasImage={!!headerImage}
+    >
       <Container className="header-container">
         {headerImage && headerImage.large && (
           <HeaderImage $imageAlign={imageAlign} className={imageLayout}>
             <Image
               src={headerImage.large.src}
-              alt="Picture of the author"
+              alt={headerImage.altText ?? ''}
               sizes="100vw"
               fill
               style={{
@@ -320,7 +358,8 @@ export default function CategoryPageHeaderBlock(props: Props) {
           <Col {...columnSizing}>
             <HeaderContent
               $alignWithContent={theme.settings.layout.leftAlignCategoryPages}
-              $hasImage={!!headerImage}
+              $hasImage={!!headerImage && imageLayout === 'contained'}
+              $moveDown={!!headerImage && !theme.settings.layout.containImages}
             >
               {showLevel && <CategoryLevelName>{level}</CategoryLevelName>}
 
@@ -362,6 +401,15 @@ export default function CategoryPageHeaderBlock(props: Props) {
                   categoryId={categoryId}
                   typeId={typeId}
                 />
+              )}
+              {pathsNodeId && pathsInstance?.id && (
+                <AttributesContainer>
+                  <PathsNodeSummary
+                    categoryId={identifier ?? ''}
+                    node={pathsNodeId}
+                    pathsInstance={pathsInstance}
+                  />
+                </AttributesContainer>
               )}
             </HeaderContent>
           </Col>
