@@ -318,17 +318,21 @@ export async function getPlansForHostname(req: NextAuthRequest, logger: Logger, 
         .join(', ')
     );
   }
-  const cacheEntry = hostnamePlanCache.getMetadata(hostname);
-  if (cacheEntry) {
-    const now = Date.now();
-    const age = now - cacheEntry.createdAt;
-    if (age < cacheEntry.ttl) {
-      return { plans: cacheEntry.value as PlanForHostname[], error: null };
+  if (!req.auth) {
+    const cacheEntry = hostnamePlanCache.getMetadata(hostname);
+    if (cacheEntry) {
+      const now = Date.now();
+      const age = now - cacheEntry.createdAt;
+      if (age < cacheEntry.ttl) {
+        return { plans: cacheEntry.value as PlanForHostname[], error: null };
+      }
     }
   }
   const { plans, error } = await queryPlansForHostname(req, logger, hostname);
   if (plans) {
-    hostnamePlanCache.set(hostname, plans, undefined, DEFAULT_TTL);
+    if (!req.auth) {
+      hostnamePlanCache.set(hostname, plans, undefined, DEFAULT_TTL);
+    }
     return { plans, error: null };
   }
   return { plans: null, error };
