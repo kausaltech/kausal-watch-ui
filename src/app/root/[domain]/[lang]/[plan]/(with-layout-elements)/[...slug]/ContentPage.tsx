@@ -106,7 +106,7 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
           iconImage={iconImage}
           headerImage={headerImage}
           imageAlign={getBgImageAlignment(headerImage)}
-          color={color}
+          color={color || undefined}
           attributes={category.attributes}
           typeId={category.type.id}
           level={page.category?.level?.name}
@@ -153,7 +153,6 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
     page.body[0]?.blockType &&
     streamFieldBlockTypesThatHavePageHeader.includes(page.body[0]?.blockType);
 
-  console.log('pageHeaderinStreamField', pageHeaderinStreamField, page?.body);
   const categoryColor = isCategoryPage && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.themeColors.light;
 

@@ -83,7 +83,11 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
   }
 
   console.log('data', data);
-  if (data) {
+
+  if (!data.node) {
+    return null;
+  }
+  if (data.node) {
     if (data.node.__typename === 'ActionNode') {
       return (
         <ActionNodeSummary

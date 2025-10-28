@@ -255,7 +255,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         <QuestionAnswerBlock
           id={id}
           alignWithContent={
-            page.__typename === 'CategoryPage' && theme.settings.leftAlignCategoryPages
+            page.__typename === 'CategoryPage' && theme.settings.layout.leftAlignCategoryPages
           }
           heading={heading ?? undefined}
           questions={excludeNullish(questions ?? [])}
