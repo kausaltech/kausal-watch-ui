@@ -64,7 +64,6 @@ interface Props {
   context?: 'hero' | 'main' | 'aside';
   /** Passed down to reactstrap Col components */
   columnProps?: ColProps;
-  hasAsideColumn?: boolean;
   block: OmitFields<CategoryPageMainTopBlock> | OmitFields<CategoryPageMainBottomBlock>;
 }
 
@@ -87,11 +86,10 @@ export default function CategoryPageStreamField({
   page,
   context = 'main',
   columnProps: customColumnProps,
-  hasAsideColumn = false,
 }: Props) {
   const theme = useTheme();
   const plan = usePlan();
-  const columnProps = context === 'main' && hasAsideColumn ? TIGHT_COL_PROPS : DEFAULT_COL_PROPS;
+  const columnProps = DEFAULT_COL_PROPS;
   switch (block.__typename) {
     case 'CategoryPageAttributeTypeBlock': {
       const withContainer = context === 'main';
@@ -153,6 +151,7 @@ export default function CategoryPageStreamField({
                 phase: progressBasis === ProgressBasis.PHASE,
               }}
               columnProps={{ md: 12, lg: 12, xl: 12 }}
+              withContainer={context === 'main'}
             />
           </Col>
         </Wrapper>
@@ -163,14 +162,7 @@ export default function CategoryPageStreamField({
       if (!page.body) {
         return null;
       }
-      return (
-        <StreamField
-          page={page}
-          blocks={page.body}
-          hasSidebar={hasAsideColumn}
-          columnProps={columnProps}
-        />
-      );
+      return <StreamField page={page} blocks={page.body} columnProps={columnProps} />;
     }
 
     case 'CategoryPageCategoryListBlock': {

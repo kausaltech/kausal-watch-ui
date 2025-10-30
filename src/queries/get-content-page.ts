@@ -83,14 +83,6 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
           }
         }
       }
-      layoutAside {
-        __typename
-        ... on CategoryPageAttributeTypeBlock {
-          attributeType {
-            identifier
-          }
-        }
-      }
     }
   }
 `;

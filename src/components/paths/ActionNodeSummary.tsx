@@ -4,24 +4,33 @@ import { useReactiveVar } from '@apollo/client';
 import { useFormatter, useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
-import { ActionNode, InstanceGoalEntry } from '@/common/__generated__/paths/graphql';
+import type {
+  GetInstanceContextQuery,
+  GetNodeContentQuery,
+} from '@/common/__generated__/paths/graphql';
 import ActionParameters from '@/components/paths/ActionParameters';
 import HighlightValue from '@/components/paths/HighlightValue';
 import { yearRangeVar } from '@/context/paths/cache';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
+
+const ValuesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: stretch;
+  justify-content: stretch;
+  height: 100%;
+  margin-bottom: ${({ theme }) => theme.spaces.s100};
+`;
 
 const Values = styled.div<{ $muted: boolean }>`
   display: flex;
   flex-wrap: wrap;
   gap: 0 10px;
   align-items: stretch;
-  height: 100%;
-  background-color: ${({ $muted, theme }) =>
-    $muted ? theme.cardBackground.secondary : theme.themeColors.white};
-
-  &:not(:last-child) {
-    margin-bottom: ${({ theme }) => theme.spaces.s100};
-  }
+  flex: 0 1 360px;
+  background-color: ${({ theme }) => theme.themeColors.white};
+  opacity: ${({ $muted }) => ($muted ? 0.5 : 1)};
 `;
 
 const ValuesHeader = styled.div`
@@ -33,7 +42,7 @@ const ValuesHeader = styled.div`
 `;
 
 const SubValue = styled.div`
-  flex: 45% 1 0;
+  flex: 1 0 45%;
 
   > div {
     height: 100%;
@@ -41,19 +50,18 @@ const SubValue = styled.div`
 `;
 
 const ParametersWrapper = styled.div`
+  flex: 1 0 45%;
   display: flex;
   flex-direction: column;
-  flex: 45% 1 0;
   align-items: center;
-  height: 100%;
 `;
 
 type PathsActionNodeContentProps = {
   categoryId: string;
-  node: ActionNode;
+  node: GetNodeContentQuery['node'] & { __typename: 'ActionNode' };
   refetching: boolean;
   onLoaded: (id: string, impact: number) => void;
-  displayGoal?: InstanceGoalEntry;
+  displayGoal?: GetInstanceContextQuery['instance']['goals'][number];
 };
 
 const ActionNodeSummary = (props: PathsActionNodeContentProps) => {
@@ -67,28 +75,29 @@ const ActionNodeSummary = (props: PathsActionNodeContentProps) => {
   useEffect(() => {
     onLoaded(categoryId, impact);
     // Using exhaustive deps here causes an infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yearRange[1]]);
 
   return (
-    <Values $muted={refetching || !pathsAction.isEnabled()}>
-      <ValuesHeader>{displayGoal?.label}</ValuesHeader>
-      <SubValue>
-        <HighlightValue
-          displayValue={
-            pathsAction.isEnabled() ? format.number(impact, { maximumSignificantDigits: 2 }) : '-'
-          }
-          header={`${t('impact')} (${yearRange[1]})`}
-          unit={pathsAction.getUnit() || ''}
-          size="md"
-          muted={refetching || !pathsAction.isEnabled()}
-          mutedReason={!pathsAction.isEnabled() ? t('action-not-included-in-scenario') : ''}
-        />
-      </SubValue>
-      <ParametersWrapper>
-        <ActionParameters parameters={node.parameters} />
-      </ParametersWrapper>
-    </Values>
+    <ValuesContainer>
+      <Values $muted={refetching || !pathsAction.isEnabled()}>
+        <ValuesHeader>{displayGoal?.label}</ValuesHeader>
+        <SubValue>
+          <HighlightValue
+            displayValue={
+              pathsAction.isEnabled() ? format.number(impact, { maximumSignificantDigits: 2 }) : '-'
+            }
+            header={`${t('impact')} (${yearRange[1]})`}
+            unit={pathsAction.getUnit() || ''}
+            size="md"
+            muted={refetching || !pathsAction.isEnabled()}
+            mutedReason={!pathsAction.isEnabled() ? t('action-not-included-in-scenario') : ''}
+          />
+        </SubValue>
+        <ParametersWrapper>
+          <ActionParameters parameters={node.parameters} />
+        </ParametersWrapper>
+      </Values>
+    </ValuesContainer>
   );
 };
 

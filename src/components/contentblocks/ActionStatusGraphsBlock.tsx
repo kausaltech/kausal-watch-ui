@@ -39,10 +39,11 @@ interface Props
   extends CommonContentBlockProps,
     Pick<ActionsStatusGraphsProps, 'chart' | 'shownDatasets'> {
   categoryId?: string;
+  withContainer?: boolean;
 }
 
 const ActionStatusGraphsBlock = (props: Props) => {
-  const { id = '', categoryId, columnProps, ...graphsProps } = props;
+  const { id = '', categoryId, columnProps, withContainer = true, ...graphsProps } = props;
   const plan = usePlan();
   const t = useTranslations();
   const theme = useTheme();
@@ -57,7 +58,7 @@ const ActionStatusGraphsBlock = (props: Props) => {
   >(GET_ACTION_LIST_FOR_GRAPHS, {
     variables: {
       plan: plan.identifier,
-      categoryId,
+      categoryId: categoryId ?? null,
     },
   });
 
@@ -67,22 +68,33 @@ const ActionStatusGraphsBlock = (props: Props) => {
   if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
   }
+
+  if (withContainer) {
+    return (
+      <Container id={id}>
+        <Row>
+          <Col xl={{ size: 8, offset: 2 }} lg={{ size: 10, offset: 1 }} {...columnProps}>
+            <ActionStatusGraphs
+              actions={planActions}
+              shownDatasets={{
+                phase: true,
+                progress: true,
+                timeliness: showUpdateStatus,
+              }}
+              {...graphsProps}
+            />
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
+
   return (
-    <Container id={id}>
-      <Row>
-        <Col xl={{ size: 8, offset: 2 }} lg={{ size: 10, offset: 1 }} {...columnProps}>
-          <ActionStatusGraphs
-            actions={planActions}
-            shownDatasets={{
-              phase: true,
-              progress: true,
-              timeliness: showUpdateStatus,
-            }}
-            {...graphsProps}
-          />
-        </Col>
-      </Row>
-    </Container>
+    <ActionStatusGraphs
+      actions={planActions}
+      shownDatasets={{ phase: true, progress: true, timeliness: showUpdateStatus }}
+      {...graphsProps}
+    />
   );
 };
 

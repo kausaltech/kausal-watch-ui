@@ -11,18 +11,6 @@ import StreamField from '@/components/common/StreamField';
 
 const MainContent = styled.div``;
 
-const AsideContent = styled.div`
-  position: sticky;
-  top: ${({ theme }) => theme.spaces.s200};
-  flex: 0 1 320px;
-  background-color: ${({ theme }) => theme.themeColors.white};
-  border-radius: ${({ theme }) => theme.cardBorderRadius};
-  padding: ${({ theme }) => `${theme.spaces.s200} ${theme.spaces.s100}`};
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-`;
-
 const columnLayout = css`
   display: flex;
   justify-content: center;
@@ -42,7 +30,7 @@ const columnLayout = css`
     justify-content: flex-start;
     align-items: stretch;
 
-    ${MainContent}, ${AsideContent} {
+    ${MainContent} {
       position: relative;
       top: 0;
       flex: 1 0 auto;
@@ -73,53 +61,22 @@ const ContentArea = styled.div<ContentAreaProps>`
 
 export default function CategoryPageContent({
   page,
-  pageSectionColor,
 }: {
   page: CategoryPage;
   pageSectionColor: string;
 }) {
   const hasMainContentTemplate = !!page.layout?.layoutMainBottom?.length;
-  const hasAsideTemplate = !!page.layout?.layoutAside;
-  const hasAside =
-    hasAsideTemplate &&
-    page.layout?.layoutAside?.some((block) =>
-      checkAttributeHasValueByType(block.attributeType.identifier, page)
-    );
 
+  console.log('CategoryPageContent', page);
   return (
-    <ContentArea
-      $columnLayout={hasAside}
-      $backgroundColor={hasAside ? pageSectionColor : undefined}
-    >
+    <ContentArea $backgroundColor={undefined}>
       <MainContent>
         {hasMainContentTemplate
           ? page.layout?.layoutMainBottom?.map((block, i) => (
-              <CategoryPageStreamField
-                key={i}
-                page={page}
-                block={block}
-                hasAsideColumn={hasAside}
-              />
+              <CategoryPageStreamField key={i} page={page} block={block} />
             ))
           : page.body && <StreamField page={page} blocks={page.body} />}
       </MainContent>
-
-      {hasAside && (
-        <AsideContent>
-          <Container>
-            {page.layout?.layoutAside?.map((block, i) => (
-              <Row key={i}>
-                <CategoryPageStreamField
-                  page={page}
-                  block={block}
-                  context="aside"
-                  columnProps={{ md: 12 }}
-                />
-              </Row>
-            ))}
-          </Container>
-        </AsideContent>
-      )}
     </ContentArea>
   );
 }

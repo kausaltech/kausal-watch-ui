@@ -18,8 +18,6 @@ import SecondaryNavigation from '@/components/common/SecondaryNavigation';
 import StreamField from '@/components/common/StreamField';
 import CategoryPageHeaderBlock from '@/components/contentblocks/CategoryPageHeaderBlock';
 import ContentPageHeaderBlock from '@/components/contentblocks/ContentPageHeaderBlock';
-import PathsPageContent from '@/components/paths/PathsPageContent';
-import { usePaths } from '@/context/paths/paths';
 
 export type PageWithLeadContent =
   | AccessibilityStatementPage

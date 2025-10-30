@@ -146,7 +146,7 @@ const HeaderContent = styled.div<{
   background-color: ${(props) => props.theme.cardBackground.primary};
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 100;
-  margin-top: ${({ $moveDown }) => ($moveDown ? '11rem' : '1rem')};
+  margin-top: ${({ $moveDown, $hasImage }) => ($moveDown ? '11rem' : $hasImage ? '0' : '1rem')};
 
   h1 {
     font-size: ${(props) => props.theme.fontSizeLg};
@@ -219,9 +219,10 @@ type CategoryTypes = NonNullable<GetCategoryAttributeTypesQuery['plan']>['catego
 
 interface CategoryHeaderAttributesProps extends Pick<Props, 'page'> {
   layout: CategoryPageMainTopBlock[];
+  children?: React.ReactNode;
 }
 
-const CategoryHeaderAttributes = ({ layout, page }: CategoryHeaderAttributesProps) =>
+const CategoryHeaderAttributes = ({ layout, page, children }: CategoryHeaderAttributesProps) =>
   layout.length ? (
     <AttributesContainer>
       <Attributes>
@@ -230,6 +231,7 @@ const CategoryHeaderAttributes = ({ layout, page }: CategoryHeaderAttributesProp
             <CategoryPageStreamField key={i} block={block} page={page} context="hero" />
           ))}
         </Row>
+        {children}
       </Attributes>
     </AttributesContainer>
   ) : null;
@@ -237,6 +239,7 @@ const CategoryHeaderAttributes = ({ layout, page }: CategoryHeaderAttributesProp
 interface LegacyCategoryHeaderAttributesProps
   extends Pick<Props, 'attributes' | 'categoryId' | 'typeId'> {
   categoryTypes?: CategoryTypes;
+  children?: React.ReactNode;
 }
 
 const LegacyCategoryHeaderAttributes = ({
@@ -244,6 +247,7 @@ const LegacyCategoryHeaderAttributes = ({
   categoryId,
   categoryTypes,
   typeId,
+  children,
 }: LegacyCategoryHeaderAttributesProps) => {
   const plan = usePlan();
 
@@ -260,19 +264,53 @@ const LegacyCategoryHeaderAttributes = ({
 
   return attributesWithContent.length > 0 && attributes && attributeTypes ? (
     <AttributesContainer>
-      <AttributesBlock attributes={attributes} types={attributeTypes} />
-      {plan.actionStatuses.length ? (
-        <ActionStatusGraphsBlock
-          categoryId={categoryId}
-          chart={ChartType.BAR}
-          shownDatasets={{ progress: true }}
-          columnProps={{ md: 12, lg: 12, xl: 12 }}
-        />
-      ) : null}
+      <AttributesBlock attributes={attributes} types={attributeTypes}>
+        {plan.actionStatuses.length ? (
+          <ActionStatusGraphsBlock
+            categoryId={categoryId}
+            chart={ChartType.BAR}
+            shownDatasets={{ progress: true }}
+            columnProps={{ md: 12, lg: 12, xl: 12 }}
+            withContainer={false}
+          />
+        ) : null}
+        {children}
+      </AttributesBlock>
     </AttributesContainer>
   ) : null;
 };
 
+/*
+Category header can have several variations
+
+Two layout options for header image:
+
+theme.settings.layout.containImages: true
+-- header image width is limited by container
+-- header content directly underneath the image, container width block
+-- background color of the section is brandDark
+
+theme.settings.layout.containImages: false (default)
+-- header image is full browser width
+-- header content overlaps the image, narrow width block
+-- background color of the section is the category color
+
+Header content alignment:
+
+theme.settings.layout.leftAlignCategoryPages: true
+-- the text content is left aligned
+theme.settings.layout.leftAlignCategoryPages: false (default)
+-- the text content is centered
+
+Category attributes:
+
+Layout configured in category page level layout admin
+-- Configured attributes displayed in header content
+Layout not configured in category page level layout admin
+-- All available attributes (LegacyCategoryHeaderAttributes) displayed in header content
+-- Category's actions status graph is always displayed if plan.actionStatuses.length > 0
+
+*/
 interface Props {
   page: CategoryPage;
   title: string;
@@ -312,7 +350,8 @@ export default function CategoryPageHeaderBlock(props: Props) {
   const paths = usePaths();
   const pathsInstance = paths?.instance;
 
-  const imageLayout = theme.settings.layout.containImages ? 'contained' : 'full-width';
+  const containImages = theme.settings.layout.containImages ?? false;
+  const imageLayout = containImages ? 'contained' : 'full-width';
   //const contentAlignment = theme.settings.layout.leftAlignCategoryPages ? 'left' : 'center';
   const showIdentifiers = !plan.primaryActionClassification?.hideCategoryIdentifiers;
 
@@ -322,7 +361,7 @@ export default function CategoryPageHeaderBlock(props: Props) {
     },
   });
 
-  const columnSizing = theme.settings.layout.containImages
+  const columnSizing = containImages
     ? { md: 12 }
     : {
         xl: { size: 8, offset: 2 },
@@ -334,11 +373,18 @@ export default function CategoryPageHeaderBlock(props: Props) {
   const parentCategory = page.category?.parent;
 
   const pathsNodeId = page.category?.kausalPathsNodeUuid;
+  const PathsNodeAttribute =
+    pathsNodeId && pathsInstance?.id ? (
+      <AttributesContainer>
+        <PathsNodeSummary
+          categoryId={identifier ?? ''}
+          node={pathsNodeId}
+          pathsInstance={pathsInstance}
+        />
+      </AttributesContainer>
+    ) : null;
   return (
-    <CategoryHeader
-      $bg={theme.settings.layout.containImages ? theme.brandDark : color}
-      $hasImage={!!headerImage}
-    >
+    <CategoryHeader $bg={containImages ? theme.brandDark : color} $hasImage={!!headerImage}>
       <Container className="header-container">
         {headerImage && headerImage.large && (
           <HeaderImage $imageAlign={imageAlign} className={imageLayout}>
@@ -359,7 +405,7 @@ export default function CategoryPageHeaderBlock(props: Props) {
             <HeaderContent
               $alignWithContent={theme.settings.layout.leftAlignCategoryPages}
               $hasImage={!!headerImage && imageLayout === 'contained'}
-              $moveDown={!!headerImage && !theme.settings.layout.containImages}
+              $moveDown={!!headerImage && !containImages}
             >
               {showLevel && <CategoryLevelName>{level}</CategoryLevelName>}
 
@@ -393,23 +439,18 @@ export default function CategoryPageHeaderBlock(props: Props) {
               {lead && <p>{lead}</p>}
 
               {layout ? (
-                <CategoryHeaderAttributes page={page} layout={layout} />
+                <CategoryHeaderAttributes page={page} layout={layout}>
+                  {PathsNodeAttribute}
+                </CategoryHeaderAttributes>
               ) : (
                 <LegacyCategoryHeaderAttributes
                   attributes={attributes}
                   categoryTypes={data?.plan?.categoryTypes}
                   categoryId={categoryId}
                   typeId={typeId}
-                />
-              )}
-              {pathsNodeId && pathsInstance?.id && (
-                <AttributesContainer>
-                  <PathsNodeSummary
-                    categoryId={identifier ?? ''}
-                    node={pathsNodeId}
-                    pathsInstance={pathsInstance}
-                  />
-                </AttributesContainer>
+                >
+                  {PathsNodeAttribute}
+                </LegacyCategoryHeaderAttributes>
               )}
             </HeaderContent>
           </Col>

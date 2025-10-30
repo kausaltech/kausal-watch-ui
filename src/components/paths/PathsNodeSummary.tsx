@@ -6,7 +6,11 @@ import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
 
-import type { InstanceType } from '@/common/__generated__/paths/graphql';
+import type {
+  GetInstanceContextQuery,
+  GetNodeContentQuery,
+  GetNodeContentQueryVariables,
+} from '@/common/__generated__/paths/graphql';
 import { activeGoalVar } from '@/context/paths/cache';
 import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
@@ -37,7 +41,7 @@ const PathsContentLoader = (props) => {
 type PathsNodeContentProps = {
   categoryId: string;
   node: string;
-  pathsInstance: InstanceType;
+  pathsInstance: GetInstanceContextQuery['instance'];
   onLoaded?: (id: string, impact: number) => void;
 };
 
@@ -62,9 +66,12 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
       : undefined;
   displayGoals?.sort((a, b) => (a.id === activeGoal?.id ? -1 : 1));
 
-  const { data, loading, error, networkStatus } = useQuery(GET_NODE_CONTENT, {
+  const { data, loading, error, networkStatus } = useQuery<
+    GetNodeContentQuery,
+    GetNodeContentQueryVariables
+  >(GET_NODE_CONTENT, {
     fetchPolicy: 'no-cache',
-    variables: { node: node, goal: actionImpactGoal?.id },
+    variables: { node: node, goal: actionImpactGoal?.id ?? null },
     notifyOnNetworkStatusChange: true,
     context: {
       uri: '/api/graphql-paths',
@@ -84,10 +91,10 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
 
   console.log('data', data);
 
-  if (!data.node) {
+  if (!data?.node) {
     return null;
   }
-  if (data.node) {
+  if (data?.node) {
     if (data.node.__typename === 'ActionNode') {
       return (
         <ActionNodeSummary

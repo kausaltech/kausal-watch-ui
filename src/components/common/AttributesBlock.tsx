@@ -24,8 +24,8 @@ export const Attributes = styled.div<AttributeProps>`
     `}
   margin: ${(props) => props.theme.spaces.s100} auto;
   padding: ${(props) => props.theme.spaces.s200} 0 0;
-  border-top: 1px solid ${(props) => props.theme.graphColors.grey040};
-  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey040};
+  border-top: 1px solid ${(props) => props.theme.graphColors.grey030};
+  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey030};
   text-align: left;
 `;
 
