@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
 import { useFormatter, useTranslations } from 'next-intl';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 import type {
   GetInstanceContextQuery,
@@ -67,6 +67,7 @@ type PathsActionNodeContentProps = {
 const ActionNodeSummary = (props: PathsActionNodeContentProps) => {
   const { categoryId, node, refetching = false, onLoaded, displayGoal } = props;
   const t = useTranslations();
+  const theme = useTheme();
   const format = useFormatter();
   const yearRange = useReactiveVar(yearRangeVar);
   const pathsAction = new PathsActionNode(node);
@@ -93,9 +94,11 @@ const ActionNodeSummary = (props: PathsActionNodeContentProps) => {
             mutedReason={!pathsAction.isEnabled() ? t('action-not-included-in-scenario') : ''}
           />
         </SubValue>
-        <ParametersWrapper>
-          <ActionParameters parameters={node.parameters} />
-        </ParametersWrapper>
+        {!theme.settings.paths.disableScenarioEditing && (
+          <ParametersWrapper>
+            <ActionParameters parameters={node.parameters} />
+          </ParametersWrapper>
+        )}
       </Values>
     </ValuesContainer>
   );

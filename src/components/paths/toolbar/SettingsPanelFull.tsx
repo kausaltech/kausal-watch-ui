@@ -94,7 +94,7 @@ const SettingsPanelFull: React.FC = () => {
   const theme = useTheme();
 
   const [mode, setMode] = useState(MODE.MD);
-  const hideScenarioPanel = theme.settings.paths.hideScenarioPanel;
+  const hideScenarioPanel = theme.settings.paths.disableScenarioEditing;
   // Initialize default values only on mount. We don't want to reset user-modified values.
   useEffect(() => {
     if (!paths || paths.instance.id === 'unknown') return;

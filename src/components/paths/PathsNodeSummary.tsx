@@ -2,7 +2,6 @@ import React from 'react';
 
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 import { captureException } from '@sentry/nextjs';
-import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 import { useTheme } from 'styled-components';
 
@@ -47,15 +46,11 @@ type PathsNodeContentProps = {
 
 const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
   const { categoryId, node, pathsInstance, onLoaded } = props;
-  const t = useTranslations();
   const pathsInstanceId = pathsInstance.id;
   const activeGoal = useReactiveVar(activeGoalVar);
 
-  console.log('PathsNodeSummary', props);
-  // Only show the impact of this type of goal
-  const actionImpactGoal = pathsInstance.goals.find(
-    (goal) => goal.id === 'net_emissions/emission_scope:direct+negative'
-  );
+  // Only show the impact of default goal if exists
+  const actionImpactGoal = pathsInstance.goals.find((goal) => goal.default === true);
 
   // For Inventory nodes show all goals, Always show the active goal first
   const displayAllGoals = true;
@@ -64,14 +59,14 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
     : activeGoal
       ? [activeGoal]
       : undefined;
-  displayGoals?.sort((a, b) => (a.id === activeGoal?.id ? -1 : 1));
+  displayGoals?.sort((a) => (a.id === activeGoal?.id ? -1 : 1));
 
   const { data, loading, error, networkStatus } = useQuery<
     GetNodeContentQuery,
     GetNodeContentQueryVariables
   >(GET_NODE_CONTENT, {
     fetchPolicy: 'no-cache',
-    variables: { node: node, goal: actionImpactGoal?.id ?? null },
+    variables: { node: node, goal: actionImpactGoal?.id ?? 'net_emissions' },
     notifyOnNetworkStatusChange: true,
     context: {
       uri: '/api/graphql-paths',
@@ -88,8 +83,6 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
     captureException(error, { extra: { pathsInstanceId: pathsInstance.id } });
     return null;
   }
-
-  console.log('data', data);
 
   if (!data?.node) {
     return null;
