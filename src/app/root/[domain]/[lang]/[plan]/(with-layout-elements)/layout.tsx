@@ -1,11 +1,10 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import SettingsPanelFull from '@/components/paths/toolbar/SettingsPanelFull';
 
 import { JsonLd } from './JsonLd';
-import { StyledMain } from './StyledMain';
 
 type Props = {
   params: Promise<{ domain: string }>;
@@ -25,9 +24,9 @@ export default async function Layout(props: Props) {
     <>
       <JsonLd domain={params.domain} />
       <Header />
-      <StyledMain id="main" data-testid="root-layout">
+      <main id="main" data-testid="root-layout" style={{ minHeight: '100vh' }}>
         {children}
-      </StyledMain>
+      </main>
       <Footer />
       <SettingsPanelFull />
     </>

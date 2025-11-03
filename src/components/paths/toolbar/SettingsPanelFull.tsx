@@ -6,9 +6,13 @@ import { useReactiveVar } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { Button } from 'reactstrap';
 import styled from 'styled-components';
+import { useTheme } from 'styled-components';
 
+import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import Icon from '@/components/common/Icon';
+import type { PathsInstanceType } from '@/components/providers/PathsProvider';
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
+//import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import { usePaths } from '@/context/paths/paths';
 
 import CompleteSettings from './CompleteSettings';
@@ -78,23 +82,30 @@ const MODE = {
   LG: 'lg',
 };
 
+type GoalType = GetInstanceContextQuery['instance']['goals'][number];
+
 const SettingsPanelFull: React.FC = () => {
-  const paths = usePaths();
+  const paths = usePaths() as PathsInstanceType;
   const activeGoal = useReactiveVar(activeGoalVar);
   const activeScenario = useReactiveVar(activeScenarioVar);
   const yearRange = useReactiveVar(yearRangeVar);
 
-  const [mode, setMode] = useState(MODE.MD);
+  const t = useTranslations();
+  const theme = useTheme();
 
+  const [mode, setMode] = useState(MODE.MD);
+  const hideScenarioPanel = theme.settings.paths.hideScenarioPanel;
+  // Initialize default values only on mount. We don't want to reset user-modified values.
   useEffect(() => {
     if (!paths || paths.instance.id === 'unknown') return;
     const { instance, scenarios } = paths;
     const firstActiveScenario = scenarios.find((sc) => sc.isActive);
-    const goals = instance.goals;
+    const goals: GoalType[] = instance.goals;
 
     if (!activeGoal) {
-      const defaultGoal = goals.length > 1 ? goals.find((goal) => goal.default) : goals[0];
-      activeGoalVar(defaultGoal ?? null);
+      const defaultGoal: GoalType | undefined =
+        goals.length > 1 ? goals.find((goal) => goal.default) : goals[0];
+      activeGoalVar(defaultGoal || undefined);
     }
 
     if (!activeScenario) {
@@ -108,10 +119,11 @@ const SettingsPanelFull: React.FC = () => {
       ];
       yearRangeVar(initialYearRange);
     }
-  }, [paths?.instance.id]);
+  });
 
-  if (!paths || paths.instance.id === 'unknown') return null;
-  const handleToggle = (e) => {
+  if (!paths || paths.instance.id === 'unknown' || hideScenarioPanel) return null;
+
+  const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (mode === MODE.LG) {
       setMode(MODE.MD);
@@ -133,7 +145,6 @@ const SettingsPanelFull: React.FC = () => {
     [yearRangeVar]
   );
   */
-  const t = useTranslations();
 
   // Normalization
   //const availableNormalizations = site.availableNormalizations;
@@ -146,7 +157,7 @@ const SettingsPanelFull: React.FC = () => {
     <>
       <Spacer />
       <FixedPanel className={`panel-${mode}`} aria-label={t('all-settings')}>
-        <StyledSettingsButton onClick={(e) => handleToggle(e)}>
+        <StyledSettingsButton onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggle(e)}>
           {mode === MODE.MD && (
             <>
               <Icon name="gear" /> <StyledButtonLabel>{t('settings-expand')}</StyledButtonLabel>
