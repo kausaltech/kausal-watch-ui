@@ -234,7 +234,11 @@ const CategoryHeaderAttributes = ({ layout, page, children }: CategoryHeaderAttr
         {children}
       </Attributes>
     </AttributesContainer>
-  ) : null;
+  ) : (
+    <AttributesContainer>
+      <Attributes>{children}</Attributes>
+    </AttributesContainer>
+  );
 
 interface LegacyCategoryHeaderAttributesProps
   extends Pick<Props, 'attributes' | 'categoryId' | 'typeId'> {
