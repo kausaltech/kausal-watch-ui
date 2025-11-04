@@ -67,12 +67,12 @@ type AttributesBlockProps = PropsWithChildren<
     vertical?: boolean;
   } & (
     | {
-        attributes: AttributeContentProps['attribute'][];
-        types: AttributeContentProps['attributeType'][];
+        attributes?: AttributeContentProps['attribute'][];
+        types?: AttributeContentProps['attributeType'][];
       }
     | {
-        attributes: AttributeContentNestedTypeProps['attribute'][];
-        types: undefined;
+        attributes?: AttributeContentNestedTypeProps['attribute'][];
+        types?: undefined;
       }
   )
 >;
@@ -84,6 +84,17 @@ function AttributesBlock(props: AttributesBlockProps) {
     types,
     vertical,
   } = props;
+
+  if (!attributes) {
+    if (children) {
+      return (
+        <Attributes $vertical={vertical ?? false}>
+          <AttributesList tag="ul">{children}</AttributesList>
+        </Attributes>
+      );
+    }
+    return null;
+  }
 
   let typesById: Map<string, AttributeContentProps['attributeType']> | null;
 

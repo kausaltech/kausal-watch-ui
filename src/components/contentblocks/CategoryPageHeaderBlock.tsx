@@ -277,7 +277,11 @@ const LegacyCategoryHeaderAttributes = ({
         {children}
       </AttributesBlock>
     </AttributesContainer>
-  ) : null;
+  ) : (
+    <AttributesContainer>
+      <AttributesBlock>{children}</AttributesBlock>
+    </AttributesContainer>
+  );
 };
 
 /*
@@ -343,7 +347,7 @@ export default function CategoryPageHeaderBlock(props: Props) {
     level,
     layout,
   } = props;
-  console.log('CategoryPageHeaderBlock', props);
+
   const plan = usePlan();
   const theme = useTheme();
   const t = useTranslations();
@@ -383,6 +387,7 @@ export default function CategoryPageHeaderBlock(props: Props) {
         />
       </AttributesContainer>
     ) : null;
+
   return (
     <CategoryHeader $bg={containImages ? theme.brandDark : color} $hasImage={!!headerImage}>
       <Container className="header-container">

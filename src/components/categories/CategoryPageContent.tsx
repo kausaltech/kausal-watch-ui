@@ -1,12 +1,9 @@
 import React from 'react';
 
-import { Container, Row } from 'reactstrap';
 import styled, { css } from 'styled-components';
 
 import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
-import CategoryPageStreamField, {
-  checkAttributeHasValueByType,
-} from '@/components/common/CategoryPageStreamField';
+import CategoryPageStreamField from '@/components/common/CategoryPageStreamField';
 import StreamField from '@/components/common/StreamField';
 
 const MainContent = styled.div``;
@@ -67,7 +64,6 @@ export default function CategoryPageContent({
 }) {
   const hasMainContentTemplate = !!page.layout?.layoutMainBottom?.length;
 
-  console.log('CategoryPageContent', page);
   return (
     <ContentArea $backgroundColor={undefined}>
       <MainContent>
