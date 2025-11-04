@@ -4,7 +4,7 @@ import { readableColor, transparentize } from 'polished';
 import styled from 'styled-components';
 
 import type { CategoryFragmentFragment } from '@/common/__generated__/graphql';
-import type { InstanceType } from '@/common/__generated__/paths/graphql';
+import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import { Link } from '@/common/links';
 
 import PathsNodeSummary from './PathsNodeSummary';
@@ -77,7 +77,7 @@ const CardGoalBlock = styled.div`
 type CategoryCardProps = {
   category: CategoryFragmentFragment;
   group?: CategoryFragmentFragment;
-  pathsInstance?: InstanceType;
+  pathsInstance?: GetInstanceContextQuery['instance'];
   onLoaded: (id: string, impact: number) => void;
 };
 
@@ -85,24 +85,29 @@ const CategoryCard = (props: CategoryCardProps) => {
   const { category, group, pathsInstance, onLoaded } = props;
 
   // TODO: Have a backend setting for the main goal attribute
-  const mainGoalAttribute: AttributeRichText = category.attributes?.find(
-    (attr) => attr.id === '5750'
-  ) as AttributeRichText;
+  const mainGoalAttribute: CategoryFragmentFragment['attributes'][number] =
+    category.attributes?.find(
+      (attr) => attr.__typename === 'AttributeRichText' && attr.id === '5750'
+    ) as CategoryFragmentFragment['attributes'][number];
 
   const mainGoalLabel = mainGoalAttribute?.key || 'Main Goal';
-  const mainGoalValue = mainGoalAttribute?.value;
+  const mainGoalValue =
+    mainGoalAttribute?.__typename === 'AttributeRichText' ? mainGoalAttribute.value : null;
 
   const flattenHTML = (html: string) => html.replace(/<\/?p[^>]*>/g, '');
   const flattenedMainGoalValue = mainGoalValue ? flattenHTML(mainGoalValue) : null;
 
   // TODO: Have a backend setting for the main indicator attribute
-  const mainIndicatorAttribute: AttributeText = category.attributes?.find(
-    (attr) => attr.id === '5688'
-  ) as AttributeText;
+  const mainIndicatorAttribute: CategoryFragmentFragment['attributes'][number] =
+    category.attributes?.find(
+      (attr) => attr.__typename === 'AttributeText' && attr.id === '5688'
+    ) as CategoryFragmentFragment['attributes'][number];
 
   const mainIndicatorId: string | null =
-    mainIndicatorAttribute?.value ||
-    (category.indicators?.length > 0 && category.indicators[0].id) ||
+    (mainIndicatorAttribute?.__typename === 'AttributeText'
+      ? mainIndicatorAttribute.value
+      : null) ||
+    (category.indicators?.length > 0 ? category.indicators[0].id : null) ||
     null;
 
   return (

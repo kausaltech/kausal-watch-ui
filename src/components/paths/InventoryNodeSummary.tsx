@@ -4,22 +4,31 @@ import { useReactiveVar } from '@apollo/client';
 import { useFormatter } from 'next-intl';
 import styled from 'styled-components';
 
-import { CausalGridNodeFragment, InstanceGoalEntry } from '@/common/__generated__/paths/graphql';
+import type {
+  GetInstanceContextQuery,
+  GetNodeContentQuery,
+} from '@/common/__generated__/paths/graphql';
 import HighlightValue from '@/components/paths/HighlightValue';
 import { yearRangeVar } from '@/context/paths/cache';
 import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';
+
+const ValuesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: stretch;
+  justify-content: stretch;
+  height: 100%;
+  margin-bottom: ${({ theme }) => theme.spaces.s100};
+`;
 
 const Values = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0 10px;
   align-items: stretch;
-  height: 100%;
+  flex: 0 1 360px;
   background-color: ${({ theme }) => theme.themeColors.white};
-
-  &:not(:last-child) {
-    margin-bottom: ${({ theme }) => theme.spaces.s100};
-  }
 `;
 
 const ValuesHeader = styled.div`
@@ -31,14 +40,14 @@ const ValuesHeader = styled.div`
 `;
 
 const SubValue = styled.div`
-  flex: 45% 1 0;
+  flex: 1 0 45%;
 
   > div {
     height: 100%;
   }
 `;
 
-const getTotalValues = (yearData) => {
+const getTotalValues = (yearData: GetNodeContentQuery['node'] & { __typename: 'Node' }) => {
   const totals: number[] = [];
   yearData.categoryTypes[1].options.forEach((colId, cIdx) => {
     const pieSegmentValues: (number | null)[] = [];
@@ -62,9 +71,9 @@ const getTotalValues = (yearData) => {
 
 type PathsBasicNodeContentProps = {
   categoryId: string;
-  node: CausalGridNodeFragment;
+  node: GetNodeContentQuery['node'] & { __typename: 'Node' };
   onLoaded: (id: string, impact: number) => void;
-  displayGoals: InstanceGoalEntry[];
+  displayGoals: GetInstanceContextQuery['instance']['goals'][number][];
   refetching: boolean;
 };
 
@@ -182,11 +191,10 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
     setEmissions(displayEmissions);
     onLoaded(categoryId, 100);
     // using exhausive deps here causes an infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yearRange[1], refetching]);
 
   return (
-    <>
+    <ValuesContainer>
       {emissions.map((em) => (
         <Values key={em.id}>
           <ValuesHeader>{em.label}</ValuesHeader>
@@ -243,7 +251,7 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
           </SubValue>
         </Values>
       ))}
-    </>
+    </ValuesContainer>
   );
 };
 

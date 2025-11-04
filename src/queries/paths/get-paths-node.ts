@@ -160,7 +160,7 @@ export const CAUSAL_GRID_NODE_FRAGMENT = gql`
 `;
 
 const GET_NODE_CONTENT = gql`
-  query GetNodeContent($node: ID!, $goal: ID!) {
+  query GetNodeContent($node: ID!, $goal: ID) {
     node(id: $node) {
       ...CausalGridNode
     }

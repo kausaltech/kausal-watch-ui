@@ -42,6 +42,7 @@ import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBloc
 import { usePlan } from '@/context/plan';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
+import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
 import ContentLoader from './ContentLoader';
 import { ErrorBoundary } from './ErrorBoundary';
 import { ErrorPage } from './ErrorPage';
@@ -256,7 +257,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         <QuestionAnswerBlock
           id={id}
           alignWithContent={
-            page.__typename === 'CategoryPage' && theme.settings.leftAlignCategoryPages
+            page.__typename === 'CategoryPage' && theme.settings.layout.leftAlignCategoryPages
           }
           heading={heading ?? undefined}
           questions={excludeNullish(questions ?? [])}
@@ -502,6 +503,24 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       const { heading, helpText, outcomeNodeId } = block;
       return (
         <PathsOutcomeBlock heading={heading} helpText={helpText} outcomenodeId={outcomeNodeId} />
+      );
+    }
+    case 'CategoryTypeLevelListBlock': {
+      const { heading, helpText, categoryLevel, groupByCategoryLevel, categoryBlockType } = block;
+
+      const allPlanCategories = categoryBlockType?.categories;
+      const categories = allPlanCategories
+        ? allPlanCategories.filter((cat) => cat?.level?.id === categoryLevel?.id)
+        : [];
+      if (!categories.length) return null;
+      return (
+        <CategoryTypeListBlock
+          id={id}
+          groupByLevelId={groupByCategoryLevel?.id}
+          categories={categories}
+          heading={heading ?? undefined}
+          lead={helpText}
+        />
       );
     }
     case 'DashboardRowBlock': {
