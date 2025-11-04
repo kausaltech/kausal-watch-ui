@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useMemo } from 'react';
 
 import Plotly from '@kausal/plotly-custom/dist/plotly-custom';
 import { useLocale } from 'next-intl';
-import type { Config, Data, Layout } from 'plotly.js';
+// import Plotly from 'plotly.js';
 import * as cs from 'plotly.js-locales/cs';
 import * as da from 'plotly.js-locales/da';
 import * as de from 'plotly.js-locales/de';
@@ -33,18 +33,39 @@ type PlotProps = PlotParams & {
   noValidate?: boolean;
 };
 
-const Plot = (props: PlotProps) => {
-  const { data } = props;
-  const config: NonNullable<PlotParams['config']> = { ...(props.config || {}) };
-  const layout = props.layout || {};
-
+const Plot = ({
+  noValidate,
+  data,
+  config: initialConfig,
+  layout: initialLayout,
+  ...rest
+}: PlotProps) => {
   const lang = useLocale();
-  config.locales = locales;
-  config.locale = lang;
 
-  config.responsive = true;
-  if (!props.noValidate) {
+  const layout = useMemo(
+    () => ({
+      ...initialLayout,
+      separators: getSeparators(lang),
+    }),
+    [initialLayout, lang]
+  );
+
+  const config = useMemo(
+    () => ({
+      ...initialConfig,
+      locales,
+      locale: lang,
+      showLink: false,
+      responsive: true,
+    }),
+    [initialConfig, lang]
+  );
+
+  console.log('Render Plot - noValidate:', noValidate);
+
+  if (!noValidate) {
     const ret = Plotly.validate(data, layout);
+
     if (ret && ret.length) {
       console.warn('Plotly validation returned errors');
       console.log(ret);
@@ -54,55 +75,8 @@ const Plot = (props: PlotProps) => {
       console.log(data);
     }
   }
-  props = {
-    ...props,
-    config,
-    layout: { ...layout, separators: getSeparators(lang) },
-  };
-  return <PlotlyPlot {...props} />;
+
+  return <PlotlyPlot showLink={false} data={data} config={config} layout={layout} {...rest} />;
 };
-
-type UsePlotlyArgs = {
-  data: Partial<Data>[];
-  layout?: Partial<Layout>;
-  config?: Partial<Config>;
-  noValidate?: boolean;
-};
-
-export function usePlotlyBasic({ data, layout, config, noValidate }: UsePlotlyArgs) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  if (!noValidate) {
-    // @ts-ignore
-    const ret = Plotly.validate(data, layout);
-    if (ret && ret.length) {
-      console.warn('Plotly validation errors:');
-      console.log(ret);
-    }
-  }
-  useLayoutEffect(() => {
-    const { current } = ref;
-    if (current) {
-      Plotly.react(current, data, layout, config);
-    }
-  }, [ref, data, layout, config]);
-
-  useEffect(() => {
-    return () => {
-      const { current } = ref;
-      if (current) {
-        console.log('purge');
-        Plotly.purge(current);
-      }
-    };
-  }, [ref]);
-  return ref;
-}
-
-export function BasicPlot(props: UsePlotlyArgs & React.HTMLAttributes<HTMLDivElement>) {
-  const { data, layout, config, noValidate, ...rest } = props;
-  const ref = usePlotlyBasic({ data, layout, config, noValidate });
-  return <div ref={ref} {...rest} />;
-}
 
 export default Plot;

@@ -1,3 +1,5 @@
+import type { TCrumb } from '@/components/common/Breadcrumbs';
+
 import type { Category, PlanContextFragment } from './__generated__/graphql';
 
 export interface CategoryInput {
@@ -181,7 +183,7 @@ export const getBreadcrumbsFromCategoryHierarchy = (
   categories: Category[],
   showIdentifiers: boolean,
   primaryCategory?: PlanContextFragment['primaryActionClassification']
-) =>
+): TCrumb[] | null | undefined =>
   categories
     .reduce(
       // Convert categories to a flat array representing the hierarchy

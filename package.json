@@ -10,7 +10,7 @@
     "@elastic/react-search-ui": "^1.11.2",
     "@kausal/mapboxgl-legend": "^1.7.2",
     "@kausal/plotly-custom": "^2.32.0",
-    "@kausal/themes": "^0.8.7",
+    "@kausal/themes": "^0.8.8",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@next/bundle-analyzer": "15.4.2",
     "@opentelemetry/api": "^1.9.0",
@@ -62,6 +62,7 @@
     "next-images": "^1.8.5",
     "next-intl": "^4.3.5",
     "pino": "^9.7.0",
+    "plotly.js": "^3.2.0",
     "plotly.js-locales": "^2.34.0",
     "polished": "^4.2.2",
     "popper.js": "^1.16.1",
@@ -188,7 +189,7 @@
   },
   "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b",
   "optionalDependencies": {
-    "@kausal-private/themes-private": "^0.5.63"
+    "@kausal-private/themes-private": "^0.5.66"
   },
   "lint-staged": {
     "*.{tsx,ts,js,css,scss,md,json}": "prettier --write"

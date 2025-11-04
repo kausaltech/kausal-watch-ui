@@ -9,6 +9,8 @@ type Props = {
   params: Promise<{ plan: string; lang: string }>;
 };
 
+// TODO: Can we deprecate this page in favor of src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage.tsx ?
+
 export default async function ActionsPage(props: Props) {
   const params = await props.params;
   const { plan } = params;

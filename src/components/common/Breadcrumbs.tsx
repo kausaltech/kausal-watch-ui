@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { MAX_CRUMB_LENGTH } from '@/common/categories';
 import { Link } from '@/common/links';
 
-type TCrumb = {
+export type TCrumb = {
   name: string;
   id: string;
   url?: string;
@@ -69,9 +69,10 @@ function Crumb({ crumb, sibling }: { crumb: TCrumb; sibling?: boolean }) {
   );
 }
 
-export default function Breadcrumbs({ breadcrumbs }: Props) {
+export default function Breadcrumbs({ breadcrumbs }: { breadcrumbs: TCrumb[] | null | undefined }) {
   // Try to handle duplicate breadcrumbs due to multiselect categories
   // this might not work for all cases
+  if (!breadcrumbs) return null;
   const uniqueBreadcrumbs = breadcrumbs.reduce((acc, current) => {
     const index = acc.findIndex((item) => item.id === current.id);
     if (index >= 0) {

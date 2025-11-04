@@ -18,6 +18,7 @@ export type Scalars = {
   PointScalar: { input: any; output: any; }
   PositiveInt: { input: number; output: number; }
   UUID: { input: string; output: string; }
+  _Any: { input: any; output: any; }
 };
 
 /** An enumeration. */
@@ -26,6 +27,23 @@ export enum ActionContactPersonRole {
   Editor = 'EDITOR',
   /** Moderator */
   Moderator = 'MODERATOR'
+}
+
+/** An enumeration. */
+export enum ActionDashboardFieldName {
+  Attribute = 'ATTRIBUTE',
+  EndDate = 'END_DATE',
+  Identifier = 'IDENTIFIER',
+  ImplementationPhase = 'IMPLEMENTATION_PHASE',
+  Name = 'NAME',
+  PrimaryOrg = 'PRIMARY_ORG',
+  RelatedIndicators = 'RELATED_INDICATORS',
+  ResponsibleParties = 'RESPONSIBLE_PARTIES',
+  ScheduleContinuous = 'SCHEDULE_CONTINUOUS',
+  StartDate = 'START_DATE',
+  Status = 'STATUS',
+  Tasks = 'TASKS',
+  UpdatedAt = 'UPDATED_AT'
 }
 
 /** An enumeration. */
@@ -49,6 +67,34 @@ export enum ActionIndicatorEffectType {
 export enum ActionListPageView {
   Cards = 'CARDS',
   Dashboard = 'DASHBOARD'
+}
+
+/** An enumeration. */
+export enum ActionList_FiltersFieldName {
+  Attribute = 'ATTRIBUTE',
+  Categories = 'CATEGORIES',
+  ContactPersons = 'CONTACT_PERSONS',
+  Dependencies = 'DEPENDENCIES',
+  Description = 'DESCRIPTION',
+  EndDate = 'END_DATE',
+  Identifier = 'IDENTIFIER',
+  ImplementationPhase = 'IMPLEMENTATION_PHASE',
+  LeadParagraph = 'LEAD_PARAGRAPH',
+  Links = 'LINKS',
+  ManualStatusReason = 'MANUAL_STATUS_REASON',
+  MergedActions = 'MERGED_ACTIONS',
+  Name = 'NAME',
+  OfficialName = 'OFFICIAL_NAME',
+  PrimaryOrg = 'PRIMARY_ORG',
+  RelatedActions = 'RELATED_ACTIONS',
+  RelatedIndicators = 'RELATED_INDICATORS',
+  ResponsibleParties = 'RESPONSIBLE_PARTIES',
+  Schedule = 'SCHEDULE',
+  ScheduleContinuous = 'SCHEDULE_CONTINUOUS',
+  StartDate = 'START_DATE',
+  Status = 'STATUS',
+  Tasks = 'TASKS',
+  UpdatedAt = 'UPDATED_AT'
 }
 
 /** An enumeration. */
@@ -172,6 +218,24 @@ export enum DatasetSchemaTimeResolution {
 }
 
 /** An enumeration. */
+export enum IndicatorColumnValueType {
+  Earliest = 'EARLIEST',
+  Goal = 'GOAL',
+  Latest = 'LATEST'
+}
+
+/** An enumeration. */
+export enum IndicatorDashboardFieldName {
+  CausalityNav = 'CAUSALITY_NAV',
+  ConnectedActions = 'CONNECTED_ACTIONS',
+  Level = 'LEVEL',
+  Name = 'NAME',
+  Organization = 'ORGANIZATION',
+  UpdatedAt = 'UPDATED_AT',
+  Visualization = 'VISUALIZATION'
+}
+
+/** An enumeration. */
 export enum IndicatorDesiredTrend {
   /** attempt to detect automatically */
   A = 'A_',
@@ -179,6 +243,17 @@ export enum IndicatorDesiredTrend {
   Decreasing = 'DECREASING',
   /** increasing */
   Increasing = 'INCREASING'
+}
+
+/** An enumeration. */
+export enum IndicatorDetailsFieldName {
+  CausalityNav = 'CAUSALITY_NAV',
+  ConnectedActions = 'CONNECTED_ACTIONS',
+  Level = 'LEVEL',
+  Name = 'NAME',
+  Organization = 'ORGANIZATION',
+  UpdatedAt = 'UPDATED_AT',
+  Visualization = 'VISUALIZATION'
 }
 
 /** An enumeration. */
@@ -192,6 +267,14 @@ export enum IndicatorLevelLevel {
 }
 
 /** An enumeration. */
+export enum IndicatorList_FiltersFieldName {
+  Level = 'LEVEL',
+  Name = 'NAME',
+  Organization = 'ORGANIZATION',
+  UpdatedAt = 'UPDATED_AT'
+}
+
+/** An enumeration. */
 export enum IndicatorTimeResolution {
   /** day */
   Day = 'DAY',
@@ -200,6 +283,12 @@ export enum IndicatorTimeResolution {
   /** year */
   Year = 'YEAR'
 }
+
+export type InstanceContext = {
+  hostname: InputMaybe<Scalars['String']['input']>;
+  identifier: InputMaybe<Scalars['ID']['input']>;
+  locale: InputMaybe<Scalars['String']['input']>;
+};
 
 /** An enumeration. */
 export enum ModelAction {
@@ -351,13 +440,9 @@ export type UserFeedbackMutationInput = {
   url: Scalars['String']['input'];
 };
 
-/** An enumeration. */
 export enum WorkflowState {
-  /** Approved */
   Approved = 'APPROVED',
-  /** Draft */
   Draft = 'DRAFT',
-  /** Published */
   Published = 'PUBLISHED'
 }
 
@@ -427,15 +512,15 @@ export type PlaywrightGetPlanInfoQuery = (
         ) | null, children: Array<(
           { id: string, page: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } }
           & { __typename: 'PageMenuItem' }
-        ) | null> | null }
+        )> | null }
         & { __typename: 'PageMenuItem' }
-      ) | null> }
+      )> }
       & { __typename: 'MainMenu' }
     ) | null }
     & { __typename: 'Plan' }
   ) | null, planIndicators: Array<(
     { id: string, name: string }
     & { __typename: 'Indicator' }
-  ) | null> | null }
+  )> | null }
   & { __typename: 'Query' }
 );

@@ -15,6 +15,7 @@ import CausalNavigation from '@/components/indicators/CausalNavigation';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 import { usePlan } from '@/context/plan';
 
+import { PlotlyRawVisualizations } from '../graphs/PlotlyRawVisualizations';
 import IndicatorHero from './IndicatorHero';
 
 const Section = styled.section`
@@ -73,6 +74,7 @@ function IndicatorDetails({ indicator, testId }: Props) {
   const uniqueTypes = Array.from(
     new Map(indicator.categories.map((c) => [c.type.id, c.type])).values()
   );
+
   return (
     <div className="mb-5" data-testid={testId}>
       <IndicatorHero
@@ -89,6 +91,9 @@ function IndicatorDetails({ indicator, testId }: Props) {
             <CategoryTags categories={indicator.categories} types={uniqueTypes} noLink={true} />
           </Col>
         </Row>
+
+        <PlotlyRawVisualizations visualizationsRaw={indicator.visualizationsRaw ?? []} />
+
         {(indicator.latestGraph || (indicator.values && indicator.values.length > 0)) && (
           <Row>
             <Col className="mb-5">

@@ -6,14 +6,16 @@ import { transparentize } from 'polished';
 import styled, { useTheme } from 'styled-components';
 
 import { getStatusSummary } from '@/common/ActionStatusSummary';
+import type { ActionTimeliness, PlanContextFragment } from '@/common/__generated__/graphql';
 import {
-  ActionTimeliness,
   ActionTimelinessIdentifier,
   Comparison,
+  type GetActionListForGraphsQuery,
   Sentiment,
 } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
-import { TFunction, getActionTermContext } from '@/common/i18n';
+import type { TFunction } from '@/common/i18n';
+import { getActionTermContext } from '@/common/i18n';
 import { getPhaseData, getStatusData } from '@/common/preprocess';
 import BarChart from '@/components/common/BarChart';
 import StatusDonut from '@/components/graphs/StatusDonut';
@@ -85,8 +87,8 @@ function getTimelinessLabel(days: number, comparison: Comparison, t: TFunction) 
 }
 
 const getTimelinessData = (
-  actions: ActionListAction[],
-  plan: PlanContextType,
+  actions: NonNullable<GetActionListForGraphsQuery['planActions']>,
+  plan: PlanContextFragment,
   theme: Theme,
   t: TFunction
 ) => {
@@ -176,7 +178,7 @@ function getTimelinessHelpText(days: number, t: TFunction) {
 }
 
 export interface ActionsStatusGraphsProps {
-  actions: ActionListAction[];
+  actions: NonNullable<GetActionListForGraphsQuery['planActions']>;
   chart?: ChartType;
   shownDatasets?: DatasetConfig;
 }

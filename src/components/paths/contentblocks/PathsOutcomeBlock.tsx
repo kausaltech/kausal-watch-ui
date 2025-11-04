@@ -6,16 +6,16 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 import { useTranslations } from 'next-intl';
+import { readableColor } from 'polished';
 import ContentLoader from 'react-content-loader';
 import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import {
-  ActionNode,
+import type {
   GetOutcomeNodeContentQuery,
-  NodeInterface,
   OutcomeNodeFieldsFragment,
 } from '@/common/__generated__/paths/graphql';
+import { ActionNode, NodeInterface } from '@/common/__generated__/paths/graphql';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
@@ -40,7 +40,12 @@ const OutcomeBlockLoader = (props) => (
 const Background = styled.div`
   padding: 4rem 0 6rem;
   background-color: ${(props) => props.theme.brandDark};
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   min-height: 800px;
 `;
 
@@ -92,7 +97,11 @@ export interface OutcomenodeType extends OutcomeNodeFieldsFragment {
   upstreamNodes: OutcomeNodeFieldsFragment[];
 }
 
-export default function PathsOutcomeBlock(props) {
+type PathsOutcomeBlockProps = {
+  heading: string;
+};
+
+export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
   const { heading } = props;
   const t = useTranslations();
   const pathsInstance = usePaths();

@@ -24,8 +24,8 @@ export const Attributes = styled.div<AttributeProps>`
     `}
   margin: ${(props) => props.theme.spaces.s100} auto;
   padding: ${(props) => props.theme.spaces.s200} 0 0;
-  border-top: 1px solid ${(props) => props.theme.graphColors.grey040};
-  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey040};
+  border-top: 1px solid ${(props) => props.theme.graphColors.grey030};
+  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey030};
   text-align: left;
 `;
 
@@ -67,12 +67,12 @@ type AttributesBlockProps = PropsWithChildren<
     vertical?: boolean;
   } & (
     | {
-        attributes: AttributeContentProps['attribute'][];
-        types: AttributeContentProps['attributeType'][];
+        attributes?: AttributeContentProps['attribute'][];
+        types?: AttributeContentProps['attributeType'][];
       }
     | {
-        attributes: AttributeContentNestedTypeProps['attribute'][];
-        types: undefined;
+        attributes?: AttributeContentNestedTypeProps['attribute'][];
+        types?: undefined;
       }
   )
 >;
@@ -84,6 +84,17 @@ function AttributesBlock(props: AttributesBlockProps) {
     types,
     vertical,
   } = props;
+
+  if (!attributes) {
+    if (children) {
+      return (
+        <Attributes $vertical={vertical ?? false}>
+          <AttributesList tag="ul">{children}</AttributesList>
+        </Attributes>
+      );
+    }
+    return null;
+  }
 
   let typesById: Map<string, AttributeContentProps['attributeType']> | null;
 
