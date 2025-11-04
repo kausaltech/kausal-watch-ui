@@ -87,6 +87,38 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
   }
 `;
 
+const INDICATOR_LIST_PAGE_FRAGMENT = gql`
+  fragment IndicatorListPageFragment on IndicatorListPage {
+    leadContent
+    displayInsights
+    displayLevel
+    includeRelatedPlans
+    listColumns {
+      __typename
+      ... on IndicatorListColumnInterface {
+        sourceField
+      }
+      ... on IndicatorValueColumn {
+        isNormalized
+        valueType
+      }
+      ... on IndicatorCategoryColumn {
+        categoryType {
+          id
+        }
+      }
+    }
+    mainFilters {
+      ... on IndicatorFilterBlockInterface {
+        sourceField
+        showAllLabel
+        fieldHelpText
+        fieldLabel
+      }
+    }
+  }
+`;
+
 export const PlanDatasetsBlockFragment = gql`
   fragment PlanDatasetsBlockFragment on Dataset {
     schema {
@@ -174,6 +206,9 @@ const GET_CONTENT_PAGE = gql`
       }
       ... on PrivacyPolicyPage {
         leadContent
+      }
+      ... on IndicatorListPage {
+        ...IndicatorListPageFragment
       }
       ... on CategoryPage {
         ...TemplatedCategoryPageFragment
@@ -275,6 +310,7 @@ const GET_CONTENT_PAGE = gql`
   ${ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT}
   ${CATEGORY_FRAGMENT}
   ${ALL_ACTION_LIST_FILTERS}
+  ${INDICATOR_LIST_PAGE_FRAGMENT}
 
   fragment CategoryParentFragment on Category {
     parent {

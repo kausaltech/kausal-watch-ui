@@ -8,6 +8,7 @@ import { useTheme } from 'styled-components';
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import type {
   GetContentPageQuery,
+  GetPlanPageIndicatorListQuery,
   MultiUseImageFragmentFragment,
 } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
@@ -18,6 +19,7 @@ import SecondaryNavigation from '@/components/common/SecondaryNavigation';
 import StreamField from '@/components/common/StreamField';
 import CategoryPageHeaderBlock from '@/components/contentblocks/CategoryPageHeaderBlock';
 import ContentPageHeaderBlock from '@/components/contentblocks/ContentPageHeaderBlock';
+import IndicatorListPage from '@/components/indicators/IndicatorList';
 
 export type PageWithLeadContent =
   | AccessibilityStatementPage
@@ -65,9 +67,10 @@ export type CategoryTypePage = GeneralPlanPage & {
   __typename: 'CategoryTypePage';
 };
 
-export type IndicatorListPage = GeneralPlanPage & {
-  __typename: 'IndicatorListPage';
-};
+export type IndicatorListPage = Extract<
+  NonNullable<GetPlanPageIndicatorListQuery['planPage']>,
+  { __typename: 'IndicatorListPage' }
+>;
 
 type PageHeaderBlockProps = {
   page:
@@ -187,6 +190,9 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
       ) : (
         <div>
           {typenameMatches(page, 'ActionListPage') && <ActionListPage actionListPage={page} />}
+          {typenameMatches(page, 'IndicatorListPage') && (
+            <IndicatorListPage page={page as IndicatorListPage} />
+          )}
           {isPageWithLeadContent && 'leadContent' in page && page.leadContent && (
             <Container className="my-5">
               <Row>

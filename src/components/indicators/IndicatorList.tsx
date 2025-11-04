@@ -9,8 +9,8 @@ import { useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
 
+import type { IndicatorListPage as IndicatorListPageType } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import type {
-  GetPlanPageIndicatorListQuery,
   IndicatorListIndicatorFragment,
   IndicatorListQuery,
   IndicatorListQueryVariables,
@@ -153,24 +153,15 @@ const getPrevIndicatorId = (
   return index > 0 ? indicators[index - 1].id : undefined;
 };
 
-type IndicatorListPage = NonNullable<GetPlanPageIndicatorListQuery['planPage']> & {
-  __typename: 'IndicatorListPage';
-};
-interface IndicatorListProps {
-  leadContent: IndicatorListPage['leadContent'];
-  displayInsights: IndicatorListPage['displayInsights'];
-  displayLevel: IndicatorListPage['displayLevel'];
-  includeRelatedPlans: IndicatorListPage['includeRelatedPlans'];
+interface IndicatorListPageProps {
+  page: IndicatorListPageType;
   testId?: string;
 }
 
-const IndicatorList = ({
-  leadContent,
-  displayInsights,
-  displayLevel,
-  includeRelatedPlans,
-  testId,
-}: IndicatorListProps) => {
+const IndicatorListPage = (props: IndicatorListPageProps) => {
+  const { page, testId } = props;
+  const { leadContent, displayInsights, displayLevel, includeRelatedPlans, listColumns } = page;
+
   const plan = usePlan();
   const t = useTranslations();
   const openIndicatorsInModal = true;
@@ -256,7 +247,7 @@ const IndicatorList = ({
           }
           onChange={(indicatorId) => handleChangeModal(indicatorId)}
           indicatorsOrder={filteredIndicators.map((indicator) => indicator.id)}
-          usableCategoryTypes={data?.plan?.categoryTypes}
+          usableCategoryTypes={data?.plan?.categoryTypes ?? []}
         />
       )}
       <IndicatorsHero
@@ -295,10 +286,11 @@ const IndicatorList = ({
           displayLevel={displayLevel}
           includePlanRelatedIndicators={includeRelatedPlans ?? false}
           commonCategories={commonCategories}
+          listColumns={listColumns ?? []}
         />
       </Container>
     </>
   );
 };
 
-export default IndicatorList;
+export default IndicatorListPage;

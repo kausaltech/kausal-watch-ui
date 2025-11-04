@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Alert, Table } from 'reactstrap';
 import { Button } from 'reactstrap';
 
+import type { IndicatorListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import { IndicatorLink } from '@/common/links';
 import { usePlan } from '@/context/plan';
 
@@ -65,14 +66,15 @@ interface IndicatorListFilteredProps {
   hierarchy?: Hierarchy;
   displayNormalizedValues?: boolean;
   openIndicatorsInModal?: (id: string) => void | null;
+  listColumns: NonNullable<IndicatorListPage['listColumns']>;
 }
 
 export default function IndicatorListFiltered(props: IndicatorListFilteredProps) {
   const t = useTranslations();
 
-  const { indicators, hierarchy, displayMunicipality, openIndicatorsInModal } = props;
+  const { indicators, hierarchy, displayMunicipality, openIndicatorsInModal, listColumns } = props;
 
-  console.log('props', props);
+  console.log('indicator list filtered new props', props);
 
   if (indicators.flat().length === 0) {
     return (
