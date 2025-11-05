@@ -55,9 +55,6 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
         }
       }
     }
-    latestGraph {
-      id
-    }
     latestValue {
       id
       date
@@ -77,11 +74,40 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
         }
       }
     }
+    values(includeDimensions: false) {
+      id
+      date
+      value
+      normalizedValues {
+        normalizerId
+        value
+      }
+      categories {
+        id
+      }
+    }
+
+    goals {
+      id
+      date
+      value
+      normalizedValues {
+        normalizerId
+        value
+      }
+      scenario {
+        id
+      }
+    }
     unit {
       shortName
     }
     plans {
       id
+      identifier
+      name
+      shortName
+      viewUrl
     }
   }
 `;

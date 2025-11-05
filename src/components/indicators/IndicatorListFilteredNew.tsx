@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Alert, Table } from 'reactstrap';
 import { Button } from 'reactstrap';
 
-import type { IndicatorListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
+import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';
 import { usePlan } from '@/context/plan';
 
@@ -32,30 +32,6 @@ const IndicatorTableRow = (props: {
     </tr>
   );
 };
-
-const IndicatorNameCell = (props: {
-  indicator: IndicatorListIndicator;
-  indent: number;
-  openIndicatorsInModal?: (id: string) => void | null;
-}) => {
-  const { indicator, indent, openIndicatorsInModal } = props;
-  const IndicatorTrigger: React.ReactNode = openIndicatorsInModal ? (
-    <Button
-      color="link"
-      onClick={() => openIndicatorsInModal(indicator.id)}
-      style={{ padding: 0, textAlign: 'left' }}
-    >
-      {indicator.name}
-    </Button>
-  ) : (
-    <IndicatorLink id={indicator.id}>{indicator.name}</IndicatorLink>
-  );
-  return (
-    <td key="name" style={{ paddingLeft: `${indent * 16}px` }}>
-      {IndicatorTrigger}
-    </td>
-  );
-};
 interface IndicatorListFilteredProps {
   categoryType?: CategoryType;
   indicators: IndicatorListIndicator[];
@@ -66,7 +42,7 @@ interface IndicatorListFilteredProps {
   hierarchy?: Hierarchy;
   displayNormalizedValues?: boolean;
   openIndicatorsInModal?: (id: string) => void | null;
-  listColumns: NonNullable<IndicatorListPage['listColumns']>;
+  listColumns: NonNullable<IndicatorListPageFragmentFragment['listColumns']>;
 }
 
 export default function IndicatorListFiltered(props: IndicatorListFilteredProps) {
@@ -75,6 +51,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
   const { indicators, hierarchy, displayMunicipality, openIndicatorsInModal, listColumns } = props;
 
   console.log('indicator list filtered new props', props);
+  console.log('listColumns', listColumns);
 
   if (indicators.flat().length === 0) {
     return (
@@ -108,13 +85,8 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
       <Table hover size="sm">
         <thead>
           <tr>
-            <IndicatorTableHeader columnId={IndicatorTableColumnId.Name} columnLabel="Name" />
-            {indicatorColumns.map((column) => (
-              <IndicatorTableHeader
-                key={column.id}
-                columnId={column.id}
-                columnLabel={column.label}
-              />
+            {listColumns.map((column) => (
+              <IndicatorTableHeader key={column.id} column={column} />
             ))}
           </tr>
         </thead>
@@ -123,18 +95,13 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
             const indent = hierarchy ? indentationLevel(indicator, hierarchy) : 0;
             return (
               <IndicatorTableRow key={indicator.id} indicator={indicator} indent={indent}>
-                <IndicatorNameCell
-                  indicator={indicator}
-                  indent={indent}
-                  openIndicatorsInModal={openIndicatorsInModal}
-                />
-                {indicatorColumns.map((column) => (
+                {listColumns.map((column) => (
                   <IndicatorTableCell
                     key={column.id}
-                    columnName={column.id}
-                    columnLabel={column.label}
-                    categoryTypeId={column.categoryTypeId}
+                    column={column}
                     indicator={indicator}
+                    openIndicatorsInModal={openIndicatorsInModal}
+                    indent={indent}
                   />
                 ))}
               </IndicatorTableRow>

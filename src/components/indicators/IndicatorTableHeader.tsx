@@ -1,15 +1,27 @@
-import { IndicatorTableColumnId } from './indicatorUtils';
+import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
 
-const numericColumns: IndicatorTableColumnId[] = [
-  IndicatorTableColumnId.LatestValue,
-  IndicatorTableColumnId.Dimensions,
-];
+interface IndicatorTableHeaderProps {
+  column: NonNullable<IndicatorListPageFragmentFragment['listColumns']>[number];
+}
 
-const IndicatorTableHeader = (props: { columnId: IndicatorTableColumnId; columnLabel: string }) => {
-  const { columnId, columnLabel } = props;
+const IndicatorTableHeader = (props: IndicatorTableHeaderProps) => {
+  const { column } = props;
+
+  // TODO: Implement this
+  const isNumericColumn = (
+    column: NonNullable<IndicatorListPageFragmentFragment['listColumns']>[number]
+  ) => {
+    switch (column.__typename) {
+      case 'IndicatorListColumn':
+        return false;
+      default:
+        return false;
+    }
+  };
+
   return (
-    <th key={columnId} style={{ textAlign: numericColumns.includes(columnId) ? 'right' : 'left' }}>
-      {columnLabel}
+    <th key={column.id} style={{ textAlign: isNumericColumn(column) ? 'right' : 'left' }}>
+      {column.columnLabel}
     </th>
   );
 };

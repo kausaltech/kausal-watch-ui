@@ -95,14 +95,24 @@ const INDICATOR_LIST_PAGE_FRAGMENT = gql`
     includeRelatedPlans
     listColumns {
       __typename
-      ... on IndicatorListColumnInterface {
+      ... on IndicatorListColumn {
+        id
+        columnLabel
+        columnHelpText
         sourceField
       }
       ... on IndicatorValueColumn {
+        id
+        columnLabel
+        columnHelpText
+        sourceField
         isNormalized
         valueType
       }
       ... on IndicatorCategoryColumn {
+        id
+        columnLabel
+        columnHelpText
         categoryType {
           id
         }

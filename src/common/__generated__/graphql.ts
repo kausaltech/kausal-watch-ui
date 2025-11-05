@@ -3894,10 +3894,7 @@ export type IndicatorListIndicatorFragment = (
       & { __typename: 'CommonCategory' }
     ) | null }
     & { __typename: 'Category' }
-  )>, latestGraph: (
-    { id: string }
-    & { __typename: 'IndicatorGraph' }
-  ) | null, latestValue: (
+  )>, latestValue: (
     { id: string, date: string | null, value: number, normalizedValues: Array<(
       { normalizerId: string | null, value: number | null }
       & { __typename: 'NormalizedValue' }
@@ -3912,11 +3909,29 @@ export type IndicatorListIndicatorFragment = (
       & { __typename: 'Dimension' }
     ) }
     & { __typename: 'IndicatorDimension' }
-  )>, unit: (
+  )>, values: Array<(
+    { id: string, date: string | null, value: number, normalizedValues: Array<(
+      { normalizerId: string | null, value: number | null }
+      & { __typename: 'NormalizedValue' }
+    )>, categories: Array<(
+      { id: string }
+      & { __typename: 'DimensionCategory' }
+    )> }
+    & { __typename: 'IndicatorValue' }
+  )>, goals: Array<(
+    { id: string, date: string | null, value: number, normalizedValues: Array<(
+      { normalizerId: string | null, value: number | null }
+      & { __typename: 'NormalizedValue' }
+    )>, scenario: (
+      { id: string }
+      & { __typename: 'Scenario' }
+    ) | null }
+    & { __typename: 'IndicatorGoal' }
+  ) | null> | null, unit: (
     { shortName: string | null }
     & { __typename: 'Unit' }
   ), plans: Array<(
-    { id: string }
+    { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
     & { __typename: 'Plan' }
   )> }
   & { __typename: 'Indicator' }
@@ -10215,16 +10230,16 @@ export type TemplatedCategoryPageFragmentFragment = (
 
 export type IndicatorListPageFragmentFragment = (
   { leadContent: string | null, displayInsights: boolean | null, displayLevel: boolean | null, includeRelatedPlans: boolean | null, listColumns: Array<(
-    { categoryType: (
+    { id: string | null, columnLabel: string | null, columnHelpText: string | null, categoryType: (
       { id: string }
       & { __typename: 'CategoryType' }
     ) }
     & { __typename: 'IndicatorCategoryColumn' }
   ) | (
-    { sourceField: IndicatorDashboardFieldName | null }
+    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
     & { __typename: 'IndicatorListColumn' }
   ) | (
-    { sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType }
+    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType }
     & { __typename: 'IndicatorValueColumn' }
   )> | null, mainFilters: Array<{ __typename: 'CategoryTypeFilterBlock' } | (
     { sourceField: IndicatorList_FiltersFieldName | null, showAllLabel: string | null, fieldHelpText: string | null, fieldLabel: string | null }
@@ -11229,16 +11244,16 @@ export type GetContentPageQuery = (
     & { __typename: 'EmptyPage' | 'ImpactGroupPage' | 'Page' | 'PlanRootPage' }
   ) | (
     { id: string | null, slug: string, title: string, lastPublishedAt: string | null, leadContent: string | null, displayInsights: boolean | null, displayLevel: boolean | null, includeRelatedPlans: boolean | null, listColumns: Array<(
-      { categoryType: (
+      { id: string | null, columnLabel: string | null, columnHelpText: string | null, categoryType: (
         { id: string }
         & { __typename: 'CategoryType' }
       ) }
       & { __typename: 'IndicatorCategoryColumn' }
     ) | (
-      { sourceField: IndicatorDashboardFieldName | null }
+      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
       & { __typename: 'IndicatorListColumn' }
     ) | (
-      { sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType }
+      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType }
       & { __typename: 'IndicatorValueColumn' }
     )> | null, mainFilters: Array<{ __typename: 'CategoryTypeFilterBlock' } | (
       { sourceField: IndicatorList_FiltersFieldName | null, showAllLabel: string | null, fieldHelpText: string | null, fieldLabel: string | null }
@@ -12835,10 +12850,7 @@ export type IndicatorListQuery = (
         & { __typename: 'CommonCategory' }
       ) | null }
       & { __typename: 'Category' }
-    )>, latestGraph: (
-      { id: string }
-      & { __typename: 'IndicatorGraph' }
-    ) | null, latestValue: (
+    )>, latestValue: (
       { id: string, date: string | null, value: number, normalizedValues: Array<(
         { normalizerId: string | null, value: number | null }
         & { __typename: 'NormalizedValue' }
@@ -12853,11 +12865,29 @@ export type IndicatorListQuery = (
         & { __typename: 'Dimension' }
       ) }
       & { __typename: 'IndicatorDimension' }
-    )>, unit: (
+    )>, values: Array<(
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )>, categories: Array<(
+        { id: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    )>, goals: Array<(
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )>, scenario: (
+        { id: string }
+        & { __typename: 'Scenario' }
+      ) | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
       { shortName: string | null }
       & { __typename: 'Unit' }
     ), plans: Array<(
-      { id: string }
+      { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
       & { __typename: 'Plan' }
     )> }
     & { __typename: 'Indicator' }
@@ -12904,10 +12934,7 @@ export type IndicatorListQuery = (
         & { __typename: 'CommonCategory' }
       ) | null }
       & { __typename: 'Category' }
-    )>, latestGraph: (
-      { id: string }
-      & { __typename: 'IndicatorGraph' }
-    ) | null, latestValue: (
+    )>, latestValue: (
       { id: string, date: string | null, value: number, normalizedValues: Array<(
         { normalizerId: string | null, value: number | null }
         & { __typename: 'NormalizedValue' }
@@ -12922,11 +12949,29 @@ export type IndicatorListQuery = (
         & { __typename: 'Dimension' }
       ) }
       & { __typename: 'IndicatorDimension' }
-    )>, unit: (
+    )>, values: Array<(
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )>, categories: Array<(
+        { id: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    )>, goals: Array<(
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )>, scenario: (
+        { id: string }
+        & { __typename: 'Scenario' }
+      ) | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
       { shortName: string | null }
       & { __typename: 'Unit' }
     ), plans: Array<(
-      { id: string }
+      { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
       & { __typename: 'Plan' }
     )> }
     & { __typename: 'Indicator' }
