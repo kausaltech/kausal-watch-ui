@@ -15,7 +15,6 @@ export type Scalars = {
   Date: { input: string; output: string; }
   DateTime: { input: string; output: string; }
   JSONString: { input: string; output: string; }
-  PointScalar: { input: any; output: any; }
   PositiveInt: { input: number; output: number; }
   RichText: { input: string; output: string; }
   UUID: { input: string; output: string; }

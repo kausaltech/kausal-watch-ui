@@ -8,7 +8,7 @@ import { useTheme } from 'styled-components';
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import type {
   GetContentPageQuery,
-  GetPlanPageIndicatorListQuery,
+  IndicatorListPageFragmentFragment,
   MultiUseImageFragmentFragment,
 } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
@@ -67,10 +67,9 @@ export type CategoryTypePage = GeneralPlanPage & {
   __typename: 'CategoryTypePage';
 };
 
-export type IndicatorListPage = Extract<
-  NonNullable<GetPlanPageIndicatorListQuery['planPage']>,
-  { __typename: 'IndicatorListPage' }
->;
+export type IndicatorListPage = GeneralPlanPage & {
+  __typename: 'IndicatorListPage';
+};
 
 type PageHeaderBlockProps = {
   page:
@@ -168,7 +167,6 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
     page,
     'AccessibilityStatementPage',
     'ImpactGroupPage',
-    'IndicatorListPage',
     'PrivacyPolicyPage'
   );
 
@@ -191,7 +189,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
         <div>
           {typenameMatches(page, 'ActionListPage') && <ActionListPage actionListPage={page} />}
           {typenameMatches(page, 'IndicatorListPage') && (
-            <IndicatorListPage page={page as IndicatorListPage} />
+            <IndicatorListPage page={page as IndicatorListPageFragmentFragment} />
           )}
           {isPageWithLeadContent && 'leadContent' in page && page.leadContent && (
             <Container className="my-5">

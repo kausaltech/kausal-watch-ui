@@ -3937,6 +3937,135 @@ export type IndicatorListIndicatorFragment = (
   & { __typename: 'Indicator' }
 );
 
+type IndicatorListFilter_JxzhEOvnBnIzLiXeAUm3xrfiKBjXFpDaL5C3p3Xgq4_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' }
+);
+
+type IndicatorListFilter_Zf5emmbUjQdAxoEd11HNfN7rZeObw5fUe9AKmN0dV8_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' }
+);
+
+type IndicatorListFilter_93JyuwkcgTxyAd8Ze7B1Y1YdUFqF72beexGyp3vHk_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' }
+);
+
+type IndicatorListFilter_4HpjKhsrlTf6hxGNhz0QdoSkd5pDwAx5uXeu2jfvi0_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' }
+);
+
+type IndicatorListFilter_2JKqHhFKfZ8iVvnmFmNiPvq34HmwQpA5qtVqflSuBmk_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' }
+);
+
+type IndicatorListFilter_Zs2zpYdJmXoh8aXtaPpv2VcnG9Rgq17jSoeVlAdcd8_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' }
+);
+
+type IndicatorListFilter_VeaKpBsv6Zwn2K5d5xj12u2IvZ3nd3EmJoHnvsbZ6Ga_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+);
+
+type IndicatorListFilter_ActionAttributeTypeFilterBlock_Fragment = (
+  { showAllLabel: string | null, field: string, id: string | null, attributeType: (
+    { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
+      { id: string, identifier: string, name: string }
+      & { __typename: 'AttributeTypeChoiceOption' }
+    )> }
+    & { __typename: 'AttributeType' }
+  ) }
+  & { __typename: 'ActionAttributeTypeFilterBlock' }
+);
+
+type IndicatorListFilter_CategoryTypeFilterBlock_Fragment = (
+  { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+    { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+      { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+        { id: string }
+        & { __typename: 'Category' }
+      ) | null, common: (
+        { id: string }
+        & { __typename: 'CommonCategory' }
+      ) | null }
+      & { __typename: 'Category' }
+    )> }
+    & { __typename: 'CategoryType' }
+  ) | null }
+  & { __typename: 'CategoryTypeFilterBlock' }
+);
+
+type IndicatorListFilter_ContinuousActionFilterBlock_Fragment = (
+  { id: string | null, field: string }
+  & { __typename: 'ContinuousActionFilterBlock' }
+);
+
+export type IndicatorListFilterFragment = IndicatorListFilter_JxzhEOvnBnIzLiXeAUm3xrfiKBjXFpDaL5C3p3Xgq4_Fragment | IndicatorListFilter_Zf5emmbUjQdAxoEd11HNfN7rZeObw5fUe9AKmN0dV8_Fragment | IndicatorListFilter_93JyuwkcgTxyAd8Ze7B1Y1YdUFqF72beexGyp3vHk_Fragment | IndicatorListFilter_4HpjKhsrlTf6hxGNhz0QdoSkd5pDwAx5uXeu2jfvi0_Fragment | IndicatorListFilter_2JKqHhFKfZ8iVvnmFmNiPvq34HmwQpA5qtVqflSuBmk_Fragment | IndicatorListFilter_Zs2zpYdJmXoh8aXtaPpv2VcnG9Rgq17jSoeVlAdcd8_Fragment | IndicatorListFilter_VeaKpBsv6Zwn2K5d5xj12u2IvZ3nd3EmJoHnvsbZ6Ga_Fragment | IndicatorListFilter_ActionAttributeTypeFilterBlock_Fragment | IndicatorListFilter_CategoryTypeFilterBlock_Fragment | IndicatorListFilter_ContinuousActionFilterBlock_Fragment;
+
+export type IndicatorListPageFiltersFragment = (
+  { primaryFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { field: string, id: string | null }
+    & { __typename: 'IndicatorFilterBlock' }
+  )> | null, mainFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { field: string, id: string | null }
+    & { __typename: 'IndicatorFilterBlock' }
+  )> | null, advancedFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { field: string, id: string | null }
+    & { __typename: 'IndicatorFilterBlock' }
+  )> | null }
+  & { __typename: 'IndicatorListPage' }
+);
+
 type StreamFieldFragment_CsWpOaD0dUEdhV96j5U9TnlDssZTxlWikakK8ZjePw_Fragment = (
   { id: string | null, blockType: string, field: string }
   & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
@@ -10241,8 +10370,59 @@ export type IndicatorListPageFragmentFragment = (
   ) | (
     { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType }
     & { __typename: 'IndicatorValueColumn' }
-  )> | null, mainFilters: Array<{ __typename: 'CategoryTypeFilterBlock' } | (
-    { sourceField: IndicatorList_FiltersFieldName | null, showAllLabel: string | null, fieldHelpText: string | null, fieldLabel: string | null }
+  )> | null, primaryFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { field: string, id: string | null }
+    & { __typename: 'IndicatorFilterBlock' }
+  )> | null, mainFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { field: string, id: string | null }
+    & { __typename: 'IndicatorFilterBlock' }
+  )> | null, advancedFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { field: string, id: string | null }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null }
   & { __typename: 'IndicatorListPage' }
@@ -11255,8 +11435,59 @@ export type GetContentPageQuery = (
     ) | (
       { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType }
       & { __typename: 'IndicatorValueColumn' }
-    )> | null, mainFilters: Array<{ __typename: 'CategoryTypeFilterBlock' } | (
-      { sourceField: IndicatorList_FiltersFieldName | null, showAllLabel: string | null, fieldHelpText: string | null, fieldLabel: string | null }
+    )> | null, primaryFilters: Array<(
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+          { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+            { id: string }
+            & { __typename: 'Category' }
+          ) | null, common: (
+            { id: string }
+            & { __typename: 'CommonCategory' }
+          ) | null }
+          & { __typename: 'Category' }
+        )> }
+        & { __typename: 'CategoryType' }
+      ) | null }
+      & { __typename: 'CategoryTypeFilterBlock' }
+    ) | (
+      { field: string, id: string | null }
+      & { __typename: 'IndicatorFilterBlock' }
+    )> | null, mainFilters: Array<(
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+          { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+            { id: string }
+            & { __typename: 'Category' }
+          ) | null, common: (
+            { id: string }
+            & { __typename: 'CommonCategory' }
+          ) | null }
+          & { __typename: 'Category' }
+        )> }
+        & { __typename: 'CategoryType' }
+      ) | null }
+      & { __typename: 'CategoryTypeFilterBlock' }
+    ) | (
+      { field: string, id: string | null }
+      & { __typename: 'IndicatorFilterBlock' }
+    )> | null, advancedFilters: Array<(
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+          { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+            { id: string }
+            & { __typename: 'Category' }
+          ) | null, common: (
+            { id: string }
+            & { __typename: 'CommonCategory' }
+          ) | null }
+          & { __typename: 'Category' }
+        )> }
+        & { __typename: 'CategoryType' }
+      ) | null }
+      & { __typename: 'CategoryTypeFilterBlock' }
+    ) | (
+      { field: string, id: string | null }
       & { __typename: 'IndicatorFilterBlock' }
     )> | null }
     & { __typename: 'IndicatorListPage' }

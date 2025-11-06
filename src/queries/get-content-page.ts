@@ -6,6 +6,7 @@ import type {
 } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 import { ALL_ACTION_LIST_FILTERS } from '@/fragments/action-list.fragment';
+import { ALL_INDICATOR_LIST_FILTERS } from '@/fragments/indicator-list.fragment';
 
 import { ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT } from '../fragments/action-attribute.fragment';
 import { CATEGORY_FRAGMENT } from '../fragments/category.fragment';
@@ -118,15 +119,9 @@ const INDICATOR_LIST_PAGE_FRAGMENT = gql`
         }
       }
     }
-    mainFilters {
-      ... on IndicatorFilterBlockInterface {
-        sourceField
-        showAllLabel
-        fieldHelpText
-        fieldLabel
-      }
-    }
+    ...IndicatorListPageFilters
   }
+  ${ALL_INDICATOR_LIST_FILTERS}
 `;
 
 export const PlanDatasetsBlockFragment = gql`
