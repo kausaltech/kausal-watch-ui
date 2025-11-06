@@ -9,11 +9,14 @@ import { useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
 
-import type { IndicatorListPage as IndicatorListPageType } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
-import type {
-  IndicatorListIndicatorFragment,
-  IndicatorListQuery,
-  IndicatorListQueryVariables,
+import {
+  IndicatorColumnValueType,
+  IndicatorDashboardFieldName,
+  type IndicatorListFilterFragment,
+  type IndicatorListIndicatorFragment,
+  type IndicatorListPageFragmentFragment,
+  type IndicatorListQuery,
+  type IndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
 import { getCategoryString } from '@/common/categories';
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
@@ -85,15 +88,17 @@ interface Filters {
 function filterIndicators<I extends IndicatorListIndicator>(
   indicators: I[],
   filters: Filters,
-  includeRelatedPlans: boolean,
-  categoryIdentifier?: string
+  includeRelatedPlans: boolean
 ): I[] {
-  const filterByCategory = (indicator: I) =>
-    !categoryIdentifier ||
-    !filters[getCategoryString(categoryIdentifier)] ||
-    !!indicator.categories.find(
+  const hasCategoryFilters = Object.entries(filters).some(
+    ([key, value]) => value !== undefined && value !== null && key.startsWith('cat')
+  );
+
+  const filterByCategory = (indicator: I) => {
+    return !!indicator.categories.find(
       ({ type, id }) => filters[getCategoryString(type.identifier)] === id
     );
+  };
 
   const filterByCommonCategory = (indicator: I) => {
     const activeFilters = Object.entries(filters).filter(
@@ -118,7 +123,7 @@ function filterIndicators<I extends IndicatorListIndicator>(
     !filters['name'] || indicator.name.toLowerCase().includes(filters['name'].toLowerCase());
 
   return indicators.filter((indicator) => {
-    const categoryResult = filterByCategory(indicator);
+    const categoryResult = hasCategoryFilters ? filterByCategory(indicator) : true;
     const commonCategoryResult = filterByCommonCategory(indicator);
     const searchResult = filterBySearch(indicator);
     return (!includeRelatedPlans ? categoryResult : commonCategoryResult) && searchResult;
@@ -137,6 +142,84 @@ const getFirstUsablePlanCategoryType = (
       )
     : undefined;
 
+const getDefaultColumns = (
+  displayMunicipality: boolean,
+  categoryType: CategoryType | undefined,
+  displayNormalizedValues: boolean,
+  displayLevel: boolean
+): NonNullable<IndicatorListPageFragmentFragment['listColumns']> => {
+  const columns: NonNullable<IndicatorListPageFragmentFragment['listColumns']> = [
+    {
+      __typename: 'IndicatorListColumn',
+      id: 'default-column-name',
+      columnLabel: 'Name',
+      columnHelpText: '',
+      sourceField: IndicatorDashboardFieldName.Name,
+    },
+  ];
+  if (displayLevel) {
+    columns.push({
+      __typename: 'IndicatorListColumn',
+      id: 'default-column-level',
+      columnLabel: 'Level',
+      columnHelpText: '',
+      sourceField: IndicatorDashboardFieldName.Level,
+    });
+  }
+  if (categoryType) {
+    columns.push({
+      __typename: 'IndicatorCategoryColumn',
+      id: 'default-column-category',
+      columnLabel: 'Category',
+      columnHelpText: '',
+      categoryType: {
+        id: categoryType.id,
+        __typename: 'CategoryType',
+      },
+    });
+  }
+  if (displayMunicipality) {
+    columns.push({
+      __typename: 'IndicatorListColumn',
+      id: 'default-column-organization',
+      columnLabel: 'Org',
+      columnHelpText: '',
+      sourceField: IndicatorDashboardFieldName.Organization,
+    });
+  }
+
+  columns.push({
+    __typename: 'IndicatorListColumn',
+    id: 'default-column-updated',
+    columnLabel: 'Updated',
+    columnHelpText: '',
+    sourceField: IndicatorDashboardFieldName.UpdatedAt,
+  });
+
+  columns.push({
+    __typename: 'IndicatorValueColumn',
+    id: 'default-column-value',
+    columnLabel: 'Latest value',
+    columnHelpText: '',
+    sourceField: null,
+    isNormalized: false,
+    valueType: IndicatorColumnValueType.Latest,
+  });
+
+  if (displayNormalizedValues) {
+    columns.push({
+      __typename: 'IndicatorValueColumn',
+      id: 'default-column-value-normalized',
+      columnLabel: 'Normalized',
+      columnHelpText: '',
+      sourceField: null,
+      isNormalized: true,
+      valueType: IndicatorColumnValueType.Latest,
+    });
+  }
+  return columns;
+};
+
 const getNextIndicatorId = (
   indicators: IndicatorListIndicator[],
   indicatorId: string
@@ -154,14 +237,28 @@ const getPrevIndicatorId = (
 };
 
 interface IndicatorListPageProps {
-  page: IndicatorListPageType;
+  page: IndicatorListPageFragmentFragment;
   testId?: string;
 }
 
 const IndicatorListPage = (props: IndicatorListPageProps) => {
   const { page, testId } = props;
-  const { leadContent, displayInsights, displayLevel, includeRelatedPlans, listColumns } = page;
-
+  const {
+    leadContent,
+    displayInsights,
+    displayLevel,
+    includeRelatedPlans,
+    listColumns,
+    mainFilters,
+    primaryFilters,
+    advancedFilters,
+  } = page;
+  const filterSections = {
+    mainFilters: mainFilters as IndicatorListFilterFragment[],
+    primaryFilters: primaryFilters as IndicatorListFilterFragment[],
+    advancedFilters: advancedFilters as IndicatorListFilterFragment[],
+  };
+  // console.log('indicator list page props', page, filterSections);
   const plan = usePlan();
   const t = useTranslations();
   const openIndicatorsInModal = true;
@@ -207,18 +304,8 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     (includeRelatedPlans ?? false) ? data.relatedPlanIndicators : data.planIndicators
   ) as IndicatorListIndicator[];
 
+  const indicatorListColumns: NonNullable<IndicatorListPageFragmentFragment['listColumns']> = [];
   const displayMunicipality = plan?.features.hasActionPrimaryOrgs === true;
-
-  const displayNormalizedValues =
-    undefined !==
-    indicators?.find((ind) => {
-      if (!ind) return false;
-      if (!ind.common) return false;
-      if (!ind.common.normalizations) return false;
-      return ind.common.normalizations?.length > 0;
-    });
-
-  const hierarchy = processCommonIndicatorHierarchy(indicators);
 
   /* This collects the common categories from the indicators that belong to different plans */
   const commonCategories = collectCommonCategories(indicators);
@@ -228,12 +315,33 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     indicators
   );
 
+  if (!listColumns || listColumns.length === 0) {
+    const displayNormalizedValues =
+      undefined !==
+      indicators?.find((ind) => {
+        if (!ind) return false;
+        if (!ind.common) return false;
+        if (!ind.common.normalizations) return false;
+        return ind.common.normalizations?.length > 0;
+      });
+
+    const defaultColumns = getDefaultColumns(
+      displayMunicipality,
+      categoryType,
+      displayNormalizedValues,
+      displayLevel ?? false
+    );
+    indicatorListColumns.push(...defaultColumns);
+  } else {
+    indicatorListColumns.push(...listColumns);
+  }
+  const hierarchy = processCommonIndicatorHierarchy(indicators);
+
   const sortedIndicators = sortIndicators(hierarchy, indicators, displayMunicipality ?? false);
   const filteredIndicators = filterIndicators(
     sortedIndicators,
     filters,
-    includeRelatedPlans ?? false,
-    categoryType?.identifier
+    includeRelatedPlans ?? false
   );
 
   return (
@@ -265,6 +373,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
         />*/}
         <IndicatorListFilters
           indicators={indicators}
+          filterLayout={filterSections}
           categoryType={categoryType}
           commonCategories={includeRelatedPlans ? commonCategories : null}
           activeFilters={filters}
@@ -276,17 +385,10 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
 
       <Container>
         <IndicatorListFiltered
-          displayMunicipality={displayMunicipality}
-          displayNormalizedValues={displayNormalizedValues}
-          categoryType={categoryType}
           indicators={filteredIndicators}
           openIndicatorsInModal={openIndicatorsInModal && handleChangeModal}
-          //filters={filters}
           hierarchy={hierarchy}
-          displayLevel={displayLevel}
-          includePlanRelatedIndicators={includeRelatedPlans ?? false}
-          commonCategories={commonCategories}
-          listColumns={listColumns ?? []}
+          listColumns={indicatorListColumns}
         />
       </Container>
     </>

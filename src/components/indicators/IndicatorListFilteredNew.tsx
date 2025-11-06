@@ -2,11 +2,8 @@ import React from 'react';
 
 import { useTranslations } from 'next-intl';
 import { Alert, Table } from 'reactstrap';
-import { Button } from 'reactstrap';
 
 import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
-import { IndicatorLink } from '@/common/links';
-import { usePlan } from '@/context/plan';
 
 import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
 import IndicatorTableCell from './IndicatorTableCell';
@@ -35,12 +32,7 @@ const IndicatorTableRow = (props: {
 interface IndicatorListFilteredProps {
   categoryType?: CategoryType;
   indicators: IndicatorListIndicator[];
-  displayLevel?: boolean | null;
-  includePlanRelatedIndicators?: boolean;
-  commonCategories?: object[];
-  displayMunicipality?: boolean;
   hierarchy?: Hierarchy;
-  displayNormalizedValues?: boolean;
   openIndicatorsInModal?: (id: string) => void | null;
   listColumns: NonNullable<IndicatorListPageFragmentFragment['listColumns']>;
 }
@@ -48,10 +40,7 @@ interface IndicatorListFilteredProps {
 export default function IndicatorListFiltered(props: IndicatorListFilteredProps) {
   const t = useTranslations();
 
-  const { indicators, hierarchy, displayMunicipality, openIndicatorsInModal, listColumns } = props;
-
-  console.log('indicator list filtered new props', props);
-  console.log('listColumns', listColumns);
+  const { indicators, hierarchy, openIndicatorsInModal, listColumns } = props;
 
   if (indicators.flat().length === 0) {
     return (
@@ -78,8 +67,6 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
     });
   }
 
-  //console.log('indicators', indicators);
-  //console.log('indicators', indicators);
   return (
     <div className="mt-5 mb-5 pb-5">
       <Table hover size="sm">

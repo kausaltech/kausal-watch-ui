@@ -1,6 +1,9 @@
 import { useTranslations } from 'next-intl';
 
-import { CategoryTypeSelectWidget } from '@/common/__generated__/graphql';
+import {
+  CategoryTypeSelectWidget,
+  type IndicatorListFilterFragment,
+} from '@/common/__generated__/graphql';
 import { usePlan } from '@/context/plan';
 
 import { type ActionListPageFiltersFragment } from '../../common/__generated__/graphql';
@@ -24,14 +27,67 @@ const createFilterUnusedCommonCategories =
   (indicators: IndicatorListIndicator[]) => (category: IndicatorCategory) =>
     indicators.find(({ categories }) => categories.find((cat) => cat.id === category.id));
 
+const indicatorListFilterToActionListFilter = (
+  filter: IndicatorListFilterFragment
+):
+  | NonNullable<ActionListPageFiltersFragment['mainFilters']>[0]
+  | NonNullable<ActionListPageFiltersFragment['advancedFilters']>[0]
+  | NonNullable<ActionListPageFiltersFragment['primaryFilters']>[0]
+  | undefined => {
+  console.log('indicatorListFilterToActionListFilter', filter);
+  switch (filter.__typename) {
+    case 'CategoryTypeFilterBlock':
+      return {
+        ...filter,
+      };
+    case 'IndicatorFilterBlock':
+      // TODO: Support level filter in ActionListFilters
+      return undefined;
+  }
+};
+
 const getFilterConfig = (
   categoryType: CategoryType | null | undefined,
   indicators: IndicatorListIndicator[],
-  commonCategories: CollectedCommonCategory[] | null
+  commonCategories: CollectedCommonCategory[] | null,
+  filterLayout: {
+    advancedFilters: IndicatorListFilterFragment[];
+    primaryFilters: IndicatorListFilterFragment[];
+    mainFilters: IndicatorListFilterFragment[];
+  }
 ): ActionListPageFiltersFragment => {
   // Common categories is null if we are not including related plans
+  const useDefaultFilters =
+    filterLayout.advancedFilters?.length === 0 &&
+    filterLayout.primaryFilters?.length === 0 &&
+    filterLayout.mainFilters?.length === 0;
 
+  // If we are provided with a custom layout, we convert the indicator list filters to action list filters
+  if (!useDefaultFilters) {
+    console.log('-----------------> Using custom filters', filterLayout);
+    return {
+      mainFilters: (
+        filterLayout.mainFilters.map((filter) =>
+          indicatorListFilterToActionListFilter(filter)
+        ) as NonNullable<ActionListPageFiltersFragment['mainFilters']>[0][]
+      ).filter((filt) => filt !== undefined),
+      primaryFilters: (
+        filterLayout.primaryFilters.map((filter) =>
+          indicatorListFilterToActionListFilter(filter)
+        ) as NonNullable<ActionListPageFiltersFragment['primaryFilters']>[0][]
+      ).filter((filt) => filt !== undefined),
+      advancedFilters: (
+        filterLayout.advancedFilters.map((filter) =>
+          indicatorListFilterToActionListFilter(filter)
+        ) as NonNullable<ActionListPageFiltersFragment['advancedFilters']>[0][]
+      ).filter((filt) => filt !== undefined),
+      __typename: 'ActionListPage',
+    };
+  }
+
+  // If we are not provided with a custom layout, we generate the default (legacy) filters
   if (!commonCategories && !categoryType) {
+    console.log('-----------------> Using empty default filters');
     return {
       mainFilters: [],
       primaryFilters: [],
@@ -40,11 +96,12 @@ const getFilterConfig = (
     };
   }
 
+  console.log('-----------------> Using default filters with category type', categoryType);
   const mainTypeFilter = categoryType
     ? {
         __typename: 'CategoryTypeFilterBlock' as const,
         field: 'category',
-        id: '817256d7-a6fb-4af1-bbba-096171eb0d36',
+        id: 'default-category-filter',
         style: 'dropdown',
         showAllLabel: '',
         depth: null,
@@ -120,16 +177,29 @@ interface IndicatorListFiltersProps {
   onChange: (filterType: string, val: FilterValue) => void;
   actionCount: number;
   actionCountLabel: string;
+  filterLayout: {
+    advancedFilters: IndicatorListFilterFragment[];
+    primaryFilters: IndicatorListFilterFragment[];
+    mainFilters: IndicatorListFilterFragment[];
+  };
 }
 
 const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
-  const { activeFilters, onChange, actionCount, categoryType, indicators, commonCategories } =
-    props;
+  const {
+    activeFilters,
+    onChange,
+    actionCount,
+    categoryType,
+    indicators,
+    commonCategories,
+    filterLayout,
+  } = props;
   const t = useTranslations();
   const plan = usePlan();
   /* Create category filter */
-  const filterConfig = getFilterConfig(categoryType, indicators, commonCategories);
+  const filterConfig = getFilterConfig(categoryType, indicators, commonCategories, filterLayout);
 
+  console.log('IndicatorListFilters props', props, filterConfig);
   const filterSections: ActionListFilterSection[] = ActionListFilters.constructFilters({
     mainConfig: filterConfig,
     primaryOrgs: [],
@@ -138,6 +208,7 @@ const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
     filterByCommonCategory: false,
     t,
     actionTerm: 'INDICATOR',
+    isIndicatorList: true,
   });
 
   return (

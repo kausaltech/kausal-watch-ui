@@ -1128,10 +1128,20 @@ type ConstructFiltersOpts = {
   primaryOrgs: ActionListPrimaryOrg[];
   filterByCommonCategory: boolean;
   actionTerm?: string;
+  isIndicatorList?: boolean;
 };
 
 ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
-  const { mainConfig, plan, t, orgs, primaryOrgs, filterByCommonCategory, actionTerm } = opts;
+  const {
+    mainConfig,
+    plan,
+    t,
+    orgs,
+    primaryOrgs,
+    filterByCommonCategory,
+    actionTerm,
+    isIndicatorList = false,
+  } = opts;
   const { primaryFilters, mainFilters, advancedFilters } = mainConfig;
 
   function makeSection(id: string, hidden: boolean, blocks: ActionListFilterFragment[] | null) {
@@ -1257,7 +1267,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
     }
 
     if (id === 'main') {
-      if (plan.actionImpacts.length) {
+      if (!isIndicatorList && plan.actionImpacts.length) {
         // FIXME: Migrate to AttributeType
         const opts = {
           id: 'impact',
