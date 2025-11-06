@@ -34,7 +34,6 @@ const indicatorListFilterToActionListFilter = (
   | NonNullable<ActionListPageFiltersFragment['advancedFilters']>[0]
   | NonNullable<ActionListPageFiltersFragment['primaryFilters']>[0]
   | undefined => {
-  console.log('indicatorListFilterToActionListFilter', filter);
   switch (filter.__typename) {
     case 'CategoryTypeFilterBlock':
       return {
@@ -64,7 +63,7 @@ const getFilterConfig = (
 
   // If we are provided with a custom layout, we convert the indicator list filters to action list filters
   if (!useDefaultFilters) {
-    console.log('-----------------> Using custom filters', filterLayout);
+    // console.log('-----------------> Using custom filters', filterLayout);
     return {
       mainFilters: (
         filterLayout.mainFilters.map((filter) =>
@@ -87,7 +86,7 @@ const getFilterConfig = (
 
   // If we are not provided with a custom layout, we generate the default (legacy) filters
   if (!commonCategories && !categoryType) {
-    console.log('-----------------> Using empty default filters');
+    // console.log('-----------------> Using empty default filters');
     return {
       mainFilters: [],
       primaryFilters: [],
@@ -96,7 +95,7 @@ const getFilterConfig = (
     };
   }
 
-  console.log('-----------------> Using default filters with category type', categoryType);
+  // console.log('-----------------> Using default filters with category type', categoryType);
   const mainTypeFilter = categoryType
     ? {
         __typename: 'CategoryTypeFilterBlock' as const,
@@ -199,7 +198,6 @@ const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
   /* Create category filter */
   const filterConfig = getFilterConfig(categoryType, indicators, commonCategories, filterLayout);
 
-  console.log('IndicatorListFilters props', props, filterConfig);
   const filterSections: ActionListFilterSection[] = ActionListFilters.constructFilters({
     mainConfig: filterConfig,
     primaryOrgs: [],

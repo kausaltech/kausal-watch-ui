@@ -1,5 +1,6 @@
-import { type DateTimeFormatOptions, useFormatter } from 'next-intl';
-import { Button } from 'reactstrap';
+import { type DateTimeFormatOptions, useFormatter, useTranslations } from 'next-intl';
+import { readableColor } from 'polished';
+import { Badge, Button } from 'reactstrap';
 import styled from 'styled-components';
 
 import {
@@ -11,11 +12,73 @@ import {
 import { IndicatorLink } from '@/common/links';
 
 import BadgeTooltip from '../common/BadgeTooltip';
+import { getIndicatorTranslation } from './IndicatorCard';
 import type { IndicatorListIndicator } from './IndicatorList';
 
 const StyledCell = styled.td<{ $numeric?: boolean }>`
   text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
+  line-height: ${(props) => props.theme.lineHeightSm};
+  padding: ${(props) => props.theme.spaces.s200};
+  a,
+  button {
+    color: ${(props) => props.theme.themeColors.black};
+    text-decoration: none;
+    line-height: ${(props) => props.theme.lineHeightMd};
+    &:hover {
+      text-decoration: underline;
+      color: ${(props) => props.theme.themeColors.black};
+    }
+  }
 `;
+
+const CategoryBadges = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${(props) => props.theme.spaces.s050};
+`;
+
+const IndicatorLevelBadge = styled(Badge)<{ $level: string }>`
+  border-radius: ${(props) => props.theme.badgeBorderRadius};
+  padding: ${({ theme }) => `${theme.badgePaddingY} ${theme.badgePaddingX}`};
+  font-weight: ${(props) => props.theme.badgeFontWeight};
+
+  color: ${(props) => {
+    switch (props.$level) {
+      case 'action':
+        return readableColor(props.theme.actionColor);
+      case 'operational':
+        return readableColor(props.theme.graphColors.blue070);
+      case 'tactical':
+        return readableColor(props.theme.graphColors.blue030);
+      case 'strategic':
+        return readableColor(props.theme.graphColors.blue010);
+      default:
+        return props.theme.themeColors.black;
+    }
+  }};
+  background-color: ${(props) => {
+    switch (props.$level) {
+      case 'action':
+        return props.theme.actionColor;
+      case 'operational':
+        return props.theme.graphColors.blue070;
+      case 'tactical':
+        return props.theme.graphColors.blue030;
+      case 'strategic':
+        return props.theme.graphColors.blue010;
+      default:
+        return '#cccccc';
+    }
+  }} !important;
+`;
+
+const Value = styled.span``;
+
+const Unit = styled.span`
+  margin-left: 0.5rem;
+  font-size: 80%;
+`;
+
 const IndicatorNameCell = (props: {
   indicator: IndicatorListIndicator;
   indent?: number;
@@ -96,11 +159,17 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
   }
   return (
     <StyledCell $numeric={true}>
-      {format.number(value, { maximumFractionDigits: 2 })} {indicator.unit.shortName}
+      <Value>{format.number(value, { maximumFractionDigits: 2 })}</Value>
+      <Unit>{indicator.unit.shortName}</Unit>
     </StyledCell>
   );
 };
 
+const getCategoryColor = (
+  category: IndicatorListIndicator['categories'][number]
+): string | undefined => {
+  return category.color || category.parent?.color || undefined;
+};
 interface IndicatorCategoryCellProps {
   indicator: IndicatorListIndicator;
   categoryId: string;
@@ -109,22 +178,24 @@ interface IndicatorCategoryCellProps {
 const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
   const { indicator, categoryId } = props;
   const categories = indicator.categories.filter((cat) => cat.type.id === categoryId);
-
   return (
     <StyledCell>
-      {categories &&
-        categories.length > 0 &&
-        categories.map((cat) => (
-          <BadgeTooltip
-            key={cat.id}
-            id={cat.id}
-            tooltip=""
-            content={cat.name}
-            size="sm"
-            color="neutralLight"
-            isLink={false}
-          />
-        ))}
+      <CategoryBadges>
+        {categories &&
+          categories.length > 0 &&
+          categories.map((cat) => (
+            <BadgeTooltip
+              key={cat.id}
+              id={cat.id}
+              tooltip=""
+              content={cat.name}
+              size="sm"
+              themeColor="neutralLight"
+              color={getCategoryColor(cat)}
+              isLink={false}
+            />
+          ))}
+      </CategoryBadges>
     </StyledCell>
   );
 };
@@ -148,11 +219,20 @@ interface IndicatorListColumnCellProps {
 const IndicatorListColumnCell = (props: IndicatorListColumnCellProps) => {
   const { sourceField, indicator } = props;
   const format = useFormatter();
+  const t = useTranslations();
+
   switch (sourceField) {
     case IndicatorDashboardFieldName.Name:
       return <StyledCell>{indicator.name}</StyledCell>;
     case IndicatorDashboardFieldName.Level:
-      return <StyledCell>{indicator.level}</StyledCell>;
+      // TODO: Use action name context
+      const indicatorLevelName =
+        indicator.level === 'action' ? t('action') : getIndicatorTranslation(indicator.level, t);
+      return (
+        <StyledCell>
+          <IndicatorLevelBadge $level={indicator.level}>{indicatorLevelName}</IndicatorLevelBadge>
+        </StyledCell>
+      );
     case IndicatorDashboardFieldName.UpdatedAt:
       const timeResolution = indicator.timeResolution;
       const lastUpdated = new Date(indicator.latestValue?.date ?? '');

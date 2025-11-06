@@ -185,6 +185,7 @@ const GET_PLAN_CONTEXT = gql`
       hasActionOfficialName
       hasActionLeadParagraph
       hasActionPrimaryOrgs
+      indicatorsOpenInModal
       showAdminLink
       enableIndicatorComparison
       minimalStatuses

@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import styled from 'styled-components';
 
 import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
 import {
@@ -6,6 +7,11 @@ import {
   IndicatorDashboardFieldName,
 } from '@/common/__generated__/graphql';
 import type { TFunction } from '@/common/i18n';
+
+const StyledTh = styled.th<{ $numeric?: boolean }>`
+  text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
+  line-height: ${(props) => props.theme.lineHeightSm};
+`;
 
 interface IndicatorTableHeaderProps {
   column: NonNullable<IndicatorListPageFragmentFragment['listColumns']>[number];
@@ -63,11 +69,29 @@ const getColumnLabel = (
         : '';
       switch (column.valueType) {
         case IndicatorColumnValueType.Latest:
-          return `${t('indicator-latest-value')} ${normalized}`;
+          return (
+            <>
+              {t('indicator-latest-value')}
+              <br />
+              {normalized}
+            </>
+          );
         case IndicatorColumnValueType.Earliest:
-          return `[indicator-start-value] ${normalized}`;
+          return (
+            <>
+              [indicator-start-value]
+              <br />
+              {normalized}
+            </>
+          );
         case IndicatorColumnValueType.Goal:
-          return `${t('target')} ${normalized}`;
+          return (
+            <>
+              {t('target')}
+              <br />
+              {normalized}
+            </>
+          );
       }
     default:
       return '';
@@ -78,9 +102,9 @@ const IndicatorTableHeader = (props: IndicatorTableHeaderProps) => {
   const { column } = props;
   const t = useTranslations();
   return (
-    <th key={column.id} style={{ textAlign: isNumericColumn(column) ? 'right' : 'left' }}>
+    <StyledTh key={column.id} $numeric={isNumericColumn(column)}>
       {getColumnLabel(column, t)}
-    </th>
+    </StyledTh>
   );
 };
 

@@ -233,23 +233,6 @@ const getDefaultColumns = (
   }
   return columns;
 };
-
-const getNextIndicatorId = (
-  indicators: IndicatorListIndicator[],
-  indicatorId: string
-): string | undefined => {
-  const index = indicators.findIndex((indicator) => indicator.id === indicatorId);
-  return index < indicators.length - 1 ? indicators[index + 1].id : undefined;
-};
-
-const getPrevIndicatorId = (
-  indicators: IndicatorListIndicator[],
-  indicatorId: string
-): string | undefined => {
-  const index = indicators.findIndex((indicator) => indicator.id === indicatorId);
-  return index > 0 ? indicators[index - 1].id : undefined;
-};
-
 interface IndicatorListPageProps {
   page: IndicatorListPageFragmentFragment;
   testId?: string;
@@ -272,10 +255,10 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     primaryFilters: primaryFilters as IndicatorListFilterFragment[],
     advancedFilters: advancedFilters as IndicatorListFilterFragment[],
   };
-  // console.log('indicator list page props', page, filterSections);
+
   const plan = usePlan();
   const t = useTranslations();
-  const openIndicatorsInModal = true;
+  const openIndicatorsInModal = plan.features.indicatorsOpenInModal === true;
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
   const getObjectFromSearchParams = (searchParams: ReadonlyURLSearchParams | null) =>
@@ -300,6 +283,9 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
       },
     }
   );
+  console.log('indicator list page props', page, filterSections);
+  console.log('PLAN', plan);
+  console.log('DATA', data);
 
   const handleFilterChange = (id: string, val: FilterValue) => {
     setFilters((state) => {
@@ -400,7 +386,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
       <Container>
         <IndicatorListFiltered
           indicators={filteredIndicators}
-          openIndicatorsInModal={openIndicatorsInModal && handleChangeModal}
+          openIndicatorsInModal={openIndicatorsInModal ? handleChangeModal : undefined}
           hierarchy={hierarchy}
           listColumns={indicatorListColumns}
         />

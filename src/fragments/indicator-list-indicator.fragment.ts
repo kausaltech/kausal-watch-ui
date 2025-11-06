@@ -40,8 +40,10 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
     categories {
       id
       name
+      color
       parent {
         id
+        color
       }
       type {
         id

@@ -6,7 +6,7 @@ import type {
 } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 import { ALL_ACTION_LIST_FILTERS } from '@/fragments/action-list.fragment';
-import { ALL_INDICATOR_LIST_FILTERS } from '@/fragments/indicator-list.fragment';
+import { INDICATOR_LIST_PAGE_FRAGMENT } from '@/fragments/indicator-list.fragment';
 
 import { ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT } from '../fragments/action-attribute.fragment';
 import { CATEGORY_FRAGMENT } from '../fragments/category.fragment';
@@ -86,43 +86,6 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
       }
     }
   }
-`;
-
-const INDICATOR_LIST_PAGE_FRAGMENT = gql`
-  fragment IndicatorListPageFragment on IndicatorListPage {
-    leadContent
-    displayInsights
-    displayLevel
-    includeRelatedPlans
-    listColumns {
-      __typename
-      ... on IndicatorListColumn {
-        id
-        columnLabel
-        columnHelpText
-        sourceField
-      }
-      ... on IndicatorValueColumn {
-        id
-        columnLabel
-        columnHelpText
-        sourceField
-        isNormalized
-        valueType
-      }
-      ... on IndicatorCategoryColumn {
-        id
-        columnLabel
-        columnHelpText
-        categoryType {
-          id
-          name
-        }
-      }
-    }
-    ...IndicatorListPageFilters
-  }
-  ${ALL_INDICATOR_LIST_FILTERS}
 `;
 
 export const PlanDatasetsBlockFragment = gql`

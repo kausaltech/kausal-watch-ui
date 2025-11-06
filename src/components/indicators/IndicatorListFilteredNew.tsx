@@ -69,7 +69,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
 
   return (
     <div className="mt-5 mb-5 pb-5">
-      <Table hover size="sm">
+      <Table hover>
         <thead>
           <tr>
             {listColumns.map((column) => (
