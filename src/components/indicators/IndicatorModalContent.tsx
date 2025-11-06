@@ -90,7 +90,7 @@ const IndicatorModalContent = ({
   if (error) return <div>Error: {error.message}</div>;
   if (!indicator) return <div>No data</div>;
 
-  console.log('🪟 ---- indicator', indicator);
+  // console.log('🪟 ---- indicator', indicator);
   const indicatorName = indicator.name;
   const indicatorDescription = indicator.description;
   const uniqueTypes = Array.from(

@@ -283,9 +283,6 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
       },
     }
   );
-  console.log('indicator list page props', page, filterSections);
-  console.log('PLAN', plan);
-  console.log('DATA', data);
 
   const handleFilterChange = (id: string, val: FilterValue) => {
     setFilters((state) => {

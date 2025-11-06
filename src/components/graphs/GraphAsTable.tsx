@@ -97,7 +97,6 @@ function GraphAsTable({
   title,
   language,
 }: GraphAsTableProps) {
-  console.log('graph as table props', data, goalTraces, specification);
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
