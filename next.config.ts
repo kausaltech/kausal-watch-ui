@@ -33,6 +33,10 @@ let nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'watch-media-prod.s3.kausal.tech',
       },
+      {
+        protocol: 'https',
+        hostname: '**.your-objectstorage.com',
+      },
     ],
   },
 };
