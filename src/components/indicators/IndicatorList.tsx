@@ -51,6 +51,9 @@ export interface CollectedCommonCategory {
   type: NonNullable<IndicatorListIndicatorFragment['categories'][number]['common']>['type'];
 }
 
+/**
+ * Multiplan lists we collect the common categories from the indicators that belong to different plans
+ */
 const collectCommonCategories = (
   indicators: IndicatorListIndicator[]
 ): CollectedCommonCategory[] => {
@@ -85,6 +88,9 @@ interface Filters {
   [category: string]: FilterValue;
 }
 
+/**
+ * Apply filters to the indicators
+ */
 function filterIndicators<I extends IndicatorListIndicator>(
   indicators: I[],
   filters: Filters,
@@ -130,6 +136,11 @@ function filterIndicators<I extends IndicatorListIndicator>(
   });
 }
 
+/**
+ * Get the first usable plan category type
+ * It's used to select one category for default columns
+ * and filters if custom layout is not applied
+ */
 const getFirstUsablePlanCategoryType = (
   categoryTypes: CategoryType[] | null | undefined,
   indicators: IndicatorListIndicator[]
@@ -141,7 +152,9 @@ const getFirstUsablePlanCategoryType = (
         )
       )
     : undefined;
-
+/**
+ * Generate default columns for legacy plans with no custom layout
+ */
 const getDefaultColumns = (
   displayMunicipality: boolean,
   categoryType: CategoryType | undefined,
@@ -152,7 +165,7 @@ const getDefaultColumns = (
     {
       __typename: 'IndicatorListColumn',
       id: 'default-column-name',
-      columnLabel: 'Name',
+      columnLabel: null,
       columnHelpText: '',
       sourceField: IndicatorDashboardFieldName.Name,
     },
@@ -161,7 +174,7 @@ const getDefaultColumns = (
     columns.push({
       __typename: 'IndicatorListColumn',
       id: 'default-column-level',
-      columnLabel: 'Level',
+      columnLabel: null,
       columnHelpText: '',
       sourceField: IndicatorDashboardFieldName.Level,
     });
@@ -170,10 +183,11 @@ const getDefaultColumns = (
     columns.push({
       __typename: 'IndicatorCategoryColumn',
       id: 'default-column-category',
-      columnLabel: 'Category',
+      columnLabel: null,
       columnHelpText: '',
       categoryType: {
         id: categoryType.id,
+        name: categoryType.name,
         __typename: 'CategoryType',
       },
     });
@@ -182,7 +196,7 @@ const getDefaultColumns = (
     columns.push({
       __typename: 'IndicatorListColumn',
       id: 'default-column-organization',
-      columnLabel: 'Org',
+      columnLabel: null,
       columnHelpText: '',
       sourceField: IndicatorDashboardFieldName.Organization,
     });
@@ -191,7 +205,7 @@ const getDefaultColumns = (
   columns.push({
     __typename: 'IndicatorListColumn',
     id: 'default-column-updated',
-    columnLabel: 'Updated',
+    columnLabel: null,
     columnHelpText: '',
     sourceField: IndicatorDashboardFieldName.UpdatedAt,
   });
@@ -199,7 +213,7 @@ const getDefaultColumns = (
   columns.push({
     __typename: 'IndicatorValueColumn',
     id: 'default-column-value',
-    columnLabel: 'Latest value',
+    columnLabel: null,
     columnHelpText: '',
     sourceField: null,
     isNormalized: false,
@@ -210,7 +224,7 @@ const getDefaultColumns = (
     columns.push({
       __typename: 'IndicatorValueColumn',
       id: 'default-column-value-normalized',
-      columnLabel: 'Normalized',
+      columnLabel: null,
       columnHelpText: '',
       sourceField: null,
       isNormalized: true,

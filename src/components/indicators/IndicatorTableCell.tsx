@@ -1,15 +1,21 @@
+import { type DateTimeFormatOptions, useFormatter } from 'next-intl';
 import { Button } from 'reactstrap';
+import styled from 'styled-components';
 
 import {
   IndicatorColumnValueType,
   IndicatorDashboardFieldName,
   type IndicatorListPageFragmentFragment,
+  IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';
 
 import BadgeTooltip from '../common/BadgeTooltip';
 import type { IndicatorListIndicator } from './IndicatorList';
 
+const StyledCell = styled.td<{ $numeric?: boolean }>`
+  text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
+`;
 const IndicatorNameCell = (props: {
   indicator: IndicatorListIndicator;
   indent?: number;
@@ -28,11 +34,16 @@ const IndicatorNameCell = (props: {
     <IndicatorLink id={indicator.id}>{indicator.name}</IndicatorLink>
   );
   return (
-    <td key="name" style={{ paddingLeft: `${indent * 16}px` }}>
+    <StyledCell key="name" style={{ paddingLeft: `${indent * 16}px` }}>
       {IndicatorTrigger}
-    </td>
+    </StyledCell>
   );
 };
+
+/**
+ * Get the value of the indicator based on the value type and whether it is normalized
+ * Can retrieve earliest, latest and goal values
+ */
 
 const getValue = (
   indicator: IndicatorListIndicator,
@@ -77,20 +88,16 @@ interface IndicatorValueCellProps {
 
 const IndicatorValueCell = (props: IndicatorValueCellProps) => {
   const { indicator, isNormalized, valueType } = props;
+  const format = useFormatter();
 
-  /*
-    Earliest = 'EARLIEST',
-  Goal = 'GOAL',
-  Latest = 'LATEST'
-  */
   const value: number | null = getValue(indicator, valueType, isNormalized);
   if (value === null) {
-    return <td>--</td>;
+    return <StyledCell $numeric={true}>--</StyledCell>;
   }
   return (
-    <td>
-      {value} {indicator.unit.shortName}
-    </td>
+    <StyledCell $numeric={true}>
+      {format.number(value, { maximumFractionDigits: 2 })} {indicator.unit.shortName}
+    </StyledCell>
   );
 };
 
@@ -104,7 +111,7 @@ const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
   const categories = indicator.categories.filter((cat) => cat.type.id === categoryId);
 
   return (
-    <td>
+    <StyledCell>
       {categories &&
         categories.length > 0 &&
         categories.map((cat) => (
@@ -118,8 +125,21 @@ const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
             isLink={false}
           />
         ))}
-    </td>
+    </StyledCell>
   );
+};
+
+const dateFormatFromResolution = (resolution: IndicatorTimeResolution): DateTimeFormatOptions => {
+  switch (resolution) {
+    case IndicatorTimeResolution.Day:
+      return { day: 'numeric', month: 'numeric', year: 'numeric' };
+    case IndicatorTimeResolution.Month:
+      return { month: 'numeric', year: 'numeric' };
+    case IndicatorTimeResolution.Year:
+      return { year: 'numeric' };
+    default:
+      return { day: 'numeric', month: 'numeric', year: 'numeric' };
+  }
 };
 interface IndicatorListColumnCellProps {
   sourceField: IndicatorDashboardFieldName | null;
@@ -127,18 +147,23 @@ interface IndicatorListColumnCellProps {
 }
 const IndicatorListColumnCell = (props: IndicatorListColumnCellProps) => {
   const { sourceField, indicator } = props;
-
+  const format = useFormatter();
   switch (sourceField) {
     case IndicatorDashboardFieldName.Name:
-      return <td>{indicator.name}</td>;
+      return <StyledCell>{indicator.name}</StyledCell>;
     case IndicatorDashboardFieldName.Level:
-      return <td>{indicator.level}</td>;
+      return <StyledCell>{indicator.level}</StyledCell>;
     case IndicatorDashboardFieldName.UpdatedAt:
-      return <td>{indicator.latestValue?.date}</td>;
+      const timeResolution = indicator.timeResolution;
+      const lastUpdated = new Date(indicator.latestValue?.date ?? '');
+      const displayDate = indicator.latestValue?.date
+        ? format.dateTime(lastUpdated, dateFormatFromResolution(timeResolution))
+        : '--';
+      return <StyledCell $numeric>{displayDate}</StyledCell>;
     case IndicatorDashboardFieldName.Organization:
-      return <td>{indicator.organization.name}</td>;
+      return <StyledCell>{indicator.organization.name}</StyledCell>;
     default:
-      return <td>--</td>;
+      return <StyledCell>--</StyledCell>;
   }
 };
 
@@ -174,21 +199,21 @@ const IndicatorTableCell = (props: IndicatorTableCellProps) => {
     case 'IndicatorCategoryColumn':
       return <IndicatorCategoryCell indicator={indicator} categoryId={column.categoryType.id} />;
     default:
-      return <td>--</td>;
+      return <StyledCell>--</StyledCell>;
   }
   /*
     case IndicatorTableColumnId.TimeResolution:
-      return <td key={columnName}>{indicator.timeResolution}</td>;
+      return <StyledCell key={columnName}>{indicator.timeResolution}</StyledCell>;
 
     case IndicatorTableColumnId.Dimensions:
       const dimensionsCount = indicator.dimensions?.length || 0;
       return (
-        <td key={columnName} style={{ textAlign: 'right' }}>
+        <StyledCell key={columnName} style={{ textAlign: 'right' }}>
           {dimensionsCount}
-        </td>
+        </StyledCell>
       );
     case IndicatorTableColumnId.Common:
-      return <td key={columnName}>{indicator.common ? '✅' : '❌'}</td>;
+      return <StyledCell key={columnName}>{indicator.common ? '✅' : '❌'}</StyledCell>;
   } */
 };
 

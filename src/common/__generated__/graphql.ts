@@ -10360,7 +10360,7 @@ export type TemplatedCategoryPageFragmentFragment = (
 export type IndicatorListPageFragmentFragment = (
   { leadContent: string | null, displayInsights: boolean | null, displayLevel: boolean | null, includeRelatedPlans: boolean | null, listColumns: Array<(
     { id: string | null, columnLabel: string | null, columnHelpText: string | null, categoryType: (
-      { id: string }
+      { id: string, name: string }
       & { __typename: 'CategoryType' }
     ) }
     & { __typename: 'IndicatorCategoryColumn' }
@@ -11425,7 +11425,7 @@ export type GetContentPageQuery = (
   ) | (
     { id: string | null, slug: string, title: string, lastPublishedAt: string | null, leadContent: string | null, displayInsights: boolean | null, displayLevel: boolean | null, includeRelatedPlans: boolean | null, listColumns: Array<(
       { id: string | null, columnLabel: string | null, columnHelpText: string | null, categoryType: (
-        { id: string }
+        { id: string, name: string }
         & { __typename: 'CategoryType' }
       ) }
       & { __typename: 'IndicatorCategoryColumn' }

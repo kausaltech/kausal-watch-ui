@@ -116,6 +116,7 @@ const INDICATOR_LIST_PAGE_FRAGMENT = gql`
         columnHelpText
         categoryType {
           id
+          name
         }
       }
     }
