@@ -62,6 +62,7 @@
     "next-images": "^1.8.5",
     "next-intl": "^4.3.5",
     "pino": "^9.7.0",
+    "plotly.js": "^3.2.0",
     "plotly.js-locales": "^2.34.0",
     "polished": "^4.2.2",
     "popper.js": "^1.16.1",

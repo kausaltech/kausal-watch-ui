@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 
 import * as Sentry from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
+import type { PlotParams } from 'react-plotly.js';
 import type { ColProps } from 'reactstrap';
 import { Col, Container, Row } from 'reactstrap';
 import type { ColumnProps } from 'reactstrap/types/lib/Col';
@@ -43,6 +44,7 @@ import { usePlan } from '@/context/plan';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
 import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
+import { PlotlyRawVisualization } from '../graphs/PlotlyRawVisualizations';
 import ContentLoader from './ContentLoader';
 import { ErrorBoundary } from './ErrorBoundary';
 import { ErrorPage } from './ErrorPage';
@@ -50,6 +52,11 @@ import { ErrorPage } from './ErrorPage';
 const CategoryTreeBlock = dynamic(() => import('@/components/contentblocks/CategoryTreeBlock'), {
   ssr: false,
 });
+
+interface PlotlyRawVisualizationValue extends PlotParams {
+  fullWidth?: boolean;
+  size: 'small' | 'medium' | 'large';
+}
 
 enum EmbedProvider {
   YOUTUBE = 'YouTube',
@@ -531,6 +538,39 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           topPadding={previousBlockType !== 'DashboardRowBlock'}
           bottomPadding={nextBlockType !== 'DashboardRowBlock'}
         />
+      );
+    }
+    case 'RawVisualizationBlock': {
+      const { value } = block;
+      const config = value ? (JSON.parse(value) as PlotlyRawVisualizationValue) : undefined;
+      const fullWidth = config?.fullWidth ?? false;
+      const size = config?.size ?? 'medium';
+
+      function getColSize(defaultSize: ColumnProps): ColumnProps {
+        if (fullWidth) {
+          return hasSidebar ? { size: 11, offset: 1 } : { size: 12, offset: 0 };
+        }
+
+        return defaultSize;
+      }
+
+      return (
+        <Container id={id}>
+          <Row>
+            <Col
+              xl={getColSize({
+                size: hasSidebar ? 7 : 6,
+                offset: hasSidebar ? 4 : 3,
+              })}
+              lg={getColSize({ size: 8, offset: hasSidebar ? 4 : 2 })}
+              md={getColSize({ size: 10, offset: 1 })}
+              className="my-4"
+              {...columnProps}
+            >
+              <PlotlyRawVisualization visualizationRaw={value} />
+            </Col>
+          </Row>
+        </Container>
       );
     }
     default:

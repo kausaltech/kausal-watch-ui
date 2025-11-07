@@ -30,6 +30,7 @@ const GET_INDICATOR_DETAILS = gql`
       description
       timeResolution
       desiredTrend
+      visualizationsRaw
       organization {
         id
         classification {

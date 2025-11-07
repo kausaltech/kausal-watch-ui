@@ -302,6 +302,11 @@ export const STREAM_FIELD_FRAGMENT = gql`
     ... on DashboardRowBlock {
       ...DashboardIndicatorBlockFragment
     }
+    ... on RawVisualizationBlock {
+      id
+      field
+      value
+    }
   }
   ${images.fragments.multiUseImage}
   ${CATEGORY_FRAGMENT}

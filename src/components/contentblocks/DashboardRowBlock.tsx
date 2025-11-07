@@ -158,14 +158,14 @@ const DashboardRowBlock = ({
     >
       <Container>
         <StyledRow>
-          {blocks.map((block) => {
+          {blocks.map((block, i) => {
             const { blockType } = block;
             const isChart = chartTypes.includes(blockType);
             const indicatorId =
               isChart && 'indicator' in block && block.indicator ? block.indicator.id : undefined;
 
             return (
-              <Col key={block.id} md={columnWidth}>
+              <Col key={`${block.id}-${i}`} md={columnWidth}>
                 <StyledCard outline>
                   <DashboardCardContents block={block} />
                   {isChart && indicatorId && (
