@@ -24,6 +24,9 @@ const levels: Record<string, { fi: string; index: number }> = {
   strategic: { fi: 'strateginen', index: 3 },
 };
 
+/**
+ * Uses the common category hierarchy to split indicators into hierarchical and non-hierarchical groups.
+ */
 export function groupIndicatorsByHierarchy(
   indicators: IndicatorListIndicator[],
   hierarchy: Hierarchy
@@ -49,6 +52,10 @@ export function groupIndicatorsByHierarchy(
   );
 }
 
+/**
+ * Uses the common category hierarchy to split indicators into hierarchical and non-hierarchical groups,
+ * and then sort them separately.
+ */
 export function sortIndicators(
   hierarchy: Hierarchy | null | undefined,
   indicators: IndicatorListIndicator[],
@@ -119,6 +126,9 @@ export function sortIndicators(
   return Array.from(grouped.values()).flat();
 }
 
+/**
+ * Calculates the indentation level of an indicator based on the common category hierarchy.
+ */
 export const indentationLevel: (item: IndicatorListIndicator, hierarchy: Hierarchy) => number = (
   item,
   hierarchy
@@ -127,4 +137,16 @@ export const indentationLevel: (item: IndicatorListIndicator, hierarchy: Hierarc
     return 0;
   }
   return (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
+};
+
+export const groupIndicatorsByCommonCategory = (
+  indicators: IndicatorListIndicator[]
+): Map<string, IndicatorListIndicator[]> => {
+  const grouped = new Map<string, IndicatorListIndicator[]>();
+  indicators.forEach((indicator) => {
+    const commonId = indicator.common?.id;
+    const group: IndicatorListIndicator[] | [] = grouped.get(commonId ?? '') ?? [];
+    grouped.set(commonId ?? '', [...group, indicator]);
+  });
+  return grouped;
 };

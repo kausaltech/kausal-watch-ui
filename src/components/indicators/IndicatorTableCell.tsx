@@ -15,10 +15,10 @@ import BadgeTooltip from '../common/BadgeTooltip';
 import { getIndicatorTranslation } from './IndicatorCard';
 import type { IndicatorListIndicator } from './IndicatorList';
 
-const StyledCell = styled.td<{ $numeric?: boolean }>`
+const CellContent = styled.div<{ $numeric?: boolean }>`
   text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
   line-height: ${(props) => props.theme.lineHeightSm};
-  padding: ${(props) => props.theme.spaces.s200};
+
   a,
   button {
     color: ${(props) => props.theme.themeColors.black};
@@ -72,19 +72,21 @@ const IndicatorLevelBadge = styled(Badge)<{ $level: string }>`
   }} !important;
 `;
 
-const Value = styled.span``;
+const Value = styled.span`
+  white-space: nowrap;
+`;
 
 const Unit = styled.span`
-  margin-left: 0.5rem;
+  margin-left: ${({ theme }) => theme.spaces.s025};
+  white-space: nowrap;
   font-size: 80%;
 `;
 
 const IndicatorNameCell = (props: {
   indicator: IndicatorListIndicator;
-  indent?: number;
   openIndicatorsInModal?: (id: string) => void | null;
 }) => {
-  const { indicator, indent = 0, openIndicatorsInModal } = props;
+  const { indicator, openIndicatorsInModal } = props;
   const IndicatorTrigger: React.ReactNode = openIndicatorsInModal ? (
     <Button
       color="link"
@@ -96,11 +98,7 @@ const IndicatorNameCell = (props: {
   ) : (
     <IndicatorLink id={indicator.id}>{indicator.name}</IndicatorLink>
   );
-  return (
-    <StyledCell key="name" style={{ paddingLeft: `${indent * 16}px` }}>
-      {IndicatorTrigger}
-    </StyledCell>
-  );
+  return <CellContent key="name">{IndicatorTrigger}</CellContent>;
 };
 
 /**
@@ -155,13 +153,13 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
 
   const value: number | null = getValue(indicator, valueType, isNormalized);
   if (value === null) {
-    return <StyledCell $numeric={true}>--</StyledCell>;
+    return <CellContent $numeric={true}>--</CellContent>;
   }
   return (
-    <StyledCell $numeric={true}>
+    <CellContent $numeric={true}>
       <Value>{format.number(value, { maximumFractionDigits: 2 })}</Value>
       <Unit>{indicator.unit.shortName}</Unit>
-    </StyledCell>
+    </CellContent>
   );
 };
 
@@ -179,7 +177,7 @@ const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
   const { indicator, categoryId } = props;
   const categories = indicator.categories.filter((cat) => cat.type.id === categoryId);
   return (
-    <StyledCell>
+    <CellContent>
       <CategoryBadges>
         {categories &&
           categories.length > 0 &&
@@ -196,7 +194,7 @@ const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
             />
           ))}
       </CategoryBadges>
-    </StyledCell>
+    </CellContent>
   );
 };
 
@@ -223,15 +221,15 @@ const IndicatorListColumnCell = (props: IndicatorListColumnCellProps) => {
 
   switch (sourceField) {
     case IndicatorDashboardFieldName.Name:
-      return <StyledCell>{indicator.name}</StyledCell>;
+      return <CellContent>{indicator.name}</CellContent>;
     case IndicatorDashboardFieldName.Level:
       // TODO: Use action name context
       const indicatorLevelName =
         indicator.level === 'action' ? t('action') : getIndicatorTranslation(indicator.level, t);
       return (
-        <StyledCell>
+        <CellContent>
           <IndicatorLevelBadge $level={indicator.level}>{indicatorLevelName}</IndicatorLevelBadge>
-        </StyledCell>
+        </CellContent>
       );
     case IndicatorDashboardFieldName.UpdatedAt:
       const timeResolution = indicator.timeResolution;
@@ -239,11 +237,11 @@ const IndicatorListColumnCell = (props: IndicatorListColumnCellProps) => {
       const displayDate = indicator.latestValue?.date
         ? format.dateTime(lastUpdated, dateFormatFromResolution(timeResolution))
         : '--';
-      return <StyledCell $numeric>{displayDate}</StyledCell>;
+      return <CellContent $numeric>{displayDate}</CellContent>;
     case IndicatorDashboardFieldName.Organization:
-      return <StyledCell>{indicator.organization.name}</StyledCell>;
+      return <CellContent>{indicator.organization.name}</CellContent>;
     default:
-      return <StyledCell>--</StyledCell>;
+      return <CellContent>--</CellContent>;
   }
 };
 
@@ -251,20 +249,15 @@ interface IndicatorTableCellProps {
   column: NonNullable<IndicatorListPageFragmentFragment['listColumns']>[number];
   indicator: IndicatorListIndicator;
   openIndicatorsInModal?: (id: string) => void | null;
-  indent?: number;
 }
 const IndicatorTableCell = (props: IndicatorTableCellProps) => {
-  const { column, indicator, openIndicatorsInModal, indent } = props;
+  const { column, indicator, openIndicatorsInModal } = props;
 
   switch (column.__typename) {
     case 'IndicatorListColumn':
       if (column.sourceField === IndicatorDashboardFieldName.Name) {
         return (
-          <IndicatorNameCell
-            indicator={indicator}
-            indent={indent}
-            openIndicatorsInModal={openIndicatorsInModal}
-          />
+          <IndicatorNameCell indicator={indicator} openIndicatorsInModal={openIndicatorsInModal} />
         );
       }
       return <IndicatorListColumnCell sourceField={column.sourceField} indicator={indicator} />;
@@ -279,21 +272,21 @@ const IndicatorTableCell = (props: IndicatorTableCellProps) => {
     case 'IndicatorCategoryColumn':
       return <IndicatorCategoryCell indicator={indicator} categoryId={column.categoryType.id} />;
     default:
-      return <StyledCell>--</StyledCell>;
+      return <CellContent>--</CellContent>;
   }
   /*
     case IndicatorTableColumnId.TimeResolution:
-      return <StyledCell key={columnName}>{indicator.timeResolution}</StyledCell>;
+      return <CellContent key={columnName}>{indicator.timeResolution}</CellContent>;
 
     case IndicatorTableColumnId.Dimensions:
       const dimensionsCount = indicator.dimensions?.length || 0;
       return (
-        <StyledCell key={columnName} style={{ textAlign: 'right' }}>
+        <CellContent key={columnName} style={{ textAlign: 'right' }}>
           {dimensionsCount}
-        </StyledCell>
+        </CellContent>
       );
     case IndicatorTableColumnId.Common:
-      return <StyledCell key={columnName}>{indicator.common ? '✅' : '❌'}</StyledCell>;
+      return <CellContent key={columnName}>{indicator.common ? '✅' : '❌'}</CellContent>;
   } */
 };
 
