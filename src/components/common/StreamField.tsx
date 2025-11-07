@@ -93,8 +93,6 @@ const ResponsiveStyles = styled.div`
   }
 
   .responsive-object[data-embed-provider='${EmbedProvider.PLOTLY}'] {
-    display: none;
-
     &.responsive-object-small {
       iframe {
         height: 400px;

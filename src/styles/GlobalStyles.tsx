@@ -235,9 +235,4 @@ export const GlobalStyles = createGlobalStyle`
   .custom-leichte-sprache {
     font-size: 125%;
   }
-
-  // Hide all Plotly embeds
-  iframe[src*="plotly.com"] {
-    display: none;
-  }
 `;
