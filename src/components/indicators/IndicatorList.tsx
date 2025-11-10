@@ -26,7 +26,7 @@ import ErrorMessage from '@/components/common/ErrorMessage';
 import { GET_INDICATOR_LIST } from '@/queries/get-indicator-list';
 
 import { usePlan } from '../../context/plan';
-import IndicatorListFiltered from './IndicatorListFilteredNew';
+import IndicatorListFiltered from './IndicatorListFiltered';
 import IndicatorListFilters from './IndicatorListFilters';
 import IndicatorModal from './IndicatorModal';
 import IndicatorsHero from './IndicatorsHero';
