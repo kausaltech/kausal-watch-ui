@@ -295,6 +295,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
   if (error) return <ErrorMessage message={error.message} />;
   if (loading || !data) return <ContentLoader />;
 
+  /* Do we show the insights tab as an alternative to the list view? */
   const showInsights = data.plan?.hasIndicatorRelationships === true && (displayInsights ?? true);
 
   const indicators: IndicatorListIndicator[] = (
@@ -312,6 +313,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     indicators
   );
 
+  /* If no custom columns are defined, we create default columns */
   if (!listColumns || listColumns.length === 0) {
     const displayNormalizedValues =
       undefined !==
@@ -334,6 +336,8 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
   }
   const hierarchy = processCommonIndicatorHierarchy(indicators);
 
+  /* Sort & filter indicators */
+  /* TODO: Sorting options are not implemented yet */
   const sortedIndicators = sortIndicators(hierarchy, indicators, displayMunicipality ?? false);
   const filteredIndicators = filterIndicators(
     sortedIndicators,

@@ -16,6 +16,7 @@ import { getIndicatorTranslation } from './IndicatorCard';
 import type { IndicatorListIndicator } from './IndicatorList';
 
 const CellContent = styled.div<{ $numeric?: boolean }>`
+  flex: 1;
   text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
   line-height: ${(props) => props.theme.lineHeightSm};
 
