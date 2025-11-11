@@ -219,6 +219,7 @@
       "CategoryListBlock",
       "IndicatorGroupBlock",
       "QuestionAnswerBlock",
+      "RawVisualizationBlock",
       "RelatedIndicatorsBlock",
       "RichTextBlock"
     ],
@@ -387,6 +388,7 @@
       "IndicatorShowcaseBlock",
       "LargeImageBlock",
       "PathsOutcomeBlock",
+      "RawVisualizationBlock",
       "RelatedPlanListBlock",
       "RichTextBlock"
     ],
@@ -434,6 +436,7 @@
       "LargeImageBlock",
       "PathsOutcomeBlock",
       "QuestionAnswerBlock",
+      "RawVisualizationBlock",
       "RichTextBlock"
     ],
     "StreamFieldInterface": [
@@ -544,6 +547,7 @@
       "QuestionAnswerBlock",
       "QuestionBlock",
       "RawHTMLBlock",
+      "RawVisualizationBlock",
       "RegexBlock",
       "RelatedIndicatorsBlock",
       "RelatedPlanListBlock",

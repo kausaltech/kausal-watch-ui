@@ -58,12 +58,12 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }: IndicatorVisuali
     plan: { scenarios },
   } = data;
 
-  console.log('indicator', indicator);
-  console.log('scenarios', scenarios);
+  //console.log('indicator', indicator);
+  // console.log('scenarios', scenarios);
   if (!indicator) return <Alert color="danger">{t('indicator-not-found')}</Alert>;
   if (indicator.values.length === 0) return null;
   const cube = generateCubeFromValues(indicator, indicator.dimensions, indicator.values);
-  console.log('cube', cube);
+  //console.log('cube', cube);
 
   const traces = getEchartTraces(
     indicator.dimensions.length > 0 ? indicator.dimensions[0].dimension : null,

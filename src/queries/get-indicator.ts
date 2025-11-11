@@ -3,7 +3,42 @@ import { gql } from '@apollo/client';
 import { RECURSIVE_CATEGORY_TAG_FRAGMENT } from '../fragments/category.fragment';
 
 export const GET_INDICATOR_DETAILS = gql`
-  query IndicatorDetails($id: ID, $plan: ID) {
+  query IndicatorDetails($plan: ID!, $id: ID!, $path: String!) {
+    planPage(plan: $plan, path: $path) {
+      __typename
+      title
+      id
+      urlPath
+      ... on IndicatorListPage {
+        detailsMainTop {
+          ... on IndicatorContentBlock {
+            id
+            blockType
+            fieldLabel
+            fieldHelpText
+            field
+          }
+        }
+        detailsMainBottom {
+          ... on IndicatorContentBlock {
+            id
+            blockType
+            fieldLabel
+            fieldHelpText
+            field
+          }
+        }
+        detailsAside {
+          ... on IndicatorContentBlock {
+            id
+            blockType
+            fieldLabel
+            fieldHelpText
+            field
+          }
+        }
+      }
+    }
     indicator(plan: $plan, id: $id) {
       id
       identifier

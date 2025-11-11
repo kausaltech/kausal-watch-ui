@@ -14,6 +14,7 @@ export const getIndicatorPage = async (plan: string, indicatorId: string) =>
     variables: {
       plan,
       id: indicatorId,
+      path: '/indicators',
     },
     fetchPolicy: 'no-cache',
   });

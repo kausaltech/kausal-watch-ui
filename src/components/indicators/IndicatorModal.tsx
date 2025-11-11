@@ -102,6 +102,7 @@ const IndicatorModal = (props: IndicatorModalProps) => {
     variables: {
       plan: planIdentifier,
       id: indicatorId,
+      path: '/indicators',
     },
     fetchPolicy: 'no-cache',
   });
@@ -112,6 +113,7 @@ const IndicatorModal = (props: IndicatorModalProps) => {
   const indicatorCount = indicatorsOrder.length;
   const currentIndicatorNumber = currentIndicatorIndex + 1;
 
+  console.log('GET_INDICATOR_DETAILS', data);
   return (
     <AriaModalOverlay
       isDismissable

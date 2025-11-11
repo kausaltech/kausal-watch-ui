@@ -152,7 +152,7 @@ const IndicatorModalContent = ({
         />
         <div style={{ marginTop: '10px' }}>
           <CategoryTags
-            categories={indicatorCategories as CategoryRecursiveFragmentFragment[]}
+            categories={indicatorCategories as unknown as CategoryRecursiveFragmentFragment[]}
             types={uniqueTypes as CategoryTypeFragmentFragment[]}
             noLink={true}
             compact={true}
