@@ -5,6 +5,12 @@ const INDICATOR_LIST_FILTER = gql`
     __typename
     field
     id
+    ... on IndicatorFilterBlock {
+      fieldLabel
+      fieldHelpText
+      showAllLabel
+      sourceField
+    }
     ... on CategoryTypeFilterBlock {
       style
       showAllLabel
@@ -30,24 +36,6 @@ const INDICATOR_LIST_FILTER = gql`
           }
         }
       }
-    }
-    ... on ActionAttributeTypeFilterBlock {
-      showAllLabel
-      attributeType {
-        id
-        identifier
-        format
-        name
-        helpText
-        choiceOptions {
-          id
-          identifier
-          name
-        }
-      }
-    }
-    ... on ContinuousActionFilterBlock {
-      id
     }
   }
 `;

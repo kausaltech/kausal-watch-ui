@@ -12,13 +12,11 @@ import { Container } from 'reactstrap';
 import {
   IndicatorColumnValueType,
   IndicatorDashboardFieldName,
-  type IndicatorListFilterFragment,
   type IndicatorListIndicatorFragment,
   type IndicatorListPageFragmentFragment,
   type IndicatorListQuery,
   type IndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
-import { getCategoryString } from '@/common/categories';
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
 import type { FilterValue } from '@/components/actions/ActionListFilters';
 import ContentLoader from '@/components/common/ContentLoader';
@@ -93,32 +91,40 @@ interface Filters {
  */
 function filterIndicators<I extends IndicatorListIndicator>(
   indicators: I[],
-  filters: Filters,
-  includeRelatedPlans: boolean
+  filters: Filters
 ): I[] {
-  const hasCategoryFilters = Object.entries(filters).some(
+  const categoryFilters = Object.entries(filters).filter(
     ([key, value]) => value !== undefined && value !== null && key.startsWith('cat')
   );
 
+  // TODO: Handle common categories
   const filterByCategory = (indicator: I) => {
-    return !!indicator.categories.find(
-      ({ type, id }) => filters[getCategoryString(type.identifier)] === id
-    );
-  };
-
-  const filterByCommonCategory = (indicator: I) => {
-    const activeFilters = Object.entries(filters).filter(
-      ([_key, value]) => value !== undefined && value !== null
-    );
-
-    if (activeFilters.length === 0) {
-      return true;
-    }
-
-    return activeFilters.every(([_filterKey, filterValue]) => {
+    if (categoryFilters.length === 0) return true;
+    // Use 'some' for OR logic - indicator matches if it satisfies ANY category filter
+    return categoryFilters.some(([key, value]) => {
+      // Treat undefined, null, or empty array as "no filter applied"
+      if (value === undefined || value === null || (Array.isArray(value) && value.length === 0)) {
+        return true;
+      }
+      const categoryTypeIdentifier = key.replace('cat-', '');
+      // Find if indicator has a category matching this type
       return indicator.categories.some((category) => {
-        if (category.common) {
-          return category.common.id === filterValue;
+        if (category.type.identifier === categoryTypeIdentifier) {
+          // Helper to check if category or any of its parents match
+          const matchesCategoryOrParent = (cat: typeof category, targetValue: string): boolean => {
+            if (cat.id === targetValue) return true;
+            // Walk up the parent chain
+            if (cat.parent?.id) {
+              return matchesCategoryOrParent(cat.parent as typeof category, targetValue);
+            }
+            return false;
+          };
+
+          // Handle both single value and array of values (multiselect)
+          if (Array.isArray(value)) {
+            return value.some((v) => matchesCategoryOrParent(category, v));
+          }
+          return matchesCategoryOrParent(category, value);
         }
         return false;
       });
@@ -128,11 +134,15 @@ function filterIndicators<I extends IndicatorListIndicator>(
   const filterBySearch = (indicator: I) =>
     !filters['name'] || indicator.name.toLowerCase().includes(filters['name'].toLowerCase());
 
+  const filterByLevel = (indicator: I) => {
+    return !filters['indicator-level'] || filters['indicator-level'] === indicator.level;
+  };
+
   return indicators.filter((indicator) => {
-    const categoryResult = hasCategoryFilters ? filterByCategory(indicator) : true;
-    const commonCategoryResult = filterByCommonCategory(indicator);
+    const categoryResult = categoryFilters ? filterByCategory(indicator) : true;
     const searchResult = filterBySearch(indicator);
-    return (!includeRelatedPlans ? categoryResult : commonCategoryResult) && searchResult;
+    const levelResult = filterByLevel(indicator);
+    return categoryResult && searchResult && levelResult;
   });
 }
 
@@ -159,13 +169,14 @@ const getDefaultColumns = (
   displayMunicipality: boolean,
   categoryType: CategoryType | undefined,
   displayNormalizedValues: boolean,
-  displayLevel: boolean
+  displayLevel: boolean,
+  t: ReturnType<typeof useTranslations<string>>
 ): NonNullable<IndicatorListPageFragmentFragment['listColumns']> => {
   const columns: NonNullable<IndicatorListPageFragmentFragment['listColumns']> = [
     {
       __typename: 'IndicatorListColumn',
       id: 'default-column-name',
-      columnLabel: null,
+      columnLabel: t('name'),
       columnHelpText: '',
       sourceField: IndicatorDashboardFieldName.Name,
     },
@@ -174,7 +185,7 @@ const getDefaultColumns = (
     columns.push({
       __typename: 'IndicatorListColumn',
       id: 'default-column-level',
-      columnLabel: null,
+      columnLabel: t('type'),
       columnHelpText: '',
       sourceField: IndicatorDashboardFieldName.Level,
     });
@@ -196,7 +207,7 @@ const getDefaultColumns = (
     columns.push({
       __typename: 'IndicatorListColumn',
       id: 'default-column-organization',
-      columnLabel: null,
+      columnLabel: t('municipality'),
       columnHelpText: '',
       sourceField: IndicatorDashboardFieldName.Organization,
     });
@@ -205,7 +216,7 @@ const getDefaultColumns = (
   columns.push({
     __typename: 'IndicatorListColumn',
     id: 'default-column-updated',
-    columnLabel: null,
+    columnLabel: t('updated'),
     columnHelpText: '',
     sourceField: IndicatorDashboardFieldName.UpdatedAt,
   });
@@ -213,7 +224,7 @@ const getDefaultColumns = (
   columns.push({
     __typename: 'IndicatorValueColumn',
     id: 'default-column-value',
-    columnLabel: null,
+    columnLabel: t('indicator-value'),
     columnHelpText: '',
     sourceField: null,
     isNormalized: false,
@@ -224,7 +235,7 @@ const getDefaultColumns = (
     columns.push({
       __typename: 'IndicatorValueColumn',
       id: 'default-column-value-normalized',
-      columnLabel: null,
+      columnLabel: t('indicator-population-normalized-value'),
       columnHelpText: '',
       sourceField: null,
       isNormalized: true,
@@ -251,9 +262,13 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     advancedFilters,
   } = page;
   const filterSections = {
-    mainFilters: mainFilters as IndicatorListFilterFragment[],
-    primaryFilters: primaryFilters as IndicatorListFilterFragment[],
-    advancedFilters: advancedFilters as IndicatorListFilterFragment[],
+    mainFilters: mainFilters as NonNullable<IndicatorListPageFragmentFragment['mainFilters']>,
+    primaryFilters: primaryFilters as NonNullable<
+      IndicatorListPageFragmentFragment['primaryFilters']
+    >,
+    advancedFilters: advancedFilters as NonNullable<
+      IndicatorListPageFragmentFragment['advancedFilters']
+    >,
   };
 
   const plan = usePlan();
@@ -328,7 +343,8 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
       displayMunicipality,
       categoryType,
       displayNormalizedValues,
-      displayLevel ?? false
+      displayLevel ?? false,
+      t
     );
     indicatorListColumns.push(...defaultColumns);
   } else {
@@ -339,11 +355,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
   /* Sort & filter indicators */
   /* TODO: Sorting options are not implemented yet */
   const sortedIndicators = sortIndicators(hierarchy, indicators, displayMunicipality ?? false);
-  const filteredIndicators = filterIndicators(
-    sortedIndicators,
-    filters,
-    includeRelatedPlans ?? false
-  );
+  const filteredIndicators = filterIndicators(sortedIndicators, filters);
 
   return (
     <>
@@ -364,14 +376,6 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
         showInsights={showInsights}
         testId={testId}
       >
-        {/*
-        <ActionListFilters
-          filterSections={filterSections}
-          activeFilters={filters}
-          onChange={handleFilterChange}
-          actionCount={filteredIndicators.length}
-          actionCountLabel={t('indicators')}
-        />*/}
         <IndicatorListFilters
           indicators={indicators}
           filterLayout={filterSections}

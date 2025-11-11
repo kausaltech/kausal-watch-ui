@@ -217,6 +217,11 @@ export enum DatasetSchemaTimeResolution {
   Yearly = 'YEARLY'
 }
 
+export enum IndicatorCategoryRelationshipType {
+  MainGoal = 'MAIN_GOAL',
+  SecondaryGoal = 'SECONDARY_GOAL'
+}
+
 /** An enumeration. */
 export enum IndicatorColumnValueType {
   Earliest = 'EARLIEST',
