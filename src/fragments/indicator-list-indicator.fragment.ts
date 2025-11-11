@@ -43,11 +43,18 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
       color
       parent {
         id
+        name
         color
+        level {
+          id
+        }
       }
       type {
         id
         identifier
+      }
+      level {
+        id
       }
       common {
         id

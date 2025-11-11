@@ -172,11 +172,28 @@ const getCategoryColor = (
 interface IndicatorCategoryCellProps {
   indicator: IndicatorListIndicator;
   categoryId: string;
+  categoryLevel: IndicatorListIndicator['categories'][number]['level'];
 }
 
 const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
-  const { indicator, categoryId } = props;
-  const categories = indicator.categories.filter((cat) => cat.type.id === categoryId);
+  const { indicator, categoryId, categoryLevel } = props;
+  const categories: IndicatorListIndicator['categories'][number][] = [];
+  // In order not to make the query recursive we support only one level of category levels
+  // If no category level is provided, show all categories of the given category type
+  // If a category level is provided choose between the selected category or its parent category
+  // Do not show category if there is no match between category levels
+  indicator.categories.forEach((cat) => {
+    if (cat.type.id === categoryId) {
+      if (!categoryLevel) {
+        categories.push(cat);
+      } else if (categoryLevel && cat.level?.id === categoryLevel.id) {
+        categories.push(cat);
+      } else if (categoryLevel && cat.parent?.level?.id === categoryLevel.id) {
+        categories.push(cat.parent as IndicatorListIndicator['categories'][number]);
+      }
+    }
+  });
+
   return (
     <CellContent>
       <CategoryBadges>
@@ -271,7 +288,13 @@ const IndicatorTableCell = (props: IndicatorTableCellProps) => {
         />
       );
     case 'IndicatorCategoryColumn':
-      return <IndicatorCategoryCell indicator={indicator} categoryId={column.categoryType.id} />;
+      return (
+        <IndicatorCategoryCell
+          indicator={indicator}
+          categoryId={column.categoryType.id}
+          categoryLevel={column?.categoryLevel}
+        />
+      );
     default:
       return <CellContent>--</CellContent>;
   }
