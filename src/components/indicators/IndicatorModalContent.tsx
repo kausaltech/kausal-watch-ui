@@ -22,7 +22,6 @@ const ContentLoader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.5);
   z-index: 1000;
 `;
 
@@ -46,6 +45,25 @@ const ModalScrollableContent = styled.div`
   overflow-y: auto;
   padding: ${({ theme }) => `0 ${theme.spaces.s200} ${theme.spaces.s200} ${theme.spaces.s200}`};
   min-height: 0;
+
+  /* Implement scroll shadows */
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+
+  background:
+    /* Shadow Cover TOP */
+    linear-gradient(white 30%, rgba(255, 255, 255, 0)) center top,
+    /* Shadow Cover BOTTOM */ linear-gradient(rgba(255, 255, 255, 0), white 70%) center bottom,
+    /* Shadow TOP */ linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0)) center top,
+    /* Shadow BOTTOM */ linear-gradient(to top, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0)) center bottom;
+
+  background-repeat: no-repeat;
+  background-size:
+    100% 40px,
+    100% 40px,
+    100% 14px,
+    100% 14px;
+  background-attachment: local, local, scroll, scroll;
 `;
 
 const PlansList = styled.ul`
@@ -83,9 +101,11 @@ const IndicatorModalContent = ({
 }: IndicatorModalContentProps) => {
   if (loading && !indicator)
     return (
-      <ContentLoader>
-        <Spinner />
-      </ContentLoader>
+      <ContentWrapper>
+        <ContentLoader>
+          <Spinner />
+        </ContentLoader>
+      </ContentWrapper>
     );
   if (error) return <div>Error: {error.message}</div>;
   if (!indicator) return <div>No data</div>;

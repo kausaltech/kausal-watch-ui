@@ -47,8 +47,8 @@ const AriaModal = styled(Modal)`
   margin-left: 50vw;
   translate: -50% -50%;
   box-shadow: 0 8px 20px rgba(0 0 0 / 0.1);
-  border-radius: 6px;
-  background: var(--overlay-background);
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  background-color: ${(props) => props.theme.cardBackground.primary};
   color: var(--text-color);
   outline: none;
 
@@ -62,7 +62,8 @@ const AriaModal = styled(Modal)`
 `;
 
 const AriaDialog = styled(Dialog)`
-  background-color: #eeeeee;
+  background-color: ${(props) => props.theme.cardBackground.primary};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -74,8 +75,11 @@ const AriaDialog = styled(Dialog)`
 const ModalNavigation = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: ${(props) => props.theme.spaces.s100};
+  align-items: center;
+  padding: ${(props) => props.theme.spaces.s050};
   flex: 0 0 auto;
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  overflow: hidden;
 `;
 
 interface IndicatorModalProps {
