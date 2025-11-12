@@ -28,6 +28,19 @@ const createFilterUnusedCommonCategories =
   (indicators: IndicatorListIndicator[]) => (category: IndicatorCategory) =>
     indicators.find(({ categories }) => categories.find((cat) => cat.id === category.id));
 
+// Prevent actionlistfilters to inject the showAllLabel "See all actions" into the empty showAllLabel
+const indicatorFiltersToActionListFilters = (
+  filters:
+    | IndicatorListPageFiltersFragment['advancedFilters']
+    | IndicatorListPageFiltersFragment['primaryFilters']
+    | IndicatorListPageFiltersFragment['mainFilters'],
+  t: TFunction
+) => {
+  return filters?.map((filter) => ({
+    ...filter,
+    showAllLabel: t('filter-all-categories'),
+  }));
+};
 const getFilterConfig = (
   categoryType: CategoryType | null | undefined,
   indicators: IndicatorListIndicator[],
@@ -51,9 +64,17 @@ const getFilterConfig = (
 
     // if (!filter.showAllLabel) filter.showAllLabel = t('filter-all-categories');
     return {
-      mainFilters: filterLayout.mainFilters,
-      primaryFilters: filterLayout.primaryFilters,
-      advancedFilters: filterLayout.advancedFilters,
+      mainFilters: indicatorFiltersToActionListFilters(filterLayout.mainFilters, t) as NonNullable<
+        IndicatorListPageFiltersFragment['mainFilters']
+      >,
+      primaryFilters: indicatorFiltersToActionListFilters(
+        filterLayout.primaryFilters,
+        t
+      ) as NonNullable<IndicatorListPageFiltersFragment['primaryFilters']>,
+      advancedFilters: indicatorFiltersToActionListFilters(
+        filterLayout.advancedFilters,
+        t
+      ) as NonNullable<IndicatorListPageFiltersFragment['advancedFilters']>,
       __typename: 'IndicatorListPage',
     };
   }
@@ -76,7 +97,7 @@ const getFilterConfig = (
         field: 'category',
         id: 'default-category-filter',
         style: 'dropdown',
-        showAllLabel: '',
+        showAllLabel: t('filter-all-categories'),
         depth: null,
         categoryType: {
           id: categoryType.id,
@@ -105,7 +126,7 @@ const getFilterConfig = (
           field: 'category',
           id: `common_${typeIdentifier}`,
           style: 'dropdown',
-          showAllLabel: '',
+          showAllLabel: t('filter-all-categories'),
           depth: null,
           categoryType: {
             id: type?.identifier || typeIdentifier,
