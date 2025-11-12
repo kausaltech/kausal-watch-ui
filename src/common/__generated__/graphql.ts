@@ -227,7 +227,8 @@ export enum IndicatorCategoryRelationshipType {
 export enum IndicatorColumnValueType {
   Earliest = 'EARLIEST',
   Goal = 'GOAL',
-  Latest = 'LATEST'
+  Latest = 'LATEST',
+  Reference = 'REFERENCE'
 }
 
 /** An enumeration. */
@@ -237,6 +238,7 @@ export enum IndicatorDashboardFieldName {
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT',
   Visualization = 'VISUALIZATION'
 }
@@ -258,6 +260,7 @@ export enum IndicatorDetailsFieldName {
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT',
   Visualization = 'VISUALIZATION'
 }
@@ -277,6 +280,7 @@ export enum IndicatorList_FiltersFieldName {
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT'
 }
 
@@ -3911,6 +3915,12 @@ export type IndicatorListIndicatorFragment = (
       & { __typename: 'NormalizedValue' }
     )> }
     & { __typename: 'IndicatorValue' }
+  ) | null, referenceValue: (
+    { id: string, date: string | null, value: number, normalizedValues: Array<(
+      { normalizerId: string | null, value: number | null }
+      & { __typename: 'NormalizedValue' }
+    )> }
+    & { __typename: 'IndicatorValue' }
   ) | null, dimensions: Array<(
     { dimension: (
       { id: string, name: string, categories: Array<(
@@ -3973,25 +3983,14 @@ type IndicatorListFilter_H9dX6C0hCybSSnS6mCyLusKJqOwEkQt1q3G8afI6Ho_Fragment = (
   & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' }
 );
 
-type IndicatorListFilter_7zEua3RoGjB9PbCDyZOxl40XhLhjxVYzvN8jZfJpeA_Fragment = (
+type IndicatorListFilter_QaDl3O8SJg99wXnAuUc2KeomVUyVsE1ZcyApGtAuY_Fragment = (
   { field: string, id: string | null }
-  & { __typename: 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RawVisualizationBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' }
+  & { __typename: 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RawVisualizationBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' }
 );
 
-type IndicatorListFilter_K0adacj1ibIpbFyCNrrGiyHrajQzRdK2nEya9txyzo_Fragment = (
+type IndicatorListFilter_V2aeCntk28Sdu3p0ZUflYw6N6iIqB4ZRyT2m1kGs_Fragment = (
   { field: string, id: string | null }
-  & { __typename: 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-);
-
-type IndicatorListFilter_ActionAttributeTypeFilterBlock_Fragment = (
-  { showAllLabel: string | null, field: string, id: string | null, attributeType: (
-    { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
-      { id: string, identifier: string, name: string }
-      & { __typename: 'AttributeTypeChoiceOption' }
-    )> }
-    & { __typename: 'AttributeType' }
-  ) }
-  & { __typename: 'ActionAttributeTypeFilterBlock' }
+  & { __typename: 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
 );
 
 type IndicatorListFilter_CategoryTypeFilterBlock_Fragment = (
@@ -4016,7 +4015,7 @@ type IndicatorListFilter_IndicatorFilterBlock_Fragment = (
   & { __typename: 'IndicatorFilterBlock' }
 );
 
-export type IndicatorListFilterFragment = IndicatorListFilter_JxzhEOvnBnIzLiXeAUm3xrfiKBjXFpDaL5C3p3Xgq4_Fragment | IndicatorListFilter_Zf5emmbUjQdAxoEd11HNfN7rZeObw5fUe9AKmN0dV8_Fragment | IndicatorListFilter_93JyuwkcgTxyAd8Ze7B1Y1YdUFqF72beexGyp3vHk_Fragment | IndicatorListFilter_4HpjKhsrlTf6hxGNhz0QdoSkd5pDwAx5uXeu2jfvi0_Fragment | IndicatorListFilter_2JKqHhFKfZ8iVvnmFmNiPvq34HmwQpA5qtVqflSuBmk_Fragment | IndicatorListFilter_7zEua3RoGjB9PbCDyZOxl40XhLhjxVYzvN8jZfJpeA_Fragment | IndicatorListFilter_K0adacj1ibIpbFyCNrrGiyHrajQzRdK2nEya9txyzo_Fragment | IndicatorListFilter_ActionAttributeTypeFilterBlock_Fragment | IndicatorListFilter_CategoryTypeFilterBlock_Fragment | IndicatorListFilter_ContinuousActionFilterBlock_Fragment;
+export type IndicatorListFilterFragment = IndicatorListFilter_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment | IndicatorListFilter_Ql4eta9xK793iJ3An4PJfoICo9TfFjlLDjRPnxN10g_Fragment | IndicatorListFilter_2koItxEy8dz60bgjDf7lXzPGmderdH7ym6d8TJsg_Fragment | IndicatorListFilter_Zzz0piZa8cY2JJosW1YuHrIjF95CcUhzRcQgkp3Q_Fragment | IndicatorListFilter_H9dX6C0hCybSSnS6mCyLusKJqOwEkQt1q3G8afI6Ho_Fragment | IndicatorListFilter_QaDl3O8SJg99wXnAuUc2KeomVUyVsE1ZcyApGtAuY_Fragment | IndicatorListFilter_V2aeCntk28Sdu3p0ZUflYw6N6iIqB4ZRyT2m1kGs_Fragment | IndicatorListFilter_CategoryTypeFilterBlock_Fragment | IndicatorListFilter_IndicatorFilterBlock_Fragment;
 
 export type IndicatorListPageFiltersFragment = (
   { primaryFilters: Array<(
@@ -4091,7 +4090,7 @@ export type IndicatorListPageFragmentFragment = (
     { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
     & { __typename: 'IndicatorListColumn' }
   ) | (
-    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType }
+    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, hideUnit: boolean }
     & { __typename: 'IndicatorValueColumn' }
   )> | null, primaryFilters: Array<(
     { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -11450,7 +11449,7 @@ export type GetContentPageQuery = (
       { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
       & { __typename: 'IndicatorListColumn' }
     ) | (
-      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType }
+      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, hideUnit: boolean }
       & { __typename: 'IndicatorValueColumn' }
     )> | null, primaryFilters: Array<(
       { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -13113,6 +13112,12 @@ export type IndicatorListQuery = (
         & { __typename: 'NormalizedValue' }
       )> }
       & { __typename: 'IndicatorValue' }
+    ) | null, referenceValue: (
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )> }
+      & { __typename: 'IndicatorValue' }
     ) | null, dimensions: Array<(
       { dimension: (
         { id: string, name: string, categories: Array<(
@@ -13198,6 +13203,12 @@ export type IndicatorListQuery = (
       ) | null }
       & { __typename: 'Category' }
     )>, latestValue: (
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    ) | null, referenceValue: (
       { id: string, date: string | null, value: number, normalizedValues: Array<(
         { normalizerId: string | null, value: number | null }
         & { __typename: 'NormalizedValue' }

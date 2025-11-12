@@ -73,6 +73,15 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
         value
       }
     }
+    referenceValue {
+      id
+      date
+      value
+      normalizedValues {
+        normalizerId
+        value
+      }
+    }
     dimensions {
       dimension {
         id
