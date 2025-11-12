@@ -7,7 +7,7 @@ import { readableColor } from 'polished';
 import { Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import type { Category, CategoryFragmentFragment } from '@/common/__generated__/graphql';
+import type { CategoryFragmentFragment } from '@/common/__generated__/graphql';
 import { getDeepParents } from '@/common/categories';
 import type { TFunction } from '@/common/i18n';
 import { usePaths } from '@/context/paths/paths';
@@ -242,7 +242,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
                   cat.categoryPage?.live && (
                     <Col tag="li" xs="12" sm="6" lg="4" key={cat.id} className="mb-5 d-flex">
                       <CategoryCard
-                        category={cat as Category}
+                        category={cat}
                         group={group}
                         pathsInstance={pathsInstance}
                         onLoaded={handleCardLoaded}
@@ -266,7 +266,7 @@ const getParentCategoryOfLevel = (
   cat: CategoryFragmentFragment,
   levelId: string
 ): CategoryFragmentFragment => {
-  const catParents = getDeepParents(cat as Category);
+  const catParents = getDeepParents(cat);
   return catParents.find((parent) => parent.level?.id === levelId) as CategoryFragmentFragment;
 };
 

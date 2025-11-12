@@ -28,7 +28,7 @@ const Values = styled.div<{ $muted: boolean }>`
   flex-wrap: wrap;
   gap: 0 10px;
   align-items: stretch;
-  flex: 0 1 360px;
+  flex: 0 1 780px;
   background-color: ${({ theme }) => theme.themeColors.white};
   opacity: ${({ $muted }) => ($muted ? 0.5 : 1)};
 `;
@@ -53,7 +53,7 @@ const ParametersWrapper = styled.div`
   flex: 1 0 45%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 type PathsActionNodeContentProps = {
