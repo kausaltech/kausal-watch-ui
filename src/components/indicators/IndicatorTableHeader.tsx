@@ -17,22 +17,14 @@ interface IndicatorTableHeaderProps {
   column: NonNullable<IndicatorListPageFragmentFragment['listColumns']>[number];
 }
 
-/*
-{t('municipality')}
-type
-name
-themes
-updated
-indicator-value
-indicator-population-normalized-value
-*/
-
 const isNumericColumn = (
   column: NonNullable<IndicatorListPageFragmentFragment['listColumns']>[number]
 ) => {
   switch (column.__typename) {
     case 'IndicatorListColumn':
-      return false;
+      if (column.sourceField === IndicatorDashboardFieldName.UpdatedAt) {
+        return true;
+      } else return false;
     case 'IndicatorValueColumn':
       return true;
     default:
@@ -61,7 +53,7 @@ const getColumnLabel = (
         case IndicatorDashboardFieldName.Level:
           return t('type');
         case IndicatorDashboardFieldName.Organization:
-          return t('municipality');
+          return t('organization');
         case IndicatorDashboardFieldName.UpdatedAt:
           return t('updated');
         default:
@@ -83,7 +75,7 @@ const getColumnLabel = (
         case IndicatorColumnValueType.Earliest:
           return (
             <>
-              [indicator-start-value]
+              {t('indicator-start-value')}
               <br />
               {normalized}
             </>

@@ -3,10 +3,11 @@ import { useTranslations } from 'next-intl';
 import {
   CategoryTypeSelectWidget,
   type IndicatorListFilterFragment,
+  type IndicatorListPageFiltersFragment,
 } from '@/common/__generated__/graphql';
+import type { TFunction } from '@/common/i18n';
 import { usePlan } from '@/context/plan';
 
-import { type ActionListPageFiltersFragment } from '../../common/__generated__/graphql';
 import ActionListFilters, {
   type ActionListFilterSection,
   type FilterValue,
@@ -27,34 +28,17 @@ const createFilterUnusedCommonCategories =
   (indicators: IndicatorListIndicator[]) => (category: IndicatorCategory) =>
     indicators.find(({ categories }) => categories.find((cat) => cat.id === category.id));
 
-const indicatorListFilterToActionListFilter = (
-  filter: IndicatorListFilterFragment
-):
-  | NonNullable<ActionListPageFiltersFragment['mainFilters']>[0]
-  | NonNullable<ActionListPageFiltersFragment['advancedFilters']>[0]
-  | NonNullable<ActionListPageFiltersFragment['primaryFilters']>[0]
-  | undefined => {
-  switch (filter.__typename) {
-    case 'CategoryTypeFilterBlock':
-      return {
-        ...filter,
-      };
-    case 'IndicatorFilterBlock':
-      // TODO: Support level filter in ActionListFilters
-      return undefined;
-  }
-};
-
 const getFilterConfig = (
   categoryType: CategoryType | null | undefined,
   indicators: IndicatorListIndicator[],
   commonCategories: CollectedCommonCategory[] | null,
   filterLayout: {
-    advancedFilters: IndicatorListFilterFragment[];
-    primaryFilters: IndicatorListFilterFragment[];
-    mainFilters: IndicatorListFilterFragment[];
-  }
-): ActionListPageFiltersFragment => {
+    advancedFilters: IndicatorListPageFiltersFragment['advancedFilters'];
+    primaryFilters: IndicatorListPageFiltersFragment['primaryFilters'];
+    mainFilters: IndicatorListPageFiltersFragment['mainFilters'];
+  },
+  t: TFunction
+): IndicatorListPageFiltersFragment => {
   // Common categories is null if we are not including related plans
   const useDefaultFilters =
     filterLayout.advancedFilters?.length === 0 &&
@@ -64,23 +48,13 @@ const getFilterConfig = (
   // If we are provided with a custom layout, we convert the indicator list filters to action list filters
   if (!useDefaultFilters) {
     // console.log('-----------------> Using custom filters', filterLayout);
+
+    // if (!filter.showAllLabel) filter.showAllLabel = t('filter-all-categories');
     return {
-      mainFilters: (
-        filterLayout.mainFilters.map((filter) =>
-          indicatorListFilterToActionListFilter(filter)
-        ) as NonNullable<ActionListPageFiltersFragment['mainFilters']>[0][]
-      ).filter((filt) => filt !== undefined),
-      primaryFilters: (
-        filterLayout.primaryFilters.map((filter) =>
-          indicatorListFilterToActionListFilter(filter)
-        ) as NonNullable<ActionListPageFiltersFragment['primaryFilters']>[0][]
-      ).filter((filt) => filt !== undefined),
-      advancedFilters: (
-        filterLayout.advancedFilters.map((filter) =>
-          indicatorListFilterToActionListFilter(filter)
-        ) as NonNullable<ActionListPageFiltersFragment['advancedFilters']>[0][]
-      ).filter((filt) => filt !== undefined),
-      __typename: 'ActionListPage',
+      mainFilters: filterLayout.mainFilters,
+      primaryFilters: filterLayout.primaryFilters,
+      advancedFilters: filterLayout.advancedFilters,
+      __typename: 'IndicatorListPage',
     };
   }
 
@@ -91,7 +65,7 @@ const getFilterConfig = (
       mainFilters: [],
       primaryFilters: [],
       advancedFilters: [],
-      __typename: 'ActionListPage',
+      __typename: 'IndicatorListPage',
     };
   }
 
@@ -164,7 +138,7 @@ const getFilterConfig = (
     ],
     primaryFilters: [],
     advancedFilters: [],
-    __typename: 'ActionListPage',
+    __typename: 'IndicatorListPage',
   };
 };
 
@@ -177,9 +151,9 @@ interface IndicatorListFiltersProps {
   actionCount: number;
   actionCountLabel: string;
   filterLayout: {
-    advancedFilters: IndicatorListFilterFragment[];
-    primaryFilters: IndicatorListFilterFragment[];
-    mainFilters: IndicatorListFilterFragment[];
+    advancedFilters: IndicatorListPageFiltersFragment['advancedFilters'];
+    primaryFilters: IndicatorListPageFiltersFragment['primaryFilters'];
+    mainFilters: IndicatorListPageFiltersFragment['mainFilters'];
   };
 }
 
@@ -196,7 +170,7 @@ const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
   const t = useTranslations();
   const plan = usePlan();
   /* Create category filter */
-  const filterConfig = getFilterConfig(categoryType, indicators, commonCategories, filterLayout);
+  const filterConfig = getFilterConfig(categoryType, indicators, commonCategories, filterLayout, t);
 
   const filterSections: ActionListFilterSection[] = ActionListFilters.constructFilters({
     mainConfig: filterConfig,

@@ -218,6 +218,11 @@ export enum DatasetSchemaTimeResolution {
   Yearly = 'YEARLY'
 }
 
+export enum IndicatorCategoryRelationshipType {
+  MainGoal = 'MAIN_GOAL',
+  SecondaryGoal = 'SECONDARY_GOAL'
+}
+
 /** An enumeration. */
 export enum IndicatorColumnValueType {
   Earliest = 'EARLIEST',
@@ -3943,29 +3948,29 @@ export type IndicatorListIndicatorFragment = (
   & { __typename: 'Indicator' }
 );
 
-type IndicatorListFilter_JxzhEOvnBnIzLiXeAUm3xrfiKBjXFpDaL5C3p3Xgq4_Fragment = (
+type IndicatorListFilter_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment = (
   { field: string, id: string | null }
-  & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' }
+  & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
 );
 
-type IndicatorListFilter_Zf5emmbUjQdAxoEd11HNfN7rZeObw5fUe9AKmN0dV8_Fragment = (
+type IndicatorListFilter_Ql4eta9xK793iJ3An4PJfoICo9TfFjlLDjRPnxN10g_Fragment = (
   { field: string, id: string | null }
-  & { __typename: 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' }
+  & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
 );
 
-type IndicatorListFilter_93JyuwkcgTxyAd8Ze7B1Y1YdUFqF72beexGyp3vHk_Fragment = (
+type IndicatorListFilter_2koItxEy8dz60bgjDf7lXzPGmderdH7ym6d8TJsg_Fragment = (
   { field: string, id: string | null }
-  & { __typename: 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' }
+  & { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' }
 );
 
-type IndicatorListFilter_4HpjKhsrlTf6hxGNhz0QdoSkd5pDwAx5uXeu2jfvi0_Fragment = (
+type IndicatorListFilter_Zzz0piZa8cY2JJosW1YuHrIjF95CcUhzRcQgkp3Q_Fragment = (
   { field: string, id: string | null }
-  & { __typename: 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' }
+  & { __typename: 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' }
 );
 
-type IndicatorListFilter_2JKqHhFKfZ8iVvnmFmNiPvq34HmwQpA5qtVqflSuBmk_Fragment = (
+type IndicatorListFilter_H9dX6C0hCybSSnS6mCyLusKJqOwEkQt1q3G8afI6Ho_Fragment = (
   { field: string, id: string | null }
-  & { __typename: 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' }
+  & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' }
 );
 
 type IndicatorListFilter_7zEua3RoGjB9PbCDyZOxl40XhLhjxVYzvN8jZfJpeA_Fragment = (
@@ -4006,9 +4011,9 @@ type IndicatorListFilter_CategoryTypeFilterBlock_Fragment = (
   & { __typename: 'CategoryTypeFilterBlock' }
 );
 
-type IndicatorListFilter_ContinuousActionFilterBlock_Fragment = (
-  { id: string | null, field: string }
-  & { __typename: 'ContinuousActionFilterBlock' }
+type IndicatorListFilter_IndicatorFilterBlock_Fragment = (
+  { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+  & { __typename: 'IndicatorFilterBlock' }
 );
 
 export type IndicatorListFilterFragment = IndicatorListFilter_JxzhEOvnBnIzLiXeAUm3xrfiKBjXFpDaL5C3p3Xgq4_Fragment | IndicatorListFilter_Zf5emmbUjQdAxoEd11HNfN7rZeObw5fUe9AKmN0dV8_Fragment | IndicatorListFilter_93JyuwkcgTxyAd8Ze7B1Y1YdUFqF72beexGyp3vHk_Fragment | IndicatorListFilter_4HpjKhsrlTf6hxGNhz0QdoSkd5pDwAx5uXeu2jfvi0_Fragment | IndicatorListFilter_2JKqHhFKfZ8iVvnmFmNiPvq34HmwQpA5qtVqflSuBmk_Fragment | IndicatorListFilter_7zEua3RoGjB9PbCDyZOxl40XhLhjxVYzvN8jZfJpeA_Fragment | IndicatorListFilter_K0adacj1ibIpbFyCNrrGiyHrajQzRdK2nEya9txyzo_Fragment | IndicatorListFilter_ActionAttributeTypeFilterBlock_Fragment | IndicatorListFilter_CategoryTypeFilterBlock_Fragment | IndicatorListFilter_ContinuousActionFilterBlock_Fragment;
@@ -4030,7 +4035,7 @@ export type IndicatorListPageFiltersFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null, mainFilters: Array<(
     { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -4048,7 +4053,7 @@ export type IndicatorListPageFiltersFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null, advancedFilters: Array<(
     { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -4066,7 +4071,7 @@ export type IndicatorListPageFiltersFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null }
   & { __typename: 'IndicatorListPage' }
@@ -4104,7 +4109,7 @@ export type IndicatorListPageFragmentFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null, mainFilters: Array<(
     { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -4122,7 +4127,7 @@ export type IndicatorListPageFragmentFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null, advancedFilters: Array<(
     { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -4140,7 +4145,7 @@ export type IndicatorListPageFragmentFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null }
   & { __typename: 'IndicatorListPage' }
@@ -11463,7 +11468,7 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'CategoryTypeFilterBlock' }
     ) | (
-      { field: string, id: string | null }
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
       & { __typename: 'IndicatorFilterBlock' }
     )> | null, mainFilters: Array<(
       { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -11481,7 +11486,7 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'CategoryTypeFilterBlock' }
     ) | (
-      { field: string, id: string | null }
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
       & { __typename: 'IndicatorFilterBlock' }
     )> | null, advancedFilters: Array<(
       { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -11499,7 +11504,7 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'CategoryTypeFilterBlock' }
     ) | (
-      { field: string, id: string | null }
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
       & { __typename: 'IndicatorFilterBlock' }
     )> | null }
     & { __typename: 'IndicatorListPage' }

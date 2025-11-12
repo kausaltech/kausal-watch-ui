@@ -10,12 +10,7 @@ import Icon from '../common/Icon';
 import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
 import IndicatorTableCell from './IndicatorTableCell';
 import IndicatorTableHeader from './IndicatorTableHeader';
-import {
-  type IndicatorTableColumn,
-  IndicatorTableColumnId,
-  groupIndicatorsByCommonCategory,
-  indentationLevel,
-} from './indicatorUtils';
+import { groupIndicatorsByCommonCategory, indentationLevel } from './indicatorUtils';
 import type { Hierarchy } from './process-indicators';
 
 export const isEmptyFilter = (val) => val == null || val === '';
@@ -191,23 +186,6 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
         <Alert color="primary">{t('search-no-results')}</Alert>
       </div>
     );
-  }
-
-  const indicatorColumns: IndicatorTableColumn[] = [
-    { id: IndicatorTableColumnId.Organization, label: 'Organization' },
-    { id: IndicatorTableColumnId.TimeResolution, label: 'Resolution' },
-    { id: IndicatorTableColumnId.Level, label: 'Level' },
-    { id: IndicatorTableColumnId.Common, label: 'Has common' },
-    { id: IndicatorTableColumnId.LatestValue, label: 'Latest value' },
-    { id: IndicatorTableColumnId.Dimensions, label: 'Dimensions' },
-  ];
-
-  if (props.categoryType) {
-    indicatorColumns.push({
-      id: IndicatorTableColumnId.Categories,
-      label: props.categoryType.name,
-      categoryTypeId: props.categoryType.id,
-    });
   }
 
   const groupedIndicators = groupIndicatorsByCommonCategory(indicators);
