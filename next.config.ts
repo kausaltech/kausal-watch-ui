@@ -31,7 +31,11 @@ let nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'watch-media-prod.s3.kausal.tech',
+        hostname: '**.kausal.tech',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.your-objectstorage.com',
       },
     ],
   },
