@@ -76,6 +76,8 @@ export const INDICATOR_LIST_PAGE_FRAGMENT = gql`
         sourceField
         isNormalized
         valueType
+        referenceYear
+        hideUnit
       }
       ... on IndicatorCategoryColumn {
         id

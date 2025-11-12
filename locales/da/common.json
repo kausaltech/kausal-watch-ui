@@ -62,6 +62,7 @@
     "indicator-no-values": "Ingen værdier",
     "indicator-not-found": "Indikator ikke fundet",
     "indicator-population-normalized-value": "Per indbygger",
+    "indicator-reference-value": "Referenceværdi",
     "indicator-related-actions": "{context, select, STRATEGY {Strategier, der påvirker denne indikator} other {Handlinger, der påvirker denne indikator}}",
     "indicator-resolution-years": "flere år",
     "indicator-start-value": "Startværdi",

@@ -226,7 +226,8 @@ export enum IndicatorCategoryRelationshipType {
 export enum IndicatorColumnValueType {
   Earliest = 'EARLIEST',
   Goal = 'GOAL',
-  Latest = 'LATEST'
+  Latest = 'LATEST',
+  Reference = 'REFERENCE'
 }
 
 /** An enumeration. */
@@ -236,6 +237,7 @@ export enum IndicatorDashboardFieldName {
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT',
   Visualization = 'VISUALIZATION'
 }
@@ -257,6 +259,7 @@ export enum IndicatorDetailsFieldName {
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT',
   Visualization = 'VISUALIZATION'
 }
@@ -276,6 +279,7 @@ export enum IndicatorList_FiltersFieldName {
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT'
 }
 

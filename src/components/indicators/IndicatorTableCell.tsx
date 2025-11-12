@@ -110,7 +110,8 @@ const IndicatorNameCell = (props: {
 const getValue = (
   indicator: IndicatorListIndicator,
   valueType: IndicatorColumnValueType,
-  isNormalized: boolean
+  isNormalized: boolean,
+  referenceYear: number | null
 ): number | null => {
   switch (valueType) {
     case IndicatorColumnValueType.Earliest:
@@ -138,6 +139,23 @@ const getValue = (
       return isNormalized
         ? (indicator.goals![lastGoalIndex]?.normalizedValues?.[0]?.value ?? null)
         : (indicator.goals![lastGoalIndex]?.value ?? null);
+    case IndicatorColumnValueType.Reference:
+      if (indicator.referenceValue) {
+        return isNormalized
+          ? (indicator.referenceValue?.normalizedValues?.[0]?.value ?? null)
+          : (indicator.referenceValue?.value ?? null);
+      }
+      if (!referenceYear) {
+        return null;
+      }
+      const referenceValue = indicator.values.find((value) =>
+        value.date?.startsWith(String(referenceYear))
+      );
+      return referenceValue
+        ? isNormalized
+          ? referenceValue.normalizedValues?.[0]?.value
+          : referenceValue.value
+        : null;
     default:
       return null;
   }
@@ -146,20 +164,22 @@ interface IndicatorValueCellProps {
   indicator: IndicatorListIndicator;
   isNormalized: boolean;
   valueType: IndicatorColumnValueType;
+  referenceYear: number | null;
+  hideUnit: boolean;
 }
 
 const IndicatorValueCell = (props: IndicatorValueCellProps) => {
-  const { indicator, isNormalized, valueType } = props;
+  const { indicator, isNormalized, valueType, referenceYear, hideUnit } = props;
   const format = useFormatter();
 
-  const value: number | null = getValue(indicator, valueType, isNormalized);
+  const value: number | null = getValue(indicator, valueType, isNormalized, referenceYear);
   if (value === null) {
     return <CellContent $numeric={true}>--</CellContent>;
   }
   return (
     <CellContent $numeric={true}>
       <Value>{format.number(value, { maximumFractionDigits: 2 })}</Value>
-      <Unit>{indicator.unit.shortName}</Unit>
+      {!hideUnit && <Unit>{indicator.unit.shortName}</Unit>}
     </CellContent>
   );
 };
@@ -258,6 +278,12 @@ const IndicatorListColumnCell = (props: IndicatorListColumnCellProps) => {
       return <CellContent $numeric>{displayDate}</CellContent>;
     case IndicatorDashboardFieldName.Organization:
       return <CellContent>{indicator.organization.name}</CellContent>;
+    case IndicatorDashboardFieldName.Unit:
+      return (
+        <CellContent>
+          <Unit>{indicator.unit.shortName}</Unit>
+        </CellContent>
+      );
     default:
       return <CellContent>--</CellContent>;
   }
@@ -285,6 +311,8 @@ const IndicatorTableCell = (props: IndicatorTableCellProps) => {
           indicator={indicator}
           isNormalized={column.isNormalized}
           valueType={column.valueType}
+          referenceYear={column.referenceYear}
+          hideUnit={column.hideUnit}
         />
       );
     case 'IndicatorCategoryColumn':

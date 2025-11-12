@@ -56,6 +56,8 @@ const getColumnLabel = (
           return t('organization');
         case IndicatorDashboardFieldName.UpdatedAt:
           return t('updated');
+        case IndicatorDashboardFieldName.Unit:
+          return t('table-unit');
         default:
           return '';
       }
@@ -84,6 +86,14 @@ const getColumnLabel = (
           return (
             <>
               {t('target')}
+              <br />
+              {normalized}
+            </>
+          );
+        case IndicatorColumnValueType.Reference:
+          return (
+            <>
+              {t('indicator-reference-value')}
               <br />
               {normalized}
             </>
