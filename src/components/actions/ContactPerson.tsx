@@ -140,15 +140,17 @@ interface ContactDetailsProps {
 
 interface ContactDetailsProps {
   id: string;
+  plan: PlanContextFragment;
 }
 
 function ContactDetails({ id }: ContactDetailsProps) {
   const plan = usePlan();
   const t = useTranslations();
+  const planIdentifier = plan.identifier;
   const { loading, error, data } = useQuery<ContactDetailsQuery, ContactDetailsQueryVariables>(
     GET_CONTACT_DETAILS,
     {
-      variables: { id, plan: plan.identifier },
+      variables: { id, plan: planIdentifier },
     }
   );
 

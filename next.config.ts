@@ -37,6 +37,10 @@ let nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '**.your-objectstorage.com',
       },
+      {
+        protocol: 'https',
+        hostname: '**.your-objectstorage.com',
+      },
     ],
   },
 };

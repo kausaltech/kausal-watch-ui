@@ -6,18 +6,18 @@ import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import type {
-  DashboardIndicatorAreaChartBlock,
-  DashboardIndicatorBarChartBlock,
-  DashboardIndicatorLineChartBlock,
-  DashboardIndicatorPieChartBlock,
-  DashboardParagraphBlock,
-  DashboardIndicatorSummaryBlock as TDashboardIndicatorSummaryBlock,
-  DashboardRowBlock as TDashboardRowBlock,
+import {
+  type DashboardIndicatorAreaChartBlock,
+  type DashboardIndicatorBarChartBlock,
+  type DashboardIndicatorLineChartBlock,
+  type DashboardIndicatorPieChartBlock,
+  type DashboardIndicatorSummaryBlock,
+  type DashboardParagraphBlock,
+  type DashboardRowBlock,
 } from '@/common/__generated__/graphql';
 
 import Card from '../common/Card';
-import DashboardIndicatorSummaryBlock from './DashboardIndicatorSummaryBlock';
+import DashboardIndicatorSummaryBlockComponent from './DashboardIndicatorSummaryBlock';
 import DashboardIndicatorAreaChartBlockComponent from './indicator-chart/DashboardIndicatorAreaChartBlock';
 import DashboardIndicatorBarChartBlockComponent from './indicator-chart/DashboardIndicatorBarChartBlock';
 import DashboardIndicatorLineChartBlockComponent from './indicator-chart/DashboardIndicatorLineChartBlock';
@@ -97,8 +97,8 @@ function getBlockComponent(block: DashboardBlock) {
       ) : null;
     }
     case 'DashboardIndicatorSummaryBlock': {
-      const summaryBlock = block as TDashboardIndicatorSummaryBlock;
-      return <DashboardIndicatorSummaryBlock indicator={summaryBlock.indicator} />;
+      const summaryBlock = block as DashboardIndicatorSummaryBlock;
+      return <DashboardIndicatorSummaryBlockComponent indicator={summaryBlock.indicator} />;
     }
     case 'DashboardIndicatorPieChartBlock': {
       const pieChartBlock = block as DashboardIndicatorPieChartBlock;

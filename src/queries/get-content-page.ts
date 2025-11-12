@@ -6,6 +6,7 @@ import type {
 } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 import { ALL_ACTION_LIST_FILTERS } from '@/fragments/action-list.fragment';
+import { INDICATOR_LIST_PAGE_FRAGMENT } from '@/fragments/indicator-list.fragment';
 
 import { ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT } from '../fragments/action-attribute.fragment';
 import { CATEGORY_FRAGMENT } from '../fragments/category.fragment';
@@ -175,6 +176,9 @@ const GET_CONTENT_PAGE = gql`
       ... on PrivacyPolicyPage {
         leadContent
       }
+      ... on IndicatorListPage {
+        ...IndicatorListPageFragment
+      }
       ... on CategoryPage {
         ...TemplatedCategoryPageFragment
         category {
@@ -275,6 +279,7 @@ const GET_CONTENT_PAGE = gql`
   ${ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT}
   ${CATEGORY_FRAGMENT}
   ${ALL_ACTION_LIST_FILTERS}
+  ${INDICATOR_LIST_PAGE_FRAGMENT}
 
   fragment CategoryParentFragment on Category {
     parent {

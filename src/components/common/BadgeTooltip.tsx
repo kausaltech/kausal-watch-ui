@@ -16,14 +16,20 @@ const WrapperButton = styled(Button)`
   text-align: left;
 `;
 
-const StyledBadge = styled(Badge)<{ color: string; $isLink: boolean }>`
-  background-color: ${(props) => props.theme[props.color]} !important;
+const StyledBadge = styled(Badge)<{
+  $themeColor: ThemeColorOption;
+  $isLink: boolean;
+  $color?: string;
+}>`
+  background-color: ${(props) => props.theme[props.$themeColor]} !important;
   color: ${(props) =>
     readableColor(
-      props.theme[props.color],
+      props.theme[props.$themeColor],
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )};
+  border-left: ${(props) =>
+    props.$color ? `calc(${props.theme.badgeBorderRadius} + 4px) solid ${props.$color}` : 'none'};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding-top: ${(props) => props.theme.badgePaddingY};
   padding-bottom: ${(props) => props.theme.badgePaddingY};
@@ -40,7 +46,7 @@ const StyledBadge = styled(Badge)<{ color: string; $isLink: boolean }>`
 
   &:hover {
     background-color: ${(props) =>
-      props.$isLink && shade(0.05, props.theme[props.color])} !important;
+      props.$isLink && shade(0.05, props.theme[props.$themeColor])} !important;
   }
 
   &.lg {
@@ -61,15 +67,15 @@ const TruncatedContent = styled.span<{ $maxLines: number }>`
   overflow: hidden;
 `;
 
-const IconBadge = styled.div<{ color: string; $isLink: boolean }>`
+const IconBadge = styled.div<{ $themeColor: ThemeColorOption; $isLink: boolean; $color?: string }>`
   overflow: hidden;
   display: flex;
   align-items: center;
   max-width: 320px;
-  background-color: ${(props) => props.theme[props.color]} !important;
+  background-color: ${(props) => props.$color || props.theme[props.$themeColor]} !important;
   color: ${(props) =>
     readableColor(
-      props.theme[props.color],
+      props.$color || props.theme[props.$themeColor],
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )};
@@ -77,7 +83,7 @@ const IconBadge = styled.div<{ color: string; $isLink: boolean }>`
 
   &:hover {
     background-color: ${(props) =>
-      props.$isLink && shade(0.05, props.theme[props.color])} !important;
+      props.$isLink && shade(0.05, props.$color || props.theme[props.$themeColor])} !important;
   }
 `;
 
@@ -112,13 +118,15 @@ const IconName = styled.div`
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
+type ThemeColorOption = 'badgeColor' | 'brandDark' | 'brandLight' | 'neutralDark' | 'neutralLight';
 interface BadgeContentProps {
   content: string | React.ReactNode;
   size?: 'lg' | 'md' | 'sm';
   ariaLabel?: string;
   iconSvg?: string;
   iconImage?: string;
-  color?: 'badgeColor' | 'brandDark' | 'brandLight' | 'neutralDark' | 'neutralLight';
+  themeColor?: ThemeColorOption;
+  color?: string;
   isLink: boolean;
   maxLines?: number;
 }
@@ -130,7 +138,8 @@ const BadgeContent = (props: BadgeContentProps) => {
     iconSvg,
     iconImage,
     ariaLabel,
-    color = 'badgeColor',
+    themeColor = 'badgeColor',
+    color,
     isLink = false,
     maxLines,
   } = props;
@@ -143,11 +152,17 @@ const BadgeContent = (props: BadgeContentProps) => {
   );
 
   return hasNoIcon ? (
-    <StyledBadge className={size} aria-label={ariaLabel} color={color} $isLink={isLink}>
+    <StyledBadge
+      className={size}
+      aria-label={ariaLabel}
+      $themeColor={themeColor}
+      $isLink={isLink}
+      $color={color}
+    >
       {renderContent}
     </StyledBadge>
   ) : (
-    <IconBadge color={color} $isLink={isLink}>
+    <IconBadge $themeColor={themeColor} $isLink={isLink} $color={color}>
       {iconSvg ? (
         <IconImage>
           <IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" />

@@ -3,14 +3,15 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
-import { ActionResponsiblePartiesBlock } from '@/common/__generated__/graphql';
+import type { ActionResponsiblePartiesBlock } from '@/common/__generated__/graphql';
 import { OrganizationLink } from '@/common/links';
 import { slugify } from '@/common/utils';
-import BadgeTooltip, { BadgeTooltipProps } from '@/components/common/BadgeTooltip';
+import type { BadgeTooltipProps } from '@/components/common/BadgeTooltip';
+import BadgeTooltip from '@/components/common/BadgeTooltip';
 import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
 
-import { ActionContentAction } from './ActionContent';
+import type { ActionContentAction } from './ActionContent';
 
 const Responsibles = styled.div`
   a {
@@ -84,7 +85,7 @@ function ResponsibleBadge({ responsibleParty, linkToOrganization = true }: Respo
             ariaLabel={ariaLabel}
             content={org.abbreviation || org.name}
             size={size}
-            color="badgeColor"
+            themeColor="badgeColor"
             isLink
           />
         </OrganizationLink>
@@ -95,7 +96,7 @@ function ResponsibleBadge({ responsibleParty, linkToOrganization = true }: Respo
           ariaLabel={ariaLabel}
           content={org.abbreviation || org.name}
           size={size}
-          color="badgeColor"
+          themeColor="badgeColor"
           isLink
         />
       )}
