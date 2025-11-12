@@ -85,6 +85,11 @@ export const INDICATOR_LIST_PAGE_FRAGMENT = gql`
           id
           name
         }
+        categoryLevel {
+          id
+          name
+          namePlural
+        }
       }
     }
     ...IndicatorListPageFilters

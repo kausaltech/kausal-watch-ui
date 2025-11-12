@@ -41,7 +41,11 @@ const getColumnLabel = (
   }
   switch (column.__typename) {
     case 'IndicatorCategoryColumn':
-      return column.categoryType?.name ?? t('themes');
+      if (column.categoryLevel) {
+        return column.categoryLevel.name ?? t('themes');
+      } else {
+        return column.categoryType.name ?? t('themes');
+      }
     case 'IndicatorListColumn':
       switch (column.sourceField) {
         case IndicatorDashboardFieldName.Name:
