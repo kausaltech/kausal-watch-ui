@@ -50,6 +50,7 @@
     "indicator-no-values": "Vērtību nav",
     "indicator-not-found": "Indikators nav atrasts",
     "indicator-population-normalized-value": "Uz vienu iedzīvotāju",
+    "indicator-reference-value": "Atsauces vērtība",
     "indicator-related-actions": "{context, select, CASE_STUDY {Gadījumu izpēte, kas ietekmē šo rādītāju} STRATEGY {Stratēģijas, kas ietekmē šo rādītāju} other {Rīcības, kas ietekmē šo rādītāju}}",
     "indicator-resolution-years": "gadi",
     "indicator-start-value": "Sākuma vērtība",
