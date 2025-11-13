@@ -2,6 +2,8 @@ import { gql } from '@apollo/client';
 
 import images from '@/common/images';
 
+/* Detailed category query for category card lists */
+
 export const CATEGORY_FRAGMENT = gql`
   fragment CategoryFragment on Category {
     id
@@ -33,6 +35,12 @@ export const CATEGORY_FRAGMENT = gql`
         name
         shortName
       }
+    }
+    indicatorRelationships {
+      indicator {
+        id
+      }
+      type
     }
     color
     iconSvgUrl
@@ -87,4 +95,68 @@ export const RECURSIVE_CATEGORY_FRAGMENT = gql`
   }
 
   ${CATEGORY_FRAGMENT}
+`;
+
+/* Simplified category query for category tags */
+
+export const CATEGORY_TAG_FRAGMENT = gql`
+  fragment CategoryTagFragment on Category {
+    id
+    identifier
+    name
+    order
+    level {
+      id
+      name
+      namePlural
+    }
+    color
+    iconSvgUrl
+    helpText
+    iconImage {
+      rendition(size: "400x400", crop: false) {
+        src
+      }
+    }
+    categoryPage {
+      id
+      title
+      urlPath
+      live
+    }
+    type {
+      id
+      name
+      identifier
+      hideCategoryIdentifiers
+      helpText
+      levels {
+        id
+        name
+        namePlural
+      }
+    }
+  }
+`;
+
+export const RECURSIVE_CATEGORY_TAG_FRAGMENT = gql`
+  # Support parent categories up to two levels deep
+  fragment CategoryTagWithParentsFragment on Category {
+    parent {
+      ...CategoryTagFragment
+      parent {
+        ...CategoryTagFragment
+        parent {
+          ...CategoryTagFragment
+        }
+      }
+    }
+  }
+
+  fragment CategoryTagRecursiveFragment on Category {
+    ...CategoryTagFragment
+    ...CategoryTagWithParentsFragment
+  }
+
+  ${CATEGORY_TAG_FRAGMENT}
 `;

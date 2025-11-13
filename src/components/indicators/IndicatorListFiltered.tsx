@@ -1,171 +1,29 @@
-import React, { type JSX, type PropsWithChildren, useState } from 'react';
+import React from 'react';
 
-import { useLocale, useTranslations } from 'next-intl';
-import { readableColor } from 'polished';
-import { Alert, Badge, Table } from 'reactstrap';
+import { useTranslations } from 'next-intl';
+import { Alert, Table } from 'reactstrap';
 import styled from 'styled-components';
 
-import { usePlan } from '@/context/plan';
+import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
 
-import { beautifyValue } from '../../common/data/format';
-import dayjs from '../../common/dayjs';
-import { getActionTermContext } from '../../common/i18n';
-import { IndicatorLink } from '../../common/links';
 import Icon from '../common/Icon';
-import { getIndicatorTranslation } from './IndicatorCard';
-import type { IndicatorListIndicator } from './IndicatorList';
+import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
+import IndicatorTableCell from './IndicatorTableCell';
+import IndicatorTableHeader from './IndicatorTableHeader';
+import { groupIndicatorsByCommonCategory, indentationLevel } from './indicatorUtils';
+import type { Hierarchy } from './process-indicators';
 
 export const isEmptyFilter = (val) => val == null || val === '';
 
-const IndicatorType = styled(Badge)<{ $level: string }>`
-  border-radius: ${(props) => props.theme.badgeBorderRadius};
-  padding: ${({ theme }) => `${theme.badgePaddingY} ${theme.badgePaddingX}`};
-  font-weight: ${(props) => props.theme.badgeFontWeight};
-
-  color: ${(props) => {
-    switch (props.$level) {
-      case 'action':
-        return readableColor(props.theme.actionColor);
-      case 'operational':
-        return readableColor(props.theme.graphColors.blue070);
-      case 'tactical':
-        return readableColor(props.theme.graphColors.blue030);
-      case 'strategic':
-        return readableColor(props.theme.graphColors.blue010);
-      default:
-        return props.theme.themeColors.black;
-    }
-  }};
-  background-color: ${(props) => {
-    switch (props.$level) {
-      case 'action':
-        return props.theme.actionColor;
-      case 'operational':
-        return props.theme.graphColors.blue070;
-      case 'tactical':
-        return props.theme.graphColors.blue030;
-      case 'strategic':
-        return props.theme.graphColors.blue010;
-      default:
-        return '#cccccc';
-    }
-  }} !important;
+const Cell = styled.td`
+  padding: ${(props) => props.theme.spaces.s200};
 `;
 
-const IndicatorDate = styled.span`
-  color: ${(props) => props.theme.textColor.tertiary};
-`;
-
-const StyledBadge = styled(Badge)`
-  white-space: normal;
-  margin-right: ${(props) => props.theme.spaces.s050};
-  margin-bottom: ${(props) => props.theme.spaces.s050};
-  border-radius: ${(props) => props.theme.badgeBorderRadius};
-  padding: ${({ theme }) => `${theme.badgePaddingY} ${theme.badgePaddingX}`};
-  font-weight: ${(props) => props.theme.badgeFontWeight};
-  background-color: ${(props) => props.theme.themeColors.light} !important;
-  color: ${(props) => props.theme.themeColors.black};
-`;
-
-type SectionButtonProps = JSX.IntrinsicElements['button'] & {
-  linkTo?: string;
-  'aria-controls'?: string;
-};
-
-function SectionButton(props: SectionButtonProps) {
-  const { linkTo, 'aria-controls': ariaControls, children, ...buttonProps } = props;
-  if (linkTo != null) {
-    return <IndicatorLink id={linkTo}>{children}</IndicatorLink>;
-  }
-  if (ariaControls == null) {
-    return <div className="indicator-name">{children}</div>;
-  }
-  return (
-    <button aria-controls={ariaControls} {...buttonProps}>
-      {children}
-    </button>
-  );
-}
-
-const StyledSectionButton = styled(SectionButton)<{ $sectionHeading: boolean }>`
-  border: none;
-  background: none;
-  padding-left: 0;
-  text-align: left;
-  color: ${(props) => props.theme.themeColors.black};
-  font-weight: ${(props) => (props.$sectionHeading ? props.theme.fontWeightBold : 'normal')};
-`;
-
-const IndicatorName = styled.div`
+// This wrapper helps to enable and align the expand button on any cell
+const CellWrapper = styled.div`
   display: flex;
+  flex-direction: row;
   align-items: center;
-`;
-
-const IndentableTable = styled(Table)`
-  > :not(caption) > * > * {
-    padding: 0;
-    background-color: transparent;
-  }
-
-  > :not(:first-child) {
-    border-top: 3px solid ${(props) => props.theme.themeColors.white};
-  }
-`;
-
-type IndentableCellContentWrapperProps = {
-  $visibleIndentation?: boolean;
-  $sectionHeader?: boolean;
-  $numeric: boolean;
-  $firstCol?: boolean;
-  $indent?: number;
-};
-
-const IndentableCellContentWrapper = styled.div<IndentableCellContentWrapperProps>`
-  padding: ${(props) =>
-    props.$sectionHeader ? `.5rem` : `0.5rem 0.5rem .5rem ${+(props.$firstCol ?? 0) + 0.5}rem`};
-  text-align: ${(props) => (props.$numeric ? 'right' : 'left')};
-  font-weight: ${(props) =>
-    props.$sectionHeader ? props.theme.fontWeightBold : props.theme.fontWeightNormal};
-  line-height: ${(props) => props.theme.lineHeightMd};
-  border-left: ${(props) => 24 * (props.$indent ?? 0)}px solid
-    ${(props) =>
-      props.$sectionHeader || props.$visibleIndentation
-        ? props.theme.themeColors.light
-        : props.theme.themeColors.white};
-  background-color: ${(props) =>
-    props.$sectionHeader === true ? props.theme.themeColors.light : 'inherit'};
-
-  a {
-    color: ${(props) => props.theme.themeColors.black};
-  }
-`;
-
-type IndentableTableCellProps = {
-  onClick?: () => void;
-  indent?: number;
-  numeric?: boolean;
-  firstCol?: boolean;
-  visibleIndentation?: boolean;
-};
-
-const IndentableTableCell = (props: PropsWithChildren<IndentableTableCellProps>) => (
-  <td onClick={props.onClick}>
-    <IndentableCellContentWrapper
-      $indent={props.indent ?? 0}
-      $numeric={props.numeric ?? false}
-      $firstCol={props.firstCol}
-      $visibleIndentation={props.visibleIndentation ?? false}
-    >
-      {props.children}
-    </IndentableCellContentWrapper>
-  </td>
-);
-
-const Value = styled.span``;
-
-const Unit = styled.span`
-  margin-left: 0.5rem;
-  font-size: 80%;
 `;
 
 const ExpandButton = styled.button`
@@ -183,6 +41,12 @@ const ExpandButton = styled.button`
   font-size: 0;
   transition: all 0.2s;
   border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background: rgba(0, 0, 0, 0.07);
@@ -194,324 +58,129 @@ const ExpandIcon = styled(Icon)<{ $expanded: boolean }>`
   transform: rotate(${({ $expanded }) => ($expanded ? '90deg' : '0deg')});
 `;
 
-type IndentableTableHeaderProps = {
-  onClick?: () => void;
-  colSpan?: number;
-  indent?: number;
-  sectionHeader?: boolean;
-  numeric?: boolean;
-  firstCol?: boolean;
-};
+const GroupHeaderContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-weight: ${({ theme }) => theme.fontWeightBold};
+`;
 
-const IndentableTableHeader = (props: PropsWithChildren<IndentableTableHeaderProps>) => {
-  // const theme = useTheme();
-  const { onClick, colSpan, indent, sectionHeader, numeric = false, firstCol, children } = props;
+const StyledCell = (props: {
+  indent: number;
+  children: React.ReactNode;
+  hasChildren: boolean;
+  expanded: boolean;
+  onToggle?: () => void;
+}) => {
+  const { indent, children, hasChildren, expanded, onToggle } = props;
   return (
-    <th scope="col" onClick={onClick} colSpan={colSpan}>
-      <IndentableCellContentWrapper
-        $indent={indent}
-        $sectionHeader={sectionHeader}
-        $numeric={numeric}
-        $firstCol={firstCol}
-      >
+    <Cell>
+      <CellWrapper>
+        {indent > 0 ? <div style={{ paddingLeft: `${indent * 16}px` }}> </div> : null}
+        {hasChildren ? (
+          <ExpandButton aria-label={expanded ? 'Collapse' : 'Expand'} onClick={onToggle}>
+            <ExpandIcon width="16px" height="16px" $expanded={expanded} name="angle-right" />
+          </ExpandButton>
+        ) : null}
         {children}
-      </IndentableCellContentWrapper>
-    </th>
+      </CellWrapper>
+    </Cell>
   );
 };
 
-const levels = {
-  operational: { fi: 'toiminnallinen', index: 1 },
-  tactical: { fi: 'taktinen', index: 2 },
-  strategic: { fi: 'strateginen', index: 3 },
-};
-
-type Hierarchy = {
-  [key: string]: {
-    id: string;
-    isRoot: boolean;
-    children: string[];
-    path: string[];
-    // Doesn't seem to be used
-    pathNames: string[];
-  };
-};
-
-type Indicators = {
-  name: string;
-  level: string;
-  organization: {
-    name: string;
-  };
-  common: {
-    id: string;
-  };
-}[];
-
-function groupIndicatorsByHierarchy(
-  indicators: Indicators,
-  hierarchy: Hierarchy
-): {
-  nonHierarchicalIndicators: Indicators;
-  hierarchicalIndicators: Indicators;
-} {
-  return indicators.reduce(
-    (groups, indicator) =>
-      !!indicator.common && hierarchy[indicator.common.id]
-        ? {
-            ...groups,
-            hierarchicalIndicators: [...groups.hierarchicalIndicators, indicator],
-          }
-        : {
-            ...groups,
-            nonHierarchicalIndicators: [...groups.nonHierarchicalIndicators, indicator],
-          },
-    {
-      nonHierarchicalIndicators: [],
-      hierarchicalIndicators: [],
-    }
-  );
-}
-
-function sortIndicators(
-  hierarchy: Hierarchy,
-  indicators: Indicators,
-  displayMunicipality: boolean
-) {
-  const isHierarchical = !!hierarchy && Object.keys(hierarchy).length > 0;
-
-  const sortedIndicators = [...indicators]
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .sort((a, b) => {
-      if (levels[a.level].index < levels[b.level].index) {
-        return -1;
-      }
-      if (levels[a.level].index > levels[b.level].index) {
-        return 1;
-      }
-      return 0;
-    });
-
-  if (displayMunicipality) {
-    sortedIndicators.sort((a, b) => a.organization.name.localeCompare(b.organization.name));
+const IndicatorTableRow = styled.tr`
+  &.group-header {
+    background: ${({ theme }) => theme.cardBackground.primary};
+    font-weight: ${({ theme }) => theme.fontWeightBold};
   }
+`;
 
-  /**
-   * Split indicators that belong to a hierarchy (visualised as a tree in the table)
-   * so that they can be sorted separately from non hierarchical indicators
-   */
-  const { nonHierarchicalIndicators, hierarchicalIndicators } = isHierarchical
-    ? groupIndicatorsByHierarchy(sortedIndicators, hierarchy)
-    : {
-        nonHierarchicalIndicators: sortedIndicators,
-        hierarchicalIndicators: [],
-      };
-
-  if (hierarchicalIndicators.length) {
-    hierarchicalIndicators.sort((a, b) => {
-      if (a.common == null || b.common == null) {
-        return 0;
-      }
-
-      const pathA = hierarchy[a.common.id]?.path ?? [];
-      const pathB = hierarchy[b.common.id]?.path ?? [];
-
-      for (let i = 0; i < pathA.length && i < pathB.length; i++) {
-        if (pathA[i] === pathB[i]) continue;
-
-        return parseInt(pathA[i]) - parseInt(pathB[i]);
-      }
-
-      return pathA.length - pathB.length;
-    });
-  }
-
-  if (!isHierarchical || !displayMunicipality) {
-    return [[...nonHierarchicalIndicators, ...hierarchicalIndicators]];
-  }
-
-  const grouped = new Map();
-  [...nonHierarchicalIndicators, ...hierarchicalIndicators].forEach((indicator) => {
-    const commonId = indicator.common?.id;
-    const group = grouped.get(commonId) ?? [];
-    grouped.set(commonId, [...group, indicator]);
-  });
-
-  return [...grouped.values()];
-}
-
-const DEFAULT_UNCOLLAPSED_DEPTH = 1;
-
-const defaultVisibleByParent = (indicators, hierarchy: Hierarchy) => {
-  const collapsibleCommonIndicators = Object.values(hierarchy).filter((v) => v.children.length > 0);
-  return Object.fromEntries(
-    collapsibleCommonIndicators.map((v) => [
-      v.id,
-      v.path.length > DEFAULT_UNCOLLAPSED_DEPTH ? false : true,
-    ])
+const GroupHeaderCell = (props: {
+  colSpan: number;
+  indent: number;
+  title: string;
+  onToggle: () => void;
+  isExpanded: boolean;
+}) => {
+  const { colSpan, indent, title, onToggle, isExpanded } = props;
+  return (
+    <td colSpan={colSpan} style={{ paddingLeft: `${indent * 16}px` }}>
+      <GroupHeaderContent>
+        <ExpandButton aria-label={isExpanded ? 'Collapse' : 'Expand'} onClick={onToggle}>
+          <ExpandIcon width="16px" height="16px" $expanded={isExpanded} name="angle-right" />
+        </ExpandButton>
+        {title}
+      </GroupHeaderContent>
+    </td>
   );
 };
-
-const isVisible = (indicator, hierarchy, visibleByParent) => {
-  const { common } = indicator;
-  if (common == null) {
-    return true;
-  }
-  if (hierarchy == null || Object.keys(hierarchy).length === 0) {
-    return true;
-  }
-  const { path } = hierarchy[common.id];
-  for (const cid of path) {
-    if (cid != common.id && visibleByParent[cid] === false) {
-      return false;
-    }
-  }
-  return true;
-};
-
-const indicatorElementId = (id) => `indicator-${id}`;
-
-const descendantIds = (indicator, hierarchy) => {
-  const { common } = indicator;
-  if (common == null) {
-    return [];
-  }
-  if (hierarchy == null || Object.keys(hierarchy).length === 0) {
-    return [];
-  }
-  const descendants = hierarchy[common.id]?.descendants.map((d) => indicatorElementId(d));
-  if (descendants.length === 0) {
-    return null;
-  }
-  return descendants.join(' ');
-};
-
 interface IndicatorListFilteredProps {
-  categoryColumnLabel?: string;
+  categoryType?: CategoryType;
   indicators: IndicatorListIndicator[];
-  shouldDisplayCategory?(cat: Category): boolean;
-  displayLevel?: boolean | null;
-  includePlanRelatedIndicators?: boolean;
-  commonCategories?: object[];
-  displayMunicipality?: boolean;
   hierarchy?: Hierarchy;
-  displayNormalizedValues?: boolean;
+  openIndicatorsInModal?: (id: string) => void | null;
+  listColumns: NonNullable<IndicatorListPageFragmentFragment['listColumns']>;
 }
 
 export default function IndicatorListFiltered(props: IndicatorListFilteredProps) {
   const t = useTranslations();
-  const {
-    indicators,
-    categoryColumnLabel,
-    displayMunicipality,
-    hierarchy,
-    displayNormalizedValues,
-    shouldDisplayCategory,
-    displayLevel,
-    includePlanRelatedIndicators,
-    commonCategories,
-  } = props;
 
-  const locale = useLocale();
+  const { indicators, hierarchy, openIndicatorsInModal, listColumns } = props;
 
-  // used for multi-city group expanding/collapsing
-  // TODO: merge with single city version
-  const [visibleGroups, setVisibleGroups] = useState({ 0: true });
-  // used for single city expanding/collapsing
-  const [visibleByParent, setVisibleByParent] = useState(() =>
-    defaultVisibleByParent(indicators, hierarchy)
-  );
+  // Calculate initial collapsed state - collapse all nodes by default except first level
+  const initialCollapsedNodes = React.useMemo(() => {
+    const groupedIndicators = groupIndicatorsByCommonCategory(indicators);
+    const collapsedSet = new Set<string>();
 
-  const toggleVisibility = (indicator) => {
-    if (!indicator.common) {
-      return;
-    }
-    setVisibleByParent((prev) => {
-      const cid = indicator.common.id;
-      const previouslyVisible = prev[cid];
-      return Object.assign({}, prev, { [cid]: !previouslyVisible });
+    groupedIndicators.forEach((group, commonId) => {
+      const isFirstLevel = hierarchy && commonId && hierarchy[commonId]?.path?.length === 1;
+
+      // Collapse groups with multiple indicators
+      if (group.length > 1 && commonId) {
+        collapsedSet.add(commonId);
+      }
+      // Collapse nodes that have children in the hierarchy (except first level)
+      if (hierarchy && commonId && hierarchy[commonId]?.children.length > 0 && !isFirstLevel) {
+        collapsedSet.add(commonId);
+      }
+    });
+
+    return collapsedSet;
+  }, [indicators, hierarchy]);
+
+  // Track which nodes are collapsed (by commonId)
+  const [collapsedNodes, setCollapsedNodes] = React.useState<Set<string>>(initialCollapsedNodes);
+
+  // Toggle collapse state for a node
+  const toggleCollapse = (commonId: string) => {
+    setCollapsedNodes((prev) => {
+      const next = new Set(prev);
+      if (next.has(commonId)) {
+        next.delete(commonId);
+      } else {
+        next.add(commonId);
+      }
+      return next;
     });
   };
-  const plan = usePlan();
-  const toggleHidden = (idx) => {
-    const newGroups = {};
-    newGroups[idx] = idx in visibleGroups ? visibleGroups[idx] === false : true;
 
-    setVisibleGroups((visibleGroups) => ({
-      ...visibleGroups,
-      ...newGroups,
-    }));
-    return null;
-  };
-
-  const sortedIndicators = sortIndicators(hierarchy, indicators, displayMunicipality);
-
-  const someIndicatorsHaveCategories =
-    sortedIndicators.flat().reduce((cumul, cur) => Math.max(cumul, cur.categories.length), 0) > 0;
-  const allIndicatorsHaveSameLevel =
-    new Set(sortedIndicators.flat().map((i) => i.level)).size === 1;
-
-  const indicatorElement = (
-    item,
-    collapsible,
-    itemName,
-    expanded: boolean,
-    expandKey: string,
-    options
-  ) =>
-    itemName && (
-      <IndicatorName>
-        {collapsible && (
-          <ExpandButton
-            aria-label={expanded ? t('collapse-row') : t('expand-row')}
-            onClick={() => toggleVisibility(item)}
-          >
-            <ExpandIcon width="16px" height="16px" $expanded={expanded} name="angle-right" />
-          </ExpandButton>
-        )}
-
-        <StyledSectionButton
-          aria-controls={expandKey}
-          aria-expanded={expanded}
-          linkTo={options?.linkTo}
-          $sectionHeading={options?.type === 'section'}
-        >
-          {itemName}
-        </StyledSectionButton>
-      </IndicatorName>
-    );
-
-  const indicatorName = (item, collapsible, expanded, expandKey, options) => {
-    let name = null;
-    if (
-      item.name != null &&
-      item.name.length > 0 &&
-      (options.singleOrganization === true ||
-        item.common == null ||
-        hierarchy == null ||
-        Object.keys(hierarchy).length === 0)
-    ) {
-      name = item.name;
-    } else if (item.common?.name != null) {
-      /* The name of the common indicator is currently used only for
-       plans which have multiple organizations with multiple
-       indicators grouped together by their common indicator.
-       */
-      name = item.common.name;
+  // Check if a non-grouped indicator should be visible based on its path and collapsed ancestors
+  const isNodeVisible = (commonId: string | null | undefined): boolean => {
+    if (!commonId || !hierarchy || !hierarchy[commonId]) {
+      return true;
     }
-    return indicatorElement(item, collapsible, name, expanded, expandKey, options);
-  };
-  const indentationLevel = (item) => {
-    if (!item.common || !hierarchy[item.common.id]) {
-      return 0;
+
+    const path = hierarchy[commonId]?.path ?? [];
+    // Check if any ancestor in the path is collapsed
+    for (const ancestorId of path) {
+      if (ancestorId !== commonId && collapsedNodes.has(ancestorId)) {
+        return false;
+      }
     }
-    return (hierarchy[item.common.id]?.path?.length ?? 1) - 1;
+    return true;
   };
 
-  const hierarchyEnabled = hierarchy != null && Object.keys(hierarchy).length > 1;
-  const indicatorNameColumnEnabled = !hierarchyEnabled || !displayMunicipality;
-
-  if (sortedIndicators.flat().length === 0) {
+  if (indicators.flat().length === 0) {
     return (
       <div className="mt-5 mb-5 pb-5">
         <Alert color="primary">{t('search-no-results')}</Alert>
@@ -519,236 +188,116 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
     );
   }
 
+  const groupedIndicators = groupIndicatorsByCommonCategory(indicators);
+  const columnCount = listColumns.length;
+
   return (
     <div className="mt-5 mb-5 pb-5">
-      <IndentableTable hover>
-        {sortedIndicators.map((group, idx) => {
-          const expanded = visibleGroups[idx] === true;
-          const expandKey = `common-indicator-section-${idx}`;
-          const headers: JSX.Element[] = [];
-          if (indicatorNameColumnEnabled) {
-            headers.push(<IndentableTableHeader key="hr-name">{t('name')}</IndentableTableHeader>);
-          }
-          if (!allIndicatorsHaveSameLevel && displayLevel) {
-            headers.push(<IndentableTableHeader key="hr-type">{t('type')}</IndentableTableHeader>);
-          }
-          if (displayMunicipality) {
-            headers.push(
-              <IndentableTableHeader
-                key="hr-municipality"
-                indent={indentationLevel(group[0])}
-                firstCol
-              >
-                {t('municipality')}
-              </IndentableTableHeader>
-            );
-          }
-          if (includePlanRelatedIndicators) {
-            // Use common categories for columns
-            commonCategories.forEach((category) => {
-              headers.push(
-                <IndentableTableHeader key={`hr-${category.typeIdentifier}`}>
-                  {category.type.name}
-                </IndentableTableHeader>
-              );
-            });
-          } else if (someIndicatorsHaveCategories) {
-            // Existing code for regular categories
-            headers.push(
-              <IndentableTableHeader key="hr-themes">
-                {categoryColumnLabel || t('themes')}
-              </IndentableTableHeader>
-            );
-          }
-          headers.push(
-            <IndentableTableHeader key="hr-updated">{t('updated')}</IndentableTableHeader>
-          );
-          headers.push(
-            <IndentableTableHeader key="hr-value" numeric>
-              {t('indicator-value')}
-            </IndentableTableHeader>
-          );
-          if (displayNormalizedValues) {
-            headers.push(
-              <IndentableTableHeader key="hr-normalized-value" numeric>
-                {t('indicator-population-normalized-value')}
-              </IndentableTableHeader>
-            );
-          }
+      <Table hover>
+        <thead>
+          <tr>
+            {listColumns.map((column) => (
+              <IndicatorTableHeader key={column.id} column={column} />
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from(groupedIndicators.entries()).map(([commonId, group]) => {
+            const indent = hierarchy ? indentationLevel(group[0], hierarchy) : 0;
+            const hasChildren = hierarchy && commonId && hierarchy[commonId]?.children.length > 0;
+            const isExpanded = !collapsedNodes.has(commonId);
 
-          const CommonCategoriesCell = ({ item, commonCategories }) => (
-            <>
-              {commonCategories.map((commonCategory) => (
-                <IndentableTableCell key={`cat-${commonCategory.typeIdentifier}`}>
-                  {item.categories
-                    .filter(
-                      (cat) =>
-                        cat.common && cat.common.type.identifier === commonCategory.typeIdentifier
-                    )
-                    .map((cat) => (
-                      <StyledBadge key={cat.common.id}>{cat.common.name}</StyledBadge>
-                    ))}
-                </IndentableTableCell>
-              ))}
-            </>
-          );
+            // For groups with multiple indicators, show header always
+            // but hide the individual indicators when collapsed
+            const isGrouped = group.length > 1 && commonId;
 
-          const RegularCategoriesCell = ({ item, shouldDisplayCategory }) => (
-            <IndentableTableCell>
-              {item.categories.map((cat) => {
-                if (cat && (shouldDisplayCategory?.(cat) ?? true)) {
-                  return <StyledBadge key={cat.id}>{cat.name}</StyledBadge>;
-                }
+            // For non-grouped indicators, check if they should be hidden by collapsed ancestors
+            // For grouped indicators (with header), always show the group header
+            if (!isGrouped) {
+              const isVisible = isNodeVisible(commonId);
+              if (!isVisible) {
                 return null;
-              })}
-            </IndentableTableCell>
-          );
-          return (
-            <React.Fragment key={`indicator-group-${idx}`}>
-              {!indicatorNameColumnEnabled && (
-                <tbody key="body-1">
-                  <tr>
-                    <IndentableTableHeader
-                      sectionHeader={true}
-                      onClick={() => toggleHidden(idx)}
-                      colSpan={headers.length}
-                      indent={indentationLevel(group[0])}
-                    >
-                      {indicatorName(group[0], true, expanded, expandKey, {
-                        type: 'section',
-                        singleOrganization: !displayMunicipality,
-                      })}
-                    </IndentableTableHeader>
-                  </tr>
-                </tbody>
-              )}
-              <tbody
-                key="body-2"
-                id={expandKey}
-                aria-hidden={!expanded}
-                style={{ display: expanded ? 'table-row-group' : 'none' }}
-              >
-                <tr>{headers}</tr>
-                {group.map((item) => {
-                  // FIXME: It sucks that we only use the context for the translation key 'action'
-                  const indicatorType =
-                    item.level === 'action'
-                      ? t('action', getActionTermContext(plan))
-                      : getIndicatorTranslation(item.level, t);
-                  let [normalizedValue, normalizedUnit] = [null, null];
-                  // We currently support only one normalizer, the population indicator
-                  const normalizations = item.common?.normalizations;
-                  if (
-                    displayNormalizedValues &&
-                    normalizations != null &&
-                    normalizations.length > 0
-                  ) {
-                    const populationNormalization = normalizations.find(
-                      (n) => n.normalizer.identifier === 'population'
-                    );
-                    if (populationNormalization != null) {
-                      const normalizedValueObject = item.latestValue?.normalizedValues.find(
-                        (v) => v.normalizerId === populationNormalization.normalizer.id
-                      );
-                      if (normalizedValueObject != null) {
-                        normalizedValue = normalizedValueObject.value;
-                        normalizedUnit = populationNormalization.unit.shortName;
-                      }
-                    }
-                  }
-                  let timeFormat = 'l';
-                  if (item.timeResolution === 'YEAR') {
-                    timeFormat = 'YYYY';
-                  }
-                  const visible =
-                    sortedIndicators.length > 1 || !hierarchyEnabled
-                      ? true
-                      : isVisible(item, hierarchy, visibleByParent);
-                  const collapseState = visibleByParent[item.common?.id];
-                  const collapsible = collapseState !== undefined;
-                  const collapsed = collapseState === true;
+              }
+            }
 
+            return isGrouped ? (
+              <React.Fragment key={`group-${commonId}`}>
+                <IndicatorTableRow
+                  data-depth={indent}
+                  id={`header-${commonId}`}
+                  className="group-header"
+                >
+                  <GroupHeaderCell
+                    colSpan={columnCount}
+                    indent={indent}
+                    title={group[0].common?.name ?? ''}
+                    onToggle={() => toggleCollapse(commonId)}
+                    isExpanded={isExpanded}
+                  />
+                </IndicatorTableRow>
+                {isExpanded &&
+                  group.map((indicator) => {
+                    return (
+                      <IndicatorTableRow
+                        key={indicator.id}
+                        data-depth={indent}
+                        id={`indicator-${commonId}-${indicator.id}`}
+                      >
+                        {listColumns.map((column, index) => (
+                          <StyledCell
+                            key={column.id}
+                            indent={index === 0 ? indent + 1 : 0}
+                            hasChildren={false}
+                            expanded={false}
+                          >
+                            <IndicatorTableCell
+                              column={column}
+                              indicator={indicator}
+                              openIndicatorsInModal={openIndicatorsInModal}
+                            />
+                          </StyledCell>
+                        ))}
+                      </IndicatorTableRow>
+                    );
+                  })}
+              </React.Fragment>
+            ) : (
+              <React.Fragment key={`group-${commonId || 'no-common'}`}>
+                {group.map((indicator) => {
                   return (
-                    <tr
-                      key={item.id}
-                      id={indicatorElementId(item.common?.id ?? item.id)}
-                      style={{ display: visible ? 'table-row' : 'none' }}
+                    <IndicatorTableRow
+                      data-depth={indent}
+                      key={indicator.id}
+                      id={`indicator-${commonId}-${indicator.id}`}
+                      className={hasChildren ? 'group-header' : ''}
                     >
-                      {indicatorNameColumnEnabled && (
-                        <IndentableTableCell
-                          indent={hierarchyEnabled && indentationLevel(item)}
-                          visibleIndentation={false}
+                      {listColumns.map((column, index) => (
+                        <StyledCell
+                          key={column.id}
+                          indent={index === 0 ? indent : 0}
+                          hasChildren={index === 0 && hasChildren ? true : false}
+                          expanded={isExpanded}
+                          onToggle={
+                            index === 0 && hasChildren && commonId
+                              ? () => toggleCollapse(commonId)
+                              : undefined
+                          }
                         >
-                          {indicatorName(
-                            item,
-                            collapsible,
-                            collapsed,
-                            descendantIds(item, hierarchy),
-                            {
-                              type: 'indicator',
-                              linkTo: item.id,
-                              singleOrganization: !displayMunicipality,
-                            }
-                          )}
-                        </IndentableTableCell>
-                      )}
-                      {!allIndicatorsHaveSameLevel && displayLevel && (
-                        <IndentableTableCell>
-                          <IndicatorType $level={item.level}>
-                            {indicatorType || <span>-</span>}
-                          </IndicatorType>
-                        </IndentableTableCell>
-                      )}
-                      {displayMunicipality && (
-                        <IndentableTableCell
-                          indent={indentationLevel(item)}
-                          firstCol
-                          visibleIndentation={true}
-                        >
-                          <IndicatorLink id={item.id}>{item.organization.name}</IndicatorLink>
-                        </IndentableTableCell>
-                      )}
-                      {includePlanRelatedIndicators ? (
-                        <CommonCategoriesCell item={item} commonCategories={commonCategories} />
-                      ) : (
-                        someIndicatorsHaveCategories && (
-                          <RegularCategoriesCell
-                            item={item}
-                            shouldDisplayCategory={shouldDisplayCategory}
+                          <IndicatorTableCell
+                            column={column}
+                            indicator={indicator}
+                            openIndicatorsInModal={openIndicatorsInModal}
                           />
-                        )
-                      )}
-                      <IndentableTableCell>
-                        {item.latestValue && (
-                          <IndicatorDate>
-                            {dayjs(item.latestValue.date).format(timeFormat)}
-                          </IndicatorDate>
-                        )}
-                      </IndentableTableCell>
-                      <IndentableTableCell numeric>
-                        <IndicatorLink id={item.id}>
-                          <Value>
-                            {item.latestValue ? beautifyValue(item.latestValue.value, locale) : '-'}
-                          </Value>
-                          {item.latestValue && <Unit>{item.unit?.shortName ?? ''}</Unit>}
-                        </IndicatorLink>
-                      </IndentableTableCell>
-                      {displayNormalizedValues && (
-                        <IndentableTableCell numeric>
-                          <IndicatorLink id={item.id}>
-                            <Value>{beautifyValue(normalizedValue, locale)}</Value>
-                            <Unit>{normalizedUnit ?? ''}</Unit>
-                          </IndicatorLink>
-                        </IndentableTableCell>
-                      )}
-                    </tr>
+                        </StyledCell>
+                      ))}
+                    </IndicatorTableRow>
                   );
                 })}
-              </tbody>
-            </React.Fragment>
-          );
-        })}
-      </IndentableTable>
+              </React.Fragment>
+            );
+          })}
+        </tbody>
+      </Table>
     </div>
   );
 }

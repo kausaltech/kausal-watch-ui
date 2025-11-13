@@ -1,26 +1,8 @@
 import { gql } from '@apollo/client';
 
-import type {
-  IndicatorDetailsQuery,
-  IndicatorDetailsQueryVariables,
-} from '@/common/__generated__/graphql';
+import { RECURSIVE_CATEGORY_TAG_FRAGMENT } from '../fragments/category.fragment';
 
-import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
-import { getClient } from '../utils/apollo-rsc-client';
-
-export const getIndicatorDetails = async (plan: string, indicatorId: string) =>
-  await (
-    await getClient()
-  ).query<IndicatorDetailsQuery, IndicatorDetailsQueryVariables>({
-    query: GET_INDICATOR_DETAILS,
-    variables: {
-      plan,
-      id: indicatorId,
-    },
-    fetchPolicy: 'no-cache',
-  });
-
-const GET_INDICATOR_DETAILS = gql`
+export const GET_INDICATOR_DETAILS = gql`
   query IndicatorDetails($id: ID, $plan: ID) {
     indicator(plan: $plan, id: $id) {
       id
@@ -46,12 +28,7 @@ const GET_INDICATOR_DETAILS = gql`
         }
       }
       categories {
-        identifier
-        name
-        id
-        type {
-          ...CategoryTypeFragment
-        }
+        ...CategoryTagRecursiveFragment
       }
       common {
         id
@@ -136,6 +113,41 @@ const GET_INDICATOR_DETAILS = gql`
           level(plan: $plan)
         }
       }
+      plans {
+        id
+        identifier
+        name
+        shortName
+        supersededBy {
+          id
+        }
+        allRelatedPlans {
+          id
+        }
+        relatedPlans {
+          id
+        }
+        supersededPlans(recursive: true) {
+          id
+        }
+        supersedingPlans(recursive: true) {
+          id
+        }
+        parent {
+          id
+        }
+        children {
+          id
+        }
+        copyOf {
+          id
+        }
+        copies {
+          id
+        }
+        versionName
+        publishedAt
+      }
     }
   }
 
@@ -177,5 +189,5 @@ const GET_INDICATOR_DETAILS = gql`
     }
   }
 
-  ${CATEGORY_TYPE_FRAGMENT}
+  ${RECURSIVE_CATEGORY_TAG_FRAGMENT}
 `;

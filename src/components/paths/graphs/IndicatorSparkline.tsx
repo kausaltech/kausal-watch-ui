@@ -79,6 +79,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
     },
   });
 
+  console.log('data', data);
   if (loading)
     return (
       <IndicatorSparklineContainer>

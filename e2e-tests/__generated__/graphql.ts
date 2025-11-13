@@ -30,6 +30,23 @@ export enum ActionContactPersonRole {
 }
 
 /** An enumeration. */
+export enum ActionDashboardFieldName {
+  Attribute = 'ATTRIBUTE',
+  EndDate = 'END_DATE',
+  Identifier = 'IDENTIFIER',
+  ImplementationPhase = 'IMPLEMENTATION_PHASE',
+  Name = 'NAME',
+  PrimaryOrg = 'PRIMARY_ORG',
+  RelatedIndicators = 'RELATED_INDICATORS',
+  ResponsibleParties = 'RESPONSIBLE_PARTIES',
+  ScheduleContinuous = 'SCHEDULE_CONTINUOUS',
+  StartDate = 'START_DATE',
+  Status = 'STATUS',
+  Tasks = 'TASKS',
+  UpdatedAt = 'UPDATED_AT'
+}
+
+/** An enumeration. */
 export enum ActionDateFormat {
   /** Day, month and year (31.12.2020) */
   Full = 'FULL',
@@ -50,6 +67,34 @@ export enum ActionIndicatorEffectType {
 export enum ActionListPageView {
   Cards = 'CARDS',
   Dashboard = 'DASHBOARD'
+}
+
+/** An enumeration. */
+export enum ActionList_FiltersFieldName {
+  Attribute = 'ATTRIBUTE',
+  Categories = 'CATEGORIES',
+  ContactPersons = 'CONTACT_PERSONS',
+  Dependencies = 'DEPENDENCIES',
+  Description = 'DESCRIPTION',
+  EndDate = 'END_DATE',
+  Identifier = 'IDENTIFIER',
+  ImplementationPhase = 'IMPLEMENTATION_PHASE',
+  LeadParagraph = 'LEAD_PARAGRAPH',
+  Links = 'LINKS',
+  ManualStatusReason = 'MANUAL_STATUS_REASON',
+  MergedActions = 'MERGED_ACTIONS',
+  Name = 'NAME',
+  OfficialName = 'OFFICIAL_NAME',
+  PrimaryOrg = 'PRIMARY_ORG',
+  RelatedActions = 'RELATED_ACTIONS',
+  RelatedIndicators = 'RELATED_INDICATORS',
+  ResponsibleParties = 'RESPONSIBLE_PARTIES',
+  Schedule = 'SCHEDULE',
+  ScheduleContinuous = 'SCHEDULE_CONTINUOUS',
+  StartDate = 'START_DATE',
+  Status = 'STATUS',
+  Tasks = 'TASKS',
+  UpdatedAt = 'UPDATED_AT'
 }
 
 /** An enumeration. */
@@ -172,6 +217,31 @@ export enum DatasetSchemaTimeResolution {
   Yearly = 'YEARLY'
 }
 
+export enum IndicatorCategoryRelationshipType {
+  MainGoal = 'MAIN_GOAL',
+  SecondaryGoal = 'SECONDARY_GOAL'
+}
+
+/** An enumeration. */
+export enum IndicatorColumnValueType {
+  Earliest = 'EARLIEST',
+  Goal = 'GOAL',
+  Latest = 'LATEST',
+  Reference = 'REFERENCE'
+}
+
+/** An enumeration. */
+export enum IndicatorDashboardFieldName {
+  CausalityNav = 'CAUSALITY_NAV',
+  ConnectedActions = 'CONNECTED_ACTIONS',
+  Level = 'LEVEL',
+  Name = 'NAME',
+  Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
+  UpdatedAt = 'UPDATED_AT',
+  Visualization = 'VISUALIZATION'
+}
+
 /** An enumeration. */
 export enum IndicatorDesiredTrend {
   /** attempt to detect automatically */
@@ -183,6 +253,18 @@ export enum IndicatorDesiredTrend {
 }
 
 /** An enumeration. */
+export enum IndicatorDetailsFieldName {
+  CausalityNav = 'CAUSALITY_NAV',
+  ConnectedActions = 'CONNECTED_ACTIONS',
+  Level = 'LEVEL',
+  Name = 'NAME',
+  Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
+  UpdatedAt = 'UPDATED_AT',
+  Visualization = 'VISUALIZATION'
+}
+
+/** An enumeration. */
 export enum IndicatorLevelLevel {
   /** operational */
   Operational = 'OPERATIONAL',
@@ -190,6 +272,15 @@ export enum IndicatorLevelLevel {
   Strategic = 'STRATEGIC',
   /** tactical */
   Tactical = 'TACTICAL'
+}
+
+/** An enumeration. */
+export enum IndicatorList_FiltersFieldName {
+  Level = 'LEVEL',
+  Name = 'NAME',
+  Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
+  UpdatedAt = 'UPDATED_AT'
 }
 
 /** An enumeration. */

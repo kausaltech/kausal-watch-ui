@@ -19,9 +19,11 @@ import {
 } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
-import type {
-  ActionListFilterFragment,
-  ActionListPageFiltersFragment,
+import {
+  type ActionListFilterFragment,
+  type ActionListPageFiltersFragment,
+  type IndicatorListFilterFragment,
+  type IndicatorListPageFiltersFragment,
 } from '@/common/__generated__/graphql';
 import {
   ActionResponsiblePartyRole,
@@ -47,6 +49,8 @@ import type {
 } from '@/components/dashboard/ActionList';
 import type { PlanContextType } from '@/context/plan';
 import { usePlan } from '@/context/plan';
+
+import type { IndicatorListIndicator } from '../indicators/IndicatorList';
 
 type MultipleFilterValue = string[];
 type SingleFilterValue = string | undefined;
@@ -462,7 +466,7 @@ type ActionListFilterOption = {
 export interface ActionListFilter<Value extends FilterValue = FilterValue> {
   id: string;
   useValueFilterId: string | undefined;
-  filterAction: (value: Value, action: ActionListAction) => boolean;
+  filterAction: (value: Value, action: ActionListAction | IndicatorListIndicator) => boolean;
   getLabel: (t: TFunction) => string;
   getHelpText: (t: TFunction) => string | undefined;
   getShowAllLabel: (t: TFunction) => string;
@@ -484,7 +488,7 @@ abstract class DefaultFilter<Value extends FilterValue> implements ActionListFil
 
   abstract getLabel(t: TFunction): string;
   abstract getHelpText(t: TFunction): string | undefined;
-  abstract filterAction(value: Value, action: ActionListAction): boolean;
+  abstract filterAction(value: Value, action: ActionListAction | IndicatorListIndicator): boolean;
 
   getShowAllLabel(t: TFunction) {
     return t('filter-all-categories');
@@ -517,7 +521,7 @@ abstract class DefaultFilter<Value extends FilterValue> implements ActionListFil
 type GenericSelectFilterOpts = {
   id: string;
   options: ActionListFilterOption[];
-  filterAction: (value: FilterValue, action: ActionListAction) => boolean;
+  filterAction: (value: FilterValue, action: ActionListAction | IndicatorListIndicator) => boolean;
   label: string;
   helpText?: string;
   showAllLabel: string;
@@ -528,7 +532,10 @@ class GenericSelectFilter extends DefaultFilter<string | undefined> {
   label: string;
   helpText: string | undefined;
   showAllLabel: string;
-  filterAction: (value: string | undefined, action: ActionListAction) => boolean;
+  filterAction: (
+    value: string | undefined,
+    action: ActionListAction | IndicatorListIndicator
+  ) => boolean;
 
   constructor(opts: GenericSelectFilterOpts) {
     const { id, options, label, helpText, showAllLabel, filterAction } = opts;
@@ -730,7 +737,10 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
       .filter((cat) => cat.depth < this.depth)
       .map((cat) => ({ id: cat.id, label: getLabel(cat), indent: cat.depth }));
   }
-  filterSingleCategory(action: ActionListAction, categoryId: string | undefined) {
+  filterSingleCategory(
+    action: ActionListAction | IndicatorListIndicator,
+    categoryId: string | undefined
+  ) {
     return action.categories.some((actCat) => {
       let cat = this.catById.get(actCat.id);
       while (cat) {
@@ -740,7 +750,7 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
       return false;
     });
   }
-  filterAction(value: FilterValue, action: ActionListAction) {
+  filterAction(value: FilterValue, action: ActionListAction | IndicatorListIndicator) {
     if (isSingleFilterValue(value)) {
       return this.filterSingleCategory(action, value);
     }
@@ -750,7 +760,7 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
     if (this.style === 'dropdown') {
       return super.render(value, onChange, t, this.hasMultipleValues);
     }
-    const seeAll: string = t('see-all-actions', this.actionTermContext || {});
+
     return (
       <Col sm={12} md={12} lg={12} key={this.id}>
         <MainCategory>
@@ -767,7 +777,7 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
               aria-checked={value === undefined}
               role="radio"
             >
-              {seeAll}
+              {this.getShowAllLabel(t)}
             </RButton>
             {this.options.map((opt) => (
               <RButton
@@ -861,10 +871,10 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
   useValueFilterId: string | undefined;
   options?: ActionListFilterOption[] | undefined;
 
-  filterAction(value: string, action: ActionListAction) {
+  filterAction(value: string, action: ActionListAction | IndicatorListIndicator) {
     const searchStr = escapeStringRegexp(value.toLowerCase());
     let searchTarget = action.name.replace(/\u00AD/g, '').toLowerCase();
-    if (this.hasActionIdentifiers) {
+    if (this.hasActionIdentifiers && 'identifier' in action) {
       searchTarget = `${action.identifier.toLowerCase()} ${searchTarget}`;
     }
     return searchTarget.search(searchStr) !== -1;
@@ -1121,30 +1131,48 @@ function ActionListFilters(props: ActionListFiltersProps) {
 }
 
 type ConstructFiltersOpts = {
-  mainConfig: ActionListPageFiltersFragment;
+  mainConfig: ActionListPageFiltersFragment | IndicatorListPageFiltersFragment;
   plan: PlanContextType;
   t: TFunction;
   orgs: ActionListOrganization[];
   primaryOrgs: ActionListPrimaryOrg[];
   filterByCommonCategory: boolean;
   actionTerm?: string;
+  isIndicatorList?: boolean;
 };
-
 ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
-  const { mainConfig, plan, t, orgs, primaryOrgs, filterByCommonCategory, actionTerm } = opts;
+  const {
+    mainConfig,
+    plan,
+    t,
+    orgs,
+    primaryOrgs,
+    filterByCommonCategory,
+    actionTerm,
+    isIndicatorList = false,
+  } = opts;
   const { primaryFilters, mainFilters, advancedFilters } = mainConfig;
 
-  function makeSection(id: string, hidden: boolean, blocks: ActionListFilterFragment[]) {
+  function makeSection(
+    id: string,
+    hidden: boolean,
+    blocks: (ActionListFilterFragment | IndicatorListFilterFragment)[] | null
+  ) {
     const filters: ActionListFilter[] = [];
     let primaryResponsiblePartyFilter: PrimaryResponsiblePartyFilter | null = null;
 
-    blocks.forEach((block) => {
+    blocks?.forEach((block) => {
       switch (block.__typename) {
         case 'ResponsiblePartyFilterBlock':
           filters.push(new ResponsiblePartyFilter(orgs, plan));
           primaryResponsiblePartyFilter = new PrimaryResponsiblePartyFilter();
           break;
         case 'CategoryTypeFilterBlock':
+          if (!block.showAllLabel)
+            block.showAllLabel =
+              block.style === 'dropdown'
+                ? t('filter-all-categories')
+                : t('see-all-actions', getActionTermContext(plan));
           filters.push(new CategoryFilter(block, filterByCommonCategory, plan));
           break;
         case 'ActionAttributeTypeFilterBlock':
@@ -1250,6 +1278,45 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             )
           );
           break;
+        // Indicator filters
+        case 'IndicatorFilterBlock':
+          if (block.__typename === 'IndicatorFilterBlock') {
+            switch (block.field) {
+              case 'level':
+                const indicatorLevels = [
+                  { id: 'operational', label: t('operational-indicator') },
+                  { id: 'strategic', label: t('strategic-indicator') },
+                  { id: 'tactical', label: t('tactical-indicator') },
+                ];
+                const levelOpts = {
+                  id: 'indicator-level',
+                  options: indicatorLevels,
+                  label: ('fieldLabel' in block ? block.fieldLabel : null) ?? t('type'),
+                  helpText: ('fieldHelpText' in block ? block.fieldHelpText : null) ?? '',
+                  showAllLabel:
+                    ('showAllLabel' in block ? block.showAllLabel : null) ?? 'All levels',
+                  filterAction: (val: string, act: IndicatorListIndicator) => {
+                    if (act.level === val) return true;
+                    return false;
+                  },
+                };
+                filters.push(new GenericSelectFilter(levelOpts));
+                break;
+              case 'organization':
+                const organizationOpts = {
+                  id: 'indicator-organization',
+                  options: [],
+                  label: ('fieldLabel' in block ? block.fieldLabel : null) ?? t('organization'),
+                  showAllLabel: 'This filter is not currently supported',
+                  filterAction: () => {
+                    return false;
+                  },
+                };
+                filters.push(new GenericSelectFilter(organizationOpts));
+                break;
+            }
+          }
+          break;
       }
     });
     if (primaryResponsiblePartyFilter) {
@@ -1257,7 +1324,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
     }
 
     if (id === 'main') {
-      if (plan.actionImpacts.length) {
+      if (!isIndicatorList && plan.actionImpacts.length) {
         // FIXME: Migrate to AttributeType
         const opts = {
           id: 'impact',
@@ -1288,7 +1355,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
 
   const sections: ActionListFilterSection[] = [];
   if (primaryFilters?.length) sections.push(makeSection('primary', false, primaryFilters));
-  if (mainFilters?.length) sections.push(makeSection('main', false, mainFilters));
+  sections.push(makeSection('main', false, mainFilters));
   if (advancedFilters?.length) sections.push(makeSection('advanced', true, advancedFilters));
 
   return sections;

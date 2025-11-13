@@ -14,6 +14,47 @@
       "ActionResponsiblePartiesBlock",
       "ActionScheduleBlock"
     ],
+    "ActionColumnBlockInterface": [
+      "EndDateColumnBlock",
+      "IdentifierColumnBlock",
+      "ImplementationPhaseColumnBlock",
+      "IndicatorsColumnBlock",
+      "NameColumnBlock",
+      "OrganizationColumnBlock",
+      "ResponsiblePartiesColumnBlock",
+      "ScheduleContinuousColumnBlock",
+      "StartDateColumnBlock",
+      "StatusColumnBlock",
+      "TasksColumnBlock",
+      "UpdatedAtColumnBlock"
+    ],
+    "ActionContentBlockInterface": [
+      "ActionAttributeTypeReportFieldBlock",
+      "ActionCategoryReportFieldBlock",
+      "ActionContactPersonsBlock",
+      "ActionContentAttributeTypeBlock",
+      "ActionContentCategoryTypeBlock",
+      "ActionDependenciesBlock",
+      "ActionDescriptionBlock",
+      "ActionEndDateBlock",
+      "ActionImplementationPhaseReportFieldBlock",
+      "ActionLeadParagraphBlock",
+      "ActionLinksBlock",
+      "ActionManualStatusReasonBlock",
+      "ActionMergedActionsBlock",
+      "ActionOfficialNameBlock",
+      "ActionPrimaryOrgBlock",
+      "ActionRelatedActionsBlock",
+      "ActionRelatedIndicatorsBlock",
+      "ActionResponsiblePartiesBlock",
+      "ActionResponsiblePartyReportFieldBlock",
+      "ActionScheduleBlock",
+      "ActionScheduleContinuousBlock",
+      "ActionStartDateBlock",
+      "ActionStatusReportFieldBlock",
+      "ActionTasksBlock",
+      "ActionUpdatedAtBlock"
+    ],
     "ActionDashboardColumnBlock": [
       "EndDateColumnBlock",
       "FieldColumnBlock",
@@ -29,7 +70,107 @@
       "TasksColumnBlock",
       "UpdatedAtColumnBlock"
     ],
+    "ActionFilterBlockInterface": [
+      "ActionImplementationPhaseFilterBlock",
+      "ActionScheduleFilterBlock",
+      "ActionStatusFilterBlock",
+      "ContinuousActionFilterBlock",
+      "PlanFilterBlock",
+      "PrimaryOrganizationFilterBlock",
+      "ResponsiblePartyFilterBlock"
+    ],
     "ActionListFilterBlock": [
+      "ActionAttributeTypeFilterBlock",
+      "ActionImplementationPhaseFilterBlock",
+      "ActionScheduleFilterBlock",
+      "ActionStatusFilterBlock",
+      "CategoryTypeFilterBlock",
+      "ContinuousActionFilterBlock",
+      "PlanFilterBlock",
+      "PrimaryOrganizationFilterBlock",
+      "ResponsiblePartyFilterBlock"
+    ],
+    "ActionListPageAdvancedFiltersUnion": [
+      "ActionAttributeTypeFilterBlock",
+      "ActionImplementationPhaseFilterBlock",
+      "ActionScheduleFilterBlock",
+      "ActionStatusFilterBlock",
+      "CategoryTypeFilterBlock",
+      "ContinuousActionFilterBlock",
+      "PlanFilterBlock",
+      "PrimaryOrganizationFilterBlock",
+      "ResponsiblePartyFilterBlock"
+    ],
+    "ActionListPageDashboardColumnsUnion": [
+      "EndDateColumnBlock",
+      "FieldColumnBlock",
+      "IdentifierColumnBlock",
+      "ImplementationPhaseColumnBlock",
+      "IndicatorsColumnBlock",
+      "NameColumnBlock",
+      "OrganizationColumnBlock",
+      "ResponsiblePartiesColumnBlock",
+      "ScheduleContinuousColumnBlock",
+      "StartDateColumnBlock",
+      "StatusColumnBlock",
+      "TasksColumnBlock",
+      "UpdatedAtColumnBlock"
+    ],
+    "ActionListPageDetailsAsideUnion": [
+      "ActionContactPersonsBlock",
+      "ActionContentAttributeTypeBlock",
+      "ActionContentCategoryTypeBlock",
+      "ActionResponsiblePartiesBlock",
+      "ActionScheduleBlock"
+    ],
+    "ActionListPageDetailsMainBottomUnion": [
+      "ActionContactFormBlock",
+      "ActionContentAttributeTypeBlock",
+      "ActionContentCategoryTypeBlock",
+      "ActionContentSectionBlock",
+      "ActionDependenciesBlock",
+      "ActionDescriptionBlock",
+      "ActionLeadParagraphBlock",
+      "ActionLinksBlock",
+      "ActionMergedActionsBlock",
+      "ActionOfficialNameBlock",
+      "ActionRelatedActionsBlock",
+      "ActionRelatedIndicatorsBlock",
+      "ActionTasksBlock",
+      "IndicatorCausalChainBlock",
+      "PlanDatasetsBlock",
+      "ReportComparisonBlock"
+    ],
+    "ActionListPageDetailsMainTopUnion": [
+      "ActionContactFormBlock",
+      "ActionContentAttributeTypeBlock",
+      "ActionContentCategoryTypeBlock",
+      "ActionContentSectionBlock",
+      "ActionDependenciesBlock",
+      "ActionDescriptionBlock",
+      "ActionLeadParagraphBlock",
+      "ActionLinksBlock",
+      "ActionMergedActionsBlock",
+      "ActionOfficialNameBlock",
+      "ActionRelatedActionsBlock",
+      "ActionRelatedIndicatorsBlock",
+      "ActionTasksBlock",
+      "IndicatorCausalChainBlock",
+      "PlanDatasetsBlock",
+      "ReportComparisonBlock"
+    ],
+    "ActionListPageMainFiltersUnion": [
+      "ActionAttributeTypeFilterBlock",
+      "ActionImplementationPhaseFilterBlock",
+      "ActionScheduleFilterBlock",
+      "ActionStatusFilterBlock",
+      "CategoryTypeFilterBlock",
+      "ContinuousActionFilterBlock",
+      "PlanFilterBlock",
+      "PrimaryOrganizationFilterBlock",
+      "ResponsiblePartyFilterBlock"
+    ],
+    "ActionListPagePrimaryFiltersUnion": [
       "ActionAttributeTypeFilterBlock",
       "ActionImplementationPhaseFilterBlock",
       "ActionScheduleFilterBlock",
@@ -78,6 +219,7 @@
       "CategoryListBlock",
       "IndicatorGroupBlock",
       "QuestionAnswerBlock",
+      "RawVisualizationBlock",
       "RelatedIndicatorsBlock",
       "RichTextBlock"
     ],
@@ -93,19 +235,10 @@
       "CategoryPageProgressBlock"
     ],
     "DashboardColumnInterface": [
-      "EndDateColumnBlock",
       "FieldColumnBlock",
-      "IdentifierColumnBlock",
-      "ImplementationPhaseColumnBlock",
-      "IndicatorsColumnBlock",
-      "NameColumnBlock",
-      "OrganizationColumnBlock",
-      "ResponsiblePartiesColumnBlock",
-      "ScheduleContinuousColumnBlock",
-      "StartDateColumnBlock",
-      "StatusColumnBlock",
-      "TasksColumnBlock",
-      "UpdatedAtColumnBlock"
+      "IndicatorCategoryColumn",
+      "IndicatorListColumn",
+      "IndicatorValueColumn"
     ],
     "DatasetSchemaScopeTypeNode": [
       "CategoryType",
@@ -120,6 +253,8 @@
       "Plan"
     ],
     "FieldBlockMetaInterface": [
+      "ActionAttributeTypeReportFieldBlock",
+      "ActionCategoryReportFieldBlock",
       "ActionContactFormBlock",
       "ActionContactPersonsBlock",
       "ActionContentAttributeTypeBlock",
@@ -127,6 +262,7 @@
       "ActionDependenciesBlock",
       "ActionDescriptionBlock",
       "ActionEndDateBlock",
+      "ActionImplementationPhaseReportFieldBlock",
       "ActionLeadParagraphBlock",
       "ActionLinksBlock",
       "ActionManualStatusReasonBlock",
@@ -136,15 +272,19 @@
       "ActionRelatedActionsBlock",
       "ActionRelatedIndicatorsBlock",
       "ActionResponsiblePartiesBlock",
+      "ActionResponsiblePartyReportFieldBlock",
       "ActionScheduleBlock",
       "ActionScheduleContinuousBlock",
       "ActionStartDateBlock",
+      "ActionStatusReportFieldBlock",
       "ActionTasksBlock",
       "ActionUpdatedAtBlock",
       "EndDateColumnBlock",
       "IdentifierColumnBlock",
       "ImplementationPhaseColumnBlock",
+      "IndicatorCategoryContentBlock",
       "IndicatorCausalChainBlock",
+      "IndicatorContentBlock",
       "IndicatorsColumnBlock",
       "NameColumnBlock",
       "OrganizationColumnBlock",
@@ -154,6 +294,63 @@
       "StatusColumnBlock",
       "TasksColumnBlock",
       "UpdatedAtColumnBlock"
+    ],
+    "IndicatorAsideContentStream": [
+      "IndicatorCategoryContentBlock",
+      "IndicatorContentBlock"
+    ],
+    "IndicatorContentBlockInterface": [
+      "IndicatorCategoryContentBlock",
+      "IndicatorContentBlock"
+    ],
+    "IndicatorFilterBlockInterface": [
+      "IndicatorFilterBlock"
+    ],
+    "IndicatorListColumnInterface": [
+      "IndicatorListColumn",
+      "IndicatorValueColumn"
+    ],
+    "IndicatorListColumnsStream": [
+      "IndicatorCategoryColumn",
+      "IndicatorListColumn",
+      "IndicatorValueColumn"
+    ],
+    "IndicatorListFilterStream": [
+      "CategoryTypeFilterBlock",
+      "IndicatorFilterBlock"
+    ],
+    "IndicatorListPageAdvancedFiltersUnion": [
+      "CategoryTypeFilterBlock",
+      "IndicatorFilterBlock"
+    ],
+    "IndicatorListPageDetailsAsideUnion": [
+      "IndicatorCategoryContentBlock",
+      "IndicatorContentBlock"
+    ],
+    "IndicatorListPageDetailsMainBottomUnion": [
+      "IndicatorCategoryContentBlock",
+      "IndicatorContentBlock"
+    ],
+    "IndicatorListPageDetailsMainTopUnion": [
+      "IndicatorCategoryContentBlock",
+      "IndicatorContentBlock"
+    ],
+    "IndicatorListPageListColumnsUnion": [
+      "IndicatorCategoryColumn",
+      "IndicatorListColumn",
+      "IndicatorValueColumn"
+    ],
+    "IndicatorListPageMainFiltersUnion": [
+      "CategoryTypeFilterBlock",
+      "IndicatorFilterBlock"
+    ],
+    "IndicatorListPagePrimaryFiltersUnion": [
+      "CategoryTypeFilterBlock",
+      "IndicatorFilterBlock"
+    ],
+    "IndicatorMainContentStream": [
+      "IndicatorCategoryContentBlock",
+      "IndicatorContentBlock"
     ],
     "MenuItem": [
       "ExternalLinkMenuItem",
@@ -191,6 +388,7 @@
       "IndicatorShowcaseBlock",
       "LargeImageBlock",
       "PathsOutcomeBlock",
+      "RawVisualizationBlock",
       "RelatedPlanListBlock",
       "RichTextBlock"
     ],
@@ -213,9 +411,12 @@
     "ReportValueInterface": [
       "ActionAttributeReportValue",
       "ActionCategoryReportValue",
+      "ActionDateFieldReportValue",
+      "ActionDateTimeFieldReportValue",
       "ActionImplementationPhaseReportValue",
       "ActionResponsiblePartyReportValue",
       "ActionSimpleFieldReportValue",
+      "ActionSingleRelatedModelFieldReportValue",
       "ActionStatusReportValue",
       "ActionTasksReportValue"
     ],
@@ -235,6 +436,7 @@
       "LargeImageBlock",
       "PathsOutcomeBlock",
       "QuestionAnswerBlock",
+      "RawVisualizationBlock",
       "RichTextBlock"
     ],
     "StreamFieldInterface": [
@@ -321,10 +523,16 @@
       "ImageChooserBlock",
       "ImplementationPhaseColumnBlock",
       "IndicatorBlock",
+      "IndicatorCategoryColumn",
+      "IndicatorCategoryContentBlock",
       "IndicatorCausalChainBlock",
+      "IndicatorContentBlock",
+      "IndicatorFilterBlock",
       "IndicatorGroupBlock",
       "IndicatorHighlightsBlock",
+      "IndicatorListColumn",
       "IndicatorShowcaseBlock",
+      "IndicatorValueColumn",
       "IndicatorsColumnBlock",
       "IntegerBlock",
       "LargeImageBlock",
@@ -339,6 +547,7 @@
       "QuestionAnswerBlock",
       "QuestionBlock",
       "RawHTMLBlock",
+      "RawVisualizationBlock",
       "RegexBlock",
       "RelatedIndicatorsBlock",
       "RelatedPlanListBlock",
