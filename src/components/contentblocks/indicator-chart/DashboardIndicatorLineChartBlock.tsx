@@ -10,11 +10,11 @@ import { useTheme } from 'styled-components';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
-import { DashboardIndicatorLineChartBlock as TDashboardIndicatorLineChartBlock } from '@/common/__generated__/graphql';
+import type { DashboardIndicatorBlockFragmentFragment as TDashboardIndicatorLineChartBlock } from '@/common/__generated__/graphql';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
-  GraphsTheme,
+  type GraphsTheme,
   buildDimSeries,
   buildGoalSeries,
   buildTooltipFormatter,

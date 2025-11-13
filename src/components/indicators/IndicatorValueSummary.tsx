@@ -4,6 +4,11 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
+import {
+  IndicatorDesiredTrend,
+  type IndicatorDetailsQuery,
+  IndicatorTimeResolution,
+} from '@/common/__generated__/graphql';
 import PopoverTip from '@/components/common/PopoverTip';
 
 import { beautifyValue } from '../../common/data/format';
@@ -62,28 +67,42 @@ const TooltipContent = styled.div`
   }
 `;
 
-function determineDesirableDirection(desiredTrend, values, goals) {
-  if (desiredTrend === 'INCREASING') {
+function determineDesirableDirection(
+  desiredTrend: Indicator['desiredTrend'] | null | undefined,
+  values: Indicator['values'],
+  goals: Indicator['goals']
+) {
+  if (desiredTrend === IndicatorDesiredTrend.Increasing) {
     return '+';
   }
-  if (desiredTrend === 'DECREASING') {
+  if (desiredTrend === IndicatorDesiredTrend.Decreasing) {
     return '-';
   }
 
   // Default value for desiredTrend is `A_` that wil try to
   // guess the desired trend based on values and goals
-  if (!values.length || !goals.length) return null;
+  if (!values.length || !goals?.length) return null;
 
   const latestValue = values[values.length - 1];
   const latestGoal = goals[goals.length - 1];
 
-  if (latestGoal.value - latestValue.value >= 0) {
+  if (latestGoal?.value && latestValue.value && latestGoal.value - latestValue.value >= 0) {
     return '+';
   }
   return '-';
 }
 
-function IndicatorValueSummary(props) {
+type Indicator = NonNullable<IndicatorDetailsQuery['indicator']>;
+
+interface IndicatorValueSummaryProps {
+  timeResolution: Indicator['timeResolution'];
+  values: Indicator['values'];
+  goals: Indicator['goals'];
+  unit: Indicator['unit'];
+  desiredTrend?: Indicator['desiredTrend'];
+}
+
+function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
   const t = useTranslations();
   const locale = useLocale();
   const theme = useTheme();
@@ -96,64 +115,65 @@ function IndicatorValueSummary(props) {
   const now = dayjs();
   let timeFormat = 'l';
 
-  if (timeResolution === 'YEAR') {
+  if (timeResolution === IndicatorTimeResolution.Year) {
     timeFormat = 'YYYY';
   }
 
-  let valueDisplay = <h6>{t('indicator-no-values')}</h6>;
-  if (values.length > 0) {
-    const latestValue = values[values.length - 1];
-    let absChange;
-    let relChange;
-    let desirableChange;
-    let changeColor;
-    let changeSymbol;
-
-    if (values.length > 1) {
-      absChange = latestValue.value - values[values.length - 2].value;
-      relChange = latestValue.value ? absChange / latestValue.value : 0;
-      if (desirableDirection) {
-        if (
-          (absChange > 0 && desirableDirection === '+') ||
-          (absChange < 0 && desirableDirection === '-')
-        ) {
-          desirableChange = true;
-          changeColor = theme.graphColors.green090;
-        } else if (absChange === 0) {
-          desirableChange = null;
-          changeColor = theme.themeColors.dark;
-        } else {
-          desirableChange = false;
-          changeColor = theme.graphColors.red070;
-        }
-      }
-      if (absChange < 0) {
-        changeSymbol = '▼';
-      } else if (absChange > 0) {
-        changeSymbol = '▲';
-      } else changeSymbol = '—';
-    }
-    const latestValueDisplay = beautifyValue(latestValue.value, locale);
-    valueDisplay = (
-      <div className="mb-4">
-        <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
-        <ValueDate>{dayjs(latestValue.date).format(timeFormat)}</ValueDate>
-        <ValueDisplay>
-          {latestValueDisplay}
-          <ValueUnit>{shortUnitName}</ValueUnit>
-          {changeSymbol && (
-            <ValueChange color={changeColor}>
-              <ChangeSymbol>{changeSymbol}</ChangeSymbol>
-              <span>{beautifyValue(absChange, locale)}</span> <small>{diffUnitName}</small>
-            </ValueChange>
-          )}
-        </ValueDisplay>
-      </div>
-    );
+  if (values.length === 0) {
+    return null;
   }
 
-  const nextGoal = goals.find((goal) => dayjs(goal.date).isSameOrAfter(now));
-  let goalDisplay = undefined;
+  const latestValue = values[values.length - 1];
+  let absChange: number | null = null;
+  //let relChange;
+  //let desirableChange;
+  let changeColor: string | undefined;
+  let changeSymbol: string | undefined;
+
+  if (values.length > 1) {
+    absChange = latestValue.value - values[values.length - 2].value;
+    //relChange = latestValue.value ? absChange / latestValue.value : 0;
+    if (desirableDirection) {
+      if (
+        (absChange > 0 && desirableDirection === '+') ||
+        (absChange < 0 && desirableDirection === '-')
+      ) {
+        //desirableChange = true;
+        changeColor = theme.graphColors.green090;
+      } else if (absChange === 0) {
+        //desirableChange = null;
+        changeColor = theme.themeColors.dark;
+      } else {
+        //desirableChange = false;
+        changeColor = theme.graphColors.red070;
+      }
+    }
+    if (absChange < 0) {
+      changeSymbol = '▼';
+    } else if (absChange > 0) {
+      changeSymbol = '▲';
+    } else changeSymbol = '—';
+  }
+  const latestValueDisplay = beautifyValue(latestValue.value, locale);
+  const valueDisplay = (
+    <div className="mb-4">
+      <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
+      <ValueDate>{dayjs(latestValue.date).format(timeFormat)}</ValueDate>
+      <ValueDisplay>
+        {latestValueDisplay}
+        <ValueUnit>{shortUnitName}</ValueUnit>
+        {changeSymbol && (
+          <ValueChange color={changeColor}>
+            <ChangeSymbol>{changeSymbol}</ChangeSymbol>
+            <span>{beautifyValue(absChange, locale)}</span> <small>{diffUnitName}</small>
+          </ValueChange>
+        )}
+      </ValueDisplay>
+    </div>
+  );
+
+  const nextGoal = goals?.find((goal) => goal && dayjs(goal.date).isSameOrAfter(now));
+  let goalDisplay: React.ReactNode | undefined;
 
   if (nextGoal) {
     const nextGoalDate = dayjs(nextGoal.date).format(timeFormat);
@@ -171,8 +191,8 @@ function IndicatorValueSummary(props) {
   }
 
   // Find the next upcoming goal
-  let differenceDisplay = undefined;
-  if (values.length > 0 && nextGoal) {
+  let differenceDisplay: React.ReactNode | undefined;
+  if (nextGoal && dayjs(nextGoal.date).isSameOrAfter(latestValue.date)) {
     const difference = nextGoal.value - values[values.length - 1].value;
     const isPercentagePoint = unit?.name === '%';
     const goalReached = desirableDirection === '+' ? difference <= 0 : difference >= 0;

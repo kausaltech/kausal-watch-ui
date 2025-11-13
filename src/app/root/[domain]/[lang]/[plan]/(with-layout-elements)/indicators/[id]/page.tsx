@@ -6,7 +6,7 @@ import { captureException } from '@sentry/nextjs';
 import type { Metadata, ResolvingMetadata } from 'next';
 
 import IndicatorContent from '@/components/indicators/IndicatorContent';
-import { getIndicatorDetails } from '@/queries/get-indicator';
+import { getIndicatorPage } from '@/queries/get-indicator-page';
 import { tryRequest } from '@/utils/api.utils';
 import { isValidIndicatorId } from '@/utils/indicators';
 
@@ -26,7 +26,7 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
     return notFound();
   }
 
-  const { data } = await tryRequest(getIndicatorDetails(plan, id));
+  const { data } = await tryRequest(getIndicatorPage(plan, id));
 
   if (!data?.indicator) {
     return {};
@@ -52,7 +52,7 @@ export default async function IndicatorPage(props: Props) {
     return notFound();
   }
 
-  const { data, error } = await tryRequest(getIndicatorDetails(plan, id));
+  const { data, error } = await tryRequest(getIndicatorPage(plan, id));
 
   if (error || !data?.indicator) {
     if (error) {

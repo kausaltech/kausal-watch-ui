@@ -227,7 +227,8 @@ export enum IndicatorCategoryRelationshipType {
 export enum IndicatorColumnValueType {
   Earliest = 'EARLIEST',
   Goal = 'GOAL',
-  Latest = 'LATEST'
+  Latest = 'LATEST',
+  Reference = 'REFERENCE'
 }
 
 /** An enumeration. */
@@ -237,6 +238,7 @@ export enum IndicatorDashboardFieldName {
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT',
   Visualization = 'VISUALIZATION'
 }
@@ -258,6 +260,7 @@ export enum IndicatorDetailsFieldName {
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT',
   Visualization = 'VISUALIZATION'
 }
@@ -277,6 +280,7 @@ export enum IndicatorList_FiltersFieldName {
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT'
 }
 
@@ -2001,149 +2005,6 @@ export type IndicatorHightlightListQuery = (
   & { __typename: 'Query' }
 );
 
-export type IndicatorListQueryVariables = Exact<{
-  plan: Scalars['ID']['input'];
-  relatedPlanIndicators: Scalars['Boolean']['input'];
-}>;
-
-
-export type IndicatorListQuery = (
-  { plan: (
-    { id: string, hasIndicatorRelationships: boolean | null, features: (
-      { hasActionPrimaryOrgs: boolean }
-      & { __typename: 'PlanFeatures' }
-    ), indicatorLevels: Array<(
-      { level: IndicatorLevelLevel, indicator: (
-        { id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
-          { id: string, name: string }
-          & { __typename: 'Organization' }
-        ), common: (
-          { id: string, name: string, normalizations: Array<(
-            { unit: (
-              { shortName: string | null }
-              & { __typename: 'Unit' }
-            ), normalizer: (
-              { name: string, id: string, identifier: string | null }
-              & { __typename: 'CommonIndicator' }
-            ) }
-            & { __typename: 'CommonIndicatorNormalization' }
-          )> }
-          & { __typename: 'CommonIndicator' }
-        ) | null, categories: Array<(
-          { id: string, name: string, parent: (
-            { id: string }
-            & { __typename: 'Category' }
-          ) | null, type: (
-            { id: string, identifier: string }
-            & { __typename: 'CategoryType' }
-          ) }
-          & { __typename: 'Category' }
-        )>, latestGraph: (
-          { id: string }
-          & { __typename: 'IndicatorGraph' }
-        ) | null, latestValue: (
-          { id: string, date: string | null, value: number, normalizedValues: Array<(
-            { normalizerId: string | null, value: number | null }
-            & { __typename: 'NormalizedValue' }
-          )> }
-          & { __typename: 'IndicatorValue' }
-        ) | null, unit: (
-          { shortName: string | null }
-          & { __typename: 'Unit' }
-        ) }
-        & { __typename: 'Indicator' }
-      ) }
-      & { __typename: 'IndicatorLevel' }
-    )>, categoryTypes: Array<(
-      { name: string, id: string, identifier: string, categories: Array<(
-        { id: string, identifier: string, order: number, name: string, parent: (
-          { id: string }
-          & { __typename: 'Category' }
-        ) | null, common?: (
-          { type: (
-            { identifier: string, name: string }
-            & { __typename: 'CommonCategoryType' }
-          ) }
-          & { __typename: 'CommonCategory' }
-        ) | null }
-        & { __typename: 'Category' }
-      )> }
-      & { __typename: 'CategoryType' }
-    )> }
-    & { __typename: 'Plan' }
-  ) | null, planIndicators?: Array<(
-    { id: string, common: (
-      { id: string, name: string, indicators: Array<(
-        { id: string, organization: (
-          { name: string }
-          & { __typename: 'Organization' }
-        ) }
-        & { __typename: 'Indicator' }
-      )>, relatedCauses: Array<(
-        { effectType: RelatedCommonIndicatorEffectType, causalIndicator: (
-          { id: string, name: string }
-          & { __typename: 'CommonIndicator' }
-        ) }
-        & { __typename: 'RelatedCommonIndicator' }
-      )>, relatedEffects: Array<(
-        { id: string, effectType: RelatedCommonIndicatorEffectType, effectIndicator: (
-          { id: string, name: string }
-          & { __typename: 'CommonIndicator' }
-        ) }
-        & { __typename: 'RelatedCommonIndicator' }
-      )> }
-      & { __typename: 'CommonIndicator' }
-    ) | null }
-    & { __typename: 'Indicator' }
-  )> | null, relatedPlanIndicators?: Array<(
-    { id: string, name: string, level: string | null, timeResolution: IndicatorTimeResolution, organization: (
-      { id: string, name: string }
-      & { __typename: 'Organization' }
-    ), common: (
-      { id: string, name: string, normalizations: Array<(
-        { unit: (
-          { shortName: string | null }
-          & { __typename: 'Unit' }
-        ), normalizer: (
-          { name: string, id: string, identifier: string | null }
-          & { __typename: 'CommonIndicator' }
-        ) }
-        & { __typename: 'CommonIndicatorNormalization' }
-      )> }
-      & { __typename: 'CommonIndicator' }
-    ) | null, latestGraph: (
-      { id: string }
-      & { __typename: 'IndicatorGraph' }
-    ) | null, latestValue: (
-      { id: string, date: string | null, value: number, normalizedValues: Array<(
-        { normalizerId: string | null, value: number | null }
-        & { __typename: 'NormalizedValue' }
-      )> }
-      & { __typename: 'IndicatorValue' }
-    ) | null, unit: (
-      { shortName: string | null }
-      & { __typename: 'Unit' }
-    ), categories: Array<(
-      { id: string, name: string, parent: (
-        { id: string }
-        & { __typename: 'Category' }
-      ) | null, type: (
-        { id: string, identifier: string, name: string }
-        & { __typename: 'CategoryType' }
-      ), common: (
-        { id: string, identifier: string, name: string, order: number, type: (
-          { identifier: string, name: string }
-          & { __typename: 'CommonCategoryType' }
-        ) }
-        & { __typename: 'CommonCategory' }
-      ) | null }
-      & { __typename: 'Category' }
-    )> }
-    & { __typename: 'Indicator' }
-  )> | null }
-  & { __typename: 'Query' }
-);
-
 export type IndicatorGraphDataQueryVariables = Exact<{
   id: InputMaybe<Scalars['ID']['input']>;
   plan: InputMaybe<Scalars['ID']['input']>;
@@ -3812,6 +3673,183 @@ export type CategoryRecursiveFragmentFragment = (
   & { __typename: 'Category' }
 );
 
+export type CategoryTagFragmentFragment = (
+  { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+    { id: string, name: string, namePlural: string | null }
+    & { __typename: 'CategoryLevel' }
+  ) | null, iconImage: (
+    { rendition: (
+      { src: string }
+      & { __typename: 'ImageRendition' }
+    ) | null }
+    & { __typename: 'Image' }
+  ) | null, categoryPage: (
+    { id: string | null, title: string, urlPath: string, live: boolean }
+    & { __typename: 'CategoryPage' }
+  ) | null, type: (
+    { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+      { id: string, name: string, namePlural: string | null }
+      & { __typename: 'CategoryLevel' }
+    )> }
+    & { __typename: 'CategoryType' }
+  ) }
+  & { __typename: 'Category' }
+);
+
+export type CategoryTagWithParentsFragmentFragment = (
+  { parent: (
+    { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+      { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+        { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+          { id: string, name: string, namePlural: string | null }
+          & { __typename: 'CategoryLevel' }
+        ) | null, iconImage: (
+          { rendition: (
+            { src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null }
+          & { __typename: 'Image' }
+        ) | null, categoryPage: (
+          { id: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+            { id: string, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          )> }
+          & { __typename: 'CategoryType' }
+        ) }
+        & { __typename: 'Category' }
+      ) | null, level: (
+        { id: string, name: string, namePlural: string | null }
+        & { __typename: 'CategoryLevel' }
+      ) | null, iconImage: (
+        { rendition: (
+          { src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null }
+        & { __typename: 'Image' }
+      ) | null, categoryPage: (
+        { id: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+          { id: string, name: string, namePlural: string | null }
+          & { __typename: 'CategoryLevel' }
+        )> }
+        & { __typename: 'CategoryType' }
+      ) }
+      & { __typename: 'Category' }
+    ) | null, level: (
+      { id: string, name: string, namePlural: string | null }
+      & { __typename: 'CategoryLevel' }
+    ) | null, iconImage: (
+      { rendition: (
+        { src: string }
+        & { __typename: 'ImageRendition' }
+      ) | null }
+      & { __typename: 'Image' }
+    ) | null, categoryPage: (
+      { id: string | null, title: string, urlPath: string, live: boolean }
+      & { __typename: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+        { id: string, name: string, namePlural: string | null }
+        & { __typename: 'CategoryLevel' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) }
+    & { __typename: 'Category' }
+  ) | null }
+  & { __typename: 'Category' }
+);
+
+export type CategoryTagRecursiveFragmentFragment = (
+  { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+    { id: string, name: string, namePlural: string | null }
+    & { __typename: 'CategoryLevel' }
+  ) | null, iconImage: (
+    { rendition: (
+      { src: string }
+      & { __typename: 'ImageRendition' }
+    ) | null }
+    & { __typename: 'Image' }
+  ) | null, categoryPage: (
+    { id: string | null, title: string, urlPath: string, live: boolean }
+    & { __typename: 'CategoryPage' }
+  ) | null, type: (
+    { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+      { id: string, name: string, namePlural: string | null }
+      & { __typename: 'CategoryLevel' }
+    )> }
+    & { __typename: 'CategoryType' }
+  ), parent: (
+    { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+      { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+        { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+          { id: string, name: string, namePlural: string | null }
+          & { __typename: 'CategoryLevel' }
+        ) | null, iconImage: (
+          { rendition: (
+            { src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null }
+          & { __typename: 'Image' }
+        ) | null, categoryPage: (
+          { id: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+            { id: string, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          )> }
+          & { __typename: 'CategoryType' }
+        ) }
+        & { __typename: 'Category' }
+      ) | null, level: (
+        { id: string, name: string, namePlural: string | null }
+        & { __typename: 'CategoryLevel' }
+      ) | null, iconImage: (
+        { rendition: (
+          { src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null }
+        & { __typename: 'Image' }
+      ) | null, categoryPage: (
+        { id: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+          { id: string, name: string, namePlural: string | null }
+          & { __typename: 'CategoryLevel' }
+        )> }
+        & { __typename: 'CategoryType' }
+      ) }
+      & { __typename: 'Category' }
+    ) | null, level: (
+      { id: string, name: string, namePlural: string | null }
+      & { __typename: 'CategoryLevel' }
+    ) | null, iconImage: (
+      { rendition: (
+        { src: string }
+        & { __typename: 'ImageRendition' }
+      ) | null }
+      & { __typename: 'Image' }
+    ) | null, categoryPage: (
+      { id: string | null, title: string, urlPath: string, live: boolean }
+      & { __typename: 'CategoryPage' }
+    ) | null, type: (
+      { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+        { id: string, name: string, namePlural: string | null }
+        & { __typename: 'CategoryLevel' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) }
+    & { __typename: 'Category' }
+  ) | null }
+  & { __typename: 'Category' }
+);
+
 export type DashboardIndicatorFragmentFragment = (
   { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
     { value: number, date: string | null }
@@ -3988,6 +4026,296 @@ export type DashboardIndicatorBlockFragmentFragment = (
     & { __typename: 'DashboardParagraphBlock' }
   )> }
   & { __typename: 'DashboardRowBlock' }
+);
+
+export type IndicatorListIndicatorFragment = (
+  { id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
+    { id: string, name: string }
+    & { __typename: 'Organization' }
+  ), common: (
+    { id: string, name: string, normalizations: Array<(
+      { unit: (
+        { shortName: string | null }
+        & { __typename: 'Unit' }
+      ), normalizer: (
+        { name: string, id: string, identifier: string | null }
+        & { __typename: 'CommonIndicator' }
+      ) }
+      & { __typename: 'CommonIndicatorNormalization' }
+    )>, relatedCauses: Array<(
+      { id: string, effectType: RelatedCommonIndicatorEffectType, causalIndicator: (
+        { id: string }
+        & { __typename: 'CommonIndicator' }
+      ) }
+      & { __typename: 'RelatedCommonIndicator' }
+    )>, relatedEffects: Array<(
+      { id: string, effectType: RelatedCommonIndicatorEffectType, effectIndicator: (
+        { id: string }
+        & { __typename: 'CommonIndicator' }
+      ) }
+      & { __typename: 'RelatedCommonIndicator' }
+    )> }
+    & { __typename: 'CommonIndicator' }
+  ) | null, categories: Array<(
+    { id: string, name: string, color: string, parent: (
+      { id: string, name: string, color: string, level: (
+        { id: string }
+        & { __typename: 'CategoryLevel' }
+      ) | null }
+      & { __typename: 'Category' }
+    ) | null, type: (
+      { id: string, identifier: string }
+      & { __typename: 'CategoryType' }
+    ), level: (
+      { id: string }
+      & { __typename: 'CategoryLevel' }
+    ) | null, common: (
+      { id: string, type: (
+        { name: string, identifier: string }
+        & { __typename: 'CommonCategoryType' }
+      ) }
+      & { __typename: 'CommonCategory' }
+    ) | null }
+    & { __typename: 'Category' }
+  )>, latestValue: (
+    { id: string, date: string | null, value: number, normalizedValues: Array<(
+      { normalizerId: string | null, value: number | null }
+      & { __typename: 'NormalizedValue' }
+    )> }
+    & { __typename: 'IndicatorValue' }
+  ) | null, referenceValue: (
+    { id: string, date: string | null, value: number, normalizedValues: Array<(
+      { normalizerId: string | null, value: number | null }
+      & { __typename: 'NormalizedValue' }
+    )> }
+    & { __typename: 'IndicatorValue' }
+  ) | null, dimensions: Array<(
+    { dimension: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'Dimension' }
+    ) }
+    & { __typename: 'IndicatorDimension' }
+  )>, values: Array<(
+    { id: string, date: string | null, value: number, normalizedValues: Array<(
+      { normalizerId: string | null, value: number | null }
+      & { __typename: 'NormalizedValue' }
+    )>, categories: Array<(
+      { id: string }
+      & { __typename: 'DimensionCategory' }
+    )> }
+    & { __typename: 'IndicatorValue' }
+  )>, goals: Array<(
+    { id: string, date: string | null, value: number, normalizedValues: Array<(
+      { normalizerId: string | null, value: number | null }
+      & { __typename: 'NormalizedValue' }
+    )>, scenario: (
+      { id: string }
+      & { __typename: 'Scenario' }
+    ) | null }
+    & { __typename: 'IndicatorGoal' }
+  ) | null> | null, unit: (
+    { shortName: string | null }
+    & { __typename: 'Unit' }
+  ), plans: Array<(
+    { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
+    & { __typename: 'Plan' }
+  )> }
+  & { __typename: 'Indicator' }
+);
+
+type IndicatorListFilter_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
+);
+
+type IndicatorListFilter_Ql4eta9xK793iJ3An4PJfoICo9TfFjlLDjRPnxN10g_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
+);
+
+type IndicatorListFilter_2koItxEy8dz60bgjDf7lXzPGmderdH7ym6d8TJsg_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' }
+);
+
+type IndicatorListFilter_Zzz0piZa8cY2JJosW1YuHrIjF95CcUhzRcQgkp3Q_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' }
+);
+
+type IndicatorListFilter_H9dX6C0hCybSSnS6mCyLusKJqOwEkQt1q3G8afI6Ho_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' }
+);
+
+type IndicatorListFilter_QaDl3O8SJg99wXnAuUc2KeomVUyVsE1ZcyApGtAuY_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RawVisualizationBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' }
+);
+
+type IndicatorListFilter_V2aeCntk28Sdu3p0ZUflYw6N6iIqB4ZRyT2m1kGs_Fragment = (
+  { field: string, id: string | null }
+  & { __typename: 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+);
+
+type IndicatorListFilter_CategoryTypeFilterBlock_Fragment = (
+  { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+    { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+      { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+        { id: string }
+        & { __typename: 'Category' }
+      ) | null, common: (
+        { id: string }
+        & { __typename: 'CommonCategory' }
+      ) | null }
+      & { __typename: 'Category' }
+    )> }
+    & { __typename: 'CategoryType' }
+  ) | null }
+  & { __typename: 'CategoryTypeFilterBlock' }
+);
+
+type IndicatorListFilter_IndicatorFilterBlock_Fragment = (
+  { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+  & { __typename: 'IndicatorFilterBlock' }
+);
+
+export type IndicatorListFilterFragment = IndicatorListFilter_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment | IndicatorListFilter_Ql4eta9xK793iJ3An4PJfoICo9TfFjlLDjRPnxN10g_Fragment | IndicatorListFilter_2koItxEy8dz60bgjDf7lXzPGmderdH7ym6d8TJsg_Fragment | IndicatorListFilter_Zzz0piZa8cY2JJosW1YuHrIjF95CcUhzRcQgkp3Q_Fragment | IndicatorListFilter_H9dX6C0hCybSSnS6mCyLusKJqOwEkQt1q3G8afI6Ho_Fragment | IndicatorListFilter_QaDl3O8SJg99wXnAuUc2KeomVUyVsE1ZcyApGtAuY_Fragment | IndicatorListFilter_V2aeCntk28Sdu3p0ZUflYw6N6iIqB4ZRyT2m1kGs_Fragment | IndicatorListFilter_CategoryTypeFilterBlock_Fragment | IndicatorListFilter_IndicatorFilterBlock_Fragment;
+
+export type IndicatorListPageFiltersFragment = (
+  { primaryFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    & { __typename: 'IndicatorFilterBlock' }
+  )> | null, mainFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    & { __typename: 'IndicatorFilterBlock' }
+  )> | null, advancedFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    & { __typename: 'IndicatorFilterBlock' }
+  )> | null }
+  & { __typename: 'IndicatorListPage' }
+);
+
+export type IndicatorListPageFragmentFragment = (
+  { leadContent: string | null, displayInsights: boolean | null, displayLevel: boolean | null, includeRelatedPlans: boolean | null, listColumns: Array<(
+    { id: string | null, columnLabel: string | null, columnHelpText: string | null, categoryType: (
+      { id: string, name: string }
+      & { __typename: 'CategoryType' }
+    ), categoryLevel: (
+      { id: string, name: string, namePlural: string | null }
+      & { __typename: 'CategoryLevel' }
+    ) | null }
+    & { __typename: 'IndicatorCategoryColumn' }
+  ) | (
+    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
+    & { __typename: 'IndicatorListColumn' }
+  ) | (
+    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, hideUnit: boolean }
+    & { __typename: 'IndicatorValueColumn' }
+  )> | null, primaryFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    & { __typename: 'IndicatorFilterBlock' }
+  )> | null, mainFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    & { __typename: 'IndicatorFilterBlock' }
+  )> | null, advancedFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+        { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    ) | null }
+    & { __typename: 'CategoryTypeFilterBlock' }
+  ) | (
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    & { __typename: 'IndicatorFilterBlock' }
+  )> | null }
+  & { __typename: 'IndicatorListPage' }
 );
 
 type StreamFieldFragment_CsWpOaD0dUEdhV96j5U9TnlDssZTxlWikakK8ZjePw_Fragment = (
@@ -11796,7 +12124,79 @@ export type GetContentPageQuery = (
     & { __typename: 'CategoryTypePage' }
   ) | (
     { id: string | null, slug: string, title: string, lastPublishedAt: string | null }
-    & { __typename: 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' }
+    & { __typename: 'EmptyPage' | 'ImpactGroupPage' | 'Page' | 'PlanRootPage' }
+  ) | (
+    { id: string | null, slug: string, title: string, lastPublishedAt: string | null, leadContent: string | null, displayInsights: boolean | null, displayLevel: boolean | null, includeRelatedPlans: boolean | null, listColumns: Array<(
+      { id: string | null, columnLabel: string | null, columnHelpText: string | null, categoryType: (
+        { id: string, name: string }
+        & { __typename: 'CategoryType' }
+      ), categoryLevel: (
+        { id: string, name: string, namePlural: string | null }
+        & { __typename: 'CategoryLevel' }
+      ) | null }
+      & { __typename: 'IndicatorCategoryColumn' }
+    ) | (
+      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
+      & { __typename: 'IndicatorListColumn' }
+    ) | (
+      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, hideUnit: boolean }
+      & { __typename: 'IndicatorValueColumn' }
+    )> | null, primaryFilters: Array<(
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+          { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+            { id: string }
+            & { __typename: 'Category' }
+          ) | null, common: (
+            { id: string }
+            & { __typename: 'CommonCategory' }
+          ) | null }
+          & { __typename: 'Category' }
+        )> }
+        & { __typename: 'CategoryType' }
+      ) | null }
+      & { __typename: 'CategoryTypeFilterBlock' }
+    ) | (
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+      & { __typename: 'IndicatorFilterBlock' }
+    )> | null, mainFilters: Array<(
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+          { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+            { id: string }
+            & { __typename: 'Category' }
+          ) | null, common: (
+            { id: string }
+            & { __typename: 'CommonCategory' }
+          ) | null }
+          & { __typename: 'Category' }
+        )> }
+        & { __typename: 'CategoryType' }
+      ) | null }
+      & { __typename: 'CategoryTypeFilterBlock' }
+    ) | (
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+      & { __typename: 'IndicatorFilterBlock' }
+    )> | null, advancedFilters: Array<(
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+        { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
+          { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
+            { id: string }
+            & { __typename: 'Category' }
+          ) | null, common: (
+            { id: string }
+            & { __typename: 'CommonCategory' }
+          ) | null }
+          & { __typename: 'Category' }
+        )> }
+        & { __typename: 'CategoryType' }
+      ) | null }
+      & { __typename: 'CategoryTypeFilterBlock' }
+    ) | (
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+      & { __typename: 'IndicatorFilterBlock' }
+    )> | null }
+    & { __typename: 'IndicatorListPage' }
   ) | (
     { leadContent: string | null, id: string | null, slug: string, title: string, lastPublishedAt: string | null }
     & { __typename: 'PrivacyPolicyPage' }
@@ -13403,20 +13803,227 @@ export type GetHomePageQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetPlanPageIndicatorListQueryVariables = Exact<{
+export type IndicatorListQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
-  path: Scalars['String']['input'];
+  relatedPlanIndicators: Scalars['Boolean']['input'];
 }>;
 
 
-export type GetPlanPageIndicatorListQuery = (
-  { planPage: (
-    { id: string | null, slug: string, title: string, lastPublishedAt: string | null }
-    & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-  ) | (
-    { leadContent: string | null, displayInsights: boolean | null, displayLevel: boolean | null, includeRelatedPlans: boolean | null, id: string | null, slug: string, title: string, lastPublishedAt: string | null }
-    & { __typename: 'IndicatorListPage' }
-  ) | null }
+export type IndicatorListQuery = (
+  { plan: (
+    { id: string, hasIndicatorRelationships: boolean | null, features: (
+      { hasActionPrimaryOrgs: boolean }
+      & { __typename: 'PlanFeatures' }
+    ), categoryTypes: Array<(
+      { name: string, id: string, identifier: string, categories: Array<(
+        { id: string, identifier: string, order: number, name: string, parent: (
+          { id: string }
+          & { __typename: 'Category' }
+        ) | null, common?: (
+          { type: (
+            { identifier: string, name: string }
+            & { __typename: 'CommonCategoryType' }
+          ) }
+          & { __typename: 'CommonCategory' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
+      & { __typename: 'CategoryType' }
+    )> }
+    & { __typename: 'Plan' }
+  ) | null, planIndicators?: Array<(
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
+      { id: string, name: string }
+      & { __typename: 'Organization' }
+    ), common: (
+      { id: string, name: string, normalizations: Array<(
+        { unit: (
+          { shortName: string | null }
+          & { __typename: 'Unit' }
+        ), normalizer: (
+          { name: string, id: string, identifier: string | null }
+          & { __typename: 'CommonIndicator' }
+        ) }
+        & { __typename: 'CommonIndicatorNormalization' }
+      )>, relatedCauses: Array<(
+        { id: string, effectType: RelatedCommonIndicatorEffectType, causalIndicator: (
+          { id: string }
+          & { __typename: 'CommonIndicator' }
+        ) }
+        & { __typename: 'RelatedCommonIndicator' }
+      )>, relatedEffects: Array<(
+        { id: string, effectType: RelatedCommonIndicatorEffectType, effectIndicator: (
+          { id: string }
+          & { __typename: 'CommonIndicator' }
+        ) }
+        & { __typename: 'RelatedCommonIndicator' }
+      )> }
+      & { __typename: 'CommonIndicator' }
+    ) | null, categories: Array<(
+      { id: string, name: string, color: string, parent: (
+        { id: string, name: string, color: string, level: (
+          { id: string }
+          & { __typename: 'CategoryLevel' }
+        ) | null }
+        & { __typename: 'Category' }
+      ) | null, type: (
+        { id: string, identifier: string }
+        & { __typename: 'CategoryType' }
+      ), level: (
+        { id: string }
+        & { __typename: 'CategoryLevel' }
+      ) | null, common: (
+        { id: string, type: (
+          { name: string, identifier: string }
+          & { __typename: 'CommonCategoryType' }
+        ) }
+        & { __typename: 'CommonCategory' }
+      ) | null }
+      & { __typename: 'Category' }
+    )>, latestValue: (
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    ) | null, referenceValue: (
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    ) | null, dimensions: Array<(
+      { dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) }
+      & { __typename: 'IndicatorDimension' }
+    )>, values: Array<(
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )>, categories: Array<(
+        { id: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    )>, goals: Array<(
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )>, scenario: (
+        { id: string }
+        & { __typename: 'Scenario' }
+      ) | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { shortName: string | null }
+      & { __typename: 'Unit' }
+    ), plans: Array<(
+      { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
+      & { __typename: 'Plan' }
+    )> }
+    & { __typename: 'Indicator' }
+  )> | null, relatedPlanIndicators?: Array<(
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
+      { id: string, name: string }
+      & { __typename: 'Organization' }
+    ), common: (
+      { id: string, name: string, normalizations: Array<(
+        { unit: (
+          { shortName: string | null }
+          & { __typename: 'Unit' }
+        ), normalizer: (
+          { name: string, id: string, identifier: string | null }
+          & { __typename: 'CommonIndicator' }
+        ) }
+        & { __typename: 'CommonIndicatorNormalization' }
+      )>, relatedCauses: Array<(
+        { id: string, effectType: RelatedCommonIndicatorEffectType, causalIndicator: (
+          { id: string }
+          & { __typename: 'CommonIndicator' }
+        ) }
+        & { __typename: 'RelatedCommonIndicator' }
+      )>, relatedEffects: Array<(
+        { id: string, effectType: RelatedCommonIndicatorEffectType, effectIndicator: (
+          { id: string }
+          & { __typename: 'CommonIndicator' }
+        ) }
+        & { __typename: 'RelatedCommonIndicator' }
+      )> }
+      & { __typename: 'CommonIndicator' }
+    ) | null, categories: Array<(
+      { id: string, name: string, color: string, parent: (
+        { id: string, name: string, color: string, level: (
+          { id: string }
+          & { __typename: 'CategoryLevel' }
+        ) | null }
+        & { __typename: 'Category' }
+      ) | null, type: (
+        { id: string, identifier: string }
+        & { __typename: 'CategoryType' }
+      ), level: (
+        { id: string }
+        & { __typename: 'CategoryLevel' }
+      ) | null, common: (
+        { id: string, type: (
+          { name: string, identifier: string }
+          & { __typename: 'CommonCategoryType' }
+        ) }
+        & { __typename: 'CommonCategory' }
+      ) | null }
+      & { __typename: 'Category' }
+    )>, latestValue: (
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    ) | null, referenceValue: (
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    ) | null, dimensions: Array<(
+      { dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) }
+      & { __typename: 'IndicatorDimension' }
+    )>, values: Array<(
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )>, categories: Array<(
+        { id: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    )>, goals: Array<(
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )>, scenario: (
+        { id: string }
+        & { __typename: 'Scenario' }
+      ) | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { shortName: string | null }
+      & { __typename: 'Unit' }
+    ), plans: Array<(
+      { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
+      & { __typename: 'Plan' }
+    )> }
+    & { __typename: 'Indicator' }
+  )> | null }
   & { __typename: 'Query' }
 );
 
@@ -13441,13 +14048,88 @@ export type IndicatorDetailsQuery = (
       ) | null }
       & { __typename: 'Organization' }
     ), categories: Array<(
-      { identifier: string, name: string, id: string, type: (
-        { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
-          { id: string, order: number, name: string, namePlural: string | null }
+      { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+        { id: string, name: string, namePlural: string | null }
+        & { __typename: 'CategoryLevel' }
+      ) | null, iconImage: (
+        { rendition: (
+          { src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null }
+        & { __typename: 'Image' }
+      ) | null, categoryPage: (
+        { id: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+          { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         )> }
         & { __typename: 'CategoryType' }
-      ) }
+      ), parent: (
+        { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+          { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+            { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
+              { id: string, name: string, namePlural: string | null }
+              & { __typename: 'CategoryLevel' }
+            ) | null, iconImage: (
+              { rendition: (
+                { src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, categoryPage: (
+              { id: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+                { id: string, name: string, namePlural: string | null }
+                & { __typename: 'CategoryLevel' }
+              )> }
+              & { __typename: 'CategoryType' }
+            ) }
+            & { __typename: 'Category' }
+          ) | null, level: (
+            { id: string, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          ) | null, iconImage: (
+            { rendition: (
+              { src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, categoryPage: (
+            { id: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+              { id: string, name: string, namePlural: string | null }
+              & { __typename: 'CategoryLevel' }
+            )> }
+            & { __typename: 'CategoryType' }
+          ) }
+          & { __typename: 'Category' }
+        ) | null, level: (
+          { id: string, name: string, namePlural: string | null }
+          & { __typename: 'CategoryLevel' }
+        ) | null, iconImage: (
+          { rendition: (
+            { src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null }
+          & { __typename: 'Image' }
+        ) | null, categoryPage: (
+          { id: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
+            { id: string, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          )> }
+          & { __typename: 'CategoryType' }
+        ) }
+        & { __typename: 'Category' }
+      ) | null }
       & { __typename: 'Category' }
     )>, common: (
       { id: string, indicators: Array<(
@@ -13530,6 +14212,36 @@ export type IndicatorDetailsQuery = (
         & { __typename: 'Indicator' }
       ) }
       & { __typename: 'RelatedIndicator' }
+    )>, plans: Array<(
+      { id: string, identifier: string, name: string, shortName: string | null, versionName: string, publishedAt: string | null, supersededBy: (
+        { id: string }
+        & { __typename: 'Plan' }
+      ) | null, allRelatedPlans: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )>, relatedPlans: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )>, supersededPlans: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )>, supersedingPlans: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )>, parent: (
+        { id: string }
+        & { __typename: 'Plan' }
+      ) | null, children: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )>, copyOf: (
+        { id: string }
+        & { __typename: 'Plan' }
+      ) | null, copies: Array<(
+        { id: string }
+        & { __typename: 'Plan' }
+      )> }
+      & { __typename: 'Plan' }
     )> }
     & { __typename: 'Indicator' }
   ) | null }
@@ -14120,7 +14832,7 @@ export type GetPlanContextQuery = (
       )> }
       & { __typename: 'Footer' }
     ) | null, features: (
-      { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
+      { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
       & { __typename: 'PlanFeatures' }
     ), allRelatedPlans: Array<(
       { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null, image: (
@@ -14316,7 +15028,7 @@ export type PlanContextFragment = (
     )> }
     & { __typename: 'Footer' }
   ) | null, features: (
-    { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
+    { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean }
     & { __typename: 'PlanFeatures' }
   ), allRelatedPlans: Array<(
     { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null, image: (

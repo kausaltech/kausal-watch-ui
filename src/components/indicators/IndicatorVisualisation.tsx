@@ -466,6 +466,7 @@ function addOrganizationCategory(value, orgId) {
 }
 
 function _addTotal(v, categoryCount) {
+  console.log('categoryCount', categoryCount);
   if (v.categories.length === 0) {
     const newCategories = new Array(categoryCount).fill({ id: 'total' });
     return Object.assign({}, v, {
@@ -489,9 +490,11 @@ function combineValues(indicator, comparisonIndicator, indicatorGraphSpecificati
         comparisonIndicator == null ? v : addOrganizationCategory(v, indicator.organization.id)
       );
   const indicatorValues = getValues(indicator);
+  console.log('indicatorValues', indicatorValues);
   if (comparisonIndicator == null) {
     return indicatorValues;
   }
+
   return indicatorValues.concat(getValues(comparisonIndicator));
 }
 
@@ -609,6 +612,7 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }: IndicatorVisuali
     normalizeByPopulation ? populationNormalizer!.normalizer.id : null
   );
 
+  console.log('indicatorGraphSpecification', indicatorGraphSpecification);
   /// Determine Indicator unit label and y-axis range
   const { unit } = normalizeByPopulation ? populationNormalizer! : indicator;
   const unitHasName = 'name' in unit;
@@ -632,6 +636,8 @@ function IndicatorVisualisation({ indicatorId, indicatorLink }: IndicatorVisuali
   }
   /// Process data for data traces
   const cube = generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues);
+
+  console.log('cube', cube);
   indicatorGraphSpecification.cube = cube;
   const hasTimeDimension =
     indicatorGraphSpecification.axes.filter((a) => a[0] === 'time').length > 0;
