@@ -747,6 +747,12 @@ export type GetActionListQuery = (
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
         { rendition: (
           { src: string }
@@ -801,6 +807,12 @@ export type GetActionListQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -854,6 +866,12 @@ export type GetActionListQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -907,6 +925,12 @@ export type GetActionListQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -1086,6 +1110,12 @@ export type GetActionListForBlockQuery = (
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
         { rendition: (
           { src: string }
@@ -1140,6 +1170,12 @@ export type GetActionListForBlockQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -1193,6 +1229,12 @@ export type GetActionListForBlockQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -1246,6 +1288,12 @@ export type GetActionListForBlockQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -2099,6 +2147,12 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
+    )>, indicatorRelationships: Array<(
+      { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string }
+        & { __typename: 'Indicator' }
+      ) }
+      & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
       { rendition: (
         { src: string }
@@ -2153,6 +2207,12 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -2206,6 +2266,12 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -2259,6 +2325,12 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
         { rendition: (
           { src: string }
@@ -2384,6 +2456,12 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
+    )>, indicatorRelationships: Array<(
+      { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string }
+        & { __typename: 'Indicator' }
+      ) }
+      & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
       { rendition: (
         { src: string }
@@ -2438,6 +2516,12 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -2491,6 +2575,12 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -2544,6 +2634,12 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
         { rendition: (
           { src: string }
@@ -2655,6 +2751,12 @@ export type ActionCardFragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
+    )>, indicatorRelationships: Array<(
+      { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string }
+        & { __typename: 'Indicator' }
+      ) }
+      & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
       { rendition: (
         { src: string }
@@ -2709,6 +2811,12 @@ export type ActionCardFragment = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -2762,6 +2870,12 @@ export type ActionCardFragment = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -2815,6 +2929,12 @@ export type ActionCardFragment = (
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
         { rendition: (
           { src: string }
@@ -3098,6 +3218,12 @@ export type CategoryFragmentFragment = (
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
+  )>, indicatorRelationships: Array<(
+    { type: IndicatorCategoryRelationshipType, indicator: (
+      { id: string }
+      & { __typename: 'Indicator' }
+    ) }
+    & { __typename: 'IndicatorCategoryRelationship' }
   )>, iconImage: (
     { rendition: (
       { src: string }
@@ -3157,6 +3283,12 @@ export type CategoryWithParentsFragmentFragment = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -3210,6 +3342,12 @@ export type CategoryWithParentsFragmentFragment = (
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
         { rendition: (
           { src: string }
@@ -3263,6 +3401,12 @@ export type CategoryWithParentsFragmentFragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
+    )>, indicatorRelationships: Array<(
+      { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string }
+        & { __typename: 'Indicator' }
+      ) }
+      & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
       { rendition: (
         { src: string }
@@ -3321,6 +3465,12 @@ export type CategoryRecursiveFragmentFragment = (
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
+  )>, indicatorRelationships: Array<(
+    { type: IndicatorCategoryRelationshipType, indicator: (
+      { id: string }
+      & { __typename: 'Indicator' }
+    ) }
+    & { __typename: 'IndicatorCategoryRelationship' }
   )>, iconImage: (
     { rendition: (
       { src: string }
@@ -3375,6 +3525,12 @@ export type CategoryRecursiveFragmentFragment = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -3428,6 +3584,12 @@ export type CategoryRecursiveFragmentFragment = (
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
         { rendition: (
           { src: string }
@@ -3481,6 +3643,12 @@ export type CategoryRecursiveFragmentFragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
+    )>, indicatorRelationships: Array<(
+      { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string }
+        & { __typename: 'Indicator' }
+      ) }
+      & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
       { rendition: (
         { src: string }
@@ -4312,6 +4480,12 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
         { rendition: (
           { src: string }
@@ -4366,6 +4540,12 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -4419,6 +4599,12 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -4472,6 +4658,12 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -4531,6 +4723,12 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
         { rendition: (
           { src: string }
@@ -4613,7 +4811,13 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
-      ) | null, iconImage: (
+      ) | null, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
+      )>, iconImage: (
         { rendition: (
           { src: string }
           & { __typename: 'ImageRendition' }
@@ -4667,6 +4871,12 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -4720,6 +4930,12 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -4773,6 +4989,12 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -5224,6 +5446,12 @@ export type GetActionDetailsQuery = (
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
         { rendition: (
           { src: string }
@@ -5278,6 +5506,12 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -5331,6 +5565,12 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -5384,6 +5624,12 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -5507,6 +5753,12 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -5561,6 +5813,12 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -5614,6 +5872,12 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -5667,6 +5931,12 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -5765,6 +6035,12 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -5819,6 +6095,12 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -5872,6 +6154,12 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -5925,6 +6213,12 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -6017,6 +6311,12 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -6071,6 +6371,12 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -6124,6 +6430,12 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -6177,6 +6489,12 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -6272,6 +6590,12 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -6326,6 +6650,12 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -6379,6 +6709,12 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -6432,6 +6768,12 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -6573,6 +6915,12 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -6627,6 +6975,12 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -6680,6 +7034,12 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -6733,6 +7093,12 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -6828,6 +7194,12 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -6882,6 +7254,12 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -6935,6 +7313,12 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -6988,6 +7372,12 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -7186,6 +7576,12 @@ export type GetActionDetailsQuery = (
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
+                  )>, indicatorRelationships: Array<(
+                    { type: IndicatorCategoryRelationshipType, indicator: (
+                      { id: string }
+                      & { __typename: 'Indicator' }
+                    ) }
+                    & { __typename: 'IndicatorCategoryRelationship' }
                   )>, iconImage: (
                     { rendition: (
                       { src: string }
@@ -7240,6 +7636,12 @@ export type GetActionDetailsQuery = (
                             & { __typename: 'Unit' }
                           ) }
                           & { __typename: 'Indicator' }
+                        )>, indicatorRelationships: Array<(
+                          { type: IndicatorCategoryRelationshipType, indicator: (
+                            { id: string }
+                            & { __typename: 'Indicator' }
+                          ) }
+                          & { __typename: 'IndicatorCategoryRelationship' }
                         )>, iconImage: (
                           { rendition: (
                             { src: string }
@@ -7293,6 +7695,12 @@ export type GetActionDetailsQuery = (
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
+                      )>, indicatorRelationships: Array<(
+                        { type: IndicatorCategoryRelationshipType, indicator: (
+                          { id: string }
+                          & { __typename: 'Indicator' }
+                        ) }
+                        & { __typename: 'IndicatorCategoryRelationship' }
                       )>, iconImage: (
                         { rendition: (
                           { src: string }
@@ -7346,6 +7754,12 @@ export type GetActionDetailsQuery = (
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
+                    )>, indicatorRelationships: Array<(
+                      { type: IndicatorCategoryRelationshipType, indicator: (
+                        { id: string }
+                        & { __typename: 'Indicator' }
+                      ) }
+                      & { __typename: 'IndicatorCategoryRelationship' }
                     )>, iconImage: (
                       { rendition: (
                         { src: string }
@@ -7494,6 +7908,12 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -7548,6 +7968,12 @@ export type GetActionDetailsQuery = (
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
+                      )>, indicatorRelationships: Array<(
+                        { type: IndicatorCategoryRelationshipType, indicator: (
+                          { id: string }
+                          & { __typename: 'Indicator' }
+                        ) }
+                        & { __typename: 'IndicatorCategoryRelationship' }
                       )>, iconImage: (
                         { rendition: (
                           { src: string }
@@ -7601,6 +8027,12 @@ export type GetActionDetailsQuery = (
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
+                    )>, indicatorRelationships: Array<(
+                      { type: IndicatorCategoryRelationshipType, indicator: (
+                        { id: string }
+                        & { __typename: 'Indicator' }
+                      ) }
+                      & { __typename: 'IndicatorCategoryRelationship' }
                     )>, iconImage: (
                       { rendition: (
                         { src: string }
@@ -7654,6 +8086,12 @@ export type GetActionDetailsQuery = (
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
+                  )>, indicatorRelationships: Array<(
+                    { type: IndicatorCategoryRelationshipType, indicator: (
+                      { id: string }
+                      & { __typename: 'Indicator' }
+                    ) }
+                    & { __typename: 'IndicatorCategoryRelationship' }
                   )>, iconImage: (
                     { rendition: (
                       { src: string }
@@ -7867,6 +8305,12 @@ export type GetActionDetailsQuery = (
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
+                  )>, indicatorRelationships: Array<(
+                    { type: IndicatorCategoryRelationshipType, indicator: (
+                      { id: string }
+                      & { __typename: 'Indicator' }
+                    ) }
+                    & { __typename: 'IndicatorCategoryRelationship' }
                   )>, iconImage: (
                     { rendition: (
                       { src: string }
@@ -7921,6 +8365,12 @@ export type GetActionDetailsQuery = (
                             & { __typename: 'Unit' }
                           ) }
                           & { __typename: 'Indicator' }
+                        )>, indicatorRelationships: Array<(
+                          { type: IndicatorCategoryRelationshipType, indicator: (
+                            { id: string }
+                            & { __typename: 'Indicator' }
+                          ) }
+                          & { __typename: 'IndicatorCategoryRelationship' }
                         )>, iconImage: (
                           { rendition: (
                             { src: string }
@@ -7974,6 +8424,12 @@ export type GetActionDetailsQuery = (
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
+                      )>, indicatorRelationships: Array<(
+                        { type: IndicatorCategoryRelationshipType, indicator: (
+                          { id: string }
+                          & { __typename: 'Indicator' }
+                        ) }
+                        & { __typename: 'IndicatorCategoryRelationship' }
                       )>, iconImage: (
                         { rendition: (
                           { src: string }
@@ -8027,6 +8483,12 @@ export type GetActionDetailsQuery = (
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
+                    )>, indicatorRelationships: Array<(
+                      { type: IndicatorCategoryRelationshipType, indicator: (
+                        { id: string }
+                        & { __typename: 'Indicator' }
+                      ) }
+                      & { __typename: 'IndicatorCategoryRelationship' }
                     )>, iconImage: (
                       { rendition: (
                         { src: string }
@@ -8175,6 +8637,12 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -8229,6 +8697,12 @@ export type GetActionDetailsQuery = (
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
+                      )>, indicatorRelationships: Array<(
+                        { type: IndicatorCategoryRelationshipType, indicator: (
+                          { id: string }
+                          & { __typename: 'Indicator' }
+                        ) }
+                        & { __typename: 'IndicatorCategoryRelationship' }
                       )>, iconImage: (
                         { rendition: (
                           { src: string }
@@ -8282,6 +8756,12 @@ export type GetActionDetailsQuery = (
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
+                    )>, indicatorRelationships: Array<(
+                      { type: IndicatorCategoryRelationshipType, indicator: (
+                        { id: string }
+                        & { __typename: 'Indicator' }
+                      ) }
+                      & { __typename: 'IndicatorCategoryRelationship' }
                     )>, iconImage: (
                       { rendition: (
                         { src: string }
@@ -8335,6 +8815,12 @@ export type GetActionDetailsQuery = (
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
+                  )>, indicatorRelationships: Array<(
+                    { type: IndicatorCategoryRelationshipType, indicator: (
+                      { id: string }
+                      & { __typename: 'Indicator' }
+                    ) }
+                    & { __typename: 'IndicatorCategoryRelationship' }
                   )>, iconImage: (
                     { rendition: (
                       { src: string }
@@ -8515,6 +9001,12 @@ export type ActionDependenciesFragment = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -8569,6 +9061,12 @@ export type ActionDependenciesFragment = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -8622,6 +9120,12 @@ export type ActionDependenciesFragment = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -8675,6 +9179,12 @@ export type ActionDependenciesFragment = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -8770,6 +9280,12 @@ export type ActionDependenciesFragment = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -8824,6 +9340,12 @@ export type ActionDependenciesFragment = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -8877,6 +9399,12 @@ export type ActionDependenciesFragment = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -8930,6 +9458,12 @@ export type ActionDependenciesFragment = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -9183,6 +9717,12 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -9237,6 +9777,12 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
+                  )>, indicatorRelationships: Array<(
+                    { type: IndicatorCategoryRelationshipType, indicator: (
+                      { id: string }
+                      & { __typename: 'Indicator' }
+                    ) }
+                    & { __typename: 'IndicatorCategoryRelationship' }
                   )>, iconImage: (
                     { rendition: (
                       { src: string }
@@ -9290,6 +9836,12 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -9343,6 +9895,12 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -9503,6 +10061,12 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -9557,6 +10121,12 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -9610,6 +10180,12 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -9663,6 +10239,12 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -9783,6 +10365,12 @@ export type ReportComparisonBlockActionContentFragment = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -9837,6 +10425,12 @@ export type ReportComparisonBlockActionContentFragment = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -9890,6 +10484,12 @@ export type ReportComparisonBlockActionContentFragment = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -9943,6 +10543,12 @@ export type ReportComparisonBlockActionContentFragment = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -10061,6 +10667,12 @@ export type ActionCardWithDependencyRoleFragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
+    )>, indicatorRelationships: Array<(
+      { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string }
+        & { __typename: 'Indicator' }
+      ) }
+      & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
       { rendition: (
         { src: string }
@@ -10115,6 +10727,12 @@ export type ActionCardWithDependencyRoleFragment = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -10168,6 +10786,12 @@ export type ActionCardWithDependencyRoleFragment = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -10221,6 +10845,12 @@ export type ActionCardWithDependencyRoleFragment = (
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
         { rendition: (
           { src: string }
@@ -10679,6 +11309,12 @@ export type GetContentPageQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
           { rendition: (
             { src: string }
@@ -10815,6 +11451,12 @@ export type GetContentPageQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -10869,6 +11511,12 @@ export type GetContentPageQuery = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -10922,6 +11570,12 @@ export type GetContentPageQuery = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -10975,6 +11629,12 @@ export type GetContentPageQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -11118,6 +11778,12 @@ export type GetContentPageQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -11172,6 +11838,12 @@ export type GetContentPageQuery = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -11225,6 +11897,12 @@ export type GetContentPageQuery = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -11278,6 +11956,12 @@ export type GetContentPageQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -11337,6 +12021,12 @@ export type GetContentPageQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -11577,6 +12267,12 @@ export type GetContentPageQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -11631,6 +12327,12 @@ export type GetContentPageQuery = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -11684,6 +12386,12 @@ export type GetContentPageQuery = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -11737,6 +12445,12 @@ export type GetContentPageQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -11796,6 +12510,12 @@ export type GetContentPageQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -11874,7 +12594,13 @@ export type GetContentPageQuery = (
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
-          ) | null, iconImage: (
+          ) | null, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
+          )>, iconImage: (
             { rendition: (
               { src: string }
               & { __typename: 'ImageRendition' }
@@ -11928,6 +12654,12 @@ export type GetContentPageQuery = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -11981,6 +12713,12 @@ export type GetContentPageQuery = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -12034,6 +12772,12 @@ export type GetContentPageQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -12426,6 +13170,12 @@ export type GetHomePageQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }
@@ -12480,6 +13230,12 @@ export type GetHomePageQuery = (
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
                   { rendition: (
                     { src: string }
@@ -12533,6 +13289,12 @@ export type GetHomePageQuery = (
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
                 { rendition: (
                   { src: string }
@@ -12586,6 +13348,12 @@ export type GetHomePageQuery = (
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
               { rendition: (
                 { src: string }
@@ -12645,6 +13413,12 @@ export type GetHomePageQuery = (
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
             { rendition: (
               { src: string }

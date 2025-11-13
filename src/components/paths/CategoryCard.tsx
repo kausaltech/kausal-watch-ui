@@ -3,7 +3,10 @@ import React from 'react';
 import { readableColor, transparentize } from 'polished';
 import styled from 'styled-components';
 
-import type { CategoryFragmentFragment } from '@/common/__generated__/graphql';
+import {
+  type CategoryFragmentFragment,
+  IndicatorCategoryRelationshipType,
+} from '@/common/__generated__/graphql';
 import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import { Link } from '@/common/links';
 
@@ -58,36 +61,6 @@ const Identifier = styled.span`
   color: ${(props) => props.theme.textColor.tertiary};
 `;
 
-const CardGoalBlock = styled.div`
-  margin: ${({ theme }) => `0 0 ${theme.spaces.s100}`};
-  line-height: ${(props) => props.theme.lineHeightMd};
-  font-size: ${(props) => props.theme.fontSizeBase};
-
-  p {
-    display: inline;
-    margin: 0;
-  }
-
-  strong,
-  span {
-    display: inline;
-  }
-`;
-
-type AttributeRichText = {
-  id: string;
-  key: string;
-  value: string;
-};
-
-type AttributeText = {
-  id: string;
-  key: string;
-  value: string;
-};
-
-const ATTRIBUTE_ID_MAIN_GOAL = '5750';
-const ATTRIBUTE_ID_MAIN_INDICATOR = '11986';
 type CategoryCardProps = {
   category: CategoryFragmentFragment;
   group?: CategoryFragmentFragment;
@@ -98,30 +71,9 @@ type CategoryCardProps = {
 const CategoryCard = (props: CategoryCardProps) => {
   const { category, group, pathsInstance, onLoaded } = props;
 
-  console.log('categoryCard', props);
-  // TODO: Have a backend setting for the main goal attribute
-  const mainGoalAttribute: AttributeRichText = category.attributes?.find(
-    (attr) => attr.id === ATTRIBUTE_ID_MAIN_GOAL
-  ) as AttributeRichText;
-
-  const mainGoalLabel = mainGoalAttribute?.key || 'Main Goal';
-  const mainGoalValue =
-    mainGoalAttribute?.__typename === 'AttributeRichText' ? mainGoalAttribute.value : null;
-
-  const flattenHTML = (html: string) => html.replace(/<\/?p[^>]*>/g, '');
-  const flattenedMainGoalValue = mainGoalValue ? flattenHTML(mainGoalValue) : null;
-
-  // TODO: Have a backend setting for the main indicator attribute
-  const mainIndicatorAttribute: AttributeText = category.attributes?.find(
-    (attr) => attr.id === ATTRIBUTE_ID_MAIN_INDICATOR
-  ) as AttributeText;
-
-  const mainIndicatorId: string | null =
-    (mainIndicatorAttribute?.__typename === 'AttributeText'
-      ? mainIndicatorAttribute.value
-      : null) ||
-    (category.indicators?.length > 0 ? category.indicators[0].id : null) ||
-    null;
+  const mainIndicatorId = category.indicatorRelationships?.find(
+    (relationship) => relationship.type === IndicatorCategoryRelationshipType.MainGoal
+  )?.indicator?.id;
 
   return (
     <Card>
@@ -157,13 +109,6 @@ const CategoryCard = (props: CategoryCardProps) => {
             </CardContentBlock>
           )}
           <CardContentBlock>
-            {mainGoalValue && (
-              <CardGoalBlock>
-                <p>
-                  <strong>{mainGoalLabel}:</strong> {flattenedMainGoalValue}
-                </p>
-              </CardGoalBlock>
-            )}
             {mainIndicatorId && <IndicatorSparkline indicatorId={mainIndicatorId} />}
           </CardContentBlock>
         </CardDataBlock>

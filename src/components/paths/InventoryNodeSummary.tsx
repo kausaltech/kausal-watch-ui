@@ -27,7 +27,7 @@ const Values = styled.div`
   flex-wrap: wrap;
   gap: 0 10px;
   align-items: stretch;
-  flex: 0 1 360px;
+  flex: 0 1 780px;
   background-color: ${({ theme }) => theme.themeColors.white};
 `;
 

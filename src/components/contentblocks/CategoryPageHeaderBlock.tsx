@@ -179,8 +179,7 @@ const AttributesContainer = styled.div`
 `;
 
 const PathsContentWrapper = styled.div`
-  max-width: ${({ theme }) => theme.breakpointSm};
-  margin-top: ${({ theme }) => theme.spaces.s100};
+  margin-bottom: ${({ theme }) => theme.spaces.s200};
 `;
 
 const getIconHeight = (size: IconSize = IconSize.M, theme: Theme) => {
@@ -234,12 +233,11 @@ const CategoryHeaderAttributes = ({ layout, page, children }: CategoryHeaderAttr
         {children}
       </Attributes>
     </AttributesContainer>
-  ) : (
+  ) : children ? (
     <AttributesContainer>
       <Attributes>{children}</Attributes>
     </AttributesContainer>
-  );
-
+  ) : null;
 interface LegacyCategoryHeaderAttributesProps
   extends Pick<Props, 'attributes' | 'categoryId' | 'typeId'> {
   categoryTypes?: CategoryTypes;
@@ -383,13 +381,13 @@ export default function CategoryPageHeaderBlock(props: Props) {
   const pathsNodeId = page.category?.kausalPathsNodeUuid;
   const PathsNodeAttribute =
     pathsNodeId && pathsInstance?.id ? (
-      <AttributesContainer>
+      <PathsContentWrapper>
         <PathsNodeSummary
           categoryId={identifier ?? ''}
           node={pathsNodeId}
           pathsInstance={pathsInstance}
         />
-      </AttributesContainer>
+      </PathsContentWrapper>
     ) : null;
 
   return (

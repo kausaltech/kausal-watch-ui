@@ -36,6 +36,12 @@ export const CATEGORY_FRAGMENT = gql`
         shortName
       }
     }
+    indicatorRelationships {
+      indicator {
+        id
+      }
+      type
+    }
     color
     iconSvgUrl
     helpText
