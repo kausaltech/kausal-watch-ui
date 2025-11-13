@@ -65,6 +65,7 @@
     "indicator-no-values": "Nenhum valor",
     "indicator-not-found": "Indicador não encontrado",
     "indicator-population-normalized-value": "Per capita",
+    "indicator-reference-value": "Valor de referência",
     "indicator-related-actions": "{context, select, CASE_STUDY {Estudos de caso que afetam esse indicador} STRATEGY {Estratégias que afetam esse indicador} other {Ações que afetam esse indicador}}",
     "indicator-resolution-years": "anos",
     "indicator-start-value": "Valor inicial",
