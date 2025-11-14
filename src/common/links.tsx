@@ -143,10 +143,14 @@ export function ActionLink({
     // nextjs NextLink doesn't properly handle links across plans in some cases,
     // specifically when we are in a plan without basepath and the link is to
     // a plan in the same hostname but with a basepath.
-    return <a href={viewUrl}>{children}</a>;
+    return (
+      <a href={viewUrl} {...other}>
+        {children}
+      </a>
+    );
   }
   return (
-    <NextLink passHref {...disablePrefetch(other)} href={actionLink}>
+    <NextLink {...disablePrefetch(other)} href={actionLink}>
       {children}
     </NextLink>
   );

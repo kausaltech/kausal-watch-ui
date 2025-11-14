@@ -2,7 +2,7 @@ import React, { Suspense, useState } from 'react';
 
 import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
-import { transparentize } from 'polished';
+import { readableColor, transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import { Tooltip } from 'reactstrap';
 import styled, { css } from 'styled-components';
@@ -28,7 +28,7 @@ import { ActionDependenciesBlock } from './blocks/action-dependencies/ActionDepe
 const StyledActionLink = styled(ActionLink)`
   text-decoration: none;
   display: flex;
-  width: 100%;
+  flex: 1 1 auto;
 
   &:hover {
     text-decoration: none;
@@ -119,7 +119,7 @@ const ActionPlan = styled.div`
   padding: ${(props) =>
     `${props.theme.spaces.s050} ${props.theme.spaces.s050} ${props.theme.spaces.s050} 0`};
   background: ${(props) => props.theme.themeColors.white};
-  border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
+  border-bottom: 1px solid ${(props) => props.theme.cardBackground.secondary};
 `;
 
 const ActionNumber = styled.div`
@@ -128,7 +128,7 @@ const ActionNumber = styled.div`
   font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
-  color: ${(props) => props.theme.themeColors.black};
+  color: ${(props) => props.theme.textColor.primary};
   background: ${(props) => props.theme.themeColors.white};
 
   &:after {
@@ -137,7 +137,7 @@ const ActionNumber = styled.div`
 `;
 
 const ActionStatusArea = styled.div<{ $statusColor: string; $isMini: boolean }>`
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) => readableColor(props.$statusColor)};
   background-color: ${(props) => props.$statusColor};
   min-height: ${({ theme, $isMini }) => ($isMini ? theme.spaces.s050 : theme.spaces.s400)};
   line-height: ${(props) => props.theme.lineHeightSm};
@@ -150,8 +150,8 @@ type StyledActionPhaseProps = {
 
 const StyledActionPhase = styled.div<StyledActionPhaseProps>`
   background-color: ${({ $hasStatus, theme, $statusColor }) =>
-    $hasStatus ? theme.themeColors.light : $statusColor};
-  color: ${(props) => props.theme.themeColors.dark};
+    $hasStatus ? theme.cardBackground.secondary : $statusColor};
+  color: ${(props) => props.theme.textColor.primary};
 `;
 
 const StatusName = styled.div`
@@ -185,7 +185,7 @@ const ActionOrg = styled.div`
   display: flex;
   align-items: center;
   background-color: ${(props) => props.theme.themeColors.white};
-  border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
+  border-bottom: 1px solid ${(props) => props.theme.cardBackground.secondary};
 `;
 
 const ActionOrgAvatar = styled.div`
@@ -195,7 +195,7 @@ const ActionOrgAvatar = styled.div`
 const ActionOrgName = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${({ theme }) => `${theme.fontFamilyTiny}, ${theme.fontFamilyFallback}`};
-  color: ${(props) => props.theme.themeColors.dark};
+  color: ${(props) => props.theme.textColor.primary};
   line-height: 1;
 `;
 

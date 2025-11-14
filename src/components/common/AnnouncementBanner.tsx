@@ -1,18 +1,23 @@
+import { readableColor } from 'polished';
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
 
 export const StyledAnnouncementBannerSection = styled.div`
   padding: ${(props) => props.theme.spaces.s100} 0;
-  background-color: ${(props) => props.theme.graphColors.blue070};
-  color: ${(props) => props.theme.graphColors.grey010};
+  background-color: ${({ theme }) =>
+    theme.settings.announcementBannerColor || theme.graphColors.blue070};
+  color: ${({ theme }) =>
+    readableColor(theme.settings.announcementBannerColor || theme.graphColors.blue070)};
 `;
 
 export const StyledAnnouncementBannerWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0;
-  background-color: ${(props) => props.theme.graphColors.blue070};
-  color: ${(props) => props.theme.graphColors.grey010};
+  background-color: ${({ theme }) =>
+    theme.settings.announcementBannerColor || theme.graphColors.blue070};
+  color: ${({ theme }) =>
+    readableColor(theme.settings.announcementBannerColor || theme.graphColors.blue070)};
 
   p {
     margin-bottom: 0;
@@ -21,8 +26,15 @@ export const StyledAnnouncementBannerWrapper = styled.div`
     margin-top: ${(props) => props.theme.spaces.s050};
   }
   a {
-    color: ${(props) => props.theme.themeColors.white};
-    font-weight: bold;
+    color: ${({ theme }) =>
+      readableColor(theme.settings.announcementBannerColor || theme.graphColors.blue070)};
+    text-decoration: underline;
+
+    &:hover {
+      color: ${({ theme }) =>
+        readableColor(theme.settings.announcementBannerColor || theme.graphColors.blue070)};
+      text-decoration: none;
+    }
   }
 `;
 

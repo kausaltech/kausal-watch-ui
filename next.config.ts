@@ -31,15 +31,7 @@ let nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**.kausal.tech',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.your-objectstorage.com',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.your-objectstorage.com',
+        hostname: '*',
       },
     ],
   },

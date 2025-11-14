@@ -35,7 +35,8 @@ const ContentHeader = styled.header`
       readableColor(
         props.theme.brandDark,
         props.theme.themeColors.black,
-        props.theme.themeColors.white
+        props.theme.themeColors.white,
+        true
       )} !important;
   }
 

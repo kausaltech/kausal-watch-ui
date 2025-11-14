@@ -32,16 +32,15 @@ const IndicatorBg = styled.div<{ $level?: string | null }>`
       case 'tactical':
         return theme.graphColors.blue030;
       case 'strategic':
-        return theme.graphColors.blue010;
       default:
-        return '#cccccc';
+        return theme.graphColors.blue010;
     }
   }};
 `;
 
 const StyledCard = styled(Card)`
   width: 100%;
-  background-color: ${(props) => props.theme.themeColors.light};
+  background-color: ${(props) => props.theme.themeColors.white};
   transition: all 0.5s ease;
   border-width: ${(props) => props.theme.cardBorderWidth};
   border-radius: ${(props) => props.theme.cardBorderRadius};
@@ -69,9 +68,8 @@ const IndicatorValue = styled.div<{ $level?: string | null }>`
       case 'tactical':
         return readableColor(props.theme.graphColors.blue030);
       case 'strategic':
-        return readableColor(props.theme.graphColors.blue010);
       default:
-        return props.theme.themeColors.black;
+        return readableColor(props.theme.graphColors.blue010);
     }
   }};
 `;
