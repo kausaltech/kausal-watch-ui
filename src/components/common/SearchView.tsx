@@ -135,10 +135,7 @@ function SearchResultItem({ hit }: SearchResultItemProps) {
     if (!hitTypeName) hitTypeName = t('page');
   }
   const showPlanChip = true;
-  const hitImage =
-    primaryOrg?.logo?.rendition?.src ||
-    hit.plan.image?.rendition?.src ||
-    'https://via.placeholder.com/64/AAAAAA/EEEEEE';
+  const hitImage = primaryOrg?.logo?.rendition?.src || hit.plan.image?.rendition?.src || undefined;
   const hitOrganization = primaryOrg?.name || hit.plan.organization.name;
 
   return (
