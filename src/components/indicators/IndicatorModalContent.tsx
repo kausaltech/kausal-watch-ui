@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import type {
   CategoryRecursiveFragmentFragment,
+  CategoryTagRecursiveFragmentFragment,
   CategoryTypeFragmentFragment,
   IndicatorDetailsQuery,
   IndicatorListQuery,
@@ -11,7 +12,7 @@ import type {
 
 import CategoryTags from '../actions/CategoryTags';
 import IndicatorValueSummary from './IndicatorValueSummary';
-import IndicatorVisualisation from './IndicatorVisualisationNew';
+import IndicatorVisualisation from './IndicatorVisualisation';
 
 const ContentLoader = styled.div`
   position: absolute;
@@ -100,6 +101,8 @@ const IndicatorModalContent = ({
   const indicatorCategories = indicator.categories
     .filter((cat) => uniqueTypes.includes(cat.type))
     .filter((cat) => usableCategoryTypes.some((type) => type.id === cat.type.id));
+  const indicatorCategoryTags =
+    indicatorCategories as unknown as CategoryTagRecursiveFragmentFragment[];
   const indicatorValues = indicator.values;
   const indicatorGoals = indicator.goals;
 
@@ -132,7 +135,7 @@ const IndicatorModalContent = ({
         />
         <div style={{ marginTop: '10px' }}>
           <CategoryTags
-            categories={indicatorCategories as CategoryRecursiveFragmentFragment[]}
+            categories={indicatorCategoryTags}
             types={uniqueTypes as CategoryTypeFragmentFragment[]}
             noLink={true}
             compact={true}
