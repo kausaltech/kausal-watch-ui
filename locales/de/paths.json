@@ -2,8 +2,12 @@
   "abbr-per-annum": "/a",
   "action-impact": "Maßnahmenauswirkungen",
   "action": "Maßnahme",
+  "action-enabled-description": "Soll die Strategie im Szenario berücksichtigt werden?",
+  "action-not-included-in-scenario": "Nicht im Szenario berücksichtigt",
   "actions": "Maßnahmen",
   "actions-available": "Maßnahmen in Szenario",
+  "actions-as-comparison": "Vergleich Auswirkung",
+  "actions-group-type": "Bereich",
   "actions-influencing-this": "{sector} beeinflussende Maßnahmen",
   "affected-by": "Beeinflusst von",
   "all-settings": "Einstellungen",
@@ -85,6 +89,8 @@
   "outcome-sub-nodes": "Untersektoren",
   "outcome-sub-nodes-secondary": "Untersektoren",
   "table-unit": "Maßeinheit",
+  "tco2-e-inhabitant": "t CO<sub>2</sub>-Äquivalente/Einw./a",
+  "ktco2-e": "kt CO<sub>2</sub>-Äquivalente/a",
   "outcome-bar-summary-historical": "<strong>{goalType}</strong> im Jahr {selectedYear} waren um <strong>{selectedYearDifference}</strong> höher als im Jahr {nearestGoalYear} ({nearestGoalValue}).",
   "outcome-bar-summary-forecast": "Mit dem gewählten <strong>Szenario {scenarioName}</strong> wird das Ziel von <strong>{nearestGoalValue}</strong> im Jahr {nearestGoalYear} erreicht. <strong>{goalType}</strong> im Jahr {selectedYear} betragen <strong>{selectedYearValue}</strong>.",
   "outcome-tabs-label": "Anzeigeoptionen",
@@ -97,5 +103,6 @@
   "error-with-code": "Fehler mit Code {code}",
   "show-error": "Fehler anzeigen",
   "thumbSliderLabel": "Anpassen",
-  "reset-button": "Zurücksetzen"
+  "reset-button": "Zurücksetzen",
+  "watch-action-list-title": "Maßnahmen"
 }
