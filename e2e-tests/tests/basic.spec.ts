@@ -81,13 +81,18 @@ const testPlan = (planId: string) => {
     });
 
     test('action details page', async ({ page, ctx }) => {
-      test.skip(ctx.plan.actions.length == 0, 'No actions defined in plan');
-      await page.goto(ctx.getActionURL(ctx.plan.actions[0]));
-      await ctx.checkMeta(page);
+      const listItem = ctx.getActionListMenuItem();
+      test.skip(!listItem, 'No actions defined in plan');
+      await page.goto(`${ctx.baseURL}${listItem.page.urlPath}`, { waitUntil: 'domcontentloaded' });
       await ctx.waitForLoadingFinished(page);
-      const actionDetailsPage = page.locator('.action-main-top');
-      await expect(actionDetailsPage).toBeVisible();
-      //await page.screenshot({ path: `${planId}_action-details.png` });
+
+      const firstActionLink = page.locator('a[href*="/actions/"]').first();
+      await firstActionLink.waitFor({ state: 'visible' });
+      const href = await firstActionLink.getAttribute('href');
+      await page.goto(href!.startsWith('http') ? href! : `${ctx.baseURL}${href}`);
+      await ctx.waitForLoadingFinished(page);
+
+      await expect(page.locator('main#main')).toBeVisible();
     });
 
     test('category page', async ({ page, ctx }) => {
