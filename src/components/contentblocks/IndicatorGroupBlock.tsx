@@ -79,7 +79,7 @@ function IndicatorItem(props: IndicatorItemProps) {
     );
 
   return (
-    <Col md={6} xl={4} className="mb-5">
+    <Col md={6} xl={4} className="mb-5 d-flex align-items-stretch">
       <IndicatorHighlightCard
         level={indicator.level}
         objectid={indicator.id}
@@ -98,6 +98,7 @@ const StyledColCentered = styled(Col)`
 
 const StyledRow = styled(Row)`
   margin-top: ${(props) => props.theme.spaces.s400};
+  align-items: stretch;
 `;
 
 type Props = {
