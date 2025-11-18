@@ -13,6 +13,7 @@ export const getIndicatorPage = async (plan: string, indicatorId: string) =>
     query: GET_INDICATOR_DETAILS,
     variables: {
       plan,
+      sitePlan: plan,
       id: indicatorId,
     },
     fetchPolicy: 'no-cache',
