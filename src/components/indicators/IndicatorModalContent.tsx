@@ -2,17 +2,12 @@ import type { ApolloError } from '@apollo/client';
 import { Spinner } from 'reactstrap';
 import styled from 'styled-components';
 
-import type {
-  CategoryRecursiveFragmentFragment,
-  CategoryTagRecursiveFragmentFragment,
-  CategoryTypeFragmentFragment,
-  IndicatorDetailsQuery,
-  IndicatorListQuery,
-} from '@/common/__generated__/graphql';
+import type { IndicatorDetailsQuery, IndicatorListQuery } from '@/common/__generated__/graphql';
 
-import CategoryTags from '../actions/CategoryTags';
-import IndicatorValueSummary from './IndicatorValueSummary';
-import IndicatorVisualisation from './IndicatorVisualisation';
+import IndicatorModalContentBlock, {
+  IndicatorGroupedCategoryBlock,
+  groupConsecutiveCategoryBlocks,
+} from './IndicatorModalContentBlock';
 
 const ContentLoader = styled.div`
   position: absolute;
@@ -39,48 +34,62 @@ const ContentWrapper = styled.div`
 
 const ModalHeader = styled.div`
   flex: 0 0 auto;
-  padding: ${({ theme }) => `${theme.spaces.s200} ${theme.spaces.s200} 0 ${theme.spaces.s200}`};
+  padding: ${({ theme }) => `${theme.spaces.s150}`};
+  padding-right: ${({ theme }) => theme.spaces.s300};
+  background-color: ${({ theme }) => theme.themeColors.white};
+  border-bottom: 1px solid ${({ theme }) => theme.cardBackground.secondary};
+  h1 {
+    margin-bottom: 0;
+    font-size: ${({ theme }) => theme.fontSizeMd};
+  }
 `;
 
 const ModalScrollableContent = styled.div`
   flex: 1 1 0;
   overflow-y: auto;
-  padding: ${({ theme }) => `0 ${theme.spaces.s200} ${theme.spaces.s200} ${theme.spaces.s200}`};
+  padding: ${({ theme }) => theme.spaces.s200};
   min-height: 0;
-`;
-
-const PlansList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: block;
-`;
-
-const PlansListItem = styled.li`
-  display: inline-block;
-  margin-right: ${(props) => props.theme.spaces.s050};
-
-  &:after {
-    content: ', ';
-    display: inline-block;
-  }
-  &:last-child:after {
-    content: '';
-    display: none;
-  }
+  background:
+    /* Shadow Cover TOP */
+    linear-gradient(${({ theme }) => theme.themeColors.white} 30%, rgba(255, 255, 255, 0)) center
+      top,
+    /* Shadow Cover BOTTOM */
+      linear-gradient(rgba(255, 255, 255, 0), ${({ theme }) => theme.themeColors.white} 70%) center
+      bottom,
+    /* Shadow TOP */ linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)) center top,
+    /* Shadow BOTTOM */ linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)) center bottom,
+    /* Base background color */ ${({ theme }) => theme.themeColors.white};
+  background-repeat: no-repeat;
+  background-size:
+    100% 40px,
+    100% 40px,
+    100% 14px,
+    100% 14px;
+  background-attachment: local, local, scroll, scroll;
 `;
 interface IndicatorModalContentProps {
   indicator?: IndicatorDetailsQuery['indicator'] | null;
   loading: boolean;
   error: ApolloError | undefined;
   usableCategoryTypes: NonNullable<IndicatorListQuery['plan']>['categoryTypes'];
+  layout: {
+    detailsMainTop: NonNullable<
+      NonNullable<IndicatorDetailsQuery['plan']>['indicatorListPage']
+    >['detailsMainTop'];
+    detailsMainBottom: NonNullable<
+      NonNullable<IndicatorDetailsQuery['plan']>['indicatorListPage']
+    >['detailsMainBottom'];
+    detailsAside: NonNullable<
+      NonNullable<IndicatorDetailsQuery['plan']>['indicatorListPage']
+    >['detailsAside'];
+  };
 }
 
 const IndicatorModalContent = ({
   indicator,
   loading,
   error,
-  usableCategoryTypes,
+  layout,
 }: IndicatorModalContentProps) => {
   if (loading && !indicator)
     return (
@@ -91,22 +100,8 @@ const IndicatorModalContent = ({
   if (error) return <div>Error: {error.message}</div>;
   if (!indicator) return <div>No data</div>;
 
-  // console.log('🪟 ---- indicator', indicator);
   const indicatorName = indicator.name;
-  const indicatorDescription = indicator.description;
-  const uniqueTypes = Array.from(
-    new Map(indicator.categories.map((c) => [c.type.id, c.type])).values()
-  );
 
-  const indicatorCategories = indicator.categories
-    .filter((cat) => uniqueTypes.includes(cat.type))
-    .filter((cat) => usableCategoryTypes.some((type) => type.id === cat.type.id));
-  const indicatorCategoryTags =
-    indicatorCategories as unknown as CategoryTagRecursiveFragmentFragment[];
-  const indicatorValues = indicator.values;
-  const indicatorGoals = indicator.goals;
-
-  const publishedPlans = indicator.plans.filter((plan) => plan.publishedAt);
   return (
     <ContentWrapper>
       {loading && (
@@ -115,34 +110,65 @@ const IndicatorModalContent = ({
         </ContentLoader>
       )}
       <ModalHeader>
-        <h3 id="indicator-modal-title">{indicatorName}</h3>
+        <h1 id="indicator-modal-title">{indicatorName}</h1>
       </ModalHeader>
       <ModalScrollableContent>
-        {publishedPlans.length > 1 && (
-          <PlansList>
-            {publishedPlans.map((plan) => (
-              <PlansListItem key={plan.id}>{plan.shortName || plan.name}</PlansListItem>
-            ))}
-          </PlansList>
+        {groupConsecutiveCategoryBlocks(layout.detailsMainTop || []).map((groupedBlock, index) => {
+          if (groupedBlock.type === 'grouped') {
+            return (
+              <IndicatorGroupedCategoryBlock
+                key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
+                blocks={groupedBlock.blocks}
+                indicator={indicator}
+              />
+            );
+          }
+          return (
+            <IndicatorModalContentBlock
+              key={groupedBlock.block.id}
+              block={groupedBlock.block}
+              indicator={indicator}
+            />
+          );
+        })}
+        {groupConsecutiveCategoryBlocks(layout.detailsMainBottom || []).map(
+          (groupedBlock, index) => {
+            if (groupedBlock.type === 'grouped') {
+              return (
+                <IndicatorGroupedCategoryBlock
+                  key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
+                  blocks={groupedBlock.blocks}
+                  indicator={indicator}
+                />
+              );
+            }
+            return (
+              <IndicatorModalContentBlock
+                key={groupedBlock.block.id}
+                block={groupedBlock.block}
+                indicator={indicator}
+              />
+            );
+          }
         )}
-
-        <IndicatorValueSummary
-          timeResolution={indicator.timeResolution || ''}
-          values={indicatorValues || []}
-          goals={indicatorGoals || []}
-          unit={indicator.unit || {}}
-          desiredTrend={indicator.desiredTrend || undefined}
-        />
-        <div style={{ marginTop: '10px' }}>
-          <CategoryTags
-            categories={indicatorCategoryTags}
-            types={uniqueTypes as CategoryTypeFragmentFragment[]}
-            noLink={true}
-            compact={true}
-          />
-        </div>
-        <div dangerouslySetInnerHTML={{ __html: indicatorDescription || '' }} />
-        <IndicatorVisualisation indicatorId={indicator.id} />
+        {groupConsecutiveCategoryBlocks(layout.detailsAside || []).map((groupedBlock, index) => {
+          if (groupedBlock.type === 'grouped') {
+            return (
+              <IndicatorGroupedCategoryBlock
+                key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
+                blocks={groupedBlock.blocks}
+                indicator={indicator}
+              />
+            );
+          }
+          return (
+            <IndicatorModalContentBlock
+              key={groupedBlock.block.id}
+              block={groupedBlock.block}
+              indicator={indicator}
+            />
+          );
+        })}
       </ModalScrollableContent>
     </ContentWrapper>
   );
