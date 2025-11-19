@@ -41,6 +41,7 @@ type IndicatorGraphProps = {
   specification: {
     axes: Array<[string, number]>;
   };
+  title: string;
 };
 
 const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
@@ -94,11 +95,13 @@ const buildSeriesFromTraces = ({
         ? colors.totalLine
         : colors.categoryColors[idx % colors.categoryColors.length];
 
+    // Use line chart for time dimension (now using category axis with formatted labels)
     if (hasTimeDimension) {
       const series: LineSeriesOption = {
         type: 'line',
         name: trace.name,
-        data: trace.x.map((value, index) => [value, trace.y[index]]),
+        // Use simple y values array since we're using category axis
+        data: trace.y,
         connectNulls: true,
         showSymbol: trace.x.length <= 30,
         symbolSize: 8,
@@ -154,9 +157,9 @@ function IndicatorGraph({
   goalTraces,
   trendTrace,
   specification,
+  title,
 }: IndicatorGraphProps) {
   const theme = useTheme();
-
   const rawGraphSettings = theme.settings?.graphs;
   const rawGraphsRecord =
     rawGraphSettings && typeof rawGraphSettings === 'object'
@@ -234,6 +237,51 @@ function IndicatorGraph({
 
   const chartHeight = 450 + (!hasTimeDimension ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0);
 
+  // Create category labels - either from traces or from formatted time data
+  const xAxisCategories = useMemo(() => {
+    if (!hasTimeDimension && traces.length > 0) {
+      return traces[0].x.map((value) => String(value));
+    }
+
+    if (hasTimeDimension && traces.length > 0) {
+      // Format time values and deduplicate consecutive labels
+      const formattedLabels: string[] = [];
+      const firstTrace = traces[0];
+
+      firstTrace.x.forEach((value) => {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+          formattedLabels.push(String(value));
+          return;
+        }
+
+        let formattedValue: string;
+        if (timeResolution === 'YEAR') {
+          formattedValue = String(date.getFullYear());
+        } else if (timeResolution === 'MONTH') {
+          formattedValue = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        } else {
+          formattedValue = date.toISOString().split('T')[0];
+        }
+
+        // Only add label if it's different from the previous one
+        if (
+          formattedLabels.length === 0 ||
+          formattedLabels[formattedLabels.length - 1] !== formattedValue
+        ) {
+          formattedLabels.push(formattedValue);
+        } else {
+          // Add empty string to maintain index alignment, but ECharts will hide duplicates
+          formattedLabels.push('');
+        }
+      });
+
+      return formattedLabels;
+    }
+
+    return [];
+  }, [hasTimeDimension, traces, timeResolution]);
+
   const option = useMemo<ECOption>(() => {
     const baseSeries = buildSeriesFromTraces({
       traces,
@@ -250,7 +298,8 @@ function IndicatorGraph({
     const goalSeries: LineSeriesOption[] = goalTraces.map((goalTrace, idx) => ({
       type: 'line',
       name: goalTrace.name,
-      data: goalTrace.x.map((value, index) => [value, goalTrace.y[index]]),
+      // Use simple y values array since we're using category axis
+      data: goalTrace.y,
       showSymbol: true,
       symbolSize: 10,
       lineStyle: {
@@ -274,7 +323,8 @@ function IndicatorGraph({
             {
               type: 'line',
               name: trendTrace.name,
-              data: trendTrace.x.map((value, index) => [value, trendTrace.y[index]]),
+              // Use simple y values array since we're using category axis
+              data: trendTrace.y,
               showSymbol: false,
               lineStyle: {
                 width: 3,
@@ -291,19 +341,31 @@ function IndicatorGraph({
           ]
         : [];
 
-    const xAxisCategories =
-      !hasTimeDimension && traces.length > 0 ? traces[0].x.map((value) => String(value)) : [];
-
     const option: ECOption = {
+      title: {
+        text: title,
+        subtext: undefined,
+        left: '75',
+        top: 10,
+        padding: [0, 0, 48, 0],
+        itemGap: 5,
+        textStyle: {
+          fontSize: 16,
+          fontWeight: 'bold',
+          color: theme.themeColors.dark,
+        },
+      },
       color: colors.categoryColors,
       legend: {
-        top: 0,
+        orient: 'horizontal',
+        right: 10,
+        bottom: 10,
       },
       grid: {
-        left: 24,
-        right: 24,
-        bottom: hasTimeDimension ? 48 : CATEGORY_XAXIS_LABEL_EXTRA_MARGIN,
-        top: 48,
+        left: '75',
+        right: '24',
+        bottom: 100,
+        top: 65,
       },
       tooltip: {
         trigger: 'axis',
@@ -312,34 +374,17 @@ function IndicatorGraph({
         },
         valueFormatter: (value: number) => formatNumber(value, yRange.valueRounding),
       },
-      xAxis: hasTimeDimension
-        ? {
-            type: 'time',
-            boundaryGap: ['0%', '0%'],
-            axisLabel: {
-              formatter: (value: number, _index: number, _extra: { level: number }) => {
-                const date = new Date(value);
-                if (Number.isNaN(date.getTime())) {
-                  return String(value);
-                }
-                if (timeResolution === 'YEAR') {
-                  return String(date.getFullYear());
-                }
-                if (timeResolution === 'MONTH') {
-                  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-                }
-                return date.toISOString().split('T')[0];
-              },
-            },
-          }
-        : {
-            type: 'category',
-            data: xAxisCategories,
-            axisLabel: {
-              interval: 0,
-              rotate: xAxisCategories.length > 6 ? 45 : 0,
-            },
-          },
+      xAxis: {
+        type: 'category',
+        data: xAxisCategories,
+        boundaryGap: hasTimeDimension ? false : undefined,
+        axisLabel: {
+          interval: 0,
+          rotate: xAxisCategories.length > 6 ? 45 : 0,
+          // Hide empty labels (duplicates)
+          formatter: (value: string) => (value === '' ? '' : value),
+        },
+      },
       yAxis: {
         type: 'value',
         name: yRange.unit,
@@ -371,7 +416,6 @@ function IndicatorGraph({
     goalTraces,
     graphSettings.drawGoalLine,
     showTrendline,
-    timeResolution,
     yRange.includeZero,
     yRange.range,
     yRange.ticksRounding,
@@ -379,6 +423,9 @@ function IndicatorGraph({
     yRange.valueRounding,
     graphSettings.roundIndicatorValue,
     trendTrace,
+    xAxisCategories,
+    title,
+    theme.themeColors.dark,
   ]);
 
   useEffect(() => {

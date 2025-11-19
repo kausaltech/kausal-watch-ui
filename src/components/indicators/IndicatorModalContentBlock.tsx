@@ -8,16 +8,21 @@ import {
 } from '@/common/__generated__/graphql';
 
 import BadgeTooltip from '../common/BadgeTooltip';
+import RichText from '../common/RichText';
 import IndicatorValueSummary from './IndicatorValueSummary';
 import IndicatorVisualisation from './IndicatorVisualisation';
 
 const CategoryTypeBlock = styled.div`
-  padding-bottom: ${(props) => props.theme.spaces.s150};
+  padding-bottom: ${(props) => props.theme.spaces.s050};
   background-color: ${({ theme }) => theme.themeColors.white};
   h3 {
     margin-bottom: ${(props) => props.theme.spaces.s050};
     font-size: ${(props) => props.theme.fontSizeSm};
   }
+`;
+
+const ContentBlockWrapper = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
 const CategoryBadges = styled.div`
@@ -46,19 +51,25 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
   switch (block.sourceField) {
     case IndicatorDetailsFieldName.Name:
       // Using name field to render description for now
-      return <div dangerouslySetInnerHTML={{ __html: indicator.description || '' }} />;
+      return (
+        <ContentBlockWrapper>
+          <RichText html={indicator.description || ''} isCollapsible={false} />
+        </ContentBlockWrapper>
+      );
     case IndicatorDetailsFieldName.Visualization:
       return <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />;
     case IndicatorDetailsFieldName.ConnectedActions:
       // Using connected actions to render value summary for now
       return (
-        <IndicatorValueSummary
-          timeResolution={indicator.timeResolution || ''}
-          values={indicator.values || []}
-          goals={indicator.goals || []}
-          unit={indicator.unit || {}}
-          desiredTrend={indicator.desiredTrend || undefined}
-        />
+        <ContentBlockWrapper>
+          <IndicatorValueSummary
+            timeResolution={indicator.timeResolution || ''}
+            values={indicator.values || []}
+            goals={indicator.goals || []}
+            unit={indicator.unit || {}}
+            desiredTrend={indicator.desiredTrend || undefined}
+          />
+        </ContentBlockWrapper>
       );
     default:
       console.log('📦 block not supported', block);
