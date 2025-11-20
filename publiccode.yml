@@ -1,0 +1,99 @@
+publiccodeYmlVersion: "0.4"
+name: "Kausal Watch Action Plan Monitoring UI"
+url: "https://github.com/kausaltech/kausal-watch-ui"
+landingURL: "https://kausal.tech"
+softwareVersion: "2.4.2"
+releaseDate: "2025-11-14"
+logo: public/static/themes/default/images/default-logo-white-KUB6ICTS.svg
+platforms:
+  - web
+usedBy:
+  - Kausal
+  # Add other organizations here?
+categories:
+  - data-visualization
+  - project-management
+
+
+developmentStatus: stable
+softwareType: "standalone/web"
+localization:
+  localizationReady: true
+  availableLanguages:
+    - cs
+    - da
+    - de
+    - de-CH
+    - el
+    - en
+    - en-AU
+    - en-GB
+    - es
+    - es-US
+    - fi
+    - lv
+    - pl
+    - pt-BR
+    - sv
+    - sv-FI
+intendedAudience:
+  countries:
+    - "au"
+    - "ca"
+    - "ch"
+    - "de"
+    - "dk"
+    - "es"
+    - "fi"
+    - "gr"
+    - "lv"
+    - "pt"
+    - "se"
+    - "us"
+  scope:
+    - local-authorities
+    - environment
+    - government
+description:
+  de:
+    genericName: "Monitoring-Dashboard"
+    shortDescription: "Next.js-Oberfläche zum Veröffentlichen und Überwachen kommunaler Klima- und Nachhaltigkeitsprogramme."
+    longDescription: >
+      Die Anwendung ist ein mit Next.js und React entwickeltes Frontend, das Maßnahmenpläne aus dem Kausal Watch GraphQL-Backend visualisiert.
+      Mehrere Mandanten erhalten vorkonfigurierte Themen, Karten und KPI-Dashboards, um Fortschritt, Budget und Verantwortlichkeiten transparent zu machen.
+      Interaktive Diagramme, Karten und Zeitachsen greifen live auf Indikator- und Aktionsdaten zu,
+      ermöglichen Filter nach Kategorien, Status und Verantwortlichen und liefern CSV- sowie Excel-Exporte für die Verwaltung.
+      Administratorinnen pflegen Inhalte in über einem Dutzend Sprachen, steuern Benutzerrechte und passen die Oberfläche per CI-konformen Themes an jede Kommune an.
+      Öffentliche Besucherinnen erhalten Feedbackkanäle, barrierefreie Komponenten und erkundbare Story-Abschnitte, während eingebettete Widgets und offene APIs dieselben Informationen in Fachportalen oder Präsentationen wiederverwenden.
+    features:
+      - Mandantenfähige Dashboards mit Karten, Zeitachsen und KPI-Widgets für Maßnahmen- und Indikator-Tracking.
+      - Mehrsprachige Inhaltsverwaltung mit über 15 Sprachpaketen, Feedback-Workflow und barrierefreier UI.
+      - Exporte nach CSV/Excel, offene GraphQL-APIs und wiederverwendbare Embeds für Portale und Berichte.
+  en:
+    genericName: "Action Plan Monitoring UI"
+    shortDescription: "Next.js-based UI that publishes, tracks, and narrates municipal climate and sustainability plans with live indicators."
+    longDescription: >
+      Kausal Watch Action Plan Monitoring UI is a Next.js/React front end.
+      It consumes the Kausal Watch GraphQL API to publish and monitor municipal climate programs and sustainability roadmaps.
+      It bundles plan catalogs, action cards, KPI dashboards, and narrative content so residents and decision makers can understand ownership, funding, and expected impact.
+      Interactive charts, timelines, and geospatial layers draw on live indicator data, expose filters for categories, progress, or responsible parties,
+      and offer CSV/Excel exports for offline briefings.
+      Editors manage content in more than fifteen languages, control access, and brand each deployment with dedicated theme packages.
+      Public visitors get accessibility-compliant components, feedback hooks, and embeddable widgets that allow the same information to surface across portals,
+      reports, or kiosk displays.
+    features:
+      - Multi-tenant dashboards with maps, timelines, and KPI widgets that monitor plans, actions, and indicators.
+      - Localized content workflows with 15+ languages, accessibility defaults, and fully brandable themes.
+      - CSV/Excel exports, open GraphQL APIs, and reusable embeds for external portals and reports.
+legal:
+  license: AGPL-3.0-or-later
+maintenance:
+  type: contract
+  contacts:
+    - name: "Kausal Oy"
+      email: "info@kausal.tech"
+  # contractors:
+  #   - name: "Kausal Oy"
+  #     email: "info@kausal.tech"
+  #     website: "https://kausal.tech"
+  #     until: "2026-12-31"
