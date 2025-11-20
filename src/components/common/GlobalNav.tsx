@@ -318,6 +318,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
   .dropdown-item {
     margin: 0 0 0 ${(props) => props.theme.spaces.s150};
     color: ${(props) => props.theme.siteNavColor};
+    white-space: normal;
 
     .highlighter {
       display: inline-block;
@@ -345,6 +346,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 `;
 
 const StyledDropdownMenu = styled(DropdownMenu)`
+  min-width: 240px;
   &.dropdown-menu[data-bs-popper] {
     top: unset;
   }
