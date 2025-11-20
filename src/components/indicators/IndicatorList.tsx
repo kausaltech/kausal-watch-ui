@@ -273,6 +273,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
 
   const plan = usePlan();
   const t = useTranslations();
+
   const openIndicatorsInModal = plan.features.indicatorsOpenInModal === true;
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
@@ -357,15 +358,33 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
   const sortedIndicators = sortIndicators(hierarchy, indicators, displayMunicipality ?? false);
   const filteredIndicators = filterIndicators(sortedIndicators, filters);
 
+  const getIndicatorPlanIdentifier = (
+    indicator: IndicatorListIndicator | undefined,
+    sitePlanIdentifier: string
+  ) => {
+    // Sometimes indicators are associated with multiple plans
+    // If the indicator is associated with the site plan, we return the site plan identifier
+    // Otherwise, we return the first other plan identifier we find so the modal can fetch the indicator from the correct plan
+    if (!indicator) return sitePlanIdentifier;
+    const currentPlan = indicator.plans.find(
+      (plan) => plan.identifier === sitePlanIdentifier
+    )?.identifier;
+    if (currentPlan) {
+      return currentPlan;
+    }
+    return indicator.plans[0]?.identifier;
+  };
+
   return (
     <>
       {indicatorModalId && (
         <IndicatorModal
           indicatorId={indicatorModalId}
-          planIdentifier={
-            indicators.find((indicator) => indicator.id === indicatorModalId)?.plans?.[0]?.id ??
+          indicatorPlanIdentifier={getIndicatorPlanIdentifier(
+            indicators.find((indicator) => indicator.id === indicatorModalId),
             plan.identifier
-          }
+          )}
+          sitePlanIdentifier={plan.identifier}
           onChange={(indicatorId) => handleChangeModal(indicatorId)}
           indicatorsOrder={filteredIndicators.map((indicator) => indicator.id)}
           usableCategoryTypes={data?.plan?.categoryTypes ?? []}

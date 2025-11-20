@@ -38,8 +38,7 @@ const StyledBadge = styled(Badge)<{
   font-weight: ${(props) => props.theme.badgeFontWeight};
   line-height: ${(props) => props.theme.lineHeightMd};
   max-width: 100%;
-  word-break: break-all;
-  word-break: break-word;
+  overflow-wrap: break-word;
   hyphens: manual;
   white-space: normal;
   text-align: left;

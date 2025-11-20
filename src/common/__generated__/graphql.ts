@@ -14030,11 +14030,54 @@ export type IndicatorListQuery = (
 export type IndicatorDetailsQueryVariables = Exact<{
   id: InputMaybe<Scalars['ID']['input']>;
   plan: InputMaybe<Scalars['ID']['input']>;
+  sitePlan: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
 export type IndicatorDetailsQuery = (
-  { indicator: (
+  { plan: (
+    { id: string, identifier: string, indicatorListPage: (
+      { detailsMainTop: Array<(
+        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, categoryType: (
+          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+            { id: string, order: number, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          )> }
+          & { __typename: 'CategoryType' }
+        ) }
+        & { __typename: 'IndicatorCategoryContentBlock' }
+      ) | (
+        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, sourceField: IndicatorDetailsFieldName | null }
+        & { __typename: 'IndicatorContentBlock' }
+      )> | null, detailsMainBottom: Array<(
+        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, categoryType: (
+          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+            { id: string, order: number, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          )> }
+          & { __typename: 'CategoryType' }
+        ) }
+        & { __typename: 'IndicatorCategoryContentBlock' }
+      ) | (
+        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, sourceField: IndicatorDetailsFieldName | null }
+        & { __typename: 'IndicatorContentBlock' }
+      )> | null, detailsAside: Array<(
+        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, categoryType: (
+          { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+            { id: string, order: number, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          )> }
+          & { __typename: 'CategoryType' }
+        ) }
+        & { __typename: 'IndicatorCategoryContentBlock' }
+      ) | (
+        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, sourceField: IndicatorDetailsFieldName | null }
+        & { __typename: 'IndicatorContentBlock' }
+      )> | null }
+      & { __typename: 'IndicatorListPage' }
+    ) | null }
+    & { __typename: 'Plan' }
+  ) | null, indicator: (
     { id: string, identifier: string | null, name: string, level: string | null, description: string | null, timeResolution: IndicatorTimeResolution, desiredTrend: IndicatorDesiredTrend | null, organization: (
       { id: string, name: string, abbreviation: string | null, classification: (
         { id: string, name: string }
@@ -14272,6 +14315,22 @@ export type ActionsTableRowFragmentFragment = (
     & { __typename: 'ActionImpact' }
   ) | null }
   & { __typename: 'Action' }
+);
+
+export type IndicatorCategoryContentBlockFragmentFragment = (
+  { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, categoryType: (
+    { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
+      { id: string, order: number, name: string, namePlural: string | null }
+      & { __typename: 'CategoryLevel' }
+    )> }
+    & { __typename: 'CategoryType' }
+  ) }
+  & { __typename: 'IndicatorCategoryContentBlock' }
+);
+
+export type IndicatorContentBlockFragmentFragment = (
+  { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, sourceField: IndicatorDetailsFieldName | null }
+  & { __typename: 'IndicatorContentBlock' }
 );
 
 export type OrganizationDetailsQueryVariables = Exact<{

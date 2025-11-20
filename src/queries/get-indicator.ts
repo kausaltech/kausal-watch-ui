@@ -1,9 +1,40 @@
 import { gql } from '@apollo/client';
 
+import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
 import { RECURSIVE_CATEGORY_TAG_FRAGMENT } from '../fragments/category.fragment';
 
 export const GET_INDICATOR_DETAILS = gql`
-  query IndicatorDetails($id: ID, $plan: ID) {
+  query IndicatorDetails($id: ID, $plan: ID, $sitePlan: ID) {
+    plan(id: $sitePlan) {
+      id
+      identifier
+      indicatorListPage {
+        detailsMainTop {
+          ... on IndicatorContentBlock {
+            ...IndicatorContentBlockFragment
+          }
+          ... on IndicatorCategoryContentBlock {
+            ...IndicatorCategoryContentBlockFragment
+          }
+        }
+        detailsMainBottom {
+          ... on IndicatorContentBlock {
+            ...IndicatorContentBlockFragment
+          }
+          ... on IndicatorCategoryContentBlock {
+            ...IndicatorCategoryContentBlockFragment
+          }
+        }
+        detailsAside {
+          ... on IndicatorContentBlock {
+            ...IndicatorContentBlockFragment
+          }
+          ... on IndicatorCategoryContentBlock {
+            ...IndicatorCategoryContentBlockFragment
+          }
+        }
+      }
+    }
     indicator(plan: $plan, id: $id) {
       id
       identifier
@@ -189,5 +220,26 @@ export const GET_INDICATOR_DETAILS = gql`
     }
   }
 
+  fragment IndicatorCategoryContentBlockFragment on IndicatorCategoryContentBlock {
+    id
+    blockType
+    fieldLabel
+    fieldHelpText
+    field
+    categoryType {
+      ...CategoryTypeFragment
+    }
+  }
+
+  fragment IndicatorContentBlockFragment on IndicatorContentBlock {
+    id
+    blockType
+    fieldLabel
+    fieldHelpText
+    field
+    sourceField
+  }
+
   ${RECURSIVE_CATEGORY_TAG_FRAGMENT}
+  ${CATEGORY_TYPE_FRAGMENT}
 `;

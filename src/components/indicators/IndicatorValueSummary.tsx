@@ -15,10 +15,24 @@ import { beautifyValue } from '../../common/data/format';
 import dayjs from '../../common/dayjs';
 
 const ValueSummary = styled.div`
-  margin: 2em 0 0;
-  padding: 1em 0 0;
-  border-top: 1px solid ${(props) => props.theme.themeColors.dark};
-  border-bottom: 1px solid ${(props) => props.theme.themeColors.dark};
+  display: flex;
+  gap: ${(props) => props.theme.spaces.s100};
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: stretch;
+  text-align: left;
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+  padding-top: ${(props) => props.theme.spaces.s100};
+  border-top: 1px solid ${(props) => props.theme.graphColors.grey030};
+  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey030};
+`;
+
+const ValueBlock = styled.div`
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
 `;
 
 const ValueLabel = styled.div`
@@ -34,9 +48,14 @@ const ValueDate = styled.div`
 `;
 
 const ValueDisplay = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
   font-size: ${(props) => props.theme.fontSizeLg};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
+  margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
 const ValueUnit = styled.span`
@@ -47,7 +66,7 @@ const ValueUnit = styled.span`
 `;
 
 const ValueChange = styled.div`
-  display: inline-block;
+  margin-top: ${(props) => props.theme.spaces.s050};
   font-size: ${(props) => props.theme.fontSizeBase};
   color: ${(props) => props.color};
 `;
@@ -152,16 +171,18 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
       changeSymbol = '▼';
     } else if (absChange > 0) {
       changeSymbol = '▲';
-    } else changeSymbol = '—';
+    } else changeSymbol = undefined;
   }
   const latestValueDisplay = beautifyValue(latestValue.value, locale);
   const valueDisplay = (
-    <div className="mb-4">
+    <ValueBlock>
       <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
       <ValueDate>{dayjs(latestValue.date).format(timeFormat)}</ValueDate>
       <ValueDisplay>
-        {latestValueDisplay}
-        <ValueUnit>{shortUnitName}</ValueUnit>
+        <div>
+          {latestValueDisplay}
+          <ValueUnit>{shortUnitName}</ValueUnit>
+        </div>
         {changeSymbol && (
           <ValueChange color={changeColor}>
             <ChangeSymbol>{changeSymbol}</ChangeSymbol>
@@ -169,7 +190,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
           </ValueChange>
         )}
       </ValueDisplay>
-    </div>
+    </ValueBlock>
   );
 
   const nextGoal = goals?.find((goal) => goal && dayjs(goal.date).isSameOrAfter(now));
@@ -179,14 +200,16 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
     const nextGoalDate = dayjs(nextGoal.date).format(timeFormat);
     const nextGoalValue = beautifyValue(nextGoal.value, locale);
     goalDisplay = (
-      <div className="mb-4">
+      <ValueBlock>
         <ValueLabel>{t('indicator-goal')}</ValueLabel>
         <ValueDate>{nextGoalDate}</ValueDate>
         <ValueDisplay>
-          {nextGoalValue}
-          <ValueUnit>{shortUnitName}</ValueUnit>
+          <div>
+            {nextGoalValue}
+            <ValueUnit>{shortUnitName}</ValueUnit>
+          </div>
         </ValueDisplay>
-      </div>
+      </ValueBlock>
     );
   }
 
@@ -199,44 +222,44 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
     const timeToGoal = dayjs(now).to(dayjs(nextGoal.date));
     const prefix = difference > 0 ? '+' : '-';
     differenceDisplay = (
-      <div className="mb-4">
+      <ValueBlock>
         <ValueLabel>{t(goalReached ? 'indicator-goal-exceeded' : 'indicator-to-goal')}</ValueLabel>
         <ValueDate>{goalReached ? '-' : timeToGoal}</ValueDate>
         <ValueDisplay>
-          {goalReached ? '' : prefix}
-          {beautifyValue(Math.abs(difference), locale)}
-          <span style={{ display: 'inline-flex' }}>
-            <ValueUnit>{diffUnitName}</ValueUnit>
-            {isPercentagePoint && (
-              <PopoverTip
-                compact
-                identifier="pp-explainer"
-                content={
-                  <TooltipContent>
-                    {t('percentage-point-explainer')}{' '}
-                    <a
-                      href="https://en.wikipedia.org/wiki/Percentage_point"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {t('read-more')}
-                    </a>
-                  </TooltipContent>
-                }
-              />
-            )}
-          </span>
+          <div>
+            {goalReached ? '' : prefix}
+            {beautifyValue(Math.abs(difference), locale)}
+            <span style={{ display: 'inline-flex' }}>
+              <ValueUnit>{diffUnitName}</ValueUnit>
+              {isPercentagePoint && (
+                <PopoverTip
+                  compact
+                  identifier="pp-explainer"
+                  content={
+                    <TooltipContent>
+                      {t('percentage-point-explainer')}{' '}
+                      <a
+                        href="https://en.wikipedia.org/wiki/Percentage_point"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t('read-more')}
+                      </a>
+                    </TooltipContent>
+                  }
+                />
+              )}
+            </span>
+          </div>
         </ValueDisplay>
-      </div>
+      </ValueBlock>
     );
   }
   return (
     <ValueSummary>
-      <Row>
-        <Col sm={4}>{valueDisplay}</Col>
-        <Col sm={4}>{differenceDisplay}</Col>
-        <Col sm={4}>{goalDisplay}</Col>
-      </Row>
+      {valueDisplay}
+      {differenceDisplay}
+      {goalDisplay}
     </ValueSummary>
   );
 }

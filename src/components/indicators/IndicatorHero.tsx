@@ -5,7 +5,7 @@ import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
+import { type IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
 import IndicatorValueSummary from '@/components/indicators/IndicatorValueSummary';
@@ -119,7 +119,7 @@ const IndexLink = styled.span`
 
 const IndicatorHeadline = styled.h1`
   hyphens: manual;
-  margin: ${(props) => props.theme.spaces.s100} 0;
+  margin: ${(props) => props.theme.spaces.s100} 0 ${(props) => props.theme.spaces.s200};
   font-size: ${(props) => props.theme.fontSizeXl};
   color: ${(props) => props.theme.themeColors.black} !important;
 
