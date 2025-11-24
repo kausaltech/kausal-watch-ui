@@ -14095,7 +14095,7 @@ export type IndicatorDetailsQuery = (
     ) | null }
     & { __typename: 'Plan' }
   ) | null, indicator: (
-    { id: string, identifier: string | null, name: string, level: string | null, description: string | null, timeResolution: IndicatorTimeResolution, desiredTrend: IndicatorDesiredTrend | null, organization: (
+    { id: string, identifier: string | null, name: string, level: string | null, description: string | null, reference: string | null, timeResolution: IndicatorTimeResolution, updatedAt: string, desiredTrend: IndicatorDesiredTrend | null, organization: (
       { id: string, name: string, abbreviation: string | null, classification: (
         { id: string, name: string }
         & { __typename: 'OrganizationClass' }
