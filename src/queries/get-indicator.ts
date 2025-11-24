@@ -50,7 +50,9 @@ export const GET_INDICATOR_DETAILS = gql`
       name
       level(plan: $plan)
       description
+      reference
       timeResolution
+      updatedAt
       desiredTrend
       organization {
         id

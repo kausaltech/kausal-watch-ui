@@ -72,6 +72,11 @@ const ValueChange = styled.div`
   color: ${(props) => props.color};
 `;
 
+const TrendIcon = styled(Icon)`
+  margin-bottom: -0.1em;
+  color: ${(props) => props.theme.graphColors.grey040};
+`;
+
 const ChangeSymbol = styled.span`
   margin-right: 0.5em;
   font-size: ${(props) => props.theme.fontSizeSm};
@@ -278,9 +283,9 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
     const nextGoalValue = beautifyValue(nextGoal.value, locale);
     const DesiredTrendIcon =
       desiredTrend === IndicatorDesiredTrend.Increasing ? (
-        <Icon name="arrow-up" />
+        <TrendIcon name="arrow-up" />
       ) : (
-        <Icon name="arrow-down" />
+        <TrendIcon name="arrow-down" />
       );
     goalDisplay = (
       <ValueBlock>
@@ -298,9 +303,9 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
   } else if (!nextGoal && desiredTrend && displayOptions.goalValue.show) {
     const DesiredTrendIcon =
       desiredTrend === IndicatorDesiredTrend.Increasing ? (
-        <Icon name="arrow-up" />
+        <TrendIcon name="arrow-up" />
       ) : (
-        <Icon name="arrow-down" />
+        <TrendIcon name="arrow-down" />
       );
     goalDisplay = (
       <ValueBlock>
