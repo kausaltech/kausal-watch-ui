@@ -48,8 +48,10 @@ interface IndicatorContentBlockProps {
 
 const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
   const { block, indicator } = props;
+
   if (!block.sourceField) return null;
   switch (block.sourceField) {
+    case IndicatorDetailsFieldName.Description:
     case IndicatorDetailsFieldName.Name:
       // Using name field to render description for now
       return (
@@ -60,7 +62,53 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
     case IndicatorDetailsFieldName.Visualization:
       return <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />;
     case IndicatorDetailsFieldName.ConnectedActions:
-      return <div>Connected Actions</div>;
+      return (
+        <div>
+          <hr />
+          Connected Actions
+          <hr />
+        </div>
+      );
+    case IndicatorDetailsFieldName.CausalityNav:
+      return (
+        <div>
+          <hr />
+          Causality Nav
+          <hr />
+        </div>
+      );
+    case IndicatorDetailsFieldName.Level:
+      return (
+        <div>
+          <hr />
+          Level
+          <hr />
+        </div>
+      );
+    case IndicatorDetailsFieldName.Organization:
+      return (
+        <div>
+          <hr />
+          Organization
+          <hr />
+        </div>
+      );
+    case IndicatorDetailsFieldName.Reference:
+      return (
+        <div>
+          <hr />
+          Reference {indicator.reference}
+          <hr />
+        </div>
+      );
+    case IndicatorDetailsFieldName.UpdatedAt:
+      return (
+        <div>
+          <hr />
+          Updated At {indicator.updatedAt}
+          <hr />
+        </div>
+      );
     default:
       console.log('📦 block not supported', block);
       return null;
