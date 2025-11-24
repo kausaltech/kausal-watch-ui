@@ -64,6 +64,8 @@
     "indicator-population-normalized-value": "Per indbygger",
     "indicator-reference-value": "Referenceværdi",
     "indicator-related-actions": "{context, select, STRATEGY {Strategier, der påvirker denne indikator} other {Handlinger, der påvirker denne indikator}}",
+    "indicator-relationship-main_goal": "Hovedmål",
+    "indicator-relationship-secondary_goal": "Sekundært mål",
     "indicator-resolution-years": "flere år",
     "indicator-start-value": "Startværdi",
     "indicator-time-no-goals": "Ingen mål",

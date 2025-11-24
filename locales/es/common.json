@@ -64,6 +64,8 @@
     "indicator-population-normalized-value": "Per cápita",
     "indicator-reference-value": "Valor de referencia",
     "indicator-related-actions": "{context, select, STRATEGY {Estrategias que inciden en este indicador} other {Acciones que repercuten en este indicador}}",
+    "indicator-relationship-main_goal": "Objetivo principal",
+    "indicator-relationship-secondary_goal": "Objetivo secundario",
     "indicator-resolution-years": "años",
     "indicator-start-value": "Valor inicial",
     "indicator-time-no-goals": "Sin objetivos",

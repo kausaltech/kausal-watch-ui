@@ -63,6 +63,8 @@
     "indicator-not-found": "Mittaria ei löydy",
     "indicator-population-normalized-value": "Per asukas",
     "indicator-related-actions": "{context, select, STRATEGY {Mittariin vaikuttavat strategiat} other {Mittariin vaikuttavat toimenpiteet}}",
+    "indicator-relationship-main_goal": "Päätavoite",
+    "indicator-relationship-secondary_goal": "Sivutavoite",
     "indicator-resolution-years": "vuotta",
     "indicator-start-value": "Lähtöarvo",
     "indicator-time-no-goals": "Ei tavoitearvoja",
