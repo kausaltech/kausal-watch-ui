@@ -67,6 +67,8 @@
     "indicator-population-normalized-value": "Per capita",
     "indicator-reference-value": "Reference value",
     "indicator-related-actions": "{context, select, CASE_STUDY {Case studies that impact this indicator} STRATEGY {Strategies that impact this indicator} other {Actions that impact this indicator}}",
+    "indicator-relationship-main_goal": "Main goal",
+    "indicator-relationship-secondary_goal": "Secondary goal",
     "indicator-resolution-years": "years",
     "indicator-time-no-goals": "No goals",
     "indicator-to-goal": "To goal",

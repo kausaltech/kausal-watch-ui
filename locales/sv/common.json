@@ -60,6 +60,8 @@
     "indicator-population-normalized-value": "Per capita",
     "indicator-reference-value": "Referensvärde",
     "indicator-related-actions": "{context, select, CASE_STUDY {Handlingar som påverkar denna indikator} STRATEGY {Strategier som påverkar denna indikator} other {Åtgärderna som påverkar denna indikator}}",
+    "indicator-relationship-main_goal": "Huvudmål",
+    "indicator-relationship-secondary_goal": "Sekundärt mål",
     "indicator-resolution-years": "år",
     "indicator-start-value": "Startvärde",
     "indicator-time-no-goals": "Inga mål",
