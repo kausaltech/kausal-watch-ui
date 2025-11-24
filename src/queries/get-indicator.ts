@@ -16,6 +16,9 @@ export const GET_INDICATOR_DETAILS = gql`
           ... on IndicatorCategoryContentBlock {
             ...IndicatorCategoryContentBlockFragment
           }
+          ... on IndicatorValueSummaryContentBlock {
+            ...IndicatorValueSummaryContentBlockFragment
+          }
         }
         detailsMainBottom {
           ... on IndicatorContentBlock {
@@ -24,6 +27,9 @@ export const GET_INDICATOR_DETAILS = gql`
           ... on IndicatorCategoryContentBlock {
             ...IndicatorCategoryContentBlockFragment
           }
+          ... on IndicatorValueSummaryContentBlock {
+            ...IndicatorValueSummaryContentBlockFragment
+          }
         }
         detailsAside {
           ... on IndicatorContentBlock {
@@ -31,6 +37,9 @@ export const GET_INDICATOR_DETAILS = gql`
           }
           ... on IndicatorCategoryContentBlock {
             ...IndicatorCategoryContentBlockFragment
+          }
+          ... on IndicatorValueSummaryContentBlock {
+            ...IndicatorValueSummaryContentBlockFragment
           }
         }
       }
@@ -240,6 +249,18 @@ export const GET_INDICATOR_DETAILS = gql`
     sourceField
   }
 
+  fragment IndicatorValueSummaryContentBlockFragment on IndicatorValueSummaryContentBlock {
+    id
+    blockType
+    fieldLabel
+    fieldHelpText
+    field
+    showReferenceValue
+    referenceYear
+    showCurrentValue
+    showGoalValue
+    showGoalGap
+  }
   ${RECURSIVE_CATEGORY_TAG_FRAGMENT}
   ${CATEGORY_TYPE_FRAGMENT}
 `;

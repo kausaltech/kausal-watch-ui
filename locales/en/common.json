@@ -58,6 +58,8 @@
     "image-credit": "Image",
     "indicator-affected-by": "This indicator is affected by",
     "indicator-also-for-actions": "Also impacted by",
+    "indicator-desired-trend-increasing": "Increase",
+    "indicator-desired-trend-decreasing": "Decrease",
     "indicator-goal": "Goal",
     "indicator-has-effect-on": "This indicator has effect on",
     "indicator-latest-value": "Latest value",

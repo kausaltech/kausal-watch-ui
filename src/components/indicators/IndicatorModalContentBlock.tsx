@@ -5,11 +5,12 @@ import {
   type IndicatorContentBlockFragmentFragment,
   IndicatorDetailsFieldName,
   type IndicatorDetailsQuery,
+  type IndicatorValueSummaryContentBlockFragmentFragment,
 } from '@/common/__generated__/graphql';
 
 import BadgeTooltip from '../common/BadgeTooltip';
 import RichText from '../common/RichText';
-import IndicatorValueSummary from './IndicatorValueSummary';
+import IndicatorValueSummary, { type ValueSummaryOptions } from './IndicatorValueSummary';
 import IndicatorVisualisation from './IndicatorVisualisation';
 
 const CategoryTypeBlock = styled.div`
@@ -59,18 +60,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
     case IndicatorDetailsFieldName.Visualization:
       return <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />;
     case IndicatorDetailsFieldName.ConnectedActions:
-      // Using connected actions to render value summary for now
-      return (
-        <ContentBlockWrapper>
-          <IndicatorValueSummary
-            timeResolution={indicator.timeResolution || ''}
-            values={indicator.values || []}
-            goals={indicator.goals || []}
-            unit={indicator.unit || {}}
-            desiredTrend={indicator.desiredTrend || undefined}
-          />
-        </ContentBlockWrapper>
-      );
+      return <div>Connected Actions</div>;
     default:
       console.log('📦 block not supported', block);
       return null;
@@ -115,6 +105,42 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
   );
 };
 
+interface IndicatorValueSummaryBlockProps {
+  block: IndicatorValueSummaryContentBlockFragmentFragment;
+  indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
+}
+
+const IndicatorValueSummaryBlock = (props: IndicatorValueSummaryBlockProps) => {
+  const { block, indicator } = props;
+  const options: ValueSummaryOptions = {
+    referenceValue: {
+      show: block.showReferenceValue,
+      year: block.referenceYear,
+    },
+    currentValue: {
+      show: block.showCurrentValue,
+    },
+    goalValue: {
+      show: block.showGoalValue,
+    },
+    goalGap: {
+      show: block.showGoalGap,
+    },
+  };
+  return (
+    <ContentBlockWrapper>
+      <IndicatorValueSummary
+        timeResolution={indicator.timeResolution || ''}
+        values={indicator.values || []}
+        goals={indicator.goals || []}
+        unit={indicator.unit || {}}
+        desiredTrend={indicator.desiredTrend || undefined}
+        options={options}
+      />
+    </ContentBlockWrapper>
+  );
+};
+
 type IndicatorListPage = NonNullable<
   NonNullable<IndicatorDetailsQuery['plan']>['indicatorListPage']
 >;
@@ -153,11 +179,14 @@ interface IndicatorModalContentBlockProps {
 const IndicatorModalContentBlock = ({ block, indicator }: IndicatorModalContentBlockProps) => {
   if (!block || !indicator) return null;
 
+  console.log('📦 block', block);
   switch (block.__typename) {
     case 'IndicatorContentBlock':
       return <IndicatorContentBlock block={block} indicator={indicator} />;
     case 'IndicatorCategoryContentBlock':
       return <IndicatorCategoryBlock block={block} indicator={indicator} />;
+    case 'IndicatorValueSummaryContentBlock':
+      return <IndicatorValueSummaryBlock block={block} indicator={indicator} />;
   }
 };
 
