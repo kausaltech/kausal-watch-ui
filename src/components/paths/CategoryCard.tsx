@@ -44,7 +44,7 @@ const CardContentBlock = styled.div<{ $disabled?: boolean }>`
 const CardContent = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100%;
 `;
 
@@ -109,7 +109,12 @@ const CategoryCard = (props: CategoryCardProps) => {
             </CardContentBlock>
           )}
           <CardContentBlock>
-            {mainIndicatorId && <IndicatorSparkline indicatorId={mainIndicatorId} />}
+            {mainIndicatorId && (
+              <IndicatorSparkline
+                indicatorId={mainIndicatorId}
+                relationshipType={IndicatorCategoryRelationshipType.MainGoal}
+              />
+            )}
           </CardContentBlock>
         </CardDataBlock>
       </CardContent>
