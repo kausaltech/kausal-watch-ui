@@ -64,6 +64,8 @@
     "indicator-population-normalized-value": "Pro Person",
     "indicator-reference-value": "Referenzwert",
     "indicator-related-actions": "{context, select, STRATEGY {Strategien, die sich auf diesen Indikator auswirken} CASE_STUDY {Fallstudien, die sich auf diesen Indikator auswirken} other {Maßnahmen, die sich auf diesen Indikator auswirken}}",
+    "indicator-relationship-main_goal": "Hauptziel",
+    "indicator-relationship-secondary_goal": "Weiteres Ziel",
     "indicator-resolution-years": "Jahre",
     "indicator-start-value": "Startwert",
     "indicator-time-no-goals": "Keine Ziele",
