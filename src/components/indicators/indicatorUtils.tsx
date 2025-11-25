@@ -1,5 +1,11 @@
-import type { IndicatorListIndicator } from './IndicatorList';
+import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
 import type { Hierarchy } from './process-indicators';
+
+export type Sort = {
+  key: string;
+  direction: 'asc' | 'desc';
+  categoryType?: CategoryType | null;
+};
 
 export enum IndicatorTableColumnId {
   Name = 'name',
@@ -57,25 +63,51 @@ export function groupIndicatorsByHierarchy(
  * and then sort them separately.
  */
 export function sortIndicators(
+  sortingOrder: Sort[],
   hierarchy: Hierarchy | null | undefined,
   indicators: IndicatorListIndicator[],
   displayMunicipality: boolean
 ): IndicatorListIndicator[] {
   const isHierarchical = !!hierarchy && Object.keys(hierarchy).length > 0;
-  const sortedIndicators = [...indicators]
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .sort((a, b) => {
-      if (!a.level || !b.level) {
+  const sortedIndicators = [...indicators];
+  console.log('sortingOrder', sortingOrder);
+  sortingOrder.forEach((sort) => {
+    sortedIndicators.sort((a, b) => {
+      if (sort.key === 'level') {
+        if (!a.level || !b.level) {
+          return 0;
+        }
+        if (levels[a.level].index < levels[b.level].index) {
+          return -1;
+        }
+        if (levels[a.level].index > levels[b.level].index) {
+          return 1;
+        }
         return 0;
       }
-      if (levels[a.level].index < levels[b.level].index) {
-        return -1;
+      if (sort.key === 'name') {
+        return a.name.localeCompare(b.name);
       }
-      if (levels[a.level].index > levels[b.level].index) {
-        return 1;
+      if (sort.key === 'organization') {
+        return a.organization.name.localeCompare(b.organization.name);
+      }
+      if (sort.key === 'category') {
+        if (!sort.categoryType) {
+          return 0;
+        }
+        const categoryAId = a.categories.find((c) => c.type.id === sort.categoryType?.id)?.id;
+        const categoryBId = b.categories.find((c) => c.type.id === sort.categoryType?.id)?.id;
+        if (!categoryAId || !categoryBId) {
+          return 0;
+        }
+        return (
+          (sort.categoryType.categories.find((c) => c.id === categoryAId)?.order ?? 0) -
+          (sort.categoryType.categories.find((c) => c.id === categoryBId)?.order ?? 0)
+        );
       }
       return 0;
     });
+  });
 
   if (displayMunicipality) {
     sortedIndicators.sort((a, b) => a.organization.name.localeCompare(b.organization.name));
