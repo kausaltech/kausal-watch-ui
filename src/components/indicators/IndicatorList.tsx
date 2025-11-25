@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
@@ -290,10 +290,25 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     () => searchParams.get('indicator') ?? null
   );
 
-  const handleChangeModal = (indicatorId?: string | null) => {
-    setIndicatorModalId(indicatorId ?? null);
-    updateSearchParams({ indicator: indicatorId ?? undefined });
-  };
+  // Store filtered indicators in a ref so handleChangeModal can access them
+  const filteredIndicatorsRef = useRef<IndicatorListIndicator[]>([]);
+
+  const handleChangeModal = useCallback(
+    (indicatorId?: string | null) => {
+      setIndicatorModalId(indicatorId ?? null);
+      if (openIndicatorsInModal) {
+        // When using global modal, pass indicatorsOrder in URL for navigation
+        const order = filteredIndicatorsRef.current.map((ind) => ind.id).join(',');
+        updateSearchParams({
+          indicator: indicatorId ?? undefined,
+          indicatorsOrder: indicatorId ? order : undefined,
+        });
+      } else {
+        updateSearchParams({ indicator: indicatorId ?? undefined });
+      }
+    },
+    [openIndicatorsInModal, updateSearchParams]
+  );
 
   const { loading, error, data } = useQuery<IndicatorListQuery, IndicatorListQueryVariables>(
     GET_INDICATOR_LIST,
@@ -394,6 +409,9 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
   );
   const filteredIndicators = filterIndicators(sortedIndicators, filters);
 
+  // Update ref with current filtered indicators (refs can be updated during render)
+  filteredIndicatorsRef.current = filteredIndicators;
+
   const getIndicatorPlanIdentifier = (
     indicator: IndicatorListIndicator | undefined,
     sitePlanIdentifier: string
@@ -413,7 +431,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
 
   return (
     <>
-      {indicatorModalId && (
+      {indicatorModalId && !openIndicatorsInModal && (
         <IndicatorModal
           indicatorId={indicatorModalId}
           indicatorPlanIdentifier={getIndicatorPlanIdentifier(

@@ -12,13 +12,12 @@ import type { PlanContextFragment } from './__generated__/graphql';
 import { getCategoryString } from './categories';
 
 export function usePrependPlanAndLocale(path: string, viewUrl: string | null = null) {
+  const plan = usePlan();
+  const locale = useLocale();
   // If cross plan link, use the viewUrl instead of the plan basePath
   if (viewUrl) {
     return `${viewUrl}${path}`;
   }
-
-  const plan = usePlan();
-  const locale = useLocale();
 
   return prependPlanAndLocale(plan, path, locale);
 }
@@ -100,10 +99,9 @@ export type IndicatorLinkProps = {
   children: ReactNode;
 } & LinkPropsWithoutHref;
 
-export function IndicatorLink({ id, viewUrl, ...other }: IndicatorLinkProps) {
-  const href = usePrependPlanAndLocale(getIndicatorLinkProps(id).href, viewUrl);
-  return <NextLink passHref {...disablePrefetch(other)} href={href} />;
-}
+// Re-export the client component as IndicatorLink
+// This allows server components to use IndicatorLink, which will be rendered as a client component
+export { IndicatorLinkClient as IndicatorLink } from '@/components/indicators/IndicatorLinkClient';
 
 export function PathsNodeLink({
   id,
