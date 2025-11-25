@@ -56,6 +56,8 @@
     "image-credit": "Bild",
     "indicator-affected-by": "Dieser Indikator wird beeinflusst von",
     "indicator-also-for-actions": "Auch betroffen von",
+    "indicator-desired-trend-increase": "Erhöhen",
+    "indicator-desired-trend-decrease": "Verringern",
     "indicator-goal": "Ziel",
     "indicator-has-effect-on": "Dieser Indikator wirkt auf",
     "indicator-latest-value": "Letzter Wert",

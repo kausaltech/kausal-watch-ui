@@ -1,3 +1,4 @@
+import type { truncate } from 'fs/promises';
 import { type DateTimeFormatOptions, useFormatter, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Badge, Button } from 'reactstrap';
@@ -12,6 +13,7 @@ import {
 import { IndicatorLink } from '@/common/links';
 
 import BadgeTooltip from '../common/BadgeTooltip';
+import Icon from '../common/Icon';
 import { getIndicatorTranslation } from './IndicatorCard';
 import type { IndicatorListIndicator } from './IndicatorList';
 
@@ -20,6 +22,9 @@ const CellContent = styled.div<{ $numeric?: boolean }>`
   text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
   line-height: ${(props) => props.theme.lineHeightSm};
 
+  svg {
+    display: inline-block;
+  }
   a,
   button {
     color: ${(props) => props.theme.themeColors.black};
@@ -36,6 +41,13 @@ const CategoryBadges = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${(props) => props.theme.spaces.s050};
+`;
+
+const TrendIcon = styled(Icon)`
+  height: 1.25em;
+  width: 1.25em;
+  margin-bottom: -0.1em;
+  color: ${(props) => props.theme.graphColors.grey040};
 `;
 
 const IndicatorLevelBadge = styled(Badge)<{ $level: string }>`
@@ -112,7 +124,7 @@ const getValue = (
   valueType: IndicatorColumnValueType,
   isNormalized: boolean,
   referenceYear: number | null
-): number | null => {
+): number | string | null => {
   switch (valueType) {
     case IndicatorColumnValueType.Earliest:
       const hasValues = indicator.values && indicator.values.length > 0;
@@ -131,6 +143,7 @@ const getValue = (
         ? (indicator.latestValue?.normalizedValues?.[0]?.value ?? null)
         : (indicator.latestValue?.value ?? null);
     case IndicatorColumnValueType.Goal:
+      if (indicator.nonQuantifiedGoal) return indicator.nonQuantifiedGoal?.toLowerCase() ?? '';
       const hasGoals = indicator.goals && indicator.goals.length > 0;
       if (!hasGoals) {
         return null;
@@ -171,10 +184,28 @@ interface IndicatorValueCellProps {
 const IndicatorValueCell = (props: IndicatorValueCellProps) => {
   const { indicator, isNormalized, valueType, referenceYear, hideUnit } = props;
   const format = useFormatter();
-
-  const value: number | null = getValue(indicator, valueType, isNormalized, referenceYear);
+  const t = useTranslations();
+  const value: number | string | null = getValue(indicator, valueType, isNormalized, referenceYear);
   if (value === null) {
     return <CellContent $numeric={true}>--</CellContent>;
+  }
+  if (typeof value === 'string') {
+    switch (value) {
+      case 'increase':
+        return (
+          <CellContent $numeric={true}>
+            <TrendIcon name="arrow-up" alt={t('increase')} />
+          </CellContent>
+        );
+      case 'decrease':
+        return (
+          <CellContent $numeric={true}>
+            <TrendIcon name="arrow-down" alt={t('decrease')} />
+          </CellContent>
+        );
+      default:
+        return <CellContent $numeric={true}>{value}</CellContent>;
+    }
   }
   return (
     <CellContent $numeric={true}>

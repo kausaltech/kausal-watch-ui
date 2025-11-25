@@ -104,7 +104,6 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
         id
       }
     }
-
     goals {
       id
       date
@@ -117,6 +116,8 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
         id
       }
     }
+    nonQuantifiedGoal
+    nonQuantifiedGoalDate
     unit {
       shortName
     }
