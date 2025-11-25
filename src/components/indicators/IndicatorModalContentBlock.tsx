@@ -104,7 +104,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
         </div>
       );
     case IndicatorDetailsFieldName.UpdatedAt:
-      const updatedAt = new Date(indicator.updatedAt);
+      const updatedAt = new Date(indicator.updatedAt as string);
       const formattedUpdatedAt = format.dateTime(updatedAt, {
         year: 'numeric',
         month: 'short',
@@ -139,12 +139,12 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
   });
 
   return (
-    <CategoryTypeBlock>
-      <h3>{block.fieldLabel || block.categoryType?.name}</h3>
-      <CategoryBadges>
-        {categories &&
-          categories.length > 0 &&
-          categories.map((cat) => (
+    categories &&
+    categories.length > 0 && (
+      <CategoryTypeBlock>
+        <h3>{block.fieldLabel || block.categoryType?.name}</h3>
+        <CategoryBadges>
+          {categories.map((cat) => (
             <BadgeTooltip
               key={cat.id}
               id={cat.id}
@@ -156,8 +156,9 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
               isLink={false}
             />
           ))}
-      </CategoryBadges>
-    </CategoryTypeBlock>
+        </CategoryBadges>
+      </CategoryTypeBlock>
+    )
   );
 };
 
