@@ -104,7 +104,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
         </div>
       );
     case IndicatorDetailsFieldName.UpdatedAt:
-      const updatedAt = new Date(indicator.updatedAt as string);
+      const updatedAt = new Date(indicator.updatedAt);
       const formattedUpdatedAt = format.dateTime(updatedAt, {
         year: 'numeric',
         month: 'short',
@@ -182,6 +182,10 @@ const IndicatorValueSummaryBlock = (props: IndicatorValueSummaryBlockProps) => {
     },
     goalGap: {
       show: block.showGoalGap,
+    },
+    nonQuantifiedGoal: {
+      trend: indicator.nonQuantifiedGoal,
+      date: indicator.nonQuantifiedGoalDate,
     },
   };
   return (

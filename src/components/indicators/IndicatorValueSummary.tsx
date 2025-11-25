@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { Col, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
 import {
   IndicatorDesiredTrend,
   type IndicatorDetailsQuery,
+  IndicatorNonQuantifiedGoal,
   IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
@@ -118,6 +118,11 @@ function determineDesirableDirection(
 }
 
 export type ValueSummaryOptions = {
+  nonQuantifiedGoal: {
+    show: boolean | null;
+    trend: IndicatorNonQuantifiedGoal | null;
+    date: string | null;
+  };
   referenceValue: {
     show: boolean | null;
     year: number | null;
@@ -163,6 +168,10 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
     },
     goalGap: {
       show: true,
+    },
+    nonQuantifiedGoal: {
+      trend: null,
+      date: null,
     },
   };
 
@@ -300,21 +309,26 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
         </ValueDisplay>
       </ValueBlock>
     );
-  } else if (!nextGoal && desiredTrend && displayOptions.goalValue.show) {
+  } else if (displayOptions.nonQuantifiedGoal.trend && displayOptions.goalValue.show) {
     const DesiredTrendIcon =
-      desiredTrend === IndicatorDesiredTrend.Increasing ? (
+      displayOptions.nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase ? (
         <TrendIcon name="arrow-up" />
       ) : (
         <TrendIcon name="arrow-down" />
       );
+    const goalDate = displayOptions.nonQuantifiedGoal.date
+      ? dayjs(displayOptions.nonQuantifiedGoal.date).format(timeFormat)
+      : '\u00A0';
     goalDisplay = (
       <ValueBlock>
         <ValueLabel>{t('indicator-goal')}</ValueLabel>
-        <ValueDate>{'\u00A0'}</ValueDate>
+        <ValueDate>{goalDate}</ValueDate>
         <ValueDisplay>
           <div>
             {DesiredTrendIcon}
-            <ValueUnit>{t(`indicator-desired-trend-${desiredTrend.toLowerCase()}`)}</ValueUnit>
+            <ValueUnit>
+              {t(`indicator-desired-trend-${displayOptions.nonQuantifiedGoal.trend.toLowerCase()}`)}
+            </ValueUnit>
           </div>
         </ValueDisplay>
       </ValueBlock>

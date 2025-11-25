@@ -293,6 +293,14 @@ export enum IndicatorList_FiltersFieldName {
 }
 
 /** An enumeration. */
+export enum IndicatorNonQuantifiedGoal {
+  /** Decrease */
+  Decrease = 'DECREASE',
+  /** Increase */
+  Increase = 'INCREASE'
+}
+
+/** An enumeration. */
 export enum IndicatorTimeResolution {
   /** day */
   Day = 'DAY',
@@ -2010,113 +2018,6 @@ export type IndicatorHightlightListQuery = (
     ) | null }
     & { __typename: 'Indicator' }
   )> | null }
-  & { __typename: 'Query' }
-);
-
-export type IndicatorGraphDataQueryVariables = Exact<{
-  id: InputMaybe<Scalars['ID']['input']>;
-  plan: InputMaybe<Scalars['ID']['input']>;
-}>;
-
-
-export type IndicatorGraphDataQuery = (
-  { plan: (
-    { scenarios: Array<(
-      { id: string, identifier: string, name: string }
-      & { __typename: 'Scenario' }
-    )> }
-    & { __typename: 'Plan' }
-  ) | null, indicator: (
-    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, showTotalLine: boolean, desiredTrend: IndicatorDesiredTrend | null, reference: string | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, valueRounding: number | null, dataCategoriesAreStackable: boolean, organization: (
-      { id: string, name: string, abbreviation: string | null }
-      & { __typename: 'Organization' }
-    ), quantity: (
-      { id: string, name: string }
-      & { __typename: 'Quantity' }
-    ) | null, values: Array<(
-      { id: string, date: string | null, value: number, normalizedValues: Array<(
-        { normalizerId: string | null, value: number | null }
-        & { __typename: 'NormalizedValue' }
-      )>, categories: Array<(
-        { id: string }
-        & { __typename: 'DimensionCategory' }
-      )> }
-      & { __typename: 'IndicatorValue' }
-    )>, dimensions: Array<(
-      { dimension: (
-        { id: string, name: string, categories: Array<(
-          { id: string, name: string }
-          & { __typename: 'DimensionCategory' }
-        )> }
-        & { __typename: 'Dimension' }
-      ) }
-      & { __typename: 'IndicatorDimension' }
-    )>, goals: Array<(
-      { id: string, date: string | null, value: number, normalizedValues: Array<(
-        { normalizerId: string | null, value: number | null }
-        & { __typename: 'NormalizedValue' }
-      )>, scenario: (
-        { id: string }
-        & { __typename: 'Scenario' }
-      ) | null }
-      & { __typename: 'IndicatorGoal' }
-    ) | null> | null, unit: (
-      { id: string, name: string, shortName: string | null, verboseName: string | null, verboseNamePlural: string | null }
-      & { __typename: 'Unit' }
-    ), common: (
-      { id: string, name: string, normalizations: Array<(
-        { unit: (
-          { shortName: string | null }
-          & { __typename: 'Unit' }
-        ), normalizer: (
-          { name: string, id: string, identifier: string | null }
-          & { __typename: 'CommonIndicator' }
-        ) }
-        & { __typename: 'CommonIndicatorNormalization' }
-      )>, indicators: Array<(
-        { id: string, timeResolution: IndicatorTimeResolution, minValue: number | null, maxValue: number | null, organization: (
-          { id: string, name: string, abbreviation: string | null }
-          & { __typename: 'Organization' }
-        ), quantity: (
-          { id: string, name: string }
-          & { __typename: 'Quantity' }
-        ) | null, values: Array<(
-          { id: string, date: string | null, value: number, normalizedValues: Array<(
-            { normalizerId: string | null, value: number | null }
-            & { __typename: 'NormalizedValue' }
-          )>, categories: Array<(
-            { id: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'IndicatorValue' }
-        )>, dimensions: Array<(
-          { dimension: (
-            { id: string, name: string, categories: Array<(
-              { id: string, name: string }
-              & { __typename: 'DimensionCategory' }
-            )> }
-            & { __typename: 'Dimension' }
-          ) }
-          & { __typename: 'IndicatorDimension' }
-        )>, goals: Array<(
-          { id: string, date: string | null, value: number, normalizedValues: Array<(
-            { normalizerId: string | null, value: number | null }
-            & { __typename: 'NormalizedValue' }
-          )>, scenario: (
-            { id: string }
-            & { __typename: 'Scenario' }
-          ) | null }
-          & { __typename: 'IndicatorGoal' }
-        ) | null> | null, unit: (
-          { id: string, name: string, shortName: string | null, verboseName: string | null, verboseNamePlural: string | null }
-          & { __typename: 'Unit' }
-        ) }
-        & { __typename: 'Indicator' }
-      )> }
-      & { __typename: 'CommonIndicator' }
-    ) | null }
-    & { __typename: 'Indicator' }
-  ) | null }
   & { __typename: 'Query' }
 );
 
@@ -4037,7 +3938,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
 );
 
 export type IndicatorListIndicatorFragment = (
-  { id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
+  { id: string, name: string, timeResolution: IndicatorTimeResolution, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
     { id: string, name: string }
     & { __typename: 'Organization' }
   ), common: (
@@ -13811,6 +13712,113 @@ export type GetHomePageQuery = (
   & { __typename: 'Query' }
 );
 
+export type IndicatorGraphDataQueryVariables = Exact<{
+  id: InputMaybe<Scalars['ID']['input']>;
+  plan: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type IndicatorGraphDataQuery = (
+  { plan: (
+    { scenarios: Array<(
+      { id: string, identifier: string, name: string }
+      & { __typename: 'Scenario' }
+    )> }
+    & { __typename: 'Plan' }
+  ) | null, indicator: (
+    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, showTotalLine: boolean, desiredTrend: IndicatorDesiredTrend | null, reference: string | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, valueRounding: number | null, dataCategoriesAreStackable: boolean, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+      { id: string, name: string, abbreviation: string | null }
+      & { __typename: 'Organization' }
+    ), quantity: (
+      { id: string, name: string }
+      & { __typename: 'Quantity' }
+    ) | null, values: Array<(
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )>, categories: Array<(
+        { id: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    )>, dimensions: Array<(
+      { dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) }
+      & { __typename: 'IndicatorDimension' }
+    )>, goals: Array<(
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )>, scenario: (
+        { id: string }
+        & { __typename: 'Scenario' }
+      ) | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { id: string, name: string, shortName: string | null, verboseName: string | null, verboseNamePlural: string | null }
+      & { __typename: 'Unit' }
+    ), common: (
+      { id: string, name: string, normalizations: Array<(
+        { unit: (
+          { shortName: string | null }
+          & { __typename: 'Unit' }
+        ), normalizer: (
+          { name: string, id: string, identifier: string | null }
+          & { __typename: 'CommonIndicator' }
+        ) }
+        & { __typename: 'CommonIndicatorNormalization' }
+      )>, indicators: Array<(
+        { id: string, timeResolution: IndicatorTimeResolution, minValue: number | null, maxValue: number | null, organization: (
+          { id: string, name: string, abbreviation: string | null }
+          & { __typename: 'Organization' }
+        ), quantity: (
+          { id: string, name: string }
+          & { __typename: 'Quantity' }
+        ) | null, values: Array<(
+          { id: string, date: string | null, value: number, normalizedValues: Array<(
+            { normalizerId: string | null, value: number | null }
+            & { __typename: 'NormalizedValue' }
+          )>, categories: Array<(
+            { id: string }
+            & { __typename: 'DimensionCategory' }
+          )> }
+          & { __typename: 'IndicatorValue' }
+        )>, dimensions: Array<(
+          { dimension: (
+            { id: string, name: string, categories: Array<(
+              { id: string, name: string }
+              & { __typename: 'DimensionCategory' }
+            )> }
+            & { __typename: 'Dimension' }
+          ) }
+          & { __typename: 'IndicatorDimension' }
+        )>, goals: Array<(
+          { id: string, date: string | null, value: number, normalizedValues: Array<(
+            { normalizerId: string | null, value: number | null }
+            & { __typename: 'NormalizedValue' }
+          )>, scenario: (
+            { id: string }
+            & { __typename: 'Scenario' }
+          ) | null }
+          & { __typename: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { id: string, name: string, shortName: string | null, verboseName: string | null, verboseNamePlural: string | null }
+          & { __typename: 'Unit' }
+        ) }
+        & { __typename: 'Indicator' }
+      )> }
+      & { __typename: 'CommonIndicator' }
+    ) | null }
+    & { __typename: 'Indicator' }
+  ) | null }
+  & { __typename: 'Query' }
+);
+
 export type IndicatorListQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   relatedPlanIndicators: Scalars['Boolean']['input'];
@@ -13840,7 +13848,7 @@ export type IndicatorListQuery = (
     )> }
     & { __typename: 'Plan' }
   ) | null, planIndicators?: Array<(
-    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
       { id: string, name: string }
       & { __typename: 'Organization' }
     ), common: (
@@ -13936,7 +13944,7 @@ export type IndicatorListQuery = (
     )> }
     & { __typename: 'Indicator' }
   )> | null, relatedPlanIndicators?: Array<(
-    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, organization: (
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
       { id: string, name: string }
       & { __typename: 'Organization' }
     ), common: (
@@ -14095,7 +14103,7 @@ export type IndicatorDetailsQuery = (
     ) | null }
     & { __typename: 'Plan' }
   ) | null, indicator: (
-    { id: string, identifier: string | null, name: string, level: string | null, description: string | null, reference: string | null, timeResolution: IndicatorTimeResolution, updatedAt: string, desiredTrend: IndicatorDesiredTrend | null, organization: (
+    { id: string, identifier: string | null, name: string, level: string | null, description: string | null, reference: string | null, timeResolution: IndicatorTimeResolution, updatedAt: string, desiredTrend: IndicatorDesiredTrend | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
       { id: string, name: string, abbreviation: string | null, classification: (
         { id: string, name: string }
         & { __typename: 'OrganizationClass' }
@@ -15247,7 +15255,7 @@ export type IndicatorSparklineGraphDataQuery = (
     )> }
     & { __typename: 'Plan' }
   ) | null, indicator: (
-    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, desiredTrend: IndicatorDesiredTrend | null, reference: string | null, minValue: number | null, maxValue: number | null, organization: (
+    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, desiredTrend: IndicatorDesiredTrend | null, reference: string | null, minValue: number | null, maxValue: number | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
       { id: string, name: string, abbreviation: string | null }
       & { __typename: 'Organization' }
     ), quantity: (

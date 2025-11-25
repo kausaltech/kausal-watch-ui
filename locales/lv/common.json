@@ -38,6 +38,8 @@
     "image-credit": "Attēls",
     "indicator-affected-by": "Šo rādītāju ietekmē",
     "indicator-also-for-actions": "Ietekme arī uz",
+    "indicator-desired-trend-increase": "Palielināt",
+    "indicator-desired-trend-decrease": "Samazināt",
     "indicator-goal": "Mērķis",
     "indicator-has-effect-on": "Šis rādītājs ietekmē",
     "additional-filters": "Papildu filtri",
