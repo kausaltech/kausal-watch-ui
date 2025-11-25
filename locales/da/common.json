@@ -56,6 +56,8 @@
     "image-credit": "Billede",
     "indicator-affected-by": "Denne indikator er påvirket af",
     "indicator-also-for-actions": "Også påvirket af",
+    "indicator-desired-trend-increase": "Forøge",
+    "indicator-desired-trend-decrease": "Formindske",
     "indicator-goal": "Mål",
     "indicator-has-effect-on": "Denne indikator har effekt på",
     "indicator-latest-value": "Seneste værdi",

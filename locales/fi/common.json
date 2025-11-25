@@ -56,6 +56,8 @@
     "image-credit": "Kuva",
     "indicator-affected-by": "Tähän mittariin vaikuttaa",
     "indicator-also-for-actions": "Liittyy myös toimenpiteisiin",
+    "indicator-desired-trend-increase": "Kasvattaa",
+    "indicator-desired-trend-decrease": "Vähentää",
     "indicator-goal": "Tavoite",
     "indicator-has-effect-on": "Tämä mittari vaikuttaa",
     "indicator-latest-value": "Viimeisin mittaus",

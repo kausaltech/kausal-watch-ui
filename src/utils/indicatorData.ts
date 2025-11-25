@@ -15,6 +15,8 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
       timeResolution
       showTrendline
       desiredTrend
+      nonQuantifiedGoal
+      nonQuantifiedGoalDate
       reference
       minValue
       maxValue

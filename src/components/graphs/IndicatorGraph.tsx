@@ -8,6 +8,9 @@ import styled, { useTheme } from 'styled-components';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
+import type { IndicatorDesiredTrend } from '@/common/__generated__/graphql';
+import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
+
 type ChartTrace = {
   name: string;
   dataType?: 'total' | null;
@@ -42,6 +45,11 @@ type IndicatorGraphProps = {
     axes: Array<[string, number]>;
   };
   title: string;
+  desiredTrend?: IndicatorDesiredTrend | null;
+  nonQuantifiedGoal?: {
+    trend: IndicatorNonQuantifiedGoal | null;
+    date: string | null;
+  };
 };
 
 const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
@@ -162,6 +170,7 @@ function IndicatorGraph({
   trendTrace,
   specification,
   title,
+  nonQuantifiedGoal,
 }: IndicatorGraphProps) {
   const theme = useTheme();
   const rawGraphSettings = theme.settings?.graphs;
@@ -323,8 +332,36 @@ function IndicatorGraph({
       return dateA - dateB;
     });
 
+    // Extend to nonQuantifiedGoalDate if needed (for directional goal arrow)
+    if (nonQuantifiedGoal?.trend && nonQuantifiedGoal?.date && timeResolution === 'YEAR') {
+      // Normalize the date to YYYY-1-1 format for YEAR resolution
+      const goalDateObj = new Date(nonQuantifiedGoal.date);
+      if (!Number.isNaN(goalDateObj.getTime())) {
+        const goalYear = goalDateObj.getFullYear();
+        const planEndDate = `${goalYear}-1-1`;
+        if (!datesArray.includes(planEndDate)) {
+          datesArray.push(planEndDate);
+          datesArray.sort((a, b) => {
+            const dateA = new Date(a).getTime();
+            const dateB = new Date(b).getTime();
+            if (Number.isNaN(dateA) || Number.isNaN(dateB)) {
+              return String(a).localeCompare(String(b));
+            }
+            return dateA - dateB;
+          });
+        }
+      }
+    }
+
     return datesArray;
-  }, [hasTimeDimension, traces, goalTraces, timeResolution]);
+  }, [
+    hasTimeDimension,
+    traces,
+    goalTraces,
+    timeResolution,
+    nonQuantifiedGoal?.trend,
+    nonQuantifiedGoal?.date,
+  ]);
 
   // Create category labels - either from traces or from formatted time data
   const xAxisCategories = useMemo(() => {
@@ -564,7 +601,8 @@ function IndicatorGraph({
       title: {
         text: title,
         subtext: undefined,
-        left: '75',
+        left: '24',
+        right: '24',
         top: 10,
         padding: [0, 0, 48, 0],
         itemGap: 5,
@@ -581,7 +619,7 @@ function IndicatorGraph({
         bottom: 10,
       },
       grid: {
-        left: '75',
+        left: '24',
         right: '24',
         bottom: 100,
         top: 65,
@@ -593,6 +631,52 @@ function IndicatorGraph({
           type: hasTimeDimension ? 'line' : 'shadow',
         },
         valueFormatter: (value: number) => formatNumber(value, yRange.valueRounding),
+        formatter: hasTimeDimension
+          ? (params: unknown) => {
+              if (!Array.isArray(params) || params.length === 0) return '';
+              const firstParam = params[0] as { axisValue?: number | string };
+              const axisValue = firstParam.axisValue;
+              if (axisValue == null) return '';
+
+              // Format the date based on timeResolution
+              let formattedDate: string;
+              if (timeResolution === 'YEAR') {
+                const date = new Date(axisValue);
+                formattedDate = String(date.getFullYear());
+              } else if (timeResolution === 'MONTH') {
+                const date = new Date(axisValue);
+                formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+              } else {
+                const date = new Date(axisValue);
+                formattedDate = date.toISOString().split('T')[0];
+              }
+
+              // Build tooltip content
+              let result = `${formattedDate}<br/>`;
+              params.forEach((param: unknown) => {
+                const typedParam = param as {
+                  seriesName?: string;
+                  value?: number | [string | number, number | null];
+                  marker?: string;
+                };
+                if (!typedParam.seriesName) return;
+
+                // Extract value - could be number or [date, value] array
+                let value: number | null = null;
+                if (Array.isArray(typedParam.value)) {
+                  value = typedParam.value[1];
+                } else if (typeof typedParam.value === 'number') {
+                  value = typedParam.value;
+                }
+
+                if (value !== null && value !== undefined && !Number.isNaN(value)) {
+                  const formattedValue = formatNumber(value, yRange.valueRounding);
+                  result += `${typedParam.marker || ''} ${typedParam.seriesName}: ${formattedValue} ${yRange.unit}<br/>`;
+                }
+              });
+              return result;
+            }
+          : undefined,
       },
       xAxis: hasTimeDimension
         ? (() => {
@@ -659,6 +743,9 @@ function IndicatorGraph({
       yAxis: {
         type: 'value',
         name: yRange.unit,
+        nameTextStyle: {
+          align: 'left',
+        },
         min:
           yRange.range[0] != null
             ? yRange.range[0]
@@ -672,6 +759,59 @@ function IndicatorGraph({
         },
       },
       series: [...baseSeries, ...trendSeries, ...goalSeries],
+      graphic:
+        nonQuantifiedGoal?.trend && nonQuantifiedGoal?.date
+          ? [
+              {
+                type: 'group',
+                right: 24,
+                top: '25%',
+                children: [
+                  {
+                    type: 'polygon',
+                    shape: {
+                      points:
+                        nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
+                          ? [
+                              [0, -67.5],
+                              [-67.5, 0],
+                              [-33.75, 0],
+                              [-33.75, 101.25],
+                              [33.75, 101.25],
+                              [33.75, 0],
+                              [67.5, 0],
+                            ]
+                          : [
+                              [0, 33.75],
+                              [-67.5, -33.75],
+                              [-33.75, -33.75],
+                              [-33.75, -135],
+                              [33.75, -135],
+                              [33.75, -33.75],
+                              [67.5, -33.75],
+                            ],
+                    },
+                    style: {
+                      fill: {
+                        type: 'linear',
+                        x: 0,
+                        y: nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase ? 0 : 1,
+                        x2: 0,
+                        y2: nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase ? 1 : 0,
+                        colorStops: [
+                          { offset: 0, color: theme.graphColors.green030 },
+                          { offset: 1, color: 'rgba(255, 255, 255, 0)' },
+                        ],
+                      },
+                      stroke: theme.graphColors.green010,
+                      lineWidth: 0,
+                    },
+                    z: 100,
+                  },
+                ],
+              },
+            ]
+          : undefined,
     };
 
     return option;
@@ -700,6 +840,10 @@ function IndicatorGraph({
     xAxisCategories,
     title,
     theme.themeColors.dark,
+    nonQuantifiedGoal?.trend,
+    nonQuantifiedGoal?.date,
+    theme.graphColors.green030,
+    theme.graphColors.green010,
   ]);
 
   useEffect(() => {

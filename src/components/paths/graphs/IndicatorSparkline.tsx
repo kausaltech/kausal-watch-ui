@@ -13,7 +13,7 @@ import type {
   IndicatorSparklineGraphDataQueryVariables,
 } from '@/common/__generated__/graphql';
 import type { IndicatorCategoryRelationshipType } from '@/common/__generated__/graphql';
-import { IndicatorDesiredTrend } from '@/common/__generated__/graphql';
+import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
 import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/utils/indicatorData';
 
@@ -99,7 +99,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   if (error) return <p>Error :(</p>;
   const indicator = data?.indicator;
   if (!indicator) return null;
-  const { maxValue, minValue, desiredTrend } = indicator;
+  const { maxValue, minValue, nonQuantifiedGoal, nonQuantifiedGoalDate } = indicator;
 
   const indicatorGoals: Array<IndicatorGoal | null> = indicator.goals || [];
   const indicatorValues: Array<IndicatorValue> = indicator.values || [];
@@ -138,30 +138,26 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
 
   const sortedYears = Object.keys(combinedData).sort((a, b) => Number(a) - Number(b));
 
-  // Check if there are goal values after the last indicator value
-  let lastIndicatorValueYear: string | null = null;
-  sortedYears.forEach((year) => {
-    if (combinedData[year].value !== undefined && combinedData[year].value !== null) {
-      lastIndicatorValueYear = year;
-    }
-  });
-
-  const hasGoalsAfterLastValue = lastIndicatorValueYear
-    ? sortedYears.some((year) => {
-        const yearNum = Number(year);
-        const lastValueYearNum = Number(lastIndicatorValueYear);
-        return (
-          yearNum > lastValueYearNum &&
-          combinedData[year].goal !== undefined &&
-          combinedData[year].goal !== null
-        );
-      })
-    : false;
-
-  // TODO: make this dynamic
-  const allYears = Array.from({ length: PLAN_END_YEAR - PLAN_START_YEAR + 1 }, (_, i) =>
+  // Extend years array to include nonQuantifiedGoalDate if needed
+  const baseYears = Array.from({ length: PLAN_END_YEAR - PLAN_START_YEAR + 1 }, (_, i) =>
     (PLAN_START_YEAR + i).toString()
   );
+
+  // If we have a nonQuantifiedGoal with a date, ensure that year is included
+  let allYears = baseYears;
+  if (nonQuantifiedGoal && nonQuantifiedGoalDate && typeof nonQuantifiedGoalDate === 'string') {
+    try {
+      const goalDateObj = new Date(nonQuantifiedGoalDate);
+      if (!Number.isNaN(goalDateObj.getTime())) {
+        const goalYear = goalDateObj.getFullYear().toString();
+        if (!allYears.includes(goalYear)) {
+          allYears = [...allYears, goalYear].sort((a, b) => Number(a) - Number(b));
+        }
+      }
+    } catch {
+      // Ignore invalid dates
+    }
+  }
 
   const dataset: DatasetComponentOption = {
     dimensions: ['date', 'value', 'goal'],
@@ -322,7 +318,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
       },
     },
     graphic:
-      !hasGoalsAfterLastValue && desiredTrend && lastIndicatorValueYear
+      nonQuantifiedGoal && nonQuantifiedGoalDate
         ? [
             {
               type: 'group',
@@ -333,7 +329,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
                   type: 'polygon',
                   shape: {
                     points:
-                      desiredTrend === IndicatorDesiredTrend.Increasing
+                      nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase
                         ? [
                             [0, -20],
                             [-20, 0],
@@ -357,9 +353,9 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
                     fill: {
                       type: 'linear',
                       x: 0,
-                      y: desiredTrend === IndicatorDesiredTrend.Increasing ? 0 : 1,
+                      y: nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase ? 0 : 1,
                       x2: 0,
-                      y2: desiredTrend === IndicatorDesiredTrend.Increasing ? 1 : 0,
+                      y2: nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase ? 1 : 0,
                       colorStops: [
                         { offset: 0, color: theme.graphColors.green030 },
                         { offset: 1, color: 'white' },

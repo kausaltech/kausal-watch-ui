@@ -52,6 +52,8 @@
     "image-credit": "Bild",
     "indicator-affected-by": "Denna indikator påverkas av",
     "indicator-also-for-actions": "Påverkas också av",
+    "indicator-desired-trend-increase": "Öka",
+    "indicator-desired-trend-decrease": "Minska",
     "indicator-goal": "Mål",
     "indicator-has-effect-on": "Denna indikator har effekt på",
     "indicator-latest-value": "Senaste värdet",

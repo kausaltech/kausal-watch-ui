@@ -22,153 +22,7 @@ import LegacyIndicatorGraph from '@/components/graphs/legacy/IndicatorGraph';
 import IndicatorComparisonSelect from '@/components/indicators/IndicatorComparisonSelect';
 import IndicatorNormalizationSelect from '@/components/indicators/IndicatorNormalizationSelect';
 import { usePlan } from '@/context/plan';
-
-export const GET_INDICATOR_GRAPH_DATA = gql`
-  query IndicatorGraphData($id: ID, $plan: ID) {
-    plan(id: $plan) {
-      scenarios {
-        id
-        identifier
-        name
-      }
-    }
-    indicator(plan: $plan, id: $id) {
-      id
-      name
-      timeResolution
-      showTrendline
-      showTotalLine
-      desiredTrend
-      reference
-      minValue
-      maxValue
-      ticksCount
-      ticksRounding
-      valueRounding
-      dataCategoriesAreStackable
-      organization {
-        id
-        name
-        abbreviation
-      }
-      quantity {
-        id
-        name
-      }
-      values(includeDimensions: true) {
-        id
-        date
-        value
-        normalizedValues {
-          normalizerId
-          value
-        }
-        categories {
-          id
-        }
-      }
-      dimensions {
-        dimension {
-          id
-          name
-          categories {
-            id
-            name
-          }
-        }
-      }
-      goals {
-        id
-        date
-        value
-        normalizedValues {
-          normalizerId
-          value
-        }
-        scenario {
-          id
-        }
-      }
-      unit {
-        id
-        name
-        shortName
-        verboseName
-        verboseNamePlural
-      }
-      common {
-        id
-        name
-        normalizations {
-          unit {
-            shortName
-          }
-          normalizer {
-            name
-            id
-            identifier
-          }
-        }
-        indicators {
-          id
-          organization {
-            id
-            name
-            abbreviation
-          }
-          timeResolution
-          minValue
-          maxValue
-          quantity {
-            id
-            name
-          }
-          values(includeDimensions: true) {
-            id
-            date
-            value
-            normalizedValues {
-              normalizerId
-              value
-            }
-            categories {
-              id
-            }
-          }
-          dimensions {
-            dimension {
-              id
-              name
-              categories {
-                id
-                name
-              }
-            }
-          }
-          goals {
-            id
-            date
-            value
-            normalizedValues {
-              normalizerId
-              value
-            }
-            scenario {
-              id
-            }
-          }
-          unit {
-            id
-            name
-            shortName
-            verboseName
-            verboseNamePlural
-          }
-        }
-      }
-    }
-  }
-`;
+import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
 
 function generateCube(dimensions, values, path) {
   const dim = dimensions[0];
@@ -747,6 +601,11 @@ function IndicatorVisualisation({
             goalTraces={goalTraces}
             trendTrace={trendTrace}
             title={plotTitle}
+            desiredTrend={indicator.desiredTrend}
+            nonQuantifiedGoal={{
+              trend: indicator.nonQuantifiedGoal,
+              date: indicator.nonQuantifiedGoalDate,
+            }}
           />
         )}
       </div>

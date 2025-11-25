@@ -292,6 +292,14 @@ export enum IndicatorList_FiltersFieldName {
 }
 
 /** An enumeration. */
+export enum IndicatorNonQuantifiedGoal {
+  /** Decrease */
+  Decrease = 'DECREASE',
+  /** Increase */
+  Increase = 'INCREASE'
+}
+
+/** An enumeration. */
 export enum IndicatorTimeResolution {
   /** day */
   Day = 'DAY',

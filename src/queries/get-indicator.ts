@@ -117,6 +117,8 @@ export const GET_INDICATOR_DETAILS = gql`
           id
         }
       }
+      nonQuantifiedGoal
+      nonQuantifiedGoalDate
       actions(plan: $plan) {
         id
         ...ActionsTableRowFragment
