@@ -95,16 +95,18 @@ const buildSeriesFromTraces = ({
         ? colors.totalLine
         : colors.categoryColors[idx % colors.categoryColors.length];
 
-    // Use line chart for time dimension (now using category axis with formatted labels)
+    // Use line chart for time dimension
     if (hasTimeDimension) {
+      // Map x and y values together for time axis
+      const data = trace.x.map((xVal, idx) => [xVal, trace.y[idx] ?? null]);
       const series: LineSeriesOption = {
         type: 'line',
         name: trace.name,
-        // Use simple y values array since we're using category axis
-        data: trace.y,
+        data: data,
         connectNulls: true,
         showSymbol: trace.x.length <= 30,
-        symbolSize: 8,
+        symbol: 'circle',
+        symbolSize: 6,
         sampling: 'lttb',
         smooth: lineShape === 'spline' || lineShape === 'smooth',
         lineStyle: {
@@ -113,7 +115,9 @@ const buildSeriesFromTraces = ({
         },
         itemStyle: {
           color,
+          borderWidth: 0,
         },
+        z: 2,
         emphasis: {
           focus: 'series',
         },
@@ -226,10 +230,35 @@ function IndicatorGraph({
     trendColor: graphSettings.trendLineColor || fallbackColor,
   };
 
-  const hasTimeDimension = useMemo(
-    () => specification.axes.some((axis) => axis[0] === 'time') || traces.length === 0,
-    [specification.axes, traces.length]
-  );
+  // Check if we have time-based data by looking at traces or goalTraces
+  // If any trace has xType 'time' or if we have goalTraces with dates, use time dimension
+  const hasTimeDimension = useMemo(() => {
+    // Check specification axes
+    if (specification.axes.some((axis) => axis[0] === 'time')) {
+      return true;
+    }
+    // Check if any trace has xType 'time'
+    if (traces.some((trace) => trace.xType === 'time')) {
+      return true;
+    }
+    // If we have goalTraces with dates, we should use time dimension
+    if (goalTraces.length > 0 && goalTraces.some((goal) => goal.x.length > 0)) {
+      return true;
+    }
+    // If we have traces with dates, use time dimension (even for single datapoint)
+    if (traces.length > 0 && traces[0].x.length > 0) {
+      // Check if x values look like dates (strings that can be parsed as dates)
+      const firstX = traces[0].x[0];
+      if (typeof firstX === 'string' && !Number.isNaN(new Date(firstX).getTime())) {
+        return true;
+      }
+      if (typeof firstX === 'number' && firstX > 1900 && firstX < 2100) {
+        // Likely a year
+        return true;
+      }
+    }
+    return false;
+  }, [specification.axes, traces, goalTraces]);
 
   const useAreaGraph = graphSettings.areaGraphs === true;
   const lineShape = graphSettings.lineShape ?? 'spline';
@@ -237,18 +266,77 @@ function IndicatorGraph({
 
   const chartHeight = 450 + (!hasTimeDimension ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0);
 
+  // Collect all unique dates from both value traces and goal traces
+  const allDates = useMemo(() => {
+    if (!hasTimeDimension) {
+      // For non-time dimension, return category data
+      return traces.length > 0 ? traces[0].x : [];
+    }
+
+    // Normalize dates to ensure consistent format for deduplication
+    const normalizeDateForSet = (d: string | number): string => {
+      if (typeof d === 'number') {
+        // If it's a number (likely a year), convert to YYYY-1-1 format
+        if (d > 1900 && d < 2100) {
+          return `${d}-1-1`;
+        }
+        return String(d);
+      }
+      // If it's already a date string, use it as-is
+      const dateObj = new Date(d);
+      if (Number.isNaN(dateObj.getTime())) {
+        return String(d);
+      }
+      // For YEAR resolution, ensure format is YYYY-1-1
+      if (timeResolution === 'YEAR') {
+        return `${dateObj.getFullYear()}-1-1`;
+      }
+      return d;
+    };
+
+    const dateSet = new Set<string>();
+    // Add dates from value traces
+    traces.forEach((trace) => {
+      trace.x.forEach((date) => {
+        if (date != null) {
+          dateSet.add(normalizeDateForSet(date));
+        }
+      });
+    });
+    // Add dates from goal traces
+    goalTraces.forEach((goalTrace) => {
+      goalTrace.x.forEach((date) => {
+        if (date != null) {
+          dateSet.add(normalizeDateForSet(date));
+        }
+      });
+    });
+
+    // Convert to array and sort
+    const datesArray = Array.from(dateSet);
+    datesArray.sort((a, b) => {
+      const dateA = new Date(a).getTime();
+      const dateB = new Date(b).getTime();
+      if (Number.isNaN(dateA) || Number.isNaN(dateB)) {
+        return String(a).localeCompare(String(b));
+      }
+      return dateA - dateB;
+    });
+
+    return datesArray;
+  }, [hasTimeDimension, traces, goalTraces, timeResolution]);
+
   // Create category labels - either from traces or from formatted time data
   const xAxisCategories = useMemo(() => {
     if (!hasTimeDimension && traces.length > 0) {
       return traces[0].x.map((value) => String(value));
     }
 
-    if (hasTimeDimension && traces.length > 0) {
+    if (hasTimeDimension && allDates.length > 0) {
       // Format time values and deduplicate consecutive labels
       const formattedLabels: string[] = [];
-      const firstTrace = traces[0];
 
-      firstTrace.x.forEach((value) => {
+      allDates.forEach((value) => {
         const date = new Date(value);
         if (Number.isNaN(date.getTime())) {
           formattedLabels.push(String(value));
@@ -280,11 +368,69 @@ function IndicatorGraph({
     }
 
     return [];
-  }, [hasTimeDimension, traces, timeResolution]);
+  }, [hasTimeDimension, traces, timeResolution, allDates]);
+
+  // Check if all dates are in the same year (for YEAR resolution)
+  const hasSingleYear = useMemo(() => {
+    if (!hasTimeDimension || timeResolution !== 'YEAR' || allDates.length === 0) {
+      return false;
+    }
+    const years = new Set<number>();
+    allDates.forEach((date) => {
+      const dateObj = new Date(date);
+      if (!Number.isNaN(dateObj.getTime())) {
+        years.add(dateObj.getFullYear());
+      }
+    });
+    return years.size === 1;
+  }, [hasTimeDimension, timeResolution, allDates]);
 
   const option = useMemo<ECOption>(() => {
+    // Normalize dates for consistent comparison (shared helper)
+    const normalizeDateForComparison = (d: string | number): string => {
+      if (typeof d === 'number') {
+        if (d > 1900 && d < 2100) {
+          return `${d}-1-1`;
+        }
+        return String(d);
+      }
+      const dateObj = new Date(d);
+      if (Number.isNaN(dateObj.getTime())) {
+        return String(d);
+      }
+      if (timeResolution === 'YEAR') {
+        return `${dateObj.getFullYear()}-1-1`;
+      }
+      return d;
+    };
+
+    // Map value traces to align with allDates array
+    const alignedTraces = hasTimeDimension
+      ? traces.map((trace) => {
+          // Create a map of normalized trace dates to values
+          const traceMap = new Map<string, number | null>();
+          trace.x.forEach((date, i) => {
+            const normalizedDate = normalizeDateForComparison(date);
+            traceMap.set(normalizedDate, trace.y[i] ?? null);
+          });
+
+          // Map trace values to positions in allDates array
+          // allDates already contains normalized dates (as strings), so we can match directly
+          const alignedY = allDates.map((date) => {
+            const dateStr = String(date);
+            return traceMap.get(dateStr) ?? null;
+          });
+
+          return {
+            ...trace,
+            x: allDates.map((d) => String(d)),
+            y: alignedY,
+          };
+        })
+      : traces;
+
     const baseSeries = buildSeriesFromTraces({
-      traces,
+      traces: alignedTraces,
       hasTimeDimension,
       useAreaGraph,
       lineShape,
@@ -295,51 +441,124 @@ function IndicatorGraph({
       valueRounding: graphSettings.roundIndicatorValue === false ? undefined : yRange.valueRounding,
     });
 
-    const goalSeries: LineSeriesOption[] = goalTraces.map((goalTrace, idx) => ({
-      type: 'line',
-      name: goalTrace.name,
-      // Use simple y values array since we're using category axis
-      data: goalTrace.y,
-      showSymbol: true,
-      symbolSize: 10,
-      lineStyle: {
-        width: 2,
-        type: graphSettings.drawGoalLine ? 'dashed' : 'solid',
-        color: colors.goalColors[idx % colors.goalColors.length],
-      },
-      itemStyle: {
-        color: colors.goalColors[idx % colors.goalColors.length],
-      },
-      opacity: 0.8,
-      connectNulls: true,
-      tooltip: {
-        valueFormatter: (val: number) => formatNumber(val, yRange.valueRounding),
-      },
-    }));
+    // Map goal values to the correct positions in the x-axis categories
+    const goalSeries: LineSeriesOption[] = goalTraces.map((goalTrace, idx) => {
+      // Normalize dates for consistent comparison
+      const normalizeDateForComparison = (d: string | number): string => {
+        if (typeof d === 'number') {
+          if (d > 1900 && d < 2100) {
+            return `${d}-1-1`;
+          }
+          return String(d);
+        }
+        const dateObj = new Date(d);
+        if (Number.isNaN(dateObj.getTime())) {
+          return String(d);
+        }
+        if (timeResolution === 'YEAR') {
+          return `${dateObj.getFullYear()}-1-1`;
+        }
+        return d;
+      };
 
+      // Create a map of normalized goal dates to values
+      const goalMap = new Map<string, number | null>();
+      goalTrace.x.forEach((date, i) => {
+        const normalizedDate = normalizeDateForComparison(date);
+        goalMap.set(normalizedDate, goalTrace.y[i] ?? null);
+      });
+
+      // Map goal values to positions in allDates array
+      // allDates already contains normalized dates (as strings), so we can match directly
+      const goalData = allDates.map((date) => {
+        const dateStr = String(date);
+        const value = goalMap.get(dateStr) ?? null;
+        return [dateStr, value];
+      });
+
+      return {
+        type: 'line',
+        name: goalTrace.name,
+        data: goalData,
+        showSymbol: true,
+        symbolSize: 10,
+        lineStyle: {
+          width: 2,
+          type: graphSettings.drawGoalLine ? 'dashed' : 'solid',
+          color: colors.goalColors[idx % colors.goalColors.length],
+        },
+        itemStyle: {
+          color: colors.goalColors[idx % colors.goalColors.length],
+        },
+        opacity: 0.8,
+        connectNulls: true,
+        z: 1,
+        tooltip: {
+          valueFormatter: (val: number) => formatNumber(val, yRange.valueRounding),
+        },
+      };
+    });
+
+    // Map trend trace to align with allDates array
     const trendSeries: LineSeriesOption[] =
-      trendTrace && showTrendline
-        ? [
-            {
-              type: 'line',
-              name: trendTrace.name,
-              // Use simple y values array since we're using category axis
-              data: trendTrace.y,
-              showSymbol: false,
-              lineStyle: {
-                width: 3,
-                color: colors.trendColor,
-                type: 'dashed',
+      trendTrace && showTrendline && hasTimeDimension
+        ? (() => {
+            // Create a map of normalized trend dates to values
+            const trendMap = new Map<string, number | null>();
+            trendTrace.x.forEach((date, i) => {
+              const normalizedDate = normalizeDateForComparison(date);
+              trendMap.set(normalizedDate, trendTrace.y[i] ?? null);
+            });
+
+            // Map trend values to positions in allDates array
+            // allDates already contains normalized dates (as strings), so we can match directly
+            const trendData = allDates.map((date) => {
+              const dateStr = String(date);
+              const value = trendMap.get(dateStr) ?? null;
+              return [dateStr, value];
+            });
+
+            return [
+              {
+                type: 'line',
+                name: trendTrace.name,
+                data: trendData,
+                showSymbol: false,
+                lineStyle: {
+                  width: 3,
+                  color: colors.trendColor,
+                  type: 'dashed',
+                },
+                emphasis: {
+                  disabled: true,
+                },
+                tooltip: {
+                  valueFormatter: (val: number) => formatNumber(val, yRange.valueRounding),
+                },
               },
-              emphasis: {
-                disabled: true,
+            ];
+          })()
+        : trendTrace && showTrendline
+          ? [
+              {
+                type: 'line',
+                name: trendTrace.name,
+                data: trendTrace.y,
+                showSymbol: false,
+                lineStyle: {
+                  width: 3,
+                  color: colors.trendColor,
+                  type: 'dashed',
+                },
+                emphasis: {
+                  disabled: true,
+                },
+                tooltip: {
+                  valueFormatter: (val: number) => formatNumber(val, yRange.valueRounding),
+                },
               },
-              tooltip: {
-                valueFormatter: (val: number) => formatNumber(val, yRange.valueRounding),
-              },
-            },
-          ]
-        : [];
+            ]
+          : [];
 
     const option: ECOption = {
       title: {
@@ -366,6 +585,7 @@ function IndicatorGraph({
         right: '24',
         bottom: 100,
         top: 65,
+        containLabel: true,
       },
       tooltip: {
         trigger: 'axis',
@@ -374,17 +594,68 @@ function IndicatorGraph({
         },
         valueFormatter: (value: number) => formatNumber(value, yRange.valueRounding),
       },
-      xAxis: {
-        type: 'category',
-        data: xAxisCategories,
-        boundaryGap: hasTimeDimension ? false : undefined,
-        axisLabel: {
-          interval: 0,
-          rotate: xAxisCategories.length > 6 ? 45 : 0,
-          // Hide empty labels (duplicates)
-          formatter: (value: string) => (value === '' ? '' : value),
-        },
-      },
+      xAxis: hasTimeDimension
+        ? (() => {
+            // For single year case, we need to track the year range to show only middle label
+            const yearRange =
+              hasSingleYear && timeResolution === 'YEAR' && allDates.length > 0
+                ? (() => {
+                    const timestamps = allDates
+                      .map((d) => new Date(d).getTime())
+                      .filter((t) => !Number.isNaN(t));
+                    return {
+                      min: Math.min(...timestamps),
+                      max: Math.max(...timestamps),
+                      year: new Date(timestamps[0]).getFullYear(),
+                    };
+                  })()
+                : null;
+
+            return {
+              type: 'time',
+              axisLabel: {
+                hideOverlap: true,
+                showMinLabel: hasSingleYear ? false : true,
+                showMaxLabel: hasSingleYear ? false : true,
+                formatter: (value: number) => {
+                  const date = new Date(value);
+                  if (timeResolution === 'YEAR') {
+                    // For single year case, only show label for ticks near the middle
+                    if (yearRange) {
+                      const timestamp = date.getTime();
+                      const range = yearRange.max - yearRange.min;
+                      const position = (timestamp - yearRange.min) / range;
+                      // Only show label if tick is in the middle 40% of the range (30% to 70%)
+                      if (position < 0.3 || position > 0.7) {
+                        return '';
+                      }
+                    }
+                    return String(date.getFullYear());
+                  } else if (timeResolution === 'MONTH') {
+                    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                  }
+                  return date.toISOString().split('T')[0];
+                },
+              },
+              // Configure time axis to show appropriate intervals
+              ...(timeResolution === 'YEAR'
+                ? {
+                    // For year resolution, show one tick per year
+                    minInterval: 31536000000, // 1 year in milliseconds
+                  }
+                : {}),
+            };
+          })()
+        : {
+            type: 'category',
+            data: xAxisCategories,
+            boundaryGap: undefined,
+            axisLabel: {
+              interval: 0,
+              rotate: xAxisCategories.length > 6 ? 45 : 0,
+              formatter: (value: string) => (value === '' ? '' : value),
+            },
+          },
       yAxis: {
         type: 'value',
         name: yRange.unit,
@@ -406,7 +677,9 @@ function IndicatorGraph({
     return option;
   }, [
     traces,
+    allDates,
     hasTimeDimension,
+    hasSingleYear,
     useAreaGraph,
     lineShape,
     colors.categoryColors,
@@ -416,6 +689,7 @@ function IndicatorGraph({
     goalTraces,
     graphSettings.drawGoalLine,
     showTrendline,
+    timeResolution,
     yRange.includeZero,
     yRange.range,
     yRange.ticksRounding,
