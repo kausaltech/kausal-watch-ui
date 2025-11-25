@@ -1,3 +1,4 @@
+import { useFormatter, useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
 import {
@@ -48,7 +49,8 @@ interface IndicatorContentBlockProps {
 
 const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
   const { block, indicator } = props;
-
+  const format = useFormatter();
+  const t = useTranslations();
   if (!block.sourceField) return null;
   switch (block.sourceField) {
     case IndicatorDetailsFieldName.Description:
@@ -102,10 +104,16 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
         </div>
       );
     case IndicatorDetailsFieldName.UpdatedAt:
+      const updatedAt = new Date(indicator.updatedAt);
+      const formattedUpdatedAt = format.dateTime(updatedAt, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
       return (
         <div>
           <hr />
-          Updated At {indicator.updatedAt}
+          {t('updated')} {formattedUpdatedAt}
           <hr />
         </div>
       );
