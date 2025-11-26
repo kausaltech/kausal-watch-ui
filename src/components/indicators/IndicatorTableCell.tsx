@@ -245,12 +245,14 @@ const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
     }
   });
 
+  // Make sure catetgories are unique (same parent category is only shown once)
+  const uniqueCategories = categories.filter((item, index) => categories.indexOf(item) === index);
   return (
     <CellContent>
       <CategoryBadges>
-        {categories &&
-          categories.length > 0 &&
-          categories.map((cat) => (
+        {uniqueCategories &&
+          uniqueCategories.length > 0 &&
+          uniqueCategories.map((cat) => (
             <BadgeTooltip
               key={cat.id}
               id={cat.id}
