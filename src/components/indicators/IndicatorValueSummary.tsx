@@ -117,15 +117,17 @@ function determineDesirableDirection(
   return '-';
 }
 
+type Indicator = NonNullable<IndicatorDetailsQuery['indicator']>;
+
 export type ValueSummaryOptions = {
   nonQuantifiedGoal: {
-    show: boolean | null;
     trend: IndicatorNonQuantifiedGoal | null;
     date: string | null;
   };
   referenceValue: {
     show: boolean | null;
     year: number | null;
+    defaultReferenceValue: Indicator['referenceValue'] | null;
   };
   currentValue: {
     show: boolean | null;
@@ -137,8 +139,6 @@ export type ValueSummaryOptions = {
     show: boolean | null;
   };
 };
-
-type Indicator = NonNullable<IndicatorDetailsQuery['indicator']>;
 
 interface IndicatorValueSummaryProps {
   timeResolution: Indicator['timeResolution'];
@@ -159,6 +159,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
     referenceValue: {
       show: true,
       year: null,
+      defaultReferenceValue: null,
     },
     currentValue: {
       show: false,
@@ -224,8 +225,15 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
 
   // Calculate reference value if displayOptions.referenceValue.show is true
   let referenceValue: { date: string; value: number } | null = null;
-  if (displayOptions.referenceValue.show && values.length > 0) {
-    if (displayOptions.referenceValue.year !== null) {
+  if (displayOptions.referenceValue.show) {
+    if (displayOptions.referenceValue.defaultReferenceValue) {
+      referenceValue = {
+        date: new Date(displayOptions.referenceValue.defaultReferenceValue.date ?? '')
+          .getFullYear()
+          .toString(),
+        value: displayOptions.referenceValue.defaultReferenceValue.value,
+      };
+    } else if (displayOptions.referenceValue.year !== null) {
       // Find value for the specified year
       const valueForYear = values.find((val) => {
         if (!val.date) return false;

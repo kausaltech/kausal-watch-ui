@@ -161,9 +161,9 @@ const getValue = (
       if (!referenceYear) {
         return null;
       }
-      const referenceValue = indicator.values.find((value) =>
-        value.date?.startsWith(String(referenceYear))
-      );
+      const referenceValue = indicator.referenceValue
+        ? indicator.referenceValue
+        : indicator.values.find((value) => value.date?.startsWith(String(referenceYear)));
       return referenceValue
         ? isNormalized
           ? referenceValue.normalizedValues?.[0]?.value
@@ -186,6 +186,13 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
   const format = useFormatter();
   const t = useTranslations();
   const value: number | string | null = getValue(indicator, valueType, isNormalized, referenceYear);
+  const customReferenceYear =
+    valueType === IndicatorColumnValueType.Reference && referenceYear
+      ? indicator.referenceValue?.date
+        ? new Date(indicator.referenceValue.date).getFullYear()
+        : null
+      : null;
+
   if (value === null) {
     return <CellContent $numeric={true}>--</CellContent>;
   }
@@ -194,13 +201,13 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
       case 'increase':
         return (
           <CellContent $numeric={true}>
-            <TrendIcon name="arrow-up" alt={t('increase')} />
+            <TrendIcon name="arrow-up" alt={t('indicator-desired-trend-increase')} />
           </CellContent>
         );
       case 'decrease':
         return (
           <CellContent $numeric={true}>
-            <TrendIcon name="arrow-down" alt={t('decrease')} />
+            <TrendIcon name="arrow-down" alt={t('indicator-desired-trend-decrease')} />
           </CellContent>
         );
       default:
@@ -211,6 +218,12 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
     <CellContent $numeric={true}>
       <Value>{format.number(value, { maximumFractionDigits: 2 })}</Value>
       {!hideUnit && <Unit>{indicator.unit.shortName}</Unit>}
+      {customReferenceYear && (
+        <>
+          <br />
+          <Unit>({customReferenceYear})</Unit>
+        </>
+      )}
     </CellContent>
   );
 };

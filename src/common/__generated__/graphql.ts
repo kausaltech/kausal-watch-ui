@@ -14103,7 +14103,13 @@ export type IndicatorDetailsQuery = (
     ) | null }
     & { __typename: 'Plan' }
   ) | null, indicator: (
-    { id: string, identifier: string | null, name: string, level: string | null, description: string | null, reference: string | null, timeResolution: IndicatorTimeResolution, updatedAt: string, desiredTrend: IndicatorDesiredTrend | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+    { id: string, identifier: string | null, name: string, level: string | null, description: string | null, reference: string | null, timeResolution: IndicatorTimeResolution, updatedAt: string, desiredTrend: IndicatorDesiredTrend | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, referenceValue: (
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    ) | null, organization: (
       { id: string, name: string, abbreviation: string | null, classification: (
         { id: string, name: string }
         & { __typename: 'OrganizationClass' }
@@ -14818,6 +14824,22 @@ export type OrgContentPlanFragment = (
   & { __typename: 'Plan' }
 );
 
+export type GetPlanCategoryTypesQueryVariables = Exact<{
+  plan: Scalars['ID']['input'];
+}>;
+
+
+export type GetPlanCategoryTypesQuery = (
+  { plan: (
+    { id: string, categoryTypes: Array<(
+      { id: string, name: string, identifier: string }
+      & { __typename: 'CategoryType' }
+    )> }
+    & { __typename: 'Plan' }
+  ) | null }
+  & { __typename: 'Query' }
+);
+
 export type GetPlanContextQueryVariables = Exact<{
   identifier: InputMaybe<Scalars['ID']['input']>;
   hostname: InputMaybe<Scalars['String']['input']>;
@@ -15255,7 +15277,7 @@ export type IndicatorSparklineGraphDataQuery = (
     )> }
     & { __typename: 'Plan' }
   ) | null, indicator: (
-    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, desiredTrend: IndicatorDesiredTrend | null, reference: string | null, minValue: number | null, maxValue: number | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, desiredTrend: IndicatorDesiredTrend | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, reference: string | null, minValue: number | null, maxValue: number | null, organization: (
       { id: string, name: string, abbreviation: string | null }
       & { __typename: 'Organization' }
     ), quantity: (
