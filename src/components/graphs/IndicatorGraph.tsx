@@ -560,11 +560,15 @@ function IndicatorGraph({
                 type: 'line',
                 name: trendTrace.name,
                 data: trendData,
-                showSymbol: false,
+                symbol: 'none',
                 lineStyle: {
-                  width: 3,
+                  width: 1,
                   color: colors.trendColor,
-                  type: 'dashed',
+                  type: 'dotted',
+                },
+                itemStyle: {
+                  color: colors.trendColor,
+                  opacity: 0,
                 },
                 emphasis: {
                   disabled: true,
@@ -582,6 +586,7 @@ function IndicatorGraph({
                 name: trendTrace.name,
                 data: trendTrace.y,
                 showSymbol: false,
+                symbol: 'none',
                 lineStyle: {
                   width: 3,
                   color: colors.trendColor,
@@ -617,6 +622,15 @@ function IndicatorGraph({
         orient: 'horizontal',
         right: 10,
         bottom: 10,
+        data: [
+          ...baseSeries
+            .map((s) => s.name)
+            .filter((name): name is string => typeof name === 'string'),
+          ...goalSeries
+            .map((s) => s.name)
+            .filter((name): name is string => typeof name === 'string'),
+          ...(trendTrace && showTrendline && trendTrace.name ? [trendTrace.name] : []),
+        ],
       },
       grid: {
         left: '24',
@@ -660,6 +674,11 @@ function IndicatorGraph({
                   marker?: string;
                 };
                 if (!typedParam.seriesName) return;
+
+                // Skip trend series in tooltip
+                if (trendTrace && typedParam.seriesName === trendTrace.name) {
+                  return;
+                }
 
                 // Extract value - could be number or [date, value] array
                 let value: number | null = null;
