@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { PieChart } from 'echarts/charts';
 import type { PieSeriesOption } from 'echarts/charts';
@@ -113,6 +113,20 @@ const DashboardIndicatorPieChartBlock = ({
       ];
     }, [] as SeriesData[]) ?? [];
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const update = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
   const option: ECOption & { series: PieSeriesOption[] } = {
     tooltip: {
       appendTo: 'body',
@@ -120,12 +134,16 @@ const DashboardIndicatorPieChartBlock = ({
       formatter: createTooltipFormatter(indicator ?? null, seriesData),
     },
     legend: {
-      show: true,
+      show: !isMobile,
       orient: 'horizontal',
       bottom: 0,
       left: 'center',
       type: 'plain',
       selectedMode: false,
+      itemGap: 20,
+      itemWidth: 18,
+      itemHeight: 12,
+      formatter: (name: string) => `${name}\u00A0\u00A0\u00A0\u00A0`,
       textStyle: {
         color: theme.textColor.primary,
       },
@@ -139,7 +157,7 @@ const DashboardIndicatorPieChartBlock = ({
     series: [
       {
         type: 'pie',
-        center: ['50%', '45%'],
+        center: ['50%', isMobile ? '50%' : '40%'],
         avoidLabelOverlap: true,
         itemStyle: {
           borderRadius: 0,
@@ -152,7 +170,11 @@ const DashboardIndicatorPieChartBlock = ({
           formatter: (params: CallbackDataParams) =>
             `${params.name}\n${params.percent ? `${Math.round(params.percent)}%` : ''}`,
         },
-
+        labelLine: {
+          show: true,
+          length: 0,
+          length2: 6,
+        },
         emphasis: {
           label: {
             show: true,
