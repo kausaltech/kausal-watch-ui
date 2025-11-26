@@ -29,6 +29,9 @@ const ContentBlockWrapper = styled.div`
 
 const CategoryBadges = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${(props) => props.theme.spaces.s050};
 `;
 
 const GroupedCategoryContainer = styled.div`
@@ -173,6 +176,7 @@ const IndicatorValueSummaryBlock = (props: IndicatorValueSummaryBlockProps) => {
     referenceValue: {
       show: block.showReferenceValue,
       year: block.referenceYear,
+      defaultReferenceValue: indicator.referenceValue,
     },
     currentValue: {
       show: block.showCurrentValue,
