@@ -51,6 +51,15 @@ export const GET_INDICATOR_DETAILS = gql`
       level(plan: $plan)
       description
       reference
+      referenceValue {
+        id
+        date
+        value
+        normalizedValues {
+          normalizerId
+          value
+        }
+      }
       timeResolution
       updatedAt
       desiredTrend
