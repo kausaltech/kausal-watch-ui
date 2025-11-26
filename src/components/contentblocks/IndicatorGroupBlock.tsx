@@ -46,10 +46,16 @@ const IndicatorContainer = styled.div`
   }
 `;
 
-type IndicatorGroupItems = NonNullable<
-  NonNullable<StreamFieldFragmentFragment & { __typename: 'IndicatorGroupBlock' }>['indicators']
+type IndicatorGroupBlock = Extract<
+  StreamFieldFragmentFragment,
+  { __typename: 'IndicatorGroupBlock' }
 >;
-type IndicatorGroupItem = IndicatorGroupItems[number];
+type IndicatorGroupItems = NonNullable<IndicatorGroupBlock['indicators']>;
+type IndicatorBlockItem = Extract<
+  NonNullable<IndicatorGroupItems[number]>,
+  { __typename: 'IndicatorBlock' }
+>;
+type IndicatorGroupItem = IndicatorBlockItem;
 
 type IndicatorItemProps = {
   indicator: NonNullable<IndicatorGroupItem['indicator']>;
@@ -115,23 +121,33 @@ export default function IndicatorGroupBlock(props: Props) {
   const plan = usePlan();
 
   const hasIndicatorsPage =
-    plan.mainMenu?.items.findIndex((menuItem) => menuItem?.page?.slug === 'indicators') !== -1;
+    plan.mainMenu?.items.findIndex(
+      (menuItem) =>
+        menuItem?.__typename === 'PageMenuItem' &&
+        menuItem?.page?.__typename === 'IndicatorListPage'
+    ) !== -1;
 
   return (
     <IndicatorGraphSection id={id}>
       <Container>
         {displayHeader ? <SectionHeader>{displayHeader}</SectionHeader> : null}
         <StyledRow className="justify-content-center">
-          {indicators.map((item) =>
-            item.indicator ? (
+          {indicators
+            .filter(
+              (
+                item
+              ): item is IndicatorBlockItem & {
+                indicator: NonNullable<IndicatorBlockItem['indicator']>;
+              } => item !== null && item.__typename === 'IndicatorBlock' && item.indicator !== null
+            )
+            .map((item) => (
               <IndicatorItem
                 indicator={item.indicator}
                 display={item.style}
                 key={item.indicator.id}
                 linkToPage={hasIndicatorsPage}
               />
-            ) : null
-          )}
+            ))}
         </StyledRow>
         {hasIndicatorsPage && (
           <Row>
