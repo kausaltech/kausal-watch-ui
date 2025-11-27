@@ -113,19 +113,23 @@ const DashboardIndicatorPieChartBlock = ({
       ];
     }, [] as SeriesData[]) ?? [];
 
+  //hide legends on smaller screens to prevent overlapping in some cases
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const update = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    const breakpoint = theme.breakpointMd;
+    const mediaQuery = window.matchMedia(`(max-width: ${breakpoint})`);
 
+    const update = (event?: MediaQueryList | MediaQueryListEvent) => {
+      setIsMobile((event ?? mediaQuery).matches);
+    };
     update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, []);
+
+    mediaQuery.addEventListener('change', update);
+    return () => mediaQuery.removeEventListener('change', update);
+  }, [theme.breakpointMd]);
 
   const option: ECOption & { series: PieSeriesOption[] } = {
     tooltip: {
