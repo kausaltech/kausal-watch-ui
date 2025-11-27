@@ -13741,7 +13741,13 @@ export type IndicatorGraphDataQuery = (
         & { __typename: 'DimensionCategory' }
       )> }
       & { __typename: 'IndicatorValue' }
-    )>, dimensions: Array<(
+    )>, referenceValue: (
+      { id: string, date: string | null, value: number, normalizedValues: Array<(
+        { normalizerId: string | null, value: number | null }
+        & { __typename: 'NormalizedValue' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    ) | null, dimensions: Array<(
       { dimension: (
         { id: string, name: string, categories: Array<(
           { id: string, name: string }
