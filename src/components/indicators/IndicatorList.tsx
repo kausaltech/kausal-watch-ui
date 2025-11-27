@@ -297,11 +297,15 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     (indicatorId?: string | null) => {
       setIndicatorModalId(indicatorId ?? null);
       if (openIndicatorsInModal) {
-        // When using global modal, pass indicatorsOrder in URL for navigation
+        // When using global modal, store indicatorsOrder in sessionStorage for navigation
         const order = filteredIndicatorsRef.current.map((ind) => ind.id).join(',');
+        if (indicatorId && order) {
+          sessionStorage.setItem('indicatorModalOrder', order);
+        } else {
+          sessionStorage.removeItem('indicatorModalOrder');
+        }
         updateSearchParams({
           indicator: indicatorId ?? undefined,
-          indicatorsOrder: indicatorId ? order : undefined,
         });
       } else {
         updateSearchParams({ indicator: indicatorId ?? undefined });
