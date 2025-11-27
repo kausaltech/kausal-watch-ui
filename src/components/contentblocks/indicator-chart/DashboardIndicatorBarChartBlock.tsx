@@ -71,12 +71,21 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
 
   const legendData = dimSeries.map((d) => d.name);
 
-  const option: ECOption = {
-    legend: {
-      show: true,
-      bottom: 0,
-      textStyle: { color: theme.textColor.secondary },
+  const buildLegend = (theme: any): ECOption['legend'] => ({
+    show: true,
+    bottom: 10,
+    left: 'center',
+    orient: 'horizontal',
+    itemGap: 30,
+    itemWidth: 18,
+    itemHeight: 12,
+    textStyle: {
+      color: theme.textColor.secondary,
     },
+  });
+
+  const option: ECOption = {
+    legend: buildLegend(theme),
     tooltip: {
       trigger: 'axis',
       appendTo: 'body',
