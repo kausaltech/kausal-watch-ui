@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo } from 'react';
 
 import type { BarSeriesOption, LineSeriesOption } from 'echarts/charts';
+import type { MarkLineOption } from 'echarts/types/dist/shared';
 import { transparentize } from 'polished';
 import styled, { useTheme } from 'styled-components';
 
@@ -50,6 +51,10 @@ type IndicatorGraphProps = {
     trend: IndicatorNonQuantifiedGoal | null;
     date: string | null;
   };
+  referenceValue: {
+    date: string | null;
+    value: number;
+  } | null;
 };
 
 const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
@@ -116,7 +121,7 @@ const buildSeriesFromTraces = ({
         symbol: 'circle',
         symbolSize: 6,
         sampling: 'lttb',
-        smooth: lineShape === 'spline' || lineShape === 'smooth',
+        smooth: false && (lineShape === 'spline' || lineShape === 'smooth'), // TODO: remove false once we have a proper smooth line shape
         lineStyle: {
           width: trace.dataType === 'total' ? 3 : 2,
           color,
@@ -171,6 +176,7 @@ function IndicatorGraph({
   specification,
   title,
   nonQuantifiedGoal,
+  referenceValue,
 }: IndicatorGraphProps) {
   const theme = useTheme();
   const rawGraphSettings = theme.settings?.graphs;
@@ -478,6 +484,119 @@ function IndicatorGraph({
       valueRounding: graphSettings.roundIndicatorValue === false ? undefined : yRange.valueRounding,
     });
 
+    // Add markArea for referenceValue if it exists and nonQuantifiedGoal is set
+    if (referenceValue?.date && nonQuantifiedGoal?.trend && baseSeries.length > 0) {
+      const firstSeries = baseSeries[0];
+      if (hasTimeDimension) {
+        // For time-based graphs, use the normalized date
+        const normalizedRefDate = normalizeDateForComparison(referenceValue.date);
+        firstSeries.markArea = {
+          silent: true,
+          itemStyle: {
+            color: theme.graphColors.blue030,
+            opacity: 0.1,
+          },
+          label: {
+            position: [0, -15],
+            fontSize: 11,
+          },
+          data: [
+            [
+              {
+                xAxis: normalizedRefDate,
+              },
+              {
+                xAxis: 'max',
+              },
+            ],
+          ],
+        };
+      } else {
+        // For category-based graphs, find the index of the reference date
+        const refDateIndex = xAxisCategories.findIndex(
+          (cat) => cat === String(referenceValue.date)
+        );
+        if (refDateIndex >= 0) {
+          firstSeries.markArea = {
+            silent: true,
+            itemStyle: {
+              color: theme.graphColors.blue030,
+              opacity: 0.1,
+            },
+            label: {
+              position: [0, -15],
+              fontSize: 11,
+            },
+            data: [
+              [
+                {
+                  xAxis: refDateIndex,
+                },
+                {
+                  xAxis: xAxisCategories.length - 1,
+                },
+              ],
+            ],
+          };
+        }
+      }
+    }
+
+    const markLines: MarkLineOption['data'] = [];
+
+    // Add markLine (vertical line) for referenceValue if it exists
+    if (referenceValue?.date && baseSeries.length > 0) {
+      if (hasTimeDimension) {
+        // For time-based graphs, use the normalized date
+        const normalizedRefDate = normalizeDateForComparison(referenceValue.date);
+        markLines.push({
+          xAxis: normalizedRefDate,
+          symbol: 'none',
+          lineStyle: {
+            color: theme.graphColors.grey030 || '#999999',
+            width: 2,
+            type: 'solid',
+          },
+          name: 'Reference Value',
+          label: {
+            formatter: `${new Date(referenceValue.date ?? '').getFullYear().toString()}: Reference`,
+            position: 'insideEndBottom',
+          },
+        });
+      }
+    }
+
+    // Add markLine (vertical line) for referenceValue if it exists
+    if (nonQuantifiedGoal?.date && baseSeries.length > 0) {
+      if (hasTimeDimension) {
+        // For time-based graphs, use the normalized date
+        const nonQuantifiedGoalDate = normalizeDateForComparison(nonQuantifiedGoal.date);
+        const goalDirection = nonQuantifiedGoal.trend ? nonQuantifiedGoal.trend.toString() : '';
+        markLines.push({
+          xAxis: nonQuantifiedGoalDate,
+          lineStyle: {
+            color: theme.graphColors.blue030 || '#999999',
+            width: 2,
+            type: 'solid',
+          },
+          symbol:
+            nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase ? 'none' : 'arrow',
+          name: 'Goal',
+          label: {
+            formatter: `${new Date(nonQuantifiedGoal.date ?? '').getFullYear().toString()}: ${goalDirection}`,
+            position: 'insideEndBottom',
+          },
+        });
+      }
+    }
+    if (markLines.length > 0) {
+      baseSeries[0].markLine = {
+        silent: true,
+        z: 1,
+        symbol: ['none', 'none'],
+        data: markLines,
+      };
+    }
     // Map goal values to the correct positions in the x-axis categories
     const goalSeries: LineSeriesOption[] = goalTraces.map((goalTrace, idx) => {
       // Normalize dates for consistent comparison
@@ -778,59 +897,6 @@ function IndicatorGraph({
         },
       },
       series: [...baseSeries, ...trendSeries, ...goalSeries],
-      graphic:
-        nonQuantifiedGoal?.trend && nonQuantifiedGoal?.date
-          ? [
-              {
-                type: 'group',
-                right: 24,
-                top: '25%',
-                children: [
-                  {
-                    type: 'polygon',
-                    shape: {
-                      points:
-                        nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
-                          ? [
-                              [0, -67.5],
-                              [-67.5, 0],
-                              [-33.75, 0],
-                              [-33.75, 101.25],
-                              [33.75, 101.25],
-                              [33.75, 0],
-                              [67.5, 0],
-                            ]
-                          : [
-                              [0, 33.75],
-                              [-67.5, -33.75],
-                              [-33.75, -33.75],
-                              [-33.75, -135],
-                              [33.75, -135],
-                              [33.75, -33.75],
-                              [67.5, -33.75],
-                            ],
-                    },
-                    style: {
-                      fill: {
-                        type: 'linear',
-                        x: 0,
-                        y: nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase ? 0 : 1,
-                        x2: 0,
-                        y2: nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase ? 1 : 0,
-                        colorStops: [
-                          { offset: 0, color: theme.graphColors.green030 },
-                          { offset: 1, color: 'rgba(255, 255, 255, 0)' },
-                        ],
-                      },
-                      stroke: theme.graphColors.green010,
-                      lineWidth: 0,
-                    },
-                    z: 100,
-                  },
-                ],
-              },
-            ]
-          : undefined,
     };
 
     return option;
@@ -861,8 +927,9 @@ function IndicatorGraph({
     theme.themeColors.dark,
     nonQuantifiedGoal?.trend,
     nonQuantifiedGoal?.date,
-    theme.graphColors.green030,
-    theme.graphColors.green010,
+    referenceValue,
+    theme.graphColors.blue030,
+    theme.graphColors.grey030,
   ]);
 
   useEffect(() => {
