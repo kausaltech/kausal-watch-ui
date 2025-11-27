@@ -602,6 +602,7 @@ function IndicatorVisualisation({
             trendTrace={trendTrace}
             title={plotTitle}
             desiredTrend={indicator.desiredTrend}
+            referenceValue={indicator.referenceValue}
             nonQuantifiedGoal={{
               trend: indicator.nonQuantifiedGoal,
               date: indicator.nonQuantifiedGoalDate,
