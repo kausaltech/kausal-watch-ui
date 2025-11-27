@@ -90,8 +90,9 @@ const GlobalIndicatorModal = () => {
     }
   }, [data?.indicator, previousData?.indicator, plan.identifier, indicatorPlanIdentifier]);
 
-  // Parse indicatorsOrder from URL if available (for navigation)
-  const indicatorsOrderParam = searchParams.get('indicatorsOrder');
+  // Parse indicatorsOrder from sessionStorage if available (for navigation)
+  const indicatorsOrderParam =
+    typeof window !== 'undefined' ? sessionStorage.getItem('indicatorModalOrder') : null;
   const indicatorsOrder = indicatorsOrderParam
     ? indicatorsOrderParam.split(',').filter(Boolean)
     : [];
@@ -110,7 +111,9 @@ const GlobalIndicatorModal = () => {
   const handleClose = () => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.delete('indicator');
-    newSearchParams.delete('indicatorsOrder');
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('indicatorModalOrder');
+    }
     const query = newSearchParams.toString() ? `?${newSearchParams.toString()}` : '';
     router.replace(`${pathname}${query}`, { scroll: false });
   };
@@ -123,10 +126,7 @@ const GlobalIndicatorModal = () => {
 
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set('indicator', newIndicatorId);
-    // Preserve indicatorsOrder if it exists
-    if (indicatorsOrderParam) {
-      newSearchParams.set('indicatorsOrder', indicatorsOrderParam);
-    }
+    // indicatorsOrder is stored in sessionStorage, no need to add to URL
     const query = `?${newSearchParams.toString()}`;
     router.replace(`${pathname}${query}`, { scroll: false });
   };
