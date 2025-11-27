@@ -93,9 +93,11 @@ const IndicatorModalContent = ({
 }: IndicatorModalContentProps) => {
   if (loading && !indicator)
     return (
-      <ContentLoader>
-        <Spinner />
-      </ContentLoader>
+      <ContentWrapper>
+        <ContentLoader>
+          <Spinner />
+        </ContentLoader>
+      </ContentWrapper>
     );
   if (error) return <div>Error: {error.message}</div>;
   if (!indicator) return <div>No data</div>;

@@ -1,3 +1,4 @@
+import { useFormatter, useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
 import {
@@ -5,11 +6,12 @@ import {
   type IndicatorContentBlockFragmentFragment,
   IndicatorDetailsFieldName,
   type IndicatorDetailsQuery,
+  type IndicatorValueSummaryContentBlockFragmentFragment,
 } from '@/common/__generated__/graphql';
 
 import BadgeTooltip from '../common/BadgeTooltip';
 import RichText from '../common/RichText';
-import IndicatorValueSummary from './IndicatorValueSummary';
+import IndicatorValueSummary, { type ValueSummaryOptions } from './IndicatorValueSummary';
 import IndicatorVisualisation from './IndicatorVisualisation';
 
 const CategoryTypeBlock = styled.div`
@@ -27,6 +29,9 @@ const ContentBlockWrapper = styled.div`
 
 const CategoryBadges = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${(props) => props.theme.spaces.s050};
 `;
 
 const GroupedCategoryContainer = styled.div`
@@ -47,8 +52,11 @@ interface IndicatorContentBlockProps {
 
 const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
   const { block, indicator } = props;
+  const format = useFormatter();
+  const t = useTranslations();
   if (!block.sourceField) return null;
   switch (block.sourceField) {
+    case IndicatorDetailsFieldName.Description:
     case IndicatorDetailsFieldName.Name:
       // Using name field to render description for now
       return (
@@ -59,17 +67,58 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
     case IndicatorDetailsFieldName.Visualization:
       return <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />;
     case IndicatorDetailsFieldName.ConnectedActions:
-      // Using connected actions to render value summary for now
       return (
-        <ContentBlockWrapper>
-          <IndicatorValueSummary
-            timeResolution={indicator.timeResolution || ''}
-            values={indicator.values || []}
-            goals={indicator.goals || []}
-            unit={indicator.unit || {}}
-            desiredTrend={indicator.desiredTrend || undefined}
-          />
-        </ContentBlockWrapper>
+        <div>
+          <hr />
+          Connected Actions
+          <hr />
+        </div>
+      );
+    case IndicatorDetailsFieldName.CausalityNav:
+      return (
+        <div>
+          <hr />
+          Causality Nav
+          <hr />
+        </div>
+      );
+    case IndicatorDetailsFieldName.Level:
+      return (
+        <div>
+          <hr />
+          Level
+          <hr />
+        </div>
+      );
+    case IndicatorDetailsFieldName.Organization:
+      return (
+        <div>
+          <hr />
+          Organization
+          <hr />
+        </div>
+      );
+    case IndicatorDetailsFieldName.Reference:
+      return (
+        <div>
+          <hr />
+          Reference {indicator.reference}
+          <hr />
+        </div>
+      );
+    case IndicatorDetailsFieldName.UpdatedAt:
+      const updatedAt = new Date(indicator.updatedAt);
+      const formattedUpdatedAt = format.dateTime(updatedAt, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+      return (
+        <div>
+          <hr />
+          {t('updated')} {formattedUpdatedAt}
+          <hr />
+        </div>
       );
     default:
       console.log('📦 block not supported', block);
@@ -93,12 +142,12 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
   });
 
   return (
-    <CategoryTypeBlock>
-      <h3>{block.fieldLabel || block.categoryType?.name}</h3>
-      <CategoryBadges>
-        {categories &&
-          categories.length > 0 &&
-          categories.map((cat) => (
+    categories &&
+    categories.length > 0 && (
+      <CategoryTypeBlock>
+        <h3>{block.fieldLabel || block.categoryType?.name}</h3>
+        <CategoryBadges>
+          {categories.map((cat) => (
             <BadgeTooltip
               key={cat.id}
               id={cat.id}
@@ -110,8 +159,50 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
               isLink={false}
             />
           ))}
-      </CategoryBadges>
-    </CategoryTypeBlock>
+        </CategoryBadges>
+      </CategoryTypeBlock>
+    )
+  );
+};
+
+interface IndicatorValueSummaryBlockProps {
+  block: IndicatorValueSummaryContentBlockFragmentFragment;
+  indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
+}
+
+const IndicatorValueSummaryBlock = (props: IndicatorValueSummaryBlockProps) => {
+  const { block, indicator } = props;
+  const options: ValueSummaryOptions = {
+    referenceValue: {
+      show: block.showReferenceValue,
+      year: block.referenceYear,
+      defaultReferenceValue: indicator.referenceValue,
+    },
+    currentValue: {
+      show: block.showCurrentValue,
+    },
+    goalValue: {
+      show: block.showGoalValue,
+    },
+    goalGap: {
+      show: block.showGoalGap,
+    },
+    nonQuantifiedGoal: {
+      trend: indicator.nonQuantifiedGoal,
+      date: indicator.nonQuantifiedGoalDate,
+    },
+  };
+  return (
+    <ContentBlockWrapper>
+      <IndicatorValueSummary
+        timeResolution={indicator.timeResolution || ''}
+        values={indicator.values || []}
+        goals={indicator.goals || []}
+        unit={indicator.unit || {}}
+        desiredTrend={indicator.desiredTrend || undefined}
+        options={options}
+      />
+    </ContentBlockWrapper>
   );
 };
 
@@ -153,11 +244,14 @@ interface IndicatorModalContentBlockProps {
 const IndicatorModalContentBlock = ({ block, indicator }: IndicatorModalContentBlockProps) => {
   if (!block || !indicator) return null;
 
+  console.log('📦 block', block);
   switch (block.__typename) {
     case 'IndicatorContentBlock':
       return <IndicatorContentBlock block={block} indicator={indicator} />;
     case 'IndicatorCategoryContentBlock':
       return <IndicatorCategoryBlock block={block} indicator={indicator} />;
+    case 'IndicatorValueSummaryContentBlock':
+      return <IndicatorValueSummaryBlock block={block} indicator={indicator} />;
   }
 };
 

@@ -1,14 +1,15 @@
 import React from 'react';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { Col, Row } from 'reactstrap';
 import styled, { useTheme } from 'styled-components';
 
 import {
   IndicatorDesiredTrend,
   type IndicatorDetailsQuery,
+  IndicatorNonQuantifiedGoal,
   IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
+import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
 
 import { beautifyValue } from '../../common/data/format';
@@ -71,6 +72,11 @@ const ValueChange = styled.div`
   color: ${(props) => props.color};
 `;
 
+const TrendIcon = styled(Icon)`
+  margin-bottom: -0.1em;
+  color: ${(props) => props.theme.graphColors.grey040};
+`;
+
 const ChangeSymbol = styled.span`
   margin-right: 0.5em;
   font-size: ${(props) => props.theme.fontSizeSm};
@@ -113,19 +119,62 @@ function determineDesirableDirection(
 
 type Indicator = NonNullable<IndicatorDetailsQuery['indicator']>;
 
+export type ValueSummaryOptions = {
+  nonQuantifiedGoal: {
+    trend: IndicatorNonQuantifiedGoal | null;
+    date: string | null;
+  };
+  referenceValue: {
+    show: boolean | null;
+    year: number | null;
+    defaultReferenceValue: Indicator['referenceValue'] | null;
+  };
+  currentValue: {
+    show: boolean | null;
+  };
+  goalValue: {
+    show: boolean | null;
+  };
+  goalGap: {
+    show: boolean | null;
+  };
+};
+
 interface IndicatorValueSummaryProps {
   timeResolution: Indicator['timeResolution'];
   values: Indicator['values'];
   goals: Indicator['goals'];
   unit: Indicator['unit'];
   desiredTrend?: Indicator['desiredTrend'];
+  options: ValueSummaryOptions;
 }
 
 function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
   const t = useTranslations();
   const locale = useLocale();
   const theme = useTheme();
-  const { timeResolution, values, goals, unit, desiredTrend } = props;
+  const { timeResolution, values, goals, unit, desiredTrend, options } = props;
+
+  const displayOptions: ValueSummaryOptions = options || {
+    referenceValue: {
+      show: true,
+      year: null,
+      defaultReferenceValue: null,
+    },
+    currentValue: {
+      show: false,
+    },
+    goalValue: {
+      show: true,
+    },
+    goalGap: {
+      show: true,
+    },
+    nonQuantifiedGoal: {
+      trend: null,
+      date: null,
+    },
+  };
 
   const desirableDirection = determineDesirableDirection(desiredTrend, values, goals);
   const shortUnitName =
@@ -173,8 +222,58 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
       changeSymbol = '▲';
     } else changeSymbol = undefined;
   }
+
+  // Calculate reference value if displayOptions.referenceValue.show is true
+  let referenceValue: { date: string; value: number } | null = null;
+  if (displayOptions.referenceValue.show) {
+    if (displayOptions.referenceValue.defaultReferenceValue) {
+      referenceValue = {
+        date: new Date(displayOptions.referenceValue.defaultReferenceValue.date ?? '')
+          .getFullYear()
+          .toString(),
+        value: displayOptions.referenceValue.defaultReferenceValue.value,
+      };
+    } else if (displayOptions.referenceValue.year !== null) {
+      // Find value for the specified year
+      const valueForYear = values.find((val) => {
+        if (!val.date) return false;
+        const valYear = new Date(val.date).getFullYear();
+        return valYear === displayOptions.referenceValue.year;
+      });
+      if (valueForYear && valueForYear.date) {
+        referenceValue = {
+          date: valueForYear.date,
+          value: valueForYear.value,
+        };
+      }
+    } else {
+      // Use the first value in the series
+      const firstValue = values[0];
+      if (firstValue && firstValue.date) {
+        referenceValue = {
+          date: firstValue.date,
+          value: firstValue.value,
+        };
+      }
+    }
+  }
+
+  const referenceValueDisplay =
+    referenceValue && displayOptions.referenceValue.show ? (
+      <ValueBlock>
+        <ValueLabel>{t('indicator-reference-value')}</ValueLabel>
+        <ValueDate>{dayjs(referenceValue.date).format(timeFormat)}</ValueDate>
+        <ValueDisplay>
+          <div>
+            {beautifyValue(referenceValue.value, locale)}
+            <ValueUnit>{shortUnitName}</ValueUnit>
+          </div>
+        </ValueDisplay>
+      </ValueBlock>
+    ) : null;
+
   const latestValueDisplay = beautifyValue(latestValue.value, locale);
-  const valueDisplay = (
+  const valueDisplay = displayOptions.currentValue.show ? (
     <ValueBlock>
       <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
       <ValueDate>{dayjs(latestValue.date).format(timeFormat)}</ValueDate>
@@ -191,22 +290,53 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
         )}
       </ValueDisplay>
     </ValueBlock>
-  );
+  ) : null;
 
   const nextGoal = goals?.find((goal) => goal && dayjs(goal.date).isSameOrAfter(now));
   let goalDisplay: React.ReactNode | undefined;
 
-  if (nextGoal) {
+  if (nextGoal && displayOptions.goalValue.show) {
     const nextGoalDate = dayjs(nextGoal.date).format(timeFormat);
     const nextGoalValue = beautifyValue(nextGoal.value, locale);
+    const DesiredTrendIcon =
+      desiredTrend === IndicatorDesiredTrend.Increasing ? (
+        <TrendIcon name="arrow-up" />
+      ) : (
+        <TrendIcon name="arrow-down" />
+      );
     goalDisplay = (
       <ValueBlock>
         <ValueLabel>{t('indicator-goal')}</ValueLabel>
         <ValueDate>{nextGoalDate}</ValueDate>
         <ValueDisplay>
           <div>
+            {desiredTrend && DesiredTrendIcon}
             {nextGoalValue}
             <ValueUnit>{shortUnitName}</ValueUnit>
+          </div>
+        </ValueDisplay>
+      </ValueBlock>
+    );
+  } else if (displayOptions.nonQuantifiedGoal.trend && displayOptions.goalValue.show) {
+    const DesiredTrendIcon =
+      displayOptions.nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase ? (
+        <TrendIcon name="arrow-up" />
+      ) : (
+        <TrendIcon name="arrow-down" />
+      );
+    const goalDate = displayOptions.nonQuantifiedGoal.date
+      ? dayjs(displayOptions.nonQuantifiedGoal.date).format(timeFormat)
+      : '\u00A0';
+    goalDisplay = (
+      <ValueBlock>
+        <ValueLabel>{t('indicator-goal')}</ValueLabel>
+        <ValueDate>{goalDate}</ValueDate>
+        <ValueDisplay>
+          <div>
+            {DesiredTrendIcon}
+            <ValueUnit>
+              {t(`indicator-desired-trend-${displayOptions.nonQuantifiedGoal.trend.toLowerCase()}`)}
+            </ValueUnit>
           </div>
         </ValueDisplay>
       </ValueBlock>
@@ -215,7 +345,11 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
 
   // Find the next upcoming goal
   let differenceDisplay: React.ReactNode | undefined;
-  if (nextGoal && dayjs(nextGoal.date).isSameOrAfter(latestValue.date)) {
+  if (
+    nextGoal &&
+    dayjs(nextGoal.date).isSameOrAfter(latestValue.date) &&
+    displayOptions.goalGap.show
+  ) {
     const difference = nextGoal.value - values[values.length - 1].value;
     const isPercentagePoint = unit?.name === '%';
     const goalReached = desirableDirection === '+' ? difference <= 0 : difference >= 0;
@@ -257,6 +391,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
   }
   return (
     <ValueSummary>
+      {referenceValueDisplay}
       {valueDisplay}
       {differenceDisplay}
       {goalDisplay}

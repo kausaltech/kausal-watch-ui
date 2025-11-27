@@ -15,6 +15,7 @@ import { getThemeStaticURL, loadTheme } from '@/common/theme';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { SharedIcons } from '@/components/common/Icon';
 import IntroModal from '@/components/custom/IntroModal';
+import GlobalIndicatorModalWrapper from '@/components/indicators/GlobalIndicatorModalWrapper';
 import PathsProvider from '@/components/providers/PathsProvider';
 import PlanProvider from '@/components/providers/PlanProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
@@ -144,6 +145,7 @@ export default async function PlanLayout(props: Props) {
         <SharedIcons />
         {theme.introModal?.videoUrls && <IntroModal videoUrls={theme.introModal.videoUrls} />}
         <PlanProvider plan={planData.plan}>
+          <GlobalIndicatorModalWrapper />
           <PathsProvider instance={pathsData}>
             <WorkflowProvider
               initialWorkflow={selectedWorkflow?.value as WorkflowState | undefined}
