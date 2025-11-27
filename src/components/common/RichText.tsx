@@ -1,7 +1,8 @@
-import type { ReactElement } from 'react';
-import React, { type JSX, useCallback, useState } from 'react';
+import type { PropsWithChildren, ReactElement } from 'react';
+import React, { type JSX, useMemo, useState } from 'react';
 
 import { withScope } from '@sentry/nextjs';
+import { ElementType } from 'domelementtype';
 import type { DOMNode, Element, HTMLReactParserOptions } from 'html-react-parser';
 import parse, { domToReact } from 'html-react-parser';
 import { useTranslations } from 'next-intl';
@@ -10,6 +11,7 @@ import 'react-medium-image-zoom/dist/styles.css';
 import { Collapse } from 'reactstrap';
 import styled from 'styled-components';
 
+import { IndicatorLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
@@ -49,6 +51,10 @@ const ToggleButton = styled(Button)`
 type RichTextImageProps = {
   attribs: React.JSX.IntrinsicElements['img'] & {
     class?: string;
+    'data-original-src'?: string;
+    'data-original-width'?: string;
+    'data-original-height'?: string;
+    src?: string;
   };
 };
 
@@ -72,7 +78,6 @@ const StyledRichText = styled.div`
 `;
 
 function ICompress() {
-  // eslint-disable-next-line max-len
   return React.createElement(
     'svg',
     {
@@ -83,7 +88,6 @@ function ICompress() {
       viewBox: '0 0 16 16',
       xmlns: 'http://www.w3.org/2000/svg',
     },
-    // eslint-disable-next-line max-len
     React.createElement('path', {
       d: 'M 14.144531 1.148438 L 9 6.292969 L 9 3 L 8 3 L 8 8 L 13 8 L 13 7 L 9.707031 7 L 14.855469 1.851563 Z M 8 8 L 3 8 L 3 9 L 6.292969 9 L 1.148438 14.144531 L 1.851563 14.855469 L 7 9.707031 L 7 13 L 8 13 Z',
     })
@@ -118,6 +122,7 @@ function RichTextImage(props: RichTextImageProps) {
   const applyZoom = !isNaN(origWidth) && origWidth > 1000;
 
   const imgElement = (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={imageUrl}
       alt={alt || 'Image'}
@@ -154,25 +159,27 @@ const clipRichText = (parsedContent: string | JSX.Element | JSX.Element[], break
     };
   }
   // Make sure we do not break inside html elements, only break after <p> tags
-  const intro: ReactElement<any>[] = [];
-  const restOfContent: ReactElement<any>[] = [];
-  let previousNodeType: string | React.JSXElementConstructor<any> = '';
+  const intro: ReactElement<unknown>[] = [];
+  const restOfContent: ReactElement<unknown>[] = [];
+  let previousNodeType: string | React.JSXElementConstructor<unknown> = '';
   let introLength = 0;
-  Array.isArray(parsedContent) &&
-    parsedContent.forEach((node, indx) => {
+  if (Array.isArray(parsedContent)) {
+    parsedContent.forEach((node: ReactElement<unknown>, indx) => {
+      const { children } = node.props as { children: ReactElement<unknown>[] | undefined };
       if (indx === 0) {
         intro.push(node);
-        introLength += node.props?.children?.length ?? 0;
+        introLength += children?.length ?? 0;
       }
       if (indx > 0 && restOfContent.length === 0) {
         if (previousNodeType === 'p' && introLength > breakPoint) restOfContent.push(node);
         else {
           intro.push(node);
-          introLength += node.props?.children?.length ?? 0;
+          introLength += children?.length ?? 0;
         }
       } else if (restOfContent.length > 0) restOfContent.push(node);
       previousNodeType = node.type;
     });
+  }
   return { intro, restOfContent };
 };
 
@@ -203,6 +210,22 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
   );
 };
 
+type RichTextIndicatorLinkProps = {
+  id: string;
+};
+
+function RichTextIndicatorLink(props: PropsWithChildren<RichTextIndicatorLinkProps>) {
+  const { id, children } = props;
+  // FIXME: Add support for indicator modals
+  return (
+    <IndicatorLink id={id}>
+      {/* FIXME: Proper icon for an indicator link */}
+      <Icon.Bullseye />
+      {children}
+    </IndicatorLink>
+  );
+}
+
 type RichTextProps = {
   html: string;
   className?: string;
@@ -218,31 +241,42 @@ export default function RichText(props: RichTextProps) {
   const cutHttp = (url: string) => url.replace(/^https?:\/\//, '');
   const currentDomain = plan.viewUrl ? cutHttp(plan.viewUrl.split('.')[0]) : '';
 
-  const replaceDomElement = useCallback(
-    (element: Element) => {
+  const options: HTMLReactParserOptions = useMemo(() => {
+    function replaceDomElement(element: Element) {
       const { name, attribs, children } = element;
+
+      const domChildren = children.filter(
+        (child) => child.type !== ElementType.CDATA && child.type !== ElementType.Root
+      );
+
       // Rewrite <a> tags to point to the FQDN
       if (name === 'a') {
         const href = attribs?.href;
 
         if (!href) {
-          return <span>{domToReact(children, options)}</span>;
+          return <span>{domToReact(domChildren, options)}</span>;
         }
 
+        const reactChildren = domToReact(domChildren, options);
         // File link
-        if (attribs['data-link-type']) {
+        const linkType = attribs['data-link-type'];
+        if (linkType) {
+          if (linkType === 'indicator') {
+            const { 'data-id': id } = attribs;
+            return <RichTextIndicatorLink id={id}>{reactChildren}</RichTextIndicatorLink>;
+          }
           // FIXME: Add icon based on attribs['data-file-extension']
-          return <a href={`${plan.serveFileBaseUrl}${href}`}>{domToReact(children, options)}</a>;
+          return <a href={`${plan.serveFileBaseUrl}${href}`}>{reactChildren}</a>;
         }
         // Internal link
         if (cutHttp(href.split('.')[0]) === currentDomain || href.startsWith('#')) {
-          return <a href={href}>{domToReact(children, options)}</a>;
+          return <a href={href}>{reactChildren}</a>;
         }
         // Assumed external link, open in new tab
         return (
           <a target="_blank" href={href} rel="noreferrer">
             <Icon.ArrowUpRightFromSquare />
-            {domToReact(children, options)}
+            {reactChildren}
           </a>
         );
       }
@@ -250,30 +284,29 @@ export default function RichText(props: RichTextProps) {
         return <RichTextImage attribs={attribs} />;
       }
       return null;
-    },
-    [plan.serveFileBaseUrl, currentDomain]
-  );
+    }
+
+    return {
+      replace: (node: DOMNode) => {
+        if (node.type !== ElementType.Tag) return null;
+        const el = node;
+        try {
+          return replaceDomElement(el);
+        } catch (err) {
+          withScope((scope) => {
+            scope.setExtra('type', el.type);
+            scope.setExtra('name', el.name);
+            scope.setExtra('attribs', el.attribs);
+            scope.captureException(err);
+          });
+          console.error(err);
+          return null;
+        }
+      },
+    };
+  }, [plan.serveFileBaseUrl, currentDomain]);
 
   if (typeof html !== 'string') return <div />;
-
-  const options: HTMLReactParserOptions = {
-    replace: (node: DOMNode) => {
-      if (node.type !== 'tag') return null;
-      const el = node as Element;
-      try {
-        return replaceDomElement(el);
-      } catch (err) {
-        withScope((scope) => {
-          scope.setExtra('type', el.type);
-          scope.setExtra('name', el.name);
-          scope.setExtra('attribs', el.attribs);
-          scope.captureException(err);
-        });
-        console.error(err);
-        return null;
-      }
-    },
-  };
 
   const parsedContent = parse(html, options);
 
