@@ -14,6 +14,7 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
       name
       normalizations {
         unit {
+          name
           shortName
         }
         normalizer {
@@ -119,6 +120,7 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
     nonQuantifiedGoal
     nonQuantifiedGoalDate
     unit {
+      name
       shortName
     }
     plans {
