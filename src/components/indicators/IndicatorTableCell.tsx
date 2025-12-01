@@ -217,7 +217,7 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
   return (
     <CellContent $numeric={true}>
       <Value>{format.number(value, { maximumFractionDigits: 2 })}</Value>
-      {!hideUnit && <Unit>{indicator.unit.shortName}</Unit>}
+      {!hideUnit && <Unit>{indicator.unit.shortName || indicator.unit.name}</Unit>}
       {customReferenceYear && (
         <>
           <br />
@@ -327,7 +327,7 @@ const IndicatorListColumnCell = (props: IndicatorListColumnCellProps) => {
     case IndicatorDashboardFieldName.Unit:
       return (
         <CellContent>
-          <Unit>{indicator.unit.shortName}</Unit>
+          <Unit>{indicator.unit.shortName || indicator.unit.name}</Unit>
         </CellContent>
       );
     default:

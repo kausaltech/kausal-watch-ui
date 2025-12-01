@@ -3944,7 +3944,7 @@ export type IndicatorListIndicatorFragment = (
   ), common: (
     { id: string, name: string, normalizations: Array<(
       { unit: (
-        { shortName: string | null }
+        { name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ), normalizer: (
         { name: string, id: string, identifier: string | null }
@@ -4026,7 +4026,7 @@ export type IndicatorListIndicatorFragment = (
     ) | null }
     & { __typename: 'IndicatorGoal' }
   ) | null> | null, unit: (
-    { shortName: string | null }
+    { name: string, shortName: string | null }
     & { __typename: 'Unit' }
   ), plans: Array<(
     { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
@@ -13860,7 +13860,7 @@ export type IndicatorListQuery = (
     ), common: (
       { id: string, name: string, normalizations: Array<(
         { unit: (
-          { shortName: string | null }
+          { name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ), normalizer: (
           { name: string, id: string, identifier: string | null }
@@ -13942,7 +13942,7 @@ export type IndicatorListQuery = (
       ) | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { shortName: string | null }
+      { name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ), plans: Array<(
       { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
@@ -13956,7 +13956,7 @@ export type IndicatorListQuery = (
     ), common: (
       { id: string, name: string, normalizations: Array<(
         { unit: (
-          { shortName: string | null }
+          { name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ), normalizer: (
           { name: string, id: string, identifier: string | null }
@@ -14038,7 +14038,7 @@ export type IndicatorListQuery = (
       ) | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { shortName: string | null }
+      { name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ), plans: Array<(
       { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
