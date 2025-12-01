@@ -5,6 +5,7 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
     id
     name
     timeResolution
+    valueRounding
     organization {
       id
       name

@@ -3938,7 +3938,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
 );
 
 export type IndicatorListIndicatorFragment = (
-  { id: string, name: string, timeResolution: IndicatorTimeResolution, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+  { id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
     { id: string, name: string }
     & { __typename: 'Organization' }
   ), common: (
@@ -13854,7 +13854,7 @@ export type IndicatorListQuery = (
     )> }
     & { __typename: 'Plan' }
   ) | null, planIndicators?: Array<(
-    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
       { id: string, name: string }
       & { __typename: 'Organization' }
     ), common: (
@@ -13950,7 +13950,7 @@ export type IndicatorListQuery = (
     )> }
     & { __typename: 'Indicator' }
   )> | null, relatedPlanIndicators?: Array<(
-    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
       { id: string, name: string }
       & { __typename: 'Organization' }
     ), common: (
@@ -14109,7 +14109,7 @@ export type IndicatorDetailsQuery = (
     ) | null }
     & { __typename: 'Plan' }
   ) | null, indicator: (
-    { id: string, identifier: string | null, name: string, level: string | null, description: string | null, reference: string | null, timeResolution: IndicatorTimeResolution, updatedAt: string, desiredTrend: IndicatorDesiredTrend | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, referenceValue: (
+    { id: string, identifier: string | null, name: string, level: string | null, description: string | null, reference: string | null, timeResolution: IndicatorTimeResolution, valueRounding: number | null, updatedAt: string, desiredTrend: IndicatorDesiredTrend | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, referenceValue: (
       { id: string, date: string | null, value: number, normalizedValues: Array<(
         { normalizerId: string | null, value: number | null }
         & { __typename: 'NormalizedValue' }

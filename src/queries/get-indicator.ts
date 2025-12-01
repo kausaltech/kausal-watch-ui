@@ -61,6 +61,7 @@ export const GET_INDICATOR_DETAILS = gql`
         }
       }
       timeResolution
+      valueRounding
       updatedAt
       desiredTrend
       organization {

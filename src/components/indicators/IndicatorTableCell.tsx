@@ -17,6 +17,8 @@ import Icon from '../common/Icon';
 import { getIndicatorTranslation } from './IndicatorCard';
 import type { IndicatorListIndicator } from './IndicatorList';
 
+const DEFAULT_ROUNDING = 2;
+
 const CellContent = styled.div<{ $numeric?: boolean }>`
   flex: 1;
   text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
@@ -185,6 +187,8 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
   const { indicator, isNormalized, valueType, referenceYear, hideUnit } = props;
   const format = useFormatter();
   const t = useTranslations();
+
+  const rounding = indicator.valueRounding ?? DEFAULT_ROUNDING;
   const value: number | string | null = getValue(indicator, valueType, isNormalized, referenceYear);
   const customReferenceYear =
     valueType === IndicatorColumnValueType.Reference && referenceYear
@@ -216,7 +220,7 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
   }
   return (
     <CellContent $numeric={true}>
-      <Value>{format.number(value, { maximumFractionDigits: 2 })}</Value>
+      <Value>{format.number(value, { maximumSignificantDigits: rounding })}</Value>
       {!hideUnit && <Unit>{indicator.unit.shortName || indicator.unit.name}</Unit>}
       {customReferenceYear && (
         <>
