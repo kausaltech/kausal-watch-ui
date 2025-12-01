@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import styled, { useTheme } from 'styled-components';
 
 import {
@@ -12,8 +12,9 @@ import {
 import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
 
-import { beautifyValue } from '../../common/data/format';
 import dayjs from '../../common/dayjs';
+
+const DEFAULT_ROUNDING = 2;
 
 const ValueSummary = styled.div`
   display: flex;
@@ -138,6 +139,7 @@ export type ValueSummaryOptions = {
   goalGap: {
     show: boolean | null;
   };
+  valueRounding: number | null;
 };
 
 interface IndicatorValueSummaryProps {
@@ -151,10 +153,11 @@ interface IndicatorValueSummaryProps {
 
 function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
   const t = useTranslations();
-  const locale = useLocale();
   const theme = useTheme();
+  const format = useFormatter();
   const { timeResolution, values, goals, unit, desiredTrend, options } = props;
 
+  const rounding = options?.valueRounding ?? DEFAULT_ROUNDING;
   const displayOptions: ValueSummaryOptions = options || {
     referenceValue: {
       show: true,
@@ -265,14 +268,16 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
         <ValueDate>{dayjs(referenceValue.date).format(timeFormat)}</ValueDate>
         <ValueDisplay>
           <div>
-            {beautifyValue(referenceValue.value, locale)}
+            {format.number(referenceValue.value, { maximumSignificantDigits: rounding })}
             <ValueUnit>{shortUnitName}</ValueUnit>
           </div>
         </ValueDisplay>
       </ValueBlock>
     ) : null;
 
-  const latestValueDisplay = beautifyValue(latestValue.value, locale);
+  const latestValueDisplay = format.number(latestValue.value, {
+    maximumSignificantDigits: rounding,
+  });
   const valueDisplay = displayOptions.currentValue.show ? (
     <ValueBlock>
       <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
@@ -282,10 +287,11 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
           {latestValueDisplay}
           <ValueUnit>{shortUnitName}</ValueUnit>
         </div>
-        {changeSymbol && (
+        {changeSymbol && absChange !== null && (
           <ValueChange color={changeColor}>
             <ChangeSymbol>{changeSymbol}</ChangeSymbol>
-            <span>{beautifyValue(absChange, locale)}</span> <small>{diffUnitName}</small>
+            <span>{format.number(absChange, { maximumSignificantDigits: rounding })}</span>{' '}
+            <small>{diffUnitName}</small>
           </ValueChange>
         )}
       </ValueDisplay>
@@ -297,7 +303,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
 
   if (nextGoal && displayOptions.goalValue.show) {
     const nextGoalDate = dayjs(nextGoal.date).format(timeFormat);
-    const nextGoalValue = beautifyValue(nextGoal.value, locale);
+    const nextGoalValue = format.number(nextGoal.value, { maximumSignificantDigits: rounding });
     const DesiredTrendIcon =
       desiredTrend === IndicatorDesiredTrend.Increasing ? (
         <TrendIcon name="arrow-up" />
@@ -362,7 +368,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
         <ValueDisplay>
           <div>
             {goalReached ? '' : prefix}
-            {beautifyValue(Math.abs(difference), locale)}
+            {format.number(Math.abs(difference), { maximumSignificantDigits: rounding })}
             <span style={{ display: 'inline-flex' }}>
               <ValueUnit>{diffUnitName}</ValueUnit>
               {isPercentagePoint && (

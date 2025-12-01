@@ -191,6 +191,7 @@ const IndicatorValueSummaryBlock = (props: IndicatorValueSummaryBlockProps) => {
       trend: indicator.nonQuantifiedGoal,
       date: indicator.nonQuantifiedGoalDate,
     },
+    valueRounding: indicator.valueRounding,
   };
   return (
     <ContentBlockWrapper>
