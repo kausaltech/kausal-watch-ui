@@ -410,7 +410,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   // TODO: these ought to be set in the backend
   const lineShape = theme.settings?.graphs?.lineShape || 'spline';
   const useAreaGraph = theme.settings?.graphs?.areaGraphs;
-  const showTrendline = theme.settings?.graphs?.showTrendline ?? true;
+
   const graphCustomBackground = theme.settings?.graphs?.customBackground;
 
   const subplotsNeeded =
@@ -495,7 +495,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   const { layoutConfig, traces: plotlyData } = mainTraces;
 
   // add trend if defined
-  if (!isComparison && trendTrace && showTrendline)
+  if (!isComparison && trendTrace)
     plotlyData.push({
       type: 'scatter',
       mode: 'lines',

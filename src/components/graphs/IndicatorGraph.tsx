@@ -78,7 +78,6 @@ type GraphSettings = {
   trendLineColor?: string;
   areaGraphs?: boolean;
   lineShape?: string;
-  showTrendLine?: boolean;
   drawGoalLine?: boolean;
   roundIndicatorValue?: boolean;
 };
@@ -208,16 +207,6 @@ function IndicatorGraph({
       typeof rawGraphSettings?.areaGraphs === 'boolean' ? rawGraphSettings.areaGraphs : undefined,
     lineShape:
       typeof rawGraphSettings?.lineShape === 'string' ? rawGraphSettings.lineShape : undefined,
-    showTrendLine: (() => {
-      const legacyValue = rawGraphsRecord?.['showTrendline'];
-      if (typeof legacyValue === 'boolean') {
-        return legacyValue;
-      }
-      if (typeof rawGraphSettings?.showTrendLine === 'boolean') {
-        return rawGraphSettings.showTrendLine;
-      }
-      return undefined;
-    })(),
     drawGoalLine:
       typeof rawGraphSettings?.drawGoalLine === 'boolean'
         ? rawGraphSettings.drawGoalLine
@@ -277,7 +266,6 @@ function IndicatorGraph({
 
   const useAreaGraph = graphSettings.areaGraphs === true;
   const lineShape = graphSettings.lineShape ?? 'spline';
-  const showTrendline = graphSettings.showTrendLine ?? true;
 
   const chartHeight = 450 + (!hasTimeDimension ? CATEGORY_XAXIS_LABEL_EXTRA_MARGIN : 0);
 
@@ -504,9 +492,11 @@ function IndicatorGraph({
             [
               {
                 xAxis: normalizedRefDate,
+                yAxis: referenceValue.value,
               },
               {
                 xAxis: 'max',
+                yAxis: 0,
               },
             ],
           ],
@@ -572,21 +562,37 @@ function IndicatorGraph({
         // For time-based graphs, use the normalized date
         const nonQuantifiedGoalDate = normalizeDateForComparison(nonQuantifiedGoal.date);
         const goalDirection = nonQuantifiedGoal.trend ? nonQuantifiedGoal.trend.toString() : '';
-        markLines.push({
-          xAxis: nonQuantifiedGoalDate,
-          lineStyle: {
-            color: theme.graphColors.blue030 || '#999999',
-            width: 2,
-            type: 'solid',
+        const goalStartValue = referenceValue?.value
+          ? referenceValue.value
+          : nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
+            ? yRange.range[0]
+            : yRange.range[1];
+        const goalEndValue =
+          nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
+            ? yRange.range[1]
+            : yRange.range[0];
+        markLines.push([
+          {
+            xAxis: nonQuantifiedGoalDate,
+            yAxis: goalStartValue,
+            lineStyle: {
+              color: theme.graphColors.blue030 || '#999999',
+              width: 2,
+              type: 'solid',
+            },
+            symbol: 'none',
+            name: 'Goal',
+            label: {
+              formatter: `${new Date(nonQuantifiedGoal.date ?? '').getFullYear().toString()}: ${goalDirection}`,
+              position: 'insideEndBottom',
+            },
           },
-          symbol:
-            nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase ? 'none' : 'arrow',
-          name: 'Goal',
-          label: {
-            formatter: `${new Date(nonQuantifiedGoal.date ?? '').getFullYear().toString()}: ${goalDirection}`,
-            position: 'insideEndBottom',
+          {
+            xAxis: nonQuantifiedGoalDate,
+            yAxis: goalEndValue,
+            symbol: 'arrow',
           },
-        });
+        ]);
       }
     }
     if (markLines.length > 0) {
@@ -657,7 +663,7 @@ function IndicatorGraph({
 
     // Map trend trace to align with allDates array
     const trendSeries: LineSeriesOption[] =
-      trendTrace && showTrendline && hasTimeDimension
+      trendTrace && hasTimeDimension
         ? (() => {
             // Create a map of normalized trend dates to values
             const trendMap = new Map<string, number | null>();
@@ -698,7 +704,7 @@ function IndicatorGraph({
               },
             ];
           })()
-        : trendTrace && showTrendline
+        : trendTrace
           ? [
               {
                 type: 'line',
@@ -748,7 +754,7 @@ function IndicatorGraph({
           ...goalSeries
             .map((s) => s.name)
             .filter((name): name is string => typeof name === 'string'),
-          ...(trendTrace && showTrendline && trendTrace.name ? [trendTrace.name] : []),
+          ...(trendTrace && trendTrace.name ? [trendTrace.name] : []),
         ],
       },
       grid: {
@@ -913,7 +919,6 @@ function IndicatorGraph({
     colors.trendColor,
     goalTraces,
     graphSettings.drawGoalLine,
-    showTrendline,
     timeResolution,
     yRange.includeZero,
     yRange.range,
