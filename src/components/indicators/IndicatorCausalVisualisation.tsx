@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { captureException } from '@sentry/nextjs';
 import { useLocale } from 'next-intl';
@@ -57,7 +57,20 @@ function getColumnHeight(nodes, column) {
   return columnIndicators.length;
 }
 
-function drawEdge(nodes, edge, toIndex, gridHeight, theme, hoverId) {
+type NodeLayout = {
+  top: number;
+  height: number;
+};
+
+function drawEdge(
+  nodes,
+  edge,
+  toIndex,
+  gridHeight,
+  theme,
+  hoverId,
+  layout: Record<string, NodeLayout>
+) {
   const fromNode = nodes.find((item) => edge.from === item.id);
   const toNode = nodes.find((item) => edge.to === item.id);
 
@@ -69,11 +82,15 @@ function drawEdge(nodes, edge, toIndex, gridHeight, theme, hoverId) {
   const fromIndex = fromNode.from.findIndex((x) => x.id === edge.id);
 
   const nodeHeight = 160;
+  const nodeWidth = 240;
+  const verticalGap = 20;
+  const centerX = nodeWidth / 2;
+
   const fromNodeHeight = (gridHeight / getColumnHeight(nodes, fromNode.column)) * nodeHeight;
-  const fromNodeFromTop = fromNode.row * (fromNodeHeight + 20);
+  const fromNodeFromTop = fromNode.row * (fromNodeHeight + verticalGap);
 
   const toNodeHeight = (gridHeight / getColumnHeight(nodes, toNode.column)) * nodeHeight;
-  const toNodeFromTop = toNode.row * (toNodeHeight + 20);
+  const toNodeFromTop = toNode.row * (toNodeHeight + verticalGap);
 
   const fromDistribution = fromNodeHeight / (fromNode.from.length + 1);
   const fromOffset = fromIndex * fromDistribution + fromDistribution / 2;
@@ -96,17 +113,35 @@ function drawEdge(nodes, edge, toIndex, gridHeight, theme, hoverId) {
 
   // Pointing down
   if (fromNode.column === toNode.column && fromNode.row < toNode.row) {
-    startX = endX = 200;
-    endY = -5;
-    startY = fromNodeFromTop + fromNodeHeight - toNodeFromTop - 25;
-    bend = 0;
+    const fromLayout = layout?.[String(fromNode.id)];
+    const toLayout = layout?.[String(toNode.id)];
+    if (fromLayout && toLayout) {
+      // Use real measured positions
+      startX = endX = centerX;
+      startY = fromLayout.top + fromLayout.height - toLayout.top;
+      endY = 0;
+    } else {
+      startX = endX = centerX;
+      endY = 0;
+      startY = fromNodeFromTop + fromNodeHeight - toNodeFromTop - 25;
+      bend = 0;
+    }
   }
 
   // Pointing up
   if (fromNode.column === toNode.column && fromNode.row > toNode.row) {
-    startX = endX = 200;
-    endY = toNodeHeight + 5;
-    startY = fromNodeFromTop - toNodeFromTop;
+    const fromLayout = layout?.[String(fromNode.id)];
+    const toLayout = layout?.[String(toNode.id)];
+
+    if (fromLayout && toLayout) {
+      startX = endX = centerX;
+      startY = fromLayout.top - toLayout.top;
+      endY = toLayout.height;
+    } else {
+      startX = endX = centerX;
+      endY = toNodeHeight;
+      startY = fromNodeFromTop - toNodeFromTop;
+    }
     bend = 0;
   }
 
@@ -213,6 +248,42 @@ const InteractiveCausalChain = (props: InteractiveCausalChainProps) => {
   const theme = useTheme();
   const [cardHover, setCardHover] = useState(null);
 
+  const indicatorRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [layout, setLayout] = useState<Record<string, NodeLayout>>({});
+
+  useLayoutEffect(() => {
+    const heights: Record<string, number> = {};
+
+    nodes.forEach((node) => {
+      const el = indicatorRefs.current[String(node.id)];
+      if (el) {
+        heights[String(node.id)] = el.getBoundingClientRect().height;
+      }
+    });
+
+    const layoutMap: Record<string, NodeLayout> = {};
+    const byColumn = new Map<number, any[]>();
+
+    nodes.forEach((node) => {
+      const col = node.column ?? 0;
+      if (!byColumn.has(col)) byColumn.set(col, []);
+      byColumn.get(col)!.push(node);
+    });
+
+    byColumn.forEach((colNodes) => {
+      colNodes.sort((a, b) => a.row - b.row);
+      let offset = 0;
+      colNodes.forEach((node) => {
+        const id = String(node.id);
+        const height = heights[id] ?? 160;
+        layoutMap[id] = { top: offset, height };
+        offset += height + 20;
+      });
+    });
+
+    setLayout(layoutMap);
+  }, [nodes]);
+
   let column = 0;
   const chain: ReactElement<any>[] = [];
   const gridHeight = getGridHeight(nodes);
@@ -230,7 +301,7 @@ const InteractiveCausalChain = (props: InteractiveCausalChainProps) => {
       if (indicator.type !== 'action') indicatorLevel = indicator.indicator_level;
       const connectionsTo: ReactElement<any>[] = [];
       indicator.to.forEach((edge, index) => {
-        const edgeElement = drawEdge(nodes, edge, index, gridHeight, theme, cardHover);
+        const edgeElement = drawEdge(nodes, edge, index, gridHeight, theme, cardHover, layout);
         if (!edgeElement) return;
         connectionsTo.push(<span key={edge.id}>{edgeElement}</span>);
       });
@@ -242,6 +313,9 @@ const InteractiveCausalChain = (props: InteractiveCausalChainProps) => {
       children.push(
         <StyledIndicator
           key={indicator.id}
+          ref={(el) => {
+            indicatorRefs.current[String(indicator.id)] = el;
+          }}
           onMouseEnter={(e) => {
             setCardHover(indicator.id);
           }}
