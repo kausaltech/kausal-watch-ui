@@ -18,6 +18,11 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
       nonQuantifiedGoal
       nonQuantifiedGoalDate
       reference
+      referenceValue {
+        id
+        date
+        value
+      }
       minValue
       maxValue
       organization {

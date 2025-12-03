@@ -100,6 +100,10 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   const indicator = data?.indicator;
   if (!indicator) return null;
   const { maxValue, minValue, nonQuantifiedGoal, nonQuantifiedGoalDate } = indicator;
+  // referenceValue may not be in the type yet until codegen runs, so access it safely
+  const referenceValue = (
+    indicator as { referenceValue?: { date: string | null; value: number } | null }
+  ).referenceValue;
 
   const indicatorGoals: Array<IndicatorGoal | null> = indicator.goals || [];
   const indicatorValues: Array<IndicatorValue> = indicator.values || [];
@@ -182,6 +186,34 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   const dataMax = allValues.length > 0 ? Math.max(...allValues) : 0;
   const actualMin = minValue ?? dataMin;
   const actualMax = maxValue === null ? dataMax : maxValue;
+
+  // Find the index of the reference year in allYears (if referenceValue exists)
+  let referenceYearIndex = -1;
+  if (referenceValue?.date) {
+    try {
+      const refDateObj = new Date(referenceValue.date);
+      if (!Number.isNaN(refDateObj.getTime())) {
+        const refYear = refDateObj.getFullYear().toString();
+        referenceYearIndex = allYears.indexOf(refYear);
+      }
+    } catch {
+      // Ignore invalid dates
+    }
+  }
+
+  // Find the index of the goal year in allYears
+  let goalYearIndex = -1;
+  if (nonQuantifiedGoal && nonQuantifiedGoalDate) {
+    try {
+      const goalDateObj = new Date(nonQuantifiedGoalDate);
+      if (!Number.isNaN(goalDateObj.getTime())) {
+        const goalYear = goalDateObj.getFullYear().toString();
+        goalYearIndex = allYears.indexOf(goalYear);
+      }
+    } catch {
+      // Ignore invalid dates
+    }
+  }
 
   const option: ECOption = {
     dataset: dataset,
@@ -278,6 +310,77 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
           width: 2,
         },
         z: 2,
+        // Add markArea for nonQuantifiedGoal (blue area) - only if referenceValue.date exists
+        ...(referenceValue?.date &&
+        nonQuantifiedGoal &&
+        goalYearIndex >= 0 &&
+        referenceYearIndex >= 0
+          ? {
+              markArea: {
+                silent: true,
+                itemStyle: {
+                  color: theme.graphColors.blue030,
+                  opacity: 0.1,
+                },
+                data: [
+                  [
+                    {
+                      xAxis: referenceYearIndex,
+                      yAxis: referenceValue.value,
+                    },
+                    {
+                      xAxis: goalYearIndex,
+                      yAxis:
+                        nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase
+                          ? actualMax
+                          : actualMin,
+                    },
+                  ],
+                ],
+              },
+            }
+          : {}),
+        // Add markLine for nonQuantifiedGoal (blue arrow)
+        ...(nonQuantifiedGoal && nonQuantifiedGoalDate && goalYearIndex >= 0
+          ? {
+              markLine: {
+                silent: true,
+                z: 1,
+                symbol: ['none', 'none'],
+                symbolSize: 10,
+                data: [
+                  [
+                    {
+                      xAxis: goalYearIndex,
+                      yAxis: referenceValue?.value
+                        ? referenceValue.value
+                        : nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase
+                          ? actualMin
+                          : actualMax,
+                      lineStyle: {
+                        color: theme.graphColors.blue030 || '#999999',
+                        width: 2,
+                        type: 'solid',
+                      },
+                      symbol: 'none',
+                      name: 'Goal',
+                      label: {
+                        show: false,
+                      },
+                    },
+                    {
+                      xAxis: goalYearIndex,
+                      yAxis:
+                        nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase
+                          ? actualMax
+                          : actualMin,
+                      symbol: 'arrow',
+                    },
+                  ],
+                ],
+              },
+            }
+          : {}),
       },
     ],
     grid: {
@@ -317,59 +420,6 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
         return result;
       },
     },
-    graphic:
-      nonQuantifiedGoal && nonQuantifiedGoalDate
-        ? [
-            {
-              type: 'group',
-              right: 24,
-              top: '25%',
-              children: [
-                {
-                  type: 'polygon',
-                  shape: {
-                    points:
-                      nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase
-                        ? [
-                            [0, -20],
-                            [-20, 0],
-                            [-10, 0],
-                            [-10, 30],
-                            [10, 30],
-                            [10, 0],
-                            [20, 0],
-                          ]
-                        : [
-                            [0, 10],
-                            [-20, -10],
-                            [-10, -10],
-                            [-10, -40],
-                            [10, -40],
-                            [10, -10],
-                            [20, -10],
-                          ],
-                  },
-                  style: {
-                    fill: {
-                      type: 'linear',
-                      x: 0,
-                      y: nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase ? 0 : 1,
-                      x2: 0,
-                      y2: nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase ? 1 : 0,
-                      colorStops: [
-                        { offset: 0, color: theme.graphColors.green030 },
-                        { offset: 1, color: 'white' },
-                      ],
-                    },
-                    stroke: theme.graphColors.green010,
-                    lineWidth: 0,
-                  },
-                  z: 100,
-                },
-              ],
-            },
-          ]
-        : undefined,
   };
 
   return (
