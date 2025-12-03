@@ -15283,7 +15283,10 @@ export type IndicatorSparklineGraphDataQuery = (
     )> }
     & { __typename: 'Plan' }
   ) | null, indicator: (
-    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, desiredTrend: IndicatorDesiredTrend | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, reference: string | null, minValue: number | null, maxValue: number | null, organization: (
+    { id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, desiredTrend: IndicatorDesiredTrend | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, reference: string | null, minValue: number | null, maxValue: number | null, referenceValue: (
+      { id: string, date: string | null, value: number }
+      & { __typename: 'IndicatorValue' }
+    ) | null, organization: (
       { id: string, name: string, abbreviation: string | null }
       & { __typename: 'Organization' }
     ), quantity: (
