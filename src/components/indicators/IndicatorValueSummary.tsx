@@ -287,7 +287,8 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
           {latestValueDisplay}
           <ValueUnit>{shortUnitName}</ValueUnit>
         </div>
-        {changeSymbol && absChange !== null && (
+        {/* Hack for legacy: Only show change symbol if reference value is not shown */}
+        {changeSymbol && absChange !== null && !displayOptions.referenceValue.show && (
           <ValueChange color={changeColor}>
             <ChangeSymbol>{changeSymbol}</ChangeSymbol>
             <span>{format.number(absChange, { maximumSignificantDigits: rounding })}</span>{' '}
