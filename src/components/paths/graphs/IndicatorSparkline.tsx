@@ -58,9 +58,6 @@ const RelationshipType = styled.p`
   margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
-const PLAN_START_YEAR = 2022;
-const PLAN_END_YEAR = 2040;
-
 type IndicatorSparklineProps = {
   indicatorId: string;
   relationshipType: IndicatorCategoryRelationshipType;
@@ -142,25 +139,95 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
 
   const sortedYears = Object.keys(combinedData).sort((a, b) => Number(a) - Number(b));
 
-  // Extend years array to include nonQuantifiedGoalDate if needed
-  const baseYears = Array.from({ length: PLAN_END_YEAR - PLAN_START_YEAR + 1 }, (_, i) =>
-    (PLAN_START_YEAR + i).toString()
-  );
+  // Collect all years from values and goals to ensure we include all data
+  const allDataYears: number[] = [];
 
-  // If we have a nonQuantifiedGoal with a date, ensure that year is included
-  let allYears = baseYears;
-  if (nonQuantifiedGoal && nonQuantifiedGoalDate && typeof nonQuantifiedGoalDate === 'string') {
+  // Add years from values
+  indicatorValues.forEach((val) => {
+    if (val.date) {
+      try {
+        const dateObj = new Date(val.date);
+        if (!Number.isNaN(dateObj.getTime())) {
+          allDataYears.push(dateObj.getFullYear());
+        }
+      } catch {
+        // Ignore invalid dates
+      }
+    }
+  });
+
+  // Add years from goals
+  indicatorGoals.forEach((goal) => {
+    if (goal?.date) {
+      try {
+        const dateObj = new Date(goal.date);
+        if (!Number.isNaN(dateObj.getTime())) {
+          allDataYears.push(dateObj.getFullYear());
+        }
+      } catch {
+        // Ignore invalid dates
+      }
+    }
+  });
+
+  // Add nonQuantifiedGoalDate year if it exists
+  if (nonQuantifiedGoalDate) {
     try {
       const goalDateObj = new Date(nonQuantifiedGoalDate);
       if (!Number.isNaN(goalDateObj.getTime())) {
-        const goalYear = goalDateObj.getFullYear().toString();
-        if (!allYears.includes(goalYear)) {
-          allYears = [...allYears, goalYear].sort((a, b) => Number(a) - Number(b));
-        }
+        allDataYears.push(goalDateObj.getFullYear());
       }
     } catch {
       // Ignore invalid dates
     }
+  }
+
+  // Add referenceValue year if it exists (for end year calculation)
+  if (referenceValue?.date) {
+    try {
+      const refDateObj = new Date(referenceValue.date);
+      if (!Number.isNaN(refDateObj.getTime())) {
+        allDataYears.push(refDateObj.getFullYear());
+      }
+    } catch {
+      // Ignore invalid dates
+    }
+  }
+
+  // Calculate start year: use referenceValue year if available, otherwise first data year
+  let startYear: number | null = null;
+  if (referenceValue?.date) {
+    try {
+      const refDateObj = new Date(referenceValue.date);
+      if (!Number.isNaN(refDateObj.getTime())) {
+        startYear = refDateObj.getFullYear();
+      }
+    } catch {
+      // Ignore invalid dates
+    }
+  }
+  // If no referenceValue, use the first year from data
+  if (startYear === null && allDataYears.length > 0) {
+    startYear = Math.min(...allDataYears);
+  }
+
+  // Calculate end year: use the latest year from all data (including referenceValue if it's later)
+  let endYear: number | null = null;
+  if (allDataYears.length > 0) {
+    endYear = Math.max(...allDataYears);
+  }
+
+  // Build allYears array from startYear to endYear
+  let allYears: string[] = [];
+  if (startYear !== null && endYear !== null) {
+    // Ensure startYear is not later than endYear (in case referenceValue is very late)
+    const actualStartYear = Math.min(startYear, endYear);
+    allYears = Array.from({ length: endYear - actualStartYear + 1 }, (_, i) =>
+      (actualStartYear + i).toString()
+    );
+  } else if (sortedYears.length > 0) {
+    // Fallback: use sortedYears if we couldn't determine start/end
+    allYears = sortedYears;
   }
 
   const dataset: DatasetComponentOption = {
