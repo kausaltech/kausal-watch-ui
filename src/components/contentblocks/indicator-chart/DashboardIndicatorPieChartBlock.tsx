@@ -114,22 +114,22 @@ const DashboardIndicatorPieChartBlock = ({
     }, [] as SeriesData[]) ?? [];
 
   //hide legends on smaller screens to prevent overlapping in some cases
-  const [isMobile, setIsMobile] = useState(false);
+  const [isCompactLayout, setIsCompactLayout] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const breakpoint = theme.breakpointMd;
+    const breakpoint = theme.breakpointXl;
     const mediaQuery = window.matchMedia(`(max-width: ${breakpoint})`);
 
     const update = (event?: MediaQueryList | MediaQueryListEvent) => {
-      setIsMobile((event ?? mediaQuery).matches);
+      setIsCompactLayout((event ?? mediaQuery).matches);
     };
     update();
 
     mediaQuery.addEventListener('change', update);
     return () => mediaQuery.removeEventListener('change', update);
-  }, [theme.breakpointMd]);
+  }, [theme.breakpointXl]);
 
   const option: ECOption & { series: PieSeriesOption[] } = {
     tooltip: {
@@ -138,7 +138,7 @@ const DashboardIndicatorPieChartBlock = ({
       formatter: createTooltipFormatter(indicator ?? null, seriesData),
     },
     legend: {
-      show: !isMobile,
+      show: !isCompactLayout,
       orient: 'horizontal',
       bottom: 0,
       left: 'center',
@@ -161,9 +161,9 @@ const DashboardIndicatorPieChartBlock = ({
     series: [
       {
         type: 'pie',
-        center: ['50%', isMobile ? '50%' : '40%'],
+        center: ['50%', isCompactLayout ? '50%' : '40%'],
         top: 0,
-        bottom: isMobile ? 0 : 20,
+        bottom: isCompactLayout ? 0 : 20,
         avoidLabelOverlap: true,
         itemStyle: {
           borderRadius: 0,
