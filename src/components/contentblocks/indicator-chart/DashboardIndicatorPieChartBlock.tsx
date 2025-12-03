@@ -162,6 +162,8 @@ const DashboardIndicatorPieChartBlock = ({
       {
         type: 'pie',
         center: ['50%', isMobile ? '50%' : '40%'],
+        top: 0,
+        bottom: isMobile ? 0 : 20,
         avoidLabelOverlap: true,
         itemStyle: {
           borderRadius: 0,
