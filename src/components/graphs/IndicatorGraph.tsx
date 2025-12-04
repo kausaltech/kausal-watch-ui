@@ -58,10 +58,40 @@ type IndicatorGraphProps = {
 };
 
 const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
+const TITLE_WIDTH = 50;
 
 const PlotContainer = styled.div<{ $vizHeight: number }>`
   height: ${(props) => props.$vizHeight}px;
 `;
+
+const wrapTitle = (title: string, maxWidth: number): string => {
+  if (title.length <= maxWidth) {
+    return title;
+  }
+
+  const words = title.split(' ');
+  const lines: string[] = [];
+  let currentLine = '';
+
+  for (const word of words) {
+    const testLine = currentLine ? `${currentLine} ${word}` : word;
+    if (testLine.length <= maxWidth) {
+      currentLine = testLine;
+    } else {
+      if (currentLine) {
+        lines.push(currentLine);
+      }
+      // If a single word is longer than maxWidth, we still need to add it
+      currentLine = word;
+    }
+  }
+
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+
+  return lines.join('\n');
+};
 
 const formatNumber = (value: number, digits?: number) => {
   if (value == null || Number.isNaN(value)) return '';
@@ -727,10 +757,15 @@ function IndicatorGraph({
             ]
           : [];
 
+    const wrappedTitle = wrapTitle(title, TITLE_WIDTH);
+    const titleLines = wrappedTitle.split('\n').length;
+    const extraLines = titleLines - 1;
+    const gridTop = 65 + extraLines * 24;
+
     const option: ECOption = {
       title: {
-        text: title,
-        subtext: undefined,
+        text: wrappedTitle,
+        subtext: yRange.unit,
         left: '24',
         right: '24',
         top: 10,
@@ -761,7 +796,7 @@ function IndicatorGraph({
         left: '24',
         right: '24',
         bottom: 100,
-        top: 65,
+        top: gridTop,
         containLabel: true,
       },
       tooltip: {
@@ -886,7 +921,7 @@ function IndicatorGraph({
           },
       yAxis: {
         type: 'value',
-        name: yRange.unit,
+        name: undefined,
         nameTextStyle: {
           align: 'left',
         },
