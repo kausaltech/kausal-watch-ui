@@ -158,6 +158,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
   const { timeResolution, values, goals, unit, desiredTrend, options } = props;
 
   const rounding = options?.valueRounding ?? DEFAULT_ROUNDING;
+  // Use default values for legacy support if options are not provided
   const displayOptions: ValueSummaryOptions = options || {
     referenceValue: {
       show: true,
@@ -299,12 +300,18 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
     </ValueBlock>
   ) : null;
 
-  const nextGoal = goals?.find((goal) => goal && dayjs(goal.date).isSameOrAfter(now));
+  // TODO: Make this configurable
+  // Implicity show the last goal if reference value is shown
+  const showLastGoal = displayOptions.referenceValue.show;
+  const displayGoal = showLastGoal
+    ? goals?.[goals.length - 1]
+    : goals?.find((goal) => goal && dayjs(goal.date).isSameOrAfter(now));
+
   let goalDisplay: React.ReactNode | undefined;
 
-  if (nextGoal && displayOptions.goalValue.show) {
-    const nextGoalDate = dayjs(nextGoal.date).format(timeFormat);
-    const nextGoalValue = format.number(nextGoal.value, { maximumSignificantDigits: rounding });
+  if (displayGoal && displayOptions.goalValue.show) {
+    const nextGoalDate = dayjs(displayGoal.date).format(timeFormat);
+    const nextGoalValue = format.number(displayGoal.value, { maximumSignificantDigits: rounding });
     const DesiredTrendIcon =
       desiredTrend === IndicatorDesiredTrend.Increasing ? (
         <TrendIcon name="arrow-up" />
@@ -353,14 +360,14 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
   // Find the next upcoming goal
   let differenceDisplay: React.ReactNode | undefined;
   if (
-    nextGoal &&
-    dayjs(nextGoal.date).isSameOrAfter(latestValue.date) &&
+    displayGoal &&
+    dayjs(displayGoal.date).isSameOrAfter(latestValue.date) &&
     displayOptions.goalGap.show
   ) {
-    const difference = nextGoal.value - values[values.length - 1].value;
+    const difference = displayGoal.value - values[values.length - 1].value;
     const isPercentagePoint = unit?.name === '%';
     const goalReached = desirableDirection === '+' ? difference <= 0 : difference >= 0;
-    const timeToGoal = dayjs(now).to(dayjs(nextGoal.date));
+    const timeToGoal = dayjs(now).to(dayjs(displayGoal.date));
     const prefix = difference > 0 ? '+' : '-';
     differenceDisplay = (
       <ValueBlock>
