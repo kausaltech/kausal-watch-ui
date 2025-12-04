@@ -135,16 +135,14 @@ export default function OutcomeNodeContent({
   const [activeTabId, setActiveTabId] = useState('graph');
   const paths = usePaths();
   const activeGoal = useReactiveVar(activeGoalVar);
+
   // We have a disclaimer for the mobility node for 2023 (hack)
   const hideForecast = separateYears && separateYears.length > 1;
-  const showDisclaimer =
-    startYear <= 2023 &&
-    endYear >= 2023 &&
-    node.id === 'net_emissions' &&
-    !activeGoal?.hideForecast;
-  const disclaimer = showDisclaimer
-    ? 'Die Werte für den Bereich Mobilität 2023 sind provisorisch'
-    : undefined;
+  const pathsDisclaimers = paths?.instance.outcomeDisclaimers;
+  const disclaimer = pathsDisclaimers?.find(
+    (disclaimer) => disclaimer.node === node.id && disclaimer.goal === activeGoal?.id
+  )?.disclaimer;
+
   const instance = paths?.instance;
   if (!instance) return null;
   const showDistribution = subNodes.length > 1;
@@ -158,7 +156,7 @@ export default function OutcomeNodeContent({
   const unit = node.metric?.unit?.htmlLong || node.metric?.unit?.htmlShort;
   const nodeName = node.shortName || node.name;
   const showNodeLinks = !instance.features?.hideNodeDetails;
-  const maximumFractionDigits = instance.features?.maximumFractionDigits ?? undefined;
+
   const outcomeGraph = useMemo(
     () =>
       node.metricDim ? (
@@ -171,7 +169,6 @@ export default function OutcomeNodeContent({
           color={color}
           withControls={false}
           baselineForecast={node.metric?.baselineForecastValues ?? undefined}
-          withReferenceYear
           withTools={false}
           disclaimer={disclaimer}
         />
