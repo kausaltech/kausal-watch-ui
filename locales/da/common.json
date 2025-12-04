@@ -67,6 +67,7 @@
     "indicator-not-found": "Indikator ikke fundet",
     "indicator-population-normalized-value": "Per indbygger",
     "indicator-reference-value": "Referenceværdi",
+    "indicator-graph-reference-line": "Reference",
     "indicator-related-actions": "{context, select, STRATEGY {Strategier, der påvirker denne indikator} other {Handlinger, der påvirker denne indikator}}",
     "indicator-relationship-main_goal": "Hovedmål",
     "indicator-relationship-secondary_goal": "Sekundært mål",

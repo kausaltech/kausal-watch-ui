@@ -4,6 +4,7 @@ import React, { useEffect, useMemo } from 'react';
 
 import type { BarSeriesOption, LineSeriesOption } from 'echarts/charts';
 import type { MarkLineOption } from 'echarts/types/dist/shared';
+import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import styled, { useTheme } from 'styled-components';
 
@@ -208,6 +209,7 @@ function IndicatorGraph({
   referenceValue,
 }: IndicatorGraphProps) {
   const theme = useTheme();
+  const t = useTranslations();
   const rawGraphSettings = theme.settings?.graphs;
   const rawGraphsRecord =
     rawGraphSettings && typeof rawGraphSettings === 'object'
@@ -579,7 +581,7 @@ function IndicatorGraph({
           },
           name: 'Reference Value',
           label: {
-            formatter: `${new Date(referenceValue.date ?? '').getFullYear().toString()}: Reference`,
+            formatter: `${new Date(referenceValue.date ?? '').getFullYear().toString()}: ${t('indicator-graph-reference-line')}`,
             position: 'insideEndBottom',
           },
         });
@@ -613,7 +615,7 @@ function IndicatorGraph({
             symbol: 'none',
             name: 'Goal',
             label: {
-              formatter: `${new Date(nonQuantifiedGoal.date ?? '').getFullYear().toString()}: ${goalDirection}`,
+              formatter: `${t('indicator-goal')} ${new Date(nonQuantifiedGoal.date ?? '').getFullYear().toString()}: ${t(`indicator-desired-trend-${goalDirection.toLowerCase()}`)}`,
               position: 'insideEndBottom',
             },
           },
