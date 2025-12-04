@@ -204,6 +204,8 @@ type ResultItemProps = {
   hit: SearchHit;
 };
 
+const RESULTS_LISTBOX_ID = 'navbar-search-results-listbox';
+
 function ResultItem(props: ResultItemProps) {
   const t = useTranslations();
   const plan = usePlan();
@@ -229,7 +231,7 @@ function ResultItem(props: ResultItemProps) {
   };
 
   return (
-    <HitItem key={hit.id}>
+    <HitItem key={hit.id} role="option">
       <a href={hit.url!}>
         <HitHeader>
           <PlanChip
@@ -289,7 +291,7 @@ const ResultList = (props: ResultListProps) => {
         </ResultCount>
       </ResultsHeader>
       {!loading && (
-        <HitList>
+        <HitList id={RESULTS_LISTBOX_ID} role="listbox">
           {results.slice(0, RESULTS_LIMIT).map((r, i) => (
             <ResultItem key={i} hit={r} />
           ))}
@@ -442,6 +444,7 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
               role="combobox"
               aria-expanded={searchTerm && searchTerm.length > 1 ? 'true' : 'false'}
               aria-haspopup="listbox"
+              aria-controls={RESULTS_LISTBOX_ID}
               value={searchTerm}
               onChange={(e) =>
                 setSearchTerm?.(e.target.value, {
