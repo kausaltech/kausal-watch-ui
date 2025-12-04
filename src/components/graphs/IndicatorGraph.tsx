@@ -46,7 +46,7 @@ type IndicatorGraphProps = {
   specification: {
     axes: Array<[string, number]>;
   };
-  title: string;
+  title: string | null;
   desiredTrend?: IndicatorDesiredTrend | null;
   nonQuantifiedGoal?: {
     trend: IndicatorNonQuantifiedGoal | null;
@@ -759,14 +759,14 @@ function IndicatorGraph({
             ]
           : [];
 
-    const wrappedTitle = wrapTitle(title, TITLE_WIDTH);
-    const titleLines = wrappedTitle.split('\n').length;
+    const wrappedTitle = title ? wrapTitle(title, TITLE_WIDTH) : null;
+    const titleLines = wrappedTitle ? wrappedTitle.split('\n').length : 0;
     const extraLines = titleLines - 1;
     const gridTop = 65 + extraLines * 24;
 
     const option: ECOption = {
       title: {
-        text: wrappedTitle,
+        text: wrappedTitle ?? undefined,
         subtext: yRange.unit,
         left: '24',
         right: '24',

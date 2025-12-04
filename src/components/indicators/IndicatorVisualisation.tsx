@@ -593,6 +593,7 @@ function IndicatorVisualisation({
             title={plotTitle}
           />
         ) : (
+          // TODO: Show title depending on context
           <IndicatorGraph
             specification={indicatorGraphSpecification}
             yRange={yRange}
@@ -600,7 +601,7 @@ function IndicatorVisualisation({
             traces={traces}
             goalTraces={goalTraces}
             trendTrace={trendTrace}
-            title={plotTitle}
+            title={null}
             desiredTrend={indicator.desiredTrend}
             referenceValue={indicator.referenceValue}
             nonQuantifiedGoal={{
