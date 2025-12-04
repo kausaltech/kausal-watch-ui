@@ -27,6 +27,12 @@ const ContentBlockWrapper = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
+const BlockLabel = styled.h2`
+  font-size: ${(props) => props.theme.fontSizeBase};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+`;
+
 const CategoryBadges = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
   display: flex;
@@ -61,50 +67,57 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
       // Using name field to render description for now
       return (
         <ContentBlockWrapper>
+          {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
           <RichText html={indicator.description || ''} isCollapsible={false} />
         </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.Visualization:
-      return <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />;
+      return (
+        <ContentBlockWrapper>
+          {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
+          <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
+        </ContentBlockWrapper>
+      );
     case IndicatorDetailsFieldName.ConnectedActions:
       return (
-        <div>
+        <ContentBlockWrapper>
           <hr />
           Connected Actions
           <hr />
-        </div>
+        </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.CausalityNav:
       return (
-        <div>
+        <ContentBlockWrapper>
           <hr />
           Causality Nav
           <hr />
-        </div>
+        </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.Level:
       return (
-        <div>
+        <ContentBlockWrapper>
           <hr />
           Level
           <hr />
-        </div>
+        </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.Organization:
       return (
-        <div>
+        <ContentBlockWrapper>
           <hr />
           Organization
           <hr />
-        </div>
+        </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.Reference:
       return (
-        <div>
-          <hr />
-          Reference {indicator.reference}
-          <hr />
-        </div>
+        indicator.reference && (
+          <ContentBlockWrapper>
+            {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
+            <RichText html={indicator.reference} />
+          </ContentBlockWrapper>
+        )
       );
     case IndicatorDetailsFieldName.UpdatedAt:
       const updatedAt = new Date(indicator.updatedAt);
@@ -114,11 +127,9 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
         day: 'numeric',
       });
       return (
-        <div>
-          <hr />
-          {t('updated')} {formattedUpdatedAt}
-          <hr />
-        </div>
+        <ContentBlockWrapper>
+          {block.fieldLabel || t('updated')} {formattedUpdatedAt}
+        </ContentBlockWrapper>
       );
     default:
       console.log('📦 block not supported', block);
@@ -245,7 +256,7 @@ interface IndicatorModalContentBlockProps {
 const IndicatorModalContentBlock = ({ block, indicator }: IndicatorModalContentBlockProps) => {
   if (!block || !indicator) return null;
 
-  console.log('📦 block', block);
+  // console.log('📦 block', block);
   switch (block.__typename) {
     case 'IndicatorContentBlock':
       return <IndicatorContentBlock block={block} indicator={indicator} />;

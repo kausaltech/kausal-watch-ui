@@ -67,6 +67,13 @@ const ModalScrollableContent = styled.div`
     100% 14px;
   background-attachment: local, local, scroll, scroll;
 `;
+
+const ModalContentBlocksWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: ${({ theme }) => theme.spaces.s300};
+`;
+
 interface IndicatorModalContentProps {
   indicator?: IndicatorDetailsQuery['indicator'] | null;
   loading: boolean;
@@ -115,26 +122,48 @@ const IndicatorModalContent = ({
         <h1 id="indicator-modal-title">{indicatorName}</h1>
       </ModalHeader>
       <ModalScrollableContent>
-        {groupConsecutiveCategoryBlocks(layout.detailsMainTop || []).map((groupedBlock, index) => {
-          if (groupedBlock.type === 'grouped') {
-            return (
-              <IndicatorGroupedCategoryBlock
-                key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
-                blocks={groupedBlock.blocks}
-                indicator={indicator}
-              />
-            );
-          }
-          return (
-            <IndicatorModalContentBlock
-              key={groupedBlock.block.id}
-              block={groupedBlock.block}
-              indicator={indicator}
-            />
-          );
-        })}
-        {groupConsecutiveCategoryBlocks(layout.detailsMainBottom || []).map(
-          (groupedBlock, index) => {
+        <ModalContentBlocksWrapper>
+          {groupConsecutiveCategoryBlocks(layout.detailsMainTop || []).map(
+            (groupedBlock, index) => {
+              if (groupedBlock.type === 'grouped') {
+                return (
+                  <IndicatorGroupedCategoryBlock
+                    key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
+                    blocks={groupedBlock.blocks}
+                    indicator={indicator}
+                  />
+                );
+              }
+              return (
+                <IndicatorModalContentBlock
+                  key={groupedBlock.block.id}
+                  block={groupedBlock.block}
+                  indicator={indicator}
+                />
+              );
+            }
+          )}
+          {groupConsecutiveCategoryBlocks(layout.detailsMainBottom || []).map(
+            (groupedBlock, index) => {
+              if (groupedBlock.type === 'grouped') {
+                return (
+                  <IndicatorGroupedCategoryBlock
+                    key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
+                    blocks={groupedBlock.blocks}
+                    indicator={indicator}
+                  />
+                );
+              }
+              return (
+                <IndicatorModalContentBlock
+                  key={groupedBlock.block.id}
+                  block={groupedBlock.block}
+                  indicator={indicator}
+                />
+              );
+            }
+          )}
+          {groupConsecutiveCategoryBlocks(layout.detailsAside || []).map((groupedBlock, index) => {
             if (groupedBlock.type === 'grouped') {
               return (
                 <IndicatorGroupedCategoryBlock
@@ -151,26 +180,8 @@ const IndicatorModalContent = ({
                 indicator={indicator}
               />
             );
-          }
-        )}
-        {groupConsecutiveCategoryBlocks(layout.detailsAside || []).map((groupedBlock, index) => {
-          if (groupedBlock.type === 'grouped') {
-            return (
-              <IndicatorGroupedCategoryBlock
-                key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
-                blocks={groupedBlock.blocks}
-                indicator={indicator}
-              />
-            );
-          }
-          return (
-            <IndicatorModalContentBlock
-              key={groupedBlock.block.id}
-              block={groupedBlock.block}
-              indicator={indicator}
-            />
-          );
-        })}
+          })}
+        </ModalContentBlocksWrapper>
       </ModalScrollableContent>
     </ContentWrapper>
   );
