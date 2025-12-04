@@ -55,6 +55,7 @@
     "indicator-not-found": "Indikators nav atrasts",
     "indicator-population-normalized-value": "Uz vienu iedzīvotāju",
     "indicator-reference-value": "Atsauces vērtība",
+    "indicator-graph-reference-line": "Atsauce",
     "indicator-related-actions": "{context, select, CASE_STUDY {Gadījumu izpēte, kas ietekmē šo rādītāju} STRATEGY {Stratēģijas, kas ietekmē šo rādītāju} other {Rīcības, kas ietekmē šo rādītāju}}",
     "indicator-relationship-main_goal": "Galvenais mērķis",
     "indicator-relationship-secondary_goal": "Sekundārais mērķis",

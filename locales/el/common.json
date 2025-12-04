@@ -148,6 +148,7 @@
     "select-language": "Επιλέξτε γλώσσα",
     "no-action-data-for-report": "Η έκθεση δεν περιέχει στοιχεία για τη δράση αυτή.",
     "indicator-goal-exceeded": "Ο στόχος έχει ήδη ξεπεραστεί",
+    "indicator-graph-reference-line": "Αναφορά",
     "indicator-progress-bar": "Το έτος {startYear} το {name} ήταν {startValue}. Η τελευταία παρατηρηθείσα τιμή στο {latestYear} ήταν {latestValue}. Ο στόχος για το έτος {goalYear} είναι {goalValue}. Από το {startYear} η μείωση είναι {reduced}. Η {toBeReduced} πρέπει ακόμη να μειωθεί πριν από το έτος {goalYear}.",
     "nav-actions-pager": "Σελιδοποίηση ενεργειών",
     "filter-primary-organization-help": "{context, select, DIVISION {Εμφάνιση ενεργειών του επιλεγμένου τμήματος} other {Εμφάνιση ενεργειών του επιλεγμένου δήμου}}",

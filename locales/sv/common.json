@@ -63,6 +63,7 @@
     "indicator-not-found": "Indikator hittades inte",
     "indicator-population-normalized-value": "Per capita",
     "indicator-reference-value": "Referensvärde",
+    "indicator-graph-reference-line": "Referens",
     "indicator-related-actions": "{context, select, CASE_STUDY {Handlingar som påverkar denna indikator} STRATEGY {Strategier som påverkar denna indikator} other {Åtgärderna som påverkar denna indikator}}",
     "indicator-relationship-main_goal": "Huvudmål",
     "indicator-relationship-secondary_goal": "Sekundärt mål",

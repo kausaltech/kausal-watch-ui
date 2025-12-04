@@ -74,6 +74,7 @@
     "indicator-time-no-goals": "Ei tavoitearvoja",
     "indicator-to-goal": "Tavoitteeseen",
     "indicator-goal-exceeded": "Tavoite jo ylitetty",
+    "indicator-graph-reference-line": "Viite",
     "indicator-value": "Havainto",
     "indicator-reference-value": "Viitearvo",
     "indicator": "Mittari",
