@@ -222,7 +222,7 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
     <CellContent $numeric={true}>
       <Value>{format.number(value, { maximumSignificantDigits: rounding })}</Value>
       {!hideUnit && <Unit>{indicator.unit.shortName || indicator.unit.name}</Unit>}
-      {customReferenceYear && (
+      {customReferenceYear && customReferenceYear !== referenceYear && (
         <>
           <br />
           <Unit>({customReferenceYear})</Unit>
