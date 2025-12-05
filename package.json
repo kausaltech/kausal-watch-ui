@@ -57,7 +57,7 @@
     "morgan": "^1.10.0",
     "motion": "^12.23.6",
     "nanoid": "^5.1.5",
-    "next": "15.5.4",
+    "next": "15.5.7",
     "next-auth": "5.0.0-beta.29",
     "next-images": "^1.8.5",
     "next-intl": "^4.3.5",
