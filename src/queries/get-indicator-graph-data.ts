@@ -44,6 +44,15 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
           id
         }
       }
+      referenceValue {
+        id
+        date
+        value
+        normalizedValues {
+          normalizerId
+          value
+        }
+      }
       dimensions {
         dimension {
           id
@@ -66,6 +75,8 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
           id
         }
       }
+      nonQuantifiedGoal
+      nonQuantifiedGoalDate
       unit {
         id
         name

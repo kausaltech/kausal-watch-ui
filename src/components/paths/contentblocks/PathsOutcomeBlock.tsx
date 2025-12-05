@@ -15,7 +15,7 @@ import type {
   GetOutcomeNodeContentQuery,
   OutcomeNodeFieldsFragment,
 } from '@/common/__generated__/paths/graphql';
-import { ActionNode, NodeInterface } from '@/common/__generated__/paths/graphql';
+// import { ActionNode, NodeInterface } from '@/common/__generated__/paths/graphql';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
@@ -82,7 +82,11 @@ const StyledCard = styled(Card)<{ $disabled?: boolean }>`
   }
 `;
 
-const findVisibleNodes = (allNodes, lastNodeId: string, visibleNodes) => {
+const findVisibleNodes = (
+  allNodes: Map<string, OutcomenodeType>,
+  lastNodeId: string,
+  visibleNodes: OutcomenodeType[]
+) => {
   // Using last active node Id, create an array of all visible nodes
   const lastNode = allNodes.get(lastNodeId)!;
   visibleNodes.unshift(lastNode);
@@ -158,7 +162,9 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
     if (!outcomeNode) return { visible: [], all: new Map() };
     const upstreamNodes = outcomeNode?.upstreamNodes ?? [];
 
-    const allNodes = new Map(upstreamNodes.map((node) => [node.id, node as OutcomenodeType]));
+    const allNodes: Map<string, OutcomenodeType> = new Map(
+      upstreamNodes.map((node) => [node.id, node as OutcomenodeType])
+    );
 
     allNodes.set(outcomeNode.id, outcomeNode);
     //setLastActiveNodeId(outcomeNode.id);
@@ -184,7 +190,7 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
             <StyledCard $disabled={refetching}>
               <CardBody>
                 {loading && <OutcomeBlockLoader />}
-                {nodes.visible.map((node, index) => (
+                {nodes.visible.map((node: OutcomenodeType, index: number) => (
                   <OutcomeCardSet
                     key={node.id}
                     // Hacky solution to support different sub node titles depending on level

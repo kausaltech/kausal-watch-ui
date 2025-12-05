@@ -1,3 +1,4 @@
+import type { truncate } from 'fs/promises';
 import { type DateTimeFormatOptions, useFormatter, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Badge, Button } from 'reactstrap';
@@ -12,14 +13,20 @@ import {
 import { IndicatorLink } from '@/common/links';
 
 import BadgeTooltip from '../common/BadgeTooltip';
+import Icon from '../common/Icon';
 import { getIndicatorTranslation } from './IndicatorCard';
 import type { IndicatorListIndicator } from './IndicatorList';
+
+const DEFAULT_ROUNDING = 2;
 
 const CellContent = styled.div<{ $numeric?: boolean }>`
   flex: 1;
   text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
   line-height: ${(props) => props.theme.lineHeightSm};
 
+  svg {
+    display: inline-block;
+  }
   a,
   button {
     color: ${(props) => props.theme.themeColors.black};
@@ -36,6 +43,13 @@ const CategoryBadges = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${(props) => props.theme.spaces.s050};
+`;
+
+const TrendIcon = styled(Icon)`
+  height: 1.25em;
+  width: 1.25em;
+  margin-bottom: -0.1em;
+  color: ${(props) => props.theme.graphColors.grey040};
 `;
 
 const IndicatorLevelBadge = styled(Badge)<{ $level: string }>`
@@ -112,7 +126,7 @@ const getValue = (
   valueType: IndicatorColumnValueType,
   isNormalized: boolean,
   referenceYear: number | null
-): number | null => {
+): number | string | null => {
   switch (valueType) {
     case IndicatorColumnValueType.Earliest:
       const hasValues = indicator.values && indicator.values.length > 0;
@@ -131,6 +145,7 @@ const getValue = (
         ? (indicator.latestValue?.normalizedValues?.[0]?.value ?? null)
         : (indicator.latestValue?.value ?? null);
     case IndicatorColumnValueType.Goal:
+      if (indicator.nonQuantifiedGoal) return indicator.nonQuantifiedGoal?.toLowerCase() ?? '';
       const hasGoals = indicator.goals && indicator.goals.length > 0;
       if (!hasGoals) {
         return null;
@@ -148,9 +163,9 @@ const getValue = (
       if (!referenceYear) {
         return null;
       }
-      const referenceValue = indicator.values.find((value) =>
-        value.date?.startsWith(String(referenceYear))
-      );
+      const referenceValue = indicator.referenceValue
+        ? indicator.referenceValue
+        : indicator.values.find((value) => value.date?.startsWith(String(referenceYear)));
       return referenceValue
         ? isNormalized
           ? referenceValue.normalizedValues?.[0]?.value
@@ -171,15 +186,48 @@ interface IndicatorValueCellProps {
 const IndicatorValueCell = (props: IndicatorValueCellProps) => {
   const { indicator, isNormalized, valueType, referenceYear, hideUnit } = props;
   const format = useFormatter();
+  const t = useTranslations();
 
-  const value: number | null = getValue(indicator, valueType, isNormalized, referenceYear);
+  const rounding = indicator.valueRounding ?? DEFAULT_ROUNDING;
+  const value: number | string | null = getValue(indicator, valueType, isNormalized, referenceYear);
+  const customReferenceYear =
+    valueType === IndicatorColumnValueType.Reference && referenceYear
+      ? indicator.referenceValue?.date
+        ? new Date(indicator.referenceValue.date).getFullYear()
+        : null
+      : null;
+
   if (value === null) {
     return <CellContent $numeric={true}>--</CellContent>;
   }
+  if (typeof value === 'string') {
+    switch (value) {
+      case 'increase':
+        return (
+          <CellContent $numeric={true}>
+            <TrendIcon name="arrow-up" alt={t('indicator-desired-trend-increase')} />
+          </CellContent>
+        );
+      case 'decrease':
+        return (
+          <CellContent $numeric={true}>
+            <TrendIcon name="arrow-down" alt={t('indicator-desired-trend-decrease')} />
+          </CellContent>
+        );
+      default:
+        return <CellContent $numeric={true}>{value}</CellContent>;
+    }
+  }
   return (
     <CellContent $numeric={true}>
-      <Value>{format.number(value, { maximumFractionDigits: 2 })}</Value>
-      {!hideUnit && <Unit>{indicator.unit.shortName}</Unit>}
+      <Value>{format.number(value, { maximumSignificantDigits: rounding })}</Value>
+      {!hideUnit && <Unit>{indicator.unit.shortName || indicator.unit.name}</Unit>}
+      {customReferenceYear && customReferenceYear !== referenceYear && (
+        <>
+          <br />
+          <Unit>({customReferenceYear})</Unit>
+        </>
+      )}
     </CellContent>
   );
 };
@@ -214,12 +262,14 @@ const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
     }
   });
 
+  // Make sure catetgories are unique (same parent category is only shown once)
+  const uniqueCategories = categories.filter((item, index) => categories.indexOf(item) === index);
   return (
     <CellContent>
       <CategoryBadges>
-        {categories &&
-          categories.length > 0 &&
-          categories.map((cat) => (
+        {uniqueCategories &&
+          uniqueCategories.length > 0 &&
+          uniqueCategories.map((cat) => (
             <BadgeTooltip
               key={cat.id}
               id={cat.id}
@@ -281,7 +331,7 @@ const IndicatorListColumnCell = (props: IndicatorListColumnCellProps) => {
     case IndicatorDashboardFieldName.Unit:
       return (
         <CellContent>
-          <Unit>{indicator.unit.shortName}</Unit>
+          <Unit>{indicator.unit.shortName || indicator.unit.name}</Unit>
         </CellContent>
       );
     default:
