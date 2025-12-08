@@ -582,8 +582,10 @@ function GlobalNav(props) {
             <HomeLink $hideLogoOnMobile={hideLogoOnMobile} href={logoLink}>
               <OrgLogo />
             </HomeLink>
-            <HomeLink href={rootLink}>
-              <SiteTitle>{theme.navTitleVisible ? siteTitle : '\u00A0'}</SiteTitle>
+            <HomeLink href={rootLink} aria-label={!theme.navTitleVisible ? siteTitle : undefined}>
+              <SiteTitle aria-hidden={!theme.navTitleVisible}>
+                {theme.navTitleVisible ? siteTitle : '\u00A0'}
+              </SiteTitle>
             </HomeLink>
             <PlanSelector color={theme.brandNavColor} />
           </Site>
