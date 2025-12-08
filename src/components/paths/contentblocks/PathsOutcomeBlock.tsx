@@ -15,7 +15,6 @@ import type {
   GetOutcomeNodeContentQuery,
   OutcomeNodeFieldsFragment,
 } from '@/common/__generated__/paths/graphql';
-// import { ActionNode, NodeInterface } from '@/common/__generated__/paths/graphql';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
@@ -82,11 +81,11 @@ const StyledCard = styled(Card)<{ $disabled?: boolean }>`
   }
 `;
 
-const findVisibleNodes = (
+const findVisibleNodes: (
   allNodes: Map<string, OutcomenodeType>,
   lastNodeId: string,
   visibleNodes: OutcomenodeType[]
-) => {
+) => OutcomenodeType[] = (allNodes, lastNodeId: string, visibleNodes) => {
   // Using last active node Id, create an array of all visible nodes
   const lastNode = allNodes.get(lastNodeId)!;
   visibleNodes.unshift(lastNode);
@@ -102,11 +101,13 @@ export interface OutcomenodeType extends OutcomeNodeFieldsFragment {
 }
 
 type PathsOutcomeBlockProps = {
-  heading: string;
+  heading: string | null;
+  helpText?: string | null;
+  outcomeNodeId?: string | null;
 };
 
 export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
-  const { heading } = props;
+  const { heading, outcomeNodeId } = props;
   const t = useTranslations();
   const pathsInstance = usePaths();
   const yearRange = useReactiveVar(yearRangeVar);
@@ -120,6 +121,7 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
   //console.log('PathsOutcomeBlock', props);
   const [lastActiveNodeId, setLastActiveNodeId] = useState<string | undefined>(queryNodeId);
 
+  console.log('paths outcome block', props);
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -141,7 +143,7 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
 
   // router.push(pathname + '?' + createQueryString('sort', 'asc'))
   const queryResp = useQuery<GetOutcomeNodeContentQuery>(GET_OUTCOME_NODE, {
-    variables: { node: 'net_emissions', goal: activeGoal?.id ?? null },
+    variables: { node: outcomeNodeId || 'net_emissions', goal: activeGoal?.id ?? null },
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
     context: {
@@ -158,7 +160,11 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
   if (error) return <p>Error : {error.message}</p>;
   const data = queryResp.data ?? previousData;
 
-  const getVisibleNodes = (outcomeNode: OutcomenodeType) => {
+  console.log('outcomedata', outcomeNodeId, data);
+  const getVisibleNodes: (outcomeNode: OutcomenodeType) => {
+    visible: OutcomenodeType[];
+    all: Map<string, OutcomenodeType>;
+  } = (outcomeNode: OutcomenodeType) => {
     if (!outcomeNode) return { visible: [], all: new Map() };
     const upstreamNodes = outcomeNode?.upstreamNodes ?? [];
 

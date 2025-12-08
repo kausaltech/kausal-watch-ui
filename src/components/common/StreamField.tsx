@@ -500,7 +500,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'PathsOutcomeBlock': {
       const { heading, helpText, outcomeNodeId } = block;
       return (
-        <PathsOutcomeBlock heading={heading} helpText={helpText} outcomenodeId={outcomeNodeId} />
+        <PathsOutcomeBlock heading={heading} helpText={helpText} outcomeNodeId={outcomeNodeId} />
       );
     }
     case 'CategoryTypeLevelListBlock': {
