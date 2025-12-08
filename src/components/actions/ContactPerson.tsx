@@ -83,7 +83,7 @@ type AvatarProps = {
   $isLeader: boolean;
 };
 
-const Avatar = styled.div<AvatarProps>`
+const Avatar = styled.div.attrs({ role: 'img' })<AvatarProps>`
   width: 5em;
   height: 5em;
   border-radius: 50%;
