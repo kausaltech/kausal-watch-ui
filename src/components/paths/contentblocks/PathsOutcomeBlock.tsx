@@ -118,10 +118,8 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
   const router = useRouter();
   const pathname = usePathname();
   const queryNodeId = searchParams.get('node') ?? undefined;
-  //console.log('PathsOutcomeBlock', props);
   const [lastActiveNodeId, setLastActiveNodeId] = useState<string | undefined>(queryNodeId);
 
-  console.log('paths outcome block', props);
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -160,7 +158,6 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
   if (error) return <p>Error : {error.message}</p>;
   const data = queryResp.data ?? previousData;
 
-  console.log('outcomedata', outcomeNodeId, data);
   const getVisibleNodes: (outcomeNode: OutcomenodeType) => {
     visible: OutcomenodeType[];
     all: Map<string, OutcomenodeType>;
