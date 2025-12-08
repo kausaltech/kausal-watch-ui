@@ -581,6 +581,9 @@ function GlobalNav(props) {
           <Site>
             <HomeLink $hideLogoOnMobile={hideLogoOnMobile} href={logoLink}>
               <OrgLogo />
+              <span className="visually-hidden">
+                + {`${ownerName}, ${siteTitle} ${t('front-page')}`}+{' '}
+              </span>
             </HomeLink>
             <HomeLink href={rootLink} aria-label={!theme.navTitleVisible ? siteTitle : undefined}>
               <SiteTitle aria-hidden={!theme.navTitleVisible}>
