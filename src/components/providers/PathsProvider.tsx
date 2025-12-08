@@ -103,8 +103,8 @@ const PER_INSTANCE_SETTINGS: Record<
 
 export default function PathsProvider({ instance, children }: PathsProviderProps) {
   const pathsInstance = instance?.instance;
-  if (!pathsInstance) return undefined;
-  const instanceSettings = PER_INSTANCE_SETTINGS[pathsInstance.id];
+
+  const instanceSettings = pathsInstance ? PER_INSTANCE_SETTINGS[pathsInstance.id] : undefined;
 
   // Augment instance with attributes that have no backend support
   const instanceGoals: AugmentedInstanceGoal[] | undefined = pathsInstance?.goals.map((goal) => {
