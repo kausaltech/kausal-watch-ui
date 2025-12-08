@@ -261,6 +261,7 @@ export enum IndicatorDetailsFieldName {
   CausalityNav = 'CAUSALITY_NAV',
   ConnectedActions = 'CONNECTED_ACTIONS',
   Description = 'DESCRIPTION',
+  GoalDescription = 'GOAL_DESCRIPTION',
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
@@ -3938,7 +3939,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
 );
 
 export type IndicatorListIndicatorFragment = (
-  { id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+  { id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, sortKey: string | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
     { id: string, name: string }
     & { __typename: 'Organization' }
   ), common: (
@@ -4167,7 +4168,7 @@ export type IndicatorListPageFragmentFragment = (
     { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
     & { __typename: 'IndicatorListColumn' }
   ) | (
-    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, hideUnit: boolean }
+    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, defaultYear: number | null, hideUnit: boolean }
     & { __typename: 'IndicatorValueColumn' }
   )> | null, primaryFilters: Array<(
     { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -12048,7 +12049,7 @@ export type GetContentPageQuery = (
       { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
       & { __typename: 'IndicatorListColumn' }
     ) | (
-      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, hideUnit: boolean }
+      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, defaultYear: number | null, hideUnit: boolean }
       & { __typename: 'IndicatorValueColumn' }
     )> | null, primaryFilters: Array<(
       { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -13854,7 +13855,7 @@ export type IndicatorListQuery = (
     )> }
     & { __typename: 'Plan' }
   ) | null, planIndicators?: Array<(
-    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, sortKey: string | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
       { id: string, name: string }
       & { __typename: 'Organization' }
     ), common: (
@@ -13950,7 +13951,7 @@ export type IndicatorListQuery = (
     )> }
     & { __typename: 'Indicator' }
   )> | null, relatedPlanIndicators?: Array<(
-    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, sortKey: string | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
       { id: string, name: string }
       & { __typename: 'Organization' }
     ), common: (
@@ -14072,7 +14073,7 @@ export type IndicatorDetailsQuery = (
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, sourceField: IndicatorDetailsFieldName | null }
         & { __typename: 'IndicatorContentBlock' }
       ) | (
-        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
+        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, defaultGoalYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
         & { __typename: 'IndicatorValueSummaryContentBlock' }
       )> | null, detailsMainBottom: Array<(
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, categoryType: (
@@ -14087,7 +14088,7 @@ export type IndicatorDetailsQuery = (
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, sourceField: IndicatorDetailsFieldName | null }
         & { __typename: 'IndicatorContentBlock' }
       ) | (
-        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
+        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, defaultGoalYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
         & { __typename: 'IndicatorValueSummaryContentBlock' }
       )> | null, detailsAside: Array<(
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, categoryType: (
@@ -14102,14 +14103,14 @@ export type IndicatorDetailsQuery = (
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, sourceField: IndicatorDetailsFieldName | null }
         & { __typename: 'IndicatorContentBlock' }
       ) | (
-        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
+        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, defaultGoalYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
         & { __typename: 'IndicatorValueSummaryContentBlock' }
       )> | null }
       & { __typename: 'IndicatorListPage' }
     ) | null }
     & { __typename: 'Plan' }
   ) | null, indicator: (
-    { id: string, identifier: string | null, name: string, level: string | null, description: string | null, reference: string | null, timeResolution: IndicatorTimeResolution, valueRounding: number | null, updatedAt: string, desiredTrend: IndicatorDesiredTrend | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, referenceValue: (
+    { id: string, identifier: string | null, name: string, level: string | null, description: string | null, goalDescription: string | null, reference: string | null, timeResolution: IndicatorTimeResolution, valueRounding: number | null, updatedAt: string, desiredTrend: IndicatorDesiredTrend | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, referenceValue: (
       { id: string, date: string | null, value: number, normalizedValues: Array<(
         { normalizerId: string | null, value: number | null }
         & { __typename: 'NormalizedValue' }
@@ -14371,7 +14372,7 @@ export type IndicatorContentBlockFragmentFragment = (
 );
 
 export type IndicatorValueSummaryContentBlockFragmentFragment = (
-  { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
+  { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, defaultGoalYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
   & { __typename: 'IndicatorValueSummaryContentBlock' }
 );
 

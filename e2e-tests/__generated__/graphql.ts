@@ -260,6 +260,7 @@ export enum IndicatorDetailsFieldName {
   CausalityNav = 'CAUSALITY_NAV',
   ConnectedActions = 'CONNECTED_ACTIONS',
   Description = 'DESCRIPTION',
+  GoalDescription = 'GOAL_DESCRIPTION',
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',

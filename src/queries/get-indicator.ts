@@ -50,6 +50,7 @@ export const GET_INDICATOR_DETAILS = gql`
       name
       level(plan: $plan)
       description
+      goalDescription
       reference
       referenceValue {
         id
@@ -271,6 +272,7 @@ export const GET_INDICATOR_DETAILS = gql`
     field
     showReferenceValue
     referenceYear
+    defaultGoalYear
     showCurrentValue
     showGoalValue
     showGoalGap
