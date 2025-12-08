@@ -93,6 +93,91 @@ const TooltipContent = styled.div`
   }
 `;
 
+/**
+ * Get the goal value for the given year or near the given year
+ * Fallback logic for when no goal year is specified
+ * @param goals - The goals of the indicator
+ * @param defaultGoalYear - The default goal year
+ * @returns The goal value
+ */
+const getGoalValue = (goals: Indicator['goals'], defaultGoalYear: number | null) => {
+  if (!goals || goals.length === 0) return null;
+
+  const now = dayjs();
+  const validGoals = goals.filter(
+    (goal): goal is NonNullable<typeof goal> & { date: string } =>
+      goal !== null && goal !== undefined && goal.date !== null && goal.date !== undefined
+  );
+
+  if (validGoals.length === 0) return null;
+
+  // If defaultGoalYear is not defined, return next goal from current date
+  if (defaultGoalYear === null || defaultGoalYear === undefined) {
+    const nextGoal = validGoals.find((goal) => dayjs(goal.date).isSameOrAfter(now));
+    return nextGoal || null;
+  }
+
+  // If defaultGoalYear is defined, get first goal from goals that is on defaultGoalYear
+  const defaultGoalYearStart = dayjs(`${defaultGoalYear}-01-01`);
+  const defaultGoalYearEnd = dayjs(`${defaultGoalYear}-12-31`).endOf('day');
+
+  const goalOnYear = validGoals.find((goal) => {
+    const goalDate = dayjs(goal.date);
+    return (
+      goalDate.isSameOrAfter(defaultGoalYearStart) &&
+      (goalDate.isBefore(defaultGoalYearEnd) || goalDate.isSame(defaultGoalYearEnd))
+    );
+  });
+
+  if (goalOnYear) {
+    return goalOnYear;
+  }
+
+  // If there are no goals on defaultGoalYear, return the first goal before defaultGoalYear
+  const goalsBeforeYear = validGoals
+    .filter((goal) => dayjs(goal.date).isBefore(defaultGoalYearStart))
+    .sort((a, b) => {
+      return dayjs(b.date).valueOf() - dayjs(a.date).valueOf(); // Sort descending (most recent first)
+    });
+
+  if (goalsBeforeYear.length > 0) {
+    return goalsBeforeYear[0];
+  }
+
+  // If there are no goals between now and defaultGoalYear, then return the next goal after defaultGoalYear
+  // Check if there are any goals between now and the end of defaultGoalYear
+  const goalsBetweenNowAndYear = validGoals.filter((goal) => {
+    const goalDate = dayjs(goal.date);
+    return (
+      goalDate.isSameOrAfter(now) &&
+      (goalDate.isBefore(defaultGoalYearEnd) || goalDate.isSame(defaultGoalYearEnd))
+    );
+  });
+
+  if (goalsBetweenNowAndYear.length === 0) {
+    // No goals between now and defaultGoalYear, return the next goal after defaultGoalYear
+    const goalsAfterYear = validGoals
+      .filter((goal) => dayjs(goal.date).isAfter(defaultGoalYearEnd))
+      .sort((a, b) => {
+        return dayjs(a.date).valueOf() - dayjs(b.date).valueOf(); // Sort ascending (earliest first)
+      });
+
+    if (goalsAfterYear.length > 0) {
+      return goalsAfterYear[0];
+    }
+  }
+
+  // Fallback: return the last goal if nothing matches
+  return validGoals[validGoals.length - 1];
+};
+
+/**
+ * Determine the desirable direction based on the desired trend and the values and goals
+ * @param desiredTrend - The desired trend of the indicator
+ * @param values - The values of the indicator
+ * @param goals - The goals of the indicator
+ * @returns The desirable direction
+ */
 function determineDesirableDirection(
   desiredTrend: Indicator['desiredTrend'] | null | undefined,
   values: Indicator['values'],
@@ -135,6 +220,7 @@ export type ValueSummaryOptions = {
   };
   goalValue: {
     show: boolean | null;
+    defaultGoalYear: number | null;
   };
   goalGap: {
     show: boolean | null;
@@ -300,38 +386,13 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
     </ValueBlock>
   ) : null;
 
-  // TODO: Make this configurable
-  // Implicity show the last goal if reference value is shown
-  const showLastGoal = displayOptions.referenceValue.show;
-  const displayGoal = showLastGoal
-    ? goals?.[goals.length - 1]
-    : goals?.find((goal) => goal && dayjs(goal.date).isSameOrAfter(now));
+  // From multiple goals, select which one to display in summary
+  const displayGoal = getGoalValue(goals, options.goalValue.defaultGoalYear);
 
   let goalDisplay: React.ReactNode | undefined;
 
-  if (displayGoal && displayOptions.goalValue.show) {
-    const nextGoalDate = dayjs(displayGoal.date).format(timeFormat);
-    const nextGoalValue = format.number(displayGoal.value, { maximumSignificantDigits: rounding });
-    const DesiredTrendIcon =
-      desiredTrend === IndicatorDesiredTrend.Increasing ? (
-        <TrendIcon name="arrow-up" />
-      ) : (
-        <TrendIcon name="arrow-down" />
-      );
-    goalDisplay = (
-      <ValueBlock>
-        <ValueLabel>{t('indicator-goal')}</ValueLabel>
-        <ValueDate>{nextGoalDate}</ValueDate>
-        <ValueDisplay>
-          <div>
-            {desiredTrend && DesiredTrendIcon}
-            {nextGoalValue}
-            <ValueUnit>{shortUnitName}</ValueUnit>
-          </div>
-        </ValueDisplay>
-      </ValueBlock>
-    );
-  } else if (displayOptions.nonQuantifiedGoal.trend && displayOptions.goalValue.show) {
+  // Non quantified goal trumps value goals in value summary
+  if (displayOptions.nonQuantifiedGoal.trend && displayOptions.goalValue.show) {
     const DesiredTrendIcon =
       displayOptions.nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase ? (
         <TrendIcon name="arrow-up" />
@@ -351,6 +412,28 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
             <ValueUnit>
               {t(`indicator-desired-trend-${displayOptions.nonQuantifiedGoal.trend.toLowerCase()}`)}
             </ValueUnit>
+          </div>
+        </ValueDisplay>
+      </ValueBlock>
+    );
+  } else if (displayGoal && displayOptions.goalValue.show) {
+    const nextGoalDate = dayjs(displayGoal.date).format(timeFormat);
+    const nextGoalValue = format.number(displayGoal.value, { maximumSignificantDigits: rounding });
+    const DesiredTrendIcon =
+      desiredTrend === IndicatorDesiredTrend.Increasing ? (
+        <TrendIcon name="arrow-up" />
+      ) : (
+        <TrendIcon name="arrow-down" />
+      );
+    goalDisplay = (
+      <ValueBlock>
+        <ValueLabel>{t('indicator-goal')}</ValueLabel>
+        <ValueDate>{nextGoalDate}</ValueDate>
+        <ValueDisplay>
+          <div>
+            {desiredTrend && DesiredTrendIcon}
+            {nextGoalValue}
+            <ValueUnit>{shortUnitName}</ValueUnit>
           </div>
         </ValueDisplay>
       </ValueBlock>
