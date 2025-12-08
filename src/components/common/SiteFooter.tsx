@@ -511,7 +511,10 @@ function SiteFooter(props: SiteFooterProps) {
             {theme.themeLogoWhiteUrl !== '' && (
               <Logo>
                 {theme?.footerLogoLink ? (
-                  <a href={theme.footerLogoLink}>
+                  <a
+                    href={theme.footerLogoLink}
+                    aria-label={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+                  >
                     <OrgLogo />
                   </a>
                 ) : (
