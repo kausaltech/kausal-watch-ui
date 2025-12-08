@@ -71,6 +71,15 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
           <RichText html={indicator.description || ''} isCollapsible={false} />
         </ContentBlockWrapper>
       );
+    case IndicatorDetailsFieldName.GoalDescription:
+      return (
+        indicator.goalDescription && (
+          <ContentBlockWrapper>
+            {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
+            <div>{indicator.goalDescription}</div>
+          </ContentBlockWrapper>
+        )
+      );
     case IndicatorDetailsFieldName.Visualization:
       return (
         <ContentBlockWrapper>
@@ -183,6 +192,7 @@ interface IndicatorValueSummaryBlockProps {
 
 const IndicatorValueSummaryBlock = (props: IndicatorValueSummaryBlockProps) => {
   const { block, indicator } = props;
+  console.log('indicator value summary block', block, indicator);
   const options: ValueSummaryOptions = {
     referenceValue: {
       show: block.showReferenceValue,
@@ -194,6 +204,7 @@ const IndicatorValueSummaryBlock = (props: IndicatorValueSummaryBlockProps) => {
     },
     goalValue: {
       show: block.showGoalValue,
+      defaultGoalYear: block.defaultGoalYear,
     },
     goalGap: {
       show: block.showGoalGap,
