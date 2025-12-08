@@ -676,7 +676,9 @@ function GlobalNav(props) {
               {customToolbarItems.length > 0 && <CustomToolbar items={customToolbarItems} mobile />}
             </Nav>
             <Nav navbar className="ms-md-5">
-              <PlanVersionSelector plan={plan} />
+              <NavItem>
+                <PlanVersionSelector plan={plan} />
+              </NavItem>
               {externalItems.length > 0 &&
                 externalItems.map((item, index) => (
                   <NavItem key={`external${index}`}>
