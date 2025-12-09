@@ -125,7 +125,7 @@ const getValue = (
   indicator: IndicatorListIndicator,
   valueType: IndicatorColumnValueType,
   isNormalized: boolean,
-  referenceYear: number | null
+  defaultYear: number | null
 ): number | string | null => {
   switch (valueType) {
     case IndicatorColumnValueType.Earliest:
@@ -150,6 +150,7 @@ const getValue = (
       if (!hasGoals) {
         return null;
       }
+
       const lastGoalIndex = indicator.goals!.length - 1;
       return isNormalized
         ? (indicator.goals![lastGoalIndex]?.normalizedValues?.[0]?.value ?? null)
@@ -160,12 +161,12 @@ const getValue = (
           ? (indicator.referenceValue?.normalizedValues?.[0]?.value ?? null)
           : (indicator.referenceValue?.value ?? null);
       }
-      if (!referenceYear) {
+      if (!defaultYear) {
         return null;
       }
       const referenceValue = indicator.referenceValue
         ? indicator.referenceValue
-        : indicator.values.find((value) => value.date?.startsWith(String(referenceYear)));
+        : indicator.values.find((value) => value.date?.startsWith(String(defaultYear)));
       return referenceValue
         ? isNormalized
           ? referenceValue.normalizedValues?.[0]?.value
@@ -179,24 +180,34 @@ interface IndicatorValueCellProps {
   indicator: IndicatorListIndicator;
   isNormalized: boolean;
   valueType: IndicatorColumnValueType;
-  referenceYear: number | null;
+  defaultYear: number | null;
   hideUnit: boolean;
 }
 
 const IndicatorValueCell = (props: IndicatorValueCellProps) => {
-  const { indicator, isNormalized, valueType, referenceYear, hideUnit } = props;
+  const { indicator, isNormalized, valueType, defaultYear, hideUnit } = props;
   const format = useFormatter();
   const t = useTranslations();
 
   const rounding = indicator.valueRounding ?? DEFAULT_ROUNDING;
-  const value: number | string | null = getValue(indicator, valueType, isNormalized, referenceYear);
+  const value: number | string | null = getValue(indicator, valueType, isNormalized, defaultYear);
   const customReferenceYear =
-    valueType === IndicatorColumnValueType.Reference && referenceYear
+    valueType === IndicatorColumnValueType.Reference && defaultYear
       ? indicator.referenceValue?.date
         ? new Date(indicator.referenceValue.date).getFullYear()
         : null
       : null;
 
+  const customGoalYear =
+    valueType === IndicatorColumnValueType.Goal && defaultYear
+      ? new Date(
+          indicator.goals?.find((goal) => goal?.date?.startsWith(String(defaultYear)))?.date ?? ''
+        ).getFullYear()
+      : null;
+
+  if (valueType === IndicatorColumnValueType.Goal) {
+    console.log('custom goal year', customGoalYear, indicator.goals, defaultYear);
+  }
   if (value === null) {
     return <CellContent $numeric={true}>--</CellContent>;
   }
@@ -222,10 +233,16 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
     <CellContent $numeric={true}>
       <Value>{format.number(value, { maximumSignificantDigits: rounding })}</Value>
       {!hideUnit && <Unit>{indicator.unit.shortName || indicator.unit.name}</Unit>}
-      {customReferenceYear && customReferenceYear !== referenceYear && (
+      {customReferenceYear && customReferenceYear !== defaultYear && (
         <>
           <br />
           <Unit>({customReferenceYear})</Unit>
+        </>
+      )}
+      {customGoalYear && customGoalYear !== defaultYear && (
+        <>
+          <br />
+          <Unit>({customGoalYear})</Unit>
         </>
       )}
     </CellContent>
@@ -361,7 +378,7 @@ const IndicatorTableCell = (props: IndicatorTableCellProps) => {
           indicator={indicator}
           isNormalized={column.isNormalized}
           valueType={column.valueType}
-          referenceYear={column.referenceYear}
+          defaultYear={column.defaultYear}
           hideUnit={column.hideUnit}
         />
       );
