@@ -17,7 +17,7 @@ import { SectionHeader } from './ActionListBlock';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
-  padding: ${(props) => props.theme.spaces.s100};
+  padding: ${(props) => props.theme.spaces.s300} 0;
   color: ${(props) =>
     readableColor(
       props.theme.neutralLight,
@@ -32,8 +32,9 @@ const IndicatorGraphSection = styled.div`
 `;
 
 const IndicatorContainer = styled.div`
+  flex: 1 1 auto;
   background-color: ${(props) => props.theme.themeColors.white};
-  padding: ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s100};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
@@ -67,7 +68,7 @@ function IndicatorItem(props: IndicatorItemProps) {
   const { indicator, display, linkToPage = true } = props;
   if (display === 'graph')
     return (
-      <Col className="mb-5" lg={{ size: 8 }}>
+      <Col className="mb-4 d-flex align-items-stretch" lg={{ size: 8 }}>
         <IndicatorContainer>
           {linkToPage ? (
             <IndicatorLink id={indicator.id}>
@@ -79,13 +80,13 @@ function IndicatorItem(props: IndicatorItemProps) {
           ) : (
             <h3>{indicator.name}</h3>
           )}
-          <IndicatorVisualisation indicatorId={indicator.id} />
+          <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
         </IndicatorContainer>
       </Col>
     );
 
   return (
-    <Col md={6} xl={4} className="mb-5 d-flex align-items-stretch">
+    <Col md={6} xl={4} className="mb-4 d-flex align-items-stretch">
       <IndicatorHighlightCard
         level={indicator.level}
         objectid={indicator.id}
@@ -103,7 +104,7 @@ const StyledColCentered = styled(Col)`
 `;
 
 const StyledRow = styled(Row)`
-  margin-top: ${(props) => props.theme.spaces.s400};
+  margin-top: ${(props) => props.theme.spaces.s200};
   align-items: stretch;
 `;
 

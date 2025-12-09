@@ -34,10 +34,7 @@ const CollapsibleTable = styled.div`
   background-color: ${(p) => p.theme.themeColors.white};
   padding: ${(p) => p.theme.spaces.s050};
 `;
-const Trigger = styled.div`
-  background-color: ${(p) => p.theme.cardBackground.primary};
-  text-align: center;
-`;
+
 const TableContainer = styled.div`
   padding: ${(p) => `${p.theme.spaces.s200} ${p.theme.spaces.s050} ${p.theme.spaces.s100}`};
   background-color: ${(p) => p.theme.cardBackground.primary};
@@ -159,12 +156,11 @@ function GraphAsTable({
 
   return (
     <CollapsibleTable>
-      <Trigger>
-        <TriggerButton color="link" size="sm" onClick={toggle}>
-          {isOpen ? t('graph-hideTable') : t('graph-showTable')}
-          <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
-        </TriggerButton>
-      </Trigger>
+      <TriggerButton color="link" size="sm" onClick={toggle}>
+        {isOpen ? t('graph-hideTable') : t('graph-showTable')}
+        <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
+      </TriggerButton>
+
       <Collapse isOpen={isOpen}>
         <TableContainer>
           <Table responsive bordered size="sm">
