@@ -1,12 +1,10 @@
 import { makeVar } from '@apollo/client';
 
-import { type GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
+import type { PathsInstanceType } from '@/components/providers/PathsProvider';
 
 export const yearRangeVar = makeVar<[number, number]>(null!);
-export const activeScenarioVar = makeVar<GetInstanceContextQuery['scenarios'][number] | null>(null);
-export const activeGoalVar = makeVar<GetInstanceContextQuery['instance']['goals'][number] | null>(
-  null
-);
+export const activeScenarioVar = makeVar<PathsInstanceType['scenarios'][number] | null>(null);
+export const activeGoalVar = makeVar<PathsInstanceType['instance']['goals'][number] | null>(null);
 
 type SettingsVarType = {
   iconBase: string;
