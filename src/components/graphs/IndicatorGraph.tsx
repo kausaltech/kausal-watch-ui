@@ -528,7 +528,10 @@ function IndicatorGraph({
               },
               {
                 xAxis: 'max',
-                yAxis: 0,
+                yAxis:
+                  nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
+                    ? yRange.range[1]
+                    : yRange.range[0],
               },
             ],
           ],
