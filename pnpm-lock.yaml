@@ -116,6 +116,9 @@ importers:
       docker-secret:
         specifier: ^1.2.4
         version: 1.2.4
+      domelementtype:
+        specifier: ^2.3.0
+        version: 2.3.0
       dotenv:
         specifier: ^16.0.0
         version: 16.6.1
