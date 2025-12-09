@@ -230,7 +230,8 @@ const getDefaultColumns = (
     sourceField: null,
     isNormalized: false,
     valueType: IndicatorColumnValueType.Latest,
-    referenceYear: null,
+    defaultYear: null,
+    referenceYear: null, // @deprecated, remove when type is updated
     hideUnit: false,
   });
 
@@ -243,7 +244,8 @@ const getDefaultColumns = (
       sourceField: null,
       isNormalized: true,
       valueType: IndicatorColumnValueType.Latest,
-      referenceYear: null,
+      defaultYear: null,
+      referenceYear: null, // @deprecated, remove when type is updated
       hideUnit: false,
     });
   }
