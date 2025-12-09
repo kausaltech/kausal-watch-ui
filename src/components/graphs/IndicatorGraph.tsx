@@ -102,6 +102,33 @@ const formatNumber = (value: number, digits?: number) => {
   }).format(value);
 };
 
+const roundTickValue = (value: number): number => {
+  if (value === 0 || !isFinite(value)) return value;
+  const absValue = Math.abs(value);
+
+  // Determine rounding precision based on magnitude
+  // For larger numbers, round to fewer decimal places
+  if (absValue >= 1000) {
+    // Round to nearest 10 for values >= 1000
+    return Math.round(value / 10) * 10;
+  } else if (absValue >= 100) {
+    // Round to nearest integer for values >= 100
+    return Math.round(value);
+  } else if (absValue >= 10) {
+    // Round to 1 decimal place for values >= 10
+    return Math.round(value * 10) / 10;
+  } else if (absValue >= 1) {
+    // Round to 2 decimal places for values >= 1
+    return Math.round(value * 100) / 100;
+  } else {
+    // For values < 1, use more precision
+    const magnitude = Math.floor(Math.log10(absValue));
+    const precision = Math.abs(magnitude) + 2;
+    const factor = Math.pow(10, precision);
+    return Math.round(value * factor) / factor;
+  }
+};
+
 type GraphSettings = {
   totalLineColor?: string;
   categoryColors?: string[];
@@ -938,8 +965,11 @@ function IndicatorGraph({
               : undefined,
         max: yRange.range[1] != null ? yRange.range[1] : undefined,
         axisLabel: {
-          formatter: (value: number) =>
-            formatNumber(value, yRange.ticksRounding ?? yRange.valueRounding),
+          formatter: (value: number) => {
+            // Round tick values more aggressively for cleaner labels
+            const roundedValue = roundTickValue(value);
+            return formatNumber(roundedValue, yRange.ticksRounding ?? yRange.valueRounding);
+          },
         },
       },
       series: [...baseSeries, ...trendSeries, ...goalSeries],
