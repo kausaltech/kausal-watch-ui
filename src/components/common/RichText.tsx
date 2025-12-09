@@ -48,6 +48,26 @@ const ToggleButton = styled(Button)`
   }
 `;
 
+const IndicatorLinkWrapper = styled.span`
+  a {
+    //background-color: ${(props) => props.theme.themeColors.white};
+    color: ${(props) => props.theme.themeColors.black};
+    text-decoration: underline !important;
+    &:hover {
+      text-decoration: none !important;
+      color: ${(props) => props.theme.themeColors.black};
+    }
+
+    svg {
+      fill: ${(props) => props.theme.linkColor};
+    }
+  }
+`;
+
+const NonBreakingWrapper = styled.span`
+  white-space: nowrap;
+`;
+
 type RichTextImageProps = {
   attribs: React.JSX.IntrinsicElements['img'] & {
     class?: string;
@@ -214,15 +234,38 @@ type RichTextIndicatorLinkProps = {
   id: string;
 };
 
+// Helper function to split first word from rest of text for non-breaking icon spacing
+function splitFirstWord(children: React.ReactNode): {
+  firstWord: React.ReactNode;
+  rest: React.ReactNode;
+} {
+  if (typeof children === 'string') {
+    const firstSpaceIndex = children.indexOf(' ');
+    const firstWord = firstSpaceIndex > 0 ? children.slice(0, firstSpaceIndex) : children;
+    const restOfText = firstSpaceIndex > 0 ? children.slice(firstSpaceIndex + 1) : '';
+    return { firstWord, rest: restOfText || null };
+  }
+  // For non-string children, return as-is (will be wrapped entirely)
+  return { firstWord: children, rest: null };
+}
+
 function RichTextIndicatorLink(props: PropsWithChildren<RichTextIndicatorLinkProps>) {
   const { id, children } = props;
   // FIXME: Add support for indicator modals
+
+  const { firstWord, rest } = splitFirstWord(children);
+
   return (
-    <IndicatorLink id={id}>
-      {/* FIXME: Proper icon for an indicator link */}
-      <Icon.Bullseye />
-      {children}
-    </IndicatorLink>
+    <IndicatorLinkWrapper>
+      <IndicatorLink id={id}>
+        <NonBreakingWrapper>
+          <Icon.Tachometer />
+          {'\u00A0'}
+          {firstWord}
+        </NonBreakingWrapper>
+        {rest && ` ${rest}`}
+      </IndicatorLink>
+    </IndicatorLinkWrapper>
   );
 }
 
@@ -273,10 +316,15 @@ export default function RichText(props: RichTextProps) {
           return <a href={href}>{reactChildren}</a>;
         }
         // Assumed external link, open in new tab
+        const { firstWord, rest } = splitFirstWord(reactChildren);
         return (
           <a target="_blank" href={href} rel="noreferrer">
-            <Icon.ArrowUpRightFromSquare />
-            {reactChildren}
+            <NonBreakingWrapper>
+              <Icon.ArrowUpRightFromSquare />
+              {'\u00A0'}
+              {firstWord}
+            </NonBreakingWrapper>
+            {rest && ` ${rest}`}
           </a>
         );
       }
