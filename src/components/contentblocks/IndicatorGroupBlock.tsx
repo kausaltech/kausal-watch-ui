@@ -131,7 +131,13 @@ export default function IndicatorGroupBlock(props: Props) {
   return (
     <IndicatorGraphSection id={id}>
       <Container>
-        {displayHeader ? <SectionHeader>{displayHeader}</SectionHeader> : null}
+        {displayHeader ? (
+          <Row>
+            <Col>
+              <SectionHeader>{displayHeader}</SectionHeader>{' '}
+            </Col>
+          </Row>
+        ) : null}
         <StyledRow className="justify-content-center">
           {indicators
             .filter(

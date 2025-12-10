@@ -69,6 +69,7 @@ const CategoryHeader = styled.div<{ $bg: string | null | undefined; $hasImage?: 
   position: relative;
   background-color: ${({ $bg }) => $bg};
   min-height: 14rem;
+  padding: ${({ theme }) => `${theme.spaces.s100} 0`};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     display: flex;
@@ -225,12 +226,12 @@ const CategoryHeaderAttributes = ({ layout, page, children }: CategoryHeaderAttr
   layout.length ? (
     <AttributesContainer>
       <Attributes>
+        {children}
         <Row>
           {layout.map((block, i) => (
             <CategoryPageStreamField key={i} block={block} page={page} context="hero" />
           ))}
         </Row>
-        {children}
       </Attributes>
     </AttributesContainer>
   ) : children ? (
@@ -267,6 +268,7 @@ const LegacyCategoryHeaderAttributes = ({
   return attributesWithContent.length > 0 && attributes && attributeTypes ? (
     <AttributesContainer>
       <AttributesBlock attributes={attributes} types={attributeTypes}>
+        {children}
         {plan.actionStatuses.length ? (
           <ActionStatusGraphsBlock
             categoryId={categoryId}
@@ -276,7 +278,6 @@ const LegacyCategoryHeaderAttributes = ({
             withContainer={false}
           />
         ) : null}
-        {children}
       </AttributesBlock>
     </AttributesContainer>
   ) : (
