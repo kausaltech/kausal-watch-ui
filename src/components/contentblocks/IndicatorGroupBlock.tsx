@@ -128,6 +128,10 @@ export default function IndicatorGroupBlock(props: Props) {
         menuItem?.page?.__typename === 'IndicatorListPage'
     ) !== -1;
 
+  const openIndicatorsInModal = plan.features.indicatorsOpenInModal === true;
+
+  const showSeeAllIndicatorsButton = hasIndicatorsPage && !openIndicatorsInModal;
+
   return (
     <IndicatorGraphSection id={id}>
       <Container>
@@ -156,7 +160,7 @@ export default function IndicatorGroupBlock(props: Props) {
               />
             ))}
         </StyledRow>
-        {hasIndicatorsPage && (
+        {showSeeAllIndicatorsButton && (
           <Row>
             <StyledColCentered>
               <IndicatorListLink>
