@@ -229,7 +229,12 @@ const CategoryHeaderAttributes = ({ layout, page, children }: CategoryHeaderAttr
         {children}
         <Row>
           {layout.map((block, i) => (
-            <CategoryPageStreamField key={i} block={block} page={page} context="hero" />
+            <CategoryPageStreamField
+              key={i}
+              block={block}
+              page={page}
+              context={layout.length === 1 ? 'main' : 'hero'}
+            />
           ))}
         </Row>
       </Attributes>
