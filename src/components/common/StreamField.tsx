@@ -173,6 +173,17 @@ const RichTextSection = styled.div<{ $topPadding: boolean; $bottomPadding: boole
   background-color: ${({ theme }) => theme.section.richText.sectionBackground};
 `;
 
+const RichTextContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.themeColors.white};
+  padding: ${({ theme }) => theme.spaces.s200};
+
+  > div {
+    flex: 0 1 800px;
+  }
+`;
+
 type StreamFieldBlockPage = {
   __typename:
     | 'CategoryPage'
@@ -234,14 +245,13 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           <Container id={id}>
             <Row>
               <Col
-                xl={{ size: hasSidebar ? 7 : 8, offset: hasSidebar ? 4 : 2 }}
-                lg={{ size: 8, offset: hasSidebar ? 4 : 2 }}
-                md={{ size: 10, offset: 1 }}
-                className="py-4"
-                style={{ backgroundColor: theme.themeColors.white }}
+                xl={{ size: hasSidebar ? 9 : 12, offset: hasSidebar ? 3 : 0 }}
+                lg={{ size: hasSidebar ? 8 : 12, offset: hasSidebar ? 4 : 0 }}
                 {...columnProps}
               >
-                <RichText html={value} isCollapsible={isCollapsible} />
+                <RichTextContainer>
+                  <RichText html={value} isCollapsible={isCollapsible} />
+                </RichTextContainer>
               </Col>
             </Row>
           </Container>
@@ -477,7 +487,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return (
         <CartographyVisualisationBlock
           id={id}
-          styleUrl={cartographyStyle}
+          styleUrl={cartographyStyle ?? ''}
           accessToken={accessToken}
           styleOverrides={styleOverrides}
           hasSidebar={hasSidebar}
