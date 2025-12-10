@@ -65,7 +65,9 @@ const IndicatorLinkWrapper = styled.span`
 `;
 
 const NonBreakingWrapper = styled.span`
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
 `;
 
 type RichTextImageProps = {
