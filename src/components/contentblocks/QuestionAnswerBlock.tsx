@@ -1,24 +1,24 @@
 import React from 'react';
 
-import { Col, ColProps, Container, Row } from 'reactstrap';
+import { Col, type ColProps, Container, Row } from 'reactstrap';
 import styled, { css } from 'styled-components';
 
 import Accordion from '@/components/common/Accordion';
 import RichText from '@/components/common/RichText';
 
-const inlineStyles = ({ theme }) => css`
+const inlineStyles = () => css`
   h2 {
     text-align: left;
-    font-size: ${theme.fontSizeLg};
+    font-size: ${({ theme }) => theme.fontSizeLg};
   }
 `;
 
-const breakOutStyles = ({ theme }) => css`
+const breakOutStyles = () => css`
   background: ${(props) => props.theme.themeColors.light};
 
   h2 {
     text-align: center;
-    font-size: ${theme.fontSizeXl};
+    font-size: ${({ theme }) => theme.fontSizeXl};
   }
 `;
 
