@@ -70,7 +70,6 @@ export function sortIndicators(
 ): IndicatorListIndicator[] {
   const isHierarchical = !!hierarchy && Object.keys(hierarchy).length > 0;
   const sortedIndicators = [...indicators];
-  console.log('sortingOrder', sortingOrder);
   sortingOrder.forEach((sort) => {
     sortedIndicators.sort((a, b) => {
       if (sort.key === 'level') {
