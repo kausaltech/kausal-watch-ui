@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useTranslations } from 'next-intl';
 import { Button } from 'reactstrap';
 
 import { IndicatorCounter, ModalNavigation } from './IndicatorModal.styles';
@@ -23,26 +24,25 @@ export function IndicatorModalNavigation({
   onPrevious,
   onNext,
 }: IndicatorModalNavigationProps) {
+  const t = useTranslations();
   return (
     <ModalNavigation>
       <Button
         onClick={onPrevious}
-        aria-label="Previous indicator"
         disabled={!prevIndicatorId || loading}
         style={{ visibility: prevIndicatorId ? 'visible' : 'hidden' }}
       >
-        Previous
+        {t('previous-indicator')}
       </Button>
       <IndicatorCounter>
         {currentIndicatorNumber}/{indicatorCount}
       </IndicatorCounter>
       <Button
         onClick={onNext}
-        aria-label="Next indicator"
         disabled={!nextIndicatorId || loading}
         style={{ visibility: nextIndicatorId ? 'visible' : 'hidden' }}
       >
-        Next
+        {t('next-indicator')}
       </Button>
     </ModalNavigation>
   );
