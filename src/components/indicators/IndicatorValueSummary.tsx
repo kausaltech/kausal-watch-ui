@@ -387,7 +387,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
   ) : null;
 
   // From multiple goals, select which one to display in summary
-  const displayGoal = getGoalValue(goals, options.goalValue.defaultGoalYear);
+  const displayGoal = getGoalValue(goals, options?.goalValue?.defaultGoalYear ?? null);
 
   let goalDisplay: React.ReactNode | undefined;
 
