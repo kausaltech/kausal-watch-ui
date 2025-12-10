@@ -87,7 +87,43 @@ const PER_INSTANCE_SETTINGS: Record<
         year: 2024,
         node: 'net_emissions',
         goal: 'net_emissions/emission_scope:indirect',
-        disclaimer: 'Text TBC',
+        disclaimer:
+          'Für die indirekten Emissionen in den Bereichen Ernährung und Konsum sowie teilweise im Bereich Mobilität (ca. 25%) im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
+      },
+      {
+        year: 2024,
+        node: 'food_consumption_emissions',
+        goal: 'net_emissions/emission_scope:indirect',
+        disclaimer:
+          'Für die indirekten Emissionen der Ernährung im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
+      },
+      {
+        year: 2024,
+        node: 'other_consumption_emissions',
+        goal: 'net_emissions/emission_scope:indirect',
+        disclaimer:
+          'Für die indirekten Emissionen des Konsums im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
+      },
+      {
+        year: 2024,
+        node: 'transportation_emissions',
+        goal: 'net_emissions/emission_scope:indirect',
+        disclaimer:
+          'Für die indirekten Emissionen der Mobilität der Stadtbevölkerung ausserhalb des Stadtgebiets (exkl. Flugzeug) und der Neufahrzeuge im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
+      },
+      {
+        year: 2024,
+        node: 'transportation_emissions_outside_city',
+        goal: 'net_emissions/emission_scope:indirect',
+        disclaimer:
+          'Für die indirekten Emissionen der Mobilität der Stadtbevölkerung ausserhalb des Stadtgebiets (exkl. Flugzeug) im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
+      },
+      {
+        year: 2024,
+        node: 'new_vehicle_emissions',
+        goal: 'net_emissions/emission_scope:indirect',
+        disclaimer:
+          'Für die indirekten Emissionen der Mobilität der Neufahrzeuge im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
       },
     ],
     colorAdjust: {

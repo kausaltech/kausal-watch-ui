@@ -203,12 +203,9 @@ const OutcomeCardSet = ({
   const hideForecast = separateYears && separateYears.length > 1;
   const inputNodes = rootNode.inputNodes.filter((node) => !nodeMap.has(node.id));
 
-  const handleHover = useCallback(
-    (evt) => {
-      setHoveredNodeId(evt);
-    },
-    [setHoveredNodeId]
-  );
+  const handleHover = useCallback((evt) => {
+    setHoveredNodeId(evt);
+  }, []);
 
   const handleClick = useCallback(
     (segmentId) => {
