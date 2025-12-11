@@ -7,7 +7,7 @@ const accessibilityStatementData = {
       notInScope: [],
     },
     preparedOn: '2020-10-7',
-    reviewedOn: '2023-03-15',
+    reviewedOn: '2025-12-10',
     feedbackEmail: 'accessibility@kausal.tech',
     feedbackLink: '',
   },
