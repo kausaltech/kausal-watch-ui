@@ -4,7 +4,7 @@ import React, { useEffect, useMemo } from 'react';
 
 import type { BarSeriesOption, LineSeriesOption } from 'echarts/charts';
 import type { MarkLineOption } from 'echarts/types/dist/shared';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import styled, { useTheme } from 'styled-components';
 
@@ -94,14 +94,6 @@ const wrapTitle = (title: string, maxWidth: number): string => {
   return lines.join('\n');
 };
 
-const formatNumber = (value: number, digits?: number) => {
-  if (value == null || Number.isNaN(value)) return '';
-  if (digits == null) return new Intl.NumberFormat().format(value);
-  return new Intl.NumberFormat(undefined, {
-    maximumSignificantDigits: digits,
-  }).format(value);
-};
-
 const roundTickValue = (value: number): number => {
   if (value === 0 || !isFinite(value)) return value;
   const absValue = Math.abs(value);
@@ -147,6 +139,7 @@ const buildSeriesFromTraces = ({
   useAreaGraph,
   lineShape,
   valueRounding,
+  format,
 }: {
   traces: ChartTrace[];
   colors: {
@@ -157,6 +150,7 @@ const buildSeriesFromTraces = ({
   useAreaGraph: boolean;
   lineShape: string;
   valueRounding?: number;
+  format: ReturnType<typeof useFormatter>;
 }): Array<LineSeriesOption | BarSeriesOption> => {
   const traceCount = traces.length;
   return traces.map<LineSeriesOption | BarSeriesOption>((trace, idx) => {
@@ -192,7 +186,11 @@ const buildSeriesFromTraces = ({
           focus: 'series',
         },
         tooltip: {
-          valueFormatter: (val: number) => formatNumber(val, valueRounding),
+          valueFormatter: (val: number) =>
+            format.number(
+              val,
+              valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
+            ),
         },
       };
 
@@ -217,7 +215,11 @@ const buildSeriesFromTraces = ({
         focus: 'series',
       },
       tooltip: {
-        valueFormatter: (val: number) => formatNumber(val, valueRounding),
+        valueFormatter: (val: number) =>
+          format.number(
+            val,
+            valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
+          ),
       },
     };
     return series;
@@ -237,11 +239,8 @@ function IndicatorGraph({
 }: IndicatorGraphProps) {
   const theme = useTheme();
   const t = useTranslations();
+  const format = useFormatter();
   const rawGraphSettings = theme.settings?.graphs;
-  const rawGraphsRecord =
-    rawGraphSettings && typeof rawGraphSettings === 'object'
-      ? (rawGraphSettings as Record<string, unknown>)
-      : undefined;
 
   const graphSettings: GraphSettings = {
     totalLineColor:
@@ -529,6 +528,7 @@ function IndicatorGraph({
         categoryColors: colors.categoryColors,
       },
       valueRounding: graphSettings.roundIndicatorValue === false ? undefined : yRange.valueRounding,
+      format,
     });
 
     // Add markArea for referenceValue if it exists and nonQuantifiedGoal is set
@@ -718,7 +718,11 @@ function IndicatorGraph({
         connectNulls: true,
         z: 1,
         tooltip: {
-          valueFormatter: (val: number) => formatNumber(val, yRange.valueRounding),
+          valueFormatter: (val: number) =>
+            format.number(
+              val,
+              yRange.valueRounding ? { maximumSignificantDigits: yRange.valueRounding } : undefined
+            ),
         },
       };
     });
@@ -761,7 +765,13 @@ function IndicatorGraph({
                   disabled: true,
                 },
                 tooltip: {
-                  valueFormatter: (val: number) => formatNumber(val, yRange.valueRounding),
+                  valueFormatter: (val: number) =>
+                    format.number(
+                      val,
+                      yRange.valueRounding
+                        ? { maximumSignificantDigits: yRange.valueRounding }
+                        : undefined
+                    ),
                 },
               },
             ];
@@ -783,7 +793,13 @@ function IndicatorGraph({
                   disabled: true,
                 },
                 tooltip: {
-                  valueFormatter: (val: number) => formatNumber(val, yRange.valueRounding),
+                  valueFormatter: (val: number) =>
+                    format.number(
+                      val,
+                      yRange.valueRounding
+                        ? { maximumSignificantDigits: yRange.valueRounding }
+                        : undefined
+                    ),
                 },
               },
             ]
@@ -836,7 +852,11 @@ function IndicatorGraph({
         axisPointer: {
           type: hasTimeDimension ? 'line' : 'shadow',
         },
-        valueFormatter: (value: number) => formatNumber(value, yRange.valueRounding),
+        valueFormatter: (value: number) =>
+          format.number(
+            value,
+            yRange.valueRounding ? { maximumSignificantDigits: yRange.valueRounding } : undefined
+          ),
         formatter: hasTimeDimension
           ? (params: unknown) => {
               if (!Array.isArray(params) || params.length === 0) return '';
@@ -881,7 +901,12 @@ function IndicatorGraph({
                 }
 
                 if (value !== null && value !== undefined && !Number.isNaN(value)) {
-                  const formattedValue = formatNumber(value, yRange.valueRounding);
+                  const formattedValue = format.number(
+                    value,
+                    yRange.valueRounding
+                      ? { maximumSignificantDigits: yRange.valueRounding }
+                      : undefined
+                  );
                   result += `${typedParam.marker || ''} ${typedParam.seriesName}: ${formattedValue} ${yRange.unit}<br/>`;
                 }
               });
@@ -968,7 +993,11 @@ function IndicatorGraph({
           formatter: (value: number) => {
             // Round tick values more aggressively for cleaner labels
             const roundedValue = roundTickValue(value);
-            return formatNumber(roundedValue, yRange.ticksRounding ?? yRange.valueRounding);
+            const rounding = yRange.ticksRounding ?? yRange.valueRounding;
+            return format.number(
+              roundedValue,
+              rounding ? { maximumSignificantDigits: rounding } : undefined
+            );
           },
         },
       },
