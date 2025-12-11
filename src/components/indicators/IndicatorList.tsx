@@ -100,8 +100,8 @@ function filterIndicators<I extends IndicatorListIndicator>(
   // TODO: Handle common categories
   const filterByCategory = (indicator: I) => {
     if (categoryFilters.length === 0) return true;
-    // Use 'some' for OR logic - indicator matches if it satisfies ANY category filter
-    return categoryFilters.some(([key, value]) => {
+    // Use 'every' for AND logic - indicator matches if it satisfies ALL category filters
+    return categoryFilters.every(([key, value]) => {
       // Treat undefined, null, or empty array as "no filter applied"
       if (value === undefined || value === null || (Array.isArray(value) && value.length === 0)) {
         return true;
