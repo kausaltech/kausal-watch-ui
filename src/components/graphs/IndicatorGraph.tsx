@@ -121,6 +121,19 @@ const roundTickValue = (value: number): number => {
   }
 };
 
+/**
+ * Safely format a number with null/NaN checks.
+ * ECharts valueFormatters can receive null values from missing data points.
+ */
+const formatNumber = (
+  value: number | null | undefined,
+  format: ReturnType<typeof useFormatter>,
+  options?: { maximumSignificantDigits?: number }
+): string => {
+  if (value == null || Number.isNaN(value)) return '';
+  return format.number(value, options);
+};
+
 type GraphSettings = {
   totalLineColor?: string;
   categoryColors?: string[];
@@ -186,9 +199,10 @@ const buildSeriesFromTraces = ({
           focus: 'series',
         },
         tooltip: {
-          valueFormatter: (val: number) =>
-            format.number(
+          valueFormatter: (val: number | null) =>
+            formatNumber(
               val,
+              format,
               valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
             ),
         },
@@ -215,9 +229,10 @@ const buildSeriesFromTraces = ({
         focus: 'series',
       },
       tooltip: {
-        valueFormatter: (val: number) =>
-          format.number(
+        valueFormatter: (val: number | null) =>
+          formatNumber(
             val,
+            format,
             valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
           ),
       },
@@ -718,9 +733,10 @@ function IndicatorGraph({
         connectNulls: true,
         z: 1,
         tooltip: {
-          valueFormatter: (val: number) =>
-            format.number(
+          valueFormatter: (val: number | null) =>
+            formatNumber(
               val,
+              format,
               yRange.valueRounding ? { maximumSignificantDigits: yRange.valueRounding } : undefined
             ),
         },
@@ -765,9 +781,10 @@ function IndicatorGraph({
                   disabled: true,
                 },
                 tooltip: {
-                  valueFormatter: (val: number) =>
-                    format.number(
+                  valueFormatter: (val: number | null) =>
+                    formatNumber(
                       val,
+                      format,
                       yRange.valueRounding
                         ? { maximumSignificantDigits: yRange.valueRounding }
                         : undefined
@@ -793,9 +810,10 @@ function IndicatorGraph({
                   disabled: true,
                 },
                 tooltip: {
-                  valueFormatter: (val: number) =>
-                    format.number(
+                  valueFormatter: (val: number | null) =>
+                    formatNumber(
                       val,
+                      format,
                       yRange.valueRounding
                         ? { maximumSignificantDigits: yRange.valueRounding }
                         : undefined
@@ -852,9 +870,10 @@ function IndicatorGraph({
         axisPointer: {
           type: hasTimeDimension ? 'line' : 'shadow',
         },
-        valueFormatter: (value: number) =>
-          format.number(
+        valueFormatter: (value: number | null) =>
+          formatNumber(
             value,
+            format,
             yRange.valueRounding ? { maximumSignificantDigits: yRange.valueRounding } : undefined
           ),
         formatter: hasTimeDimension
@@ -901,8 +920,9 @@ function IndicatorGraph({
                 }
 
                 if (value !== null && value !== undefined && !Number.isNaN(value)) {
-                  const formattedValue = format.number(
+                  const formattedValue = formatNumber(
                     value,
+                    format,
                     yRange.valueRounding
                       ? { maximumSignificantDigits: yRange.valueRounding }
                       : undefined
@@ -994,8 +1014,9 @@ function IndicatorGraph({
             // Round tick values more aggressively for cleaner labels
             const roundedValue = roundTickValue(value);
             const rounding = yRange.ticksRounding ?? yRange.valueRounding;
-            return format.number(
+            return formatNumber(
               roundedValue,
+              format,
               rounding ? { maximumSignificantDigits: rounding } : undefined
             );
           },
@@ -1034,6 +1055,7 @@ function IndicatorGraph({
     referenceValue,
     theme.graphColors.blue030,
     theme.graphColors.grey030,
+    format,
   ]);
 
   useEffect(() => {
