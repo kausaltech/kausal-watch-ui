@@ -136,8 +136,8 @@ const ActionNumber = styled.div`
   }
 `;
 
-const ActionStatusArea = styled.div<{ $statusColor: string; $isMini: boolean }>`
-  color: ${(props) => readableColor(props.$statusColor)};
+const ActionStatusArea = styled.div<{ $statusColor: string | undefined; $isMini: boolean }>`
+  color: ${(props) => readableColor(props.$statusColor || props.theme.themeColors.light)};
   background-color: ${(props) => props.$statusColor};
   min-height: ${({ theme, $isMini }) => ($isMini ? theme.spaces.s050 : theme.spaces.s400)};
   line-height: ${(props) => props.theme.lineHeightSm};
@@ -356,7 +356,7 @@ function ActionCard({
   }
 
   const identifierPosition = getidentifierPosition(showPlan, variant, plan);
-  const statusColor = getStatusColorForAction(action, plan, theme);
+  const statusColor: string | undefined = getStatusColorForAction(action, plan, theme);
 
   const actionCard = (
     <ActionCardElement $isLink={isLink} $isHighlighted={isHighlighted}>

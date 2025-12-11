@@ -17,7 +17,7 @@ import { SectionHeader } from './ActionListBlock';
 
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
-  padding: ${(props) => props.theme.spaces.s100};
+  padding: ${(props) => props.theme.spaces.s300} 0;
   color: ${(props) =>
     readableColor(
       props.theme.neutralLight,
@@ -32,8 +32,9 @@ const IndicatorGraphSection = styled.div`
 `;
 
 const IndicatorContainer = styled.div`
+  flex: 1 1 auto;
   background-color: ${(props) => props.theme.themeColors.white};
-  padding: ${(props) => props.theme.spaces.s300};
+  padding: ${(props) => props.theme.spaces.s100};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
@@ -46,10 +47,16 @@ const IndicatorContainer = styled.div`
   }
 `;
 
-type IndicatorGroupItems = NonNullable<
-  NonNullable<StreamFieldFragmentFragment & { __typename: 'IndicatorGroupBlock' }>['indicators']
+type IndicatorGroupBlock = Extract<
+  StreamFieldFragmentFragment,
+  { __typename: 'IndicatorGroupBlock' }
 >;
-type IndicatorGroupItem = IndicatorGroupItems[number];
+type IndicatorGroupItems = NonNullable<IndicatorGroupBlock['indicators']>;
+type IndicatorBlockItem = Extract<
+  NonNullable<IndicatorGroupItems[number]>,
+  { __typename: 'IndicatorBlock' }
+>;
+type IndicatorGroupItem = IndicatorBlockItem;
 
 type IndicatorItemProps = {
   indicator: NonNullable<IndicatorGroupItem['indicator']>;
@@ -61,7 +68,7 @@ function IndicatorItem(props: IndicatorItemProps) {
   const { indicator, display, linkToPage = true } = props;
   if (display === 'graph')
     return (
-      <Col className="mb-5" lg={{ size: 8 }}>
+      <Col className="mb-4 d-flex align-items-stretch" lg={{ size: 8 }}>
         <IndicatorContainer>
           {linkToPage ? (
             <IndicatorLink id={indicator.id}>
@@ -73,13 +80,13 @@ function IndicatorItem(props: IndicatorItemProps) {
           ) : (
             <h3>{indicator.name}</h3>
           )}
-          <IndicatorVisualisation indicatorId={indicator.id} />
+          <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
         </IndicatorContainer>
       </Col>
     );
 
   return (
-    <Col md={6} xl={4} className="mb-5 d-flex align-items-stretch">
+    <Col md={6} xl={4} className="mb-4 d-flex align-items-stretch">
       <IndicatorHighlightCard
         level={indicator.level}
         objectid={indicator.id}
@@ -97,7 +104,7 @@ const StyledColCentered = styled(Col)`
 `;
 
 const StyledRow = styled(Row)`
-  margin-top: ${(props) => props.theme.spaces.s400};
+  margin-top: ${(props) => props.theme.spaces.s200};
   align-items: stretch;
 `;
 
@@ -115,25 +122,45 @@ export default function IndicatorGroupBlock(props: Props) {
   const plan = usePlan();
 
   const hasIndicatorsPage =
-    plan.mainMenu?.items.findIndex((menuItem) => menuItem?.page?.slug === 'indicators') !== -1;
+    plan.mainMenu?.items.findIndex(
+      (menuItem) =>
+        menuItem?.__typename === 'PageMenuItem' &&
+        menuItem?.page?.__typename === 'IndicatorListPage'
+    ) !== -1;
+
+  const openIndicatorsInModal = plan.features.indicatorsOpenInModal === true;
+
+  const showSeeAllIndicatorsButton = hasIndicatorsPage && !openIndicatorsInModal;
 
   return (
     <IndicatorGraphSection id={id}>
       <Container>
-        {displayHeader ? <SectionHeader>{displayHeader}</SectionHeader> : null}
+        {displayHeader ? (
+          <Row>
+            <Col>
+              <SectionHeader>{displayHeader}</SectionHeader>{' '}
+            </Col>
+          </Row>
+        ) : null}
         <StyledRow className="justify-content-center">
-          {indicators.map((item) =>
-            item.indicator ? (
+          {indicators
+            .filter(
+              (
+                item
+              ): item is IndicatorBlockItem & {
+                indicator: NonNullable<IndicatorBlockItem['indicator']>;
+              } => item !== null && item.__typename === 'IndicatorBlock' && item.indicator !== null
+            )
+            .map((item) => (
               <IndicatorItem
                 indicator={item.indicator}
                 display={item.style}
                 key={item.indicator.id}
                 linkToPage={hasIndicatorsPage}
               />
-            ) : null
-          )}
+            ))}
         </StyledRow>
-        {hasIndicatorsPage && (
+        {showSeeAllIndicatorsButton && (
           <Row>
             <StyledColCentered>
               <IndicatorListLink>

@@ -1,3 +1,4 @@
+import { useFormatter, useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
 import {
@@ -5,11 +6,12 @@ import {
   type IndicatorContentBlockFragmentFragment,
   IndicatorDetailsFieldName,
   type IndicatorDetailsQuery,
+  type IndicatorValueSummaryContentBlockFragmentFragment,
 } from '@/common/__generated__/graphql';
 
 import BadgeTooltip from '../common/BadgeTooltip';
 import RichText from '../common/RichText';
-import IndicatorValueSummary from './IndicatorValueSummary';
+import IndicatorValueSummary, { type ValueSummaryOptions } from './IndicatorValueSummary';
 import IndicatorVisualisation from './IndicatorVisualisation';
 
 const CategoryTypeBlock = styled.div`
@@ -25,8 +27,17 @@ const ContentBlockWrapper = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
 `;
 
+const BlockLabel = styled.h2`
+  font-size: ${(props) => props.theme.fontSizeBase};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+`;
+
 const CategoryBadges = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${(props) => props.theme.spaces.s050};
 `;
 
 const GroupedCategoryContainer = styled.div`
@@ -47,28 +58,86 @@ interface IndicatorContentBlockProps {
 
 const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
   const { block, indicator } = props;
+  const format = useFormatter();
+  const t = useTranslations();
   if (!block.sourceField) return null;
   switch (block.sourceField) {
+    case IndicatorDetailsFieldName.Description:
     case IndicatorDetailsFieldName.Name:
       // Using name field to render description for now
       return (
         <ContentBlockWrapper>
+          {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
           <RichText html={indicator.description || ''} isCollapsible={false} />
         </ContentBlockWrapper>
       );
+    case IndicatorDetailsFieldName.GoalDescription:
+      return (
+        indicator.goalDescription && (
+          <ContentBlockWrapper>
+            {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
+            <div>{indicator.goalDescription}</div>
+          </ContentBlockWrapper>
+        )
+      );
     case IndicatorDetailsFieldName.Visualization:
-      return <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />;
-    case IndicatorDetailsFieldName.ConnectedActions:
-      // Using connected actions to render value summary for now
       return (
         <ContentBlockWrapper>
-          <IndicatorValueSummary
-            timeResolution={indicator.timeResolution || ''}
-            values={indicator.values || []}
-            goals={indicator.goals || []}
-            unit={indicator.unit || {}}
-            desiredTrend={indicator.desiredTrend || undefined}
-          />
+          {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
+          <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
+        </ContentBlockWrapper>
+      );
+    case IndicatorDetailsFieldName.ConnectedActions:
+      return (
+        <ContentBlockWrapper>
+          <hr />
+          Connected Actions
+          <hr />
+        </ContentBlockWrapper>
+      );
+    case IndicatorDetailsFieldName.CausalityNav:
+      return (
+        <ContentBlockWrapper>
+          <hr />
+          Causality Nav
+          <hr />
+        </ContentBlockWrapper>
+      );
+    case IndicatorDetailsFieldName.Level:
+      return (
+        <ContentBlockWrapper>
+          <hr />
+          Level
+          <hr />
+        </ContentBlockWrapper>
+      );
+    case IndicatorDetailsFieldName.Organization:
+      return (
+        <ContentBlockWrapper>
+          <hr />
+          Organization
+          <hr />
+        </ContentBlockWrapper>
+      );
+    case IndicatorDetailsFieldName.Reference:
+      return (
+        indicator.reference && (
+          <ContentBlockWrapper>
+            {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
+            <RichText html={indicator.reference} />
+          </ContentBlockWrapper>
+        )
+      );
+    case IndicatorDetailsFieldName.UpdatedAt:
+      const updatedAt = new Date(indicator.updatedAt);
+      const formattedUpdatedAt = format.dateTime(updatedAt, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+      return (
+        <ContentBlockWrapper>
+          {block.fieldLabel || t('updated')} {formattedUpdatedAt}
         </ContentBlockWrapper>
       );
     default:
@@ -93,12 +162,12 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
   });
 
   return (
-    <CategoryTypeBlock>
-      <h3>{block.fieldLabel || block.categoryType?.name}</h3>
-      <CategoryBadges>
-        {categories &&
-          categories.length > 0 &&
-          categories.map((cat) => (
+    categories &&
+    categories.length > 0 && (
+      <CategoryTypeBlock>
+        <h3>{block.fieldLabel || block.categoryType?.name}</h3>
+        <CategoryBadges>
+          {categories.map((cat) => (
             <BadgeTooltip
               key={cat.id}
               id={cat.id}
@@ -110,8 +179,53 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
               isLink={false}
             />
           ))}
-      </CategoryBadges>
-    </CategoryTypeBlock>
+        </CategoryBadges>
+      </CategoryTypeBlock>
+    )
+  );
+};
+
+interface IndicatorValueSummaryBlockProps {
+  block: IndicatorValueSummaryContentBlockFragmentFragment;
+  indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
+}
+
+const IndicatorValueSummaryBlock = (props: IndicatorValueSummaryBlockProps) => {
+  const { block, indicator } = props;
+  console.log('indicator value summary block', block, indicator);
+  const options: ValueSummaryOptions = {
+    referenceValue: {
+      show: block.showReferenceValue,
+      year: block.referenceYear,
+      defaultReferenceValue: indicator.referenceValue,
+    },
+    currentValue: {
+      show: block.showCurrentValue,
+    },
+    goalValue: {
+      show: block.showGoalValue,
+      defaultGoalYear: block.defaultGoalYear,
+    },
+    goalGap: {
+      show: block.showGoalGap,
+    },
+    nonQuantifiedGoal: {
+      trend: indicator.nonQuantifiedGoal,
+      date: indicator.nonQuantifiedGoalDate,
+    },
+    valueRounding: indicator.valueRounding,
+  };
+  return (
+    <ContentBlockWrapper>
+      <IndicatorValueSummary
+        timeResolution={indicator.timeResolution || ''}
+        values={indicator.values || []}
+        goals={indicator.goals || []}
+        unit={indicator.unit || {}}
+        desiredTrend={indicator.desiredTrend || undefined}
+        options={options}
+      />
+    </ContentBlockWrapper>
   );
 };
 
@@ -153,11 +267,14 @@ interface IndicatorModalContentBlockProps {
 const IndicatorModalContentBlock = ({ block, indicator }: IndicatorModalContentBlockProps) => {
   if (!block || !indicator) return null;
 
+  // console.log('📦 block', block);
   switch (block.__typename) {
     case 'IndicatorContentBlock':
       return <IndicatorContentBlock block={block} indicator={indicator} />;
     case 'IndicatorCategoryContentBlock':
       return <IndicatorCategoryBlock block={block} indicator={indicator} />;
+    case 'IndicatorValueSummaryContentBlock':
+      return <IndicatorValueSummaryBlock block={block} indicator={indicator} />;
   }
 };
 

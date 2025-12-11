@@ -1,3 +1,4 @@
+import type { truncate } from 'fs/promises';
 import { type DateTimeFormatOptions, useFormatter, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Badge, Button } from 'reactstrap';
@@ -12,14 +13,20 @@ import {
 import { IndicatorLink } from '@/common/links';
 
 import BadgeTooltip from '../common/BadgeTooltip';
+import Icon from '../common/Icon';
 import { getIndicatorTranslation } from './IndicatorCard';
 import type { IndicatorListIndicator } from './IndicatorList';
+
+const DEFAULT_ROUNDING = 2;
 
 const CellContent = styled.div<{ $numeric?: boolean }>`
   flex: 1;
   text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
   line-height: ${(props) => props.theme.lineHeightSm};
 
+  svg {
+    display: inline-block;
+  }
   a,
   button {
     color: ${(props) => props.theme.themeColors.black};
@@ -36,6 +43,13 @@ const CategoryBadges = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${(props) => props.theme.spaces.s050};
+`;
+
+const TrendIcon = styled(Icon)`
+  height: 1.25em;
+  width: 1.25em;
+  margin-bottom: -0.1em;
+  color: ${(props) => props.theme.graphColors.grey040};
 `;
 
 const IndicatorLevelBadge = styled(Badge)<{ $level: string }>`
@@ -111,75 +125,161 @@ const getValue = (
   indicator: IndicatorListIndicator,
   valueType: IndicatorColumnValueType,
   isNormalized: boolean,
-  referenceYear: number | null
-): number | null => {
+  defaultYear: number | null
+): { value: number | string | null; year: number | null } => {
+  /* 
+  If defaultYear is provided we return a value for the year
+  so values that are not on column's default year can be highlighted
+  */
   switch (valueType) {
     case IndicatorColumnValueType.Earliest:
       const hasValues = indicator.values && indicator.values.length > 0;
       if (!hasValues) {
-        return null;
+        return { value: null, year: null };
       }
       return isNormalized
-        ? (indicator.values[0]?.normalizedValues?.[0]?.value ?? null)
-        : (indicator.values[0]?.value ?? null);
+        ? { value: indicator.values[0]?.normalizedValues?.[0]?.value ?? null, year: null }
+        : { value: indicator.values[0]?.value ?? null, year: null };
     case IndicatorColumnValueType.Latest:
+      if (defaultYear) {
+        const latestValue = indicator.values.find((value) =>
+          value.date?.startsWith(String(defaultYear))
+        );
+        if (latestValue) {
+          return {
+            value: latestValue.value ?? null,
+            year: new Date(latestValue.date ?? '').getFullYear(),
+          };
+        }
+      }
       const hasLatestValue = indicator.latestValue;
       if (!hasLatestValue) {
-        return null;
+        return { value: null, year: null };
       }
       return isNormalized
-        ? (indicator.latestValue?.normalizedValues?.[0]?.value ?? null)
-        : (indicator.latestValue?.value ?? null);
+        ? {
+            value: indicator.latestValue?.normalizedValues?.[0]?.value ?? null,
+            year: indicator.latestValue?.date
+              ? new Date(indicator.latestValue?.date ?? '').getFullYear()
+              : null,
+          }
+        : {
+            value: indicator.latestValue?.value ?? null,
+            year: indicator.latestValue?.date
+              ? new Date(indicator.latestValue?.date ?? '').getFullYear()
+              : null,
+          };
     case IndicatorColumnValueType.Goal:
+      // Non quantified goal is always shown if selected, 'increase' or 'decrease'
+      if (indicator.nonQuantifiedGoal)
+        return { value: indicator.nonQuantifiedGoal?.toLowerCase() ?? '', year: null };
       const hasGoals = indicator.goals && indicator.goals.length > 0;
       if (!hasGoals) {
-        return null;
+        return { value: null, year: null };
       }
+      // If defaultYear is provided we try to return a value for that year
+      // TODO: Maybe need to also handle normalized values here
+      if (defaultYear) {
+        const goal = indicator.goals?.find((goal) => goal?.date?.startsWith(String(defaultYear)));
+        if (goal) {
+          return { value: goal.value ?? null, year: new Date(goal.date ?? '').getFullYear() };
+        }
+      }
+      // If no value for the default year is found, we return the LAST goal
+      // This could also be the NEXT goal, but it's simpler this way
       const lastGoalIndex = indicator.goals!.length - 1;
       return isNormalized
-        ? (indicator.goals![lastGoalIndex]?.normalizedValues?.[0]?.value ?? null)
-        : (indicator.goals![lastGoalIndex]?.value ?? null);
+        ? {
+            value: indicator.goals![lastGoalIndex]?.normalizedValues?.[0]?.value ?? null,
+            year: indicator.goals![lastGoalIndex]?.date
+              ? new Date(indicator.goals![lastGoalIndex]?.date ?? '').getFullYear()
+              : null,
+          }
+        : {
+            value: indicator.goals![lastGoalIndex]?.value ?? null,
+            year: indicator.goals![lastGoalIndex]?.date
+              ? new Date(indicator.goals![lastGoalIndex]?.date ?? '').getFullYear()
+              : null,
+          };
     case IndicatorColumnValueType.Reference:
       if (indicator.referenceValue) {
         return isNormalized
-          ? (indicator.referenceValue?.normalizedValues?.[0]?.value ?? null)
-          : (indicator.referenceValue?.value ?? null);
+          ? {
+              value: indicator.referenceValue?.normalizedValues?.[0]?.value ?? null,
+              year: indicator.referenceValue?.date
+                ? new Date(indicator.referenceValue?.date ?? '').getFullYear()
+                : null,
+            }
+          : {
+              value: indicator.referenceValue?.value ?? null,
+              year: indicator.referenceValue?.date
+                ? new Date(indicator.referenceValue?.date ?? '').getFullYear()
+                : null,
+            };
       }
-      if (!referenceYear) {
-        return null;
+      if (!defaultYear) {
+        return { value: null, year: null };
       }
-      const referenceValue = indicator.values.find((value) =>
-        value.date?.startsWith(String(referenceYear))
-      );
+      const referenceValue = indicator.referenceValue
+        ? indicator.referenceValue
+        : indicator.values.find((value) => value.date?.startsWith(String(defaultYear)));
       return referenceValue
         ? isNormalized
-          ? referenceValue.normalizedValues?.[0]?.value
-          : referenceValue.value
-        : null;
+          ? { value: referenceValue.normalizedValues?.[0]?.value ?? null, year: null }
+          : { value: referenceValue.value ?? null, year: null }
+        : { value: null, year: null };
     default:
-      return null;
+      return { value: null, year: null };
   }
 };
 interface IndicatorValueCellProps {
   indicator: IndicatorListIndicator;
   isNormalized: boolean;
   valueType: IndicatorColumnValueType;
-  referenceYear: number | null;
+  defaultYear: number | null;
   hideUnit: boolean;
 }
 
 const IndicatorValueCell = (props: IndicatorValueCellProps) => {
-  const { indicator, isNormalized, valueType, referenceYear, hideUnit } = props;
+  const { indicator, isNormalized, valueType, defaultYear, hideUnit } = props;
   const format = useFormatter();
+  const t = useTranslations();
 
-  const value: number | null = getValue(indicator, valueType, isNormalized, referenceYear);
+  const rounding = indicator.valueRounding ?? DEFAULT_ROUNDING;
+  const { value, year } = getValue(indicator, valueType, isNormalized, defaultYear);
+
   if (value === null) {
     return <CellContent $numeric={true}>--</CellContent>;
   }
+  // Non quantified goal, 'increase' or 'decrease'
+  if (typeof value === 'string') {
+    switch (value) {
+      case 'increase':
+        return (
+          <CellContent $numeric={true}>
+            <TrendIcon name="arrow-up" alt={t('indicator-desired-trend-increase')} />
+          </CellContent>
+        );
+      case 'decrease':
+        return (
+          <CellContent $numeric={true}>
+            <TrendIcon name="arrow-down" alt={t('indicator-desired-trend-decrease')} />
+          </CellContent>
+        );
+      default:
+        return <CellContent $numeric={true}>{value}</CellContent>;
+    }
+  }
   return (
     <CellContent $numeric={true}>
-      <Value>{format.number(value, { maximumFractionDigits: 2 })}</Value>
-      {!hideUnit && <Unit>{indicator.unit.shortName}</Unit>}
+      <Value>{format.number(value, { maximumSignificantDigits: rounding })}</Value>
+      {!hideUnit && <Unit>{indicator.unit.shortName || indicator.unit.name}</Unit>}
+      {defaultYear && year && year !== defaultYear && (
+        <>
+          <br />
+          <Unit>({year.toString()})</Unit>
+        </>
+      )}
     </CellContent>
   );
 };
@@ -214,12 +314,14 @@ const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
     }
   });
 
+  // Make sure catetgories are unique (same parent category is only shown once)
+  const uniqueCategories = categories.filter((item, index) => categories.indexOf(item) === index);
   return (
     <CellContent>
       <CategoryBadges>
-        {categories &&
-          categories.length > 0 &&
-          categories.map((cat) => (
+        {uniqueCategories &&
+          uniqueCategories.length > 0 &&
+          uniqueCategories.map((cat) => (
             <BadgeTooltip
               key={cat.id}
               id={cat.id}
@@ -281,7 +383,7 @@ const IndicatorListColumnCell = (props: IndicatorListColumnCellProps) => {
     case IndicatorDashboardFieldName.Unit:
       return (
         <CellContent>
-          <Unit>{indicator.unit.shortName}</Unit>
+          <Unit>{indicator.unit.shortName || indicator.unit.name}</Unit>
         </CellContent>
       );
     default:
@@ -311,7 +413,7 @@ const IndicatorTableCell = (props: IndicatorTableCellProps) => {
           indicator={indicator}
           isNormalized={column.isNormalized}
           valueType={column.valueType}
-          referenceYear={column.referenceYear}
+          defaultYear={column.defaultYear}
           hideUnit={column.hideUnit}
         />
       );

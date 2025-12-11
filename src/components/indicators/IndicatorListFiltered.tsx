@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useTranslations } from 'next-intl';
+import { transparentize } from 'polished';
 import { Alert, Table } from 'reactstrap';
 import styled from 'styled-components';
 
@@ -14,6 +15,42 @@ import { groupIndicatorsByCommonCategory, indentationLevel } from './indicatorUt
 import type { Hierarchy } from './process-indicators';
 
 export const isEmptyFilter = (val) => val == null || val === '';
+
+const TableWrapper = styled.div`
+  /*div className="mt-5 mb-5 pb-5"*/
+  width: 100%;
+  display: flex;
+  overflow-x: auto;
+
+  margin: ${(props) => props.theme.spaces.s200} 0;
+  padding-bottom: ${(props) => props.theme.spaces.s200};
+
+  background-image: ${(props) => `linear-gradient(to right, ${
+    props.theme.themeColors.white
+  }, ${props.theme.themeColors.white}),
+    linear-gradient(to right, ${props.theme.themeColors.white}, ${props.theme.themeColors.white}),
+    linear-gradient(to right, rgba(0, 0, 0, 0.15), ${transparentize(
+      0,
+      props.theme.themeColors.white
+    )}),
+    linear-gradient(to left, rgba(0, 0, 0, 0.15), ${transparentize(
+      0,
+      props.theme.themeColors.white
+    )})`};
+  background-position:
+    left center,
+    right center,
+    left center,
+    right center;
+  background-repeat: no-repeat;
+  background-color: ${(props) => props.theme.themeColors.white};
+  background-size:
+    25px 100%,
+    25px 100%,
+    25px 100%,
+    25px 100%;
+  background-attachment: local, local, scroll, scroll;
+`;
 
 const Cell = styled.td`
   padding: ${(props) => props.theme.spaces.s200};
@@ -192,7 +229,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
   const columnCount = listColumns.length;
 
   return (
-    <div className="mt-5 mb-5 pb-5">
+    <TableWrapper>
       <Table hover>
         <thead>
           <tr>
@@ -298,6 +335,6 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
           })}
         </tbody>
       </Table>
-    </div>
+    </TableWrapper>
   );
 }

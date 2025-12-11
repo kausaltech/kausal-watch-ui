@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
 import { useFormatter, useTranslations } from 'next-intl';
@@ -120,7 +120,7 @@ type OutcomeNodeContentProps = {
   separateYears: number[] | null;
 };
 
-export default function OutcomeNodeContent({
+function OutcomeNodeContent({
   node,
   subNodes,
   color,
@@ -135,27 +135,12 @@ export default function OutcomeNodeContent({
   const [activeTabId, setActiveTabId] = useState('graph');
   const paths = usePaths();
   const activeGoal = useReactiveVar(activeGoalVar);
-
   // We have a disclaimer for the mobility node for 2023 (hack)
   const hideForecast = separateYears && separateYears.length > 1;
   const pathsDisclaimers = paths?.instance.outcomeDisclaimers;
   const disclaimer = pathsDisclaimers?.find(
     (disclaimer) => disclaimer.node === node.id && disclaimer.goal === activeGoal?.id
   )?.disclaimer;
-
-  const instance = paths?.instance;
-  if (!instance) return null;
-  const showDistribution = subNodes.length > 1;
-  const nodesTotal = getMetricValue(node, endYear);
-  const nodesBase = getMetricValue(node, startYear);
-  const lastMeasuredYear =
-    node?.metric?.historicalValues[node.metric.historicalValues.length - 1]?.year;
-  const firstForecastYear = node?.metric?.forecastValues[0]?.year;
-  const isForecast = endYear > lastMeasuredYear;
-  const outcomeChange = getMetricChange(nodesBase, nodesTotal);
-  const unit = node.metric?.unit?.htmlLong || node.metric?.unit?.htmlShort;
-  const nodeName = node.shortName || node.name;
-  const showNodeLinks = !instance.features?.hideNodeDetails;
 
   const outcomeGraph = useMemo(
     () =>
@@ -177,7 +162,7 @@ export default function OutcomeNodeContent({
           {t('time-series')}, {t('coming-soon')}
         </h5>
       ),
-    [node, color, startYear, endYear]
+    [node, color, startYear, endYear, separateYears, disclaimer, t]
   );
 
   const singleYearGraph = useMemo(
@@ -187,12 +172,25 @@ export default function OutcomeNodeContent({
           metric={node.metricDim!}
           endYear={separateYears ? separateYears[separateYears.length - 1] : endYear}
           colorChange={separateYears ? 1.75 : 0}
-          disclaimer={endYear === 2023 ? disclaimer : undefined}
         />
       </div>
     ),
-    [node, endYear, color]
+    [node, endYear, separateYears]
   );
+
+  const instance = paths?.instance;
+  if (!instance) return null;
+  const showDistribution = subNodes.length > 1;
+  const nodesTotal = getMetricValue(node, endYear);
+  const nodesBase = getMetricValue(node, startYear);
+  const lastMeasuredYear =
+    node?.metric?.historicalValues[node.metric.historicalValues.length - 1]?.year;
+  const firstForecastYear = node?.metric?.forecastValues[0]?.year;
+  const isForecast = endYear > lastMeasuredYear;
+  const outcomeChange = getMetricChange(nodesBase, nodesTotal);
+  const unit = node.metric?.unit?.htmlLong || node.metric?.unit?.htmlShort;
+  const nodeName = node.shortName || node.name;
+  const showNodeLinks = !instance.features?.hideNodeDetails;
 
   return (
     <div role="tabpanel" id={`tabpanel-${node.id}`}>
@@ -352,3 +350,5 @@ export default function OutcomeNodeContent({
     </div>
   );
 }
+
+export default memo(OutcomeNodeContent);

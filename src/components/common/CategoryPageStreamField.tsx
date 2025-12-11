@@ -38,20 +38,6 @@ const Wrapper = ({ children, withContainer = true }: WrapperProps) =>
     <>{children}</>
   );
 
-const DEFAULT_COL_PROPS = {
-  xl: { size: 6, offset: 3 },
-  lg: { size: 8, offset: 2 },
-  md: { size: 10, offset: 1 },
-  className: 'my-4',
-};
-
-const TIGHT_COL_PROPS = {
-  xl: { size: 12 },
-  lg: { size: 12 },
-  md: { size: 12 },
-  className: 'my-4',
-};
-
 type CategoryPageLayout = NonNullable<CategoryPage['layout']>;
 
 export type CategoryPageMainTopBlock = NonNullable<CategoryPageLayout['layoutMainTop']>[number];
@@ -89,7 +75,7 @@ export default function CategoryPageStreamField({
 }: Props) {
   const theme = useTheme();
   const plan = usePlan();
-  const columnProps = DEFAULT_COL_PROPS;
+  const columnProps = {};
   switch (block.__typename) {
     case 'CategoryPageAttributeTypeBlock': {
       const withContainer = context === 'main';

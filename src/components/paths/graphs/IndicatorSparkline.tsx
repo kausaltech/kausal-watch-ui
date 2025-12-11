@@ -9,24 +9,20 @@ import styled, { useTheme } from 'styled-components';
 import { Chart, type ECOption } from '@common/components/Chart';
 
 import type {
-  IndicatorGoal,
-  IndicatorGraphDataQuery,
   IndicatorSparklineGraphDataQuery,
   IndicatorSparklineGraphDataQueryVariables,
-  IndicatorValue,
 } from '@/common/__generated__/graphql';
-import Icon from '@/components/common/Icon';
-import PopoverTip from '@/components/common/PopoverTip';
-import Unit from '@/components/indicators/Unit';
+import type { IndicatorCategoryRelationshipType } from '@/common/__generated__/graphql';
+import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
 import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/utils/indicatorData';
 
-const SparklineLoader = (props) => (
+const SparklineLoader = (props: React.ComponentProps<typeof ContentLoader>) => (
   <ContentLoader
     speed={2}
     width={300}
-    height={130}
-    viewBox="0 0 300 130"
+    height={110}
+    viewBox="0 0 300 110"
     backgroundColor="#f3f3f3"
     foregroundColor="#ecebeb"
     {...props}
@@ -39,32 +35,43 @@ const SparklineLoader = (props) => (
 
 const IndicatorSparklineContainer = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
-  padding: ${({ theme }) => `${theme.spaces.s050} ${theme.spaces.s100} ${theme.spaces.s100}`};
+  padding: ${({ theme }) => `${theme.spaces.s050} ${theme.spaces.s050} ${theme.spaces.s100}`};
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
 const SparkLineHeader = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
   margin-bottom: ${(props) => props.theme.spaces.s050};
+
+  h3 {
+    font-size: ${(props) => props.theme.fontSizeSm};
+    font-family: ${(props) => props.theme.fontFamily};
+    line-height: ${(props) => props.theme.lineHeightSm};
+    margin-bottom: ${(props) => props.theme.spaces.s050};
+  }
 `;
 
-const TrendIconWrapper = styled.div`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.05rem;
-  height: 1.05rem;
-  background-color: ${(props) => props.theme.graphColors.green030};
-  margin-right: ${(props) => props.theme.spaces.s050};
-  border-radius: 50%;
+const RelationshipType = styled.p`
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => props.theme.fontFamily};
+  line-height: ${(props) => props.theme.lineHeightSm};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
 type IndicatorSparklineProps = {
   indicatorId: string;
+  relationshipType: IndicatorCategoryRelationshipType;
 };
+// Extract types from the query result
+type IndicatorValue = NonNullable<
+  NonNullable<IndicatorSparklineGraphDataQuery['indicator']>['values']
+>[number];
+type IndicatorGoal = NonNullable<
+  NonNullable<NonNullable<IndicatorSparklineGraphDataQuery['indicator']>['goals']>[number]
+>;
 
 const IndicatorSparkline = (props: IndicatorSparklineProps) => {
-  const { indicatorId } = props;
+  const { indicatorId, relationshipType } = props;
   const theme = useTheme();
   const t = useTranslations();
   const format = useFormatter();
@@ -79,7 +86,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
     },
   });
 
-  console.log('data', data);
+  // console.log('data', data, props);
   if (loading)
     return (
       <IndicatorSparklineContainer>
@@ -89,12 +96,14 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   if (error) return <p>Error :(</p>;
   const indicator = data?.indicator;
   if (!indicator) return null;
-  const { maxValue, minValue, desiredTrend } = indicator;
+  const { maxValue, minValue, nonQuantifiedGoal, nonQuantifiedGoalDate } = indicator;
+  // referenceValue may not be in the type yet until codegen runs, so access it safely
+  const referenceValue = (
+    indicator as { referenceValue?: { date: string | null; value: number } | null }
+  ).referenceValue;
 
-  const indicatorGoals: Array<IndicatorGoal | null | undefined> | null | undefined =
-    indicator.goals || [];
-  const indicatorValues: Array<IndicatorValue | null | undefined> | null | undefined =
-    indicator.values || [];
+  const indicatorGoals: Array<IndicatorGoal | null> = indicator.goals || [];
+  const indicatorValues: Array<IndicatorValue> = indicator.values || [];
 
   interface CombinedDataItem {
     value?: number;
@@ -106,17 +115,16 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   }
   const combinedData: CombinedData = {};
 
-  const items = [...(indicatorValues || []), ...(indicatorGoals || [])] as (
-    | IndicatorValue
-    | IndicatorGoal
-    | null
-    | undefined
-  )[];
+  const items: Array<IndicatorValue | IndicatorGoal | null> = [
+    ...indicatorValues,
+    ...indicatorGoals,
+  ];
 
   items.forEach((item) => {
     if (!item) return;
-    //const date = item.date as string;
-    const year = new Date(item.date as string).getFullYear().toString();
+    const date = item.date;
+    if (!date) return;
+    const year = new Date(date).getFullYear().toString();
     if (!(year in combinedData)) {
       combinedData[year] = {};
     }
@@ -131,8 +139,96 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
 
   const sortedYears = Object.keys(combinedData).sort((a, b) => Number(a) - Number(b));
 
-  // TODO: make this dynamic
-  const allYears = Array.from({ length: 2040 - 2022 + 1 }, (_, i) => (2022 + i).toString());
+  // Collect all years from values and goals to ensure we include all data
+  const allDataYears: number[] = [];
+
+  // Add years from values
+  indicatorValues.forEach((val) => {
+    if (val.date) {
+      try {
+        const dateObj = new Date(val.date);
+        if (!Number.isNaN(dateObj.getTime())) {
+          allDataYears.push(dateObj.getFullYear());
+        }
+      } catch {
+        // Ignore invalid dates
+      }
+    }
+  });
+
+  // Add years from goals
+  indicatorGoals.forEach((goal) => {
+    if (goal?.date) {
+      try {
+        const dateObj = new Date(goal.date);
+        if (!Number.isNaN(dateObj.getTime())) {
+          allDataYears.push(dateObj.getFullYear());
+        }
+      } catch {
+        // Ignore invalid dates
+      }
+    }
+  });
+
+  // Add nonQuantifiedGoalDate year if it exists
+  if (nonQuantifiedGoalDate) {
+    try {
+      const goalDateObj = new Date(nonQuantifiedGoalDate);
+      if (!Number.isNaN(goalDateObj.getTime())) {
+        allDataYears.push(goalDateObj.getFullYear());
+      }
+    } catch {
+      // Ignore invalid dates
+    }
+  }
+
+  // Add referenceValue year if it exists (for end year calculation)
+  if (referenceValue?.date) {
+    try {
+      const refDateObj = new Date(referenceValue.date);
+      if (!Number.isNaN(refDateObj.getTime())) {
+        allDataYears.push(refDateObj.getFullYear());
+      }
+    } catch {
+      // Ignore invalid dates
+    }
+  }
+
+  // Calculate start year: use referenceValue year if available, otherwise first data year
+  let startYear: number | null = null;
+  if (referenceValue?.date) {
+    try {
+      const refDateObj = new Date(referenceValue.date);
+      if (!Number.isNaN(refDateObj.getTime())) {
+        startYear = refDateObj.getFullYear();
+      }
+    } catch {
+      // Ignore invalid dates
+    }
+  }
+  // If no referenceValue, use the first year from data
+  if (startYear === null && allDataYears.length > 0) {
+    startYear = Math.min(...allDataYears);
+  }
+
+  // Calculate end year: use the latest year from all data (including referenceValue if it's later)
+  let endYear: number | null = null;
+  if (allDataYears.length > 0) {
+    endYear = Math.max(...allDataYears);
+  }
+
+  // Build allYears array from startYear to endYear
+  let allYears: string[] = [];
+  if (startYear !== null && endYear !== null) {
+    // Ensure startYear is not later than endYear (in case referenceValue is very late)
+    const actualStartYear = Math.min(startYear, endYear);
+    allYears = Array.from({ length: endYear - actualStartYear + 1 }, (_, i) =>
+      (actualStartYear + i).toString()
+    );
+  } else if (sortedYears.length > 0) {
+    // Fallback: use sortedYears if we couldn't determine start/end
+    allYears = sortedYears;
+  }
 
   const dataset: DatasetComponentOption = {
     dimensions: ['date', 'value', 'goal'],
@@ -142,6 +238,49 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
       goal: combinedData[year].goal !== undefined ? combinedData[year].goal : null,
     })),
   };
+
+  // Calculate actual min and max values from the data for y-axis label display
+  const allValues: number[] = [];
+  sortedYears.forEach((year) => {
+    if (combinedData[year].value !== undefined && combinedData[year].value !== null) {
+      allValues.push(combinedData[year].value);
+    }
+    if (combinedData[year].goal !== undefined && combinedData[year].goal !== null) {
+      allValues.push(combinedData[year].goal);
+    }
+  });
+  const dataMin = allValues.length > 0 ? Math.min(...allValues) : 0;
+  const dataMax = allValues.length > 0 ? Math.max(...allValues) : 0;
+  const actualMin = minValue ?? dataMin;
+  const actualMax = maxValue === null ? dataMax : maxValue;
+
+  // Find the index of the reference year in allYears (if referenceValue exists)
+  let referenceYearIndex = -1;
+  if (referenceValue?.date) {
+    try {
+      const refDateObj = new Date(referenceValue.date);
+      if (!Number.isNaN(refDateObj.getTime())) {
+        const refYear = refDateObj.getFullYear().toString();
+        referenceYearIndex = allYears.indexOf(refYear);
+      }
+    } catch {
+      // Ignore invalid dates
+    }
+  }
+
+  // Find the index of the goal year in allYears
+  let goalYearIndex = -1;
+  if (nonQuantifiedGoal && nonQuantifiedGoalDate) {
+    try {
+      const goalDateObj = new Date(nonQuantifiedGoalDate);
+      if (!Number.isNaN(goalDateObj.getTime())) {
+        const goalYear = goalDateObj.getFullYear().toString();
+        goalYearIndex = allYears.indexOf(goalYear);
+      }
+    } catch {
+      // Ignore invalid dates
+    }
+  }
 
   const option: ECOption = {
     dataset: dataset,
@@ -169,6 +308,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
       position: 'left',
       max: maxValue === null ? 'dataMax' : maxValue,
       min: minValue ?? 'dataMin',
+      splitNumber: 1, // Only show min and max ticks
       axisLabel: {
         show: true,
         showMinLabel: true,
@@ -177,7 +317,12 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
         inside: false,
         fontSize: 10,
         formatter: function (value: number) {
-          return format.number(value);
+          // Only show label if it's the min or max value
+          const tolerance = Math.abs(actualMax - actualMin) * 0.001; // Small tolerance for floating point comparison
+          if (Math.abs(value - actualMin) < tolerance || Math.abs(value - actualMax) < tolerance) {
+            return format.number(value);
+          }
+          return '';
         },
         margin: 12,
         align: 'right',
@@ -193,7 +338,6 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
       axisLine: {
         show: false,
       },
-      interval: 'auto',
       scale: maxValue === null && minValue === null,
     },
     series: [
@@ -233,25 +377,109 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
           width: 2,
         },
         z: 2,
+        // Add markArea for nonQuantifiedGoal (blue area) - only if referenceValue.date exists
+        ...(referenceValue?.date &&
+        nonQuantifiedGoal &&
+        goalYearIndex >= 0 &&
+        referenceYearIndex >= 0
+          ? {
+              markArea: {
+                silent: true,
+                itemStyle: {
+                  color: theme.graphColors.blue030,
+                  opacity: 0.1,
+                },
+                data: [
+                  [
+                    {
+                      xAxis: referenceYearIndex,
+                      yAxis: referenceValue.value,
+                    },
+                    {
+                      xAxis: goalYearIndex,
+                      yAxis:
+                        nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase
+                          ? actualMax
+                          : actualMin,
+                    },
+                  ],
+                ],
+              },
+            }
+          : {}),
+        // Add markLine for nonQuantifiedGoal (blue arrow)
+        ...(nonQuantifiedGoal && nonQuantifiedGoalDate && goalYearIndex >= 0
+          ? {
+              markLine: {
+                silent: true,
+                z: 1,
+                symbol: ['none', 'none'],
+                symbolSize: 10,
+                data: [
+                  [
+                    {
+                      xAxis: goalYearIndex,
+                      yAxis: referenceValue?.value
+                        ? referenceValue.value
+                        : nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase
+                          ? actualMin
+                          : actualMax,
+                      lineStyle: {
+                        color: theme.graphColors.blue030 || '#999999',
+                        width: 2,
+                        type: 'solid',
+                      },
+                      symbol: 'none',
+                      name: 'Goal',
+                      label: {
+                        show: false,
+                      },
+                    },
+                    {
+                      xAxis: goalYearIndex,
+                      yAxis:
+                        nonQuantifiedGoal === IndicatorNonQuantifiedGoal.Increase
+                          ? actualMax
+                          : actualMin,
+                      symbol: 'arrow',
+                    },
+                  ],
+                ],
+              },
+            }
+          : {}),
       },
     ],
     grid: {
       left: 15,
       right: 15,
-      top: 10,
+      top: 15,
       bottom: 5,
       containLabel: true,
     },
     tooltip: {
       trigger: 'axis',
-      formatter: function (params) {
-        const date = params[0].value.date;
-        const year = new Date(date).getFullYear();
+      formatter: function (params: unknown) {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const firstParam = params[0] as {
+          value?: { date?: string | number; value?: number | null; goal?: number | null };
+          seriesName?: string;
+        };
+        const valueObj = firstParam.value;
+        if (!valueObj || !valueObj.date) return '';
+        const year = new Date(valueObj.date).getFullYear();
         let result = `${t('table-year')}: ${year}<br/>`;
-        params.forEach((param) => {
-          const value = param.value[param.dimensionNames[param.encode.y]];
-          if (value !== null) {
-            result += `${param.seriesName}: ${format.number(value, {
+        params.forEach((param: unknown) => {
+          const typedParam = param as {
+            value?: { date?: string | number; value?: number | null; goal?: number | null };
+            seriesName?: string;
+          };
+          if (!typedParam.value || !typedParam.seriesName) return;
+          // Extract the value based on which series it is (goal or value)
+          const dataValue =
+            typedParam.seriesName === t('target') ? typedParam.value.goal : typedParam.value.value;
+          if (dataValue !== null && dataValue !== undefined && typeof dataValue === 'number') {
+            result += `${typedParam.seriesName}: ${format.number(dataValue, {
               maximumSignificantDigits: 2,
             })} ${indicator.unit.shortName || indicator.unit.name}<br/>`;
           }
@@ -264,16 +492,22 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   return (
     <IndicatorSparklineContainer>
       <SparkLineHeader>
-        {desiredTrend && (
+        {/*desiredTrend && (
           <TrendIconWrapper>
-            <Icon name={desiredTrend === 'INCREASING' ? 'arrow-up' : 'arrow-down'} />
+            <Icon
+              name={desiredTrend === IndicatorDesiredTrend.Increasing ? 'arrow-up' : 'arrow-down'}
+            />
           </TrendIconWrapper>
-        )}
-        <Unit unit={indicator.unit} />{' '}
-        <PopoverTip content={indicator.name} identifier={indicator.id} />
+        )*/}
+        <RelationshipType>
+          {t(`indicator-relationship-${relationshipType.toLowerCase()}`)}
+        </RelationshipType>
+        <h3>
+          {indicator.name} ({indicator.unit.shortName || indicator.unit.name})
+        </h3>
       </SparkLineHeader>
 
-      <Chart data={option} isLoading={false} height="110px" />
+      <Chart data={option} isLoading={false} height="110px" withResizeLegend={false} />
     </IndicatorSparklineContainer>
   );
 };

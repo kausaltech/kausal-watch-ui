@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { captureMessage } from '@sentry/nextjs';
 import { isEqual } from 'lodash';
 import { useLocale, useTranslations } from 'next-intl';
@@ -15,160 +15,13 @@ import type {
 import { linearRegression } from '@/common/math';
 import { capitalizeFirstLetter } from '@/common/utils';
 import ContentLoader from '@/components/common/ContentLoader';
-import RichText from '@/components/common/RichText';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
 import LegacyIndicatorGraph from '@/components/graphs/legacy/IndicatorGraph';
 import IndicatorComparisonSelect from '@/components/indicators/IndicatorComparisonSelect';
 import IndicatorNormalizationSelect from '@/components/indicators/IndicatorNormalizationSelect';
 import { usePlan } from '@/context/plan';
-
-export const GET_INDICATOR_GRAPH_DATA = gql`
-  query IndicatorGraphData($id: ID, $plan: ID) {
-    plan(id: $plan) {
-      scenarios {
-        id
-        identifier
-        name
-      }
-    }
-    indicator(plan: $plan, id: $id) {
-      id
-      name
-      timeResolution
-      showTrendline
-      showTotalLine
-      desiredTrend
-      reference
-      minValue
-      maxValue
-      ticksCount
-      ticksRounding
-      valueRounding
-      dataCategoriesAreStackable
-      organization {
-        id
-        name
-        abbreviation
-      }
-      quantity {
-        id
-        name
-      }
-      values(includeDimensions: true) {
-        id
-        date
-        value
-        normalizedValues {
-          normalizerId
-          value
-        }
-        categories {
-          id
-        }
-      }
-      dimensions {
-        dimension {
-          id
-          name
-          categories {
-            id
-            name
-          }
-        }
-      }
-      goals {
-        id
-        date
-        value
-        normalizedValues {
-          normalizerId
-          value
-        }
-        scenario {
-          id
-        }
-      }
-      unit {
-        id
-        name
-        shortName
-        verboseName
-        verboseNamePlural
-      }
-      common {
-        id
-        name
-        normalizations {
-          unit {
-            shortName
-          }
-          normalizer {
-            name
-            id
-            identifier
-          }
-        }
-        indicators {
-          id
-          organization {
-            id
-            name
-            abbreviation
-          }
-          timeResolution
-          minValue
-          maxValue
-          quantity {
-            id
-            name
-          }
-          values(includeDimensions: true) {
-            id
-            date
-            value
-            normalizedValues {
-              normalizerId
-              value
-            }
-            categories {
-              id
-            }
-          }
-          dimensions {
-            dimension {
-              id
-              name
-              categories {
-                id
-                name
-              }
-            }
-          }
-          goals {
-            id
-            date
-            value
-            normalizedValues {
-              normalizerId
-              value
-            }
-            scenario {
-              id
-            }
-          }
-          unit {
-            id
-            name
-            shortName
-            verboseName
-            verboseNamePlural
-          }
-        }
-      }
-    }
-  }
-`;
+import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
 
 function generateCube(dimensions, values, path) {
   const dim = dimensions[0];
@@ -566,6 +419,7 @@ function IndicatorVisualisation({
   if (error) return <Alert color="danger">{`${t('error')}: ${error.message}`}</Alert>;
   if (!data || !data.plan) return null;
 
+  console.log('IndicatorVisualisation', data);
   const {
     indicator,
     plan: { scenarios },
@@ -663,6 +517,7 @@ function IndicatorVisualisation({
       ? [null, null]
       : generateTrendTrace(indicator, traces, goalTraces, i18n);
 
+  // Include trend and goal bounds in the calculation
   let bounds = indicatorGraphSpecification.bounds;
   for (const addBounds of [goalBounds, trendBounds]) {
     if (addBounds) {
@@ -672,9 +527,39 @@ function IndicatorVisualisation({
       ]);
     }
   }
-  const delta = bounds.max - bounds.min;
-  bounds.max = bounds.max + delta * 0.1;
-  bounds.min = bounds.min - delta * 0.1;
+
+  // Round bounds to avoid overly precise floating point values
+  // Use a reasonable precision based on the magnitude of the values
+  const roundBounds = (value: number): number => {
+    if (value === 0 || !isFinite(value)) return value;
+    const absValue = Math.abs(value);
+    // Determine appropriate precision based on magnitude
+    let precision: number;
+    if (absValue >= 1000) {
+      precision = 1; // Round to nearest integer for large numbers
+    } else if (absValue >= 100) {
+      precision = 1; // Round to 1 decimal place
+    } else if (absValue >= 10) {
+      precision = 2; // Round to 2 decimal places
+    } else if (absValue >= 1) {
+      precision = 3; // Round to 3 decimal places
+    } else {
+      // For values < 1, use more precision
+      const magnitude = Math.floor(Math.log10(absValue));
+      precision = Math.abs(magnitude) + 3;
+    }
+    const factor = Math.pow(10, precision);
+    return Math.round(value * factor) / factor;
+  };
+
+  // Only add 10% padding if explicit minValue/maxValue are NOT set
+  // If explicit values are provided, use them directly without padding
+  if (indicator.minValue == null && indicator.maxValue == null) {
+    // Add 10% padding to bounds (adds 10% extra space above and below the data range)
+    const delta = bounds.max - bounds.min;
+    bounds.max = roundBounds(bounds.max + delta * 0.1);
+    bounds.min = roundBounds(bounds.min - delta * 0.1);
+  }
   indicatorGraphSpecification.bounds = bounds;
 
   const yRange = {
@@ -685,21 +570,48 @@ function IndicatorVisualisation({
     ticksRounding: indicator.ticksRounding ?? undefined,
     valueRounding: indicator.valueRounding ?? undefined,
     includeZero: false,
-    range: [],
+    range: [] as number[],
   };
-  if (indicator?.quantity?.name === 'päästöt') {
+  // includeZero is kept for backwards compatibility but not used since we always set range
+  // Only set to true if explicitly requested via minValue or maxValue
+  if (indicator.minValue === 0 || indicator.maxValue === 0) {
+    yRange.includeZero = true;
+  } else if (indicator?.quantity?.name === 'päästöt' && indicator.minValue == null) {
     yRange.includeZero = true;
   }
-  let minValue, maxValue;
-  minValue = indicator.minValue ?? indicatorGraphSpecification.bounds.min;
-  maxValue = indicator.maxValue ?? indicatorGraphSpecification.bounds.max;
 
-  // If min and max values are set, do not use autorange
-  if (minValue != null || maxValue != null) {
-    yRange.range = [minValue, maxValue];
-    if (minValue != null && maxValue != null) {
-      yRange.autorange = false;
+  // If explicit minValue/maxValue are set, use them directly without any modification
+  // Otherwise, use calculated bounds (but don't force 0 unless explicitly requested)
+  let minValue, maxValue;
+  if (indicator.minValue != null) {
+    // Use explicit minValue exactly as provided
+    minValue = indicator.minValue;
+  } else {
+    minValue = indicatorGraphSpecification.bounds.min;
+    // Legacy support: for 'päästöt' quantity, include 0 if no explicit minValue is set
+    if (indicator?.quantity?.name === 'päästöt' && minValue > 0) {
+      minValue = 0;
     }
+  }
+
+  if (indicator.maxValue != null) {
+    // Use explicit maxValue exactly as provided
+    maxValue = indicator.maxValue;
+  } else {
+    maxValue = indicatorGraphSpecification.bounds.max;
+  }
+
+  // Always set range to prevent ECharts from auto-ranging and including 0
+  // When explicit minValue/maxValue are provided, use them exactly without padding
+  yRange.range = [minValue, maxValue];
+
+  // Update bounds to match the range when explicit values are set
+  // This ensures bounds reflect the actual range being used
+  if (indicator.minValue != null || indicator.maxValue != null) {
+    indicatorGraphSpecification.bounds = {
+      min: minValue,
+      max: maxValue,
+    };
   }
 
   const comparisonOrgs = indicator.common?.indicators
@@ -739,6 +651,7 @@ function IndicatorVisualisation({
             title={plotTitle}
           />
         ) : (
+          // TODO: Show title depending on context
           <IndicatorGraph
             specification={indicatorGraphSpecification}
             yRange={yRange}
@@ -746,7 +659,13 @@ function IndicatorVisualisation({
             traces={traces}
             goalTraces={goalTraces}
             trendTrace={trendTrace}
-            title={plotTitle}
+            title={null}
+            desiredTrend={indicator.desiredTrend}
+            referenceValue={indicator.referenceValue}
+            nonQuantifiedGoal={{
+              trend: indicator.nonQuantifiedGoal,
+              date: indicator.nonQuantifiedGoalDate,
+            }}
           />
         )}
       </div>
@@ -758,12 +677,6 @@ function IndicatorVisualisation({
         title={plotTitle}
         language={i18n.language}
       />
-      {indicator.reference && (
-        <div style={{ display: 'flex' }}>
-          <span style={{ marginRight: '0.5em' }}>{t('reference')}:</span>
-          <RichText html={indicator.reference} />
-        </div>
-      )}
     </div>
   );
 }

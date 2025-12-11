@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
@@ -28,7 +28,7 @@ import IndicatorListFiltered from './IndicatorListFiltered';
 import IndicatorListFilters from './IndicatorListFilters';
 import IndicatorModal from './IndicatorModal';
 import IndicatorsHero from './IndicatorsHero';
-import { sortIndicators } from './indicatorUtils';
+import { type Sort, sortIndicators } from './indicatorUtils';
 import { processCommonIndicatorHierarchy } from './process-indicators';
 
 /* We augment the IndicatorListIndicatorFragment with a level property */
@@ -201,6 +201,7 @@ const getDefaultColumns = (
         name: categoryType.name,
         __typename: 'CategoryType',
       },
+      categoryLevel: null,
     });
   }
   if (displayMunicipality) {
@@ -229,6 +230,9 @@ const getDefaultColumns = (
     sourceField: null,
     isNormalized: false,
     valueType: IndicatorColumnValueType.Latest,
+    defaultYear: null,
+    referenceYear: null, // @deprecated, remove when type is updated
+    hideUnit: false,
   });
 
   if (displayNormalizedValues) {
@@ -240,6 +244,9 @@ const getDefaultColumns = (
       sourceField: null,
       isNormalized: true,
       valueType: IndicatorColumnValueType.Latest,
+      defaultYear: null,
+      referenceYear: null, // @deprecated, remove when type is updated
+      hideUnit: false,
     });
   }
   return columns;
@@ -285,10 +292,29 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     () => searchParams.get('indicator') ?? null
   );
 
-  const handleChangeModal = (indicatorId?: string | null) => {
-    setIndicatorModalId(indicatorId ?? null);
-    updateSearchParams({ indicator: indicatorId ?? undefined });
-  };
+  // Store filtered indicators in a ref so handleChangeModal can access them
+  const filteredIndicatorsRef = useRef<IndicatorListIndicator[]>([]);
+
+  const handleChangeModal = useCallback(
+    (indicatorId?: string | null) => {
+      setIndicatorModalId(indicatorId ?? null);
+      if (openIndicatorsInModal) {
+        // When using global modal, store indicatorsOrder in sessionStorage for navigation
+        const order = filteredIndicatorsRef.current.map((ind) => ind.id).join(',');
+        if (indicatorId && order) {
+          sessionStorage.setItem('indicatorModalOrder', order);
+        } else {
+          sessionStorage.removeItem('indicatorModalOrder');
+        }
+        updateSearchParams({
+          indicator: indicatorId ?? undefined,
+        });
+      } else {
+        updateSearchParams({ indicator: indicatorId ?? undefined });
+      }
+    },
+    [openIndicatorsInModal, updateSearchParams]
+  );
 
   const { loading, error, data } = useQuery<IndicatorListQuery, IndicatorListQueryVariables>(
     GET_INDICATOR_LIST,
@@ -323,11 +349,16 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
 
   /* This collects the common categories from the indicators that belong to different plans */
   const commonCategories = collectCommonCategories(indicators);
-  /* We support only one category type for indicators, it is guessed here */
-  const categoryType: CategoryType | undefined = getFirstUsablePlanCategoryType(
-    data?.plan?.categoryTypes,
-    indicators
-  );
+  /* If no layout is defined, we support only one category type for indicators, it is guessed here */
+  /* If we have category columns defined, we use the first category type from the columns */
+  const firstCategoryColumnTypeId: string | undefined = listColumns?.find(
+    (column) => column.__typename === 'IndicatorCategoryColumn'
+  )?.categoryType.id;
+  const mainCategoryType: CategoryType | undefined = firstCategoryColumnTypeId
+    ? (data?.plan?.categoryTypes?.find(
+        (categoryType) => categoryType.id === firstCategoryColumnTypeId
+      ) as CategoryType)
+    : getFirstUsablePlanCategoryType(data?.plan?.categoryTypes, indicators);
 
   /* If no custom columns are defined, we create default columns */
   if (!listColumns || listColumns.length === 0) {
@@ -342,7 +373,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
 
     const defaultColumns = getDefaultColumns(
       displayMunicipality,
-      categoryType,
+      mainCategoryType,
       displayNormalizedValues,
       displayLevel ?? false,
       t
@@ -355,8 +386,37 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
 
   /* Sort & filter indicators */
   /* TODO: Sorting options are not implemented yet */
-  const sortedIndicators = sortIndicators(hierarchy, indicators, displayMunicipality ?? false);
+  /* Automatically guess default sorting order */
+  const sortingOrder: Sort[] = [{ key: 'name', direction: 'asc' }];
+  // If we display category column sort by category
+  if (mainCategoryType) {
+    sortingOrder.push({ key: 'category', direction: 'asc', categoryType: mainCategoryType });
+  }
+  // If we display level column sort by level
+  if (
+    indicatorListColumns.find(
+      (column) =>
+        column.__typename === 'IndicatorListColumn' &&
+        column.sourceField === IndicatorDashboardFieldName.Level
+    )
+  ) {
+    sortingOrder.push({ key: 'level', direction: 'asc' });
+  }
+  // If we display municipality column sort by municipality
+  if (displayMunicipality) {
+    sortingOrder.push({ key: 'organization', direction: 'asc' });
+  }
+
+  const sortedIndicators = sortIndicators(
+    sortingOrder,
+    hierarchy,
+    indicators,
+    displayMunicipality ?? false
+  );
   const filteredIndicators = filterIndicators(sortedIndicators, filters);
+
+  // Update ref with current filtered indicators (refs can be updated during render)
+  filteredIndicatorsRef.current = filteredIndicators;
 
   const getIndicatorPlanIdentifier = (
     indicator: IndicatorListIndicator | undefined,
@@ -377,7 +437,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
 
   return (
     <>
-      {indicatorModalId && (
+      {indicatorModalId && !openIndicatorsInModal && (
         <IndicatorModal
           indicatorId={indicatorModalId}
           indicatorPlanIdentifier={getIndicatorPlanIdentifier(
@@ -398,7 +458,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
         <IndicatorListFilters
           indicators={indicators}
           filterLayout={filterSections}
-          categoryType={categoryType}
+          categoryType={mainCategoryType}
           commonCategories={includeRelatedPlans ? commonCategories : null}
           activeFilters={filters}
           onChange={handleFilterChange}

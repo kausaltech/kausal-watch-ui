@@ -5,6 +5,8 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
     id
     name
     timeResolution
+    valueRounding
+    sortKey
     organization {
       id
       name
@@ -14,6 +16,7 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
       name
       normalizations {
         unit {
+          name
           shortName
         }
         normalizer {
@@ -104,7 +107,6 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
         id
       }
     }
-
     goals {
       id
       date
@@ -117,7 +119,10 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
         id
       }
     }
+    nonQuantifiedGoal
+    nonQuantifiedGoalDate
     unit {
+      name
       shortName
     }
     plans {

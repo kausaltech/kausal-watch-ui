@@ -32,10 +32,10 @@ import Icon from '@/components/common/Icon';
 import SelectDropdown from '@/components/common/SelectDropdown';
 import { activeGoalVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
+import type { MetricSlice } from '@/utils/paths/metric';
 import {
   DimensionalMetric,
   type MetricCategoryValues,
-  MetricSlice,
   type SliceConfig,
 } from '@/utils/paths/metric';
 
@@ -56,7 +56,10 @@ const Tools = styled.div`
 
 const Disclaimer = styled.p`
   margin-right: 1.25rem;
+  margin-left: auto;
+  max-width: 700px;
   font-size: ${({ theme }) => theme.fontSizeSm};
+  line-height: ${({ theme }) => theme.lineHeightSm};
   color: ${({ theme }) => theme.textColor.secondary};
   text-align: right;
 `;
@@ -517,7 +520,7 @@ export default function DimensionalNodePlot({
       separateYearsValues.push(...separateYearsIndices.map((i) => allValues[i]));
     }
 
-    const label = t('plot-total')!;
+    const label = t('plot-total');
     plotData.push({
       xaxis: 'x2',
       type: 'scatter',
@@ -700,7 +703,7 @@ export default function DimensionalNodePlot({
               <SelectDropdown
                 id="dimension"
                 className="flex-grow-1"
-                label={t('plot-choose-dimension')!}
+                label={t('plot-choose-dimension')}
                 onChange={(val) =>
                   setSliceConfig((old) => ({
                     ...old,

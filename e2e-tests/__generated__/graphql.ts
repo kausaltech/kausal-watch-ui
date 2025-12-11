@@ -234,11 +234,14 @@ export enum IndicatorColumnValueType {
 export enum IndicatorDashboardFieldName {
   CausalityNav = 'CAUSALITY_NAV',
   ConnectedActions = 'CONNECTED_ACTIONS',
+  Description = 'DESCRIPTION',
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Reference = 'REFERENCE',
   Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT',
+  ValueSummary = 'VALUE_SUMMARY',
   Visualization = 'VISUALIZATION'
 }
 
@@ -256,11 +259,15 @@ export enum IndicatorDesiredTrend {
 export enum IndicatorDetailsFieldName {
   CausalityNav = 'CAUSALITY_NAV',
   ConnectedActions = 'CONNECTED_ACTIONS',
+  Description = 'DESCRIPTION',
+  GoalDescription = 'GOAL_DESCRIPTION',
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Reference = 'REFERENCE',
   Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT',
+  ValueSummary = 'VALUE_SUMMARY',
   Visualization = 'VISUALIZATION'
 }
 
@@ -276,11 +283,21 @@ export enum IndicatorLevelLevel {
 
 /** An enumeration. */
 export enum IndicatorList_FiltersFieldName {
+  Description = 'DESCRIPTION',
   Level = 'LEVEL',
   Name = 'NAME',
   Organization = 'ORGANIZATION',
+  Reference = 'REFERENCE',
   Unit = 'UNIT',
   UpdatedAt = 'UPDATED_AT'
+}
+
+/** An enumeration. */
+export enum IndicatorNonQuantifiedGoal {
+  /** Decrease */
+  Decrease = 'DECREASE',
+  /** Increase */
+  Increase = 'INCREASE'
 }
 
 /** An enumeration. */

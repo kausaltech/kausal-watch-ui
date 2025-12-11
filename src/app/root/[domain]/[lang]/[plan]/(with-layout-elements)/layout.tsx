@@ -24,7 +24,7 @@ export default async function Layout(props: Props) {
     <>
       <JsonLd domain={params.domain} />
       <Header />
-      <main id="main" data-testid="root-layout" style={{ minHeight: '100vh' }}>
+      <main id="main" data-testid="root-layout" style={{ minHeight: 'calc(100vh - 400px)' }}>
         {children}
       </main>
       <Footer />

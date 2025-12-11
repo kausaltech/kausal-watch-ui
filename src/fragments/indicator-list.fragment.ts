@@ -77,6 +77,7 @@ export const INDICATOR_LIST_PAGE_FRAGMENT = gql`
         isNormalized
         valueType
         referenceYear
+        defaultYear
         hideUnit
       }
       ... on IndicatorCategoryColumn {
