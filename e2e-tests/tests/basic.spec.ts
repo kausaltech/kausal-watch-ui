@@ -200,10 +200,10 @@ const testPlan = (planId: string) => {
       let indicatorLink = main.locator('a[href*="/indicators/"]').first();
       if (!(await indicatorLink.count())) {
         // handle hierarchical case
-        const sectionButtons = main.getByRole('button');
-        const btnCount = await sectionButtons.count();
-
-        for (let i = 0; i < btnCount; i++) {
+        for (let i = 0; ; i++) {
+          const sectionButtons = main.getByRole('button');
+          const btnCount = await sectionButtons.count();
+          if (i >= btnCount) break;
           await sectionButtons.nth(i).click();
           indicatorLink = main.locator('a[href*="/indicators/"]').first();
           if (await indicatorLink.count()) break;

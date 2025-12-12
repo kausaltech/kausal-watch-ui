@@ -581,9 +581,14 @@ function GlobalNav(props) {
           <Site>
             <HomeLink $hideLogoOnMobile={hideLogoOnMobile} href={logoLink}>
               <OrgLogo />
+              <span className="visually-hidden">
+                + {`${ownerName}, ${siteTitle} ${t('front-page')}`}+{' '}
+              </span>
             </HomeLink>
-            <HomeLink href={rootLink}>
-              <SiteTitle>{theme.navTitleVisible ? siteTitle : '\u00A0'}</SiteTitle>
+            <HomeLink href={rootLink} aria-label={!theme.navTitleVisible ? siteTitle : undefined}>
+              <SiteTitle aria-hidden={!theme.navTitleVisible}>
+                {theme.navTitleVisible ? siteTitle : '\u00A0'}
+              </SiteTitle>
             </HomeLink>
             <PlanSelector color={theme.brandNavColor} />
           </Site>
@@ -676,7 +681,9 @@ function GlobalNav(props) {
               {customToolbarItems.length > 0 && <CustomToolbar items={customToolbarItems} mobile />}
             </Nav>
             <Nav navbar className="ms-md-5">
-              <PlanVersionSelector plan={plan} />
+              <NavItem>
+                <PlanVersionSelector plan={plan} />
+              </NavItem>
               {externalItems.length > 0 &&
                 externalItems.map((item, index) => (
                   <NavItem key={`external${index}`}>
