@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
+import { usePathname } from 'next/navigation';
 import Script from 'next/script';
 
 import { useTranslations } from 'next-intl';
@@ -196,6 +197,13 @@ function GlobalNav(props: GlobalNavProps) {
   const { siteTitle, ownerName, navItems, activeBranch, activePath } = props;
   const theme = useTheme();
   const t = useTranslations();
+  const pathname = usePathname();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   // Handle custom category page hierarchy --------------------------------------
   const activePathParts = activePath.split('/');
   const isSubCategory = activePathParts[1] === 'bereiche' && activePathParts.length >= 4;
