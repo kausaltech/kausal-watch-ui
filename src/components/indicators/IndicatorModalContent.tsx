@@ -1,8 +1,10 @@
 import type { ApolloError } from '@apollo/client';
-import { Spinner } from 'reactstrap';
+import { useTranslations } from 'next-intl';
+import { Alert, Spinner } from 'reactstrap';
 import styled from 'styled-components';
 
 import type { IndicatorDetailsQuery, IndicatorListQuery } from '@/common/__generated__/graphql';
+import { deploymentType } from '@/common/environment';
 
 import IndicatorModalContentBlock, {
   IndicatorGroupedCategoryBlock,
@@ -98,6 +100,7 @@ const IndicatorModalContent = ({
   error,
   layout,
 }: IndicatorModalContentProps) => {
+  const t = useTranslations();
   if (loading && !indicator)
     return (
       <ContentWrapper>
@@ -111,6 +114,10 @@ const IndicatorModalContent = ({
 
   const indicatorName = indicator.name;
 
+  const hasLayout =
+    (layout.detailsMainTop && layout.detailsMainTop.length > 0) ||
+    (layout.detailsMainBottom && layout.detailsMainBottom.length > 0) ||
+    (layout.detailsAside && layout.detailsAside.length > 0);
   return (
     <ContentWrapper>
       {loading && (
@@ -122,6 +129,9 @@ const IndicatorModalContent = ({
         <h1 id="indicator-modal-title">{indicatorName}</h1>
       </ModalHeader>
       <ModalScrollableContent>
+        {!hasLayout && deploymentType !== 'production' && (
+          <Alert color="warning">{t('error-no-layout')}</Alert>
+        )}
         <ModalContentBlocksWrapper>
           {groupConsecutiveCategoryBlocks(layout.detailsMainTop || []).map(
             (groupedBlock, index) => {
