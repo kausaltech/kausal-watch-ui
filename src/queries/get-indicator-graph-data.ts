@@ -60,6 +60,7 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
           categories {
             id
             name
+            defaultColor
           }
         }
       }
@@ -130,6 +131,7 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
               categories {
                 id
                 name
+                defaultColor
               }
             }
           }
