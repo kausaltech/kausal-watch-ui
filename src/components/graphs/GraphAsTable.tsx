@@ -32,7 +32,7 @@ type GraphAsTableProps = {
 
 const CollapsibleTable = styled.div`
   background-color: ${(p) => p.theme.themeColors.white};
-  padding: ${(p) => p.theme.spaces.s050};
+  margin-bottom: ${(p) => p.theme.spaces.s100};
 `;
 
 const TableContainer = styled.div`
@@ -59,6 +59,7 @@ const TableContainer = styled.div`
 const TriggerButton = styled(Button)`
   text-decoration: none;
   color: ${(p) => p.theme.linkColor};
+  padding-left: 0;
   &:hover {
     text-decoration: underline;
     color: ${(p) => p.theme.linkColor};

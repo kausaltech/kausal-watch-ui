@@ -183,7 +183,7 @@ const buildSeriesFromTraces = ({
         connectNulls: true,
         showSymbol: trace.x.length <= 30,
         symbol: 'circle',
-        symbolSize: 6,
+        symbolSize: 7,
         sampling: 'lttb',
         smooth: false && (lineShape === 'spline' || lineShape === 'smooth'), // TODO: remove false once we have a proper smooth line shape
         lineStyle: {
@@ -720,10 +720,10 @@ function IndicatorGraph({
         name: goalTrace.name,
         data: goalData,
         showSymbol: true,
-        symbolSize: 10,
+        symbolSize: 11,
         lineStyle: {
-          width: 2,
-          type: graphSettings.drawGoalLine ? 'dashed' : 'solid',
+          width: graphSettings.drawGoalLine ? 2 : 0,
+          type: graphSettings.drawGoalLine ? 'dashed' : 'dotted',
           color: colors.goalColors[idx % colors.goalColors.length],
         },
         itemStyle: {
@@ -769,7 +769,7 @@ function IndicatorGraph({
                 data: trendData,
                 symbol: 'none',
                 lineStyle: {
-                  width: 1,
+                  width: 3,
                   color: colors.trendColor,
                   type: 'dotted',
                 },

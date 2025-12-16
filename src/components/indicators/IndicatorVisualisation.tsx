@@ -23,6 +23,8 @@ import IndicatorNormalizationSelect from '@/components/indicators/IndicatorNorma
 import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
 
+import RichText from '../common/RichText';
+
 function generateCube(dimensions, values, path) {
   const dim = dimensions[0];
   const rest = dimensions.slice(1);
@@ -386,12 +388,14 @@ type IndicatorVisualisationProps = {
   indicatorId: string;
   indicatorLink?: string;
   useLegacyGraph?: boolean;
+  showReference?: boolean;
 };
 
 function IndicatorVisualisation({
   indicatorId,
   indicatorLink,
   useLegacyGraph = true,
+  showReference = false,
 }: IndicatorVisualisationProps) {
   const plan = usePlan();
   const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
@@ -677,6 +681,12 @@ function IndicatorVisualisation({
         title={plotTitle}
         language={i18n.language}
       />
+      {indicator.reference && showReference && (
+        <div style={{ display: 'flex' }}>
+          <span style={{ marginRight: '0.5em' }}>{t('reference')}:</span>
+          <RichText html={indicator.reference} />
+        </div>
+      )}
     </div>
   );
 }
