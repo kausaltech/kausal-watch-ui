@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 const StyledFooter = styled.div`
   margin-bottom: 12px; // Allow space for Paths settings panel
-  //height: 120px;
   padding-top: 120px !important;
   // Handle mystery regression in prod
   // Copy + paste from https://designsystem.stadt-zuerich.ch/2.8.0/?path=/story/components-footer--default
