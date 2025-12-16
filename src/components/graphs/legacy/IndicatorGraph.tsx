@@ -396,11 +396,22 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   }
   const { yRange, timeResolution, traces, goalTraces, trendTrace, specification } = props;
 
+  // If dimension categories have a color defined by user, use it,
+  // otherwise use default colors from theme or fallback to black
+  const categoryColors = specification.dimensions[0]?.categories?.map((category, idx) => {
+    if (category.defaultColor) return category.defaultColor;
+    if (theme.settings?.graphs?.categoryColors) {
+      const length = theme.settings.graphs.categoryColors.length;
+      return theme.settings.graphs.categoryColors[idx % length];
+    }
+    return '#000000';
+  });
+
   const plotColors = {
     trace: theme.settings.graphs.totalLineColor,
     trend: theme.settings.graphs.trendLineColor,
     goalScale: theme.settings.graphs.goalLineColors,
-    mainScale: theme.settings.graphs.categoryColors,
+    mainScale: categoryColors ?? theme.settings.graphs.categoryColors,
     fillMarkers: theme.settings.graphs.fillMarkers,
     symbols: theme.settings.graphs.categorySymbols,
     goalSymbol: theme.settings.graphs.goalSymbol,
