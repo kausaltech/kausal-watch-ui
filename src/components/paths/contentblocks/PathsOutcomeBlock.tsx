@@ -8,13 +8,14 @@ import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import ContentLoader from 'react-content-loader';
-import { Card, CardBody, Col, Container, Row } from 'reactstrap';
+import { Alert, Card, CardBody, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import type {
   GetOutcomeNodeContentQuery,
   OutcomeNodeFieldsFragment,
 } from '@/common/__generated__/paths/graphql';
+import { deploymentType } from '@/common/environment';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
@@ -24,15 +25,15 @@ import { getHttpHeaders } from '@/utils/paths/paths.utils';
 const OutcomeBlockLoader = (props) => (
   <ContentLoader
     speed={2}
-    width={600}
-    height={12}
-    viewBox="0 0 600 12"
+    width={1200}
+    height={64}
+    viewBox="0 0 1200 100"
     backgroundColor="#f4f4f4"
     foregroundColor="#c9c9c9"
     style={{ width: '100%' }}
     {...props}
   >
-    <rect x="0" y="0" rx="0" ry="0" width="600" height="12" />
+    <rect x="0" y="0" rx="0" ry="0" width="1200" height="100" />
   </ContentLoader>
 );
 
@@ -192,6 +193,11 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
             <StyledTitle>{heading}</StyledTitle>
             <StyledCard $disabled={refetching}>
               <CardBody>
+                {deploymentType !== 'production' && !data?.node && !loading && (
+                  <Alert color="warning">
+                    {t('error-no-outcome-node', { outcomeNodeId: outcomeNodeId ?? 'undefined' })}
+                  </Alert>
+                )}
                 {loading && <OutcomeBlockLoader />}
                 {nodes.visible.map((node: OutcomenodeType, index: number) => (
                   <OutcomeCardSet
