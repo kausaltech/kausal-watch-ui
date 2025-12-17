@@ -123,6 +123,10 @@ const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
     align-items: stretch;
   }
 
+  .plan-version-navitem {
+    display: contents;
+  }
+
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     .navbar-nav {
       padding: 0;
@@ -681,7 +685,7 @@ function GlobalNav(props) {
               {customToolbarItems.length > 0 && <CustomToolbar items={customToolbarItems} mobile />}
             </Nav>
             <Nav navbar className="ms-md-5">
-              <NavItem>
+              <NavItem className="plan-version-navitem">
                 <PlanVersionSelector plan={plan} />
               </NavItem>
               {externalItems.length > 0 &&
