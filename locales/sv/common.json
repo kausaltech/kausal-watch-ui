@@ -25,6 +25,8 @@
     "error-loading-indicators": "Fel vid inläsning av indikatorlistan",
     "error-occurred": "Fel inträffade",
     "error-with-code": "Felkod",
+    "error-no-layout": "Ingen layout definierad. Lägg till innehåll här.",
+    "error-no-outcome-node": "Resultatnod '{outcomeNodeId}' hittades inte.",
     "feedback": "Respons",
     "feedback-description": "Upptäckte du något som inte fungerar? Eller har du idéer om något vi kan förbättra?",
     "feedback-error-content": "Något gick fel och din feedback mottogs inte. Försök igen om ett ögonblick.",

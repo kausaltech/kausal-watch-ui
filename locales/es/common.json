@@ -26,6 +26,8 @@
     "error-loading-indicators": "Error al cargar la lista de indicadores",
     "error-occurred": "Se ha producido un error",
     "error-with-code": "Error con el código",
+    "error-no-layout": "No se ha definido ningún diseño. Añada contenido aquí.",
+    "error-no-outcome-node": "Nodo de resultado '{outcomeNodeId}' no encontrado.",
     "export": "Exportar",
     "feedback": "Comentarios",
     "feedback-description": "¿Ha descubierto algo que no funciona? ¿O tiene ideas sobre algo que podamos mejorar?",

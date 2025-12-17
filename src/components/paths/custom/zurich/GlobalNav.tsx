@@ -199,11 +199,6 @@ function GlobalNav(props: GlobalNavProps) {
   const t = useTranslations();
   const pathname = usePathname();
 
-  // Scroll to top on route change
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
   // Handle custom category page hierarchy --------------------------------------
   const activePathParts = activePath.split('/');
   const isSubCategory = activePathParts[1] === 'bereiche' && activePathParts.length >= 4;

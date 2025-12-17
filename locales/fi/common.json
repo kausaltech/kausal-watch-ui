@@ -26,6 +26,8 @@
     "error-loading-indicators": "Virhe mittareiden latauksessa",
     "error-occurred": "Virhe tapahtui",
     "error-with-code": "Virhekoodi",
+    "error-no-layout": "Asettelua ei ole määritelty. Lisää sisältöä tähän.",
+    "error-no-outcome-node": "Tulosnodea '{outcomeNodeId}' ei löydy.",
     "export": "Vie tiedostoon",
     "feedback": "Palaute",
     "feedback-description": "Löysitkö palvelusta jotain joka ei toimi? Tai onko sinulla ideoita palvelun parantamiseksi?",

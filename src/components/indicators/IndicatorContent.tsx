@@ -94,7 +94,7 @@ function IndicatorDetails({ indicator, testId }: Props) {
             <Col className="mb-5">
               <GraphContainer>
                 <h2>{indicator.name}</h2>
-                <IndicatorVisualisation indicatorId={indicator.id} />
+                <IndicatorVisualisation indicatorId={indicator.id} showReference={true} />
               </GraphContainer>
             </Col>
           </Row>
