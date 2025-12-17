@@ -8,9 +8,16 @@ import {
 } from '@/common/__generated__/graphql';
 import type { TFunction } from '@/common/i18n';
 
+import PopoverTip from '../common/PopoverTip';
+
 const StyledTh = styled.th<{ $numeric?: boolean }>`
   text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
   line-height: ${(props) => props.theme.lineHeightSm};
+`;
+
+const StyledHeaderContent = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 interface IndicatorTableHeaderProps {
@@ -109,7 +116,12 @@ const IndicatorTableHeader = (props: IndicatorTableHeaderProps) => {
   const t = useTranslations();
   return (
     <StyledTh key={column.id} $numeric={isNumericColumn(column)}>
-      {getColumnLabel(column, t)}
+      <StyledHeaderContent>
+        {getColumnLabel(column, t)}
+        {column.columnHelpText && (
+          <PopoverTip content={column.columnHelpText} identifier={column.id ?? ''} />
+        )}
+      </StyledHeaderContent>
     </StyledTh>
   );
 };
