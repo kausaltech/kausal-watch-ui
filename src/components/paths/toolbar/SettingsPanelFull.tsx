@@ -101,7 +101,12 @@ const SettingsPanelFull: React.FC = () => {
 
   const [mode, setMode] = useState(MODE.MD);
 
-  const hideScenarioPanel = !showSettingsPanel && theme.settings.paths.disableScenarioEditing;
+  // allowHidingSettingsPanel===false enables legacy behaviour of showing the panel on every page
+  // showSettingsPanel===false means the panel is always hidden
+  // showSettingsPanel controls the visibility of the panel on the page level
+  const hideScenarioPanel =
+    theme.settings.paths.disableScenarioEditing ||
+    (theme.settings.paths.allowHidingSettingsPanel && !showSettingsPanel);
   // Initialize default values only on mount. We don't want to reset user-modified values.
   useEffect(() => {
     if (!paths || paths.instance.id === 'unknown') return;
