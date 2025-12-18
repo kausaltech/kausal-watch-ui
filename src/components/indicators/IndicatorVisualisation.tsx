@@ -423,7 +423,6 @@ function IndicatorVisualisation({
   if (error) return <Alert color="danger">{`${t('error')}: ${error.message}`}</Alert>;
   if (!data || !data.plan) return null;
 
-  console.log('IndicatorVisualisation', data);
   const {
     indicator,
     plan: { scenarios },

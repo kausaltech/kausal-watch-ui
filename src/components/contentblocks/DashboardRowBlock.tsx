@@ -6,15 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import {
-  type DashboardIndicatorAreaChartBlock,
-  type DashboardIndicatorBarChartBlock,
-  type DashboardIndicatorLineChartBlock,
-  type DashboardIndicatorPieChartBlock,
-  type DashboardIndicatorSummaryBlock,
-  type DashboardParagraphBlock,
-  type DashboardRowBlock,
-} from '@/common/__generated__/graphql';
+import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
 
 import Card from '../common/Card';
 import DashboardIndicatorSummaryBlockComponent from './DashboardIndicatorSummaryBlock';
@@ -36,15 +28,15 @@ const DashboardRowSection = styled.div<{
     props.$bottomPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
 `;
 
-type DashboardBlock =
-  | DashboardParagraphBlock
-  | DashboardIndicatorPieChartBlock
-  | DashboardIndicatorAreaChartBlock
-  | DashboardIndicatorBarChartBlock
-  | DashboardIndicatorLineChartBlock
-  | TDashboardIndicatorSummaryBlock;
+// Extract the DashboardRowBlock fragment type from the union
+type DashboardRowBlockFragment = Extract<
+  StreamFieldFragmentFragment,
+  { __typename: 'DashboardRowBlock' }
+>;
+// Get the element type of the blocks array
+type DashboardBlock = NonNullable<DashboardRowBlockFragment['blocks']>[number];
 
-interface DashboardRowBlockProps extends Omit<TDashboardRowBlock, 'rawValue'> {
+interface DashboardRowBlockProps extends Omit<DashboardRowBlockFragment, 'rawValue'> {
   topPadding?: boolean;
   bottomPadding?: boolean;
   blocks: DashboardBlock[];
@@ -89,33 +81,49 @@ const StyledLink = styled(Link)`
 `;
 
 function getBlockComponent(block: DashboardBlock) {
-  switch (block.blockType) {
+  switch (block.__typename) {
     case 'DashboardParagraphBlock': {
-      const paragraphBlock = block as DashboardParagraphBlock;
-      return paragraphBlock.text ? (
-        <div dangerouslySetInnerHTML={{ __html: paragraphBlock.text }} />
-      ) : null;
+      if ('text' in block) {
+        return block.text ? <div dangerouslySetInnerHTML={{ __html: block.text }} /> : null;
+      }
+      return null;
     }
     case 'DashboardIndicatorSummaryBlock': {
-      const summaryBlock = block as DashboardIndicatorSummaryBlock;
-      return <DashboardIndicatorSummaryBlockComponent indicator={summaryBlock.indicator} />;
+      if ('indicator' in block) {
+        return <DashboardIndicatorSummaryBlockComponent indicator={block.indicator} />;
+      }
+      return null;
     }
     case 'DashboardIndicatorPieChartBlock': {
-      const pieChartBlock = block as DashboardIndicatorPieChartBlock;
-      return <DashboardIndicatorPieChartBlockComponent {...pieChartBlock} />;
+      const pieBlock = block as Extract<
+        DashboardBlock,
+        { __typename: 'DashboardIndicatorPieChartBlock' }
+      >;
+      return <DashboardIndicatorPieChartBlockComponent {...(pieBlock as any)} />;
     }
     case 'DashboardIndicatorLineChartBlock': {
-      const lineChartBlock = block as DashboardIndicatorLineChartBlock;
-      return <DashboardIndicatorLineChartBlockComponent {...lineChartBlock} />;
+      const lineBlock = block as Extract<
+        DashboardBlock,
+        { __typename: 'DashboardIndicatorLineChartBlock' }
+      >;
+      return <DashboardIndicatorLineChartBlockComponent {...(lineBlock as any)} />;
     }
     case 'DashboardIndicatorBarChartBlock': {
-      const barChartBlock = block as DashboardIndicatorBarChartBlock;
-      return <DashboardIndicatorBarChartBlockComponent {...barChartBlock} />;
+      const barBlock = block as Extract<
+        DashboardBlock,
+        { __typename: 'DashboardIndicatorBarChartBlock' }
+      >;
+      return <DashboardIndicatorBarChartBlockComponent {...(barBlock as any)} />;
     }
     case 'DashboardIndicatorAreaChartBlock': {
-      const areaChartBlock = block as DashboardIndicatorAreaChartBlock;
-      return <DashboardIndicatorAreaChartBlockComponent {...areaChartBlock} />;
+      const areaBlock = block as Extract<
+        DashboardBlock,
+        { __typename: 'DashboardIndicatorAreaChartBlock' }
+      >;
+      return <DashboardIndicatorAreaChartBlockComponent {...(areaBlock as any)} />;
     }
+    default:
+      return null;
   }
 }
 
@@ -164,8 +172,10 @@ const DashboardRowBlock = ({
             const indicatorId =
               isChart && 'indicator' in block && block.indicator ? block.indicator.id : undefined;
 
+            const blockId =
+              'id' in block && block.id ? block.id : `${block.blockType}-${block.__typename}`;
             return (
-              <Col key={block.id} md={columnWidth}>
+              <Col key={blockId} md={columnWidth}>
                 <StyledCard outline>
                   <DashboardCardContents block={block} />
                   {isChart && indicatorId && (
