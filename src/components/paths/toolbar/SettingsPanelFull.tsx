@@ -11,7 +11,12 @@ import { useTheme } from 'styled-components';
 import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import Icon from '@/components/common/Icon';
 import type { PathsInstanceType } from '@/components/providers/PathsProvider';
-import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
+import {
+  activeGoalVar,
+  activeScenarioVar,
+  showSettingsPanelVar,
+  yearRangeVar,
+} from '@/context/paths/cache';
 //import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import { usePaths } from '@/context/paths/paths';
 
@@ -89,12 +94,14 @@ const SettingsPanelFull: React.FC = () => {
   const activeGoal = useReactiveVar(activeGoalVar);
   const activeScenario = useReactiveVar(activeScenarioVar);
   const yearRange = useReactiveVar(yearRangeVar);
+  const showSettingsPanel = useReactiveVar(showSettingsPanelVar);
 
   const t = useTranslations();
   const theme = useTheme();
 
   const [mode, setMode] = useState(MODE.MD);
-  const hideScenarioPanel = theme.settings.paths.disableScenarioEditing;
+
+  const hideScenarioPanel = !showSettingsPanel && theme.settings.paths.disableScenarioEditing;
   // Initialize default values only on mount. We don't want to reset user-modified values.
   useEffect(() => {
     if (!paths || paths.instance.id === 'unknown') return;
