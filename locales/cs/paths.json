@@ -2,6 +2,8 @@
   "abbr-per-annum": "/a",
   "action-impact": "Dopad akce",
   "action": "Akce",
+  "action-enabled-description": "Má být akce zahrnuta do scénáře?",
+  "action-not-included-in-scenario": "Není zahrnuta do scénáře",
   "actions": "Akce",
   "actions-available": "Akce ve scénáři",
   "actions-influencing-this": "Akce ovlivňující {sector}",

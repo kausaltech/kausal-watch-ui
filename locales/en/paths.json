@@ -2,6 +2,8 @@
   "abbr-per-annum": "/a",
   "action-impact": "Action impact",
   "action": "Action",
+  "action-enabled-description": "Should the action be included in the scenario?",
+  "action-not-included-in-scenario": "Not included in the scenario",
   "actions": "Actions",
   "actions-available": "Actions on scenario",
   "actions-influencing-this": "Actions influencing {sector}",

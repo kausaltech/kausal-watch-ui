@@ -2,6 +2,8 @@
   "abbr-per-annum": "/v",
   "action-impact": "Toimenpiteen vaikutus",
   "action": "Toimenpide",
+  "action-enabled-description": "Sisällytetään toimenpide skenaarioon",
+  "action-not-included-in-scenario": "Ei sisällytetty skenaarioon",
   "actions": "Toimet",
   "actions-available": "Toimet skenaariossa",
   "actions-influencing-this": "{sector} -sektoriin vaikuttavat toimenpiteet",
