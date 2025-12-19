@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 import { captureException } from '@sentry/nextjs';
@@ -48,6 +48,11 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
   const { categoryId, node, pathsInstance, onLoaded } = props;
   const pathsInstanceId = pathsInstance.id;
   const activeGoal = useReactiveVar(activeGoalVar);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Only show the impact of default goal if exists
   const actionImpactGoal = pathsInstance.goals.find((goal) => goal.default === true);
@@ -76,8 +81,14 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
 
   const refetching = networkStatus === NetworkStatus.refetch;
 
-  if (loading && !refetching) {
+  // Only show loader after client-side hydration to prevent hydration mismatch
+  if (loading && !refetching && isMounted) {
     return <PathsContentLoader />;
+  }
+
+  // Return null during SSR/initial hydration to match server render
+  if (loading && !isMounted) {
+    return null;
   }
   if (error) {
     captureException(error, { extra: { pathsInstanceId: pathsInstance.id } });
