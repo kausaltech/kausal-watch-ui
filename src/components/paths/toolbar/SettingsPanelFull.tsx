@@ -8,7 +8,6 @@ import { Button } from 'reactstrap';
 import styled from 'styled-components';
 import { useTheme } from 'styled-components';
 
-import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import Icon from '@/components/common/Icon';
 import type { PathsInstanceType } from '@/components/providers/PathsProvider';
 import {
@@ -22,6 +21,8 @@ import { usePaths } from '@/context/paths/paths';
 
 import CompleteSettings from './CompleteSettings';
 import MediumSettings from './MediumSettings';
+
+type AugmentedGoal = PathsInstanceType['instance']['goals'][number];
 
 const Spacer = styled.div`
   // Add space under footer for approximate height of the settings panel
@@ -87,8 +88,6 @@ const MODE = {
   LG: 'lg',
 };
 
-type GoalType = GetInstanceContextQuery['instance']['goals'][number];
-
 const SettingsPanelFull: React.FC = () => {
   const paths = usePaths() as PathsInstanceType;
   const activeGoal = useReactiveVar(activeGoalVar);
@@ -112,12 +111,11 @@ const SettingsPanelFull: React.FC = () => {
     if (!paths || paths.instance.id === 'unknown') return;
     const { instance, scenarios } = paths;
     const firstActiveScenario = scenarios.find((sc) => sc.isActive);
-    const goals: GoalType[] = instance.goals;
+    const goals = instance.goals;
 
     if (!activeGoal) {
-      const defaultGoal: GoalType | undefined =
-        goals.length > 1 ? goals.find((goal) => goal.default) : goals[0];
-      activeGoalVar(defaultGoal || undefined);
+      const defaultGoal = goals.length > 1 ? goals.find((goal) => goal.default) : goals[0];
+      activeGoalVar((defaultGoal as AugmentedGoal | undefined) ?? null);
     }
 
     if (!activeScenario) {
