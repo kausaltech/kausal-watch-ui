@@ -179,8 +179,6 @@ const MediumSettings = (props: MediumSettingsProps) => {
   // TODO: This is a hack. We should get this from the backend.
   const goalHasSeparateYears = activeGoal?.separateYears;
 
-  console.log('MediumSettings', activeGoalVar(), hidden);
-
   if (hidden || !instance) return null;
   return (
     <Container fluid="xl">

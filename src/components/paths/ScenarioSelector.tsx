@@ -24,7 +24,7 @@ const ACTIVATE_SCENARIO = gql`
   }
 `;
 
-const DropdownWrapper = styled.div`
+const DropdownWrapper = styled.div<{ $isCustom: boolean }>`
   max-width: 320px;
   label {
     font-size: 0.8rem;
@@ -35,11 +35,14 @@ const DropdownWrapper = styled.div`
     font-size: 0.9rem !important;
     min-height: auto !important;
     border-width: 0 !important;
+    // Using BS btn-secondary here for legacy support
+    ${({ $isCustom }) => $isCustom && `background-color: #d4ebff !important;`}
   }
 
   /* Style the value container to match original padding */
   .scenario-select__value-container {
     padding: ${({ theme }) => theme.spaces.s050} !important;
+    ${({ $isCustom }) => $isCustom && `background-color: #d4ebff !important;`}
   }
 
   /* Style the single value text */
@@ -120,7 +123,7 @@ const ScenarioSelector = ({ disabled = false }: { disabled?: boolean }) => {
   };
 
   return (
-    <DropdownWrapper>
+    <DropdownWrapper $isCustom={!disabled && activeScenario?.id === 'custom'}>
       <SelectDropdown
         id="scenario-selector"
         label={t('scenario')}

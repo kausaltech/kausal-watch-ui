@@ -167,7 +167,6 @@ const ResponsiveStyles = styled.div`
 `;
 
 function hasPathsContent(body: StreamFieldFragmentFragment[]) {
-  console.log('body', body);
   return body.some(
     (block) =>
       block.blockType === 'PathsOutcomeBlock' || block.blockType === 'CategoryTypeLevelListBlock'
