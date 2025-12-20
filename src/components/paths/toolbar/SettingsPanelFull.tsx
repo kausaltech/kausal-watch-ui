@@ -86,43 +86,48 @@ const StyledButtonLabel = styled.span`
 const MODE = {
   MD: 'md',
   LG: 'lg',
+  NONE: 'none',
 };
 
 const SettingsPanelFull: React.FC = () => {
   const paths = usePaths() as PathsInstanceType;
-  const activeGoal = useReactiveVar(activeGoalVar);
-  const activeScenario = useReactiveVar(activeScenarioVar);
-  const yearRange = useReactiveVar(yearRangeVar);
   const showSettingsPanel = useReactiveVar(showSettingsPanelVar);
 
   const t = useTranslations();
   const theme = useTheme();
 
-  const [mode, setMode] = useState(MODE.MD);
-
   // allowHidingSettingsPanel===false enables legacy behaviour of showing the panel on every page
   // showSettingsPanel===false means the panel is always hidden
-  // showSettingsPanel controls the visibility of the panel on the page level
-  const hideScenarioPanel =
-    theme.settings.paths.disableScenarioEditing ||
-    (theme.settings.paths.allowHidingSettingsPanel && !showSettingsPanel);
+  // showSettingsPanel controls the visibility of the panel from the page
+
+  const [mode, setMode] = useState(MODE.MD);
+
+  useEffect(() => {
+    if (!showSettingsPanel && theme.settings.paths.allowHidingSettingsPanel) {
+      setMode(MODE.NONE);
+    } else {
+      setMode(MODE.MD);
+    }
+  }, [showSettingsPanel]);
   // Initialize default values only on mount. We don't want to reset user-modified values.
+  // We do not want to unmount this when page changes so hiding the panel on relevant pages
+  // is handled in the MediumSettings component.
   useEffect(() => {
     if (!paths || paths.instance.id === 'unknown') return;
     const { instance, scenarios } = paths;
     const firstActiveScenario = scenarios.find((sc) => sc.isActive);
     const goals = instance.goals;
 
-    if (!activeGoal) {
+    if (!activeGoalVar()) {
       const defaultGoal = goals.length > 1 ? goals.find((goal) => goal.default) : goals[0];
       activeGoalVar((defaultGoal as AugmentedGoal | undefined) ?? null);
     }
 
-    if (!activeScenario) {
+    if (!activeScenarioVar()) {
       activeScenarioVar(firstActiveScenario ?? undefined);
     }
 
-    if (!yearRange) {
+    if (!yearRangeVar()) {
       const initialYearRange: [number, number] = [
         instance.minimumHistoricalYear ?? instance.referenceYear ?? 2010,
         instance.targetYear ?? instance.modelEndYear,
@@ -131,7 +136,8 @@ const SettingsPanelFull: React.FC = () => {
     }
   });
 
-  if (!paths || paths.instance.id === 'unknown' || hideScenarioPanel) return null;
+  if (!paths || paths.instance.id === 'unknown' || theme.settings.paths.disableScenarioEditing)
+    return null;
 
   const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -144,43 +150,28 @@ const SettingsPanelFull: React.FC = () => {
     }
   };
 
-  // State of display settings
-  // Year range
-  /*
-  const yearRange = useReactiveVar(yearRangeVar);
-  const setYearRange = useCallback(
-    (newRange: [number, number]) => {
-      yearRangeVar(newRange);
-    },
-    [yearRangeVar]
-  );
-  */
-
-  // Normalization
-  //const availableNormalizations = site.availableNormalizations;
-
-  // Target
-  //const nrGoals = instance.goals.length;
-
-  // console.log(props);
   return (
     <>
       <Spacer />
       <FixedPanel className={`panel-${mode}`} aria-label={t('all-settings')}>
-        <StyledSettingsButton onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggle(e)}>
-          {mode === MODE.MD && (
-            <>
-              <Icon name="gear" /> <StyledButtonLabel>{t('settings-expand')}</StyledButtonLabel>
-            </>
-          )}
-          {mode === MODE.LG && (
-            <>
-              <Icon name="angle-down" />{' '}
-              <StyledButtonLabel>{t('settings-collapse')}</StyledButtonLabel>
-            </>
-          )}
-        </StyledSettingsButton>
-        {mode === MODE.MD && <MediumSettings />}
+        {mode !== MODE.NONE && (
+          <StyledSettingsButton
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggle(e)}
+          >
+            {mode === MODE.MD && (
+              <>
+                <Icon name="gear" /> <StyledButtonLabel>{t('settings-expand')}</StyledButtonLabel>
+              </>
+            )}
+            {mode === MODE.LG && (
+              <>
+                <Icon name="angle-down" />{' '}
+                <StyledButtonLabel>{t('settings-collapse')}</StyledButtonLabel>
+              </>
+            )}
+          </StyledSettingsButton>
+        )}
+        {mode === MODE.MD && mode !== MODE.NONE && <MediumSettings />}
         {mode === MODE.LG && <CompleteSettings />}
       </FixedPanel>
     </>

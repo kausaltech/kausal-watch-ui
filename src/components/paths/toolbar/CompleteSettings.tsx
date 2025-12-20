@@ -76,8 +76,10 @@ const CompleteSettings = (props) => {
   const instance = paths?.instance;
   const activeScenario = useReactiveVar(activeScenarioVar);
 
-  const hasGlobalParameters = paths.parameters.find((param) => param.isCustomizable) !== undefined;
-  const hasNormalizations = paths.availableNormalizations.length > 0;
+  //const hasGlobalParameters = paths?.parameters.find((param) => param.isCustomizable) !== undefined;
+  const hasNormalizations = paths?.availableNormalizations
+    ? paths?.availableNormalizations.length > 0
+    : false;
 
   // State of display settings
   // Year range
@@ -90,6 +92,7 @@ const CompleteSettings = (props) => {
     [yearRangeVar]
   );
 
+  if (!instance) return null;
   // Target
   const nrGoals = instance.goals.length;
 
@@ -157,13 +160,7 @@ const CompleteSettings = (props) => {
                     <h5>{t('change-scenario')}</h5>
                     <ScenarioSelector />
                   </Widget>
-                  <Widget>
-                    {hasGlobalParameters && (
-                      <>
-                        <h5>Global settings</h5>
-                      </>
-                    )}
-                  </Widget>
+                  {/* TODO: Global parameters when requested */}
                 </CardBody>
               </Card>
             </UncontrolledCollapse>

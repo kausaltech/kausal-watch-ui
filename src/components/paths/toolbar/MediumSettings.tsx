@@ -16,9 +16,10 @@ const PanelContent = styled.div`
   padding: ${({ theme }) => `${theme.spaces.s150} ${theme.spaces.s050} ${theme.spaces.s050}`};
 `;
 
-const ButtonLabel = styled.div`
+const ButtonLabel = styled.label`
   white-space: nowrap;
   font-size: 0.8rem;
+  line-height: 1;
 `;
 
 const StyledRow = styled(Row)`
@@ -53,7 +54,9 @@ const StyledButton = styled.button<{ ref: HTMLButtonElement }>`
   font-weight: 400;
   font-size: 0.9rem;
   padding: ${({ theme }) => theme.spaces.s050};
-
+  background-color: ${({ theme }) => theme.themeColors.white};
+  border-radius: ${({ theme }) => theme.inputBorderRadius};
+  border-width: 0;
   &:focus {
     box-shadow: 0 0 0 0.25rem ${(props) => props.theme.inputBtnFocusColor};
   }
@@ -106,7 +109,7 @@ const YearRangeSelector = (props) => {
   const buttonLabel = disabled ? '-' : `${yearRange[0]}–${yearRange[1]}`;
   if (!yearRange) return <div>Loading...</div>;
   return (
-    <div>
+    <div className="mb-3">
       <ButtonLabel>{t('comparing-years')}</ButtonLabel>
       <StyledButton
         className={`btn btn-light ${disabled ? 'disabled' : ''}`}
@@ -162,16 +165,23 @@ function getColumnSizes(hasMultipleGoals: boolean) {
   };
 }
 
-const MediumSettings = (props) => {
+type MediumSettingsProps = {
+  hidden?: boolean;
+};
+const MediumSettings = (props: MediumSettingsProps) => {
+  const { hidden = false } = props;
   const paths = usePaths();
   const instance = paths?.instance;
-  const nrGoals = instance.goals.length;
-  const hasMultipleGoals = nrGoals > 1;
+  const nrGoals = instance?.goals.length;
+  const hasMultipleGoals = nrGoals ? nrGoals > 1 : false;
   const columnSizes = getColumnSizes(hasMultipleGoals);
   const activeGoal = useReactiveVar(activeGoalVar);
   // TODO: This is a hack. We should get this from the backend.
   const goalHasSeparateYears = activeGoal?.separateYears;
 
+  console.log('MediumSettings', activeGoalVar(), hidden);
+
+  if (hidden || !instance) return null;
   return (
     <Container fluid="xl">
       <PanelContent>
@@ -191,7 +201,7 @@ const MediumSettings = (props) => {
             />
           </StyledDropdownCol>
           <StyledDropdownCol {...columnSizes.scenario}>
-            <ScenarioSelector disabled={goalHasSeparateYears} />
+            <ScenarioSelector disabled={!!goalHasSeparateYears} />
           </StyledDropdownCol>
           <StyledOutcomeCol className="text-right" {...columnSizes.outcome}>
             {goalHasSeparateYears ? <div /> : <GoalOutcomeBar compact />}
