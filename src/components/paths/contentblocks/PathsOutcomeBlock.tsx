@@ -198,7 +198,7 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
                     {t('error-no-outcome-node', { outcomeNodeId: outcomeNodeId ?? 'undefined' })}
                   </Alert>
                 )}
-                {loading && <OutcomeBlockLoader />}
+                {loading && !previousData && <OutcomeBlockLoader />}
                 {nodes.visible.map((node: OutcomenodeType, index: number) => (
                   <OutcomeCardSet
                     key={node.id}
