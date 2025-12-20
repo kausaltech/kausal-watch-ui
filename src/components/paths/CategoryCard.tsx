@@ -66,10 +66,11 @@ type CategoryCardProps = {
   group?: CategoryFragmentFragment;
   pathsInstance?: GetInstanceContextQuery['instance'];
   onLoaded: (id: string, impact: number) => void;
+  targetNodeId?: string | null;
 };
 
 const CategoryCard = (props: CategoryCardProps) => {
-  const { category, group, pathsInstance, onLoaded } = props;
+  const { category, group, pathsInstance, onLoaded, targetNodeId } = props;
 
   const mainIndicatorId = category.indicatorRelationships?.find(
     (relationship) => relationship.type === IndicatorCategoryRelationshipType.MainGoal
@@ -105,6 +106,7 @@ const CategoryCard = (props: CategoryCardProps) => {
                 node={category.kausalPathsNodeUuid}
                 pathsInstance={pathsInstance}
                 onLoaded={onLoaded}
+                targetNodeId={targetNodeId}
               />
             </CardContentBlock>
           )}
