@@ -23,6 +23,7 @@ const WidgetWrapper = styled.div`
   font-size: 0.8rem;
 
   .form-check-input {
+    border-color: ${(props) => props.theme.themeColors.dark};
     &:checked {
       background-color: ${(props) => props.theme.brandDark};
       border-color: ${(props) => props.theme.brandDark};
@@ -213,6 +214,7 @@ export const BoolWidget = (props: BoolWidgetProps) => {
     return <input ref={determinedRef} {...focusableProps} {...props} />;
   });
 
+  if (!isCustomizable) return null;
   return (
     <WidgetWrapper className="form-check form-switch">
       <TooltipTrigger>
@@ -224,7 +226,7 @@ export const BoolWidget = (props: BoolWidgetProps) => {
           name={id!}
           checked={boolValue!}
           onChange={() => handleChange({ parameterId: id!, boolValue: !boolValue })}
-          disabled={!isCustomizable || loading}
+          disabled={loading}
           style={{ transform: 'scale(1.5)' }}
         />
         {!hideLabel && (
