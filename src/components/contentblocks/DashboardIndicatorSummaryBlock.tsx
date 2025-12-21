@@ -8,13 +8,13 @@ import Icon from '@/components/common/Icon';
 import { beautifyValue } from '../../common/data/format';
 import dayjs from '../../common/dayjs';
 
-const Container = styled.div<{ hasDescription: boolean }>`
+const Container = styled.div<{ $hasDescription?: boolean }>`
   padding: 0;
   margin: 0;
   color: ${(props) => props.theme.themeColors.dark};
   display: flex;
   flex-direction: column;
-  justify-content: ${({ hasDescription }) => (hasDescription ? 'flex-start' : 'center')};
+  justify-content: ${({ $hasDescription }) => ($hasDescription ? 'flex-start' : 'center')};
   height: 100%;
   align-items: flex-start;
 `;
@@ -33,9 +33,11 @@ const Description = styled.div`
   }
 `;
 
-const SummaryRow = styled.div<{ hasDescription: boolean }>`
-  ${({ hasDescription, theme }) =>
-    hasDescription ? `margin-top: ${theme.spaces.s200};` : `margin-top: auto; margin-bottom: auto;`}
+const SummaryRow = styled.div<{ $hasDescription?: boolean }>`
+  ${({ $hasDescription, theme }) =>
+    $hasDescription
+      ? `margin-top: ${theme.spaces.s200};`
+      : `margin-top: auto; margin-bottom: auto;`}
   font-size: 2rem;
   font-weight: bold;
   display: flex;
@@ -98,11 +100,11 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
   const goalYear = nextGoal?.date ? dayjs(nextGoal.date).format('YYYY') : null;
 
   return (
-    <Container hasDescription={!!description}>
+    <Container $hasDescription={!!description}>
       <IndicatorTitle>{name}</IndicatorTitle>
       {description && <Description dangerouslySetInnerHTML={{ __html: description }} />}
 
-      <SummaryRow hasDescription={!!description}>
+      <SummaryRow $hasDescription={!!description}>
         <ValueBlock>
           <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
           {latestYear && <YearLabel>{latestYear}</YearLabel>}
@@ -119,7 +121,12 @@ const DashboardIndicatorSummaryBlock = ({ indicator }) => {
         </ValueBlock>
 
         <div style={{ marginTop: '2.5rem' }}>
-          <Icon.ArrowRight size={24} color={theme.themeColors.dark} aria-hidden="true" />
+          <Icon.ArrowRight
+            width="24px"
+            height="24px"
+            color={theme.themeColors.dark}
+            aria-hidden="true"
+          />
         </div>
 
         <ValueBlock>

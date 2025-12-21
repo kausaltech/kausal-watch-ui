@@ -2,6 +2,8 @@
   "abbr-per-annum": "/a",
   "action-impact": "Handlingspåvirkning",
   "action": "Handling",
+  "action-enabled-description": "Skal handlingen inkluderes i scenariet?",
+  "action-not-included-in-scenario": "Ikke inkluderet i scenariet",
   "actions": "Handlinger",
   "actions-available": "Handlinger på scenarie",
   "actions-influencing-this": "Handlinger, der påvirker {sector}",

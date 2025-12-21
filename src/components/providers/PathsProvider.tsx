@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import PathsContext from '@/context/paths/paths';

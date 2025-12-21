@@ -2,6 +2,8 @@
   "abbr-per-annum": "/a",
   "action-impact": "Åtgärd påverkan",
   "action": "Åtgärd",
+  "action-enabled-description": "Inkluderas åtgärden i scenariot",
+  "action-not-included-in-scenario": "Exkluderas från scenariot",
   "actions": "Åtgärder",
   "actions-available": "Åtgärder på scenariot",
   "actions-influencing-this": "Åtgärder som påverkar {{sector}}",

@@ -2,6 +2,8 @@
   "abbr-per-annum": "/g",
   "action-impact": "Darbības ietekme",
   "action": "Darbība",
+  "action-enabled-description": "Vai darbība jāiekļauj scenārijā?",
+  "action-not-included-in-scenario": "Nav iekļauta scenārijā",
   "actions": "Darbības",
   "actions-available": "Darbības scenārijā",
   "actions-influencing-this": "Darbības, kas ietekmē {sector}",

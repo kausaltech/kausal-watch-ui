@@ -2,6 +2,8 @@
   "abbr-per-annum": "/a",
   "action-impact": "Wpływ działania",
   "action": "Działanie",
+  "action-enabled-description": "Czy działanie powinno być uwzględnione w scenariuszu?",
+  "action-not-included-in-scenario": "Nie uwzględnione w scenariuszu",
   "actions": "Działania",
   "actions-available": "Działania w scenariuszu",
   "actions-influencing-this": "Działania wpływające na {sector}",
