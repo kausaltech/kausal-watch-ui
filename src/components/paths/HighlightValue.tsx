@@ -17,8 +17,7 @@ const TotalValue = styled.div<{ $size?: string; $muted?: boolean }>`
         return '1.5rem';
     }
   }};
-  background-color: ${({ $muted, theme }) =>
-    $muted ? theme.cardBackground.secondary : theme.themeColors.white};
+  background-color: ${({ theme }) => theme.themeColors.white};
   color: ${({ $muted, theme }) => ($muted ? theme.textColor.tertiary : theme.textColor.primary)};
 
   &:hover {

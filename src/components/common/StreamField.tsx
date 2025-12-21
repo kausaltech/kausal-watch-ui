@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 
 import dynamic from 'next/dynamic';
 
@@ -39,6 +39,7 @@ import QuestionAnswerBlock from '@/components/contentblocks/QuestionAnswerBlock'
 import RelatedIndicatorsBlock from '@/components/contentblocks/RelatedIndicatorsBlock';
 import RelatedPlanListBlock from '@/components/contentblocks/RelatedPlanListBlock';
 import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBlock';
+import { showSettingsPanelVar } from '@/context/paths/cache';
 import { usePlan } from '@/context/plan';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
@@ -164,6 +165,13 @@ const ResponsiveStyles = styled.div`
     }
   }
 `;
+
+function hasPathsContent(body: StreamFieldFragmentFragment[]) {
+  return body.some(
+    (block) =>
+      block.blockType === 'PathsOutcomeBlock' || block.blockType === 'CategoryTypeLevelListBlock'
+  );
+}
 
 const RichTextSection = styled.div<{ $topPadding: boolean; $bottomPadding: boolean }>`
   padding-top: ${(props) =>
@@ -555,6 +563,18 @@ interface StreamFieldProps {
 
 export default function StreamField(props: StreamFieldProps) {
   const { page, blocks, hasSidebar = false, columnProps } = props;
+
+  const isCategoryPage = page.__typename === 'CategoryPage';
+  useEffect(() => {
+    // If there are any content blocks that potentially use Paths scenario data
+    // OR the page type is a CategoryPage, we do not hide the Paths settings panel
+    showSettingsPanelVar(isCategoryPage || hasPathsContent(blocks));
+
+    // Cleanup: reset to false when component unmounts
+    return () => {
+      showSettingsPanelVar(false);
+    };
+  }, [blocks, isCategoryPage]);
 
   return (
     <div className={`custom-${page.slug}`}>

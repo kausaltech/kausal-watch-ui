@@ -1,17 +1,10 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Spinner } from 'reactstrap';
 import styled from 'styled-components';
 
-/*
-import {
-  ActivateScenarioMutation,
-  ActivateScenarioMutationVariables,
-  GetScenariosQuery,
-} from 'common/__generated__/graphql';
- */
+import SelectDropdown, { type SelectDropdownOption } from '@/components/common/SelectDropdown';
 import { activeScenarioVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { GET_SCENARIOS } from '@/queries/paths/get-paths-scenarios';
@@ -31,32 +24,45 @@ const ACTIVATE_SCENARIO = gql`
   }
 `;
 
-const StyledDropdown = styled(Dropdown)`
+const DropdownWrapper = styled.div<{ $isCustom: boolean }>`
   max-width: 320px;
+  label {
+    font-size: 0.8rem;
+    margin: 0;
+  }
 
-  .btn {
-    width: 100%;
+  .scenario-select__control {
+    font-size: 0.9rem !important;
+    min-height: auto !important;
+    border-width: 0 !important;
+    // Using BS btn-secondary here for legacy support
+    ${({ $isCustom }) => $isCustom && `background-color: #d4ebff !important;`}
+  }
+
+  /* Style the value container to match original padding */
+  .scenario-select__value-container {
+    padding: ${({ theme }) => theme.spaces.s050} !important;
+    ${({ $isCustom }) => $isCustom && `background-color: #d4ebff !important;`}
+  }
+
+  /* Style the single value text */
+  .scenario-select__single-value {
+    font-size: 0.9rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin: 0 !important;
+  }
+
+  /* Ensure the control has proper text alignment */
+  .scenario-select__control > div {
     text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    font-size: 0.9rem;
-    padding: ${({ theme }) => theme.spaces.s050};
-
-    &:focus {
-      box-shadow: 0 0 0 0.25rem ${(props) => props.theme.inputBtnFocusColor};
-    }
   }
 `;
 
-const DropdownLabel = styled.div`
-  font-size: 0.8rem;
-`;
-
-const ScenarioSelector = ({ disabled }: { disabled: boolean }) => {
+const ScenarioSelector = ({ disabled = false }: { disabled?: boolean }) => {
   const t = useTranslations();
   const paths = usePaths();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   const { loading, error, data } = useQuery(GET_SCENARIOS, {
     context: {
@@ -67,6 +73,7 @@ const ScenarioSelector = ({ disabled }: { disabled: boolean }) => {
     notifyOnNetworkStatusChange: true,
     onCompleted: (dat) => activeScenarioVar(dat.scenarios.find((scen) => scen.isActive)),
   });
+
   const [activateScenario, { loading: mutationLoading, error: mutationError }] = useMutation(
     ACTIVATE_SCENARIO,
     {
@@ -78,50 +85,61 @@ const ScenarioSelector = ({ disabled }: { disabled: boolean }) => {
     }
   );
 
-  if (loading) {
-    return (
-      <StyledDropdown disabled={disabled}>
-        <DropdownLabel>{t('scenario')}</DropdownLabel>
-        <DropdownToggle color="light">
-          <span>
-            <Spinner size="sm" color="primary" />
-          </span>
-        </DropdownToggle>
-      </StyledDropdown>
-    );
-  }
-  if (error) {
-    return <div>{t('error-loading-data')}: mutationError</div>;
-  }
-
   //const hideBaseScenario = instance.features?.baselineVisibleInGraphs === false;
   const hideBaseScenario = false;
   const scenarios =
-    data?.scenarios.filter((scen) => (hideBaseScenario ? scen.id !== 'baseline' : true)) ?? [];
+    data?.scenarios?.filter((scen) => (hideBaseScenario ? scen.id !== 'baseline' : true)) ?? [];
   const activeScenario = scenarios.find((scen) => scen.isActive);
 
+  // Convert scenarios to SelectDropdownOption format
+  const options: SelectDropdownOption[] = useMemo(
+    () =>
+      scenarios.map((scenario) => ({
+        id: scenario.id,
+        label: scenario.name,
+      })),
+    [scenarios]
+  );
+
+  // Find the current selected option
+  const selectedOption: SelectDropdownOption | null = useMemo(
+    () =>
+      activeScenario
+        ? {
+            id: activeScenario.id,
+            label:
+              !disabled && activeScenario.id === 'custom'
+                ? `${activeScenario.name} *`
+                : activeScenario.name,
+          }
+        : null,
+    [activeScenario, disabled]
+  );
+
+  const handleChange = (option: SelectDropdownOption | null) => {
+    if (option && !disabled) {
+      activateScenario({ variables: { scenarioId: option.id } });
+    }
+  };
+
   return (
-    <StyledDropdown isOpen={dropdownOpen} toggle={toggle} disabled={disabled}>
-      <DropdownLabel>{t('scenario')}</DropdownLabel>
-      <DropdownToggle
-        color={`${activeScenario.id === 'custom' && !disabled ? 'secondary' : 'light'}`}
-      >
-        <span>{disabled ? '-' : activeScenario.name}</span>
-        <span>{!disabled && activeScenario.id === 'custom' && <span>*</span>}</span>
-      </DropdownToggle>
-      <DropdownMenu>
-        <DropdownItem header>{t('change-scenario')}</DropdownItem>
-        {scenarios?.map((scenario) => (
-          <DropdownItem
-            key={scenario.id}
-            active={scenario.isActive}
-            onClick={() => activateScenario({ variables: { scenarioId: scenario.id } })}
-          >
-            {scenario.name}
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
-    </StyledDropdown>
+    <DropdownWrapper $isCustom={!disabled && activeScenario?.id === 'custom'}>
+      <SelectDropdown
+        id="scenario-selector"
+        label={t('scenario')}
+        options={options}
+        value={selectedOption}
+        onChange={handleChange}
+        isMulti={false}
+        isClearable={false}
+        isDisabled={disabled || loading || mutationLoading}
+        isLoading={loading || mutationLoading}
+        menuPlacement="top"
+        classNamePrefix="scenario-select"
+        placeholder={loading || mutationLoading ? '...' : error ? t('error-loading-data') : '-'}
+        noOptionsMessage={() => (error ? t('error-loading-data') : t('no-options'))}
+      />
+    </DropdownWrapper>
   );
 };
 

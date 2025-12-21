@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useQuery } from '@apollo/client';
 import type { DatasetComponentOption } from 'echarts/components';
@@ -82,6 +82,12 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   const t = useTranslations();
   const format = useFormatter();
   const plan = usePlan();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const { loading, error, data } = useQuery<
     IndicatorSparklineGraphDataQuery,
     IndicatorSparklineGraphDataQueryVariables
@@ -92,13 +98,19 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
     },
   });
 
-  // console.log('data', data, props);
-  if (loading)
+  // Only show loader after client-side hydration to prevent hydration mismatch
+  if (loading && isMounted) {
     return (
       <IndicatorSparklineContainer>
         <SparklineLoader />
       </IndicatorSparklineContainer>
     );
+  }
+
+  // Return null during SSR/initial hydration to match server render
+  if (loading && !isMounted) {
+    return null;
+  }
   if (error) return <p>Error :(</p>;
   const indicator = data?.indicator;
   if (!indicator) return null;
