@@ -522,7 +522,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'CategoryTypeLevelListBlock': {
-      const { heading, helpText, categoryLevel, groupByCategoryLevel, categoryBlockType } = block;
+      const { heading, helpText, categoryLevel, groupByCategoryLevel, categoryBlockType, pathsTargetNodeId } = block;
 
       const allPlanCategories = categoryBlockType?.categories;
       const categories = allPlanCategories
@@ -536,6 +536,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           categories={categories}
           heading={heading ?? undefined}
           lead={helpText}
+          targetNodeId={pathsTargetNodeId ?? undefined}
         />
       );
     }

@@ -42,10 +42,11 @@ type PathsNodeContentProps = {
   node: string;
   pathsInstance: GetInstanceContextQuery['instance'];
   onLoaded?: (id: string, impact: number) => void;
+  targetNodeId?: string | null;
 };
 
 const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
-  const { categoryId, node, pathsInstance, onLoaded } = props;
+  const { categoryId, node, pathsInstance, onLoaded, targetNodeId } = props;
   const pathsInstanceId = pathsInstance.id;
   const activeGoal = useReactiveVar(activeGoalVar);
   const [isMounted, setIsMounted] = useState(false);
@@ -71,7 +72,11 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
     GetNodeContentQueryVariables
   >(GET_NODE_CONTENT, {
     fetchPolicy: 'no-cache',
-    variables: { node: node, goal: actionImpactGoal?.id ?? 'net_emissions' },
+    variables: {
+      node: node,
+      goal: actionImpactGoal?.id ?? 'net_emissions',
+      targetNodeId: targetNodeId ?? undefined,
+    },
     notifyOnNetworkStatusChange: true,
     context: {
       uri: '/api/graphql-paths',

@@ -116,6 +116,7 @@ interface CategoryTypeListBlockProps {
   heading?: string;
   lead?: string | null;
   style?: 'treemap' | 'cards';
+  targetNodeId?: string | null;
 }
 
 interface ImpactData {
@@ -124,7 +125,7 @@ interface ImpactData {
 }
 
 const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
-  const { id = '', heading, groupByLevelId, categories, lead } = props;
+  const { id = '', heading, groupByLevelId, categories, lead, targetNodeId } = props;
 
   const paths = usePaths();
   const t = useTranslations();
@@ -246,6 +247,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
                         group={group}
                         pathsInstance={pathsInstance}
                         onLoaded={handleCardLoaded}
+                        targetNodeId={targetNodeId}
                       />
                     </Col>
                   )
