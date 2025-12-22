@@ -118,6 +118,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
     ... on CategoryTypeLevelListBlock {
       heading
       helpText
+      pathsTargetNodeId
       categoryLevel {
         id
         name
