@@ -16,4 +16,4 @@
     "select-sector-for-actions": "Wähle en Emissionssektor, um zugehörigi Massnahme ahzuzeigen",
     "filter-text": "{context, select, STRATEGY {Strategien durchsuchen} CASE_STUDY {Fallstudien durchsuchen} INDICATOR {Indikatoren durchsuchen} other {Massnahmen durchsuchen}}",
     "indicator-graph-reference-line": "Start Massnahmen"
-  }
+}
