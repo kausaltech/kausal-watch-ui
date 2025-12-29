@@ -217,6 +217,15 @@ const GET_ACTION_DETAILS = gql`
       attributes {
         ...AttributesBlockAttribute
       }
+      changeLogMessage {
+        content
+        createdBy {
+          firstName
+          lastName
+          avatarUrl
+        }
+        updatedAt
+      }
       datasets {
         schema {
           uuid
