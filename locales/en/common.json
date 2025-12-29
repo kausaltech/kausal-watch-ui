@@ -199,5 +199,11 @@
     "content-could-not-be-displayed": "We're unable to display this content at the moment. Please try refreshing the page. A report has been sent to our team to investigate the issue.",
     "select-language": "Select language",
     "form-effectively-empty-error": "Your feedback is empty. Please fill in at least one field.",
-    "do-not-show-video-again": "Do not show this video again"
-}
+    "do-not-show-video-again": "Do not show this video again",
+    "change-history": {
+      "information-updated": "Information updated {date}",
+       "view-changes": "View changes",
+       "modal-title": "Latest changes",
+       "description-label": "Description of changes"
+    }
+  }
