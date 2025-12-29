@@ -43,6 +43,7 @@ import { ACTION_CONTENT_MAIN_BOTTOM } from '@/constants/containers';
 import { PlanContextType, usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 
+import ChangeHistory from '../common/ChangeHistory';
 import ActionHero from './ActionHero';
 import ActionImpact from './ActionImpact';
 import ActionPager from './ActionPager';
@@ -282,6 +283,14 @@ function ActionContentBlock(props: ActionContentBlockProps) {
     }
     case 'ReportComparisonBlock':
       return <ReportComparisonBlock plan={plan} block={block} action={action} />;
+    case 'ChangeLogMessageBlock':
+      return (
+        <ChangeHistory
+          entityType="action"
+          entityId={String(action.id)}
+          entry={action.changeLogMessage}
+        />
+      );
     case 'IndicatorCausalChainBlock':
       return null;
     default:

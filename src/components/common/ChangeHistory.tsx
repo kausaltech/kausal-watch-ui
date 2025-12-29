@@ -11,18 +11,19 @@ import Icon from '@/components/common/Icon';
 export type EntityType = 'action' | 'indicator' | 'page';
 
 export type ChangeHistoryEntry = {
-  entityType: EntityType;
-  entityId: string;
   updatedAt: string;
-  updatedByName: string;
-  updatedByAvatarUrl?: string;
-  description: string;
+  createdBy: {
+    firstName: string;
+    lastName: string;
+    avatarUrl?: string;
+  };
+  content: string;
 };
 
 type ChangeHistoryProps = {
   entityType: EntityType;
   entityId: string;
-  entryOverride?: ChangeHistoryEntry | null;
+  entry?: ChangeHistoryEntry | null;
 };
 
 const Wrapper = styled.div`
@@ -141,10 +142,9 @@ const FooterMeta = styled.div`
   gap: ${(props) => props.theme.spaces.s050};
 `;
 
-const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entityType, entityId, entryOverride }) => {
+const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entityType, entityId, entry }) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
-  const entry = entryOverride;
   if (!entry) return null;
 
   const formattedDate = dayjs(entry.updatedAt).format('L');
@@ -160,8 +160,10 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entityType, entityId, ent
         </UpdatedText>
         <Row>
           <AuthorInfo>
-            <Avatar $url={entry.updatedByAvatarUrl} />
-            <AuthorName>{entry.updatedByName}</AuthorName>
+            <Avatar $url={entry.createdBy.avatarUrl} />
+            <AuthorName>
+              {entry.createdBy.firstName} {entry.createdBy.lastName}
+            </AuthorName>
           </AuthorInfo>
           <ViewChangesButton type="button" onClick={open}>
             {t('change-history.view-changes')}
@@ -187,11 +189,13 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entityType, entityId, ent
             </CloseButton>
           </DialogHeader>
           <ChangesLabel>{t('change-history.description-label')}</ChangesLabel>
-          <ChangesText>{entry.description}</ChangesText>
+          <ChangesText>{entry.content}</ChangesText>
           <ModalFooterRow>
-            <Avatar $url={entry.updatedByAvatarUrl} />
+            <Avatar $url={entry.createdBy.avatarUrl} />
             <FooterMeta>
-              <span>{entry.updatedByName}</span>
+              <span>
+                {entry.createdBy.firstName} {entry.createdBy.lastName}
+              </span>
               <span>•</span>
               <span>{formattedDate}</span>
             </FooterMeta>
