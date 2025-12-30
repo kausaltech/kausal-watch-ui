@@ -203,6 +203,15 @@ export const GET_INDICATOR_DETAILS = gql`
         versionName
         publishedAt
       }
+      changeLogMessage {
+        content
+        createdBy {
+          firstName
+          lastName
+          avatarUrl
+        }
+        updatedAt
+      }
     }
   }
 

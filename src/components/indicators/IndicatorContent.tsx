@@ -10,6 +10,7 @@ import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import ActionsTable from '@/components/actions/ActionsTable';
 import CategoryTags from '@/components/actions/CategoryTags';
+import ChangeHistory from '@/components/common/ChangeHistory';
 import RichText from '@/components/common/RichText';
 import CausalNavigation from '@/components/indicators/CausalNavigation';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
@@ -118,6 +119,19 @@ function IndicatorDetails({ indicator, testId }: Props) {
       )}
       {hasImpacts && (
         <CausalNavigation causes={indicator.relatedCauses} effects={indicator.relatedEffects} />
+      )}
+      {plan.features.enableChangeLog && indicator.changeLogMessage && (
+        <Container>
+          <Row>
+            <Col>
+              <ChangeHistory
+                entityType="indicator"
+                entityId={String(indicator.id)}
+                entry={indicator.changeLogMessage}
+              />
+            </Col>
+          </Row>
+        </Container>
       )}
     </div>
   );
