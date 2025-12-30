@@ -29,7 +29,7 @@
     "error-occurred": "Ocorreu um erro",
     "error-with-code": "Erro com o código",
     "error-no-layout": "Nenhum layout definido. Adicione conteúdo aqui.",
-    "error-no-outcome-node": "Nó de resultado '{outcomeNodeId}' não encontrado.",
+    "error-no-outcome-node": "Nó de resultado [{outcomeNodeId}] não encontrado.",
     "export": "Exportar",
     "feedback": "Feedback",
     "feedback-description": "Você descobriu algo que não funciona? Ou tem ideia de algo que podemos melhorar?",

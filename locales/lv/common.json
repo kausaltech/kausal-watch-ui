@@ -145,7 +145,7 @@
     "error-occurred": "Kļūda radusies",
     "error-with-code": "Kļūda ar kodu",
     "error-no-layout": "Nav definēts izkārtojums. Pievienojiet saturu šeit.",
-    "error-no-outcome-node": "Rezultāta mezgls '{outcomeNodeId}' nav atrasts.",
+    "error-no-outcome-node": "Rezultāta mezgls [{outcomeNodeId}] nav atrasts.",
     "filter-impact": "Ietekme",
     "filter-phase": "Fāze",
     "filter-plan": "Plāns",
