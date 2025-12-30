@@ -44,6 +44,7 @@ import { usePlan } from '@/context/plan';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
 import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
+import ChangeHistory from './ChangeHistory';
 import ContentLoader from './ContentLoader';
 import { ErrorBoundary } from './ErrorBoundary';
 import { ErrorPage } from './ErrorPage';
@@ -522,7 +523,14 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'CategoryTypeLevelListBlock': {
-      const { heading, helpText, categoryLevel, groupByCategoryLevel, categoryBlockType, pathsTargetNodeId } = block;
+      const {
+        heading,
+        helpText,
+        categoryLevel,
+        groupByCategoryLevel,
+        categoryBlockType,
+        pathsTargetNodeId,
+      } = block;
 
       const allPlanCategories = categoryBlockType?.categories;
       const categories = allPlanCategories
@@ -547,6 +555,16 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           id={id}
           topPadding={previousBlockType !== 'DashboardRowBlock'}
           bottomPadding={nextBlockType !== 'DashboardRowBlock'}
+        />
+      );
+    }
+    case 'ChangeLogMessageBlock': {
+      if (!page.category?.id || !page.category?.changeLogMessage) return null;
+      return (
+        <ChangeHistory
+          entityType="category"
+          entityId={page.category.id}
+          entry={page.category.changeLogMessage}
         />
       );
     }

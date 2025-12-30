@@ -15,6 +15,8 @@ import PlanDatasetsBlock from '@/components/contentblocks/PlanDatasetsBlock';
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
 import { usePlan } from '@/context/plan';
 
+import ChangeHistory from './ChangeHistory';
+
 type OmitUnion<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
 
 type OmitFields<T> = OmitUnion<T, 'blockType' | 'field' | 'rawValue'>;
@@ -186,6 +188,17 @@ export default function CategoryPageStreamField({
             />
           </Col>
         </Wrapper>
+      );
+    }
+
+    case 'ChangeLogMessageBlock': {
+      if (!page.category?.id || !page.category?.changeLogMessage) return null;
+      return (
+        <ChangeHistory
+          entityType="page"
+          entityId={String(page.category.id)}
+          entry={page.category.changeLogMessage}
+        />
       );
     }
 
