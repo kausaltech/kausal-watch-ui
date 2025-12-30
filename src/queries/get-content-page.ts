@@ -254,6 +254,15 @@ const GET_CONTENT_PAGE = gql`
           datasets {
             ...PlanDatasetsBlockFragment
           }
+          changeLogMessage {
+            content
+            createdBy {
+              firstName
+              lastName
+              avatarUrl
+            }
+            updatedAt
+          }
         }
         body {
           ...StreamFieldFragment
