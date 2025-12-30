@@ -559,7 +559,8 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'ChangeLogMessageBlock': {
-      if (!page.category?.id || !page.category?.changeLogMessage) return null;
+      if (!plan.features.enableChangeLog || !page.category?.id || !page.category?.changeLogMessage)
+        return null;
       return (
         <ChangeHistory
           entityType="category"
