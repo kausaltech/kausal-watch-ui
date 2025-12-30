@@ -283,7 +283,10 @@ function ActionContentBlock(props: ActionContentBlockProps) {
     }
     case 'ReportComparisonBlock':
       return <ReportComparisonBlock plan={plan} block={block} action={action} />;
-    case 'ChangeLogMessageBlock':
+    case 'ChangeLogMessageBlock': {
+      if (!plan.features.enableChangeLog) {
+        return null;
+      }
       return (
         <ChangeHistory
           entityType="action"
@@ -291,6 +294,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
           entry={action.changeLogMessage}
         />
       );
+    }
     case 'IndicatorCausalChainBlock':
       return null;
     default:
