@@ -194,12 +194,19 @@ export default function CategoryPageStreamField({
     case 'ChangeLogMessageBlock': {
       if (!plan.features.enableChangeLog || !page.category?.id || !page.category?.changeLogMessage)
         return null;
+
+      const withContainer = context === 'main';
+
       return (
-        <ChangeHistory
-          entityType="page"
-          entityId={String(page.category.id)}
-          entry={page.category.changeLogMessage}
-        />
+        <Wrapper withContainer={withContainer}>
+          <Col xs={12} {...customColumnProps}>
+            <ChangeHistory
+              entityType="page"
+              entityId={String(page.category.id)}
+              entry={page.category.changeLogMessage}
+            />
+          </Col>
+        </Wrapper>
       );
     }
 
