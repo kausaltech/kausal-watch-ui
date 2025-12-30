@@ -627,6 +627,7 @@ export type CausalGridNodeFragment = CausalGridNode_ActionNode_Fragment | Causal
 export type GetNodeContentQueryVariables = Exact<{
   node: Scalars['ID']['input'];
   goal: InputMaybe<Scalars['ID']['input']>;
+  targetNodeId: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 

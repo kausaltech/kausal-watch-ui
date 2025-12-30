@@ -12,7 +12,8 @@
       "ActionContentAttributeTypeBlock",
       "ActionContentCategoryTypeBlock",
       "ActionResponsiblePartiesBlock",
-      "ActionScheduleBlock"
+      "ActionScheduleBlock",
+      "ChangeLogMessageBlock"
     ],
     "ActionColumnBlockInterface": [
       "EndDateColumnBlock",
@@ -121,7 +122,8 @@
       "ActionContentAttributeTypeBlock",
       "ActionContentCategoryTypeBlock",
       "ActionResponsiblePartiesBlock",
-      "ActionScheduleBlock"
+      "ActionScheduleBlock",
+      "ChangeLogMessageBlock"
     ],
     "ActionListPageDetailsMainBottomUnion": [
       "ActionContactFormBlock",
@@ -137,6 +139,7 @@
       "ActionRelatedActionsBlock",
       "ActionRelatedIndicatorsBlock",
       "ActionTasksBlock",
+      "ChangeLogMessageBlock",
       "IndicatorCausalChainBlock",
       "PlanDatasetsBlock",
       "ReportComparisonBlock"
@@ -155,6 +158,7 @@
       "ActionRelatedActionsBlock",
       "ActionRelatedIndicatorsBlock",
       "ActionTasksBlock",
+      "ChangeLogMessageBlock",
       "IndicatorCausalChainBlock",
       "PlanDatasetsBlock",
       "ReportComparisonBlock"
@@ -195,6 +199,7 @@
       "ActionRelatedActionsBlock",
       "ActionRelatedIndicatorsBlock",
       "ActionTasksBlock",
+      "ChangeLogMessageBlock",
       "IndicatorCausalChainBlock",
       "PlanDatasetsBlock",
       "ReportComparisonBlock"
@@ -217,6 +222,7 @@
       "ActionListBlock",
       "AdaptiveEmbedBlock",
       "CategoryListBlock",
+      "ChangeLogMessageBlock",
       "IndicatorGroupBlock",
       "QuestionAnswerBlock",
       "RawVisualizationBlock",
@@ -228,11 +234,17 @@
       "CategoryPageBodyBlock",
       "CategoryPageCategoryListBlock",
       "CategoryPageContactFormBlock",
-      "CategoryTypeDatasetsBlock"
+      "CategoryTypeDatasetsBlock",
+      "ChangeLogMessageBlock"
     ],
     "CategoryPageMainTopBlock": [
       "CategoryPageAttributeTypeBlock",
       "CategoryPageProgressBlock"
+    ],
+    "ChangeLogMessageInterface": [
+      "ActionChangeLogMessage",
+      "CategoryChangeLogMessage",
+      "IndicatorChangeLogMessage"
     ],
     "DashboardColumnInterface": [
       "FieldColumnBlock",
@@ -438,6 +450,7 @@
       "CategoryListBlock",
       "CategoryTreeMapBlock",
       "CategoryTypeLevelListBlock",
+      "ChangeLogMessageBlock",
       "DashboardRowBlock",
       "IndicatorGroupBlock",
       "LargeImageBlock",
@@ -503,6 +516,7 @@
       "CategoryTypeDatasetsBlock",
       "CategoryTypeFilterBlock",
       "CategoryTypeLevelListBlock",
+      "ChangeLogMessageBlock",
       "CharBlock",
       "ChoiceBlock",
       "ContinuousActionFilterBlock",
