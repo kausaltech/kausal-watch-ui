@@ -16,20 +16,10 @@ import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
-const BreakPoint = styled.div<{ $fade: boolean }>`
+const BreakPoint = styled.div`
   text-align: center;
   margin-bottom: ${(props) => props.theme.spaces.s150};
   position: relative;
-
-  &:before {
-    content: '';
-    display: ${(props) => (props.$fade ? 'none' : 'block')};
-    position: absolute;
-    height: 75px;
-    top: -90px;
-    width: 100%;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
-  }
 `;
 
 const ToggleButton = styled(Button)`
@@ -107,6 +97,22 @@ const CollapsedWrapper = styled.div<{ $isOpen: boolean }>`
   overflow: hidden;
   max-height: ${(p) => (p.$isOpen ? '10000px' : `${COLLAPSED_MAX_HEIGHT_PX}px`)};
   transition: max-height 200ms ease;
+`;
+
+const FadeClip = styled.div<{ $fade: boolean }>`
+  position: relative;
+
+  &::after {
+    content: '';
+    display: ${(p) => (p.$fade ? 'block' : 'none')};
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 75px;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+  }
 `;
 
 function ICompress() {
@@ -245,21 +251,25 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
 
   const shouldFallbackCollapse = !hasRest && plainTextLen > BREAK_POINT;
 
+  const showFade = !isOpen && (hasRest || shouldFallbackCollapse);
+
   return (
     <div {...rest} className={`text-content ${className || ''}`}>
       <StyledRichText>
-        {shouldFallbackCollapse ? (
-          <CollapsedWrapper $isOpen={isOpen}>{parsedContent}</CollapsedWrapper>
-        ) : (
-          <>
-            {intro}
-            {hasRest && <Collapse isOpen={isOpen}>{restOfContent}</Collapse>}
-          </>
-        )}
+        <FadeClip $fade={showFade}>
+          {shouldFallbackCollapse ? (
+            <CollapsedWrapper $isOpen={isOpen}>{parsedContent}</CollapsedWrapper>
+          ) : (
+            <>
+              {intro}
+              {hasRest && <Collapse isOpen={isOpen}>{restOfContent}</Collapse>}
+            </>
+          )}
+        </FadeClip>
       </StyledRichText>
 
       {(hasRest || shouldFallbackCollapse) && (
-        <BreakPoint $fade={isOpen}>
+        <BreakPoint>
           <ToggleButton color="link" onClick={toggle} className={isOpen ? 'open' : ''}>
             {isOpen ? t('close') : t('read-more')}
             <Icon name={isOpen ? 'angle-up' : 'angle-down'} />
