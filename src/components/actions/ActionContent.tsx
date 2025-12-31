@@ -1,6 +1,6 @@
 'use client';
 
-import React, { type JSX, useCallback, useEffect } from 'react';
+import React, { type JSX, useCallback, useEffect, useMemo } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -40,7 +40,7 @@ import PlanDatasetsBlock from '@/components/contentblocks/PlanDatasetsBlock';
 import IndicatorCausalVisualisation from '@/components/indicators/IndicatorCausalVisualisation';
 import ActionVersionHistory from '@/components/versioning/ActionVersionHistory';
 import { ACTION_CONTENT_MAIN_BOTTOM } from '@/constants/containers';
-import { PlanContextType, usePlan } from '@/context/plan';
+import { type PlanContextType, usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 
 import ChangeHistory from '../common/ChangeHistory';
@@ -166,6 +166,19 @@ function getMaxImpact(plan: PlanContextType) {
   return max;
 }
 
+function LegacyUpdatedAt({ date }: { date: string }) {
+  const updated = dayjs(date).format('L');
+  const t = useTranslations();
+
+  return (
+    <ActionSection>
+      <LastUpdated>
+        {t('action-last-updated')} {updated}
+      </LastUpdated>
+    </ActionSection>
+  );
+}
+
 type SectionIdentifier = 'detailsMainTop' | 'detailsMainBottom' | 'detailsAside';
 
 type ActionContentBlockProps = {
@@ -287,6 +300,16 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       if (!plan.features.enableChangeLog) {
         return null;
       }
+
+      /**
+       * Ensure we display basic updated at information if the user has added
+       * a ChangeLogMessageBlock but it has no content. Otherwise no updated at
+       * information will be visible.
+       */
+      if (!action.changeLogMessage) {
+        return <LegacyUpdatedAt date={action.updatedAt} />;
+      }
+
       return (
         <ChangeHistory
           entityType="action"
@@ -477,8 +500,6 @@ function ActionContent(props: ActionContentProps) {
   );
   const actionListPage = extraPlanData.actionListPage!;
 
-  const updated = dayjs(action.updatedAt).format('L');
-
   const actionState = 'live';
   // TODO: plug in action state from backend here. "draft" would display a banner
 
@@ -573,6 +594,21 @@ function ActionContent(props: ActionContentProps) {
     [actionListPage, action]
   );
 
+  // If the change log message block has been added hide the legacy information updated at
+  const showLegacyLastUpdated = useMemo(() => {
+    if (!plan.features.enableChangeLog) {
+      return true;
+    }
+
+    const allBlocks = [
+      ...(actionListPage?.detailsAside ?? []),
+      ...(actionListPage.detailsMainBottom ?? []),
+      ...(actionListPage.detailsMainTop ?? []),
+    ];
+
+    return !allBlocks.find((block) => block.__typename === 'ChangeLogMessageBlock');
+  }, [actionListPage, plan.features.enableChangeLog]);
+
   return (
     <div data-testid={testId}>
       <ActionHero
@@ -665,11 +701,7 @@ function ActionContent(props: ActionContentProps) {
               <ActionVersionHistory action={action} />
             </ActionSection>
           )}
-          <ActionSection>
-            <LastUpdated>
-              {t('action-last-updated')} {updated}
-            </LastUpdated>
-          </ActionSection>
+          {showLegacyLastUpdated && <LegacyUpdatedAt date={action.updatedAt} />}
         </StyledAside>
       </StyledContentGrid>
 
