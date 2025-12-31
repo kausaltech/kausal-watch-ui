@@ -199,5 +199,11 @@
     "plan": "Plan",
     "select-language": "Sprache auswählen",
     "form-effectively-empty-error": "Ihr Feedback ist leer. Bitte füllen Sie mindestens ein Feld aus.",
-    "do-not-show-video-again": "Dieses Video nicht mehr anzeigen"
-}
+    "do-not-show-video-again": "Dieses Video nicht mehr anzeigen",
+    "change-history": {
+      "information-updated": "Informationen aktualisiert {date}",
+       "view-changes": "Änderungen anzeigen",
+       "modal-title": "Neueste Änderungen",
+       "description-label": "Beschreibung der Änderungen"
+    }
+  }
