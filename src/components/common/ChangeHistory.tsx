@@ -11,13 +11,13 @@ import Icon from '@/components/common/Icon';
 export type EntityType = 'action' | 'indicator' | 'page';
 
 export type ChangeHistoryEntry = {
-  updatedAt: string;
+  updatedAt: string | null;
   createdBy: {
     firstName: string;
     lastName: string;
-    avatarUrl?: string;
-  };
-  content: string;
+    avatarUrl: string | null;
+  } | null;
+  content: string | null;
 };
 
 type ChangeHistoryProps = {
@@ -53,7 +53,7 @@ const AuthorInfo = styled.div`
   gap: ${(props) => props.theme.spaces.s100};
 `;
 
-const Avatar = styled.div<{ $url?: string }>`
+const Avatar = styled.div<{ $url: string | null }>`
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -159,12 +159,14 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entityType, entityId, ent
           {t('change-history.information-updated', { date: formattedDate })}
         </UpdatedText>
         <Row>
-          <AuthorInfo>
-            <Avatar $url={entry.createdBy.avatarUrl} />
-            <AuthorName>
-              {entry.createdBy.firstName} {entry.createdBy.lastName}
-            </AuthorName>
-          </AuthorInfo>
+          {entry.createdBy && (
+            <AuthorInfo>
+              <Avatar $url={entry.createdBy.avatarUrl} />
+              <AuthorName>
+                {entry.createdBy.firstName} {entry.createdBy.lastName}
+              </AuthorName>
+            </AuthorInfo>
+          )}
           <ViewChangesButton type="button" onClick={open}>
             {t('change-history.view-changes')}
           </ViewChangesButton>
@@ -191,12 +193,16 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entityType, entityId, ent
           <ChangesLabel>{t('change-history.description-label')}</ChangesLabel>
           <ChangesText>{entry.content}</ChangesText>
           <ModalFooterRow>
-            <Avatar $url={entry.createdBy.avatarUrl} />
+            {entry.createdBy && <Avatar $url={entry.createdBy.avatarUrl} />}
             <FooterMeta>
-              <span>
-                {entry.createdBy.firstName} {entry.createdBy.lastName}
-              </span>
-              <span>•</span>
+              {entry.createdBy && (
+                <>
+                  <span>
+                    {entry.createdBy.firstName} {entry.createdBy.lastName}
+                  </span>
+                  <span>•</span>
+                </>
+              )}
               <span>{formattedDate}</span>
             </FooterMeta>
           </ModalFooterRow>
