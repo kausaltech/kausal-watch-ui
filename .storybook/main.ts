@@ -1,71 +1,48 @@
-import type { StorybookConfig } from '@storybook/nextjs';
+import type { StorybookConfig } from '@storybook/nextjs-vite';
+import path from 'path';
 
-const fs = require('fs');
-const path = require('path');
+import { loadThemes } from './themes';
 
-// Load all the directories in the themes directory
-function loadDirectoryNames(directoryPath) {
-  return fs.readdirSync(directoryPath).filter((file) => {
-    return fs.statSync(path.join(directoryPath, file)).isDirectory();
-  });
-}
-
-const themesDirectory = path.join(__dirname, '../public/static/themes');
-const themesList = ['default'];
-try {
-  themesList.push(...loadDirectoryNames(themesDirectory));
-} catch (err) {
-  console.error(
-    '⚠️ Error reading themes directory, please try clearing the broken symlinks from /public/static/themes',
-    err
-  );
-}
-
-// Populate available theme data
-const themes = {};
-themesList.forEach((themeName) => {
-  const themePath = path.join(themesDirectory, themeName, 'theme.json');
-  try {
-    const data = fs.readFileSync(themePath);
-    themes[themeName] = JSON.parse(data);
-  } catch (err) {
-    console.error(`⚠️ Error reading theme data for ${themeName}`, err);
-  }
-});
-
-console.log('Loaded themes data', Object.keys(themes));
+// Load themes at build time (Node.js context)
+const themes = await loadThemes();
+const projectRoot = process.cwd();
 
 const config: StorybookConfig = {
-  stories: [
-    '../stories/**/*.mdx',
-    '../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-  ],
+  stories: ['../src/stories/**/*.mdx', '../src/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
+    '@chromatic-com/storybook',
+    '@storybook/addon-vitest',
+    '@storybook/addon-a11y',
+    '@storybook/addon-docs',
     '@storybook/addon-themes',
   ],
-  framework: {
-    name: '@storybook/nextjs',
-    options: {
-      builder: {
-        useSWC: true, // Enables SWC support
-      },
-    },
+  framework: '@storybook/nextjs-vite',
+  core: {
+    builder: '@storybook/builder-vite',
   },
-  logLevel: 'info',
   staticDirs: ['../public'],
-  docs: {
-    autodocs: 'tag',
-  },
   env: (config) => ({
     ...config,
     THEMES: JSON.stringify(themes),
   }),
-  async webpackFinal(config) {
-    config.resolve.alias['@'] = path.resolve(__dirname, '../');
-    return config;
+  async viteFinal(config) {
+    // Configure Vite to resolve imports from the public directory
+    // and expose THEMES environment variable to client code
+    const { mergeConfig } = await import('vite');
+    return mergeConfig(config, {
+      resolve: {
+        alias: {
+          public: path.resolve(projectRoot, 'public'),
+        },
+      },
+      define: {
+        // Vite's define replaces process.env.THEMES with this string literal at build time
+        // themes is an object, so we stringify it once to create a JSON string
+        // In preview.ts, this will be parsed back to an object with JSON.parse()
+        'process.env.THEMES': JSON.stringify(JSON.stringify(themes)),
+      },
+    });
   },
+  // Note: Path aliases from tsconfig.json are automatically handled by @storybook/nextjs-vite
 };
 export default config;
