@@ -5,6 +5,8 @@ import styled from 'styled-components';
 
 import type { IndicatorDetailsQuery, IndicatorListQuery } from '@/common/__generated__/graphql';
 import { deploymentType } from '@/common/environment';
+import ChangeHistory from '@/components/common/ChangeHistory';
+import { usePlan } from '@/context/plan';
 
 import IndicatorModalContentBlock, {
   IndicatorGroupedCategoryBlock,
@@ -76,6 +78,12 @@ const ModalContentBlocksWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spaces.s300};
 `;
 
+// Remove ChangeHistory's internal padding (s150) to align it with modal content.
+const ChangeHistoryInModal = styled.div`
+  margin-left: ${({ theme }) => `-${theme.spaces.s150}`};
+  margin-right: ${({ theme }) => `-${theme.spaces.s150}`};
+`;
+
 interface IndicatorModalContentProps {
   indicator?: IndicatorDetailsQuery['indicator'] | null;
   loading: boolean;
@@ -101,6 +109,7 @@ const IndicatorModalContent = ({
   layout,
 }: IndicatorModalContentProps) => {
   const t = useTranslations();
+  const plan = usePlan();
   if (loading && !indicator)
     return (
       <ContentWrapper>
@@ -192,6 +201,15 @@ const IndicatorModalContent = ({
             );
           })}
         </ModalContentBlocksWrapper>
+        {plan.features.enableChangeLog && indicator.changeLogMessage && (
+          <ChangeHistoryInModal>
+            <ChangeHistory
+              entityType="indicator"
+              entityId={String(indicator.id)}
+              entry={indicator.changeLogMessage}
+            />
+          </ChangeHistoryInModal>
+        )}
       </ModalScrollableContent>
     </ContentWrapper>
   );
