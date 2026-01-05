@@ -123,10 +123,13 @@ const IndicatorModalContent = ({
 
   const indicatorName = indicator.name;
 
+  const showChangeHistory = plan.features.enableChangeLog && !!indicator.changeLogMessage;
+
   const hasLayout =
     (layout.detailsMainTop && layout.detailsMainTop.length > 0) ||
     (layout.detailsMainBottom && layout.detailsMainBottom.length > 0) ||
     (layout.detailsAside && layout.detailsAside.length > 0);
+
   return (
     <ContentWrapper>
       {loading && (
@@ -150,6 +153,7 @@ const IndicatorModalContent = ({
                     key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
                     blocks={groupedBlock.blocks}
                     indicator={indicator}
+                    hideLegacyLastUpdated={showChangeHistory}
                   />
                 );
               }
@@ -158,6 +162,7 @@ const IndicatorModalContent = ({
                   key={groupedBlock.block.id}
                   block={groupedBlock.block}
                   indicator={indicator}
+                  hideLegacyLastUpdated={showChangeHistory}
                 />
               );
             }
@@ -170,6 +175,7 @@ const IndicatorModalContent = ({
                     key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
                     blocks={groupedBlock.blocks}
                     indicator={indicator}
+                    hideLegacyLastUpdated={showChangeHistory}
                   />
                 );
               }
@@ -178,6 +184,7 @@ const IndicatorModalContent = ({
                   key={groupedBlock.block.id}
                   block={groupedBlock.block}
                   indicator={indicator}
+                  hideLegacyLastUpdated={showChangeHistory}
                 />
               );
             }
@@ -189,6 +196,7 @@ const IndicatorModalContent = ({
                   key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
                   blocks={groupedBlock.blocks}
                   indicator={indicator}
+                  hideLegacyLastUpdated={showChangeHistory}
                 />
               );
             }
@@ -197,11 +205,12 @@ const IndicatorModalContent = ({
                 key={groupedBlock.block.id}
                 block={groupedBlock.block}
                 indicator={indicator}
+                hideLegacyLastUpdated={showChangeHistory}
               />
             );
           })}
         </ModalContentBlocksWrapper>
-        {plan.features.enableChangeLog && indicator.changeLogMessage && (
+        {showChangeHistory && (
           <ChangeHistoryInModal>
             <ChangeHistory
               entityType="indicator"

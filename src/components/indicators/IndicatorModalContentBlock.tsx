@@ -54,10 +54,11 @@ const CategoryColumn = styled.div``;
 interface IndicatorContentBlockProps {
   block: IndicatorContentBlockFragmentFragment;
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
+  hideLegacyLastUpdated?: boolean;
 }
 
 const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
-  const { block, indicator } = props;
+  const { block, indicator, hideLegacyLastUpdated } = props;
   const format = useFormatter();
   const t = useTranslations();
   if (!block.sourceField) return null;
@@ -129,6 +130,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
         )
       );
     case IndicatorDetailsFieldName.UpdatedAt:
+      if (hideLegacyLastUpdated) return null;
       const updatedAt = new Date(indicator.updatedAt);
       const formattedUpdatedAt = format.dateTime(updatedAt, {
         year: 'numeric',
@@ -241,6 +243,7 @@ type IndicatorModalContentBlock =
 interface IndicatorGroupedCategoryBlockProps {
   blocks: IndicatorCategoryContentBlockFragmentFragment[];
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
+  hideLegacyLastUpdated?: boolean;
 }
 
 const IndicatorGroupedCategoryBlock = (props: IndicatorGroupedCategoryBlockProps) => {
@@ -262,15 +265,26 @@ const IndicatorGroupedCategoryBlock = (props: IndicatorGroupedCategoryBlockProps
 interface IndicatorModalContentBlockProps {
   block: IndicatorModalContentBlock | null;
   indicator: IndicatorDetailsQuery['indicator'] | null;
+  hideLegacyLastUpdated?: boolean;
 }
 
-const IndicatorModalContentBlock = ({ block, indicator }: IndicatorModalContentBlockProps) => {
+const IndicatorModalContentBlock = ({
+  block,
+  indicator,
+  hideLegacyLastUpdated,
+}: IndicatorModalContentBlockProps) => {
   if (!block || !indicator) return null;
 
   // console.log('📦 block', block);
   switch (block.__typename) {
     case 'IndicatorContentBlock':
-      return <IndicatorContentBlock block={block} indicator={indicator} />;
+      return (
+        <IndicatorContentBlock
+          block={block}
+          indicator={indicator}
+          hideLegacyLastUpdated={hideLegacyLastUpdated}
+        />
+      );
     case 'IndicatorCategoryContentBlock':
       return <IndicatorCategoryBlock block={block} indicator={indicator} />;
     case 'IndicatorValueSummaryContentBlock':
