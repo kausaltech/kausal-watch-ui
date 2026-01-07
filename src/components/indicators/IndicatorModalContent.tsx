@@ -5,6 +5,8 @@ import styled from 'styled-components';
 
 import type { IndicatorDetailsQuery, IndicatorListQuery } from '@/common/__generated__/graphql';
 import { deploymentType } from '@/common/environment';
+import ChangeHistory from '@/components/common/ChangeHistory';
+import { usePlan } from '@/context/plan';
 
 import IndicatorModalContentBlock, {
   IndicatorGroupedCategoryBlock,
@@ -76,6 +78,12 @@ const ModalContentBlocksWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spaces.s300};
 `;
 
+// Remove ChangeHistory's internal padding (s150) to align it with modal content.
+const ChangeHistoryInModal = styled.div`
+  margin-left: ${({ theme }) => `-${theme.spaces.s150}`};
+  margin-right: ${({ theme }) => `-${theme.spaces.s150}`};
+`;
+
 interface IndicatorModalContentProps {
   indicator?: IndicatorDetailsQuery['indicator'] | null;
   loading: boolean;
@@ -101,6 +109,7 @@ const IndicatorModalContent = ({
   layout,
 }: IndicatorModalContentProps) => {
   const t = useTranslations();
+  const plan = usePlan();
   if (loading && !indicator)
     return (
       <ContentWrapper>
@@ -114,10 +123,13 @@ const IndicatorModalContent = ({
 
   const indicatorName = indicator.name;
 
+  const showChangeHistory = plan.features.enableChangeLog && !!indicator.changeLogMessage;
+
   const hasLayout =
     (layout.detailsMainTop && layout.detailsMainTop.length > 0) ||
     (layout.detailsMainBottom && layout.detailsMainBottom.length > 0) ||
     (layout.detailsAside && layout.detailsAside.length > 0);
+
   return (
     <ContentWrapper>
       {loading && (
@@ -141,6 +153,7 @@ const IndicatorModalContent = ({
                     key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
                     blocks={groupedBlock.blocks}
                     indicator={indicator}
+                    hideLegacyLastUpdated={showChangeHistory}
                   />
                 );
               }
@@ -149,6 +162,7 @@ const IndicatorModalContent = ({
                   key={groupedBlock.block.id}
                   block={groupedBlock.block}
                   indicator={indicator}
+                  hideLegacyLastUpdated={showChangeHistory}
                 />
               );
             }
@@ -161,6 +175,7 @@ const IndicatorModalContent = ({
                     key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
                     blocks={groupedBlock.blocks}
                     indicator={indicator}
+                    hideLegacyLastUpdated={showChangeHistory}
                   />
                 );
               }
@@ -169,6 +184,7 @@ const IndicatorModalContent = ({
                   key={groupedBlock.block.id}
                   block={groupedBlock.block}
                   indicator={indicator}
+                  hideLegacyLastUpdated={showChangeHistory}
                 />
               );
             }
@@ -180,6 +196,7 @@ const IndicatorModalContent = ({
                   key={`grouped-${index}-${groupedBlock.blocks[0]?.id}`}
                   blocks={groupedBlock.blocks}
                   indicator={indicator}
+                  hideLegacyLastUpdated={showChangeHistory}
                 />
               );
             }
@@ -188,10 +205,20 @@ const IndicatorModalContent = ({
                 key={groupedBlock.block.id}
                 block={groupedBlock.block}
                 indicator={indicator}
+                hideLegacyLastUpdated={showChangeHistory}
               />
             );
           })}
         </ModalContentBlocksWrapper>
+        {showChangeHistory && (
+          <ChangeHistoryInModal>
+            <ChangeHistory
+              entityType="indicator"
+              entityId={String(indicator.id)}
+              entry={indicator.changeLogMessage}
+            />
+          </ChangeHistoryInModal>
+        )}
       </ModalScrollableContent>
     </ContentWrapper>
   );
