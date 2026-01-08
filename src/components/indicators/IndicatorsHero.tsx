@@ -87,7 +87,7 @@ function IndicatorsHero({ title, leadContent = '', showInsights = true, children
   const t = useTranslations();
   const pathname = usePathname();
 
-  const header = (title ?? '').trim() || t('indicators');
+  const header = title ? title : t('indicators');
 
   return (
     <div data-testid={testId}>
