@@ -76,21 +76,24 @@ const Tab = styled.div`
 `;
 
 interface Props {
+  title?: string;
   leadContent?: string;
   showInsights?: boolean;
   children?: React.ReactNode;
   testId?: string;
 }
 
-function IndicatorsHero({ leadContent = '', showInsights = true, children, testId }: Props) {
+function IndicatorsHero({ title, leadContent = '', showInsights = true, children, testId }: Props) {
   const t = useTranslations();
   const pathname = usePathname();
+
+  const header = (title ?? '').trim() || t('indicators');
 
   return (
     <div data-testid={testId}>
       <IndicatorsJumbo>
         <Container>
-          <h1>{t('indicators')}</h1>
+          <h1>{header}</h1>
           {leadContent && (
             <Row>
               <Col sm="12" md="8" className="mb-3">
