@@ -17,6 +17,15 @@ const preview: Preview = {
       // 'off' - skip a11y checks entirely
       test: 'todo',
     },
+    nextjs: {
+      // Enable App Router support - this provides router mocks for useRouter, usePathname, useSearchParams
+      appDirectory: true,
+      navigation: {
+        pathname: '/',
+        query: {},
+        segments: [],
+      },
+    },
   },
   loaders: [
     async () => {

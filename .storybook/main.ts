@@ -16,7 +16,12 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-themes',
   ],
-  framework: '@storybook/nextjs-vite',
+  framework: {
+    name: '@storybook/nextjs-vite',
+    options: {
+      nextConfigPath: path.resolve(projectRoot, 'next.config.ts'),
+    },
+  },
   core: {
     builder: '@storybook/builder-vite',
   },
