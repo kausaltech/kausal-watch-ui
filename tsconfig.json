@@ -6,6 +6,7 @@
         "name": "next"
       }
     ],
+    "moduleResolution": "bundler",
     "paths": {
       "@/public/*": ["./public/*"],
       "@/*": ["./src/*"],

@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
+import { AttributeTypeFormat } from '@/common/__generated__/graphql';
 import ActionAttribute from '@/components/common/ActionAttribute';
 
 const meta = {
@@ -34,21 +35,27 @@ export const Default: Story = {
           shortName: '%',
           __typename: 'Unit',
         },
-        format: 'NUMERIC',
+        format: AttributeTypeFormat.Numeric,
+        helpText: '',
+        showChoiceNames: false,
+        hasZeroOption: false,
+        choiceOptions: [],
         __typename: 'AttributeType',
       },
       numericValue: 95,
     },
+    attributeType: null,
   },
 };
 
 export const AttributeChoice: Story = {
   parameters: {},
   args: {
+    fontSize: 'fontSizeBase',
     attributeType: {
       __typename: 'AttributeType',
       id: '261',
-      format: 'ORDERED_CHOICE',
+      format: AttributeTypeFormat.OrderedChoice,
       name: 'Kosten',
       identifier: 'kosten',
       helpText: 'Die Bewertung der Sach- und Personalkosten (aufaddiert bis zum Jahr 2035).',
@@ -82,11 +89,6 @@ export const AttributeChoice: Story = {
       unit: null,
       showChoiceNames: true,
       hasZeroOption: false,
-      meta: {
-        restricted: false,
-        hidden: false,
-        __typename: 'FieldBlockMetaData',
-      },
     },
     attribute: {
       __typename: 'AttributeChoice',
@@ -96,7 +98,7 @@ export const AttributeChoice: Story = {
         identifier: 'kosten',
         name: 'Kosten',
         unit: null,
-        format: 'ORDERED_CHOICE',
+        format: AttributeTypeFormat.OrderedChoice,
         __typename: 'AttributeType',
       },
       choice: {
