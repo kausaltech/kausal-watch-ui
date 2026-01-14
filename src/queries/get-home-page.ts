@@ -13,6 +13,15 @@ export const GET_HOME_PAGE = gql`
       id
       slug
       ... on PlanRootPage {
+        changeLogMessage {
+          content
+          createdAt
+          createdBy {
+            firstName
+            lastName
+            avatarUrl
+          }
+        }
         body {
           ...StreamFieldFragment
         }
