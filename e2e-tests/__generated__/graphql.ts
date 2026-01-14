@@ -198,15 +198,13 @@ export enum Comparison {
 }
 
 export type CreateOrganizationMutationInput = {
-  /** A simplified short version of name for the general public */
+  /** Short version or abbreviation of the organization name to be displayed when it is not necessary to show the full name */
   abbreviation: InputMaybe<Scalars['String']['input']>;
   classification: InputMaybe<Scalars['ID']['input']>;
   clientMutationId: InputMaybe<Scalars['String']['input']>;
-  /** A date of dissolution */
   dissolutionDate: InputMaybe<Scalars['Date']['input']>;
-  /** A date of founding */
   foundingDate: InputMaybe<Scalars['Date']['input']>;
-  /** A primary name, e.g. a legally recognized name */
+  /** Full name of the organization */
   name: Scalars['String']['input'];
   parent: InputMaybe<Scalars['ID']['input']>;
 };
@@ -425,16 +423,14 @@ export type UpdateIndicatorMutationInput = {
 };
 
 export type UpdateOrganizationMutationInput = {
-  /** A simplified short version of name for the general public */
+  /** Short version or abbreviation of the organization name to be displayed when it is not necessary to show the full name */
   abbreviation: InputMaybe<Scalars['String']['input']>;
   classification: InputMaybe<Scalars['ID']['input']>;
   clientMutationId: InputMaybe<Scalars['String']['input']>;
-  /** A date of dissolution */
   dissolutionDate: InputMaybe<Scalars['Date']['input']>;
-  /** A date of founding */
   foundingDate: InputMaybe<Scalars['Date']['input']>;
   id: InputMaybe<Scalars['ID']['input']>;
-  /** A primary name, e.g. a legally recognized name */
+  /** Full name of the organization */
   name: Scalars['String']['input'];
   parent: InputMaybe<Scalars['ID']['input']>;
 };
