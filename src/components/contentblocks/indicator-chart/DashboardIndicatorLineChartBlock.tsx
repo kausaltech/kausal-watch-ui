@@ -27,6 +27,78 @@ echarts.use([LineChart, ScatterChart, GridComponent, TooltipComponent, LegendCom
 
 type Props = TDashboardIndicatorLineChartBlock;
 
+type Granularity = 'day' | 'month' | 'year';
+
+function detectGranularity(timestamps: number[]): Granularity {
+  if (timestamps.length < 2) return 'year';
+
+  const dates = timestamps.map(ts => new Date(ts));
+  const intervals = [];
+  
+  for (let i = 1; i < dates.length; i++) {
+    const diff = dates[i].getTime() - dates[i - 1].getTime();
+    intervals.push(diff);
+  }
+
+  intervals.sort((a, b) => a - b);
+  const medianInterval = intervals[Math.floor(intervals.length / 2)];
+  
+  const day = 24 * 60 * 60 * 1000;
+  const month = 30 * day;
+  const year = 365 * day;
+}
+
+function formatDate(timestamp: number, granularity: Granularity): string {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  switch (granularity) {
+    case 'daily':
+      return `${year}-${month}-${day}`;
+    case 'monthly':
+      return `${year}-${month}`;
+    case 'yearly':
+      return `${year}`;
+  }
+}
+function formatAxisLabel(dateStr: string, granularity: Granularity, locale?: string): string {
+  const parts = dateStr.split('-');
+  const year = parseInt(parts[0]);
+  const month = parts[1] ? parseInt(parts[1]) - 1 : 0;
+  const day = parts[2] ? parseInt(parts[2]) : 1;
+  
+  const date = new Date(year, month, day);
+
+  switch (granularity) {
+    case 'day':
+      return date.toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' });
+    case 'month':
+      return date.toLocaleDateString(locale, { month: 'short', year: 'numeric' });
+    case 'year':
+      return `${year}`;
+  }
+}
+
+function addTimeInterval(timestamp: number, granularity: Granularity): number {
+  const date = new Date(timestamp);
+  
+  switch (granularity) {
+    case 'day':
+      date.setDate(date.getDate() + 1);
+      break;
+    case 'month':
+      date.setMonth(date.getMonth() + 1);
+      break;
+    case 'year':
+      date.setFullYear(date.getFullYear() + 1);
+      break;
+  }
+  
+  return date.getTime();
+}
+
 const DashboardIndicatorLineChartBlock = ({
   chartSeries,
   indicator,
