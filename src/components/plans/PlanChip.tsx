@@ -49,7 +49,7 @@ const PlanOrg = styled.div<{ $negative?: boolean }>`
   font-weight: ${(props) => props.theme.fontWeightNormal};
   font-family: ${(props) => `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
   color: ${(props) =>
-    props.$negative ? props.theme.graphColors.grey030 : props.theme.graphColors.grey070};
+    props.$negative ? props.theme.graphColors.grey020 : props.theme.graphColors.grey070};
 `;
 
 interface PlanChipProps {
