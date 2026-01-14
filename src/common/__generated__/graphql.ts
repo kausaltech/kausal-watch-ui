@@ -12300,7 +12300,13 @@ export type GetContentPageQuery = (
     { leadContent: string | null, id: string | null, slug: string, title: string, lastPublishedAt: string | null }
     & { __typename: 'PrivacyPolicyPage' }
   ) | (
-    { leadParagraph: string | null, id: string | null, slug: string, title: string, lastPublishedAt: string | null, headerImage: (
+    { leadParagraph: string | null, id: string | null, slug: string, title: string, lastPublishedAt: string | null, changeLogMessage: (
+      { content: string | null, createdAt: string | null, createdBy: (
+        { firstName: string, lastName: string, avatarUrl: string | null }
+        & { __typename: 'Person' }
+      ) | null }
+      & { __typename: 'PageChangeLogMessage' }
+    ) | null, headerImage: (
       { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
