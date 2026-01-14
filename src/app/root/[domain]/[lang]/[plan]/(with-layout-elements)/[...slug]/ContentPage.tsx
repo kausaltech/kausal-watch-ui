@@ -14,12 +14,14 @@ import type {
 import { getBgImageAlignment } from '@/common/images';
 import { typenameMatches } from '@/common/utils';
 import CategoryPageContent from '@/components/categories/CategoryPageContent';
+import ChangeHistory from '@/components/common/ChangeHistory';
 import RichText from '@/components/common/RichText';
 import SecondaryNavigation from '@/components/common/SecondaryNavigation';
 import StreamField from '@/components/common/StreamField';
 import CategoryPageHeaderBlock from '@/components/contentblocks/CategoryPageHeaderBlock';
 import ContentPageHeaderBlock from '@/components/contentblocks/ContentPageHeaderBlock';
 import IndicatorListPage from '@/components/indicators/IndicatorList';
+import { usePlan } from '@/context/plan';
 
 export type PageWithLeadContent =
   | AccessibilityStatementPage
@@ -134,7 +136,7 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
 
 export default function ContentPage({ page, testId }: { page: GeneralPlanPage; testId?: string }) {
   // TODO: Resolve shareImageUrl by pagetype
-
+  const plan = usePlan();
   const theme = useTheme();
   const isCategoryPage = page.__typename === 'CategoryPage';
 
@@ -177,6 +179,18 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
       : []
     : [];
 
+  const hasChangeLogMessageBlock =
+    'body' in page &&
+    Array.isArray(page.body) &&
+    page.body.some((b) => b?.blockType === 'ChangeLogMessageBlock');
+
+  const showFallbackChangeHistory =
+    plan.features.enableChangeLog &&
+    page.__typename === 'StaticPage' &&
+    'changeLogMessage' in page &&
+    !!page.changeLogMessage &&
+    !hasChangeLogMessageBlock;
+
   return (
     <article data-testid={testId}>
       {typenameMatches(page, 'CategoryPage', 'StaticPage') && !pageHeaderinStreamField ? (
@@ -213,6 +227,19 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
             <StreamField page={page} blocks={page.body} hasSidebar={siblings.length > 1} />
           )}
         </div>
+      )}
+      {showFallbackChangeHistory && (
+        <Container className="my-5">
+          <Row>
+            <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+              <ChangeHistory
+                entityType="page"
+                entityId={String(page.id)}
+                entry={page.changeLogMessage}
+              />
+            </Col>
+          </Row>
+        </Container>
       )}
     </article>
   );
