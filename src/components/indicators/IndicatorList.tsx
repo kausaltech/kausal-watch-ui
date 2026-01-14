@@ -259,6 +259,7 @@ interface IndicatorListPageProps {
 const IndicatorListPage = (props: IndicatorListPageProps) => {
   const { page, testId } = props;
   const {
+    title,
     leadContent,
     displayInsights,
     displayLevel,
@@ -451,6 +452,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
         />
       )}
       <IndicatorsHero
+        title={title ?? undefined}
         leadContent={leadContent || undefined}
         showInsights={showInsights}
         testId={testId}
