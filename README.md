@@ -55,6 +55,16 @@ Make sure that your installation does not give errors about missing files. If it
 WATCH_BACKEND_URL=
 ```
 
+### Storybook
+
+You can explore, develop and test Kausal Watch UI components in isolation on Storybook.
+
+Run Storybook locally and access it in browser at http://localhost:6006/ with
+
+```bash
+pnpm run storybook
+```
+
 ### End-to-end Testing
 
 The tests live under the `e2e-tests/` directory. It has its own `package.json`,
