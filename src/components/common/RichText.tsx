@@ -16,6 +16,8 @@ import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
+const CUSTOM_IFRAME_HEIGHT_PARAM = 'k_height';
+
 const BreakPoint = styled.div`
   text-align: center;
   margin-bottom: ${(props) => props.theme.spaces.s150};
@@ -341,6 +343,22 @@ export default function RichText(props: RichTextProps) {
       const domChildren = children.filter(
         (child) => child.type !== ElementType.CDATA && child.type !== ElementType.Root
       );
+
+      /**
+       * Support custom iframe height based on a query parameter on the embed URL
+       */
+      if (name === 'iframe') {
+        const iframeSrc = element.attribs.src;
+        const iframeUrl = new URL(iframeSrc);
+        const iframeParams = new URLSearchParams(iframeUrl.searchParams);
+        const customHeight = iframeParams.get(CUSTOM_IFRAME_HEIGHT_PARAM);
+
+        if (typeof customHeight === 'string' && !isNaN(parseInt(customHeight))) {
+          return <iframe {...element.attribs} height={customHeight} />;
+        }
+
+        return null;
+      }
 
       // Rewrite <a> tags to point to the FQDN
       if (name === 'a') {
