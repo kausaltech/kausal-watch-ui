@@ -559,15 +559,34 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'ChangeLogMessageBlock': {
-      if (!plan.features.enableChangeLog || !page.category?.id || !page.category?.changeLogMessage)
-        return null;
-      return (
-        <ChangeHistory
-          entityType="category"
-          entityId={page.category.id}
-          entry={page.category.changeLogMessage}
-        />
-      );
+      if (!plan.features.enableChangeLog) return null;
+      // Category page
+      if (page.__typename === 'CategoryPage') {
+        const entry = page.category?.changeLogMessage;
+        const entityId = page.category?.id;
+        if (!entry || !entityId) return null;
+
+        return <ChangeHistory entityType="category" entityId={entityId} entry={entry} />;
+      }
+      // Static + Home
+      if (page.__typename === 'StaticPage' || page.__typename === 'PlanRootPage') {
+        const entry = (page as any).changeLogMessage;
+        if (!entry) return null;
+
+        return (
+          <Container id={id} className="my-5">
+            <Row>
+              <Col
+                xl={{ size: hasSidebar ? 9 : 12, offset: hasSidebar ? 3 : 0 }}
+                lg={{ size: hasSidebar ? 8 : 12, offset: hasSidebar ? 4 : 0 }}
+              >
+                <ChangeHistory entityType="page" entityId={String(page.id)} entry={entry} />
+              </Col>
+            </Row>
+          </Container>
+        );
+      }
+      return null;
     }
     default:
       return <div id={id}>{`Component for ${__typename} does not exist`}</div>;
