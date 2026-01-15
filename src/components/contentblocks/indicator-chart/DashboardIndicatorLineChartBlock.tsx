@@ -38,7 +38,7 @@ const DashboardIndicatorLineChartBlock = ({
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
   const unit = indicator?.unit?.name ?? '';
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
-
+  const timeResolution = indicator?.timeResolution ?? 'YEAR';
   const totalLabel = t('total');
   const goalLabel = t('goal');
   const trendLabel = t('current-trend');
@@ -47,27 +47,73 @@ const DashboardIndicatorLineChartBlock = ({
     return <div>{t('data-not-available')}</div>;
   }
 
-  const dimSeries = buildDimSeries(chartSeries, palette);
-  const totalDef = buildTotalSeries(chartSeries, graphsTheme.totalLineColor ?? '#000', totalLabel);
+  const dimSeries = buildDimSeries(chartSeries, palette, timeResolution);
+  const totalDef = buildTotalSeries(
+    chartSeries,
+    graphsTheme.totalLineColor ?? '#000',
+    totalLabel,
+    timeResolution
+  );
   const totalRaw = totalDef.raw;
 
-  const xYearSet = new Set<number>();
-  dimSeries.forEach((d) => d.raw.forEach(([y]) => xYearSet.add(y)));
-  totalRaw.forEach(([y]) => xYearSet.add(y));
-  indicator?.goals?.forEach((g) => xYearSet.add(new Date(g.date).getFullYear()));
-  const xCategories = Array.from(xYearSet)
-    .sort((a, b) => a - b)
-    .map(String);
+  const normalizeDateForSet = (key: string | number): string => {
+    if (typeof key === 'number') {
+      if (key > 1900 && key < 2100) {
+        return `${key}-1-1`;
+      }
+      return String(key);
+    }
+    const dateObj = new Date(key);
+    if (Number.isNaN(dateObj.getTime())) {
+      return String(key);
+    }
+    if (timeResolution === 'YEAR') {
+      return `${dateObj.getFullYear()}-1-1`;
+    }
+    return key;
+  };
 
-  function buildLines(arr: { name: string; color: string; raw: [number, number][] }[], width = 2) {
+  const normalizedDateSet = new Set<string>();
+  dimSeries.forEach((d) =>
+    d.raw.forEach(([key]) => normalizedDateSet.add(normalizeDateForSet(key)))
+  );
+  totalRaw.forEach(([key]) => normalizedDateSet.add(normalizeDateForSet(key)));
+  indicator?.goals?.forEach((g) => {
+    normalizedDateSet.add(normalizeDateForSet(g.date));
+  });
+
+  const allDates = Array.from(normalizedDateSet);
+  allDates.sort((a, b) => {
+    const dateA = new Date(a).getTime();
+    const dateB = new Date(b).getTime();
+    if (Number.isNaN(dateA) || Number.isNaN(dateB)) {
+      return String(a).localeCompare(String(b));
+    }
+    return dateA - dateB;
+  });
+
+  const formatForDisplay = (normalizedDate: string): string => {
+    const date = new Date(normalizedDate);
+    if (Number.isNaN(date.getTime())) {
+      return normalizedDate;
+    }
+    if (timeResolution === 'YEAR') {
+      return String(date.getFullYear());
+    } else if (timeResolution === 'MONTH') {
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    } else {
+      return date.toISOString().split('T')[0];
+    }
+  };
+
+  const xCategories = allDates.map(formatForDisplay);
+
+  function buildLines(arr: { name: string; color: string; raw: [string, number][] }[], width = 2) {
     return arr.map(({ name, color, raw }) => {
-      const data =
-        raw.length === 1
-          ? [
-              [String(raw[0][0]), raw[0][1]],
-              [String(raw[0][0] + 1), raw[0][1]],
-            ]
-          : raw.map(([y, v]) => [String(y), v] as [string, number]);
+      const dataMap = new Map(raw.map(([key, value]) => [key, value]));
+      const data = xCategories.map(
+        (key) => [key, dataMap.get(key) ?? null] as [string, number | null]
+      );
 
       return {
         name,
@@ -89,9 +135,16 @@ const DashboardIndicatorLineChartBlock = ({
     totalRaw,
     indicator,
     graphsTheme.trendLineColor ?? '#aaa',
-    trendLabel
+    trendLabel,
+    timeResolution
   );
-  const goalSeries = buildGoalSeries(indicator, unit, graphsTheme.goalLineColors ?? [], goalLabel);
+  const goalSeries = buildGoalSeries(
+    indicator,
+    unit,
+    graphsTheme.goalLineColors ?? [],
+    goalLabel,
+    timeResolution
+  );
 
   const legendData = [
     ...dimSeries.map((d) => d.name),
@@ -112,7 +165,14 @@ const DashboardIndicatorLineChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'line' },
-      formatter: buildTooltipFormatter(unit, legendData, t, dimension, indicator?.valueRounding),
+      formatter: buildTooltipFormatter(
+        unit,
+        legendData,
+        t,
+        dimension,
+        indicator?.valueRounding,
+        timeResolution
+      ),
     },
     grid: {
       left: 20,

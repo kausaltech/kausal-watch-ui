@@ -11,6 +11,7 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
     maxValue
     ticksCount
     ticksRounding
+    timeResolution
     latestValue {
       value
       date
