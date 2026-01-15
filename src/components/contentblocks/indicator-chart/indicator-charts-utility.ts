@@ -18,9 +18,35 @@ export interface GraphsTheme {
   showTrendline?: boolean;
 }
 
+function formatDateKey(date: string, timeResolution?: string | null): string {
+  const d = new Date(date);
+  if (Number.isNaN(d.getTime())) return date;
+
+  const resolution = String(timeResolution || 'YEAR').toUpperCase();
+  if (resolution === 'YEAR') {
+    return String(d.getFullYear());
+  } else if (resolution === 'MONTH') {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  } else {
+    return d.toISOString().split('T')[0];
+  }
+}
+
+function getTimeKeyForSorting(key: string, timeResolution?: string | null): number {
+  if (timeResolution === 'YEAR') {
+    return parseInt(key, 10);
+  } else if (timeResolution === 'MONTH') {
+    const [year, month] = key.split('-').map(Number);
+    return year * 12 + (month - 1);
+  } else {
+    return new Date(key).getTime();
+  }
+}
+
 export function buildDimSeries(
   chartSeries: TDashboardIndicatorLineChartBlock['chartSeries'],
-  palette: string[]
+  palette: string[],
+  timeResolution?: string | null
 ) {
   const dimCategoryMap = new Map<
     string,
@@ -43,14 +69,19 @@ export function buildDimSeries(
     });
 
   return Array.from(dimCategoryMap.entries()).map(([name, { color, values }]) => {
-    const yearMap = new Map<number, number>();
+    const timeMap = new Map<string, number>();
     values.forEach((v) => {
       if (v.value != null && v.date) {
-        const y = new Date(v.date).getFullYear();
-        yearMap.set(y, (yearMap.get(y) || 0) + v.value);
+        const key = formatDateKey(v.date, timeResolution);
+        timeMap.set(key, (timeMap.get(key) || 0) + v.value);
       }
     });
-    const raw = Array.from(yearMap.entries()).sort((a, b) => a[0] - b[0]);
+    const raw = Array.from(timeMap.entries())
+      .map(([key, value]) => [key, value] as [string, number])
+      .sort(
+        (a, b) =>
+          getTimeKeyForSorting(a[0], timeResolution) - getTimeKeyForSorting(b[0], timeResolution)
+      );
     return { name, color, raw };
   });
 }
@@ -58,19 +89,25 @@ export function buildDimSeries(
 export function buildTotalSeries(
   chartSeries: TDashboardIndicatorLineChartBlock['chartSeries'],
   totalLineColor: string,
-  label = 'Total'
+  label = 'Total',
+  timeResolution?: string | null
 ) {
-  const totalMap = new Map<number, number>();
+  const totalMap = new Map<string, number>();
   chartSeries
     .find((s) => !s.dimensionCategory)
     ?.values.forEach((v) => {
       if (v.value != null && v.date) {
-        const y = new Date(v.date).getFullYear();
-        totalMap.set(y, (totalMap.get(y) || 0) + v.value);
+        const key = formatDateKey(v.date, timeResolution);
+        totalMap.set(key, (totalMap.get(key) || 0) + v.value);
       }
     });
 
-  const totalRaw = Array.from(totalMap.entries()).sort((a, b) => a[0] - b[0]);
+  const totalRaw = Array.from(totalMap.entries())
+    .map(([key, value]) => [key, value] as [string, number])
+    .sort(
+      (a, b) =>
+        getTimeKeyForSorting(a[0], timeResolution) - getTimeKeyForSorting(b[0], timeResolution)
+    );
   return {
     name: label,
     color: totalLineColor,
@@ -82,17 +119,18 @@ export function buildGoalSeries(
   indicator: TDashboardIndicatorLineChartBlock['indicator'],
   unit: string,
   goalLineColors: string[],
-  label = 'Goal'
+  label = 'Goal',
+  timeResolution?: string | null
 ) {
   return (
     indicator?.goals?.map((g) => {
-      const y = new Date(g.date).getFullYear();
+      const key = formatDateKey(g.date, timeResolution);
       return {
         name: label,
         type: 'scatter' as const,
         symbol: X_SYMBOL,
         symbolSize: 10,
-        data: [[String(y), g.value]],
+        data: [[key, g.value]],
         itemStyle: { color: goalLineColors?.[0] ?? '#3E9C88' },
         tooltip: { formatter: `Goal: ${g.value} ${unit}` },
       };
@@ -101,21 +139,43 @@ export function buildGoalSeries(
 }
 
 export function buildTrendSeries(
-  totalRaw: [number, number][],
+  totalRaw: [string, number][],
   indicator: TDashboardIndicatorLineChartBlock['indicator'],
   trendLineColor: string,
-  label = 'Trend'
+  label = 'Trend',
+  timeResolution?: string | null
 ) {
   const regData = totalRaw.slice(-Math.min(totalRaw.length, 10));
-  const predictedYears = regData.map(([yr]) => yr);
+  const predictedTimes = regData.map(([key]) => getTimeKeyForSorting(key, timeResolution));
+
   if (indicator?.goals?.length) {
-    const highestGoalYear = Math.max(...indicator.goals.map((g) => new Date(g.date).getFullYear()));
-    if (highestGoalYear > predictedYears[predictedYears.length - 1]) {
-      predictedYears.push(highestGoalYear);
+    const highestGoalTime = Math.max(
+      ...indicator.goals.map((g) =>
+        getTimeKeyForSorting(formatDateKey(g.date, timeResolution), timeResolution)
+      )
+    );
+    if (highestGoalTime > predictedTimes[predictedTimes.length - 1]) {
+      predictedTimes.push(highestGoalTime);
     }
   }
-  const model = linearRegression(regData);
-  const predictedValues = predictedYears.map((yr) => model.m * yr + model.b);
+
+  const numericData = regData.map(
+    ([key, value]) => [getTimeKeyForSorting(key, timeResolution), value] as [number, number]
+  );
+  const model = linearRegression(numericData);
+  const predictedValues = predictedTimes.map((timeKey) => model.m * timeKey + model.b);
+
+  const predictedKeys = predictedTimes.map((timeKey) => {
+    if (timeResolution === 'YEAR') {
+      return String(timeKey);
+    } else if (timeResolution === 'MONTH') {
+      const year = Math.floor(timeKey / 12);
+      const month = (timeKey % 12) + 1;
+      return `${year}-${String(month).padStart(2, '0')}`;
+    } else {
+      return new Date(timeKey).toISOString().split('T')[0];
+    }
+  });
 
   return regData.length >= 2 && (indicator?.showTrendline ?? true)
     ? [
@@ -125,7 +185,7 @@ export function buildTrendSeries(
           symbol: 'none',
           showSymbol: false,
           smooth: false,
-          data: predictedYears.map((yr, i) => [String(yr), predictedValues[i]] as [string, number]),
+          data: predictedKeys.map((key, i) => [key, predictedValues[i]] as [string, number]),
           lineStyle: { type: 'dashed', width: 2, color: trendLineColor },
           itemStyle: { color: trendLineColor },
           tooltip: { show: false },
@@ -149,14 +209,27 @@ export function buildTooltipFormatter(
   legendData: string[],
   t: TFunction,
   dimension?: { name: string },
-  valueRounding?: number
+  valueRounding?: number,
+  timeResolution?: string | null
 ) {
   const formatValue = buildValueFormatter(valueRounding);
 
   return (params: any[]) => {
     const processedSeries = new Set<string>();
     const paramsArray = Array.isArray(params) ? params : [params];
-    const year = paramsArray[0]?.axisValue;
+    const timeKey = paramsArray[0]?.axisValue;
+
+    let formattedTime: string;
+    if (timeResolution === 'YEAR') {
+      formattedTime = String(timeKey);
+    } else if (timeResolution === 'MONTH') {
+      formattedTime = String(timeKey);
+    } else {
+      const date = new Date(timeKey);
+      formattedTime = Number.isNaN(date.getTime())
+        ? String(timeKey)
+        : date.toISOString().split('T')[0];
+    }
 
     const rows = paramsArray
       .filter((p) => {
@@ -178,7 +251,7 @@ export function buildTooltipFormatter(
         return `${p.marker} ${label}: ${value} ${unit}`;
       });
 
-    return `<strong>${year}</strong><br/>${rows.join('<br/>')}`;
+    return `<strong>${formattedTime}</strong><br/>${rows.join('<br/>')}`;
   };
 }
 

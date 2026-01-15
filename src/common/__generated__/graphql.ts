@@ -3771,7 +3771,7 @@ export type CategoryTagRecursiveFragmentFragment = (
 );
 
 export type DashboardIndicatorFragmentFragment = (
-  { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+  { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
     { value: number, date: string | null }
     & { __typename: 'IndicatorValue' }
   ) | null, goals: Array<(
@@ -3823,7 +3823,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -3853,7 +3853,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -3883,7 +3883,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -3913,7 +3913,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -3928,7 +3928,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
     & { __typename: 'DashboardIndicatorPieChartBlock' }
   ) | (
     { id: string | null, blockType: string, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -4995,7 +4995,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -5025,7 +5025,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -5055,7 +5055,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -5085,7 +5085,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
       )> }
       & { __typename: 'Dimension' }
     ) | null, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -5100,7 +5100,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
     & { __typename: 'DashboardIndicatorPieChartBlock' }
   ) | (
     { id: string | null, blockType: string, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
@@ -12062,7 +12062,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -12092,7 +12092,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -12122,7 +12122,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -12152,7 +12152,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -12167,7 +12167,7 @@ export type GetContentPageQuery = (
         & { __typename: 'DashboardIndicatorPieChartBlock' }
       ) | (
         { id: string | null, blockType: string, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -12983,7 +12983,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -13013,7 +13013,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -13043,7 +13043,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -13073,7 +13073,7 @@ export type GetContentPageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -13088,7 +13088,7 @@ export type GetContentPageQuery = (
         & { __typename: 'DashboardIndicatorPieChartBlock' }
       ) | (
         { id: string | null, blockType: string, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -13637,7 +13637,7 @@ export type GetHomePageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -13667,7 +13667,7 @@ export type GetHomePageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -13697,7 +13697,7 @@ export type GetHomePageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -13727,7 +13727,7 @@ export type GetHomePageQuery = (
           )> }
           & { __typename: 'Dimension' }
         ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
@@ -13742,7 +13742,7 @@ export type GetHomePageQuery = (
         & { __typename: 'DashboardIndicatorPieChartBlock' }
       ) | (
         { id: string | null, blockType: string, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
