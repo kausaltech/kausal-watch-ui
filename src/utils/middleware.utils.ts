@@ -306,7 +306,7 @@ async function queryPlansForHostname(req: NextAuthRequest, logger: Logger, hostn
   }
 }
 
-const DEFAULT_TTL = 30 * 60 * 1000;
+const DEFAULT_TTL = 5 * 60 * 1000;
 
 const hostnamePlanCache = new LRUCache<string, PlanForHostname[]>();
 
