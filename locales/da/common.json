@@ -27,7 +27,7 @@
     "error-occurred": "Der er sket en fejl",
     "error-with-code": "Fejl med kode",
     "error-no-layout": "Ingen layout defineret. Tilføj indhold her.",
-    "error-no-outcome-node": "Resultatnode '{outcomeNodeId}' blev ikke fundet.",
+    "error-no-outcome-node": "Resultatnode [{outcomeNodeId}] blev ikke fundet.",
     "export": "Eksport",
     "feedback": "Feedback",
     "feedback-description": "Har du opdaget noget, der ikke virker? Eller har du ideer til noget, vi kan forbedre?",

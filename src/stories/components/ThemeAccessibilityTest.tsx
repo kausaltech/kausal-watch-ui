@@ -1,4 +1,6 @@
-import { meetsContrastGuidelines, readableColor } from 'polished';
+import { useEffect, useState } from 'react';
+
+import { getContrast, meetsContrastGuidelines, readableColor } from 'polished';
 import { useTheme } from 'styled-components';
 import styled from 'styled-components';
 
@@ -31,10 +33,16 @@ const Result = styled.div`
   text-align: right;
 `;
 
-const TextContrast = (props) => {
-  const { foreground, background, largeOnly = false } = props;
+const TextContrast = (props: {
+  foreground: string;
+  background: string;
+  largeOnly?: boolean;
+  setPassed: (passed: boolean) => void;
+}) => {
+  const { foreground, background, largeOnly = false, setPassed } = props;
   const theme = useTheme();
 
+  // 'readable' means that we check this color combination against the theme colors.white and theme colors.black in the component
   const foregroundFromTheme =
     foreground !== 'readable' ? foreground.split('.').reduce((a, b) => a[b], theme) : '#FFFFFF';
   const backgroundFromTheme =
@@ -50,13 +58,17 @@ const TextContrast = (props) => {
       : readableColor(foregroundFromTheme, theme.themeColors.black, theme.themeColors.white);
 
   const contrastScore = meetsContrastGuidelines(foregroundColor, backgroundColor);
+  const contrastValue = getContrast(foregroundColor, backgroundColor);
 
   const DisplayContrastScore = () => {
     const meetsGuidelines = largeOnly ? contrastScore.AALarge : contrastScore.AA;
+    if (!meetsGuidelines) setPassed(false);
     return (
       <span>
         {largeOnly ? <small>(Large)</small> : ''}
         {meetsGuidelines ? <Badge>OK</Badge> : <Badge $bad>Fail</Badge>}
+        <br />
+        <small>{contrastValue}</small>
       </span>
     );
   };
@@ -74,45 +86,140 @@ const TextContrast = (props) => {
 };
 
 const ThemeAccessibilityTest = () => {
+  const [passed, setPassed] = useState(true);
   //const theme = useTheme();
   return (
     <div>
-      <TextContrast foreground="brandDark" background="readable" />
-      <TextContrast foreground="readable" background="brandDark" />
-      <TextContrast foreground="textColor.primary" background="cardBackground.primary" />
-      <TextContrast foreground="textColor.primary" background="cardBackground.secondary" />
-      <TextContrast foreground="textColor.secondary" background="cardBackground.primary" />
-      <TextContrast foreground="textColor.secondary" background="cardBackground.secondary" />
-      <TextContrast foreground="textColor.tertiary" background="cardBackground.primary" />
-      <TextContrast foreground="headingsColor" background="themeColors.white" />
+      {passed ? (
+        <h2>
+          All tests <Badge>pass</Badge>
+        </h2>
+      ) : (
+        <h2>
+          Some tests <Badge $bad>fail</Badge>
+        </h2>
+      )}
+      <TextContrast foreground="brandDark" background="readable" setPassed={setPassed} />
+      <TextContrast foreground="readable" background="brandDark" setPassed={setPassed} />
+      <TextContrast
+        foreground="textColor.primary"
+        background="cardBackground.primary"
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="textColor.primary"
+        background="cardBackground.secondary"
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="textColor.secondary"
+        background="cardBackground.primary"
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="textColor.secondary"
+        background="cardBackground.secondary"
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="textColor.tertiary"
+        background="cardBackground.primary"
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="headingsColor"
+        background="themeColors.white"
+        setPassed={setPassed}
+      />
       {/* image credit with transclusent bg */}
-      <TextContrast foreground="neutralDark" background="themeColors.white" />
+      <TextContrast foreground="neutralDark" background="themeColors.white" setPassed={setPassed} />
       {/* ToggleButton with readableColor function */}
-      <TextContrast foreground="themeColors.black" background="themeColors.light" />
+      <TextContrast
+        foreground="themeColors.black"
+        background="themeColors.light"
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="graphColors.grey070"
+        background="themeColors.light"
+        setPassed={setPassed}
+      />
       {/* ActionNumberBadge with brandLight bg and readableColor */}
       {/* RestrictedBlockWrapper pink bg */}
       {/* Attributes */}
       Announcement banner
-      <TextContrast foreground="graphColors.grey010" background="graphColors.blue070" />
+      <TextContrast
+        foreground="graphColors.grey010"
+        background="graphColors.blue070"
+        setPassed={setPassed}
+      />
       {/* BadgeTooltip against readableColor white or black */}
       Navigation
-      <TextContrast foreground="brandNavColor" background="brandNavBackground" largeOnly="true" />
-      <TextContrast foreground="textColor.primary" background="cardBackground.secondary" />
-      <TextContrast foreground="linkColor" background="themeColors.white" />
-      <TextContrast foreground="linkColor" background="cardBackground.primary" />
+      <TextContrast
+        foreground="brandNavColor"
+        background="brandNavBackground"
+        largeOnly={true}
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="textColor.primary"
+        background="cardBackground.secondary"
+        setPassed={setPassed}
+      />
+      <TextContrast foreground="linkColor" background="themeColors.white" setPassed={setPassed} />
+      <TextContrast
+        foreground="linkColor"
+        background="cardBackground.primary"
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="linkColor"
+        background="cardBackground.secondary"
+        setPassed={setPassed}
+      />
       {/* SearchSection neutralLight bg with readable color text*/}
-      <TextContrast foreground="footerColor" background="footerBackgroundColor" />
-      <TextContrast foreground="graphColors.grey070" background="inputBg" />
-      <TextContrast foreground="themeColors.black" background="graphColors.blue010" />
+      <TextContrast
+        foreground="footerColor"
+        background="footerBackgroundColor"
+        setPassed={setPassed}
+      />
+      <TextContrast foreground="graphColors.grey070" background="inputBg" setPassed={setPassed} />
+      <TextContrast
+        foreground="themeColors.black"
+        background="graphColors.blue010"
+        setPassed={setPassed}
+      />
       <TextContrast
         foreground="section.indicatorShowcase.color"
         background="section.indicatorShowcase.background"
+        setPassed={setPassed}
       />
-      <TextContrast foreground="themeColors.white" background="themeColors.dark" />
-      <TextContrast foreground="themeColors.black" background="graphColors.blue010" />
-      <TextContrast foreground="themeColors.black" background="graphColors.blue030" />
-      <TextContrast foreground="themeColors.white" background="graphColors.blue070" />
-      <TextContrast foreground="themeColors.white" background="actionColor" />
+      <TextContrast
+        foreground="themeColors.white"
+        background="themeColors.dark"
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="graphColors.grey020"
+        background="themeColors.dark"
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="themeColors.black"
+        background="graphColors.blue010"
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="themeColors.black"
+        background="graphColors.blue030"
+        setPassed={setPassed}
+      />
+      <TextContrast
+        foreground="themeColors.white"
+        background="graphColors.blue070"
+        setPassed={setPassed}
+      />
+      <TextContrast foreground="readable" background="actionColor" setPassed={setPassed} />
     </div>
   );
 };

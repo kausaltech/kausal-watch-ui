@@ -34,3 +34,5 @@ build-storybook.log
 /.eslintcache
 **/node_modules/
 *.tsbuildinfo
+
+*storybook.log

@@ -27,7 +27,7 @@
     "error-occurred": "Ein Fehler ist aufgetreten",
     "error-with-code": "Fehler mit Code",
     "error-no-layout": "Kein Layout definiert. Fügen Sie hier Inhalte hinzu.",
-    "error-no-outcome-node": "Ergebnis-Knoten '{outcomeNodeId}' nicht gefunden.",
+    "error-no-outcome-node": "Ergebnis-Knoten [{outcomeNodeId}] nicht gefunden.",
     "export": "Exportieren",
     "feedback": "Feedback",
     "feedback-description": "Haben Sie etwas entdeckt, das nicht funktioniert? Oder haben Sie Ideen, was wir verbessern können?",
