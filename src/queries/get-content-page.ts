@@ -133,6 +133,15 @@ const GET_CONTENT_PAGE = gql`
       slug
       title
       ... on StaticPage {
+        changeLogMessage {
+          content
+          createdAt
+          createdBy {
+            firstName
+            lastName
+            avatarUrl
+          }
+        }
         headerImage {
           id
           ...MultiUseImageFragment

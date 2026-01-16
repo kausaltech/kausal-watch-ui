@@ -134,7 +134,6 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
 
 export default function ContentPage({ page, testId }: { page: GeneralPlanPage; testId?: string }) {
   // TODO: Resolve shareImageUrl by pagetype
-
   const theme = useTheme();
   const isCategoryPage = page.__typename === 'CategoryPage';
 

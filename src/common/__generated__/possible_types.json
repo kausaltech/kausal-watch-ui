@@ -223,6 +223,7 @@
       "AdaptiveEmbedBlock",
       "CategoryListBlock",
       "ChangeLogMessageBlock",
+      "DashboardRowBlock",
       "IndicatorGroupBlock",
       "QuestionAnswerBlock",
       "RawVisualizationBlock",
@@ -244,7 +245,8 @@
     "ChangeLogMessageInterface": [
       "ActionChangeLogMessage",
       "CategoryChangeLogMessage",
-      "IndicatorChangeLogMessage"
+      "IndicatorChangeLogMessage",
+      "PageChangeLogMessage"
     ],
     "DashboardColumnInterface": [
       "FieldColumnBlock",
@@ -400,6 +402,7 @@
       "CardListBlock",
       "CategoryListBlock",
       "CategoryTreeMapBlock",
+      "ChangeLogMessageBlock",
       "DashboardRowBlock",
       "FrontPageHeroBlock",
       "IndicatorGroupBlock",
