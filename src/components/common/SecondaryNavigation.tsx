@@ -19,7 +19,7 @@ const NavigationContainer = styled(Container)`
 const NavigationCard = styled.div`
   padding: ${(props) => props.theme.spaces.s100};
   margin: ${(props) => props.theme.spaces.s200} 0;
-  background-color: #f2f2f2;
+  background-color: ${(props) => props.theme.cardBackground.secondary};
   pointer-events: all;
 
   h3 {

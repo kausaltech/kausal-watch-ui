@@ -38,7 +38,7 @@ const StyledFooter = styled.footer`
   min-height: 14em;
   clear: both;
   background-color: ${(props) => props.theme.footerBackgroundColor};
-  color: ${(props) => transparentize(0.2, props.theme.footerColor)};
+  color: ${(props) => props.theme.footerColor};
   padding: ${(props) => props.theme.spaces.s400} 0;
 
   a {
@@ -166,11 +166,11 @@ const FooterNavItem = styled.li`
     flex: 1 0 auto;
     max-width: 240px;
   }
+`;
 
-  .parent-item {
-    &:after {
-      content: '';
-    }
+const FooterNavHeading = styled.div`
+  &:after {
+    content: '';
   }
 `;
 
@@ -549,8 +549,10 @@ function SiteFooter(props: SiteFooterProps) {
                   )}
                   {page.children && page.children?.length > 0 && (
                     <>
-                      <span className="parent-item">{page.name}</span>
-                      <FooterSubnav>
+                      <FooterNavHeading id={`footer-nav-heading-${page.id}`}>
+                        {page.name}
+                      </FooterNavHeading>
+                      <FooterSubnav aria-labelledby={`footer-nav-heading-${page.id}`}>
                         {page.children.map((childPage) => (
                           <FooterNavSubItem key={childPage.slug}>
                             <NavigationLink slug={childPage.slug}>
@@ -674,7 +676,7 @@ function SiteFooter(props: SiteFooterProps) {
                 if (page.crossPlanLink) {
                   return (
                     <BaseLink key={page.slug}>
-                      <NavigationLink slug={absoluteLink(page.viewUrl, page.slug)}>
+                      <NavigationLink slug={absoluteLink(page.viewUrl ?? '', page.slug ?? '')}>
                         {page.name}
                       </NavigationLink>
                     </BaseLink>
