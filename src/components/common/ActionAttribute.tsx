@@ -72,12 +72,19 @@ const NumericValueUnit = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
+const NoLinkCursor = styled.div`
+  button {
+    cursor: default !important;
+  }
+`;
+
 type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment;
   attributeType: AttributesBlockAttributeTypeFragment;
   fontSize: string;
   notitle?: boolean;
   minimized?: boolean;
+  noLinkCursor?: boolean;
 };
 
 type AttributeContentNestedTypeProps = {
@@ -86,12 +93,20 @@ type AttributeContentNestedTypeProps = {
   fontSize?: string;
   notitle?: boolean;
   minimized?: boolean;
+  noLinkCursor?: boolean;
 };
 
 const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTypeProps) => {
   const locale = useLocale();
 
-  const { attribute, attributeType, fontSize, notitle = false, minimized = false } = props;
+  const {
+    attribute,
+    attributeType,
+    fontSize,
+    notitle = false,
+    minimized = false,
+    noLinkCursor = false,
+  } = props;
   const type = attributeType ?? attribute.type;
   let dataElement: ReactElement<any>;
   const MAX_MINIMIZED_TEXT_LENGTH = 50;
@@ -160,15 +175,17 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
         </div>
       );
       break;
-    case 'AttributeCategoryChoice':
-      dataElement = (
+    case 'AttributeCategoryChoice': {
+      const content = (
         <CategoryContent
           categories={attribute.categories}
           categoryType={attribute.type}
           noLink={true}
         />
       );
+      dataElement = noLinkCursor ? <NoLinkCursor>{content}</NoLinkCursor> : content;
       break;
+    }
     default:
       return <div />;
   }

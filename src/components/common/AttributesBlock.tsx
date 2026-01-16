@@ -14,6 +14,7 @@ import ActionAttribute from './ActionAttribute';
 
 type AttributeProps = {
   $vertical?: boolean;
+  noLinkCursor?: boolean;
 };
 
 export const Attributes = styled.div<AttributeProps>`
@@ -83,6 +84,7 @@ function AttributesBlock(props: AttributesBlockProps) {
     children, // extra children that can be passed by nesting in the JSX tag
     types,
     vertical,
+    noLinkCursor = false,
   } = props;
 
   if (!attributes) {
@@ -119,6 +121,7 @@ function AttributesBlock(props: AttributesBlockProps) {
                   key={item.id}
                   attribute={item}
                   attributeType={typesById && typesById.get(item.type.id)}
+                  noLinkCursor={noLinkCursor}
                 />
               </AttributeItem>
             </RestrictedBlockWrapper>
