@@ -18,6 +18,11 @@ export async function loadThemes(): Promise<Record<string, any>> {
   const themesList: string[] = ['default'];
   try {
     themesList.push(...loadDirectoryNames(themesDirectory));
+    // Remove common as it is not a theme
+    const commonIndex = themesList.indexOf('common');
+    if (commonIndex > -1) {
+      themesList.splice(commonIndex, 1);
+    }
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err);
     console.error(
