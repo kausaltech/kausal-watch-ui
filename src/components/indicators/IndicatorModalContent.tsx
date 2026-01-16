@@ -58,7 +58,7 @@ const ModalScrollableContent = styled.div`
     linear-gradient(${({ theme }) => theme.themeColors.white} 30%, rgba(255, 255, 255, 0)) center
       top,
     /* Shadow Cover BOTTOM */
-      linear-gradient(rgba(255, 255, 255, 0), ${({ theme }) => theme.themeColors.white} 70%) center
+    linear-gradient(rgba(255, 255, 255, 0), ${({ theme }) => theme.themeColors.white} 70%) center
       bottom,
     /* Shadow TOP */ linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)) center top,
     /* Shadow BOTTOM */ linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)) center bottom,
@@ -110,6 +110,12 @@ const IndicatorModalContent = ({
 }: IndicatorModalContentProps) => {
   const t = useTranslations();
   const plan = usePlan();
+  const hasLayout =
+    !loading &&
+    ((layout.detailsMainTop && layout.detailsMainTop.length > 0) ||
+      (layout.detailsMainBottom && layout.detailsMainBottom.length > 0) ||
+      (layout.detailsAside && layout.detailsAside.length > 0));
+
   if (loading && !indicator)
     return (
       <ContentWrapper>
@@ -124,11 +130,6 @@ const IndicatorModalContent = ({
   const indicatorName = indicator.name;
 
   const showChangeHistory = plan.features.enableChangeLog && !!indicator.changeLogMessage;
-
-  const hasLayout =
-    (layout.detailsMainTop && layout.detailsMainTop.length > 0) ||
-    (layout.detailsMainBottom && layout.detailsMainBottom.length > 0) ||
-    (layout.detailsAside && layout.detailsAside.length > 0);
 
   return (
     <ContentWrapper>

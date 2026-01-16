@@ -517,7 +517,6 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       },
       hoverinfo: 'skip',
       ...trendTrace,
-      hoverinfo: 'skip',
     });
 
   // add goals if defined
