@@ -272,7 +272,7 @@ const LegacyCategoryHeaderAttributes = ({
 
   return attributesWithContent.length > 0 && attributes && attributeTypes ? (
     <AttributesContainer>
-      <AttributesBlock attributes={attributes} types={attributeTypes} noLinkCursor>
+      <AttributesBlock attributes={attributes} types={attributeTypes}>
         {children}
         {plan.actionStatuses.length ? (
           <ActionStatusGraphsBlock
