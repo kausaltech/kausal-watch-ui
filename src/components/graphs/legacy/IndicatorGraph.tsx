@@ -396,16 +396,26 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   }
   const { yRange, timeResolution, traces, goalTraces, trendTrace, specification } = props;
 
-  // If dimension categories have a color defined by user, use it,
-  // otherwise use default colors from theme or fallback to black
-  const categoryColors = specification.dimensions[0]?.categories?.map((category, idx) => {
-    if (category.defaultColor) return category.defaultColor;
-    if (theme.settings?.graphs?.categoryColors) {
-      const length = theme.settings.graphs.categoryColors.length;
-      return theme.settings.graphs.categoryColors[idx % length];
-    }
-    return '#000000';
+  const traceNames = traces.map((trace, idx) => {
+    return trace.name;
   });
+  const categoryColors = specification.dimensions[0]?.categories
+    ?.filter((category) => {
+      // Only include colours of existing traces. (Takes care of filtering out
+      // total line if visualization has been defined not to include total line)
+      if (traceNames.includes(category.name)) return true;
+      return false;
+    })
+    .map((category, idx) => {
+      // If dimension categories have a color defined by user, use it,
+      // otherwise use default colors from theme or fallback to black
+      if (category.defaultColor) return category.defaultColor;
+      if (theme.settings?.graphs?.categoryColors) {
+        const length = theme.settings.graphs.categoryColors.length;
+        return theme.settings.graphs.categoryColors[idx % length];
+      }
+      return '#000000';
+    });
 
   const plotColors = {
     trace: theme.settings.graphs.totalLineColor,
