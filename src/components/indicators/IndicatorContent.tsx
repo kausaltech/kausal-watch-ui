@@ -41,6 +41,16 @@ const GraphContainer = styled.div`
   }
 `;
 
+const CausalNavigationWrapper = styled.div`
+  padding: ${(props) => props.theme.spaces.s200} 0;
+  background-color: ${(props) => props.theme.themeColors.light};
+
+  h3 {
+    font-size: ${(props) => props.theme.fontSizeLg};
+    margin-bottom: ${(props) => props.theme.spaces.s200};
+  }
+`;
+
 type Props = {
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
   layout: NonNullable<IndicatorDetailsQuery['plan']>['indicatorListPage'];
@@ -89,9 +99,11 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
         indicator={indicator}
         orgs={plan.features.hasActionPrimaryOrgs ? allOrgs : null}
         goals={mainGoals}
+        legacyMode={!hasLayout}
       />
       <Container>
         <Row>
+          {/* Main content = detailsMainTop */}
           <Col md="7" lg="8" className="mb-5">
             {hasLayout &&
               layout?.detailsMainTop &&
@@ -102,6 +114,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
               })}
             {!hasLayout && <RichText html={indicator.description || ''} isCollapsible={false} />}
           </Col>
+          {/* Side bar = detailsAside */}
           <Col md="5" lg="4" className="mb-5">
             {hasLayout &&
               layout?.detailsAside &&
@@ -116,6 +129,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
           </Col>
         </Row>
         <Row>
+          {/* Main content = detailsMainBottom */}
           {hasLayout &&
             layout?.detailsMainBottom &&
             layout.detailsMainBottom.map((block, index) => {
@@ -152,7 +166,11 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
         </Section>
       )}
       {hasImpacts && (
-        <CausalNavigation causes={indicator.relatedCauses} effects={indicator.relatedEffects} />
+        <CausalNavigationWrapper>
+          <Container>
+            <CausalNavigation causes={indicator.relatedCauses} effects={indicator.relatedEffects} />
+          </Container>
+        </CausalNavigationWrapper>
       )}
       {plan.features.enableChangeLog && indicator.changeLogMessage && (
         <Container>
