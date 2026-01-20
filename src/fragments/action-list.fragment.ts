@@ -7,6 +7,11 @@ const ACTION_LIST_FILTER = gql`
     __typename
     field
     id
+    ... on ResponsiblePartyFilterBlock {
+      fieldLabel
+      fieldHelpText
+      showAllLabel
+    }
     ... on CategoryTypeFilterBlock {
       style
       showAllLabel
