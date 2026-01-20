@@ -218,13 +218,14 @@ type IndicatorCardProps = {
     date: string;
     unit: string;
   } | null;
-  resolution: IndicatorTimeResolution;
+  resolution?: IndicatorTimeResolution;
   goalValue?: {
     value: number;
     date: string;
     unit: string;
   } | null;
   disabled?: boolean | null;
+  customHref?: string | null;
 };
 
 function IndicatorCard({
@@ -233,10 +234,10 @@ function IndicatorCard({
   name,
   number = null,
   latestValue = null,
-  resolution = 'day',
+  resolution = 'year',
   goalValue = null,
   disabled = false,
-  customHref,
+  customHref = null,
 }: IndicatorCardProps) {
   const plan = usePlan();
   const t = useTranslations();
