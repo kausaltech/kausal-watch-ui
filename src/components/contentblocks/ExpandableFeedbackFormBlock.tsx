@@ -16,6 +16,7 @@ const FeedbackFormSection = styled.div<{ $size: 'sm' | 'md' }>`
   margin-bottom: ${(props) => props.theme.spaces.s400};
 
   h2 {
+    color: ${(props) => props.theme.themeColors.black};
     font-size: ${(props) =>
       props.$size === 'sm' ? props.theme.fontSizeMd : props.theme.fontSizeLg};
   }

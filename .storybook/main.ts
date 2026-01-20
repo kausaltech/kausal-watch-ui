@@ -1,7 +1,7 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite';
 import path from 'path';
 
-import { loadThemes } from './themes';
+import { loadThemes } from './themes.ts';
 
 // Load themes at build time (Node.js context)
 const themes = await loadThemes();

@@ -131,6 +131,11 @@ const ThemeAccessibilityTest = () => {
         background="themeColors.white"
         setPassed={setPassed}
       />
+      <TextContrast
+        foreground="headingsColor"
+        background="themeColors.light"
+        setPassed={setPassed}
+      />
       {/* image credit with transclusent bg */}
       <TextContrast foreground="neutralDark" background="themeColors.white" setPassed={setPassed} />
       {/* ToggleButton with readableColor function */}
