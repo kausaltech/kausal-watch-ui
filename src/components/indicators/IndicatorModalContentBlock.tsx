@@ -73,6 +73,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
   switch (block.sourceField) {
     case IndicatorDetailsFieldName.Description:
     case IndicatorDetailsFieldName.Name:
+      if (!indicator.description) return null;
       // Using name field to render description for now
       return (
         <ContentBlockWrapper>
@@ -81,15 +82,16 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
         </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.GoalDescription:
+      if (!indicator.goalDescription) return null;
       return (
-        indicator.goalDescription && (
-          <ContentBlockWrapper>
-            {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
-            <div>{indicator.goalDescription}</div>
-          </ContentBlockWrapper>
-        )
+        <ContentBlockWrapper>
+          {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
+          <div>{indicator.goalDescription}</div>
+        </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.Visualization:
+      const indicatorHasData = indicator.values.length > 0;
+      if (!indicatorHasData) return null;
       return (
         <ContentBlockWrapper>
           {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}

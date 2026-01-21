@@ -48,7 +48,7 @@ const CardContent = styled.div`
 const OverlayContainer = styled.div<{ $legacyMode: boolean }>`
   display: flex;
   align-items: flex-end;
-  min-height: ${(props) => (props.$legacyMode ? '18rem' : '10rem')};
+  min-height: ${(props) => (props.$legacyMode ? '18rem' : '14rem')};
   padding: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s300};
 `;
 
