@@ -14,6 +14,7 @@ const WrapperButton = styled(Button)`
   background-color: transparent;
   border: none;
   text-align: left;
+  cursor: ${({ $isLink }) => ($isLink ? 'pointer' : 'default')};
 `;
 
 const StyledBadge = styled(Badge)<{
@@ -21,6 +22,7 @@ const StyledBadge = styled(Badge)<{
   $isLink: boolean;
   $color?: string;
 }>`
+  cursor: ${(props) => (props.$isLink ? 'pointer' : 'default')};
   background-color: ${(props) => props.theme[props.$themeColor]} !important;
   color: ${(props) =>
     readableColor(
@@ -79,6 +81,7 @@ const IconBadge = styled.div<{ $themeColor: ThemeColorOption; $isLink: boolean; 
       props.theme.themeColors.white
     )};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
+  cursor: ${(props) => (props.$isLink ? 'pointer' : 'default')};
 
   &:hover {
     background-color: ${(props) =>
@@ -183,10 +186,18 @@ const BadgeTooltip = (props: BadgeTooltipProps) => {
   const { tooltip, id, ...badgeContentProps } = props;
   const badgeId = `btt${id.replace(/[: ]/g, '_')}`;
 
+  if (!badgeContentProps.isLink && !tooltip) {
+    return (
+      <span id={badgeId}>
+        <BadgeContent {...badgeContentProps} />
+      </span>
+    );
+  }
+
   return (
     <span id={badgeId}>
       <TooltipTrigger>
-        <WrapperButton>
+        <WrapperButton $isLink={badgeContentProps.isLink}>
           <BadgeContent {...badgeContentProps} />
         </WrapperButton>
         {tooltip && <Tooltip>{tooltip}</Tooltip>}
