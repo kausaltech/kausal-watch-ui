@@ -562,12 +562,27 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
   id = 'responsible_party';
   options: ActionListFilterOption[];
   orgById: Map<string, ActionListOrganization>;
+  private fieldLabel?: string;
+  private fieldHelpText?: string;
+  private showAllLabelOverride?: string;
 
   constructor(
     orgs: ActionListOrganization[],
-    private plan: PlanContextType
+    private plan: PlanContextType,
+    overrides?: {
+      fieldLabel?: string | null;
+      fieldHelpText?: string | null;
+      showAllLabel?: string | null;
+    }
   ) {
     super();
+
+    const nonEmpty = (s?: string | null) => (s && s.trim() ? s : undefined);
+
+    this.fieldLabel = nonEmpty(overrides?.fieldLabel);
+    this.fieldHelpText = nonEmpty(overrides?.fieldHelpText);
+    this.showAllLabelOverride = nonEmpty(overrides?.showAllLabel);
+
     const sortedOrgs = sortDepthFirst(
       orgs,
       (a, b) => a.name.localeCompare(b.name),
@@ -635,13 +650,13 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
     return { context: this.plan.generalContent.organizationTerm };
   }
   getLabel(t: TFunction) {
-    return t('filter-organization', this.getOrgTermContext());
+    return this.fieldLabel ?? t('filter-organization', this.getOrgTermContext());
   }
   getHelpText(t: TFunction) {
-    return t('filter-organization-help', this.getOrgTermContext());
+    return this.fieldHelpText ?? t('filter-organization-help', this.getOrgTermContext());
   }
   getShowAllLabel(t: TFunction) {
-    return t('filter-all-organizations', this.getOrgTermContext());
+    return this.showAllLabelOverride ?? t('filter-all-organizations', this.getOrgTermContext());
   }
 }
 
@@ -1163,10 +1178,22 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
 
     blocks?.forEach((block) => {
       switch (block.__typename) {
-        case 'ResponsiblePartyFilterBlock':
-          filters.push(new ResponsiblePartyFilter(orgs, plan));
+        case 'ResponsiblePartyFilterBlock': {
+          const rpBlock = block as typeof block & {
+            fieldLabel?: string | null;
+            fieldHelpText?: string | null;
+            showAllLabel?: string | null;
+          };
+          filters.push(
+            new ResponsiblePartyFilter(orgs, plan, {
+              fieldLabel: rpBlock.fieldLabel,
+              fieldHelpText: rpBlock.fieldHelpText,
+              showAllLabel: rpBlock.showAllLabel,
+            })
+          );
           primaryResponsiblePartyFilter = new PrimaryResponsiblePartyFilter();
           break;
+        }
         case 'CategoryTypeFilterBlock':
           if (!block.showAllLabel)
             block.showAllLabel =

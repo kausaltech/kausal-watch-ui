@@ -2922,14 +2922,14 @@ type ActionListFilter_56YswJLd8wl8sGss2iw1Tmd2cQ2raO423fp6Sc4Ox58_Fragment = (
   & { __typename: 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsOutcomeBlock' }
 );
 
-type ActionListFilter_NR38togmfWYch6NtwnrgEkAhNqPdNkItmPTomSGu0_Fragment = (
+type ActionListFilter_YBqG723ErytSgVv1Zn3kmdmyrB1EnQtoVkh0Huaq0_Fragment = (
   { field: string, id: string | null }
-  & { __typename: 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RawVisualizationBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' }
+  & { __typename: 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RawVisualizationBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' }
 );
 
-type ActionListFilter_BK76UhbfqRdr6gNaDPl3RrINz0IvF4fQko9ExLz8_Fragment = (
+type ActionListFilter_V2aeCntk28Sdu3p0ZUflYw6N6iIqB4ZRyT2m1kGs_Fragment = (
   { field: string, id: string | null }
-  & { __typename: 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+  & { __typename: 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
 );
 
 type ActionListFilter_ActionAttributeTypeFilterBlock_Fragment = (
@@ -2965,7 +2965,12 @@ type ActionListFilter_ContinuousActionFilterBlock_Fragment = (
   & { __typename: 'ContinuousActionFilterBlock' }
 );
 
-export type ActionListFilterFragment = ActionListFilter_JxzhEOvnBnIzLiXeAUm3xrfiKBjXFpDaL5C3p3Xgq4_Fragment | ActionListFilter_Zf5emmbUjQdAxoEd11HNfN7rZeObw5fUe9AKmN0dV8_Fragment | ActionListFilter_7Agg9LSmkj1UityVjhQm4G69vQjRvgc8wgqPlVoq7E_Fragment | ActionListFilter_DsfnukXhKIc52cW0CzdvKbfRgssBrHWboPu6WtaaJk_Fragment | ActionListFilter_56YswJLd8wl8sGss2iw1Tmd2cQ2raO423fp6Sc4Ox58_Fragment | ActionListFilter_NR38togmfWYch6NtwnrgEkAhNqPdNkItmPTomSGu0_Fragment | ActionListFilter_BK76UhbfqRdr6gNaDPl3RrINz0IvF4fQko9ExLz8_Fragment | ActionListFilter_ActionAttributeTypeFilterBlock_Fragment | ActionListFilter_CategoryTypeFilterBlock_Fragment | ActionListFilter_ContinuousActionFilterBlock_Fragment;
+type ActionListFilter_ResponsiblePartyFilterBlock_Fragment = (
+  { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+  & { __typename: 'ResponsiblePartyFilterBlock' }
+);
+
+export type ActionListFilterFragment = ActionListFilter_JxzhEOvnBnIzLiXeAUm3xrfiKBjXFpDaL5C3p3Xgq4_Fragment | ActionListFilter_Zf5emmbUjQdAxoEd11HNfN7rZeObw5fUe9AKmN0dV8_Fragment | ActionListFilter_7Agg9LSmkj1UityVjhQm4G69vQjRvgc8wgqPlVoq7E_Fragment | ActionListFilter_DsfnukXhKIc52cW0CzdvKbfRgssBrHWboPu6WtaaJk_Fragment | ActionListFilter_56YswJLd8wl8sGss2iw1Tmd2cQ2raO423fp6Sc4Ox58_Fragment | ActionListFilter_YBqG723ErytSgVv1Zn3kmdmyrB1EnQtoVkh0Huaq0_Fragment | ActionListFilter_V2aeCntk28Sdu3p0ZUflYw6N6iIqB4ZRyT2m1kGs_Fragment | ActionListFilter_ActionAttributeTypeFilterBlock_Fragment | ActionListFilter_CategoryTypeFilterBlock_Fragment | ActionListFilter_ContinuousActionFilterBlock_Fragment | ActionListFilter_ResponsiblePartyFilterBlock_Fragment;
 
 export type ActionListPageFiltersFragment = (
   { primaryFilters: Array<(
@@ -2979,7 +2984,7 @@ export type ActionListPageFiltersFragment = (
     & { __typename: 'ActionAttributeTypeFilterBlock' }
   ) | (
     { field: string, id: string | null }
-    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' }
   ) | (
     { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
@@ -2998,6 +3003,9 @@ export type ActionListPageFiltersFragment = (
   ) | (
     { id: string | null, field: string }
     & { __typename: 'ContinuousActionFilterBlock' }
+  ) | (
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+    & { __typename: 'ResponsiblePartyFilterBlock' }
   )> | null, mainFilters: Array<(
     { showAllLabel: string | null, field: string, id: string | null, attributeType: (
       { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
@@ -3009,7 +3017,7 @@ export type ActionListPageFiltersFragment = (
     & { __typename: 'ActionAttributeTypeFilterBlock' }
   ) | (
     { field: string, id: string | null }
-    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' }
   ) | (
     { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
@@ -3028,6 +3036,9 @@ export type ActionListPageFiltersFragment = (
   ) | (
     { id: string | null, field: string }
     & { __typename: 'ContinuousActionFilterBlock' }
+  ) | (
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+    & { __typename: 'ResponsiblePartyFilterBlock' }
   )> | null, advancedFilters: Array<(
     { showAllLabel: string | null, field: string, id: string | null, attributeType: (
       { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
@@ -3039,7 +3050,7 @@ export type ActionListPageFiltersFragment = (
     & { __typename: 'ActionAttributeTypeFilterBlock' }
   ) | (
     { field: string, id: string | null }
-    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+    & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' }
   ) | (
     { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
@@ -3058,6 +3069,9 @@ export type ActionListPageFiltersFragment = (
   ) | (
     { id: string | null, field: string }
     & { __typename: 'ContinuousActionFilterBlock' }
+  ) | (
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+    & { __typename: 'ResponsiblePartyFilterBlock' }
   )> | null }
   & { __typename: 'ActionListPage' }
 );
@@ -10874,7 +10888,7 @@ export type GetActionListPageQuery = (
         & { __typename: 'ActionAttributeTypeFilterBlock' }
       ) | (
         { field: string, id: string | null }
-        & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+        & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' }
       ) | (
         { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
           { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
@@ -10893,6 +10907,9 @@ export type GetActionListPageQuery = (
       ) | (
         { id: string | null, field: string }
         & { __typename: 'ContinuousActionFilterBlock' }
+      ) | (
+        { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+        & { __typename: 'ResponsiblePartyFilterBlock' }
       )> | null, mainFilters: Array<(
         { showAllLabel: string | null, field: string, id: string | null, attributeType: (
           { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
@@ -10904,7 +10921,7 @@ export type GetActionListPageQuery = (
         & { __typename: 'ActionAttributeTypeFilterBlock' }
       ) | (
         { field: string, id: string | null }
-        & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+        & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' }
       ) | (
         { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
           { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
@@ -10923,6 +10940,9 @@ export type GetActionListPageQuery = (
       ) | (
         { id: string | null, field: string }
         & { __typename: 'ContinuousActionFilterBlock' }
+      ) | (
+        { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+        & { __typename: 'ResponsiblePartyFilterBlock' }
       )> | null, advancedFilters: Array<(
         { showAllLabel: string | null, field: string, id: string | null, attributeType: (
           { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
@@ -10934,7 +10954,7 @@ export type GetActionListPageQuery = (
         & { __typename: 'ActionAttributeTypeFilterBlock' }
       ) | (
         { field: string, id: string | null }
-        & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+        & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' }
       ) | (
         { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
           { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
@@ -10953,6 +10973,9 @@ export type GetActionListPageQuery = (
       ) | (
         { id: string | null, field: string }
         & { __typename: 'ContinuousActionFilterBlock' }
+      ) | (
+        { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+        & { __typename: 'ResponsiblePartyFilterBlock' }
       )> | null }
       & { __typename: 'ActionListPage' }
     ) | null }
@@ -11087,7 +11110,7 @@ export type GetContentPageQuery = (
       & { __typename: 'ActionAttributeTypeFilterBlock' }
     ) | (
       { field: string, id: string | null }
-      & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+      & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' }
     ) | (
       { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
@@ -11106,6 +11129,9 @@ export type GetContentPageQuery = (
     ) | (
       { id: string | null, field: string }
       & { __typename: 'ContinuousActionFilterBlock' }
+    ) | (
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+      & { __typename: 'ResponsiblePartyFilterBlock' }
     )> | null, mainFilters: Array<(
       { showAllLabel: string | null, field: string, id: string | null, attributeType: (
         { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
@@ -11117,7 +11143,7 @@ export type GetContentPageQuery = (
       & { __typename: 'ActionAttributeTypeFilterBlock' }
     ) | (
       { field: string, id: string | null }
-      & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+      & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' }
     ) | (
       { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
@@ -11136,6 +11162,9 @@ export type GetContentPageQuery = (
     ) | (
       { id: string | null, field: string }
       & { __typename: 'ContinuousActionFilterBlock' }
+    ) | (
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+      & { __typename: 'ResponsiblePartyFilterBlock' }
     )> | null, advancedFilters: Array<(
       { showAllLabel: string | null, field: string, id: string | null, attributeType: (
         { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
@@ -11147,7 +11176,7 @@ export type GetContentPageQuery = (
       & { __typename: 'ActionAttributeTypeFilterBlock' }
     ) | (
       { field: string, id: string | null }
-      & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
+      & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' }
     ) | (
       { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
@@ -11166,6 +11195,9 @@ export type GetContentPageQuery = (
     ) | (
       { id: string | null, field: string }
       & { __typename: 'ContinuousActionFilterBlock' }
+    ) | (
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+      & { __typename: 'ResponsiblePartyFilterBlock' }
     )> | null }
     & { __typename: 'ActionListPage' }
   ) | (
