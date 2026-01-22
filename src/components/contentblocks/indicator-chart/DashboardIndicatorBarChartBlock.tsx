@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { BarChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
@@ -22,6 +22,27 @@ echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
 
 type Props = TDashboardIndicatorBarChartBlock;
 
+// FIX: Watch the card width so we can shrink the legend on small screens
+// (e.g. 3 charts per row) and keep more space for the bars—no scroll legend.
+function useElementWidth<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const el = ref.current;
+    const ro = new ResizeObserver(([entry]) => {
+      setWidth(entry?.contentRect?.width ?? 0);
+    });
+
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return { ref, width };
+}
+
 const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, barType }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
@@ -30,6 +51,9 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
 
   const totalLabel = t('total');
+
+  const { ref: containerRef, width } = useElementWidth<HTMLDivElement>();
+  const isCompact = width > 0 && width < 520;
 
   if (!chartSeries?.length) {
     return <div>{t('data-not-available')}</div>;
@@ -73,14 +97,18 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
 
   const buildLegend = (theme: any): ECOption['legend'] => ({
     show: true,
-    bottom: 10,
+    bottom: isCompact ? 6 : 10,
     left: 'center',
     orient: 'horizontal',
-    itemGap: 30,
-    itemWidth: 18,
-    itemHeight: 12,
+    // Tighter legend layout on compact cards
+    itemGap: isCompact ? 10 : 30,
+    itemWidth: isCompact ? 12 : 18,
+    itemHeight: isCompact ? 8 : 12,
+    padding: 0,
     textStyle: {
       color: theme.textColor.secondary,
+      fontSize: isCompact ? 11 : 12,
+      lineHeight: isCompact ? 12 : 14,
     },
   });
 
@@ -96,7 +124,7 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
       left: 20,
       right: 20,
       top: 40,
-      bottom: 60,
+      bottom: isCompact ? 80 : 60,
       containLabel: true,
     },
     xAxis: {
@@ -109,10 +137,10 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
   };
 
   return (
-    <>
+    <div ref={containerRef}>
       <h5>{dimension?.name}</h5>
       <Chart data={option} isLoading={false} height="300px" />
-    </>
+    </div>
   );
 };
 
