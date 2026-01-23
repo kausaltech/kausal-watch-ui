@@ -16,6 +16,7 @@ import {
   buildTooltipFormatter,
   buildTotalSeries,
   buildYAxisConfig,
+  collectAllDates,
 } from './indicator-charts-utility';
 
 echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -28,6 +29,7 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
   const graphsTheme = theme.settings?.graphs ?? {};
   const unit = indicator?.unit?.name ?? '';
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
+  const timeResolution = indicator?.timeResolution ?? 'YEAR';
 
   const totalLabel = t('total');
 
@@ -36,26 +38,27 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
   }
 
   const dimSeries = dimension
-    ? buildDimSeries(chartSeries, palette)
-    : [buildTotalSeries(chartSeries, graphsTheme.totalLineColor ?? palette[0], totalLabel)];
+    ? buildDimSeries(chartSeries, palette, timeResolution)
+    : [
+        buildTotalSeries(
+          chartSeries,
+          graphsTheme.totalLineColor ?? palette[0],
+          totalLabel,
+          timeResolution
+        ),
+      ];
 
-  const xCategoriesSet = new Set<string>();
+  const { xCategories } = collectAllDates(
+    dimSeries.map((d) => d.raw),
+    timeResolution
+  );
+
   const seriesDataMap: Record<string, (number | null)[]> = {};
-
   dimSeries.forEach(({ name, raw }) => {
-    seriesDataMap[name] = [];
-    raw.forEach(([year]) => {
-      xCategoriesSet.add(String(year));
-    });
-  });
-
-  const xCategories = Array.from(xCategoriesSet).sort();
-
-  dimSeries.forEach(({ name, raw }) => {
-    const valuesByYear: Record<string, number> = Object.fromEntries(
-      raw.map(([year, value]) => [String(year), value])
+    const valuesByKey: Record<string, number> = Object.fromEntries(
+      raw.map(([key, value]) => [key, value])
     );
-    seriesDataMap[name] = xCategories.map((year) => valuesByYear[year] ?? null);
+    seriesDataMap[name] = xCategories.map((key) => valuesByKey[key] ?? null);
   });
 
   const series = Object.entries(seriesDataMap).map(([name, data]) => ({
@@ -90,7 +93,14 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'shadow' },
-      formatter: buildTooltipFormatter(unit, legendData, t, dimension, indicator?.valueRounding),
+      formatter: buildTooltipFormatter(
+        unit,
+        legendData,
+        t,
+        dimension,
+        indicator?.valueRounding,
+        timeResolution
+      ),
     },
     grid: {
       left: 20,
