@@ -214,10 +214,12 @@ interface IndicatorProgressBarProps {
     normalizedName?: string;
   };
   note?: string;
+  significantDigits?: number;
 }
 
 function IndicatorProgressBar(props: IndicatorProgressBarProps) {
-  const { indicatorId, normalize, baseValue, lastValue, goalValue, unit, note } = props;
+  const { indicatorId, normalize, baseValue, lastValue, goalValue, unit, note, significantDigits } =
+    props;
 
   const width = useChartWidth();
   const [scope, animate] = useAnimate();
@@ -259,7 +261,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
         ? baseValue.normalizedValue
         : baseValue.value;
 
-  const minPrecision = findPrecision([startValue, latestValue ?? 0, goalDisplayValue ?? 0]);
+  const minPrecision =
+    significantDigits != null
+      ? significantDigits
+      : findPrecision([startValue, latestValue ?? 0, goalDisplayValue ?? 0]);
 
   const roundedValues = {
     start: Number(startValue?.toPrecision(minPrecision)),
