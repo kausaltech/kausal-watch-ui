@@ -298,3 +298,86 @@ export function buildYAxisConfig(
 
   return yAxis;
 }
+
+/**
+ * Normalizes a date key to a consistent format for use in Sets/Maps.
+ * Converts numbers (years) and date strings to a normalized format.
+ */
+export function normalizeDateForSet(
+  key: string | number,
+  timeResolution: string | null | undefined
+): string {
+  if (typeof key === 'number') {
+    if (key > 1900 && key < 2100) {
+      return `${key}-1-1`;
+    }
+    return String(key);
+  }
+  const dateObj = new Date(key);
+  if (Number.isNaN(dateObj.getTime())) {
+    return String(key);
+  }
+  if (timeResolution === 'YEAR') {
+    return `${dateObj.getFullYear()}-1-1`;
+  }
+  return key;
+}
+
+/**
+ * Formats a normalized date string for display based on time resolution.
+ */
+export function formatDateForDisplay(
+  normalizedDate: string,
+  timeResolution: string | null | undefined
+): string {
+  const date = new Date(normalizedDate);
+  if (Number.isNaN(date.getTime())) {
+    return normalizedDate;
+  }
+  if (timeResolution === 'YEAR') {
+    return String(date.getFullYear());
+  } else if (timeResolution === 'MONTH') {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  } else {
+    return date.toISOString().split('T')[0];
+  }
+}
+
+/**
+ * Sorts an array of normalized date strings chronologically.
+ */
+export function sortDates(dates: string[]): string[] {
+  return [...dates].sort((a, b) => {
+    const dateA = new Date(a).getTime();
+    const dateB = new Date(b).getTime();
+    if (Number.isNaN(dateA) || Number.isNaN(dateB)) {
+      return String(a).localeCompare(String(b));
+    }
+    return dateA - dateB;
+  });
+}
+
+/**
+ * Collects and sorts all unique dates from multiple raw series arrays.
+ * Returns both the sorted normalized dates and the display-formatted categories.
+ */
+export function collectAllDates(
+  sources: Array<[string, number][]>,
+  timeResolution: string | null | undefined,
+  additionalDates?: (string | number)[]
+): { allDates: string[]; xCategories: string[] } {
+  const normalizedDateSet = new Set<string>();
+
+  sources.forEach((raw) =>
+    raw.forEach(([key]) => normalizedDateSet.add(normalizeDateForSet(key, timeResolution)))
+  );
+
+  additionalDates?.forEach((date) =>
+    normalizedDateSet.add(normalizeDateForSet(date, timeResolution))
+  );
+
+  const allDates = sortDates(Array.from(normalizedDateSet));
+  const xCategories = allDates.map((d) => formatDateForDisplay(d, timeResolution));
+
+  return { allDates, xCategories };
+}

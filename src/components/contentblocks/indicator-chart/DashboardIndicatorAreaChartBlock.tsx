@@ -24,6 +24,7 @@ import {
   buildTotalSeries,
   buildTrendSeries,
   buildYAxisConfig,
+  collectAllDates,
 } from './indicator-charts-utility';
 
 echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -83,57 +84,8 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
 
   const legendData: LegendComponentOption['data'] = [...areaLegendItems, ...trendLegendItems];
 
-  const normalizeDateForSet = (key: string | number): string => {
-    if (typeof key === 'number') {
-      if (key > 1900 && key < 2100) {
-        return `${key}-1-1`;
-      }
-      return String(key);
-    }
-    const dateObj = new Date(key);
-    if (Number.isNaN(dateObj.getTime())) {
-      return String(key);
-    }
-    if (timeResolution === 'YEAR') {
-      return `${dateObj.getFullYear()}-1-1`;
-    }
-    return key;
-  };
-
-  const normalizedDateSet = new Set<string>();
-  if (hasDimension) {
-    dimSeries.forEach((d) =>
-      d.raw.forEach(([key]) => normalizedDateSet.add(normalizeDateForSet(key)))
-    );
-  } else {
-    totalRaw.forEach(([key]) => normalizedDateSet.add(normalizeDateForSet(key)));
-  }
-
-  const allDates = Array.from(normalizedDateSet);
-  allDates.sort((a, b) => {
-    const dateA = new Date(a).getTime();
-    const dateB = new Date(b).getTime();
-    if (Number.isNaN(dateA) || Number.isNaN(dateB)) {
-      return String(a).localeCompare(String(b));
-    }
-    return dateA - dateB;
-  });
-
-  const formatForDisplay = (normalizedDate: string): string => {
-    const date = new Date(normalizedDate);
-    if (Number.isNaN(date.getTime())) {
-      return normalizedDate;
-    }
-    if (timeResolution === 'YEAR') {
-      return String(date.getFullYear());
-    } else if (timeResolution === 'MONTH') {
-      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-    } else {
-      return date.toISOString().split('T')[0];
-    }
-  };
-
-  const xCategories = allDates.map(formatForDisplay);
+  const dataSources = hasDimension ? dimSeries.map((d) => d.raw) : [totalRaw];
+  const { xCategories } = collectAllDates(dataSources, timeResolution);
 
   const series = hasDimension
     ? dimSeries.map((d) => {
