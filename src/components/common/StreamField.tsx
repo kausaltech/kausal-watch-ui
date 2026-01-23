@@ -421,8 +421,16 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'IndicatorShowcaseBlock': {
-      const { indicator, title, body } = block;
-      return <IndicatorShowcaseBlock id={id} indicator={indicator} title={title} body={body} />;
+      const { indicator, title, body, significantDigits } = block;
+      return (
+        <IndicatorShowcaseBlock
+          id={id}
+          indicator={indicator}
+          title={title}
+          body={body}
+          significantDigits={significantDigits}
+        />
+      );
     }
     case 'CardListBlock': {
       const { cards, lead, heading } = block;
