@@ -342,7 +342,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   };
 
   const reductionCounterFrom = 0;
-  const reductionCounterTo = Math.abs(roundedValues.start - roundedValues.latest);
+  const reductionCounterTo = Math.abs(startValue - (latestValue ?? 0));
   // Animation length relative to animated bar length
   const reductionCounterDuration = (10 * Math.abs(startBar.w - latestBar.w)) / bars.w;
 
