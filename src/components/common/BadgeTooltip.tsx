@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 import Tooltip from './Tooltip';
 
-const WrapperButton = styled(Button)`
+const WrapperButton = styled(Button)<{ $isLink: boolean }>`
   padding: 0;
   margin: 0;
   background-color: transparent;
@@ -102,13 +102,19 @@ const IconImage = styled.div<{ $imageSrc?: string }>`
   min-width: ${(props) => (props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300)};
 `;
 
-const IconSvg = styled(SVG)<{ $color?: string }>`
+const IconSvg = styled(SVG)<{ $bgcolor?: string; $themeColor: string }>`
   height: ${(props) => props.theme.spaces.s200};
   margin: ${(props) => props.theme.spaces.s050};
-  fill: ${(props) => props.$color || props.theme.brandDark} !important;
+
+  &,
   path,
   stroke {
-    fill: ${(props) => props.$color || props.theme.brandDark} !important;
+    fill: ${(props) =>
+      readableColor(
+        props.$bgcolor || props.theme[props.$themeColor],
+        props.theme.themeColors.black,
+        props.theme.themeColors.white
+      )};
   }
 `;
 
@@ -167,7 +173,12 @@ const BadgeContent = (props: BadgeContentProps) => {
     <IconBadge $themeColor={themeColor} $isLink={isLink} $color={color}>
       {iconSvg ? (
         <IconImage>
-          <IconSvg src={iconSvg} preserveAspectRatio="xMinYMid meet" />
+          <IconSvg
+            $bgcolor={color}
+            $themeColor={themeColor}
+            src={iconSvg}
+            preserveAspectRatio="xMinYMid meet"
+          />
         </IconImage>
       ) : (
         <IconImage $imageSrc={iconImage} />
