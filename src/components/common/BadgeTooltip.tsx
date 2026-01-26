@@ -112,9 +112,9 @@ const IconSvg = styled(SVG)<{ $bgcolor?: string; $themeColor: string }>`
     fill: ${(props) =>
       readableColor(
         props.$bgcolor || props.theme[props.$themeColor],
-        props.theme.themeColors.black,
+        props.theme.brandDark,
         props.theme.themeColors.white
-      )};
+      )} !important;
   }
 `;
 
