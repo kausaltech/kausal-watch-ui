@@ -24,9 +24,9 @@ function formatDateKey(date: string, timeResolution?: string | null): string {
 
   const resolution = String(timeResolution || 'YEAR').toUpperCase();
   if (resolution === 'YEAR') {
-    return String(d.getFullYear());
+    return String(d.getUTCFullYear());
   } else if (resolution === 'MONTH') {
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
   } else {
     return d.toISOString().split('T')[0];
   }
@@ -309,7 +309,7 @@ export function normalizeDateForSet(
 ): string {
   if (typeof key === 'number') {
     if (key > 1900 && key < 2100) {
-      return `${key}-1-1`;
+      return `${key}-01-01`;
     }
     return String(key);
   }
@@ -318,7 +318,7 @@ export function normalizeDateForSet(
     return String(key);
   }
   if (timeResolution === 'YEAR') {
-    return `${dateObj.getFullYear()}-1-1`;
+    return `${dateObj.getUTCFullYear()}-01-01`;
   }
   return key;
 }
@@ -335,9 +335,9 @@ export function formatDateForDisplay(
     return normalizedDate;
   }
   if (timeResolution === 'YEAR') {
-    return String(date.getFullYear());
+    return String(date.getUTCFullYear());
   } else if (timeResolution === 'MONTH') {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
   } else {
     return date.toISOString().split('T')[0];
   }
