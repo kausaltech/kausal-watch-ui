@@ -12,7 +12,7 @@ const ThemeableBackgrounds = (Story, context) => {
 };
 
 const meta = {
-  title: 'Plans/PlanChip',
+  title: 'Common/PlanChip',
   component: PlanChip,
   parameters: {
     layout: 'centered',
