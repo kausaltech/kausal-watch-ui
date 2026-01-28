@@ -38,15 +38,19 @@ const SummaryRow = styled.div<{ $hasDescription?: boolean }>`
     $hasDescription
       ? `margin-top: ${theme.spaces.s200};`
       : `margin-top: auto; margin-bottom: auto;`}
+  width: 100%;
   font-size: 2rem;
   font-weight: bold;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 2rem;
+  justify-content: space-between;
+  gap: ${(props) => props.theme.spaces.s100};
+  flex-wrap: wrap;
 `;
 
 const ValueBlock = styled.div`
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -78,6 +82,15 @@ const UnitText = styled.span`
 const Missing = styled.span`
   color: ${(props) => props.theme.textColor.secondary};
   cursor: help;
+`;
+
+const ArrowWrapper = styled.div`
+  flex: 0 0 auto;
+  margin-top: 2.5rem;
+
+  @media (max-width: 1024px) {
+    margin-top: 0;
+  }
 `;
 
 type DashboardIndicatorSummaryBlockProps = {
@@ -152,14 +165,14 @@ const DashboardIndicatorSummaryBlock = ({ indicator }: DashboardIndicatorSummary
           <ValueText>{renderValue(latestFormatted)}</ValueText>
         </ValueBlock>
 
-        <div style={{ marginTop: '2.5rem' }}>
+        <ArrowWrapper>
           <Icon.ArrowRight
             width="24px"
             height="24px"
             color={theme.themeColors.dark}
             aria-hidden="true"
           />
-        </div>
+        </ArrowWrapper>
 
         <ValueBlock>
           <ValueLabel>{t('indicator-goal')}</ValueLabel>
