@@ -351,12 +351,29 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'FrontPageHeroBlock': {
       const { layout, image, heading, lead } = block;
       // TODO: Typecheck layout to be either 'small_image' or 'big_image'
+
+      const focalBox =
+        image?.focalPointX != null &&
+        image?.focalPointY != null &&
+        image?.focalPointWidth != null &&
+        image?.focalPointHeight != null
+          ? {
+              focalPointX: image.focalPointX,
+              focalPointY: image.focalPointY,
+              focalPointWidth: image.focalPointWidth,
+              focalPointHeight: image.focalPointHeight,
+              imageWidth: image.width,
+              imageHeight: image.height,
+            }
+          : undefined;
+
       return (
         <FrontPageHeroBlock
           id={id}
           layout={(layout as 'small_image' | 'big_image' | null) ?? 'small_image'}
           image={image}
           imageAlign={getBgImageAlignment(image)}
+          focalBox={focalBox}
           heading={heading}
           lead={lead}
           altText={image?.altText}
