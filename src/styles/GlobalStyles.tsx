@@ -49,16 +49,16 @@ export const GlobalStyles = createGlobalStyle`
     font-weight: ${(props) => props.theme.headingsFontWeight};
     line-height: ${(props) => props.theme.lineHeightMd};
     color: ${(props) => props.theme.headingsColor};
+    text-transform: ${(props) => props.theme.headingsTextTransform} !important;
   }
 
   h1 {
     font-size: ${(props) => props.theme.fontSizeXxl};
-    text-transform: ${(props) => props.theme.headingsTextTransform};
+    
   }
 
   h2 {
     font-size: ${(props) => props.theme.fontSizeXl};
-    text-transform: ${(props) => props.theme.headingsTextTransform};
   }
 
   h3 {
