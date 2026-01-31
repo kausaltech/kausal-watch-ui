@@ -1,4 +1,4 @@
-import { Theme } from '@kausal/themes/types';
+import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Container } from 'reactstrap';
@@ -12,7 +12,18 @@ import RichText from '@/components/common/RichText';
 const getHeight = (theme: Theme, defaultHeight: string) =>
   theme.settings.frontHero?.height ?? defaultHeight;
 
-const Hero = styled.div`
+function getHeroMinHeight(theme: Theme, defaultHeight: string, focalBoxAspectRatio?: number) {
+  const height = getHeight(theme, defaultHeight);
+
+  // If the user specified a focal box in Wagtail, ensure container is tall enough to show it all
+  if (focalBoxAspectRatio) {
+    return `max(${height}, calc(100vw / ${focalBoxAspectRatio}))`;
+  }
+
+  return height;
+}
+
+const Hero = styled.div<{ $focalBoxAspectRatio?: number }>`
   width: 100%;
   position: relative;
   background-color: ${(props) => props.theme.brandDark};
@@ -20,16 +31,19 @@ const Hero = styled.div`
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     display: flex;
-    min-height: ${({ theme }) => getHeight(theme, '24rem')};
+    min-height: ${({ theme, $focalBoxAspectRatio }) =>
+      getHeroMinHeight(theme, '24rem', $focalBoxAspectRatio)};
     padding: 0;
   }
 
   @media (min-width: ${(props) => props.theme.breakpointLg}) {
-    min-height: ${({ theme }) => getHeight(theme, '28rem')};
+    min-height: ${({ theme, $focalBoxAspectRatio }) =>
+      getHeroMinHeight(theme, '28rem', $focalBoxAspectRatio)};
   }
 
   @media (min-width: ${(props) => props.theme.breakpointXl}) {
-    min-height: ${({ theme }) => getHeight(theme, '30rem')};
+    min-height: ${({ theme, $focalBoxAspectRatio }) =>
+      getHeroMinHeight(theme, '30rem', $focalBoxAspectRatio)};
   }
 `;
 
@@ -150,10 +164,20 @@ const ImageCredit = styled.span`
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
+interface FocalBoxInfo {
+  focalPointX: number;
+  focalPointY: number;
+  focalPointWidth: number;
+  focalPointHeight: number;
+  imageWidth: number;
+  imageHeight: number;
+}
+
 interface HeroFullImageProps {
   id?: string;
   bgImage: string;
   imageAlign?: string;
+  focalBox?: FocalBoxInfo;
   title?: string;
   lead?: string;
   altText?: string;
@@ -165,6 +189,7 @@ const HeroFullImage = (props: HeroFullImageProps) => {
     id = '',
     bgImage,
     imageAlign = 'center center',
+    focalBox,
     title,
     lead,
     altText,
@@ -182,8 +207,15 @@ const HeroFullImage = (props: HeroFullImageProps) => {
 
   const showContentBox = title || lead;
 
+  // Calculate aspect ratio to ensure focal box is always visible
+  // aspectRatio = imageWidth / focalBoxHeight ensures the container is tall enough
+  // when the image is scaled to cover the container width
+  const focalBoxAspectRatio = focalBox
+    ? focalBox.imageWidth / focalBox.focalPointHeight
+    : undefined;
+
   return (
-    <Hero id={id}>
+    <Hero id={id} $focalBoxAspectRatio={focalBoxAspectRatio}>
       <HeroImage $image={bgImage} $imageAlign={imageAlign} />
       {altText && <span className="sr-only" role="img" aria-label={altText} />}
       {imageCredit && <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>}
@@ -192,7 +224,7 @@ const HeroFullImage = (props: HeroFullImageProps) => {
           <HeroContent>
             <MainCard $alignment={contentAlignment} $color={contentColor}>
               <h1>{title}</h1>
-              <RichText html={lead} className="lead-content" />
+              {lead ? <RichText html={lead} className="lead-content" /> : null}
             </MainCard>
           </HeroContent>
         </Container>

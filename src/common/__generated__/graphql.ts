@@ -504,7 +504,7 @@ export type GetSitemapQuery = (
 );
 
 export type MultiUseImageFragmentFragment = (
-  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+  { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
     { id: string, width: number, height: number, src: string }
     & { __typename: 'ImageRendition' }
   ) | null, large: (
@@ -591,7 +591,7 @@ export type ActionHightlightListQueryVariables = Exact<{
 export type ActionHightlightListQuery = (
   { planActions: Array<(
     { id: string, identifier: string, name: string, officialName: string | null, completion: number | null, updatedAt: string, color: string | null, image: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -622,7 +622,7 @@ export type ActionHightlightListQuery = (
       & { __typename: 'ActionImplementationPhase' }
     ) | null, categories: Array<(
       { id: string, image: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -641,7 +641,7 @@ export type ActionHightlightListQuery = (
         & { __typename: 'Image' }
       ) | null, parent: (
         { id: string, image: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -660,7 +660,7 @@ export type ActionHightlightListQuery = (
           & { __typename: 'Image' }
         ) | null, parent: (
           { id: string, image: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -731,7 +731,7 @@ export type GetActionListQuery = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -791,7 +791,7 @@ export type GetActionListQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -850,7 +850,7 @@ export type GetActionListQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -909,7 +909,7 @@ export type GetActionListQuery = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -1094,7 +1094,7 @@ export type GetActionListForBlockQuery = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -1154,7 +1154,7 @@ export type GetActionListForBlockQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -1213,7 +1213,7 @@ export type GetActionListForBlockQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -1272,7 +1272,7 @@ export type GetActionListForBlockQuery = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -1899,7 +1899,7 @@ export type GetEmbedActionQueryVariables = Exact<{
 export type GetEmbedActionQuery = (
   { action: (
     { id: string, identifier: string, name: string, officialName: string | null, completion: number | null, updatedAt: string, color: string | null, image: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -1930,7 +1930,7 @@ export type GetEmbedActionQuery = (
       & { __typename: 'ActionImplementationPhase' }
     ) | null, categories: Array<(
       { id: string, image: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -1949,7 +1949,7 @@ export type GetEmbedActionQuery = (
         & { __typename: 'Image' }
       ) | null, parent: (
         { id: string, image: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -1968,7 +1968,7 @@ export type GetEmbedActionQuery = (
           & { __typename: 'Image' }
         ) | null, parent: (
           { id: string, image: (
-            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -2024,7 +2024,7 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
       { id: string, name: string, namePlural: string | null }
       & { __typename: 'CategoryLevel' }
     ) | null, image: (
-      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -2084,7 +2084,7 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -2143,7 +2143,7 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -2202,7 +2202,7 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -2333,7 +2333,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
       { id: string, name: string, namePlural: string | null }
       & { __typename: 'CategoryLevel' }
     ) | null, image: (
-      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -2393,7 +2393,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -2452,7 +2452,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -2511,7 +2511,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -2628,7 +2628,7 @@ export type ActionCardFragment = (
       { id: string, name: string, namePlural: string | null }
       & { __typename: 'CategoryLevel' }
     ) | null, image: (
-      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -2688,7 +2688,7 @@ export type ActionCardFragment = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -2747,7 +2747,7 @@ export type ActionCardFragment = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -2806,7 +2806,7 @@ export type ActionCardFragment = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -3109,7 +3109,7 @@ export type CategoryFragmentFragment = (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
   ) | null, image: (
-    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
       { id: string, width: number, height: number, src: string }
       & { __typename: 'ImageRendition' }
     ) | null, large: (
@@ -3174,7 +3174,7 @@ export type CategoryWithParentsFragmentFragment = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -3233,7 +3233,7 @@ export type CategoryWithParentsFragmentFragment = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -3292,7 +3292,7 @@ export type CategoryWithParentsFragmentFragment = (
       { id: string, name: string, namePlural: string | null }
       & { __typename: 'CategoryLevel' }
     ) | null, image: (
-      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -3356,7 +3356,7 @@ export type CategoryRecursiveFragmentFragment = (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
   ) | null, image: (
-    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
       { id: string, width: number, height: number, src: string }
       & { __typename: 'ImageRendition' }
     ) | null, large: (
@@ -3416,7 +3416,7 @@ export type CategoryRecursiveFragmentFragment = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -3475,7 +3475,7 @@ export type CategoryRecursiveFragmentFragment = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -3534,7 +3534,7 @@ export type CategoryRecursiveFragmentFragment = (
       { id: string, name: string, namePlural: string | null }
       & { __typename: 'CategoryLevel' }
     ) | null, image: (
-      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -4333,7 +4333,7 @@ type StreamFieldFragment_AdaptiveEmbedBlock_Fragment = (
 type StreamFieldFragment_CardListBlock_Fragment = (
   { heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, cards: Array<(
     { heading: string | null, content: string | null, link: string | null, image: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -4371,7 +4371,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -4431,7 +4431,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -4490,7 +4490,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -4549,7 +4549,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -4614,7 +4614,7 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -4714,7 +4714,7 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -4762,7 +4762,7 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -4821,7 +4821,7 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -4880,7 +4880,7 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -5122,7 +5122,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
 
 type StreamFieldFragment_FrontPageHeroBlock_Fragment = (
   { layout: string, heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, image: (
-    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
       { id: string, width: number, height: number, src: string }
       & { __typename: 'ImageRendition' }
     ) | null, large: (
@@ -5303,7 +5303,7 @@ export type GetActionDetailsQuery = (
       ) | null }
       & { __typename: 'WorkflowInfoNode' }
     ) | null, image: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -5337,7 +5337,7 @@ export type GetActionDetailsQuery = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -5397,7 +5397,7 @@ export type GetActionDetailsQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -5456,7 +5456,7 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -5515,7 +5515,7 @@ export type GetActionDetailsQuery = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -5644,7 +5644,7 @@ export type GetActionDetailsQuery = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -5704,7 +5704,7 @@ export type GetActionDetailsQuery = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -5763,7 +5763,7 @@ export type GetActionDetailsQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -5822,7 +5822,7 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -5926,7 +5926,7 @@ export type GetActionDetailsQuery = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -5986,7 +5986,7 @@ export type GetActionDetailsQuery = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -6045,7 +6045,7 @@ export type GetActionDetailsQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -6104,7 +6104,7 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -6202,7 +6202,7 @@ export type GetActionDetailsQuery = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -6262,7 +6262,7 @@ export type GetActionDetailsQuery = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -6321,7 +6321,7 @@ export type GetActionDetailsQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -6380,7 +6380,7 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -6481,7 +6481,7 @@ export type GetActionDetailsQuery = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -6541,7 +6541,7 @@ export type GetActionDetailsQuery = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -6600,7 +6600,7 @@ export type GetActionDetailsQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -6659,7 +6659,7 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -6812,7 +6812,7 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -6872,7 +6872,7 @@ export type GetActionDetailsQuery = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -6931,7 +6931,7 @@ export type GetActionDetailsQuery = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -6990,7 +6990,7 @@ export type GetActionDetailsQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -7091,7 +7091,7 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -7151,7 +7151,7 @@ export type GetActionDetailsQuery = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -7210,7 +7210,7 @@ export type GetActionDetailsQuery = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -7269,7 +7269,7 @@ export type GetActionDetailsQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -7473,7 +7473,7 @@ export type GetActionDetailsQuery = (
                     { id: string, name: string, namePlural: string | null }
                     & { __typename: 'CategoryLevel' }
                   ) | null, image: (
-                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                       { id: string, width: number, height: number, src: string }
                       & { __typename: 'ImageRendition' }
                     ) | null, large: (
@@ -7533,7 +7533,7 @@ export type GetActionDetailsQuery = (
                           { id: string, name: string, namePlural: string | null }
                           & { __typename: 'CategoryLevel' }
                         ) | null, image: (
-                          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                             { id: string, width: number, height: number, src: string }
                             & { __typename: 'ImageRendition' }
                           ) | null, large: (
@@ -7592,7 +7592,7 @@ export type GetActionDetailsQuery = (
                         { id: string, name: string, namePlural: string | null }
                         & { __typename: 'CategoryLevel' }
                       ) | null, image: (
-                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                           { id: string, width: number, height: number, src: string }
                           & { __typename: 'ImageRendition' }
                         ) | null, large: (
@@ -7651,7 +7651,7 @@ export type GetActionDetailsQuery = (
                       { id: string, name: string, namePlural: string | null }
                       & { __typename: 'CategoryLevel' }
                     ) | null, image: (
-                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                         { id: string, width: number, height: number, src: string }
                         & { __typename: 'ImageRendition' }
                       ) | null, large: (
@@ -7808,7 +7808,7 @@ export type GetActionDetailsQuery = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -7868,7 +7868,7 @@ export type GetActionDetailsQuery = (
                         { id: string, name: string, namePlural: string | null }
                         & { __typename: 'CategoryLevel' }
                       ) | null, image: (
-                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                           { id: string, width: number, height: number, src: string }
                           & { __typename: 'ImageRendition' }
                         ) | null, large: (
@@ -7927,7 +7927,7 @@ export type GetActionDetailsQuery = (
                       { id: string, name: string, namePlural: string | null }
                       & { __typename: 'CategoryLevel' }
                     ) | null, image: (
-                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                         { id: string, width: number, height: number, src: string }
                         & { __typename: 'ImageRendition' }
                       ) | null, large: (
@@ -7986,7 +7986,7 @@ export type GetActionDetailsQuery = (
                     { id: string, name: string, namePlural: string | null }
                     & { __typename: 'CategoryLevel' }
                   ) | null, image: (
-                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                       { id: string, width: number, height: number, src: string }
                       & { __typename: 'ImageRendition' }
                     ) | null, large: (
@@ -8205,7 +8205,7 @@ export type GetActionDetailsQuery = (
                     { id: string, name: string, namePlural: string | null }
                     & { __typename: 'CategoryLevel' }
                   ) | null, image: (
-                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                       { id: string, width: number, height: number, src: string }
                       & { __typename: 'ImageRendition' }
                     ) | null, large: (
@@ -8265,7 +8265,7 @@ export type GetActionDetailsQuery = (
                           { id: string, name: string, namePlural: string | null }
                           & { __typename: 'CategoryLevel' }
                         ) | null, image: (
-                          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                             { id: string, width: number, height: number, src: string }
                             & { __typename: 'ImageRendition' }
                           ) | null, large: (
@@ -8324,7 +8324,7 @@ export type GetActionDetailsQuery = (
                         { id: string, name: string, namePlural: string | null }
                         & { __typename: 'CategoryLevel' }
                       ) | null, image: (
-                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                           { id: string, width: number, height: number, src: string }
                           & { __typename: 'ImageRendition' }
                         ) | null, large: (
@@ -8383,7 +8383,7 @@ export type GetActionDetailsQuery = (
                       { id: string, name: string, namePlural: string | null }
                       & { __typename: 'CategoryLevel' }
                     ) | null, image: (
-                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                         { id: string, width: number, height: number, src: string }
                         & { __typename: 'ImageRendition' }
                       ) | null, large: (
@@ -8540,7 +8540,7 @@ export type GetActionDetailsQuery = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -8600,7 +8600,7 @@ export type GetActionDetailsQuery = (
                         { id: string, name: string, namePlural: string | null }
                         & { __typename: 'CategoryLevel' }
                       ) | null, image: (
-                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                           { id: string, width: number, height: number, src: string }
                           & { __typename: 'ImageRendition' }
                         ) | null, large: (
@@ -8659,7 +8659,7 @@ export type GetActionDetailsQuery = (
                       { id: string, name: string, namePlural: string | null }
                       & { __typename: 'CategoryLevel' }
                     ) | null, image: (
-                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                         { id: string, width: number, height: number, src: string }
                         & { __typename: 'ImageRendition' }
                       ) | null, large: (
@@ -8718,7 +8718,7 @@ export type GetActionDetailsQuery = (
                     { id: string, name: string, namePlural: string | null }
                     & { __typename: 'CategoryLevel' }
                   ) | null, image: (
-                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                       { id: string, width: number, height: number, src: string }
                       & { __typename: 'ImageRendition' }
                     ) | null, large: (
@@ -8907,7 +8907,7 @@ export type ActionDependenciesFragment = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -8967,7 +8967,7 @@ export type ActionDependenciesFragment = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -9026,7 +9026,7 @@ export type ActionDependenciesFragment = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -9085,7 +9085,7 @@ export type ActionDependenciesFragment = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -9186,7 +9186,7 @@ export type ActionDependenciesFragment = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -9246,7 +9246,7 @@ export type ActionDependenciesFragment = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -9305,7 +9305,7 @@ export type ActionDependenciesFragment = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -9364,7 +9364,7 @@ export type ActionDependenciesFragment = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -9628,7 +9628,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -9688,7 +9688,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                     { id: string, name: string, namePlural: string | null }
                     & { __typename: 'CategoryLevel' }
                   ) | null, image: (
-                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                       { id: string, width: number, height: number, src: string }
                       & { __typename: 'ImageRendition' }
                     ) | null, large: (
@@ -9747,7 +9747,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -9806,7 +9806,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -9977,7 +9977,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -10037,7 +10037,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -10096,7 +10096,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -10155,7 +10155,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -10281,7 +10281,7 @@ export type ReportComparisonBlockActionContentFragment = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -10341,7 +10341,7 @@ export type ReportComparisonBlockActionContentFragment = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -10400,7 +10400,7 @@ export type ReportComparisonBlockActionContentFragment = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -10459,7 +10459,7 @@ export type ReportComparisonBlockActionContentFragment = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -10583,7 +10583,7 @@ export type ActionCardWithDependencyRoleFragment = (
       { id: string, name: string, namePlural: string | null }
       & { __typename: 'CategoryLevel' }
     ) | null, image: (
-      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -10643,7 +10643,7 @@ export type ActionCardWithDependencyRoleFragment = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -10702,7 +10702,7 @@ export type ActionCardWithDependencyRoleFragment = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -10761,7 +10761,7 @@ export type ActionCardWithDependencyRoleFragment = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -11212,7 +11212,7 @@ export type GetContentPageQuery = (
         { id: string, hideCategoryIdentifiers: boolean }
         & { __typename: 'CategoryType' }
       ), image: (
-        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -11243,7 +11243,7 @@ export type GetContentPageQuery = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -11303,7 +11303,7 @@ export type GetContentPageQuery = (
           { name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
-          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -11385,7 +11385,7 @@ export type GetContentPageQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -11445,7 +11445,7 @@ export type GetContentPageQuery = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -11504,7 +11504,7 @@ export type GetContentPageQuery = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -11563,7 +11563,7 @@ export type GetContentPageQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -11718,7 +11718,7 @@ export type GetContentPageQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -11778,7 +11778,7 @@ export type GetContentPageQuery = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -11837,7 +11837,7 @@ export type GetContentPageQuery = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -11896,7 +11896,7 @@ export type GetContentPageQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -11961,7 +11961,7 @@ export type GetContentPageQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -12339,7 +12339,7 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'PageChangeLogMessage' }
     ) | null, headerImage: (
-      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -12375,7 +12375,7 @@ export type GetContentPageQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -12435,7 +12435,7 @@ export type GetContentPageQuery = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -12494,7 +12494,7 @@ export type GetContentPageQuery = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -12553,7 +12553,7 @@ export type GetContentPageQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -12618,7 +12618,7 @@ export type GetContentPageQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -12714,7 +12714,7 @@ export type GetContentPageQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -12762,7 +12762,7 @@ export type GetContentPageQuery = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -12821,7 +12821,7 @@ export type GetContentPageQuery = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -12880,7 +12880,7 @@ export type GetContentPageQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -13256,7 +13256,7 @@ export type GetHomePageQuery = (
     ) | (
       { heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, cards: Array<(
         { heading: string | null, content: string | null, link: string | null, image: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -13284,7 +13284,7 @@ export type GetHomePageQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -13344,7 +13344,7 @@ export type GetHomePageQuery = (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
                 ) | null, image: (
-                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                     { id: string, width: number, height: number, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null, large: (
@@ -13403,7 +13403,7 @@ export type GetHomePageQuery = (
                 { id: string, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               ) | null, image: (
-                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                   { id: string, width: number, height: number, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null, large: (
@@ -13462,7 +13462,7 @@ export type GetHomePageQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, image: (
-              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
                 { id: string, width: number, height: number, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null, large: (
@@ -13527,7 +13527,7 @@ export type GetHomePageQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, image: (
-            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
               { id: string, width: number, height: number, src: string }
               & { __typename: 'ImageRendition' }
             ) | null, large: (
@@ -13762,7 +13762,7 @@ export type GetHomePageQuery = (
       & { __typename: 'DashboardRowBlock' }
     ) | (
       { layout: string, heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, image: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -13907,7 +13907,7 @@ export type GetHomePageQuery = (
     { id: string, primaryActionClassification: (
       { categories: Array<(
         { id: string, identifier: string, name: string, leadParagraph: string, color: string, image: (
-          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+          { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
             { id: string, width: number, height: number, src: string }
             & { __typename: 'ImageRendition' }
           ) | null, large: (
@@ -15108,7 +15108,7 @@ export type GetPlanContextQuery = (
       { id: string, basePath: string | null, googleSiteVerificationTag: string | null, matomoAnalyticsUrl: string | null }
       & { __typename: 'PlanDomain' }
     ) | null, image: (
-      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, large: (
@@ -15304,7 +15304,7 @@ export type PlanContextFragment = (
     { id: string, basePath: string | null, googleSiteVerificationTag: string | null, matomoAnalyticsUrl: string | null }
     & { __typename: 'PlanDomain' }
   ) | null, image: (
-    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, full: (
+    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
       { id: string, width: number, height: number, src: string }
       & { __typename: 'ImageRendition' }
     ) | null, large: (

@@ -6,24 +6,23 @@ export const getBgImageAlignment = (
   image: {
     focalPointX: number | null;
     focalPointY: number | null;
+    focalPointWidth: number | null;
+    focalPointHeight: number | null;
     width: number;
     height: number;
   } | null
 ) => {
-  if (!image || !image.focalPointX || !image.focalPointY) return 'center center';
-  const focalCentre = [image.focalPointX, image.focalPointY];
-  const imageCentre = [image.width / 2, image.height / 2];
-  const imageAlignment = ['center', 'center'];
-  const focalOffsetX = imageCentre[0] / focalCentre[0];
-  const focalOffsetY = imageCentre[1] / focalCentre[1];
+  if (!image || image.focalPointX == null || image.focalPointY == null) {
+    return 'center center';
+  }
 
-  if (focalOffsetX > 1.5) imageAlignment[0] = 'left';
-  if (focalOffsetX < 0.75) imageAlignment[0] = 'right';
+  const focalCenterX = image.focalPointX + (image.focalPointWidth ?? 0) / 2;
+  const focalCenterY = image.focalPointY + (image.focalPointHeight ?? 0) / 2;
 
-  if (focalOffsetY > 1.5) imageAlignment[1] = 'top';
-  if (focalOffsetY < 0.75) imageAlignment[1] = 'bottom';
+  const xPercent = (focalCenterX / image.width) * 100;
+  const yPercent = (focalCenterY / image.height) * 100;
 
-  return `${imageAlignment[0]} ${imageAlignment[1]}`;
+  return `${xPercent.toFixed(1)}% ${yPercent.toFixed(1)}%`;
 };
 
 type ActionWithImage = {
@@ -76,6 +75,8 @@ const images = {
         height
         focalPointX
         focalPointY
+        focalPointWidth
+        focalPointHeight
         full: rendition(size: "1600x1600", crop: false) {
           id
           width
