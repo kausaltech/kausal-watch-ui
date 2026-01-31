@@ -8,6 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import { getStatusSummary } from '@/common/ActionStatusSummary';
 import type { ActionTimeliness, PlanContextFragment } from '@/common/__generated__/graphql';
 import {
+  ActionStatusSummaryIdentifier,
   ActionTimelinessIdentifier,
   Comparison,
   type GetActionListForGraphsQuery,
@@ -112,9 +113,19 @@ const getTimelinessData = (
     actionTimelinessClasses.map((c) => [c.identifier, c])
   );
 
-  const activeActions = actions.filter(
-    (action) => getStatusSummary(plan, action.statusSummary).isActive
-  );
+  // Treat "continuous" actions with Implementation phaze = "Completed" as active (even if the backend status summary is COMPLETED).
+  const activeActions = actions.filter((action) => {
+    const summary = getStatusSummary(plan, action.statusSummary);
+
+    const isActive = summary.isActive;
+
+    const isContinuousButCompleted =
+      action.scheduleContinuous &&
+      action.statusSummary?.identifier === ActionStatusSummaryIdentifier.Completed;
+
+    return isActive || isContinuousButCompleted;
+  });
+
   if (activeActions.length === 0) {
     return aggregates;
   }
