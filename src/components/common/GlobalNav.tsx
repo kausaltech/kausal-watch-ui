@@ -31,7 +31,7 @@ import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 
 const getRootLink = (
-  plan: { parent?: { viewUrl?: string } | null },
+  plan: { parent?: { viewUrl?: string | null } | null },
   locale: string,
   primaryLanguage: string
 ) => {
@@ -519,7 +519,7 @@ function GlobalNav(props) {
   const theme = useTheme();
   const locale = useLocale();
   const plan = usePlan();
-  const rootLink = getRootLink(plan, locale, plan.primaryLanguage);
+  const defaultRootLink = getRootLink(plan, locale, plan.primaryLanguage);
   const {
     siteTitle,
     ownerName = '',
@@ -529,7 +529,12 @@ function GlobalNav(props) {
     sticky = false,
     activeBranch,
     customToolbarItems,
+    logoLink: logoLinkOverride,
+    hidePlanSelector = false,
+    hideSearch = false,
+    hideVersionSelector = false,
   } = props;
+  const rootLink = logoLinkOverride ?? defaultRootLink;
   const {
     isOpen,
     setIsOpen,
@@ -594,12 +599,12 @@ function GlobalNav(props) {
                 {theme.navTitleVisible ? siteTitle : '\u00A0'}
               </SiteTitle>
             </HomeLink>
-            <PlanSelector color={theme.brandNavColor} />
+            {!hidePlanSelector && <PlanSelector color={theme.brandNavColor} />}
           </Site>
 
           <Nav navbar className="ml-auto d-none d-md-flex">
             {customToolbarItems.length > 0 && <CustomToolbar items={customToolbarItems} />}
-            <NavbarSearch />
+            {!hideSearch && <NavbarSearch />}
             <LanguageSelector mobile={false} />
           </Nav>
           <NavbarToggler
@@ -669,7 +674,7 @@ function GlobalNav(props) {
                     </NavItem>
                   )
                 )}
-              {plan.features.enableSearch && (
+              {!hideSearch && plan.features.enableSearch && (
                 <NavItem className="d-md-none mb-2">
                   <NavLink>
                     <NavigationLink slug="/search" onClick={handleClose}>
@@ -685,18 +690,36 @@ function GlobalNav(props) {
               {customToolbarItems.length > 0 && <CustomToolbar items={customToolbarItems} mobile />}
             </Nav>
             <Nav navbar className="ms-md-5">
-              <NavItem className="plan-version-navitem">
-                <PlanVersionSelector plan={plan} />
-              </NavItem>
+              {!hideVersionSelector && (
+                <NavItem className="plan-version-navitem">
+                  <PlanVersionSelector plan={plan} />
+                </NavItem>
+              )}
               {externalItems.length > 0 &&
                 externalItems.map((item, index) => (
                   <NavItem key={`external${index}`}>
                     <NavLink>
-                      <NavigationLink slug={item.url} onClick={handleClose}>
-                        <NavHighlighter className="highlighter external">
-                          {item.name}
-                        </NavHighlighter>
-                      </NavigationLink>
+                      {item.newTab ? (
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={handleClose}
+                        >
+                          <NavHighlighter className="highlighter external">
+                            {item.name}
+                            {item.icon && (
+                              <Icon name={item.icon} width="1rem" height="1rem" className="ms-1" />
+                            )}
+                          </NavHighlighter>
+                        </a>
+                      ) : (
+                        <NavigationLink slug={item.url} onClick={handleClose}>
+                          <NavHighlighter className="highlighter external">
+                            {item.name}
+                          </NavHighlighter>
+                        </NavigationLink>
+                      )}
                     </NavLink>
                   </NavItem>
                 ))}
@@ -729,8 +752,15 @@ GlobalNav.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       url: PropTypes.string,
+      newTab: PropTypes.bool,
+      icon: PropTypes.string,
     })
   ),
+  // Props for minimal/pledge mode
+  logoLink: PropTypes.string,
+  hidePlanSelector: PropTypes.bool,
+  hideSearch: PropTypes.bool,
+  hideVersionSelector: PropTypes.bool,
 };
 
 export default GlobalNav;
