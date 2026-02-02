@@ -205,5 +205,10 @@
        "view-changes": "View changes",
        "modal-title": "Latest changes",
        "description-label": "Description of changes"
-    }
+    },
+    "pledge-view-full-plan": "View full action plan",
+    "pledge-list-title": "Pledges",
+    "pledge-list-description": "Browse pledges made by participants.",
+    "pledge-details-title": "Pledge Details",
+    "pledge-details-slug": "Pledge ID"
   }
