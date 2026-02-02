@@ -5,6 +5,8 @@ export const ACTIONS_PATH = '/actions';
 
 export const UNPUBLISHED_PATH = '/unpublished';
 
+export const PLEDGE_PATH = '/pledge';
+
 export const STATIC_ROUTES = [
   '/accessibility',
   ACTIONS_PATH,
@@ -12,6 +14,7 @@ export const STATIC_ROUTES = [
   INDICATORS_PATH,
   '/insight',
   '/organizations',
+  PLEDGE_PATH,
   '/search',
 ];
 
