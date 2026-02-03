@@ -210,5 +210,8 @@
     "pledge-list-title": "Pledges",
     "pledge-list-description": "Browse pledges made by participants.",
     "pledge-details-title": "Pledge Details",
-    "pledge-details-slug": "Pledge ID"
+    "pledge-details-slug": "Pledge ID",
+    "pledge-list-all": "All Pledges",
+    "pledge-list-mine": "My Pledges",
+    "pledge-list-view-toggle": "Toggle pledge view"
   }
