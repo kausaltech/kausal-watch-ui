@@ -1,3 +1,5 @@
+'use client';
+
 import type { ReactNode } from 'react';
 
 import { notFound } from 'next/navigation';
@@ -21,7 +23,7 @@ const StyledMainWrapper = styled.div`
  * TODO: Replace with plan.features.[WHATEVER] when backend support is added.
  */
 function isPledgesEnabled(): boolean {
-  return process.env.ENABLE_PLEDGES === 'true';
+  return process.env.NEXT_PUBLIC_ENABLE_PLEDGES === 'true';
 }
 
 /**
@@ -31,7 +33,7 @@ function isPledgesEnabled(): boolean {
  *
  * Pledges must be enabled via the ENABLE_PLEDGES environment variable (until backend feature flag supports it).
  */
-export default async function PledgeLayout({ children }: Props) {
+export default function PledgeLayout({ children }: Props) {
   if (!isPledgesEnabled()) {
     notFound();
   }
