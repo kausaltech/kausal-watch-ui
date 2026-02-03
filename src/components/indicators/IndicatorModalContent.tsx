@@ -111,10 +111,9 @@ const IndicatorModalContent = ({
   const t = useTranslations();
   const plan = usePlan();
   const hasLayout =
-    !loading &&
-    ((layout.detailsMainTop && layout.detailsMainTop.length > 0) ||
-      (layout.detailsMainBottom && layout.detailsMainBottom.length > 0) ||
-      (layout.detailsAside && layout.detailsAside.length > 0));
+    (layout.detailsMainTop && layout.detailsMainTop.length > 0) ||
+    (layout.detailsMainBottom && layout.detailsMainBottom.length > 0) ||
+    (layout.detailsAside && layout.detailsAside.length > 0);
 
   if (loading && !indicator)
     return (
@@ -142,7 +141,7 @@ const IndicatorModalContent = ({
         <h1 id="indicator-modal-title">{indicatorName}</h1>
       </ModalHeader>
       <ModalScrollableContent>
-        {!hasLayout && deploymentType !== 'production' && (
+        {!loading && !hasLayout && deploymentType !== 'production' && (
           <Alert color="warning">{t('error-no-layout')}</Alert>
         )}
         <ModalContentBlocksWrapper>

@@ -33,7 +33,6 @@ type OrganizationChipProps = {
 
 function OrganizationChip(props: OrganizationChipProps) {
   const { organization, role, specifier, linkToOrganization = true } = props;
-  console.log('chip props', props);
   const t = useTranslations();
 
   let size = 'md' as BadgeTooltipProps['size'];
