@@ -14,6 +14,7 @@ const IndicatorLevel = styled.span<{ $level: string }>`
     border-radius: ${(props) => props.theme.badgeBorderRadius};
     padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
     font-weight: ${(props) => props.theme.badgeFontWeight};
+    line-height: ${(props) => props.theme.lineHeightSm};
 
     color: ${(props) => {
       switch (props.$level) {

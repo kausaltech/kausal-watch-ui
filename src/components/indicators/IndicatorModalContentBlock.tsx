@@ -23,7 +23,7 @@ import IndicatorValueSummary, { type ValueSummaryOptions } from './IndicatorValu
 import IndicatorVisualisation from './IndicatorVisualisation';
 
 const CategoryTypeBlock = styled.div`
-  padding-bottom: ${(props) => props.theme.spaces.s050};
+  margin-bottom: ${(props) => props.theme.spaces.s200};
   background-color: ${({ theme }) => theme.themeColors.white};
   h3 {
     margin-bottom: ${(props) => props.theme.spaces.s050};
@@ -32,7 +32,7 @@ const CategoryTypeBlock = styled.div`
 `;
 
 const ContentBlockWrapper = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s200};
+  margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
 export const BlockLabel = styled.h2`
@@ -219,7 +219,7 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
     categories &&
     categories.length > 0 && (
       <CategoryTypeBlock>
-        <h3>
+        <BlockLabel>
           {block.fieldLabel || block.categoryType?.name}
           {(block.fieldHelpText || block.categoryType?.helpText) && block.id && (
             <PopoverTip
@@ -227,7 +227,7 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
               identifier={block.id}
             />
           )}
-        </h3>
+        </BlockLabel>
 
         <CategoryBadges>
           {categories.map((cat) => (
@@ -236,7 +236,7 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
               id={cat.id}
               tooltip=""
               content={cat.name}
-              size="sm"
+              size="md"
               themeColor="neutralLight"
               color={cat.color || cat.parent?.color || undefined}
               isLink={false}
