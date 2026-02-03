@@ -7,7 +7,7 @@ type Props = {
   params: Promise<{ plan: string; lang: string; slug: string }>;
 };
 
-export default async function PledgeDetailsPage({ params }) {
+export default function PledgeDetailsPage({ params }) {
   const t = useTranslations();
 
   return (
