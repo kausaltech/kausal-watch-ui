@@ -24,6 +24,9 @@ const CausalNav = styled.div`
   justify-content: space-between;
   gap: ${(props) => props.theme.spaces.s100};
 
+  padding-top: ${(props) => props.theme.spaces.s100};
+  border-top: 1px solid ${(props) => props.theme.textColor.tertiary};
+  border-bottom: 1px solid ${(props) => props.theme.textColor.tertiary};
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     flex-direction: row;
   }
