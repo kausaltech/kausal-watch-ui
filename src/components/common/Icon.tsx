@@ -65,6 +65,7 @@ export enum AvailableIcons {
   ArrowUpDown = 'arrow-up-down',
   ArrowUpRightFromSquare = 'arrow-up-right-from-square',
   ArrowUpWideShort = 'arrow-up-wide-short',
+  Award = 'award',
   Bars = 'bars',
   Bullseye = 'bullseye',
   Calendar = 'calendar',
