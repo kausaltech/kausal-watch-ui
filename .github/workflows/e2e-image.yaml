@@ -50,7 +50,7 @@ jobs:
     name: Run tests
     runs-on: runner-prod
     container:
-      image: harbor.kausal.tech/library/playwright:v1.54.1
+      image: harbor.kausal.tech/library/playwright:v1.58.1
     env:
       TEST_PLAN_IDENTIFIERS: ${{ inputs.instance_identifiers }}
       WATCH_BACKEND_URL: ${{ inputs.backend_base_url }}
