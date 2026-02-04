@@ -3,33 +3,33 @@ on:
   workflow_call:
     inputs:
       instance_identifiers:
-        description: "Comma separated list of instance identifiers"
+        description: 'Comma separated list of instance identifiers'
         required: false
         type: string
-        default: "sunnydale,tampere-ilmasto,espoo-ilmasto,longmont-indicators,hame-ilmasto"
+        default: 'sunnydale,tampere-ilmasto,espoo-ilmasto,longmont-indicators,hame-ilmasto'
       image:
-        description: "Image (incl. repo, path, tag) to test"
+        description: 'Image (incl. repo, path, tag) to test'
         required: true
         type: string
       backend_base_url:
-        description: "Base URL for backend API"
+        description: 'Base URL for backend API'
         required: true
         type: string
-        default: "https://api.watch.kausal.tech"
+        default: 'https://api.watch.kausal.tech'
       build_id:
-        description: "Unique ID for the build"
+        description: 'Unique ID for the build'
         required: true
         type: string
       s3_endpoint:
-        description: "S3 endpoint URL where to upload test artifacts"
+        description: 'S3 endpoint URL where to upload test artifacts'
         required: false
         type: string
       s3_bucket:
-        description: "S3 bucket"
+        description: 'S3 bucket'
         required: false
         type: string
       nr_workers:
-        description: "How many test workers to use"
+        description: 'How many test workers to use'
         required: false
         type: number
         default: 2
@@ -42,7 +42,7 @@ on:
 
     outputs:
       test_report_url:
-        description: "URL to e2e test report"
+        description: 'URL to e2e test report'
         value: ${{ jobs.e2e_test.outputs.test_report_url }}
 
 jobs:
@@ -50,11 +50,11 @@ jobs:
     name: Run tests
     runs-on: runner-prod
     container:
-      image: harbor.kausal.tech/library/playwright:v1.57.0
+      image: harbor.kausal.tech/library/playwright:v1.58.1
     env:
       TEST_PLAN_IDENTIFIERS: ${{ inputs.instance_identifiers }}
       WATCH_BACKEND_URL: ${{ inputs.backend_base_url }}
-      TEST_PAGE_BASE_URL: "http://{planId}.localhost:3000"
+      TEST_PAGE_BASE_URL: 'http://{planId}.localhost:3000'
       CI: 1
     services:
       app:
