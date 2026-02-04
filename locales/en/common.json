@@ -213,5 +213,9 @@
     "pledge-details-slug": "Pledge ID",
     "pledge-list-all": "All Pledges",
     "pledge-list-mine": "My Pledges",
-    "pledge-list-view-toggle": "Toggle pledge view"
+    "pledge-list-view-toggle": "Toggle pledge view",
+    "pledge-committed-count": "{count} committed",
+    "pledge-committed": "Committed",
+    "pledge-commit-to-this": "Commit to this",
+    "pledge-no-commitments": "You haven't committed to any pledges yet. Browse all pledges to find one that interests you!"
   }
