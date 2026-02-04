@@ -89,6 +89,26 @@ function isChildOrg(childOrg, parentOrg) {
   return childTree.some((id) => parentTree.indexOf(id) >= 0);
 }
 
+class AttributeType {
+  id: string;
+  constructor(id: string) {
+    this.id = id;
+  }
+}
+
+interface Sort {
+  key: keyof ActionListAction | AttributeType | null;
+  direction: number;
+}
+
+const isAttributeTypeKey = (key: Sort['key']): key is AttributeType => key instanceof AttributeType;
+
+const isSameSortKey = (a: Sort['key'], b: Sort['key']) => {
+  if (a === b) return true;
+  if (a instanceof AttributeType && b instanceof AttributeType) return a.id === b.id;
+  return false;
+};
+
 interface SortableTableHeaderProps {
   children: ReactNode;
   headerKey: Sort['key'];
@@ -104,7 +124,7 @@ const SortableTableHeader = ({
   onClick,
   className,
 }: SortableTableHeaderProps) => {
-  const selected = sort.key == headerKey;
+  const selected = isSameSortKey(sort.key, headerKey);
   const iconName = selected ? ((sort.direction ?? 1) === 1 ? 'sortDown' : 'sortUp') : 'sort';
 
   return (
@@ -123,18 +143,16 @@ const SortableTableHeader = ({
 };
 
 const getAttributeComparableValue = (action: ActionListAction, attributeTypeId: string) => {
-  const attr = action.attributes?.find((a) => a.type?.id === attributeTypeId);
+  const attr = action.attributes?.find(
+    (a) => a.type?.id === attributeTypeId && a.__typename === 'AttributeNumericValue'
+  );
   if (!attr) return null;
 
-  if (attr.__typename === 'AttributeNumericValue') {
-    const n = attr.numericValue;
-    if (typeof n === 'number') return n;
-    if (n == null) return null;
-    const parsed = Number(n);
-    return Number.isFinite(parsed) ? parsed : null;
-  }
-
-  return null;
+  const n = attr.numericValue;
+  if (typeof n === 'number') return n;
+  if (n == null) return null;
+  const parsed = Number(n);
+  return Number.isFinite(parsed) ? parsed : null;
 };
 
 const preprocessForSorting = (
@@ -143,12 +161,14 @@ const preprocessForSorting = (
   hasImplementationPhases: boolean
 ) => {
   // Custom field sorting
-  if (typeof sortKey === 'string' && sortKey.startsWith('field:')) {
-    const attributeTypeId = sortKey.slice('field:'.length);
-    return items.map((item) => getAttributeComparableValue(item, attributeTypeId));
+  if (isAttributeTypeKey(sortKey)) {
+    return items.map((item) => getAttributeComparableValue(item, sortKey.id));
+  }
+  if (sortKey == null) {
+    return [null, null];
   }
 
-  const values = items.map((item) => (item as any)[sortKey]);
+  const values = items.map((item) => item[sortKey]);
 
   switch (sortKey) {
     case 'updatedAt': {
@@ -172,11 +192,6 @@ interface Props {
   enableExport?: boolean;
   planViewUrl?: string | null;
   hasRelatedPlans?: boolean;
-}
-
-interface Sort {
-  key: keyof ActionListAction | string | null;
-  direction: number;
 }
 
 const ActionStatusTable = (props: Props) => {
@@ -213,7 +228,7 @@ const ActionStatusTable = (props: Props) => {
   const sortHandler = (key: Sort['key']) => () => {
     let direction = 1;
 
-    if (key === sort.key) {
+    if (isSameSortKey(key, sort.key)) {
       direction -= sort.direction;
     }
 
@@ -268,7 +283,7 @@ const ActionStatusTable = (props: Props) => {
                   typeof column.attributeType?.format === 'string' &&
                   column.attributeType.format.toUpperCase().includes('NUMERIC');
                 const headerKey: Sort['key'] = isNumericFieldColumn
-                  ? `field:${column.attributeType!.id}`
+                  ? new AttributeType(column.attributeType!.id)
                   : columnConfig.headerKey;
                 // apply sorting only for numeric custom fields
                 const isSortable =
