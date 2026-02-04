@@ -132,12 +132,12 @@ const StyledCommittedCount = styled(StyledMetaItem)`
 `;
 
 const StyledCategory = styled(StyledMetaItem)`
-  color: ${({ theme }) => theme.graphColors.grey050};
+  color: ${({ theme }) => theme.textColor.tertiary};
 `;
 
 const StyledCardDescription = styled.p`
   font-size: ${({ theme }) => theme.fontSizeSm};
-  color: ${({ theme }) => theme.themeColors.dark};
+  color: ${({ theme }) => theme.textColor.secondary};
   margin: 0 0 ${({ theme }) => theme.spaces.s150};
   line-height: ${({ theme }) => theme.lineHeightMd};
   display: -webkit-box;
