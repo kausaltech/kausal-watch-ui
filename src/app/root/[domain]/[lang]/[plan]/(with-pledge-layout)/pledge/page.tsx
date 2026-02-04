@@ -7,6 +7,7 @@ import { Button, ButtonGroup, Container } from 'reactstrap';
 import styled from 'styled-components';
 
 import HeroFullImage from '@/components/home/HeroFullImage';
+import PledgeCard, { type PledgeCategory } from '@/components/pledge/PledgeCard';
 
 const MOCK_HERO_IMAGE = {
   id: 'a08966d2-ec91-450a-8f13-d9b793c6255b',
@@ -70,6 +71,91 @@ const MOCK_TITLE = {
   lead: 'Pledge your commitment to sustainable choices that will help your environment and community.',
 };
 
+type MockPledge = {
+  slug: string;
+  title: string;
+  description: string;
+  image: string;
+  committedCount: number;
+  categories: PledgeCategory[];
+};
+
+const MOCK_PLEDGES: MockPledge[] = [
+  {
+    slug: 'turn-off-unused-electronics',
+    title: 'Turn off unused electronics',
+    description:
+      'Make it a daily habit to unplug or turn off electronics, lights, and appliances when not in use. Even devices in "standby" mode consume energy that adds up over time.',
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop',
+    committedCount: 122,
+    categories: [
+      { icon: 'tachometer', label: 'Saves money' },
+      { icon: 'calendar', label: 'Start now' },
+    ],
+  },
+  {
+    slug: 'start-or-join-carpool',
+    title: 'Start or join a carpool group',
+    description:
+      'Connect with neighbors, coworkers, or fellow commuters to share rides for regular trips like work, school, or errands. Carpooling reduces emissions and saves money on fuel.',
+    image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=600&h=400&fit=crop',
+    committedCount: 83,
+    categories: [
+      { icon: 'tachometer', label: 'Saves money' },
+      { icon: 'gear', label: 'Quick setup' },
+    ],
+  },
+  {
+    slug: 'reduce-meat-consumption',
+    title: 'Reduce meat consumption',
+    description:
+      'Try incorporating more plant-based meals into your diet. Even one meat-free day per week can significantly reduce your carbon footprint and improve your health.',
+    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop',
+    committedCount: 256,
+    categories: [
+      { icon: 'heart', label: 'Health benefit' },
+      { icon: 'tachometer', label: 'Saves money' },
+    ],
+  },
+  {
+    slug: 'install-led-bulbs',
+    title: 'Install LED light bulbs',
+    description:
+      'Replace incandescent and CFL bulbs with energy-efficient LED bulbs. They last longer, use less energy, and reduce your electricity bills.',
+    image: 'https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=600&h=400&fit=crop',
+    committedCount: 189,
+    categories: [
+      { icon: 'tachometer', label: 'Saves money' },
+      { icon: 'gear', label: 'Quick setup' },
+    ],
+  },
+  {
+    slug: 'use-reusable-bags',
+    title: 'Use reusable shopping bags',
+    description:
+      'Bring your own bags when shopping to reduce plastic waste. Keep reusable bags in your car or by your front door so you always have them handy.',
+    image:
+      'https://images.unsplash.com/photo-1758708536099-9f46dc81fffc?q=80&w=1970&auto=format&fit=crop',
+    committedCount: 312,
+    categories: [
+      { icon: 'calendar', label: 'Start now' },
+      { icon: 'globe', label: 'Reduces waste' },
+    ],
+  },
+  {
+    slug: 'plant-native-garden',
+    title: 'Plant a native garden',
+    description:
+      'Create a garden with native plants that support local wildlife and require less water than non-native species. Native plants are adapted to local conditions and attract pollinators.',
+    image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop',
+    committedCount: 67,
+    categories: [
+      { icon: 'globe', label: 'Supports wildlife' },
+      { icon: 'tachometer', label: 'Saves water' },
+    ],
+  },
+];
+
 const StyledContainer = styled(Container)`
   margin-top: ${({ theme }) => theme.spaces.s200};
   margin-bottom: ${({ theme }) => theme.spaces.s200};
@@ -83,9 +169,17 @@ const StyledRadioButton = styled(Button)`
 `;
 
 const StyledTabsContainer = styled.div`
+  margin-bottom: ${({ theme }) => theme.spaces.s200};
+
   @media (max-width: ${(props) => props.theme.breakpointSm}) {
     text-align: center;
   }
+`;
+
+const StyledPledgeGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: ${({ theme }) => theme.spaces.s200};
 `;
 
 type Props = {
@@ -96,8 +190,28 @@ type ViewType = 'ALL' | 'MY_PLEDGES';
 
 export default function PledgeListPage(props: Props) {
   const [view, setView] = useState<ViewType>('ALL');
+  const [committedSlugs, setCommittedSlugs] = useState<Set<string>>(
+    new Set(['turn-off-unused-electronics', 'start-or-join-carpool'])
+  );
 
   const t = useTranslations();
+
+  const handleCommittedChange = (slug: string, committed: boolean) => {
+    setCommittedSlugs((prev) => {
+      const next = new Set(prev);
+      if (committed) {
+        next.add(slug);
+      } else {
+        next.delete(slug);
+      }
+      return next;
+    });
+  };
+
+  const filteredPledges =
+    view === 'MY_PLEDGES'
+      ? MOCK_PLEDGES.filter((pledge) => committedSlugs.has(pledge.slug))
+      : MOCK_PLEDGES;
 
   /**
    * Arrow keys toggle between options per WAI-ARIA radio group pattern.
@@ -135,12 +249,14 @@ export default function PledgeListPage(props: Props) {
       <StyledContainer>
         <StyledTabsContainer>
           <ButtonGroup
+            size="small"
             role="radiogroup"
             aria-label={t('pledge-list-view-toggle')}
             onKeyDown={handleRadiosKeyDown}
           >
             <StyledRadioButton
               color="black"
+              size="small"
               outline
               onClick={() => setView('ALL')}
               active={view === 'ALL'}
@@ -152,6 +268,7 @@ export default function PledgeListPage(props: Props) {
             </StyledRadioButton>
             <StyledRadioButton
               color="black"
+              size="small"
               outline
               onClick={() => setView('MY_PLEDGES')}
               active={view === 'MY_PLEDGES'}
@@ -164,7 +281,26 @@ export default function PledgeListPage(props: Props) {
           </ButtonGroup>
         </StyledTabsContainer>
 
-        <pre>Selected: {view}</pre>
+        <StyledPledgeGrid>
+          {filteredPledges.map((pledge) => (
+            <PledgeCard
+              key={pledge.slug}
+              title={pledge.title}
+              description={pledge.description}
+              slug={pledge.slug}
+              image={pledge.image}
+              imageAlt={pledge.title}
+              committedCount={pledge.committedCount}
+              categories={pledge.categories}
+              isCommitted={committedSlugs.has(pledge.slug)}
+              onCommittedChange={(committed) => handleCommittedChange(pledge.slug, committed)}
+            />
+          ))}
+        </StyledPledgeGrid>
+
+        {view === 'MY_PLEDGES' && filteredPledges.length === 0 && (
+          <p>{t('pledge-no-commitments')}</p>
+        )}
       </StyledContainer>
     </>
   );
