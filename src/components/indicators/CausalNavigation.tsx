@@ -16,17 +16,20 @@ type RelatedEffect = Indicator['relatedEffects'][number];
 type CausalNavigationProps = {
   causes: Indicator['relatedCauses'];
   effects: Indicator['relatedEffects'];
+  legacyMode?: boolean;
 };
 
-const CausalNav = styled.div`
+const CausalNav = styled.div<{ $withBorder?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: ${(props) => props.theme.spaces.s100};
 
   padding-top: ${(props) => props.theme.spaces.s100};
-  border-top: 1px solid ${(props) => props.theme.textColor.tertiary};
-  border-bottom: 1px solid ${(props) => props.theme.textColor.tertiary};
+  border-top: ${(props) =>
+    props.$withBorder ? '1px solid ' + props.theme.graphColors.grey030 : 'none'};
+  border-bottom: ${(props) =>
+    props.$withBorder ? '1px solid ' + props.theme.graphColors.grey030 : 'none'};
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     flex-direction: row;
   }
@@ -46,7 +49,7 @@ const CardWrapper = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
-function CausalNavigation({ causes, effects }: CausalNavigationProps) {
+function CausalNavigation({ causes, effects, legacyMode = false }: CausalNavigationProps) {
   const t = useTranslations();
   const currentPlan = usePlan();
 
@@ -76,7 +79,7 @@ function CausalNavigation({ causes, effects }: CausalNavigationProps) {
   };
 
   return (
-    <CausalNav>
+    <CausalNav $withBorder={!legacyMode}>
       <CausalList>
         {causes.length > 0 && (
           <div>

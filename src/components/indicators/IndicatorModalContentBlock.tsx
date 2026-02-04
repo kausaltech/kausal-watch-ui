@@ -137,7 +137,11 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
                 )}
               </BlockLabel>
             )}
-            <CausalNavigation causes={indicator.relatedCauses} effects={indicator.relatedEffects} />
+            <CausalNavigation
+              causes={indicator.relatedCauses}
+              effects={indicator.relatedEffects}
+              legacyMode={false}
+            />
           </ContentBlockWrapper>
         )
       );
@@ -214,7 +218,6 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
       categories.push(cat);
     }
   });
-  console.log('📦 IndicatorCategoryBlock rendering', block, categories);
   return (
     categories &&
     categories.length > 0 && (
