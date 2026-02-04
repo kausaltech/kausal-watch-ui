@@ -20,12 +20,17 @@ import IndicatorHero from './IndicatorHero';
 import IndicatorModalContentBlock from './IndicatorModalContentBlock';
 
 const Section = styled.section`
-  padding: ${(props) => props.theme.spaces.s300} 0;
+  margin-bottom: ${(props) => props.theme.spaces.s200};
 
   h2 {
     font-size: ${(props) => props.theme.fontSizeLg};
     margin-bottom: ${(props) => props.theme.spaces.s100};
   }
+`;
+
+const CausalNavigationSection = styled(Section)`
+  background-color: ${(props) => props.theme.cardBackground.secondary};
+  padding: ${(props) => props.theme.spaces.s100} 0;
 `;
 
 const GraphContainer = styled.div`
@@ -41,16 +46,6 @@ const GraphContainer = styled.div`
   }
 `;
 
-const CausalNavigationWrapper = styled.div`
-  padding: ${(props) => props.theme.spaces.s200} 0;
-  background-color: ${(props) => props.theme.themeColors.light};
-
-  h3 {
-    font-size: ${(props) => props.theme.fontSizeLg};
-    margin-bottom: ${(props) => props.theme.spaces.s200};
-  }
-`;
-
 type Props = {
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
   layout: NonNullable<IndicatorDetailsQuery['plan']>['indicatorListPage'];
@@ -61,7 +56,6 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
   const plan = usePlan();
   const t = useTranslations();
 
-  console.log('indicator & layout', indicator, layout);
   const hasLayout =
     layout &&
     ((layout.detailsMainTop && layout.detailsMainTop.length > 0) ||
@@ -71,7 +65,15 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
   const mainGoals = indicator.goals?.filter((goal) => !goal?.scenario) ?? [];
 
-  const allOrgs = [];
+  const allOrgs: {
+    id: string;
+    identifier: string | null;
+    image: string | null | undefined;
+    name: string;
+    shortName: string | null;
+    active: boolean;
+    orgUrl: string;
+  }[] = [];
   /* If indicator has a common indicator for another org in the plan add it in the orgs list */
   indicator.common?.indicators.forEach((common) => {
     /* Make sure organization is included in this plan or is the organization of the active indicator */
@@ -93,6 +95,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
   const uniqueTypes = Array.from(
     new Map(indicator.categories.map((c) => [c.type.id, c.type])).values()
   );
+
   return (
     <div className="mb-5" data-testid={testId}>
       <IndicatorHero
@@ -105,6 +108,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
         <Row>
           {/* Main content = detailsMainTop */}
           <Col md="7" lg="8" className="mb-5">
+            {/* Admin created layout */}
             {hasLayout &&
               layout?.detailsMainTop &&
               layout.detailsMainTop.map((block, index) => {
@@ -112,10 +116,12 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
                   <IndicatorModalContentBlock key={block.id} block={block} indicator={indicator} />
                 );
               })}
+            {/* Legacy support */}
             {!hasLayout && <RichText html={indicator.description || ''} isCollapsible={false} />}
           </Col>
           {/* Side bar = detailsAside */}
           <Col md="5" lg="4" className="mb-5">
+            {/* Admin created layout */}
             {hasLayout &&
               layout?.detailsAside &&
               layout.detailsAside.map((block, index) => {
@@ -123,6 +129,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
                   <IndicatorModalContentBlock key={block.id} block={block} indicator={indicator} />
                 );
               })}
+            {/* Legacy support */}
             {!hasLayout && (
               <CategoryTags categories={indicator.categories} types={uniqueTypes} noLink={true} />
             )}
@@ -137,53 +144,54 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
                 <IndicatorModalContentBlock key={block.id} block={block} indicator={indicator} />
               );
             })}
-          {(indicator.latestGraph || (indicator.values && indicator.values.length > 0)) && (
-            <Row>
-              <Col className="mb-5">
-                <GraphContainer>
-                  <h2>{indicator.name}</h2>
-                  <IndicatorVisualisation indicatorId={indicator.id} showReference={true} />
-                </GraphContainer>
-              </Col>
-            </Row>
+          {/* Legacy support */}
+          {!hasLayout && (
+            <div>
+              {(indicator.latestGraph || (indicator.values && indicator.values.length > 0)) && (
+                <Row>
+                  <Col className="mb-4">
+                    <GraphContainer>
+                      <h2>{indicator.name}</h2>
+                      <IndicatorVisualisation indicatorId={indicator.id} showReference={true} />
+                    </GraphContainer>
+                  </Col>
+                </Row>
+              )}
+              {indicator.actions && indicator.actions.length > 0 && (
+                <Row>
+                  <Col className="mb-4">
+                    <Section>
+                      <h2>{t('indicator-related-actions', getActionTermContext(plan))}</h2>
+                      <ActionsTable actions={indicator.actions} />
+                    </Section>
+                  </Col>
+                </Row>
+              )}
+              {plan.features.enableChangeLog && indicator.changeLogMessage && (
+                <ChangeHistory
+                  entityType="indicator"
+                  entityId={String(indicator.id)}
+                  entry={indicator.changeLogMessage}
+                />
+              )}
+            </div>
           )}
         </Row>
       </Container>
-      {indicator.actions && indicator.actions.length > 0 && (
-        <Section>
+      {!hasLayout && hasImpacts && (
+        <CausalNavigationSection>
           <Container>
-            <Row>
-              <Col className="mb-4">
-                <h2>{t('indicator-related-actions', getActionTermContext(plan))}</h2>
-              </Col>
-            </Row>
             <Row>
               <Col>
-                <ActionsTable actions={indicator.actions} />
+                <CausalNavigation
+                  causes={indicator.relatedCauses}
+                  effects={indicator.relatedEffects}
+                  legacyMode={true}
+                />
               </Col>
             </Row>
           </Container>
-        </Section>
-      )}
-      {hasImpacts && (
-        <CausalNavigationWrapper>
-          <Container>
-            <CausalNavigation causes={indicator.relatedCauses} effects={indicator.relatedEffects} />
-          </Container>
-        </CausalNavigationWrapper>
-      )}
-      {plan.features.enableChangeLog && indicator.changeLogMessage && (
-        <Container>
-          <Row>
-            <Col>
-              <ChangeHistory
-                entityType="indicator"
-                entityId={String(indicator.id)}
-                entry={indicator.changeLogMessage}
-              />
-            </Col>
-          </Row>
-        </Container>
+        </CausalNavigationSection>
       )}
     </div>
   );
