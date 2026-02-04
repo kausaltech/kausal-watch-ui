@@ -122,20 +122,42 @@ const SortableTableHeader = ({
   );
 };
 
+const getAttributeComparableValue = (action: ActionListAction, attributeTypeId: string) => {
+  const attr = action.attributes?.find((a) => a.type?.id === attributeTypeId);
+  if (!attr) return null;
+
+  if (attr.__typename === 'AttributeNumericValue') {
+    const n = attr.numericValue;
+    if (typeof n === 'number') return n;
+    if (n == null) return null;
+    const parsed = Number(n);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
+};
+
 const preprocessForSorting = (
-  sortKey: keyof ActionListAction,
+  sortKey: Sort['key'],
   items: [ActionListAction, ActionListAction],
-  hasImplementationPhases
+  hasImplementationPhases: boolean
 ) => {
-  const values = items.map((item) => item[sortKey]);
+  // Custom field sorting
+  if (typeof sortKey === 'string' && sortKey.startsWith('field:')) {
+    const attributeTypeId = sortKey.slice('field:'.length);
+    return items.map((item) => getAttributeComparableValue(item, attributeTypeId));
+  }
+
+  const values = items.map((item) => (item as any)[sortKey]);
 
   switch (sortKey) {
-    case 'updatedAt':
+    case 'updatedAt': {
       const [x, y] = values;
       return [y, x];
+    }
     case 'implementationPhase':
       return hasImplementationPhases
-        ? items.map((item) => item[sortKey]?.order)
+        ? items.map((item) => item.implementationPhase?.order)
         : items.map((item) => actionStatusOrder(item.status));
     default:
       return values;
@@ -153,7 +175,7 @@ interface Props {
 }
 
 interface Sort {
-  key: keyof ActionListAction | null;
+  key: keyof ActionListAction | string | null;
   direction: number;
 }
 
@@ -169,6 +191,7 @@ const ActionStatusTable = (props: Props) => {
   } = props;
 
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
+
   const [sort, setSort] = useState<Sort>({ key: null, direction: 1 });
 
   const hasImplementationPhases = plan.actionImplementationPhases.length > 0;
@@ -179,6 +202,7 @@ const ActionStatusTable = (props: Props) => {
     }
 
     const [v1, v2] = preprocessForSorting(sort.key, [g1, g2], hasImplementationPhases);
+
     const val = v1 == v2 ? 0 : v1 == null || v2 > v1 ? -1 : 1;
 
     return sort.direction === 1 ? val : -val;
@@ -186,7 +210,7 @@ const ActionStatusTable = (props: Props) => {
 
   const sortedActions = [...actions].sort(comparator);
 
-  const sortHandler = (key: keyof ActionListAction | null) => () => {
+  const sortHandler = (key: Sort['key']) => () => {
     let direction = 1;
 
     if (key === sort.key) {
@@ -236,31 +260,36 @@ const ActionStatusTable = (props: Props) => {
                   return null;
                 }
 
-                if (columnConfig.sortable && columnConfig.headerKey) {
+                const headerLabel = column.columnLabel || column?.attributeType?.name;
+                const isFieldColumn =
+                  column.__typename === 'FieldColumnBlock' && !!column.attributeType?.id;
+                const isNumericFieldColumn =
+                  isFieldColumn &&
+                  typeof column.attributeType?.format === 'string' &&
+                  column.attributeType.format.toUpperCase().includes('NUMERIC');
+                const headerKey: Sort['key'] = isNumericFieldColumn
+                  ? `field:${column.attributeType!.id}`
+                  : columnConfig.headerKey;
+                // apply sorting only for numeric custom fields
+                const isSortable =
+                  isNumericFieldColumn || (columnConfig.sortable && columnConfig.headerKey);
+                if (isSortable && headerKey) {
                   return (
                     <SortableTableHeader
                       key={i}
                       sort={sort}
-                      headerKey={columnConfig.headerKey}
-                      onClick={sortHandler(columnConfig.headerKey)}
+                      headerKey={headerKey}
+                      onClick={sortHandler(headerKey)}
                       className={columnConfig.headerClassName}
                     >
-                      {columnConfig.renderHeader(
-                        t,
-                        plan,
-                        column.columnLabel || column?.attributeType?.name
-                      )}
+                      {columnConfig.renderHeader(t, plan, headerLabel)}
                     </SortableTableHeader>
                   );
                 }
 
                 return (
                   <th key={i} scope="col" className={columnConfig.headerClassName}>
-                    {columnConfig.renderHeader(
-                      t,
-                      plan,
-                      column.columnLabel || column?.attributeType?.name
-                    )}
+                    {columnConfig.renderHeader(t, plan, headerLabel)}
                   </th>
                 );
               })}
