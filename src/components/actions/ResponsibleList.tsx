@@ -3,14 +3,10 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
-import type { ActionResponsiblePartiesBlock } from '@/common/__generated__/graphql';
-import { OrganizationLink } from '@/common/links';
-import { slugify } from '@/common/utils';
-import type { BadgeTooltipProps } from '@/components/common/BadgeTooltip';
-import BadgeTooltip from '@/components/common/BadgeTooltip';
 import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
 
+import OrganizationChip from '../common/OrganizationChip';
 import type { ActionContentAction } from './ActionContent';
 
 const Responsibles = styled.div`
@@ -38,80 +34,8 @@ const ResponsibleItem = styled.li`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
-const ResponsibleSpecifier = styled.div`
-  margin: ${(props) => props.theme.spaces.s050} 0 ${(props) => props.theme.spaces.s050};
-  line-height: ${(props) => props.theme.lineHeightMd};
-`;
-
-const Address = styled.address`
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
-`;
-
-type ResponsibleBadgeProps = {
-  responsibleParty: ActionContentAction['responsibleParties'][0];
-  linkToOrganization?: boolean;
-};
-
-function ResponsibleBadge({ responsibleParty, linkToOrganization = true }: ResponsibleBadgeProps) {
-  const { organization: org, role, specifier } = responsibleParty;
-  const t = useTranslations();
-
-  let size = 'md' as BadgeTooltipProps['size'];
-  let ariaLabel;
-
-  // PRIMARY, COLLABORATOR
-
-  if (role === 'PRIMARY') {
-    size = 'lg';
-    ariaLabel = `${t('responsible-party-main')}: ${org.abbreviation} ${org.name}`;
-  }
-  if (role === 'COLLABORATOR') {
-    size = 'sm';
-    ariaLabel = `${t('responsible-party-main')}: ${org.abbreviation} ${org.name}`;
-  } else {
-    ariaLabel = `${org.abbreviation} ${org.name}`;
-  }
-
-  return (
-    <ResponsibleItem>
-      {linkToOrganization ? (
-        <OrganizationLink organizationId={org.id}>
-          <BadgeTooltip
-            id={`org-${slugify(org.id)}`}
-            tooltip={org.abbreviation !== '' ? org.name : undefined}
-            ariaLabel={ariaLabel}
-            content={org.abbreviation || org.name}
-            size={size}
-            themeColor="badgeColor"
-            isLink
-          />
-        </OrganizationLink>
-      ) : (
-        <BadgeTooltip
-          id={`org-${slugify(org.id)}`}
-          tooltip={org.abbreviation !== '' ? org.name : undefined}
-          ariaLabel={ariaLabel}
-          content={org.abbreviation || org.name}
-          size={size}
-          themeColor="badgeColor"
-          isLink
-        />
-      )}
-      {specifier && <ResponsibleSpecifier>{specifier}</ResponsibleSpecifier>}
-      {org.email && (
-        <Address>
-          {t('email')}: <a href={`mailto:${org.email}`}>{org.email}</a>
-        </Address>
-      )}
-    </ResponsibleItem>
-  );
-}
-
 type ResponsibleListProps = {
-  heading: ActionResponsiblePartiesBlock['heading'];
+  heading: string | null;
   responsibleParties: ActionContentAction['responsibleParties'];
 };
 function ResponsibleList(props: ResponsibleListProps) {
@@ -124,16 +48,21 @@ function ResponsibleList(props: ResponsibleListProps) {
   const { organizationTerm } = plan.generalContent;
   /* TODO: a11y - this should probably be a list markup */
 
+  console.log('responsibleParties', responsibleParties);
   return (
     <Responsibles>
       <h3>{heading || t('responsible-parties', { context: organizationTerm })}</h3>
       <ResponsiblesList>
         {responsibleParties.map((item) => (
-          <ResponsibleBadge
-            key={item.id}
-            responsibleParty={item}
-            linkToOrganization={linkToOrganization}
-          />
+          <ResponsibleItem>
+            <OrganizationChip
+              key={item.id}
+              organization={item.organization}
+              role={item.role}
+              specifier={item.specifier}
+              linkToOrganization={linkToOrganization}
+            />
+          </ResponsibleItem>
         ))}
       </ResponsiblesList>
     </Responsibles>

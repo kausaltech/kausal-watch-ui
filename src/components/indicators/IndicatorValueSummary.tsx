@@ -234,7 +234,7 @@ interface IndicatorValueSummaryProps {
   goals: Indicator['goals'];
   unit: Indicator['unit'];
   desiredTrend?: Indicator['desiredTrend'];
-  options: ValueSummaryOptions;
+  options?: ValueSummaryOptions;
 }
 
 function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
@@ -245,7 +245,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
 
   const rounding = options?.valueRounding ?? DEFAULT_ROUNDING;
   // Use default values for legacy support if options are not provided
-  const displayOptions: ValueSummaryOptions = options || {
+  const displayOptions: ValueSummaryOptions = options ?? {
     referenceValue: {
       show: true,
       year: null,
@@ -256,6 +256,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
     },
     goalValue: {
       show: true,
+      defaultGoalYear: null,
     },
     goalGap: {
       show: true,
@@ -264,6 +265,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
       trend: null,
       date: null,
     },
+    valueRounding: DEFAULT_ROUNDING,
   };
 
   const desirableDirection = determineDesirableDirection(desiredTrend, values, goals);

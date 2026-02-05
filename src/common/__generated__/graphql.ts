@@ -3608,7 +3608,7 @@ export type CategoryTagFragmentFragment = (
     & { __typename: 'CategoryPage' }
   ) | null, type: (
     { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-      { id: string, name: string, namePlural: string | null }
+      { id: string, order: number, name: string, namePlural: string | null }
       & { __typename: 'CategoryLevel' }
     )> }
     & { __typename: 'CategoryType' }
@@ -3634,7 +3634,7 @@ export type CategoryTagWithParentsFragmentFragment = (
           & { __typename: 'CategoryPage' }
         ) | null, type: (
           { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-            { id: string, name: string, namePlural: string | null }
+            { id: string, order: number, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           )> }
           & { __typename: 'CategoryType' }
@@ -3654,7 +3654,7 @@ export type CategoryTagWithParentsFragmentFragment = (
         & { __typename: 'CategoryPage' }
       ) | null, type: (
         { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-          { id: string, name: string, namePlural: string | null }
+          { id: string, order: number, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         )> }
         & { __typename: 'CategoryType' }
@@ -3674,7 +3674,7 @@ export type CategoryTagWithParentsFragmentFragment = (
       & { __typename: 'CategoryPage' }
     ) | null, type: (
       { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-        { id: string, name: string, namePlural: string | null }
+        { id: string, order: number, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       )> }
       & { __typename: 'CategoryType' }
@@ -3699,7 +3699,7 @@ export type CategoryTagRecursiveFragmentFragment = (
     & { __typename: 'CategoryPage' }
   ) | null, type: (
     { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-      { id: string, name: string, namePlural: string | null }
+      { id: string, order: number, name: string, namePlural: string | null }
       & { __typename: 'CategoryLevel' }
     )> }
     & { __typename: 'CategoryType' }
@@ -3720,7 +3720,7 @@ export type CategoryTagRecursiveFragmentFragment = (
           & { __typename: 'CategoryPage' }
         ) | null, type: (
           { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-            { id: string, name: string, namePlural: string | null }
+            { id: string, order: number, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           )> }
           & { __typename: 'CategoryType' }
@@ -3740,7 +3740,7 @@ export type CategoryTagRecursiveFragmentFragment = (
         & { __typename: 'CategoryPage' }
       ) | null, type: (
         { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-          { id: string, name: string, namePlural: string | null }
+          { id: string, order: number, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         )> }
         & { __typename: 'CategoryType' }
@@ -3760,7 +3760,7 @@ export type CategoryTagRecursiveFragmentFragment = (
       & { __typename: 'CategoryPage' }
     ) | null, type: (
       { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-        { id: string, name: string, namePlural: string | null }
+        { id: string, order: number, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       )> }
       & { __typename: 'CategoryType' }
@@ -14376,7 +14376,7 @@ export type IndicatorDetailsQuery = (
         & { __typename: 'CategoryPage' }
       ) | null, type: (
         { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-          { id: string, name: string, namePlural: string | null }
+          { id: string, order: number, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         )> }
         & { __typename: 'CategoryType' }
@@ -14397,7 +14397,7 @@ export type IndicatorDetailsQuery = (
               & { __typename: 'CategoryPage' }
             ) | null, type: (
               { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-                { id: string, name: string, namePlural: string | null }
+                { id: string, order: number, name: string, namePlural: string | null }
                 & { __typename: 'CategoryLevel' }
               )> }
               & { __typename: 'CategoryType' }
@@ -14417,7 +14417,7 @@ export type IndicatorDetailsQuery = (
             & { __typename: 'CategoryPage' }
           ) | null, type: (
             { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-              { id: string, name: string, namePlural: string | null }
+              { id: string, order: number, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             )> }
             & { __typename: 'CategoryType' }
@@ -14437,7 +14437,7 @@ export type IndicatorDetailsQuery = (
           & { __typename: 'CategoryPage' }
         ) | null, type: (
           { id: string, name: string, identifier: string, hideCategoryIdentifiers: boolean, helpText: string, levels: Array<(
-            { id: string, name: string, namePlural: string | null }
+            { id: string, order: number, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           )> }
           & { __typename: 'CategoryType' }

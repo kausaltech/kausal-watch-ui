@@ -73,8 +73,12 @@ const ViewChangesButton = styled.button`
   padding: 0;
   cursor: pointer;
   text-decoration: underline;
-  color: ${(props) => props.theme.brandDark};
+  color: ${(props) => props.theme.linkColor};
   font-size: ${(props) => props.theme.fontSizeSm};
+
+  &:hover {
+    text-decoration: none;
+  }
 `;
 
 const Overlay = styled.div<{ $open: boolean }>`

@@ -132,6 +132,7 @@ export const CATEGORY_TAG_FRAGMENT = gql`
       helpText
       levels {
         id
+        order
         name
         namePlural
       }

@@ -1,3 +1,4 @@
+import { upperFirst } from 'lodash';
 import { useFormatter, useTranslations } from 'next-intl';
 import styled from 'styled-components';
 
@@ -8,14 +9,21 @@ import {
   type IndicatorDetailsQuery,
   type IndicatorValueSummaryContentBlockFragmentFragment,
 } from '@/common/__generated__/graphql';
+import { getActionTermContext } from '@/common/i18n';
+import { usePlan } from '@/context/plan';
 
+import ActionsTable from '../actions/ActionsTable';
 import BadgeTooltip from '../common/BadgeTooltip';
+import OrganizationChip from '../common/OrganizationChip';
+import PopoverTip from '../common/PopoverTip';
 import RichText from '../common/RichText';
+import CausalNavigation from './CausalNavigation';
+import IndicatorLevelChip from './IndicatorLevelChip';
 import IndicatorValueSummary, { type ValueSummaryOptions } from './IndicatorValueSummary';
 import IndicatorVisualisation from './IndicatorVisualisation';
 
 const CategoryTypeBlock = styled.div`
-  padding-bottom: ${(props) => props.theme.spaces.s050};
+  margin-bottom: ${(props) => props.theme.spaces.s200};
   background-color: ${({ theme }) => theme.themeColors.white};
   h3 {
     margin-bottom: ${(props) => props.theme.spaces.s050};
@@ -24,10 +32,10 @@ const CategoryTypeBlock = styled.div`
 `;
 
 const ContentBlockWrapper = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s200};
+  margin-bottom: ${(props) => props.theme.spaces.s300};
 `;
 
-const BlockLabel = styled.h2`
+export const BlockLabel = styled.h2`
   font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: ${(props) => props.theme.fontWeightBold};
   margin-bottom: ${(props) => props.theme.spaces.s050};
@@ -59,72 +67,120 @@ interface IndicatorContentBlockProps {
 
 const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
   const { block, indicator, hideLegacyLastUpdated } = props;
+  const plan = usePlan();
   const format = useFormatter();
   const t = useTranslations();
   if (!block.sourceField) return null;
   switch (block.sourceField) {
     case IndicatorDetailsFieldName.Description:
     case IndicatorDetailsFieldName.Name:
+      if (!indicator.description) return null;
       // Using name field to render description for now
       return (
         <ContentBlockWrapper>
-          {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
+          <BlockLabel>
+            {block.fieldLabel}
+            {block.fieldHelpText && block.id && (
+              <PopoverTip content={block.fieldHelpText} identifier={block.id} />
+            )}
+          </BlockLabel>
           <RichText html={indicator.description || ''} isCollapsible={false} />
         </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.GoalDescription:
-      return (
-        indicator.goalDescription && (
-          <ContentBlockWrapper>
-            {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
-            <div>{indicator.goalDescription}</div>
-          </ContentBlockWrapper>
-        )
-      );
-    case IndicatorDetailsFieldName.Visualization:
+      if (!indicator.goalDescription) return null;
       return (
         <ContentBlockWrapper>
           {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
+          <div>{indicator.goalDescription}</div>
+        </ContentBlockWrapper>
+      );
+    case IndicatorDetailsFieldName.Visualization:
+      const indicatorHasData = indicator.values.length > 0;
+      if (!indicatorHasData) return null;
+      return (
+        <ContentBlockWrapper>
+          <BlockLabel>
+            {block.fieldLabel}
+            {block.fieldHelpText && block.id && (
+              <PopoverTip content={block.fieldHelpText} identifier={block.id} />
+            )}
+          </BlockLabel>
           <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
         </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.ConnectedActions:
       return (
-        <ContentBlockWrapper>
-          <hr />
-          Connected Actions
-          <hr />
-        </ContentBlockWrapper>
+        indicator.actions &&
+        indicator.actions.length > 0 && (
+          <ContentBlockWrapper>
+            <BlockLabel>
+              {block.fieldLabel || t('indicator-related-actions', getActionTermContext(plan))}
+              {block.fieldHelpText && block.id && (
+                <PopoverTip content={block.fieldHelpText} identifier={block.id} />
+              )}
+            </BlockLabel>
+            <ActionsTable actions={indicator.actions} />
+          </ContentBlockWrapper>
+        )
       );
     case IndicatorDetailsFieldName.CausalityNav:
+      const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
       return (
-        <ContentBlockWrapper>
-          <hr />
-          Causality Nav
-          <hr />
-        </ContentBlockWrapper>
+        hasImpacts && (
+          <ContentBlockWrapper>
+            {block.fieldLabel && (
+              <BlockLabel>
+                {block.fieldLabel}
+                {block.fieldHelpText && block.id && (
+                  <PopoverTip content={block.fieldHelpText} identifier={block.id} />
+                )}
+              </BlockLabel>
+            )}
+            <CausalNavigation
+              causes={indicator.relatedCauses}
+              effects={indicator.relatedEffects}
+              legacyMode={false}
+            />
+          </ContentBlockWrapper>
+        )
       );
     case IndicatorDetailsFieldName.Level:
       return (
         <ContentBlockWrapper>
-          <hr />
-          Level
-          <hr />
+          <BlockLabel>
+            {block.fieldLabel || upperFirst(t('level'))}
+            {block.fieldHelpText && block.id && (
+              <PopoverTip content={block.fieldHelpText} identifier={block.id} />
+            )}
+          </BlockLabel>
+          {indicator.level && <IndicatorLevelChip level={indicator.level} />}
         </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.Organization:
       return (
         <ContentBlockWrapper>
-          <hr />
-          Organization
-          <hr />
+          <BlockLabel>
+            {block.fieldLabel || t('organization')}
+            {block.fieldHelpText && block.id && (
+              <PopoverTip content={block.fieldHelpText} identifier={block.id} />
+            )}
+          </BlockLabel>
+          <OrganizationChip organization={indicator.organization} />
         </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.Reference:
       return (
         indicator.reference && (
           <ContentBlockWrapper>
-            {block.fieldLabel && <BlockLabel>{block.fieldLabel}</BlockLabel>}
+            {block.fieldLabel && (
+              <BlockLabel>
+                {block.fieldLabel}
+                {block.fieldHelpText && block.id && (
+                  <PopoverTip content={block.fieldHelpText} identifier={block.id} />
+                )}
+              </BlockLabel>
+            )}
             <RichText html={indicator.reference} />
           </ContentBlockWrapper>
         )
@@ -162,12 +218,20 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
       categories.push(cat);
     }
   });
-
   return (
     categories &&
     categories.length > 0 && (
       <CategoryTypeBlock>
-        <h3>{block.fieldLabel || block.categoryType?.name}</h3>
+        <BlockLabel>
+          {block.fieldLabel || block.categoryType?.name}
+          {(block.fieldHelpText || block.categoryType?.helpText) && block.id && (
+            <PopoverTip
+              content={block.fieldHelpText || block.categoryType?.helpText || ''}
+              identifier={block.id}
+            />
+          )}
+        </BlockLabel>
+
         <CategoryBadges>
           {categories.map((cat) => (
             <BadgeTooltip
@@ -175,7 +239,7 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
               id={cat.id}
               tooltip=""
               content={cat.name}
-              size="sm"
+              size="md"
               themeColor="neutralLight"
               color={cat.color || cat.parent?.color || undefined}
               isLink={false}
@@ -194,7 +258,6 @@ interface IndicatorValueSummaryBlockProps {
 
 const IndicatorValueSummaryBlock = (props: IndicatorValueSummaryBlockProps) => {
   const { block, indicator } = props;
-  console.log('indicator value summary block', block, indicator);
   const options: ValueSummaryOptions = {
     referenceValue: {
       show: block.showReferenceValue,
@@ -217,8 +280,16 @@ const IndicatorValueSummaryBlock = (props: IndicatorValueSummaryBlockProps) => {
     },
     valueRounding: indicator.valueRounding,
   };
+  const hasContent = indicator.values && indicator.values.length > 0;
+  if (!hasContent) return null;
   return (
     <ContentBlockWrapper>
+      <BlockLabel>
+        {block.fieldLabel}
+        {block.fieldHelpText && block.id && (
+          <PopoverTip content={block.fieldHelpText} identifier={block.id} />
+        )}
+      </BlockLabel>
       <IndicatorValueSummary
         timeResolution={indicator.timeResolution || ''}
         values={indicator.values || []}
@@ -248,7 +319,19 @@ interface IndicatorGroupedCategoryBlockProps {
 
 const IndicatorGroupedCategoryBlock = (props: IndicatorGroupedCategoryBlockProps) => {
   const { blocks, indicator } = props;
+  const hasContet = blocks.some((block) => {
+    const categories: NonNullable<IndicatorDetailsQuery['indicator']>['categories'][number][] = [];
 
+    indicator.categories.forEach((cat) => {
+      if (cat.type.id === block.categoryType?.id) {
+        categories.push(cat);
+      }
+    });
+
+    return categories && categories.length > 0;
+  });
+
+  if (!hasContet) return null;
   return (
     <GroupedCategoryContainer>
       {blocks.map((block) => {
@@ -275,7 +358,6 @@ const IndicatorModalContentBlock = ({
 }: IndicatorModalContentBlockProps) => {
   if (!block || !indicator) return null;
 
-  // console.log('📦 block', block);
   switch (block.__typename) {
     case 'IndicatorContentBlock':
       return (
