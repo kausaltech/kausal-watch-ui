@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import type { truncate } from 'fs/promises';
 import { type DateTimeFormatOptions, useFormatter, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
@@ -270,10 +271,27 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
         return <CellContent $numeric={true}>{value}</CellContent>;
     }
   }
+
+  let unit = indicator.unit;
+
+  if (isNormalized) {
+    if (
+      indicator.common == null ||
+      indicator.common.normalizations == null ||
+      indicator.common.normalizations.length !== 1
+    ) {
+      Sentry.captureMessage('Unable to find unambigious normalization for indicator.');
+    } else {
+      unit = indicator.common?.normalizations[0]?.unit;
+    }
+  }
+
+  const unitName = unit.shortName || unit.name;
+
   return (
     <CellContent $numeric={true}>
       <Value>{format.number(value, { maximumSignificantDigits: rounding })}</Value>
-      {!hideUnit && <Unit>{indicator.unit.shortName || indicator.unit.name}</Unit>}
+      {!hideUnit && <Unit>{unitName}</Unit>}
       {defaultYear && year && year !== defaultYear && (
         <>
           <br />
