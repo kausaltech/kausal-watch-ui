@@ -217,5 +217,12 @@
     "pledge-committed-count": "{count} committed",
     "pledge-committed": "Committed",
     "pledge-commit-to-this": "Commit to this",
-    "pledge-no-commitments": "You haven't committed to any pledges yet. Browse all pledges to find one that interests you!"
+    "pledge-no-commitments": "You haven't committed to any pledges yet. Browse all pledges to find one that interests you!",
+    "pledge-your-potential-impact": "Your potential impact",
+    "pledge-impact-if-residents-commit": "If {count} residents commit to this Pledge",
+    "pledge-impact-to-go": "{count} to go",
+    "pledge-impact-we-save": "We save {amount} {unit} each year",
+    "pledge-impact-equivalent-to": "That's equivalent to {equivalence}",
+    "pledge-how-this-supports-climate-plan": "How this supports our climate plan",
+    "pledge-view-action": "View action"
   }
