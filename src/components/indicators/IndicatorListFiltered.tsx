@@ -12,6 +12,7 @@ import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
 import IndicatorTableCell from './IndicatorTableCell';
 import IndicatorTableHeader from './IndicatorTableHeader';
 import { groupIndicatorsByCommonCategory, indentationLevel } from './indicatorUtils';
+import type { SortState } from './indicatorUtils';
 import type { Hierarchy } from './process-indicators';
 
 export const isEmptyFilter = (val) => val == null || val === '';
@@ -157,12 +158,14 @@ interface IndicatorListFilteredProps {
   hierarchy?: Hierarchy;
   openIndicatorsInModal?: (id: string) => void | null;
   listColumns: NonNullable<IndicatorListPageFragmentFragment['listColumns']>;
+  sort: SortState;
+  onSortState: (key: 'name' | 'level') => void;
 }
 
 export default function IndicatorListFiltered(props: IndicatorListFilteredProps) {
   const t = useTranslations();
 
-  const { indicators, hierarchy, openIndicatorsInModal, listColumns } = props;
+  const { indicators, hierarchy, openIndicatorsInModal, listColumns, sort, onSortState } = props;
 
   // Calculate initial collapsed state - collapse all nodes by default except first level
   const initialCollapsedNodes = React.useMemo(() => {
@@ -234,7 +237,12 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
         <thead>
           <tr>
             {listColumns.map((column) => (
-              <IndicatorTableHeader key={column.id} column={column} />
+              <IndicatorTableHeader
+                key={column.id}
+                column={column}
+                sort={sort}
+                onSortState={onSortState}
+              />
             ))}
           </tr>
         </thead>
