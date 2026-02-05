@@ -207,10 +207,11 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
 interface IndicatorCategoryBlockProps {
   block: IndicatorCategoryContentBlockFragmentFragment;
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
+  context?: 'grouped' | 'single';
 }
 
 const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
-  const { block, indicator } = props;
+  const { block, indicator, context = 'single' } = props;
   const categories: NonNullable<IndicatorDetailsQuery['indicator']>['categories'][number][] = [];
 
   indicator.categories.forEach((cat) => {
@@ -239,7 +240,7 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
               id={cat.id}
               tooltip=""
               content={cat.name}
-              size="md"
+              size={context === 'grouped' ? 'sm' : 'md'}
               themeColor="neutralLight"
               color={cat.color || cat.parent?.color || undefined}
               isLink={false}
@@ -337,7 +338,12 @@ const IndicatorGroupedCategoryBlock = (props: IndicatorGroupedCategoryBlockProps
       {blocks.map((block) => {
         return (
           <CategoryColumn key={block.id}>
-            <IndicatorCategoryBlock key={block.id} block={block} indicator={indicator} />
+            <IndicatorCategoryBlock
+              key={block.id}
+              block={block}
+              indicator={indicator}
+              context="grouped"
+            />
           </CategoryColumn>
         );
       })}
