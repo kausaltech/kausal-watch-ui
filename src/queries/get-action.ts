@@ -313,6 +313,10 @@ const GET_ACTION_DETAILS = gql`
   }
 
   fragment ActionAsideContentBlocksFragment on ActionAsideContentBlock {
+    ... on ActionContentBlockInterface {
+      fieldLabel
+      fieldHelpText
+    }
     ... on FieldBlockMetaInterface {
       meta {
         restricted

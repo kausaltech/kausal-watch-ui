@@ -252,7 +252,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
         />
       );
     case 'ActionScheduleBlock':
-      return <ActionScheduleBlock action={action} plan={plan} />;
+      return <ActionScheduleBlock heading={block.fieldLabel} action={action} plan={plan} />;
     case 'ActionContentSectionBlock':
       const { heading, helpText, layout, blocks, pageid } = block;
       return (
