@@ -89,6 +89,26 @@ function isChildOrg(childOrg, parentOrg) {
   return childTree.some((id) => parentTree.indexOf(id) >= 0);
 }
 
+class AttributeType {
+  id: string;
+  constructor(id: string) {
+    this.id = id;
+  }
+}
+
+interface Sort {
+  key: keyof ActionListAction | AttributeType | null;
+  direction: number;
+}
+
+const isAttributeTypeKey = (key: Sort['key']): key is AttributeType => key instanceof AttributeType;
+
+const isSameSortKey = (a: Sort['key'], b: Sort['key']) => {
+  if (a === b) return true;
+  if (a instanceof AttributeType && b instanceof AttributeType) return a.id === b.id;
+  return false;
+};
+
 interface SortableTableHeaderProps {
   children: ReactNode;
   headerKey: Sort['key'];
@@ -104,7 +124,7 @@ const SortableTableHeader = ({
   onClick,
   className,
 }: SortableTableHeaderProps) => {
-  const selected = sort.key == headerKey;
+  const selected = isSameSortKey(sort.key, headerKey);
   const iconName = selected ? ((sort.direction ?? 1) === 1 ? 'sortDown' : 'sortUp') : 'sort';
 
   return (
@@ -122,20 +142,42 @@ const SortableTableHeader = ({
   );
 };
 
+const getAttributeComparableValue = (action: ActionListAction, attributeTypeId: string) => {
+  const attr = action.attributes?.find(
+    (a) => a.type?.id === attributeTypeId && a.__typename === 'AttributeNumericValue'
+  );
+  if (!attr) return null;
+
+  const n = attr.numericValue;
+  if (typeof n === 'number') return n;
+  if (n == null) return null;
+  const parsed = Number(n);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
 const preprocessForSorting = (
-  sortKey: keyof ActionListAction,
+  sortKey: Sort['key'],
   items: [ActionListAction, ActionListAction],
-  hasImplementationPhases
+  hasImplementationPhases: boolean
 ) => {
+  // Custom field sorting
+  if (isAttributeTypeKey(sortKey)) {
+    return items.map((item) => getAttributeComparableValue(item, sortKey.id));
+  }
+  if (sortKey == null) {
+    return [null, null];
+  }
+
   const values = items.map((item) => item[sortKey]);
 
   switch (sortKey) {
-    case 'updatedAt':
+    case 'updatedAt': {
       const [x, y] = values;
       return [y, x];
+    }
     case 'implementationPhase':
       return hasImplementationPhases
-        ? items.map((item) => item[sortKey]?.order)
+        ? items.map((item) => item.implementationPhase?.order)
         : items.map((item) => actionStatusOrder(item.status));
     default:
       return values;
@@ -152,11 +194,6 @@ interface Props {
   hasRelatedPlans?: boolean;
 }
 
-interface Sort {
-  key: keyof ActionListAction | null;
-  direction: number;
-}
-
 const ActionStatusTable = (props: Props) => {
   const {
     actions,
@@ -169,6 +206,7 @@ const ActionStatusTable = (props: Props) => {
   } = props;
 
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
+
   const [sort, setSort] = useState<Sort>({ key: null, direction: 1 });
 
   const hasImplementationPhases = plan.actionImplementationPhases.length > 0;
@@ -179,6 +217,7 @@ const ActionStatusTable = (props: Props) => {
     }
 
     const [v1, v2] = preprocessForSorting(sort.key, [g1, g2], hasImplementationPhases);
+
     const val = v1 == v2 ? 0 : v1 == null || v2 > v1 ? -1 : 1;
 
     return sort.direction === 1 ? val : -val;
@@ -186,10 +225,10 @@ const ActionStatusTable = (props: Props) => {
 
   const sortedActions = [...actions].sort(comparator);
 
-  const sortHandler = (key: keyof ActionListAction | null) => () => {
+  const sortHandler = (key: Sort['key']) => () => {
     let direction = 1;
 
-    if (key === sort.key) {
+    if (isSameSortKey(key, sort.key)) {
       direction -= sort.direction;
     }
 
@@ -236,31 +275,36 @@ const ActionStatusTable = (props: Props) => {
                   return null;
                 }
 
-                if (columnConfig.sortable && columnConfig.headerKey) {
+                const headerLabel = column.columnLabel || column?.attributeType?.name;
+                const isFieldColumn =
+                  column.__typename === 'FieldColumnBlock' && !!column.attributeType?.id;
+                const isNumericFieldColumn =
+                  isFieldColumn &&
+                  typeof column.attributeType?.format === 'string' &&
+                  column.attributeType.format.toUpperCase().includes('NUMERIC');
+                const headerKey: Sort['key'] = isNumericFieldColumn
+                  ? new AttributeType(column.attributeType!.id)
+                  : columnConfig.headerKey;
+                // apply sorting only for numeric custom fields
+                const isSortable =
+                  isNumericFieldColumn || (columnConfig.sortable && columnConfig.headerKey);
+                if (isSortable && headerKey) {
                   return (
                     <SortableTableHeader
                       key={i}
                       sort={sort}
-                      headerKey={columnConfig.headerKey}
-                      onClick={sortHandler(columnConfig.headerKey)}
+                      headerKey={headerKey}
+                      onClick={sortHandler(headerKey)}
                       className={columnConfig.headerClassName}
                     >
-                      {columnConfig.renderHeader(
-                        t,
-                        plan,
-                        column.columnLabel || column?.attributeType?.name
-                      )}
+                      {columnConfig.renderHeader(t, plan, headerLabel)}
                     </SortableTableHeader>
                   );
                 }
 
                 return (
                   <th key={i} scope="col" className={columnConfig.headerClassName}>
-                    {columnConfig.renderHeader(
-                      t,
-                      plan,
-                      column.columnLabel || column?.attributeType?.name
-                    )}
+                    {columnConfig.renderHeader(t, plan, headerLabel)}
                   </th>
                 );
               })}
