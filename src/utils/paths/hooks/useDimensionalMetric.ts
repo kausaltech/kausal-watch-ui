@@ -5,20 +5,25 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useReactiveVar } from '@apollo/client';
 import { isEqual } from 'lodash';
 
-import { activeGoalVar } from '@/context/paths/cache';
-
-import { getDefaultSliceConfig, updateChoice } from '../metric/config';
-import { downloadData } from '../metric/export';
-import { parseMetric } from '../metric/parse';
-import { flatten, sliceBy } from '../metric/slicing';
+import {
+  downloadData,
+  flatten,
+  getDefaultSliceConfig,
+  parseMetric,
+  sliceBy,
+  updateChoice,
+} from '@common/utils/paths/metric';
 import type {
   ExportOptions,
+  InstanceGoalInput,
   MetricDimension,
   MetricInput,
   MetricSliceData,
   ParsedMetric,
   SliceConfig,
-} from '../metric/types';
+} from '@common/utils/paths/metric';
+
+import { activeGoalVar } from '@/context/paths/cache';
 
 type UseDimensionalMetricOptions = {
   /** Sync slice config with active goal changes (default: true) */
@@ -55,7 +60,7 @@ export function useDimensionalMetric(
   options: UseDimensionalMetricOptions = {}
 ): UseDimensionalMetricReturn {
   const { syncWithGoal = true } = options;
-  const activeGoal = useReactiveVar(activeGoalVar);
+  const activeGoal = useReactiveVar(activeGoalVar) as InstanceGoalInput | null;
 
   // Parse metric once when data changes
   const metric = useMemo(() => parseMetric(metricData), [metricData]);

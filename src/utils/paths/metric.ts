@@ -1,6 +1,6 @@
 /**
  * @deprecated This file provides backwards compatibility.
- * Use imports from '@/utils/paths/metric' for the new functional API instead.
+ * Use imports from '@common/paths/metric' for the new functional API instead.
  *
  * Example migration:
  * ```typescript
@@ -10,7 +10,7 @@
  * const slice = cube.sliceBy(dimId, true, categories);
  *
  * // New:
- * import { parseMetric, sliceBy } from '@/utils/paths/metric';
+ * import { parseMetric, sliceBy } from '@common/paths/metric';
  * const metric = parseMetric(data);
  * const slice = sliceBy(metric, dimId, true, categories, true);
  *
@@ -22,17 +22,31 @@
 import type { DocumentNode } from '@apollo/client';
 import { gql } from '@apollo/client';
 
-import { createTable } from './metric-slice';
-import * as accessors from './metric/accessors';
-import * as config from './metric/config';
-import * as dimensions from './metric/dimensions';
-import { downloadData } from './metric/export';
-import * as goals from './metric/goals';
-import { parseMetric } from './metric/parse';
-import * as slicing from './metric/slicing';
-// Import for internal use
+// Import everything from the shared library
+import {
+  createTable,
+  downloadData,
+  flatten,
+  getChoicesForGoal,
+  getDefaultSliceConfig,
+  getForecastFrom,
+  getForecastYears,
+  getGoalsForChoice,
+  getHistoricalYears,
+  getName,
+  getOptionsForDimension,
+  getSingleYear,
+  getSliceableDims,
+  getUnit,
+  getUnitShort,
+  hasDimension,
+  isForecastYear,
+  parseMetric,
+  sliceBy,
+  updateChoice,
+} from '@common/utils/paths/metric';
 import type {
-  InstanceGoal,
+  InstanceGoalInput,
   MetricCategoryChoice,
   MetricDimension,
   MetricInput,
@@ -40,27 +54,29 @@ import type {
   ParsedMetric,
   SliceConfig,
   TableLabels,
-} from './metric/types';
+} from '@common/utils/paths/metric';
 
 // Re-export types for backwards compatibility
+// InstanceGoal is an alias for InstanceGoalInput from the shared lib
+export type InstanceGoal = InstanceGoalInput;
+
 export type {
   SliceConfig,
   MetricCategoryChoice,
   MetricCategoryValues,
   MetricCategory,
   MetricSliceData,
-  InstanceGoal,
   MetricInput,
   ParsedMetric,
   MetricDimension,
   MetricDimensionCategory,
   MetricCategoryGroup,
   CatDimChoice,
-} from './metric/types';
+} from '@common/utils/paths/metric';
 
 // Re-export functions for new API usage
-export { parseMetric } from './metric/parse';
 export {
+  parseMetric,
   getName,
   getUnit,
   getUnitShort,
@@ -68,13 +84,19 @@ export {
   getHistoricalYears,
   getForecastYears,
   isForecastYear,
-} from './metric/accessors';
-export { hasDimension, getOptionsForDimension, getSliceableDims } from './metric/dimensions';
-export { getGoalsForChoice, getChoicesForGoal } from './metric/goals';
-export { getDefaultSliceConfig, updateChoice } from './metric/config';
-export { sliceBy, flatten, getSingleYear } from './metric/slicing';
-export { downloadData } from './metric/export';
-export { createTable } from './metric-slice';
+  hasDimension,
+  getOptionsForDimension,
+  getSliceableDims,
+  getGoalsForChoice,
+  getChoicesForGoal,
+  getDefaultSliceConfig,
+  updateChoice,
+  sliceBy,
+  flatten,
+  getSingleYear,
+  downloadData,
+  createTable,
+} from '@common/utils/paths/metric';
 
 const DIMENSIONAL_METRIC_FRAGMENT = gql`
   fragment DimensionalMetric on DimensionalMetricType {
@@ -182,32 +204,30 @@ export class DimensionalMetric {
     this.parsed = parseMetric(data);
   }
 
-  getName = () => accessors.getName(this.parsed);
-  getUnit = () => accessors.getUnit(this.parsed);
-  getForecastFrom = () => accessors.getForecastFrom(this.parsed);
-  getHistoricalYears = () => accessors.getHistoricalYears(this.parsed);
-  getForecastYears = () => accessors.getForecastYears(this.parsed);
-  isForecastYear = (year: number) => accessors.isForecastYear(this.parsed, year);
+  getName = () => getName(this.parsed);
+  getUnit = () => getUnit(this.parsed);
+  getForecastFrom = () => getForecastFrom(this.parsed);
+  getHistoricalYears = () => getHistoricalYears(this.parsed);
+  getForecastYears = () => getForecastYears(this.parsed);
+  isForecastYear = (year: number) => isForecastYear(this.parsed, year);
 
-  hasDimension = (originalDimId: string) => dimensions.hasDimension(this.parsed, originalDimId);
+  hasDimension = (originalDimId: string) => hasDimension(this.parsed, originalDimId);
 
   getOptionsForDimension = (dimId: string, cfg: MetricCategoryChoice) =>
-    dimensions.getOptionsForDimension(this.parsed, dimId, cfg);
+    getOptionsForDimension(this.parsed, dimId, cfg);
 
-  getSliceableDims = (selection: SliceConfig) =>
-    dimensions.getSliceableDims(this.parsed, selection);
+  getSliceableDims = (selection: SliceConfig) => getSliceableDims(this.parsed, selection);
 
   getGoalsForChoice = (choice: MetricCategoryChoice | null | undefined) =>
-    goals.getGoalsForChoice(this.parsed, choice);
+    getGoalsForChoice(this.parsed, choice);
 
-  getChoicesForGoal = (activeGoal: InstanceGoal) =>
-    goals.getChoicesForGoal(this.parsed, activeGoal);
+  getChoicesForGoal = (activeGoal: InstanceGoal) => getChoicesForGoal(this.parsed, activeGoal);
 
   getDefaultSliceConfig = (activeGoal: InstanceGoal | null) =>
-    config.getDefaultSliceConfig(this.parsed, activeGoal);
+    getDefaultSliceConfig(this.parsed, activeGoal);
 
   updateChoice = (dim: MetricDimension, old: SliceConfig, newChoice: readonly { id: string }[]) =>
-    config.updateChoice(this.parsed, dim, old, newChoice);
+    updateChoice(this.parsed, dim, old, newChoice);
 
   sliceBy = (
     dimensionId: string,
@@ -216,17 +236,17 @@ export class DimensionalMetric {
     useGroups: boolean = true,
     years?: number[]
   ): MetricSlice | null => {
-    const data = slicing.sliceBy(this.parsed, dimensionId, sort, categoryChoice, useGroups, years);
+    const data = sliceBy(this.parsed, dimensionId, sort, categoryChoice, useGroups, years);
     return data ? new MetricSlice(data) : null;
   };
 
   flatten = (categoryChoice?: MetricCategoryChoice, years?: number[]): MetricSlice => {
-    const data = slicing.flatten(this.parsed, categoryChoice, years);
+    const data = flatten(this.parsed, categoryChoice, years);
     return new MetricSlice(data);
   };
 
   getSingleYear = (year: number, categoryChoice?: MetricCategoryChoice) =>
-    slicing.getSingleYear(this.parsed, year, categoryChoice);
+    getSingleYear(this.parsed, year, categoryChoice);
 
   async downloadData(
     cfg: SliceConfig,
