@@ -1,16 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
 import { useFormatter } from 'next-intl';
 import styled from 'styled-components';
 
-import type {
-  GetInstanceContextQuery,
-  GetNodeContentQuery,
-} from '@/common/__generated__/paths/graphql';
+import type { GetNodeContentQuery } from '@/common/__generated__/paths/graphql';
 import HighlightValue from '@/components/paths/HighlightValue';
+import type { PathsInstanceType } from '@/components/providers/PathsProvider';
 import { yearRangeVar } from '@/context/paths/cache';
-import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';
+import {
+  type SliceConfig,
+  flatten,
+  getDefaultSliceConfig,
+  getHistoricalYears,
+  getName,
+  getSingleYear,
+  getUnit,
+  parseMetric,
+} from '@/utils/paths/metric';
 
 const ValuesContainer = styled.div`
   display: flex;
@@ -47,12 +54,15 @@ const SubValue = styled.div`
   }
 `;
 
-const getTotalValues = (yearData: GetNodeContentQuery['node'] & { __typename: 'Node' }) => {
+const getTotalValues = (yearData: {
+  categoryTypes: readonly { options: readonly string[] }[];
+  rows: readonly (readonly (number | null)[])[];
+}) => {
   const totals: number[] = [];
-  yearData.categoryTypes[1].options.forEach((colId, cIdx) => {
+  yearData.categoryTypes[1]?.options.forEach((colId, cIdx) => {
     const pieSegmentValues: (number | null)[] = [];
-    yearData.categoryTypes[0].options.forEach((rowId, rIdx) => {
-      const datum = yearData.rows[rIdx][cIdx];
+    yearData.categoryTypes[0]?.options.forEach((rowId, rIdx) => {
+      const datum = yearData.rows[rIdx]?.[cIdx];
       if (datum != 0) {
         pieSegmentValues.push(datum ? Math.abs(datum) : null);
       }
@@ -69,11 +79,13 @@ const getTotalValues = (yearData: GetNodeContentQuery['node'] & { __typename: 'N
   return totals;
 };
 
+type AugmentedGoal = NonNullable<PathsInstanceType>['instance']['goals'][number];
+
 type PathsBasicNodeContentProps = {
   categoryId: string;
   node: GetNodeContentQuery['node'] & { __typename: 'Node' };
   onLoaded: (id: string, impact: number) => void;
-  displayGoals: GetInstanceContextQuery['instance']['goals'][number][];
+  displayGoals: AugmentedGoal[];
   refetching: boolean;
 };
 
@@ -117,53 +129,89 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
   ]);
 
   const [unit, setUnit] = useState<string | null>(null);
-  const nodeMetric = new DimensionalMetric(node.metricDim!);
+
+  // Parse metric data once when node changes
+  const metric = useMemo(() => parseMetric(node.metricDim!), [node.metricDim]);
 
   // Redefine values if yearRange has been manipulated
   useEffect(() => {
-    const historicalYears = nodeMetric.getHistoricalYears();
+    const historicalYears = getHistoricalYears(metric);
     const lastHistoricalYear = historicalYears[historicalYears.length - 1];
-    setUnit(nodeMetric.getUnit());
+    setUnit(getUnit(metric));
 
     const displayEmissions: Emissions[] = [];
 
     displayGoals.forEach((goal) => {
-      const sliceConfig: SliceConfig = nodeMetric.getDefaultSliceConfig(goal);
+      const sliceConfig: SliceConfig = getDefaultSliceConfig(metric, goal);
+      const hasCategoryFilters = Object.keys(sliceConfig.categories).length > 0;
+      const hasTwoDimensions = metric.dimensions.length >= 2;
 
-      // TODO: Data seems to exist even when goal is not available on metric?
-      const latestData = nodeMetric.getSingleYear(lastHistoricalYear, sliceConfig.categories);
-      const referenceData = nodeMetric.getSingleYear(yearRange[1], sliceConfig.categories);
+      let latestValue: number | null = null;
+      let referenceValue: number | null = null;
+      let latestLabel: string | null = null;
+      let referenceLabel: string | null = null;
 
-      // So we check slice config to determine if data is valid
-      // Let's assume the first key is the one we want to display
-      //const displayCategoryType = Object.keys(sliceConfig.categories)[0];
-      const displayCategoryType = sliceConfig.categories[Object.keys(sliceConfig.categories)[0]];
+      if (hasCategoryFilters && hasTwoDimensions) {
+        // Use the 2D matrix approach for multi-dimension metrics with filters
+        const latestData = getSingleYear(metric, lastHistoricalYear, sliceConfig.categories);
+        const referenceData = getSingleYear(metric, yearRange[1], sliceConfig.categories);
 
-      const displayCategory =
-        displayCategoryType && displayCategoryType.groups?.length
-          ? { id: displayCategoryType?.groups[0], type: 'group' }
-          : { id: displayCategoryType?.categories[0], type: 'category' };
+        const displayCategoryType = sliceConfig.categories[Object.keys(sliceConfig.categories)[0]];
+        const displayCategory =
+          displayCategoryType && displayCategoryType.groups?.length
+            ? { id: displayCategoryType?.groups[0], type: 'group' }
+            : { id: displayCategoryType?.categories[0], type: 'category' };
 
-      const hasDataForThisGoal = displayCategory.id ? true : false;
+        const hasDataForThisGoal = !!displayCategory.id;
 
-      const latestLabel = latestData.allLabels.find(
-        (label) => label.id === displayCategory.id
-      )?.label;
-      const referenceLabel = referenceData.allLabels.find(
-        (label) => label.id === displayCategory.id
-      )?.label;
+        latestLabel =
+          latestData.allLabels.find((label) => label.id === displayCategory.id)?.label ?? null;
+        referenceLabel =
+          referenceData.allLabels.find((label) => label.id === displayCategory.id)?.label ?? null;
 
-      const latestValue = hasDataForThisGoal ? getTotalValues(latestData)[0] : null;
-      const referenceValue =
-        goal?.hideForecast || !hasDataForThisGoal ? null : getTotalValues(referenceData)[0];
+        latestValue = hasDataForThisGoal ? (getTotalValues(latestData)[0] ?? null) : null;
+        referenceValue =
+          goal.hideForecast || !hasDataForThisGoal
+            ? null
+            : (getTotalValues(referenceData)[0] ?? null);
+      } else {
+        // Use flatten for single-dimension metrics or when no category filters
+        const sliceData = flatten(metric, sliceConfig.categories);
+
+        // Find the value for the specific year
+        const latestYearIndex = sliceData.historicalYears.indexOf(lastHistoricalYear);
+        const referenceYearIndex =
+          sliceData.historicalYears.indexOf(yearRange[1]) >= 0
+            ? sliceData.historicalYears.indexOf(yearRange[1])
+            : sliceData.forecastYears.indexOf(yearRange[1]);
+        const isReferenceForecast = sliceData.forecastYears.includes(yearRange[1]);
+
+        if (latestYearIndex >= 0) {
+          latestValue = sliceData.categoryValues[0]?.historicalValues[latestYearIndex] ?? null;
+        }
+
+        if (!goal.hideForecast) {
+          if (isReferenceForecast && referenceYearIndex >= 0) {
+            referenceValue =
+              sliceData.categoryValues[0]?.forecastValues[referenceYearIndex] ?? null;
+          } else if (referenceYearIndex >= 0) {
+            referenceValue =
+              sliceData.categoryValues[0]?.historicalValues[referenceYearIndex] ?? null;
+          }
+        }
+
+        // Use the metric name as the label when flattening
+        latestLabel = getName(metric);
+        referenceLabel = getName(metric);
+      }
 
       displayEmissions.push({
-        metricName: nodeMetric.getName(),
+        metricName: getName(metric),
         label: goal.label ? goal.label : null,
         id: goal.id,
         latest: {
           value: latestValue,
-          label: latestLabel || null,
+          label: latestLabel,
           year: lastHistoricalYear,
           change:
             latestValue !== null &&
@@ -175,7 +223,7 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
         },
         reference: {
           value: referenceValue,
-          label: referenceLabel || null,
+          label: referenceLabel,
           year: yearRange[1],
           change:
             referenceValue !== null &&
@@ -191,8 +239,9 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
     setEmissions(displayEmissions);
     onLoaded(categoryId, 100);
     // using exhausive deps here causes an infinite loop
-  }, [yearRange[1], refetching]);
+  }, [yearRange[1], refetching, metric]);
 
+  console.log('InventoryNodeSummary render emissions', { emissions, unit });
   return (
     <ValuesContainer>
       {emissions.map((em) => (
