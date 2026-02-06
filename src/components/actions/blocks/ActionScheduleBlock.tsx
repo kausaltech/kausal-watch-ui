@@ -18,24 +18,26 @@ const SideHeader = styled.h3`
 type Props = {
   action: NonNullable<GetActionDetailsQuery['action']>;
   plan: PlanContextFragment;
+  heading: string;
 };
 
-const ActionScheduleBlock = ({ action, plan }: Props) => {
+const ActionScheduleBlock = ({ action, plan, heading }: Props) => {
   const t = useTranslations();
 
   const dateFormat = action.dateFormat || plan.actionListPage?.actionDateFormat || undefined;
+  const headingText = heading ?? t('action-timeline');
 
   return (
     <>
       {action.schedule.length ? (
         <ActionSection>
-          <SideHeader>{t('action-timeline')}</SideHeader>
+          <SideHeader>{headingText}</SideHeader>
           <ScheduleTimeline schedules={action.schedule} allSchedules={plan.actionSchedules} />
         </ActionSection>
       ) : null}
       {action.startDate || action.endDate || action.scheduleContinuous ? (
         <ActionSection>
-          <SideHeader>{t('action-timeline')}</SideHeader>
+          <SideHeader>{headingText}</SideHeader>
           <Timeline
             formatOptions={getDateFormat(dateFormat as ActionDateFormat | undefined)}
             startDate={action.startDate}
