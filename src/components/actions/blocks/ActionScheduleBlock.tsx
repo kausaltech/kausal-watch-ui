@@ -25,7 +25,7 @@ const ActionScheduleBlock = ({ action, plan, heading }: Props) => {
   const t = useTranslations();
 
   const dateFormat = action.dateFormat || plan.actionListPage?.actionDateFormat || undefined;
-  const headingText = heading ?? t('action-timeline');
+  const headingText = heading != null && heading.trim().length > 0 ? heading : t('action-timeline');
 
   return (
     <>
