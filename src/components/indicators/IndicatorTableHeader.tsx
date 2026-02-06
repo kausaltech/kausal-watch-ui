@@ -7,21 +7,37 @@ import {
   IndicatorDashboardFieldName,
 } from '@/common/__generated__/graphql';
 import type { TFunction } from '@/common/i18n';
+import Icon from '@/components/common/Icon';
 
 import PopoverTip from '../common/PopoverTip';
+import type { SortState } from './indicatorUtils';
 
 const StyledTh = styled.th<{ $numeric?: boolean }>`
   text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const StyledHeaderContent = styled.div`
+const SortableTh = styled(StyledTh)`
+  cursor: pointer;
+`;
+
+const HeaderContent = styled.div<{ $selected?: boolean }>`
   display: flex;
   align-items: center;
+  text-decoration: ${(props) => (props.$selected ? 'underline' : 'none')};
+`;
+
+const TableSortingIcon = styled(Icon)<{ $selected: boolean }>`
+  width: 0.8em;
+  height: 0.8em;
+  opacity: ${(props) => (props.$selected ? 1 : 0.3)};
+  margin-left: ${(props) => props.theme.spaces.s050};
 `;
 
 interface IndicatorTableHeaderProps {
   column: NonNullable<IndicatorListPageFragmentFragment['listColumns']>[number];
+  sort?: SortState;
+  onSortState?: (key: 'name' | 'level') => void;
 }
 
 const isNumericColumn = (
@@ -112,17 +128,49 @@ const getColumnLabel = (
 };
 
 const IndicatorTableHeader = (props: IndicatorTableHeaderProps) => {
-  const { column } = props;
+  const { column, sort, onSortState } = props;
   const t = useTranslations();
+  // Only Name and Level are sortable
+  const isNameColumn =
+    column.__typename === 'IndicatorListColumn' &&
+    column.sourceField === IndicatorDashboardFieldName.Name;
+
+  const isLevelColumn =
+    column.__typename === 'IndicatorListColumn' &&
+    column.sourceField === IndicatorDashboardFieldName.Level;
+
+  const sortKey: 'name' | 'level' | null = isNameColumn ? 'name' : isLevelColumn ? 'level' : null;
+  const isSortable = sortKey !== null;
+
+  const selected = !!(sortKey && sort?.key === sortKey);
+  const iconName = selected ? (sort?.direction === 'asc' ? 'sortDown' : 'sortUp') : 'sort';
+
+  const Th = isSortable ? SortableTh : StyledTh;
+
   return (
-    <StyledTh key={column.id} $numeric={isNumericColumn(column)}>
-      <StyledHeaderContent>
-        {getColumnLabel(column, t)}
+    <Th
+      key={column.id}
+      $numeric={isNumericColumn(column)}
+      scope="col"
+      onClick={isSortable && sortKey ? () => onSortState?.(sortKey) : undefined}
+      aria-sort={
+        isSortable
+          ? selected
+            ? sort?.direction === 'asc'
+              ? 'ascending'
+              : 'descending'
+            : 'none'
+          : undefined
+      }
+    >
+      <HeaderContent $selected={selected}>
+        <div>{getColumnLabel(column, t)}</div>
+        {isSortable && <TableSortingIcon name={iconName} $selected={selected} aria-hidden="true" />}
         {column.columnHelpText && (
           <PopoverTip content={column.columnHelpText} identifier={column.id ?? ''} />
         )}
-      </StyledHeaderContent>
-    </StyledTh>
+      </HeaderContent>
+    </Th>
   );
 };
 
