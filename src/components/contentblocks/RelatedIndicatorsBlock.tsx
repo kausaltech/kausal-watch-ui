@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import { Link } from '@/common/links';
+import { IndicatorLink, Link } from '@/common/links';
 import Icon from '@/components/common/Icon';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 
@@ -32,10 +32,10 @@ const IndicatorItem = (props: { indicator: string; indicatorCount: number }) => 
       <IndicatorVisualisation indicatorId={indicator} />
       {showLink && (
         <div className="mt-2 text-right">
-          <Link href={`/indicators/${indicator}`}>
+          <IndicatorLink id={indicator}>
             {t('read-more')}
             <Icon.ArrowRight />
-          </Link>
+          </IndicatorLink>
         </div>
       )}
     </Col>

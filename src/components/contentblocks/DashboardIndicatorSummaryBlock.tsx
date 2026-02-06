@@ -7,6 +7,7 @@ import Icon from '@/components/common/Icon';
 
 import { beautifyValue } from '../../common/data/format';
 import dayjs from '../../common/dayjs';
+import type { DashboardBlock } from './DashboardRowBlock';
 
 const Container = styled.div<{ $hasDescription?: boolean }>`
   padding: 0;
@@ -93,14 +94,17 @@ const ArrowWrapper = styled.div`
   }
 `;
 
+// Extract the DashboardIndicatorSummaryBlock from the union
+type DashboardIndicatorSummaryBlockType = Extract<
+  DashboardBlock,
+  { __typename: 'DashboardIndicatorSummaryBlock' }
+>;
+
+// Get the indicator type from it
+type IndicatorType = DashboardIndicatorSummaryBlockType['indicator'];
+
 type DashboardIndicatorSummaryBlockProps = {
-  indicator: {
-    name: string;
-    description?: string | null;
-    latestValue?: { value: number | null; date?: string | null } | null;
-    goals?: Array<{ value: number | null; date?: string | null }> | null;
-    unit?: { shortName?: string | null; name?: string | null } | null;
-  } | null;
+  indicator: IndicatorType;
 };
 
 const DashboardIndicatorSummaryBlock = ({ indicator }: DashboardIndicatorSummaryBlockProps) => {
