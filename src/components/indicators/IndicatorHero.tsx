@@ -1,18 +1,15 @@
 import React from 'react';
 
 import { useTranslations } from 'next-intl';
-import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import { type IndicatorDetailsQuery } from '@/common/__generated__/graphql';
-import { getActionTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
 import IndicatorValueSummary from '@/components/indicators/IndicatorValueSummary';
 import OrgSelector from '@/components/orgs/OrgSelector';
-import { usePlan } from '@/context/plan';
 
-import { getIndicatorTranslation } from './IndicatorCard';
+import IndicatorLevelChip from './IndicatorLevelChip';
 
 const Hero = styled.header`
   position: relative;
@@ -48,69 +45,11 @@ const CardContent = styled.div`
   }
 `;
 
-const OverlayContainer = styled.div`
+const OverlayContainer = styled.div<{ $legacyMode: boolean }>`
   display: flex;
   align-items: flex-end;
-  min-height: 18rem;
+  min-height: ${(props) => (props.$legacyMode ? '18rem' : '14rem')};
   padding: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s300};
-`;
-
-const IndicatorLevel = styled.span<{ $level: string }>`
-  a {
-    display: inline-block;
-    border-radius: ${(props) => props.theme.badgeBorderRadius};
-    padding: ${(props) => props.theme.badgePaddingY} ${(props) => props.theme.badgePaddingX};
-    font-weight: ${(props) => props.theme.badgeFontWeight};
-    margin: ${(props) => props.theme.spaces.s150} 0 0;
-
-    color: ${(props) => {
-      switch (props.$level) {
-        case 'action':
-          return readableColor(props.theme.actionColor);
-        case 'operational':
-          return readableColor(props.theme.graphColors.blue070);
-        case 'tactical':
-          return readableColor(props.theme.graphColors.blue030);
-        case 'strategic':
-          return readableColor(props.theme.graphColors.blue010);
-        default:
-          return props.theme.themeColors.black;
-      }
-    }};
-
-    background-color: ${(props) => {
-      switch (props.$level) {
-        case 'action':
-          return props.theme.actionColor;
-        case 'operational':
-          return props.theme.graphColors.blue070;
-        case 'tactical':
-          return props.theme.graphColors.blue030;
-        case 'strategic':
-          return props.theme.graphColors.blue010;
-        default:
-          return '#cccccc';
-      }
-    }};
-
-    &:hover {
-      color: ${(props) => {
-        switch (props.$level) {
-          case 'action':
-            return readableColor(props.theme.actionColor);
-          case 'operational':
-            return readableColor(props.theme.graphColors.blue070);
-          case 'tactical':
-            return readableColor(props.theme.graphColors.blue030);
-          case 'strategic':
-            return readableColor(props.theme.graphColors.blue010);
-          default:
-            return props.theme.themeColors.black;
-        }
-      }};
-      text-decoration: underline;
-    }
-  }
 `;
 
 const IndexLink = styled.span`
@@ -133,26 +72,18 @@ interface IndicatorHeroProps {
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
   orgs: any;
   goals: any;
+  legacyMode?: boolean;
 }
 
 function IndicatorHero(props: IndicatorHeroProps) {
-  const { indicator, orgs, goals } = props;
+  const { indicator, orgs, goals, legacyMode = false } = props;
   // const theme = useTheme();
   const t = useTranslations();
-  const plan = usePlan();
-
-  // FIXME: It sucks that we only use the context for the translation key 'action'
-  const indicatorType =
-    indicator.level === 'action'
-      ? t('action', getActionTermContext(plan))
-      : indicator.level != null
-        ? getIndicatorTranslation(indicator.level, t)
-        : null;
 
   return (
     <Hero>
       <div>
-        <OverlayContainer>
+        <OverlayContainer $legacyMode={legacyMode}>
           <Container>
             <Row>
               <Col lg={8}>
@@ -169,7 +100,7 @@ function IndicatorHero(props: IndicatorHeroProps) {
                     <IndicatorHeadline>
                       <span>{indicator.name}</span>
                     </IndicatorHeadline>
-                    {goals.length > 0 && (
+                    {legacyMode && goals.length > 0 && (
                       <IndicatorValueSummary
                         timeResolution={indicator.timeResolution}
                         values={indicator.values}
@@ -178,12 +109,8 @@ function IndicatorHero(props: IndicatorHeroProps) {
                         desiredTrend={indicator.desiredTrend}
                       />
                     )}
-                    {indicator.level && indicatorType && (
-                      <IndicatorLevel $level={indicator.level}>
-                        <IndicatorListLink>
-                          <span>{indicatorType}</span>
-                        </IndicatorListLink>
-                      </IndicatorLevel>
+                    {legacyMode && indicator.level && (
+                      <IndicatorLevelChip level={indicator.level} />
                     )}
                   </CardContent>
                 </HeroCardBg>

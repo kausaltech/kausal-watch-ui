@@ -38,7 +38,7 @@ const StyledBadge = styled(Badge)<{
   padding-left: ${(props) => props.theme.badgePaddingX};
   padding-right: ${(props) => props.theme.badgePaddingX};
   font-weight: ${(props) => props.theme.badgeFontWeight};
-  line-height: ${(props) => props.theme.lineHeightMd};
+  line-height: ${(props) => props.theme.lineHeightSm};
   max-width: 100%;
   overflow-wrap: break-word;
   hyphens: manual;
