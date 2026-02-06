@@ -287,7 +287,7 @@ function ActionListDropdownInput<Value extends FilterValue>(props: ActionListDro
       if (isMulti) {
         (onChange as FilterChangeCallback<MultipleFilterValue>)(
           id,
-          (option as SelectDropdownOption[])?.map((o) => o.id)
+          ((option as SelectDropdownOption[] | null) ?? []).map((o) => o.id)
         );
         return;
       } else {
@@ -527,13 +527,13 @@ type GenericSelectFilterOpts = {
   showAllLabel: string;
 };
 
-class GenericSelectFilter extends DefaultFilter<string | undefined> {
+class GenericSelectFilter extends DefaultFilter<MultipleFilterValue> {
   options: ActionListFilterOption[];
   label: string;
   helpText: string | undefined;
   showAllLabel: string;
   filterAction: (
-    value: string | undefined,
+    value: MultipleFilterValue,
     action: ActionListAction | IndicatorListIndicator
   ) => boolean;
 
@@ -545,7 +545,10 @@ class GenericSelectFilter extends DefaultFilter<string | undefined> {
     this.label = label;
     this.helpText = helpText;
     this.showAllLabel = showAllLabel;
-    this.filterAction = filterAction;
+    this.filterAction = (vals, action) => {
+      if (!vals || vals.length === 0) return true;
+      return vals.some((v) => filterAction(v, action));
+    };
   }
   getLabel() {
     return this.label;
@@ -555,6 +558,69 @@ class GenericSelectFilter extends DefaultFilter<string | undefined> {
   }
   getShowAllLabel() {
     return this.showAllLabel;
+  }
+  render(
+    value: MultipleFilterValue,
+    onChange: FilterChangeCallback<MultipleFilterValue>,
+    t: TFunction
+  ) {
+    return super.render(value, onChange, t, true);
+  }
+}
+
+class GenericMultiSelectFilter extends DefaultFilter<MultipleFilterValue> {
+  options: ActionListFilterOption[];
+  label: string;
+  helpText: string | undefined;
+  showAllLabel: string;
+
+  private singleValueFilterAction: (
+    value: string,
+    action: ActionListAction | IndicatorListIndicator
+  ) => boolean;
+
+  constructor(opts: GenericSelectFilterOpts) {
+    const { id, options, label, helpText, showAllLabel, filterAction } = opts;
+    super();
+    this.id = id;
+    this.options = options;
+    this.label = label;
+    this.helpText = helpText;
+    this.showAllLabel = showAllLabel;
+
+    this.singleValueFilterAction = filterAction as unknown as (
+      value: string,
+      action: ActionListAction | IndicatorListIndicator
+    ) => boolean;
+  }
+
+  getLabel() {
+    return this.label;
+  }
+  getHelpText() {
+    return this.helpText;
+  }
+  getShowAllLabel() {
+    return this.showAllLabel;
+  }
+
+  filterAction(
+    values: MultipleFilterValue,
+    action: ActionListAction | IndicatorListIndicator
+  ): boolean {
+    // empty selection => don't filter
+    if (!values || values.length === 0) return true;
+    // match any selected option
+    return values.some((v) => this.singleValueFilterAction(v, action));
+  }
+
+  render(
+    value: MultipleFilterValue,
+    onChange: FilterChangeCallback<MultipleFilterValue>,
+    t: TFunction
+  ) {
+    // force isMulti=true for this filter type
+    return super.render(value, onChange, t, true);
   }
 }
 
@@ -1229,7 +1295,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               return false;
             },
           };
-          filters.push(new GenericSelectFilter(phaseOpts));
+          filters.push(new GenericMultiSelectFilter(phaseOpts));
           break;
         case 'ActionStatusFilterBlock':
           if (!plan.actionStatuses.length) break;
