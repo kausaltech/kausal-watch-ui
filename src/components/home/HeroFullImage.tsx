@@ -1,3 +1,5 @@
+'use client';
+
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
