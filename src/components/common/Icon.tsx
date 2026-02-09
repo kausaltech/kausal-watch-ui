@@ -94,6 +94,7 @@ export enum AvailableIcons {
   Gear = 'gear',
   Globe = 'globe',
   Grid = 'grid',
+  Handshake = 'handshake',
   Heart = 'heart',
   Help = 'help',
   Hidden = 'hidden',
