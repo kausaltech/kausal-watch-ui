@@ -9,6 +9,8 @@ import styled from 'styled-components';
 
 import type { GetPledgeQuery } from '@/common/__generated__/graphql';
 import { usePrependPlanAndLocale } from '@/common/links';
+import { excludeNullish } from '@/common/utils';
+import Accordion from '@/components/common/Accordion';
 import ActionAttribute from '@/components/common/ActionAttribute';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import Button from '@/components/common/Button';
@@ -174,6 +176,84 @@ const StyledViewActionLink = styled.a`
   }
 `;
 
+const StyledBodySection = styled.div`
+  margin-bottom: ${({ theme }) => theme.spaces.s300};
+`;
+
+const StyledLargeImage = styled.figure`
+  margin: ${({ theme }) => theme.spaces.s200} 0;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+`;
+
+const StyledImageCredit = styled.figcaption`
+  font-size: ${({ theme }) => theme.fontSizeSm};
+  color: ${({ theme }) => theme.textColor.tertiary};
+  margin-top: ${({ theme }) => theme.spaces.s050};
+`;
+
+const StyledFaqSection = styled.section`
+  background: ${({ theme }) => theme.themeColors.light};
+  padding: ${({ theme }) => theme.spaces.s300} 0;
+  margin: ${({ theme }) => theme.spaces.s200} 0;
+
+  h3 {
+    font-size: ${({ theme }) => theme.fontSizeMd};
+    margin-bottom: ${({ theme }) => theme.spaces.s200};
+  }
+`;
+
+type BodyBlock = NonNullable<PledgeData['body']>[number];
+
+function PledgeBodyBlock({ block }: { block: BodyBlock }) {
+  switch (block.__typename) {
+    case 'RichTextBlock':
+      return <RichText html={block.value} />;
+
+    case 'QuestionAnswerBlock': {
+      const questions = excludeNullish(block.questions ?? []);
+      if (!questions.length) return null;
+
+      return (
+        <StyledFaqSection>
+          <Container fluid="sm">
+            {block.heading && <h3>{block.heading}</h3>}
+            <Accordion>
+              {questions.map((q, i) => (
+                <Accordion.Item key={i}>
+                  <Accordion.Header>{q.question}</Accordion.Header>
+                  <Accordion.Body>
+                    <RichText html={q.answer} />
+                  </Accordion.Body>
+                </Accordion.Item>
+              ))}
+            </Accordion>
+          </Container>
+        </StyledFaqSection>
+      );
+    }
+
+    case 'LargeImageBlock': {
+      const { image } = block;
+      if (!image?.renditionUncropped?.src) return null;
+
+      return (
+        <StyledLargeImage>
+          <img src={image.renditionUncropped.src} alt={image.altText} />
+          {image.imageCredit && <StyledImageCredit>{image.imageCredit}</StyledImageCredit>}
+        </StyledLargeImage>
+      );
+    }
+
+    default:
+      return null;
+  }
+}
+
 function PledgeDetail({ pledge }: Props) {
   // TODO: Replace with actual user commitment state from API/auth
   const [isCommitted, setIsCommitted] = useState(false);
@@ -228,6 +308,14 @@ function PledgeDetail({ pledge }: Props) {
               </StyledMetaItem>
             ))}
           </StyledMetaList>
+        )}
+
+        {pledge.body && pledge.body.length > 0 && (
+          <StyledBodySection>
+            {pledge.body.map((block) => (
+              <PledgeBodyBlock key={block.id} block={block} />
+            ))}
+          </StyledBodySection>
         )}
 
         {pledge.residentCount != null && pledge.impactStatement && pledge.localEquivalency && (
