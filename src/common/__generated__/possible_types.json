@@ -226,7 +226,6 @@
       "DashboardRowBlock",
       "IndicatorGroupBlock",
       "QuestionAnswerBlock",
-      "RawVisualizationBlock",
       "RelatedIndicatorsBlock",
       "RichTextBlock"
     ],
@@ -411,8 +410,12 @@
       "IndicatorShowcaseBlock",
       "LargeImageBlock",
       "PathsOutcomeBlock",
-      "RawVisualizationBlock",
       "RelatedPlanListBlock",
+      "RichTextBlock"
+    ],
+    "PledgeBodyUnion": [
+      "LargeImageBlock",
+      "QuestionAnswerBlock",
       "RichTextBlock"
     ],
     "ReportFieldBlock": [
@@ -460,7 +463,6 @@
       "LargeImageBlock",
       "PathsOutcomeBlock",
       "QuestionAnswerBlock",
-      "RawVisualizationBlock",
       "RichTextBlock"
     ],
     "StreamFieldInterface": [
@@ -573,7 +575,6 @@
       "QuestionAnswerBlock",
       "QuestionBlock",
       "RawHTMLBlock",
-      "RawVisualizationBlock",
       "RegexBlock",
       "RelatedIndicatorsBlock",
       "RelatedPlanListBlock",
