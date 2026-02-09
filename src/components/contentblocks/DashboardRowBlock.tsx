@@ -7,6 +7,7 @@ import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
 import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
+import { IndicatorLink } from '@/common/links';
 
 import Card from '../common/Card';
 import DashboardIndicatorSummaryBlockComponent from './DashboardIndicatorSummaryBlock';
@@ -34,7 +35,7 @@ type DashboardRowBlockFragment = Extract<
   { __typename: 'DashboardRowBlock' }
 >;
 // Get the element type of the blocks array
-type DashboardBlock = NonNullable<DashboardRowBlockFragment['blocks']>[number];
+export type DashboardBlock = NonNullable<DashboardRowBlockFragment['blocks']>[number];
 
 interface DashboardRowBlockProps extends Omit<DashboardRowBlockFragment, 'rawValue'> {
   topPadding?: boolean;
@@ -66,7 +67,7 @@ const StyledCard = styled(Card)`
   }
 `;
 
-const StyledLink = styled(Link)`
+const StyledLink = styled(IndicatorLink)`
   margin-top: auto;
   padding-top: ${({ theme }) => theme.spaces.s200};
   align-self: flex-end;
@@ -179,9 +180,7 @@ const DashboardRowBlock = ({
                 <StyledCard outline>
                   <DashboardCardContents block={block} />
                   {isChart && indicatorId && (
-                    <StyledLink href={`/indicators/${indicatorId}`}>
-                      {t('see-full-data')}
-                    </StyledLink>
+                    <StyledLink id={indicatorId}>{t('see-full-data')}</StyledLink>
                   )}
                 </StyledCard>
               </Col>
