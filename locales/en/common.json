@@ -225,5 +225,6 @@
     "pledge-impact-we-save": "We save {amount} {unit} each year",
     "pledge-impact-equivalent-to": "That's equivalent to {equivalence}",
     "pledge-how-this-supports-climate-plan": "How this supports our climate plan",
-    "pledge-view-action": "View action"
+    "pledge-view-action": "View action",
+    "pledge-commitment-count": "{count, plural, one {# person committed} other {# people committed}}"
   }
