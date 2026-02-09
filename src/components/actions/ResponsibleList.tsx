@@ -48,7 +48,6 @@ function ResponsibleList(props: ResponsibleListProps) {
   const { organizationTerm } = plan.generalContent;
   /* TODO: a11y - this should probably be a list markup */
 
-  console.log('responsibleParties', responsibleParties);
   return (
     <Responsibles>
       <h3>{heading || t('responsible-parties', { context: organizationTerm })}</h3>
