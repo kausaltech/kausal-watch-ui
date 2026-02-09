@@ -64,6 +64,15 @@ export function groupIndicatorsByHierarchy(
  * Uses the common category hierarchy to split indicators into hierarchical and non-hierarchical groups,
  * and then sort them separately.
  */
+const dirFactor = (direction: 'asc' | 'desc') => (direction === 'desc' ? -1 : 1);
+
+const compareLevelIndex = (a: IndicatorListIndicator, b: IndicatorListIndicator) => {
+  if (!a.level || !b.level) return 0;
+  const aIdx = levels[a.level]?.index ?? 0;
+  const bIdx = levels[b.level]?.index ?? 0;
+  return aIdx - bIdx;
+};
+
 export function sortIndicators(
   sortingOrder: Sort[],
   hierarchy: Hierarchy | null | undefined,
@@ -74,42 +83,28 @@ export function sortIndicators(
   const isHierarchical = !!hierarchy && Object.keys(hierarchy).length > 0;
   const sortedIndicators = [...indicators];
   sortingOrder.forEach((rule) => {
+    const dir = dirFactor(rule.direction);
     sortedIndicators.sort((a, b) => {
-      let result = 0;
-
-      if (rule.key === 'level') {
-        if (!a.level || !b.level) {
-          result = 0;
-        } else if (levels[a.level].index < levels[b.level].index) {
-          result = -1;
-        } else if (levels[a.level].index > levels[b.level].index) {
-          result = 1;
-        } else {
-          result = 0;
-        }
-      } else if (rule.key === 'name') {
-        result = a.name.localeCompare(b.name);
-      } else if (rule.key === 'organization') {
-        result = a.organization.name.localeCompare(b.organization.name);
-      } else if (rule.key === 'category') {
-        if (!rule.categoryType) {
-          result = 0;
-        } else {
+      switch (rule.key) {
+        case 'level':
+          return dir * compareLevelIndex(a, b);
+        case 'name':
+          return dir * a.name.localeCompare(b.name);
+        case 'organization':
+          return dir * a.organization.name.localeCompare(b.organization.name);
+        case 'category': {
+          if (!rule.categoryType) return 0;
           const categoryAId = a.categories.find((c) => c.type.id === rule.categoryType?.id)?.id;
           const categoryBId = b.categories.find((c) => c.type.id === rule.categoryType?.id)?.id;
-          if (!categoryAId || !categoryBId) {
-            result = 0;
-          } else {
-            result =
-              (rule.categoryType.categories.find((c) => c.id === categoryAId)?.order ?? 0) -
-              (rule.categoryType.categories.find((c) => c.id === categoryBId)?.order ?? 0);
-          }
+          if (!categoryAId || !categoryBId) return 0;
+          const orderA = rule.categoryType.categories.find((c) => c.id === categoryAId)?.order ?? 0;
+          const orderB = rule.categoryType.categories.find((c) => c.id === categoryBId)?.order ?? 0;
+          return dir * (orderA - orderB);
         }
-      } else {
-        result = 0;
-      }
 
-      return rule.direction === 'desc' ? -result : result;
+        default:
+          return 0;
+      }
     });
   });
 
@@ -117,22 +112,13 @@ export function sortIndicators(
     sortedIndicators.sort((a, b) => a.organization.name.localeCompare(b.organization.name));
   }
 
-  if (sortState?.key === 'name') {
-    sortedIndicators.sort((a, b) => {
-      const res = a.name.localeCompare(b.name);
-      return sortState.direction === 'desc' ? -res : res;
-    });
-  } else if (sortState?.key === 'level') {
-    sortedIndicators.sort((a, b) => {
-      if (!a.level || !b.level) return 0;
-      const res =
-        levels[a.level].index < levels[b.level].index
-          ? -1
-          : levels[a.level].index > levels[b.level].index
-            ? 1
-            : 0;
-      return sortState.direction === 'desc' ? -res : res;
-    });
+  if (sortState) {
+    const dir = dirFactor(sortState.direction);
+    if (sortState.key === 'name') {
+      sortedIndicators.sort((a, b) => dir * a.name.localeCompare(b.name));
+    } else if (sortState.key === 'level') {
+      sortedIndicators.sort((a, b) => dir * compareLevelIndex(a, b));
+    }
   }
 
   /**
