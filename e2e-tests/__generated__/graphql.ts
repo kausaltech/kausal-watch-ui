@@ -14,6 +14,7 @@ export type Scalars = {
   Float: { input: number; output: number; }
   Date: { input: string; output: string; }
   DateTime: { input: string; output: string; }
+  GenericStreamFieldInterface: { input: any; output: any; }
   JSONString: { input: string; output: string; }
   PointScalar: { input: any; output: any; }
   PositiveInt: { input: number; output: number; }
