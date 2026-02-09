@@ -1,7 +1,9 @@
 {
   "action-completion-percentage": "Completion",
   "action-continuous": "Continuous",
+  "actions-continuous": "Continuous actions",
   "action-not-continuous": "Not continuous",
+  "actions-non-continuous": "Non-continuous actions",
   "actions-show-continuous": "{context, select, CASE_STUDY {Show only continuous case studies} STRATEGY {Show only continuous strategies} other {Show only continuous actions}}",
   "action-description": "Description",
   "action-description-official": "Official description",
@@ -41,6 +43,7 @@
   "actions-updated-help-days": "{context, select, CASE_STUDY {Case studies that have been updated within the last {count} days} STRATEGY {Strategies that have been updated within the last {count} days} other {Actions that have been updated within the last {count} days}}",
   "actions-updated-help-months": "{context, select, CASE_STUDY {Case studies that have been updated within the last {count, plural, =1 {month} other {# months}}} STRATEGY {Strategies that have been updated within the last {count, plural, =1 {month} other {# months}}} other {Actions that have been updated within the last {count, plural, =1 {month} other {# months}}}}",
   "emission-scopes": "Emission scopes",
+  "filter-action-type": "Actions type",
   "inactive-actions": "{context, select, CASE_STUDY {Inactive case studies} STRATEGY {Inactive strategies} other {Inactive actions}}",
   "no-defined-indicators": "No indicators defined",
   "status": "Status",
@@ -64,5 +67,6 @@
   "no-action-version-available": "No --{versionType}--- version available",
   "feedback-on-category": "Give feedback on this category",
   "feedback-on-category-description": "You can leave a comment or feedback on this category",
-  "action-leadParagraph": "Lead paragraph"
+  "action-leadParagraph": "Lead paragraph",
+  "see-all-actions": "All types"
 }

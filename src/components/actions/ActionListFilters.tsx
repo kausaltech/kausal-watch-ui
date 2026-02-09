@@ -990,47 +990,43 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
   }
 }
 
-class ContinuousActionFilter implements ActionListFilter<string | undefined> {
-  id = 'continuous';
+class ActionTypeFilter extends DefaultFilter<string | undefined> {
+  id = 'action_type';
   sm = undefined;
   md = 6;
   lg = 4;
-  label: string;
 
-  constructor(id: string, label: string) {
-    this.id = id;
-    this.label = label;
+  options: ActionListFilterOption[];
+
+  private label: string;
+  private showAllLabel: string;
+
+  constructor(opts: { label: string; showAllLabel: string; options: ActionListFilterOption[] }) {
+    super();
+    this.label = opts.label;
+    this.showAllLabel = opts.showAllLabel;
+    this.options = opts.options;
   }
-  useValueFilterId: string | undefined;
-  options?: ActionListFilterOption[] | undefined;
-  debounce?: number | undefined;
-  getLabel(t: TFunction) {
-    return t('actions-show-continuous', getActionTermContext(usePlan()));
+
+  getLabel() {
+    return this.label;
   }
-  getShowAllLabel(t: TFunction) {
-    return t('filter-text-default');
-  }
+
   getHelpText() {
     return undefined;
   }
-  filterAction(value: FilterValue, action: ActionListAction) {
-    return action?.scheduleContinuous === !!value;
+
+  getShowAllLabel() {
+    return this.showAllLabel;
   }
-  render(value: string | undefined, onChange: FilterChangeCallback<string | undefined>) {
-    return (
-      <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
-        <FormGroup switch className="mb-4">
-          <Input
-            type="switch"
-            role="switch"
-            id={this.id}
-            checked={value === '1'}
-            onChange={(e) => onChange(this.id, e.target.checked ? '1' : '')}
-          />
-          <label htmlFor={this.id}>{this.label}</label>
-        </FormGroup>
-      </FilterColumn>
-    );
+
+  filterAction(value: string | undefined, action: ActionListAction): boolean {
+    if (!value) return true;
+
+    if (value === 'continuous') return action.scheduleContinuous === true;
+    if (value === 'non_continuous') return action.scheduleContinuous === false;
+
+    return true;
   }
 }
 
@@ -1363,14 +1359,17 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           };
           filters.push(new GenericSelectFilter(planOpts));
           break;
-        case 'ContinuousActionFilterBlock':
-          filters.push(
-            new ContinuousActionFilter(
-              'continuous',
-              t('actions-show-continuous', getActionTermContext(plan))
-            )
-          );
+        case 'ContinuousActionFilterBlock': {
+          const ctx = getActionTermContext(plan);
+          const label = t('filter-action-type');
+          const showAllLabel = t('see-all-actions');
+          const options: ActionListFilterOption[] = [
+            { id: 'continuous', label: t('actions-continuous') },
+            { id: 'non_continuous', label: t('actions-non-continuous') },
+          ];
+          filters.push(new ActionTypeFilter({ label, showAllLabel, options }));
           break;
+        }
         // Indicator filters
         case 'IndicatorFilterBlock':
           if (block.__typename === 'IndicatorFilterBlock') {
