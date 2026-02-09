@@ -28,7 +28,7 @@ import IndicatorListFiltered from './IndicatorListFiltered';
 import IndicatorListFilters from './IndicatorListFilters';
 import IndicatorModal from './IndicatorModal';
 import IndicatorsHero from './IndicatorsHero';
-import { type Sort, sortIndicators } from './indicatorUtils';
+import { type Sort, type SortState, sortIndicators } from './indicatorUtils';
 import { processCommonIndicatorHierarchy } from './process-indicators';
 
 /* We augment the IndicatorListIndicatorFragment with a level property */
@@ -296,6 +296,16 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
   // Store filtered indicators in a ref so handleChangeModal can access them
   const filteredIndicatorsRef = useRef<IndicatorListIndicator[]>([]);
 
+  const [sort, setSort] = useState<SortState>(null);
+
+  // click handler for Name/Level sorting
+  const sortHandler = (key: 'name' | 'level') => {
+    setSort((prev) => {
+      if (!prev || prev.key !== key) return { key, direction: 'asc' };
+      return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' };
+    });
+  };
+
   const handleChangeModal = useCallback(
     (indicatorId?: string | null) => {
       setIndicatorModalId(indicatorId ?? null);
@@ -412,7 +422,8 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     sortingOrder,
     hierarchy,
     indicators,
-    displayMunicipality ?? false
+    displayMunicipality ?? false,
+    sort
   );
   const filteredIndicators = filterIndicators(sortedIndicators, filters);
 
@@ -475,6 +486,8 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
           openIndicatorsInModal={openIndicatorsInModal ? handleChangeModal : undefined}
           hierarchy={hierarchy}
           listColumns={indicatorListColumns}
+          sort={sort}
+          onSortState={sortHandler}
         />
       </Container>
     </>

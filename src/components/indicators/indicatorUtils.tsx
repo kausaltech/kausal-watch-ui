@@ -7,6 +7,8 @@ export type Sort = {
   categoryType?: CategoryType | null;
 };
 
+export type SortState = { key: 'name' | 'level'; direction: 'asc' | 'desc' } | null;
+
 export enum IndicatorTableColumnId {
   Name = 'name',
   TimeResolution = 'timeResolution',
@@ -62,54 +64,61 @@ export function groupIndicatorsByHierarchy(
  * Uses the common category hierarchy to split indicators into hierarchical and non-hierarchical groups,
  * and then sort them separately.
  */
+const dirFactor = (direction: 'asc' | 'desc') => (direction === 'desc' ? -1 : 1);
+
+const compareLevelIndex = (a: IndicatorListIndicator, b: IndicatorListIndicator) => {
+  if (!a.level || !b.level) return 0;
+  const aIdx = levels[a.level]?.index ?? 0;
+  const bIdx = levels[b.level]?.index ?? 0;
+  return aIdx - bIdx;
+};
+
 export function sortIndicators(
   sortingOrder: Sort[],
   hierarchy: Hierarchy | null | undefined,
   indicators: IndicatorListIndicator[],
-  displayMunicipality: boolean
+  displayMunicipality: boolean,
+  sortState?: SortState
 ): IndicatorListIndicator[] {
   const isHierarchical = !!hierarchy && Object.keys(hierarchy).length > 0;
   const sortedIndicators = [...indicators];
-  sortingOrder.forEach((sort) => {
+  sortingOrder.forEach((rule) => {
+    const dir = dirFactor(rule.direction);
     sortedIndicators.sort((a, b) => {
-      if (sort.key === 'level') {
-        if (!a.level || !b.level) {
+      switch (rule.key) {
+        case 'level':
+          return dir * compareLevelIndex(a, b);
+        case 'name':
+          return dir * a.name.localeCompare(b.name);
+        case 'organization':
+          return dir * a.organization.name.localeCompare(b.organization.name);
+        case 'category': {
+          if (!rule.categoryType) return 0;
+          const categoryAId = a.categories.find((c) => c.type.id === rule.categoryType?.id)?.id;
+          const categoryBId = b.categories.find((c) => c.type.id === rule.categoryType?.id)?.id;
+          if (!categoryAId || !categoryBId) return 0;
+          const orderA = rule.categoryType.categories.find((c) => c.id === categoryAId)?.order ?? 0;
+          const orderB = rule.categoryType.categories.find((c) => c.id === categoryBId)?.order ?? 0;
+          return dir * (orderA - orderB);
+        }
+
+        default:
           return 0;
-        }
-        if (levels[a.level].index < levels[b.level].index) {
-          return -1;
-        }
-        if (levels[a.level].index > levels[b.level].index) {
-          return 1;
-        }
-        return 0;
       }
-      if (sort.key === 'name') {
-        return a.name.localeCompare(b.name);
-      }
-      if (sort.key === 'organization') {
-        return a.organization.name.localeCompare(b.organization.name);
-      }
-      if (sort.key === 'category') {
-        if (!sort.categoryType) {
-          return 0;
-        }
-        const categoryAId = a.categories.find((c) => c.type.id === sort.categoryType?.id)?.id;
-        const categoryBId = b.categories.find((c) => c.type.id === sort.categoryType?.id)?.id;
-        if (!categoryAId || !categoryBId) {
-          return 0;
-        }
-        return (
-          (sort.categoryType.categories.find((c) => c.id === categoryAId)?.order ?? 0) -
-          (sort.categoryType.categories.find((c) => c.id === categoryBId)?.order ?? 0)
-        );
-      }
-      return 0;
     });
   });
 
-  if (displayMunicipality) {
+  if (displayMunicipality && !sortState) {
     sortedIndicators.sort((a, b) => a.organization.name.localeCompare(b.organization.name));
+  }
+
+  if (sortState) {
+    const dir = dirFactor(sortState.direction);
+    if (sortState.key === 'name') {
+      sortedIndicators.sort((a, b) => dir * a.name.localeCompare(b.name));
+    } else if (sortState.key === 'level') {
+      sortedIndicators.sort((a, b) => dir * compareLevelIndex(a, b));
+    }
   }
 
   /**
