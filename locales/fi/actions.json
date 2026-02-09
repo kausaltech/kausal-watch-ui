@@ -58,5 +58,9 @@
     "no-action-version-available": "{versionType}-versiota ei ole saatavilla",
     "n-more-actions": "Plus {count} muut {context, select, CASE_STUDY {{count, plural, =1 {case study} other {case studies}}} STRATEGIA {{count, plural, =1 {strategy} other {strategies}}} muut {{count, plural, =1 {action} other {actions}}}}",
     "action-dependencies": "{context, select, CASE_STUDY {Tapaustutkimuksen riippuvuudet} STRATEGIA {Strategian riippuvuudet} muut {Toimen riippuvuudet}}",
-    "logo": "Logo"
+    "logo": "Logo",
+    "actions-continuous": "Jatkuvat toimenpiteet",
+    "actions-non-continuous": "Ei-jatkuvat toimenpiteet",
+    "filter-action-type": "Toimenpiteen tyyppi",
+    "see-all-actions": "Kaikki tyypit"
 }

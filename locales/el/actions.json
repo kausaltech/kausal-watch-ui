@@ -62,5 +62,9 @@
     "feedback-on-category": "Ανατροφοδοτήστε αυτή την κατηγορία",
     "feedback-on-category-description": "Μπορείτε να αφήσετε ένα σχόλιο ή σχόλιο σε αυτή την κατηγορία",
     "action-end-date": "Τέλος",
-    "action-start-date": "Έναρξη"
+    "action-start-date": "Έναρξη",
+    "actions-continuous": "Συνεχείς ενέργειες",
+    "actions-non-continuous": "Μη συνεχείς ενέργειες",
+    "filter-action-type": "Τύπος ενεργειών",
+    "see-all-actions": "Όλοι οι τύποι"
 }

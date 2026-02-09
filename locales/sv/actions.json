@@ -56,5 +56,9 @@
     "other": "Annat",
     "logo": "Logotyp",
     "inactive-actions": "Inaktiva åtgärder",
-    "no-action-version-available": "Ingen {versionType}-version tillgänglig"
+    "no-action-version-available": "Ingen {versionType}-version tillgänglig",
+    "actions-continuous": "Ständiga åtgärder",
+    "actions-non-continuous": "Icke ständiga åtgärder",
+    "filter-action-type": "Typ av åtgärd",
+    "see-all-actions": "Alla typer"
 }

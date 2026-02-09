@@ -15,5 +15,9 @@
     "related-actions": "Verbundene Massnahmen",
     "org-responsible-in-actions": "Verantwortlich für {actionCount} Massnahmen",
     "inactive-actions": "Inaktive Massnahmen",
-    "action-timeline": "Frist"
+    "action-timeline": "Frist",
+    "actions-continuous": "Kontinuierliche Massnahmen",
+    "actions-non-continuous": "Nicht kontinuierliche Massnahmen",
+    "filter-action-type": "Art der Massnahmen",
+    "see-all-actions": "Alle Arten"
 }
