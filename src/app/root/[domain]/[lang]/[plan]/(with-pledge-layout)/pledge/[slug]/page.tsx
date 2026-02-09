@@ -12,6 +12,7 @@ import Breadcrumbs from '@/components/common/Breadcrumbs';
 import Button from '@/components/common/Button';
 import Icon, { type ValidIconName } from '@/components/common/Icon';
 import RichText from '@/components/common/RichText';
+import PledgeImpactComparison from '@/components/pledge/PledgeImpactComparison';
 import { PLEDGE_PATH } from '@/constants/routes';
 
 // Types
@@ -326,6 +327,15 @@ export default function PledgeDetailPage({ params }: Props) {
 
         <StyledSection>
           <RichText html={pledge.body} />
+        </StyledSection>
+
+        <StyledSection>
+          <PledgeImpactComparison
+            residentCount={pledge.impact.targetCount}
+            saving={`We save <strong>${pledge.impact.savingsAmount} ${pledge.impact.savingsUnit}</strong> each year`}
+            savingIcon="arrow-down"
+            equivalence={`That's equivalent to <strong>${pledge.impact.equivalence}</strong>`}
+          />
         </StyledSection>
 
         <StyledRelatedActionsSection>
