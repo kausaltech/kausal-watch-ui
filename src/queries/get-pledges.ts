@@ -97,14 +97,47 @@ const GET_PLEDGES = gql`
   ${PLEDGE_FRAGMENT}
 `;
 
+const PLEDGE_BODY_FRAGMENT = gql`
+  fragment PledgeBodyFragment on StreamFieldInterface {
+    id
+    blockType
+    ... on RichTextBlock {
+      value
+    }
+    ... on QuestionAnswerBlock {
+      heading
+      questions {
+        ... on QuestionBlock {
+          question
+          answer
+        }
+      }
+    }
+    ... on LargeImageBlock {
+      image {
+        title
+        altText
+        width
+        height
+        renditionUncropped: rendition(size: "1320x1320", crop: false) {
+          src
+        }
+        imageCredit
+      }
+      width
+    }
+  }
+`;
+
 const GET_PLEDGE = gql`
   query GetPledge($plan: ID!, $slug: String!) {
     plan(id: $plan) {
       id
       pledge(slug: $slug) {
         ...PledgeFragment
-        # TODO: there's a backend issue with this atm
-        # body
+        body {
+          ...PledgeBodyFragment
+        }
         actions {
           id
           identifier
@@ -115,6 +148,7 @@ const GET_PLEDGE = gql`
     }
   }
   ${PLEDGE_FRAGMENT}
+  ${PLEDGE_BODY_FRAGMENT}
 `;
 
 const GET_PLEDGE_FEATURE_ENABLED = gql`
