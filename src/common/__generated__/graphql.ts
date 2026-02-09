@@ -15,7 +15,6 @@ export type Scalars = {
   Float: { input: number; output: number; }
   Date: { input: string; output: string; }
   DateTime: { input: string; output: string; }
-  GenericStreamFieldInterface: { input: any; output: any; }
   JSONString: { input: string; output: string; }
   PointScalar: { input: any; output: any; }
   PositiveInt: { input: number; output: number; }
@@ -16173,6 +16172,67 @@ export type GetPledgesQuery = (
   & { __typename: 'Query' }
 );
 
+type PledgeBodyFragment_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment = (
+  { id: string | null, blockType: string }
+  & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
+);
+
+type PledgeBodyFragment_Ql4eta9xK793iJ3An4PJfoICo9TfFjlLDjRPnxN10g_Fragment = (
+  { id: string | null, blockType: string }
+  & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
+);
+
+type PledgeBodyFragment_Ct1QkYUrh2NDpn8mDflXgUh9OGs5VGxSpmvBt8QiWy_Fragment = (
+  { id: string | null, blockType: string }
+  & { __typename: 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' }
+);
+
+type PledgeBodyFragment_FNwkRjdWhZVbXkdgq3fD1zI6O2mR9KuNmhUuxEsiQ_Fragment = (
+  { id: string | null, blockType: string }
+  & { __typename: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' }
+);
+
+type PledgeBodyFragment_SSfSdhoFgsuOkBgPoNa5SeAttr8KxaVlZScs075dwo8_Fragment = (
+  { id: string | null, blockType: string }
+  & { __typename: 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' }
+);
+
+type PledgeBodyFragment_Vf35Cl8No6cDp42MtQdLj4Gi0zr7VruR3WEocjokk_Fragment = (
+  { id: string | null, blockType: string }
+  & { __typename: 'PageLinkBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' }
+);
+
+type PledgeBodyFragment_V2aeCntk28Sdu3p0ZUflYw6N6iIqB4ZRyT2m1kGs_Fragment = (
+  { id: string | null, blockType: string }
+  & { __typename: 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+);
+
+type PledgeBodyFragment_LargeImageBlock_Fragment = (
+  { width: string | null, id: string | null, blockType: string, image: (
+    { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
+      { src: string }
+      & { __typename: 'ImageRendition' }
+    ) | null }
+    & { __typename: 'Image' }
+  ) | null }
+  & { __typename: 'LargeImageBlock' }
+);
+
+type PledgeBodyFragment_QuestionAnswerBlock_Fragment = (
+  { heading: string | null, id: string | null, blockType: string, questions: Array<(
+    { question: string, answer: string }
+    & { __typename: 'QuestionBlock' }
+  )> | null }
+  & { __typename: 'QuestionAnswerBlock' }
+);
+
+type PledgeBodyFragment_RichTextBlock_Fragment = (
+  { value: string, id: string | null, blockType: string }
+  & { __typename: 'RichTextBlock' }
+);
+
+export type PledgeBodyFragmentFragment = PledgeBodyFragment_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment | PledgeBodyFragment_Ql4eta9xK793iJ3An4PJfoICo9TfFjlLDjRPnxN10g_Fragment | PledgeBodyFragment_Ct1QkYUrh2NDpn8mDflXgUh9OGs5VGxSpmvBt8QiWy_Fragment | PledgeBodyFragment_FNwkRjdWhZVbXkdgq3fD1zI6O2mR9KuNmhUuxEsiQ_Fragment | PledgeBodyFragment_SSfSdhoFgsuOkBgPoNa5SeAttr8KxaVlZScs075dwo8_Fragment | PledgeBodyFragment_Vf35Cl8No6cDp42MtQdLj4Gi0zr7VruR3WEocjokk_Fragment | PledgeBodyFragment_V2aeCntk28Sdu3p0ZUflYw6N6iIqB4ZRyT2m1kGs_Fragment | PledgeBodyFragment_LargeImageBlock_Fragment | PledgeBodyFragment_QuestionAnswerBlock_Fragment | PledgeBodyFragment_RichTextBlock_Fragment;
+
 export type GetPledgeQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   slug: Scalars['String']['input'];
@@ -16182,7 +16242,25 @@ export type GetPledgeQueryVariables = Exact<{
 export type GetPledgeQuery = (
   { plan: (
     { id: string, pledge: (
-      { body: any | null, id: string, name: string, description: string, uuid: string, slug: string, commitmentCount: number, residentCount: number | null, impactStatement: string, localEquivalency: string, actions: Array<(
+      { id: string, name: string, description: string, uuid: string, slug: string, commitmentCount: number, residentCount: number | null, impactStatement: string, localEquivalency: string, body: Array<(
+        { width: string | null, id: string | null, blockType: string, image: (
+          { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
+            { src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null }
+          & { __typename: 'Image' }
+        ) | null }
+        & { __typename: 'LargeImageBlock' }
+      ) | (
+        { heading: string | null, id: string | null, blockType: string, questions: Array<(
+          { question: string, answer: string }
+          & { __typename: 'QuestionBlock' }
+        )> | null }
+        & { __typename: 'QuestionAnswerBlock' }
+      ) | (
+        { value: string, id: string | null, blockType: string }
+        & { __typename: 'RichTextBlock' }
+      )> | null, actions: Array<(
         { id: string, identifier: string, name: string, viewUrl: string }
         & { __typename: 'Action' }
       )> | null, image: (
