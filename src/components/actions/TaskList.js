@@ -147,7 +147,7 @@ const Task = (props) => {
       <TaskContent>
         <h4 className="task-title">{task.name}</h4>
         {/* Strip HTML tags to see if comment field is actually empty */}
-        {task.comment.replace(/(<([^>]+)>)/gi, '').length > 0 && (
+        {task.comment?.replace(/(<([^>]+)>)/gi, '').length > 0 && (
           <>
             <ToggleButton color="link" onClick={toggle} size="sm" className={isOpen ? 'open' : ''}>
               {isOpen ? t('action-task-hide-comment') : t('action-task-show-comment')}
