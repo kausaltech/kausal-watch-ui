@@ -17,5 +17,5 @@ export default async function PledgeDetailPage({ params }: Props) {
     notFound();
   }
 
-  return <PledgeDetail pledge={pledge} />;
+  return <PledgeDetail pledge={pledge} planIdentifier={planId} />;
 }
