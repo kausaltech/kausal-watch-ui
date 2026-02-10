@@ -18,12 +18,14 @@ import Icon from '@/components/common/Icon';
 import RichText from '@/components/common/RichText';
 import { PLEDGE_PATH } from '@/constants/routes';
 
+import PledgeFeedback from './PledgeFeedback';
 import PledgeImpactComparison from './PledgeImpactComparison';
 
 type PledgeData = NonNullable<NonNullable<GetPledgeQuery['plan']>['pledge']>;
 
 type Props = {
   pledge: PledgeData;
+  planIdentifier: string;
 };
 
 const StyledHero = styled.div<{ $bgImage: string }>`
@@ -254,7 +256,7 @@ function PledgeBodyBlock({ block }: { block: BodyBlock }) {
   }
 }
 
-function PledgeDetail({ pledge }: Props) {
+function PledgeDetail({ pledge, planIdentifier }: Props) {
   // TODO: Replace with actual user commitment state from API/auth
   const [isCommitted, setIsCommitted] = useState(false);
   const t = useTranslations();
@@ -336,7 +338,7 @@ function PledgeDetail({ pledge }: Props) {
             {actions.map((action) => (
               <StyledRelatedActionCard key={action.id}>
                 <StyledActionIdentifier>{action.identifier}.</StyledActionIdentifier> {action.name}
-                <StyledViewActionLink href={action.viewUrl}>
+                <StyledViewActionLink href={action.viewUrl} target="_blank">
                   {t('pledge-view-action')}
                   <Icon name="arrow-up-right-from-square" width="14px" height="14px" />
                 </StyledViewActionLink>
@@ -344,6 +346,12 @@ function PledgeDetail({ pledge }: Props) {
             ))}
           </StyledRelatedActionsSection>
         )}
+
+        <PledgeFeedback
+          planIdentifier={planIdentifier}
+          pledgeSlug={pledge.slug}
+          pledgeTitle={pledge.name}
+        />
       </StyledPageContentContainer>
     </>
   );
