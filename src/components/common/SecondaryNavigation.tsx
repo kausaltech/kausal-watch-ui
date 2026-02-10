@@ -1,9 +1,8 @@
 import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
-import { PageInterface } from '@/common/__generated__/graphql';
+import { type StaticPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import { Link } from '@/common/links';
-import Icon from '@/components/common/Icon';
 
 const NavigationContainer = styled(Container)`
   @media (min-width: ${(props) => props.theme.breakpointLg}) {
@@ -36,23 +35,24 @@ const Nav = styled.ul`
 const NavItem = styled.li<{ $isActive: boolean }>`
   margin-bottom: 0.5rem;
   padding: 0;
-
+  padding-left: ${(props) => (props.$isActive ? props.theme.spaces.s050 : 0)};
+  border-left: ${(props) => (props.$isActive ? `3px solid ${props.theme.brandDark}` : 'none')};
+  font-weight: ${(props) => (props.$isActive ? 'bold' : 'normal')};
   a {
     color: ${(props) => props.theme.themeColors.black};
-    border-left: 3px solid ${(props) => (props.$isActive ? props.theme.brandDark : 'transparent')};
-    font-weight: ${(props) => (props.$isActive ? 'bold' : 'normal')};
 
     &:hover {
       color: ${(props) =>
         props.$isActive ? props.theme.linkColor : props.theme.themeColors.black};
       text-decoration: none;
-      border-bottom: 3px solid ${(props) => props.theme.brandDark};
+      border-bottom: 2px solid ${(props) => props.theme.themeColors.black};
     }
   }
 `;
 
+type StaticPageParentsChildren = NonNullable<StaticPage['parent']>['children'];
 interface SecondaryNavigationProps {
-  links: PageInterface[];
+  links: StaticPageParentsChildren;
   activeLink?: string | null;
   title?: string;
 }
@@ -69,7 +69,11 @@ const SecondaryNavigation = (props: SecondaryNavigationProps) => {
             <Nav>
               {links.map((link) => (
                 <NavItem key={link.id} $isActive={link.id === activeLink}>
-                  <Link href={link.urlPath}>{link.title}</Link>
+                  {link.id === activeLink ? (
+                    <span>{link.title}</span>
+                  ) : (
+                    <Link href={link.urlPath}>{link.title}</Link>
+                  )}
                 </NavItem>
               ))}
             </Nav>
