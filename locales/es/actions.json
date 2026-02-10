@@ -55,5 +55,9 @@
     "action-draft": "Borrador",
     "other": "Otro",
     "inactive-actions": "Acciones inactivas",
-    "no-action-version-available": "No hay versión {versionType} disponible"
+    "no-action-version-available": "No hay versión {versionType} disponible",
+    "actions-continuous": "Acciones en curso",
+    "actions-non-continuous": "Acciones no continuas",
+    "filter-action-type": "Tipo de acción",
+    "see-all-actions": "Todos los tipos"
 }

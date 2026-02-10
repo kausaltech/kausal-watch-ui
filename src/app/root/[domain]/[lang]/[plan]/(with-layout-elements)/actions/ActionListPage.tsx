@@ -18,11 +18,26 @@ type Props = {
   testId?: string;
 };
 
+// Phase is multi-select. URL rehydration may return a string, so force array.
+function parseFilters(sp: URLSearchParams | null): Filters<FilterValue> {
+  if (!sp) return {};
+  const out: Filters<FilterValue> = {};
+  const keys = Array.from(new Set(sp.keys()));
+  for (const key of keys) {
+    const values = sp.getAll(key).filter((v) => v !== '');
+    if (values.length === 0) continue;
+    if (key === 'phase') {
+      out[key] = values;
+      continue;
+    }
+    out[key] = values.length === 1 ? values[0] : values;
+  }
+  return out;
+}
+
 export function ActionListPage({ actionListPage, testId }: Props) {
   const searchParams = useSearchParams();
-  const [filters, setFilters] = useState<Filters<FilterValue>>(
-    searchParams ? Object.fromEntries(searchParams) : {}
-  );
+  const [filters, setFilters] = useState<Filters<FilterValue>>(() => parseFilters(searchParams));
   const updateSearchParams = useUpdateSearchParams();
 
   const handleFilterChange = useCallback(
