@@ -38,8 +38,8 @@ const NavItem = styled.li<{ $isActive: boolean }>`
   padding: 0;
 
   a {
-    color: ${(props) => (props.$isActive ? props.theme.linkColor : props.theme.themeColors.black)};
-    border-bottom: 3px solid ${(props) => (props.$isActive ? props.theme.brandDark : 'transparent')};
+    color: ${(props) => props.theme.themeColors.black};
+    border-left: 3px solid ${(props) => (props.$isActive ? props.theme.brandDark : 'transparent')};
     font-weight: ${(props) => (props.$isActive ? 'bold' : 'normal')};
 
     &:hover {
