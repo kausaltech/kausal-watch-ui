@@ -30,8 +30,8 @@ importers:
         specifier: ^2.32.0
         version: 2.35.2(mapbox-gl@3.17.0)(webpack@5.104.1(esbuild@0.27.2))
       '@kausal/themes':
-        specifier: ^0.8.16
-        version: 0.8.16
+        specifier: ^0.8.18
+        version: 0.8.18
       '@n8tb1t/use-scroll-position':
         specifier: ^2.0.3
         version: 2.0.3(@types/react@19.1.8)(react@19.1.0)
@@ -476,8 +476,8 @@ importers:
         version: 5.104.1(esbuild@0.27.2)
     optionalDependencies:
       '@kausal-private/themes-private':
-        specifier: ^0.5.82
-        version: 0.5.82
+        specifier: ^0.5.83
+        version: 0.5.83
 
 packages:
 
@@ -1915,8 +1915,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@kausal-private/themes-private@0.5.82':
-    resolution: {integrity: sha512-/o5+yx48PtC/2sAV49Pne21J2izbF7eSfhLSBMIwkNLd5BQI6OWwloiZuRozYfeA9guKsTX3tLO0bCfympKw4Q==}
+  '@kausal-private/themes-private@0.5.83':
+    resolution: {integrity: sha512-zmFJd8swFH2gXKQ78wds9Jd5igh38IRcwPTXZdHSlxHWkk2mNC51o0X4PVxfkXZOzMmWZxpMaq6oqpBXI87FKg==}
 
   '@kausal/mapboxgl-legend@1.7.2':
     resolution: {integrity: sha512-qmjchiPrcer3gCLkln7z2e0o8i5XK2BNRbMMdr6/KHMxDTSeOOaN1PvRjXzrTAtewOyxztHxnyYH9KaoC5LJdQ==}
@@ -1924,8 +1924,8 @@ packages:
   '@kausal/plotly-custom@2.35.2':
     resolution: {integrity: sha512-LTuhiMsKd36/1y2zebV9RcskUqLbKdPFiN0H2C/7UMUjtIW9sI+JkVL0d0jz6VlmQdhk6xoVA6pcFiXEa+0UPg==}
 
-  '@kausal/themes@0.8.16':
-    resolution: {integrity: sha512-DAcl9XKvIa+jYmDSeA//bm0hgII00cfwz+MtmWhuiaxmM9ANxhX+ziaGgxgCj36NX+IxlK7DyWA8PtQzCab0KQ==}
+  '@kausal/themes@0.8.18':
+    resolution: {integrity: sha512-uxu6yyEZzI1rgbaRcQl1M0+QrWP9eoC0Rfxyj2QaHdMYRDlcmpwMclds2quM7WdX580t4iL2Q+l6U53arhMUcQ==}
 
   '@mapbox/geojson-rewind@0.5.2':
     resolution: {integrity: sha512-tJaT+RbYGJYStt7wI3cq4Nl4SXxG8W7JDG5DMJu97V25RnbNg3QtQtf+KD+VLjNpWKYsRvXDNmNrBgEETr1ifA==}
@@ -12102,7 +12102,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@kausal-private/themes-private@0.5.82':
+  '@kausal-private/themes-private@0.5.83':
     optional: true
 
   '@kausal/mapboxgl-legend@1.7.2': {}
@@ -12167,7 +12167,7 @@ snapshots:
       - supports-color
       - webpack
 
-  '@kausal/themes@0.8.16': {}
+  '@kausal/themes@0.8.18': {}
 
   '@mapbox/geojson-rewind@0.5.2':
     dependencies:
