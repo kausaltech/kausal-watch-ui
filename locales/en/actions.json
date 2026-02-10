@@ -43,7 +43,7 @@
   "actions-updated-help-days": "{context, select, CASE_STUDY {Case studies that have been updated within the last {count} days} STRATEGY {Strategies that have been updated within the last {count} days} other {Actions that have been updated within the last {count} days}}",
   "actions-updated-help-months": "{context, select, CASE_STUDY {Case studies that have been updated within the last {count, plural, =1 {month} other {# months}}} STRATEGY {Strategies that have been updated within the last {count, plural, =1 {month} other {# months}}} other {Actions that have been updated within the last {count, plural, =1 {month} other {# months}}}}",
   "emission-scopes": "Emission scopes",
-  "filter-action-type": "Actions type",
+  "filter-action-type": "Action type",
   "inactive-actions": "{context, select, CASE_STUDY {Inactive case studies} STRATEGY {Inactive strategies} other {Inactive actions}}",
   "no-defined-indicators": "No indicators defined",
   "status": "Status",
