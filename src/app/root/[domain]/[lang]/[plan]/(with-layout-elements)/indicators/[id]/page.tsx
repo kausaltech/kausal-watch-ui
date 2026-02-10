@@ -62,5 +62,11 @@ export default async function IndicatorPage(props: Props) {
     return notFound();
   }
 
-  return <IndicatorContent indicator={data.indicator} testId="indicator-page" />;
+  return (
+    <IndicatorContent
+      indicator={data.indicator}
+      layout={data.plan?.indicatorListPage}
+      testId="indicator-page"
+    />
+  );
 }

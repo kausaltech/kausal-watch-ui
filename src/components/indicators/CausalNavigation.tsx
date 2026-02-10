@@ -1,21 +1,47 @@
 import React from 'react';
 
 import { useTranslations } from 'next-intl';
-import PropTypes from 'prop-types';
-import { Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
 
+import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { usePlan } from '@/context/plan';
 
 import IndicatorCard from './IndicatorCard';
+import { BlockLabel } from './IndicatorModalContentBlock';
 
-const CausalNavigationWrapper = styled.div`
-  padding-top: ${(props) => props.theme.spaces.s200};
-  background-color: ${(props) => props.theme.themeColors.light};
+type Indicator = NonNullable<IndicatorDetailsQuery['indicator']>;
+type RelatedCause = Indicator['relatedCauses'][number];
+type RelatedEffect = Indicator['relatedEffects'][number];
 
-  h3 {
-    font-size: ${(props) => props.theme.fontSizeLg};
-    margin-bottom: ${(props) => props.theme.spaces.s200};
+type CausalNavigationProps = {
+  causes: Indicator['relatedCauses'];
+  effects: Indicator['relatedEffects'];
+  legacyMode?: boolean;
+};
+
+const CausalNav = styled.div<{ $withBorder?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: ${(props) => props.theme.spaces.s100};
+
+  padding-top: ${(props) => props.theme.spaces.s100};
+  border-top: ${(props) =>
+    props.$withBorder ? '1px solid ' + props.theme.graphColors.grey030 : 'none'};
+  border-bottom: ${(props) =>
+    props.$withBorder ? '1px solid ' + props.theme.graphColors.grey030 : 'none'};
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    flex-direction: row;
+  }
+`;
+
+const CausalList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${(props) => props.theme.spaces.s100};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    flex: 0 1 400px;
   }
 `;
 
@@ -23,12 +49,13 @@ const CardWrapper = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
-function CausalNavigation(props) {
+function CausalNavigation({ causes, effects, legacyMode = false }: CausalNavigationProps) {
   const t = useTranslations();
-  const { effects, causes } = props;
   const currentPlan = usePlan();
 
-  const getIndicatorLink = (indicator) => {
+  const getIndicatorLink = (
+    indicator: RelatedCause['causalIndicator'] | RelatedEffect['effectIndicator']
+  ): string | null => {
     // If the indicator has no plans, or current plan includes the indicator, default behaviour.
     // If the indicator is connected only to another plan, link to the correct indicator page.
     if (!indicator.plans || !Array.isArray(indicator.plans) || indicator.plans.length === 0) {
@@ -52,55 +79,44 @@ function CausalNavigation(props) {
   };
 
   return (
-    <CausalNavigationWrapper>
-      <Container>
-        <Row>
-          <Col sm="6" lg={{ size: 5 }} className="mb-5">
-            {causes.length > 0 && (
-              <div>
-                <h3>{t('indicator-affected-by')}</h3>
-                {causes.map((cause) => (
-                  <CardWrapper key={cause.causalIndicator.id}>
-                    <IndicatorCard
-                      objectid={cause.causalIndicator.id}
-                      name={cause.causalIndicator.name}
-                      level={cause.causalIndicator.level}
-                      customHref={getIndicatorLink(cause.causalIndicator)}
-                    />
-                  </CardWrapper>
-                ))}
-              </div>
-            )}
-          </Col>
+    <CausalNav $withBorder={!legacyMode}>
+      <CausalList>
+        {causes.length > 0 && (
+          <div>
+            <BlockLabel>{t('indicator-affected-by')}</BlockLabel>
+            {causes.map((cause) => (
+              <CardWrapper key={cause.causalIndicator.id}>
+                <IndicatorCard
+                  objectid={cause.causalIndicator.id}
+                  name={cause.causalIndicator.name}
+                  level={cause.causalIndicator.level}
+                  customHref={getIndicatorLink(cause.causalIndicator)}
+                />
+              </CardWrapper>
+            ))}
+          </div>
+        )}
+      </CausalList>
 
-          <Col sm="6" lg={{ size: 5, offset: 2 }} className="mb-5">
-            {effects.length > 0 && (
-              <div>
-                <h3>{t('indicator-has-effect-on')}</h3>
-                {effects.map((effect) => (
-                  <CardWrapper key={effect.effectIndicator.id}>
-                    <IndicatorCard
-                      objectid={effect.effectIndicator.id}
-                      name={effect.effectIndicator.name}
-                      level={effect.effectIndicator.level}
-                      customHref={getIndicatorLink(effect.effectIndicator)}
-                    />
-                  </CardWrapper>
-                ))}
-              </div>
-            )}
-          </Col>
-        </Row>
-      </Container>
-    </CausalNavigationWrapper>
+      <CausalList>
+        {effects.length > 0 && (
+          <div>
+            <BlockLabel>{t('indicator-has-effect-on')}</BlockLabel>
+            {effects.map((effect) => (
+              <CardWrapper key={effect.effectIndicator.id}>
+                <IndicatorCard
+                  objectid={effect.effectIndicator.id}
+                  name={effect.effectIndicator.name}
+                  level={effect.effectIndicator.level}
+                  customHref={getIndicatorLink(effect.effectIndicator)}
+                />
+              </CardWrapper>
+            ))}
+          </div>
+        )}
+      </CausalList>
+    </CausalNav>
   );
 }
-
-CausalNavigation.propTypes = {};
-
-CausalNavigation.propTypes = {
-  causes: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  effects: PropTypes.arrayOf(PropTypes.shape).isRequired,
-};
 
 export default CausalNavigation;
