@@ -22,7 +22,7 @@ type Props = {
 function parseFilters(sp: URLSearchParams | null): Filters<FilterValue> {
   if (!sp) return {};
   const out: Filters<FilterValue> = {};
-  const keys = Array.from(new Set(Array.from(sp.keys())));
+  const keys = Array.from(new Set(sp.keys()));
   for (const key of keys) {
     const values = sp.getAll(key).filter((v) => v !== '');
     if (values.length === 0) continue;
