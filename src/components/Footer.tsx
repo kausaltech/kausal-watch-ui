@@ -131,7 +131,7 @@ function Footer() {
     }
   }
 
-  if (plan.adminUrl) {
+  if (plan.features.showAdminLink && plan.adminUrl) {
     utilityLinks.push({
       id: '3',
       name: t('admin-login'),
