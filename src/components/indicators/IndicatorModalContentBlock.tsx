@@ -320,7 +320,7 @@ interface IndicatorGroupedCategoryBlockProps {
 
 const IndicatorGroupedCategoryBlock = (props: IndicatorGroupedCategoryBlockProps) => {
   const { blocks, indicator } = props;
-  const hasContet = blocks.some((block) => {
+  const hasContent = blocks.some((block) => {
     const categories: NonNullable<IndicatorDetailsQuery['indicator']>['categories'][number][] = [];
 
     indicator.categories.forEach((cat) => {
@@ -332,7 +332,7 @@ const IndicatorGroupedCategoryBlock = (props: IndicatorGroupedCategoryBlockProps
     return categories && categories.length > 0;
   });
 
-  if (!hasContet) return null;
+  if (!hasContent) return null;
   return (
     <GroupedCategoryContainer>
       {blocks.map((block) => {
