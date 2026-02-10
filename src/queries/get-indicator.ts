@@ -48,6 +48,8 @@ export const GET_INDICATOR_DETAILS = gql`
       id
       identifier
       name
+      hideIndicatorGraph
+      hideIndicatorTable
       level(plan: $plan)
       description
       goalDescription

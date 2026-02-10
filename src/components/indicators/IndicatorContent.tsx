@@ -152,7 +152,12 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
                   <Col className="mb-4">
                     <GraphContainer>
                       <h2>{indicator.name}</h2>
-                      <IndicatorVisualisation indicatorId={indicator.id} showReference={true} />
+                      <IndicatorVisualisation
+                        indicatorId={indicator.id}
+                        showReference={true}
+                        hideGraph={indicator.hideIndicatorGraph ?? false}
+                        hideTable={indicator.hideIndicatorTable ?? false}
+                      />
                     </GraphContainer>
                   </Col>
                 </Row>

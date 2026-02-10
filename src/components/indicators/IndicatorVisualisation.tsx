@@ -389,6 +389,8 @@ type IndicatorVisualisationProps = {
   indicatorLink?: string;
   useLegacyGraph?: boolean;
   showReference?: boolean;
+  hideGraph?: boolean;
+  hideTable?: boolean;
 };
 
 function IndicatorVisualisation({
@@ -396,6 +398,8 @@ function IndicatorVisualisation({
   indicatorLink,
   useLegacyGraph = true,
   showReference = false,
+  hideGraph = false,
+  hideTable = false,
 }: IndicatorVisualisationProps) {
   const plan = usePlan();
   const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
@@ -433,6 +437,9 @@ function IndicatorVisualisation({
   if (indicator.values.length === 0) {
     return null;
   }
+
+  const showGraph = !hideGraph;
+  const showTable = !hideTable;
 
   const comparisonIndicator = indicator.common?.indicators.find(
     (indicator) => indicator.organization.id === compareTo
@@ -642,44 +649,48 @@ function IndicatorVisualisation({
           currentValue={normalizeByPopulation}
         />
       )}
-      <div aria-hidden="true">
-        {useLegacyGraph ? (
-          <LegacyIndicatorGraph
-            specification={indicatorGraphSpecification}
-            yRange={yRange}
-            timeResolution={indicator.timeResolution}
-            traces={traces}
-            goalTraces={goalTraces}
-            trendTrace={trendTrace}
-            title={plotTitle}
-          />
-        ) : (
-          // TODO: Show title depending on context
-          <IndicatorGraph
-            specification={indicatorGraphSpecification}
-            yRange={yRange}
-            timeResolution={indicator.timeResolution}
-            traces={traces}
-            goalTraces={goalTraces}
-            trendTrace={trendTrace}
-            title={null}
-            desiredTrend={indicator.desiredTrend}
-            referenceValue={indicator.referenceValue}
-            nonQuantifiedGoal={{
-              trend: indicator.nonQuantifiedGoal,
-              date: indicator.nonQuantifiedGoalDate,
-            }}
-          />
-        )}
-      </div>
-      <GraphAsTable
-        specification={yRange}
-        timeResolution={indicator.timeResolution}
-        data={traces}
-        goalTraces={goalTraces}
-        title={plotTitle}
-        language={i18n.language}
-      />
+      {showGraph && (
+        <div aria-hidden="true">
+          {useLegacyGraph ? (
+            <LegacyIndicatorGraph
+              specification={indicatorGraphSpecification}
+              yRange={yRange}
+              timeResolution={indicator.timeResolution}
+              traces={traces}
+              goalTraces={goalTraces}
+              trendTrace={trendTrace}
+              title={plotTitle}
+            />
+          ) : (
+            // TODO: Show title depending on context
+            <IndicatorGraph
+              specification={indicatorGraphSpecification}
+              yRange={yRange}
+              timeResolution={indicator.timeResolution}
+              traces={traces}
+              goalTraces={goalTraces}
+              trendTrace={trendTrace}
+              title={null}
+              desiredTrend={indicator.desiredTrend}
+              referenceValue={indicator.referenceValue}
+              nonQuantifiedGoal={{
+                trend: indicator.nonQuantifiedGoal,
+                date: indicator.nonQuantifiedGoalDate,
+              }}
+            />
+          )}
+        </div>
+      )}
+      {showTable && (
+        <GraphAsTable
+          specification={yRange}
+          timeResolution={indicator.timeResolution}
+          data={traces}
+          goalTraces={goalTraces}
+          title={plotTitle}
+          language={i18n.language}
+        />
+      )}
       {indicator.reference && showReference && (
         <div style={{ display: 'flex' }}>
           <span style={{ marginRight: '0.5em' }}>{t('reference')}:</span>
