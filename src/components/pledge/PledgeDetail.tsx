@@ -8,6 +8,7 @@ import { Container } from 'reactstrap';
 import styled from 'styled-components';
 
 import type { GetPledgeQuery } from '@/common/__generated__/graphql';
+import type { TFunction } from '@/common/i18n';
 import { usePrependPlanAndLocale } from '@/common/links';
 import { excludeNullish } from '@/common/utils';
 import Accordion from '@/components/common/Accordion';
@@ -17,7 +18,9 @@ import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import RichText from '@/components/common/RichText';
 import { PLEDGE_PATH } from '@/constants/routes';
+import { getDefaultFormFields } from '@/utils/pledge.utils';
 
+import ConfirmPledge from './ConfirmPledge';
 import PledgeFeedback from './PledgeFeedback';
 import PledgeImpactComparison from './PledgeImpactComparison';
 
@@ -39,6 +42,7 @@ const StyledHero = styled.div<{ $bgImage: string }>`
     left: 0;
     right: 0;
     height: 90%;
+    background-color: ${({ theme }) => theme.brandDark};
     background-image: url(${({ $bgImage }) => $bgImage});
     background-size: cover;
     background-position: center;
@@ -259,6 +263,7 @@ function PledgeBodyBlock({ block }: { block: BodyBlock }) {
 function PledgeDetail({ pledge, planIdentifier }: Props) {
   // TODO: Replace with actual user commitment state from API/auth
   const [isCommitted, setIsCommitted] = useState(false);
+  const [showConfirmDrawer, setShowConfirmDrawer] = useState(false);
   const t = useTranslations();
   const pledgeListLink = usePrependPlanAndLocale(PLEDGE_PATH);
 
@@ -266,6 +271,26 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
 
   const heroImage = pledge.image?.large?.src ?? pledge.image?.full?.src ?? '';
   const actions = pledge.actions ?? [];
+
+  const handleCommitClick = () => {
+    if (isCommitted) {
+      // Uncommit immediately without drawer
+      setIsCommitted(false);
+    } else {
+      // Show confirmation drawer for committing
+      setShowConfirmDrawer(true);
+    }
+  };
+
+  const handleConfirmPledge = (formData: Record<string, string>) => {
+    // TODO: Send commitment to backend with formData
+    console.log('Pledge committed with data:', formData);
+    setIsCommitted(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setShowConfirmDrawer(false);
+  };
 
   return (
     <>
@@ -284,7 +309,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
                 color="primary"
                 outline={!isCommitted}
                 $isCommitted={isCommitted}
-                onClick={() => setIsCommitted(!isCommitted)}
+                onClick={handleCommitClick}
                 aria-pressed={isCommitted}
               >
                 <Icon name="award" width="18px" height="18px" />
@@ -296,21 +321,18 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
       </StyledHero>
 
       <StyledPageContentContainer fluid="sm">
-        {(pledge.commitmentCount > 0 || (pledge.attributes && pledge.attributes.length > 0)) && (
-          <StyledMetaList>
-            {
-              <StyledMetaItem>
-                <Icon name="user" width="18px" height="18px" />
-                {t('pledge-commitment-count', { count: pledge.commitmentCount })}
-              </StyledMetaItem>
-            }
-            {pledge.attributes?.map((attribute) => (
-              <StyledMetaItem key={attribute.id}>
-                <ActionAttribute attribute={attribute} attributeType={null} variant="chip" />
-              </StyledMetaItem>
-            ))}
-          </StyledMetaList>
-        )}
+        <StyledMetaList>
+          <StyledMetaItem>
+            <Icon name="user" width="18px" height="18px" />
+            {t('pledge-commitment-count', { count: pledge.commitmentCount })}
+          </StyledMetaItem>
+
+          {pledge.attributes?.map((attribute) => (
+            <StyledMetaItem key={attribute.id}>
+              <ActionAttribute attribute={attribute} attributeType={null} variant="chip" />
+            </StyledMetaItem>
+          ))}
+        </StyledMetaList>
 
         {pledge.body && pledge.body.length > 0 && (
           <StyledBodySection>
@@ -353,6 +375,17 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
           pledgeTitle={pledge.name}
         />
       </StyledPageContentContainer>
+
+      <ConfirmPledge
+        isOpen={showConfirmDrawer}
+        onClose={handleCloseDrawer}
+        onConfirm={handleConfirmPledge}
+        pledgeName={pledge.name}
+        pledgeSlug={pledge.slug}
+        pledgeImage={pledge.image?.rendition?.src ?? null}
+        commitmentCount={pledge.commitmentCount}
+        formFields={getDefaultFormFields(t)}
+      />
     </>
   );
 }
