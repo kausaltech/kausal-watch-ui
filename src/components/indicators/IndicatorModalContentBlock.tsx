@@ -98,6 +98,11 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
     case IndicatorDetailsFieldName.Visualization:
       const indicatorHasData = indicator.values.length > 0;
       if (!indicatorHasData) return null;
+
+      const showIndicatorGraph = !(indicator.hideIndicatorGraph ?? false);
+      const showIndicatorTable = !(indicator.hideIndicatorTable ?? false);
+      if (!showIndicatorGraph && !showIndicatorTable) return null;
+
       return (
         <ContentBlockWrapper>
           <BlockLabel>
@@ -106,7 +111,12 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
               <PopoverTip content={block.fieldHelpText} identifier={block.id} />
             )}
           </BlockLabel>
-          <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
+          <IndicatorVisualisation
+            indicatorId={indicator.id}
+            useLegacyGraph={false}
+            showGraph={showIndicatorGraph}
+            showTable={showIndicatorTable}
+          />
         </ContentBlockWrapper>
       );
     case IndicatorDetailsFieldName.ConnectedActions:

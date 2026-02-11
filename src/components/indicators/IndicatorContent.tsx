@@ -65,6 +65,12 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
   const mainGoals = indicator.goals?.filter((goal) => !goal?.scenario) ?? [];
 
+  const showIndicatorGraph = !indicator.hideIndicatorGraph;
+  const showIndicatorTable = !indicator.hideIndicatorTable;
+  const showGraphOrTable = showIndicatorGraph || showIndicatorTable;
+  // header visible only if graph is visible
+  const showGraphHeader = showIndicatorGraph;
+
   const allOrgs: {
     id: string;
     identifier: string | null;
@@ -147,16 +153,22 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
           {/* Legacy support */}
           {!hasLayout && (
             <div>
-              {(indicator.latestGraph || (indicator.values && indicator.values.length > 0)) && (
-                <Row>
-                  <Col className="mb-4">
-                    <GraphContainer>
-                      <h2>{indicator.name}</h2>
-                      <IndicatorVisualisation indicatorId={indicator.id} showReference={true} />
-                    </GraphContainer>
-                  </Col>
-                </Row>
-              )}
+              {(indicator.latestGraph || (indicator.values && indicator.values.length > 0)) &&
+                showGraphOrTable && (
+                  <Row>
+                    <Col className="mb-4">
+                      <GraphContainer>
+                        {showGraphHeader && <h2>{indicator.name}</h2>}
+                        <IndicatorVisualisation
+                          indicatorId={indicator.id}
+                          showReference={true}
+                          showGraph={showIndicatorGraph}
+                          showTable={showIndicatorTable}
+                        />
+                      </GraphContainer>
+                    </Col>
+                  </Row>
+                )}
               {indicator.actions && indicator.actions.length > 0 && (
                 <Row>
                   <Col className="mb-4">
