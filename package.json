@@ -10,7 +10,7 @@
     "@elastic/react-search-ui": "^1.24.2",
     "@kausal/mapboxgl-legend": "^1.7.2",
     "@kausal/plotly-custom": "^2.32.0",
-    "@kausal/themes": "^0.8.16",
+    "@kausal/themes": "^0.8.18",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@next/bundle-analyzer": "15.4.2",
     "@opentelemetry/api": "^1.9.0",
@@ -192,7 +192,7 @@
   },
   "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6",
   "optionalDependencies": {
-    "@kausal-private/themes-private": "^0.5.81"
+    "@kausal-private/themes-private": "^0.5.83"
   },
   "lint-staged": {
     "*.{tsx,ts,js,css,scss,md,json}": "prettier --write"
