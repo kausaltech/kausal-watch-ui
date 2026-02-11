@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
-import { Container } from 'reactstrap';
+import { Container, Spinner } from 'reactstrap';
 import styled from 'styled-components';
 
 import Button from '@/components/common/Button';
@@ -143,6 +143,10 @@ const StyledDrawerFooter = styled.div`
 
 const StyledButton = styled(Button)`
   min-width: 100px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spaces.s050};
 
   @media (max-width: ${({ theme }) => theme.breakpointLg}) {
     width: 100%;
@@ -160,12 +164,13 @@ type FormField = {
 type ConfirmPledgeProps = {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (formData: Record<string, string>) => void;
+  onConfirm: (formData: Record<string, string>) => Promise<void>;
   pledgeName: string;
   pledgeSlug: string;
   pledgeImage?: string | null;
   commitmentCount: number;
   formFields?: FormField[];
+  userData?: Record<string, string>;
 };
 
 type Step = 'form' | 'success';
@@ -179,10 +184,33 @@ function ConfirmPledge({
   pledgeImage,
   commitmentCount,
   formFields = [],
+  userData = {},
 }: ConfirmPledgeProps) {
   const t = useTranslations();
   const [step, setStep] = useState<Step>('form');
   const [formData, setFormData] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const prevIsOpen = useRef(false);
+
+  // Pre-fill form data from userData when the drawer opens
+  useEffect(() => {
+    if (isOpen && !prevIsOpen.current) {
+      const initialData: Record<string, string> = {};
+
+      formFields.forEach((field) => {
+        const existing = userData[field.id];
+
+        if (existing) {
+          initialData[field.id] = existing;
+        }
+      });
+
+      setStep('form');
+      setFormData(initialData);
+    }
+
+    prevIsOpen.current = isOpen;
+  }, [isOpen, formFields, userData]);
 
   const handleClose = () => {
     setStep('form');
@@ -194,9 +222,18 @@ function ConfirmPledge({
     setFormData((prev) => ({ ...prev, [fieldId]: value }));
   };
 
-  const handleSubmit = () => {
-    onConfirm(formData);
-    setStep('success');
+  const handleSubmit = async () => {
+    setSubmitting(true);
+
+    try {
+      await onConfirm(formData);
+      setStep('success');
+    } catch (error) {
+      // TODO: Handle and report the error
+      console.error('Failed to commit:', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -279,7 +316,16 @@ function ConfirmPledge({
             </StyledDrawerContent>
 
             <StyledDrawerFooter>
-              <StyledButton color="primary" onClick={step === 'form' ? handleSubmit : handleClose}>
+              <StyledButton
+                color="primary"
+                onClick={step === 'form' ? handleSubmit : handleClose}
+                disabled={submitting}
+              >
+                {submitting ? (
+                  <Spinner size="sm" />
+                ) : step === 'form' ? (
+                  <Icon name="award" width="18px" height="18px" />
+                ) : null}
                 {step === 'form' ? t('pledge-confirm-button') : t('close')}
               </StyledButton>
             </StyledDrawerFooter>

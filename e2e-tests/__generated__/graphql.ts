@@ -458,6 +458,7 @@ export type UserFeedbackMutationInput = {
   name: InputMaybe<Scalars['String']['input']>;
   pageId: InputMaybe<Scalars['String']['input']>;
   plan: Scalars['ID']['input'];
+  pledge: InputMaybe<Scalars['ID']['input']>;
   type: InputMaybe<Scalars['String']['input']>;
   url: Scalars['String']['input'];
 };
