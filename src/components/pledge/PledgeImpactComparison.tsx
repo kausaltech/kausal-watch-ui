@@ -90,6 +90,12 @@ const StyledBubbleRow = styled.div`
   align-items: stretch;
 `;
 
+const StyledBubbleTextWrapper = styled.div`
+  p {
+    margin: 0;
+  }
+`;
+
 const StyledConnector = styled.div`
   position: relative;
   flex: 1 0 auto;
@@ -188,7 +194,7 @@ function PledgeImpactComparison({
           <StyledConnectorMidLeft />
           <StyledBubble $arrow="right">
             <Icon name={savingIcon} width="20px" height="20px" />
-            <span dangerouslySetInnerHTML={{ __html: saving }} />
+            <StyledBubbleTextWrapper dangerouslySetInnerHTML={{ __html: saving }} />
           </StyledBubble>
           <StyledConnectorMidRight />
         </StyledBubbleRow>
@@ -197,7 +203,7 @@ function PledgeImpactComparison({
           <StyledConnectorBottomLeft />
           <StyledBubble $arrow="left">
             {equivalenceIcon && <Icon name={equivalenceIcon} width="20px" height="20px" />}
-            <span dangerouslySetInnerHTML={{ __html: equivalence }} />
+            <StyledBubbleTextWrapper dangerouslySetInnerHTML={{ __html: equivalence }} />
           </StyledBubble>
         </StyledBubbleRow>
       </StyledBubbleContainer>

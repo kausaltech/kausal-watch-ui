@@ -258,8 +258,8 @@ function PledgeFeedbackComponent({
                 />
 
                 {!!otherMutationErrors.length &&
-                  otherMutationErrors.map((errorMessage) => (
-                    <StyledAlert color="danger">
+                  otherMutationErrors.map((errorMessage, i) => (
+                    <StyledAlert key={i} color="danger">
                       <p>{errorMessage}</p>
                     </StyledAlert>
                   ))}
