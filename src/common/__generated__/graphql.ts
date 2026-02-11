@@ -459,6 +459,7 @@ export type UserFeedbackMutationInput = {
   name: InputMaybe<Scalars['String']['input']>;
   pageId: InputMaybe<Scalars['String']['input']>;
   plan: Scalars['ID']['input'];
+  pledge: InputMaybe<Scalars['ID']['input']>;
   type: InputMaybe<Scalars['String']['input']>;
   url: Scalars['String']['input'];
 };
@@ -2015,6 +2016,75 @@ export type IndicatorHightlightListQuery = (
     ) | null }
     & { __typename: 'Indicator' }
   )> | null }
+  & { __typename: 'Query' }
+);
+
+export type RegisterPledgeUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RegisterPledgeUserMutation = (
+  { pledge: (
+    { registerUser: (
+      { uuid: string }
+      & { __typename: 'RegisterPledgeUserPayload' }
+    ) | null }
+    & { __typename: 'PledgeMutations' }
+  ) }
+  & { __typename: 'Mutation' }
+);
+
+export type CommitToPledgeMutationVariables = Exact<{
+  user: Scalars['UUID']['input'];
+  pledge: Scalars['ID']['input'];
+  committed: Scalars['Boolean']['input'];
+}>;
+
+
+export type CommitToPledgeMutation = (
+  { pledge: (
+    { commitToPledge: (
+      { committed: boolean }
+      & { __typename: 'CommitToPledgePayload' }
+    ) | null }
+    & { __typename: 'PledgeMutations' }
+  ) }
+  & { __typename: 'Mutation' }
+);
+
+export type PledgeUserDataMutationVariables = Exact<{
+  user: Scalars['UUID']['input'];
+  key: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+}>;
+
+
+export type PledgeUserDataMutation = (
+  { pledge: (
+    { setUserData: (
+      { uuid: string }
+      & { __typename: 'SetUserDataPayload' }
+    ) | null }
+    & { __typename: 'PledgeMutations' }
+  ) }
+  & { __typename: 'Mutation' }
+);
+
+export type PledgeUserQueryVariables = Exact<{
+  user: Scalars['UUID']['input'];
+}>;
+
+
+export type PledgeUserQuery = (
+  { pledgeUser: (
+    { id: string, uuid: string, userData: string, commitments: Array<(
+      { id: string, pledge: (
+        { id: string, slug: string, name: string }
+        & { __typename: 'Pledge' }
+      ) | null }
+      & { __typename: 'PledgeCommitment' }
+    )> | null }
+    & { __typename: 'PledgeUser' }
+  ) | null }
   & { __typename: 'Query' }
 );
 
