@@ -7,7 +7,9 @@ import { Button, ButtonGroup, Container } from 'reactstrap';
 import styled from 'styled-components';
 
 import type { GetPledgesQuery } from '@/common/__generated__/graphql';
+import { getDefaultFormFields } from '@/utils/pledge.utils';
 
+import ConfirmPledge from './ConfirmPledge';
 import PledgeCard from './PledgeCard';
 
 type Pledge = NonNullable<NonNullable<NonNullable<GetPledgesQuery['plan']>['pledges']>[number]>;
@@ -40,6 +42,7 @@ const StyledPledgeGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: ${({ theme }) => theme.spaces.s200};
+  align-items: stretch;
 `;
 
 type ViewType = 'ALL' | 'MY_PLEDGES';
@@ -48,21 +51,41 @@ function PledgeList({ pledges }: Props) {
   const [view, setView] = useState<ViewType>('ALL');
   // TODO: Replace with actual user commitment state from API/auth
   const [committedSlugs, setCommittedSlugs] = useState<Set<string>>(new Set());
+  const [showConfirmDrawer, setShowConfirmDrawer] = useState(false);
+  const [selectedPledge, setSelectedPledge] = useState<Pledge | null>(null);
 
   const t = useTranslations();
 
-  const handleCommittedChange = (slug: string, committed: boolean) => {
-    setCommittedSlugs((prev) => {
-      const next = new Set(prev);
+  const handleCommitClick = (pledge: Pledge, isCurrentlyCommitted: boolean) => {
+    if (isCurrentlyCommitted) {
+      // Uncommit immediately without drawer
+      setCommittedSlugs((prev) => {
+        const next = new Set(prev);
+        next.delete(pledge.slug);
+        return next;
+      });
+    } else {
+      // Show confirmation drawer for committing
+      setSelectedPledge(pledge);
+      setShowConfirmDrawer(true);
+    }
+  };
 
-      if (committed) {
-        next.add(slug);
-      } else {
-        next.delete(slug);
-      }
+  const handleConfirmPledge = (formData: Record<string, string>) => {
+    if (selectedPledge) {
+      // TODO: Send commitment to backend with formData
+      console.log('Pledge committed with data:', formData);
+      setCommittedSlugs((prev) => {
+        const next = new Set(prev);
+        next.add(selectedPledge.slug);
+        return next;
+      });
+    }
+  };
 
-      return next;
-    });
+  const handleCloseDrawer = () => {
+    setShowConfirmDrawer(false);
+    setSelectedPledge(null);
   };
 
   const filteredPledges =
@@ -137,12 +160,26 @@ function PledgeList({ pledges }: Props) {
             image={pledge.image?.large?.src ?? pledge.image?.full?.src}
             imageAlt={pledge.image?.altText ?? pledge.name}
             isCommitted={committedSlugs.has(pledge.slug)}
-            onCommittedChange={(committed) => handleCommittedChange(pledge.slug, committed)}
+            committedCount={pledge.commitmentCount}
+            onCommitClick={(isCommitted) => handleCommitClick(pledge, isCommitted)}
           />
         ))}
       </StyledPledgeGrid>
 
       {view === 'MY_PLEDGES' && filteredPledges.length === 0 && <p>{t('pledge-no-commitments')}</p>}
+
+      {selectedPledge && (
+        <ConfirmPledge
+          isOpen={showConfirmDrawer}
+          onClose={handleCloseDrawer}
+          onConfirm={handleConfirmPledge}
+          pledgeName={selectedPledge.name}
+          pledgeSlug={selectedPledge.slug}
+          pledgeImage={selectedPledge.image?.rendition?.src ?? null}
+          commitmentCount={selectedPledge.commitmentCount}
+          formFields={getDefaultFormFields(t)}
+        />
+      )}
     </StyledContainer>
   );
 }
