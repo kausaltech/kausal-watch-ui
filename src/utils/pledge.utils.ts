@@ -5,7 +5,7 @@ import type { TFunction } from '@/common/i18n';
 export function getDefaultFormFields(t: TFunction) {
   return [
     {
-      id: 'zipCode',
+      id: 'zip_code',
       label: t('pledge-form-zip-code'),
       helpText: t('pledge-form-zip-code-help'),
       required: false,
