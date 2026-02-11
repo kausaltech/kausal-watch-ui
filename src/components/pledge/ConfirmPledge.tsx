@@ -134,7 +134,7 @@ const StyledFieldHelp = styled.p`
 
 const StyledDrawerFooter = styled.div`
   padding: ${({ theme }) => theme.spaces.s200};
-  border-top: 1px solid ${({ theme }) => theme.themeColors.light};
+  border-top: 1px solid ${({ theme }) => theme.graphColors.grey020};
 
   @media (max-width: ${({ theme }) => theme.breakpointMd}) {
     padding: ${({ theme }) => theme.spaces.s100};
