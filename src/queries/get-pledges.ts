@@ -33,6 +33,9 @@ export const getPledges = async (plan: string) =>
       plan,
     },
     fetchPolicy: 'no-cache',
+    context: {
+      bypassDomainCache: true,
+    },
   });
 
 export const getPledge = async (plan: string, slug: string) =>
@@ -45,6 +48,9 @@ export const getPledge = async (plan: string, slug: string) =>
       slug,
     },
     fetchPolicy: 'no-cache',
+    context: {
+      bypassDomainCache: true,
+    },
   });
 
 const PLEDGE_FRAGMENT = gql`
