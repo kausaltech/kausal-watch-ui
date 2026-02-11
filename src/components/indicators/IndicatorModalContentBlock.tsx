@@ -114,8 +114,8 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
           <IndicatorVisualisation
             indicatorId={indicator.id}
             useLegacyGraph={false}
-            hideGraph={!showIndicatorGraph}
-            hideTable={!showIndicatorTable}
+            showGraph={showIndicatorGraph}
+            showTable={showIndicatorTable}
           />
         </ContentBlockWrapper>
       );

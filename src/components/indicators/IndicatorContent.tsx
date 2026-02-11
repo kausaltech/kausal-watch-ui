@@ -65,8 +65,8 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
   const mainGoals = indicator.goals?.filter((goal) => !goal?.scenario) ?? [];
 
-  const showIndicatorGraph = !(indicator.hideIndicatorGraph ?? false);
-  const showIndicatorTable = !(indicator.hideIndicatorTable ?? false);
+  const showIndicatorGraph = !indicator.hideIndicatorGraph;
+  const showIndicatorTable = !indicator.hideIndicatorTable;
   const showGraphOrTable = showIndicatorGraph || showIndicatorTable;
   // header visible only if graph is visible
   const showGraphHeader = showIndicatorGraph;
@@ -162,8 +162,8 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
                         <IndicatorVisualisation
                           indicatorId={indicator.id}
                           showReference={true}
-                          hideGraph={indicator.hideIndicatorGraph ?? false}
-                          hideTable={indicator.hideIndicatorTable ?? false}
+                          showGraph={showIndicatorGraph}
+                          showTable={showIndicatorTable}
                         />
                       </GraphContainer>
                     </Col>

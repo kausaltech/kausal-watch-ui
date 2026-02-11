@@ -389,8 +389,8 @@ type IndicatorVisualisationProps = {
   indicatorLink?: string;
   useLegacyGraph?: boolean;
   showReference?: boolean;
-  hideGraph?: boolean;
-  hideTable?: boolean;
+  showGraph?: boolean;
+  showTable?: boolean;
 };
 
 function IndicatorVisualisation({
@@ -398,8 +398,8 @@ function IndicatorVisualisation({
   indicatorLink,
   useLegacyGraph = true,
   showReference = false,
-  hideGraph = false,
-  hideTable = false,
+  showGraph = true,
+  showTable = true,
 }: IndicatorVisualisationProps) {
   const plan = usePlan();
   const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
@@ -437,9 +437,6 @@ function IndicatorVisualisation({
   if (indicator.values.length === 0) {
     return null;
   }
-
-  const showGraph = !hideGraph;
-  const showTable = !hideTable;
 
   const comparisonIndicator = indicator.common?.indicators.find(
     (indicator) => indicator.organization.id === compareTo
