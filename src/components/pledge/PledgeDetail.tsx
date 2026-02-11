@@ -4,11 +4,10 @@ import { useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Container } from 'reactstrap';
+import { Container, Spinner } from 'reactstrap';
 import styled from 'styled-components';
 
 import type { GetPledgeQuery } from '@/common/__generated__/graphql';
-import type { TFunction } from '@/common/i18n';
 import { usePrependPlanAndLocale } from '@/common/links';
 import { excludeNullish } from '@/common/utils';
 import Accordion from '@/components/common/Accordion';
@@ -23,6 +22,7 @@ import { getDefaultFormFields } from '@/utils/pledge.utils';
 import ConfirmPledge from './ConfirmPledge';
 import PledgeFeedback from './PledgeFeedback';
 import PledgeImpactComparison from './PledgeImpactComparison';
+import { usePledgeUser } from './use-pledge-user';
 
 type PledgeData = NonNullable<NonNullable<GetPledgeQuery['plan']>['pledge']>;
 
@@ -261,31 +261,36 @@ function PledgeBodyBlock({ block }: { block: BodyBlock }) {
 }
 
 function PledgeDetail({ pledge, planIdentifier }: Props) {
-  // TODO: Replace with actual user commitment state from API/auth
-  const [isCommitted, setIsCommitted] = useState(false);
   const [showConfirmDrawer, setShowConfirmDrawer] = useState(false);
+  const [isUpdatingCommitment, setIsUpdatingCommitment] = useState(false);
   const t = useTranslations();
   const pledgeListLink = usePrependPlanAndLocale(PLEDGE_PATH);
+  const {
+    userData,
+    committedSlugs,
+    commitToPledge,
+    uncommitFromPledge,
+    getCommitmentCountAdjustment,
+  } = usePledgeUser();
 
+  const isCommitted = committedSlugs.has(pledge.slug);
   const breadcrumbs = [{ id: 'pledges', name: t('pledge-list-title'), url: pledgeListLink }];
 
   const heroImage = pledge.image?.large?.src ?? pledge.image?.full?.src ?? '';
   const actions = pledge.actions ?? [];
 
-  const handleCommitClick = () => {
+  const handleCommitClick = async () => {
     if (isCommitted) {
-      // Uncommit immediately without drawer
-      setIsCommitted(false);
+      setIsUpdatingCommitment(true);
+      await uncommitFromPledge(pledge.id);
+      setIsUpdatingCommitment(false);
     } else {
-      // Show confirmation drawer for committing
       setShowConfirmDrawer(true);
     }
   };
 
-  const handleConfirmPledge = (formData: Record<string, string>) => {
-    // TODO: Send commitment to backend with formData
-    console.log('Pledge committed with data:', formData);
-    setIsCommitted(true);
+  const handleConfirmPledge = async (formData: Record<string, string>) => {
+    await commitToPledge(pledge.id, formData);
   };
 
   const handleCloseDrawer = () => {
@@ -312,7 +317,11 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
                 onClick={handleCommitClick}
                 aria-pressed={isCommitted}
               >
-                <Icon name="award" width="18px" height="18px" />
+                {isUpdatingCommitment ? (
+                  <Spinner size="sm" />
+                ) : (
+                  <Icon name="award" width="18px" height="18px" />
+                )}
                 {isCommitted ? t('pledge-committed') : t('pledge-commit-to-this')}
               </StyledCommitButton>
             </StyledActionsRow>
@@ -324,7 +333,9 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
         <StyledMetaList>
           <StyledMetaItem>
             <Icon name="user" width="18px" height="18px" />
-            {t('pledge-commitment-count', { count: pledge.commitmentCount })}
+            {t('pledge-commitment-count', {
+              count: pledge.commitmentCount + getCommitmentCountAdjustment(pledge.slug),
+            })}
           </StyledMetaItem>
 
           {pledge.attributes?.map((attribute) => (
@@ -385,6 +396,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
         pledgeImage={pledge.image?.rendition?.src ?? null}
         commitmentCount={pledge.commitmentCount}
         formFields={getDefaultFormFields(t)}
+        userData={userData}
       />
     </>
   );

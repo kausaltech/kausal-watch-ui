@@ -11,6 +11,7 @@ import { getDefaultFormFields } from '@/utils/pledge.utils';
 
 import ConfirmPledge from './ConfirmPledge';
 import PledgeCard from './PledgeCard';
+import { usePledgeUser } from './use-pledge-user';
 
 type Pledge = NonNullable<NonNullable<NonNullable<GetPledgesQuery['plan']>['pledges']>[number]>;
 
@@ -49,37 +50,30 @@ type ViewType = 'ALL' | 'MY_PLEDGES';
 
 function PledgeList({ pledges }: Props) {
   const [view, setView] = useState<ViewType>('ALL');
-  // TODO: Replace with actual user commitment state from API/auth
-  const [committedSlugs, setCommittedSlugs] = useState<Set<string>>(new Set());
   const [showConfirmDrawer, setShowConfirmDrawer] = useState(false);
   const [selectedPledge, setSelectedPledge] = useState<Pledge | null>(null);
 
   const t = useTranslations();
+  const {
+    userData,
+    committedSlugs,
+    commitToPledge,
+    uncommitFromPledge,
+    getCommitmentCountAdjustment,
+  } = usePledgeUser();
 
   const handleCommitClick = (pledge: Pledge, isCurrentlyCommitted: boolean) => {
     if (isCurrentlyCommitted) {
-      // Uncommit immediately without drawer
-      setCommittedSlugs((prev) => {
-        const next = new Set(prev);
-        next.delete(pledge.slug);
-        return next;
-      });
+      uncommitFromPledge(pledge.id);
     } else {
-      // Show confirmation drawer for committing
       setSelectedPledge(pledge);
       setShowConfirmDrawer(true);
     }
   };
 
-  const handleConfirmPledge = (formData: Record<string, string>) => {
+  const handleConfirmPledge = async (formData: Record<string, string>) => {
     if (selectedPledge) {
-      // TODO: Send commitment to backend with formData
-      console.log('Pledge committed with data:', formData);
-      setCommittedSlugs((prev) => {
-        const next = new Set(prev);
-        next.add(selectedPledge.slug);
-        return next;
-      });
+      await commitToPledge(selectedPledge.id, formData);
     }
   };
 
@@ -160,7 +154,7 @@ function PledgeList({ pledges }: Props) {
             image={pledge.image?.large?.src ?? pledge.image?.full?.src}
             imageAlt={pledge.image?.altText ?? pledge.name}
             isCommitted={committedSlugs.has(pledge.slug)}
-            committedCount={pledge.commitmentCount}
+            committedCount={pledge.commitmentCount + getCommitmentCountAdjustment(pledge.slug)}
             onCommitClick={(isCommitted) => handleCommitClick(pledge, isCommitted)}
           />
         ))}
@@ -178,6 +172,7 @@ function PledgeList({ pledges }: Props) {
           pledgeImage={selectedPledge.image?.rendition?.src ?? null}
           commitmentCount={selectedPledge.commitmentCount}
           formFields={getDefaultFormFields(t)}
+          userData={userData}
         />
       )}
     </StyledContainer>
