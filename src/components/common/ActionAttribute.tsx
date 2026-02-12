@@ -1,9 +1,9 @@
-import React, { ReactElement } from 'react';
+import React, { type ReactElement } from 'react';
 
 import { useLocale } from 'next-intl';
 import styled from 'styled-components';
 
-import {
+import type {
   AttributesBlockAttributeFragment,
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
@@ -17,6 +17,8 @@ import {
   ATTRIBUTE_TYPE_FRAGMENT,
   ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT,
 } from '@/fragments/action-attribute.fragment';
+
+type Variant = 'default' | 'minimized' | 'chip';
 
 const ScaleIcon = styled(Icon)<{ $active?: boolean }>`
   font-size: 1.5rem;
@@ -72,12 +74,52 @@ const NumericValueUnit = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
+const StyledChipContainer = styled.span`
+  display: inline;
+  font-size: ${(props) => props.theme.fontSizeSm};
+`;
+
+const StyledChipLabel = styled.span`
+  color: ${(props) => props.theme.textColor.secondary};
+`;
+
+const StyledChipValue = styled.span`
+  color: ${(props) => props.theme.textColor.primary};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+`;
+
+/**
+ * Extracts the display value from an attribute as plain text for chip rendering.
+ */
+function getAttributeValueText(
+  attribute: AttributesBlockAttributeFragment | AttributesBlockAttributeWithNestedTypeFragment,
+  locale: string
+): string | null {
+  switch (attribute.__typename) {
+    case 'AttributeChoice':
+      return attribute.choice?.name ?? null;
+    case 'AttributeText':
+    case 'AttributeRichText':
+      // Strip HTML tags for plain text display
+      return attribute.value?.replace(/<[^>]*>/g, '').trim() || null;
+    case 'AttributeNumericValue':
+      const unit = attribute.type.unit?.shortName ?? attribute.type.unit?.name ?? '';
+      return attribute.numericValue != null
+        ? `${attribute.numericValue.toLocaleString(locale)}${unit ? ` ${unit}` : ''}`
+        : null;
+    case 'AttributeCategoryChoice':
+      return attribute.categories.map((cat) => cat.name).join(', ') || null;
+    default:
+      return null;
+  }
+}
+
 type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment;
   attributeType: AttributesBlockAttributeTypeFragment;
-  fontSize: string;
+  fontSize?: string;
   notitle?: boolean;
-  minimized?: boolean;
+  variant?: Variant;
 };
 
 type AttributeContentNestedTypeProps = {
@@ -85,16 +127,32 @@ type AttributeContentNestedTypeProps = {
   attributeType: null | undefined;
   fontSize?: string;
   notitle?: boolean;
-  minimized?: boolean;
+  variant?: Variant;
 };
 
 const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTypeProps) => {
   const locale = useLocale();
 
-  const { attribute, attributeType, fontSize, notitle = false, minimized = false } = props;
+  const { attribute, attributeType, fontSize, notitle = false, variant = 'default' } = props;
   const type = attributeType ?? attribute.type;
-  let dataElement: ReactElement<any>;
+  const isMinimized = variant === 'minimized';
   const MAX_MINIMIZED_TEXT_LENGTH = 50;
+
+  // Chip variant with a simple "label: value" format
+  if (variant === 'chip') {
+    const chipValue = getAttributeValueText(attribute, locale);
+
+    if (!chipValue) return null;
+
+    return (
+      <StyledChipContainer>
+        <StyledChipLabel>{type.name}: </StyledChipLabel>
+        <StyledChipValue>{chipValue}</StyledChipValue>
+      </StyledChipContainer>
+    );
+  }
+
+  let dataElement: ReactElement<any>;
 
   switch (attribute.__typename) {
     case 'AttributeChoice':
@@ -129,7 +187,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
               {attribute.choice?.name}
             </AttributeChoiceLabel>
           )}
-          {!minimized && attribute.text ? <RichText html={attribute.text} /> : null}
+          {!isMinimized && attribute.text ? <RichText html={attribute.text} /> : null}
         </div>
       );
       break;
@@ -138,7 +196,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
       dataElement = (
         <RichText
           html={attribute.value}
-          maxLength={minimized ? MAX_MINIMIZED_TEXT_LENGTH : undefined}
+          maxLength={isMinimized ? MAX_MINIMIZED_TEXT_LENGTH : undefined}
         />
       );
       break;
@@ -146,7 +204,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
       dataElement = (
         <RichText
           html={attribute.value}
-          maxLength={minimized ? MAX_MINIMIZED_TEXT_LENGTH : undefined}
+          maxLength={isMinimized ? MAX_MINIMIZED_TEXT_LENGTH : undefined}
         />
       );
       break;

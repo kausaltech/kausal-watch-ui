@@ -196,7 +196,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
           attribute={attributeContent}
           attributeType={attributeType}
           notitle
-          minimized
+          variant="minimized"
         />
       );
     },
