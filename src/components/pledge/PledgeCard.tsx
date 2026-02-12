@@ -51,7 +51,7 @@ const StyledCardTitle = styled.h3<{ $layout: CardLayout }>`
     $layout === 'default' ? theme.fontSizeMd : theme.fontSizeBase};
   font-weight: ${({ theme, $layout }) =>
     $layout === 'default' ? theme.headingsFontWeight : theme.fontWeightNormal};
-  margin: 0;
+  margin: 0 0 ${({ theme }) => theme.spaces.s100};
   line-height: ${({ theme }) => theme.lineHeightSm};
 `;
 
@@ -66,7 +66,7 @@ const StyledCardLink = styled(NextLink)`
 `;
 
 const StyledCardWrapper = styled.article<{ $layout: CardLayout }>`
-  display: flex;
+  display: ${({ $layout }) => ($layout === 'share' ? 'inline-flex' : 'flex')};
   flex-direction: ${({ $layout }) => ($layout === 'default' ? 'column' : 'row')};
   background: ${({ theme }) => theme.themeColors.white};
   border-radius: ${({ theme }) => theme.cardBorderRadius};
