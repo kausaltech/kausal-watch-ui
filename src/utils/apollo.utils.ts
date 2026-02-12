@@ -23,7 +23,6 @@ declare module '@apollo/client' {
     planDomain?: string;
     sessionToken?: string;
     start?: number;
-    bypassDomainCache?: boolean;
   }
 }
 
@@ -142,17 +141,15 @@ export function getHttpLink(noProxy?: boolean) {
 export const headersMiddleware = new ApolloLink((operation, forward) => {
   const context = operation.getContext();
 
-  if (!context.bypassDomainCache) {
-    operation.setContext(({ headers = {} }) => {
-      return {
-        headers: {
-          ...headers,
-          'x-cache-plan-domain': context.planDomain,
-          'x-cache-plan-identifier': context.planIdentifier,
-        },
-      };
-    });
-  }
+  operation.setContext(({ headers = {} }) => {
+    return {
+      headers: {
+        ...headers,
+        'x-cache-plan-domain': context.planDomain,
+        'x-cache-plan-identifier': context.planIdentifier,
+      },
+    };
+  });
 
   return forward(operation);
 });
