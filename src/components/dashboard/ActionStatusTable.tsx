@@ -177,12 +177,22 @@ const preprocessForSorting = (
     }
     case 'implementationPhase':
       return hasImplementationPhases
-        ? items.map((item) => item.implementationPhase?.order)
+        ? items.map((item) => item.implementationPhase?.order ?? null)
         : items.map((item) => actionStatusOrder(item.status));
     default:
       return values;
   }
 };
+// Helpers for stable sorting
+const compareNullableNumber = (a: number | null, b: number | null) => {
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  return a - b;
+};
+
+const compareNullableString = (a?: string | null, b?: string | null) =>
+  (a ?? '').localeCompare(b ?? '');
 
 interface Props {
   actions: ActionListAction[];
@@ -212,8 +222,35 @@ const ActionStatusTable = (props: Props) => {
   const hasImplementationPhases = plan.actionImplementationPhases.length > 0;
 
   const comparator = (g1: ActionListAction, g2: ActionListAction) => {
-    if (!sort.key) {
-      return 0;
+    if (!sort.key) return 0;
+
+    // ImplementationPhase sorting
+    if (sort.key === 'implementationPhase') {
+      const [o1, o2] = preprocessForSorting(
+        'implementationPhase',
+        [g1, g2],
+        hasImplementationPhases
+      ) as [number | null, number | null];
+      let base = compareNullableNumber(o1, o2);
+      if (base === 0) {
+        // Push "Continuous" (completed+scheduleContinuous) after Completed
+        const g1Completed = g1.implementationPhase?.identifier === 'completed';
+        const g2Completed = g2.implementationPhase?.identifier === 'completed';
+        if (g1Completed && g2Completed) {
+          const aCont = g1.scheduleContinuous === true;
+          const bCont = g2.scheduleContinuous === true;
+          if (aCont !== bCont) {
+            base = (aCont ? 1 : 0) - (bCont ? 1 : 0);
+          }
+        }
+        if (base === 0) {
+          base = compareNullableString(g1.implementationPhase?.name, g2.implementationPhase?.name);
+        }
+        if (base === 0) {
+          base = String(g1.id).localeCompare(String(g2.id));
+        }
+      }
+      return sort.direction === 1 ? base : -base;
     }
 
     const [v1, v2] = preprocessForSorting(sort.key, [g1, g2], hasImplementationPhases);
