@@ -218,6 +218,7 @@ const ActionStatusTable = (props: Props) => {
   const orgMap = new Map(orgs.map((org) => [org.id, org]));
 
   const [sort, setSort] = useState<Sort>({ key: null, direction: 1 });
+
   const hasImplementationPhases = plan.actionImplementationPhases.length > 0;
 
   const comparator = (g1: ActionListAction, g2: ActionListAction) => {
@@ -253,7 +254,9 @@ const ActionStatusTable = (props: Props) => {
     }
 
     const [v1, v2] = preprocessForSorting(sort.key, [g1, g2], hasImplementationPhases);
+
     const val = v1 == v2 ? 0 : v1 == null || v2 > v1 ? -1 : 1;
+
     return sort.direction === 1 ? val : -val;
   };
 
@@ -265,6 +268,7 @@ const ActionStatusTable = (props: Props) => {
     if (isSameSortKey(key, sort.key)) {
       direction -= sort.direction;
     }
+
     setSort({ key, direction });
   };
 
@@ -307,6 +311,7 @@ const ActionStatusTable = (props: Props) => {
                 if (!columnConfig) {
                   return null;
                 }
+
                 const headerLabel = column.columnLabel || column?.attributeType?.name;
                 const isFieldColumn =
                   column.__typename === 'FieldColumnBlock' && !!column.attributeType?.id;
