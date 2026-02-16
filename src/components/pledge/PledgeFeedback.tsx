@@ -120,6 +120,7 @@ const StyledAlert = styled(Alert)`
 `;
 
 type PledgeFeedbackComponentProps = {
+  pledgeId: string;
   planIdentifier: string;
   pledgeSlug: string;
   pledgeTitle: string;
@@ -155,6 +156,7 @@ function getEmojiScale(t: TFunction): Emoji[] {
 type Step = 'emoji' | 'feedback' | 'thanks';
 
 function PledgeFeedbackComponent({
+  pledgeId,
   planIdentifier,
   pledgeSlug,
   pledgeTitle,
@@ -194,6 +196,7 @@ function PledgeFeedbackComponent({
       type: 'pledge',
       plan: planIdentifier,
       url: window.location.href,
+      pledge: pledgeId,
     };
 
     try {
