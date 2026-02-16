@@ -9,7 +9,7 @@ import type { Logger } from 'pino';
 import type { ApolloClientType } from '@common/apollo';
 import { createSentryLink, logOperationLink } from '@common/apollo/links';
 import { FORWARDED_HEADER, WILDCARD_DOMAINS_HEADER } from '@common/constants/headers.mjs';
-import { getWatchGraphQLUrl, getWildcardDomains, isLocalDev } from '@common/env';
+import { getWatchGraphQLUrl, getWildcardDomains } from '@common/env';
 import { getClientIP } from '@common/utils';
 import LRUCache from '@common/utils/lru-cache';
 
@@ -227,7 +227,16 @@ export function rewriteUrl(
   return response;
 }
 
-function createApolloClient(req: NextAuthRequest, logger: Logger) {
+interface CreateApolloClientOptions {
+  skipAuth?: boolean;
+}
+
+function createApolloClient(
+  req: NextAuthRequest,
+  logger: Logger,
+  options?: CreateApolloClientOptions
+) {
+  const { skipAuth = false } = options ?? {};
   const uri = getWatchGraphQLUrl();
   const httpLink = new HttpLink({
     uri,
@@ -253,7 +262,7 @@ function createApolloClient(req: NextAuthRequest, logger: Logger) {
           if (wildcardDomains.length > 0) {
             ctxHeaders[WILDCARD_DOMAINS_HEADER] = wildcardDomains.join(',');
           }
-          if (req.auth?.idToken) {
+          if (!skipAuth && req.auth?.idToken) {
             ctxHeaders['Authorization'] = `Bearer ${req.auth.idToken}`;
           }
           const newHeaders = {
@@ -288,8 +297,13 @@ function createApolloClient(req: NextAuthRequest, logger: Logger) {
   return client;
 }
 
-async function queryPlansForHostname(req: NextAuthRequest, logger: Logger, hostname: string) {
-  const apolloClient = createApolloClient(req, logger);
+async function queryPlansForHostname(
+  req: NextAuthRequest,
+  logger: Logger,
+  hostname: string,
+  options?: CreateApolloClientOptions
+) {
+  const apolloClient = createApolloClient(req, logger, options);
   try {
     const { data, error } = await apolloClient.query<
       GetPlansByHostnameQuery,
@@ -310,15 +324,20 @@ const DEFAULT_TTL = 5 * 60 * 1000;
 
 const hostnamePlanCache = new LRUCache<string, PlanForHostname[]>();
 
-export async function getPlansForHostname(req: NextAuthRequest, logger: Logger, hostname: string) {
-  if (false && isLocalDev) {
-    hostnamePlanCache.print((plans) =>
-      plans
-        .map((plan) => `${plan!.__typename} ${plan!.__typename == 'Plan' ? plan!.id : ''}`)
-        .join(', ')
-    );
-  }
-  if (!req.auth) {
+export interface GetPlansOptions {
+  skipAuth?: boolean;
+}
+
+export async function getPlansForHostname(
+  req: NextAuthRequest,
+  logger: Logger,
+  hostname: string,
+  options?: GetPlansOptions
+) {
+  const { skipAuth = false } = options ?? {};
+  const isUnauthenticatedRequest = !req.auth || skipAuth;
+
+  if (isUnauthenticatedRequest) {
     const cacheEntry = hostnamePlanCache.getMetadata(hostname);
     if (cacheEntry) {
       const now = Date.now();
@@ -328,9 +347,9 @@ export async function getPlansForHostname(req: NextAuthRequest, logger: Logger, 
       }
     }
   }
-  const { plans, error } = await queryPlansForHostname(req, logger, hostname);
+  const { plans, error } = await queryPlansForHostname(req, logger, hostname, { skipAuth });
   if (plans) {
-    if (!req.auth) {
+    if (isUnauthenticatedRequest) {
       hostnamePlanCache.set(hostname, plans, undefined, DEFAULT_TTL);
     }
     return { plans, error: null };
