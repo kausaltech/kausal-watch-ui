@@ -135,7 +135,10 @@ function filterIndicators<I extends IndicatorListIndicator>(
     !filters['name'] || indicator.name.toLowerCase().includes(filters['name'].toLowerCase());
 
   const filterByLevel = (indicator: I) => {
-    return !filters['indicator-level'] || filters['indicator-level'] === indicator.level;
+    const level = filters['indicator-level'];
+    if (level == null) return true;
+    if (Array.isArray(level)) return level.length === 0 ? true : level.includes(indicator.level);
+    return level === indicator.level;
   };
 
   return indicators.filter((indicator) => {
