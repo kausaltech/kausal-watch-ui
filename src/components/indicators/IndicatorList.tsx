@@ -393,6 +393,20 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
   } else {
     indicatorListColumns.push(...listColumns);
   }
+
+  // The list would be fairly useless if we don't have name column
+  // We add it by default if it's not included in the layout
+  if (
+    !indicatorListColumns.find((column) => column.sourceField === IndicatorDashboardFieldName.Name)
+  ) {
+    indicatorListColumns.unshift({
+      __typename: 'IndicatorListColumn',
+      id: 'default-column-name',
+      columnLabel: t('name'),
+      columnHelpText: '',
+      sourceField: IndicatorDashboardFieldName.Name,
+    });
+  }
   const hierarchy = processCommonIndicatorHierarchy(indicators);
 
   /* Sort & filter indicators */
