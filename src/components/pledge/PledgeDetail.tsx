@@ -394,6 +394,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
         )}
 
         <PledgeFeedback
+          pledgeId={pledge.id}
           planIdentifier={planIdentifier}
           pledgeSlug={pledge.slug}
           pledgeTitle={pledge.name}
