@@ -13,6 +13,8 @@ import Button from '@/components/common/Button';
 import Icon, { type ValidIconName } from '@/components/common/Icon';
 import { PLEDGE_PATH } from '@/constants/routes';
 
+import { ShareButton } from './ShareButton';
+
 export type PledgeCategory = {
   icon: ValidIconName;
   label: string;
@@ -205,16 +207,6 @@ const StyledShareActions = styled.div`
   gap: ${({ theme }) => theme.spaces.s100};
 `;
 
-const StyledShareButton = styled(Button)`
-  display: inline-flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spaces.s050};
-
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
-    display: none;
-  }
-`;
-
 const StyledCopyButton = styled(Button)`
   display: inline-flex;
   align-items: center;
@@ -242,15 +234,6 @@ function SharePledgeCard({
     }
   };
 
-  const handleShare = async () => {
-    if (!navigator.share) return;
-    try {
-      await navigator.share({ title, url: shareUrl });
-    } catch (error) {
-      // User cancelled or share failed
-    }
-  };
-
   return (
     <StyledCardWrapper $layout="share">
       <PledgeImage layout="share" image={image} imageAlt={imageAlt} title={title} />
@@ -264,10 +247,7 @@ function SharePledgeCard({
             <Icon name={copied ? 'check' : 'link'} width="16px" height="16px" />
             {copied ? t('copied-to-clipboard') : t('pledge-copy-link')}
           </StyledCopyButton>
-          <StyledShareButton color="primary" outline size="sm" onClick={handleShare}>
-            <Icon name="arrow-up-right-from-square" width="16px" height="16px" />
-            {t('share')}
-          </StyledShareButton>
+          <ShareButton title={title} shareUrl={shareUrl} />
         </StyledShareActions>
       </StyledCardContent>
     </StyledCardWrapper>

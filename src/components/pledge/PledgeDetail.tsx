@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
@@ -22,6 +22,7 @@ import { getDefaultFormFields } from '@/utils/pledge.utils';
 import ConfirmPledge from './ConfirmPledge';
 import PledgeFeedback from './PledgeFeedback';
 import PledgeImpactComparison from './PledgeImpactComparison';
+import { ShareButton } from './ShareButton';
 import { usePledgeUser } from './use-pledge-user';
 
 type PledgeData = NonNullable<NonNullable<GetPledgeQuery['plan']>['pledge']>;
@@ -101,7 +102,7 @@ const StyledLead = styled.p`
 
 const StyledActionsRow = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.spaces.s100};
+  gap: ${({ theme }) => theme.spaces.s050};
 `;
 
 const StyledCommitButton = styled(Button)<{ $isCommitted: boolean }>`
@@ -263,6 +264,7 @@ function PledgeBodyBlock({ block }: { block: BodyBlock }) {
 function PledgeDetail({ pledge, planIdentifier }: Props) {
   const [showConfirmDrawer, setShowConfirmDrawer] = useState(false);
   const [isUpdatingCommitment, setIsUpdatingCommitment] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const t = useTranslations();
   const pledgeListLink = usePrependPlanAndLocale(PLEDGE_PATH);
   const {
@@ -278,6 +280,8 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
 
   const heroImage = pledge.image?.large?.src ?? pledge.image?.full?.src ?? '';
   const actions = pledge.actions ?? [];
+
+  useEffect(() => setIsClient(true), []);
 
   const handleCommitClick = async () => {
     if (isCommitted) {
@@ -324,6 +328,15 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
                 )}
                 {isCommitted ? t('pledge-committed') : t('pledge-commit-to-this')}
               </StyledCommitButton>
+              {isClient && (
+                <ShareButton
+                  color="link"
+                  outline
+                  size="md"
+                  title={pledge.name}
+                  shareUrl={window.location.href}
+                />
+              )}
             </StyledActionsRow>
           </StyledHeroCard>
         </StyledHeroContentContainer>
