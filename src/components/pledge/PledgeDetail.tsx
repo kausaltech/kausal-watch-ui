@@ -366,12 +366,12 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
           </StyledBodySection>
         )}
 
-        {pledge.residentCount != null && pledge.impactStatement && pledge.localEquivalency && (
+        {pledge.residentCount != null && pledge.impactStatement && (
           <StyledSection>
             <PledgeImpactComparison
               residentCount={pledge.residentCount}
-              saving={pledge.impactStatement}
-              savingIcon="arrow-down"
+              impactStatement={pledge.impactStatement}
+              impactIcon="arrow-down"
               equivalence={pledge.localEquivalency}
             />
           </StyledSection>

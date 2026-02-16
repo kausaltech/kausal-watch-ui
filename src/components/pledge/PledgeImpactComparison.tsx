@@ -7,9 +7,9 @@ import Icon, { type ValidIconName } from '@/components/common/Icon';
 
 type Props = {
   residentCount: number;
-  saving: string;
-  savingIcon?: ValidIconName;
-  equivalence: string;
+  impactStatement: string;
+  impactIcon?: ValidIconName;
+  equivalence?: string;
   equivalenceIcon?: ValidIconName;
 };
 
@@ -96,6 +96,10 @@ const StyledBubbleTextWrapper = styled.div`
   }
 `;
 
+const StyledSpacer = styled.div`
+  flex: 1 0 auto;
+`;
+
 const StyledConnector = styled.div`
   position: relative;
   flex: 1 0 auto;
@@ -165,8 +169,8 @@ const StyledConnectorBottomLeft = styled(StyledConnector)`
 
 function PledgeImpactComparison({
   residentCount,
-  saving,
-  savingIcon = 'arrow-down',
+  impactStatement,
+  impactIcon = 'arrow-down',
   equivalence,
   equivalenceIcon,
 }: Props) {
@@ -191,21 +195,23 @@ function PledgeImpactComparison({
         </StyledBubbleRow>
 
         <StyledBubbleRow>
-          <StyledConnectorMidLeft />
+          {!!equivalence ? <StyledConnectorMidLeft /> : <StyledSpacer />}
           <StyledBubble $arrow="right">
-            <Icon name={savingIcon} width="20px" height="20px" />
-            <StyledBubbleTextWrapper dangerouslySetInnerHTML={{ __html: saving }} />
+            <Icon name={impactIcon} width="20px" height="20px" />
+            <StyledBubbleTextWrapper dangerouslySetInnerHTML={{ __html: impactStatement }} />
           </StyledBubble>
           <StyledConnectorMidRight />
         </StyledBubbleRow>
 
-        <StyledBubbleRow>
-          <StyledConnectorBottomLeft />
-          <StyledBubble $arrow="left">
-            {equivalenceIcon && <Icon name={equivalenceIcon} width="20px" height="20px" />}
-            <StyledBubbleTextWrapper dangerouslySetInnerHTML={{ __html: equivalence }} />
-          </StyledBubble>
-        </StyledBubbleRow>
+        {!!equivalence && (
+          <StyledBubbleRow>
+            <StyledConnectorBottomLeft />
+            <StyledBubble $arrow="left">
+              {equivalenceIcon && <Icon name={equivalenceIcon} width="20px" height="20px" />}
+              <StyledBubbleTextWrapper dangerouslySetInnerHTML={{ __html: equivalence }} />
+            </StyledBubble>
+          </StyledBubbleRow>
+        )}
       </StyledBubbleContainer>
     </StyledContainer>
   );
