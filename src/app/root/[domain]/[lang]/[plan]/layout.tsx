@@ -3,11 +3,14 @@ import type { ReactNode } from 'react';
 import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
+import { ThemeProvider } from '@mui/material/styles';
 import { captureException } from '@sentry/nextjs';
 import * as Sentry from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
 import ThemedGlobalStyles from '@common/themes/ThemedGlobalStyles';
+// import { GlobalStyles } from '@/styles/GlobalStyles';
+import { initializeMuiTheme } from '@common/themes/mui-theme/theme';
 import { getThemeStaticURL, loadTheme } from '@common/themes/theme';
 import { getRequestOrigin } from '@common/utils/request.server';
 
@@ -19,7 +22,6 @@ import IntroModal from '@/components/custom/IntroModal';
 import GlobalIndicatorModalWrapper from '@/components/indicators/GlobalIndicatorModalWrapper';
 import PathsProvider from '@/components/providers/PathsProvider';
 import PlanProvider from '@/components/providers/PlanProvider';
-import ThemeProvider from '@/components/providers/ThemeProvider';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { WorkflowProvider } from '@/context/workflow-selector';
 import { getPlan } from '@/queries/get-plan';
@@ -130,6 +132,7 @@ export default async function PlanLayout(props: Props) {
   const matomoAnalyticsUrl = planData.plan.domain?.matomoAnalyticsUrl ?? undefined;
   const selectedWorkflow = cookieStore.get(SELECTED_WORKFLOW_COOKIE_KEY);
 
+  const muiTheme = initializeMuiTheme(theme);
   const pathsData = await getPathsData(planData.plan?.kausalPathsInstanceUuid);
 
   return (
@@ -139,7 +142,7 @@ export default async function PlanLayout(props: Props) {
       )}
 
       {!!matomoAnalyticsUrl && <MatomoAnalytics matomoAnalyticsUrl={matomoAnalyticsUrl} />}
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={muiTheme}>
         <ThemedGlobalStyles />
         <SharedIcons />
         {theme.introModal?.videoUrls && <IntroModal videoUrls={theme.introModal.videoUrls} />}
