@@ -1375,6 +1375,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           if (block.__typename === 'IndicatorFilterBlock') {
             switch (block.field) {
               case 'level':
+                const nonEmpty = (s?: string | null) => (s && s.trim() ? s : undefined);
                 const indicatorLevels = [
                   { id: 'operational', label: t('operational-indicator') },
                   { id: 'strategic', label: t('strategic-indicator') },
@@ -1383,7 +1384,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                 const levelOpts = {
                   id: 'indicator-level',
                   options: indicatorLevels,
-                  label: ('fieldLabel' in block ? block.fieldLabel : null) ?? t('type'),
+                  label: nonEmpty('fieldLabel' in block ? block.fieldLabel : null) ?? t('type'),
                   helpText: ('fieldHelpText' in block ? block.fieldHelpText : null) ?? '',
                   showAllLabel:
                     ('showAllLabel' in block ? block.showAllLabel : null) ?? 'All levels',
