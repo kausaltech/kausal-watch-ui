@@ -6,12 +6,21 @@ import { setContext } from '@apollo/client/link/context';
 
 import { createSentryLink, logOperationLink } from '@common/apollo/links';
 import { getWatchGraphQLUrl } from '@common/env';
+import { getLogger } from '@common/logging';
 
 import possibleTypes from '@/common/__generated__/possible_types.json';
 import { auth } from '@/config/auth';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 
-import { getHttpLink, headersMiddleware, localeMiddleware } from './apollo.utils';
+import { createErrorLink, getHttpLink, headersMiddleware, localeMiddleware } from './apollo.utils';
+
+const rscLogger = getLogger('apollo-rsc');
+
+const rscErrorLink = createErrorLink(() => {
+  rscLogger.warn(
+    'UNAUTHENTICATED error in RSC Apollo client — token should have been cleared by JWT callback'
+  );
+});
 
 const authMiddleware = setContext(async (_, { headers: initialHeaders = {} }) => {
   const session = await auth();
@@ -50,6 +59,7 @@ export const { getClient } = registerApolloClient(async () => {
       possibleTypes: possibleTypes.possibleTypes,
     }),
     link: from([
+      rscErrorLink,
       createSentryLink(getWatchGraphQLUrl()),
       logOperationLink,
       localeMiddleware,

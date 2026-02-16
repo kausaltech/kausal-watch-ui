@@ -6,13 +6,14 @@ import type { NextAuthRequest } from 'next-auth/lib';
 import createIntlMiddleware from 'next-intl/middleware';
 
 import { HEALTH_CHECK_PUBLIC_PATH } from '@common/constants/routes.mjs';
-import { getDeploymentType, getSpotlightUrl, isLocalDev } from '@common/env';
+import { getSpotlightUrl, isLocalDev } from '@common/env';
 import { generateCorrelationID, getLogger } from '@common/logging';
 import { LOGGER_SPAN_ID, LOGGER_TRACE_ID } from '@common/logging/init';
 import { LOGGER_CORRELATION_ID } from '@common/logging/logger';
 
 import { auth } from './config/auth';
 import { UNPUBLISHED_PATH } from './constants/routes';
+import { hasUnauthenticatedErrors } from './utils/auth-errors';
 import {
   clearHostnameCache,
   convertPathnameFromInvalidLocaleCasing,
@@ -39,6 +40,11 @@ export const config = {
     '/((?!api/|_next/|_static/|static/|[\\w-]+\\.\\w+).*)',
   ],
 };
+
+function clearSessionCookies(response: NextResponse) {
+  response.cookies.delete('authjs.session-token');
+  response.cookies.delete('__Secure-authjs.session-token');
+}
 
 function getMiddlewareLogger(request: NextAuthRequest, host: string, pathname: string) {
   const reqId = request.headers.get('X-Correlation-ID') || generateCorrelationID();
@@ -120,17 +126,18 @@ const middleware = auth(async (request: NextAuthRequest) => {
 
   const requestScope = Sentry.getIsolationScope();
   requestScope.setTag('plan.hostname', hostname);
-  const { plans, error } = await getPlansForHostname(request, logger, hostname);
+  // Normally the JWT callback strips expired tokens before this point, so
+  // UNAUTHENTICATED errors should be rare here (only a tight race condition).
+  // Session clearing primarily happens client-side via TopToolBar.
+  let shouldClearSession = false;
+  let { plans, error } = await getPlansForHostname(request, logger, hostname);
   if (error) {
-    const errorPreamble = `Error fetching plans for hostname ${hostname}`;
-    // If we're not in production, we'll return the error to the user for easier debugging.
-    if (getDeploymentType() !== 'production') {
-      if (error instanceof Error) {
-        return new NextResponse(`${errorPreamble} (${error.name}: ${error.message})`, {
-          status: 500,
-        });
-      }
-      return new NextResponse(`${errorPreamble} (${String(error)})`, { status: 500 });
+    if (hasUnauthenticatedErrors(error)) {
+      logger.warn('Token expired or invalid, retrying without auth');
+      const retryResult = await getPlansForHostname(request, logger, hostname, { skipAuth: true });
+      plans = retryResult.plans;
+      error = retryResult.error;
+      shouldClearSession = true;
     }
   }
   if (!plans || plans.length === 0) {
@@ -173,6 +180,10 @@ const middleware = auth(async (request: NextAuthRequest) => {
   }
 
   const response = handleI18nRouting(request);
+
+  if (shouldClearSession) {
+    clearSessionCookies(response);
+  }
 
   if (isRestrictedPlan(parsedPlan)) {
     // Pass the status message to the unpublished page as search params

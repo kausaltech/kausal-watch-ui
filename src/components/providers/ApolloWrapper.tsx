@@ -9,7 +9,7 @@ import {
 } from '@apollo/client-integration-nextjs';
 import { setContext } from '@apollo/client/link/context';
 import { disableFragmentWarnings } from 'graphql-tag';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 
 import { createSentryLink, logOperationLink } from '@common/apollo/links';
@@ -17,7 +17,12 @@ import { getWatchGraphQLUrl } from '@common/env';
 
 import { isServer } from '@/common/environment';
 
-import { getHttpLink, headersMiddleware, localeMiddleware } from '../../utils/apollo.utils';
+import {
+  createErrorLink,
+  getHttpLink,
+  headersMiddleware,
+  localeMiddleware,
+} from '../../utils/apollo.utils';
 
 const authMiddleware = setContext((_, { sessionToken, headers: initialHeaders = {} }) => {
   return {
@@ -36,6 +41,9 @@ function makeClient(config: {
   noProxy?: boolean;
 }) {
   const { initialLocale, sessionToken, planIdentifier, planDomain, noProxy } = config;
+  const unauthErrorLink = createErrorLink(() => {
+    signOut({ redirect: true });
+  });
   return new ApolloClient({
     defaultContext: {
       locale: initialLocale,
@@ -45,6 +53,7 @@ function makeClient(config: {
     },
     cache: new InMemoryCache(),
     link: ApolloLink.from([
+      unauthErrorLink,
       logOperationLink,
       createSentryLink(getWatchGraphQLUrl()),
       localeMiddleware,
