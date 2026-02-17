@@ -156,6 +156,14 @@ function PledgeList({ pledges }: Props) {
   const filteredPledges =
     view === 'MY_PLEDGES' ? pledges.filter((pledge) => committedSlugs.has(pledge.slug)) : pledges;
 
+  const mostCommitted = pledges.reduce(
+    (mostCommittedPledge: null | Pledge, pledge) =>
+      pledge.commitmentCount > (mostCommittedPledge?.commitmentCount ?? 0)
+        ? pledge
+        : mostCommittedPledge,
+    null
+  );
+
   /**
    * Arrow keys toggle between options per WAI-ARIA radio group pattern.
    * With only two options, the wrapping behaviour of start/end options
@@ -235,6 +243,7 @@ function PledgeList({ pledges }: Props) {
                 isCommitted={committedSlugs.has(pledge.slug)}
                 committedCount={pledge.commitmentCount + getCommitmentCountAdjustment(pledge.slug)}
                 onCommitClick={(isCommitted) => handleCommitClick(pledge, isCommitted)}
+                isMostCommitted={pledge.id === mostCommitted?.id}
               />
             ))}
           </StyledPledgeGrid>

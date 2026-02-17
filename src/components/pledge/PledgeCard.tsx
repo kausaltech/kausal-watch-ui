@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import NextLink from 'next/link';
 
 import { useTranslations } from 'next-intl';
-import { transparentize } from 'polished';
+import { readableColor, transparentize } from 'polished';
 import styled, { css } from 'styled-components';
 
 import { usePrependPlanAndLocale } from '@/common/links';
@@ -35,6 +35,7 @@ type InteractiveProps = BaseProps & {
   isCommitted: boolean;
   onCommitClick: (isCommitted: boolean) => void;
   shareUrl?: never;
+  isMostCommitted?: boolean;
 };
 
 type ShareProps = BaseProps & {
@@ -68,11 +69,11 @@ const StyledCardLink = styled(NextLink)`
 `;
 
 const StyledCardWrapper = styled.article<{ $layout: CardLayout }>`
+  position: relative;
   display: ${({ $layout }) => ($layout === 'share' ? 'inline-flex' : 'flex')};
   flex-direction: ${({ $layout }) => ($layout === 'default' ? 'column' : 'row')};
   background: ${({ theme }) => theme.themeColors.white};
   border-radius: ${({ theme }) => theme.cardBorderRadius};
-  overflow: hidden;
   color: inherit;
   text-decoration: none;
   height: 100%;
@@ -91,6 +92,21 @@ const StyledCardWrapper = styled.article<{ $layout: CardLayout }>`
             box-shadow: 0 4px 16px ${({ theme }) => transparentize(0.85, theme.themeColors.black)};
           }
         `}
+`;
+
+const StyledMostCommittedTag = styled.div`
+  position: absolute;
+  right: -${({ theme }) => theme.spaces.s050};
+  top: ${({ theme }) => theme.spaces.s200};
+  background: ${({ theme }) => theme.brandDark};
+  color: ${({ theme }) =>
+    readableColor(theme.brandDark, theme.themeColors.black, theme.themeColors.white)};
+  display: flex;
+  gap: ${({ theme }) => theme.spaces.s050};
+  align-items: center;
+  justify-content: center;
+  font-size: ${({ theme }) => theme.fontSizeSm};
+  padding: ${({ theme }) => theme.spaces.s025};
 `;
 
 const StyledImageContainer = styled.div<{ $layout: CardLayout }>`
@@ -259,6 +275,7 @@ function InteractivePledgeCard({
   imageAlt,
   isCommitted,
   onCommitClick,
+  isMostCommitted = false,
 }: InteractiveProps) {
   const t = useTranslations();
   const pledgeLink = usePrependPlanAndLocale(`${PLEDGE_PATH}/${slug}`);
@@ -273,6 +290,13 @@ function InteractivePledgeCard({
     <StyledCardLink href={pledgeLink}>
       <StyledCardWrapper $layout={layout}>
         <PledgeImage layout={layout} image={image} imageAlt={imageAlt} title={title} />
+
+        {isMostCommitted && (
+          <StyledMostCommittedTag>
+            <Icon name="award" width="16px" height="16px" />
+            <span>{t('pledge-most-committed')}</span>
+          </StyledMostCommittedTag>
+        )}
 
         <StyledCardContent $layout={layout}>
           <PledgeAttributes committedCount={committedCount} categories={categories} />
