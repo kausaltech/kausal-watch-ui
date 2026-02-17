@@ -20,6 +20,8 @@ import {
   Row,
 } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import {
   type ActionListFilterFragment,
   type ActionListPageFiltersFragment,
@@ -50,7 +52,6 @@ import type {
 } from '@/components/dashboard/ActionList';
 import type { PlanContextType } from '@/context/plan';
 import { usePlan } from '@/context/plan';
-import { transientOptions } from '@/styles/styled';
 
 import type { IndicatorListIndicator } from '../indicators/IndicatorList';
 

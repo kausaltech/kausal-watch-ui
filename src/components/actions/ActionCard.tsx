@@ -8,6 +8,8 @@ import { readableColor, transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import { Tooltip } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import { getStatusColorForAction } from '@/common/ActionStatusSummary';
 import type {
   ActionCardFragment,
@@ -21,7 +23,6 @@ import { getThemeStaticURL } from '@/common/theme';
 import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';
 import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
-import { transientOptions } from '@/styles/styled';
 
 import Icon from '../common/Icon';
 import { ActionDependenciesBlock } from './blocks/action-dependencies/ActionDependenciesBlock';

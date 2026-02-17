@@ -3,7 +3,7 @@ import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { Card as BSCard, CardBody } from 'reactstrap';
 
-import { transientOptions } from '@/styles/styled';
+import { transientOptions } from '@common/themes/styles/styled';
 
 const StyledCard = styled(BSCard, transientOptions)<{
   $customColor?: string;

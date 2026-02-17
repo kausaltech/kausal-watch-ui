@@ -3,6 +3,8 @@ import React, { type ReactElement } from 'react';
 import styled from '@emotion/styled';
 import { useLocale } from 'next-intl';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import type {
   AttributesBlockAttributeFragment,
   AttributesBlockAttributeTypeFragment,
@@ -17,7 +19,6 @@ import {
   ATTRIBUTE_TYPE_FRAGMENT,
   ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT,
 } from '@/fragments/action-attribute.fragment';
-import { transientOptions } from '@/styles/styled';
 
 type Variant = 'default' | 'minimized' | 'chip';
 

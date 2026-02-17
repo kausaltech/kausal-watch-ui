@@ -9,12 +9,13 @@ import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';
 import { Collapse, Nav, NavItem, Navbar } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import { deploymentType } from '@/common/environment';
 import { NavigationLink } from '@/common/links';
 import { getThemeStaticURL } from '@/common/theme';
 import { NavItem as NavItemType } from '@/components/Header';
 import Icon from '@/components/common/Icon';
-import { transientOptions } from '@/styles/styled';
 
 //import NavDropdown, { type NavDropdownProps } from '@/components/common/NavDropdown';
 //import type { GlobalNavProps } from '@/components/common/GlobalNav';

@@ -8,13 +8,13 @@ import { NextIntlClientProvider, useMessages } from 'next-intl';
 import 'react-medium-image-zoom/dist/styles.css';
 
 import { EnvProvider } from '@common/env/runtime-react';
+import { EmotionRegistry } from '@common/themes/StyledComponentsRegistry';
+import '@common/themes/styles/main.scss';
 
 import { DayjsLocaleProvider } from '@/common/dayjs';
 import { ApolloWrapper } from '@/components/providers/ApolloWrapper';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { auth } from '@/config/auth';
-import { EmotionRegistry } from '@/styles/StyledComponentsRegistry';
-import '@/styles/default/main.scss';
 
 type Props = {
   params: Promise<{ lang: string }>;

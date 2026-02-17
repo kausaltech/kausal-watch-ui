@@ -4,11 +4,12 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, Table } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import { PlanContextFragment } from '@/common/__generated__/graphql';
 import { actionStatusOrder } from '@/common/data/actions';
 import Icon from '@/components/common/Icon';
 import ActionTableRow from '@/components/dashboard/ActionTableRow';
-import { transientOptions } from '@/styles/styled';
 
 import ActionStatusExport from './ActionStatusExport';
 import { COLUMN_CONFIG } from './dashboard.constants';

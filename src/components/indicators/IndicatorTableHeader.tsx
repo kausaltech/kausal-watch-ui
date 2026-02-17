@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
 import {
   IndicatorColumnValueType,
@@ -8,7 +10,6 @@ import {
 } from '@/common/__generated__/graphql';
 import type { TFunction } from '@/common/i18n';
 import Icon from '@/components/common/Icon';
-import { transientOptions } from '@/styles/styled';
 
 import PopoverTip from '../common/PopoverTip';
 import type { SortState } from './indicatorUtils';

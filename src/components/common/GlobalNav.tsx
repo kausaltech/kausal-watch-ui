@@ -20,13 +20,14 @@ import {
   UncontrolledDropdown,
 } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import { isServer } from '@/common/environment';
 import { Link, NavigationLink } from '@/common/links';
 import { getThemeStaticURL } from '@/common/theme';
 import PlanSelector from '@/components/plans/PlanSelector';
 import PlanVersionSelector from '@/components/versioning/PlanVersionSelector';
 import { usePlan } from '@/context/plan';
-import { transientOptions } from '@/styles/styled';
 
 import Icon, { type ValidIconName } from './Icon';
 import LanguageSelector from './LanguageSelector';
