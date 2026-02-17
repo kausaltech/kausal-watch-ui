@@ -14,6 +14,16 @@ jobs:
           node-version: '24'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Generate theme symlinks
+        run: |
+          mkdir -p public/static
+          node -e "
+            const path = require('path');
+            const {createRequire} = require('module');
+            const req = createRequire(path.join(process.cwd(), 'package.json'));
+            const {generateThemeSymlinks} = req('@kausal/themes/setup.cjs');
+            generateThemeSymlinks(path.join(process.cwd(), 'public', 'static', 'themes'), {verbose: false});
+          "
       - run: pnpm test
 
   build:
