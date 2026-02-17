@@ -100,8 +100,8 @@ export function getAttributeValueText(
       return attribute.choice?.name ?? null;
     case 'AttributeText':
     case 'AttributeRichText':
-      // Strip HTML tags for plain text display
-      return attribute.value?.replace(/<[^>]*>/g, '').trim() || null;
+      // Strip angle brackets to prevent any residual HTML tags or fragments
+      return attribute.value?.replace(/[<>]/g, '').trim() || null;
     case 'AttributeNumericValue':
       const unit = attribute.type.unit?.shortName ?? attribute.type.unit?.name ?? '';
       return attribute.numericValue != null
