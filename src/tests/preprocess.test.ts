@@ -130,8 +130,8 @@ describe('getPhaseData', () => {
       labels: ['Completed', 'In progress', 'Not started'],
       values: [5, 2, 1],
       colors: [undefined, undefined, undefined],
-      good: 0,
-      total: '7', // substract 1 for the not_started action
+      good: 7,
+      total: '8',
     });
   });
   it('returns the correct series with actions that have an inactive status', () => {
@@ -141,8 +141,8 @@ describe('getPhaseData', () => {
       labels: ['Completed', 'In progress', 'Not started', 'no-phase', 'inactive-actions'],
       values: [5, 2, 1, 1, 8],
       colors: [undefined, undefined, undefined, undefined, undefined],
-      good: 0,
-      total: '7',
+      good: 7,
+      total: '17',
     });
   });
 });

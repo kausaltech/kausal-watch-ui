@@ -15,7 +15,9 @@ import ConfirmPledge from './ConfirmPledge';
 import PledgeCard, { type PledgeCategory } from './PledgeCard';
 import { usePledgeUser } from './use-pledge-user';
 
-type Pledge = NonNullable<NonNullable<NonNullable<GetPledgesQuery['plan']>['pledges']>[number]>;
+export type Pledge = NonNullable<
+  NonNullable<NonNullable<GetPledgesQuery['plan']>['pledges']>[number]
+>;
 
 type Props = {
   pledges: Pledge[];

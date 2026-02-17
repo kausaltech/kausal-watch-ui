@@ -1,7 +1,7 @@
 import React from 'react';
 
-import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import PopoverTip from '../../components/common/PopoverTip';
 import { render } from '../test-utils';
@@ -15,17 +15,19 @@ describe('PopoverTip', () => {
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  it('displays the tooltip on hover', async () => {
+  it('displays the tooltip on keyboard focus', async () => {
+    const user = userEvent.setup();
     render(<PopoverTip content={mockContent} identifier={mockIdentifier} />);
-    const infoButton = screen.getByRole('button');
-    fireEvent.mouseOver(infoButton);
+    await user.tab();
     expect(await screen.findByRole('tooltip')).toHaveTextContent(mockContent);
   });
 
-  it('stops displaying the tooltip when mouse is not over', () => {
+  it('hides the tooltip when focus leaves', async () => {
+    const user = userEvent.setup();
     render(<PopoverTip content={mockContent} identifier={mockIdentifier} />);
-    const infoButton = screen.getByRole('button');
-    fireEvent.mouseOut(infoButton);
+    await user.tab();
+    expect(await screen.findByRole('tooltip')).toBeInTheDocument();
+    await user.tab();
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
   });
 });
