@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, Col, Collapse, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import dayjs from '@/common/dayjs';
 import { getActionTermContext } from '@/common/i18n';

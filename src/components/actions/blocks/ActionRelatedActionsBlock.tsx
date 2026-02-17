@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';

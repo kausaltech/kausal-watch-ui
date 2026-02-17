@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
 import { gql, useMutation, useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
 
 import SelectDropdown, { type SelectDropdownOption } from '@/components/common/SelectDropdown';
 import { activeScenarioVar } from '@/context/paths/cache';

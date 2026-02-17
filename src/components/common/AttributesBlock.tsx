@@ -1,7 +1,8 @@
 import React, { type PropsWithChildren } from 'react';
 
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { Col, Row } from 'reactstrap';
-import styled, { css } from 'styled-components';
 
 import type {
   AttributesBlockAttributeFragment,
@@ -20,7 +21,7 @@ export const Attributes = styled.div<AttributeProps>`
   ${(props) =>
     props.$vertical &&
     css`
-      max-width: ${(props) => props.theme.breakpointSm};
+      max-width: ${props.theme.breakpointSm};
     `}
   margin: ${(props) => props.theme.spaces.s100} auto;
   padding: ${(props) => props.theme.spaces.s200} 0 0;

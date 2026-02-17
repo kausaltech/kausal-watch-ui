@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { gql, useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Container } from 'reactstrap';
-import styled from 'styled-components';
 
 import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';

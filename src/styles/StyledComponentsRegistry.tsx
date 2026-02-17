@@ -1,25 +1,11 @@
 'use client';
 
-import React, { type PropsWithChildren, useState } from 'react';
+import type { PropsWithChildren } from 'react';
 
-import { useServerInsertedHTML } from 'next/navigation';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 
-import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
-
-export function StyledComponentsRegistry({ children }: PropsWithChildren) {
-  const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet());
-
-  useServerInsertedHTML(() => {
-    const styles = styledComponentsStyleSheet.getStyleElement();
-    styledComponentsStyleSheet.instance.clearTag();
-    return <>{styles}</>;
-  });
-
-  if (typeof window !== 'undefined') return <>{children}</>;
-
+export function EmotionRegistry({ children }: PropsWithChildren) {
   return (
-    <StyleSheetManager enableVendorPrefixes sheet={styledComponentsStyleSheet.instance}>
-      {children}
-    </StyleSheetManager>
+    <AppRouterCacheProvider options={{ enableCssLayer: true }}>{children}</AppRouterCacheProvider>
   );
 }

@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import { readableColor } from 'polished';
 import { Container } from 'reactstrap';
-import styled from 'styled-components';
 
 export const StyledAnnouncementBannerSection = styled.div`
   padding: ${(props) => props.theme.spaces.s100} 0;

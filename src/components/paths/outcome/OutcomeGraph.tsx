@@ -2,10 +2,11 @@ import { useContext, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 
+import { ThemeContext } from '@emotion/react';
+import styled from '@emotion/styled';
 import { tint } from 'polished';
 import type { PlotParams } from 'react-plotly.js';
 import { Spinner } from 'reactstrap';
-import styled, { ThemeContext } from 'styled-components';
 
 import { OutcomeNodeFieldsFragment } from '@/common/__generated__/graphql';
 import { useInstance } from '@/common/instance';

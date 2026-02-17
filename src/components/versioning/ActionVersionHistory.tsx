@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, Collapse } from 'reactstrap';
-import styled from 'styled-components';
 
 import { deploymentType } from '@/common/environment';
 import { ActionLink } from '@/common/links';

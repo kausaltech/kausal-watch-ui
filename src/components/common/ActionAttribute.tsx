@@ -1,7 +1,7 @@
 import React, { type ReactElement } from 'react';
 
+import styled from '@emotion/styled';
 import { useLocale } from 'next-intl';
-import styled from 'styled-components';
 
 import type {
   AttributesBlockAttributeFragment,
@@ -17,10 +17,11 @@ import {
   ATTRIBUTE_TYPE_FRAGMENT,
   ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT,
 } from '@/fragments/action-attribute.fragment';
+import { transientOptions } from '@/styles/styled';
 
 type Variant = 'default' | 'minimized' | 'chip';
 
-const ScaleIcon = styled(Icon)<{ $active?: boolean }>`
+const ScaleIcon = styled(Icon, transientOptions)<{ $active?: boolean }>`
   font-size: 1.5rem;
   fill: ${({ theme, $active }) =>
     $active ? (theme.actionAttributeColor ?? theme.brandDark) : theme.themeColors.light} !important;

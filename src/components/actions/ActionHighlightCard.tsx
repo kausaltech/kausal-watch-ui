@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { transparentize } from 'polished';
 import { Badge, Card, CardBody, CardTitle } from 'reactstrap';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
 
 import { getStatusColorForAction } from '@/common/ActionStatusSummary';
 import { ActionLink } from '@/common/links';

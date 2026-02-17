@@ -1,9 +1,10 @@
 import React from 'react';
 
 import { gql, skipToken, useSuspenseQuery } from '@apollo/client';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { filter, groupBy, map, sortBy, uniqBy } from 'lodash';
 import { useTranslations } from 'next-intl';
-import styled, { css } from 'styled-components';
 
 import type {
   ActionCardFragment,

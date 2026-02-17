@@ -1,10 +1,10 @@
 'use client';
 
 import { gql } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import { Table } from 'reactstrap';
-import styled from 'styled-components';
 
 import type {
   ActionDateFormat,

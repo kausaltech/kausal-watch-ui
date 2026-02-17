@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
+import styled from '@emotion/styled';
 import { Container } from 'reactstrap';
-import styled from 'styled-components';
 
 import { CommonContentBlockProps } from '@/common/blocks.types';
 import IndicatorHighlightsList from '@/components/indicators/IndicatorHighlightsList';

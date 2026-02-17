@@ -1,6 +1,7 @@
 import React from 'react';
 
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 
 import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import CategoryPageStreamField from '@/components/common/CategoryPageStreamField';

@@ -1,9 +1,9 @@
+import styled from '@emotion/styled';
 import * as Sentry from '@sentry/nextjs';
 import type { truncate } from 'fs/promises';
 import { type DateTimeFormatOptions, useFormatter, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Badge, Button } from 'reactstrap';
-import styled from 'styled-components';
 
 import {
   IndicatorColumnValueType,
@@ -12,6 +12,7 @@ import {
   IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';
+import { transientOptions } from '@/styles/styled';
 
 import BadgeTooltip from '../common/BadgeTooltip';
 import Icon from '../common/Icon';
@@ -53,7 +54,7 @@ const TrendIcon = styled(Icon)`
   color: ${(props) => props.theme.graphColors.grey040};
 `;
 
-const IndicatorLevelBadge = styled(Badge)<{ $level: string }>`
+const IndicatorLevelBadge = styled(Badge, transientOptions)<{ $level: string }>`
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${({ theme }) => `${theme.badgePaddingY} ${theme.badgePaddingX}`};
   font-weight: ${(props) => props.theme.badgeFontWeight};

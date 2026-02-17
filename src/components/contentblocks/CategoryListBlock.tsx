@@ -1,9 +1,9 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import type { Theme } from '@kausal/themes/types';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { MultiUseImageFragmentFragment } from '@/common/__generated__/graphql';
 import type { CommonContentBlockProps } from '@/common/blocks.types';

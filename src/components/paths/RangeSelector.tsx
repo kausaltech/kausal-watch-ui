@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Range, getTrackBackground } from 'react-range';
 import { ButtonToggle } from 'reactstrap';
-import styled, { useTheme } from 'styled-components';
 
 import Icon from '@/components/common/Icon';
 

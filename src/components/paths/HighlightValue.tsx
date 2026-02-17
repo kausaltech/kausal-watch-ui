@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 const TotalValue = styled.div<{ $size?: string; $muted?: boolean }>`
   padding: 0.5rem;

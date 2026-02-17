@@ -6,11 +6,6 @@ import type { Theme } from '@kausal/themes/types';
 import { captureException } from '@sentry/nextjs';
 import { CardBody, Col, Container, Row } from 'reactstrap';
 
-import { ErrorBackground, StyledCard, StyledTitle, errorIcon } from '@/components/common/ErrorPage';
-import ThemeProvider from '@/components/providers/ThemeProvider';
-import defaultTheme from '@/public/static/themes/default/theme.json';
-import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
-
 type Props = {
   error: Error & { digest?: string };
 };
@@ -23,30 +18,20 @@ export default function GlobalError({ error }: Props) {
   return (
     <html>
       <body>
-        <ThemeProvider theme={defaultTheme as Theme}>
-          <StyledComponentsRegistry>
-            <ErrorBackground $isFullPage={true} data-testid="global-error-boundary">
-              <Container>
-                <Row>
-                  <Col md={{ size: 6, offset: 3 }}>
-                    <StyledCard>
-                      <CardBody>
-                        {errorIcon}
+        <Container>
+          <Row>
+            <Col md={{ size: 6, offset: 3 }}>
+              <CardBody>
+                <h1>Something went wrong</h1>
 
-                        <StyledTitle as={'h1'}>Something went wrong</StyledTitle>
-
-                        <StyledTitle as={'h4'}>
-                          We're sorry — an unexpected error occurred on our end. The issue has been
-                          reported and our team will investigate it.
-                        </StyledTitle>
-                      </CardBody>
-                    </StyledCard>
-                  </Col>
-                </Row>
-              </Container>
-            </ErrorBackground>
-          </StyledComponentsRegistry>
-        </ThemeProvider>
+                <h4>
+                  We're sorry — an unexpected error occurred on our end. The issue has been reported
+                  and our team will investigate it.
+                </h4>
+              </CardBody>
+            </Col>
+          </Row>
+        </Container>
       </body>
     </html>
   );

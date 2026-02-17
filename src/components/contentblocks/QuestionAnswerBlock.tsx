@@ -1,7 +1,8 @@
 import React from 'react';
 
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { Col, type ColProps, Container, Row } from 'reactstrap';
-import styled, { css } from 'styled-components';
 
 import Accordion from '@/components/common/Accordion';
 import RichText from '@/components/common/RichText';

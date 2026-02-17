@@ -3,6 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { useApolloClient } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import {
@@ -13,7 +14,6 @@ import {
   DropdownToggle,
   Spinner,
 } from 'reactstrap';
-import styled from 'styled-components';
 
 import { WorkflowState, WorkflowStateDescription } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';

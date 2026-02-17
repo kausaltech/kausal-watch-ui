@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
+import { useTheme } from '@emotion/react';
 import { PieChart } from 'echarts/charts';
 import type { PieSeriesOption } from 'echarts/charts';
 import { LegendComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import { CallbackDataParams } from 'echarts/types/dist/shared';
-import { useTheme } from 'styled-components';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 

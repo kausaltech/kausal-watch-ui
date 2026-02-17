@@ -5,11 +5,11 @@ import React, { type JSX, use, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import * as Sentry from '@sentry/nextjs';
 import { debounce } from 'lodash';
 import { Container } from 'reactstrap';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
 
 import Icon from '@/components/common/Icon';
 import EmbedContext, { InvalidEmbedAddressError } from '@/context/embed';

@@ -3,9 +3,10 @@
 import type { ReactNode } from 'react';
 
 import type { Theme } from '@kausal/themes/types';
-import { ThemeProvider as SCThemeProvider } from 'styled-components';
+import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 
 import { CommonThemeProvider } from '@common/providers/CommonThemeProvider';
+import { initializeMuiTheme } from '@common/themes/mui-theme/theme';
 
 type Props = {
   theme: Theme;
@@ -13,9 +14,10 @@ type Props = {
 };
 
 export default function ThemeProvider({ theme, children }: Props) {
+  const muiTheme = initializeMuiTheme(theme);
   return (
-    <SCThemeProvider theme={theme}>
+    <MUIThemeProvider theme={muiTheme}>
       <CommonThemeProvider theme={theme}>{children}</CommonThemeProvider>
-    </SCThemeProvider>
+    </MUIThemeProvider>
   );
 }

@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { UncontrolledTooltip } from 'reactstrap';
-import styled from 'styled-components';
 
 import { PlanContextFragment } from '@/common/__generated__/graphql';
 

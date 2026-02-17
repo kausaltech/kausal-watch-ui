@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useFormatter, useTranslations } from 'next-intl';
-import styled, { useTheme } from 'styled-components';
 
 import type {
   GetInstanceContextQuery,

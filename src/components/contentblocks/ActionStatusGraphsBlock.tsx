@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { gql, useQuery } from '@apollo/client';
+import { useTheme } from '@emotion/react';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
-import { useTheme } from 'styled-components';
 
 import type {
   GetActionListForGraphsQuery,
@@ -36,8 +36,7 @@ const GET_ACTION_LIST_FOR_GRAPHS = gql`
 `;
 
 interface Props
-  extends CommonContentBlockProps,
-    Pick<ActionsStatusGraphsProps, 'chart' | 'shownDatasets'> {
+  extends CommonContentBlockProps, Pick<ActionsStatusGraphsProps, 'chart' | 'shownDatasets'> {
   categoryId?: string;
   withContainer?: boolean;
 }

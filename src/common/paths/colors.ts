@@ -1,5 +1,5 @@
+import type { DefaultTheme } from '@emotion/react';
 import chroma from 'chroma-js';
-import type { DefaultTheme } from 'styled-components';
 
 export function genColors(colorsIn: string[], numColors: number) {
   const colors = colorsIn.slice(0, -1);

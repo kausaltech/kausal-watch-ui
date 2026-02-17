@@ -1,9 +1,9 @@
 import { memo, useMemo, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Nav, NavItem, NavLink, TabContent } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
 import { PathsNodeLink } from '@/common/links';

@@ -2,13 +2,15 @@
 
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, TooltipTrigger } from 'react-aria-components';
-import styled from 'styled-components';
+
+import { transientOptions } from '@/styles/styled';
 
 import Tooltip from './Tooltip';
 
-const InfoButton = styled(Button)<{ $invert: string; $compact?: boolean }>`
+const InfoButton = styled(Button, transientOptions)<{ $invert: string; $compact?: boolean }>`
   padding: ${(p) => (p.$compact ? '0' : '0 0.25rem 0.1rem')};
   line-height: 0.5rem;
   opacity: 0.75;

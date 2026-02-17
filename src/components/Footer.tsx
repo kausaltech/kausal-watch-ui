@@ -4,8 +4,8 @@ import React from 'react';
 
 import { usePathname } from 'next/navigation';
 
+import { useTheme } from '@emotion/react';
 import { useTranslations } from 'next-intl';
-import { useTheme } from 'styled-components';
 
 import { getDeploymentType } from '@common/env';
 

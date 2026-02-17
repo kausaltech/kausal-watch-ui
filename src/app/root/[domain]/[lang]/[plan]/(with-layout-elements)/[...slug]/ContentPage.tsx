@@ -2,8 +2,9 @@
 
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { Col, Container, Row } from 'reactstrap';
-import { useTheme } from 'styled-components';
 
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import type {

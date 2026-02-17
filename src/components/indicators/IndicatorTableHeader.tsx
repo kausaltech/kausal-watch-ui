@@ -1,5 +1,5 @@
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
 
 import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
 import {
@@ -8,6 +8,7 @@ import {
 } from '@/common/__generated__/graphql';
 import type { TFunction } from '@/common/i18n';
 import Icon from '@/components/common/Icon';
+import { transientOptions } from '@/styles/styled';
 
 import PopoverTip from '../common/PopoverTip';
 import type { SortState } from './indicatorUtils';
@@ -27,7 +28,7 @@ const HeaderContent = styled.div<{ $selected?: boolean }>`
   text-decoration: ${(props) => (props.$selected ? 'underline' : 'none')};
 `;
 
-const TableSortingIcon = styled(Icon)<{ $selected: boolean }>`
+const TableSortingIcon = styled(Icon, transientOptions)<{ $selected: boolean }>`
   width: 0.8em;
   height: 0.8em;
   opacity: ${(props) => (props.$selected ? 1 : 0.3)};

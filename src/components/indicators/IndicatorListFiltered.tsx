@@ -1,11 +1,12 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { Alert, Table } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
+import { transientOptions } from '@/styles/styled';
 
 import Icon from '../common/Icon';
 import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
@@ -91,7 +92,7 @@ const ExpandButton = styled.button`
   }
 `;
 
-const ExpandIcon = styled(Icon)<{ $expanded: boolean }>`
+const ExpandIcon = styled(Icon, transientOptions)<{ $expanded: boolean }>`
   transition: transform 0.2s;
   transform: rotate(${({ $expanded }) => ($expanded ? '90deg' : '0deg')});
 `;

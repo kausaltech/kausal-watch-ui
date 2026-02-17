@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
 import { useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Alert, Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { SearchQueryQuery, SearchQueryQueryVariables } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';

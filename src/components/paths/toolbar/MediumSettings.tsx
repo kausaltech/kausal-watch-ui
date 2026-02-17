@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Popover, PopoverBody, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import GoalSelector from '@/components/paths/GoalSelector';
 import RangeSelector from '@/components/paths/RangeSelector';

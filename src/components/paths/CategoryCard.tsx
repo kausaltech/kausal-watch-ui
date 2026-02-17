@@ -1,7 +1,7 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { readableColor, transparentize } from 'polished';
-import styled from 'styled-components';
 
 import {
   type CategoryFragmentFragment,

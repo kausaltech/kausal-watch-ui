@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { gql, useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { IndicatorHightlightListQuery } from '@/common/__generated__/graphql';
 import { IndicatorListLink } from '@/common/links';

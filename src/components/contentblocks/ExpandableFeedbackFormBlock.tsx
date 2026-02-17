@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Collapse } from 'reactstrap';
-import styled from 'styled-components';
 
 import { getActionTermContext } from '@/common/i18n';
 import type { ActionContentAction } from '@/components/actions/ActionContent';

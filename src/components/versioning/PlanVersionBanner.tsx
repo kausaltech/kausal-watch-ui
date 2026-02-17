@@ -1,5 +1,5 @@
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
 
 import AnnouncementBanner from '@/components/common/AnnouncementBanner';
 import Icon from '@/components/common/Icon';

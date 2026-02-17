@@ -1,7 +1,7 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import type { Theme } from '@kausal/themes/types';
-import styled from 'styled-components';
 
 const Tag = styled.div`
   display: flex;
