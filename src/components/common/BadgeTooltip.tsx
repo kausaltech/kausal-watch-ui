@@ -6,7 +6,7 @@ import { Button, TooltipTrigger } from 'react-aria-components';
 import SVG from 'react-inlinesvg';
 import { Badge } from 'reactstrap';
 
-import { transientOptions } from '@/styles/styled';
+import { transientOptions } from '@common/themes/styles/styled';
 
 import Tooltip from './Tooltip';
 

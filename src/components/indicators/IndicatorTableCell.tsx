@@ -5,6 +5,8 @@ import { type DateTimeFormatOptions, useFormatter, useTranslations } from 'next-
 import { readableColor } from 'polished';
 import { Badge, Button } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import {
   IndicatorColumnValueType,
   IndicatorDashboardFieldName,
@@ -12,7 +14,6 @@ import {
   IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';
-import { transientOptions } from '@/styles/styled';
 
 import BadgeTooltip from '../common/BadgeTooltip';
 import Icon from '../common/Icon';

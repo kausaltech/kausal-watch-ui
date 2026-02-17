@@ -5,6 +5,8 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, type ColProps, Row } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import type {
   ActionHightlightListQuery,
   ActionHightlightListQueryVariables,
@@ -15,7 +17,6 @@ import images, { getActionImage } from '@/common/images';
 import { ActionListLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import EmbedContext from '@/context/embed';
-import { transientOptions } from '@/styles/styled';
 
 import Icon from '../common/Icon';
 import ActionHighlightCard from './ActionHighlightCard';

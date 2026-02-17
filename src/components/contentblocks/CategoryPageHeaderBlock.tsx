@@ -10,6 +10,8 @@ import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';
 import { Col, Container, Row } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import type {
   AttributesBlockAttributeFragment,
@@ -25,7 +27,6 @@ import CategoryPageStreamField, {
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
 import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
-import { transientOptions } from '@/styles/styled';
 
 import PathsNodeSummary from '../paths/PathsNodeSummary';
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';

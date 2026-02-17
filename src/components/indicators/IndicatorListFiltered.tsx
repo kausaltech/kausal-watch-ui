@@ -5,8 +5,9 @@ import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { Alert, Table } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
-import { transientOptions } from '@/styles/styled';
 
 import Icon from '../common/Icon';
 import type { CategoryType, IndicatorListIndicator } from './IndicatorList';

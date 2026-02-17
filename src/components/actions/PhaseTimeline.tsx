@@ -7,9 +7,10 @@ import { debounce } from 'lodash';
 import get from 'lodash/get';
 import { useTranslations } from 'next-intl';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import { ActionImplementationPhase } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
-import { transientOptions } from '@/styles/styled';
 
 import { ActionContentAction } from './ActionContent';
 

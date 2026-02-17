@@ -6,9 +6,10 @@ import styled from '@emotion/styled';
 import { useLocale, useTranslations } from 'next-intl';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import { usePlan } from '@/context/plan';
-import { transientOptions } from '@/styles/styled';
 
 import Icon from './Icon';
 
