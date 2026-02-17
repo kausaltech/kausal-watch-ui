@@ -91,9 +91,9 @@ const StyledChipValue = styled.span`
 /**
  * Extracts the display value from an attribute as plain text for chip rendering.
  */
-function getAttributeValueText(
+export function getAttributeValueText(
   attribute: AttributesBlockAttributeFragment | AttributesBlockAttributeWithNestedTypeFragment,
-  locale: string
+  locale?: string
 ): string | null {
   switch (attribute.__typename) {
     case 'AttributeChoice':
