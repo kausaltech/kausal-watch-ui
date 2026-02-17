@@ -240,7 +240,8 @@ export function NavigationLink({ slug, children, ...other }: NavigationLinkProps
     );
   }
 
-  const href = prependPlanAndLocale(plan, slug, locale);
+  const normalizedSlug = (slug ?? '').trim() === '' ? '/' : slug;
+  const href = prependPlanAndLocale(plan, normalizedSlug, locale);
 
   return (
     <NextLink href={href} {...disablePrefetch(other)}>
