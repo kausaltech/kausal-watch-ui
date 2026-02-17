@@ -4,11 +4,10 @@ import { render } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider } from 'styled-components';
 
-import a11yMessages from '@/locales/en/a11y.json';
-import actionsMessages from '@/locales/en/actions.json';
-import commonMessages from '@/locales/en/common.json';
-
-import theme from '../public/static/themes/default/theme.json';
+import a11yMessages from '../../locales/en/a11y.json';
+import actionsMessages from '../../locales/en/actions.json';
+import commonMessages from '../../locales/en/common.json';
+import theme from '../../public/static/themes/default/theme.json';
 
 const messages = { ...a11yMessages, ...actionsMessages, ...commonMessages };
 
