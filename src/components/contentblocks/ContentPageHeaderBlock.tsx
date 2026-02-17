@@ -1,9 +1,9 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 const HeaderImage = styled.div<{ $image: string; $imageAlign: string }>`
   background-image: url(${(props) => props.$image});

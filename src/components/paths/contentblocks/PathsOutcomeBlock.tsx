@@ -5,11 +5,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import ContentLoader from 'react-content-loader';
 import { Alert, Card, CardBody, Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type {
   GetOutcomeNodeContentQuery,
@@ -20,6 +20,7 @@ import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';
+import { transientOptions } from '@/styles/styled';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 
 const OutcomeBlockLoader = (props) => (
@@ -59,7 +60,7 @@ const StyledTitle = styled.h1`
   }
 `;
 
-const StyledCard = styled(Card)<{ $disabled?: boolean }>`
+const StyledCard = styled(Card, transientOptions)<{ $disabled?: boolean }>`
   width: 100%;
   transition: all 0.5s ease;
   overflow: hidden;

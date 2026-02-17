@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 
 import { gql, useSuspenseQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, type ColProps, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type {
   ActionHightlightListQuery,
@@ -15,6 +15,7 @@ import images, { getActionImage } from '@/common/images';
 import { ActionListLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import EmbedContext from '@/context/embed';
+import { transientOptions } from '@/styles/styled';
 
 import Icon from '../common/Icon';
 import ActionHighlightCard from './ActionHighlightCard';
@@ -98,7 +99,9 @@ const ReactStrapCol = (props: React.PropsWithChildren<ColProps>) => {
   return <Col {...childProps}>{props.children}</Col>;
 };
 
-const StyledCardContainer = styled(ReactStrapCol)<{ $embed?: { active: boolean } }>`
+const StyledCardContainer = styled(ReactStrapCol, transientOptions)<{
+  $embed?: { active: boolean };
+}>`
   margin-bottom: ${(props) => props.theme.spaces.s150};
   ${(props) => (props.$embed?.active ? '' : 'transition: all 0.5s ease;')}
 

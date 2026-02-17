@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
 import { gql, useSuspenseQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import * as Sentry from '@sentry/nextjs';
 import { concat } from 'lodash';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
 import type { CommonContentBlockProps } from '@/common/blocks.types';

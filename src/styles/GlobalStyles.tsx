@@ -1,6 +1,6 @@
 'use client';
 
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from '@emotion/react';
 
 export const GlobalStyles = createGlobalStyle`
   :root {

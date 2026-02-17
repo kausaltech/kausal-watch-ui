@@ -1,6 +1,8 @@
 import type { Ref } from 'react';
 import React, { type JSX, createRef, useCallback, useMemo, useState } from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import escapeStringRegexp from 'escape-string-regexp';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
@@ -17,7 +19,6 @@ import {
   Button as RButton,
   Row,
 } from 'reactstrap';
-import styled, { useTheme } from 'styled-components';
 
 import {
   type ActionListFilterFragment,
@@ -49,6 +50,7 @@ import type {
 } from '@/components/dashboard/ActionList';
 import type { PlanContextType } from '@/context/plan';
 import { usePlan } from '@/context/plan';
+import { transientOptions } from '@/styles/styled';
 
 import type { IndicatorListIndicator } from '../indicators/IndicatorList';
 
@@ -116,7 +118,7 @@ const FilterSectionDivider = styled.div`
   border-bottom: 1px solid #333;
 `;
 
-const StyledBadge = styled(BadgeComponent)<{ $color?: string }>`
+const StyledBadge = styled(BadgeComponent, transientOptions)<{ $color?: string }>`
   display: inline-flex;
   max-width: 100%;
   white-space: normal;

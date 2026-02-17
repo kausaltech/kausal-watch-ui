@@ -1,6 +1,6 @@
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
 
 import { ActionSection } from '@/components/actions/ActionContent';
 import RichText from '@/components/common/RichText';

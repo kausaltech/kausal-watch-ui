@@ -1,9 +1,9 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import styled from 'styled-components';
 
 const StyledTypeahead = styled(Typeahead)`
   .rbt-close-content {

@@ -1,4 +1,5 @@
-import styled, { useTheme } from 'styled-components';
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 
 import { getThemeStaticURL } from '@/common/theme';
 

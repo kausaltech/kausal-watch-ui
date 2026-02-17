@@ -1,8 +1,8 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import RichText from '@/components/common/RichText';
 import IndicatorProgressBar from '@/components/indicators/IndicatorProgressBar';

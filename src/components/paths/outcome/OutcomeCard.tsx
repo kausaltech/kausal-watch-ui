@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 
+import styled from '@emotion/styled';
 import chroma from 'chroma-js';
 import { useFormatter, useTranslations } from 'next-intl';
-import styled from 'styled-components';
 
 import { getMetricChange, getMetricValue } from '@/common/paths/preprocess';
 import ContentLoader from '@/components/common/ContentLoader';

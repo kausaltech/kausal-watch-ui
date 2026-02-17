@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { getContrast, meetsContrastGuidelines, readableColor } from 'polished';
-import { useTheme } from 'styled-components';
-import styled from 'styled-components';
 
 const TextContrastOutput = styled.div<{
   $foreground: string;

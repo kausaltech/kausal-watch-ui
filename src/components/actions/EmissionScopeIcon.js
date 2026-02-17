@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'reactstrap';
-import styled from 'styled-components';
 
 import Icon from '../common/Icon';
 

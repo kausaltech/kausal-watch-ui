@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 const StyledFooter = styled.div`
   margin-bottom: 12px; // Allow space for Paths settings panel

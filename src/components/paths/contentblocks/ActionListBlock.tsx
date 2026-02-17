@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
-import styled from 'styled-components';
 
 import type {
   ActionCardFragment,

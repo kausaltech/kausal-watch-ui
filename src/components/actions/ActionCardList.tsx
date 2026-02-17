@@ -1,10 +1,10 @@
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
 
 import type { ActionCardFragment } from '@/common/__generated__/graphql';
 import type { TFunction } from '@/common/i18n';

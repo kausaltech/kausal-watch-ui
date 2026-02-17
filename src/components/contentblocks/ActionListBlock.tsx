@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
 
 import { gql, useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
-import styled from 'styled-components';
 
 import type {
   ActionCardFragment,

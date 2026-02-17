@@ -3,10 +3,11 @@ import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { useReactiveVar } from '@apollo/client';
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import chroma from 'chroma-js';
 import { isEqual } from 'lodash';
 import { useFormatter, useTranslations } from 'next-intl';
-import styled, { useTheme } from 'styled-components';
 
 import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
 import { activeGoalVar } from '@/context/paths/cache';

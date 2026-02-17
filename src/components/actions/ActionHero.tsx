@@ -1,9 +1,10 @@
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
-import styled, { useTheme } from 'styled-components';
 
 import type { ActionCardFragment } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';

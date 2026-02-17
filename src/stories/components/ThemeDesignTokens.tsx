@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 
+import { useTheme } from '@emotion/react';
 import _ from 'lodash';
 import defaultTheme from 'public/static/themes/default/theme.json';
 import { ChromePicker } from 'react-color';
 import { Container, Table } from 'reactstrap';
-import { useTheme } from 'styled-components';
 
 const ColorPicker = (props) => {
   const { color, handleChange, isDefault } = props;

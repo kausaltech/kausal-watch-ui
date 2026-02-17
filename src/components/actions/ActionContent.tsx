@@ -4,10 +4,11 @@ import React, { type JSX, useCallback, useEffect, useMemo } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { css, useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Col, Container, Row } from 'reactstrap';
-import styled, { css, useTheme } from 'styled-components';
 
 import {
   type ActionAsideContentBlocksFragmentFragment,
@@ -107,7 +108,7 @@ const ContentGroup = styled.div<{ $vertical: boolean }>`
   ${(props) =>
     props.$vertical &&
     css`
-      max-width: ${(props) => props.theme.breakpointSm};
+      max-width: ${props.theme.breakpointSm};
     `}
   margin: ${(props) => props.theme.spaces.s100} auto ${(props) => props.theme.spaces.s300};
   padding: ${(props) => props.theme.spaces.s200} 0 0;

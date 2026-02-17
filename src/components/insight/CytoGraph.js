@@ -2,6 +2,8 @@ import React from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { withTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import dayjs from 'dayjs';
@@ -17,7 +19,6 @@ import {
   Row,
   UncontrolledButtonDropdown,
 } from 'reactstrap';
-import styled, { withTheme } from 'styled-components';
 
 import { getActionLinkProps, getIndicatorLinkProps } from '../../common/links';
 import InsightFilter from './InsightFilter';

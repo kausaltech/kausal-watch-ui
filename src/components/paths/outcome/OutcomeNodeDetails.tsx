@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import type { GetPlanContextQuery } from '@/common/__generated__/graphql';
 import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';

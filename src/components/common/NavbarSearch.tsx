@@ -6,10 +6,10 @@ import { useRouter } from 'next/navigation';
 
 import { useApolloClient } from '@apollo/client';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { usePopper } from 'react-popper';
 import { InputGroup } from 'reactstrap';
-import styled from 'styled-components';
 
 import { getActionTermContext } from '@/common/i18n';
 import { Link, usePrependPlanAndLocale } from '@/common/links';

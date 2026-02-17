@@ -1,8 +1,8 @@
 import React from 'react';
 
+import { ThemeProvider } from '@emotion/react';
 import { render } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
-import { ThemeProvider } from 'styled-components';
 
 import a11yMessages from '../../locales/en/a11y.json';
 import actionsMessages from '../../locales/en/actions.json';

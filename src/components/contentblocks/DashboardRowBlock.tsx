@@ -2,9 +2,9 @@ import React from 'react';
 
 import Link from 'next/link';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';

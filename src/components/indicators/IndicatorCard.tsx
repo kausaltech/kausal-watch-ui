@@ -1,15 +1,16 @@
 import React, { type PropsWithChildren } from 'react';
 
+import styled from '@emotion/styled';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Card, CardBody, CardTitle } from 'reactstrap';
-import styled from 'styled-components';
 
 import dayjs from '@/common/dayjs';
 import type { TFunction } from '@/common/i18n';
 import { getActionTermContext } from '@/common/i18n';
 import { IndicatorLink } from '@/common/links';
 import { usePlan } from '@/context/plan';
+import { transientOptions } from '@/styles/styled';
 
 const IndicatorValueDisplay = styled.div`
   margin-top: 1em;
@@ -48,7 +49,7 @@ const StyledIndicatorLink = styled(IndicatorLink)`
   }
 `;
 
-const StyledIndicator = styled(Card)<{ $level: string | null }>`
+const StyledIndicator = styled(Card, transientOptions)<{ $level: string | null }>`
   hyphens: manual;
   line-height: ${(props) => props.theme.lineHeightSm};
   border: 0;

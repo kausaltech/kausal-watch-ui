@@ -5,41 +5,7 @@ import React from 'react';
 import Link from 'next/link';
 
 import { useTranslations } from 'next-intl';
-import { Card, CardBody, Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
-
-import Button from '@/components/common/Button';
-
-export const ErrorBackground = styled.div<{ $isFullPage?: boolean }>`
-  background-color: ${(props) => props.theme.brandDark};
-  min-height: ${({ $isFullPage }) => ($isFullPage ? '800px' : undefined)};
-  padding: 5rem 0;
-`;
-
-export const StyledCard = styled(Card)`
-  text-align: center;
-  width: 100%;
-  transition: all 0.5s ease;
-  overflow: hidden;
-  border-width: ${(props) => props.theme.cardBorderWidth};
-  border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) => props.theme.themeColors.white};
-
-  svg {
-    width: 4rem;
-    margin-bottom: 2rem;
-    fill: ${(props) => props.theme.brandDark};
-  }
-`;
-
-export const StyledTitle = styled.h1`
-  margin-bottom: 1rem;
-`;
-
-export const StyledSubtitle = styled.h4`
-  font-weight: ${({ theme }) => theme.fontWeightBase};
-  color: ${({ theme }) => theme.textColor.secondary};
-`;
+import { Button, Card, CardBody, Col, Container, Row } from 'reactstrap';
 
 type Props = {
   message?: string;
@@ -60,34 +26,28 @@ export function ErrorPage({ message, type = 'page', testId }: Props) {
   const t = useTranslations();
 
   return (
-    <ErrorBackground $isFullPage={type === 'page'} data-testid={testId}>
-      <Container>
-        <Row>
-          <Col md={{ size: 6, offset: 3 }}>
-            <StyledCard>
-              <CardBody>
-                {errorIcon}
+    <Container>
+      <Row>
+        <Col md={{ size: 6, offset: 3 }}>
+          <Card>
+            <CardBody>
+              {errorIcon}
 
-                <StyledTitle as={type === 'page' ? 'h1' : 'h2'}>
-                  {message || t('error-occurred')}
-                </StyledTitle>
+              <h1>{message || t('error-occurred')}</h1>
 
-                {type === 'page' && (
-                  <Link href="/">
-                    <Button outline color="dark" size="sm">
-                      {t('return-to-front')}
-                    </Button>
-                  </Link>
-                )}
+              {type === 'page' && (
+                <Link href="/">
+                  <Button outline color="dark" size="sm">
+                    {t('return-to-front')}
+                  </Button>
+                </Link>
+              )}
 
-                {type === 'block' && (
-                  <StyledSubtitle>{t('content-could-not-be-displayed')}</StyledSubtitle>
-                )}
-              </CardBody>
-            </StyledCard>
-          </Col>
-        </Row>
-      </Container>
-    </ErrorBackground>
+              {type === 'block' && <h3>{t('content-could-not-be-displayed')}</h3>}
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 }

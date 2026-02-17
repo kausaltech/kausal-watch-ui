@@ -1,10 +1,10 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { Dayjs } from 'dayjs';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Badge } from 'reactstrap';
-import styled from 'styled-components';
 
 import dayjs from '@/common/dayjs';
 

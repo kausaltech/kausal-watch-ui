@@ -1,7 +1,7 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { Tooltip as AriaTooltip, OverlayArrow, TooltipTrigger } from 'react-aria-components';
-import styled from 'styled-components';
 
 const StyledTooltip = styled(AriaTooltip)`
   box-shadow: 0 8px 20px rgba(0 0 0 / 0.1);

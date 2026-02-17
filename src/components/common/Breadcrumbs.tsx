@@ -1,7 +1,7 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { UncontrolledTooltip } from 'reactstrap';
-import styled from 'styled-components';
 
 import { MAX_CRUMB_LENGTH } from '@/common/categories';
 import { Link } from '@/common/links';

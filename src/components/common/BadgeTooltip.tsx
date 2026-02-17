@@ -1,14 +1,16 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { readableColor, shade } from 'polished';
 import { Button, TooltipTrigger } from 'react-aria-components';
 import SVG from 'react-inlinesvg';
 import { Badge } from 'reactstrap';
-import styled from 'styled-components';
+
+import { transientOptions } from '@/styles/styled';
 
 import Tooltip from './Tooltip';
 
-const WrapperButton = styled(Button)<{ $isLink: boolean }>`
+const WrapperButton = styled(Button, transientOptions)<{ $isLink: boolean }>`
   padding: 0;
   margin: 0;
   background-color: transparent;
@@ -17,7 +19,7 @@ const WrapperButton = styled(Button)<{ $isLink: boolean }>`
   cursor: ${({ $isLink }) => ($isLink ? 'pointer' : 'default')};
 `;
 
-const StyledBadge = styled(Badge)<{
+const StyledBadge = styled(Badge, transientOptions)<{
   $themeColor: ThemeColorOption;
   $isLink: boolean;
   $color?: string;
@@ -102,7 +104,7 @@ const IconImage = styled.div<{ $imageSrc?: string }>`
   min-width: ${(props) => (props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300)};
 `;
 
-const IconSvg = styled(SVG)<{ $bgcolor?: string; $themeColor: string }>`
+const IconSvg = styled(SVG, transientOptions)<{ $bgcolor?: string; $themeColor: string }>`
   height: ${(props) => props.theme.spaces.s200};
   margin: ${(props) => props.theme.spaces.s050};
 

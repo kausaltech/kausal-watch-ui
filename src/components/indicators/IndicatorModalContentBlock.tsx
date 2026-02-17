@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import { upperFirst } from 'lodash';
 import { useFormatter, useTranslations } from 'next-intl';
-import styled from 'styled-components';
 
 import {
   type IndicatorCategoryContentBlockFragmentFragment,

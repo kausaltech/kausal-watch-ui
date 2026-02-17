@@ -2,9 +2,9 @@
 
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';

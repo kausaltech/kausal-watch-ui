@@ -2,11 +2,12 @@
 
 import React, { useEffect, useMemo } from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import type { BarSeriesOption, LineSeriesOption } from 'echarts/charts';
 import type { MarkLineOption } from 'echarts/types/dist/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
-import styled, { useTheme } from 'styled-components';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 

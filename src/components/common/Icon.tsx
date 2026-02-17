@@ -2,9 +2,9 @@
 
 import React, { type JSX } from 'react';
 
+import { useTheme } from '@emotion/react';
 import { captureMessage } from '@sentry/nextjs';
 import SVG from 'react-inlinesvg';
-import { useTheme } from 'styled-components';
 
 import { getThemeStaticURL } from '@/common/theme';
 import defaultTheme from '@/public/static/themes/default/theme.json';
