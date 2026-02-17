@@ -16,7 +16,7 @@ import { PLEDGE_PATH } from '@/constants/routes';
 import { ShareButton } from './ShareButton';
 
 export type PledgeCategory = {
-  icon: ValidIconName;
+  icon?: ValidIconName;
   label: string;
 };
 
@@ -143,7 +143,8 @@ const StyledCardContent = styled.div<{ $layout: CardLayout }>`
 const StyledMetaRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: ${({ theme }) => theme.spaces.s100};
+  row-gap: ${({ theme }) => theme.spaces.s025};
+  column-gap: ${({ theme }) => theme.spaces.s100};
   margin-bottom: ${({ theme }) => theme.spaces.s100};
   font-size: ${({ theme }) => theme.fontSizeSm};
   color: ${({ theme }) => theme.themeColors.dark};
@@ -213,14 +214,7 @@ const StyledCopyButton = styled(Button)`
   gap: ${({ theme }) => theme.spaces.s050};
 `;
 
-function SharePledgeCard({
-  title,
-  committedCount,
-  categories,
-  image,
-  imageAlt,
-  shareUrl,
-}: ShareProps) {
+function SharePledgeCard({ title, committedCount, image, imageAlt, shareUrl }: ShareProps) {
   const t = useTranslations();
   const [copied, setCopied] = useState(false);
 
@@ -238,7 +232,7 @@ function SharePledgeCard({
     <StyledCardWrapper $layout="share">
       <PledgeImage layout="share" image={image} imageAlt={imageAlt} title={title} />
       <StyledCardContent $layout="share">
-        <PledgeAttributes committedCount={committedCount} categories={categories} />
+        <PledgeAttributes committedCount={committedCount} />
         <StyledCardTitle $layout="share">{title}</StyledCardTitle>
         <StyledDivider />
         <StyledShareLabel>{t('pledge-success-share-label')}</StyledShareLabel>
@@ -351,7 +345,7 @@ function PledgeAttributes({
 
       {categories?.map((category, index) => (
         <StyledCategory key={index}>
-          <Icon name={category.icon} width="18px" height="18px" />
+          {category.icon && <Icon name={category.icon} width="18px" height="18px" />}
           {category.label}
         </StyledCategory>
       ))}

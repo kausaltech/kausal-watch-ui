@@ -10,8 +10,9 @@ import type { GetPledgesQuery } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
 import { getDefaultFormFields } from '@/utils/pledge.utils';
 
+import { getAttributeValueText } from '../common/ActionAttribute';
 import ConfirmPledge from './ConfirmPledge';
-import PledgeCard from './PledgeCard';
+import PledgeCard, { type PledgeCategory } from './PledgeCard';
 import { usePledgeUser } from './use-pledge-user';
 
 type Pledge = NonNullable<NonNullable<NonNullable<GetPledgesQuery['plan']>['pledges']>[number]>;
@@ -222,6 +223,12 @@ function PledgeList({ pledges }: Props) {
                 key={pledge.slug}
                 title={pledge.name}
                 description={pledge.description}
+                categories={pledge.attributes
+                  .map((attribute) => ({
+                    // TODO: Add icon when supported by the backend
+                    label: getAttributeValueText(attribute),
+                  }))
+                  .filter((category): category is PledgeCategory => !!category.label)}
                 slug={pledge.slug}
                 image={pledge.image?.large?.src ?? pledge.image?.full?.src}
                 imageAlt={pledge.image?.altText ?? pledge.name}
