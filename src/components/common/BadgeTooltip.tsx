@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import { readableColor, shade } from 'polished';
 import { Button, TooltipTrigger } from 'react-aria-components';
 import SVG from 'react-inlinesvg';
-import { Badge } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -19,11 +18,12 @@ const WrapperButton = styled(Button, transientOptions)<{ $isLink: boolean }>`
   cursor: ${({ $isLink }) => ($isLink ? 'pointer' : 'default')};
 `;
 
-const StyledBadge = styled(Badge, transientOptions)<{
+const StyledBadge = styled.span<{
   $themeColor: ThemeColorOption;
   $isLink: boolean;
   $color?: string;
 }>`
+  display: inline-block;
   cursor: ${(props) => (props.$isLink ? 'pointer' : 'default')};
   background-color: ${(props) => props.theme[props.$themeColor]} !important;
   color: ${(props) =>
@@ -163,6 +163,7 @@ const BadgeContent = (props: BadgeContentProps) => {
 
   return hasNoIcon ? (
     <StyledBadge
+      color=""
       className={size}
       aria-label={ariaLabel}
       $themeColor={themeColor}
@@ -172,7 +173,7 @@ const BadgeContent = (props: BadgeContentProps) => {
       {renderContent}
     </StyledBadge>
   ) : (
-    <IconBadge $themeColor={themeColor} $isLink={isLink} $color={color}>
+    <IconBadge color="" $themeColor={themeColor} $isLink={isLink} $color={color}>
       {iconSvg ? (
         <IconImage>
           <IconSvg

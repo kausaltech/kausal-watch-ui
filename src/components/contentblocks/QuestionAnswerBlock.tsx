@@ -1,30 +1,30 @@
 import React from 'react';
 
-import { css } from '@emotion/react';
+import { type Theme, css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Col, type ColProps, Container, Row } from 'reactstrap';
 
 import Accordion from '@/components/common/Accordion';
 import RichText from '@/components/common/RichText';
 
-const inlineStyles = () => css`
+const inlineStyles = (theme: Theme) => css`
   h2 {
     text-align: left;
-    font-size: ${({ theme }) => theme.fontSizeLg};
+    font-size: ${theme.fontSizeLg};
   }
 `;
 
-const breakOutStyles = () => css`
-  background: ${(props) => props.theme.themeColors.light};
+const breakOutStyles = (theme: Theme) => css`
+  background: ${theme.themeColors.light};
 
   h2 {
     text-align: center;
-    font-size: ${({ theme }) => theme.fontSizeXl};
+    font-size: ${theme.fontSizeXl};
   }
 `;
 
 const FaqSection = styled.section<{ $inline?: boolean }>`
-  ${({ $inline }) => ($inline ? inlineStyles : breakOutStyles)};
+  ${({ $inline, theme }) => ($inline ? inlineStyles(theme) : breakOutStyles(theme))};
   padding: ${(props) => props.theme.spaces.s400} 0;
 
   h2 {

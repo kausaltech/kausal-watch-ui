@@ -121,7 +121,7 @@ const ActionHeadline = styled.h1`
   font-size: ${(props) => props.theme.fontSizeLg};
   color: ${(props) => props.theme.textColor.primary} !important;
 
-  :lang(fi) & {
+  html:lang(fi) & {
     hyphens: manual;
   }
 
