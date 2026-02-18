@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { gql, useSuspenseQuery } from '@apollo/client';
 import styled from '@emotion/styled';
 import * as Sentry from '@sentry/nextjs';
-import { concat } from 'lodash';
+import { concat } from 'lodash-es';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 

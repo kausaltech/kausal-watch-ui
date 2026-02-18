@@ -3,7 +3,7 @@ import { RefObject, useEffect, useRef, useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Theme } from '@kausal/themes/types';
-import { debounce } from 'lodash';
+import { debounce } from 'lodash-es';
 import get from 'lodash/get';
 import { useTranslations } from 'next-intl';
 

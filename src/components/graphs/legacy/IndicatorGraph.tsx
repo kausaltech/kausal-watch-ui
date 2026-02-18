@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { merge } from 'lodash';
+import { merge } from 'lodash-es';
 import type { Data, Layout, PlotData } from 'plotly.js';
 import { transparentize } from 'polished';
 

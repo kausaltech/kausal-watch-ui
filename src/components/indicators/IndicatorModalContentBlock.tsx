@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { upperFirst } from 'lodash';
+import { upperFirst } from 'lodash-es';
 import { useFormatter, useTranslations } from 'next-intl';
 
 import {

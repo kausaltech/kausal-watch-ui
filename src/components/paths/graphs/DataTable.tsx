@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { useFormatter, useTranslations } from 'next-intl';
 import {
   DropdownItem,

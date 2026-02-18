@@ -1,7 +1,7 @@
 import { NetworkStatus, gql, useQuery, useReactiveVar } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { max, min, sortBy } from 'lodash';
+import { max, min, sortBy } from 'lodash-es';
 import { useFormatter, useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 import { Button, CardBody, UncontrolledCollapse } from 'reactstrap';

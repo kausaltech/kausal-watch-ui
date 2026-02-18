@@ -6,7 +6,7 @@ import { useReactiveVar } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import chroma from 'chroma-js';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { useFormatter, useTranslations } from 'next-intl';
 
 import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';

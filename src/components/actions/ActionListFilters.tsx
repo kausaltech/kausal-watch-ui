@@ -4,7 +4,7 @@ import React, { type JSX, createRef, useCallback, useMemo, useState } from 'reac
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import escapeStringRegexp from 'escape-string-regexp';
-import { debounce } from 'lodash';
+import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { createFilter } from 'react-select';

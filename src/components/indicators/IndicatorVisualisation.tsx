@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 import { useQuery } from '@apollo/client';
 import { captureMessage } from '@sentry/nextjs';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { useLocale, useTranslations } from 'next-intl';
 import { Alert } from 'reactstrap';
 
