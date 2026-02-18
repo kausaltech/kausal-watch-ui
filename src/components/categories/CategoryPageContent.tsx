@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { css } from '@emotion/react';
+import { type Theme, css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
@@ -9,21 +9,21 @@ import StreamField from '@/components/common/StreamField';
 
 const MainContent = styled.div``;
 
-const columnLayout = css`
+const columnLayout = (theme: Theme) => css`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: ${({ theme }) => `0 ${theme.spaces.s200} ${theme.spaces.s200}`};
-  gap: ${({ theme }) => theme.spaces.s300};
+  padding: 0 ${theme.spaces.s200} ${theme.spaces.s200};
+  gap: ${theme.spaces.s300};
 
   ${MainContent} {
-    flex: 0 2 ${({ theme }) => theme.breakpointMd};
-    padding: 0 ${({ theme }) => theme.spaces.s100};
-    background-color: ${({ theme }) => theme.themeColors.white};
-    border-radius: ${({ theme }) => theme.cardBorderRadius};
+    flex: 0 2 ${theme.breakpointMd};
+    padding: 0 ${theme.spaces.s100};
+    background-color: ${theme.themeColors.white};
+    border-radius: ${theme.cardBorderRadius};
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpointLg}) {
+  @media (max-width: ${theme.breakpointLg}) {
     flex-direction: column-reverse;
     justify-content: flex-start;
     align-items: stretch;
@@ -33,17 +33,17 @@ const columnLayout = css`
       top: 0;
       flex: 1 0 auto;
       width: 100%;
-      max-width: ${({ theme }) => theme.breakpointMd};
+      max-width: ${theme.breakpointMd};
       margin: 0 auto;
     }
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpointMd}) {
-    gap: ${({ theme }) => theme.spaces.s150};
+  @media (max-width: ${theme.breakpointMd}) {
+    gap: ${theme.spaces.s150};
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpointSm}) {
-    padding: ${({ theme }) => `0 ${theme.spaces.s050} ${theme.spaces.s050}`};
+  @media (max-width: ${theme.breakpointSm}) {
+    padding: 0 ${theme.spaces.s050} ${theme.spaces.s050};
   }
 `;
 
@@ -53,7 +53,7 @@ type ContentAreaProps = {
 };
 
 const ContentArea = styled.div<ContentAreaProps>`
-  ${({ $columnLayout }) => $columnLayout && columnLayout};
+  ${({ $columnLayout, theme }) => $columnLayout && columnLayout(theme)};
   background-color: ${({ $backgroundColor }) => $backgroundColor};
 `;
 

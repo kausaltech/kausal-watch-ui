@@ -56,7 +56,7 @@ const TableWrapper = styled.div`
 `;
 
 const Cell = styled.td`
-  padding: ${(props) => props.theme.spaces.s200};
+  padding: ${(props) => props.theme.spaces.s050};
 `;
 
 // This wrapper helps to enable and align the expand button on any cell

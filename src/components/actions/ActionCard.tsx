@@ -174,11 +174,11 @@ const StyledCardTitle = styled.div<{ $isSmall: boolean }>`
   word-break: break-word;
   hyphens: auto;
 
-  :lang(fi) & {
+  html:lang(fi) & {
     hyphens: manual;
   }
 
-  :lang(en) & {
+  html:lang(en) & {
     word-break: normal;
     hyphens: none;
 `;

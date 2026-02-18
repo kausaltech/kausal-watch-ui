@@ -63,7 +63,7 @@ const StyledCardTitle = styled(CardTitle)`
   hyphens: auto;
   margin-bottom: 0;
 
-  :lang(fi) & {
+  html:lang(fi) & {
     hyphens: manual;
   }
 `;
