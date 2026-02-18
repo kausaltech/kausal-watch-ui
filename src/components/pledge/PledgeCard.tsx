@@ -55,7 +55,7 @@ const StyledCardTitle = styled.h3<{ $layout: CardLayout }>`
   font-weight: ${({ theme, $layout }) =>
     $layout === 'default' ? theme.headingsFontWeight : theme.fontWeightNormal};
   margin: 0 0 ${({ theme }) => theme.spaces.s100};
-  line-height: ${({ theme }) => theme.lineHeightSm};
+  line-height: ${({ theme }) => theme.lineHeightMd};
 `;
 
 const StyledCardLink = styled(NextLink)`
@@ -185,7 +185,7 @@ const StyledCardDescription = styled.p`
   font-size: ${({ theme }) => theme.fontSizeSm};
   color: ${({ theme }) => theme.textColor.secondary};
   margin: ${({ theme }) => theme.spaces.s100} 0 ${({ theme }) => theme.spaces.s150};
-  line-height: ${({ theme }) => theme.lineHeightMd};
+  line-height: ${({ theme }) => theme.lineHeightBase};
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
