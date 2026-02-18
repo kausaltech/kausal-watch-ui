@@ -3,7 +3,7 @@ import React from 'react';
 import { gql, skipToken, useSuspenseQuery } from '@apollo/client';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { filter, groupBy, map, sortBy, uniqBy } from 'lodash';
+import { filter, groupBy, map, sortBy, uniqBy } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 
 import type {

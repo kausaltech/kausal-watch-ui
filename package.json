@@ -57,7 +57,7 @@
     "html-react-parser": "^5.2.11",
     "import-in-the-middle": "^1.15.0",
     "js-cookie": "3.0.5",
-    "lodash": "^4.17.23",
+    "lodash-es": "^4.17.23",
     "mapbox-gl": "^3.17.0",
     "mapboxgl-legend": "^1.16.0",
     "morgan": "^1.10.0",

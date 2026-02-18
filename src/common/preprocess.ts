@@ -1,5 +1,5 @@
 import type { Theme } from '@kausal/themes/types';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 
 import { getStatusSummary } from '../common/ActionStatusSummary';
 import type { Progress } from '../components/dashboard/ActionStatusGraphs';

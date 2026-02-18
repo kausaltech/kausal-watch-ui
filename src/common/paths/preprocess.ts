@@ -1,4 +1,4 @@
-import { max as _max, min as _min, ceil, sum } from 'lodash';
+import { max as _max, min as _min, ceil, sum } from 'lodash-es';
 
 let nrSignificantDigits = 2;
 

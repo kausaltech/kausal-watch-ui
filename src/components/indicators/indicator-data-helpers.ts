@@ -1,7 +1,7 @@
 import type { Theme } from '@kausal/themes/types';
 import { captureMessage } from '@sentry/nextjs';
 import type { LineSeriesOption } from 'echarts';
-import { cloneDeep, isEqual } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash-es';
 
 import {
   type IndicatorGraphDataQuery,
