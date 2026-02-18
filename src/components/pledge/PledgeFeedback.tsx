@@ -59,15 +59,14 @@ const StyledEmojiButton = styled.button<{ $selected: boolean }>`
   background: ${({ theme, $selected }) => ($selected ? theme.brandDark : 'transparent')};
   border: 2px solid ${({ theme, $selected }) => ($selected ? theme.brandDark : 'transparent')};
   border-radius: 50%;
-  padding: 0 ${({ theme }) => theme.spaces.s150};
-  font-size: ${({ theme }) => theme.fontSizeXl};
+  font-size: ${({ $selected, theme }) => ($selected ? theme.fontSizeXl : theme.fontSizeXxl)};
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(${({ theme }) => theme.fontSizeXl} + ${({ theme }) => theme.spaces.s100});
-  height: calc(${({ theme }) => theme.fontSizeXl} + ${({ theme }) => theme.spaces.s100});
+  width: calc(${({ theme }) => theme.fontSizeXxl} + ${({ theme }) => theme.spaces.s050});
+  height: calc(${({ theme }) => theme.fontSizeXxl} + ${({ theme }) => theme.spaces.s050});
 
   &:first-of-type {
     margin-left: -${({ theme }) => theme.spaces.s050};
