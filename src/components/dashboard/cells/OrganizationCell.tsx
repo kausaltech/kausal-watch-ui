@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { getThemeStaticURL } from '@/common/theme';
+import { getThemeStaticURL } from '@common/themes/theme';
 
 import { ActionListAction } from '../dashboard.types';
 

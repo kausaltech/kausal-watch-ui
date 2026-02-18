@@ -1,7 +1,8 @@
 'use client';
 
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled, { css } from 'styled-components';
 
 import Icon, { type ValidIconName } from '@/components/common/Icon';
 

@@ -6,7 +6,8 @@ import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Col, Media, Row } from 'reactstrap';
 
-import { getThemeStaticURL } from '@/common/theme';
+import { getThemeStaticURL } from '@common/themes/theme';
+
 import RichText from '@/components/common/RichText';
 
 import dayjs from '../../common/dayjs';

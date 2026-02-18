@@ -8,8 +8,9 @@ import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import { Container, Spinner } from 'reactstrap';
 
+import { getThemeStaticURL } from '@common/themes/theme';
+
 import { Link, NavigationLink } from '@/common/links';
-import { getThemeStaticURL } from '@/common/theme';
 import PlanSelector from '@/components/plans/PlanSelector';
 import { usePlan } from '@/context/plan';
 import { useHandleSignOut } from '@/utils/auth.utils';

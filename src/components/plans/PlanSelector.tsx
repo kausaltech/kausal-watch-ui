@@ -5,7 +5,8 @@ import styled from '@emotion/styled';
 import { transparentize } from 'polished';
 import { DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
-import { getThemeStaticURL } from '@/common/theme';
+import { getThemeStaticURL } from '@common/themes/theme';
+
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
