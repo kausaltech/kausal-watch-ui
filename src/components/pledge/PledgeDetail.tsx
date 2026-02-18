@@ -82,7 +82,7 @@ const StyledTitle = styled.h1`
   font-size: ${({ theme }) => theme.fontSizeLg};
   font-weight: ${({ theme }) => theme.fontWeightBold};
   margin-bottom: ${({ theme }) => theme.spaces.s150};
-  line-height: ${({ theme }) => theme.lineHeightSm};
+  line-height: ${({ theme }) => theme.lineHeightMd};
 
   @media (min-width: ${({ theme }) => theme.breakpointMd}) {
     font-size: ${({ theme }) => theme.fontSizeXl};
@@ -92,7 +92,7 @@ const StyledTitle = styled.h1`
 const StyledLead = styled.p`
   font-size: ${({ theme }) => theme.fontSizeBase};
   color: ${({ theme }) => theme.textColor.secondary};
-  line-height: ${({ theme }) => theme.lineHeightMd};
+  line-height: ${({ theme }) => theme.lineHeightBase};
   margin-bottom: ${({ theme }) => theme.spaces.s200};
 
   @media (min-width: ${({ theme }) => theme.breakpointMd}) {
