@@ -21,6 +21,11 @@ export type Scalars = {
   _Any: { input: any; output: any; }
 };
 
+export type ActionAttributeValueInput = {
+  attributeTypeId: Scalars['ID']['input'];
+  choiceId: Scalars['ID']['input'];
+};
+
 /** An enumeration. */
 export enum ActionContactPersonRole {
   /** Editor */
@@ -63,6 +68,19 @@ export enum ActionIndicatorEffectType {
   /** increases */
   Increases = 'INCREASES'
 }
+
+/** One action/measure tracked in an action plan. */
+export type ActionInput = {
+  attributeValues: InputMaybe<Array<ActionAttributeValueInput>>;
+  categoryIds: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** What does this action involve in more detail? */
+  description: InputMaybe<Scalars['String']['input']>;
+  /** The identifier for this action (e.g. number) */
+  identifier: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  planId: Scalars['ID']['input'];
+  primaryOrgId: InputMaybe<Scalars['ID']['input']>;
+};
 
 export enum ActionListPageView {
   Cards = 'CARDS',
@@ -159,6 +177,13 @@ export enum ActionVisibility {
   Public = 'PUBLIC'
 }
 
+export type AddRelatedOrganizationInput = {
+  /** The PK of the organization */
+  organizationId: Scalars['ID']['input'];
+  /** The PK or identifier of the plan */
+  planId: Scalars['ID']['input'];
+};
+
 /** An enumeration. */
 export enum AttributeTypeFormat {
   /** Category */
@@ -177,11 +202,52 @@ export enum AttributeTypeFormat {
   UnorderedChoice = 'UNORDERED_CHOICE'
 }
 
+/** AttributeType(id, latest_revision, order, instances_editable_by, instances_visible_for, primary_language_lowercase, object_content_type, scope_content_type, scope_id, name, identifier, help_text, format, unit, attribute_category_type, show_choice_names, has_zero_option, max_length, show_in_reporting_tab, primary_language, other_languages, i18n) */
+export type AttributeTypeInput = {
+  choiceOptions: InputMaybe<Array<ChoiceOptionInput>>;
+  /** The format of the attributes with this type */
+  format: AttributeTypeFormat;
+  helpText: InputMaybe<Scalars['String']['input']>;
+  identifier: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  planId: Scalars['ID']['input'];
+  unitId: InputMaybe<Scalars['ID']['input']>;
+};
+
 /** An enumeration. */
 export enum CartographyProviderCredentialsProvider {
   /** MapBox */
   Mapbox = 'MAPBOX'
 }
+
+/** A category for actions and indicators. */
+export type CategoryInput = {
+  identifier: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  order: InputMaybe<Scalars['Int']['input']>;
+  parentId: InputMaybe<Scalars['ID']['input']>;
+  typeId: Scalars['ID']['input'];
+};
+
+/**
+ * Type of the categories.
+ *
+ * Is used to group categories together. One action plan can have several
+ * category types.
+ */
+export type CategoryTypeInput = {
+  /** Set if the categories do not have meaningful identifiers */
+  hideCategoryIdentifiers: InputMaybe<Scalars['Boolean']['input']>;
+  identifier: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  planId: Scalars['ID']['input'];
+  /** Whether this category type is the primary action classification. NOTE: A Plan must have exactly one primary action classification. */
+  primaryActionClassification: Scalars['Boolean']['input'];
+  /** Choose "Multiple" only if more than one category can be selected at a time, otherwise choose "Single" which is the default. */
+  selectWidget: InputMaybe<Scalars['String']['input']>;
+  usableForActions: InputMaybe<Scalars['Boolean']['input']>;
+  usableForIndicators: InputMaybe<Scalars['Boolean']['input']>;
+};
 
 /** An enumeration. */
 export enum CategoryTypeSelectWidget {
@@ -191,23 +257,17 @@ export enum CategoryTypeSelectWidget {
   Single = 'SINGLE'
 }
 
+export type ChoiceOptionInput = {
+  identifier: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  order: Scalars['Int']['input'];
+};
+
 /** An enumeration. */
 export enum Comparison {
   Gt = 'GT',
   Lte = 'LTE'
 }
-
-export type CreateOrganizationMutationInput = {
-  /** Short version or abbreviation of the organization name to be displayed when it is not necessary to show the full name */
-  abbreviation: InputMaybe<Scalars['String']['input']>;
-  classification: InputMaybe<Scalars['ID']['input']>;
-  clientMutationId: InputMaybe<Scalars['String']['input']>;
-  dissolutionDate: InputMaybe<Scalars['Date']['input']>;
-  foundingDate: InputMaybe<Scalars['Date']['input']>;
-  /** Full name of the organization */
-  name: Scalars['String']['input'];
-  parent: InputMaybe<Scalars['ID']['input']>;
-};
 
 /** An enumeration. */
 export enum DatasetSchemaTimeResolution {
@@ -234,7 +294,6 @@ export enum IndicatorDashboardFieldName {
   ConnectedActions = 'CONNECTED_ACTIONS',
   Description = 'DESCRIPTION',
   Level = 'LEVEL',
-  Name = 'NAME',
   Organization = 'ORGANIZATION',
   Reference = 'REFERENCE',
   Unit = 'UNIT',
@@ -260,7 +319,6 @@ export enum IndicatorDetailsFieldName {
   Description = 'DESCRIPTION',
   GoalDescription = 'GOAL_DESCRIPTION',
   Level = 'LEVEL',
-  Name = 'NAME',
   Organization = 'ORGANIZATION',
   Reference = 'REFERENCE',
   Unit = 'UNIT',
@@ -283,7 +341,6 @@ export enum IndicatorLevelLevel {
 export enum IndicatorList_FiltersFieldName {
   Description = 'DESCRIPTION',
   Level = 'LEVEL',
-  Name = 'NAME',
   Organization = 'ORGANIZATION',
   Reference = 'REFERENCE',
   Unit = 'UNIT',
@@ -322,6 +379,15 @@ export enum ModelAction {
   View = 'VIEW'
 }
 
+export type OrganizationInput = {
+  /** Short abbreviation (e.g. "NASA", "YM") */
+  abbreviation: InputMaybe<Scalars['String']['input']>;
+  /** The official name of the organization */
+  name: Scalars['String']['input'];
+  /** ID of the parent organization; omit for a root organization */
+  parentId: InputMaybe<Scalars['ID']['input']>;
+};
+
 /** An enumeration. */
 export enum PlanFeaturesContactPersonsPublicData {
   /** Show all information */
@@ -333,6 +399,40 @@ export enum PlanFeaturesContactPersonsPublicData {
   /** Do not show contact persons publicly */
   None = 'NONE'
 }
+
+/** PlanFeatures(id, latest_revision, plan, allow_images_for_actions, show_admin_link, allow_public_site_login, expose_unpublished_plan_only_to_authenticated_user, contact_persons_public_data, contact_persons_show_picture, contact_persons_show_organization_ancestors, contact_persons_hide_moderators, has_action_identifiers, show_action_identifiers, has_action_contact_person_roles, minimal_statuses, has_action_official_name, has_action_lead_paragraph, has_action_primary_orgs, enable_search, enable_indicator_comparison, indicator_ordering, moderation_workflow, display_field_visibility_restrictions, output_report_action_print_layout, password_protected, indicators_open_in_modal, enable_change_log, enable_community_engagement, admin_accessibility_conformance_level) */
+export type PlanFeaturesInput = {
+  /** Set if the plan uses meaningful action identifiers */
+  hasActionIdentifiers: InputMaybe<Scalars['Boolean']['input']>;
+  /** Set if the plan uses the lead paragraph field */
+  hasActionLeadParagraph: InputMaybe<Scalars['Boolean']['input']>;
+  /** Set if the plan uses the official name field */
+  hasActionOfficialName: InputMaybe<Scalars['Boolean']['input']>;
+  /** Set if actions have a clear primary organization (such as multi-city plans) */
+  hasActionPrimaryOrgs: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/**
+ * The Action Plan under monitoring.
+ *
+ * Most information in this service is linked to a Plan.
+ */
+export type PlanInput = {
+  features: InputMaybe<PlanFeaturesInput>;
+  /** A unique identifier for the plan used internally to distinguish between plans. This becomes part of the test site URL: https://[identifier].watch-test.kausal.tech. Use lowercase letters and dashes. */
+  identifier: Scalars['ID']['input'];
+  /** The official plan name in full form */
+  name: Scalars['String']['input'];
+  /** The main organization for the plan */
+  organizationId: Scalars['ID']['input'];
+  /** Additional language codes (ISO 639-1) */
+  otherLanguages: Array<Scalars['String']['input']>;
+  /** Primary language code (ISO 639-1, e.g. "en-US", "fi", "de-CH") */
+  primaryLanguage: Scalars['String']['input'];
+  /** A shorter version of the plan name */
+  shortName: InputMaybe<Scalars['String']['input']>;
+  themeIdentifier: InputMaybe<Scalars['ID']['input']>;
+};
 
 /** An enumeration. */
 export enum PublicationStatus {
@@ -422,19 +522,6 @@ export type UpdateIndicatorMutationInput = {
   organization: Scalars['ID']['input'];
 };
 
-export type UpdateOrganizationMutationInput = {
-  /** Short version or abbreviation of the organization name to be displayed when it is not necessary to show the full name */
-  abbreviation: InputMaybe<Scalars['String']['input']>;
-  classification: InputMaybe<Scalars['ID']['input']>;
-  clientMutationId: InputMaybe<Scalars['String']['input']>;
-  dissolutionDate: InputMaybe<Scalars['Date']['input']>;
-  foundingDate: InputMaybe<Scalars['Date']['input']>;
-  id: InputMaybe<Scalars['ID']['input']>;
-  /** Full name of the organization */
-  name: Scalars['String']['input'];
-  parent: InputMaybe<Scalars['ID']['input']>;
-};
-
 export type UpdatePersonMutationInput = {
   clientMutationId: InputMaybe<Scalars['String']['input']>;
   id: InputMaybe<Scalars['ID']['input']>;
@@ -458,6 +545,7 @@ export type UserFeedbackMutationInput = {
   name: InputMaybe<Scalars['String']['input']>;
   pageId: InputMaybe<Scalars['String']['input']>;
   plan: Scalars['ID']['input'];
+  pledge: InputMaybe<Scalars['ID']['input']>;
   type: InputMaybe<Scalars['String']['input']>;
   url: Scalars['String']['input'];
 };
