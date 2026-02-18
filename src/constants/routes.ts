@@ -5,7 +5,7 @@ export const ACTIONS_PATH = '/actions';
 
 export const UNPUBLISHED_PATH = '/unpublished';
 
-export const PLEDGE_PATH = '/pledge';
+export const PLEDGE_PATH = '/pledges';
 
 export const STATIC_ROUTES = [
   '/accessibility',
