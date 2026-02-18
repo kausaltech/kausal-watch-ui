@@ -6,7 +6,8 @@ import { useTheme } from '@emotion/react';
 import { captureMessage } from '@sentry/nextjs';
 import SVG from 'react-inlinesvg';
 
-import { getThemeStaticURL } from '@/common/theme';
+import { getThemeStaticURL } from '@common/themes/theme';
+
 import defaultTheme from '@/public/static/themes/default/theme.json';
 
 const makeIconId = (name: string): string => `symbol-icon-${name}`;

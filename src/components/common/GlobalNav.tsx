@@ -21,10 +21,10 @@ import {
 } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
+import { getThemeStaticURL } from '@common/themes/theme';
 
 import { isServer } from '@/common/environment';
 import { Link, NavigationLink } from '@/common/links';
-import { getThemeStaticURL } from '@/common/theme';
 import PlanSelector from '@/components/plans/PlanSelector';
 import PlanVersionSelector from '@/components/versioning/PlanVersionSelector';
 import { usePlan } from '@/context/plan';

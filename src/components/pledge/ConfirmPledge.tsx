@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Container, Spinner } from 'reactstrap';
-import styled from 'styled-components';
 
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';

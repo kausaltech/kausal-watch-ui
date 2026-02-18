@@ -9,6 +9,7 @@ import SVG from 'react-inlinesvg';
 import { Tooltip } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
+import { getThemeStaticURL } from '@common/themes/theme';
 
 import { getStatusColorForAction } from '@/common/ActionStatusSummary';
 import type {
@@ -19,7 +20,6 @@ import type {
 import { getActionTermContext } from '@/common/i18n';
 import { ActionLink } from '@/common/links';
 import { cleanActionStatus } from '@/common/preprocess';
-import { getThemeStaticURL } from '@/common/theme';
 import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';
 import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';

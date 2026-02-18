@@ -6,13 +6,14 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, Collapse } from 'reactstrap';
 
+import { getThemeStaticURL } from '@common/themes/theme';
+
 import {
   type ContactDetailsQuery,
   type ContactDetailsQueryVariables,
   type PlanContextFragment,
   PlanFeaturesContactPersonsPublicData,
 } from '@/common/__generated__/graphql';
-import { getThemeStaticURL } from '@/common/theme';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
