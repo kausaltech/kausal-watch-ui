@@ -1,8 +1,11 @@
 import React from 'react';
 
 import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import { render } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
+
+import { initializeMuiTheme } from '@common/themes/mui-theme/theme';
 
 import a11yMessages from '../../locales/en/a11y.json';
 import actionsMessages from '../../locales/en/actions.json';
@@ -10,11 +13,14 @@ import commonMessages from '../../locales/en/common.json';
 import theme from '../../public/static/themes/default/theme.json';
 
 const messages = { ...a11yMessages, ...actionsMessages, ...commonMessages };
+const muiTheme = initializeMuiTheme(theme);
 
 const AllTheProviders = ({ children }) => {
   return (
     <NextIntlClientProvider locale={'en'} messages={messages}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <MUIThemeProvider theme={muiTheme}>
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      </MUIThemeProvider>
     </NextIntlClientProvider>
   );
 };

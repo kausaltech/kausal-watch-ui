@@ -19,19 +19,20 @@ describe('<ContentLoader />', () => {
   });
 
   it('does not render immediately', () => {
-    const { queryAllByRole } = render(<ContentLoader t={t} />);
-    const spinners = queryAllByRole('status');
+    const { queryAllByRole } = render(<ContentLoader />);
+    const spinners = queryAllByRole('progressbar');
     expect(spinners).toHaveLength(0);
   });
 
   it('renders spinner and loading message after 250ms', async () => {
-    const { findAllByRole } = render(<ContentLoader t={t} />);
+    const { findByRole } = render(<ContentLoader />);
 
     act(() => {
       jest.advanceTimersByTime(250);
     });
 
-    const spinners = await findAllByRole('status', { timeout: 300 });
-    expect(spinners).toHaveLength(3);
+    const spinner = await findByRole('progressbar', { timeout: 300 });
+    expect(spinner).toBeInTheDocument();
+    expect(spinner).toHaveAttribute('aria-busy', 'true');
   });
 });
