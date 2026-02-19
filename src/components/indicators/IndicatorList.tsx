@@ -350,7 +350,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
   };
 
   if (error) return <ErrorPage message={t('error-loading-indicators')} details={error.message} />;
-  return <ContentLoader fullPage message={t('loading')} />;
+  if (loading || !data) return <ContentLoader fullPage message={t('loading')} />;
 
   /* Do we show the insights tab as an alternative to the list view? */
   const showInsights = data.plan?.hasIndicatorRelationships === true && (displayInsights ?? true);
