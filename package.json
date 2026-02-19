@@ -148,7 +148,6 @@
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/cytoscape-dagre": "^2.3.4",
     "@types/jest": "^30.0.0",
-    "@types/lodash": "^4.17.21",
     "@types/node": "^17.0.31",
     "@types/plotly.js": "^2.35.13",
     "@types/react": "19.1.8",
