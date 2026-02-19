@@ -55,6 +55,9 @@ const ACTION_LIST_FILTER = gql`
     }
     ... on ContinuousActionFilterBlock {
       id
+      fieldLabel
+      fieldHelpText
+      showAllLabel
     }
   }
 `;
