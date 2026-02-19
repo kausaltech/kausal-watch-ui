@@ -79,18 +79,18 @@ const StyledCardWrapper = styled.article<{ $layout: CardLayout }>`
   text-decoration: none;
   height: 100%;
 
-  ${({ $layout }) =>
+  ${({ $layout, theme }) =>
     $layout === 'share'
       ? css`
-          box-shadow: 0 2px 8px ${({ theme }) => transparentize(0.95, theme.themeColors.black)};
+          box-shadow: 0 2px 8px ${transparentize(0.95, theme.themeColors.black)};
         `
       : css`
-          box-shadow: 0 2px 8px ${({ theme }) => transparentize(0.9, theme.themeColors.black)};
+          box-shadow: 0 2px 8px ${transparentize(0.9, theme.themeColors.black)};
           transition: all 0.2s ease;
 
           &:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 16px ${({ theme }) => transparentize(0.85, theme.themeColors.black)};
+            box-shadow: 0 4px 16px ${transparentize(0.85, theme.themeColors.black)};
           }
         `}
 `;
@@ -149,10 +149,10 @@ const StyledCardContent = styled.div<{ $layout: CardLayout }>`
   flex: 1;
   min-width: 0;
 
-  ${({ $layout }) =>
+  ${({ $layout, theme }) =>
     ($layout === 'mini' || $layout === 'share') &&
     css`
-      padding: ${({ theme }) => theme.spaces.s100};
+      padding: ${theme.spaces.s100};
       justify-content: center;
     `}
 `;
@@ -193,7 +193,9 @@ const StyledCardDescription = styled.p`
   overflow: hidden;
 `;
 
-const StyledCommitButton = styled(Button)<{ $isCommitted: boolean }>`
+const StyledCommitButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== '$isCommitted',
+})<{ $isCommitted: boolean }>`
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
