@@ -94,7 +94,6 @@
     "reactstrap": "9.2.1",
     "require-in-the-middle": "^7.5.2",
     "set-cookie-parser": "^2.7.2",
-    "styled-components": "^6.0.0",
     "stylis": "^4.0.0"
   },
   "license": "AGPL-3.0-or-later",
@@ -160,7 +159,6 @@
     "ansi-styles": "^6.2.3",
     "babel-jest": "^28.0.3",
     "babel-loader": "^8.2.5",
-    "babel-plugin-styled-components": "^2.0.7",
     "chromatic": "^11.0.1",
     "css-tree": "^2.1.0",
     "eslint": "9.31.0",
