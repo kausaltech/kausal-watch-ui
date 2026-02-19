@@ -65,8 +65,9 @@ const OpenModalButton = styled.button`
   }
 `;
 
+// TODO: Loading should be translated, but can not do it in dynamic import.
 const Plot = dynamic(() => import('./Plot'), {
-  loading: () => <ContentLoader message={t('loading')} />,
+  loading: () => <ContentLoader message="Loading" />,
   ssr: false,
 });
 

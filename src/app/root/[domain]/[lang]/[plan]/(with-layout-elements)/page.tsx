@@ -1,4 +1,6 @@
-import { ErrorPage } from '@/components/common/ErrorPage';
+import { getTranslations } from 'next-intl/server';
+
+import ErrorPage from '@/components/common/ErrorPage';
 import { getHomePage } from '@/queries/get-home-page';
 import { tryRequest } from '@/utils/api.utils';
 
@@ -10,10 +12,11 @@ type Props = {
 
 export default async function PlanPage(props: Props) {
   const params = await props.params;
+  const t = await getTranslations({ locale: params.lang });
   const { data, error } = await tryRequest(getHomePage(params.plan));
 
   if (error || !data) {
-    return <ErrorPage message={error?.message} />;
+    return <ErrorPage message={t('error-loading-data')} details={error?.message} />;
   }
 
   return <RootPage data={data} testId="home-page" />;

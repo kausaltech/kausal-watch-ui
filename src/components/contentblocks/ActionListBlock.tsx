@@ -226,7 +226,13 @@ const ActionListBlock = (props: ActionListBlockProps) => {
 
   const displayHeader = heading ? heading : t('actions-plural', getActionTermContext(plan));
 
-  if (error) return <ErrorMessage message={error.message} />;
+  if (error)
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error?.message}
+      />
+    );
   if (loading && !data) return <ContentLoader message={t('loading')} />;
 
   return (

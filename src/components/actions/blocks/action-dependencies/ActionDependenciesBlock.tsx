@@ -229,7 +229,12 @@ export function ActionDependenciesBlock({
   }
 
   if (error)
-    return <ErrorMessage message={t('error-loading-actions', getActionTermContext(plan))} />;
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error?.message}
+      />
+    );
 
   const actionGroups = mapActionToDependencyGroups(
     skipFetchingDependencies ? action : data.action,

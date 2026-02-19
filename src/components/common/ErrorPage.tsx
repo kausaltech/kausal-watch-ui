@@ -11,6 +11,7 @@ type Props = {
   message?: string;
   type?: 'page' | 'block';
   testId?: string;
+  details?: string;
 };
 
 export const errorIcon = (
@@ -22,7 +23,7 @@ export const errorIcon = (
   </svg>
 );
 
-export function ErrorPage({ message, type = 'page', testId }: Props) {
+function ErrorPage({ message, type = 'page', details, testId }: Props) {
   const t = useTranslations();
 
   return (
@@ -35,9 +36,14 @@ export function ErrorPage({ message, type = 'page', testId }: Props) {
                 <Box sx={{ width: 48, height: 48, mb: 1, display: 'inline-block' }}>
                   {errorIcon}
                 </Box>
-                <Typography variant="h2" component="h1" sx={{ mb: 2 }}>
+                <Typography variant="h2" component="h1" sx={{ mb: 1 }}>
                   {message || t('error-occurred')}
                 </Typography>
+                {details && (
+                  <Typography variant="body1" sx={{ mb: 2, bgcolor: 'secondary.light' }}>
+                    <code>{details}</code>
+                  </Typography>
+                )}
                 <Link href="/">
                   <Button variant="outlined" size="small" color="primary">
                     {t('return-to-front', { ns: 'common' })}
@@ -51,3 +57,5 @@ export function ErrorPage({ message, type = 'page', testId }: Props) {
     </Box>
   );
 }
+
+export default ErrorPage;

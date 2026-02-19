@@ -62,11 +62,11 @@ const ActionStatusGraphsBlock = (props: Props) => {
     },
   });
 
-  if (error) return <ErrorMessage message={error.message} />;
+  if (error) return <ErrorMessage message={t('error-loading-data')} details={error.message} />;
   if (loading || !data) return <ContentLoader message={t('loading')} />;
   const { planActions } = data;
   if (!planActions) {
-    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
+    return <ErrorMessage message={t('error-loading-data')} details={t('actions')} />;
   }
 
   if (withContainer) {

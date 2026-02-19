@@ -124,13 +124,24 @@ const CategoryActionList = (props) => {
     },
   });
   if (loading) return <ContentLoader message={t('loading')} />;
-  if (error) return <ErrorMessage message={error.message} />;
+  if (error)
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error?.message}
+      />
+    );
 
   const { planActions } = data;
   const isCategoryRoot = activeCategory.parent == null;
 
   if (!planActions) {
-    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error?.message}
+      />
+    );
   }
 
   const filteredActions = filterByCategory(

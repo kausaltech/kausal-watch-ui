@@ -19,6 +19,7 @@ import type {
 } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
 import { excludeNullish } from '@/common/utils';
+import ErrorMessage from '@/components/common/ErrorMessage';
 import RichText from '@/components/common/RichText';
 import AccessibilityStatementComplianceStatusBlock from '@/components/contentblocks/AccessibilityStatementComplianceStatusBlock';
 import AccessibilityStatementContactFormBlock from '@/components/contentblocks/AccessibilityStatementContactFormBlock';
@@ -49,7 +50,6 @@ import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
 import ChangeHistory from './ChangeHistory';
 import { ErrorBoundary } from './ErrorBoundary';
-import { ErrorPage } from './ErrorPage';
 
 const CategoryTreeBlock = dynamic(() => import('@/components/contentblocks/CategoryTreeBlock'), {
   ssr: false,
@@ -648,7 +648,7 @@ export default function StreamField(props: StreamFieldProps) {
       {blocks.map((block, index) => (
         <ErrorBoundary
           key={block.id}
-          fallback={<ErrorPage type="block" />}
+          fallback={<ErrorMessage message={t('error-loading-data')} details={block.__typename} />}
           errorExtras={{
             type: 'StreamFieldBlock',
             block: JSON.stringify(block),
