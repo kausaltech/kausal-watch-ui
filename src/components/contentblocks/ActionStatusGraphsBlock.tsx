@@ -5,12 +5,13 @@ import { useTheme } from '@emotion/react';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 
+import ContentLoader from '@common/components/ContentLoader';
+
 import type {
   GetActionListForGraphsQuery,
   GetActionListForGraphsQueryVariables,
 } from '@/common/__generated__/graphql';
 import type { CommonContentBlockProps } from '@/common/blocks.types';
-import ContentLoader from '@/components/common/ContentLoader';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import type { ActionsStatusGraphsProps } from '@/components/dashboard/ActionStatusGraphs';
 import ActionStatusGraphs from '@/components/dashboard/ActionStatusGraphs';
@@ -62,7 +63,7 @@ const ActionStatusGraphsBlock = (props: Props) => {
   });
 
   if (error) return <ErrorMessage message={error.message} />;
-  if (loading || !data) return <ContentLoader />;
+  if (loading || !data) return <ContentLoader message={t('loading')} />;
   const { planActions } = data;
   if (!planActions) {
     return <ErrorMessage statusCode={404} message={t('page-not-found')} />;

@@ -2,7 +2,8 @@ import React from 'react';
 
 import { act } from '@testing-library/react';
 
-import ContentLoader from '../../components/common/ContentLoader';
+import ContentLoader from '@common/components/ContentLoader';
+
 import { render } from '../test-utils';
 
 const t = (key) => key;

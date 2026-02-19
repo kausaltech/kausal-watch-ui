@@ -4,8 +4,8 @@ import React from 'react';
 
 import Link from 'next/link';
 
+import { Box, Button, Card, CardContent, Container, Grid, Typography } from '@mui/material';
 import { useTranslations } from 'next-intl';
-import { Button, Card, CardBody, Col, Container, Row } from 'reactstrap';
 
 type Props = {
   message?: string;
@@ -26,28 +26,28 @@ export function ErrorPage({ message, type = 'page', testId }: Props) {
   const t = useTranslations();
 
   return (
-    <Container>
-      <Row>
-        <Col md={{ size: 6, offset: 3 }}>
-          <Card>
-            <CardBody>
-              {errorIcon}
-
-              <h1>{message || t('error-occurred')}</h1>
-
-              {type === 'page' && (
+    <Box sx={{ bgcolor: 'primary.main', py: 8 }} data-testid={testId}>
+      <Container fixed maxWidth="xl">
+        <Grid container spacing={2}>
+          <Grid size={{ md: 6 }} offset={{ md: 3 }}>
+            <Card>
+              <CardContent sx={{ textAlign: 'center' }}>
+                <Box sx={{ width: 48, height: 48, mb: 1, display: 'inline-block' }}>
+                  {errorIcon}
+                </Box>
+                <Typography variant="h2" component="h1" sx={{ mb: 2 }}>
+                  {message || t('error-occurred')}
+                </Typography>
                 <Link href="/">
-                  <Button outline color="dark" size="sm">
-                    {t('return-to-front')}
+                  <Button variant="outlined" size="small" color="primary">
+                    {t('return-to-front', { ns: 'common' })}
                   </Button>
                 </Link>
-              )}
-
-              {type === 'block' && <h3>{t('content-could-not-be-displayed')}</h3>}
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   );
 }

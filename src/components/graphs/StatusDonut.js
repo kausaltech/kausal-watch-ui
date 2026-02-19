@@ -6,7 +6,8 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 
-import ContentLoader from '@/components/common/ContentLoader';
+import ContentLoader from '@common/components/ContentLoader';
+
 import Icon from '@/components/common/Icon';
 import Modal from '@/components/common/Modal';
 
@@ -65,7 +66,7 @@ const OpenModalButton = styled.button`
 `;
 
 const Plot = dynamic(() => import('./Plot'), {
-  loading: () => <ContentLoader />,
+  loading: () => <ContentLoader message={t('loading')} />,
   ssr: false,
 });
 

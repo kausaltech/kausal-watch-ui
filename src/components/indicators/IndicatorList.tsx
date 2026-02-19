@@ -9,6 +9,8 @@ import { useQuery } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
 
+import ContentLoader from '@common/components/ContentLoader';
+
 import {
   IndicatorColumnValueType,
   IndicatorDashboardFieldName,
@@ -19,7 +21,6 @@ import {
 } from '@/common/__generated__/graphql';
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
 import type { FilterValue } from '@/components/actions/ActionListFilters';
-import ContentLoader from '@/components/common/ContentLoader';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import { GET_INDICATOR_LIST } from '@/queries/get-indicator-list';
 
@@ -349,7 +350,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
   };
 
   if (error) return <ErrorMessage message={error.message} />;
-  if (loading || !data) return <ContentLoader />;
+  if (loading || !data) return <ContentLoader fullPage message={t('loading')} />;
 
   /* Do we show the insights tab as an alternative to the list view? */
   const showInsights = data.plan?.hasIndicatorRelationships === true && (displayInsights ?? true);
