@@ -77,11 +77,6 @@ const StatusDonut = (props) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const isServer = typeof window === 'undefined';
-  if (isServer) {
-    return null;
-  }
-
   const pieData = {
     values: [...data.values],
     labels: [...data.labels],

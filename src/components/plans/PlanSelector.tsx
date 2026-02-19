@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { transparentize } from 'polished';
 import { DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
 import { getThemeStaticURL } from '@common/themes/theme';
 
 import Icon from '@/components/common/Icon';
@@ -42,7 +43,7 @@ type StyledDropdownToggleProps = {
   $color: CSSProperties['color'];
 };
 
-const StyledDropdownToggle = styled(DropdownToggle)<StyledDropdownToggleProps>`
+const StyledDropdownToggle = styled(DropdownToggle, transientOptions)<StyledDropdownToggleProps>`
   display: flex;
   align-items: center;
   padding: 0.25rem;

@@ -24,8 +24,9 @@ import { usePaths } from '@/context/paths/paths';
 import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 
-const OutcomeBlockLoader = (props) => (
+const OutcomeBlockLoader = (props: React.ComponentProps<typeof ContentLoader>) => (
   <ContentLoader
+    uniqueKey="outcome-block-loader"
     speed={2}
     width={1200}
     height={64}
