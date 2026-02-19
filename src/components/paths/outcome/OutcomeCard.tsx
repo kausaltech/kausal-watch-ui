@@ -4,8 +4,9 @@ import styled from '@emotion/styled';
 import chroma from 'chroma-js';
 import { useFormatter, useTranslations } from 'next-intl';
 
+import ContentLoader from '@common/components/ContentLoader';
+
 import { getMetricChange, getMetricValue } from '@/common/paths/preprocess';
-import ContentLoader from '@/components/common/ContentLoader';
 import DashCard from '@/components/paths/DashCard';
 
 const StyledTab = styled.div<{ $disabled: boolean }>`
@@ -216,7 +217,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
         color={displayColor}
         refProp={cardRef}
       >
-        {refetching && <ContentLoader />}
+        {refetching && <ContentLoader message={t('loading')} />}
 
         <ProportionBar
           size={goalOutcomeValue || goalOutcomeValue === 0 ? goalOutcomeValue / total : 0}

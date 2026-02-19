@@ -6,6 +6,8 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Alert, Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
 
+import ContentLoader from '@common/components/ContentLoader';
+
 import type { SearchQueryQuery, SearchQueryQueryVariables } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { Link } from '@/common/links';
@@ -16,7 +18,6 @@ import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';
 
 import { trackSearch } from '../MatomoAnalytics';
-import ContentLoader from './ContentLoader';
 
 const SearchSection = styled.div`
   padding-bottom: ${(props) => props.theme.spaces.s050};
@@ -208,7 +209,7 @@ function SearchResults({ search }: SearchResultsProps) {
   if (loading) {
     return (
       <ResultsHeader>
-        <ContentLoader />
+        <ContentLoader message={t('loading')} />
       </ResultsHeader>
     );
   }

@@ -3,11 +3,12 @@ import React, { ReactElement, useEffect, useLayoutEffect, useRef, useState } fro
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { captureException } from '@sentry/nextjs';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Alert } from 'reactstrap';
 
+import ContentLoader from '@common/components/ContentLoader';
+
 import { aplans } from '@/common/api';
-import ContentLoader from '@/components/common/ContentLoader';
 import Connector from '@/components/indicators/Connector';
 import IndicatorCard from '@/components/indicators/IndicatorCard';
 import { usePlan } from '@/context/plan';
@@ -352,7 +353,7 @@ function IndicatorCausalVisualisation({ actionId }: IndicatorCausalVisualisation
   const plan = usePlan();
   const isServer = typeof window === 'undefined';
   const locale = useLocale();
-
+  const t = useTranslations();
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState('');
@@ -394,7 +395,7 @@ function IndicatorCausalVisualisation({ actionId }: IndicatorCausalVisualisation
     );
   }
   if (isServer || !isLoaded) {
-    return <ContentLoader />;
+    return <ContentLoader message={t('loading')} />;
   }
 
   return (

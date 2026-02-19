@@ -11,6 +11,8 @@ import type { ColProps } from 'reactstrap';
 import { Col, Container, Row } from 'reactstrap';
 import type { ColumnProps } from 'reactstrap/types/lib/Col';
 
+import ContentLoader from '@common/components/ContentLoader';
+
 import type {
   MultiUseImageFragmentFragment,
   StreamFieldFragmentFragment,
@@ -46,7 +48,6 @@ import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
 import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
 import ChangeHistory from './ChangeHistory';
-import ContentLoader from './ContentLoader';
 import { ErrorBoundary } from './ErrorBoundary';
 import { ErrorPage } from './ErrorPage';
 
@@ -628,6 +629,7 @@ interface StreamFieldProps {
 
 export default function StreamField(props: StreamFieldProps) {
   const { page, blocks, hasSidebar = false, columnProps } = props;
+  const t = useTranslations();
 
   const isCategoryPage = page.__typename === 'CategoryPage';
   useEffect(() => {
@@ -652,7 +654,7 @@ export default function StreamField(props: StreamFieldProps) {
             block: JSON.stringify(block),
           }}
         >
-          <Suspense fallback={<ContentLoader />}>
+          <Suspense fallback={<ContentLoader message={t('loading')} />}>
             <StreamFieldBlock
               id={`section-${index + 1}`}
               block={block}
