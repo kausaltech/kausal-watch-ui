@@ -180,7 +180,13 @@ const ActionListBlock = (props: ActionListBlockProps) => {
   });
 
   if (loading) return <ContentLoader message={t('loading')} />;
-  if (error) return <ErrorMessage message={error.message} />;
+  if (error)
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error.message}
+      />
+    );
 
   if (!data || !data.planActions) return null;
 

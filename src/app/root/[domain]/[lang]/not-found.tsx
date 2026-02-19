@@ -5,7 +5,7 @@ import React from 'react';
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 
-import { ErrorPage } from '@/components/common/ErrorPage';
+import ErrorPage from '@/components/common/ErrorPage';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import defaultTheme from '@/public/static/themes/default/theme.json';
 

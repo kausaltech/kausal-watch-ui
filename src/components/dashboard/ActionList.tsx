@@ -28,7 +28,7 @@ import type {
   Filters,
 } from '@/components/actions/ActionListFilters';
 import ActionListFilters from '@/components/actions/ActionListFilters';
-import ErrorMessage from '@/components/common/ErrorMessage';
+import ErrorPage from '@/components/common/ErrorPage';
 import RichText from '@/components/common/RichText';
 import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
@@ -670,7 +670,12 @@ function ActionListLoader(props: StatusboardProps) {
   });
 
   if (error || !data || !data.plan)
-    return <ErrorMessage message={t('error-loading-actions', getActionTermContext(plan))} />;
+    return (
+      <ErrorPage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error?.message}
+      />
+    );
 
   const { plan: loadedPlan, planOrganizations, planPage } = data;
   const { categoryTypes, primaryOrgs } = loadedPlan;

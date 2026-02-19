@@ -16,6 +16,7 @@ import { getActionTermContext } from '@/common/i18n';
 import images, { getActionImage } from '@/common/images';
 import { ActionListLink } from '@/common/links';
 import Button from '@/components/common/Button';
+import ErrorMessage from '@/components/common/ErrorMessage';
 import EmbedContext from '@/context/embed';
 
 import Icon from '../common/Icon';
@@ -187,7 +188,12 @@ function ActionHighlightsList(props: ActionHighlightsListProps) {
   });
 
   if (error || !data.planActions)
-    return <p>{t('error-loading-actions', getActionTermContext(plan))}</p>;
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error?.message}
+      />
+    );
 
   return (
     <ActionCardList actions={data.planActions} plan={plan} displayHeader={displayHeader ?? true} />

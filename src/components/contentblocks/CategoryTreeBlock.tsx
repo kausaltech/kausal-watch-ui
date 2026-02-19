@@ -4,6 +4,7 @@ import { gql, useSuspenseQuery } from '@apollo/client';
 import styled from '@emotion/styled';
 import * as Sentry from '@sentry/nextjs';
 import { concat } from 'lodash-es';
+import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 
@@ -305,6 +306,7 @@ function CategoryTreeBlockBrowser(
 
 function CategoryTreeBlock(props: CategoryTreeBlockProps) {
   const { treeMapCategoryType, valueAttribute, hasSidebar } = props;
+  const t = useTranslations();
   const plan = usePlan();
   const { data, error } = useSuspenseQuery<GetCategoriesForTreeMapQuery>(
     GET_CATEGORIES_FOR_TREEMAP,
@@ -317,7 +319,7 @@ function CategoryTreeBlock(props: CategoryTreeBlockProps) {
     }
   );
 
-  if (error) return <ErrorMessage message={error.message} />;
+  if (error) return <ErrorMessage message={t('error-loading-data')} details={error.message} />;
   if (!data || !data.planCategories) {
     const errMsg = 'CategoryTreeBlock missing categories';
     Sentry.captureMessage(errMsg);
