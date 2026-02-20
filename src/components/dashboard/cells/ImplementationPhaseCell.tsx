@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { PlanContextFragment } from '@/common/__generated__/graphql';
 import { PhaseTimeline } from '@/components/actions/PhaseTimeline';

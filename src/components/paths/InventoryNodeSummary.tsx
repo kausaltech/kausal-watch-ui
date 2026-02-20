@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useFormatter } from 'next-intl';
-import styled from 'styled-components';
 
 import type { GetNodeContentQuery } from '@/common/__generated__/paths/graphql';
 import HighlightValue from '@/components/paths/HighlightValue';

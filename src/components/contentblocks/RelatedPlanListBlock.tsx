@@ -1,9 +1,9 @@
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { transparentize } from 'polished';
 import { Container } from 'reactstrap';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
 
 import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';

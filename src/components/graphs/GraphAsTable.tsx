@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, Collapse, Table } from 'reactstrap';
-import styled from 'styled-components';
 
 import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { beautifyValue } from '@/common/data/format';

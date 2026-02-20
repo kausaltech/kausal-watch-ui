@@ -5,11 +5,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import ContentLoader from 'react-content-loader';
 import { Alert, Card, CardBody, Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
+
+import { transientOptions } from '@common/themes/styles/styled';
 
 import type {
   GetOutcomeNodeContentQuery,
@@ -22,8 +24,9 @@ import { usePaths } from '@/context/paths/paths';
 import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 
-const OutcomeBlockLoader = (props) => (
+const OutcomeBlockLoader = (props: React.ComponentProps<typeof ContentLoader>) => (
   <ContentLoader
+    uniqueKey="outcome-block-loader"
     speed={2}
     width={1200}
     height={64}
@@ -59,7 +62,7 @@ const StyledTitle = styled.h1`
   }
 `;
 
-const StyledCard = styled(Card)<{ $disabled?: boolean }>`
+const StyledCard = styled(Card, transientOptions)<{ $disabled?: boolean }>`
   width: 100%;
   transition: all 0.5s ease;
   overflow: hidden;

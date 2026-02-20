@@ -1,9 +1,11 @@
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { Card as BSCard, CardBody } from 'reactstrap';
-import styled from 'styled-components';
 
-const StyledCard = styled(BSCard)<{
+import { transientOptions } from '@common/themes/styles/styled';
+
+const StyledCard = styled(BSCard, transientOptions)<{
   $customColor?: string;
   $customBackgroundColor?: string;
 }>`

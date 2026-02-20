@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
 
 import dayjs from '@/common/dayjs';
 import Icon from '@/components/common/Icon';

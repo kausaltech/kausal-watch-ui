@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Spinner } from 'reactstrap';
-import styled from 'styled-components';
 
 import dayjs from '@/common/dayjs';
 import { useWorkflowSelector } from '@/context/workflow-selector';

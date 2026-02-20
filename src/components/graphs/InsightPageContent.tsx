@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 
+import { useTranslations } from 'next-intl';
+
+import ContentLoader from '@common/components/ContentLoader';
+
 import { aplans } from '@/common/api';
-import ContentLoader from '@/components/common/ContentLoader';
 import IndicatorsHero from '@/components/indicators/IndicatorsHero';
 
 const CytoGraph = dynamic<{
@@ -31,6 +34,7 @@ const InsightPageContent = ({
   const [loading, setLoading] = useState(true);
   const [edges, setEdges] = useState([]);
   const [nodes, setNodes] = useState([]);
+  const t = useTranslations();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,7 +68,7 @@ const InsightPageContent = ({
   const isServer = typeof window === 'undefined';
   if (!isServer) {
     if (loading) {
-      content = <ContentLoader />;
+      content = <ContentLoader message={t('loading')} />;
     } else {
       content = (
         <CytoGraph

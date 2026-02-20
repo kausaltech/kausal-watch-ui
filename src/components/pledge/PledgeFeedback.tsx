@@ -3,10 +3,10 @@
 import { useState } from 'react';
 
 import { gql, useMutation } from '@apollo/client';
+import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Alert, Spinner } from 'reactstrap';
-import styled from 'styled-components';
 
 import type {
   CreateUserFeedbackMutation,

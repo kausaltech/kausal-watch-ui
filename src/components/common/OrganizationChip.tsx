@@ -1,5 +1,5 @@
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
 
 import type { ActionResponsiblePartyRole } from '@/common/__generated__/graphql';
 import { OrganizationLink } from '@/common/links';

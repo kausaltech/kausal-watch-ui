@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 
 import { gql, useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
-import styled from 'styled-components';
+
+import ContentLoader from '@common/components/ContentLoader';
 
 import type {
   ActionCardFragment,
@@ -14,7 +16,6 @@ import { getDeepParents } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';
 import ActionCardList from '@/components/actions/ActionCardList';
-import ContentLoader from '@/components/common/ContentLoader';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
@@ -225,8 +226,14 @@ const ActionListBlock = (props: ActionListBlockProps) => {
 
   const displayHeader = heading ? heading : t('actions-plural', getActionTermContext(plan));
 
-  if (error) return <ErrorMessage message={error.message} />;
-  if (loading && !data) return <ContentLoader />;
+  if (error)
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error?.message}
+      />
+    );
+  if (loading && !data) return <ContentLoader message={t('loading')} />;
 
   return (
     <ActionListSection id={id}>

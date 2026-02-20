@@ -3,12 +3,15 @@ import React, { Suspense, useEffect } from 'react';
 
 import dynamic from 'next/dynamic';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import * as Sentry from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import type { ColProps } from 'reactstrap';
 import { Col, Container, Row } from 'reactstrap';
 import type { ColumnProps } from 'reactstrap/types/lib/Col';
-import styled, { useTheme } from 'styled-components';
+
+import ContentLoader from '@common/components/ContentLoader';
 
 import type {
   MultiUseImageFragmentFragment,
@@ -16,6 +19,7 @@ import type {
 } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
 import { excludeNullish } from '@/common/utils';
+import ErrorMessage from '@/components/common/ErrorMessage';
 import RichText from '@/components/common/RichText';
 import AccessibilityStatementComplianceStatusBlock from '@/components/contentblocks/AccessibilityStatementComplianceStatusBlock';
 import AccessibilityStatementContactFormBlock from '@/components/contentblocks/AccessibilityStatementContactFormBlock';
@@ -45,9 +49,7 @@ import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 
 import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
 import ChangeHistory from './ChangeHistory';
-import ContentLoader from './ContentLoader';
 import { ErrorBoundary } from './ErrorBoundary';
-import { ErrorPage } from './ErrorPage';
 
 const CategoryTreeBlock = dynamic(() => import('@/components/contentblocks/CategoryTreeBlock'), {
   ssr: false,
@@ -627,6 +629,7 @@ interface StreamFieldProps {
 
 export default function StreamField(props: StreamFieldProps) {
   const { page, blocks, hasSidebar = false, columnProps } = props;
+  const t = useTranslations();
 
   const isCategoryPage = page.__typename === 'CategoryPage';
   useEffect(() => {
@@ -645,13 +648,13 @@ export default function StreamField(props: StreamFieldProps) {
       {blocks.map((block, index) => (
         <ErrorBoundary
           key={block.id}
-          fallback={<ErrorPage type="block" />}
+          fallback={<ErrorMessage message={t('error-loading-data')} details={block.__typename} />}
           errorExtras={{
             type: 'StreamFieldBlock',
             block: JSON.stringify(block),
           }}
         >
-          <Suspense fallback={<ContentLoader />}>
+          <Suspense fallback={<ContentLoader message={t('loading')} />}>
             <StreamFieldBlock
               id={`section-${index + 1}`}
               block={block}

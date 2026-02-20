@@ -1,7 +1,7 @@
 import React, { type PropsWithChildren } from 'react';
 
+import styled from '@emotion/styled';
 import { readableColor } from 'polished';
-import styled from 'styled-components';
 
 import {
   type CategoryTagRecursiveFragmentFragment,

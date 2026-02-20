@@ -1,9 +1,11 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { Alert, Table } from 'reactstrap';
-import styled from 'styled-components';
+
+import { transientOptions } from '@common/themes/styles/styled';
 
 import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
 
@@ -54,7 +56,7 @@ const TableWrapper = styled.div`
 `;
 
 const Cell = styled.td`
-  padding: ${(props) => props.theme.spaces.s200};
+  padding: ${(props) => props.theme.spaces.s050};
 `;
 
 // This wrapper helps to enable and align the expand button on any cell
@@ -91,7 +93,7 @@ const ExpandButton = styled.button`
   }
 `;
 
-const ExpandIcon = styled(Icon)<{ $expanded: boolean }>`
+const ExpandIcon = styled(Icon, transientOptions)<{ $expanded: boolean }>`
   transition: transform 0.2s;
   transform: rotate(${({ $expanded }) => ($expanded ? '90deg' : '0deg')});
 `;

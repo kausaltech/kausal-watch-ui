@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 
 import {
   downloadData,

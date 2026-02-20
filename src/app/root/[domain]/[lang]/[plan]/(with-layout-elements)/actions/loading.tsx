@@ -1,5 +1,10 @@
-import ContentLoader from '@/components/common/ContentLoader';
+import { useTranslations } from 'next-intl';
 
+import ContentLoader from '@common/components/ContentLoader';
+
+// Action list page loading state
+// TODO: We could skeleton filter area here?
 export default function Loading() {
-  return <ContentLoader initiallyVisible />;
+  const t = useTranslations();
+  return <ContentLoader initiallyVisible fullPage message={t('loading')} />;
 }
