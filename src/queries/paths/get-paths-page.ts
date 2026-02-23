@@ -36,6 +36,7 @@ export const DimensionalMetricFragment = gql`
     }
     unit {
       htmlShort
+      htmlLong
       short
     }
     stackable

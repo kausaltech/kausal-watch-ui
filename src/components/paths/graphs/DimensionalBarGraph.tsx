@@ -7,8 +7,9 @@ import { useTheme } from '@emotion/react';
 import { isEqual } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 
+import { activeGoalVar } from '@common/apollo/paths-cache';
+
 import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
-import { activeGoalVar } from '@/context/paths/cache';
 //import type { InstanceGoal } from 'common/instance';
 import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';
 

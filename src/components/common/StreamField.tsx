@@ -11,6 +11,7 @@ import type { ColProps } from 'reactstrap';
 import { Col, Container, Row } from 'reactstrap';
 import type { ColumnProps } from 'reactstrap/types/lib/Col';
 
+import { showSettingsPanelVar } from '@common/apollo/paths-cache';
 import ContentLoader from '@common/components/ContentLoader';
 
 import type {
@@ -43,7 +44,6 @@ import QuestionAnswerBlock from '@/components/contentblocks/QuestionAnswerBlock'
 import RelatedIndicatorsBlock from '@/components/contentblocks/RelatedIndicatorsBlock';
 import RelatedPlanListBlock from '@/components/contentblocks/RelatedPlanListBlock';
 import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBlock';
-import { showSettingsPanelVar } from '@/context/paths/cache';
 import { usePlan } from '@/context/plan';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 

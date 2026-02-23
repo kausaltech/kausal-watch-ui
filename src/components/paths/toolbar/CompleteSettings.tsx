@@ -5,12 +5,13 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, CardBody, Col, Container, Row, UncontrolledCollapse } from 'reactstrap';
 
+import { activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
+
 import Icon from '@/components/common/Icon';
 import GoalSelector from '@/components/paths/GoalSelector';
 import RangeSelector from '@/components/paths/RangeSelector';
 import ScenarioSelector from '@/components/paths/ScenarioSelector';
 import GoalOutcomeBar from '@/components/paths/toolbar/GoalOutcomeBar';
-import { activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 
 import NormalizationWidget from '../NormalizationWidget';

@@ -12,9 +12,10 @@ import {
   UncontrolledDropdown,
 } from 'reactstrap';
 
+import { activeGoalVar, activeScenarioVar } from '@common/apollo/paths-cache';
+
 import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
 import Icon from '@/components/common/Icon';
-import { activeGoalVar, activeScenarioVar } from '@/context/paths/cache';
 import { DimensionalMetric, MetricSlice, SliceConfig } from '@/utils/paths/metric';
 
 //  import { useFeatures } from '@/common/instance';

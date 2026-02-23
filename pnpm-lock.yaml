@@ -223,6 +223,9 @@ importers:
       react-aria-components:
         specifier: ^1.14.0
         version: 1.14.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-bootstrap-icons:
+        specifier: ^1.11.6
+        version: 1.11.6(react@19.1.0)
       react-bootstrap-typeahead:
         specifier: ^6.4.1
         version: 6.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -14015,6 +14018,11 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
+  react-bootstrap-icons@1.11.6:
+    resolution: {integrity: sha512-ycXiyeSyzbS1C4+MlPTYe0riB+UlZ7LV7YZQYqlERV2cxDiKtntI0huHmP/3VVvzPt4tGxqK0K+Y6g7We3U6tQ==}
+    peerDependencies:
+      react: '>=16.8.6'
+
   react-bootstrap-typeahead@6.4.1:
     resolution:
       {
@@ -27184,6 +27192,11 @@ snapshots:
       '@react-types/shared': 3.32.1(react@19.1.0)
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
+
+  react-bootstrap-icons@1.11.6(react@19.1.0):
+    dependencies:
+      prop-types: 15.8.1
+      react: 19.1.0
 
   react-bootstrap-typeahead@6.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:

@@ -5,8 +5,8 @@ import chroma from 'chroma-js';
 import { useFormatter, useTranslations } from 'next-intl';
 
 import ContentLoader from '@common/components/ContentLoader';
+import { getMetricChange, getMetricValue } from '@common/utils/paths/metric';
 
-import { getMetricChange, getMetricValue } from '@/common/paths/preprocess';
 import DashCard from '@/components/paths/DashCard';
 
 const StyledTab = styled.div<{ $disabled: boolean }>`

@@ -6,13 +6,14 @@ import { useFormatter, useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 import { Button, CardBody, UncontrolledCollapse } from 'reactstrap';
 
+import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
+
 import type {
   GetInstanceGoalOutcomeQuery,
   GetInstanceGoalOutcomeQueryVariables,
 } from '@/common/__generated__/paths/graphql';
 import type { TFunction } from '@/common/i18n';
 import Icon from '@/components/common/Icon';
-import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 

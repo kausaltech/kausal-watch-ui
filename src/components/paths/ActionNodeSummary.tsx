@@ -5,13 +5,14 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useFormatter, useTranslations } from 'next-intl';
 
+import { yearRangeVar } from '@common/apollo/paths-cache';
+
 import type {
   GetInstanceContextQuery,
   GetNodeContentQuery,
 } from '@/common/__generated__/paths/graphql';
 import ActionParameters from '@/components/paths/ActionParameters';
 import HighlightValue from '@/components/paths/HighlightValue';
-import { yearRangeVar } from '@/context/paths/cache';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
 
 const ValuesContainer = styled.div`
