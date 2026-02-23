@@ -35,6 +35,12 @@ const Labels = styled.div<{ columns: string }>`
   width: 100%;
   margin-top: ${(props) => props.theme.spaces.s050};
   column-gap: 0;
+
+  @media (max-width: 768px) {
+    display: flex;
+    width: auto;
+    margin-top: ${(props) => props.theme.spaces.s050};
+  }
 `;
 
 const SegmentLabel = styled.span<{ portion: number }>`
@@ -50,6 +56,18 @@ const SegmentLabel = styled.span<{ portion: number }>`
   .value {
     font-weight: ${(props) => props.theme.fontWeightBold};
     white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    align-items: flex-start;
+    text-align: left;
+    flex-basis: ${(props) => props.portion}%;
+    padding: 0;
+    margin: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s050} 0 0;
+
+    span {
+      align-self: flex-start;
+    }
   }
 `;
 
@@ -98,7 +116,10 @@ function BarChart({ title, data }: BarChartProps) {
           </BarGraph>
           <Labels columns={labelColumns}>
             {segments.map((segment) => (
-              <SegmentLabel key={segment.id}>
+              <SegmentLabel
+                key={segment.id}
+                portion={(segments.length === 1 ? 1 : segment.portion) * 100}
+              >
                 <span className="value">{segment.value}</span>
                 <span> {segment.label}</span>
               </SegmentLabel>
