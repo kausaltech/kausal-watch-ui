@@ -123,6 +123,7 @@ const languageNames = {
   en: 'English',
   es: 'Español',
   fi: 'Suomi',
+  fr: 'French',
   lv: 'Latviešu',
   sv: 'Svenska',
 };
