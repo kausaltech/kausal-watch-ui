@@ -8,14 +8,15 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button } from 'reactstrap';
 
-import Icon from '@/components/common/Icon';
-import type { PathsInstanceType } from '@/components/providers/PathsProvider';
 import {
   activeGoalVar,
   activeScenarioVar,
   showSettingsPanelVar,
   yearRangeVar,
-} from '@/context/paths/cache';
+} from '@common/apollo/paths-cache';
+
+import Icon from '@/components/common/Icon';
+import type { PathsInstanceType } from '@/components/providers/PathsProvider';
 //import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import { usePaths } from '@/context/paths/paths';
 

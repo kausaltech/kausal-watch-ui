@@ -3,11 +3,12 @@ import { useCallback, useMemo, useState } from 'react';
 import { useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
 
-import { setUniqueColors } from '@/common/paths/colors';
-import { getMetricValue, getOutcomeTotal } from '@/common/paths/preprocess';
+import { activeGoalVar } from '@common/apollo/paths-cache';
+import { setUniqueColors } from '@common/utils/paths/colors';
+import { getMetricValue, getOutcomeTotal } from '@common/utils/paths/metric';
+
 import OutcomeCard from '@/components/paths/outcome/OutcomeCard';
 import OutcomeNodeContent from '@/components/paths/outcome/OutcomeNodeContent';
-import { activeGoalVar } from '@/context/paths/cache';
 
 import type { OutcomenodeType } from '../contentblocks/PathsOutcomeBlock';
 

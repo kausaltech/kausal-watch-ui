@@ -5,21 +5,29 @@ import styled from '@emotion/styled';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Nav, NavItem, NavLink, TabContent } from 'reactstrap';
 
+import { activeGoalVar } from '@common/apollo/paths-cache';
+import DimensionalNodeVisualisation from '@common/components/paths/DimensionalNodeVisualisation';
+import { getMetricChange, getMetricValue } from '@common/utils/paths/metric';
+
 import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
 import { PathsNodeLink } from '@/common/links';
-import { getMetricChange, getMetricValue } from '@/common/paths/preprocess';
 import Icon from '@/components/common/Icon';
 import HighlightValue from '@/components/paths/HighlightValue';
 import ScenarioBadge from '@/components/paths/ScenarioBadge';
 import DataTable from '@/components/paths/graphs/DataTable';
-import DimensionalNodePlot from '@/components/paths/graphs/DimensionalNodePlot';
 import DimensionalPieGraph from '@/components/paths/graphs/DimensionalPieGraph';
 import OutcomeNodeDetails from '@/components/paths/outcome/OutcomeNodeDetails';
-import { activeGoalVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 
 const DisplayTab = styled(NavItem)`
   font-size: 0.9rem;
+
+  // Redefine bootstrap styles as MUI overrides them
+  a.nav-link.active {
+    color: var(--bs-nav-tabs-link-active-color);
+    background-color: var(--bs-nav-tabs-link-active-bg);
+    border-color: var(--bs-nav-tabs-link-active-border-color);
+  }
 
   .icon {
     width: 1.2rem !important;
@@ -137,33 +145,48 @@ function OutcomeNodeContent({
   const activeGoal = useReactiveVar(activeGoalVar);
   // We have a disclaimer for the mobility node for 2023 (hack)
   const hideForecast = separateYears && separateYears.length > 1;
-  const pathsDisclaimers = paths?.instance.outcomeDisclaimers;
+  const instance = paths?.instance;
+  const nodeName = node.shortName || node.name;
+  const pathsDisclaimers = instance?.outcomeDisclaimers;
   const disclaimer = pathsDisclaimers?.find(
     (disclaimer) => disclaimer.node === node.id && disclaimer.goal === activeGoal?.id
   )?.disclaimer;
 
-  const outcomeGraph = useMemo(
-    () =>
-      node.metricDim ? (
-        <DimensionalNodePlot
-          node={node}
-          metric={node.metricDim}
-          startYear={startYear}
-          endYear={endYear}
-          separateYears={separateYears}
-          color={color}
-          withControls={false}
-          baselineForecast={node.metric?.baselineForecastValues ?? undefined}
-          withTools={false}
-          disclaimer={disclaimer}
-        />
-      ) : (
+  const outcomeGraph = useMemo(() => {
+    if (!node.metricDim) {
+      return (
         <h5>
           {t('time-series')}, {t('coming-soon')}
         </h5>
-      ),
-    [node, color, startYear, endYear, separateYears, disclaimer, t]
-  );
+      );
+    }
+    if (!instance) return null;
+
+    // Use legacy mode (area graph) if we have scopes
+    const legacyMode = node.metricDim.dimensions.find(
+      (dim) => dim.id === 'net_emissions:dim:emission_scope'
+    );
+    return (
+      <DimensionalNodeVisualisation
+        title={undefined}
+        metric={node.metricDim}
+        startYear={startYear}
+        endYear={endYear}
+        color={color}
+        withControls={false}
+        withTools={false}
+        baselineForecast={node.metric?.baselineForecastValues ?? undefined}
+        instance={{
+          referenceYear: instance.referenceYear,
+          minimumHistoricalYear: instance.minimumHistoricalYear,
+          features: instance.features,
+        }}
+        site={null}
+        t={t}
+        chartType={legacyMode ? 'area' : 'bar'}
+      />
+    );
+  }, [node, color, startYear, endYear, instance, nodeName, t]);
 
   const singleYearGraph = useMemo(
     () => (
@@ -178,9 +201,21 @@ function OutcomeNodeContent({
     [node, endYear, separateYears]
   );
 
-  const instance = paths?.instance;
   if (!instance) return null;
-  const showDistribution = subNodes.length > 1;
+
+  console.log('Rendering OutcomeNodeContent for node', node.id, {
+    node,
+    subNodes,
+    color,
+    startYear,
+    endYear,
+  });
+
+  // Display yearly distribution tab only if the node has scopes dimension
+  const showDistribution =
+    node.metricDim &&
+    node.metricDim.dimensions.find((dim) => dim.id === 'net_emissions:dim:emission_scope') &&
+    subNodes.length > 1;
   const nodesTotal = getMetricValue(node, endYear);
   const nodesBase = getMetricValue(node, startYear);
   const lastMeasuredYear =
@@ -189,7 +224,6 @@ function OutcomeNodeContent({
   const isForecast = endYear > lastMeasuredYear;
   const outcomeChange = getMetricChange(nodesBase, nodesTotal);
   const unit = node.metric?.unit?.htmlLong || node.metric?.unit?.htmlShort;
-  const nodeName = node.shortName || node.name;
   const showNodeLinks = !instance.features?.hideNodeDetails;
 
   return (
