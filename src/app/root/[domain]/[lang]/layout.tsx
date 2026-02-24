@@ -46,7 +46,6 @@ export default function LangLayout(props: Props) {
         </Script>
         {/* Provide the public environment variables to the client */}
         <EnvProvider />
-        {/* Removed default theme provider - expecting before page loading components not to use themes */}
         <NextIntlClientProvider locale={params.lang} messages={messages}>
           <EmotionRegistry>
             <DayjsLocaleProvider locale={params.lang}>
