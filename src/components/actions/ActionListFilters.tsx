@@ -1000,12 +1000,19 @@ class ActionTypeFilter extends DefaultFilter<string | undefined> {
 
   private label: string;
   private showAllLabel: string;
+  private helpText?: string;
 
-  constructor(opts: { label: string; showAllLabel: string; options: ActionListFilterOption[] }) {
+  constructor(opts: {
+    label: string;
+    showAllLabel: string;
+    options: ActionListFilterOption[];
+    helpText?: string;
+  }) {
     super();
     this.label = opts.label;
     this.showAllLabel = opts.showAllLabel;
     this.options = opts.options;
+    this.helpText = opts.helpText;
   }
 
   getLabel() {
@@ -1013,7 +1020,7 @@ class ActionTypeFilter extends DefaultFilter<string | undefined> {
   }
 
   getHelpText() {
-    return undefined;
+    return this.helpText;
   }
 
   getShowAllLabel() {
@@ -1360,14 +1367,21 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           filters.push(new GenericSelectFilter(planOpts));
           break;
         case 'ContinuousActionFilterBlock': {
-          const ctx = getActionTermContext(plan);
-          const label = t('filter-action-type');
-          const showAllLabel = t('see-all-actions');
+          const nonEmpty = (s?: string | null) => (s && s.trim() ? s : undefined);
+          const fieldLabel = 'fieldLabel' in block ? nonEmpty(block.fieldLabel) : undefined;
+          const fieldHelpText =
+            'fieldHelpText' in block ? nonEmpty(block.fieldHelpText) : undefined;
+          const showAllLabelOverride =
+            'showAllLabel' in block ? nonEmpty(block.showAllLabel) : undefined;
+          const label = fieldLabel ?? t('filter-action-type');
+          const showAllLabel = showAllLabelOverride ?? t('see-all-actions');
           const options: ActionListFilterOption[] = [
             { id: 'continuous', label: t('actions-continuous') },
             { id: 'non_continuous', label: t('actions-non-continuous') },
           ];
-          filters.push(new ActionTypeFilter({ label, showAllLabel, options }));
+          filters.push(
+            new ActionTypeFilter({ label, showAllLabel, options, helpText: fieldHelpText })
+          );
           break;
         }
         // Indicator filters
