@@ -166,6 +166,7 @@ const GET_ACTION_DETAILS = gql`
       }
       relatedIndicators {
         id
+        indicatesActionProgress
         indicator {
           id
           name

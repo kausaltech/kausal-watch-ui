@@ -203,7 +203,7 @@ export enum AttributeTypeFormat {
   UnorderedChoice = 'UNORDERED_CHOICE'
 }
 
-/** AttributeType(id, latest_revision, order, instances_editable_by, instances_visible_for, primary_language_lowercase, object_content_type, scope_content_type, scope_id, name, identifier, help_text, format, unit, attribute_category_type, show_choice_names, has_zero_option, max_length, show_in_reporting_tab, primary_language, other_languages, i18n) */
+/** AttributeType(id, latest_revision, order, instances_editable_by, instances_visible_for, primary_language_lowercase, object_content_type, scope_content_type, scope_id, name, identifier, help_text, format, unit, attribute_category_type, show_choice_names, has_zero_option, max_length, show_in_reporting_tab, icon, primary_language, other_languages, i18n) */
 export type AttributeTypeInput = {
   choiceOptions: InputMaybe<Array<ChoiceOptionInput>>;
   /** The format of the attributes with this type */
@@ -295,6 +295,7 @@ export enum IndicatorDashboardFieldName {
   ConnectedActions = 'CONNECTED_ACTIONS',
   Description = 'DESCRIPTION',
   Level = 'LEVEL',
+  Name = 'NAME',
   Organization = 'ORGANIZATION',
   Reference = 'REFERENCE',
   Unit = 'UNIT',
@@ -320,6 +321,7 @@ export enum IndicatorDetailsFieldName {
   Description = 'DESCRIPTION',
   GoalDescription = 'GOAL_DESCRIPTION',
   Level = 'LEVEL',
+  Name = 'NAME',
   Organization = 'ORGANIZATION',
   Reference = 'REFERENCE',
   Unit = 'UNIT',
@@ -342,6 +344,7 @@ export enum IndicatorLevelLevel {
 export enum IndicatorList_FiltersFieldName {
   Description = 'DESCRIPTION',
   Level = 'LEVEL',
+  Name = 'NAME',
   Organization = 'ORGANIZATION',
   Reference = 'REFERENCE',
   Unit = 'UNIT',
@@ -387,6 +390,8 @@ export type OrganizationInput = {
   name: Scalars['String']['input'];
   /** ID of the parent organization; omit for a root organization */
   parentId: InputMaybe<Scalars['ID']['input']>;
+  /** Primary language code (ISO 639-1, e.g. "en-US", "fi", "de-CH"). */
+  primaryLanguage: Scalars['String']['input'];
 };
 
 /** An enumeration. */
@@ -5775,7 +5780,7 @@ export type GetActionDetailsQuery = (
       { id: string }
       & { __typename: 'ActionStatusUpdate' }
     )>, relatedIndicators: Array<(
-      { id: string, indicator: (
+      { id: string, indicatesActionProgress: boolean, indicator: (
         { id: string, name: string, latestGraph: (
           { id: string }
           & { __typename: 'IndicatorGraph' }

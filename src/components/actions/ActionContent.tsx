@@ -508,6 +508,11 @@ function ActionContent(props: ActionContentProps) {
 
   const hasPhases = plan.actionImplementationPhases.length > 0;
 
+  // Show completion progress bar if at least one related indicator is marked in admin
+  const showCompletionProgress = (action.relatedIndicators ?? []).some(
+    (rel) => rel?.indicatesActionProgress === true
+  );
+
   // Full width IndicatorCausalChainBlock can only be rendered in the bottom of the page
   // so we do not use it in streamfield layout
   const isIndicatorCausalChainBlock = (block) => block.__typename === 'IndicatorCausalChainBlock';
@@ -665,7 +670,7 @@ function ActionContent(props: ActionContentProps) {
             </ActionSection>
           )}
 
-          {(!hasPhases || action.completion) && (
+          {showCompletionProgress && (!hasPhases || (action.completion ?? 0) > 0) && (
             <ActionSection>
               <SideHeader>{t('action-completion-percentage')}</SideHeader>
               {(action.completion ?? 0) > 0 && (
@@ -677,6 +682,7 @@ function ActionContent(props: ActionContentProps) {
                 plan={plan}
                 statusSummary={action.statusSummary}
                 completion={action.completion}
+                showProgressBar={showCompletionProgress}
               />
             </ActionSection>
           )}
