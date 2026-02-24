@@ -227,16 +227,7 @@ export function rewriteUrl(
   return response;
 }
 
-interface CreateApolloClientOptions {
-  skipAuth?: boolean;
-}
-
-function createApolloClient(
-  req: NextAuthRequest,
-  logger: Logger,
-  options?: CreateApolloClientOptions
-) {
-  const { skipAuth = false } = options ?? {};
+function createApolloClient(req: NextAuthRequest, logger: Logger, skipAuth = false) {
   const uri = getWatchGraphQLUrl();
   const httpLink = new HttpLink({
     uri,
@@ -301,9 +292,9 @@ async function queryPlansForHostname(
   req: NextAuthRequest,
   logger: Logger,
   hostname: string,
-  options?: CreateApolloClientOptions
+  skipAuth = false
 ) {
-  const apolloClient = createApolloClient(req, logger, options);
+  const apolloClient = createApolloClient(req, logger, skipAuth);
   try {
     const { data, error } = await apolloClient.query<
       GetPlansByHostnameQuery,
@@ -324,17 +315,12 @@ const DEFAULT_TTL = 5 * 60 * 1000;
 
 const hostnamePlanCache = new LRUCache<string, PlanForHostname[]>();
 
-export interface GetPlansOptions {
-  skipAuth?: boolean;
-}
-
 export async function getPlansForHostname(
   req: NextAuthRequest,
   logger: Logger,
   hostname: string,
-  options?: GetPlansOptions
+  skipAuth = false
 ) {
-  const { skipAuth = false } = options ?? {};
   const isUnauthenticatedRequest = !req.auth || skipAuth;
 
   if (isUnauthenticatedRequest) {
@@ -347,7 +333,7 @@ export async function getPlansForHostname(
       }
     }
   }
-  const { plans, error } = await queryPlansForHostname(req, logger, hostname, { skipAuth });
+  const { plans, error } = await queryPlansForHostname(req, logger, hostname, skipAuth);
   if (plans) {
     if (isUnauthenticatedRequest) {
       hostnamePlanCache.set(hostname, plans, undefined, DEFAULT_TTL);

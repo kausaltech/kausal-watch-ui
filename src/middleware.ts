@@ -134,7 +134,7 @@ const middleware = auth(async (request: NextAuthRequest) => {
   if (error) {
     if (hasUnauthenticatedErrors(error)) {
       logger.warn('Token expired or invalid, retrying without auth');
-      const retryResult = await getPlansForHostname(request, logger, hostname, { skipAuth: true });
+      const retryResult = await getPlansForHostname(request, logger, hostname, true);
       plans = retryResult.plans;
       error = retryResult.error;
       shouldClearSession = true;
