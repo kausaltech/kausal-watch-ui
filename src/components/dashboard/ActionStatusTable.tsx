@@ -1,8 +1,10 @@
 import React, { ReactNode, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, Table } from 'reactstrap';
-import styled from 'styled-components';
+
+import { transientOptions } from '@common/themes/styles/styled';
 
 import { PlanContextFragment } from '@/common/__generated__/graphql';
 import { actionStatusOrder } from '@/common/data/actions';
@@ -69,7 +71,7 @@ const HeaderContentWrapper = styled.div<{ $selected: boolean }>`
   align-items: flex-end;
 `;
 
-const TableSortingIcon = styled(Icon)<{ $selected: boolean }>`
+const TableSortingIcon = styled(Icon, transientOptions)<{ $selected: boolean }>`
   width: 0.8em;
   height: 0.8em;
   opacity: ${(props) => (props.$selected ? 1 : 0.3)};

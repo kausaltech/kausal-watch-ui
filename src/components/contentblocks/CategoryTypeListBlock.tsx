@@ -2,10 +2,10 @@
 
 import React, { useMemo, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { CategoryFragmentFragment } from '@/common/__generated__/graphql';
 import { getDeepParents } from '@/common/categories';

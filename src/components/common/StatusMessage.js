@@ -2,8 +2,8 @@ import React from 'react';
 
 import Head from 'next/head';
 
+import styled from '@emotion/styled';
 import PropTypes from 'prop-types';
-import styled, { ThemeContext } from 'styled-components';
 
 const MessageText = styled.p`
   color: #888888;

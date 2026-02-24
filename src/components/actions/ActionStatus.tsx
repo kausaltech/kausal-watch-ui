@@ -1,7 +1,8 @@
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { Progress } from 'reactstrap';
-import styled, { useTheme } from 'styled-components';
 
 import { getStatusSummary } from '@/common/ActionStatusSummary';
 import type { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';

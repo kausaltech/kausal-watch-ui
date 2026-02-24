@@ -3,10 +3,11 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 
 import { gql, useSuspenseQuery } from '@apollo/client';
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Alert, Col, Container, Row } from 'reactstrap';
-import styled, { useTheme } from 'styled-components';
 
 import {
   type ActionListPageFiltersFragment,
@@ -27,7 +28,7 @@ import type {
   Filters,
 } from '@/components/actions/ActionListFilters';
 import ActionListFilters from '@/components/actions/ActionListFilters';
-import ErrorMessage from '@/components/common/ErrorMessage';
+import ErrorPage from '@/components/common/ErrorPage';
 import RichText from '@/components/common/RichText';
 import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
@@ -669,7 +670,12 @@ function ActionListLoader(props: StatusboardProps) {
   });
 
   if (error || !data || !data.plan)
-    return <ErrorMessage message={t('error-loading-actions', getActionTermContext(plan))} />;
+    return (
+      <ErrorPage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error?.message}
+      />
+    );
 
   const { plan: loadedPlan, planOrganizations, planPage } = data;
   const { categoryTypes, primaryOrgs } = loadedPlan;

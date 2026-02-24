@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useLocale, useTranslations } from 'next-intl';
 import { PropTypes } from 'prop-types';
 import {
@@ -8,8 +10,6 @@ import {
   Button,
   Collapse,
 } from 'reactstrap';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
 
 import dayjs from '@/common/dayjs';
 import Icon from '@/components/common/Icon';

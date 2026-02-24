@@ -1,5 +1,5 @@
 import type { Theme } from '@kausal/themes/types';
-import { memoize } from 'lodash';
+import { memoize } from 'lodash-es';
 
 import { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
 import type { PlanContextType } from '@/context/plan';

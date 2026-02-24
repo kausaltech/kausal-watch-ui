@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, type ButtonProps } from 'reactstrap';
-import styled from 'styled-components';
 
 import Icon from '../common/Icon';
 

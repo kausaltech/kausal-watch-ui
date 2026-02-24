@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import _ from 'lodash';
+import { useTheme } from '@emotion/react';
+import { cloneDeep, get, isObject, set } from 'lodash-es';
 import defaultTheme from 'public/static/themes/default/theme.json';
 import { ChromePicker } from 'react-color';
 import { Container, Table } from 'reactstrap';
-import { useTheme } from 'styled-components';
 
 const ColorPicker = (props) => {
   const { color, handleChange, isDefault } = props;
@@ -72,23 +72,23 @@ const ColorPicker = (props) => {
 
 const ThemeDesignTokens = () => {
   const themeContext = useTheme();
-  const [editedTheme, setEditedTheme] = useState(_.cloneDeep(themeContext));
+  const [editedTheme, setEditedTheme] = useState(cloneDeep(themeContext));
 
   useEffect(() => {
-    setEditedTheme(_.cloneDeep(themeContext));
+    setEditedTheme(cloneDeep(themeContext));
     console.log('Theme Changed');
   }, [themeContext]);
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
-    const changedTheme = _.cloneDeep(editedTheme);
-    _.set(changedTheme, name, value);
+    const changedTheme = cloneDeep(editedTheme);
+    set(changedTheme, name, value);
     setEditedTheme(() => changedTheme);
   };
 
   const handleColorChange = (val, nam) => {
-    const changedTheme = _.cloneDeep(editedTheme);
-    _.set(changedTheme, nam, val);
+    const changedTheme = cloneDeep(editedTheme);
+    set(changedTheme, nam, val);
     setEditedTheme(() => changedTheme);
   };
 
@@ -110,14 +110,14 @@ const ThemeDesignTokens = () => {
     const { tokenName, tokenValue } = props;
 
     const [tokenState, setTokenState] = useState({
-      isEdited: _.get(themeContext, tokenName) !== tokenValue,
-      isDefault: _.get(defaultTheme, tokenName) === tokenValue,
+      isEdited: get(themeContext, tokenName) !== tokenValue,
+      isDefault: get(defaultTheme, tokenName) === tokenValue,
     });
 
     useEffect(() => {
       setTokenState({
-        isEdited: _.get(themeContext, tokenName) !== tokenValue,
-        isDefault: _.get(defaultTheme, tokenName) === tokenValue,
+        isEdited: get(themeContext, tokenName) !== tokenValue,
+        isDefault: get(defaultTheme, tokenName) === tokenValue,
       });
     }, [tokenValue]);
 
@@ -149,7 +149,7 @@ const ThemeDesignTokens = () => {
   };
 
   const renderTokenRows = (token, tokenPath = '') => {
-    if (!_.isObject(token)) {
+    if (!isObject(token)) {
       const tokenName = tokenPath;
       return (
         <tr key={tokenName}>
@@ -157,7 +157,7 @@ const ThemeDesignTokens = () => {
           <td>
             <TokenInput
               tokenName={tokenName}
-              tokenValue={_.get(editedTheme, tokenName)}
+              tokenValue={get(editedTheme, tokenName)}
               key={`input-${tokenName}`}
             />
           </td>

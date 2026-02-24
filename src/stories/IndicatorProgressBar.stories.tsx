@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { useTheme } from 'styled-components';
 
 //import { themes } from '@/../.storybook/preview';
 import IndicatorProgressBar from '@/components/indicators/IndicatorProgressBar';

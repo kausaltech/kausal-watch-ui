@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import type {
   GetEmbedActionQuery,

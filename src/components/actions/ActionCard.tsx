@@ -1,12 +1,15 @@
 import React, { Suspense, useState } from 'react';
 
+import { css, useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import { Tooltip } from 'reactstrap';
-import styled, { css } from 'styled-components';
-import { useTheme } from 'styled-components';
+
+import { transientOptions } from '@common/themes/styles/styled';
+import { getThemeStaticURL } from '@common/themes/theme';
 
 import { getStatusColorForAction } from '@/common/ActionStatusSummary';
 import type {
@@ -17,7 +20,6 @@ import type {
 import { getActionTermContext } from '@/common/i18n';
 import { ActionLink } from '@/common/links';
 import { cleanActionStatus } from '@/common/preprocess';
-import { getThemeStaticURL } from '@/common/theme';
 import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';
 import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
@@ -62,7 +64,7 @@ const PrimaryImageIcon = styled.div<{ $imagesrc: string }>`
   background-position: center center;
 `;
 
-const SecondaryIcon = styled(SVG)<{ $color: string }>`
+const SecondaryIcon = styled(SVG, transientOptions)<{ $color: string }>`
   width: ${(props) => props.theme.spaces.s100};
   margin-right: ${(props) => props.theme.spaces.s050};
   fill: ${(props) => props.$color};
@@ -172,11 +174,11 @@ const StyledCardTitle = styled.div<{ $isSmall: boolean }>`
   word-break: break-word;
   hyphens: auto;
 
-  :lang(fi) & {
+  html:lang(fi) & {
     hyphens: manual;
   }
 
-  :lang(en) & {
+  html:lang(en) & {
     word-break: normal;
     hyphens: none;
 `;

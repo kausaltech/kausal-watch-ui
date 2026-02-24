@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { useTheme } from '@emotion/react';
 import { BarChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import { useTranslations } from 'next-intl';
-import { useTheme } from 'styled-components';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 

@@ -4,9 +4,9 @@ import React, { useMemo } from 'react';
 
 import { usePathname } from 'next/navigation';
 
+import { useTheme } from '@emotion/react';
 import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
-import { useTheme } from 'styled-components';
 
 import { getDeploymentType } from '@common/env';
 

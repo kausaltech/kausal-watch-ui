@@ -1,10 +1,10 @@
 import React from 'react';
 
+import { ThemeProvider } from '@emotion/react';
 import { DecoratorHelpers } from '@storybook/addon-themes';
 import type { Decorator } from '@storybook/nextjs-vite';
 import { SessionProvider } from 'next-auth/react';
 import { NextIntlClientProvider } from 'next-intl';
-import { ThemeProvider } from 'styled-components';
 
 import a11yMessages from '@/../locales/en/a11y.json';
 import actionsMessages from '@/../locales/en/actions.json';

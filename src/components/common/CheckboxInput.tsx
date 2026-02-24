@@ -1,5 +1,6 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { ControllerRenderProps } from 'react-hook-form/dist/types/controller';
 import {
   Input as BSInput,
@@ -8,7 +9,6 @@ import {
   FormGroup,
   InputProps,
 } from 'reactstrap';
-import styled from 'styled-components';
 
 const GroupLabel = styled.div`
   font-weight: ${(props) => props.theme.formLabelFontWeight};

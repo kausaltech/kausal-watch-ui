@@ -1,14 +1,15 @@
 import React from 'react';
 
 import { gql, useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Container } from 'reactstrap';
-import styled from 'styled-components';
+
+import ContentLoader from '@common/components/ContentLoader';
 
 import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';
-import ContentLoader from '@/components/common/ContentLoader';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import { usePlan } from '@/context/plan';
 
@@ -122,14 +123,25 @@ const CategoryActionList = (props) => {
       clientUrl: plan.viewUrl,
     },
   });
-  if (loading) return <ContentLoader />;
-  if (error) return <ErrorMessage message={error.message} />;
+  if (loading) return <ContentLoader message={t('loading')} />;
+  if (error)
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error?.message}
+      />
+    );
 
   const { planActions } = data;
   const isCategoryRoot = activeCategory.parent == null;
 
   if (!planActions) {
-    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error?.message}
+      />
+    );
   }
 
   const filteredActions = filterByCategory(

@@ -1,7 +1,7 @@
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Badge, Col, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import { getActionTermContext } from '@/common/i18n';
 import type { ActionContentAction } from '@/components/actions/ActionContent';

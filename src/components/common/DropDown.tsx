@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { Menu, MenuItem, Typeahead } from 'react-bootstrap-typeahead';
 import { Input as BSCustomInput, Label as BSLabel, FormGroup } from 'reactstrap';
-import styled from 'styled-components';
 
 const Label = styled(BSLabel)`
   font-weight: ${(props) => props.theme.formLabelFontWeight};

@@ -1,11 +1,14 @@
 import React from 'react';
 
-import ErrorMessage from '../../components/common/ErrorMessage';
+import ErrorMessage from '@/components/common/ErrorMessage';
+
 import { render } from '../test-utils';
 
 describe('ErrorMessage component', () => {
   it('renders without crashing', () => {
-    const { getByText } = render(<ErrorMessage message="Test Error" />);
+    const { getByText } = render(
+      <ErrorMessage message="Test Error" details="test error details" />
+    );
     const errorMessage = getByText('Test Error');
     expect(errorMessage).toBeInTheDocument();
   });

@@ -1,15 +1,17 @@
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
-import styled, { useTheme } from 'styled-components';
+
+import { getThemeStaticURL } from '@common/themes/theme';
 
 import type { ActionCardFragment } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
 import { ActionLink, ActionListLink, OrganizationLink } from '@/common/links';
-import { getThemeStaticURL } from '@/common/theme';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
@@ -119,7 +121,7 @@ const ActionHeadline = styled.h1`
   font-size: ${(props) => props.theme.fontSizeLg};
   color: ${(props) => props.theme.textColor.primary} !important;
 
-  :lang(fi) & {
+  html:lang(fi) & {
     hyphens: manual;
   }
 

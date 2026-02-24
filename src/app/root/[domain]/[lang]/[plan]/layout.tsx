@@ -7,11 +7,12 @@ import { captureException } from '@sentry/nextjs';
 import * as Sentry from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
+import ThemedGlobalStyles from '@common/themes/ThemedGlobalStyles';
+import { getThemeStaticURL, loadTheme } from '@common/themes/theme';
 import { getRequestOrigin } from '@common/utils/request.server';
 
 import type { WorkflowState } from '@/common/__generated__/graphql';
 import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
-import { getThemeStaticURL, loadTheme } from '@/common/theme';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { SharedIcons } from '@/components/common/Icon';
 import IntroModal from '@/components/custom/IntroModal';
@@ -23,7 +24,6 @@ import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { WorkflowProvider } from '@/context/workflow-selector';
 import { getPlan } from '@/queries/get-plan';
 import { getPathsInstance } from '@/queries/paths/get-paths-instance';
-import { GlobalStyles } from '@/styles/GlobalStyles';
 import { tryRequest } from '@/utils/api.utils';
 import { getMetaTitles } from '@/utils/metadata';
 
@@ -139,9 +139,8 @@ export default async function PlanLayout(props: Props) {
       )}
 
       {!!matomoAnalyticsUrl && <MatomoAnalytics matomoAnalyticsUrl={matomoAnalyticsUrl} />}
-
       <ThemeProvider theme={theme}>
-        <GlobalStyles />
+        <ThemedGlobalStyles />
         <SharedIcons />
         {theme.introModal?.videoUrls && <IntroModal videoUrls={theme.introModal.videoUrls} />}
         <PlanProvider plan={planData.plan}>

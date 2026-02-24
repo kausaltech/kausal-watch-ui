@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 
 import { gql, useQuery } from '@apollo/client';
+import { css, useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, Collapse } from 'reactstrap';
-import styled, { css, useTheme } from 'styled-components';
+
+import { getThemeStaticURL } from '@common/themes/theme';
 
 import {
   type ContactDetailsQuery,
@@ -11,7 +14,6 @@ import {
   type PlanContextFragment,
   PlanFeaturesContactPersonsPublicData,
 } from '@/common/__generated__/graphql';
-import { getThemeStaticURL } from '@/common/theme';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
@@ -33,7 +35,7 @@ const Person = styled.div<PersonProps>`
     props.$isLeader &&
     css`
       img {
-        border: 4px solid ${(props) => props.theme.brandDark};
+        border: 4px solid ${props.theme.brandDark};
       }
     `}
 
@@ -41,7 +43,7 @@ const Person = styled.div<PersonProps>`
     props.$withoutAvatar &&
     props.$isLeader &&
     css`
-      border-left: 5px solid ${(props) => props.theme.brandDark};
+      border-left: 5px solid ${props.theme.brandDark};
     `}
 `;
 
@@ -83,7 +85,7 @@ type AvatarProps = {
   $isLeader: boolean;
 };
 
-const Avatar = styled.div.attrs({ role: 'img' })<AvatarProps>`
+const Avatar = styled.div<AvatarProps>`
   width: 5em;
   height: 5em;
   border-radius: 50%;
@@ -228,6 +230,7 @@ function ContactPerson({ person, leader = false }: ContactPersonProps) {
       {plan.features.contactPersonsShowPicture ? (
         <>
           <Avatar
+            role="img"
             src={person.avatarUrl || getThemeStaticURL(theme.defaultAvatarUserImage)}
             $hasAvatar={hasAvatar}
             $isLeader={leader}

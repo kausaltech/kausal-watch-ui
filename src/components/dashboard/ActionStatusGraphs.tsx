@@ -1,9 +1,10 @@
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
-import styled, { useTheme } from 'styled-components';
 
 import { getStatusSummary } from '@/common/ActionStatusSummary';
 import type { ActionTimeliness, PlanContextFragment } from '@/common/__generated__/graphql';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { ReactNode } from 'react';
 
+import styled from '@emotion/styled';
 import { transparentize } from 'polished';
-import styled from 'styled-components';
 
 import Icon from '@/components/common/Icon';
 

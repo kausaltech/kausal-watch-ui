@@ -1,11 +1,10 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { notFound, useSearchParams } from 'next/navigation';
 
 import { useTranslations } from 'next-intl';
 
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
-import ErrorMessage from '@/components/common/ErrorMessage';
 import SearchView from '@/components/common/SearchView';
 import { usePlan } from '@/context/plan';
 
@@ -30,7 +29,7 @@ function SearchPage() {
   };
 
   if (!plan.features.enableSearch) {
-    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
+    return notFound();
   }
 
   return <SearchView search={search} onSearchChange={handleSearchChange} testId="search-page" />;

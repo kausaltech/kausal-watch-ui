@@ -1,10 +1,8 @@
 import React from 'react';
 
-import Link from 'next/link';
-
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';
@@ -167,14 +165,13 @@ const DashboardRowBlock = ({
     >
       <Container>
         <StyledRow>
-          {blocks.map((block) => {
+          {blocks.map((block, index) => {
             const { blockType } = block;
             const isChart = chartTypes.includes(blockType);
             const indicatorId =
               isChart && 'indicator' in block && block.indicator ? block.indicator.id : undefined;
 
-            const blockId =
-              'id' in block && block.id ? block.id : `${block.blockType}-${block.__typename}`;
+            const blockId = 'id' in block && block.id ? block.id : `${block.blockType}-${index}`;
             return (
               <Col key={blockId} md={columnWidth}>
                 <StyledCard outline>

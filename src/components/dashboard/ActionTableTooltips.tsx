@@ -1,7 +1,8 @@
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled, { useTheme } from 'styled-components';
 
 import { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';

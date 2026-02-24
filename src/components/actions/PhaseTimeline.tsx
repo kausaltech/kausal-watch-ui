@@ -1,10 +1,13 @@
 import { RefObject, useEffect, useRef, useState } from 'react';
 
+import { css, useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { Theme } from '@kausal/themes/types';
-import { debounce } from 'lodash';
+import { debounce } from 'lodash-es';
 import get from 'lodash/get';
 import { useTranslations } from 'next-intl';
-import styled, { css, useTheme } from 'styled-components';
+
+import { transientOptions } from '@common/themes/styles/styled';
 
 import { ActionImplementationPhase } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
@@ -36,10 +39,10 @@ const verticalContainerStyles = css`
   grid-auto-flow: row;
 `;
 
-const horizontalContainerStyles = css<{ $isMini?: boolean }>`
+const horizontalContainerStyles = ({ $isMini }: { $isMini?: boolean }) => css`
   grid-auto-flow: column;
   justify-content: start;
-  ${({ $isMini }) => !$isMini && 'grid-auto-columns: 1fr;'}
+  ${!$isMini && 'grid-auto-columns: 1fr;'}
 `;
 
 const StyledContainer = styled.ul<{ $isVertical?: boolean; $isMini?: boolean }>`
@@ -48,7 +51,7 @@ const StyledContainer = styled.ul<{ $isVertical?: boolean; $isMini?: boolean }>`
   padding: 0;
   list-style-type: none;
 
-  ${({ $isVertical }) => ($isVertical ? verticalContainerStyles : horizontalContainerStyles)}
+  ${(props) => (props.$isVertical ? verticalContainerStyles : horizontalContainerStyles(props))}
 `;
 
 const verticalIndicatorStyles = css`
@@ -77,7 +80,7 @@ const StyledMiniPhaseName = styled.div`
   margin-top: ${({ theme }) => theme.spaces.s050};
 `;
 
-const StyledPhaseName = styled(StyledMiniPhaseName)<{
+const StyledPhaseName = styled(StyledMiniPhaseName, transientOptions)<{
   $isVertical?: boolean;
   $color?: string;
   $type: PhaseType;
@@ -97,11 +100,11 @@ const verticalPhaseStyles = css`
 const horizontalPhaseStyles = css`
   flex-direction: column;
 
-  &:first-of-type ${StyledPhaseName} {
+  &:first-of-type .phase-name {
     padding-left: 0;
   }
 
-  &:last-of-type ${StyledPhaseName} {
+  &:last-of-type .phase-name {
     padding-right: 0;
   }
 `;
@@ -112,17 +115,22 @@ const StyledPhase = styled.li<{ $isVertical: boolean }>`
   ${({ $isVertical }) => ($isVertical ? verticalPhaseStyles : horizontalPhaseStyles)}
 `;
 
-const verticalLineStyles = css<{ $hidden?: boolean }>`
+const verticalLineStyles = ({ $hidden }: { $hidden?: boolean }) => css`
   width: 2px;
   height: 14px;
-  ${({ $hidden }) => $hidden && 'display: none;'}
+  ${$hidden && 'display: none;'}
 `;
 
-const horizontalLineStyles = css<{ $hidden?: boolean; $isMini?: boolean }>`
+const horizontalLineStyles = ({
+  $isMini,
+  $hidden,
+}: {
+  $isMini?: boolean;
+  $hidden?: boolean;
+}) => css`
   height: 2px;
-
-  ${({ $isMini }) => ($isMini ? 'width: 8px;' : 'flex: 1 0 auto;')}
-  ${({ $hidden }) => $hidden && 'visibility: hidden;'}
+  ${$isMini ? 'width: 8px;' : 'flex: 1 0 auto;'}
+  ${$hidden && 'visibility: hidden;'}
 `;
 
 const StyledPhaseLine = styled.div<{
@@ -133,7 +141,7 @@ const StyledPhaseLine = styled.div<{
 }>`
   background: ${({ $color }) => $color};
 
-  ${({ $isVertical }) => ($isVertical ? verticalLineStyles : horizontalLineStyles)}
+  ${(props) => (props.$isVertical ? verticalLineStyles(props) : horizontalLineStyles(props))}
 `;
 
 const PHASE_CONFIG: {
@@ -324,6 +332,7 @@ export function PhaseTimeline({
 
               {layout !== 'mini' && (
                 <StyledPhaseName
+                  className="phase-name"
                   $isVertical={isVertical}
                   $type={phaseType}
                   $color={getColorFromType(phaseType, theme, 'textColorKey')}

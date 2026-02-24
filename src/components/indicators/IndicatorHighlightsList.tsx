@@ -1,14 +1,15 @@
 import React from 'react';
 
 import { gql, useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
-import styled from 'styled-components';
+
+import ContentLoader from '@common/components/ContentLoader';
 
 import type { IndicatorHightlightListQuery } from '@/common/__generated__/graphql';
 import { IndicatorListLink } from '@/common/links';
 import Button from '@/components/common/Button';
-import ContentLoader from '@/components/common/ContentLoader';
 import Icon from '@/components/common/Icon';
 
 import IndicatorHighlightCard from './IndicatorHighlightCard';
@@ -127,7 +128,7 @@ function IndicatorHighlightsList(props: IndicatorHighlightsListProps) {
     }
   );
 
-  if (loading) return <ContentLoader />;
+  if (loading) return <ContentLoader message={t('loading')} />;
   if (error) return <p>{t('error-loading-indicators')}</p>;
   return <IndicatorCardList indicators={data?.planIndicators} />;
 }

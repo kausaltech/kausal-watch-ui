@@ -13,6 +13,7 @@ import type { WorkflowState } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { getActionImage } from '@/common/images';
 import ActionContent from '@/components/actions/ActionContent';
+import ErrorPage from '@/components/common/ErrorPage';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { getActionDetails } from '@/queries/get-action';
 import { tryRequest } from '@/utils/api.utils';
@@ -66,6 +67,7 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
 export default async function ActionPage(props: Props) {
   const params = await props.params;
   const { id, plan } = params;
+  const t = await getTranslations({ locale: params.lang });
   const cookiesList = await cookies();
   const workflow = cookiesList.get(SELECTED_WORKFLOW_COOKIE_KEY);
   const decodedId = decodeURIComponent(id);
@@ -82,6 +84,7 @@ export default async function ActionPage(props: Props) {
   if (error || !data?.action || !data.plan) {
     if (error) {
       captureException(error);
+      return <ErrorPage message={t('error-loading-data')} details={error.message} />;
     }
 
     return notFound();

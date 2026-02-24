@@ -2,9 +2,9 @@
 
 import { redirect } from 'next/navigation';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Card, CardBody, Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import { Link } from '@/common/links';
 import Button from '@/components/common/Button';

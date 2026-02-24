@@ -4,47 +4,14 @@ import React from 'react';
 
 import Link from 'next/link';
 
+import { Box, Button, Card, CardContent, Container, Grid, Typography } from '@mui/material';
 import { useTranslations } from 'next-intl';
-import { Card, CardBody, Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
-
-import Button from '@/components/common/Button';
-
-export const ErrorBackground = styled.div<{ $isFullPage?: boolean }>`
-  background-color: ${(props) => props.theme.brandDark};
-  min-height: ${({ $isFullPage }) => ($isFullPage ? '800px' : undefined)};
-  padding: 5rem 0;
-`;
-
-export const StyledCard = styled(Card)`
-  text-align: center;
-  width: 100%;
-  transition: all 0.5s ease;
-  overflow: hidden;
-  border-width: ${(props) => props.theme.cardBorderWidth};
-  border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) => props.theme.themeColors.white};
-
-  svg {
-    width: 4rem;
-    margin-bottom: 2rem;
-    fill: ${(props) => props.theme.brandDark};
-  }
-`;
-
-export const StyledTitle = styled.h1`
-  margin-bottom: 1rem;
-`;
-
-export const StyledSubtitle = styled.h4`
-  font-weight: ${({ theme }) => theme.fontWeightBase};
-  color: ${({ theme }) => theme.textColor.secondary};
-`;
 
 type Props = {
   message?: string;
   type?: 'page' | 'block';
   testId?: string;
+  details?: string;
 };
 
 export const errorIcon = (
@@ -56,38 +23,39 @@ export const errorIcon = (
   </svg>
 );
 
-export function ErrorPage({ message, type = 'page', testId }: Props) {
+function ErrorPage({ message, type = 'page', details, testId }: Props) {
   const t = useTranslations();
 
   return (
-    <ErrorBackground $isFullPage={type === 'page'} data-testid={testId}>
-      <Container>
-        <Row>
-          <Col md={{ size: 6, offset: 3 }}>
-            <StyledCard>
-              <CardBody>
-                {errorIcon}
-
-                <StyledTitle as={type === 'page' ? 'h1' : 'h2'}>
+    <Box sx={{ bgcolor: 'primary.main', py: 8 }} data-testid={testId}>
+      <Container fixed maxWidth="xl">
+        <Grid container spacing={2}>
+          <Grid size={{ md: 6 }} offset={{ md: 3 }}>
+            <Card>
+              <CardContent sx={{ textAlign: 'center' }}>
+                <Box sx={{ width: 48, height: 48, mb: 1, display: 'inline-block' }}>
+                  {errorIcon}
+                </Box>
+                <Typography variant="h2" component="h1" sx={{ mb: 1 }}>
                   {message || t('error-occurred')}
-                </StyledTitle>
-
-                {type === 'page' && (
-                  <Link href="/">
-                    <Button outline color="dark" size="sm">
-                      {t('return-to-front')}
-                    </Button>
-                  </Link>
+                </Typography>
+                {details && (
+                  <Typography variant="body1" sx={{ mb: 2, bgcolor: 'secondary.light' }}>
+                    <code>{details}</code>
+                  </Typography>
                 )}
-
-                {type === 'block' && (
-                  <StyledSubtitle>{t('content-could-not-be-displayed')}</StyledSubtitle>
-                )}
-              </CardBody>
-            </StyledCard>
-          </Col>
-        </Row>
+                <Link href="/">
+                  <Button variant="outlined" size="small" color="primary">
+                    {t('return-to-front', { ns: 'common' })}
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </Container>
-    </ErrorBackground>
+    </Box>
   );
 }
+
+export default ErrorPage;

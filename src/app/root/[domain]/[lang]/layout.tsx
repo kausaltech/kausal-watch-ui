@@ -4,20 +4,17 @@ import type { ReactNode } from 'react';
 import { headers } from 'next/headers';
 import Script from 'next/script';
 
-import type { Theme } from '@kausal/themes/types';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import 'react-medium-image-zoom/dist/styles.css';
 
 import { EnvProvider } from '@common/env/runtime-react';
+import { EmotionRegistry } from '@common/themes/StyledComponentsRegistry';
+import '@common/themes/styles/main.scss';
 
 import { DayjsLocaleProvider } from '@/common/dayjs';
 import { ApolloWrapper } from '@/components/providers/ApolloWrapper';
 import { AuthProvider } from '@/components/providers/AuthProvider';
-import ThemeProvider from '@/components/providers/ThemeProvider';
 import { auth } from '@/config/auth';
-import defaultTheme from '@/public/static/themes/default/theme.json';
-import { StyledComponentsRegistry } from '@/styles/StyledComponentsRegistry';
-import '@/styles/default/main.scss';
 
 type Props = {
   params: Promise<{ lang: string }>;
@@ -49,25 +46,21 @@ export default function LangLayout(props: Props) {
         </Script>
         {/* Provide the public environment variables to the client */}
         <EnvProvider />
-        {/* Initially provide the default theme since the plan theme identifier is loaded asynchronously.
-            This prevents errors in root components such as loaders that require a theme */}
-        <ThemeProvider theme={defaultTheme as Theme}>
-          <NextIntlClientProvider locale={params.lang} messages={messages}>
-            <StyledComponentsRegistry>
-              <DayjsLocaleProvider locale={params.lang}>
-                <AsyncAuthProvider>
-                  <ApolloWrapper
-                    initialLocale={params.lang}
-                    planIdentifier={planIdentifier}
-                    planDomain={planDomain}
-                  >
-                    {children}
-                  </ApolloWrapper>
-                </AsyncAuthProvider>
-              </DayjsLocaleProvider>
-            </StyledComponentsRegistry>
-          </NextIntlClientProvider>
-        </ThemeProvider>
+        <NextIntlClientProvider locale={params.lang} messages={messages}>
+          <EmotionRegistry>
+            <DayjsLocaleProvider locale={params.lang}>
+              <AsyncAuthProvider>
+                <ApolloWrapper
+                  initialLocale={params.lang}
+                  planIdentifier={planIdentifier}
+                  planDomain={planDomain}
+                >
+                  {children}
+                </ApolloWrapper>
+              </AsyncAuthProvider>
+            </DayjsLocaleProvider>
+          </EmotionRegistry>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

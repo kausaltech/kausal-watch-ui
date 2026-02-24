@@ -2,7 +2,7 @@ import type { ComponentType } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import { useTheme } from 'styled-components';
+import { useTheme } from '@emotion/react';
 
 export const CUSTOM_COMPONENTS = {
   zurich: {

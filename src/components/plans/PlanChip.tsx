@@ -1,10 +1,11 @@
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { Theme } from '@kausal/themes/types';
 import { transparentize } from 'polished';
-import styled, { useTheme } from 'styled-components';
 
-import { getThemeStaticURL } from '@/common/theme';
+import { getThemeStaticURL } from '@common/themes/theme';
 
 const Tag = styled.div<{ $minWidth: string }>`
   display: flex;

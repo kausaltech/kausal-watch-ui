@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 
 import dynamic from 'next/dynamic';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
 
-import ContentLoader from '@/components/common/ContentLoader';
+import ContentLoader from '@common/components/ContentLoader';
+
 import Icon from '@/components/common/Icon';
 import Modal from '@/components/common/Modal';
 
@@ -64,8 +65,9 @@ const OpenModalButton = styled.button`
   }
 `;
 
+// TODO: Loading should be translated, but can not do it in dynamic import.
 const Plot = dynamic(() => import('./Plot'), {
-  loading: () => <ContentLoader />,
+  loading: () => <ContentLoader message="Loading" />,
   ssr: false,
 });
 
@@ -76,11 +78,6 @@ const StatusDonut = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
-  const isServer = typeof window === 'undefined';
-  if (isServer) {
-    return null;
-  }
 
   const pieData = {
     values: [...data.values],

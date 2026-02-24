@@ -1,6 +1,7 @@
 import type { PropsWithChildren, ReactElement } from 'react';
 import React, { type JSX, useMemo, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { withScope } from '@sentry/nextjs';
 import { ElementType } from 'domelementtype';
 import type { DOMNode, Element, HTMLReactParserOptions } from 'html-react-parser';
@@ -9,7 +10,6 @@ import { useTranslations } from 'next-intl';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 import { Collapse } from 'reactstrap';
-import styled from 'styled-components';
 
 import { IndicatorLink } from '@/common/links';
 import Button from '@/components/common/Button';

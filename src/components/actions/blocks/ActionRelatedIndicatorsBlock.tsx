@@ -1,9 +1,9 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor, shade } from 'polished';
 import { Badge as BaseBadge, Card as BaseCard, CardBody, CardFooter, Col, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
 import { ActionLink, IndicatorLink } from '@/common/links';

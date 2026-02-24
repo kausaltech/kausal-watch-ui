@@ -1,9 +1,9 @@
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
 
 import { CommonContentBlockProps } from '@/common/blocks.types';
 import { getCategoryString } from '@/common/categories';

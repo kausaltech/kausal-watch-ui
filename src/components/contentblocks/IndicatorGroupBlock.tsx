@@ -1,9 +1,9 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
 import { IndicatorLink, IndicatorListLink } from '@/common/links';

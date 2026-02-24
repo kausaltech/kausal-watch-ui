@@ -1,7 +1,7 @@
 import React, { type ReactNode, useEffect, useRef } from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
 
 import Icon from '@/components/common/Icon';
 
