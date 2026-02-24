@@ -213,28 +213,6 @@ export type ActivateScenarioMutation = (
   & { __typename: 'Mutation' }
 );
 
-export type SetGlobalParameterFromActionSummaryMutationVariables = Exact<{
-  parameterId: Scalars['ID']['input'];
-  boolValue: InputMaybe<Scalars['Boolean']['input']>;
-  numberValue: InputMaybe<Scalars['Float']['input']>;
-  stringValue: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type SetGlobalParameterFromActionSummaryMutation = (
-  { setParameter: (
-    { ok: boolean | null, parameter: (
-      { isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null }
-      & { __typename: 'BoolParameterType' }
-    ) | (
-      { isCustomized: boolean, isCustomizable: boolean }
-      & { __typename: 'NumberParameterType' | 'StringParameterType' | 'UnknownParameterType' }
-    ) | null }
-    & { __typename: 'SetParameterMutation' }
-  ) | null }
-  & { __typename: 'Mutation' }
-);
-
 export type SetGlobalParameterMutationVariables = Exact<{
   parameterId: Scalars['ID']['input'];
   boolValue: InputMaybe<Scalars['Boolean']['input']>;

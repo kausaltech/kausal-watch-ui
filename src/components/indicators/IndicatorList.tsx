@@ -401,7 +401,11 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
   // The list would be fairly useless if we don't have name column
   // We add it by default if it's not included in the layout
   if (
-    !indicatorListColumns.find((column) => column.sourceField === IndicatorDashboardFieldName.Name)
+    !indicatorListColumns.find(
+      (column) =>
+        column.__typename === 'IndicatorListColumn' &&
+        column.sourceField === IndicatorDashboardFieldName.Name
+    )
   ) {
     indicatorListColumns.unshift({
       __typename: 'IndicatorListColumn',
