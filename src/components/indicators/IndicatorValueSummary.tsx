@@ -270,9 +270,11 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
   };
 
   const desirableDirection = determineDesirableDirection(desiredTrend, values, goals);
-  const shortUnitName =
-    (unit.shortName || unit.name) === 'no unit' ? '' : unit.shortName || unit.name;
-  const diffUnitName = unit.name === '%' ? t('percent-point-abbreviation') : shortUnitName;
+  const unitLabelRaw = unit.shortName || unit.name;
+  const unitLabel = (unitLabelRaw || '').trim();
+  const shortUnitName = unitLabel === 'no unit' ? '' : unitLabel;
+  const isPercentUnit = unitLabel === '%' || unitLabel.startsWith('%');
+  const diffUnitName = isPercentUnit ? t('percent-point-abbreviation') : shortUnitName;
   const now = dayjs();
   let timeFormat = 'l';
 
@@ -451,7 +453,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
     displayOptions.goalGap.show
   ) {
     const difference = displayGoal.value - values[values.length - 1].value;
-    const isPercentagePoint = unit?.name === '%';
+    const isPercentagePoint = isPercentUnit;
     const goalReached = desirableDirection === '+' ? difference <= 0 : difference >= 0;
     const timeToGoal = dayjs(now).to(dayjs(displayGoal.date));
     const prefix = difference > 0 ? '+' : '-';
