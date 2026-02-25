@@ -39,7 +39,6 @@ const Labels = styled.div<{ columns: string }>`
   @media (max-width: 768px) {
     display: flex;
     width: auto;
-    margin-top: ${(props) => props.theme.spaces.s050};
   }
 `;
 
