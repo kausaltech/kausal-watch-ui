@@ -121,30 +121,36 @@ type OutcomeNodeContentProps = {
   node: OutcomeNodeFieldsFragment;
   subNodes: OutcomeNodeFieldsFragment[];
   color?: string | null;
+  colorAdjust?: number;
   startYear: number;
   endYear: number;
   activeScenario: string;
   refetching: boolean;
   separateYears: number[] | null;
+  chartType?: 'area' | 'line' | 'bar';
 };
 
 function OutcomeNodeContent({
   node,
   subNodes,
   color,
+  colorAdjust,
   startYear,
   endYear,
   activeScenario,
   refetching,
+  chartType = 'bar',
   separateYears,
 }: OutcomeNodeContentProps) {
   const t = useTranslations();
   const format = useFormatter();
   const [activeTabId, setActiveTabId] = useState('graph');
   const paths = usePaths();
+
   const activeGoal = useReactiveVar(activeGoalVar);
   // We have a disclaimer for the mobility node for 2023 (hack)
   const hideForecast = separateYears && separateYears.length > 1;
+
   const instance = paths?.instance;
   const nodeName = node.shortName || node.name;
   const pathsDisclaimers = instance?.outcomeDisclaimers;
@@ -162,10 +168,6 @@ function OutcomeNodeContent({
     }
     if (!instance) return null;
 
-    // Use legacy mode (area graph) if we have scopes
-    const legacyMode = node.metricDim.dimensions.find(
-      (dim) => dim.id === 'net_emissions:dim:emission_scope'
-    );
     return (
       <DimensionalNodeVisualisation
         title={undefined}
@@ -173,6 +175,7 @@ function OutcomeNodeContent({
         startYear={startYear}
         endYear={endYear}
         color={color}
+        colorAdjust={colorAdjust}
         withControls={false}
         withTools={false}
         baselineForecast={node.metric?.baselineForecastValues ?? undefined}
@@ -183,7 +186,8 @@ function OutcomeNodeContent({
         }}
         site={null}
         t={t}
-        chartType={legacyMode ? 'area' : 'bar'}
+        chartType={chartType}
+        separateYears={separateYears}
       />
     );
   }, [node, color, startYear, endYear, instance, nodeName, t]);
@@ -194,22 +198,14 @@ function OutcomeNodeContent({
         <DimensionalPieGraph
           metric={node.metricDim!}
           endYear={separateYears ? separateYears[separateYears.length - 1] : endYear}
-          colorChange={separateYears ? 1.75 : 0}
+          colorChange={colorAdjust}
         />
       </div>
     ),
-    [node, endYear, separateYears]
+    [node, endYear, separateYears, colorAdjust]
   );
 
   if (!instance) return null;
-
-  console.log('Rendering OutcomeNodeContent for node', node.id, {
-    node,
-    subNodes,
-    color,
-    startYear,
-    endYear,
-  });
 
   // Display yearly distribution tab only if the node has scopes dimension
   const showDistribution =

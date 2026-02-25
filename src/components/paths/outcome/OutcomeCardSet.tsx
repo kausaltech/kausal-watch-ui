@@ -201,7 +201,9 @@ const OutcomeCardSet = ({
   const activeGoal = useReactiveVar(activeGoalVar);
   // We have a different group for indirect emissions (hack)
   const separateYears = activeGoal?.separateYears || null;
+  const chartType = activeGoal?.defaultOutcomeGraphType || 'bar';
   const hideForecast = separateYears && separateYears.length > 1;
+  const colorAdjust = activeGoal?.colorAdjust;
   const inputNodes = rootNode.inputNodes.filter((node) => !nodeMap.has(node.id));
 
   const handleHover = useCallback((evt) => {
@@ -234,11 +236,13 @@ const OutcomeCardSet = ({
             node={rootNode}
             subNodes={cardNodes}
             color={rootNode.color || parentColor}
+            colorAdjust={colorAdjust}
             startYear={startYear}
             endYear={endYear}
             activeScenario={activeScenario}
             refetching={refetching}
             separateYears={separateYears}
+            chartType={chartType}
           />
         </ContentArea>
         {cardNodes.length > 0 && (
@@ -257,6 +261,7 @@ const OutcomeCardSet = ({
                   onHover={handleHover}
                   handleClick={handleClick}
                   color={node.color || parentColor}
+                  colorAdjust={colorAdjust}
                   total={positiveNodesTotal - negativeNodesTotal}
                   positiveTotal={positiveNodesTotal}
                   negativeTotal={negativeNodesTotal}
