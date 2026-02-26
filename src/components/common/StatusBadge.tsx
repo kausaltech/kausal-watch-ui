@@ -2,9 +2,11 @@ import React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+import { useTranslations } from 'next-intl';
 import { setLightness } from 'polished';
 
 import { ActionWithStatusSummary, getStatusColorForAction } from '@/common/ActionStatusSummary';
+import { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
 import type { PlanContextType } from '@/context/plan';
 
 type StatusProps = {
@@ -65,13 +67,24 @@ interface StatusBadgeProps {
 
 const StatusBadge = ({ action, statusName, plan, reason, subtle = false }: StatusBadgeProps) => {
   const { statusSummary, status } = action;
+  const t = useTranslations();
 
   const theme = useTheme();
-  const statusColor = status?.color
+  let statusColor = status?.color
     ? theme.graphColors[status.color]
     : getStatusColorForAction(action, plan, theme);
-  const label = statusName ?? statusSummary?.label;
-
+  let label = statusName;
+  if (label == null) {
+    if (
+      action.scheduleContinuous &&
+      action.statusSummary?.identifier === ActionStatusSummaryIdentifier.Completed
+    ) {
+      label = t('action-continuous');
+      statusColor = theme.actionContinuousColor;
+    } else {
+      label = statusSummary?.label;
+    }
+  }
   if (!label) {
     return null;
   }
