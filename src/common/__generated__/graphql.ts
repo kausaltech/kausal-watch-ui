@@ -5780,7 +5780,7 @@ export type GetActionDetailsQuery = (
       { id: string }
       & { __typename: 'ActionStatusUpdate' }
     )>, relatedIndicators: Array<(
-      { id: string, indicator: (
+      { id: string, indicatesActionProgress: boolean, indicator: (
         { id: string, name: string, latestGraph: (
           { id: string }
           & { __typename: 'IndicatorGraph' }

@@ -39,18 +39,22 @@ interface ActionStatusProps {
   };
   completion?: number | null;
   text?: string;
+  showProgressBar?: boolean;
 }
 
 function ActionStatus(props: ActionStatusProps) {
-  const { plan, statusSummary, completion = 0, text } = props;
+  const { plan, statusSummary, completion = 0, text, showProgressBar = false } = props;
   const theme = useTheme();
   const enrichedStatusSummary = getStatusSummary(plan, statusSummary);
   const statusColor = enrichedStatusSummary.color;
   const statusName = text ?? enrichedStatusSummary.label;
+  const completionNumber =
+    typeof completion === 'number' && Number.isFinite(completion) ? completion : null;
+  const shouldShowBar = showProgressBar && completionNumber !== null && completionNumber > 0;
 
   return (
     <Status theme={theme}>
-      {completion && <ActionProgress value={completion} color={statusColor} aria-hidden />}
+      {shouldShowBar && <ActionProgress value={completionNumber} color={statusColor} aria-hidden />}
       <StatusTitle>{statusName}</StatusTitle>
     </Status>
   );
