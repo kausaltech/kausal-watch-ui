@@ -7,10 +7,12 @@ import PathsContext from '@/context/paths/paths';
 
 type InstanceGoalEntry = GetInstanceContextQuery['instance']['goals'][number];
 // Complex way to define augmented instance context type
+// Settings per goal
 type AugmentedInstanceGoal = InstanceGoalEntry & {
   separateYears: number[] | null;
   colorAdjust: number;
   hideForecast: boolean;
+  defaultOutcomeGraphType?: 'area' | 'line' | 'bar';
 };
 
 type AugmentedInstanceType = Omit<GetInstanceContextQuery['instance'], 'goals'> & {
@@ -40,6 +42,7 @@ const PER_INSTANCE_SETTINGS: Record<
     outcomeDisclaimers?: { year: number; node: string; goal: string; disclaimer: string }[];
     colorAdjust?: Record<string, number>;
     hideForecast?: Record<string, boolean>;
+    defaultOutcomeGraphType?: Record<string, 'area' | 'line' | 'bar'>;
   }
 > = {
   'lappeenranta-nzc': {
@@ -56,6 +59,10 @@ const PER_INSTANCE_SETTINGS: Record<
     ],
   },
   zuerich: {
+    defaultOutcomeGraphType: {
+      'net_emissions/emission_scope:indirect': 'bar',
+      'net_emissions/emission_scope:direct+negative': 'area',
+    },
     separateYears: {
       'net_emissions/emission_scope:indirect': [1990, 2010, 2015, 2020, 2022, 2023],
       'net_emissions/emission_scope:direct+negative': null,
@@ -78,6 +85,10 @@ const PER_INSTANCE_SETTINGS: Record<
     },
   },
   'zuerich-dev': {
+    defaultOutcomeGraphType: {
+      'net_emissions/emission_scope:indirect': 'bar',
+      'net_emissions/emission_scope:direct+negative': 'area',
+    },
     separateYears: {
       'net_emissions/emission_scope:indirect': [1990, 2010, 2015, 2020, 2022, 2023, 2024],
       'net_emissions/emission_scope:direct+negative': null,
@@ -150,11 +161,15 @@ export default function PathsProvider({ instance, children }: PathsProviderProps
     const colorAdjust = instanceSettings?.colorAdjust?.[goal.id] ?? 0;
     // Used to hide the forecast for the indirect emissions
     const hideForecast = instanceSettings?.hideForecast?.[goal.id] ?? false;
+    // Used to set a default graph type for the goal
+    const defaultOutcomeGraphType =
+      instanceSettings?.defaultOutcomeGraphType?.[goal.id] ?? undefined;
     return {
       ...goal,
       separateYears,
       colorAdjust,
       hideForecast,
+      defaultOutcomeGraphType,
     };
   });
 

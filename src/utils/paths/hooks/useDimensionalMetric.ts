@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useReactiveVar } from '@apollo/client';
 import { isEqual } from 'lodash-es';
 
+import { activeGoalVar } from '@common/apollo/paths-cache';
 import {
   downloadData,
   flatten,
@@ -22,8 +23,6 @@ import type {
   ParsedMetric,
   SliceConfig,
 } from '@common/utils/paths/metric';
-
-import { activeGoalVar } from '@/context/paths/cache';
 
 type UseDimensionalMetricOptions = {
   /** Sync slice config with active goal changes (default: true) */

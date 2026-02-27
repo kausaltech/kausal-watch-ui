@@ -5,11 +5,12 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Popover, PopoverBody, Row } from 'reactstrap';
 
+import { activeGoalVar, yearRangeVar } from '@common/apollo/paths-cache';
+
 import GoalSelector from '@/components/paths/GoalSelector';
 import RangeSelector from '@/components/paths/RangeSelector';
 import ScenarioSelector from '@/components/paths/ScenarioSelector';
 import GoalOutcomeBar from '@/components/paths/toolbar/GoalOutcomeBar';
-import { activeGoalVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 
 const PanelContent = styled.div`

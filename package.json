@@ -75,6 +75,7 @@
     "proper-lockfile": "^4.1.2",
     "react": "19.1.0",
     "react-aria-components": "^1.14.0",
+    "react-bootstrap-icons": "^1.11.6",
     "react-bootstrap-typeahead": "^6.4.1",
     "react-content-loader": "^7.0.2",
     "react-copy-to-clipboard": "^5.1.0",

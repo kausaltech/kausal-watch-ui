@@ -3,11 +3,12 @@ import { useCallback, useMemo, useState } from 'react';
 import { useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
 
-import { setUniqueColors } from '@/common/paths/colors';
-import { getMetricValue, getOutcomeTotal } from '@/common/paths/preprocess';
+import { activeGoalVar } from '@common/apollo/paths-cache';
+import { setUniqueColors } from '@common/utils/paths/colors';
+import { getMetricValue, getOutcomeTotal } from '@common/utils/paths/metric';
+
 import OutcomeCard from '@/components/paths/outcome/OutcomeCard';
 import OutcomeNodeContent from '@/components/paths/outcome/OutcomeNodeContent';
-import { activeGoalVar } from '@/context/paths/cache';
 
 import type { OutcomenodeType } from '../contentblocks/PathsOutcomeBlock';
 
@@ -200,7 +201,9 @@ const OutcomeCardSet = ({
   const activeGoal = useReactiveVar(activeGoalVar);
   // We have a different group for indirect emissions (hack)
   const separateYears = activeGoal?.separateYears || null;
+  const chartType = activeGoal?.defaultOutcomeGraphType || 'bar';
   const hideForecast = separateYears && separateYears.length > 1;
+  const colorAdjust = activeGoal?.colorAdjust;
   const inputNodes = rootNode.inputNodes.filter((node) => !nodeMap.has(node.id));
 
   const handleHover = useCallback((evt) => {
@@ -233,11 +236,13 @@ const OutcomeCardSet = ({
             node={rootNode}
             subNodes={cardNodes}
             color={rootNode.color || parentColor}
+            colorAdjust={colorAdjust}
             startYear={startYear}
             endYear={endYear}
             activeScenario={activeScenario}
             refetching={refetching}
             separateYears={separateYears}
+            chartType={chartType}
           />
         </ContentArea>
         {cardNodes.length > 0 && (
@@ -256,6 +261,7 @@ const OutcomeCardSet = ({
                   onHover={handleHover}
                   handleClick={handleClick}
                   color={node.color || parentColor}
+                  colorAdjust={colorAdjust}
                   total={positiveNodesTotal - negativeNodesTotal}
                   positiveTotal={positiveNodesTotal}
                   negativeTotal={negativeNodesTotal}

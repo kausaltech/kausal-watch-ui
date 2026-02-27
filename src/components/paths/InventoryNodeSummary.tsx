@@ -4,10 +4,11 @@ import { useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
 import { useFormatter } from 'next-intl';
 
+import { yearRangeVar } from '@common/apollo/paths-cache';
+
 import type { GetNodeContentQuery } from '@/common/__generated__/paths/graphql';
 import HighlightValue from '@/components/paths/HighlightValue';
 import type { PathsInstanceType } from '@/components/providers/PathsProvider';
-import { yearRangeVar } from '@/context/paths/cache';
 import {
   type SliceConfig,
   flatten,

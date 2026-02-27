@@ -11,6 +11,7 @@ import { readableColor } from 'polished';
 import ContentLoader from 'react-content-loader';
 import { Alert, Card, CardBody, Col, Container, Row } from 'reactstrap';
 
+import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type {
@@ -19,7 +20,6 @@ import type {
 } from '@/common/__generated__/paths/graphql';
 import { deploymentType } from '@/common/environment';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
-import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';

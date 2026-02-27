@@ -99,5 +99,6 @@
   "outcome-bar-summary-forecast": "Ar izvēlēto scenāriju {scenarioName} {goalType} prognoze {selectedYear}. gadā ir {selectedYearValue}. Mērķis {nearestGoalYear}. gadam ir {nearestGoalValue}.",
   "outcome-tabs-label": "Attēlošanas opcijas",
   "tco2-e-inhabitant": "t CO<sub>2</sub>eq/iedzīvotājs/g",
-  "ktco2-e": "kt CO<sub>2</sub>eq/g"
+  "ktco2-e": "kt CO<sub>2</sub>eq/g",
+  "calculated-emissions": "Aprēķinātās emisijas"
 }

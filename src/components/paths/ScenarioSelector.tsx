@@ -4,8 +4,9 @@ import { gql, useMutation, useQuery } from '@apollo/client';
 import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 
+import { activeScenarioVar } from '@common/apollo/paths-cache';
+
 import SelectDropdown, { type SelectDropdownOption } from '@/components/common/SelectDropdown';
-import { activeScenarioVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { GET_SCENARIOS } from '@/queries/paths/get-paths-scenarios';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
