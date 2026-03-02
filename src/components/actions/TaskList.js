@@ -60,11 +60,11 @@ const TaskContent = styled.div`
     }
   }
 
-  .task-comment {
+  .task-details {
     margin-top: ${(props) => props.theme.spaces.s100};
   }
 
-  .task-comment h4 {
+  .task-details h4 {
     margin-top: 1rem;
   }
 
@@ -146,16 +146,16 @@ const Task = (props) => {
       )}
       <TaskContent>
         <h4 className="task-title">{task.name}</h4>
-        {/* Strip HTML tags to see if comment field is actually empty */}
-        {task.comment?.replace(/(<([^>]+)>)/gi, '').length > 0 && (
+        {/* Strip HTML tags to see if details field is actually empty */}
+        {task.details?.replace(/(<([^>]+)>)/gi, '').length > 0 && (
           <>
             <ToggleButton color="link" onClick={toggle} size="sm" className={isOpen ? 'open' : ''}>
-              {isOpen ? t('action-task-hide-comment') : t('action-task-show-comment')}
+              {isOpen ? t('action-task-hide-details') : t('action-task-show-details')}
               <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
             </ToggleButton>
             <Collapse isOpen={isOpen}>
-              <div className="task-comment">
-                <RichText html={task.comment} />
+              <div className="task-details">
+                <RichText html={task.details} />
               </div>
             </Collapse>
           </>
