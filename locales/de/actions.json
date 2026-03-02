@@ -64,5 +64,9 @@
     "action-dependencies": "{context, select, CASE_STUDY {Abhängigkeiten der Fallstudie} STRATEGY {Abhängigkeiten der Strategie} other {Abhängigkeiten der Maßnahmen}}",
     "feedback-on-category": "Feedback zu dieser Kategorie geben",
     "feedback-on-category-description": "Sie können einen Kommentar oder Feedback zu dieser Kategorie hinterlassen",
-    "action-leadParagraph": "Leitabsatz"
+    "action-leadParagraph": "Leitabsatz",
+    "actions-continuous": "Kontinuierliche Maßnahmen",
+    "actions-non-continuous": "Nicht kontinuierliche Maßnahmen",
+    "filter-action-type": "Art der Maßnahme",
+    "see-all-actions": "Alle Typen"
 }
