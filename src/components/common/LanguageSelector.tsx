@@ -125,7 +125,7 @@ const languageNames = {
   en: 'English',
   es: 'Español',
   fi: 'Suomi',
-  fr: 'French',
+  fr: 'Français',
   lv: 'Latviešu',
   sv: 'Svenska',
 };
