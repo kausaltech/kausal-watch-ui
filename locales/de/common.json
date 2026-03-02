@@ -127,7 +127,7 @@
     "search-from-plans": "Suche in Plänen",
     "see-all-actions": "{context, select, STRATEGY {Alle Strategien ansehen} CASE_STUDY {Alle Fallstudien anzeigen} other {Alle Maßnahmen ansehen}}",
     "see-all-indicators": "Alle Indikatoren ansehen",
-    "see-all-results": "Alle {count} Ergebnisse ansehen",
+    "see-all-results": "{count, plural, one {Ergebnis ansehen} other {Alle # Ergebnisse ansehen}}",
     "searching-for": "Suche nach \"{term}\"",
     "search-advanced": "Fortgeschrittene Suche",
     "search-no-results": "Keine Ergebnisse für diese Suche. Versuchen Sie, die Suchbegriffe zu ändern.",
@@ -214,7 +214,7 @@
     "pledge-list-all": "Alle Mitmach-Aktionen",
     "pledge-list-mine": "Meine Mitmach-Aktionen",
     "pledge-list-view-toggle": "Ansicht der Mitmach-Aktionen umschalten",
-    "pledge-committed-count": "{count} machen mit",
+    "pledge-committed-count": "{count, plural, one {# macht mit} other {# machen mit}}",
     "pledge-committed": "Mitgemacht",
     "pledge-commit-to-this": "Jetzt mitmachen",
     "pledge-no-commitments": "Sie haben noch nicht an einer Mitmach-Aktion teilgenommen. Durchsuchen Sie alle Mitmach-Aktionen, um eine zu finden, die Sie interessiert!",
@@ -235,7 +235,7 @@
     "pledge-feedback-thanks-message": "Ihr Feedback hilft uns, unsere Mitmach-Aktionen zu verbessern und effektiver zu gestalten.",
     "very-dissatisfied": "Sehr unzufrieden",
     "dissatisfied": "Unzufrieden",
-    "neutral": "neutral",
+    "neutral": "Neutral",
     "satisfied": "Zufrieden",
     "very-satisfied": "Sehr zufrieden",
     "back": "Zurück",
@@ -251,5 +251,8 @@
     "pledge-form-zip-code": "Ihre Postleitzahl",
     "pledge-form-zip-code-help": "Helfen Sie uns zu verstehen, welche Regionen Maßnahmen ergreifen. Ihre Postleitzahl wird anonym erfasst.",
     "pledge-most-committed": "Am häufigsten unterstützt",
-    "share": "Teilen"
+    "share": "Teilen",
+    "pledge-impact-if-residents-commit-html": "{count, plural, one {Wenn <strong># Einwohner </strong> an dieser Mitmach-Aktion teilnimmt} other {Wenn <strong># Einwohner</strong> an dieser Mitmach-Aktion teilnehmen}}",
+    "pledge-impact-to-go": "{count} übrig",
+    "sending": "Senden..."
 }
