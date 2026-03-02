@@ -280,7 +280,7 @@ function PledgeFeedbackComponent({
                   {mutationLoading ? (
                     <span>
                       <StyledSpinner size="sm" color="light" />
-                      {t('sending')}...
+                      {t('sending')}
                     </span>
                   ) : (
                     t('pledge-feedback-send')
