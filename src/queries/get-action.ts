@@ -131,7 +131,7 @@ const GET_ACTION_DETAILS = gql`
         dueAt
         dateFormat
         completedAt
-        comment
+        details
         state
       }
       status {
