@@ -188,7 +188,7 @@
     "select-sector-for-actions": "{context, select, CASE_STUDY {Wählen Sie einen Emissionssektor aus, um entsprechende Fallstudien anzuzeigen} STRATEGY {Wählen Sie einen Emissionssektor aus, um entsprechende Strategien anzuzeigen} other {Wählen Sie einen Emissionssektor aus, um entsprechende Maßnahmen anzuzeigen}}",
     "no-phase": "Keine Phase",
     "no-status": "Kein Status",
-    "number-of-search-results": "{count, plural, =1 {ein Treffer} other {# Treffer}} für die Suche",
+    "number-of-search-results": "{count, plural, one {ein Treffer} other {# Treffer}} für die Suche",
     "error": "Fehler",
     "collapse-row": "Zeile zusammenklappen",
     "expand-row": "Zeile erweitern",
