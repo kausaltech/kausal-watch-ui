@@ -24,6 +24,7 @@ type AugmentedInstanceType = Omit<GetInstanceContextQuery['instance'], 'goals'> 
     disclaimer: string;
   }[];
   colorAdjust: Record<string, number>;
+  showOutcomeNodeDetails: boolean;
 };
 
 export type PathsInstanceType = GetInstanceContextQuery & {
@@ -43,6 +44,7 @@ const PER_INSTANCE_SETTINGS: Record<
     colorAdjust?: Record<string, number>;
     hideForecast?: Record<string, boolean>;
     defaultOutcomeGraphType?: Record<string, 'area' | 'line' | 'bar'>;
+    showOutcomeNodeDetails?: boolean;
   }
 > = {
   'lappeenranta-nzc': {
@@ -85,6 +87,7 @@ const PER_INSTANCE_SETTINGS: Record<
     },
   },
   'zuerich-dev': {
+    showOutcomeNodeDetails: false,
     defaultOutcomeGraphType: {
       'net_emissions/emission_scope:indirect': 'bar',
       'net_emissions/emission_scope:direct+negative': 'area',
@@ -184,7 +187,12 @@ export default function PathsProvider({ instance, children }: PathsProviderProps
     instance && pathsInstance
       ? {
           ...instance,
-          instance: { ...pathsInstance, goals: instanceGoals || [], outcomeDisclaimers },
+          instance: {
+            ...pathsInstance,
+            goals: instanceGoals || [],
+            outcomeDisclaimers,
+            showOutcomeNodeDetails: instanceSettings?.showOutcomeNodeDetails ?? true,
+          },
         }
       : undefined;
 
