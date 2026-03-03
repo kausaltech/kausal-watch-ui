@@ -1,24 +1,34 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
 import { isEqual } from 'lodash-es';
 import { useFormatter, useTranslations } from 'next-intl';
-import {
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Table,
-  UncontrolledDropdown,
-} from 'reactstrap';
+import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
 import { activeGoalVar, activeScenarioVar } from '@common/apollo/paths-cache';
+import {
+  downloadData,
+  flatten,
+  getDefaultSliceConfig,
+  parseMetric,
+  sliceBy,
+} from '@common/utils/paths/metric';
+import type { MetricSliceData, SliceConfig } from '@common/utils/paths/metric';
 
 import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
 import Icon from '@/components/common/Icon';
-import { DimensionalMetric, MetricSlice, SliceConfig } from '@/utils/paths/metric';
-
-//  import { useFeatures } from '@/common/instance';
 
 const Tools = styled.div`
   padding: 0 1rem 0.5rem;
@@ -31,19 +41,6 @@ const Tools = styled.div`
     height: 1.25rem !important;
     vertical-align: -0.2rem;
   }
-`;
-
-const TableWrapper = styled.div`
-  margin: 0 auto;
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: visible;
-  width: calc(100% - 1rem);
-  bottom: -1rem;
-  max-height: 100%;
-  z-index: 1;
-  scroll-behavior: smooth;
-  font-size: 70%;
 `;
 
 interface DataTableProps {
@@ -59,16 +56,17 @@ const DataTable = (props: DataTableProps) => {
   const { metric, startYear, endYear, separateYears, goalName, disclaimer } = props;
 
   const t = useTranslations();
+  const theme = useTheme();
   const format = useFormatter();
   const activeGoal = useReactiveVar(activeGoalVar);
   const activeScenario = useReactiveVar(activeScenarioVar);
 
-  const cube = useMemo(() => new DimensionalMetric(metric), [metric]);
+  const parsed = useMemo(() => parseMetric(metric), [metric]);
 
   const lastMetricYear = metric.years.slice(-1)[0];
   const usableEndYear = lastMetricYear && endYear > lastMetricYear ? lastMetricYear : endYear;
 
-  const defaultConfig = cube.getDefaultSliceConfig(activeGoal);
+  const defaultConfig = getDefaultSliceConfig(parsed, activeGoal);
   const [sliceConfig, setSliceConfig] = useState<SliceConfig>(defaultConfig);
 
   useEffect(() => {
@@ -78,21 +76,21 @@ const DataTable = (props: DataTableProps) => {
      * dimensions with our metric).
      */
     if (!activeGoal) return;
-    const newDefault = cube.getDefaultSliceConfig(activeGoal);
+    const newDefault = getDefaultSliceConfig(parsed, activeGoal);
     if (!newDefault || isEqual(sliceConfig, newDefault)) return;
     setSliceConfig(newDefault);
-  }, [activeGoal, cube, sliceConfig]);
+  }, [activeGoal, parsed, sliceConfig]);
 
-  const slicedDim = cube.dimensions.find((dim) => dim.id === sliceConfig.dimensionId);
+  const slicedDim = parsed.dimensions.find((dim) => dim.id === sliceConfig.dimensionId);
 
   const years =
     separateYears ?? Array.from({ length: usableEndYear - startYear + 1 }, (_, i) => startYear + i);
 
-  let slice: MetricSlice | null = null;
+  let slice: MetricSliceData | null = null;
   if (slicedDim) {
-    slice = cube.sliceBy(slicedDim.id, true, sliceConfig.categories, undefined, years);
+    slice = sliceBy(parsed, slicedDim.id, true, sliceConfig.categories, undefined, years);
   } else {
-    slice = cube.flatten(sliceConfig.categories, years);
+    slice = flatten(parsed, sliceConfig.categories, years);
   }
 
   if (!slice) return null;
@@ -104,78 +102,93 @@ const DataTable = (props: DataTableProps) => {
 
   const tableTitle = `${metric.name}, ${goalName}`;
 
+  const headerCellStyle = {
+    fontWeight: 'bold',
+    lineHeight: 1,
+    bgcolor: theme.cardBackground.secondary,
+  };
   return (
-    <TableWrapper>
-      <h5 className="my-4">{tableTitle}</h5>
-      <Table bordered size="sm" responsive>
+    <TableContainer
+      component={Paper}
+      role="region"
+      aria-label={tableTitle}
+      tabIndex={0}
+      sx={{ maxHeight: 400, overflow: 'auto', backgroundColor: 'white' }}
+    >
+      <Typography variant="h5" component="h3" sx={{ py: 2 }}>
+        {tableTitle}
+      </Typography>
+      <Table sx={{ minWidth: 650 }} size="small" stickyHeader>
         {disclaimer && <caption>{disclaimer}</caption>}
-        <thead>
-          <tr>
-            <th>{t('table-year')}</th>
-            <th>{t('table-measure-type')}</th>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={headerCellStyle}>{t('table-year')}</TableCell>
+            <TableCell sx={headerCellStyle}>{t('table-measure-type')}</TableCell>
             {slice.categoryValues.map((cat) => (
-              <th key={cat.category.id}>{cat.category.label}</th>
+              <TableCell sx={headerCellStyle} key={cat.category.id}>
+                {cat.category.label}
+              </TableCell>
             ))}
-            <th>{t('plot-total')}</th>
-            <th>{t('table-unit')}</th>
-          </tr>
-        </thead>
-        <tbody>
+            <TableCell sx={headerCellStyle}>{t('plot-total')}</TableCell>
+            <TableCell sx={headerCellStyle}>{t('table-unit')}</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {slice.historicalYears.map((year, idx) => (
-            <tr key={`h-${year}`}>
-              <td>{year}</td>
-              <td>{t('table-historical')}</td>
+            <TableRow key={`h-${year}`}>
+              <TableCell>{year}</TableCell>
+              <TableCell>{t('table-historical')}</TableCell>
               {slice.categoryValues.map((cat) => (
-                <td key={`${cat.category.id}-h-${year}`}>
+                <TableCell key={`${cat.category.id}-h-${year}`}>
                   {cat.historicalValues[idx]
                     ? format.number(cat.historicalValues[idx], {
                         maximumSignificantDigits: 2,
                       })
                     : ''}
-                </td>
+                </TableCell>
               ))}
-              <td>
+              <TableCell>
                 {slice.totalValues?.historicalValues[idx]
                   ? format.number(slice.totalValues?.historicalValues[idx], {
                       maximumSignificantDigits: 2,
                     })
                   : ''}
-              </td>
-              <td
+              </TableCell>
+              <TableCell
                 dangerouslySetInnerHTML={{
                   __html: slice.unit,
                 }}
               />
-            </tr>
+            </TableRow>
           ))}
           {slice.forecastYears.map((year, idx) => (
-            <tr key={`h-${year}`}>
-              <td>{year}</td>
-              <td>{forecastLabel}</td>
+            <TableRow key={`f-${year}`}>
+              <TableCell>{year}</TableCell>
+              <TableCell>{forecastLabel}</TableCell>
               {slice.categoryValues.map((cat) => (
-                <td key={`${cat.category.id}-f-${year}`}>
+                <TableCell key={`${cat.category.id}-f-${year}`}>
                   {cat.forecastValues[idx]
                     ? format.number(cat.forecastValues[idx], {
                         maximumSignificantDigits: 2,
                       })
                     : ''}
-                </td>
+                </TableCell>
               ))}
-              <td>
+              <TableCell>
                 {slice.totalValues?.forecastValues[idx]
                   ? format.number(slice.totalValues?.forecastValues[idx], {
                       maximumSignificantDigits: 2,
                     })
                   : ''}
-              </td>
-              <td
+              </TableCell>
+              <TableCell
                 dangerouslySetInnerHTML={{
                   __html: slice.unit,
                 }}
               />
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
+        </TableBody>
       </Table>
       <Tools>
         <UncontrolledDropdown size="sm">
@@ -185,37 +198,37 @@ const DataTable = (props: DataTableProps) => {
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem
-              onClick={async (ev) =>
-                await cube.downloadData(
-                  sliceConfig,
-                  'xlsx',
+              onClick={async () =>
+                await downloadData(parsed, sliceConfig, 'xlsx', {
                   years,
                   tableTitle,
-                  t('plot-total'),
-                  t('table-measure-type'),
-                  t('table-year'),
-                  t('table-unit'),
-                  t('table-historical'),
-                  forecastLabel
-                )
+                  labels: {
+                    total: t('plot-total'),
+                    type: t('table-measure-type'),
+                    year: t('table-year'),
+                    unit: t('table-unit'),
+                    historical: t('table-historical'),
+                    forecast: forecastLabel,
+                  },
+                })
               }
             >
               <Icon name="file" /> XLS
             </DropdownItem>
             <DropdownItem
-              onClick={async (ev) =>
-                await cube.downloadData(
-                  sliceConfig,
-                  'csv',
+              onClick={async () =>
+                await downloadData(parsed, sliceConfig, 'csv', {
                   years,
                   tableTitle,
-                  t('plot-total'),
-                  t('table-measure-type'),
-                  t('table-year'),
-                  t('table-unit'),
-                  t('table-historical'),
-                  forecastLabel
-                )
+                  labels: {
+                    total: t('plot-total'),
+                    type: t('table-measure-type'),
+                    year: t('table-year'),
+                    unit: t('table-unit'),
+                    historical: t('table-historical'),
+                    forecast: forecastLabel,
+                  },
+                })
               }
             >
               <Icon name="file" /> CSV
@@ -223,7 +236,7 @@ const DataTable = (props: DataTableProps) => {
           </DropdownMenu>
         </UncontrolledDropdown>
       </Tools>
-    </TableWrapper>
+    </TableContainer>
   );
 };
 
