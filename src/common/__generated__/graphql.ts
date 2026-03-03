@@ -203,7 +203,7 @@ export enum AttributeTypeFormat {
   UnorderedChoice = 'UNORDERED_CHOICE'
 }
 
-/** AttributeType(id, latest_revision, order, instances_editable_by, instances_visible_for, primary_language_lowercase, object_content_type, scope_content_type, scope_id, name, identifier, help_text, format, unit, attribute_category_type, show_choice_names, has_zero_option, max_length, show_in_reporting_tab, icon, primary_language, other_languages, i18n) */
+/** Input type for creating a new attribute type */
 export type AttributeTypeInput = {
   choiceOptions: InputMaybe<Array<ChoiceOptionInput>>;
   /** The format of the attributes with this type */
@@ -221,7 +221,7 @@ export enum CartographyProviderCredentialsProvider {
   Mapbox = 'MAPBOX'
 }
 
-/** A category for actions and indicators. */
+/** Input type for creating a new category */
 export type CategoryInput = {
   identifier: Scalars['ID']['input'];
   name: Scalars['String']['input'];
@@ -245,7 +245,9 @@ export type CategoryTypeInput = {
   /** Whether this category type is the primary action classification. NOTE: A Plan must have exactly one primary action classification. */
   primaryActionClassification: Scalars['Boolean']['input'];
   /** Choose "Multiple" only if more than one category can be selected at a time, otherwise choose "Single" which is the default. */
-  selectWidget: InputMaybe<Scalars['String']['input']>;
+  selectWidget: InputMaybe<CategoryTypeSelectWidget>;
+  /** Should a content page hierarchy be automatically generated for the categories. If not set, defaults to the value of `primaryActionClassification`. */
+  synchronizeWithPages: InputMaybe<Scalars['Boolean']['input']>;
   usableForActions: InputMaybe<Scalars['Boolean']['input']>;
   usableForIndicators: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -383,6 +385,14 @@ export enum ModelAction {
   View = 'VIEW'
 }
 
+export enum OperationMessageKind {
+  Error = 'ERROR',
+  Info = 'INFO',
+  Permission = 'PERMISSION',
+  Validation = 'VALIDATION',
+  Warning = 'WARNING'
+}
+
 export type OrganizationInput = {
   /** Short abbreviation (e.g. "NASA", "YM") */
   abbreviation: InputMaybe<Scalars['String']['input']>;
@@ -424,6 +434,8 @@ export type PlanFeaturesInput = {
  * Most information in this service is linked to a Plan.
  */
 export type PlanInput = {
+  /** ISO 3166-1 country code (e.g. FI, DE, US) */
+  country: Scalars['String']['input'];
   features: InputMaybe<PlanFeaturesInput>;
   /** A unique identifier for the plan used internally to distinguish between plans. This becomes part of the test site URL: https://[identifier].watch-test.kausal.tech. Use lowercase letters and dashes. */
   identifier: Scalars['ID']['input'];
@@ -515,30 +527,6 @@ export enum SiteGeneralContentOrganizationTerm {
   /** Organization */
   Organization = 'ORGANIZATION'
 }
-
-export type UpdateActionResponsiblePartyMutationInput = {
-  clientMutationId: InputMaybe<Scalars['String']['input']>;
-  id: InputMaybe<Scalars['ID']['input']>;
-  organization: Scalars['ID']['input'];
-};
-
-export type UpdateIndicatorMutationInput = {
-  clientMutationId: InputMaybe<Scalars['String']['input']>;
-  id: InputMaybe<Scalars['ID']['input']>;
-  organization: Scalars['ID']['input'];
-};
-
-export type UpdatePersonMutationInput = {
-  clientMutationId: InputMaybe<Scalars['String']['input']>;
-  id: InputMaybe<Scalars['ID']['input']>;
-  organization: Scalars['ID']['input'];
-};
-
-export type UpdatePlanMutationInput = {
-  clientMutationId: InputMaybe<Scalars['String']['input']>;
-  id: InputMaybe<Scalars['ID']['input']>;
-  organization: Scalars['ID']['input'];
-};
 
 export type UserFeedbackMutationInput = {
   action: InputMaybe<Scalars['ID']['input']>;
@@ -5762,7 +5750,7 @@ export type GetActionDetailsQuery = (
       ) }
       & { __typename: 'ActionResponsibleParty' }
     )>, tasks: Array<(
-      { id: string, name: string, dueAt: string, dateFormat: ActionTaskDateFormat | null, completedAt: string | null, comment: string | null, state: ActionTaskState }
+      { id: string, name: string, dueAt: string, dateFormat: ActionTaskDateFormat | null, completedAt: string | null, details: string | null, state: ActionTaskState }
       & { __typename: 'ActionTask' }
     )>, status: (
       { id: string, identifier: string, name: string, color: string }
@@ -14641,7 +14629,7 @@ export type IndicatorDetailsQuery = (
       ) | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, actions: Array<(
-      { id: string, identifier: string, name: string, color: string | null, completion: number | null, status: (
+      { id: string, identifier: string, name: string, color: string | null, scheduleContinuous: boolean, completion: number | null, status: (
         { id: string, identifier: string, name: string, color: string }
         & { __typename: 'ActionStatus' }
       ) | null, implementationPhase: (
@@ -14731,7 +14719,7 @@ export type IndicatorDetailsQuery = (
 );
 
 export type ActionsTableRowFragmentFragment = (
-  { id: string, identifier: string, name: string, color: string | null, completion: number | null, status: (
+  { id: string, identifier: string, name: string, color: string | null, scheduleContinuous: boolean, completion: number | null, status: (
     { id: string, identifier: string, name: string, color: string }
     & { __typename: 'ActionStatus' }
   ) | null, implementationPhase: (

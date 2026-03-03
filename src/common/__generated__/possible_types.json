@@ -208,6 +208,10 @@
       "ActionContentAttributeTypeBlock",
       "ActionContentCategoryTypeBlock"
     ],
+    "AddRelatedOrganizationPayload": [
+      "OperationInfo",
+      "Plan"
+    ],
     "AttributeInterface": [
       "AttributeCategoryChoice",
       "AttributeChoice",
@@ -246,6 +250,30 @@
       "CategoryChangeLogMessage",
       "IndicatorChangeLogMessage",
       "PageChangeLogMessage"
+    ],
+    "CreateActionPayload": [
+      "Action",
+      "OperationInfo"
+    ],
+    "CreateAttributeTypePayload": [
+      "AttributeType",
+      "OperationInfo"
+    ],
+    "CreateCategoryPayload": [
+      "Category",
+      "OperationInfo"
+    ],
+    "CreateCategoryTypePayload": [
+      "CategoryType",
+      "OperationInfo"
+    ],
+    "CreateOrganizationPayload": [
+      "OperationInfo",
+      "Organization"
+    ],
+    "CreatePlanPayload": [
+      "OperationInfo",
+      "Plan"
     ],
     "DashboardColumnInterface": [
       "FieldColumnBlock",

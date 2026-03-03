@@ -371,32 +371,6 @@ type ActionParameter_UnknownParameterType_Fragment = (
 
 export type ActionParameterFragment = ActionParameter_BoolParameterType_Fragment | ActionParameter_NumberParameterType_Fragment | ActionParameter_StringParameterType_Fragment | ActionParameter_UnknownParameterType_Fragment;
 
-export type DimensionalMetricFragment = (
-  { id: string, name: string, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
-    { id: string, label: string, originalId: string | null, helpText: string | null, categories: Array<(
-      { id: string, originalId: string | null, label: string, color: string | null, order: number | null, group: string | null }
-      & { __typename: 'MetricDimensionCategoryType' }
-    )>, groups: Array<(
-      { id: string, originalId: string, label: string, color: string | null, order: number | null }
-      & { __typename: 'MetricDimensionCategoryGroupType' }
-    )> }
-    & { __typename: 'MetricDimensionType' }
-  )>, goals: Array<(
-    { categories: Array<string>, groups: Array<string>, values: Array<(
-      { year: number, value: number, isInterpolated: boolean }
-      & { __typename: 'MetricYearlyGoalType' }
-    )> }
-    & { __typename: 'DimensionalMetricGoalEntry' }
-  )>, unit: (
-    { htmlShort: string, short: string }
-    & { __typename: 'UnitType' }
-  ), normalizedBy: (
-    { id: string, name: string }
-    & { __typename: 'NormalizerNodeType' }
-  ) | null }
-  & { __typename: 'DimensionalMetricType' }
-);
-
 type CausalGridNode_ActionNode_Fragment = (
   { isEnabled: boolean, id: string, name: string, shortDescription: string | null, color: string | null, targetYearGoal: number | null, isVisible: boolean, quantity: string | null, group: (
     { id: string, name: string, color: string | null }
@@ -445,7 +419,7 @@ type CausalGridNode_ActionNode_Fragment = (
       )> }
       & { __typename: 'DimensionalMetricGoalEntry' }
     )>, unit: (
-      { htmlShort: string, short: string }
+      { htmlShort: string, htmlLong: string, short: string }
       & { __typename: 'UnitType' }
     ), normalizedBy: (
       { id: string, name: string }
@@ -543,7 +517,7 @@ type CausalGridNode_Node_Fragment = (
       )> }
       & { __typename: 'DimensionalMetricGoalEntry' }
     )>, unit: (
-      { htmlShort: string, short: string }
+      { htmlShort: string, htmlLong: string, short: string }
       & { __typename: 'UnitType' }
     ), normalizedBy: (
       { id: string, name: string }
@@ -654,7 +628,7 @@ export type GetNodeContentQuery = (
         )> }
         & { __typename: 'DimensionalMetricGoalEntry' }
       )>, unit: (
-        { htmlShort: string, short: string }
+        { htmlShort: string, htmlLong: string, short: string }
         & { __typename: 'UnitType' }
       ), normalizedBy: (
         { id: string, name: string }
@@ -750,7 +724,7 @@ export type GetNodeContentQuery = (
         )> }
         & { __typename: 'DimensionalMetricGoalEntry' }
       )>, unit: (
-        { htmlShort: string, short: string }
+        { htmlShort: string, htmlLong: string, short: string }
         & { __typename: 'UnitType' }
       ), normalizedBy: (
         { id: string, name: string }
@@ -836,7 +810,7 @@ export type DimensionalNodeMetricFragment = (
       )> }
       & { __typename: 'DimensionalMetricGoalEntry' }
     )>, unit: (
-      { htmlShort: string, short: string }
+      { htmlShort: string, htmlLong: string, short: string }
       & { __typename: 'UnitType' }
     ), normalizedBy: (
       { id: string, name: string }
@@ -910,7 +884,7 @@ export type OutcomeNodeFieldsFragment = (
       )> }
       & { __typename: 'DimensionalMetricGoalEntry' }
     )>, unit: (
-      { htmlShort: string, short: string }
+      { htmlShort: string, htmlLong: string, short: string }
       & { __typename: 'UnitType' }
     ), normalizedBy: (
       { id: string, name: string }
@@ -992,7 +966,7 @@ export type GetOutcomeNodeContentQuery = (
           )> }
           & { __typename: 'DimensionalMetricGoalEntry' }
         )>, unit: (
-          { htmlShort: string, short: string }
+          { htmlShort: string, htmlLong: string, short: string }
           & { __typename: 'UnitType' }
         ), normalizedBy: (
           { id: string, name: string }
@@ -1067,7 +1041,7 @@ export type GetOutcomeNodeContentQuery = (
           )> }
           & { __typename: 'DimensionalMetricGoalEntry' }
         )>, unit: (
-          { htmlShort: string, short: string }
+          { htmlShort: string, htmlLong: string, short: string }
           & { __typename: 'UnitType' }
         ), normalizedBy: (
           { id: string, name: string }
@@ -1138,7 +1112,7 @@ export type GetOutcomeNodeContentQuery = (
         )> }
         & { __typename: 'DimensionalMetricGoalEntry' }
       )>, unit: (
-        { htmlShort: string, short: string }
+        { htmlShort: string, htmlLong: string, short: string }
         & { __typename: 'UnitType' }
       ), normalizedBy: (
         { id: string, name: string }
@@ -1229,7 +1203,7 @@ export type GetPageQuery = (
             )> }
             & { __typename: 'DimensionalMetricGoalEntry' }
           )>, unit: (
-            { htmlShort: string, short: string }
+            { htmlShort: string, htmlLong: string, short: string }
             & { __typename: 'UnitType' }
           ), normalizedBy: (
             { id: string, name: string }
@@ -1300,7 +1274,7 @@ export type GetPageQuery = (
           )> }
           & { __typename: 'DimensionalMetricGoalEntry' }
         )>, unit: (
-          { htmlShort: string, short: string }
+          { htmlShort: string, htmlLong: string, short: string }
           & { __typename: 'UnitType' }
         ), normalizedBy: (
           { id: string, name: string }
@@ -1362,4 +1336,30 @@ export type GetScenariosQuery = (
     & { __typename: 'ScenarioType' }
   )> }
   & { __typename: 'Query' }
+);
+
+export type DimensionalMetricFragment = (
+  { id: string, name: string, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
+    { id: string, label: string, originalId: string | null, helpText: string | null, categories: Array<(
+      { id: string, originalId: string | null, label: string, color: string | null, order: number | null, group: string | null }
+      & { __typename: 'MetricDimensionCategoryType' }
+    )>, groups: Array<(
+      { id: string, originalId: string, label: string, color: string | null, order: number | null }
+      & { __typename: 'MetricDimensionCategoryGroupType' }
+    )> }
+    & { __typename: 'MetricDimensionType' }
+  )>, goals: Array<(
+    { categories: Array<string>, groups: Array<string>, values: Array<(
+      { year: number, value: number, isInterpolated: boolean }
+      & { __typename: 'MetricYearlyGoalType' }
+    )> }
+    & { __typename: 'DimensionalMetricGoalEntry' }
+  )>, unit: (
+    { htmlShort: string, htmlLong: string, short: string }
+    & { __typename: 'UnitType' }
+  ), normalizedBy: (
+    { id: string, name: string }
+    & { __typename: 'NormalizerNodeType' }
+  ) | null }
+  & { __typename: 'DimensionalMetricType' }
 );
