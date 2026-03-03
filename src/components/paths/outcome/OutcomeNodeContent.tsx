@@ -43,6 +43,7 @@ const ContentWrapper = styled.div`
   overflow-y: auto;
   padding: 1rem;
   background-color: white;
+  color: ${(props) => props.theme.themeColors.black};
   border-radius: 0;
   border: 1px solid ${(props) => props.theme.graphColors.grey010};
   border-top: 0;
@@ -115,6 +116,14 @@ const CardSetSummary = styled.div`
   .figure {
     margin-left: 1rem;
   }
+`;
+
+const GraphDisclaimer = styled.div`
+  max-width: 700px;
+  text-align: right;
+  margin: ${({ theme }) => `${theme.spaces.s050} ${theme.spaces.s100} 0 auto`};
+  font-size: ${(props) => props.theme.fontSizeSm};
+  color: ${(props) => props.theme.textColor.tertiary};
 `;
 
 type OutcomeNodeContentProps = {
@@ -220,16 +229,15 @@ function OutcomeNodeContent({
   const isForecast = endYear > lastMeasuredYear;
   const outcomeChange = getMetricChange(nodesBase, nodesTotal);
   const unit = node.metric?.unit?.htmlLong || node.metric?.unit?.htmlShort;
-  const showNodeLinks = !instance.features?.hideNodeDetails;
+  const showNodeDetails =
+    !instance.features?.hideNodeDetails && instance.showOutcomeNodeDetails && node.shortDescription;
 
   return (
     <div role="tabpanel" id={`tabpanel-${node.id}`}>
       <CardSetHeader>
         <div>
           <CardSetDescription>
-            <h4>
-              {showNodeLinks ? <PathsNodeLink id={node}>{nodeName}</PathsNodeLink> : nodeName}
-            </h4>
+            <h4>{nodeName}</h4>
             {activeGoal?.label && (
               <CardSetDescriptionDetails>
                 <ScenarioBadge>{activeGoal?.label}</ScenarioBadge>
@@ -328,8 +336,7 @@ function OutcomeNodeContent({
               <Icon name="table" /> {t('table')}
             </NavLink>
           </DisplayTab>
-          {/* TODO: Hide info tab for now as we can not link to paths actions inside watch */}
-          {showNodeLinks && false && (
+          {showNodeDetails && (
             <DisplayTab role="presentation">
               <NavLink
                 href="#"
@@ -355,7 +362,12 @@ function OutcomeNodeContent({
           aria-labelledby={`${node.id}-tab-${activeTabId}}`}
         >
           {activeTabId === 'year' && <ContentWrapper>{singleYearGraph}</ContentWrapper>}
-          {activeTabId === 'graph' && <ContentWrapper>{outcomeGraph}</ContentWrapper>}
+          {activeTabId === 'graph' && (
+            <ContentWrapper>
+              {outcomeGraph}
+              <GraphDisclaimer>{disclaimer}</GraphDisclaimer>
+            </ContentWrapper>
+          )}
           {activeTabId === 'info' && (
             <ContentWrapper>
               <OutcomeNodeDetails node={node} t={t} />
