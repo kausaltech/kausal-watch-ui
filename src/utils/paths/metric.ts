@@ -98,7 +98,7 @@ export {
   createTable,
 } from '@common/utils/paths/metric';
 
-const DIMENSIONAL_METRIC_FRAGMENT = gql`
+export const DIMENSIONAL_METRIC_FRAGMENT = gql`
   fragment DimensionalMetric on DimensionalMetricType {
     id
     name
@@ -134,6 +134,7 @@ const DIMENSIONAL_METRIC_FRAGMENT = gql`
     }
     unit {
       htmlShort
+      htmlLong
       short
     }
     stackable
