@@ -1,54 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const DimensionalMetricFragment = gql`
-  fragment DimensionalMetric on DimensionalMetricType {
-    id
-    name
-    dimensions {
-      id
-      label
-      originalId
-      helpText
-      categories {
-        id
-        originalId
-        label
-        color
-        order
-        group
-      }
-      groups {
-        id
-        originalId
-        label
-        color
-        order
-      }
-    }
-    goals {
-      categories
-      groups
-      values {
-        year
-        value
-        isInterpolated
-      }
-    }
-    unit {
-      htmlShort
-      htmlLong
-      short
-    }
-    stackable
-    normalizedBy {
-      id
-      name
-    }
-    forecastFrom
-    years
-    values
-  }
-`;
+import { DIMENSIONAL_METRIC_FRAGMENT as DimensionalMetricFragment } from '@/utils/paths/metric';
 
 const dimensionalNodePlotFragment = gql`
   fragment DimensionalNodeMetric on NodeInterface {
