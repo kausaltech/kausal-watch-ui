@@ -1,9 +1,12 @@
 import { NetworkStatus, gql, useQuery, useReactiveVar } from '@apollo/client';
-import { max, min, sortBy } from 'lodash';
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
+import { max, min, sortBy } from 'lodash-es';
 import { useFormatter, useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 import { Button, CardBody, UncontrolledCollapse } from 'reactstrap';
-import styled, { useTheme } from 'styled-components';
+
+import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 
 import type {
   GetInstanceGoalOutcomeQuery,
@@ -11,7 +14,6 @@ import type {
 } from '@/common/__generated__/paths/graphql';
 import type { TFunction } from '@/common/i18n';
 import Icon from '@/components/common/Icon';
-import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 

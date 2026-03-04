@@ -1,5 +1,8 @@
 import React, { type JSX, useEffect, useState } from 'react';
 
+import { useTheme } from '@emotion/react';
+import type { Theme } from '@emotion/react';
+import styled from '@emotion/styled';
 import Highlighter from 'react-highlight-words';
 import Select, {
   DropdownIndicatorProps,
@@ -10,7 +13,6 @@ import Select, {
   components,
 } from 'react-select';
 import { Label as BSLabel, FormGroup } from 'reactstrap';
-import styled, { DefaultTheme, useTheme } from 'styled-components';
 
 import PopoverTip from '@/components/common/PopoverTip';
 
@@ -46,7 +48,7 @@ const DropdownLabel = styled.div<{ $primary: boolean }>`
 `;
 
 function getSelectStyles<Option extends SelectDropdownOption>(
-  theme: DefaultTheme,
+  theme: Theme,
   multi: boolean,
   size: string = ''
 ) {

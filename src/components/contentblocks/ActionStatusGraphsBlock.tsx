@@ -1,16 +1,17 @@
 import React from 'react';
 
 import { gql, useQuery } from '@apollo/client';
+import { useTheme } from '@emotion/react';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
-import { useTheme } from 'styled-components';
+
+import ContentLoader from '@common/components/ContentLoader';
 
 import type {
   GetActionListForGraphsQuery,
   GetActionListForGraphsQueryVariables,
 } from '@/common/__generated__/graphql';
 import type { CommonContentBlockProps } from '@/common/blocks.types';
-import ContentLoader from '@/components/common/ContentLoader';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import type { ActionsStatusGraphsProps } from '@/components/dashboard/ActionStatusGraphs';
 import ActionStatusGraphs from '@/components/dashboard/ActionStatusGraphs';
@@ -36,8 +37,7 @@ const GET_ACTION_LIST_FOR_GRAPHS = gql`
 `;
 
 interface Props
-  extends CommonContentBlockProps,
-    Pick<ActionsStatusGraphsProps, 'chart' | 'shownDatasets'> {
+  extends CommonContentBlockProps, Pick<ActionsStatusGraphsProps, 'chart' | 'shownDatasets'> {
   categoryId?: string;
   withContainer?: boolean;
 }
@@ -62,11 +62,11 @@ const ActionStatusGraphsBlock = (props: Props) => {
     },
   });
 
-  if (error) return <ErrorMessage message={error.message} />;
-  if (loading || !data) return <ContentLoader />;
+  if (error) return <ErrorMessage message={t('error-loading-data')} details={error.message} />;
+  if (loading || !data) return <ContentLoader message={t('loading')} />;
   const { planActions } = data;
   if (!planActions) {
-    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
+    return <ErrorMessage message={t('error-loading-data')} details={t('actions')} />;
   }
 
   if (withContainer) {

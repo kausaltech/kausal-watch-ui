@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 
+import styled from '@emotion/styled';
 import chroma from 'chroma-js';
 import { useFormatter, useTranslations } from 'next-intl';
-import styled from 'styled-components';
 
-import { getMetricChange, getMetricValue } from '@/common/paths/preprocess';
-import ContentLoader from '@/components/common/ContentLoader';
+import ContentLoader from '@common/components/ContentLoader';
+import { getMetricChange, getMetricValue } from '@common/utils/paths/metric';
+
 import DashCard from '@/components/paths/DashCard';
 
 const StyledTab = styled.div<{ $disabled: boolean }>`
@@ -134,6 +135,7 @@ type OutcomeCardProps = {
   onHover: (evt) => void;
   handleClick: (segmentId: string) => void;
   color: string;
+  colorAdjust?: number;
   total: number;
   positiveTotal: number;
   negativeTotal: number;
@@ -151,6 +153,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
     handleClick,
     active,
     color,
+    colorAdjust,
     startYear,
     endYear,
     total,
@@ -171,8 +174,9 @@ const OutcomeCard = (props: OutcomeCardProps) => {
       });
   }, [active]);
 
-  const separateYearsColorChange = hideForecast ? 1.75 : 0;
-  const displayColor = chroma(color).brighten(separateYearsColorChange).hex();
+  const displayColor = chroma(color)
+    .brighten(colorAdjust || 0)
+    .hex();
   //console.log(state);
   const t = useTranslations();
   const format = useFormatter();
@@ -216,7 +220,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
         color={displayColor}
         refProp={cardRef}
       >
-        {refetching && <ContentLoader />}
+        {refetching && <ContentLoader message={t('loading')} />}
 
         <ProportionBar
           size={goalOutcomeValue || goalOutcomeValue === 0 ? goalOutcomeValue / total : 0}

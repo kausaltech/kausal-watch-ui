@@ -1,10 +1,12 @@
 import Link from 'next/link';
 
 import { useApolloClient } from '@apollo/client';
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useLocale, useTranslations } from 'next-intl';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
-import styled from 'styled-components';
-import { useTheme } from 'styled-components';
+
+import { transientOptions } from '@common/themes/styles/styled';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import { usePlan } from '@/context/plan';
@@ -28,7 +30,7 @@ const LanguageSelectorListItem = styled.li`
   }
 `;
 
-const Selector = styled(UncontrolledDropdown)<{ $mobile: boolean }>`
+const Selector = styled(UncontrolledDropdown, transientOptions)<{ $mobile: boolean }>`
   button {
     height: 100%;
     display: flex;

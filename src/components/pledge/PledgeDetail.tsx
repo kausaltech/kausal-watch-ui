@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Container, Spinner } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { GetPledgeQuery } from '@/common/__generated__/graphql';
 import { usePrependPlanAndLocale } from '@/common/links';

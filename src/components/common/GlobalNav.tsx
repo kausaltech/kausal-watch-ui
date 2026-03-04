@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { css, useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import type { Theme } from '@kausal/themes/types';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import debounce from 'lodash/debounce';
@@ -17,11 +19,12 @@ import {
   Navbar,
   UncontrolledDropdown,
 } from 'reactstrap';
-import styled, { css, useTheme } from 'styled-components';
+
+import { transientOptions } from '@common/themes/styles/styled';
+import { getThemeStaticURL } from '@common/themes/theme';
 
 import { isServer } from '@/common/environment';
 import { Link, NavigationLink } from '@/common/links';
-import { getThemeStaticURL } from '@/common/theme';
 import PlanSelector from '@/components/plans/PlanSelector';
 import PlanVersionSelector from '@/components/versioning/PlanVersionSelector';
 import { usePlan } from '@/context/plan';
@@ -46,7 +49,7 @@ const getRootLink = (
   return '/';
 };
 
-const baseFixedNavStyles = css`
+const baseFixedNavStyles = (theme: Theme) => css`
   @keyframes slide-in {
     0% {
       top: -100%;
@@ -56,7 +59,7 @@ const baseFixedNavStyles = css`
     }
   }
 
-  box-shadow: 3px 3px 6px -2px ${({ theme }) => transparentize(0.9, theme.themeColors.black)};
+  box-shadow: 3px 3px 6px -2px ${transparentize(0.9, theme.themeColors.black)};
   animation: slide-in 0.4s;
 `;
 
@@ -65,7 +68,7 @@ const TopNav = styled(Navbar)`
   background-color: ${(props) => props.theme.brandNavBackground};
   flex-wrap: nowrap;
 
-  ${({ fixed }) => fixed && baseFixedNavStyles}
+  ${({ fixed, theme }) => fixed && baseFixedNavStyles(theme)}
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     padding: 0 ${(props) => props.theme.spaces.s100};
@@ -73,12 +76,12 @@ const TopNav = styled(Navbar)`
   }
 `;
 
-const BotNav = styled(Navbar)<{ $offsetTop?: number; $expanded: boolean }>`
+const BotNav = styled(Navbar, transientOptions)<{ $offsetTop?: number; $expanded: boolean }>`
   background-color: ${(props) => props.theme.siteNavBackground};
   padding: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
 
-  ${({ fixed, $expanded }) => fixed && !$expanded && baseFixedNavStyles}
+  ${({ fixed, $expanded, theme }) => fixed && !$expanded && baseFixedNavStyles(theme)}
 
   ${({ $offsetTop, $expanded }) =>
     !!$expanded &&
@@ -160,7 +163,7 @@ const Site = styled.div`
   align-items: center;
 `;
 
-const HomeLink = styled(Link)<{ $hideLogoOnMobile?: boolean }>`
+const HomeLink = styled(Link, transientOptions)<{ $hideLogoOnMobile?: boolean }>`
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.brandNavColor};

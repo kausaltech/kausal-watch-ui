@@ -1,14 +1,16 @@
 import React from 'react';
 
+import { css, useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 import { Container, Spinner } from 'reactstrap';
-import styled, { css, useTheme } from 'styled-components';
+
+import { getThemeStaticURL } from '@common/themes/theme';
 
 import { Link, NavigationLink } from '@/common/links';
-import { getThemeStaticURL } from '@/common/theme';
 import PlanSelector from '@/components/plans/PlanSelector';
 import { usePlan } from '@/context/plan';
 import { useHandleSignOut } from '@/utils/auth.utils';
@@ -91,32 +93,30 @@ const Branding = styled.div`
 `;
 
 const Logo = styled.div`
-  ${css`
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    height: calc(${(props) => props.theme.footerLogoSize} * ${(props) => props.theme.spaces.s400});
-    max-width: calc(
-      ${(props) => props.theme.footerLogoSize} * 4 * ${(props) => props.theme.spaces.s300}
-    );
-    margin-right: ${(props) => props.theme.spaces.s200};
-    margin: ${(props) => props.theme.spaces.s150} ${(props) => props.theme.spaces.s200}
-      ${(props) => props.theme.spaces.s150} 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: calc(${(props) => props.theme.footerLogoSize} * ${(props) => props.theme.spaces.s400});
+  max-width: calc(
+    ${(props) => props.theme.footerLogoSize} * 4 * ${(props) => props.theme.spaces.s300}
+  );
+  margin-right: ${(props) => props.theme.spaces.s200};
+  margin: ${(props) => props.theme.spaces.s150} ${(props) => props.theme.spaces.s200}
+    ${(props) => props.theme.spaces.s150} 0;
 
-    .footer-org-logo {
-      height: 100%;
-      max-width: 100%;
+  .footer-org-logo {
+    height: 100%;
+    max-width: 100%;
 
-      &.footer-logo-bitmap {
-        height: auto;
-        max-height: 100%;
-      }
+    &.footer-logo-bitmap {
+      height: auto;
+      max-height: 100%;
     }
+  }
 
-    @media (max-width: ${(props) => props.theme.breakpointMd}) {
-      margin: 0 auto ${(props) => props.theme.spaces.s200};
-    }
-  `}
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    margin: 0 auto ${(props) => props.theme.spaces.s200};
+  }
 `;
 
 const ServiceTitle = styled.div`

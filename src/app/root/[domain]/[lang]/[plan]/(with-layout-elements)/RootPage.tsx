@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import type { GetHomePageQuery } from '@/common/__generated__/graphql';
-import ErrorMessage from '@/components/common/ErrorMessage';
+import ErrorPage from '@/components/common/ErrorPage';
 import StreamField from '@/components/common/StreamField';
 import CategoriesContext from '@/context/categories';
 
@@ -36,7 +36,7 @@ export function RootPage({ data, testId }: Props) {
   const { planPage, plan: queriedPlan } = data;
   const categories = queriedPlan?.primaryActionClassification?.categories ?? [];
   if (!planPage) {
-    return <ErrorMessage statusCode={404} message={t('page-not-found')} />;
+    return <ErrorPage statusCode={404} message={t('page-not-found')} />;
   }
 
   return <HomePage page={planPage} categories={categories} testId={testId} />;

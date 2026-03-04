@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 
+import styled from '@emotion/styled';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import LegendControl, { type MapboxMap } from 'mapboxgl-legend';
 import 'mapboxgl-legend/dist/style.css';
 import Map, { NavigationControl, useMap } from 'react-map-gl/mapbox';
 import { Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { CommonContentBlockProps } from '@/common/blocks.types';
 

@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
+
+import { activeGoalVar } from '@common/apollo/paths-cache';
 
 import SelectDropdown, { type SelectDropdownOption } from '@/components/common/SelectDropdown';
-import { activeGoalVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 
 const DropdownWrapper = styled.div`

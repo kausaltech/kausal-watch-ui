@@ -1,5 +1,5 @@
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import styled from 'styled-components';
 
 const OfficialText = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s300};

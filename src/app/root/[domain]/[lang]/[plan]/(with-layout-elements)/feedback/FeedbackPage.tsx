@@ -1,9 +1,9 @@
 'use client';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
-import styled from 'styled-components';
 
 import FeedbackForm from '@/components/common/FeedbackForm';
 import { usePlan } from '@/context/plan';

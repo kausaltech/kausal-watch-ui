@@ -1,14 +1,15 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { readableColor, shade } from 'polished';
 import { Button, TooltipTrigger } from 'react-aria-components';
 import SVG from 'react-inlinesvg';
-import { Badge } from 'reactstrap';
-import styled from 'styled-components';
+
+import { transientOptions } from '@common/themes/styles/styled';
 
 import Tooltip from './Tooltip';
 
-const WrapperButton = styled(Button)<{ $isLink: boolean }>`
+const WrapperButton = styled(Button, transientOptions)<{ $isLink: boolean }>`
   padding: 0;
   margin: 0;
   background-color: transparent;
@@ -17,11 +18,12 @@ const WrapperButton = styled(Button)<{ $isLink: boolean }>`
   cursor: ${({ $isLink }) => ($isLink ? 'pointer' : 'default')};
 `;
 
-const StyledBadge = styled(Badge)<{
+const StyledBadge = styled.span<{
   $themeColor: ThemeColorOption;
   $isLink: boolean;
   $color?: string;
 }>`
+  display: inline-block;
   cursor: ${(props) => (props.$isLink ? 'pointer' : 'default')};
   background-color: ${(props) => props.theme[props.$themeColor]} !important;
   color: ${(props) =>
@@ -102,7 +104,7 @@ const IconImage = styled.div<{ $imageSrc?: string }>`
   min-width: ${(props) => (props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300)};
 `;
 
-const IconSvg = styled(SVG)<{ $bgcolor?: string; $themeColor: string }>`
+const IconSvg = styled(SVG, transientOptions)<{ $bgcolor?: string; $themeColor: string }>`
   height: ${(props) => props.theme.spaces.s200};
   margin: ${(props) => props.theme.spaces.s050};
 
@@ -161,6 +163,7 @@ const BadgeContent = (props: BadgeContentProps) => {
 
   return hasNoIcon ? (
     <StyledBadge
+      color=""
       className={size}
       aria-label={ariaLabel}
       $themeColor={themeColor}
@@ -170,7 +173,7 @@ const BadgeContent = (props: BadgeContentProps) => {
       {renderContent}
     </StyledBadge>
   ) : (
-    <IconBadge $themeColor={themeColor} $isLink={isLink} $color={color}>
+    <IconBadge color="" $themeColor={themeColor} $isLink={isLink} $color={color}>
       {iconSvg ? (
         <IconImage>
           <IconSvg

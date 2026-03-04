@@ -102,5 +102,6 @@
   "error-with-code": "Virhekoodi {code}",
   "show-error": "Näytä virhe",
   "thumbSliderLabel": "Säädä",
-  "reset-button": "Nollaa"
+  "reset-button": "Nollaa",
+  "calculated-emissions": "Lasketut päästöt"
 }

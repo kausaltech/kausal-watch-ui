@@ -28,6 +28,11 @@ const nextAuth = NextAuth({
           token.expires = new Date(profile.exp * 1000).toISOString();
         }
       }
+      // If token has expired, clear it — forces unauthenticated access
+      if (token.expires && new Date(token.expires as string) <= new Date()) {
+        delete token.idToken;
+        delete token.expires;
+      }
       return token;
     },
     session({ session, ...params }) {

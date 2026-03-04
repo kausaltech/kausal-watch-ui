@@ -4,9 +4,11 @@ import React, { useState } from 'react';
 
 import { useQuery } from '@apollo/client';
 import { captureMessage } from '@sentry/nextjs';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { useLocale, useTranslations } from 'next-intl';
 import { Alert } from 'reactstrap';
+
+import ContentLoader from '@common/components/ContentLoader';
 
 import type {
   IndicatorGraphDataQuery,
@@ -14,7 +16,6 @@ import type {
 } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
 import { capitalizeFirstLetter } from '@/common/utils';
-import ContentLoader from '@/components/common/ContentLoader';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
 import LegacyIndicatorGraph from '@/components/graphs/legacy/IndicatorGraph';
@@ -423,7 +424,7 @@ function IndicatorVisualisation({
     },
   });
 
-  if (loading) return <ContentLoader />;
+  if (loading) return <ContentLoader message={t('loading')} />;
   if (error) return <Alert color="danger">{`${t('error')}: ${error.message}`}</Alert>;
   if (!data || !data.plan) return null;
 

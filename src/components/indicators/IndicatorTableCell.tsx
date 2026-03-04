@@ -1,9 +1,9 @@
+import styled from '@emotion/styled';
 import * as Sentry from '@sentry/nextjs';
 import type { truncate } from 'fs/promises';
 import { type DateTimeFormatOptions, useFormatter, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Badge, Button } from 'reactstrap';
-import styled from 'styled-components';
+import { Button } from 'reactstrap';
 
 import {
   IndicatorColumnValueType,
@@ -53,7 +53,13 @@ const TrendIcon = styled(Icon)`
   color: ${(props) => props.theme.graphColors.grey040};
 `;
 
-const IndicatorLevelBadge = styled(Badge)<{ $level: string }>`
+const IndicatorLevelBadge = styled.span<{ $level: string }>`
+  display: inline-block;
+  font-size: 0.75em;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding: ${({ theme }) => `${theme.badgePaddingY} ${theme.badgePaddingX}`};
   font-weight: ${(props) => props.theme.badgeFontWeight};
@@ -85,7 +91,7 @@ const IndicatorLevelBadge = styled(Badge)<{ $level: string }>`
       default:
         return '#cccccc';
     }
-  }} !important;
+  }};
 `;
 
 const Value = styled.span`

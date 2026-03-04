@@ -1,7 +1,7 @@
 import type { ApolloError } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Alert, Spinner } from 'reactstrap';
-import styled from 'styled-components';
 
 import type { IndicatorDetailsQuery, IndicatorListQuery } from '@/common/__generated__/graphql';
 import { deploymentType } from '@/common/environment';

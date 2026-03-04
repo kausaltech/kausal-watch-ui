@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
-import styled from 'styled-components';
+
+import ContentLoader from '@common/components/ContentLoader';
 
 import type {
   ActionCardFragment,
@@ -16,7 +18,6 @@ import { getDeepParents } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';
 import ActionCardList from '@/components/actions/ActionCardList';
-import ContentLoader from '@/components/common/ContentLoader';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import { usePlan } from '@/context/plan';
 
@@ -178,8 +179,14 @@ const ActionListBlock = (props: ActionListBlockProps) => {
     },
   });
 
-  if (loading) return <ContentLoader />;
-  if (error) return <ErrorMessage message={error.message} />;
+  if (loading) return <ContentLoader message={t('loading')} />;
+  if (error)
+    return (
+      <ErrorMessage
+        message={t('error-loading-actions', getActionTermContext(plan))}
+        details={error.message}
+      />
+    );
 
   if (!data || !data.planActions) return null;
 

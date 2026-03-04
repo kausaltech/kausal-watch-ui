@@ -1,8 +1,8 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { readableColor, shade, transparentize } from 'polished';
 import { Button as BSButton, type ButtonProps as BSButtonProps } from 'reactstrap';
-import styled from 'styled-components';
 
 const StyledButton = styled(BSButton)`
   padding: ${({ theme }) => `${theme.inputBtnPaddingY} ${theme.inputBtnPaddingX}`};

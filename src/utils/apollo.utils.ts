@@ -49,22 +49,33 @@ function logError(
   });
 }
 
-export const errorLink = onError(({ networkError, graphQLErrors, operation }) => {
-  if (networkError) {
-    logError(operation, networkError.message, networkError, {
-      cause: networkError.cause,
-      name: networkError.name,
-    });
-  }
-
-  if (graphQLErrors) {
-    graphQLErrors.forEach((error) => {
-      logError(operation, error.message, error, {
-        errorPath: error.path,
+export function createErrorLink(onUnauthenticated?: () => void) {
+  return onError(({ networkError, graphQLErrors, operation }) => {
+    if (networkError) {
+      logError(operation, networkError.message, networkError, {
+        cause: networkError.cause,
+        name: networkError.name,
       });
-    });
-  }
-});
+    }
+
+    if (graphQLErrors) {
+      graphQLErrors.forEach((error) => {
+        logError(operation, error.message, error, {
+          errorPath: error.path,
+        });
+      });
+
+      if (
+        onUnauthenticated &&
+        graphQLErrors.some((e) => e.extensions?.code === 'UNAUTHENTICATED')
+      ) {
+        onUnauthenticated();
+      }
+    }
+  });
+}
+
+export const errorLink = createErrorLink();
 
 export const operationStart = new ApolloLink((operation, forward) => {
   operation.setContext({ start: Date.now() });

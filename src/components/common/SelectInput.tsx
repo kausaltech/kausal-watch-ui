@@ -1,5 +1,6 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import {
   Input as BSInput,
   Label as BSLabel,
@@ -7,7 +8,6 @@ import {
   FormGroup,
   InputProps,
 } from 'reactstrap';
-import styled from 'styled-components';
 
 const Label = styled(BSLabel)`
   font-weight: ${(props) => props.theme.formLabelFontWeight};

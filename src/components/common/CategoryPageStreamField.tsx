@@ -1,8 +1,8 @@
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
 import * as Sentry from '@sentry/nextjs';
 import { Col, type ColProps, Container, Row } from 'reactstrap';
-import { useTheme } from 'styled-components';
 
 import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import ActionAttribute from '@/components/common/ActionAttribute';

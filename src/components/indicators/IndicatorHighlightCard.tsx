@@ -1,10 +1,10 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import { readableColor } from 'polished';
 import { Card, CardBody, CardImgOverlay, CardTitle } from 'reactstrap';
-import styled from 'styled-components';
 
 import { beautifyValue } from '@/common/data/format';
 import { getActionTermContext } from '@/common/i18n';

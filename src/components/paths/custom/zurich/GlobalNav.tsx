@@ -3,21 +3,24 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Script from 'next/script';
 
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';
 import { Collapse, Nav, NavItem, Navbar } from 'reactstrap';
-import styled, { useTheme } from 'styled-components';
+
+import { transientOptions } from '@common/themes/styles/styled';
+import { getThemeStaticURL } from '@common/themes/theme';
 
 import { deploymentType } from '@/common/environment';
 import { NavigationLink } from '@/common/links';
-import { getThemeStaticURL } from '@/common/theme';
 import { NavItem as NavItemType } from '@/components/Header';
 import Icon from '@/components/common/Icon';
 
 //import NavDropdown, { type NavDropdownProps } from '@/components/common/NavDropdown';
 //import type { GlobalNavProps } from '@/components/common/GlobalNav';
 
-const SecondaryNav = styled(Navbar)<{ $dark?: boolean }>`
+const SecondaryNav = styled(Navbar, transientOptions)<{ $dark?: boolean }>`
   padding: 0;
   background-color: ${(props) =>
     props.$dark ? 'var(--stzh-color-zueriblue)' : 'var(--stzh-color-white)'};
@@ -132,7 +135,7 @@ const NavHighlighter = styled.span`
   }
 `;
 
-const StyledCollapse = styled(Collapse)<{ $dark?: boolean }>`
+const StyledCollapse = styled(Collapse, transientOptions)<{ $dark?: boolean }>`
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     display: flex;
     background-color: ${(props) =>

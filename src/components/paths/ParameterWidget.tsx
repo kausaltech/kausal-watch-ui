@@ -1,16 +1,18 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { gql, useMutation, useReactiveVar } from '@apollo/client';
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useFocusable } from '@react-aria/focus';
 import { useTranslations } from 'next-intl';
 import { Range, getTrackBackground } from 'react-range';
-import styled, { useTheme } from 'styled-components';
+
+import { activeScenarioVar } from '@common/apollo/paths-cache';
 
 import { ParameterInterface } from '@/common/__generated__/paths/graphql';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import Tooltip, { TooltipTrigger } from '@/components/common/Tooltip';
-import { activeScenarioVar } from '@/context/paths/cache';
 import { usePaths } from '@/context/paths/paths';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 

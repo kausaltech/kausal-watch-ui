@@ -1,5 +1,5 @@
+import styled from '@emotion/styled';
 import { CardBody } from 'reactstrap';
-import styled from 'styled-components';
 
 const CardWithState = styled.div`
   position: relative;

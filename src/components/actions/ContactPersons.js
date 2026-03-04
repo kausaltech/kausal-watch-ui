@@ -1,8 +1,8 @@
 import React from 'react';
 
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
 import ContactPerson from './ContactPerson';
 

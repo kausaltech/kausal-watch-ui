@@ -2,16 +2,17 @@ import { useEffect, useState } from 'react';
 
 import type { ObservableQuery } from '@apollo/client';
 import { NetworkStatus, gql, useMutation, useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, Col, FormFeedback, FormGroup, Input, InputGroup, Label, Row } from 'reactstrap';
-import styled from 'styled-components';
+
+import ContentLoader from '@common/components/ContentLoader';
 
 import {
   GetParametersQuery,
   SetNormalizationMutation,
   SetNormalizationMutationVariables,
 } from '@/common/__generated__/paths/graphql';
-import ContentLoader from '@/components/common/ContentLoader';
 import Icon from '@/components/common/Icon';
 import { usePaths } from '@/context/paths/paths';
 import { GET_PARAMETERS } from '@/queries/paths/get-paths-parameters';
@@ -345,7 +346,7 @@ const GlobalParameters = () => {
   if ((loading && !previousData) || !data || !data.parameters) {
     return (
       <>
-        <ContentLoader />
+        <ContentLoader message={t('loading')} />
       </>
     );
   }

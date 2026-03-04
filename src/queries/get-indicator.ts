@@ -222,6 +222,7 @@ export const GET_INDICATOR_DETAILS = gql`
     identifier
     name
     color
+    scheduleContinuous
     status {
       id
       identifier

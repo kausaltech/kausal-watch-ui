@@ -1,12 +1,13 @@
 import React from 'react';
 
 import { gql, useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 import { Col, Media, Row } from 'reactstrap';
-import styled from 'styled-components';
 
-import { getThemeStaticURL } from '@/common/theme';
+import { getThemeStaticURL } from '@common/themes/theme';
+
 import RichText from '@/components/common/RichText';
 
 import dayjs from '../../common/dayjs';

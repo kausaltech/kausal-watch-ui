@@ -1,5 +1,5 @@
+import styled from '@emotion/styled';
 import { Button as AriaButton, Dialog, Modal, ModalOverlay } from 'react-aria-components';
-import styled from 'styled-components';
 
 export const AriaModalOverlay = styled(ModalOverlay)`
   position: fixed;

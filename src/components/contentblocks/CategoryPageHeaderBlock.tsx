@@ -3,11 +3,14 @@ import React from 'react';
 import Image from 'next/image';
 
 import { gql, useQuery } from '@apollo/client';
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';
 import { Col, Container, Row } from 'reactstrap';
-import styled, { useTheme } from 'styled-components';
+
+import { transientOptions } from '@common/themes/styles/styled';
 
 import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import type {
@@ -200,7 +203,10 @@ const CategoryIconImage = styled.img<{ size?: IconSize }>`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
-const CategoryIconSvg = styled(SVG)<{ size?: IconSize; $color?: string | null | undefined }>`
+const CategoryIconSvg = styled(SVG, transientOptions)<{
+  size?: IconSize;
+  $color?: string | null | undefined;
+}>`
   max-height: ${({ theme, size }) => getIconHeight(size, theme)};
   margin-bottom: ${(props) => props.theme.spaces.s100};
   fill: ${(props) => props.$color || props.theme.brandDark} !important;
@@ -244,8 +250,10 @@ const CategoryHeaderAttributes = ({ layout, page, children }: CategoryHeaderAttr
       <Attributes>{children}</Attributes>
     </AttributesContainer>
   ) : null;
-interface LegacyCategoryHeaderAttributesProps
-  extends Pick<Props, 'attributes' | 'categoryId' | 'typeId'> {
+interface LegacyCategoryHeaderAttributesProps extends Pick<
+  Props,
+  'attributes' | 'categoryId' | 'typeId'
+> {
   categoryTypes?: CategoryTypes;
   children?: React.ReactNode;
 }

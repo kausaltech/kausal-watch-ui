@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import styled from 'styled-components';
 
 import { getActionTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';

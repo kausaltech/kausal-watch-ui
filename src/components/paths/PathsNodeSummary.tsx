@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
+import { useTheme } from '@emotion/react';
 import { captureException } from '@sentry/nextjs';
 import ContentLoader from 'react-content-loader';
-import { useTheme } from 'styled-components';
+
+import { activeGoalVar } from '@common/apollo/paths-cache';
 
 import type {
   GetInstanceContextQuery,
   GetNodeContentQuery,
   GetNodeContentQueryVariables,
 } from '@/common/__generated__/paths/graphql';
-import { activeGoalVar } from '@/context/paths/cache';
 import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 
