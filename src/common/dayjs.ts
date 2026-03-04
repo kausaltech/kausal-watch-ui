@@ -9,6 +9,7 @@ import 'dayjs/locale/en-au';
 import 'dayjs/locale/en-gb';
 import 'dayjs/locale/es';
 import 'dayjs/locale/fi';
+import 'dayjs/locale/fr';
 import 'dayjs/locale/sv';
 import 'dayjs/locale/sv-fi';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
