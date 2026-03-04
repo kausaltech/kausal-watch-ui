@@ -55,6 +55,12 @@ Make sure that your installation does not give errors about missing files. If it
 WATCH_BACKEND_URL=
 ```
 
+7. Run the development server locally. This will run the Kausal Watch UI on port 3000.
+
+```
+pnpm run dev
+```
+
 ### Storybook
 
 You can explore, develop and test Kausal Watch UI components in isolation on Storybook.
