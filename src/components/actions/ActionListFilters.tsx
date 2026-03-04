@@ -1290,14 +1290,14 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           const phaseOpts = {
             id: 'phase',
             options: plan.actionImplementationPhases.map((obj) => ({
-              id: obj.id,
+              id: obj.identifier,
               label: obj.name,
             })),
             label: t('filter-phase'),
             helpText: t('filter-phase-help', getActionTermContext(plan)) || '',
             showAllLabel: t('filter-all-phases'),
             filterAction: (val: string, act: ActionListAction) => {
-              if (act.implementationPhase?.id === val) return true;
+              if (act.implementationPhase?.identifier === val) return true;
               return false;
             },
           };
@@ -1308,14 +1308,14 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           const statusOpts = {
             id: 'status',
             options: plan.actionStatuses.map((obj) => ({
-              id: obj.id,
+              id: obj.identifier,
               label: obj.name,
             })),
             label: t('filter-status'),
             helpText: t('filter-status-help', getActionTermContext(plan)) || '',
             showAllLabel: t('filter-all-statuses'),
             filterAction: (val: string, act: ActionListAction) => {
-              if (act.status?.id === val) return true;
+              if (act.status?.identifier === val) return true;
               return false;
             },
           };
