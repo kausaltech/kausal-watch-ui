@@ -10,6 +10,7 @@ import * as da from 'plotly.js-locales/da';
 import * as de from 'plotly.js-locales/de';
 import * as de_ch from 'plotly.js-locales/de-ch';
 import * as fi from 'plotly.js-locales/fi';
+import * as fr from 'plotly.js-locales/fr';
 import * as lv from 'plotly.js-locales/lv';
 import * as pl from 'plotly.js-locales/pl';
 import * as sv from 'plotly.js-locales/sv';
@@ -17,7 +18,7 @@ import type { PlotParams } from 'react-plotly.js';
 import createPlotlyComponent from 'react-plotly.js/factory';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const locales = { sv, de, de_ch, cs, da, lv, pl, fi };
+const locales = { sv, de, de_ch, cs, da, lv, pl, fi, fr };
 
 const getSeparators = (locale: string): string | undefined => {
   const separators = Intl.NumberFormat(locale)?.formatToParts(10000.1);
