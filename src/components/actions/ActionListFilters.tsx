@@ -813,22 +813,30 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
       (cat) => cat.children
     );
     this.catById = this.filterByCommonCategory
-      ? new Map(sortedCats.map((c) => [c.common.id, c]))
+      ? new Map(sortedCats.filter((c) => c.common?.id != null).map((c) => [c.common!.id, c]))
       : new Map(sortedCats.map((c) => [c.id, c]));
     const getLabel = (cat: ActionListCategory) =>
       this.ct.hideCategoryIdentifiers ? cat.name : `${cat.identifier}. ${cat.name}`;
     this.options = sortedCats
       .filter((cat) => cat.depth < this.depth)
-      .map((cat) => ({ id: cat.id, label: getLabel(cat), indent: cat.depth }));
+      .flatMap((cat) => {
+        const id = this.filterByCommonCategory ? cat.common?.id : cat.id;
+        if (!id) return [];
+        return [{ id, label: getLabel(cat), indent: cat.depth }];
+      });
   }
   filterSingleCategory(
     action: ActionListAction | IndicatorListIndicator,
     categoryId: string | undefined
   ) {
     return action.categories.some((actCat) => {
-      let cat = this.catById.get(actCat.id);
+      const actCatKey = this.filterByCommonCategory
+        ? ((actCat as any).common?.id ?? null)
+        : actCat.id;
+      let cat = actCatKey ? this.catById.get(actCatKey) : undefined;
       while (cat) {
-        if (cat.id === categoryId) return true;
+        const catKey = this.filterByCommonCategory ? cat.common?.id : cat.id;
+        if (catKey && catKey === categoryId) return true;
         cat = cat.parent ?? undefined;
       }
       return false;

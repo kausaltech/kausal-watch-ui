@@ -40,7 +40,10 @@ export function constructCatHierarchy<
       const ct: CTType = {
         ...categoryOrCommonCategoryType,
       };
-      ct.categories = ctIn.categories.map((cat) => {
+      ct.categories = ctIn.categories.flatMap((cat) => {
+        // Some categories don't have a common mapping.
+        // @ts-ignore
+        if (mapToCommonCategories && cat.common == null) return [];
         // @ts-ignore
         const categoryOrCommon = mapToCommonCategories ? cat.common : cat;
         const newCat: CatType = {
@@ -49,12 +52,13 @@ export function constructCatHierarchy<
           children: [],
         };
         if (mapToCommonCategories) {
+          // @ts-ignore
           newCat.parent = cat.parent?.common ?? null;
         } else {
           newCat.parent = cat.parent;
         }
         objsById.set(newCat.id, newCat);
-        return newCat;
+        return [newCat];
       });
 
       ctsById.set(ct.id, ct);
@@ -110,21 +114,20 @@ export function mapActionCategories<
     let actionPrimaryCategories: Cat[] = [];
     const actionCategories: (ActionType['categories'][0] | null)[] = action.categories
       .map((cat) => {
-        if (useCommonCategories && cat.common == null) return;
+        // @ts-ignore
         const category = useCommonCategories ? cat.common : cat;
+        if (!category) return null;
         const catObj = categoriesById.get(category.id);
         if (!catObj) return null;
-        const categoryPath: Cat[] = [];
         if (primaryRootCT && catObj.type.identifier === primaryRootCT.identifier) {
+          const categoryPath: Cat[] = [];
           let root = catObj;
           categoryPath.unshift(root);
           while (root.parent) {
             root = root.parent;
             categoryPath.unshift(root);
           }
-          if (depth > categoryPath.length) {
-            depth = categoryPath.length;
-          }
+          if (depth > categoryPath.length) depth = categoryPath.length;
           actionPrimaryCategories = categoryPath.slice(0, depth);
         }
         return catObj;
