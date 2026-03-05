@@ -180,7 +180,7 @@
     "regenerator-runtime": "^0.13.9",
     "sass": "^1.97.1",
     "source-map-loader": "^5.0.0",
-    "storybook": "^10.1.11",
+    "storybook": "^10.2.10",
     "swc-plugin-coverage-instrument": "^0.0.28",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5.9.3",
