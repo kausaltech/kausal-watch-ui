@@ -76,6 +76,10 @@ const StyledRichText = styled.div`
   // break words that can not fit on single line
   overflow-wrap: break-word;
 
+  iframe {
+    width: 100%;
+  }
+  
   .responsive-object {
     position: relative;
   }
