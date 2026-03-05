@@ -119,7 +119,7 @@ const FilterSectionDivider = styled.div`
   border-bottom: 1px solid #333;
 `;
 
-const StyledBadge = styled(BadgeComponent, transientOptions)<{ $color?: string }>`
+const StyledBadge = styled('span', transientOptions)<{ $color?: string }>`
   display: inline-flex;
   max-width: 100%;
   white-space: normal;
@@ -445,7 +445,7 @@ function ActionListFilterBadges({
       {badges.length > 0 && <span className="visually-hidden">{t('active-filters')}</span>}
       {/* TODO: animate transition */}
       {badges.map((item) => (
-        <StyledBadge key={`${item.id}-${item.value}`} className="me-3" $color={buttonColor}>
+        <StyledBadge key={`${item.id}-${item.value}`} className="badge me-3" $color={buttonColor}>
           <CloseButton
             variant={readableColor(buttonColor || '#000') === '#000' ? 'black' : 'white'}
             className="btn-sm"
