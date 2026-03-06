@@ -173,6 +173,13 @@ type ActionListLinkProps = {
   };
 };
 
+type IndicatorListLinkProps = {
+  categoryFilters?: {
+    typeIdentifier: string;
+    categoryId: string;
+  }[];
+};
+
 type OtherLinkProps = Omit<LinkProps, 'href' | 'as'>;
 
 export function ActionListLink(props: PropsWithChildren<OtherLinkProps & ActionListLinkProps>) {
@@ -198,12 +205,25 @@ ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps)
 };
 
 export function IndicatorListLink(
-  props: Omit<LinkProps, 'href'> & { children: ReactElement<unknown> }
+  props: PropsWithChildren<OtherLinkProps & IndicatorListLinkProps>
 ) {
-  const href = usePrependPlanAndLocale(INDICATORS_PATH);
+  const pathname = usePrependPlanAndLocale(INDICATORS_PATH);
+  const { href, ...linkProps } = IndicatorListLink.getLinkProps(props);
 
-  return <NextLink href={href} passHref {...disablePrefetch(props)} />;
+  return <NextLink href={{ ...href, pathname }} passHref {...disablePrefetch(linkProps)} />;
 }
+
+IndicatorListLink.getLinkProps = (opts: IndicatorListLinkProps, rest?: OtherLinkProps) => {
+  const { categoryFilters, ...other } = opts;
+  const query: Record<string, string> = {};
+  if (categoryFilters) {
+    categoryFilters.forEach((f) => {
+      query[getCategoryString(f.typeIdentifier)] = f.categoryId;
+    });
+  }
+  const href = { query };
+  return { ...other, ...(rest || {}), href };
+};
 
 type StaticPageLinkProps =
   | {

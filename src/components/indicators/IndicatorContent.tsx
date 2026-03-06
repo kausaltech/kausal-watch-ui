@@ -8,6 +8,7 @@ import { Col, Container, Row } from 'reactstrap';
 
 import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
+import { IndicatorListLink } from '@/common/links';
 import ActionsTable from '@/components/actions/ActionsTable';
 import CategoryTags from '@/components/actions/CategoryTags';
 import ChangeHistory from '@/components/common/ChangeHistory';
@@ -148,7 +149,13 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
               })}
             {/* Legacy support */}
             {!hasLayout && (
-              <CategoryTags categories={uniqueCategories} types={uniqueTypes} noLink={true} />
+              <CategoryTags
+                categories={uniqueCategories}
+                types={uniqueTypes}
+                noLink={false}
+                ListLinkComponent={IndicatorListLink}
+                linkMode="indicator-list"
+              />
             )}
           </Col>
         </Row>

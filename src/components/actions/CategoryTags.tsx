@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from 'react';
+import React, { type ComponentType, type PropsWithChildren } from 'react';
 
 import styled from '@emotion/styled';
 import { readableColor } from 'polished';
@@ -54,6 +54,12 @@ const CategoryListItem = styled.li`
   }
 `;
 
+type CategoryFilter = { typeIdentifier: string; categoryId: string };
+
+type ListLinkComponentProps = PropsWithChildren<{
+  categoryFilters: CategoryFilter[];
+}>;
+
 type CategoryLinkProps<ExtraCatProps = object, ExtraCTProps = object> = {
   category: {
     id: string;
@@ -66,10 +72,17 @@ type CategoryLinkProps<ExtraCatProps = object, ExtraCTProps = object> = {
     identifier: string;
   } & ExtraCTProps;
   noLink?: boolean;
+  ListLinkComponent?: ComponentType<ListLinkComponentProps>;
 };
 
 function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
-  const { category, categoryType, noLink = false, children } = props;
+  const {
+    category,
+    categoryType,
+    noLink = false,
+    children,
+    ListLinkComponent = ActionListLink,
+  } = props;
 
   if (noLink) return <>{children}</>;
 
@@ -82,7 +95,7 @@ function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
         categoryId: category.id,
       },
     ];
-    return <ActionListLink categoryFilters={filters}>{children}</ActionListLink>;
+    return <ListLinkComponent categoryFilters={filters}>{children}</ListLinkComponent>;
   }
 }
 
@@ -100,15 +113,21 @@ type CategoryContentProps = {
   categoryType: CategoryTypeFragmentFragment;
   noLink?: boolean;
   compact?: boolean;
+  ListLinkComponent?: ComponentType<ListLinkComponentProps>;
 };
 
 export const CategoryContent = (props: CategoryContentProps) => {
-  const { categories, categoryType, noLink = false, compact = false } = props;
+  const { categories, categoryType, noLink = false, compact = false, ListLinkComponent } = props;
   return (
     <CategoryList>
       {categories.map((item) => (
         <CategoryListItem key={item.id}>
-          <CategoryLink category={item} categoryType={categoryType} noLink={noLink}>
+          <CategoryLink
+            category={item}
+            categoryType={categoryType}
+            noLink={noLink}
+            ListLinkComponent={ListLinkComponent}
+          >
             <BadgeTooltip
               id={item.id}
               tooltip={item.helpText}
@@ -140,10 +159,11 @@ type CategoryTagsProps = {
   types: CategoryTypeFragmentFragment[];
   noLink?: boolean;
   compact?: boolean;
+  ListLinkComponent?: ComponentType<ListLinkComponentProps>;
 };
 
 function CategoryTags(props: CategoryTagsProps) {
-  const { categories, types, noLink = false, compact = false } = props;
+  const { categories, types, noLink = false, compact = false, ListLinkComponent } = props;
   const groupElements = types.map((ct) => {
     const cats = categories.filter((cat) => cat.type.id === ct.id);
     if (!cats || !cats.length) return null;
@@ -161,7 +181,13 @@ function CategoryTags(props: CategoryTagsProps) {
             {ct.helpText && <PopoverTip content={ct.helpText} identifier={ct.id} />}
           </h3>
         ) : null}
-        <CategoryContent categories={cats} categoryType={ct} noLink={noLink} compact={compact} />
+        <CategoryContent
+          categories={cats}
+          categoryType={ct}
+          noLink={noLink}
+          compact={compact}
+          ListLinkComponent={ListLinkComponent}
+        />
       </CategoryGroup>
     );
   });
