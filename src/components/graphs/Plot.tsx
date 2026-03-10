@@ -11,6 +11,7 @@ import * as de from 'plotly.js-locales/de';
 import * as de_ch from 'plotly.js-locales/de-ch';
 import * as fi from 'plotly.js-locales/fi';
 import * as fr from 'plotly.js-locales/fr';
+// no fr_ca available in plotly
 import * as lv from 'plotly.js-locales/lv';
 import * as pl from 'plotly.js-locales/pl';
 import * as sv from 'plotly.js-locales/sv';
