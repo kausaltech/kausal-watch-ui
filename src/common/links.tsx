@@ -178,6 +178,8 @@ type IndicatorListLinkProps = {
     typeIdentifier: string;
     categoryId: string;
   }[];
+  filterGroupLabel?: string;
+  filterValueLabel?: string;
 };
 
 type OtherLinkProps = Omit<LinkProps, 'href' | 'as'>;
@@ -214,13 +216,21 @@ export function IndicatorListLink(
 }
 
 IndicatorListLink.getLinkProps = (opts: IndicatorListLinkProps, rest?: OtherLinkProps) => {
-  const { categoryFilters, ...other } = opts;
+  const { categoryFilters, filterGroupLabel, filterValueLabel, ...other } = opts;
   const query: Record<string, string> = {};
+
   if (categoryFilters) {
     categoryFilters.forEach((f) => {
       query[getCategoryString(f.typeIdentifier)] = f.categoryId;
     });
   }
+  if (filterGroupLabel) {
+    query.badgeType = filterGroupLabel;
+  }
+  if (filterValueLabel) {
+    query.badgeLabel = filterValueLabel;
+  }
+
   const href = { query };
   return { ...other, ...(rest || {}), href };
 };

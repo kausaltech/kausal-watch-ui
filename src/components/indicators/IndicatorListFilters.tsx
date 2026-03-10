@@ -10,6 +10,7 @@ import { usePlan } from '@/context/plan';
 
 import ActionListFilters, {
   type ActionListFilterSection,
+  type AdditionalFilterBadge,
   type FilterValue,
   type Filters,
 } from '../actions/ActionListFilters';
@@ -27,6 +28,44 @@ const createFilterUnusedCategories =
 const createFilterUnusedCommonCategories =
   (indicators: IndicatorListIndicator[]) => (category: IndicatorCategory) =>
     indicators.find(({ categories }) => categories.find((cat) => cat.id === category.id));
+
+const isCategoryFilterKey = (key: string) => key.startsWith('cat-');
+
+const getCategoryTypeIdentifierFromFilterKey = (key: string) => key.replace(/^cat-/, '');
+
+const getConfiguredFilterIds = (filterSections: ActionListFilterSection[]) =>
+  new Set(filterSections.flatMap((section) => section.filters.map((filter) => filter.id)));
+
+const formatTypeIdentifier = (value: string) =>
+  value
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+
+const getCategoryBadgeDataByTypeAndId = (
+  indicators: IndicatorListIndicator[],
+  typeIdentifier: string,
+  categoryId: string
+) => {
+  for (const indicator of indicators) {
+    for (const category of indicator.categories) {
+      let current: typeof category | null | undefined = category;
+
+      while (current) {
+        if (current.id === categoryId) {
+          return {
+            typeName: formatTypeIdentifier(typeIdentifier),
+            categoryName: current.name,
+          };
+        }
+
+        current = current.parent as typeof category | null | undefined;
+      }
+    }
+  }
+
+  return null;
+};
 
 // Prevent actionlistfilters to inject the showAllLabel "See all actions" into the empty showAllLabel
 const indicatorFiltersToActionListFilters = (
@@ -176,6 +215,8 @@ interface IndicatorListFiltersProps {
     primaryFilters: IndicatorListPageFiltersFragment['primaryFilters'];
     mainFilters: IndicatorListPageFiltersFragment['mainFilters'];
   };
+  filterGroupLabel?: string | null;
+  filterValueLabel?: string | null;
 }
 
 const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
@@ -187,6 +228,8 @@ const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
     indicators,
     commonCategories,
     filterLayout,
+    filterGroupLabel,
+    filterValueLabel,
   } = props;
   const t = useTranslations();
   const plan = usePlan();
@@ -204,6 +247,32 @@ const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
     isIndicatorList: true,
   });
 
+  const configuredFilterIds = getConfiguredFilterIds(filterSections);
+
+  const additionalFilterBadges: AdditionalFilterBadge[] = Object.entries(activeFilters)
+    .filter(
+      ([key, value]) => isCategoryFilterKey(key) && typeof value === 'string' && value.length > 0
+    )
+    .filter(([key]) => !configuredFilterIds.has(key))
+    .map(([key, value]) => {
+      const typeIdentifier = getCategoryTypeIdentifierFromFilterKey(key);
+      const badgeData = getCategoryBadgeDataByTypeAndId(indicators, typeIdentifier, value);
+      if (!badgeData) return null;
+      const fallbackLabel = `${badgeData.typeName}: ${badgeData.categoryName}`;
+
+      return {
+        key: `${key}-${value}`,
+        id: key,
+        value,
+        label:
+          filterGroupLabel && filterValueLabel
+            ? `${filterGroupLabel}: ${filterValueLabel}`
+            : fallbackLabel,
+        onReset: () => onChange(key, undefined),
+      };
+    })
+    .filter((badge): badge is AdditionalFilterBadge => badge != null);
+
   return (
     <ActionListFilters
       filterSections={filterSections}
@@ -211,6 +280,7 @@ const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
       onChange={onChange}
       actionCount={actionCount}
       actionCountLabel={t('indicators')}
+      additionalFilterBadges={additionalFilterBadges}
     />
   );
 };

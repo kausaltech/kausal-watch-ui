@@ -58,7 +58,11 @@ type CategoryFilter = { typeIdentifier: string; categoryId: string };
 
 type ListLinkComponentProps = PropsWithChildren<{
   categoryFilters: CategoryFilter[];
+  filterGroupLabel?: string;
+  filterValueLabel?: string;
 }>;
+
+type CategoryLinkMode = 'default' | 'indicator-list';
 
 type CategoryLinkProps<ExtraCatProps = object, ExtraCTProps = object> = {
   category: {
@@ -71,32 +75,49 @@ type CategoryLinkProps<ExtraCatProps = object, ExtraCTProps = object> = {
   categoryType: {
     identifier: string;
   } & ExtraCTProps;
+  categoryTypeHeader?: string | null;
   noLink?: boolean;
   ListLinkComponent?: ComponentType<ListLinkComponentProps>;
+  linkMode?: CategoryLinkMode;
 };
 
 function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
   const {
     category,
     categoryType,
+    categoryTypeHeader,
     noLink = false,
     children,
     ListLinkComponent = ActionListLink,
+    linkMode = 'default',
   } = props;
 
   if (noLink) return <>{children}</>;
 
+  const filters = [
+    {
+      typeIdentifier: categoryType.identifier,
+      categoryId: category.id,
+    },
+  ];
+
+  if (linkMode === 'indicator-list') {
+    return (
+      <ListLinkComponent
+        categoryFilters={filters}
+        filterGroupLabel={categoryTypeHeader || categoryType.identifier}
+        filterValueLabel={category.name}
+      >
+        {children}
+      </ListLinkComponent>
+    );
+  }
+
   if (category.categoryPage) {
     return <StaticPageLink page={category.categoryPage}>{children}</StaticPageLink>;
-  } else {
-    const filters = [
-      {
-        typeIdentifier: categoryType.identifier,
-        categoryId: category.id,
-      },
-    ];
-    return <ListLinkComponent categoryFilters={filters}>{children}</ListLinkComponent>;
   }
+
+  return <ActionListLink categoryFilters={filters}>{children}</ActionListLink>;
 }
 
 const Identifier = styled.span`
@@ -111,13 +132,24 @@ const Identifier = styled.span`
 type CategoryContentProps = {
   categories: CategoryTagRecursiveFragmentFragment[];
   categoryType: CategoryTypeFragmentFragment;
+  categoryTypeHeader?: string | null;
   noLink?: boolean;
   compact?: boolean;
   ListLinkComponent?: ComponentType<ListLinkComponentProps>;
+  linkMode?: CategoryLinkMode;
 };
 
 export const CategoryContent = (props: CategoryContentProps) => {
-  const { categories, categoryType, noLink = false, compact = false, ListLinkComponent } = props;
+  const {
+    categories,
+    categoryType,
+    categoryTypeHeader,
+    noLink = false,
+    compact = false,
+    ListLinkComponent,
+    linkMode = 'default',
+  } = props;
+
   return (
     <CategoryList>
       {categories.map((item) => (
@@ -125,8 +157,10 @@ export const CategoryContent = (props: CategoryContentProps) => {
           <CategoryLink
             category={item}
             categoryType={categoryType}
+            categoryTypeHeader={categoryTypeHeader}
             noLink={noLink}
             ListLinkComponent={ListLinkComponent}
+            linkMode={linkMode}
           >
             <BadgeTooltip
               id={item.id}
@@ -160,16 +194,26 @@ type CategoryTagsProps = {
   noLink?: boolean;
   compact?: boolean;
   ListLinkComponent?: ComponentType<ListLinkComponentProps>;
+  linkMode?: CategoryLinkMode;
 };
 
 function CategoryTags(props: CategoryTagsProps) {
-  const { categories, types, noLink = false, compact = false, ListLinkComponent } = props;
+  const {
+    categories,
+    types,
+    noLink = false,
+    compact = false,
+    ListLinkComponent,
+    linkMode = 'default',
+  } = props;
+
   const groupElements = types.map((ct) => {
     const cats = categories.filter((cat) => cat.type.id === ct.id);
     if (!cats || !cats.length) return null;
     /* If category type seems to have levels,
         use the level name of the first selected categoory
         as section header */
+
     const categoryTypeHeader =
       ct.levels?.length > 0 && cats[0].level?.name ? cats[0].level.name : ct.name;
 
@@ -184,13 +228,16 @@ function CategoryTags(props: CategoryTagsProps) {
         <CategoryContent
           categories={cats}
           categoryType={ct}
+          categoryTypeHeader={categoryTypeHeader}
           noLink={noLink}
           compact={compact}
           ListLinkComponent={ListLinkComponent}
+          linkMode={linkMode}
         />
       </CategoryGroup>
     );
   });
+
   return <Categories $compact={compact}>{groupElements}</Categories>;
 }
 
