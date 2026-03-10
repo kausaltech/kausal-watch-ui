@@ -1,5 +1,7 @@
 import { gql } from '@apollo/client';
 
+import { DIMENSIONAL_METRIC_FRAGMENT } from '@/utils/paths/metric';
+
 export const ACTION_PARAMETER_FRAGMENT = gql`
   fragment ActionParameter on ParameterInterface {
     __typename
@@ -30,55 +32,6 @@ export const ACTION_PARAMETER_FRAGMENT = gql`
       stringValue: value
       stringDefaultValue: defaultValue
     }
-  }
-`;
-
-export const DIMENSIONAL_METRIC_FRAGMENT = gql`
-  fragment DimensionalMetric on DimensionalMetricType {
-    id
-    name
-    dimensions {
-      id
-      label
-      originalId
-      helpText
-      categories {
-        id
-        originalId
-        label
-        color
-        order
-        group
-      }
-      groups {
-        id
-        originalId
-        label
-        color
-        order
-      }
-    }
-    goals {
-      categories
-      groups
-      values {
-        year
-        value
-        isInterpolated
-      }
-    }
-    unit {
-      htmlShort
-      short
-    }
-    stackable
-    normalizedBy {
-      id
-      name
-    }
-    forecastFrom
-    years
-    values
   }
 `;
 
