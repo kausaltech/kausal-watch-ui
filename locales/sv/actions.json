@@ -60,5 +60,6 @@
     "actions-continuous": "Ständiga åtgärder",
     "actions-non-continuous": "Icke ständiga åtgärder",
     "filter-action-type": "Typ av åtgärd",
-    "see-all-actions": "Alla typer"
+    "see-all-actions": "Alla typer",
+    "action-not-continuous": "Inte kontinuerlig"
 }
