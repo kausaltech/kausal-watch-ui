@@ -98,8 +98,19 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
       });
   });
 
+  const uniqueCategories = Array.from(
+    new Map(
+      indicator.categories.map((cat) => {
+        const visibleHeader =
+          cat.type.levels?.length > 0 && cat.level?.name ? cat.level.name : cat.type.name;
+        const key = `${visibleHeader}::${cat.name}`;
+        return [key, cat];
+      })
+    ).values()
+  );
+
   const uniqueTypes = Array.from(
-    new Map(indicator.categories.map((c) => [c.type.id, c.type])).values()
+    new Map(uniqueCategories.map((c) => [c.type.id, c.type])).values()
   );
 
   return (
@@ -137,7 +148,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
               })}
             {/* Legacy support */}
             {!hasLayout && (
-              <CategoryTags categories={indicator.categories} types={uniqueTypes} noLink={true} />
+              <CategoryTags categories={uniqueCategories} types={uniqueTypes} noLink={true} />
             )}
           </Col>
         </Row>
