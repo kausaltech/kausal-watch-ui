@@ -206,16 +206,7 @@ ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps)
   return { ...other, ...(rest || {}), href };
 };
 
-export function IndicatorListLink(
-  props: PropsWithChildren<OtherLinkProps & IndicatorListLinkProps>
-) {
-  const pathname = usePrependPlanAndLocale(INDICATORS_PATH);
-  const { href, ...linkProps } = IndicatorListLink.getLinkProps(props);
-
-  return <NextLink href={{ ...href, pathname }} passHref {...disablePrefetch(linkProps)} />;
-}
-
-IndicatorListLink.getLinkProps = (opts: IndicatorListLinkProps, rest?: OtherLinkProps) => {
+function getIndicatorListLinkProps(opts: IndicatorListLinkProps, rest?: OtherLinkProps) {
   const { categoryFilters, filterGroupLabel, filterValueLabel, ...other } = opts;
   const query: Record<string, string> = {};
 
@@ -224,16 +215,27 @@ IndicatorListLink.getLinkProps = (opts: IndicatorListLinkProps, rest?: OtherLink
       query[getCategoryString(f.typeIdentifier)] = f.categoryId;
     });
   }
+
   if (filterGroupLabel) {
-    query.badgeType = filterGroupLabel;
+    query.filterGroupLabel = filterGroupLabel;
   }
+
   if (filterValueLabel) {
-    query.badgeLabel = filterValueLabel;
+    query.filterValueLabel = filterValueLabel;
   }
 
   const href = { query };
   return { ...other, ...(rest || {}), href };
-};
+}
+
+export function IndicatorListLink(
+  props: PropsWithChildren<OtherLinkProps & IndicatorListLinkProps>
+) {
+  const pathname = usePrependPlanAndLocale(INDICATORS_PATH);
+  const { href, ...linkProps } = getIndicatorListLinkProps(props);
+
+  return <NextLink href={{ ...href, pathname }} passHref {...disablePrefetch(linkProps)} />;
+}
 
 type StaticPageLinkProps =
   | {

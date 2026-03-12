@@ -48,6 +48,8 @@ const getCategoryBadgeDataByTypeAndId = (
   categoryId: string
 ) => {
   for (const indicator of indicators) {
+    // Walk through each category and its parent chain to find the matching category id.
+    // This allows badge labels to be resolved even when the selected category is a parent category.
     for (const category of indicator.categories) {
       let current: typeof category | null | undefined = category;
 
