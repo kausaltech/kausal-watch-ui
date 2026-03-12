@@ -333,6 +333,14 @@ function ActionListDropdownInput<Value extends FilterValue>(props: ActionListDro
   );
 }
 
+export type AdditionalFilterBadge = {
+  key: string;
+  id: string;
+  value: string;
+  label: string;
+  onReset: () => void;
+};
+
 type ActionListFilterBadgesProps = {
   plan: PlanContextType;
   allFilters: ActionListFilter[];
@@ -341,6 +349,7 @@ type ActionListFilterBadgesProps = {
   actionCountLabel?: string;
   onReset: (id: string, value: SingleFilterValue) => void;
   buttonColor?: string;
+  additionalFilterBadges?: AdditionalFilterBadge[];
 };
 
 type Badge = {
@@ -359,6 +368,7 @@ function ActionListFilterBadges({
   actionCountLabel,
   onReset,
   buttonColor,
+  additionalFilterBadges = [],
 }: ActionListFilterBadgesProps) {
   const t = useTranslations();
 
@@ -429,6 +439,7 @@ function ActionListFilterBadges({
     })
     .flat()
     .filter((item): item is Badge => item != null);
+  const allBadges = [...badges, ...additionalFilterBadges];
 
   return (
     <FiltersList aria-live="assertive">
@@ -442,9 +453,9 @@ function ActionListFilterBadges({
           }`
         }
       </span>
-      {badges.length > 0 && <span className="visually-hidden">{t('active-filters')}</span>}
+      {allBadges.length > 0 && <span className="visually-hidden">{t('active-filters')}</span>}
       {/* TODO: animate transition */}
-      {badges.map((item) => (
+      {allBadges.map((item) => (
         <StyledBadge key={`${item.id}-${item.value}`} className="badge me-3" $color={buttonColor}>
           <CloseButton
             variant={readableColor(buttonColor || '#000') === '#000' ? 'black' : 'white'}
@@ -1086,10 +1097,18 @@ type ActionListFiltersProps = {
   actionCount: number;
   actionCountLabel?: string;
   onChange: (filterType: string, val: FilterValue) => void;
+  additionalFilterBadges?: AdditionalFilterBadge[];
 };
 
 function ActionListFilters(props: ActionListFiltersProps) {
-  const { activeFilters, filterSections, actionCount, onChange, actionCountLabel } = props;
+  const {
+    activeFilters,
+    filterSections,
+    actionCount,
+    onChange,
+    actionCountLabel,
+    additionalFilterBadges = [],
+  } = props;
 
   const [filterState, setFilterState] = useState(activeFilters);
   const [isOpen, setIsOpen] = useState(false);
@@ -1214,6 +1233,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
               onReset={onReset}
               actionCount={actionCount}
               actionCountLabel={actionCountLabel}
+              additionalFilterBadges={additionalFilterBadges}
               buttonColor={
                 theme.neutralLight === theme.brandDark ? theme.brandLight : theme.brandDark
               }

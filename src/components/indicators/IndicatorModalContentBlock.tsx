@@ -10,6 +10,7 @@ import {
   type IndicatorValueSummaryContentBlockFragmentFragment,
 } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
+import { IndicatorListLink } from '@/common/links';
 import { usePlan } from '@/context/plan';
 
 import ActionsTable from '../actions/ActionsTable';
@@ -229,12 +230,15 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
       categories.push(cat);
     }
   });
+
+  const groupLabel = block.fieldLabel || block.categoryType?.name || '';
+
   return (
     categories &&
     categories.length > 0 && (
       <CategoryTypeBlock>
         <BlockLabel>
-          {block.fieldLabel || block.categoryType?.name}
+          {groupLabel}
           {(block.fieldHelpText || block.categoryType?.helpText) && block.id && (
             <PopoverTip
               content={block.fieldHelpText || block.categoryType?.helpText || ''}
@@ -245,16 +249,27 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
 
         <CategoryBadges>
           {categories.map((cat) => (
-            <BadgeTooltip
+            <IndicatorListLink
               key={cat.id}
-              id={cat.id}
-              tooltip=""
-              content={cat.name}
-              size={context === 'grouped' ? 'sm' : 'md'}
-              themeColor="neutralLight"
-              color={cat.color || cat.parent?.color || undefined}
-              isLink={false}
-            />
+              categoryFilters={[
+                {
+                  typeIdentifier: cat.type.identifier,
+                  categoryId: cat.id,
+                },
+              ]}
+              filterGroupLabel={groupLabel}
+              filterValueLabel={cat.name}
+            >
+              <BadgeTooltip
+                id={cat.id}
+                tooltip=""
+                content={cat.name}
+                size={context === 'grouped' ? 'sm' : 'md'}
+                themeColor="neutralLight"
+                color={cat.color || cat.parent?.color || undefined}
+                isLink={true}
+              />
+            </IndicatorListLink>
           ))}
         </CategoryBadges>
       </CategoryTypeBlock>

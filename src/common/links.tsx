@@ -173,6 +173,15 @@ type ActionListLinkProps = {
   };
 };
 
+type IndicatorListLinkProps = {
+  categoryFilters?: {
+    typeIdentifier: string;
+    categoryId: string;
+  }[];
+  filterGroupLabel?: string;
+  filterValueLabel?: string;
+};
+
 type OtherLinkProps = Omit<LinkProps, 'href' | 'as'>;
 
 export function ActionListLink(props: PropsWithChildren<OtherLinkProps & ActionListLinkProps>) {
@@ -197,12 +206,35 @@ ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps)
   return { ...other, ...(rest || {}), href };
 };
 
-export function IndicatorListLink(
-  props: Omit<LinkProps, 'href'> & { children: ReactElement<unknown> }
-) {
-  const href = usePrependPlanAndLocale(INDICATORS_PATH);
+function getIndicatorListLinkProps(opts: IndicatorListLinkProps, rest?: OtherLinkProps) {
+  const { categoryFilters, filterGroupLabel, filterValueLabel, ...other } = opts;
+  const query: Record<string, string> = {};
 
-  return <NextLink href={href} passHref {...disablePrefetch(props)} />;
+  if (categoryFilters) {
+    categoryFilters.forEach((f) => {
+      query[getCategoryString(f.typeIdentifier)] = f.categoryId;
+    });
+  }
+
+  if (filterGroupLabel) {
+    query.filterGroupLabel = filterGroupLabel;
+  }
+
+  if (filterValueLabel) {
+    query.filterValueLabel = filterValueLabel;
+  }
+
+  const href = { query };
+  return { ...other, ...(rest || {}), href };
+}
+
+export function IndicatorListLink(
+  props: PropsWithChildren<OtherLinkProps & IndicatorListLinkProps>
+) {
+  const pathname = usePrependPlanAndLocale(INDICATORS_PATH);
+  const { href, ...linkProps } = getIndicatorListLinkProps(props);
+
+  return <NextLink href={{ ...href, pathname }} passHref {...disablePrefetch(linkProps)} />;
 }
 
 type StaticPageLinkProps =

@@ -440,6 +440,9 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     sortingOrder.push({ key: 'organization', direction: 'asc' });
   }
 
+  const badgeType = searchParams.get('badgeType');
+  const badgeLabel = searchParams.get('badgeLabel');
+
   const sortedIndicators = sortIndicators(
     sortingOrder,
     hierarchy,
@@ -499,6 +502,8 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
           onChange={handleFilterChange}
           actionCount={filteredIndicators.length}
           actionCountLabel={t('indicators')}
+          filterGroupLabel={badgeType}
+          filterValueLabel={badgeLabel}
         />
       </IndicatorsHero>
 
