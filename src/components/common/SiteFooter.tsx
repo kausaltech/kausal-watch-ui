@@ -119,6 +119,18 @@ const Logo = styled.div`
   }
 `;
 
+const FooterLogoLink = styled.a`
+  display: flex;
+  align-items: center;
+  height: 100%;
+  max-width: 100%;
+
+  .footer-org-logo {
+    height: 100%;
+    max-width: 100%;
+  }
+`;
+
 const ServiceTitle = styled.div`
   display: flex;
   flex-direction: row;
@@ -511,12 +523,12 @@ function SiteFooter(props: SiteFooterProps) {
             {theme.themeLogoWhiteUrl !== '' && (
               <Logo>
                 {theme?.footerLogoLink ? (
-                  <a
+                  <FooterLogoLink
                     href={theme.footerLogoLink}
                     aria-label={`${ownerName}, ${siteTitle} ${t('front-page')}`}
                   >
                     <OrgLogo />
-                  </a>
+                  </FooterLogoLink>
                 ) : (
                   <OrgLogo />
                 )}
