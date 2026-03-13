@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
+import type { ApolloQueryResult } from '@apollo/client';
 import { captureException } from '@sentry/nextjs';
 import * as Sentry from '@sentry/nextjs';
 import type { Metadata } from 'next';
@@ -100,13 +101,23 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 async function getPathsData(pathsInstance: string) {
   if (pathsInstance) {
-    const { data: pathsData } = await tryRequest<GetInstanceContextQuery>(
-      getPathsInstance(pathsInstance)
-    );
+    const result = await tryRequest<GetInstanceContextQuery>(getPathsInstance(pathsInstance));
+    if ('error' in result && result.error) {
+      captureException(result.error, {
+        extra: { pathsInstance, context: 'getPathsData' },
+      });
+      return undefined;
+    }
+    const { data: pathsData, errors } = result as ApolloQueryResult<GetInstanceContextQuery>;
+    if (errors?.length) {
+      captureException(new Error(`Paths instance query returned errors for ${pathsInstance}`), {
+        extra: { errors, pathsInstance, context: 'getPathsData' },
+      });
+      return undefined;
+    }
     if (pathsData?.instance) {
-      // console.log('pathsData', pathsData);
       return pathsData;
-    } else return undefined;
+    }
   }
   return undefined;
 }

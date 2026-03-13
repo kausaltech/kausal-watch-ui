@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
+import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import ContentLoader from 'react-content-loader';
@@ -19,6 +20,7 @@ import type {
   OutcomeNodeFieldsFragment,
 } from '@/common/__generated__/paths/graphql';
 import { deploymentType } from '@/common/environment';
+import ErrorMessage from '@/components/common/ErrorMessage';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
 import { usePaths } from '@/context/paths/paths';
 import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';
@@ -159,7 +161,11 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
   const { loading, error, previousData, networkStatus } = queryResp;
   const refetching = networkStatus === NetworkStatus.refetch;
 
-  if (error) return <p>Error : {error.message}</p>;
+  if (error) {
+    captureException(error, {
+      extra: { outcomeNodeId, pathsInstance: pathsInstance?.instance.id },
+    });
+  }
   const data = queryResp.data ?? previousData;
 
   const getVisibleNodes: (outcomeNode: OutcomenodeType) => {
@@ -202,27 +208,29 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
                   </Alert>
                 )}
                 {loading && !previousData && <OutcomeBlockLoader />}
-                {nodes.visible.map((node: OutcomenodeType, index: number) => (
-                  <OutcomeCardSet
-                    key={node.id}
-                    // Hacky solution to support different sub node titles depending on level
-                    subNodesTitle={
-                      index === 0 ? t('outcome-sub-nodes') : t('outcome-sub-nodes-secondary')
-                    }
-                    nodeMap={nodes.all}
-                    rootNode={node}
-                    startYear={yearRange[0]}
-                    endYear={yearRange[1]}
-                    activeScenario={activeScenario?.name || ''}
-                    parentColor="#666"
-                    activeNodeId={
-                      index < nodes.visible.length - 1 ? nodes.visible[index + 1].id : undefined
-                    }
-                    lastActiveNodeId={lastActiveNodeId}
-                    setLastActiveNodeId={setLastActiveNodeId}
-                    refetching={refetching}
-                  />
-                ))}
+                {error && <ErrorMessage message={error.message} />}
+                {!error &&
+                  nodes.visible.map((node: OutcomenodeType, index: number) => (
+                    <OutcomeCardSet
+                      key={node.id}
+                      // Hacky solution to support different sub node titles depending on level
+                      subNodesTitle={
+                        index === 0 ? t('outcome-sub-nodes') : t('outcome-sub-nodes-secondary')
+                      }
+                      nodeMap={nodes.all}
+                      rootNode={node}
+                      startYear={yearRange[0]}
+                      endYear={yearRange[1]}
+                      activeScenario={activeScenario?.name || ''}
+                      parentColor="#666"
+                      activeNodeId={
+                        index < nodes.visible.length - 1 ? nodes.visible[index + 1].id : undefined
+                      }
+                      lastActiveNodeId={lastActiveNodeId}
+                      setLastActiveNodeId={setLastActiveNodeId}
+                      refetching={refetching}
+                    />
+                  ))}
               </CardBody>
             </StyledCard>
           </Col>
