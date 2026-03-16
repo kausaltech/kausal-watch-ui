@@ -216,6 +216,10 @@ function sortDepthFirst<Type>(
   return out;
 }
 
+function asNonEmptyString(value?: string | null) {
+  return value && value.trim() ? value : undefined;
+}
+
 type ActionListTextInputProps = {
   id: string;
   label: string;
@@ -657,11 +661,9 @@ class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
   ) {
     super();
 
-    const nonEmpty = (s?: string | null) => (s && s.trim() ? s : undefined);
-
-    this.fieldLabel = nonEmpty(overrides?.fieldLabel);
-    this.fieldHelpText = nonEmpty(overrides?.fieldHelpText);
-    this.showAllLabelOverride = nonEmpty(overrides?.showAllLabel);
+    this.fieldLabel = asNonEmptyString(overrides?.fieldLabel);
+    this.fieldHelpText = asNonEmptyString(overrides?.fieldHelpText);
+    this.showAllLabelOverride = asNonEmptyString(overrides?.showAllLabel);
 
     const sortedOrgs = sortDepthFirst(
       orgs,
@@ -1129,7 +1131,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
   const plan = usePlan();
 
   const allFilters: ActionListFilter[] = useMemo(
-    () => filterSections.map((section) => section.filters).flat(),
+    () => filterSections.flatMap((section) => section.filters),
     [filterSections]
   );
 
@@ -1406,12 +1408,11 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           filters.push(new GenericSelectFilter(planOpts));
           break;
         case 'ContinuousActionFilterBlock': {
-          const nonEmpty = (s?: string | null) => (s && s.trim() ? s : undefined);
-          const fieldLabel = 'fieldLabel' in block ? nonEmpty(block.fieldLabel) : undefined;
+          const fieldLabel = 'fieldLabel' in block ? asNonEmptyString(block.fieldLabel) : undefined;
           const fieldHelpText =
-            'fieldHelpText' in block ? nonEmpty(block.fieldHelpText) : undefined;
+            'fieldHelpText' in block ? asNonEmptyString(block.fieldHelpText) : undefined;
           const showAllLabelOverride =
-            'showAllLabel' in block ? nonEmpty(block.showAllLabel) : undefined;
+            'showAllLabel' in block ? asNonEmptyString(block.showAllLabel) : undefined;
           const label = fieldLabel ?? t('filter-action-type');
           const showAllLabel = showAllLabelOverride ?? t('see-all-actions');
           const options: ActionListFilterOption[] = [
@@ -1428,7 +1429,6 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           if (block.__typename === 'IndicatorFilterBlock') {
             switch (block.field) {
               case 'level':
-                const nonEmpty = (s?: string | null) => (s && s.trim() ? s : undefined);
                 const indicatorLevels = [
                   { id: 'operational', label: t('operational-indicator') },
                   { id: 'strategic', label: t('strategic-indicator') },
@@ -1437,7 +1437,8 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                 const levelOpts = {
                   id: 'indicator-level',
                   options: indicatorLevels,
-                  label: nonEmpty('fieldLabel' in block ? block.fieldLabel : null) ?? t('type'),
+                  label:
+                    asNonEmptyString('fieldLabel' in block ? block.fieldLabel : null) ?? t('type'),
                   helpText: ('fieldHelpText' in block ? block.fieldHelpText : null) ?? '',
                   showAllLabel:
                     ('showAllLabel' in block ? block.showAllLabel : null) ?? 'All levels',
