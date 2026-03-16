@@ -1,5 +1,5 @@
 import type { Ref } from 'react';
-import React, { type JSX, createRef, useCallback, useMemo, useState } from 'react';
+import React, { type JSX, createRef, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -1110,6 +1110,73 @@ type ActionListFiltersProps = {
   additionalFilterBadges?: AdditionalFilterBadge[];
 };
 
+function useFilterState(
+  activeFilters: Filters,
+  onChange: (filterType: string, val: FilterValue) => void
+) {
+  const [filterState, setFilterState] = useState(activeFilters);
+
+  useEffect(() => {
+    setFilterState(activeFilters);
+  }, [activeFilters]);
+
+  const debouncedFilterChange = useMemo(() => debounce(onChange, 150), [onChange]);
+
+  useEffect(() => {
+    return () => {
+      debouncedFilterChange.cancel();
+    };
+  }, [debouncedFilterChange]);
+
+  const updateFilter = useCallback(
+    (id: string, val: FilterValue, debounceMs = 0) => {
+      setFilterState((state) => {
+        const next = { ...state, [id]: val };
+
+        if (id === 'responsible_party') {
+          next['primary_responsible_party'] = undefined;
+        }
+
+        return next;
+      });
+
+      if (debounceMs) {
+        debouncedFilterChange(id, val);
+      } else {
+        onChange(id, val);
+      }
+    },
+    [debouncedFilterChange, onChange]
+  );
+
+  const deleteFilterValue = useCallback(
+    (id: string, value: SingleFilterValue) => {
+      const current = filterState[id];
+      if (Array.isArray(current)) {
+        return current.filter((item) => item !== value);
+      }
+      return undefined;
+    },
+    [filterState]
+  );
+
+  const resetFilterValue = useCallback(
+    (id: string, value: SingleFilterValue) => {
+      if (id === 'responsible_party') {
+        updateFilter('primary_responsible_party', undefined);
+      }
+      updateFilter(id, deleteFilterValue(id, value));
+    },
+    [deleteFilterValue, updateFilter]
+  );
+
+  return {
+    filterState,
+    updateFilter,
+    resetFilterValue,
+  };
+}
+
 function ActionListFilters(props: ActionListFiltersProps) {
   const {
     activeFilters,
@@ -1120,7 +1187,6 @@ function ActionListFilters(props: ActionListFiltersProps) {
     additionalFilterBadges = [],
   } = props;
 
-  const [filterState, setFilterState] = useState(activeFilters);
   const [isOpen, setIsOpen] = useState(false);
 
   const t = useTranslations();
@@ -1135,49 +1201,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
     [filterSections]
   );
 
-  const debouncedFilterChange = useMemo(() => debounce(onChange, 150), [onChange]);
-
-  const onFilterChange = useCallback(
-    (id: string, val: FilterValue, debounce: number = 0) => {
-      setFilterState((state) => {
-        const newState = { ...state, [id]: val };
-
-        if (id === 'responsible_party') {
-          newState['primary_responsible_party'] = undefined;
-        }
-
-        return newState;
-      });
-
-      if (debounce) {
-        debouncedFilterChange(id, val);
-      } else {
-        onChange(id, val);
-      }
-    },
-    [setFilterState, onChange, debouncedFilterChange]
-  );
-
-  const deleteFilterValues = useCallback(
-    (id: string, value: SingleFilterValue) => {
-      const filterVal = filterState[id];
-      if (Array.isArray(filterVal)) {
-        return filterVal.filter((valueId) => value !== valueId);
-      }
-      return undefined;
-    },
-    [filterState]
-  );
-
-  const onReset = useCallback(
-    (id: string, value: SingleFilterValue) => {
-      if (id === 'responsible_party') {
-        onFilterChange('primary_responsible_party', undefined);
-      }
-      onFilterChange(id, deleteFilterValues(id, value));
-    },
-    [onFilterChange, deleteFilterValues]
-  );
+  const { filterState, updateFilter, resetFilterValue } = useFilterState(activeFilters, onChange);
 
   const toggle = () => setIsOpen(!isOpen);
 
@@ -1206,7 +1230,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
                   <FilterCol
                     key={filter.id}
                     filter={filter}
-                    onFilterChange={onFilterChange}
+                    onFilterChange={updateFilter}
                     state={filterState[filter.id]}
                     primaryResponsibleParty={filterState['primary_responsible_party']}
                   />
@@ -1240,7 +1264,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
               plan={plan}
               allFilters={allFilters}
               activeFilters={filterState}
-              onReset={onReset}
+              onReset={resetFilterValue}
               actionCount={actionCount}
               actionCountLabel={actionCountLabel}
               additionalFilterBadges={additionalFilterBadges}
