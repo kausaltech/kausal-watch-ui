@@ -364,6 +364,91 @@ type Badge = {
   onReset: () => void;
 };
 
+function getBadgeLabel(
+  filter: ActionListFilter,
+  value: SingleFilterValue,
+  activeFilters: Filters,
+  t: TFunction
+): string | null {
+  if (!value) return null;
+
+  if (filter.id === 'primary_responsible_party') {
+    return activeFilters['responsible_party'] ? filter.getLabel(t) : null;
+  }
+
+  if (filter.id === 'name') {
+    const trimmed = value.trim();
+    return trimmed ? trimmed : null;
+  }
+
+  if (filter.options) {
+    return filter.options.find((opt) => opt.id === value)?.label ?? null;
+  }
+
+  if (typeof value === 'boolean') {
+    return filter.getLabel(t);
+  }
+
+  return null;
+}
+
+function buildBadges(
+  allFilters: ActionListFilter[],
+  activeFilters: Filters,
+  onReset: (id: string, value: SingleFilterValue) => void,
+  t: TFunction
+): Badge[] {
+  const enabled = allFilters.filter((item) => activeFilters[item.id]);
+
+  const seenFilterKeyValues = new Set<string>();
+  const uniqueFilters = enabled.filter((item) => {
+    const uniqueKey = `${item.id}-${activeFilters[item.id]}`;
+    if (seenFilterKeyValues.has(uniqueKey)) return false;
+    seenFilterKeyValues.add(uniqueKey);
+    return true;
+  });
+
+  if (
+    activeFilters['primary_responsible_party'] &&
+    activeFilters['responsible_party'] &&
+    !uniqueFilters.some((item) => item.id === 'primary_responsible_party')
+  ) {
+    uniqueFilters.push({
+      id: 'primary_responsible_party',
+      useValueFilterId: 'responsible_party',
+      filterAction: () => true,
+      getLabel: (t: TFunction) => t('filter-primary-responsible-party'),
+      getHelpText: () => undefined,
+      getShowAllLabel: () => '',
+      sm: undefined,
+      md: 6,
+      lg: 4,
+      render: () => null,
+    } as ActionListFilter);
+  }
+
+  return uniqueFilters
+    .map((filter) => {
+      const rawValue = activeFilters[filter.id];
+      const values = isSingleFilterValue(rawValue) ? [rawValue] : rawValue;
+
+      return values.map((value) => {
+        const label = getBadgeLabel(filter, value, activeFilters, t);
+        if (!label) return null;
+
+        return {
+          key: `${filter.id}-${value}`,
+          id: filter.id,
+          value,
+          label,
+          onReset: () => onReset(filter.id, value),
+        };
+      });
+    })
+    .flat()
+    .filter((item): item is Badge => item != null);
+}
+
 function ActionListFilterBadges({
   plan,
   allFilters,
@@ -376,73 +461,11 @@ function ActionListFilterBadges({
 }: ActionListFilterBadgesProps) {
   const t = useTranslations();
 
-  const enabled = allFilters.filter((item) => activeFilters[item.id]);
+  const badges = useMemo(
+    () => buildBadges(allFilters, activeFilters, onReset, t),
+    [allFilters, activeFilters, onReset, t]
+  );
 
-  function createBadge(item: ActionListFilter, value: SingleFilterValue): Badge | null {
-    let label: string;
-
-    if (item.id === 'primary_responsible_party') {
-      if (!value || !activeFilters['responsible_party']) return null;
-      label = item.getLabel(t);
-    } else if (item.id === 'name') {
-      if (!value || typeof value !== 'string' || value.trim() === '') {
-        return null;
-      }
-      label = value;
-    } else if (item.options) {
-      const matchingFilters = enabled.filter((i) => i.id === item.id);
-      let activeOption: ActionListFilterOption | undefined;
-
-      for (const filter of matchingFilters) {
-        activeOption = filter.options?.find((opt) => opt.id === value);
-        if (activeOption) break;
-      }
-
-      if (!activeOption) {
-        return null;
-      }
-      label = activeOption.label;
-      // Handle boolean type filters
-    } else if (typeof value === 'boolean') {
-      label = item.getLabel(t);
-    } else {
-      return null;
-    }
-    return {
-      key: item.id,
-      id: item.id,
-      value,
-      label,
-      onReset: () => {
-        onReset(item.id, value);
-      },
-    };
-  }
-
-  const seenFilterKeyValues = new Set();
-  const badgesToCreate = enabled.filter((item: ActionListFilter) => {
-    const uniqueKey = `${item.id}-${activeFilters[item.id]}`;
-    if (seenFilterKeyValues.has(uniqueKey)) return false;
-    seenFilterKeyValues.add(uniqueKey);
-    return true;
-  });
-  if (
-    activeFilters['primary_responsible_party'] &&
-    activeFilters['responsible_party'] &&
-    !badgesToCreate.some((b) => b.id === 'primary_responsible_party')
-  ) {
-    badgesToCreate.push({
-      id: 'primary_responsible_party',
-      getLabel: (t: TFunction) => t('filter-primary-responsible-party'),
-    } as ActionListFilter);
-  }
-  const badges = badgesToCreate
-    .map((item: ActionListFilter) => {
-      const value = activeFilters[item.id];
-      return (isSingleFilterValue(value) ? [value] : value).map((v) => createBadge(item, v));
-    })
-    .flat()
-    .filter((item): item is Badge => item != null);
   const allBadges = [...badges, ...additionalFilterBadges];
 
   return (
