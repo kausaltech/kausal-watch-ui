@@ -1098,30 +1098,31 @@ export type ActionListFilterSection = {
   filters: ActionListFilter[];
 };
 
-type FilterColProps = {
+type FilterFieldProps = {
   filter: ActionListFilter;
-  onFilterChange: (id: string, val: FilterValue, debounce: number) => void;
-  state: FilterValue;
-  primaryResponsibleParty?: string | undefined;
+  value: FilterValue;
+  onChange: (id: string, val: FilterValue, debounce?: number) => void;
+  primaryResponsibleParty?: string;
 };
-const FilterCol = React.memo(function FilterCol({
+
+const FilterField = React.memo(function FilterField({
   filter,
-  onFilterChange,
-  state,
+  value,
+  onChange,
   primaryResponsibleParty,
-}: FilterColProps) {
+}: FilterFieldProps) {
   const t = useTranslations();
 
   if (filter.id === 'responsible_party') {
     return (filter as ResponsiblePartyFilter).render(
-      state as string | undefined,
-      onFilterChange,
+      value as string | undefined,
+      onChange,
       t,
       primaryResponsibleParty
     );
   }
 
-  return filter.render(state, onFilterChange, t);
+  return filter.render(value, onChange, t);
 });
 
 type ActionListFiltersProps = {
@@ -1250,12 +1251,14 @@ function ActionListFilters(props: ActionListFiltersProps) {
             <Collapse isOpen={section.hidden ? isOpen : true}>
               <FilterSection key={section.id}>
                 {section.filters.map((filter) => (
-                  <FilterCol
+                  <FilterField
                     key={filter.id}
                     filter={filter}
-                    onFilterChange={updateFilter}
-                    state={filterState[filter.id]}
-                    primaryResponsibleParty={filterState['primary_responsible_party']}
+                    onChange={updateFilter}
+                    value={filterState[filter.id]}
+                    primaryResponsibleParty={
+                      filterState['primary_responsible_party'] as string | undefined
+                    }
                   />
                 ))}
                 {section.id === 'main' && (
