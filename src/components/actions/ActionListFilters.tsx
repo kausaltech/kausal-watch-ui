@@ -633,6 +633,94 @@ function createSelectFilter(opts: {
   };
 }
 
+function createActionNameFilter(
+  plan: PlanContextType,
+  t: TFunction,
+  actionTerm?: string
+): ActionListFilter<string | undefined> {
+  const hasActionIdentifiers = plan.features.hasActionIdentifiers;
+  const actionTermContext =
+    actionTerm === 'INDICATOR' ? getIndicatorTermContext(plan) : getActionTermContext(plan);
+  const ref = createRef<HTMLInputElement>();
+
+  return {
+    id: 'name',
+    useValueFilterId: undefined,
+    sm: 9,
+    md: 9,
+    lg: 6,
+    debounce: 150,
+    getLabel: () => t('filter-text', actionTermContext),
+    getHelpText: () => undefined,
+    getShowAllLabel: () => t('filter-text-default'),
+    filterAction: (value, action) => {
+      if (!value) return true;
+
+      const searchStr = escapeStringRegexp(value.toLowerCase());
+      let searchTarget = action.name.replace(/\u00AD/g, '').toLowerCase();
+
+      if (hasActionIdentifiers && 'identifier' in action) {
+        searchTarget = `${action.identifier.toLowerCase()} ${searchTarget}`;
+      }
+
+      return searchTarget.search(searchStr) !== -1;
+    },
+    render: (value, onChange, t) => (
+      <FilterColumn sm={9} md={9} lg={6} key="name">
+        <ActionListTextInput
+          id="name"
+          label={t('filter-text', actionTermContext)}
+          placeholder={t('filter-text-default')}
+          onChange={onChange}
+          currentValue={value}
+          inputRef={ref}
+        />
+      </FilterColumn>
+    ),
+  };
+}
+
+function createContinuousActionFilter(opts: {
+  label: string;
+  showAllLabel: string;
+  options: ActionListFilterOption[];
+  helpText?: string;
+}): ActionListFilter<string | undefined> {
+  const { label, showAllLabel, options, helpText } = opts;
+
+  return {
+    id: 'action_type',
+    useValueFilterId: undefined,
+    sm: undefined,
+    md: 6,
+    lg: 4,
+    options,
+    getLabel: () => label,
+    getHelpText: () => helpText,
+    getShowAllLabel: () => showAllLabel,
+    filterAction: (value, action) => {
+      if (!value) return true;
+      if (value === 'continuous') return action.scheduleContinuous === true;
+      if (value === 'non_continuous') return action.scheduleContinuous === false;
+      return true;
+    },
+    render: (value, onChange, t) => (
+      <FilterColumn md={6} lg={4} key="action_type">
+        <ActionListDropdownInput
+          isMulti={false}
+          id="action_type"
+          label={label}
+          helpText={helpText}
+          showAllLabel={showAllLabel}
+          currentValue={value}
+          onChange={onChange}
+          options={options}
+        />
+      </FilterColumn>
+    ),
+  };
+}
+
 class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
   id = 'responsible_party';
   options: ActionListFilterOption[];
@@ -952,111 +1040,6 @@ class AttributeTypeFilter extends DefaultFilter<string | undefined> {
   }
   getShowAllLabel(t: TFunction) {
     return this.showAllLabel || t('filter-all-categories');
-  }
-}
-
-class ActionNameFilter implements ActionListFilter<string | undefined> {
-  id = 'name';
-  sm = 9;
-  md = 9;
-  lg = 6;
-  debounce = 150;
-
-  private actionTermContext?: { context: string };
-  hasActionIdentifiers: boolean;
-  ref: Ref<HTMLInputElement>;
-
-  constructor(plan: PlanContextType, actionTerm?: string) {
-    this.hasActionIdentifiers = plan.features.hasActionIdentifiers;
-    this.actionTermContext =
-      actionTerm === 'INDICATOR' ? getIndicatorTermContext(plan) : getActionTermContext(plan);
-    this.ref = createRef();
-  }
-  useValueFilterId: string | undefined;
-  options?: ActionListFilterOption[] | undefined;
-
-  filterAction(value: string, action: ActionListAction | IndicatorListIndicator) {
-    const searchStr = escapeStringRegexp(value.toLowerCase());
-    let searchTarget = action.name.replace(/\u00AD/g, '').toLowerCase();
-    if (this.hasActionIdentifiers && 'identifier' in action) {
-      searchTarget = `${action.identifier.toLowerCase()} ${searchTarget}`;
-    }
-    return searchTarget.search(searchStr) !== -1;
-  }
-  getLabel(t: TFunction) {
-    return t('filter-text', this.actionTermContext);
-  }
-  getShowAllLabel(t: TFunction) {
-    return t('filter-text-default');
-  }
-  getHelpText() {
-    return undefined;
-  }
-  render(
-    value: string | undefined,
-    onChange: FilterChangeCallback<string | undefined>,
-    t: TFunction,
-    _primaryValue?: string
-  ) {
-    return (
-      <FilterColumn m={this.sm} md={this.md} lg={this.lg} key={this.id}>
-        <ActionListTextInput
-          id={this.id}
-          label={this.getLabel(t)}
-          placeholder={this.getShowAllLabel(t)}
-          onChange={onChange}
-          currentValue={value}
-          inputRef={this.ref}
-        />
-      </FilterColumn>
-    );
-  }
-}
-
-class ActionTypeFilter extends DefaultFilter<string | undefined> {
-  id = 'action_type';
-  sm = undefined;
-  md = 6;
-  lg = 4;
-
-  options: ActionListFilterOption[];
-
-  private label: string;
-  private showAllLabel: string;
-  private helpText?: string;
-
-  constructor(opts: {
-    label: string;
-    showAllLabel: string;
-    options: ActionListFilterOption[];
-    helpText?: string;
-  }) {
-    super();
-    this.label = opts.label;
-    this.showAllLabel = opts.showAllLabel;
-    this.options = opts.options;
-    this.helpText = opts.helpText;
-  }
-
-  getLabel() {
-    return this.label;
-  }
-
-  getHelpText() {
-    return this.helpText;
-  }
-
-  getShowAllLabel() {
-    return this.showAllLabel;
-  }
-
-  filterAction(value: string | undefined, action: ActionListAction): boolean {
-    if (!value) return true;
-
-    if (value === 'continuous') return action.scheduleContinuous === true;
-    if (value === 'non_continuous') return action.scheduleContinuous === false;
-
-    return true;
   }
 }
 
@@ -1477,7 +1460,12 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             { id: 'non_continuous', label: t('actions-non-continuous') },
           ];
           filters.push(
-            new ActionTypeFilter({ label, showAllLabel, options, helpText: fieldHelpText })
+            createContinuousActionFilter({
+              label,
+              showAllLabel,
+              options,
+              helpText: fieldHelpText,
+            })
           );
           break;
         }
@@ -1562,9 +1550,15 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             return false;
           },
         };
-        filters.push(new GenericSelectFilter(opts));
+        filters.push(
+          createSelectFilter({
+            ...opts,
+            isMulti: true,
+            matchesSingle: opts.filterAction as (value: string, item: FilterItem) => boolean,
+          })
+        );
       }
-      filters.push(new ActionNameFilter(plan, actionTerm));
+      filters.push(createActionNameFilter(plan, t, actionTerm));
     }
 
     const ret: ActionListFilterSection = {
