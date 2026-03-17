@@ -373,7 +373,7 @@ function getBadgeLabel(
   if (!value) return null;
 
   if (filter.id === 'primary_responsible_party') {
-    return activeFilters['responsible_party'] ? filter.getLabel(t) : null;
+    return activeFilters['responsible_party'] ? filter.label : null;
   }
 
   if (filter.id === 'name') {
@@ -386,7 +386,7 @@ function getBadgeLabel(
   }
 
   if (typeof value === 'boolean') {
-    return filter.getLabel(t);
+    return filter.label;
   }
 
   return null;
@@ -415,15 +415,17 @@ function buildBadges(
   ) {
     uniqueFilters.push({
       id: 'primary_responsible_party',
+      kind: 'hidden-toggle',
       useValueFilterId: 'responsible_party',
-      filterAction: () => true,
-      getLabel: (t: TFunction) => t('filter-primary-responsible-party'),
-      getHelpText: () => undefined,
-      getShowAllLabel: () => '',
+      label: t('filter-primary-responsible-party'),
+      helpText: undefined,
+      showAllLabel: '',
       sm: undefined,
       md: 6,
       lg: 4,
-      render: () => null,
+      options: [],
+      isMulti: false,
+      filterAction: () => true,
     } as ActionListFilter);
   }
 
@@ -504,71 +506,26 @@ type ActionListFilterOption = {
   label: string;
 };
 
-export interface ActionListFilter<Value extends FilterValue = FilterValue> {
+type FilterItem = ActionListAction | IndicatorListIndicator;
+
+type FilterKind = 'text' | 'select' | 'category-buttons' | 'responsible-party' | 'hidden-toggle';
+
+export type ActionListFilter<Value extends FilterValue = FilterValue> = {
   id: string;
-  useValueFilterId: string | undefined;
-  filterAction: (value: Value, action: ActionListAction | IndicatorListIndicator) => boolean;
-  getLabel: (t: TFunction) => string;
-  getHelpText: (t: TFunction) => string | undefined;
-  getShowAllLabel: (t: TFunction) => string;
-  sm: number | undefined;
+  kind: FilterKind;
+  useValueFilterId?: string;
+  sm?: number;
   md: number;
   lg: number;
+  debounce?: number;
+  isMulti?: boolean;
   options?: ActionListFilterOption[];
-  debounce?: number | undefined;
-  render: (value: Value, onChange: FilterChangeCallback<Value>, t: TFunction) => JSX.Element;
-}
-
-abstract class DefaultFilter<Value extends FilterValue> implements ActionListFilter<Value> {
-  id: string;
-  useValueFilterId: string | undefined;
-  sm = undefined;
-  md = 6;
-  lg = 4;
-  abstract options: NonNullable<ActionListFilter['options']>;
-
-  abstract getLabel(t: TFunction): string;
-  abstract getHelpText(t: TFunction): string | undefined;
-  abstract filterAction(value: Value, action: ActionListAction | IndicatorListIndicator): boolean;
-
-  getShowAllLabel(t: TFunction) {
-    return t('filter-all-categories');
-  }
-
-  render(
-    value: Value,
-    onChange: FilterChangeCallback<Value>,
-    t: TFunction,
-    isMulti?: Value extends MultipleFilterValue ? boolean : false
-  ) {
-    const _isMulti = isMulti ?? false;
-    return (
-      <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
-        <ActionListDropdownInput
-          isMulti={_isMulti}
-          id={this.id}
-          label={this.getLabel(t)}
-          helpText={this.getHelpText(t)}
-          showAllLabel={this.getShowAllLabel(t)}
-          currentValue={value}
-          onChange={onChange}
-          options={this.options}
-        />
-      </FilterColumn>
-    );
-  }
-}
-
-type GenericSelectFilterOpts = {
-  id: string;
-  options: ActionListFilterOption[];
-  filterAction: (value: FilterValue, action: ActionListAction | IndicatorListIndicator) => boolean;
   label: string;
   helpText?: string;
   showAllLabel: string;
+  filterAction: (value: Value, item: FilterItem) => boolean;
+  inputRef?: Ref<HTMLInputElement>;
 };
-
-type FilterItem = ActionListAction | IndicatorListIndicator;
 
 function createSelectFilter(opts: {
   id: string;
@@ -599,14 +556,16 @@ function createSelectFilter(opts: {
 
   return {
     id,
-    useValueFilterId,
+    kind: 'select',
+    label,
+    helpText,
+    showAllLabel,
+    options,
+    isMulti,
     sm,
     md,
     lg,
-    options,
-    getLabel: () => label,
-    getHelpText: () => helpText,
-    getShowAllLabel: () => showAllLabel,
+    useValueFilterId,
     filterAction: (value, item) => {
       if (Array.isArray(value)) {
         if (value.length === 0) return true;
@@ -616,20 +575,6 @@ function createSelectFilter(opts: {
       if (!value) return true;
       return matchesSingle(value, item);
     },
-    render: (value, onChange, t) => (
-      <FilterColumn sm={sm} md={md} lg={lg} key={id}>
-        <ActionListDropdownInput
-          isMulti={isMulti as false}
-          id={id}
-          label={label}
-          helpText={helpText}
-          showAllLabel={showAllLabel}
-          currentValue={value}
-          onChange={onChange}
-          options={options}
-        />
-      </FilterColumn>
-    ),
   };
 }
 
@@ -645,14 +590,16 @@ function createActionNameFilter(
 
   return {
     id: 'name',
+    kind: 'text',
     useValueFilterId: undefined,
     sm: 9,
     md: 9,
     lg: 6,
     debounce: 150,
-    getLabel: () => t('filter-text', actionTermContext),
-    getHelpText: () => undefined,
-    getShowAllLabel: () => t('filter-text-default'),
+    label: t('filter-text', actionTermContext),
+    helpText: undefined,
+    showAllLabel: t('filter-text-default'),
+    inputRef: ref,
     filterAction: (value, action) => {
       if (!value) return true;
 
@@ -665,18 +612,6 @@ function createActionNameFilter(
 
       return searchTarget.search(searchStr) !== -1;
     },
-    render: (value, onChange, t) => (
-      <FilterColumn sm={9} md={9} lg={6} key="name">
-        <ActionListTextInput
-          id="name"
-          label={t('filter-text', actionTermContext)}
-          placeholder={t('filter-text-default')}
-          onChange={onChange}
-          currentValue={value}
-          inputRef={ref}
-        />
-      </FilterColumn>
-    ),
   };
 }
 
@@ -690,34 +625,22 @@ function createContinuousActionFilter(opts: {
 
   return {
     id: 'action_type',
+    kind: 'select',
     useValueFilterId: undefined,
     sm: undefined,
     md: 6,
     lg: 4,
     options,
-    getLabel: () => label,
-    getHelpText: () => helpText,
-    getShowAllLabel: () => showAllLabel,
+    isMulti: false,
+    label,
+    helpText,
+    showAllLabel,
     filterAction: (value, action) => {
       if (!value) return true;
       if (value === 'continuous') return action.scheduleContinuous === true;
       if (value === 'non_continuous') return action.scheduleContinuous === false;
       return true;
     },
-    render: (value, onChange, t) => (
-      <FilterColumn md={6} lg={4} key="action_type">
-        <ActionListDropdownInput
-          isMulti={false}
-          id="action_type"
-          label={label}
-          helpText={helpText}
-          showAllLabel={showAllLabel}
-          currentValue={value}
-          onChange={onChange}
-          options={options}
-        />
-      </FilterColumn>
-    ),
   };
 }
 
@@ -733,14 +656,16 @@ function createAttributeTypeFilter(
 
   return {
     id: `att-${att.identifier}`,
+    kind: 'select',
     useValueFilterId: undefined,
     sm: undefined,
     md: 6,
     lg: 4,
     options,
-    getLabel: () => att.name,
-    getHelpText: () => att.helpText ?? undefined,
-    getShowAllLabel: () => config.showAllLabel || t('filter-all-categories'),
+    isMulti: false,
+    label: att.name,
+    helpText: att.helpText ?? undefined,
+    showAllLabel: config.showAllLabel || t('filter-all-categories'),
     filterAction: (value, action) => {
       if (!value) return true;
 
@@ -749,20 +674,6 @@ function createAttributeTypeFilter(
         return actAtt.choice?.id === value;
       });
     },
-    render: (value, onChange, t) => (
-      <FilterColumn md={6} lg={4} key={`att-${att.identifier}`}>
-        <ActionListDropdownInput
-          isMulti={false}
-          id={`att-${att.identifier}`}
-          label={att.name}
-          helpText={att.helpText ?? undefined}
-          showAllLabel={config.showAllLabel || t('filter-all-categories')}
-          currentValue={value}
-          onChange={onChange}
-          options={options}
-        />
-      </FilterColumn>
-    ),
   };
 }
 
@@ -833,73 +744,21 @@ function createCategoryFilter(
 
   return {
     id: filterId,
+    kind: style === 'dropdown' ? 'select' : 'category-buttons',
     useValueFilterId: undefined,
     sm: undefined,
     md: style === 'dropdown' ? 6 : 12,
     lg: style === 'dropdown' ? 4 : 12,
     options,
-    getLabel: () => ct.name,
-    getHelpText: () => ct.helpText ?? undefined,
-    getShowAllLabel: () => showAllLabel,
+    isMulti: style === 'dropdown' && ct.selectionType === CategoryTypeSelectWidget.Multiple,
+    label: ct.name,
+    helpText: ct.helpText ?? undefined,
+    showAllLabel,
     filterAction: (value, action) => {
       if (isSingleFilterValue(value)) {
         return filterSingleCategory(action, value);
       }
       return value.every((v) => filterSingleCategory(action, v));
-    },
-    render: (value, onChange, t) => {
-      if (style === 'dropdown') {
-        return (
-          <FilterColumn md={6} lg={4} key={filterId}>
-            <ActionListDropdownInput
-              isMulti={ct.selectionType === CategoryTypeSelectWidget.Multiple}
-              id={filterId}
-              label={ct.name}
-              helpText={ct.helpText ?? undefined}
-              showAllLabel={showAllLabel}
-              currentValue={value}
-              onChange={onChange}
-              options={options}
-            />
-          </FilterColumn>
-        );
-      }
-
-      return (
-        <Col sm={12} md={12} lg={12} key={filterId}>
-          <MainCategory>
-            <MainCategoryLabel id={`label-${filterId}`}>
-              {ct.name}
-              {ct.helpText && <PopoverTip header="Main Category" content={ct.helpText} />}
-            </MainCategoryLabel>
-            <ButtonGroup role="radiogroup" aria-labelledby={`label-${filterId}`}>
-              <RButton
-                color="black"
-                outline
-                onClick={() => onChange(filterId, undefined)}
-                active={value === undefined}
-                aria-checked={value === undefined}
-                role="radio"
-              >
-                {showAllLabel}
-              </RButton>
-              {options.map((opt) => (
-                <RButton
-                  color="black"
-                  outline
-                  onClick={() => onChange(filterId, opt.id)}
-                  active={value === opt.id}
-                  aria-checked={value === opt.id}
-                  key={opt.id}
-                  role="radio"
-                >
-                  {opt.label}
-                </RButton>
-              ))}
-            </ButtonGroup>
-          </MainCategory>
-        </Col>
-      );
     },
   };
 }
@@ -937,14 +796,16 @@ function createResponsiblePartyFilter(
 
   return {
     id: 'responsible_party',
+    kind: 'responsible-party',
     useValueFilterId: undefined,
     sm: undefined,
     md: 6,
     lg: 4,
     options,
-    getLabel: () => label,
-    getHelpText: () => helpText,
-    getShowAllLabel: () => showAllLabel,
+    isMulti: false,
+    label,
+    helpText,
+    showAllLabel,
     filterAction: (value, action) => {
       if (!value) return true;
       if (action.primaryOrg?.id === value) return true;
@@ -958,34 +819,22 @@ function createResponsiblePartyFilter(
         return false;
       });
     },
-    render: (value, onChange, t) => (
-      <FilterColumn md={6} lg={4} key="responsible_party">
-        <ActionListDropdownInput
-          isMulti={false}
-          id="responsible_party"
-          label={label}
-          helpText={helpText}
-          showAllLabel={showAllLabel}
-          currentValue={value}
-          onChange={onChange}
-          options={options}
-        />
-      </FilterColumn>
-    ),
   };
 }
 
 function createPrimaryResponsiblePartyFilter(t: TFunction): ActionListFilter<string | undefined> {
   return {
     id: 'primary_responsible_party',
+    kind: 'hidden-toggle',
     useValueFilterId: 'responsible_party',
     sm: undefined,
     md: 6,
     lg: 4,
     options: [],
-    getLabel: () => t('filter-primary-responsible-party'),
-    getHelpText: () => undefined,
-    getShowAllLabel: () => '',
+    isMulti: false,
+    label: t('filter-primary-responsible-party'),
+    helpText: undefined,
+    showAllLabel: '',
     filterAction: (value, action) => {
       if (!value) return true;
 
@@ -996,7 +845,6 @@ function createPrimaryResponsiblePartyFilter(t: TFunction): ActionListFilter<str
         )
       );
     },
-    render: () => null,
   };
 }
 
@@ -1026,28 +874,49 @@ const FilterField = React.memo(function FilterField({
 }: FilterFieldProps) {
   const t = useTranslations();
 
-  if (filter.id === 'responsible_party') {
+  if (filter.kind === 'hidden-toggle') {
+    return null;
+  }
+
+  if (filter.kind === 'text') {
+    return (
+      <FilterColumn sm={filter.sm} md={filter.md} lg={filter.lg} key={filter.id}>
+        <ActionListTextInput
+          id={filter.id}
+          label={filter.label}
+          placeholder={filter.showAllLabel}
+          onChange={onChange as FilterChangeCallback<string | undefined>}
+          currentValue={value as string | undefined}
+          inputRef={filter.inputRef}
+        />
+      </FilterColumn>
+    );
+  }
+
+  if (filter.kind === 'responsible-party') {
+    const currentValue = value as string | undefined;
+
     return (
       <FilterColumn sm={filter.sm} md={filter.md} lg={filter.lg} key={filter.id}>
         <ActionListDropdownInput
           isMulti={false}
           id={filter.id}
-          label={filter.getLabel(t)}
-          helpText={filter.getHelpText(t)}
-          showAllLabel={filter.getShowAllLabel(t)}
-          currentValue={value as string | undefined}
+          label={filter.label}
+          helpText={filter.helpText}
+          showAllLabel={filter.showAllLabel}
+          currentValue={currentValue}
           onChange={onChange as FilterChangeCallback<string | undefined>}
           options={filter.options ?? []}
         />
-        {value && (
+        {currentValue && (
           <FormGroup switch>
             <Input
               type="switch"
               role="switch"
               id="primary_responsible_party"
-              checked={primaryResponsibleParty === value}
+              checked={primaryResponsibleParty === currentValue}
               onChange={(e) =>
-                onChange('primary_responsible_party', e.target.checked ? value : undefined)
+                onChange('primary_responsible_party', e.target.checked ? currentValue : undefined)
               }
             />
             <label htmlFor="primary_responsible_party">
@@ -1059,7 +928,65 @@ const FilterField = React.memo(function FilterField({
     );
   }
 
-  return filter.render(value, onChange, t);
+  if (filter.kind === 'category-buttons') {
+    const selectedValue = value as string | undefined;
+    const showAllSelected = selectedValue === undefined;
+
+    return (
+      <Col sm={12} md={12} lg={12} key={filter.id}>
+        <MainCategory>
+          <MainCategoryLabel id={`label-${filter.id}`}>
+            {filter.label}
+            {filter.helpText && <PopoverTip header="Main Category" content={filter.helpText} />}
+          </MainCategoryLabel>
+          <ButtonGroup role="radiogroup" aria-labelledby={`label-${filter.id}`}>
+            <RButton
+              color="black"
+              outline
+              onClick={() => onChange(filter.id, undefined)}
+              active={showAllSelected}
+              aria-checked={showAllSelected}
+              role="radio"
+            >
+              {filter.showAllLabel}
+            </RButton>
+            {(filter.options ?? []).map((opt) => {
+              const isActive = selectedValue === opt.id;
+
+              return (
+                <RButton
+                  color="black"
+                  outline
+                  onClick={() => onChange(filter.id, opt.id)}
+                  active={isActive}
+                  aria-checked={isActive}
+                  key={opt.id}
+                  role="radio"
+                >
+                  {opt.label}
+                </RButton>
+              );
+            })}
+          </ButtonGroup>
+        </MainCategory>
+      </Col>
+    );
+  }
+
+  return (
+    <FilterColumn sm={filter.sm} md={filter.md} lg={filter.lg} key={filter.id}>
+      <ActionListDropdownInput
+        isMulti={(filter.isMulti ?? false) as false}
+        id={filter.id}
+        label={filter.label}
+        helpText={filter.helpText}
+        showAllLabel={filter.showAllLabel}
+        currentValue={value}
+        onChange={onChange as FilterChangeCallback<FilterValue>}
+        options={filter.options ?? []}
+      />
+    </FilterColumn>
+  );
 });
 
 type ActionListFiltersProps = {
