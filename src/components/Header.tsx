@@ -150,6 +150,7 @@ function Header() {
         externalItems={externalLinks}
         customToolbarItems={theme.settings.customNavbarTools || []}
         sticky={theme.settings.stickyNavigation}
+        logoLink={theme.navLogoLink}
       />
       {googleAnalyticsId && <GoogleAnalytics trackingId={googleAnalyticsId} />}
     </header>
