@@ -1,5 +1,5 @@
 import type { Ref } from 'react';
-import React, { type JSX, createRef, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { createRef, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -9,7 +9,6 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { createFilter } from 'react-select';
 import {
-  Badge as BadgeComponent,
   ButtonGroup,
   CloseButton,
   Col,
@@ -45,7 +44,6 @@ import TextInput from '@/components/common/TextInput';
 import type {
   ActionListAction,
   ActionListActionAttributeTypeFilterBlock,
-  ActionListCategory,
   ActionListCategoryTypeFilterBlock,
   ActionListOrganization,
   ActionListPrimaryOrg,
@@ -367,8 +365,7 @@ type Badge = {
 function getBadgeLabel(
   filter: ActionListFilter,
   value: SingleFilterValue,
-  activeFilters: Filters,
-  t: TFunction
+  activeFilters: Filters
 ): string | null {
   if (!value) return null;
 
@@ -383,10 +380,6 @@ function getBadgeLabel(
 
   if (filter.options) {
     return filter.options.find((opt) => opt.id === value)?.label ?? null;
-  }
-
-  if (typeof value === 'boolean') {
-    return filter.label;
   }
 
   return null;
@@ -435,7 +428,7 @@ function buildBadges(
       const values = isSingleFilterValue(rawValue) ? [rawValue] : rawValue;
 
       return values.map((value) => {
-        const label = getBadgeLabel(filter, value, activeFilters, t);
+        const label = getBadgeLabel(filter, value, activeFilters);
         if (!label) return null;
 
         return {
