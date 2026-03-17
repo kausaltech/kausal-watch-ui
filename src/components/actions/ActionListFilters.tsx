@@ -568,101 +568,69 @@ type GenericSelectFilterOpts = {
   showAllLabel: string;
 };
 
-class GenericSelectFilter extends DefaultFilter<MultipleFilterValue> {
-  options: ActionListFilterOption[];
+type FilterItem = ActionListAction | IndicatorListIndicator;
+
+function createSelectFilter(opts: {
+  id: string;
   label: string;
-  helpText: string | undefined;
+  helpText?: string;
   showAllLabel: string;
-  filterAction: (
-    value: MultipleFilterValue,
-    action: ActionListAction | IndicatorListIndicator
-  ) => boolean;
-
-  constructor(opts: GenericSelectFilterOpts) {
-    const { id, options, label, helpText, showAllLabel, filterAction } = opts;
-    super();
-    this.id = id;
-    this.options = options;
-    this.label = label;
-    this.helpText = helpText;
-    this.showAllLabel = showAllLabel;
-    this.filterAction = (vals, action) => {
-      if (!vals || vals.length === 0) return true;
-      return vals.some((v) => filterAction(v, action));
-    };
-  }
-  getLabel() {
-    return this.label;
-  }
-  getHelpText() {
-    return this.helpText;
-  }
-  getShowAllLabel() {
-    return this.showAllLabel;
-  }
-  render(
-    value: MultipleFilterValue,
-    onChange: FilterChangeCallback<MultipleFilterValue>,
-    t: TFunction
-  ) {
-    return super.render(value, onChange, t, true);
-  }
-}
-
-class GenericMultiSelectFilter extends DefaultFilter<MultipleFilterValue> {
   options: ActionListFilterOption[];
-  label: string;
-  helpText: string | undefined;
-  showAllLabel: string;
+  isMulti?: boolean;
+  sm?: number;
+  md?: number;
+  lg?: number;
+  useValueFilterId?: string;
+  matchesSingle: (value: string, item: FilterItem) => boolean;
+}): ActionListFilter {
+  const {
+    id,
+    label,
+    helpText,
+    showAllLabel,
+    options,
+    isMulti = false,
+    sm,
+    md = 6,
+    lg = 4,
+    useValueFilterId,
+    matchesSingle,
+  } = opts;
 
-  private singleValueFilterAction: (
-    value: string,
-    action: ActionListAction | IndicatorListIndicator
-  ) => boolean;
+  return {
+    id,
+    useValueFilterId,
+    sm,
+    md,
+    lg,
+    options,
+    getLabel: () => label,
+    getHelpText: () => helpText,
+    getShowAllLabel: () => showAllLabel,
+    filterAction: (value, item) => {
+      if (Array.isArray(value)) {
+        if (value.length === 0) return true;
+        return value.some((v) => matchesSingle(v, item));
+      }
 
-  constructor(opts: GenericSelectFilterOpts) {
-    const { id, options, label, helpText, showAllLabel, filterAction } = opts;
-    super();
-    this.id = id;
-    this.options = options;
-    this.label = label;
-    this.helpText = helpText;
-    this.showAllLabel = showAllLabel;
-
-    this.singleValueFilterAction = filterAction as unknown as (
-      value: string,
-      action: ActionListAction | IndicatorListIndicator
-    ) => boolean;
-  }
-
-  getLabel() {
-    return this.label;
-  }
-  getHelpText() {
-    return this.helpText;
-  }
-  getShowAllLabel() {
-    return this.showAllLabel;
-  }
-
-  filterAction(
-    values: MultipleFilterValue,
-    action: ActionListAction | IndicatorListIndicator
-  ): boolean {
-    // empty selection => don't filter
-    if (!values || values.length === 0) return true;
-    // match any selected option
-    return values.some((v) => this.singleValueFilterAction(v, action));
-  }
-
-  render(
-    value: MultipleFilterValue,
-    onChange: FilterChangeCallback<MultipleFilterValue>,
-    t: TFunction
-  ) {
-    // force isMulti=true for this filter type
-    return super.render(value, onChange, t, true);
-  }
+      if (!value) return true;
+      return matchesSingle(value, item);
+    },
+    render: (value, onChange, t) => (
+      <FilterColumn sm={sm} md={md} lg={lg} key={id}>
+        <ActionListDropdownInput
+          isMulti={isMulti as false}
+          id={id}
+          label={label}
+          helpText={helpText}
+          showAllLabel={showAllLabel}
+          currentValue={value}
+          onChange={onChange}
+          options={options}
+        />
+      </FilterColumn>
+    ),
+  };
 }
 
 class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
@@ -1389,7 +1357,13 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               return false;
             },
           };
-          filters.push(new GenericMultiSelectFilter(phaseOpts));
+          filters.push(
+            createSelectFilter({
+              ...phaseOpts,
+              isMulti: true,
+              matchesSingle: phaseOpts.filterAction as (value: string, item: FilterItem) => boolean,
+            })
+          );
           break;
         case 'ActionStatusFilterBlock':
           if (!plan.actionStatuses.length) break;
@@ -1407,7 +1381,16 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               return false;
             },
           };
-          filters.push(new GenericSelectFilter(statusOpts));
+          filters.push(
+            createSelectFilter({
+              ...statusOpts,
+              isMulti: true,
+              matchesSingle: statusOpts.filterAction as (
+                value: string,
+                item: FilterItem
+              ) => boolean,
+            })
+          );
           break;
         case 'PrimaryOrganizationFilterBlock':
           const primaryOrgOpts = {
@@ -1424,7 +1407,16 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               return false;
             },
           };
-          filters.push(new GenericSelectFilter(primaryOrgOpts));
+          filters.push(
+            createSelectFilter({
+              ...primaryOrgOpts,
+              isMulti: true,
+              matchesSingle: primaryOrgOpts.filterAction as (
+                value: string,
+                item: FilterItem
+              ) => boolean,
+            })
+          );
           break;
         case 'ActionScheduleFilterBlock':
           if (!plan.actionSchedules.length) break;
@@ -1442,7 +1434,16 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               return false;
             },
           };
-          filters.push(new GenericSelectFilter(scheduleOpts));
+          filters.push(
+            createSelectFilter({
+              ...scheduleOpts,
+              isMulti: true,
+              matchesSingle: scheduleOpts.filterAction as (
+                value: string,
+                item: FilterItem
+              ) => boolean,
+            })
+          );
           break;
         case 'PlanFilterBlock':
           const relatedPlans = plan.allRelatedPlans;
@@ -1455,7 +1456,13 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             showAllLabel: t('filter-all-plans'),
             filterAction: (val: string, act: ActionListAction) => act.plan?.id === val,
           };
-          filters.push(new GenericSelectFilter(planOpts));
+          filters.push(
+            createSelectFilter({
+              ...planOpts,
+              isMulti: true,
+              matchesSingle: planOpts.filterAction as (value: string, item: FilterItem) => boolean,
+            })
+          );
           break;
         case 'ContinuousActionFilterBlock': {
           const fieldLabel = 'fieldLabel' in block ? asNonEmptyString(block.fieldLabel) : undefined;
@@ -1497,7 +1504,16 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                     return false;
                   },
                 };
-                filters.push(new GenericSelectFilter(levelOpts));
+                filters.push(
+                  createSelectFilter({
+                    ...levelOpts,
+                    isMulti: true,
+                    matchesSingle: levelOpts.filterAction as (
+                      value: string,
+                      item: FilterItem
+                    ) => boolean,
+                  })
+                );
                 break;
               case 'organization':
                 const organizationOpts = {
@@ -1509,7 +1525,16 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                     return false;
                   },
                 };
-                filters.push(new GenericSelectFilter(organizationOpts));
+                filters.push(
+                  createSelectFilter({
+                    ...organizationOpts,
+                    isMulti: true,
+                    matchesSingle: organizationOpts.filterAction as (
+                      value: string,
+                      item: FilterItem
+                    ) => boolean,
+                  })
+                );
                 break;
             }
           }
