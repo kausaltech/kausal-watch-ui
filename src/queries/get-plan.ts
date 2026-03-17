@@ -118,6 +118,7 @@ const GET_PLAN_CONTEXT = gql`
       ownerName
       actionTerm
       actionTaskTerm
+      indicatorTerm
       organizationTerm
       sitewideAnnouncement
     }

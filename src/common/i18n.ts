@@ -3,17 +3,29 @@ import { useTranslations } from 'next-intl';
 import {
   SiteGeneralContentActionTaskTerm,
   SiteGeneralContentActionTerm,
+  SiteGeneralContentIndicatorTerm,
 } from './__generated__/graphql';
 
 export function getActionTermContext(
   plan: {
-    generalContent?: { actionTerm: SiteGeneralContentActionTerm };
+    generalContent?: {
+      actionTerm?: SiteGeneralContentActionTerm;
+      indicatorTerm?: SiteGeneralContentIndicatorTerm;
+    };
   },
   actionTerm?: string
 ) {
+  if (actionTerm === 'INDICATOR') {
+    const indicatorTerm = plan.generalContent?.indicatorTerm;
+    return indicatorTerm === 'INDICATOR' || !indicatorTerm
+      ? { context: '' }
+      : { context: indicatorTerm };
+  }
+
   if (!actionTerm) {
     actionTerm = plan.generalContent?.actionTerm;
   }
+
   return actionTerm === 'ACTION' ? { context: '' } : { context: actionTerm || '' };
 }
 

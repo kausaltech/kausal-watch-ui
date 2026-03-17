@@ -12,7 +12,6 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  Date: { input: string; output: string; }
   DateTime: { input: string; output: string; }
   JSONString: { input: string; output: string; }
   PositiveInt: { input: number; output: number; }
@@ -31,19 +30,7 @@ export enum ActionSortOrder {
   Standard = 'STANDARD'
 }
 
-export type CreateOrganizationMutationInput = {
-  /** Short version or abbreviation of the organization name to be displayed when it is not necessary to show the full name */
-  abbreviation: InputMaybe<Scalars['String']['input']>;
-  classification: InputMaybe<Scalars['ID']['input']>;
-  clientMutationId: InputMaybe<Scalars['String']['input']>;
-  dissolutionDate: InputMaybe<Scalars['Date']['input']>;
-  foundingDate: InputMaybe<Scalars['Date']['input']>;
-  /** Full name of the organization */
-  name: Scalars['String']['input'];
-  parent: InputMaybe<Scalars['ID']['input']>;
-};
-
-/** An enumeration. */
+/** Which governance level is applicable for an action */
 export enum DecisionLevel {
   Eu = 'EU',
   Municipality = 'MUNICIPALITY',
@@ -130,7 +117,6 @@ export type NzcCityEssentialData = {
   temperature: LowHigh;
 };
 
-/** An enumeration. */
 export enum ScenarioKind {
   Baseline = 'BASELINE',
   Custom = 'CUSTOM',
@@ -143,19 +129,6 @@ export enum SearchOperatorEnum {
   And = 'AND',
   Or = 'OR'
 }
-
-export type UpdateOrganizationMutationInput = {
-  /** Short version or abbreviation of the organization name to be displayed when it is not necessary to show the full name */
-  abbreviation: InputMaybe<Scalars['String']['input']>;
-  classification: InputMaybe<Scalars['ID']['input']>;
-  clientMutationId: InputMaybe<Scalars['String']['input']>;
-  dissolutionDate: InputMaybe<Scalars['Date']['input']>;
-  foundingDate: InputMaybe<Scalars['Date']['input']>;
-  id: InputMaybe<Scalars['ID']['input']>;
-  /** Full name of the organization */
-  name: Scalars['String']['input'];
-  parent: InputMaybe<Scalars['ID']['input']>;
-};
 
 export enum VisualizationKind {
   Group = 'group',
@@ -280,7 +253,7 @@ export type GetInstanceContextQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetInstanceContextQuery = (
   { instance: (
-    { id: string, name: string, themeIdentifier: string | null, owner: string | null, defaultLanguage: string, supportedLanguages: Array<string>, targetYear: number | null, modelEndYear: number, referenceYear: number | null, minimumHistoricalYear: number, maximumHistoricalYear: number | null, leadTitle: string | null, leadParagraph: string | null, features: (
+    { id: string, name: string, themeIdentifier: string | null, owner: string | null, defaultLanguage: string, supportedLanguages: Array<string>, targetYear: number | null, modelEndYear: number, referenceYear: number | null, minimumHistoricalYear: number, maximumHistoricalYear: number | null, leadTitle: string, leadParagraph: string | null, features: (
       { baselineVisibleInGraphs: boolean, hideNodeDetails: boolean, maximumFractionDigits: number | null, showAccumulatedEffects: boolean, showSignificantDigits: number | null }
       & { __typename: 'InstanceFeaturesType' }
     ), introContent: Array<{ __typename: 'ActionImpactBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CallToActionBlock' | 'CardListBlock' | 'CategoryBreakdownBlock' | 'CharBlock' | 'ChoiceBlock' | 'CurrentProgressBarBlock' | 'DashboardCardBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'GoalProgressBarBlock' | 'ImageBlock' | 'ImageChooserBlock' } | { __typename: 'IntegerBlock' | 'ListBlock' | 'PageChooserBlock' | 'RawHTMLBlock' | 'ReferenceProgressBarBlock' | 'RegexBlock' | 'ScenarioProgressBarBlock' | 'SnippetChooserBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | (
@@ -867,7 +840,7 @@ export type OutcomeNodeFieldsFragment = (
       & { __typename: 'ActionGroupType' }
     ) | null }
     & { __typename: 'ActionNode' }
-  )> | null, metricDim: (
+  )>, metricDim: (
     { id: string, name: string, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
       { id: string, label: string, originalId: string | null, helpText: string | null, categories: Array<(
         { id: string, originalId: string | null, label: string, color: string | null, order: number | null, group: string | null }
@@ -949,7 +922,7 @@ export type GetOutcomeNodeContentQuery = (
           & { __typename: 'ActionGroupType' }
         ) | null }
         & { __typename: 'ActionNode' }
-      )> | null, metricDim: (
+      )>, metricDim: (
         { id: string, name: string, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
           { id: string, label: string, originalId: string | null, helpText: string | null, categories: Array<(
             { id: string, originalId: string | null, label: string, color: string | null, order: number | null, group: string | null }
@@ -1024,7 +997,7 @@ export type GetOutcomeNodeContentQuery = (
           & { __typename: 'ActionGroupType' }
         ) | null }
         & { __typename: 'ActionNode' }
-      )> | null, metricDim: (
+      )>, metricDim: (
         { id: string, name: string, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
           { id: string, label: string, originalId: string | null, helpText: string | null, categories: Array<(
             { id: string, originalId: string | null, label: string, color: string | null, order: number | null, group: string | null }
@@ -1095,7 +1068,7 @@ export type GetOutcomeNodeContentQuery = (
         & { __typename: 'ActionGroupType' }
       ) | null }
       & { __typename: 'ActionNode' }
-    )> | null, metricDim: (
+    )>, metricDim: (
       { id: string, name: string, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
         { id: string, label: string, originalId: string | null, helpText: string | null, categories: Array<(
           { id: string, originalId: string | null, label: string, color: string | null, order: number | null, group: string | null }
@@ -1186,7 +1159,7 @@ export type GetPageQuery = (
             & { __typename: 'ActionGroupType' }
           ) | null }
           & { __typename: 'ActionNode' }
-        )> | null, metricDim: (
+        )>, metricDim: (
           { id: string, name: string, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
             { id: string, label: string, originalId: string | null, helpText: string | null, categories: Array<(
               { id: string, originalId: string | null, label: string, color: string | null, order: number | null, group: string | null }
@@ -1257,7 +1230,7 @@ export type GetPageQuery = (
           & { __typename: 'ActionGroupType' }
         ) | null }
         & { __typename: 'ActionNode' }
-      )> | null, metricDim: (
+      )>, metricDim: (
         { id: string, name: string, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<(
           { id: string, label: string, originalId: string | null, helpText: string | null, categories: Array<(
             { id: string, originalId: string | null, label: string, color: string | null, order: number | null, group: string | null }
