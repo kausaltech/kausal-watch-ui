@@ -721,6 +721,189 @@ function createContinuousActionFilter(opts: {
   };
 }
 
+function createAttributeTypeFilter(
+  config: ActionListActionAttributeTypeFilterBlock,
+  t: TFunction
+): ActionListFilter<string | undefined> {
+  const att = config.attributeType!;
+  const options = att.choiceOptions.map((choice) => ({
+    id: choice.id,
+    label: choice.name,
+  }));
+
+  return {
+    id: `att-${att.identifier}`,
+    useValueFilterId: undefined,
+    sm: undefined,
+    md: 6,
+    lg: 4,
+    options,
+    getLabel: () => att.name,
+    getHelpText: () => att.helpText ?? undefined,
+    getShowAllLabel: () => config.showAllLabel || t('filter-all-categories'),
+    filterAction: (value, action) => {
+      if (!value) return true;
+
+      return action.attributes.some((actAtt) => {
+        if (actAtt.__typename !== 'AttributeChoice') return false;
+        return actAtt.choice?.id === value;
+      });
+    },
+    render: (value, onChange, t) => (
+      <FilterColumn md={6} lg={4} key={`att-${att.identifier}`}>
+        <ActionListDropdownInput
+          isMulti={false}
+          id={`att-${att.identifier}`}
+          label={att.name}
+          helpText={att.helpText ?? undefined}
+          showAllLabel={config.showAllLabel || t('filter-all-categories')}
+          currentValue={value}
+          onChange={onChange}
+          options={options}
+        />
+      </FilterColumn>
+    ),
+  };
+}
+
+function createCategoryFilter(
+  config: ActionListCategoryTypeFilterBlock,
+  filterByCommonCategory: boolean,
+  plan: PlanContextType,
+  t: TFunction
+): ActionListFilter<FilterValue> {
+  const ct = config.categoryType!;
+  const style = config.style === 'dropdown' ? 'dropdown' : 'buttons';
+  const depth = config.depth ?? (style === 'dropdown' ? 2 : 1);
+
+  const hierarchyCt = constructCatHierarchy<FilterCategory, FilterCategoryType>([ct])[0];
+  const sortedCats = sortDepthFirst(
+    hierarchyCt.categories,
+    (a, b) => a.order - b.order,
+    (cat) => cat.parent,
+    (cat) => cat.children
+  );
+
+  const catById = filterByCommonCategory
+    ? new Map(
+        sortedCats.flatMap((c) => {
+          const entries: [string, FilterCategory][] = [];
+          if (c.common?.id) entries.push([c.common.id, c]);
+          entries.push([c.id, c]);
+          return entries;
+        })
+      )
+    : new Map(sortedCats.map((c) => [c.id, c]));
+
+  const options = sortedCats
+    .filter((cat) => cat.depth < depth)
+    .flatMap((cat) => {
+      const id = filterByCommonCategory ? cat.common?.id : cat.id;
+      if (!id) return [];
+      const label = ct.hideCategoryIdentifiers ? cat.name : `${cat.identifier}. ${cat.name}`;
+      return [{ id, label, indent: cat.depth }];
+    });
+
+  function filterSingleCategory(
+    action: ActionListAction | IndicatorListIndicator,
+    categoryId: string | undefined
+  ) {
+    if (!categoryId) return true;
+
+    return action.categories.some((actCat) => {
+      const actCatKey = filterByCommonCategory ? ((actCat as any).common?.id ?? actCat.id) : actCat.id;
+      let cat = actCatKey ? catById.get(actCatKey) : undefined;
+
+      while (cat) {
+        const catKey = filterByCommonCategory ? (cat.common?.id ?? cat.id) : cat.id;
+        if (catKey && catKey === categoryId) return true;
+        cat = cat.parent ?? undefined;
+      }
+
+      return false;
+    });
+  }
+
+  const filterId = getCategoryString(ct.identifier);
+  const showAllLabel =
+    config.showAllLabel ||
+    (style === 'dropdown'
+      ? t('filter-all-categories')
+      : t('see-all-actions', getActionTermContext(plan)));
+
+  return {
+    id: filterId,
+    useValueFilterId: undefined,
+    sm: undefined,
+    md: style === 'dropdown' ? 6 : 12,
+    lg: style === 'dropdown' ? 4 : 12,
+    options,
+    getLabel: () => ct.name,
+    getHelpText: () => ct.helpText ?? undefined,
+    getShowAllLabel: () => showAllLabel,
+    filterAction: (value, action) => {
+      if (isSingleFilterValue(value)) {
+        return filterSingleCategory(action, value);
+      }
+      return value.every((v) => filterSingleCategory(action, v));
+    },
+    render: (value, onChange, t) => {
+      if (style === 'dropdown') {
+        return (
+          <FilterColumn md={6} lg={4} key={filterId}>
+            <ActionListDropdownInput
+              isMulti={ct.selectionType === CategoryTypeSelectWidget.Multiple}
+              id={filterId}
+              label={ct.name}
+              helpText={ct.helpText ?? undefined}
+              showAllLabel={showAllLabel}
+              currentValue={value}
+              onChange={onChange}
+              options={options}
+            />
+          </FilterColumn>
+        );
+      }
+
+      return (
+        <Col sm={12} md={12} lg={12} key={filterId}>
+          <MainCategory>
+            <MainCategoryLabel id={`label-${filterId}`}>
+              {ct.name}
+              {ct.helpText && <PopoverTip header="Main Category" content={ct.helpText} />}
+            </MainCategoryLabel>
+            <ButtonGroup role="radiogroup" aria-labelledby={`label-${filterId}`}>
+              <RButton
+                color="black"
+                outline
+                onClick={() => onChange(filterId, undefined)}
+                active={value === undefined}
+                aria-checked={value === undefined}
+                role="radio"
+              >
+                {showAllLabel}
+              </RButton>
+              {options.map((opt) => (
+                <RButton
+                  color="black"
+                  outline
+                  onClick={() => onChange(filterId, opt.id)}
+                  active={value === opt.id}
+                  aria-checked={value === opt.id}
+                  key={opt.id}
+                  role="radio"
+                >
+                  {opt.label}
+                </RButton>
+              ))}
+            </ButtonGroup>
+          </MainCategory>
+        </Col>
+      );
+    },
+  };
+}
+
 class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
   id = 'responsible_party';
   options: ActionListFilterOption[];
@@ -869,179 +1052,6 @@ type QueryFilterCategoryType = ActionListCategoryTypeFilterBlock['categoryType']
 type QueryFilterCategory = NonNullable<QueryFilterCategoryType>['categories'][0];
 type FilterCategoryType = QueryFilterCategoryType & CategoryTypeHierarchy<FilterCategory>;
 type FilterCategory = QueryFilterCategory & CategoryHierarchyMember<FilterCategoryType>;
-
-class CategoryFilter extends DefaultFilter<FilterValue> {
-  id: string;
-  ct: NonNullable<ActionListCategoryTypeFilterBlock['categoryType']>;
-  options: ActionListFilterOption[];
-  style: 'dropdown' | 'buttons';
-  showAllLabel: string | undefined | null;
-  filterByCommonCategory: boolean;
-  catById: Map<string, FilterCategory>;
-  hasMultipleValues: boolean;
-  depth: number;
-  private actionTermContext?: { context: string };
-
-  constructor(
-    config: ActionListCategoryTypeFilterBlock,
-    filterByCommonCategory: boolean,
-    plan: PlanContextType
-  ) {
-    super();
-    this.ct = config.categoryType!;
-    this.id = getCategoryString(this.ct.identifier);
-    this.showAllLabel = config.showAllLabel;
-    this.hasMultipleValues = this.ct.selectionType === CategoryTypeSelectWidget.Multiple;
-    this.filterByCommonCategory = filterByCommonCategory;
-    this.actionTermContext = getActionTermContext(plan);
-    const style = config.style === 'dropdown' ? 'dropdown' : 'buttons';
-    this.style = style;
-    this.depth = config.depth ?? (this.style === 'dropdown' ? 2 : 1);
-    const hierarchyCt = constructCatHierarchy<FilterCategory, FilterCategoryType>([this.ct])[0];
-    const sortedCats = sortDepthFirst(
-      hierarchyCt.categories,
-      (a, b) => a.order - b.order,
-      (cat) => cat.parent,
-      (cat) => cat.children
-    );
-    this.catById = this.filterByCommonCategory
-      ? new Map(
-          sortedCats.flatMap((c) => {
-            const entries: [string, FilterCategory][] = [];
-            if (c.common?.id) entries.push([c.common.id, c]);
-            entries.push([c.id, c]);
-            return entries;
-          })
-        )
-      : new Map(sortedCats.map((c) => [c.id, c]));
-    const getLabel = (cat: ActionListCategory) =>
-      this.ct.hideCategoryIdentifiers ? cat.name : `${cat.identifier}. ${cat.name}`;
-    this.options = sortedCats
-      .filter((cat) => cat.depth < this.depth)
-      .flatMap((cat) => {
-        const id = this.filterByCommonCategory ? cat.common?.id : cat.id;
-        if (!id) return [];
-        return [{ id, label: getLabel(cat), indent: cat.depth }];
-      });
-  }
-  filterSingleCategory(
-    action: ActionListAction | IndicatorListIndicator,
-    categoryId: string | undefined
-  ) {
-    return action.categories.some((actCat) => {
-      const actCatKey = this.filterByCommonCategory
-        ? ((actCat as any).common?.id ?? actCat.id)
-        : actCat.id;
-      let cat = actCatKey ? this.catById.get(actCatKey) : undefined;
-      while (cat) {
-        const catKey = this.filterByCommonCategory ? (cat.common?.id ?? cat.id) : cat.id;
-        if (catKey && catKey === categoryId) return true;
-        cat = cat.parent ?? undefined;
-      }
-      return false;
-    });
-  }
-  filterAction(value: FilterValue, action: ActionListAction | IndicatorListIndicator) {
-    if (isSingleFilterValue(value)) {
-      return this.filterSingleCategory(action, value);
-    }
-    return value.every((v) => this.filterSingleCategory(action, v));
-  }
-  render(value: FilterValue, onChange: FilterChangeCallback<FilterValue>, t: TFunction) {
-    if (this.style === 'dropdown') {
-      return super.render(value, onChange, t, this.hasMultipleValues);
-    }
-
-    return (
-      <Col sm={12} md={12} lg={12} key={this.id}>
-        <MainCategory>
-          <MainCategoryLabel id={`label-${this.id}`}>
-            {this.getLabel(t)}
-            {this.ct.helpText && <PopoverTip header="Main Category" content={this.ct.helpText} />}
-          </MainCategoryLabel>
-          <ButtonGroup role="radiogroup" aria-labelledby={`label-${this.id}`}>
-            <RButton
-              color="black"
-              outline
-              onClick={() => onChange(this.id, undefined)}
-              active={value === undefined}
-              aria-checked={value === undefined}
-              role="radio"
-            >
-              {this.getShowAllLabel(t)}
-            </RButton>
-            {this.options.map((opt) => (
-              <RButton
-                color="black"
-                outline
-                onClick={() => onChange(this.id, opt.id)}
-                active={value === opt.id}
-                aria-checked={value === opt.id}
-                key={opt.id}
-                role="radio"
-              >
-                {opt.label}
-              </RButton>
-            ))}
-          </ButtonGroup>
-        </MainCategory>
-      </Col>
-    );
-  }
-  getLabel() {
-    return this.ct.name;
-  }
-  getHelpText() {
-    return this.ct.helpText;
-  }
-  getShowAllLabel(t: TFunction) {
-    return this.showAllLabel || t('filter-all-categories');
-  }
-}
-
-type AttributeTypeChoice = NonNullable<
-  ActionListActionAttributeTypeFilterBlock['attributeType']
->['choiceOptions'][0];
-
-class AttributeTypeFilter extends DefaultFilter<string | undefined> {
-  id: string;
-  att: NonNullable<ActionListActionAttributeTypeFilterBlock['attributeType']>;
-  options: ActionListFilterOption[];
-  showAllLabel: string | undefined | null;
-  choiceById: Map<string, AttributeTypeChoice>;
-
-  constructor(config: ActionListActionAttributeTypeFilterBlock) {
-    super();
-    this.att = config.attributeType!;
-    this.showAllLabel = config.showAllLabel;
-    this.id = `att-${this.att.identifier}`;
-    const choices = this.att.choiceOptions;
-    this.choiceById = new Map(choices.map((choice) => [choice.id, choice]));
-    const getLabel = (choice: AttributeTypeChoice) => choice.name;
-    this.options = choices.map((choice) => ({
-      id: choice.id,
-      label: getLabel(choice),
-    }));
-  }
-  filterAction(value: string | undefined, action: ActionListAction) {
-    return action.attributes.some((actAtt) => {
-      if (actAtt.__typename !== 'AttributeChoice') return false;
-      const { choice } = actAtt;
-      if (!choice) return false;
-      if (choice.id === value) return true;
-      return false;
-    });
-  }
-  getLabel() {
-    return this.att.name;
-  }
-  getHelpText() {
-    return this.att.helpText;
-  }
-  getShowAllLabel(t: TFunction) {
-    return this.showAllLabel || t('filter-all-categories');
-  }
-}
 
 export type ActionListFilterSection = {
   id: string;
@@ -1311,7 +1321,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               block.style === 'dropdown'
                 ? t('filter-all-categories')
                 : t('see-all-actions', getActionTermContext(plan));
-          filters.push(new CategoryFilter(block, filterByCommonCategory, plan));
+          filters.push(createCategoryFilter(block, filterByCommonCategory, plan, t));
           break;
         case 'ActionAttributeTypeFilterBlock':
           const allowedFormats = ['ORDERED_CHOICE', 'UNORDERED_CHOICE', 'OPTIONAL_CHOICE'];
@@ -1322,7 +1332,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             );
             break;
           }
-          filters.push(new AttributeTypeFilter(block));
+          filters.push(createAttributeTypeFilter(block, t));
           break;
         case 'ActionImplementationPhaseFilterBlock':
           if (!plan.actionImplementationPhases.length) break;
