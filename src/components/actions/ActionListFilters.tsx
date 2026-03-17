@@ -904,148 +904,100 @@ function createCategoryFilter(
   };
 }
 
-class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
-  id = 'responsible_party';
-  options: ActionListFilterOption[];
-  orgById: Map<string, ActionListOrganization>;
-  private fieldLabel?: string;
-  private fieldHelpText?: string;
-  private showAllLabelOverride?: string;
-
-  constructor(
-    orgs: ActionListOrganization[],
-    private plan: PlanContextType,
-    overrides?: {
-      fieldLabel?: string | null;
-      fieldHelpText?: string | null;
-      showAllLabel?: string | null;
-    }
-  ) {
-    super();
-
-    this.fieldLabel = asNonEmptyString(overrides?.fieldLabel);
-    this.fieldHelpText = asNonEmptyString(overrides?.fieldHelpText);
-    this.showAllLabelOverride = asNonEmptyString(overrides?.showAllLabel);
-
-    const sortedOrgs = sortDepthFirst(
-      orgs,
-      (a, b) => a.name.localeCompare(b.name),
-      (org) => org.parent,
-      (org) => org.children
-    );
-    this.orgById = new Map(orgs.map((org) => [org.id, org]));
-    this.options = sortedOrgs.map((org) => ({
-      id: org.id,
-      label: org.name,
-      indent: org.depth,
-    }));
+function createResponsiblePartyFilter(
+  orgs: ActionListOrganization[],
+  plan: PlanContextType,
+  t: TFunction,
+  overrides?: {
+    fieldLabel?: string | null;
+    fieldHelpText?: string | null;
+    showAllLabel?: string | null;
   }
-  filterAction(value: string | undefined, action: ActionListAction) {
-    if (!value) return true;
-    if (action.primaryOrg?.id === value) return true;
-    return action.responsibleParties.some((rp) => {
-      let org: ActionListOrganization | null = rp.organization as ActionListOrganization;
-      while (org) {
-        if (org.id === value) return true;
-        org = org.parent;
-      }
-      return false;
-    });
-  }
+): ActionListFilter<string | undefined> {
+  const orgTermContext = { context: plan.generalContent.organizationTerm };
 
-  render(
-    value: string | undefined,
-    onChange: FilterChangeCallback<string | undefined>,
-    t: TFunction,
-    primaryValue?: string
-  ) {
-    return (
-      <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
+  const sortedOrgs = sortDepthFirst(
+    orgs,
+    (a, b) => a.name.localeCompare(b.name),
+    (org) => org.parent,
+    (org) => org.children
+  );
+
+  const options = sortedOrgs.map((org) => ({
+    id: org.id,
+    label: org.name,
+    indent: org.depth,
+  }));
+
+  const label = asNonEmptyString(overrides?.fieldLabel) ?? t('filter-organization', orgTermContext);
+  const helpText =
+    asNonEmptyString(overrides?.fieldHelpText) ?? t('filter-organization-help', orgTermContext);
+  const showAllLabel =
+    asNonEmptyString(overrides?.showAllLabel) ?? t('filter-all-organizations', orgTermContext);
+
+  return {
+    id: 'responsible_party',
+    useValueFilterId: undefined,
+    sm: undefined,
+    md: 6,
+    lg: 4,
+    options,
+    getLabel: () => label,
+    getHelpText: () => helpText,
+    getShowAllLabel: () => showAllLabel,
+    filterAction: (value, action) => {
+      if (!value) return true;
+      if (action.primaryOrg?.id === value) return true;
+
+      return action.responsibleParties.some((rp) => {
+        let org: ActionListOrganization | null = rp.organization as ActionListOrganization;
+        while (org) {
+          if (org.id === value) return true;
+          org = org.parent;
+        }
+        return false;
+      });
+    },
+    render: (value, onChange, t) => (
+      <FilterColumn md={6} lg={4} key="responsible_party">
         <ActionListDropdownInput
           isMulti={false}
-          id={this.id}
-          label={this.getLabel(t)}
-          helpText={this.getHelpText(t)}
-          showAllLabel={this.getShowAllLabel(t)}
+          id="responsible_party"
+          label={label}
+          helpText={helpText}
+          showAllLabel={showAllLabel}
           currentValue={value}
           onChange={onChange}
-          options={this.options}
+          options={options}
         />
-        {value && (
-          <FormGroup switch>
-            <Input
-              type="switch"
-              role="switch"
-              id="primary_responsible_party"
-              checked={primaryValue === value}
-              onChange={(e) =>
-                onChange('primary_responsible_party', e.target.checked ? value : undefined)
-              }
-            />
-            <label htmlFor="primary_responsible_party">
-              {t('filter-primary-responsible-party')}
-            </label>
-          </FormGroup>
-        )}
       </FilterColumn>
-    );
-  }
-  private getOrgTermContext() {
-    return { context: this.plan.generalContent.organizationTerm };
-  }
-  getLabel(t: TFunction) {
-    return this.fieldLabel ?? t('filter-organization', this.getOrgTermContext());
-  }
-  getHelpText(t: TFunction) {
-    return this.fieldHelpText ?? t('filter-organization-help', this.getOrgTermContext());
-  }
-  getShowAllLabel(t: TFunction) {
-    return this.showAllLabelOverride ?? t('filter-all-organizations', this.getOrgTermContext());
-  }
+    ),
+  };
 }
 
-class PrimaryResponsiblePartyFilter extends React.Component<{
-  responsibleParty: string;
-  value: string | undefined;
-  onChange: FilterChangeCallback<string | undefined>;
-  t: TFunction;
-}> {
-  id = 'primary_responsible_party';
-  useValueFilterId = 'responsible_party';
-  options: ActionListFilterOption[] = [];
+function createPrimaryResponsiblePartyFilter(t: TFunction): ActionListFilter<string | undefined> {
+  return {
+    id: 'primary_responsible_party',
+    useValueFilterId: 'responsible_party',
+    sm: undefined,
+    md: 6,
+    lg: 4,
+    options: [],
+    getLabel: () => t('filter-primary-responsible-party'),
+    getHelpText: () => undefined,
+    getShowAllLabel: () => '',
+    filterAction: (value, action) => {
+      if (!value) return true;
 
-  filterAction(value: string | undefined, action: ActionListAction) {
-    if (!value) return true;
-    return (
-      action.primaryOrg?.id === value ||
-      action.responsibleParties.some(
-        (rp) => rp.role === ActionResponsiblePartyRole.Primary && rp.organization.id === value
-      )
-    );
-  }
-
-  getLabel(t: TFunction) {
-    return t('filter-primary-responsible-party');
-  }
-
-  render() {
-    if (!this.props || !this.props.responsibleParty) return null;
-    const { responsibleParty, onChange, t } = this.props;
-    return (
-      <FilterColumn>
-        <FormGroup switch className="mb-4">
-          <Input
-            type="switch"
-            role="switch"
-            id={this.id}
-            checked={this.props.value === this.props.responsibleParty}
-            onChange={(e) => onChange(this.id, e.target.checked ? responsibleParty : undefined)}
-          />
-          <label htmlFor={this.id}>{this.getLabel(t)}</label>
-        </FormGroup>
-      </FilterColumn>
-    );
-  }
+      return (
+        action.primaryOrg?.id === value ||
+        action.responsibleParties.some(
+          (rp) => rp.role === ActionResponsiblePartyRole.Primary && rp.organization.id === value
+        )
+      );
+    },
+    render: () => null,
+  };
 }
 
 type QueryFilterCategoryType = ActionListCategoryTypeFilterBlock['categoryType'];
@@ -1075,11 +1027,35 @@ const FilterField = React.memo(function FilterField({
   const t = useTranslations();
 
   if (filter.id === 'responsible_party') {
-    return (filter as ResponsiblePartyFilter).render(
-      value as string | undefined,
-      onChange,
-      t,
-      primaryResponsibleParty
+    return (
+      <FilterColumn sm={filter.sm} md={filter.md} lg={filter.lg} key={filter.id}>
+        <ActionListDropdownInput
+          isMulti={false}
+          id={filter.id}
+          label={filter.getLabel(t)}
+          helpText={filter.getHelpText(t)}
+          showAllLabel={filter.getShowAllLabel(t)}
+          currentValue={value as string | undefined}
+          onChange={onChange as FilterChangeCallback<string | undefined>}
+          options={filter.options ?? []}
+        />
+        {value && (
+          <FormGroup switch>
+            <Input
+              type="switch"
+              role="switch"
+              id="primary_responsible_party"
+              checked={primaryResponsibleParty === value}
+              onChange={(e) =>
+                onChange('primary_responsible_party', e.target.checked ? value : undefined)
+              }
+            />
+            <label htmlFor="primary_responsible_party">
+              {t('filter-primary-responsible-party')}
+            </label>
+          </FormGroup>
+        )}
+      </FilterColumn>
     );
   }
 
@@ -1295,7 +1271,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
     blocks: (ActionListFilterFragment | IndicatorListFilterFragment)[] | null
   ) {
     const filters: ActionListFilter[] = [];
-    let primaryResponsiblePartyFilter: PrimaryResponsiblePartyFilter | null = null;
+    let primaryResponsiblePartyFilter: ActionListFilter | null = null;
 
     blocks?.forEach((block) => {
       switch (block.__typename) {
@@ -1306,13 +1282,13 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             showAllLabel?: string | null;
           };
           filters.push(
-            new ResponsiblePartyFilter(orgs, plan, {
+            createResponsiblePartyFilter(orgs, plan, t, {
               fieldLabel: rpBlock.fieldLabel,
               fieldHelpText: rpBlock.fieldHelpText,
               showAllLabel: rpBlock.showAllLabel,
             })
           );
-          primaryResponsiblePartyFilter = new PrimaryResponsiblePartyFilter();
+          primaryResponsiblePartyFilter = createPrimaryResponsiblePartyFilter(t);
           break;
         }
         case 'CategoryTypeFilterBlock':
