@@ -14,6 +14,10 @@ import Icon from '../common/Icon';
 const Pager = styled.div`
   display: flex;
   margin: 2rem 0;
+
+  @media print {
+    display: none;
+  }
 `;
 
 const Previous = styled.div`

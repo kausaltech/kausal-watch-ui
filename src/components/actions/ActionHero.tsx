@@ -90,6 +90,9 @@ const ActionsNav = styled.nav`
     font-size: ${(props) => props.theme.fontSizeBase};
     font-family: ${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`};
   }
+  @media print {
+    display: none;
+  }
 `;
 
 const NavDivider = styled.span`
