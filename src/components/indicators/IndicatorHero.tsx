@@ -5,9 +5,11 @@ import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 
 import { type IndicatorDetailsQuery } from '@/common/__generated__/graphql';
+import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
 import IndicatorValueSummary from '@/components/indicators/IndicatorValueSummary';
 import OrgSelector from '@/components/orgs/OrgSelector';
+import { usePlan } from '@/context/plan';
 
 import IndicatorLevelChip from './IndicatorLevelChip';
 
@@ -79,6 +81,8 @@ function IndicatorHero(props: IndicatorHeroProps) {
   const { indicator, orgs, goals, legacyMode = false } = props;
   // const theme = useTheme();
   const t = useTranslations();
+  const plan = usePlan();
+  const indicatorTermContext = getIndicatorTermContext(plan);
 
   return (
     <Hero>
@@ -95,7 +99,7 @@ function IndicatorHero(props: IndicatorHeroProps) {
                       </PrimaryOrg>
                     )}
                     <IndicatorListLink>
-                      <IndexLink>{t('indicators')}</IndexLink>
+                      <IndexLink>{t('indicators', indicatorTermContext)}</IndexLink>
                     </IndicatorListLink>
                     <IndicatorHeadline>
                       <span>{indicator.name}</span>

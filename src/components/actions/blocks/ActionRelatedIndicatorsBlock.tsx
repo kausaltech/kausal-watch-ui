@@ -6,6 +6,7 @@ import { readableColor, shade } from 'polished';
 import { Badge as BaseBadge, Card as BaseCard, CardBody, CardFooter, Col, Row } from 'reactstrap';
 
 import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
+import { getIndicatorTermContext } from '@/common/i18n';
 import { ActionLink, IndicatorLink } from '@/common/links';
 import { SectionHeader } from '@/components/actions/ActionContent';
 import Icon from '@/components/common/Icon';
@@ -134,7 +135,7 @@ const ActionRelatedIndicatorsBlock = (props: ActionRelatedIndicatorsBlockProps) 
     <div>
       <Row>
         <Col>
-          <SectionHeader>{t('indicators')}</SectionHeader>
+          <SectionHeader>{t('indicators', getIndicatorTermContext(plan))}</SectionHeader>
         </Col>
       </Row>
       <Row>

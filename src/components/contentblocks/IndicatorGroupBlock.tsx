@@ -6,6 +6,7 @@ import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 
 import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
+import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorLink, IndicatorListLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
@@ -118,8 +119,9 @@ type Props = {
 export default function IndicatorGroupBlock(props: Props) {
   const { id = '', title, indicators } = props;
   const t = useTranslations();
-  const displayHeader = title === '-' ? null : title || t('indicators');
   const plan = usePlan();
+  const indicatorTermContext = getIndicatorTermContext(plan);
+  const displayHeader = title === '-' ? null : title || t('indicators', indicatorTermContext);
 
   const hasIndicatorsPage =
     plan.mainMenu?.items.findIndex(
@@ -165,7 +167,7 @@ export default function IndicatorGroupBlock(props: Props) {
             <StyledColCentered>
               <IndicatorListLink>
                 <Button color="primary">
-                  {t('see-all-indicators')} <Icon.ArrowRight />
+                  {t('see-all-indicators', indicatorTermContext)} <Icon.ArrowRight />
                 </Button>
               </IndicatorListLink>
             </StyledColCentered>

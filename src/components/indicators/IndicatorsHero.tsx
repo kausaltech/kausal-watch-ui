@@ -7,7 +7,9 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Nav, NavItem, Row } from 'reactstrap';
 
+import { getIndicatorTermContext } from '@/common/i18n';
 import RichText from '@/components/common/RichText';
+import { usePlan } from '@/context/plan';
 
 import { NavigationLink } from '../../common/links';
 
@@ -86,8 +88,10 @@ interface Props {
 function IndicatorsHero({ title, leadContent = '', showInsights = true, children, testId }: Props) {
   const t = useTranslations();
   const pathname = usePathname();
+  const plan = usePlan();
+  const indicatorTermContext = getIndicatorTermContext(plan);
 
-  const header = title ? title : t('indicators');
+  const header = title ? title : t('indicators', indicatorTermContext);
 
   return (
     <div data-testid={testId}>
@@ -115,14 +119,14 @@ function IndicatorsHero({ title, leadContent = '', showInsights = true, children
               <NavItem>
                 <NavigationLink slug="/indicators">
                   <Tab className={`nav-link ${pathname?.includes('/indicators') ? 'active' : ''}`}>
-                    {t('indicators-as-list')}
+                    {t('indicators-as-list', indicatorTermContext)}
                   </Tab>
                 </NavigationLink>
               </NavItem>
               <NavItem>
                 <NavigationLink slug="/insight">
                   <Tab className={`nav-link ${pathname?.includes('/insight') ? 'active' : ''}`}>
-                    {t('indicators-as-insight')}
+                    {t('indicators-as-insight', indicatorTermContext)}
                   </Tab>
                 </NavigationLink>
               </NavItem>

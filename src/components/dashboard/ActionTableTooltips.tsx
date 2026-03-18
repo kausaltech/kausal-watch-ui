@@ -6,7 +6,11 @@ import { useTranslations } from 'next-intl';
 
 import { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
-import { getActionTaskTermContext, getActionTermContext } from '@/common/i18n';
+import {
+  getActionTaskTermContext,
+  getActionTermContext,
+  getIndicatorTermContext,
+} from '@/common/i18n';
 import { PhaseTimeline } from '@/components/actions/PhaseTimeline';
 import ActionAttribute from '@/components/common/ActionAttribute';
 import Icon from '@/components/common/Icon';
@@ -220,22 +224,23 @@ export const ResponsiblePartiesTooltipContent = ({ action, plan }: TooltipWithPl
   );
 };
 
-export const IndicatorsTooltipContent = ({ action }: TooltipProps) => {
+export const IndicatorsTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
   const t = useTranslations();
   const theme = useTheme();
+  const indicatorTermContext = getIndicatorTermContext(plan);
 
   const hasIndicators = action.indicatorsCount != null && action.indicatorsCount > 0;
   const hasGoals = action.hasIndicatorsWithGoals;
   return (
     <div>
-      <TooltipTitle>{t('indicators')}</TooltipTitle>
+      <TooltipTitle>{t('indicators', indicatorTermContext)}</TooltipTitle>
       <Icon.Tachometer
         color={hasIndicators ? theme.graphColors.green070 : theme.graphColors.grey030}
         height="1.2em"
         width="1.2em"
       />
       {hasIndicators
-        ? ` ${t('indicators')}: ${action.indicatorsCount}`
+        ? ` ${t('indicators', indicatorTermContext)}: ${action.indicatorsCount}`
         : ` ${t('no-defined-indicators')}`}
       <br />
       <Icon.Bullseye

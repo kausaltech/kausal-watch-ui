@@ -20,6 +20,7 @@ import {
   type IndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
+import { getIndicatorTermContext } from '@/common/i18n';
 import type { FilterValue } from '@/components/actions/ActionListFilters';
 import ErrorPage from '@/components/common/ErrorPage';
 import { GET_INDICATOR_LIST } from '@/queries/get-indicator-list';
@@ -285,6 +286,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
 
   const plan = usePlan();
   const t = useTranslations();
+  const indicatorTermContext = getIndicatorTermContext(plan);
 
   const openIndicatorsInModal = plan.features.indicatorsOpenInModal === true;
   const searchParams = useSearchParams();
@@ -501,7 +503,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
           activeFilters={filters}
           onChange={handleFilterChange}
           actionCount={filteredIndicators.length}
-          actionCountLabel={t('indicators')}
+          actionCountLabel={t('indicators', indicatorTermContext)}
           filterGroupLabel={badgeType}
           filterValueLabel={badgeLabel}
         />

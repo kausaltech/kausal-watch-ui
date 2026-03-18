@@ -2,7 +2,11 @@ import React, { ReactNode } from 'react';
 
 import { PlanContextFragment } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
-import { getActionTaskTermContext, getActionTermContext } from '@/common/i18n';
+import {
+  getActionTaskTermContext,
+  getActionTermContext,
+  getIndicatorTermContext,
+} from '@/common/i18n';
 import { TFunction } from '@/common/i18n';
 import { ActionLink } from '@/common/links';
 import ActionAttribute from '@/components/common/ActionAttribute';
@@ -145,9 +149,11 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   },
 
   IndicatorsColumnBlock: {
-    renderHeader: (t, _, label) => label || t('indicators'),
+    renderHeader: (t, plan, label) => label || t('indicators', getIndicatorTermContext(plan)),
     renderCell: (_, action) => <IndicatorsCell action={action} />,
-    renderTooltipContent: (_, action) => <IndicatorsTooltipContent action={action} />,
+    renderTooltipContent: (_, action, plan) => (
+      <IndicatorsTooltipContent action={action} plan={plan} />
+    ),
   },
 
   UpdatedAtColumnBlock: {
