@@ -6,27 +6,18 @@ import {
   SiteGeneralContentIndicatorTerm,
 } from './__generated__/graphql';
 
-export function getActionTermContext(
-  plan: {
-    generalContent?: {
-      actionTerm?: SiteGeneralContentActionTerm;
-      indicatorTerm?: SiteGeneralContentIndicatorTerm;
-    };
-  },
-  actionTerm?: string
-) {
-  if (actionTerm === 'INDICATOR') {
-    const indicatorTerm = plan.generalContent?.indicatorTerm;
-    return indicatorTerm === 'INDICATOR' || !indicatorTerm
-      ? { context: '' }
-      : { context: indicatorTerm };
-  }
-
-  if (!actionTerm) {
-    actionTerm = plan.generalContent?.actionTerm;
-  }
-
+export function getActionTermContext(plan: {
+  generalContent?: { actionTerm?: SiteGeneralContentActionTerm };
+}) {
+  const actionTerm = plan.generalContent?.actionTerm;
   return actionTerm === 'ACTION' ? { context: '' } : { context: actionTerm || '' };
+}
+
+export function getIndicatorTermContext(plan: {
+  generalContent?: { indicatorTerm?: SiteGeneralContentIndicatorTerm };
+}) {
+  const indicatorTerm = plan.generalContent?.indicatorTerm;
+  return { context: indicatorTerm || 'INDICATOR' };
 }
 
 export function getActionTaskTermContext(plan: {
