@@ -63,6 +63,10 @@ export const ModalNavigation = styled.div`
   flex: 0 0 auto;
   border-top: 1px solid ${({ theme }) => theme.cardBackground.secondary};
   background-color: ${({ theme }) => theme.themeColors.white};
+
+  @media print {
+    display: none;
+  }
 `;
 
 export const IndicatorCounter = styled.div`
