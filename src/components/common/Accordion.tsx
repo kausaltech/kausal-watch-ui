@@ -31,6 +31,10 @@ const CopyLink = styled.button`
   display: block;
   position: absolute;
   visibility: hidden;
+
+  @media print {
+    display: none;
+  }
   width: 2rem;
   right: -1rem;
   top: -0.5rem;
@@ -64,6 +68,10 @@ const TriggerIcon = styled.span`
   line-height: 1.5rem;
   font-weight: ${(props) => props.theme.fontWeightNormal};
   text-align: center;
+
+  @media print {
+    display: none;
+  }
 `;
 
 const QuestionTrigger = styled.button`
@@ -89,6 +97,12 @@ const QuestionTrigger = styled.button`
 const AccordionContent = styled(Collapse)`
   margin-bottom: ${(props) => props.theme.spaces.s300};
   margin-left: ${(props) => props.theme.spaces.s200};
+
+  @media print {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
 `;
 
 const LinkCopyButton = ({ identifier }: { identifier: string }) => {
