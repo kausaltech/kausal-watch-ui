@@ -15,6 +15,7 @@ import { IndicatorLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
+import { usePrint } from '@/context/print';
 
 const CUSTOM_IFRAME_HEIGHT_PARAM = 'k_height';
 
@@ -89,6 +90,15 @@ const StyledRichText = styled.div`
     width: 100%;
     height: 100%;
   }
+`;
+
+const PrintPlaceholder = styled.div`
+  padding: ${(props) => props.theme.spaces.s100};
+  background-color: ${(props) => props.theme.graphColors.grey010};
+  color: ${(props) => props.theme.graphColors.grey070};
+  font-style: italic;
+  text-align: center;
+  border: 1px solid ${(props) => props.theme.graphColors.grey020};
 `;
 
 //Fallback collapse based on height. Only used when the safe breakpoint not found.
@@ -331,6 +341,8 @@ type RichTextProps = {
 export default function RichText(props: RichTextProps) {
   const { html, isCollapsible, className, maxLength = undefined, ...rest } = props;
   const plan = usePlan();
+  const isPrint = usePrint();
+  const t = useTranslations();
 
   // FIXME: Hacky hack to figure out if the rich text links are internal
   const cutHttp = (url: string) => url.replace(/^https?:\/\//, '');
@@ -348,6 +360,12 @@ export default function RichText(props: RichTextProps) {
        * Support custom iframe height based on a query parameter on the embed URL
        */
       if (name === 'iframe') {
+        if (isPrint) {
+          return (
+            <PrintPlaceholder>{t('embedded-content-not-available-in-print')}</PrintPlaceholder>
+          );
+        }
+
         const iframeSrc = element.attribs.src;
         const iframeUrl = new URL(iframeSrc);
         const iframeParams = new URLSearchParams(iframeUrl.searchParams);
@@ -420,7 +438,7 @@ export default function RichText(props: RichTextProps) {
         }
       },
     };
-  }, [plan.serveFileBaseUrl, currentDomain]);
+  }, [plan.serveFileBaseUrl, currentDomain, isPrint, t]);
 
   if (typeof html !== 'string') return <div />;
 
