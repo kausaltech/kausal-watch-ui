@@ -44,12 +44,24 @@ const ToggleButton = styled(Button)`
   &.open {
     color: ${(props) => props.theme.textColor.tertiary};
   }
+
+  @media print {
+    display: none;
+  }
 `;
 
 const TaskContent = styled.div`
   margin: ${(props) => props.theme.spaces.s025} 0;
   border-left: 1px solid ${(props) => props.theme.themeColors.light};
   padding-left: ${(props) => props.theme.spaces.s100};
+
+  @media print {
+    .collapse {
+      display: block !important;
+      height: auto !important;
+      overflow: visible !important;
+    }
+  }
 
   .text-content {
     font-size: ${(props) => props.theme.fontSizeSm};
