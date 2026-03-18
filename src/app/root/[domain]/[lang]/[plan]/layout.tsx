@@ -21,6 +21,7 @@ import PathsProvider from '@/components/providers/PathsProvider';
 import PlanProvider from '@/components/providers/PlanProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
+import { PrintProvider } from '@/context/print';
 import { WorkflowProvider } from '@/context/workflow-selector';
 import { getPlan } from '@/queries/get-plan';
 import { getPathsInstance } from '@/queries/paths/get-paths-instance';
@@ -150,7 +151,7 @@ export default async function PlanLayout(props: Props) {
               initialWorkflow={selectedWorkflow?.value as WorkflowState | undefined}
               workflowStates={planData.workflowStates}
             >
-              {children}
+              <PrintProvider>{children}</PrintProvider>
             </WorkflowProvider>
           </PathsProvider>
         </PlanProvider>
