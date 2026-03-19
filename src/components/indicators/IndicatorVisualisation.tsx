@@ -506,13 +506,20 @@ function IndicatorVisualisation({
   const hasTimeDimension =
     indicatorGraphSpecification.axes.filter((a) => a[0] === 'time').length > 0;
   const showTotalLine = indicator.showTotalLine;
-  const traces = getTraces(
+  const allTraces = getTraces(
     indicatorGraphSpecification.dimensions,
     cube,
     null,
     hasTimeDimension,
-    i18n
-  ).filter((t) => t.dataType !== 'total' || showTotalLine);
+    i18n,
+    undefined
+  );
+  // If all traces are "total" (no dimensions), keep them regardless of showTotalLine.
+  // Otherwise, filter out the total when showTotalLine is false.
+  const hasOnlyTotalTraces = allTraces.every((t) => t.dataType === 'total');
+  const traces = hasOnlyTotalTraces
+    ? allTraces
+    : allTraces.filter((t) => t.dataType !== 'total' || showTotalLine);
 
   const [goalTraces, goalBounds] = normalizeByPopulation
     ? [[], []]
