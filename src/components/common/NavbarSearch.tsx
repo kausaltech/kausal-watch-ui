@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
 import { usePopper } from 'react-popper';
 import { InputGroup } from 'reactstrap';
 
-import { getActionTermContext } from '@/common/i18n';
+import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { Link, usePrependPlanAndLocale } from '@/common/links';
 import WatchSearchAPIConnector, { type SearchHit } from '@/common/search';
 import Icon from '@/components/common/Icon';
@@ -220,7 +220,7 @@ function ResultItem(props: ResultItemProps) {
       if (typename === 'Action') {
         return t('action', getActionTermContext(plan));
       } else if (typename === 'Indicator') {
-        return t('indicator');
+        return t('indicator', getIndicatorTermContext(plan));
       }
     } else if (page) {
       if (page.__typename === 'CategoryPage' && page.category) {

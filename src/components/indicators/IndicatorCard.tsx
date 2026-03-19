@@ -9,7 +9,7 @@ import { transientOptions } from '@common/themes/styles/styled';
 
 import dayjs from '@/common/dayjs';
 import type { TFunction } from '@/common/i18n';
-import { getActionTermContext } from '@/common/i18n';
+import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorLink } from '@/common/links';
 import { usePlan } from '@/context/plan';
 
@@ -193,9 +193,13 @@ function CardLink(props: CardLinkProps) {
   return <>{children}</>;
 }
 
-export function getIndicatorTranslation(level: string | null, t: TFunction) {
+export function getIndicatorTranslation(
+  level: string | null,
+  t: TFunction,
+  indicatorTermContext?: { context: string }
+) {
   if (!level) {
-    return t('indicator');
+    return t('indicator', indicatorTermContext);
   }
 
   switch (level) {
@@ -244,12 +248,13 @@ function IndicatorCard({
   const plan = usePlan();
   const t = useTranslations();
   const locale = useLocale();
+  const indicatorTermContext = getIndicatorTermContext(plan);
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
   const indicatorType =
     level === 'action'
       ? t('action', getActionTermContext(plan))
-      : getIndicatorTranslation(level, t);
+      : getIndicatorTranslation(level, t, indicatorTermContext);
 
   return (
     <CardLink level={level} indicatorId={objectid} customHref={customHref}>
