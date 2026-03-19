@@ -4,7 +4,7 @@ import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { Theme } from '@kausal/themes/types';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
-import debounce from 'lodash/debounce';
+import debounce from 'lodash-es/debounce';
 import { useLocale, useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import PropTypes from 'prop-types';
@@ -353,7 +353,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 `;
 
 const StyledDropdownMenu = styled(DropdownMenu)`
-  min-width: 240px;
+  min-width: 260px;
   &.dropdown-menu[data-bs-popper] {
     top: unset;
   }

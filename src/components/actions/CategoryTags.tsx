@@ -34,24 +34,13 @@ const CategoryGroup = styled.div<{ $compact?: boolean }>`
   margin-bottom: ${(props) => (props.$compact ? props.theme.spaces.s050 : props.theme.spaces.s200)};
 `;
 
-const CategoryList = styled.ul`
+const CategoryBadges = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
-`;
-
-const CategoryListItem = styled.li`
-  margin-bottom: ${(props) => props.theme.spaces.s100};
-
-  a {
-    display: block;
-  }
-
-  &:hover {
-    a {
-      text-decoration: none;
-    }
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${(props) => props.theme.spaces.s050};
 `;
 
 type CategoryFilter = { typeIdentifier: string; categoryId: string };
@@ -151,9 +140,9 @@ export const CategoryContent = (props: CategoryContentProps) => {
   } = props;
 
   return (
-    <CategoryList>
+    <CategoryBadges>
       {categories.map((item) => (
-        <CategoryListItem key={item.id}>
+        <li key={item.id}>
           <CategoryLink
             category={item}
             categoryType={categoryType}
@@ -178,13 +167,14 @@ export const CategoryContent = (props: CategoryContentProps) => {
               iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl || undefined}
               size={compact ? 'sm' : 'md'}
               themeColor="neutralLight"
+              color={item.color || item.parent?.color || undefined}
               isLink={!noLink}
               maxLines={item.name.length > 50 ? 2 : 4}
             />
           </CategoryLink>
-        </CategoryListItem>
+        </li>
       ))}
-    </CategoryList>
+    </CategoryBadges>
   );
 };
 

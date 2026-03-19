@@ -33,7 +33,9 @@ const StyledBadge = styled.span<{
       props.theme.themeColors.white
     )};
   border-left: ${(props) =>
-    props.$color ? `calc(${props.theme.badgeBorderRadius} + 4px) solid ${props.$color}` : 'none'};
+    props.$color
+      ? `calc(${props.theme.badgeBorderRadius == '0' ? `4px` : props.theme.badgeBorderRadius} + 4px) solid ${props.$color}`
+      : 'none'};
   border-radius: ${(props) => props.theme.badgeBorderRadius};
   padding-top: ${(props) => props.theme.badgePaddingY};
   padding-bottom: ${(props) => props.theme.badgePaddingY};
@@ -75,7 +77,7 @@ const IconBadge = styled.div<{ $themeColor: ThemeColorOption; $isLink: boolean; 
   display: flex;
   align-items: center;
   max-width: 320px;
-  background-color: ${(props) => props.$color || props.theme[props.$themeColor]} !important;
+  background-color: ${(props) => props.theme.neutralLight};
   color: ${(props) =>
     readableColor(
       props.$color || props.theme[props.$themeColor],
@@ -87,17 +89,17 @@ const IconBadge = styled.div<{ $themeColor: ThemeColorOption; $isLink: boolean; 
 
   &:hover {
     background-color: ${(props) =>
-      props.$isLink && shade(0.05, props.$color || props.theme[props.$themeColor])} !important;
+      props.$isLink && shade(0.05, props.theme.neutralLight)} !important;
   }
 `;
 
-const IconImage = styled.div<{ $imageSrc?: string }>`
+const IconImage = styled.div<{ $imageSrc?: string; $color?: string }>`
   display: block;
   text-align: center;
   height: ${(props) => (props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300)};
   flex: 0 0 ${(props) => (props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300)};
   margin-right: ${(props) => props.theme.spaces.s050};
-  background-color: ${(props) => props.theme.neutralLight};
+  background-color: ${(props) => props.$color || props.theme.neutralLight}!important;
   ${(props) => !!props.$imageSrc && `background-image: url(${props.$imageSrc});`};
   background-size: cover;
   background-position: center center;
@@ -163,7 +165,6 @@ const BadgeContent = (props: BadgeContentProps) => {
 
   return hasNoIcon ? (
     <StyledBadge
-      color=""
       className={size}
       aria-label={ariaLabel}
       $themeColor={themeColor}
@@ -173,9 +174,9 @@ const BadgeContent = (props: BadgeContentProps) => {
       {renderContent}
     </StyledBadge>
   ) : (
-    <IconBadge color="" $themeColor={themeColor} $isLink={isLink} $color={color}>
+    <IconBadge $themeColor={themeColor} $isLink={isLink} $color={color}>
       {iconSvg ? (
-        <IconImage>
+        <IconImage $color={color}>
           <IconSvg
             $bgcolor={color}
             $themeColor={themeColor}
@@ -184,7 +185,7 @@ const BadgeContent = (props: BadgeContentProps) => {
           />
         </IconImage>
       ) : (
-        <IconImage $imageSrc={iconImage} />
+        <IconImage $imageSrc={iconImage} $color={color} />
       )}
       <IconName>{renderContent}</IconName>
     </IconBadge>
