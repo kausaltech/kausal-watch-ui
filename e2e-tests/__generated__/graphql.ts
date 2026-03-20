@@ -21,9 +21,22 @@ export type Scalars = {
   _Any: { input: any; output: any; }
 };
 
-export type ActionAttributeValueInput = {
+export type ActionAttributeUpdateInput = {
+  /** ID (PK or identifier) of the attribute type */
   attributeTypeId: Scalars['ID']['input'];
-  choiceId: Scalars['ID']['input'];
+  value: ActionAttributeValueInput;
+};
+
+/** Value for an attribute (choose one based on attribute type format) */
+export type ActionAttributeValueInput = {
+  /** Category choice values (pks) for an attribute */
+  categoryChoices: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** Choice value (pk + optional rich text explanation) for an attribute */
+  choice: InputMaybe<AttributeValueChoiceInput>;
+  /** HTML rich text value for an attribute */
+  richText: InputMaybe<Scalars['String']['input']>;
+  /** Plain text value for an attribute */
+  text: InputMaybe<Scalars['String']['input']>;
 };
 
 /** An enumeration. */
@@ -71,15 +84,26 @@ export enum ActionIndicatorEffectType {
 
 /** One action/measure tracked in an action plan. */
 export type ActionInput = {
-  attributeValues: InputMaybe<Array<ActionAttributeValueInput>>;
+  attributeValues: InputMaybe<Array<ActionAttributeUpdateInput>>;
   categoryIds: InputMaybe<Array<Scalars['ID']['input']>>;
   /** What does this action involve in more detail? */
   description: InputMaybe<Scalars['String']['input']>;
   /** The identifier for this action (e.g. number) */
   identifier: Scalars['ID']['input'];
+  leadParagraph: InputMaybe<Scalars['String']['input']>;
+  links: InputMaybe<Array<ActionLinkInput>>;
   name: Scalars['String']['input'];
   planId: Scalars['ID']['input'];
   primaryOrgId: InputMaybe<Scalars['ID']['input']>;
+  responsibleParties: InputMaybe<Array<ActionResponsiblePartyInput>>;
+};
+
+/** Link to associate with an action */
+export type ActionLinkInput = {
+  /** Display title for the link */
+  title: Scalars['String']['input'];
+  /** URL of the link */
+  url: Scalars['String']['input'];
 };
 
 export enum ActionListPageView {
@@ -115,13 +139,17 @@ export enum ActionList_FiltersFieldName {
   UpdatedAt = 'UPDATED_AT'
 }
 
-/** An enumeration. */
+/** Responsible party assignment for an action */
+export type ActionResponsiblePartyInput = {
+  /** ID of the organization */
+  organizationId: Scalars['ID']['input'];
+  /** Role of this organization in implementing the action. */
+  role: InputMaybe<ActionResponsiblePartyRole>;
+};
+
+/** Role of an organization in implementing an action */
 export enum ActionResponsiblePartyRole {
-  /** Collaborator */
   Collaborator = 'COLLABORATOR',
-  /** Unspecified */
-  None = 'NONE',
-  /** Primary responsible party */
   Primary = 'PRIMARY'
 }
 
@@ -169,6 +197,23 @@ export enum ActionTimelinessIdentifier {
   Stale = 'STALE'
 }
 
+/** Update input for a single action in a bulk update */
+export type ActionUpdateInput = {
+  attributeValues: InputMaybe<Array<ActionAttributeUpdateInput>>;
+  categoryIds: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** What does this action involve in more detail? */
+  description: InputMaybe<Scalars['String']['input']>;
+  /** The action ID (pk) */
+  id: Scalars['ID']['input'];
+  /** The identifier for this action (e.g. number) */
+  identifier: InputMaybe<Scalars['ID']['input']>;
+  leadParagraph: InputMaybe<Scalars['String']['input']>;
+  links: InputMaybe<Array<ActionLinkInput>>;
+  name: InputMaybe<Scalars['String']['input']>;
+  primaryOrgId: InputMaybe<Scalars['ID']['input']>;
+  responsibleParties: InputMaybe<Array<ActionResponsiblePartyInput>>;
+};
+
 /** An enumeration. */
 export enum ActionVisibility {
   /** Internal */
@@ -205,13 +250,18 @@ export enum AttributeTypeFormat {
 /** Input type for creating a new attribute type */
 export type AttributeTypeInput = {
   choiceOptions: InputMaybe<Array<ChoiceOptionInput>>;
-  /** The format of the attributes with this type */
+  /** The format of the fields with this type */
   format: AttributeTypeFormat;
   helpText: InputMaybe<Scalars['String']['input']>;
   identifier: Scalars['ID']['input'];
   name: Scalars['String']['input'];
   planId: Scalars['ID']['input'];
   unitId: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type AttributeValueChoiceInput = {
+  choiceId: InputMaybe<Scalars['ID']['input']>;
+  text: InputMaybe<Scalars['String']['input']>;
 };
 
 /** An enumeration. */
@@ -269,12 +319,6 @@ export type ChoiceOptionInput = {
 export enum Comparison {
   Gt = 'GT',
   Lte = 'LTE'
-}
-
-/** An enumeration. */
-export enum DatasetSchemaTimeResolution {
-  /** Yearly */
-  Yearly = 'YEARLY'
 }
 
 export enum IndicatorCategoryRelationshipType {
@@ -517,6 +561,14 @@ export enum SiteGeneralContentActionTerm {
   CaseStudy = 'CASE_STUDY',
   /** Strategy */
   Strategy = 'STRATEGY'
+}
+
+/** An enumeration. */
+export enum SiteGeneralContentIndicatorTerm {
+  /** Indicator */
+  Indicator = 'INDICATOR',
+  /** Measure */
+  Measure = 'MEASURE'
 }
 
 /** An enumeration. */

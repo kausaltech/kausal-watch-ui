@@ -56,10 +56,10 @@ export interface ActionListPlan {
   name: string;
   shortName?: string;
   viewUrl: string;
-  generalContent: {
-    actionTaskTerm: Plan['generalContent']['actionTaskTerm'];
-    organizationTerm: Plan['generalContent']['organizationTerm'];
-  };
+  generalContent: Pick<
+    Plan['generalContent'],
+    'actionTaskTerm' | 'organizationTerm' | 'indicatorTerm'
+  >;
   image: {
     rendition: {
       src: string;

@@ -35,7 +35,7 @@ import {
 import type { CategoryHierarchyMember, CategoryTypeHierarchy } from '@/common/categories';
 import { constructCatHierarchy, getCategoryString } from '@/common/categories';
 import type { TFunction } from '@/common/i18n';
-import { getActionTermContext } from '@/common/i18n';
+import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
@@ -968,7 +968,8 @@ class ActionNameFilter implements ActionListFilter<string | undefined> {
 
   constructor(plan: PlanContextType, actionTerm?: string) {
     this.hasActionIdentifiers = plan.features.hasActionIdentifiers;
-    this.actionTermContext = getActionTermContext(plan, actionTerm);
+    this.actionTermContext =
+      actionTerm === 'INDICATOR' ? getIndicatorTermContext(plan) : getActionTermContext(plan);
     this.ref = createRef();
   }
   useValueFilterId: string | undefined;

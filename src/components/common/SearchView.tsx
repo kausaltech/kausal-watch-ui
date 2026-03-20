@@ -9,7 +9,7 @@ import { Alert, Col, Container, FormGroup, Input, Label, Row } from 'reactstrap'
 import ContentLoader from '@common/components/ContentLoader';
 
 import type { SearchQueryQuery, SearchQueryQueryVariables } from '@/common/__generated__/graphql';
-import { getActionTermContext } from '@/common/i18n';
+import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { Link } from '@/common/links';
 import { SEARCH_QUERY } from '@/common/search';
 import Button from '@/components/common/Button';
@@ -127,7 +127,7 @@ function SearchResultItem({ hit }: SearchResultItemProps) {
     if (typename === 'Action') {
       hitTypeName = t('action', getActionTermContext(plan));
     } else if (typename === 'Indicator') {
-      hitTypeName = t('indicator');
+      hitTypeName = t('indicator', getIndicatorTermContext(plan));
     }
   } else if (page) {
     if ('category' in page && page.category) {

@@ -5,7 +5,7 @@ import {
   type IndicatorListFilterFragment,
   type IndicatorListPageFiltersFragment,
 } from '@/common/__generated__/graphql';
-import type { TFunction } from '@/common/i18n';
+import { type TFunction, getIndicatorTermContext } from '@/common/i18n';
 import { usePlan } from '@/context/plan';
 
 import ActionListFilters, {
@@ -281,7 +281,7 @@ const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
       activeFilters={activeFilters}
       onChange={onChange}
       actionCount={actionCount}
-      actionCountLabel={t('indicators')}
+      actionCountLabel={t('indicators', getIndicatorTermContext(plan))}
       additionalFilterBadges={additionalFilterBadges}
     />
   );
