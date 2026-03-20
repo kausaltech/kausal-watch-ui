@@ -35,6 +35,10 @@ const ToolbarContainer = styled(Container)`
   padding: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.themeColors.black};
   font-family: Inter, system-ui, sans-serif;
+
+  @media print {
+    display: none;
+  }
 `;
 
 const StyledDropdown = styled(Dropdown)`

@@ -249,7 +249,7 @@ const FeedbackForm = (props: FeedbackFormProps) => {
   };
 
   return (
-    <div className="mb-5">
+    <div className="mb-5 d-print-none">
       <h2 className="mb-4">{heading ?? t('give-feedback')}</h2>
       <p>{description ?? t('feedback-description')}</p>
       <p>{prompt ?? t('feedback-prompt')}</p>

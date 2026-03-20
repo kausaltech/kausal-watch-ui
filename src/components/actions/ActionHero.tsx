@@ -29,6 +29,10 @@ const Hero = styled.header<{ $bgColor: string }>`
       color: ${(props) => props.theme.linkColor};
     }
   }
+  @media print {
+    background-color: transparent;
+    margin-bottom: 0;
+  }
 `;
 
 type ActionBgImageProps = {
@@ -43,6 +47,10 @@ const ActionBgImage = styled.div<ActionBgImageProps>`
   background-position: ${(props) => props.$imageAlign};
   background-size: cover;
   background-blend-mode: multiply;
+  @media print {
+    background-image: none;
+    background-color: transparent;
+  }
 `;
 
 const PrimaryOrg = styled.div`
@@ -63,6 +71,11 @@ const HeroCardBg = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
   border-radius: ${(props) => props.theme.cardBorderRadius};
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+  @media print {
+    margin-bottom: 0;
+    box-shadow: none;
+    border-radius: 0;
+  }
 `;
 
 const CardContent = styled.div`
@@ -78,6 +91,10 @@ const OverlayContainer = styled.div`
   align-items: flex-end;
   min-height: 24rem;
   padding: ${(props) => props.theme.spaces.s300} 0 ${(props) => props.theme.spaces.s300};
+  @media print {
+    min-height: 0;
+    padding: 0;
+  }
 `;
 
 const ActionsNav = styled.nav`
@@ -90,6 +107,9 @@ const ActionsNav = styled.nav`
     font-size: ${(props) => props.theme.fontSizeBase};
     font-family: ${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`};
   }
+`;
+
+const ActionsPagination = styled.div`
   @media print {
     display: none;
   }
@@ -114,6 +134,9 @@ const ImageCredit = styled.span`
   background-color: rgba(255, 255, 255, 0.66);
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
+  @media print {
+    display: none;
+  }
 `;
 
 const ActionHeadline = styled.h1`
@@ -286,7 +309,7 @@ function ActionHero(props: ActionHeroProps) {
                         <IndexLink>{t('actions-plural', getActionTermContext(plan))}</IndexLink>
                       </ActionListLink>
                       {theme.settings?.actionView?.showPaginationTop && (
-                        <div>
+                        <ActionsPagination>
                           {previousAction && (
                             <ActionLink action={previousAction}>
                               <>
@@ -304,7 +327,7 @@ function ActionHero(props: ActionHeroProps) {
                               </>
                             </ActionLink>
                           )}
-                        </div>
+                        </ActionsPagination>
                       )}
                     </ActionsNav>
                     <ActionCategories categories={categories} />

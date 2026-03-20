@@ -16,6 +16,10 @@ import PlanLink from './PlanLink';
 const PlanSelect = styled.div`
   display: flex;
   align-items: center;
+
+  @media print {
+    display: none;
+  }
 `;
 
 const PlanDivider = styled.div<{ $color: CSSProperties['color'] }>`

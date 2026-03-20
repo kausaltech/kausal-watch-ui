@@ -83,6 +83,10 @@ const FiltersList = styled.div`
   border-top: 1px solid;
   border-bottom: 1px solid;
 
+  @media print {
+    display: none;
+  }
+
   .count {
     margin: ${(props) => props.theme.spaces.s100} ${(props) => props.theme.spaces.s100}
       ${(props) => props.theme.spaces.s100} 0;
