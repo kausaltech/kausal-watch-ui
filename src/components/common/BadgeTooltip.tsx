@@ -104,6 +104,8 @@ const IconImage = styled.div<{ $imageSrc?: string; $color?: string }>`
   background-size: cover;
   background-position: center center;
   min-width: ${(props) => (props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300)};
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 `;
 
 const IconSvg = styled(SVG, transientOptions)<{ $bgcolor?: string; $themeColor: string }>`

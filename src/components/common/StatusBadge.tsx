@@ -33,6 +33,8 @@ const StyledStatusIndicator = styled.div<StatusProps>`
   width: 10px;
   height: 10px;
   flex-shrink: 0;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 `;
 
 const StyledStatusLabel = styled.div<{ $subtle?: boolean }>`

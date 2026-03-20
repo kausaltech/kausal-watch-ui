@@ -28,6 +28,10 @@ const SearchSection = styled.div`
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )};
+
+  @media print {
+    display: none;
+  }
 `;
 
 const SearchHeader = styled.div`

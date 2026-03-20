@@ -25,6 +25,10 @@ const InfoButton = styled(Button, transientOptions)<{ $invert: string; $compact?
   &:hover {
     opacity: 1;
   }
+
+  @media print {
+    display: none;
+  }
 `;
 
 /* TODO: make this accessible */

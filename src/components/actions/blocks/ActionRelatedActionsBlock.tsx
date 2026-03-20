@@ -13,6 +13,10 @@ const RelatedActionList = styled(Row)`
 
 const RelatedActionItem = styled(Col)`
   list-style: none;
+
+  @media print {
+    margin-bottom: ${({ theme }) => theme.spaces.s100} !important;
+  }
 `;
 
 const ActionRelatedActionsBlock = (props) => {

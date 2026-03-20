@@ -140,6 +140,8 @@ const StyledPhaseLine = styled.div<{
   $color: string;
 }>`
   background: ${({ $color }) => $color};
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 
   ${(props) => (props.$isVertical ? verticalLineStyles(props) : horizontalLineStyles(props))}
 `;

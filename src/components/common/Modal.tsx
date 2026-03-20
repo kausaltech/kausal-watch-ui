@@ -34,6 +34,10 @@ const CloseButton = styled.button`
   border: none;
   cursor: pointer;
   z-index: 1001;
+
+  @media print {
+    display: none;
+  }
 `;
 
 const ModalHeader = styled.h2`

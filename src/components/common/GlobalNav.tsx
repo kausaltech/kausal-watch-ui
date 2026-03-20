@@ -74,6 +74,19 @@ const TopNav = styled(Navbar)`
     padding: 0 ${(props) => props.theme.spaces.s100};
     border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
   }
+
+  @media print {
+    position: static !important;
+    animation: none;
+    box-shadow: none;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+
+    .navbar-nav,
+    .navbar-collapse {
+      display: none !important;
+    }
+  }
 `;
 
 const BotNav = styled(Navbar, transientOptions)<{ $offsetTop?: number; $expanded: boolean }>`
@@ -124,6 +137,10 @@ const BotNav = styled(Navbar, transientOptions)<{ $offsetTop?: number; $expanded
 
   .navbar-collapse {
     align-items: stretch;
+  }
+
+  @media print {
+    display: none;
   }
 
   .plan-version-navitem {
@@ -377,6 +394,10 @@ const NavbarToggler = styled.button`
   appearance: none;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    display: none;
+  }
+
+  @media print {
     display: none;
   }
 `;

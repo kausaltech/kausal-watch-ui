@@ -143,6 +143,12 @@ const ActionStatusArea = styled.div<{ $statusColor: string | undefined; $isMini:
   background-color: ${(props) => props.$statusColor};
   min-height: ${({ theme, $isMini }) => ($isMini ? theme.spaces.s050 : theme.spaces.s400)};
   line-height: ${(props) => props.theme.lineHeightSm};
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+
+  @media print {
+    min-height: 0;
+  }
 `;
 
 type StyledActionPhaseProps = {
@@ -173,6 +179,10 @@ const StyledCardTitle = styled.div<{ $isSmall: boolean }>`
   text-align: left;
   word-break: break-word;
   hyphens: auto;
+
+  @media print {
+    min-height: 0;
+  }
 
   html:lang(fi) & {
     hyphens: manual;

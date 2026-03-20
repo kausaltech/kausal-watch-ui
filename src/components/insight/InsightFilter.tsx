@@ -67,7 +67,7 @@ function InsightFilter(props: InsightFilterProps) {
   }
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 d-print-none">
       <StyledLabel htmlFor="insight-filter">
         {t('insight-filter-label')}
         <StyledTypeahead
