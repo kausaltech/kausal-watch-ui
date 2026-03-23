@@ -201,10 +201,10 @@
     "form-effectively-empty-error": "Your feedback is empty. Please fill in at least one field.",
     "do-not-show-video-again": "Do not show this video again",
     "change-history": {
-      "information-updated": "Information updated {date}",
-       "view-changes": "View changes",
-       "modal-title": "Latest changes",
-       "description-label": "Description of changes"
+        "information-updated": "Information updated {date}",
+        "view-changes": "View changes",
+        "modal-title": "Latest changes",
+        "description-label": "Description of changes"
     },
     "pledge-view-full-plan": "View full action plan",
     "pledge-list-title": "Pledges",
@@ -255,4 +255,4 @@
     "pledge-form-zip-code-help": "Help us understand which neighborhoods are taking action. Your ZIP code is collected anonymously.",
     "pledge-most-committed": "Most committed",
     "share": "Share"
-  }
+}
