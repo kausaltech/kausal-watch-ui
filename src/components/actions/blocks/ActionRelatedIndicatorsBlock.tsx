@@ -121,6 +121,7 @@ type ActionRelatedIndicatorsBlockProps = {
 const ActionRelatedIndicatorsBlock = (props: ActionRelatedIndicatorsBlockProps) => {
   const { indicators, actionId } = props;
   const t = useTranslations();
+  const plan = usePlan();
 
   // FIXME: Assume indicator not connected to any plan are "draft" until we have API solution for this
   const filteredIndicators = indicators.filter(
