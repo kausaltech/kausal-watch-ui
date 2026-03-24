@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import NextLink from 'next/link';
+
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { AnimationSequence } from 'motion/react';
@@ -215,12 +217,29 @@ interface IndicatorProgressBarProps {
     normalizedName?: string;
   };
   note?: string;
+  linkButton?: {
+    text?: string;
+    page?: {
+      url?: string | null;
+      urlPath?: string | null;
+      slug?: string | null;
+    } | null;
+  } | null;
   significantDigits?: number;
 }
 
 function IndicatorProgressBar(props: IndicatorProgressBarProps) {
-  const { indicatorId, normalize, baseValue, lastValue, goalValue, unit, note, significantDigits } =
-    props;
+  const {
+    indicatorId,
+    normalize,
+    baseValue,
+    lastValue,
+    goalValue,
+    unit,
+    note,
+    linkButton,
+    significantDigits,
+  } = props;
 
   const width = useChartWidth();
   const [scope, animate] = useAnimate();
@@ -494,6 +513,13 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
     else return intendedX;
   };
 
+  // Prefer the admin-configured page link.
+  // Fall back to the indicator page link when no linkButton is set.
+  const pageHref =
+    linkButton?.page?.url ??
+    linkButton?.page?.urlPath ??
+    (linkButton?.page?.slug ? `/${linkButton.page.slug}` : undefined);
+
   return (
     <ProgressBarWrapper>
       {normalize && (
@@ -749,7 +775,11 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
         </svg>
         {theme.section.indicatorShowcase.linkToSource && (
           <SourceLink className="text-end mt-3">
-            <IndicatorLink id={indicatorId}>{note}</IndicatorLink>
+            {linkButton?.text && pageHref ? (
+              <NextLink href={pageHref}>{linkButton.text}</NextLink>
+            ) : (
+              <IndicatorLink id={indicatorId}>{note}</IndicatorLink>
+            )}
           </SourceLink>
         )}
       </div>
