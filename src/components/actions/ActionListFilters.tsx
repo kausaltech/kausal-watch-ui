@@ -824,7 +824,14 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
       (cat) => cat.children
     );
     this.catById = this.filterByCommonCategory
-      ? new Map(sortedCats.filter((c) => c.common?.id != null).map((c) => [c.common!.id, c]))
+      ? new Map(
+          sortedCats.flatMap((c) => {
+            const entries: [string, FilterCategory][] = [];
+            if (c.common?.id) entries.push([c.common.id, c]);
+            entries.push([c.id, c]);
+            return entries;
+          })
+        )
       : new Map(sortedCats.map((c) => [c.id, c]));
     const getLabel = (cat: ActionListCategory) =>
       this.ct.hideCategoryIdentifiers ? cat.name : `${cat.identifier}. ${cat.name}`;
@@ -842,11 +849,11 @@ class CategoryFilter extends DefaultFilter<FilterValue> {
   ) {
     return action.categories.some((actCat) => {
       const actCatKey = this.filterByCommonCategory
-        ? ((actCat as any).common?.id ?? null)
+        ? ((actCat as any).common?.id ?? actCat.id)
         : actCat.id;
       let cat = actCatKey ? this.catById.get(actCatKey) : undefined;
       while (cat) {
-        const catKey = this.filterByCommonCategory ? cat.common?.id : cat.id;
+        const catKey = this.filterByCommonCategory ? (cat.common?.id ?? cat.id) : cat.id;
         if (catKey && catKey === categoryId) return true;
         cat = cat.parent ?? undefined;
       }
