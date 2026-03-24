@@ -67,6 +67,13 @@ export type Filters<Value extends FilterValue = FilterValue> = {
   [key: string]: Value;
 };
 
+const FILTER_IDS = {
+  NAME: 'name',
+  RESPONSIBLE_PARTY: 'responsible_party',
+  PRIMARY_RESPONSIBLE_PARTY: 'primary_responsible_party',
+  ACTION_TYPE: 'action_type',
+} as const;
+
 const FiltersList = styled.div`
   margin: 0 0 ${(props) => props.theme.spaces.s150} 0;
   padding: ${(props) => props.theme.spaces.s100} 0;
@@ -369,11 +376,11 @@ function getBadgeLabel(
 ): string | null {
   if (!value) return null;
 
-  if (filter.id === 'primary_responsible_party') {
-    return activeFilters['responsible_party'] ? filter.label : null;
+  if (filter.id === FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY) {
+    return activeFilters[FILTER_IDS.RESPONSIBLE_PARTY] ? filter.label : null;
   }
 
-  if (filter.id === 'name') {
+  if (filter.id === FILTER_IDS.NAME) {
     const trimmed = value.trim();
     return trimmed ? trimmed : null;
   }
@@ -402,14 +409,14 @@ function buildBadges(
   });
 
   if (
-    activeFilters['primary_responsible_party'] &&
-    activeFilters['responsible_party'] &&
-    !uniqueFilters.some((item) => item.id === 'primary_responsible_party')
+    activeFilters[FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY] &&
+    activeFilters[FILTER_IDS.RESPONSIBLE_PARTY] &&
+    !uniqueFilters.some((item) => item.id === FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY)
   ) {
     uniqueFilters.push({
-      id: 'primary_responsible_party',
+      id: FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY,
       kind: 'hidden-toggle',
-      useValueFilterId: 'responsible_party',
+      useValueFilterId: FILTER_IDS.RESPONSIBLE_PARTY,
       label: t('filter-primary-responsible-party'),
       helpText: undefined,
       showAllLabel: '',
@@ -582,7 +589,7 @@ function createActionNameFilter(
   const ref = createRef<HTMLInputElement>();
 
   return {
-    id: 'name',
+    id: FILTER_IDS.NAME,
     kind: 'text',
     useValueFilterId: undefined,
     sm: 9,
@@ -617,7 +624,7 @@ function createContinuousActionFilter(opts: {
   const { label, showAllLabel, options, helpText } = opts;
 
   return {
-    id: 'action_type',
+    id: FILTER_IDS.ACTION_TYPE,
     kind: 'select',
     useValueFilterId: undefined,
     sm: undefined,
@@ -788,7 +795,7 @@ function createResponsiblePartyFilter(
     asNonEmptyString(overrides?.showAllLabel) ?? t('filter-all-organizations', orgTermContext);
 
   return {
-    id: 'responsible_party',
+    id: FILTER_IDS.RESPONSIBLE_PARTY,
     kind: 'responsible-party',
     useValueFilterId: undefined,
     sm: undefined,
@@ -817,9 +824,9 @@ function createResponsiblePartyFilter(
 
 function createPrimaryResponsiblePartyFilter(t: TFunction): ActionListFilter<string | undefined> {
   return {
-    id: 'primary_responsible_party',
+    id: FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY,
+    useValueFilterId: FILTER_IDS.RESPONSIBLE_PARTY,
     kind: 'hidden-toggle',
-    useValueFilterId: 'responsible_party',
     sm: undefined,
     md: 6,
     lg: 4,
@@ -906,13 +913,16 @@ const FilterField = React.memo(function FilterField({
             <Input
               type="switch"
               role="switch"
-              id="primary_responsible_party"
+              id={FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY}
               checked={primaryResponsibleParty === currentValue}
               onChange={(e) =>
-                onChange('primary_responsible_party', e.target.checked ? currentValue : undefined)
+                onChange(
+                  FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY,
+                  e.target.checked ? currentValue : undefined
+                )
               }
             />
-            <label htmlFor="primary_responsible_party">
+            <label htmlFor={FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY}>
               {t('filter-primary-responsible-party')}
             </label>
           </FormGroup>
@@ -1014,8 +1024,8 @@ function useFilterState(
       setFilterState((state) => {
         const next = { ...state, [id]: val };
 
-        if (id === 'responsible_party') {
-          next['primary_responsible_party'] = undefined;
+        if (id === FILTER_IDS.RESPONSIBLE_PARTY) {
+          next[FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY] = undefined;
         }
 
         return next;
@@ -1043,8 +1053,8 @@ function useFilterState(
 
   const resetFilterValue = useCallback(
     (id: string, value: SingleFilterValue) => {
-      if (id === 'responsible_party') {
-        updateFilter('primary_responsible_party', undefined);
+      if (id === FILTER_IDS.RESPONSIBLE_PARTY) {
+        updateFilter(FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY, undefined);
       }
       updateFilter(id, deleteFilterValue(id, value));
     },
@@ -1114,7 +1124,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
                     onChange={updateFilter}
                     value={filterState[filter.id]}
                     primaryResponsibleParty={
-                      filterState['primary_responsible_party'] as string | undefined
+                      filterState[FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY] as string | undefined
                     }
                   />
                 ))}
