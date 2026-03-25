@@ -1,10 +1,9 @@
-import { RefObject, useEffect, useRef, useState } from 'react';
+import { type RefObject, useEffect, useRef, useState } from 'react';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Theme } from '@kausal/themes/types';
-import { debounce } from 'lodash-es';
-import get from 'lodash/get';
+import type { Theme } from '@kausal/themes/types';
+import { debounce, get } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 
 import { transientOptions } from '@common/themes/styles/styled';
@@ -12,7 +11,7 @@ import { transientOptions } from '@common/themes/styles/styled';
 import { ActionImplementationPhase } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
 
-import { ActionContentAction } from './ActionContent';
+import type { ActionContentAction } from './ActionContent';
 
 // Used to determine the style of icon visualizing a phase, not to be confused with phase identifiers
 type PhaseType = 'done' | 'current' | 'todo';

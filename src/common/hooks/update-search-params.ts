@@ -2,8 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { usePathname, useRouter } from 'next/navigation';
 
-import debounce from 'lodash/debounce';
-import omitBy from 'lodash/omitBy';
+import { debounce, omitBy } from 'lodash-es';
 
 import type { Filters } from '@/components/actions/ActionListFilters';
 
