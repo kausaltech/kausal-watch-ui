@@ -6,6 +6,8 @@ import type { Decorator } from '@storybook/nextjs-vite';
 import { SessionProvider } from 'next-auth/react';
 import { NextIntlClientProvider } from 'next-intl';
 
+import ThemedGlobalStyles from '@common/themes/ThemedGlobalStyles';
+
 import a11yMessages from '@/../locales/en/a11y.json';
 import actionsMessages from '@/../locales/en/actions.json';
 import commonMessages from '@/../locales/en/common.json';
@@ -13,7 +15,6 @@ import { SharedIcons } from '@/components/common/Icon';
 import PlanProvider from '@/components/providers/PlanProvider';
 import { WorkflowProvider } from '@/context/workflow-selector';
 import { MOCK_PLAN } from '@/stories/mocks/plan.mocks';
-import { GlobalStyles } from '@/styles/GlobalStyles';
 
 const { initializeThemeState, pluckThemeFromContext } = DecoratorHelpers;
 
@@ -57,7 +58,7 @@ export const withKausalThemes = ({ themes, defaultTheme }: WithKausalThemesOptio
             <ThemeProvider theme={theme}>
               <NextIntlClientProvider locale={'en'} messages={messages}>
                 <PlanProvider plan={MOCK_PLAN}>
-                  <GlobalStyles />
+                  <ThemedGlobalStyles />
                   <SharedIcons />
                   {story(context)}
                 </PlanProvider>

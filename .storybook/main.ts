@@ -40,6 +40,13 @@ const config: StorybookConfig = {
           public: path.resolve(projectRoot, 'public'),
         },
       },
+      optimizeDeps: {
+        esbuildOptions: {
+          loader: {
+            '.js': 'jsx',
+          },
+        },
+      },
       define: {
         // Vite's define replaces process.env.THEMES with this string literal at build time
         // themes is an object, so we stringify it once to create a JSON string
