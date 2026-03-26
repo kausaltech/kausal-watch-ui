@@ -1,5 +1,5 @@
 import type { Ref } from 'react';
-import React, { type JSX, createRef, useCallback, useMemo, useState } from 'react';
+import React, { createRef, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -9,7 +9,6 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { createFilter } from 'react-select';
 import {
-  Badge as BadgeComponent,
   ButtonGroup,
   CloseButton,
   Col,
@@ -45,7 +44,6 @@ import TextInput from '@/components/common/TextInput';
 import type {
   ActionListAction,
   ActionListActionAttributeTypeFilterBlock,
-  ActionListCategory,
   ActionListCategoryTypeFilterBlock,
   ActionListOrganization,
   ActionListPrimaryOrg,
@@ -68,6 +66,13 @@ function isSingleFilterValue(value: FilterValue): value is SingleFilterValue {
 export type Filters<Value extends FilterValue = FilterValue> = {
   [key: string]: Value;
 };
+
+const FILTER_IDS = {
+  NAME: 'name',
+  RESPONSIBLE_PARTY: 'responsible_party',
+  PRIMARY_RESPONSIBLE_PARTY: 'primary_responsible_party',
+  ACTION_TYPE: 'action_type',
+} as const;
 
 const FiltersList = styled.div`
   margin: 0 0 ${(props) => props.theme.spaces.s150} 0;
@@ -220,6 +225,10 @@ function sortDepthFirst<Type>(
   return out;
 }
 
+function asNonEmptyString(value?: string | null) {
+  return value && value.trim() ? value : undefined;
+}
+
 type ActionListTextInputProps = {
   id: string;
   label: string;
@@ -364,6 +373,88 @@ type Badge = {
   onReset: () => void;
 };
 
+function getBadgeLabel(
+  filter: ActionListFilter,
+  value: SingleFilterValue,
+  activeFilters: Filters
+): string | null {
+  if (!value) return null;
+
+  if (filter.id === FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY) {
+    return activeFilters[FILTER_IDS.RESPONSIBLE_PARTY] ? filter.label : null;
+  }
+
+  if (filter.id === FILTER_IDS.NAME) {
+    const trimmed = value.trim();
+    return trimmed ? trimmed : null;
+  }
+
+  if (filter.options) {
+    return filter.options.find((opt) => opt.id === value)?.label ?? null;
+  }
+
+  return null;
+}
+
+function buildBadges(
+  allFilters: ActionListFilter[],
+  activeFilters: Filters,
+  onReset: (id: string, value: SingleFilterValue) => void,
+  t: TFunction
+): Badge[] {
+  const enabled = allFilters.filter((item) => activeFilters[item.id]);
+
+  const seenFilterKeyValues = new Set<string>();
+  const uniqueFilters = enabled.filter((item) => {
+    const uniqueKey = `${item.id}-${activeFilters[item.id]}`;
+    if (seenFilterKeyValues.has(uniqueKey)) return false;
+    seenFilterKeyValues.add(uniqueKey);
+    return true;
+  });
+
+  if (
+    activeFilters[FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY] &&
+    activeFilters[FILTER_IDS.RESPONSIBLE_PARTY] &&
+    !uniqueFilters.some((item) => item.id === FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY)
+  ) {
+    uniqueFilters.push({
+      id: FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY,
+      kind: 'hidden-toggle',
+      useValueFilterId: FILTER_IDS.RESPONSIBLE_PARTY,
+      label: t('filter-primary-responsible-party'),
+      helpText: undefined,
+      showAllLabel: '',
+      sm: undefined,
+      md: 6,
+      lg: 4,
+      options: [],
+      isMulti: false,
+      filterAction: () => true,
+    } as ActionListFilter);
+  }
+
+  return uniqueFilters
+    .map((filter) => {
+      const rawValue = activeFilters[filter.id];
+      const values = isSingleFilterValue(rawValue) ? [rawValue] : rawValue;
+
+      return values.map((value) => {
+        const label = getBadgeLabel(filter, value, activeFilters);
+        if (!label) return null;
+
+        return {
+          key: `${filter.id}-${value}`,
+          id: filter.id,
+          value,
+          label,
+          onReset: () => onReset(filter.id, value),
+        };
+      });
+    })
+    .flat()
+    .filter((item): item is Badge => item != null);
+}
+
 function ActionListFilterBadges({
   plan,
   allFilters,
@@ -376,73 +467,11 @@ function ActionListFilterBadges({
 }: ActionListFilterBadgesProps) {
   const t = useTranslations();
 
-  const enabled = allFilters.filter((item) => activeFilters[item.id]);
+  const badges = useMemo(
+    () => buildBadges(allFilters, activeFilters, onReset, t),
+    [allFilters, activeFilters, onReset, t]
+  );
 
-  function createBadge(item: ActionListFilter, value: SingleFilterValue): Badge | null {
-    let label: string;
-
-    if (item.id === 'primary_responsible_party') {
-      if (!value || !activeFilters['responsible_party']) return null;
-      label = item.getLabel(t);
-    } else if (item.id === 'name') {
-      if (!value || typeof value !== 'string' || value.trim() === '') {
-        return null;
-      }
-      label = value;
-    } else if (item.options) {
-      const matchingFilters = enabled.filter((i) => i.id === item.id);
-      let activeOption: ActionListFilterOption | undefined;
-
-      for (const filter of matchingFilters) {
-        activeOption = filter.options?.find((opt) => opt.id === value);
-        if (activeOption) break;
-      }
-
-      if (!activeOption) {
-        return null;
-      }
-      label = activeOption.label;
-      // Handle boolean type filters
-    } else if (typeof value === 'boolean') {
-      label = item.getLabel(t);
-    } else {
-      return null;
-    }
-    return {
-      key: item.id,
-      id: item.id,
-      value,
-      label,
-      onReset: () => {
-        onReset(item.id, value);
-      },
-    };
-  }
-
-  const seenFilterKeyValues = new Set();
-  const badgesToCreate = enabled.filter((item: ActionListFilter) => {
-    const uniqueKey = `${item.id}-${activeFilters[item.id]}`;
-    if (seenFilterKeyValues.has(uniqueKey)) return false;
-    seenFilterKeyValues.add(uniqueKey);
-    return true;
-  });
-  if (
-    activeFilters['primary_responsible_party'] &&
-    activeFilters['responsible_party'] &&
-    !badgesToCreate.some((b) => b.id === 'primary_responsible_party')
-  ) {
-    badgesToCreate.push({
-      id: 'primary_responsible_party',
-      getLabel: (t: TFunction) => t('filter-primary-responsible-party'),
-    } as ActionListFilter);
-  }
-  const badges = badgesToCreate
-    .map((item: ActionListFilter) => {
-      const value = activeFilters[item.id];
-      return (isSingleFilterValue(value) ? [value] : value).map((v) => createBadge(item, v));
-    })
-    .flat()
-    .filter((item): item is Badge => item != null);
   const allBadges = [...badges, ...additionalFilterBadges];
 
   return (
@@ -481,311 +510,346 @@ type ActionListFilterOption = {
   label: string;
 };
 
-export interface ActionListFilter<Value extends FilterValue = FilterValue> {
+type FilterItem = ActionListAction | IndicatorListIndicator;
+
+type FilterKind = 'text' | 'select' | 'category-buttons' | 'responsible-party' | 'hidden-toggle';
+
+export type ActionListFilter<Value extends FilterValue = FilterValue> = {
   id: string;
-  useValueFilterId: string | undefined;
-  filterAction: (value: Value, action: ActionListAction | IndicatorListIndicator) => boolean;
-  getLabel: (t: TFunction) => string;
-  getHelpText: (t: TFunction) => string | undefined;
-  getShowAllLabel: (t: TFunction) => string;
-  sm: number | undefined;
+  kind: FilterKind;
+  useValueFilterId?: string;
+  sm?: number;
   md: number;
   lg: number;
+  debounce?: number;
+  isMulti?: boolean;
   options?: ActionListFilterOption[];
-  debounce?: number | undefined;
-  render: (value: Value, onChange: FilterChangeCallback<Value>, t: TFunction) => JSX.Element;
-}
-
-abstract class DefaultFilter<Value extends FilterValue> implements ActionListFilter<Value> {
-  id: string;
-  useValueFilterId: string | undefined;
-  sm = undefined;
-  md = 6;
-  lg = 4;
-  abstract options: NonNullable<ActionListFilter['options']>;
-
-  abstract getLabel(t: TFunction): string;
-  abstract getHelpText(t: TFunction): string | undefined;
-  abstract filterAction(value: Value, action: ActionListAction | IndicatorListIndicator): boolean;
-
-  getShowAllLabel(t: TFunction) {
-    return t('filter-all-categories');
-  }
-
-  render(
-    value: Value,
-    onChange: FilterChangeCallback<Value>,
-    t: TFunction,
-    isMulti?: Value extends MultipleFilterValue ? boolean : false
-  ) {
-    const _isMulti = isMulti ?? false;
-    return (
-      <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
-        <ActionListDropdownInput
-          isMulti={_isMulti}
-          id={this.id}
-          label={this.getLabel(t)}
-          helpText={this.getHelpText(t)}
-          showAllLabel={this.getShowAllLabel(t)}
-          currentValue={value}
-          onChange={onChange}
-          options={this.options}
-        />
-      </FilterColumn>
-    );
-  }
-}
-
-type GenericSelectFilterOpts = {
-  id: string;
-  options: ActionListFilterOption[];
-  filterAction: (value: FilterValue, action: ActionListAction | IndicatorListIndicator) => boolean;
   label: string;
   helpText?: string;
   showAllLabel: string;
+  filterAction: (value: Value, item: FilterItem) => boolean;
+  inputRef?: Ref<HTMLInputElement>;
 };
 
-class GenericSelectFilter extends DefaultFilter<MultipleFilterValue> {
-  options: ActionListFilterOption[];
+function createSelectFilter(opts: {
+  id: string;
   label: string;
-  helpText: string | undefined;
+  helpText?: string;
   showAllLabel: string;
-  filterAction: (
-    value: MultipleFilterValue,
-    action: ActionListAction | IndicatorListIndicator
-  ) => boolean;
-
-  constructor(opts: GenericSelectFilterOpts) {
-    const { id, options, label, helpText, showAllLabel, filterAction } = opts;
-    super();
-    this.id = id;
-    this.options = options;
-    this.label = label;
-    this.helpText = helpText;
-    this.showAllLabel = showAllLabel;
-    this.filterAction = (vals, action) => {
-      if (!vals || vals.length === 0) return true;
-      return vals.some((v) => filterAction(v, action));
-    };
-  }
-  getLabel() {
-    return this.label;
-  }
-  getHelpText() {
-    return this.helpText;
-  }
-  getShowAllLabel() {
-    return this.showAllLabel;
-  }
-  render(
-    value: MultipleFilterValue,
-    onChange: FilterChangeCallback<MultipleFilterValue>,
-    t: TFunction
-  ) {
-    return super.render(value, onChange, t, true);
-  }
-}
-
-class GenericMultiSelectFilter extends DefaultFilter<MultipleFilterValue> {
   options: ActionListFilterOption[];
-  label: string;
-  helpText: string | undefined;
-  showAllLabel: string;
+  isMulti?: boolean;
+  sm?: number;
+  md?: number;
+  lg?: number;
+  useValueFilterId?: string;
+  matchesSingle: (value: string, item: FilterItem) => boolean;
+}): ActionListFilter {
+  const {
+    id,
+    label,
+    helpText,
+    showAllLabel,
+    options,
+    isMulti = false,
+    sm,
+    md = 6,
+    lg = 4,
+    useValueFilterId,
+    matchesSingle,
+  } = opts;
 
-  private singleValueFilterAction: (
-    value: string,
-    action: ActionListAction | IndicatorListIndicator
-  ) => boolean;
-
-  constructor(opts: GenericSelectFilterOpts) {
-    const { id, options, label, helpText, showAllLabel, filterAction } = opts;
-    super();
-    this.id = id;
-    this.options = options;
-    this.label = label;
-    this.helpText = helpText;
-    this.showAllLabel = showAllLabel;
-
-    this.singleValueFilterAction = filterAction as unknown as (
-      value: string,
-      action: ActionListAction | IndicatorListIndicator
-    ) => boolean;
-  }
-
-  getLabel() {
-    return this.label;
-  }
-  getHelpText() {
-    return this.helpText;
-  }
-  getShowAllLabel() {
-    return this.showAllLabel;
-  }
-
-  filterAction(
-    values: MultipleFilterValue,
-    action: ActionListAction | IndicatorListIndicator
-  ): boolean {
-    // empty selection => don't filter
-    if (!values || values.length === 0) return true;
-    // match any selected option
-    return values.some((v) => this.singleValueFilterAction(v, action));
-  }
-
-  render(
-    value: MultipleFilterValue,
-    onChange: FilterChangeCallback<MultipleFilterValue>,
-    t: TFunction
-  ) {
-    // force isMulti=true for this filter type
-    return super.render(value, onChange, t, true);
-  }
-}
-
-class ResponsiblePartyFilter extends DefaultFilter<string | undefined> {
-  id = 'responsible_party';
-  options: ActionListFilterOption[];
-  orgById: Map<string, ActionListOrganization>;
-  private fieldLabel?: string;
-  private fieldHelpText?: string;
-  private showAllLabelOverride?: string;
-
-  constructor(
-    orgs: ActionListOrganization[],
-    private plan: PlanContextType,
-    overrides?: {
-      fieldLabel?: string | null;
-      fieldHelpText?: string | null;
-      showAllLabel?: string | null;
-    }
-  ) {
-    super();
-
-    const nonEmpty = (s?: string | null) => (s && s.trim() ? s : undefined);
-
-    this.fieldLabel = nonEmpty(overrides?.fieldLabel);
-    this.fieldHelpText = nonEmpty(overrides?.fieldHelpText);
-    this.showAllLabelOverride = nonEmpty(overrides?.showAllLabel);
-
-    const sortedOrgs = sortDepthFirst(
-      orgs,
-      (a, b) => a.name.localeCompare(b.name),
-      (org) => org.parent,
-      (org) => org.children
-    );
-    this.orgById = new Map(orgs.map((org) => [org.id, org]));
-    this.options = sortedOrgs.map((org) => ({
-      id: org.id,
-      label: org.name,
-      indent: org.depth,
-    }));
-  }
-  filterAction(value: string | undefined, action: ActionListAction) {
-    if (!value) return true;
-    if (action.primaryOrg?.id === value) return true;
-    return action.responsibleParties.some((rp) => {
-      let org: ActionListOrganization | null = rp.organization as ActionListOrganization;
-      while (org) {
-        if (org.id === value) return true;
-        org = org.parent;
+  return {
+    id,
+    kind: 'select',
+    label,
+    helpText,
+    showAllLabel,
+    options,
+    isMulti,
+    sm,
+    md,
+    lg,
+    useValueFilterId,
+    filterAction: (value, item) => {
+      if (Array.isArray(value)) {
+        if (value.length === 0) return true;
+        return value.some((v) => matchesSingle(v, item));
       }
+
+      if (!value) return true;
+      return matchesSingle(value, item);
+    },
+  };
+}
+
+function createActionNameFilter(
+  plan: PlanContextType,
+  t: TFunction,
+  actionTerm?: string
+): ActionListFilter<string | undefined> {
+  const hasActionIdentifiers = plan.features.hasActionIdentifiers;
+  const actionTermContext =
+    actionTerm === 'INDICATOR' ? getIndicatorTermContext(plan) : getActionTermContext(plan);
+  const ref = createRef<HTMLInputElement>();
+
+  return {
+    id: FILTER_IDS.NAME,
+    kind: 'text',
+    useValueFilterId: undefined,
+    sm: 9,
+    md: 9,
+    lg: 6,
+    debounce: 150,
+    label: t('filter-text', actionTermContext),
+    helpText: undefined,
+    showAllLabel: t('filter-text-default'),
+    inputRef: ref,
+    filterAction: (value, action) => {
+      if (!value) return true;
+
+      const searchStr = escapeStringRegexp(value.toLowerCase());
+      let searchTarget = action.name.replace(/\u00AD/g, '').toLowerCase();
+
+      if (hasActionIdentifiers && 'identifier' in action) {
+        searchTarget = `${action.identifier.toLowerCase()} ${searchTarget}`;
+      }
+
+      return searchTarget.search(searchStr) !== -1;
+    },
+  };
+}
+
+function createContinuousActionFilter(opts: {
+  label: string;
+  showAllLabel: string;
+  options: ActionListFilterOption[];
+  helpText?: string;
+}): ActionListFilter<string | undefined> {
+  const { label, showAllLabel, options, helpText } = opts;
+
+  return {
+    id: FILTER_IDS.ACTION_TYPE,
+    kind: 'select',
+    useValueFilterId: undefined,
+    sm: undefined,
+    md: 6,
+    lg: 4,
+    options,
+    isMulti: false,
+    label,
+    helpText,
+    showAllLabel,
+    filterAction: (value, action) => {
+      if (!value) return true;
+      if (value === 'continuous') return action.scheduleContinuous === true;
+      if (value === 'non_continuous') return action.scheduleContinuous === false;
+      return true;
+    },
+  };
+}
+
+function createAttributeTypeFilter(
+  config: ActionListActionAttributeTypeFilterBlock,
+  t: TFunction
+): ActionListFilter<string | undefined> {
+  const att = config.attributeType!;
+  const options = att.choiceOptions.map((choice) => ({
+    id: choice.id,
+    label: choice.name,
+  }));
+
+  return {
+    id: `att-${att.identifier}`,
+    kind: 'select',
+    useValueFilterId: undefined,
+    sm: undefined,
+    md: 6,
+    lg: 4,
+    options,
+    isMulti: false,
+    label: att.name,
+    helpText: att.helpText ?? undefined,
+    showAllLabel: config.showAllLabel || t('filter-all-categories'),
+    filterAction: (value, action) => {
+      if (!value) return true;
+
+      return action.attributes.some((actAtt) => {
+        if (actAtt.__typename !== 'AttributeChoice') return false;
+        return actAtt.choice?.id === value;
+      });
+    },
+  };
+}
+
+function createCategoryFilter(
+  config: ActionListCategoryTypeFilterBlock,
+  filterByCommonCategory: boolean,
+  plan: PlanContextType,
+  t: TFunction
+): ActionListFilter<FilterValue> {
+  const ct = config.categoryType!;
+  const style = config.style === 'dropdown' ? 'dropdown' : 'buttons';
+  const depth = config.depth ?? (style === 'dropdown' ? 2 : 1);
+
+  const hierarchyCt = constructCatHierarchy<FilterCategory, FilterCategoryType>([ct])[0];
+  const sortedCats = sortDepthFirst(
+    hierarchyCt.categories,
+    (a, b) => a.order - b.order,
+    (cat) => cat.parent,
+    (cat) => cat.children
+  );
+
+  const catById = filterByCommonCategory
+    ? new Map(
+        sortedCats.flatMap((c) => {
+          const entries: [string, FilterCategory][] = [];
+          if (c.common?.id) entries.push([c.common.id, c]);
+          entries.push([c.id, c]);
+          return entries;
+        })
+      )
+    : new Map(sortedCats.map((c) => [c.id, c]));
+
+  const options = sortedCats
+    .filter((cat) => cat.depth < depth)
+    .flatMap((cat) => {
+      const id = filterByCommonCategory ? cat.common?.id : cat.id;
+      if (!id) return [];
+      const label = ct.hideCategoryIdentifiers ? cat.name : `${cat.identifier}. ${cat.name}`;
+      return [{ id, label, indent: cat.depth }];
+    });
+
+  function filterSingleCategory(
+    action: ActionListAction | IndicatorListIndicator,
+    categoryId: string | undefined
+  ) {
+    if (!categoryId) return true;
+
+    return action.categories.some((actCat) => {
+      const actCatKey = filterByCommonCategory ? ((actCat as any).common?.id ?? actCat.id) : actCat.id;
+      let cat = actCatKey ? catById.get(actCatKey) : undefined;
+
+      while (cat) {
+        const catKey = filterByCommonCategory ? (cat.common?.id ?? cat.id) : cat.id;
+        if (catKey && catKey === categoryId) return true;
+        cat = cat.parent ?? undefined;
+      }
+
       return false;
     });
   }
 
-  render(
-    value: string | undefined,
-    onChange: FilterChangeCallback<string | undefined>,
-    t: TFunction,
-    primaryValue?: string
-  ) {
-    return (
-      <FilterColumn sm={this.sm} md={this.md} lg={this.lg} key={this.id}>
-        <ActionListDropdownInput
-          isMulti={false}
-          id={this.id}
-          label={this.getLabel(t)}
-          helpText={this.getHelpText(t)}
-          showAllLabel={this.getShowAllLabel(t)}
-          currentValue={value}
-          onChange={onChange}
-          options={this.options}
-        />
-        {value && (
-          <FormGroup switch>
-            <Input
-              type="switch"
-              role="switch"
-              id="primary_responsible_party"
-              checked={primaryValue === value}
-              onChange={(e) =>
-                onChange('primary_responsible_party', e.target.checked ? value : undefined)
-              }
-            />
-            <label htmlFor="primary_responsible_party">
-              {t('filter-primary-responsible-party')}
-            </label>
-          </FormGroup>
-        )}
-      </FilterColumn>
-    );
-  }
-  private getOrgTermContext() {
-    return { context: this.plan.generalContent.organizationTerm };
-  }
-  getLabel(t: TFunction) {
-    return this.fieldLabel ?? t('filter-organization', this.getOrgTermContext());
-  }
-  getHelpText(t: TFunction) {
-    return this.fieldHelpText ?? t('filter-organization-help', this.getOrgTermContext());
-  }
-  getShowAllLabel(t: TFunction) {
-    return this.showAllLabelOverride ?? t('filter-all-organizations', this.getOrgTermContext());
-  }
+  const filterId = getCategoryString(ct.identifier);
+  const showAllLabel =
+    config.showAllLabel ||
+    (style === 'dropdown'
+      ? t('filter-all-categories')
+      : t('see-all-actions', getActionTermContext(plan)));
+
+  return {
+    id: filterId,
+    kind: style === 'dropdown' ? 'select' : 'category-buttons',
+    useValueFilterId: undefined,
+    sm: undefined,
+    md: style === 'dropdown' ? 6 : 12,
+    lg: style === 'dropdown' ? 4 : 12,
+    options,
+    isMulti: style === 'dropdown' && ct.selectionType === CategoryTypeSelectWidget.Multiple,
+    label: ct.name,
+    helpText: ct.helpText ?? undefined,
+    showAllLabel,
+    filterAction: (value, action) => {
+      if (isSingleFilterValue(value)) {
+        return filterSingleCategory(action, value);
+      }
+      return value.every((v) => filterSingleCategory(action, v));
+    },
+  };
 }
 
-class PrimaryResponsiblePartyFilter extends React.Component<{
-  responsibleParty: string;
-  value: string | undefined;
-  onChange: FilterChangeCallback<string | undefined>;
-  t: TFunction;
-}> {
-  id = 'primary_responsible_party';
-  useValueFilterId = 'responsible_party';
-  options: ActionListFilterOption[] = [];
-
-  filterAction(value: string | undefined, action: ActionListAction) {
-    if (!value) return true;
-    return (
-      action.primaryOrg?.id === value ||
-      action.responsibleParties.some(
-        (rp) => rp.role === ActionResponsiblePartyRole.Primary && rp.organization.id === value
-      )
-    );
+function createResponsiblePartyFilter(
+  orgs: ActionListOrganization[],
+  plan: PlanContextType,
+  t: TFunction,
+  overrides?: {
+    fieldLabel?: string | null;
+    fieldHelpText?: string | null;
+    showAllLabel?: string | null;
   }
+): ActionListFilter<string | undefined> {
+  const orgTermContext = { context: plan.generalContent.organizationTerm };
 
-  getLabel(t: TFunction) {
-    return t('filter-primary-responsible-party');
-  }
+  const sortedOrgs = sortDepthFirst(
+    orgs,
+    (a, b) => a.name.localeCompare(b.name),
+    (org) => org.parent,
+    (org) => org.children
+  );
 
-  render() {
-    if (!this.props || !this.props.responsibleParty) return null;
-    const { responsibleParty, onChange, t } = this.props;
-    return (
-      <FilterColumn>
-        <FormGroup switch className="mb-4">
-          <Input
-            type="switch"
-            role="switch"
-            id={this.id}
-            checked={this.props.value === this.props.responsibleParty}
-            onChange={(e) => onChange(this.id, e.target.checked ? responsibleParty : undefined)}
-          />
-          <label htmlFor={this.id}>{this.getLabel(t)}</label>
-        </FormGroup>
-      </FilterColumn>
-    );
-  }
+  const options = sortedOrgs.map((org) => ({
+    id: org.id,
+    label: org.name,
+    indent: org.depth,
+  }));
+
+  const label = asNonEmptyString(overrides?.fieldLabel) ?? t('filter-organization', orgTermContext);
+  const helpText =
+    asNonEmptyString(overrides?.fieldHelpText) ?? t('filter-organization-help', orgTermContext);
+  const showAllLabel =
+    asNonEmptyString(overrides?.showAllLabel) ?? t('filter-all-organizations', orgTermContext);
+
+  return {
+    id: FILTER_IDS.RESPONSIBLE_PARTY,
+    kind: 'responsible-party',
+    useValueFilterId: undefined,
+    sm: undefined,
+    md: 6,
+    lg: 4,
+    options,
+    isMulti: false,
+    label,
+    helpText,
+    showAllLabel,
+    filterAction: (value, action) => {
+      if (!value) return true;
+      if (action.primaryOrg?.id === value) return true;
+
+      return action.responsibleParties.some((rp) => {
+        let org: ActionListOrganization | null = rp.organization as ActionListOrganization;
+        while (org) {
+          if (org.id === value) return true;
+          org = org.parent;
+        }
+        return false;
+      });
+    },
+  };
+}
+
+function createPrimaryResponsiblePartyFilter(t: TFunction): ActionListFilter<string | undefined> {
+  return {
+    id: FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY,
+    useValueFilterId: FILTER_IDS.RESPONSIBLE_PARTY,
+    kind: 'hidden-toggle',
+    sm: undefined,
+    md: 6,
+    lg: 4,
+    options: [],
+    isMulti: false,
+    label: t('filter-primary-responsible-party'),
+    helpText: undefined,
+    showAllLabel: '',
+    filterAction: (value, action) => {
+      if (!value) return true;
+
+      return (
+        action.primaryOrg?.id === value ||
+        action.responsibleParties.some(
+          (rp) => rp.role === ActionResponsiblePartyRole.Primary && rp.organization.id === value
+        )
+      );
+    },
+  };
 }
 
 type QueryFilterCategoryType = ActionListCategoryTypeFilterBlock['categoryType'];
@@ -793,314 +857,143 @@ type QueryFilterCategory = NonNullable<QueryFilterCategoryType>['categories'][0]
 type FilterCategoryType = QueryFilterCategoryType & CategoryTypeHierarchy<FilterCategory>;
 type FilterCategory = QueryFilterCategory & CategoryHierarchyMember<FilterCategoryType>;
 
-class CategoryFilter extends DefaultFilter<FilterValue> {
-  id: string;
-  ct: NonNullable<ActionListCategoryTypeFilterBlock['categoryType']>;
-  options: ActionListFilterOption[];
-  style: 'dropdown' | 'buttons';
-  showAllLabel: string | undefined | null;
-  filterByCommonCategory: boolean;
-  catById: Map<string, FilterCategory>;
-  hasMultipleValues: boolean;
-  depth: number;
-  private actionTermContext?: { context: string };
-
-  constructor(
-    config: ActionListCategoryTypeFilterBlock,
-    filterByCommonCategory: boolean,
-    plan: PlanContextType
-  ) {
-    super();
-    this.ct = config.categoryType!;
-    this.id = getCategoryString(this.ct.identifier);
-    this.showAllLabel = config.showAllLabel;
-    this.hasMultipleValues = this.ct.selectionType === CategoryTypeSelectWidget.Multiple;
-    this.filterByCommonCategory = filterByCommonCategory;
-    this.actionTermContext = getActionTermContext(plan);
-    const style = config.style === 'dropdown' ? 'dropdown' : 'buttons';
-    this.style = style;
-    this.depth = config.depth ?? (this.style === 'dropdown' ? 2 : 1);
-    const hierarchyCt = constructCatHierarchy<FilterCategory, FilterCategoryType>([this.ct])[0];
-    const sortedCats = sortDepthFirst(
-      hierarchyCt.categories,
-      (a, b) => a.order - b.order,
-      (cat) => cat.parent,
-      (cat) => cat.children
-    );
-    this.catById = this.filterByCommonCategory
-      ? new Map(
-          sortedCats.flatMap((c) => {
-            const entries: [string, FilterCategory][] = [];
-            if (c.common?.id) entries.push([c.common.id, c]);
-            entries.push([c.id, c]);
-            return entries;
-          })
-        )
-      : new Map(sortedCats.map((c) => [c.id, c]));
-    const getLabel = (cat: ActionListCategory) =>
-      this.ct.hideCategoryIdentifiers ? cat.name : `${cat.identifier}. ${cat.name}`;
-    this.options = sortedCats
-      .filter((cat) => cat.depth < this.depth)
-      .flatMap((cat) => {
-        const id = this.filterByCommonCategory ? cat.common?.id : cat.id;
-        if (!id) return [];
-        return [{ id, label: getLabel(cat), indent: cat.depth }];
-      });
-  }
-  filterSingleCategory(
-    action: ActionListAction | IndicatorListIndicator,
-    categoryId: string | undefined
-  ) {
-    return action.categories.some((actCat) => {
-      const actCatKey = this.filterByCommonCategory
-        ? ((actCat as any).common?.id ?? actCat.id)
-        : actCat.id;
-      let cat = actCatKey ? this.catById.get(actCatKey) : undefined;
-      while (cat) {
-        const catKey = this.filterByCommonCategory ? (cat.common?.id ?? cat.id) : cat.id;
-        if (catKey && catKey === categoryId) return true;
-        cat = cat.parent ?? undefined;
-      }
-      return false;
-    });
-  }
-  filterAction(value: FilterValue, action: ActionListAction | IndicatorListIndicator) {
-    if (isSingleFilterValue(value)) {
-      return this.filterSingleCategory(action, value);
-    }
-    return value.every((v) => this.filterSingleCategory(action, v));
-  }
-  render(value: FilterValue, onChange: FilterChangeCallback<FilterValue>, t: TFunction) {
-    if (this.style === 'dropdown') {
-      return super.render(value, onChange, t, this.hasMultipleValues);
-    }
-
-    return (
-      <Col sm={12} md={12} lg={12} key={this.id}>
-        <MainCategory>
-          <MainCategoryLabel id={`label-${this.id}`}>
-            {this.getLabel(t)}
-            {this.ct.helpText && <PopoverTip header="Main Category" content={this.ct.helpText} />}
-          </MainCategoryLabel>
-          <ButtonGroup role="radiogroup" aria-labelledby={`label-${this.id}`}>
-            <RButton
-              color="black"
-              outline
-              onClick={() => onChange(this.id, undefined)}
-              active={value === undefined}
-              aria-checked={value === undefined}
-              role="radio"
-            >
-              {this.getShowAllLabel(t)}
-            </RButton>
-            {this.options.map((opt) => (
-              <RButton
-                color="black"
-                outline
-                onClick={() => onChange(this.id, opt.id)}
-                active={value === opt.id}
-                aria-checked={value === opt.id}
-                key={opt.id}
-                role="radio"
-              >
-                {opt.label}
-              </RButton>
-            ))}
-          </ButtonGroup>
-        </MainCategory>
-      </Col>
-    );
-  }
-  getLabel() {
-    return this.ct.name;
-  }
-  getHelpText() {
-    return this.ct.helpText;
-  }
-  getShowAllLabel(t: TFunction) {
-    return this.showAllLabel || t('filter-all-categories');
-  }
-}
-
-type AttributeTypeChoice = NonNullable<
-  ActionListActionAttributeTypeFilterBlock['attributeType']
->['choiceOptions'][0];
-
-class AttributeTypeFilter extends DefaultFilter<string | undefined> {
-  id: string;
-  att: NonNullable<ActionListActionAttributeTypeFilterBlock['attributeType']>;
-  options: ActionListFilterOption[];
-  showAllLabel: string | undefined | null;
-  choiceById: Map<string, AttributeTypeChoice>;
-
-  constructor(config: ActionListActionAttributeTypeFilterBlock) {
-    super();
-    this.att = config.attributeType!;
-    this.showAllLabel = config.showAllLabel;
-    this.id = `att-${this.att.identifier}`;
-    const choices = this.att.choiceOptions;
-    this.choiceById = new Map(choices.map((choice) => [choice.id, choice]));
-    const getLabel = (choice: AttributeTypeChoice) => choice.name;
-    this.options = choices.map((choice) => ({
-      id: choice.id,
-      label: getLabel(choice),
-    }));
-  }
-  filterAction(value: string | undefined, action: ActionListAction) {
-    return action.attributes.some((actAtt) => {
-      if (actAtt.__typename !== 'AttributeChoice') return false;
-      const { choice } = actAtt;
-      if (!choice) return false;
-      if (choice.id === value) return true;
-      return false;
-    });
-  }
-  getLabel() {
-    return this.att.name;
-  }
-  getHelpText() {
-    return this.att.helpText;
-  }
-  getShowAllLabel(t: TFunction) {
-    return this.showAllLabel || t('filter-all-categories');
-  }
-}
-
-class ActionNameFilter implements ActionListFilter<string | undefined> {
-  id = 'name';
-  sm = 9;
-  md = 9;
-  lg = 6;
-  debounce = 150;
-
-  private actionTermContext?: { context: string };
-  hasActionIdentifiers: boolean;
-  ref: Ref<HTMLInputElement>;
-
-  constructor(plan: PlanContextType, actionTerm?: string) {
-    this.hasActionIdentifiers = plan.features.hasActionIdentifiers;
-    this.actionTermContext =
-      actionTerm === 'INDICATOR' ? getIndicatorTermContext(plan) : getActionTermContext(plan);
-    this.ref = createRef();
-  }
-  useValueFilterId: string | undefined;
-  options?: ActionListFilterOption[] | undefined;
-
-  filterAction(value: string, action: ActionListAction | IndicatorListIndicator) {
-    const searchStr = escapeStringRegexp(value.toLowerCase());
-    let searchTarget = action.name.replace(/\u00AD/g, '').toLowerCase();
-    if (this.hasActionIdentifiers && 'identifier' in action) {
-      searchTarget = `${action.identifier.toLowerCase()} ${searchTarget}`;
-    }
-    return searchTarget.search(searchStr) !== -1;
-  }
-  getLabel(t: TFunction) {
-    return t('filter-text', this.actionTermContext);
-  }
-  getShowAllLabel(t: TFunction) {
-    return t('filter-text-default');
-  }
-  getHelpText() {
-    return undefined;
-  }
-  render(
-    value: string | undefined,
-    onChange: FilterChangeCallback<string | undefined>,
-    t: TFunction,
-    _primaryValue?: string
-  ) {
-    return (
-      <FilterColumn m={this.sm} md={this.md} lg={this.lg} key={this.id}>
-        <ActionListTextInput
-          id={this.id}
-          label={this.getLabel(t)}
-          placeholder={this.getShowAllLabel(t)}
-          onChange={onChange}
-          currentValue={value}
-          inputRef={this.ref}
-        />
-      </FilterColumn>
-    );
-  }
-}
-
-class ActionTypeFilter extends DefaultFilter<string | undefined> {
-  id = 'action_type';
-  sm = undefined;
-  md = 6;
-  lg = 4;
-
-  options: ActionListFilterOption[];
-
-  private label: string;
-  private showAllLabel: string;
-  private helpText?: string;
-
-  constructor(opts: {
-    label: string;
-    showAllLabel: string;
-    options: ActionListFilterOption[];
-    helpText?: string;
-  }) {
-    super();
-    this.label = opts.label;
-    this.showAllLabel = opts.showAllLabel;
-    this.options = opts.options;
-    this.helpText = opts.helpText;
-  }
-
-  getLabel() {
-    return this.label;
-  }
-
-  getHelpText() {
-    return this.helpText;
-  }
-
-  getShowAllLabel() {
-    return this.showAllLabel;
-  }
-
-  filterAction(value: string | undefined, action: ActionListAction): boolean {
-    if (!value) return true;
-
-    if (value === 'continuous') return action.scheduleContinuous === true;
-    if (value === 'non_continuous') return action.scheduleContinuous === false;
-
-    return true;
-  }
-}
-
 export type ActionListFilterSection = {
   id: string;
   hidden?: boolean;
   filters: ActionListFilter[];
 };
 
-type FilterColProps = {
+type FilterFieldProps = {
   filter: ActionListFilter;
-  onFilterChange: (id: string, val: FilterValue, debounce: number) => void;
-  state: FilterValue;
-  primaryResponsibleParty?: string | undefined;
+  value: FilterValue;
+  onChange: (id: string, val: FilterValue, debounce?: number) => void;
+  primaryResponsibleParty?: string;
 };
-const FilterCol = React.memo(function FilterCol({
+
+const FilterField = React.memo(function FilterField({
   filter,
-  onFilterChange,
-  state,
+  value,
+  onChange,
   primaryResponsibleParty,
-}: FilterColProps) {
+}: FilterFieldProps) {
   const t = useTranslations();
 
-  if (filter.id === 'responsible_party') {
-    return (filter as ResponsiblePartyFilter).render(
-      state as string | undefined,
-      onFilterChange,
-      t,
-      primaryResponsibleParty
+  if (filter.kind === 'hidden-toggle') {
+    return null;
+  }
+
+  if (filter.kind === 'text') {
+    return (
+      <FilterColumn sm={filter.sm} md={filter.md} lg={filter.lg} key={filter.id}>
+        <ActionListTextInput
+          id={filter.id}
+          label={filter.label}
+          placeholder={filter.showAllLabel}
+          onChange={onChange as FilterChangeCallback<string | undefined>}
+          currentValue={value as string | undefined}
+          inputRef={filter.inputRef}
+        />
+      </FilterColumn>
     );
   }
 
-  return filter.render(state, onFilterChange, t);
+  if (filter.kind === 'responsible-party') {
+    const currentValue = value as string | undefined;
+
+    return (
+      <FilterColumn sm={filter.sm} md={filter.md} lg={filter.lg} key={filter.id}>
+        <ActionListDropdownInput
+          isMulti={false}
+          id={filter.id}
+          label={filter.label}
+          helpText={filter.helpText}
+          showAllLabel={filter.showAllLabel}
+          currentValue={currentValue}
+          onChange={onChange as FilterChangeCallback<string | undefined>}
+          options={filter.options ?? []}
+        />
+        {currentValue && (
+          <FormGroup switch>
+            <Input
+              type="switch"
+              role="switch"
+              id={FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY}
+              checked={primaryResponsibleParty === currentValue}
+              onChange={(e) =>
+                onChange(
+                  FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY,
+                  e.target.checked ? currentValue : undefined
+                )
+              }
+            />
+            <label htmlFor={FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY}>
+              {t('filter-primary-responsible-party')}
+            </label>
+          </FormGroup>
+        )}
+      </FilterColumn>
+    );
+  }
+
+  if (filter.kind === 'category-buttons') {
+    const selectedValue = value as string | undefined;
+    const showAllSelected = selectedValue === undefined;
+
+    return (
+      <Col sm={12} md={12} lg={12} key={filter.id}>
+        <MainCategory>
+          <MainCategoryLabel id={`label-${filter.id}`}>
+            {filter.label}
+            {filter.helpText && <PopoverTip header="Main Category" content={filter.helpText} />}
+          </MainCategoryLabel>
+          <ButtonGroup role="radiogroup" aria-labelledby={`label-${filter.id}`}>
+            <RButton
+              color="black"
+              outline
+              onClick={() => onChange(filter.id, undefined)}
+              active={showAllSelected}
+              aria-checked={showAllSelected}
+              role="radio"
+            >
+              {filter.showAllLabel}
+            </RButton>
+            {(filter.options ?? []).map((opt) => {
+              const isActive = selectedValue === opt.id;
+
+              return (
+                <RButton
+                  color="black"
+                  outline
+                  onClick={() => onChange(filter.id, opt.id)}
+                  active={isActive}
+                  aria-checked={isActive}
+                  key={opt.id}
+                  role="radio"
+                >
+                  {opt.label}
+                </RButton>
+              );
+            })}
+          </ButtonGroup>
+        </MainCategory>
+      </Col>
+    );
+  }
+
+  return (
+    <FilterColumn sm={filter.sm} md={filter.md} lg={filter.lg} key={filter.id}>
+      <ActionListDropdownInput
+        isMulti={(filter.isMulti ?? false) as false}
+        id={filter.id}
+        label={filter.label}
+        helpText={filter.helpText}
+        showAllLabel={filter.showAllLabel}
+        currentValue={value}
+        onChange={onChange as FilterChangeCallback<FilterValue>}
+        options={filter.options ?? []}
+      />
+    </FilterColumn>
+  );
 });
 
 type ActionListFiltersProps = {
@@ -1112,6 +1005,73 @@ type ActionListFiltersProps = {
   additionalFilterBadges?: AdditionalFilterBadge[];
 };
 
+function useFilterState(
+  activeFilters: Filters,
+  onChange: (filterType: string, val: FilterValue) => void
+) {
+  const [filterState, setFilterState] = useState(activeFilters);
+
+  useEffect(() => {
+    setFilterState(activeFilters);
+  }, [activeFilters]);
+
+  const debouncedFilterChange = useMemo(() => debounce(onChange, 150), [onChange]);
+
+  useEffect(() => {
+    return () => {
+      debouncedFilterChange.cancel();
+    };
+  }, [debouncedFilterChange]);
+
+  const updateFilter = useCallback(
+    (id: string, val: FilterValue, debounceMs = 0) => {
+      setFilterState((state) => {
+        const next = { ...state, [id]: val };
+
+        if (id === FILTER_IDS.RESPONSIBLE_PARTY) {
+          next[FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY] = undefined;
+        }
+
+        return next;
+      });
+
+      if (debounceMs) {
+        debouncedFilterChange(id, val);
+      } else {
+        onChange(id, val);
+      }
+    },
+    [debouncedFilterChange, onChange]
+  );
+
+  const deleteFilterValue = useCallback(
+    (id: string, value: SingleFilterValue) => {
+      const current = filterState[id];
+      if (Array.isArray(current)) {
+        return current.filter((item) => item !== value);
+      }
+      return undefined;
+    },
+    [filterState]
+  );
+
+  const resetFilterValue = useCallback(
+    (id: string, value: SingleFilterValue) => {
+      if (id === FILTER_IDS.RESPONSIBLE_PARTY) {
+        updateFilter(FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY, undefined);
+      }
+      updateFilter(id, deleteFilterValue(id, value));
+    },
+    [deleteFilterValue, updateFilter]
+  );
+
+  return {
+    filterState,
+    updateFilter,
+    resetFilterValue,
+  };
+}
+
 function ActionListFilters(props: ActionListFiltersProps) {
   const {
     activeFilters,
@@ -1122,7 +1082,6 @@ function ActionListFilters(props: ActionListFiltersProps) {
     additionalFilterBadges = [],
   } = props;
 
-  const [filterState, setFilterState] = useState(activeFilters);
   const [isOpen, setIsOpen] = useState(false);
 
   const t = useTranslations();
@@ -1133,53 +1092,11 @@ function ActionListFilters(props: ActionListFiltersProps) {
   const plan = usePlan();
 
   const allFilters: ActionListFilter[] = useMemo(
-    () => filterSections.map((section) => section.filters).flat(),
+    () => filterSections.flatMap((section) => section.filters),
     [filterSections]
   );
 
-  const debouncedFilterChange = useMemo(() => debounce(onChange, 150), [onChange]);
-
-  const onFilterChange = useCallback(
-    (id: string, val: FilterValue, debounce: number = 0) => {
-      setFilterState((state) => {
-        const newState = { ...state, [id]: val };
-
-        if (id === 'responsible_party') {
-          newState['primary_responsible_party'] = undefined;
-        }
-
-        return newState;
-      });
-
-      if (debounce) {
-        debouncedFilterChange(id, val);
-      } else {
-        onChange(id, val);
-      }
-    },
-    [setFilterState, onChange, debouncedFilterChange]
-  );
-
-  const deleteFilterValues = useCallback(
-    (id: string, value: SingleFilterValue) => {
-      const filterVal = filterState[id];
-      if (Array.isArray(filterVal)) {
-        return filterVal.filter((valueId) => value !== valueId);
-      }
-      return undefined;
-    },
-    [filterState]
-  );
-
-  const onReset = useCallback(
-    (id: string, value: SingleFilterValue) => {
-      if (id === 'responsible_party') {
-        onFilterChange('primary_responsible_party', undefined);
-      }
-      onFilterChange(id, deleteFilterValues(id, value));
-    },
-    [onFilterChange, deleteFilterValues]
-  );
+  const { filterState, updateFilter, resetFilterValue } = useFilterState(activeFilters, onChange);
 
   const toggle = () => setIsOpen(!isOpen);
 
@@ -1205,12 +1122,14 @@ function ActionListFilters(props: ActionListFiltersProps) {
             <Collapse isOpen={section.hidden ? isOpen : true}>
               <FilterSection key={section.id}>
                 {section.filters.map((filter) => (
-                  <FilterCol
+                  <FilterField
                     key={filter.id}
                     filter={filter}
-                    onFilterChange={onFilterChange}
-                    state={filterState[filter.id]}
-                    primaryResponsibleParty={filterState['primary_responsible_party']}
+                    onChange={updateFilter}
+                    value={filterState[filter.id]}
+                    primaryResponsibleParty={
+                      filterState[FILTER_IDS.PRIMARY_RESPONSIBLE_PARTY] as string | undefined
+                    }
                   />
                 ))}
                 {section.id === 'main' && (
@@ -1242,7 +1161,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
               plan={plan}
               allFilters={allFilters}
               activeFilters={filterState}
-              onReset={onReset}
+              onReset={resetFilterValue}
               actionCount={actionCount}
               actionCountLabel={actionCountLabel}
               additionalFilterBadges={additionalFilterBadges}
@@ -1286,7 +1205,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
     blocks: (ActionListFilterFragment | IndicatorListFilterFragment)[] | null
   ) {
     const filters: ActionListFilter[] = [];
-    let primaryResponsiblePartyFilter: PrimaryResponsiblePartyFilter | null = null;
+    let primaryResponsiblePartyFilter: ActionListFilter | null = null;
 
     blocks?.forEach((block) => {
       switch (block.__typename) {
@@ -1297,13 +1216,13 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             showAllLabel?: string | null;
           };
           filters.push(
-            new ResponsiblePartyFilter(orgs, plan, {
+            createResponsiblePartyFilter(orgs, plan, t, {
               fieldLabel: rpBlock.fieldLabel,
               fieldHelpText: rpBlock.fieldHelpText,
               showAllLabel: rpBlock.showAllLabel,
             })
           );
-          primaryResponsiblePartyFilter = new PrimaryResponsiblePartyFilter();
+          primaryResponsiblePartyFilter = createPrimaryResponsiblePartyFilter(t);
           break;
         }
         case 'CategoryTypeFilterBlock':
@@ -1312,7 +1231,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               block.style === 'dropdown'
                 ? t('filter-all-categories')
                 : t('see-all-actions', getActionTermContext(plan));
-          filters.push(new CategoryFilter(block, filterByCommonCategory, plan));
+          filters.push(createCategoryFilter(block, filterByCommonCategory, plan, t));
           break;
         case 'ActionAttributeTypeFilterBlock':
           const allowedFormats = ['ORDERED_CHOICE', 'UNORDERED_CHOICE', 'OPTIONAL_CHOICE'];
@@ -1323,7 +1242,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             );
             break;
           }
-          filters.push(new AttributeTypeFilter(block));
+          filters.push(createAttributeTypeFilter(block, t));
           break;
         case 'ActionImplementationPhaseFilterBlock':
           if (!plan.actionImplementationPhases.length) break;
@@ -1341,7 +1260,13 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               return false;
             },
           };
-          filters.push(new GenericMultiSelectFilter(phaseOpts));
+          filters.push(
+            createSelectFilter({
+              ...phaseOpts,
+              isMulti: true,
+              matchesSingle: phaseOpts.filterAction as (value: string, item: FilterItem) => boolean,
+            })
+          );
           break;
         case 'ActionStatusFilterBlock':
           if (!plan.actionStatuses.length) break;
@@ -1359,7 +1284,16 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               return false;
             },
           };
-          filters.push(new GenericSelectFilter(statusOpts));
+          filters.push(
+            createSelectFilter({
+              ...statusOpts,
+              isMulti: true,
+              matchesSingle: statusOpts.filterAction as (
+                value: string,
+                item: FilterItem
+              ) => boolean,
+            })
+          );
           break;
         case 'PrimaryOrganizationFilterBlock':
           const primaryOrgOpts = {
@@ -1376,7 +1310,16 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               return false;
             },
           };
-          filters.push(new GenericSelectFilter(primaryOrgOpts));
+          filters.push(
+            createSelectFilter({
+              ...primaryOrgOpts,
+              isMulti: true,
+              matchesSingle: primaryOrgOpts.filterAction as (
+                value: string,
+                item: FilterItem
+              ) => boolean,
+            })
+          );
           break;
         case 'ActionScheduleFilterBlock':
           if (!plan.actionSchedules.length) break;
@@ -1394,7 +1337,16 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
               return false;
             },
           };
-          filters.push(new GenericSelectFilter(scheduleOpts));
+          filters.push(
+            createSelectFilter({
+              ...scheduleOpts,
+              isMulti: true,
+              matchesSingle: scheduleOpts.filterAction as (
+                value: string,
+                item: FilterItem
+              ) => boolean,
+            })
+          );
           break;
         case 'PlanFilterBlock':
           const relatedPlans = plan.allRelatedPlans;
@@ -1407,15 +1359,20 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             showAllLabel: t('filter-all-plans'),
             filterAction: (val: string, act: ActionListAction) => act.plan?.id === val,
           };
-          filters.push(new GenericSelectFilter(planOpts));
+          filters.push(
+            createSelectFilter({
+              ...planOpts,
+              isMulti: true,
+              matchesSingle: planOpts.filterAction as (value: string, item: FilterItem) => boolean,
+            })
+          );
           break;
         case 'ContinuousActionFilterBlock': {
-          const nonEmpty = (s?: string | null) => (s && s.trim() ? s : undefined);
-          const fieldLabel = 'fieldLabel' in block ? nonEmpty(block.fieldLabel) : undefined;
+          const fieldLabel = 'fieldLabel' in block ? asNonEmptyString(block.fieldLabel) : undefined;
           const fieldHelpText =
-            'fieldHelpText' in block ? nonEmpty(block.fieldHelpText) : undefined;
+            'fieldHelpText' in block ? asNonEmptyString(block.fieldHelpText) : undefined;
           const showAllLabelOverride =
-            'showAllLabel' in block ? nonEmpty(block.showAllLabel) : undefined;
+            'showAllLabel' in block ? asNonEmptyString(block.showAllLabel) : undefined;
           const label = fieldLabel ?? t('filter-action-type');
           const showAllLabel = showAllLabelOverride ?? t('see-all-actions');
           const options: ActionListFilterOption[] = [
@@ -1423,7 +1380,12 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             { id: 'non_continuous', label: t('actions-non-continuous') },
           ];
           filters.push(
-            new ActionTypeFilter({ label, showAllLabel, options, helpText: fieldHelpText })
+            createContinuousActionFilter({
+              label,
+              showAllLabel,
+              options,
+              helpText: fieldHelpText,
+            })
           );
           break;
         }
@@ -1432,7 +1394,6 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           if (block.__typename === 'IndicatorFilterBlock') {
             switch (block.field) {
               case 'level':
-                const nonEmpty = (s?: string | null) => (s && s.trim() ? s : undefined);
                 const indicatorLevels = [
                   { id: 'operational', label: t('operational-indicator') },
                   { id: 'strategic', label: t('strategic-indicator') },
@@ -1441,7 +1402,8 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                 const levelOpts = {
                   id: 'indicator-level',
                   options: indicatorLevels,
-                  label: nonEmpty('fieldLabel' in block ? block.fieldLabel : null) ?? t('type'),
+                  label:
+                    asNonEmptyString('fieldLabel' in block ? block.fieldLabel : null) ?? t('type'),
                   helpText: ('fieldHelpText' in block ? block.fieldHelpText : null) ?? '',
                   showAllLabel:
                     ('showAllLabel' in block ? block.showAllLabel : null) ?? 'All levels',
@@ -1450,7 +1412,16 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                     return false;
                   },
                 };
-                filters.push(new GenericSelectFilter(levelOpts));
+                filters.push(
+                  createSelectFilter({
+                    ...levelOpts,
+                    isMulti: true,
+                    matchesSingle: levelOpts.filterAction as (
+                      value: string,
+                      item: FilterItem
+                    ) => boolean,
+                  })
+                );
                 break;
               case 'organization':
                 const organizationOpts = {
@@ -1462,7 +1433,16 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                     return false;
                   },
                 };
-                filters.push(new GenericSelectFilter(organizationOpts));
+                filters.push(
+                  createSelectFilter({
+                    ...organizationOpts,
+                    isMulti: true,
+                    matchesSingle: organizationOpts.filterAction as (
+                      value: string,
+                      item: FilterItem
+                    ) => boolean,
+                  })
+                );
                 break;
             }
           }
@@ -1490,9 +1470,15 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             return false;
           },
         };
-        filters.push(new GenericSelectFilter(opts));
+        filters.push(
+          createSelectFilter({
+            ...opts,
+            isMulti: true,
+            matchesSingle: opts.filterAction as (value: string, item: FilterItem) => boolean,
+          })
+        );
       }
-      filters.push(new ActionNameFilter(plan, actionTerm));
+      filters.push(createActionNameFilter(plan, t, actionTerm));
     }
 
     const ret: ActionListFilterSection = {

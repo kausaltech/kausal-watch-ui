@@ -166,7 +166,7 @@
     "filter-impact-help": "{context, select, CASE_STUDY {Fallstudien mit ausgewählter Auswirkung anzeigen} STRATEGY {Strategien mit ausgewählter Auswirkung anzeigen} other {Maßnahmen mit ausgewählter Auswirkung anzeigen}}",
     "filter-organization-help": "{context, select, DIVISION {Zeige Maßnahmen, für die die gewählte Abteilung zuständig ist} other {Zeige Maßnahmen, für die die gewählte Organisation zuständig ist}}",
     "filter-phase-help": "{context, select, CASE_STUDY {Fallstudien in ausgewählter Umsetzungsphase anzeigen} STRATEGY {Strategien in ausgewählter Umsetzungsphase anzeigen} other {Maßnahmen in ausgewählter Umsetzungsphase anzeigen}}",
-    "filter-plan-help": "{context, select CASE_STUDY {Fallstudien im ausgewählten Plan anzeigen} STRATEGY {Strategien im ausgewählten Plan anzeigen} other {Maßnahmen im ausgewählten Plan anzeigen}}",
+    "filter-plan-help": "{context, select, CASE_STUDY {Fallstudien im ausgewählten Plan anzeigen} STRATEGY {Strategien im ausgewählten Plan anzeigen} other {Maßnahmen im ausgewählten Plan anzeigen}}",
     "filter-primary-organization-help": "{context, select, DIVISION {Zeige Maßnahmen in ausgewählter Abteilung} other {Zeige Maßnahmen in ausgewählter Gemeinde}}",
     "filter-schedule-help": "{context, select, CASE_STUDY {Fallstudien für den ausgewählten Zeitraum anzeigen} STRATEGY {Strategien für den ausgewählten Zeitraum anzeigen} other {Maßnahmen für den ausgewählten Zeitraum anzeigen}}",
     "additional-filters": "Mehr Optionen",
