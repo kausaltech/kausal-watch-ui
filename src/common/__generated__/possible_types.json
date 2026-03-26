@@ -326,7 +326,9 @@
       "IndicatorCategoryContentBlock",
       "IndicatorCausalChainBlock",
       "IndicatorContentBlock",
+      "IndicatorFactorValueSummaryContentBlock",
       "IndicatorValueSummaryContentBlock",
+      "IndicatorVisualizationContentBlock",
       "IndicatorsColumnBlock",
       "NameColumnBlock",
       "OrganizationColumnBlock",
@@ -340,12 +342,16 @@
     "IndicatorAsideContentStream": [
       "IndicatorCategoryContentBlock",
       "IndicatorContentBlock",
-      "IndicatorValueSummaryContentBlock"
+      "IndicatorFactorValueSummaryContentBlock",
+      "IndicatorValueSummaryContentBlock",
+      "IndicatorVisualizationContentBlock"
     ],
     "IndicatorContentBlockInterface": [
       "IndicatorCategoryContentBlock",
       "IndicatorContentBlock",
-      "IndicatorValueSummaryContentBlock"
+      "IndicatorFactorValueSummaryContentBlock",
+      "IndicatorValueSummaryContentBlock",
+      "IndicatorVisualizationContentBlock"
     ],
     "IndicatorFilterBlockInterface": [
       "IndicatorFilterBlock"
@@ -370,17 +376,23 @@
     "IndicatorListPageDetailsAsideUnion": [
       "IndicatorCategoryContentBlock",
       "IndicatorContentBlock",
-      "IndicatorValueSummaryContentBlock"
+      "IndicatorFactorValueSummaryContentBlock",
+      "IndicatorValueSummaryContentBlock",
+      "IndicatorVisualizationContentBlock"
     ],
     "IndicatorListPageDetailsMainBottomUnion": [
       "IndicatorCategoryContentBlock",
       "IndicatorContentBlock",
-      "IndicatorValueSummaryContentBlock"
+      "IndicatorFactorValueSummaryContentBlock",
+      "IndicatorValueSummaryContentBlock",
+      "IndicatorVisualizationContentBlock"
     ],
     "IndicatorListPageDetailsMainTopUnion": [
       "IndicatorCategoryContentBlock",
       "IndicatorContentBlock",
-      "IndicatorValueSummaryContentBlock"
+      "IndicatorFactorValueSummaryContentBlock",
+      "IndicatorValueSummaryContentBlock",
+      "IndicatorVisualizationContentBlock"
     ],
     "IndicatorListPageListColumnsUnion": [
       "IndicatorCategoryColumn",
@@ -398,7 +410,9 @@
     "IndicatorMainContentStream": [
       "IndicatorCategoryContentBlock",
       "IndicatorContentBlock",
-      "IndicatorValueSummaryContentBlock"
+      "IndicatorFactorValueSummaryContentBlock",
+      "IndicatorValueSummaryContentBlock",
+      "IndicatorVisualizationContentBlock"
     ],
     "MenuItem": [
       "ExternalLinkMenuItem",
@@ -582,6 +596,7 @@
       "IndicatorCategoryContentBlock",
       "IndicatorCausalChainBlock",
       "IndicatorContentBlock",
+      "IndicatorFactorValueSummaryContentBlock",
       "IndicatorFilterBlock",
       "IndicatorGroupBlock",
       "IndicatorHighlightsBlock",
@@ -589,6 +604,7 @@
       "IndicatorShowcaseBlock",
       "IndicatorValueColumn",
       "IndicatorValueSummaryContentBlock",
+      "IndicatorVisualizationContentBlock",
       "IndicatorsColumnBlock",
       "IntegerBlock",
       "LargeImageBlock",

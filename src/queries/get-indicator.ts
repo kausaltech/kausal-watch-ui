@@ -19,6 +19,14 @@ export const GET_INDICATOR_DETAILS = gql`
           ... on IndicatorValueSummaryContentBlock {
             ...IndicatorValueSummaryContentBlockFragment
           }
+          ... on IndicatorFactorValueSummaryContentBlock {
+            fieldLabel
+            fieldHelpText
+          }
+          ... on IndicatorVisualizationContentBlock {
+            fieldLabel
+            showFactorValues
+          }
         }
         detailsMainBottom {
           ... on IndicatorContentBlock {
@@ -29,6 +37,14 @@ export const GET_INDICATOR_DETAILS = gql`
           }
           ... on IndicatorValueSummaryContentBlock {
             ...IndicatorValueSummaryContentBlockFragment
+          }
+          ... on IndicatorFactorValueSummaryContentBlock {
+            fieldLabel
+            fieldHelpText
+          }
+          ... on IndicatorVisualizationContentBlock {
+            fieldLabel
+            showFactorValues
           }
         }
         detailsAside {
