@@ -448,6 +448,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           title={title}
           body={body}
           significantDigits={significantDigits}
+          linkButton={block.linkButton}
         />
       );
     }

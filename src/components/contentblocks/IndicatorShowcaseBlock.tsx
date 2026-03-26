@@ -54,7 +54,7 @@ const getNormalizedUnit = (indicator) => {
 };
 
 const IndicatorShowcaseBlock = (props) => {
-  const { id = '', indicator, title, body, significantDigits } = props;
+  const { id = '', indicator, title, body, significantDigits, linkButton } = props;
 
   const lastGoal = indicator.goals[indicator.goals.length - 1];
   const firstValue = indicator.values[0];
@@ -102,6 +102,7 @@ const IndicatorShowcaseBlock = (props) => {
               <IndicatorProgressBar
                 indicatorId={indicator.id}
                 note={indicator.name}
+                linkButton={linkButton}
                 significantDigits={significantDigits}
                 baseValue={baseValue}
                 lastValue={latestValue}
