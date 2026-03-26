@@ -385,7 +385,7 @@ function normalizeValuesByNormalizer(values, normalizerId) {
   );
 }
 
-type IndicatorVisualisationProps = {
+export type IndicatorVisualisationProps = {
   indicatorId: string;
   indicatorLink?: string;
   useLegacyGraph?: boolean;

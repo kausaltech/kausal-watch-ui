@@ -131,7 +131,17 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
               layout?.detailsMainTop &&
               layout.detailsMainTop.map((block, index) => {
                 return (
-                  <IndicatorModalContentBlock key={block.id} block={block} indicator={indicator} />
+                  <IndicatorModalContentBlock
+                    key={index}
+                    block={block}
+                    indicator={indicator}
+                    componentProps={{
+                      IndicatorVisualisation: {
+                        showGraph: showIndicatorGraph,
+                        showTable: showIndicatorTable,
+                      },
+                    }}
+                  />
                 );
               })}
             {/* Legacy support */}
@@ -165,7 +175,17 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
             layout?.detailsMainBottom &&
             layout.detailsMainBottom.map((block, index) => {
               return (
-                <IndicatorModalContentBlock key={block.id} block={block} indicator={indicator} />
+                <IndicatorModalContentBlock
+                  key={index}
+                  block={block}
+                  indicator={indicator}
+                  componentProps={{
+                    IndicatorVisualisation: {
+                      showGraph: showIndicatorGraph,
+                      showTable: showIndicatorTable,
+                    },
+                  }}
+                />
               );
             })}
           {/* Legacy support */}

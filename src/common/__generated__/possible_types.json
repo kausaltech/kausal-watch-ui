@@ -342,7 +342,9 @@
     "IndicatorAsideContentStream": [
       "IndicatorCategoryContentBlock",
       "IndicatorContentBlock",
-      "IndicatorValueSummaryContentBlock"
+      "IndicatorFactorValueSummaryContentBlock",
+      "IndicatorValueSummaryContentBlock",
+      "IndicatorVisualizationContentBlock"
     ],
     "IndicatorContentBlockInterface": [
       "IndicatorCategoryContentBlock",
@@ -374,7 +376,9 @@
     "IndicatorListPageDetailsAsideUnion": [
       "IndicatorCategoryContentBlock",
       "IndicatorContentBlock",
-      "IndicatorValueSummaryContentBlock"
+      "IndicatorFactorValueSummaryContentBlock",
+      "IndicatorValueSummaryContentBlock",
+      "IndicatorVisualizationContentBlock"
     ],
     "IndicatorListPageDetailsMainBottomUnion": [
       "IndicatorCategoryContentBlock",

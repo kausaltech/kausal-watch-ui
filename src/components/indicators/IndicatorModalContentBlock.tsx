@@ -21,7 +21,7 @@ import RichText from '../common/RichText';
 import CausalNavigation from './CausalNavigation';
 import IndicatorLevelChip from './IndicatorLevelChip';
 import IndicatorValueSummary, { type ValueSummaryOptions } from './IndicatorValueSummary';
-import IndicatorVisualisation from './IndicatorVisualisation';
+import IndicatorVisualisation, { type IndicatorVisualisationProps } from './IndicatorVisualisation';
 
 const CategoryTypeBlock = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s200};
@@ -380,12 +380,16 @@ interface IndicatorModalContentBlockProps {
   block: IndicatorModalContentBlock | null;
   indicator: IndicatorDetailsQuery['indicator'] | null;
   hideLegacyLastUpdated?: boolean;
+  componentProps?: {
+    IndicatorVisualisation?: Partial<IndicatorVisualisationProps>;
+  };
 }
 
 const IndicatorModalContentBlock = ({
   block,
   indicator,
   hideLegacyLastUpdated,
+  componentProps,
 }: IndicatorModalContentBlockProps) => {
   if (!block || !indicator) return null;
 
@@ -402,6 +406,16 @@ const IndicatorModalContentBlock = ({
       return <IndicatorCategoryBlock block={block} indicator={indicator} />;
     case 'IndicatorValueSummaryContentBlock':
       return <IndicatorValueSummaryBlock block={block} indicator={indicator} />;
+    case 'IndicatorFactorValueSummaryContentBlock':
+      return <div>IndicatorFactorValueSummaryContentBlock</div>;
+    case 'IndicatorVisualizationContentBlock':
+      return (
+        <IndicatorVisualisation
+          indicatorId={indicator.id}
+          showReference={true}
+          {...componentProps?.['IndicatorVisualisation']}
+        />
+      );
   }
 };
 
