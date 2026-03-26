@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+import { captureMessage } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Col, Container, Row } from 'reactstrap';
@@ -52,6 +53,7 @@ import ActionStatus from './ActionStatus';
 import ActionUpdatesList from './ActionUpdatesList';
 import CategoryTags from './CategoryTags';
 import EmissionScopeIcon from './EmissionScopeIcon';
+import ExportActionPdfButton from './ExportActionPdfButton';
 import { PhaseTimeline } from './PhaseTimeline';
 import RestrictedBlockWrapper from './blocks/RestrictedBlockWrapper';
 import { ActionDependenciesBlock } from './blocks/action-dependencies/ActionDependenciesBlock';
@@ -471,10 +473,11 @@ type ActionContentProps = {
   action: ActionContentAction;
   extraPlanData: NonNullable<GetActionDetailsQuery['plan']>;
   testId?: string;
+  pdfExportConfigured?: boolean;
 };
 
 function ActionContent(props: ActionContentProps) {
-  const { action, extraPlanData, testId } = props;
+  const { action, extraPlanData, testId, pdfExportConfigured } = props;
   const plan = usePlan();
   const theme = useTheme();
   const router = useRouter();
@@ -484,6 +487,15 @@ function ActionContent(props: ActionContentProps) {
   useEffect(() => {
     setLoading(false);
   }, [action]);
+
+  useEffect(() => {
+    if (plan.features.enableActionPdfExportInPublicUi && !pdfExportConfigured) {
+      captureMessage(
+        'Plan has enableActionPdfExportInPublicUi enabled but the PDF export service is not configured',
+        'error'
+      );
+    }
+  }, [plan.features.enableActionPdfExportInPublicUi, pdfExportConfigured]);
 
   useHotkeys(
     'ctrl+left, ctrl+right',
@@ -709,6 +721,11 @@ function ActionContent(props: ActionContentProps) {
             </ActionSection>
           )}
           {showLegacyLastUpdated && <LegacyUpdatedAt date={action.updatedAt} />}
+          {plan.features.enableActionPdfExportInPublicUi && pdfExportConfigured && (
+            <ActionSection>
+              <ExportActionPdfButton />
+            </ActionSection>
+          )}
         </StyledAside>
       </StyledContentGrid>
 

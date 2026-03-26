@@ -17,6 +17,7 @@ import ErrorPage from '@/components/common/ErrorPage';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { getActionDetails } from '@/queries/get-action';
 import { tryRequest } from '@/utils/api.utils';
+import { isPdfExportConfigured } from '@/utils/pdf-export';
 
 type Props = {
   params: Promise<{
@@ -90,5 +91,12 @@ export default async function ActionPage(props: Props) {
     return notFound();
   }
 
-  return <ActionContent action={data.action} extraPlanData={data.plan} testId="action-page" />;
+  return (
+    <ActionContent
+      action={data.action}
+      extraPlanData={data.plan}
+      testId="action-page"
+      pdfExportConfigured={isPdfExportConfigured()}
+    />
+  );
 }
