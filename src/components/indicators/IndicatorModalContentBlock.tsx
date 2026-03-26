@@ -412,6 +412,7 @@ const IndicatorModalContentBlock = ({
       return (
         <IndicatorVisualisation
           indicatorId={indicator.id}
+          useLegacyGraph={false}
           showReference={true}
           {...componentProps?.['IndicatorVisualisation']}
         />
