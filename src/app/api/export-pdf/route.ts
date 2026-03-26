@@ -50,7 +50,16 @@ export async function POST(request: NextRequest) {
 
   let body: { path: string; locale?: string };
   try {
-    body = await request.json();
+    const contentType = request.headers.get('content-type') || '';
+    if (contentType.includes('application/x-www-form-urlencoded')) {
+      const formData = await request.formData();
+      body = {
+        path: formData.get('path') as string,
+        locale: (formData.get('locale') as string) || undefined,
+      };
+    } else {
+      body = await request.json();
+    }
   } catch {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
