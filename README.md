@@ -37,8 +37,10 @@ corepack enable
 4. If you need access to the Kausal private themes:
 
 ```
+cd ..   # verdaccio-openid runs npm commands which only work outside the pnpm project
 npx verdaccio-openid@latest --registry https://npm.kausal.tech
 npm config set @kausal-private:registry https://npm.kausal.tech
+cd -    # back to project directory
 ```
 
 5. Install dependencies:
