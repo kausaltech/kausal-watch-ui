@@ -17,6 +17,10 @@ const StyledActionGroup = styled.div<{ $isSmall: boolean }>`
   gap: ${({ theme, $isSmall }) => ($isSmall ? theme.spaces.s050 : theme.spaces.s100)};
   text-align: ${({ $isSmall }) => ($isSmall ? 'center' : 'left')};
   width: 100%;
+
+  @media print {
+    background-color: #fff;
+  }
 `;
 
 const StyledGroupTitle = styled.h5`

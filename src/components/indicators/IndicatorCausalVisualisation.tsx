@@ -20,6 +20,10 @@ const CausalChain = styled.div`
   overflow-x: auto;
   padding: 1em;
   margin-bottom: 3em;
+
+  @media print {
+    background-color: #fff;
+  }
 `;
 
 const Column = styled.div`

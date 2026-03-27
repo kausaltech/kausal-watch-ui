@@ -88,6 +88,10 @@ const ListHeader = styled(Col)`
     @media (min-width: ${(props) => props.theme.breakpointMd}) {
       font-size: ${(props) => props.theme.fontSizeXl};
     }
+
+    @media print {
+      background-color: #fff;
+    }
   }
 `;
 

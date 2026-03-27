@@ -19,6 +19,10 @@ const StatusTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   line-height: ${(props) => props.theme.spaces.s150};
+
+  @media print {
+    background-color: #fff;
+  }
 `;
 
 const ActionProgress = styled(Progress)<{ color: string }>`

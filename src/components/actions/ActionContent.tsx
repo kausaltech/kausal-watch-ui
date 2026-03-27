@@ -87,6 +87,10 @@ const StyledProgressCard = styled.div`
   border-radius: ${({ theme }) => theme.cardBorderRadius};
   padding: ${({ theme }) => `${theme.spaces.s200} ${theme.spaces.s100}`};
   margin-bottom: ${(props) => props.theme.spaces.s050};
+
+  @media print {
+    background: #fff;
+  }
 `;
 
 const StyledProgressHeaderContainer = styled.div`
