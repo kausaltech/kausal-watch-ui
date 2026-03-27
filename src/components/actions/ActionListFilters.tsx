@@ -726,7 +726,9 @@ function createCategoryFilter(
     if (!categoryId) return true;
 
     return action.categories.some((actCat) => {
-      const actCatKey = filterByCommonCategory ? ((actCat as any).common?.id ?? actCat.id) : actCat.id;
+      const actCatKey = filterByCommonCategory
+        ? ((actCat as any).common?.id ?? actCat.id)
+        : actCat.id;
       let cat = actCatKey ? catById.get(actCatKey) : undefined;
 
       while (cat) {
