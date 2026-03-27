@@ -91,6 +91,11 @@ const StyledIndicator = styled(Card, transientOptions)<{ $level: string | null }
     transform: translateY(-5px);
     box-shadow: 4px 4px 8px rgba(82, 90, 101, 0.5);
   }
+
+  @media print {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
 `;
 
 const IndicatorType = styled.div`
