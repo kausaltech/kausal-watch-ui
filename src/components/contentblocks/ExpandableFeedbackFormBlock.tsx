@@ -15,6 +15,10 @@ const FeedbackFormSection = styled.div<{ $size: 'sm' | 'md' }>`
   background-color: ${(props) => props.theme.graphColors.blue010};
   margin-bottom: ${(props) => props.theme.spaces.s400};
 
+  @media print {
+    display: none;
+  }
+
   h2 {
     color: ${(props) => props.theme.themeColors.black};
     font-size: ${(props) =>
