@@ -20,7 +20,7 @@ This file provides guidance to LLM agents when working with this codebase.
 
 - **Framework:** Next.js 15 with App Router, React 19
 - **Language:** TypeScript 5.8 (strict mode)
-- **Styling:** styled-components 6, Bootstrap 5, reactstrap
+- **Styling:** Emotion (styled), MUI, Bootstrap 5, reactstrap
 - **Data:** Apollo Client 3, GraphQL with code generation
 - **i18n:** next-intl
 - **Auth:** next-auth 5 (beta)
@@ -122,7 +122,7 @@ import { ... } from '@/public/...'          // → public/
 
 ### Styling
 
-- Use styled-components for component styling
+- Use `@emotion/styled` for component styling
 - Theme context available via Kausal themes package
 - Bootstrap utilities for layout/spacing
 
