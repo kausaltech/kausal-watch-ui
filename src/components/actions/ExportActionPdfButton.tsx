@@ -4,34 +4,10 @@ import React, { useCallback, useState } from 'react';
 
 import { usePathname } from 'next/navigation';
 
-import { css, keyframes } from '@emotion/react';
-import styled from '@emotion/styled';
+import { Button, Menu, MenuItem } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useLocale, useTranslations } from 'next-intl';
-
-import Button from '@/components/common/Button';
-import Icon from '@/components/common/Icon';
-
-const StyledButton = styled(Button)`
-  @media print {
-    display: none;
-  }
-`;
-
-const spin = keyframes`
-  to { transform: rotate(360deg); }
-`;
-
-const SpinnerIcon = styled.span`
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  border: 2px solid currentColor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  ${css`
-    animation: ${spin} 0.75s linear infinite;
-  `}
-`;
+import { ChevronDown, FilePdf } from 'react-bootstrap-icons';
 
 export default function ExportActionPdfButton() {
   const t = useTranslations();
@@ -39,8 +15,18 @@ export default function ExportActionPdfButton() {
   const pathname = usePathname();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleExport = useCallback(async () => {
+    handleClose();
     setLoading(true);
     setError(null);
 
@@ -75,11 +61,24 @@ export default function ExportActionPdfButton() {
   }, [pathname, locale]);
 
   return (
-    <div>
-      <StyledButton color="outline-dark" size="sm" onClick={handleExport} disabled={loading}>
-        {loading ? <SpinnerIcon className="me-2" /> : <Icon name="download" className="me-2" />}
-        {t('export-pdf')}
-      </StyledButton>
+    <div className="d-print-none">
+      <Button
+        variant="text"
+        size="medium"
+        onClick={handleOpen}
+        disabled={loading}
+        startIcon={loading ? <CircularProgress size={14} color="inherit" /> : undefined}
+        endIcon={<ChevronDown />}
+        sx={{ textTransform: 'none', px: 0, fontWeight: 'normal' }}
+      >
+        {t('download')}
+      </Button>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+        <MenuItem onClick={handleExport}>
+          <FilePdf style={{ marginRight: '0.5rem' }} />
+          {t('download-page-as-pdf')}
+        </MenuItem>
+      </Menu>
       {error && (
         <div className="text-danger mt-1" style={{ fontSize: '0.85em' }}>
           {error}
