@@ -39,7 +39,7 @@ export default function ExportActionPdfButton() {
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);
-        throw new Error(data?.error || 'PDF export failed');
+        throw new Error(data?.error || t('pdf-export-failed'));
       }
 
       const blob = await response.blob();
@@ -52,13 +52,13 @@ export default function ExportActionPdfButton() {
       a.remove();
       URL.revokeObjectURL(url);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'PDF export failed';
+      const message = err instanceof Error ? err.message : t('pdf-export-failed');
       setError(message);
       console.error('PDF export failed:', err);
     } finally {
       setLoading(false);
     }
-  }, [pathname, locale]);
+  }, [pathname, locale, t]);
 
   return (
     <div className="d-print-none">
