@@ -113,6 +113,8 @@ export async function POST(request: NextRequest) {
 
     // Wait for iframes to finish loading (the PrintProvider sets this flag).
     formData.append('waitForExpression', 'window.__iframesReady === true');
+    // Wait before printing because some elements may take time to render (e.g., SVGs that render asynchronously).
+    formData.append('waitDelay', '2s');
 
     // PDF layout options
     formData.append('marginTop', '1.5');
