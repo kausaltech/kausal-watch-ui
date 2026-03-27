@@ -8,6 +8,13 @@ import { Button, Menu, MenuItem } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useLocale, useTranslations } from 'next-intl';
 import { ChevronDown, FilePdf } from 'react-bootstrap-icons';
+import styled from 'styled-components';
+
+const ErrorMessage = styled.div`
+  color: ${({ theme }) => theme.graphColors.red070};
+  font-size: ${({ theme }) => theme.fontSizeSm};
+  margin-top: ${({ theme }) => theme.spaces.s050};
+`;
 
 export default function ExportActionPdfButton() {
   const t = useTranslations();
@@ -79,11 +86,7 @@ export default function ExportActionPdfButton() {
           {t('download-page-as-pdf')}
         </MenuItem>
       </Menu>
-      {error && (
-        <div className="text-danger mt-1" style={{ fontSize: '0.85em' }}>
-          {error}
-        </div>
-      )}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </div>
   );
 }
