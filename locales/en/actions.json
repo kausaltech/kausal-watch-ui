@@ -70,5 +70,6 @@
     "action-leadParagraph": "Lead paragraph",
     "see-all-actions": "All actions",
     "download": "Download",
-    "download-page-as-pdf": "Page as PDF"
+    "download-page-as-pdf": "Page as PDF",
+    "pdf-export-failed": "PDF export failed"
 }
