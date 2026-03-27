@@ -75,6 +75,7 @@ const HeroCardBg = styled.div`
     margin-bottom: 0;
     box-shadow: none;
     border-radius: 0;
+    background-color: #fff;
   }
 `;
 

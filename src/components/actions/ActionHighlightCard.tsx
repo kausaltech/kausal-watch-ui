@@ -28,6 +28,10 @@ const StyledCard = styled(Card)`
     transform: translateY(-5px);
     box-shadow: 4px 4px 8px ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
   }
+
+  @media print {
+    background-color: #fff;
+  }
 `;
 
 const StyledActionStatus = styled(ActionStatus)`

@@ -115,6 +115,10 @@ const ActionCardElement = styled.div<ActionCardElementProps>`
     css`
       border: 3px solid ${theme.brandDark};
     `}
+
+  @media print {
+    background: #fff;
+  }
 `;
 
 const ActionPlan = styled.div`
