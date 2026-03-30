@@ -36,15 +36,23 @@ const config: StorybookConfig = {
     const { mergeConfig } = await import('vite');
     return mergeConfig(config, {
       resolve: {
-        alias: {
-          public: path.resolve(projectRoot, 'public'),
-        },
+        alias: [
+          { find: '@/public', replacement: path.resolve(projectRoot, 'public') },
+          { find: '@common', replacement: path.resolve(projectRoot, 'kausal_common/src') },
+          { find: '@', replacement: path.resolve(projectRoot, 'src') },
+          { find: 'public', replacement: path.resolve(projectRoot, 'public') },
+        ],
       },
       optimizeDeps: {
         esbuildOptions: {
           loader: {
             '.js': 'jsx',
           },
+        },
+      },
+      server: {
+        fs: {
+          allow: [path.resolve(projectRoot, '.storybook'), projectRoot],
         },
       },
       define: {
