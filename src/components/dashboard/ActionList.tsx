@@ -503,11 +503,14 @@ const ActionList = (props: ActionListProps) => {
   });
 
   let groupBy: 'category' | 'primaryOrg' | 'plan' = 'category';
-  if (
-    plan.features.hasActionPrimaryOrgs &&
-    primaryCatType?.identifier &&
-    `${getCategoryString(primaryCatType.identifier)}` in activeFilters
-  ) {
+  const hasPrimaryCategoryFilter = primaryCatType?.identifier
+    ? (() => {
+        const value = activeFilters[getCategoryString(primaryCatType.identifier)];
+        return Array.isArray(value) ? value.length > 0 : Boolean(value);
+      })()
+    : false;
+
+  if (plan.features.hasActionPrimaryOrgs && hasPrimaryCategoryFilter) {
     groupBy = 'primaryOrg';
   }
   // for umbrella plans group by plan if no common category exists
