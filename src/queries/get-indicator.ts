@@ -20,8 +20,6 @@ export const GET_INDICATOR_DETAILS = gql`
             ...IndicatorValueSummaryContentBlockFragment
           }
           ... on IndicatorFactorValueSummaryContentBlock {
-            id
-            blockType
             fieldLabel
             fieldHelpText
           }
@@ -146,26 +144,6 @@ export const GET_INDICATOR_DETAILS = gql`
         value
         scenario {
           id
-        }
-      }
-      datasets {
-        uuid
-        schema {
-          uuid
-          name
-          metrics {
-            label
-            unit
-            isComputed
-          }
-        }
-        computedDataPoints {
-          date
-          value
-          metric {
-            label
-            unit
-          }
         }
       }
       nonQuantifiedGoal

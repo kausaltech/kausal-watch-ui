@@ -19,7 +19,6 @@ import OrganizationChip from '../common/OrganizationChip';
 import PopoverTip from '../common/PopoverTip';
 import RichText from '../common/RichText';
 import CausalNavigation from './CausalNavigation';
-import IndicatorFactorValueSummaryBlock from './IndicatorFactorValueSummaryBlock';
 import IndicatorLevelChip from './IndicatorLevelChip';
 import IndicatorValueSummary, { type ValueSummaryOptions } from './IndicatorValueSummary';
 import IndicatorVisualisation, { type IndicatorVisualisationProps } from './IndicatorVisualisation';
@@ -408,7 +407,7 @@ const IndicatorModalContentBlock = ({
     case 'IndicatorValueSummaryContentBlock':
       return <IndicatorValueSummaryBlock block={block} indicator={indicator} />;
     case 'IndicatorFactorValueSummaryContentBlock':
-      return <IndicatorFactorValueSummaryBlock block={block} indicator={indicator} />;
+      return <div>IndicatorFactorValueSummaryContentBlock</div>;
     case 'IndicatorVisualizationContentBlock':
       return (
         <IndicatorVisualisation
