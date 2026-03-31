@@ -461,7 +461,7 @@ export enum PlanFeaturesContactPersonsPublicData {
   None = 'NONE'
 }
 
-/** PlanFeatures(id, latest_revision, plan, allow_images_for_actions, show_admin_link, allow_public_site_login, expose_unpublished_plan_only_to_authenticated_user, contact_persons_public_data, contact_persons_show_picture, contact_persons_show_organization_ancestors, contact_persons_hide_moderators, has_action_identifiers, show_action_identifiers, has_action_contact_person_roles, minimal_statuses, has_action_official_name, has_action_lead_paragraph, has_action_primary_orgs, enable_search, enable_indicator_comparison, enable_indicator_factors, indicator_ordering, moderation_workflow, display_field_visibility_restrictions, output_report_action_print_layout, password_protected, indicators_open_in_modal, enable_change_log, enable_community_engagement, enable_action_pdf_export_in_public_ui, admin_accessibility_conformance_level) */
+/** PlanFeatures(id, latest_revision, plan, allow_images_for_actions, show_admin_link, allow_public_site_login, expose_unpublished_plan_only_to_authenticated_user, contact_persons_public_data, contact_persons_show_picture, contact_persons_show_organization_ancestors, contact_persons_hide_moderators, has_action_identifiers, show_action_identifiers, has_action_contact_person_roles, minimal_statuses, has_action_official_name, has_action_lead_paragraph, has_action_primary_orgs, enable_search, enable_indicator_comparison, enable_indicator_factors, indicator_ordering, moderation_workflow, display_field_visibility_restrictions, output_report_action_print_layout, password_protected, indicators_open_in_modal, enable_change_log, enable_community_engagement, admin_accessibility_conformance_level) */
 export type PlanFeaturesInput = {
   /** Set if the plan uses meaningful action identifiers */
   hasActionIdentifiers: InputMaybe<Scalars['Boolean']['input']>;
@@ -14509,7 +14509,7 @@ export type IndicatorDetailsQuery = (
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, sourceField: IndicatorDetailsFieldName | null }
         & { __typename: 'IndicatorContentBlock' }
       ) | (
-        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null }
+        { fieldLabel: string | null, fieldHelpText: string | null }
         & { __typename: 'IndicatorFactorValueSummaryContentBlock' }
       ) | (
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, defaultGoalYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
@@ -14550,7 +14550,7 @@ export type IndicatorDetailsQuery = (
       ) | (
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, sourceField: IndicatorDetailsFieldName | null }
         & { __typename: 'IndicatorContentBlock' }
-      ) | (
+      ) | { __typename: 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' } | (
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, defaultGoalYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
         & { __typename: 'IndicatorValueSummaryContentBlock' }
       )> | null }
@@ -14693,22 +14693,7 @@ export type IndicatorDetailsQuery = (
         & { __typename: 'Scenario' }
       ) | null }
       & { __typename: 'IndicatorGoal' }
-    ) | null> | null, datasets: Array<(
-      { uuid: string, schema: (
-        { uuid: string, name: string, metrics: Array<(
-          { label: string, unit: string, isComputed: boolean }
-          & { __typename: 'DatasetMetricNode' }
-        )> }
-        & { __typename: 'DatasetSchema' }
-      ) | null, computedDataPoints: Array<(
-        { date: string, value: number | null, metric: (
-          { label: string, unit: string }
-          & { __typename: 'DatasetMetricNode' }
-        ) }
-        & { __typename: 'ComputedDataPointNode' }
-      )> }
-      & { __typename: 'Dataset' }
-    )>, actions: Array<(
+    ) | null> | null, actions: Array<(
       { id: string, identifier: string, name: string, color: string | null, scheduleContinuous: boolean, completion: number | null, status: (
         { id: string, identifier: string, name: string, color: string }
         & { __typename: 'ActionStatus' }
