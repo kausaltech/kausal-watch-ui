@@ -14,6 +14,7 @@ import { Collapse } from 'reactstrap';
 import { IndicatorLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import { ImageCredit } from '@/components/contentblocks/ContentPageHeaderBlock';
 import { usePlan } from '@/context/plan';
 
 const CUSTOM_IFRAME_HEIGHT_PARAM = 'k_height';
@@ -68,8 +69,10 @@ type RichTextImageProps = {
     'data-original-src'?: string;
     'data-original-width'?: string;
     'data-original-height'?: string;
+    'data-image-credit'?: string;
     src?: string;
   };
+  creditLabel: string;
 };
 
 const StyledRichText = styled.div`
@@ -137,9 +140,21 @@ const CompressIcon = styled(ICompress)`
   vertical-align: baseline;
 `;
 
+const RichTextImageWrapper = styled.figure`
+  position: relative;
+  display: inline-block;
+  margin: 0;
+
+  > img,
+  > [data-rmiz] img {
+    display: block;
+    margin: 0;
+  }
+`;
+
 function RichTextImage(props: RichTextImageProps) {
   const plan = usePlan();
-  const { attribs } = props;
+  const { attribs, creditLabel } = props;
   const {
     src,
     alt,
@@ -149,9 +164,9 @@ function RichTextImage(props: RichTextImageProps) {
     'data-original-src': originalSrc,
     'data-original-width': originalWidth,
     'data-original-height': originalHeight,
+    'data-image-credit': imageCredit,
     ...rest
   } = attribs;
-
   const imageUrl = src?.startsWith('http') ? src : `${plan.serveFileBaseUrl}${src}`;
 
   if (!imageUrl) {
@@ -173,10 +188,22 @@ function RichTextImage(props: RichTextImageProps) {
     />
   );
 
-  if (applyZoom) {
-    return <Zoom IconUnzoom={CompressIcon}>{imgElement}</Zoom>;
+  const zoomedElement = applyZoom ? (
+    <Zoom IconUnzoom={CompressIcon}>{imgElement}</Zoom>
+  ) : (
+    imgElement
+  );
+
+  if (imageCredit) {
+    return (
+      <RichTextImageWrapper className={className || 'richtext-image full-width'}>
+        {zoomedElement}
+        <ImageCredit>{`${creditLabel}: ${imageCredit}`}</ImageCredit>
+      </RichTextImageWrapper>
+    );
   }
-  return imgElement;
+
+  return zoomedElement;
 }
 
 type CollapsibleTextProps = {
@@ -331,6 +358,8 @@ type RichTextProps = {
 export default function RichText(props: RichTextProps) {
   const { html, isCollapsible, className, maxLength = undefined, ...rest } = props;
   const plan = usePlan();
+  const t = useTranslations();
+  const creditLabel = t('image-credit');
 
   // FIXME: Hacky hack to figure out if the rich text links are internal
   const cutHttp = (url: string) => url.replace(/^https?:\/\//, '');
@@ -397,7 +426,7 @@ export default function RichText(props: RichTextProps) {
         );
       }
       if (name === 'img') {
-        return <RichTextImage attribs={attribs} />;
+        return <RichTextImage attribs={attribs} creditLabel={creditLabel} />;
       }
       return null;
     }
@@ -420,7 +449,7 @@ export default function RichText(props: RichTextProps) {
         }
       },
     };
-  }, [plan.serveFileBaseUrl, currentDomain]);
+  }, [plan.serveFileBaseUrl, currentDomain, creditLabel]);
 
   if (typeof html !== 'string') return <div />;
 
