@@ -14,20 +14,20 @@ const ContentBlockWrapper = styled.div`
 `;
 
 const BlockLabel = styled.h2`
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: ${(props) => props.theme.fontWeightBold};
-  margin-bottom: ${(props) => props.theme.spaces.s100};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
 const SummarySection = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s200};
+  margin-bottom: ${(props) => props.theme.spaces.s150};
 `;
 
 const MetricTitleRow = styled.div`
   display: flex;
   align-items: center;
   gap: ${(props) => props.theme.spaces.s050};
-  margin-bottom: ${(props) => props.theme.spaces.s100};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
 const MetricTitle = styled.h3`
