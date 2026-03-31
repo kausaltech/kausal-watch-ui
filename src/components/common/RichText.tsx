@@ -140,7 +140,7 @@ const CompressIcon = styled(ICompress)`
   vertical-align: baseline;
 `;
 
-const RichTextImageWrapper = styled.figure`
+const RichTextImageWrapper = styled.span`
   position: relative;
   display: inline-block;
   margin: 0;
