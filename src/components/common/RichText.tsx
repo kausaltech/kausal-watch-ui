@@ -140,20 +140,16 @@ const CompressIcon = styled(ICompress)`
   vertical-align: baseline;
 `;
 
-const RichTextImageWrapper = styled.span`
+const RichTextImageWrapper = styled.figure`
   position: relative;
-  display: inline-block;
+  margin: 0;
+`;
 
-  /* Reset the top margin on the inner image so the ImageCredit overlay
-     (absolutely positioned at top:0) sits on the image, not in the
-     margin gap above it. The global .richtext-image rule sets
-     margin: s300 auto; we preserve the bottom margin for spacing.
-     [data-rmiz] is the wrapper added by react-medium-image-zoom. */
-  > img,
-  > [data-rmiz] img {
-    display: block;
-    margin-top: 0;
-  }
+const StyledImageCredit = styled(ImageCredit)`
+  // Align the top of the credit with the top margin of the image defined in the global .richtext-image styles.
+  // Without this, the credit would be rendered above the image. It's slightly hacky but allows us to keep
+  // the image classes at the img tag level without having to restructure the layout.
+  top: ${({ theme }) => theme.spaces.s300};
 `;
 
 function RichTextImage(props: RichTextImageProps) {
@@ -200,9 +196,9 @@ function RichTextImage(props: RichTextImageProps) {
 
   if (imageCredit) {
     return (
-      <RichTextImageWrapper className={className || 'richtext-image full-width'}>
+      <RichTextImageWrapper>
         {zoomedElement}
-        <ImageCredit>{`${creditLabel}: ${imageCredit}`}</ImageCredit>
+        <StyledImageCredit as="figcaption">{`${creditLabel}: ${imageCredit}`}</StyledImageCredit>
       </RichTextImageWrapper>
     );
   }
