@@ -2,11 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
-import { useFormatter } from 'next-intl';
 
 import { yearRangeVar } from '@common/apollo/paths-cache';
 
 import type { GetNodeContentQuery } from '@/common/__generated__/paths/graphql';
+import useNumberFormatter from '@/common/numbers';
 import HighlightValue from '@/components/paths/HighlightValue';
 import type { PathsInstanceType } from '@/components/providers/PathsProvider';
 import {
@@ -107,7 +107,7 @@ type Emissions = {
 const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
   const { categoryId, node, onLoaded, displayGoals, refetching } = props;
   const yearRange = useReactiveVar(yearRangeVar);
-  const format = useFormatter();
+  const formatNumber = useNumberFormatter({ scope: 'paths' });
 
   const [emissions, setEmissions] = useState<Emissions[]>([
     {
@@ -251,23 +251,13 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
 
           <SubValue>
             <HighlightValue
-              displayValue={
-                em.latest.value != null
-                  ? format.number(em.latest.value, {
-                      maximumSignificantDigits: 2,
-                    })
-                  : ' '
-              }
+              displayValue={em.latest.value != null ? formatNumber(em.latest.value) : ' '}
               header={`${em.latest.value != null ? em.latest.year : '-'}`}
               unit={em.latest.value && unit ? unit : ''}
               size="md"
               change={
                 em.latest.change != null
-                  ? `${em.latest.change > 0 ? '+' : ''}${format.number(em.latest.change * 100, {
-                      style: 'unit',
-                      unit: 'percent',
-                      maximumSignificantDigits: 2,
-                    })}`
+                  ? `${em.latest.change > 0 ? '+' : ''}${formatNumber(em.latest.change * 100)}%`
                   : undefined
               }
             />
@@ -275,26 +265,13 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
 
           <SubValue>
             <HighlightValue
-              displayValue={
-                em.reference.value != null
-                  ? format.number(em.reference.value, {
-                      maximumSignificantDigits: 2,
-                    })
-                  : ' '
-              }
+              displayValue={em.reference.value != null ? formatNumber(em.reference.value) : ' '}
               header={`${em.reference.value != null ? em.reference.year : '-'}`}
               unit={em.reference.value && unit ? unit : ''}
               size="md"
               change={
                 em.reference.change != null
-                  ? `${em.reference.change > 0 ? '+' : ''}${format.number(
-                      em.reference.change * 100,
-                      {
-                        style: 'unit',
-                        unit: 'percent',
-                        maximumSignificantDigits: 2,
-                      }
-                    )}`
+                  ? `${em.reference.change > 0 ? '+' : ''}${formatNumber(em.reference.change * 100)}%`
                   : undefined
               }
             />

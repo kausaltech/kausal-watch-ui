@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { isEqual } from 'lodash-es';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
 import { activeGoalVar, activeScenarioVar } from '@common/apollo/paths-cache';
@@ -28,6 +28,7 @@ import {
 import type { MetricSliceData, SliceConfig } from '@common/utils/paths/metric';
 
 import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
+import useNumberFormatter from '@/common/numbers';
 import Icon from '@/components/common/Icon';
 
 const Tools = styled.div`
@@ -57,7 +58,7 @@ const DataTable = (props: DataTableProps) => {
 
   const t = useTranslations();
   const theme = useTheme();
-  const format = useFormatter();
+  const formatNumber = useNumberFormatter({ scope: 'paths' });
   const activeGoal = useReactiveVar(activeGoalVar);
   const activeScenario = useReactiveVar(activeScenarioVar);
 
@@ -140,18 +141,12 @@ const DataTable = (props: DataTableProps) => {
               <TableCell>{t('table-historical')}</TableCell>
               {slice.categoryValues.map((cat) => (
                 <TableCell key={`${cat.category.id}-h-${year}`}>
-                  {cat.historicalValues[idx]
-                    ? format.number(cat.historicalValues[idx], {
-                        maximumSignificantDigits: 2,
-                      })
-                    : ''}
+                  {cat.historicalValues[idx] ? formatNumber(cat.historicalValues[idx]) : ''}
                 </TableCell>
               ))}
               <TableCell>
                 {slice.totalValues?.historicalValues[idx]
-                  ? format.number(slice.totalValues?.historicalValues[idx], {
-                      maximumSignificantDigits: 2,
-                    })
+                  ? formatNumber(slice.totalValues.historicalValues[idx])
                   : ''}
               </TableCell>
               <TableCell
@@ -167,18 +162,12 @@ const DataTable = (props: DataTableProps) => {
               <TableCell>{forecastLabel}</TableCell>
               {slice.categoryValues.map((cat) => (
                 <TableCell key={`${cat.category.id}-f-${year}`}>
-                  {cat.forecastValues[idx]
-                    ? format.number(cat.forecastValues[idx], {
-                        maximumSignificantDigits: 2,
-                      })
-                    : ''}
+                  {cat.forecastValues[idx] ? formatNumber(cat.forecastValues[idx]) : ''}
                 </TableCell>
               ))}
               <TableCell>
                 {slice.totalValues?.forecastValues[idx]
-                  ? format.number(slice.totalValues?.forecastValues[idx], {
-                      maximumSignificantDigits: 2,
-                    })
+                  ? formatNumber(slice.totalValues.forecastValues[idx])
                   : ''}
               </TableCell>
               <TableCell

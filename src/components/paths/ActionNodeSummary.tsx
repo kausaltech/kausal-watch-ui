@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useReactiveVar } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 import { yearRangeVar } from '@common/apollo/paths-cache';
 
@@ -11,6 +11,7 @@ import type {
   GetInstanceContextQuery,
   GetNodeContentQuery,
 } from '@/common/__generated__/paths/graphql';
+import useNumberFormatter from '@/common/numbers';
 import ActionParameters from '@/components/paths/ActionParameters';
 import HighlightValue from '@/components/paths/HighlightValue';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
@@ -70,7 +71,7 @@ const ActionNodeSummary = (props: PathsActionNodeContentProps) => {
   const { categoryId, node, refetching = false, onLoaded, displayGoal } = props;
   const t = useTranslations();
   const theme = useTheme();
-  const format = useFormatter();
+  const formatNumber = useNumberFormatter({ scope: 'paths' });
   const yearRange = useReactiveVar(yearRangeVar);
   const pathsAction = new PathsActionNode(node);
 
@@ -87,9 +88,7 @@ const ActionNodeSummary = (props: PathsActionNodeContentProps) => {
         <ValuesHeader>{displayGoal?.label}</ValuesHeader>
         <SubValue>
           <HighlightValue
-            displayValue={
-              pathsAction.isEnabled() ? format.number(impact, { maximumSignificantDigits: 2 }) : '-'
-            }
+            displayValue={pathsAction.isEnabled() ? formatNumber(impact) : '-'}
             header={`${t('impact')} (${yearRange[1]})`}
             unit={pathsAction.getUnit() || ''}
             size="md"

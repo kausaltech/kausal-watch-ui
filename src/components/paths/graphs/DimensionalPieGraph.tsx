@@ -7,11 +7,12 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import chroma from 'chroma-js';
 import { isEqual } from 'lodash-es';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 import { activeGoalVar } from '@common/apollo/paths-cache';
 
 import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
+import useNumberFormatter from '@/common/numbers';
 //import type { InstanceGoal } from 'common/instance';
 import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';
 
@@ -41,7 +42,7 @@ const DimensionalPieGraph = ({
   colorChange: colorChangeProp = 0,
 }: DimensionalPieGraphProps) => {
   const t = useTranslations();
-  const format = useFormatter();
+  const formatNumber = useNumberFormatter({ scope: 'paths' });
   const theme = useTheme();
   const activeGoal = useReactiveVar(activeGoalVar);
   const cube = useMemo(() => new DimensionalMetric(metric), [metric]);
@@ -153,7 +154,7 @@ const DimensionalPieGraph = ({
         pieSegmentColors.push(chroma(segmentColor).brighten(colorChange).hex());
         pieSegmentHovers.push(
           `${yearData.allLabels.find((l) => l.id === rowId)?.label}, ${
-            datum && format.number(Math.abs(datum), { maximumSignificantDigits: 2 })
+            datum && formatNumber(Math.abs(datum))
           } ${datum && metric.unit.htmlShort}` || ''
         );
       }
@@ -167,7 +168,7 @@ const DimensionalPieGraph = ({
         return numSum + numValue;
       }, 0) || 0;
     const percentages = pieSegmentValues.map((value) =>
-      value ? format.number((value / total) * 100, { maximumSignificantDigits: 2 }) : null
+      value ? formatNumber((value / total) * 100) : null
     );
 
     // Create new labels with percentages
@@ -184,9 +185,7 @@ const DimensionalPieGraph = ({
               color: theme.graphColors.grey050,
             },
             showarrow: false,
-            text: `<b>${format.number(total, {
-              maximumSignificantDigits: 2,
-            })}</b>`,
+            text: `<b>${formatNumber(total)}</b>`,
             x: 0.5,
             y: 0.5,
           },
