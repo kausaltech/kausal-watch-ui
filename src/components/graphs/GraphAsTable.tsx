@@ -5,8 +5,8 @@ import { useTranslations } from 'next-intl';
 import { Button, Collapse, Table } from 'reactstrap';
 
 import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
-import { beautifyValue } from '@/common/data/format';
 import dayjs from '@/common/dayjs';
+import useNumberFormatter from '@/common/numbers';
 import Icon from '@/components/common/Icon';
 
 type XValue = string | number | Date;
@@ -98,7 +98,7 @@ function GraphAsTable({
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-
+  const formatNumber = useNumberFormatter();
   const isTime = data?.[0]?.xType === 'time';
 
   const { tableData, tableCategoryHeaders } = useMemo(() => {
@@ -198,7 +198,7 @@ function GraphAsTable({
                 <tr key={i}>
                   <th scope="row">{row.label}</th>
                   {row.values.map((value, j) => (
-                    <td key={j}>{beautifyValue(value, language)}</td>
+                    <td key={j}>{value ? formatNumber(value) : null}</td>
                   ))}
                 </tr>
               ))}

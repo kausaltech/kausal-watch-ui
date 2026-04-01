@@ -255,7 +255,6 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
   });
   const t = useTranslations();
 
-  const rounding = indicator.valueRounding ?? DEFAULT_ROUNDING;
   const { value, year } = getValue(indicator, valueType, isNormalized, defaultYear);
 
   if (value === null) {

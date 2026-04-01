@@ -4,9 +4,9 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useLocale, useTranslations } from 'next-intl';
 
+import useNumberFormatter from '@/common/numbers';
 import Icon from '@/components/common/Icon';
 
-import { beautifyValue } from '../../common/data/format';
 import dayjs from '../../common/dayjs';
 import type { DashboardBlock } from './DashboardRowBlock';
 
@@ -109,10 +109,10 @@ type DashboardIndicatorSummaryBlockProps = {
 };
 
 const DashboardIndicatorSummaryBlock = ({ indicator }: DashboardIndicatorSummaryBlockProps) => {
-  const locale = useLocale();
   const theme = useTheme();
   const t = useTranslations();
-
+  const indicatorValueRounding = indicator?.valueRounding ?? undefined;
+  const formatNumber = useNumberFormatter({ maximumSignificantDigits: indicatorValueRounding });
   if (!indicator) return null;
 
   const { name, description, latestValue, goals, unit } = indicator;
@@ -120,8 +120,7 @@ const DashboardIndicatorSummaryBlock = ({ indicator }: DashboardIndicatorSummary
 
   const shortUnit = unit?.shortName || unit?.name || '';
 
-  const latestFormatted =
-    latestValue?.value != null ? beautifyValue(latestValue.value, locale) : null;
+  const latestFormatted = latestValue?.value != null ? formatNumber(latestValue.value) : null;
 
   const latestYear = latestValue?.date ? dayjs(latestValue.date).format('YYYY') : null;
 
@@ -144,8 +143,7 @@ const DashboardIndicatorSummaryBlock = ({ indicator }: DashboardIndicatorSummary
 
   const selectedGoal = nextGoal ?? closestPastToLatest ?? validGoals.at(-1) ?? null;
 
-  const goalFormatted =
-    selectedGoal?.value != null ? beautifyValue(selectedGoal.value, locale) : null;
+  const goalFormatted = selectedGoal?.value != null ? formatNumber(selectedGoal.value) : null;
   const goalYear = selectedGoal?.__d ? selectedGoal.__d.format('YYYY') : null;
 
   const renderValue = (formatted: string | null) =>

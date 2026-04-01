@@ -2,13 +2,12 @@ import React from 'react';
 
 import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
-import { useLocale } from 'next-intl';
 import { readableColor } from 'polished';
 import { Card, CardBody, CardImgOverlay, CardTitle } from 'reactstrap';
 
-import { beautifyValue } from '@/common/data/format';
 import { getActionTermContext } from '@/common/i18n';
 import { IndicatorLink } from '@/common/links';
+import useNumberFormatter from '@/common/numbers';
 import { usePlan } from '@/context/plan';
 
 import { getIndicatorTranslation } from './IndicatorCard';
@@ -104,8 +103,7 @@ function IndicatorHighlightCard({
 }: IndicatorHighlightCardProps) {
   const t = useTranslations();
   const plan = usePlan();
-  const locale = useLocale();
-
+  const formatNumber = useNumberFormatter();
   // FIXME: It sucks that we only use the context for the translation key 'action'
   const indicatorType =
     level === 'action'
@@ -118,7 +116,7 @@ function IndicatorHighlightCard({
         <IndicatorBg $level={level} />
         <CardImgOverlay>
           <IndicatorValue $level={level} className="action-number">
-            {typeof value === 'number' ? beautifyValue(value, locale) : '-'}
+            {typeof value === 'number' ? formatNumber(value) : '-'}
             <IndicatorUnit>{unit === 'no unit' ? '' : unit}</IndicatorUnit>
           </IndicatorValue>
         </CardImgOverlay>
