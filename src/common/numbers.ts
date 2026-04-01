@@ -2,45 +2,11 @@ import { useCallback, useMemo } from 'react';
 
 import { useLocale } from 'next-intl';
 
+import { formatWithFormatter, makeFormatter } from '@common/utils/format';
+
 import { usePaths } from '@/context/paths/paths';
 
 export const DEFAULT_SIGNIFICANT_DIGITS = 2;
-
-function makeFormatter(
-  locale: string,
-  significantDigits?: number,
-  fractionDigits?: number
-): { format: (value: number) => string } {
-  // Clamp to Intl.NumberFormat valid ranges; treat out-of-range/zero as unset.
-  const sigDigits =
-    significantDigits && significantDigits >= 1 && significantDigits <= 21
-      ? significantDigits
-      : undefined;
-  const fracDigits =
-    fractionDigits !== undefined && fractionDigits >= 0 && fractionDigits <= 100
-      ? fractionDigits
-      : undefined;
-  if (typeof sigDigits === 'number' && typeof fracDigits === 'number') {
-    // Intl.NumberFormat can't apply both constraints simultaneously — significant digits wins.
-    // Instead: round to significant digits first, then cap fraction digits via the formatter.
-    const fracFormatter = new Intl.NumberFormat(locale, { maximumFractionDigits: fracDigits });
-    return {
-      format: (value) => fracFormatter.format(parseFloat(value.toPrecision(sigDigits))),
-    };
-  }
-  return new Intl.NumberFormat(locale, {
-    maximumFractionDigits: fracDigits,
-    maximumSignificantDigits: sigDigits,
-  });
-}
-
-function formatWithFormatter(
-  formatter: { format: (value: number) => string },
-  value: number | null | undefined
-): string {
-  if (value == null || Number.isNaN(value)) return '-';
-  return formatter.format(value);
-}
 
 /**
  * Returns a locale-aware axis label formatter for ECharts.
