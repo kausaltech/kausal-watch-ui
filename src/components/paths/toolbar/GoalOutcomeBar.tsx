@@ -2,7 +2,7 @@ import { NetworkStatus, gql, useQuery, useReactiveVar } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { max, min, sortBy } from 'lodash-es';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 import { Button, CardBody, UncontrolledCollapse } from 'reactstrap';
 
@@ -13,6 +13,7 @@ import type {
   GetInstanceGoalOutcomeQueryVariables,
 } from '@/common/__generated__/paths/graphql';
 import type { TFunction } from '@/common/i18n';
+import useNumberFormatter from '@/common/numbers';
 import Icon from '@/components/common/Icon';
 import { usePaths } from '@/context/paths/paths';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
@@ -155,7 +156,7 @@ const Card = styled.div`
   padding: 1rem;
 `;
 
-type Formatter = ReturnType<typeof useFormatter>;
+type Formatter = (value: number) => string;
 
 type BarWithLabelProps = {
   label: string;
@@ -188,8 +189,7 @@ function BarWithLabel(props: BarWithLabelProps) {
       >
         <Label>{label}</Label>
         <Value>
-          {format.number(value, { maximumSignificantDigits: 2 })}{' '}
-          <Unit dangerouslySetInnerHTML={{ __html: unit }} />
+          {format(value)} <Unit dangerouslySetInnerHTML={{ __html: unit }} />
         </Value>
       </BarLabel>
     </EmissionBar>
@@ -246,7 +246,7 @@ type GoalOutcomeBarBar = {
 function GoalOutcomeBar(props: GoalOutcomeBarProps) {
   const { compact } = props;
   const t = useTranslations();
-  const format = useFormatter();
+  const numberFormatter = useNumberFormatter({ scope: 'paths' });
   const theme = useTheme();
   const paths = usePaths();
   const activeScenario = useReactiveVar(activeScenarioVar);
@@ -350,16 +350,10 @@ function GoalOutcomeBar(props: GoalOutcomeBarProps) {
     activeScenario.name,
     activeGoal.label || '',
     yearRange[1],
-    `${format.number(missingFromTarget, {
-      maximumSignificantDigits: 2,
-    })} ${longUnit}`,
-    `${format.number(comparisonActual.actual!, {
-      maximumSignificantDigits: 2,
-    })} ${longUnit}`,
+    `${numberFormatter(missingFromTarget)} ${longUnit}`,
+    `${numberFormatter(comparisonActual.actual!)} ${longUnit}`,
     comparisonGoal.year,
-    `${format.number(comparisonGoal.goal!, {
-      maximumSignificantDigits: 2,
-    })} ${longUnit}`,
+    `${numberFormatter(comparisonGoal.goal!)} ${longUnit}`,
     t
   );
 
@@ -374,7 +368,7 @@ function GoalOutcomeBar(props: GoalOutcomeBarProps) {
                 key={bar.label}
                 placement={index}
                 zeroOffset={zeroOffset}
-                format={format}
+                format={numberFormatter}
               />
             ))}
           </EmissionsBar>
@@ -399,7 +393,7 @@ function GoalOutcomeBar(props: GoalOutcomeBarProps) {
                         key={bar.label}
                         placement={index}
                         zeroOffset={zeroOffset}
-                        format={format}
+                        format={numberFormatter}
                       />
                     ))}
                   </EmissionsBar>
