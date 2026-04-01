@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { DashboardIndicatorBlockFragmentFragment as TDashboardIndicatorLineChartBlock } from '@/common/__generated__/graphql';
+import useNumberFormatter from '@/common/numbers';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
@@ -36,6 +37,12 @@ const DashboardIndicatorLineChartBlock = ({
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
+  const formatValue = useNumberFormatter({
+    maximumSignificantDigits: indicator?.valueRounding ?? undefined,
+  });
+  const formatAxisValue = useNumberFormatter({
+    maximumSignificantDigits: indicator?.ticksRounding ?? 100,
+  });
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
   const unit = indicator?.unit?.name ?? '';
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
@@ -121,14 +128,7 @@ const DashboardIndicatorLineChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'line' },
-      formatter: buildTooltipFormatter(
-        unit,
-        legendData,
-        t,
-        dimension,
-        indicator?.valueRounding,
-        timeResolution
-      ),
+      formatter: buildTooltipFormatter(unit, legendData, t, formatValue, dimension, timeResolution),
     },
     grid: {
       left: 20,
@@ -143,7 +143,12 @@ const DashboardIndicatorLineChartBlock = ({
       boundaryGap: false,
       axisLabel: { color: theme.textColor.primary },
     },
-    yAxis: buildYAxisConfig(indicator?.unit?.name ?? '', indicator, theme.textColor.primary),
+    yAxis: buildYAxisConfig(
+      indicator?.unit?.name ?? '',
+      formatAxisValue,
+      indicator,
+      theme.textColor.primary
+    ),
     series: [...seriesLines, ...seriesTotal, ...goalSeries, ...trendSeries],
   };
 
