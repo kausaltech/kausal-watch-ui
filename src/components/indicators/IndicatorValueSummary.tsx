@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 
 import {
   IndicatorDesiredTrend,
@@ -10,62 +10,20 @@ import {
   IndicatorNonQuantifiedGoal,
   IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
-import useNumberFormatter from '@/common/numbers';
 import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
 
 import dayjs from '../../common/dayjs';
+import {
+  ValueBlock,
+  ValueDate,
+  ValueDisplay,
+  ValueLabel,
+  ValueSummary,
+  ValueUnit,
+} from './IndicatorSummary.styles';
 
-const ValueSummary = styled.div`
-  display: flex;
-  gap: ${(props) => props.theme.spaces.s100};
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: stretch;
-  text-align: left;
-  margin-bottom: ${(props) => props.theme.spaces.s100};
-  padding-top: ${(props) => props.theme.spaces.s100};
-  border-top: 1px solid ${(props) => props.theme.graphColors.grey030};
-  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey030};
-`;
-
-const ValueBlock = styled.div`
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-`;
-
-const ValueLabel = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s050};
-  font-size: ${(props) => props.theme.fontSizeBase};
-  font-weight: ${(props) => props.theme.fontWeightBold};
-  line-height: ${(props) => props.theme.lineHeightSm};
-`;
-
-const ValueDate = styled.div`
-  font-size: ${(props) => props.theme.fontSizeSm};
-  color: ${(props) => props.theme.themeColors.dark};
-`;
-
-const ValueDisplay = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  font-size: ${(props) => props.theme.fontSizeLg};
-  font-weight: ${(props) => props.theme.fontWeightBold};
-  line-height: ${(props) => props.theme.lineHeightSm};
-  margin-bottom: ${(props) => props.theme.spaces.s100};
-`;
-
-const ValueUnit = styled.span`
-  margin: 0 0.5em 0 0.25em;
-  font-size: ${(props) => props.theme.fontSizeBase};
-  font-weight: ${(props) => props.theme.fontWeightNormal};
-  color: ${(props) => props.theme.themeColors.dark};
-`;
+const DEFAULT_ROUNDING = 2;
 
 const ValueChange = styled.div`
   margin-top: ${(props) => props.theme.spaces.s050};
@@ -225,7 +183,7 @@ export type ValueSummaryOptions = {
   goalGap: {
     show: boolean | null;
   };
-  valueRounding: number | null | undefined;
+  valueRounding: number | null;
 };
 
 interface IndicatorValueSummaryProps {
@@ -234,18 +192,39 @@ interface IndicatorValueSummaryProps {
   goals: Indicator['goals'];
   unit: Indicator['unit'];
   desiredTrend?: Indicator['desiredTrend'];
-  options: ValueSummaryOptions;
+  options?: ValueSummaryOptions;
 }
 
 function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
   const t = useTranslations();
   const theme = useTheme();
+  const format = useFormatter();
   const { timeResolution, values, goals, unit, desiredTrend, options } = props;
-  const rounding = options?.valueRounding;
-  const formatNumber = useNumberFormatter({ maximumSignificantDigits: rounding ?? undefined });
 
+  const rounding = options?.valueRounding ?? DEFAULT_ROUNDING;
   // Use default values for legacy support if options are not provided
-  const displayOptions: ValueSummaryOptions = options;
+  const displayOptions: ValueSummaryOptions = options ?? {
+    referenceValue: {
+      show: true,
+      year: null,
+      defaultReferenceValue: null,
+    },
+    currentValue: {
+      show: false,
+    },
+    goalValue: {
+      show: true,
+      defaultGoalYear: null,
+    },
+    goalGap: {
+      show: true,
+    },
+    nonQuantifiedGoal: {
+      trend: null,
+      date: null,
+    },
+    valueRounding: DEFAULT_ROUNDING,
+  };
 
   const desirableDirection = determineDesirableDirection(desiredTrend, values, goals);
   const unitLabelRaw = unit.shortName || unit.name;
@@ -338,14 +317,16 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
         <ValueDate>{dayjs(referenceValue.date).format(timeFormat)}</ValueDate>
         <ValueDisplay>
           <div>
-            {formatNumber(referenceValue.value)}
+            {format.number(referenceValue.value, { maximumSignificantDigits: rounding })}
             <ValueUnit>{shortUnitName}</ValueUnit>
           </div>
         </ValueDisplay>
       </ValueBlock>
     ) : null;
 
-  const latestValueDisplay = formatNumber(latestValue.value);
+  const latestValueDisplay = format.number(latestValue.value, {
+    maximumSignificantDigits: rounding,
+  });
   const valueDisplay = displayOptions.currentValue.show ? (
     <ValueBlock>
       <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
@@ -359,7 +340,8 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
         {changeSymbol && absChange !== null && !displayOptions.referenceValue.show && (
           <ValueChange color={changeColor}>
             <ChangeSymbol>{changeSymbol}</ChangeSymbol>
-            <span>{formatNumber(absChange)}</span> <small>{diffUnitName}</small>
+            <span>{format.number(absChange, { maximumSignificantDigits: rounding })}</span>{' '}
+            <small>{diffUnitName}</small>
           </ValueChange>
         )}
       </ValueDisplay>
@@ -398,7 +380,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
     );
   } else if (displayGoal && displayOptions.goalValue.show) {
     const nextGoalDate = dayjs(displayGoal.date).format(timeFormat);
-    const nextGoalValue = formatNumber(displayGoal.value);
+    const nextGoalValue = format.number(displayGoal.value, { maximumSignificantDigits: rounding });
     const DesiredTrendIcon =
       desiredTrend === IndicatorDesiredTrend.Increasing ? (
         <TrendIcon name="arrow-up" />
@@ -439,7 +421,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
         <ValueDisplay>
           <div>
             {goalReached ? '' : prefix}
-            {formatNumber(Math.abs(difference))}
+            {format.number(Math.abs(difference), { maximumSignificantDigits: rounding })}
             <span style={{ display: 'inline-flex' }}>
               <ValueUnit>{diffUnitName}</ValueUnit>
               {isPercentagePoint && (

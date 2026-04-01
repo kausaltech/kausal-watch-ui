@@ -7,6 +7,14 @@ import type {
 } from '@/common/__generated__/graphql';
 
 import PopoverTip from '../common/PopoverTip';
+import {
+  ValueBlock,
+  ValueDate,
+  ValueDisplay,
+  ValueLabel,
+  ValueSummary,
+  ValueUnit,
+} from './IndicatorSummary.styles';
 import { getComputedMetricSeries } from './indicatorFactorUtils';
 
 const ContentBlockWrapper = styled.div`
@@ -35,57 +43,6 @@ const MetricTitle = styled.h3`
   font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightSm};
-`;
-
-const ValueSummary = styled.div`
-  display: flex;
-  gap: ${(props) => props.theme.spaces.s100};
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: stretch;
-  text-align: left;
-  margin-bottom: ${(props) => props.theme.spaces.s100};
-  padding-top: ${(props) => props.theme.spaces.s100};
-  border-top: 1px solid ${(props) => props.theme.graphColors.grey030};
-  border-bottom: 1px solid ${(props) => props.theme.graphColors.grey030};
-`;
-
-const ValueBlock = styled.div`
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-`;
-
-const ValueLabel = styled.div`
-  margin-bottom: ${(props) => props.theme.spaces.s050};
-  font-size: ${(props) => props.theme.fontSizeBase};
-  font-weight: ${(props) => props.theme.fontWeightBold};
-  line-height: ${(props) => props.theme.lineHeightSm};
-`;
-
-const ValueDate = styled.div`
-  font-size: ${(props) => props.theme.fontSizeSm};
-  color: ${(props) => props.theme.themeColors.dark};
-`;
-
-const ValueDisplay = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  font-size: ${(props) => props.theme.fontSizeLg};
-  font-weight: ${(props) => props.theme.fontWeightBold};
-  line-height: ${(props) => props.theme.lineHeightSm};
-  margin-bottom: ${(props) => props.theme.spaces.s100};
-`;
-
-const ValueUnit = styled.span`
-  margin: 0 0.5em 0 0.25em;
-  font-size: ${(props) => props.theme.fontSizeBase};
-  font-weight: ${(props) => props.theme.fontWeightNormal};
-  color: ${(props) => props.theme.themeColors.dark};
 `;
 
 type Props = {
