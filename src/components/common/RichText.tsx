@@ -143,12 +143,16 @@ const CompressIcon = styled(ICompress)`
 const RichTextImageWrapper = styled.span`
   position: relative;
   display: inline-block;
-  margin: 0;
 
+  /* Reset the top margin on the inner image so the ImageCredit overlay
+     (absolutely positioned at top:0) sits on the image, not in the
+     margin gap above it. The global .richtext-image rule sets
+     margin: s300 auto; we preserve the bottom margin for spacing.
+     [data-rmiz] is the wrapper added by react-medium-image-zoom. */
   > img,
   > [data-rmiz] img {
     display: block;
-    margin: 0;
+    margin-top: 0;
   }
 `;
 
