@@ -41,6 +41,8 @@ export const GET_INDICATOR_DETAILS = gql`
             ...IndicatorValueSummaryContentBlockFragment
           }
           ... on IndicatorFactorValueSummaryContentBlock {
+            id
+            blockType
             fieldLabel
             fieldHelpText
           }
