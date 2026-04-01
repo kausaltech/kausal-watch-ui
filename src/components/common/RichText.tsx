@@ -142,14 +142,12 @@ const CompressIcon = styled(ICompress)`
 
 const RichTextImageWrapper = styled.figure`
   position: relative;
-  margin: 0;
-`;
+  display: inline-block;
 
-const StyledImageCredit = styled(ImageCredit)`
-  // Align the top of the credit with the top margin of the image defined in the global .richtext-image styles.
-  // Without this, the credit would be rendered above the image. It's slightly hacky but allows us to keep
-  // the image classes at the img tag level without having to restructure the layout.
-  top: ${({ theme }) => theme.spaces.s300};
+  img {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 function RichTextImage(props: RichTextImageProps) {
@@ -160,7 +158,7 @@ function RichTextImage(props: RichTextImageProps) {
     alt,
     height,
     width,
-    class: className,
+    class: className = 'richtext-image full-width',
     'data-original-src': originalSrc,
     'data-original-width': originalWidth,
     'data-original-height': originalHeight,
@@ -183,7 +181,8 @@ function RichTextImage(props: RichTextImageProps) {
       alt={alt || 'Image'}
       height={height}
       width={width}
-      className={className || 'richtext-image full-width'}
+      // Apply image classes to the parent wrapper if grouped with an imageCredit
+      className={imageCredit ? undefined : className}
       {...rest}
     />
   );
@@ -196,9 +195,9 @@ function RichTextImage(props: RichTextImageProps) {
 
   if (imageCredit) {
     return (
-      <RichTextImageWrapper>
+      <RichTextImageWrapper className={className}>
         {zoomedElement}
-        <StyledImageCredit as="figcaption">{`${creditLabel}: ${imageCredit}`}</StyledImageCredit>
+        <ImageCredit as="figcaption">{`${creditLabel}: ${imageCredit}`}</ImageCredit>
       </RichTextImageWrapper>
     );
   }
