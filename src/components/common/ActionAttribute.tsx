@@ -1,7 +1,6 @@
 import React, { type ReactElement } from 'react';
 
 import styled from '@emotion/styled';
-import { useLocale } from 'next-intl';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -10,6 +9,7 @@ import type {
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
 } from '@/common/__generated__/graphql';
+import useNumberFormatter from '@/common/numbers';
 import { CategoryContent } from '@/components/actions/CategoryTags';
 import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
@@ -94,9 +94,11 @@ const StyledChipValue = styled.span`
  * Extracts the display value from an attribute as plain text for chip rendering.
  */
 export function getAttributeValueText(
-  attribute: AttributesBlockAttributeFragment | AttributesBlockAttributeWithNestedTypeFragment,
-  locale?: string
+  attribute: AttributesBlockAttributeFragment | AttributesBlockAttributeWithNestedTypeFragment
 ): string | null {
+  // maximumFractionDigits: 100 ensures that the number is not rounded
+  const formatNumber = useNumberFormatter({ maximumFractionDigits: 100 });
+
   switch (attribute.__typename) {
     case 'AttributeChoice':
       return attribute.choice?.name ?? null;
@@ -107,7 +109,7 @@ export function getAttributeValueText(
     case 'AttributeNumericValue':
       const unit = attribute.type.unit?.shortName ?? attribute.type.unit?.name ?? '';
       return attribute.numericValue != null
-        ? `${attribute.numericValue.toLocaleString(locale)}${unit ? ` ${unit}` : ''}`
+        ? `${formatNumber(attribute.numericValue)}${unit ? ` ${unit}` : ''}`
         : null;
     case 'AttributeCategoryChoice':
       return attribute.categories.map((cat) => cat.name).join(', ') || null;
@@ -133,8 +135,7 @@ type AttributeContentNestedTypeProps = {
 };
 
 const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTypeProps) => {
-  const locale = useLocale();
-
+  const formatNumber = useNumberFormatter({ maximumFractionDigits: 100 });
   const { attribute, attributeType, fontSize, notitle = false, variant = 'default' } = props;
   const type = attributeType ?? attribute.type;
   const isMinimized = variant === 'minimized';
@@ -142,7 +143,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
 
   // Chip variant with a simple "label: value" format
   if (variant === 'chip') {
-    const chipValue = getAttributeValueText(attribute, locale);
+    const chipValue = getAttributeValueText(attribute);
 
     if (!chipValue) return null;
 
@@ -211,7 +212,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
       );
       break;
     case 'AttributeNumericValue':
-      const formattedValue = attribute.numericValue?.toLocaleString(locale);
+      const formattedValue = formatNumber(attribute.numericValue);
 
       dataElement = (
         <div>
