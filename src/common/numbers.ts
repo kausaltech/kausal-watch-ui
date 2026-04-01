@@ -11,17 +11,26 @@ function makeFormatter(
   significantDigits?: number,
   fractionDigits?: number
 ): { format: (value: number) => string } {
-  if (typeof significantDigits === 'number' && typeof fractionDigits === 'number') {
+  // Clamp to Intl.NumberFormat valid ranges; treat out-of-range/zero as unset.
+  const sigDigits =
+    significantDigits && significantDigits >= 1 && significantDigits <= 21
+      ? significantDigits
+      : undefined;
+  const fracDigits =
+    fractionDigits !== undefined && fractionDigits >= 0 && fractionDigits <= 100
+      ? fractionDigits
+      : undefined;
+  if (typeof sigDigits === 'number' && typeof fracDigits === 'number') {
     // Intl.NumberFormat can't apply both constraints simultaneously — significant digits wins.
     // Instead: round to significant digits first, then cap fraction digits via the formatter.
-    const fracFormatter = new Intl.NumberFormat(locale, { maximumFractionDigits: fractionDigits });
+    const fracFormatter = new Intl.NumberFormat(locale, { maximumFractionDigits: fracDigits });
     return {
-      format: (value) => fracFormatter.format(parseFloat(value.toPrecision(significantDigits))),
+      format: (value) => fracFormatter.format(parseFloat(value.toPrecision(sigDigits))),
     };
   }
   return new Intl.NumberFormat(locale, {
-    maximumFractionDigits: fractionDigits,
-    maximumSignificantDigits: significantDigits,
+    maximumFractionDigits: fracDigits,
+    maximumSignificantDigits: sigDigits,
   });
 }
 
