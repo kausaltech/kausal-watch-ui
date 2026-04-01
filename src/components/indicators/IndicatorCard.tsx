@@ -1,7 +1,7 @@
 import React, { type PropsWithChildren } from 'react';
 
 import styled from '@emotion/styled';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 
@@ -11,6 +11,7 @@ import dayjs from '@/common/dayjs';
 import type { TFunction } from '@/common/i18n';
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorLink } from '@/common/links';
+import useNumberFormatter from '@/common/numbers';
 import { usePlan } from '@/context/plan';
 
 const IndicatorValueDisplay = styled.div`
@@ -252,7 +253,8 @@ function IndicatorCard({
 }: IndicatorCardProps) {
   const plan = usePlan();
   const t = useTranslations();
-  const locale = useLocale();
+  // FIXME: We use default rounding here, indicator's custom rounding is not available for this component
+  const formatNumber = useNumberFormatter();
   const indicatorTermContext = getIndicatorTermContext(plan);
 
   // FIXME: It sucks that we only use the context for the translation key 'action'
@@ -274,11 +276,11 @@ function IndicatorCard({
           </div>
           {latestValue && (
             <IndicatorValue
-              latestValue={latestValue.value.toLocaleString(locale)}
+              latestValue={formatNumber(latestValue.value)}
               date={latestValue.date}
               unit={latestValue.unit}
               resolution={resolution}
-              goalValue={goalValue ? goalValue.value.toLocaleString(locale) : null}
+              goalValue={goalValue ? formatNumber(goalValue.value) : null}
               goalDate={goalValue ? goalValue.date : null}
             />
           )}
