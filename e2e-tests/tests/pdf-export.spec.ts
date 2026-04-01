@@ -177,6 +177,12 @@ test.describe('pdf-export', { annotation: annotations }, () => {
       data: { path: '/indicators/1', locale: 'en' },
     });
 
+    // The route returns 503 when GOTENBERG_URL is not configured,
+    // before it ever reaches the path validation that returns 403.
+    if (res.status() === 503) {
+      test.skip(true, 'PDF export service is not configured');
+    }
+
     expect(res.status()).toBe(403);
     const body = await res.json();
     expect(body.error).toContain('action detail pages');
