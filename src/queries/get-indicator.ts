@@ -26,7 +26,9 @@ export const GET_INDICATOR_DETAILS = gql`
             fieldHelpText
           }
           ... on IndicatorVisualizationContentBlock {
+            id
             fieldLabel
+            fieldHelpText
             showFactorValues
           }
         }
@@ -47,7 +49,9 @@ export const GET_INDICATOR_DETAILS = gql`
             fieldHelpText
           }
           ... on IndicatorVisualizationContentBlock {
+            id
             fieldLabel
+            fieldHelpText
             showFactorValues
           }
         }

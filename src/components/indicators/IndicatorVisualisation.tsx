@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { captureMessage } from '@sentry/nextjs';
 import { isEqual } from 'lodash-es';
 import { useLocale, useTranslations } from 'next-intl';
@@ -392,7 +393,144 @@ export type IndicatorVisualisationProps = {
   showReference?: boolean;
   showGraph?: boolean;
   showTable?: boolean;
+  showFactorValues?: boolean;
 };
+
+const FactorChartTitle = styled.div`
+  margin-top: ${(props) => props.theme.spaces.s200};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+  font-size: ${(props) => props.theme.fontSizeBase};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+`;
+
+type FactorChartsProps = {
+  datasets: NonNullable<IndicatorGraphDataQuery['indicator']>['datasets'];
+  timeResolution: NonNullable<IndicatorGraphDataQuery['indicator']>['timeResolution'];
+  values: NonNullable<IndicatorGraphDataQuery['indicator']>['values'];
+  valueRounding?: number | null;
+  showGraph: boolean;
+  showTable: boolean;
+  unitLabel: string;
+  mainXAxisRange?: { min: number; max: number };
+  language: string;
+};
+
+function FactorCharts({
+  datasets,
+  timeResolution,
+  values,
+  valueRounding,
+  showGraph,
+  showTable,
+  unitLabel,
+  mainXAxisRange,
+  language,
+}: FactorChartsProps) {
+  const t = useTranslations();
+
+  const indicatorValueByYear = new Map<string, number | null>();
+  values.forEach((v) => {
+    if (!v.date) return;
+    indicatorValueByYear.set(v.date.split('-')[0], v.value);
+  });
+
+  return (
+    <>
+      {datasets?.flatMap((dataset) => {
+        const computedMetrics = dataset.schema?.metrics.filter((m) => m.isComputed) ?? [];
+        return computedMetrics.map((metric) => {
+          const points = dataset.computedDataPoints
+            .filter((p) => p.metric.label === metric.label)
+            .sort((a, b) => a.date.localeCompare(b.date));
+          if (points.length === 0) return null;
+
+          const factorTrace = {
+            xType: 'time' as const,
+            name: capitalizeFirstLetter(t('value')),
+            dataType: 'total' as const,
+            x: points.map((p) =>
+              timeResolution === 'YEAR' ? `${p.date.split('-')[0]}-1-1` : p.date
+            ),
+            y: points.map((p) => p.value),
+          };
+
+          const factorX: string[] = [];
+          const factorY: Array<number | null> = [];
+          points.forEach((p) => {
+            const yearKey = p.date.split('-')[0];
+            const indicatorVal = indicatorValueByYear.get(yearKey) ?? null;
+            const dateStr = timeResolution === 'YEAR' ? `${yearKey}-1-1` : p.date;
+            factorX.push(dateStr);
+            factorY.push(
+              p.value !== null && indicatorVal !== null && indicatorVal !== 0
+                ? p.value / indicatorVal
+                : null
+            );
+          });
+          const factorExtraColumn = {
+            header: `Factor (${metric.unit}/${unitLabel})`,
+            x: factorX,
+            y: factorY,
+          };
+
+          const pointValues = points.map((p) => p.value).filter((v): v is number => v !== null);
+          const factorBounds = calculateBounds(pointValues) ?? { min: 0, max: 0 };
+          const delta = factorBounds.max - factorBounds.min;
+          const paddedBounds = {
+            min: factorBounds.min - delta * 0.1,
+            max: factorBounds.max + delta * 0.1,
+          };
+          const factorYRange = {
+            unit: metric.unit,
+            minDigits: 0,
+            maxDigits: 0,
+            ticksCount: 2,
+            ticksRounding: undefined,
+            valueRounding: valueRounding ?? undefined,
+            includeZero: false,
+            range: [paddedBounds.min, paddedBounds.max],
+          };
+          const factorSpec = { axes: [['time', 1]] as [string, number][] };
+
+          return (
+            <div key={`${dataset.uuid}-${metric.label}`}>
+              <FactorChartTitle>{metric.label}</FactorChartTitle>
+              {showGraph && (
+                <div aria-hidden="true">
+                  <IndicatorGraph
+                    specification={factorSpec}
+                    yRange={factorYRange}
+                    timeResolution={timeResolution as 'YEAR' | 'MONTH'}
+                    traces={[factorTrace]}
+                    goalTraces={[]}
+                    trendTrace={null}
+                    title={null}
+                    desiredTrend={null}
+                    referenceValue={null}
+                    nonQuantifiedGoal={{ trend: null, date: null }}
+                    height={225}
+                    xAxisRange={mainXAxisRange}
+                  />
+                </div>
+              )}
+              {showTable && (
+                <GraphAsTable
+                  specification={factorYRange}
+                  timeResolution={timeResolution}
+                  data={[factorTrace]}
+                  goalTraces={[]}
+                  title={metric.label}
+                  language={language}
+                  extraColumns={[factorExtraColumn]}
+                />
+              )}
+            </div>
+          );
+        });
+      })}
+    </>
+  );
+}
 
 function IndicatorVisualisation({
   indicatorId,
@@ -401,6 +539,7 @@ function IndicatorVisualisation({
   showReference = false,
   showGraph = true,
   showTable = true,
+  showFactorValues = false,
 }: IndicatorVisualisationProps) {
   const plan = usePlan();
   const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
@@ -516,7 +655,7 @@ function IndicatorVisualisation({
   );
   // If all traces are "total" (no dimensions), keep them regardless of showTotalLine.
   // Otherwise, filter out the total when showTotalLine is false.
-  const hasOnlyTotalTraces = allTraces.every((t) => t.dataType === 'total');
+  const hasOnlyTotalTraces = allTraces.every((trace) => trace.dataType === 'total');
   const traces = hasOnlyTotalTraces
     ? allTraces
     : allTraces.filter((t) => t.dataType !== 'total' || showTotalLine);
@@ -524,6 +663,18 @@ function IndicatorVisualisation({
   const [goalTraces, goalBounds] = normalizeByPopulation
     ? [[], []]
     : generateGoalTraces(indicator, scenarios, i18n);
+
+  // Get the x-axis date range from the main chart for use by factor charts
+  // This keeps axes consistent for charts displayed on top of each other
+  const timestamps = traces
+    .flatMap((trace) => new Date(String(trace.x)).getTime())
+    .filter((trace) => !isNaN(trace));
+
+  const mainXAxisRange =
+    timestamps.length === 0
+      ? undefined
+      : { min: Math.min(...timestamps), max: Math.max(...timestamps) };
+
   const [trendTrace, trendBounds] =
     normalizeByPopulation ||
     !hasTimeDimension ||
@@ -693,6 +844,19 @@ function IndicatorVisualisation({
           data={traces}
           goalTraces={goalTraces}
           title={plotTitle}
+          language={i18n.language}
+        />
+      )}
+      {showFactorValues && indicator.datasets && (
+        <FactorCharts
+          datasets={indicator.datasets}
+          timeResolution={indicator.timeResolution}
+          values={indicator.values}
+          valueRounding={indicator.valueRounding}
+          showGraph={showGraph}
+          showTable={showTable}
+          unitLabel={unitLabel}
+          mainXAxisRange={mainXAxisRange}
           language={i18n.language}
         />
       )}
