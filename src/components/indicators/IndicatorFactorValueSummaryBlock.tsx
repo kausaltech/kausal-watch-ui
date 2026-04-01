@@ -93,7 +93,7 @@ type Props = {
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
 };
 
-const getYear = (date: string) => new Date(date).getFullYear().toString();
+const getYear = (date: string) => date.split('-')[0] ?? '';
 
 export default function IndicatorFactorValueSummaryBlock({ block, indicator }: Props) {
   const format = useFormatter();
