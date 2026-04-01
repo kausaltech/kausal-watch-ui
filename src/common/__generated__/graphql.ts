@@ -14530,7 +14530,7 @@ export type IndicatorDetailsQuery = (
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, sourceField: IndicatorDetailsFieldName | null }
         & { __typename: 'IndicatorContentBlock' }
       ) | (
-        { fieldLabel: string | null, fieldHelpText: string | null }
+        { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null }
         & { __typename: 'IndicatorFactorValueSummaryContentBlock' }
       ) | (
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, defaultGoalYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
