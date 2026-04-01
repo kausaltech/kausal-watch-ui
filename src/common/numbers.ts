@@ -27,9 +27,9 @@ function makeFormatter(
 
 function formatWithFormatter(
   formatter: { format: (value: number) => string },
-  value: number
+  value: number | null | undefined
 ): string {
-  if (!value) return '-';
+  if (value == null || Number.isNaN(value)) return '-';
   return formatter.format(value);
 }
 
