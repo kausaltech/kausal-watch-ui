@@ -409,15 +409,33 @@ const IndicatorModalContentBlock = ({
       return <IndicatorValueSummaryBlock block={block} indicator={indicator} />;
     case 'IndicatorFactorValueSummaryContentBlock':
       return <IndicatorFactorValueSummaryBlock block={block} indicator={indicator} />;
-    case 'IndicatorVisualizationContentBlock':
-      return (
+    case 'IndicatorVisualizationContentBlock': {
+      const visualisation = (
         <IndicatorVisualisation
           indicatorId={indicator.id}
           useLegacyGraph={false}
           showReference={true}
           {...componentProps?.['IndicatorVisualisation']}
+          showFactorValues={block.showFactorValues ?? false}
         />
       );
+
+      if (!block.fieldLabel) {
+        return visualisation;
+      }
+
+      return (
+        <ContentBlockWrapper>
+          <BlockLabel>
+            {block.fieldLabel}
+            {block.fieldHelpText && block.id && (
+              <PopoverTip content={block.fieldHelpText} identifier={block.id} />
+            )}
+          </BlockLabel>
+          {visualisation}
+        </ContentBlockWrapper>
+      );
+    }
   }
 };
 

@@ -78,6 +78,25 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
       }
       nonQuantifiedGoal
       nonQuantifiedGoalDate
+      datasets {
+        uuid
+        schema {
+          uuid
+          metrics {
+            label
+            unit
+            isComputed
+          }
+        }
+        computedDataPoints {
+          date
+          value
+          metric {
+            label
+            unit
+          }
+        }
+      }
       unit {
         id
         name
