@@ -42,25 +42,30 @@ export function useAxisLabelFormatter() {
  * formatNumber(1234.5, undefined, 0)               // override: round to integer
  */
 export default function useNumberFormatter(
-  options:
-    | { scope: 'paths' }
-    | { maximumSignificantDigits?: number; maximumFractionDigits?: number } = {}
+  options: {
+    scope?: 'paths';
+    maximumSignificantDigits?: number;
+    maximumFractionDigits?: number;
+  } = {}
 ) {
   const locale = useLocale();
   const pathsInstance = usePaths();
 
-  const isPathsScope = 'scope' in options && options.scope === 'paths';
-  const maximumSignificantDigits = isPathsScope
-    ? (pathsInstance?.instance.features.showSignificantDigits ?? undefined)
-    : 'maximumSignificantDigits' in options
+  const isPathsScope = options.scope === 'paths';
+  const maximumSignificantDigits =
+    typeof options.maximumSignificantDigits === 'number'
       ? options.maximumSignificantDigits
-      : undefined;
-  const maximumFractionDigits = isPathsScope
-    ? (pathsInstance?.instance.features.maximumFractionDigits ?? undefined)
-    : 'maximumFractionDigits' in options
+      : isPathsScope
+        ? (pathsInstance?.instance.features.showSignificantDigits ?? undefined)
+        : undefined;
+  const maximumFractionDigits =
+    typeof options.maximumFractionDigits === 'number'
       ? options.maximumFractionDigits
-      : undefined;
+      : isPathsScope
+        ? (pathsInstance?.instance.features.maximumFractionDigits ?? undefined)
+        : undefined;
 
+  // Create default formatter based on instance settings or options, memoized for performance.
   const formatter = useMemo(
     () =>
       makeFormatter(
@@ -72,6 +77,7 @@ export default function useNumberFormatter(
     [locale, maximumSignificantDigits, maximumFractionDigits]
   );
 
+  // If callback receives overrides, create a new formatter for that call; otherwise use the memoized default.
   return useCallback(
     (
       value: number,
