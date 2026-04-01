@@ -2,9 +2,9 @@ import { useCallback, useMemo } from 'react';
 
 import { useLocale } from 'next-intl';
 
-import { DEFAULT_SIGNIFICANT_DIGITS } from '@common/utils/format';
-
 import { usePaths } from '@/context/paths/paths';
+
+export const DEFAULT_SIGNIFICANT_DIGITS = 2;
 
 function makeFormatter(
   locale: string,
