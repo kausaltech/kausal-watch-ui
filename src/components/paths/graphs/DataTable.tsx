@@ -145,7 +145,7 @@ const DataTable = (props: DataTableProps) => {
                 </TableCell>
               ))}
               <TableCell>
-                {slice.totalValues?.historicalValues[idx]
+                {slice.totalValues?.historicalValues[idx] != null
                   ? formatNumber(slice.totalValues.historicalValues[idx])
                   : ''}
               </TableCell>
@@ -162,11 +162,11 @@ const DataTable = (props: DataTableProps) => {
               <TableCell>{forecastLabel}</TableCell>
               {slice.categoryValues.map((cat) => (
                 <TableCell key={`${cat.category.id}-f-${year}`}>
-                  {cat.forecastValues[idx] ? formatNumber(cat.forecastValues[idx]) : ''}
+                  {cat.forecastValues[idx] != null ? formatNumber(cat.forecastValues[idx]) : ''}
                 </TableCell>
               ))}
               <TableCell>
-                {slice.totalValues?.forecastValues[idx]
+                {slice.totalValues?.forecastValues[idx] != null
                   ? formatNumber(slice.totalValues.forecastValues[idx])
                   : ''}
               </TableCell>

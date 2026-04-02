@@ -198,7 +198,7 @@ function GraphAsTable({
                 <tr key={i}>
                   <th scope="row">{row.label}</th>
                   {row.values.map((value, j) => (
-                    <td key={j}>{value ? formatNumber(value) : null}</td>
+                    <td key={j}>{value != null ? formatNumber(value) : null}</td>
                   ))}
                 </tr>
               ))}

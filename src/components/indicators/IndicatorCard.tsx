@@ -280,8 +280,8 @@ function IndicatorCard({
               date={latestValue.date}
               unit={latestValue.unit}
               resolution={resolution}
-              goalValue={goalValue ? formatNumber(goalValue.value) : null}
-              goalDate={goalValue ? goalValue.date : null}
+              goalValue={goalValue != null ? formatNumber(goalValue.value) : null}
+              goalDate={goalValue != null ? goalValue.date : null}
             />
           )}
         </CardBody>

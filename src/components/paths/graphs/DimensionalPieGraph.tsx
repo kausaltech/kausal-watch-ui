@@ -168,7 +168,7 @@ const DimensionalPieGraph = ({
         return numSum + numValue;
       }, 0) || 0;
     const percentages = pieSegmentValues.map((value) =>
-      value ? formatNumber((value / total) * 100) : null
+      value != null ? formatNumber((value / total) * 100) : null
     );
 
     // Create new labels with percentages

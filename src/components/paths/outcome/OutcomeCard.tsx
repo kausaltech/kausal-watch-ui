@@ -256,7 +256,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
               {change ? (
                 <>
                   {change > 0 && <span>+</span>}
-                  {change ? <span>{`${formatNumber(change)}%`}</span> : <span>-</span>}
+                  {change != null ? <span>{`${formatNumber(change)}%`}</span> : <span>-</span>}
                 </>
               ) : (
                 <NoValue />

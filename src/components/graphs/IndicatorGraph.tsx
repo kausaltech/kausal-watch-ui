@@ -722,7 +722,7 @@ function IndicatorGraph({
         connectNulls: true,
         z: 1,
         tooltip: {
-          valueFormatter: (val: number | null) => (val ? formatNumber(val) : undefined),
+          valueFormatter: (val: number | null) => (val != null ? formatNumber(val) : undefined),
         },
       };
     });
@@ -765,7 +765,8 @@ function IndicatorGraph({
                   disabled: true,
                 },
                 tooltip: {
-                  valueFormatter: (val: number | null) => (val ? formatNumber(val) : undefined),
+                  valueFormatter: (val: number | null) =>
+                    val != null ? formatNumber(val) : undefined,
                 },
               },
             ];
@@ -787,7 +788,8 @@ function IndicatorGraph({
                   disabled: true,
                 },
                 tooltip: {
-                  valueFormatter: (val: number | null) => (val ? formatNumber(val) : undefined),
+                  valueFormatter: (val: number | null) =>
+                    val != null ? formatNumber(val) : undefined,
                 },
               },
             ]
@@ -840,7 +842,7 @@ function IndicatorGraph({
         axisPointer: {
           type: hasTimeDimension ? 'line' : 'shadow',
         },
-        valueFormatter: (value: number | null) => (value ? formatNumber(value) : ''),
+        valueFormatter: (value: number | null) => (value != null ? formatNumber(value) : ''),
         formatter: hasTimeDimension
           ? (params: unknown) => {
               if (!Array.isArray(params) || params.length === 0) return '';

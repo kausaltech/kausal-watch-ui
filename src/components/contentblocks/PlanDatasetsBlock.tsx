@@ -196,7 +196,7 @@ export default function PlanDatasetsBlock(props: PlanDatasetsBlockProps) {
                 <DataRow key={rowIndex}>
                   <th>{row.label}</th>
                   {row.cells?.map((cell, cellIndex) => (
-                    <td key={cellIndex}>{cell.value ? formatNumber(cell.value) : '-'}</td>
+                    <td key={cellIndex}>{cell.value != null ? formatNumber(cell.value) : '-'}</td>
                   ))}
                 </DataRow>
               ))}
