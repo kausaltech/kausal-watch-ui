@@ -12,6 +12,7 @@ import {
   IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';
+import useNumberFormatter from '@/common/numbers';
 
 import BadgeTooltip from '../common/BadgeTooltip';
 import Icon from '../common/Icon';
@@ -249,10 +250,11 @@ interface IndicatorValueCellProps {
 
 const IndicatorValueCell = (props: IndicatorValueCellProps) => {
   const { indicator, isNormalized, valueType, defaultYear, hideUnit } = props;
-  const format = useFormatter();
+  const formatNumber = useNumberFormatter({
+    maximumSignificantDigits: indicator.valueRounding ?? undefined,
+  });
   const t = useTranslations();
 
-  const rounding = indicator.valueRounding ?? DEFAULT_ROUNDING;
   const { value, year } = getValue(indicator, valueType, isNormalized, defaultYear);
 
   if (value === null) {
@@ -296,7 +298,7 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
 
   return (
     <CellContent $numeric={true}>
-      <Value>{format.number(value, { maximumSignificantDigits: rounding })}</Value>
+      <Value>{formatNumber(value)}</Value>
       {!hideUnit && <Unit>{unitName}</Unit>}
       {defaultYear && year && year !== defaultYear && (
         <>

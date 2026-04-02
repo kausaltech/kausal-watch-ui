@@ -2,7 +2,7 @@ import { memo, useMemo, useState } from 'react';
 
 import { useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Nav, NavItem, NavLink, TabContent } from 'reactstrap';
 
 import { activeGoalVar } from '@common/apollo/paths-cache';
@@ -11,6 +11,7 @@ import { getMetricChange, getMetricValue } from '@common/utils/paths/metric';
 
 import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
 import { PathsNodeLink } from '@/common/links';
+import useNumberFormatter from '@/common/numbers';
 import Icon from '@/components/common/Icon';
 import HighlightValue from '@/components/paths/HighlightValue';
 import ScenarioBadge from '@/components/paths/ScenarioBadge';
@@ -152,7 +153,7 @@ function OutcomeNodeContent({
   separateYears,
 }: OutcomeNodeContentProps) {
   const t = useTranslations();
-  const format = useFormatter();
+  const formatNumber = useNumberFormatter({ scope: 'paths' });
   const [activeTabId, setActiveTabId] = useState('graph');
   const paths = usePaths();
 
@@ -231,7 +232,6 @@ function OutcomeNodeContent({
   const unit = node.metric?.unit?.htmlLong || node.metric?.unit?.htmlShort;
   const showNodeDetails =
     !instance.features?.hideNodeDetails && instance.showOutcomeNodeDetails && node.shortDescription;
-
   return (
     <div role="tabpanel" id={`tabpanel-${node.id}`}>
       <CardSetHeader>
@@ -268,7 +268,7 @@ function OutcomeNodeContent({
             {nodesTotal && (
               <HighlightValue
                 className="figure"
-                displayValue={'' + format.number(nodesTotal, { maximumSignificantDigits: 2 })}
+                displayValue={formatNumber(nodesTotal)}
                 header={`${
                   isForecast ? t('table-scenario-forecast') : t('table-historical')
                 } ${endYear}`}

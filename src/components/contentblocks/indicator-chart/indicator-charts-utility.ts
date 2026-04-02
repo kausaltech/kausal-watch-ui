@@ -194,26 +194,14 @@ export function buildTrendSeries(
     : [];
 }
 
-export function buildValueFormatter(valueRounding?: number) {
-  return (value: number) => {
-    return valueRounding != null
-      ? value.toLocaleString(undefined, {
-          maximumSignificantDigits: valueRounding,
-        })
-      : `${value}`;
-  };
-}
-
 export function buildTooltipFormatter(
   unit: string,
   legendData: string[],
   t: TFunction,
+  formatValue: (value: number) => string,
   dimension?: { name: string },
-  valueRounding?: number,
   timeResolution?: string | null
 ) {
-  const formatValue = buildValueFormatter(valueRounding);
-
   return (params: any[]) => {
     const processedSeries = new Set<string>();
     const paramsArray = Array.isArray(params) ? params : [params];
@@ -257,11 +245,11 @@ export function buildTooltipFormatter(
 
 export function buildYAxisConfig(
   unit: string,
+  formatValue: (value: number) => string,
   indicator?: {
     minValue?: number | null;
     maxValue?: number | null;
     ticksCount?: number | null;
-    ticksRounding?: number | null;
   },
   color?: string
 ) {
@@ -275,14 +263,7 @@ export function buildYAxisConfig(
     },
     axisLabel: {
       color,
-      formatter: (value: number) => {
-        const rounding = indicator?.ticksRounding;
-        if (rounding != null) {
-          const rounded = Number(value).toPrecision(rounding);
-          return Number(rounded).toLocaleString();
-        }
-        return value;
-      },
+      formatter: formatValue,
     },
   };
 

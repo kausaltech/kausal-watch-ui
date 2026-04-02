@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { DatasetComponentOption } from 'echarts/components';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
 
 import { Chart, type ECOption } from '@common/components/Chart';
@@ -15,6 +15,7 @@ import type {
 } from '@/common/__generated__/graphql';
 import type { IndicatorCategoryRelationshipType } from '@/common/__generated__/graphql';
 import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
+import useNumberFormatter from '@/common/numbers';
 import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/utils/indicatorData';
 
@@ -81,7 +82,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   const { indicatorId, relationshipType } = props;
   const theme = useTheme();
   const t = useTranslations();
-  const format = useFormatter();
+  const formatNumber = useNumberFormatter({ scope: 'paths' });
   const plan = usePlan();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -339,9 +340,8 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
           // Only show label if it's the min or max value
           const tolerance = Math.abs(actualMax - actualMin) * 0.001; // Small tolerance for floating point comparison
           if (Math.abs(value - actualMin) < tolerance || Math.abs(value - actualMax) < tolerance) {
-            // Use useFormatter from next-intl for consistent internationalization
             // CSS fix handles Windows Edge spacing issues with thousand separators
-            return format.number(value);
+            return formatNumber(value);
           }
           return '';
         },
@@ -500,9 +500,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
           const dataValue =
             typedParam.seriesName === t('target') ? typedParam.value.goal : typedParam.value.value;
           if (dataValue !== null && dataValue !== undefined && typeof dataValue === 'number') {
-            result += `${typedParam.seriesName}: ${format.number(dataValue, {
-              maximumSignificantDigits: 2,
-            })} ${indicator.unit.shortName || indicator.unit.name}<br/>`;
+            result += `${typedParam.seriesName}: ${formatNumber(dataValue)} ${indicator.unit.shortName || indicator.unit.name}<br/>`;
           }
         });
         return result;

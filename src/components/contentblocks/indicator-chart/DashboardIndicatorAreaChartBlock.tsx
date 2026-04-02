@@ -16,6 +16,7 @@ import { useTranslations } from 'next-intl';
 import { Chart, type ECOption } from '@common/components/Chart';
 
 import { DashboardIndicatorAreaChartBlock as TDashboardIndicatorAreaChartBlock } from '@/common/__generated__/graphql';
+import useNumberFormatter from '@/common/numbers';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
@@ -34,6 +35,12 @@ type Props = TDashboardIndicatorAreaChartBlock;
 const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
+  const formatValue = useNumberFormatter({
+    maximumSignificantDigits: indicator?.valueRounding ?? undefined,
+  });
+  const formatAxisValue = useNumberFormatter({
+    maximumSignificantDigits: indicator?.ticksRounding ?? 100,
+  });
   const graphsTheme = theme.settings?.graphs ?? {};
   const unit = indicator?.unit?.name ?? '';
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
@@ -140,8 +147,8 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
         unit,
         legendLabels,
         t,
+        formatValue,
         dimension,
-        indicator?.valueRounding,
         timeResolution
       ),
     },
@@ -169,7 +176,12 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
         },
       },
     },
-    yAxis: buildYAxisConfig(indicator?.unit?.name ?? '', indicator, theme.textColor.primary),
+    yAxis: buildYAxisConfig(
+      indicator?.unit?.name ?? '',
+      formatAxisValue,
+      indicator,
+      theme.textColor.primary
+    ),
     series: [...seriesWithStack, ...trendSeries],
   };
 

@@ -13,6 +13,7 @@ import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { IndicatorDesiredTrend } from '@/common/__generated__/graphql';
 import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
+import useNumberFormatter from '@/common/numbers';
 
 type ChartTrace = {
   name: string;
@@ -152,8 +153,7 @@ const buildSeriesFromTraces = ({
   hasTimeDimension,
   useAreaGraph,
   lineShape,
-  valueRounding,
-  format,
+  formatNumber,
 }: {
   traces: ChartTrace[];
   colors: {
@@ -163,8 +163,7 @@ const buildSeriesFromTraces = ({
   hasTimeDimension: boolean;
   useAreaGraph: boolean;
   lineShape: string;
-  valueRounding?: number;
-  format: ReturnType<typeof useFormatter>;
+  formatNumber: (number) => string;
 }): Array<LineSeriesOption | BarSeriesOption> => {
   const traceCount = traces.length;
   return traces.map<LineSeriesOption | BarSeriesOption>((trace, idx) => {
@@ -200,12 +199,7 @@ const buildSeriesFromTraces = ({
           focus: 'series',
         },
         tooltip: {
-          valueFormatter: (val: number | null) =>
-            formatNumber(
-              val,
-              format,
-              valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
-            ),
+          valueFormatter: (val: number | null) => formatNumber(val),
         },
       };
 
@@ -230,12 +224,7 @@ const buildSeriesFromTraces = ({
         focus: 'series',
       },
       tooltip: {
-        valueFormatter: (val: number | null) =>
-          formatNumber(
-            val,
-            format,
-            valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
-          ),
+        valueFormatter: (val: number | null) => formatNumber(val),
       },
     };
     return series;
@@ -255,7 +244,7 @@ function IndicatorGraph({
 }: IndicatorGraphProps) {
   const theme = useTheme();
   const t = useTranslations();
-  const format = useFormatter();
+  const formatNumber = useNumberFormatter({ maximumSignificantDigits: yRange.valueRounding });
   const rawGraphSettings = theme.settings?.graphs;
 
   const graphSettings: GraphSettings = {
@@ -543,8 +532,7 @@ function IndicatorGraph({
         totalLine: colors.totalLineColor,
         categoryColors: colors.categoryColors,
       },
-      valueRounding: graphSettings.roundIndicatorValue === false ? undefined : yRange.valueRounding,
-      format,
+      formatNumber,
     });
 
     // Add markArea for referenceValue if it exists and nonQuantifiedGoal is set
@@ -734,12 +722,7 @@ function IndicatorGraph({
         connectNulls: true,
         z: 1,
         tooltip: {
-          valueFormatter: (val: number | null) =>
-            formatNumber(
-              val,
-              format,
-              yRange.valueRounding ? { maximumSignificantDigits: yRange.valueRounding } : undefined
-            ),
+          valueFormatter: (val: number | null) => (val != null ? formatNumber(val) : undefined),
         },
       };
     });
@@ -783,13 +766,7 @@ function IndicatorGraph({
                 },
                 tooltip: {
                   valueFormatter: (val: number | null) =>
-                    formatNumber(
-                      val,
-                      format,
-                      yRange.valueRounding
-                        ? { maximumSignificantDigits: yRange.valueRounding }
-                        : undefined
-                    ),
+                    val != null ? formatNumber(val) : undefined,
                 },
               },
             ];
@@ -812,13 +789,7 @@ function IndicatorGraph({
                 },
                 tooltip: {
                   valueFormatter: (val: number | null) =>
-                    formatNumber(
-                      val,
-                      format,
-                      yRange.valueRounding
-                        ? { maximumSignificantDigits: yRange.valueRounding }
-                        : undefined
-                    ),
+                    val != null ? formatNumber(val) : undefined,
                 },
               },
             ]
@@ -871,12 +842,7 @@ function IndicatorGraph({
         axisPointer: {
           type: hasTimeDimension ? 'line' : 'shadow',
         },
-        valueFormatter: (value: number | null) =>
-          formatNumber(
-            value,
-            format,
-            yRange.valueRounding ? { maximumSignificantDigits: yRange.valueRounding } : undefined
-          ),
+        valueFormatter: (value: number | null) => (value != null ? formatNumber(value) : ''),
         formatter: hasTimeDimension
           ? (params: unknown) => {
               if (!Array.isArray(params) || params.length === 0) return '';
@@ -921,13 +887,7 @@ function IndicatorGraph({
                 }
 
                 if (value !== null && value !== undefined && !Number.isNaN(value)) {
-                  const formattedValue = formatNumber(
-                    value,
-                    format,
-                    yRange.valueRounding
-                      ? { maximumSignificantDigits: yRange.valueRounding }
-                      : undefined
-                  );
+                  const formattedValue = formatNumber(value);
                   result += `${typedParam.marker || ''} ${typedParam.seriesName}: ${formattedValue} ${yRange.unit}<br/>`;
                 }
               });
@@ -1015,11 +975,7 @@ function IndicatorGraph({
             // Round tick values more aggressively for cleaner labels
             const roundedValue = roundTickValue(value);
             const rounding = yRange.ticksRounding ?? yRange.valueRounding;
-            return formatNumber(
-              roundedValue,
-              format,
-              rounding ? { maximumSignificantDigits: rounding } : undefined
-            );
+            return formatNumber(roundedValue, rounding);
           },
         },
       },
@@ -1056,7 +1012,7 @@ function IndicatorGraph({
     referenceValue,
     theme.graphColors.blue030,
     theme.graphColors.grey030,
-    format,
+    formatNumber,
   ]);
 
   useEffect(() => {

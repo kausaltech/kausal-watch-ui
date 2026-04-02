@@ -8,9 +8,11 @@ import { Col, Row } from 'reactstrap';
 import ContentLoader from '@common/components/ContentLoader';
 
 import type { IndicatorHightlightListQuery } from '@/common/__generated__/graphql';
+import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
 
 import IndicatorHighlightCard from './IndicatorHighlightCard';
 
@@ -69,6 +71,8 @@ type IndicatorCardListProps = {
 
 function IndicatorCardList(props: IndicatorCardListProps) {
   const t = useTranslations();
+  const plan = usePlan();
+  const indicatorTermContext = getIndicatorTermContext(plan);
   const { indicators } = props;
 
   return (
@@ -100,7 +104,7 @@ function IndicatorCardList(props: IndicatorCardListProps) {
       <Col xs="12" className="mt-5 mb-3">
         <IndicatorListLink>
           <Button color="primary">
-            {t('see-all-indicators')} <Icon.ArrowRight />
+            {t('see-all-indicators', indicatorTermContext)} <Icon.ArrowRight />
           </Button>
         </IndicatorListLink>
       </Col>

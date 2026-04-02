@@ -2,11 +2,12 @@ import { useEffect, useRef } from 'react';
 
 import styled from '@emotion/styled';
 import chroma from 'chroma-js';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 import ContentLoader from '@common/components/ContentLoader';
 import { getMetricChange, getMetricValue } from '@common/utils/paths/metric';
 
+import useNumberFormatter from '@/common/numbers';
 import DashCard from '@/components/paths/DashCard';
 
 const StyledTab = styled.div<{ $disabled: boolean }>`
@@ -179,7 +180,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
     .hex();
   //console.log(state);
   const t = useTranslations();
-  const format = useFormatter();
+  const formatNumber = useNumberFormatter({ scope: 'paths' });
   const baseOutcomeValue = getMetricValue(node, startYear) || 0;
   const goalOutcomeValue = getMetricValue(node, endYear);
   const change = getMetricChange(baseOutcomeValue, goalOutcomeValue);
@@ -241,9 +242,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
             </Label>
             {goalOutcomeValue !== undefined ? (
               <>
-                {format.number(goalOutcomeValue, {
-                  maximumSignificantDigits: 2,
-                })}
+                {formatNumber(goalOutcomeValue)}
                 <MainUnit dangerouslySetInnerHTML={{ __html: unit || '' }} />
               </>
             ) : (
@@ -257,14 +256,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
               {change ? (
                 <>
                   {change > 0 && <span>+</span>}
-                  {change ? (
-                    <span>{`${format.number(change, {
-                      style: 'unit',
-                      unit: 'percent',
-                    })}`}</span>
-                  ) : (
-                    <span>-</span>
-                  )}
+                  {change != null ? <span>{`${formatNumber(change)}%`}</span> : <span>-</span>}
                 </>
               ) : (
                 <NoValue />

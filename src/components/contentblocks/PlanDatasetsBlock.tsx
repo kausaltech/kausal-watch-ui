@@ -1,6 +1,5 @@
 'use client';
 
-import { gql } from '@apollo/client';
 import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
@@ -10,7 +9,7 @@ import type {
   ActionDateFormat,
   PlanDatasetsBlockFragmentFragment,
 } from '@/common/__generated__/graphql';
-import { beautifyValue } from '@/common/data/format';
+import useNumberFormatter from '@/common/numbers';
 import { SectionHeader } from '@/components/actions/ActionContent';
 import PopoverTip from '@/components/common/PopoverTip';
 import { getDateFormat } from '@/utils/dates.utils';
@@ -137,7 +136,7 @@ export default function PlanDatasetsBlock(props: PlanDatasetsBlockProps) {
   const { heading, helpText, data, schema } = props;
   const locale = useLocale();
   const t = useTranslations();
-
+  const formatNumber = useNumberFormatter();
   const unit = schema.metrics[0]?.unit ?? '';
 
   const categoriesGroupedByDimension = schema.dimensions
@@ -197,14 +196,14 @@ export default function PlanDatasetsBlock(props: PlanDatasetsBlockProps) {
                 <DataRow key={rowIndex}>
                   <th>{row.label}</th>
                   {row.cells?.map((cell, cellIndex) => (
-                    <td key={cellIndex}>{cell.value ? beautifyValue(cell.value, locale) : '-'}</td>
+                    <td key={cellIndex}>{cell.value != null ? formatNumber(cell.value) : '-'}</td>
                   ))}
                 </DataRow>
               ))}
               <TotalsRow>
                 <th>{t('total')}</th>
                 {table.totals.map((total, totalIndex) => (
-                  <td key={totalIndex}>{beautifyValue(total, locale)}</td>
+                  <td key={totalIndex}>{formatNumber(total)}</td>
                 ))}
               </TotalsRow>
             </>

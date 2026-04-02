@@ -84,6 +84,29 @@ function IndicatorHero(props: IndicatorHeroProps) {
   const plan = usePlan();
   const indicatorTermContext = getIndicatorTermContext(plan);
 
+  const options = {
+    referenceValue: {
+      show: true,
+      year: null,
+      defaultReferenceValue: null,
+    },
+    currentValue: {
+      show: false,
+    },
+    goalValue: {
+      show: true,
+      defaultGoalYear: null,
+    },
+    goalGap: {
+      show: true,
+    },
+    nonQuantifiedGoal: {
+      trend: null,
+      date: null,
+    },
+    valueRounding: indicator.valueRounding ?? null,
+  };
+
   return (
     <Hero>
       <div>
@@ -111,6 +134,7 @@ function IndicatorHero(props: IndicatorHeroProps) {
                         unit={indicator.unit}
                         goals={goals}
                         desiredTrend={indicator.desiredTrend}
+                        options={options}
                       />
                     )}
                     {legacyMode && indicator.level && (

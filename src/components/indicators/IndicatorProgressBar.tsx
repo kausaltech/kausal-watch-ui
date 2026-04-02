@@ -12,6 +12,7 @@ import { readableColor } from 'polished';
 import dayjs from '@/common/dayjs';
 import { useWindowSize } from '@/common/hooks/use-window-size';
 import { IndicatorLink } from '@/common/links';
+import useNumberFormatter from '@/common/numbers';
 import Switch from '@/components/common/Switch';
 
 const ProgressBarWrapper = styled.div`
@@ -82,12 +83,6 @@ const NormalizerChooser = styled.div`
     border-color: ${({ theme }) => theme.section.indicatorShowcase.color};
   }
 `;
-const formatValue = (value: number | string, locale: string, precision?: number): string => {
-  const precisionValue = precision ?? 2;
-  return Number(value).toLocaleString(locale, {
-    maximumFractionDigits: precisionValue,
-  });
-};
 
 const findPrecision = (comparableValues: Array<number | string>) => {
   for (let i = 2; i < 4; i++) {
@@ -131,12 +126,14 @@ function Counter({
   duration,
   locale,
   precision,
+  numberFormatter,
 }: {
   from: number;
   to: number;
   duration: number;
   locale: string;
   precision: number;
+  numberFormatter: (value: number) => string;
 }) {
   const ref = useRef<SVGTSpanElement>(null);
 
@@ -146,7 +143,7 @@ function Counter({
       onUpdate(value) {
         // ref.current is null when navigating away from the page
         if (!ref.current) return;
-        ref.current.textContent = formatValue(value, locale, precision);
+        ref.current.textContent = numberFormatter(value);
       },
     });
     return () => controls.stop();
@@ -286,6 +283,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
       ? significantDigits
       : findPrecision([startValue, latestValue ?? 0, goalDisplayValue ?? 0]);
 
+  const formatNumber = useNumberFormatter({ maximumFractionDigits: minPrecision });
   const roundedValues = {
     start: Number(startValue?.toPrecision(minPrecision)),
     latest: Number(latestValue?.toPrecision(minPrecision)),
@@ -594,7 +592,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                 <ValueGroup
                   transform={`translate(${startBar.x + 4}, 0)`}
                   startDate={graphValues.startYear}
-                  value={formatValue(roundedValues.start, locale)}
+                  value={formatNumber(roundedValues.start)}
                   unit={displayUnit ?? ''}
                   locale={locale}
                   textColor={readableColor(
@@ -618,6 +616,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
                       duration={reductionCounterDuration}
                       locale={locale}
                       precision={minPrecision}
+                      numberFormatter={formatNumber}
                     />{' '}
                     <SegmentUnit>{displayUnit ?? ''}</SegmentUnit>
                   </SegmentValue>
@@ -670,7 +669,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
               } ${latestBar.y})`}
               opacity={0}
               date={graphValues.latestYear}
-              value={formatValue(roundedValues.latest, locale)}
+              value={formatNumber(roundedValues.latest)}
               unit={displayUnit ?? ''}
               locale={locale}
               textColor={
@@ -687,7 +686,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
           >
             <SegmentHeader>{t('to-reduce')}</SegmentHeader>
             <SegmentValue x="0" y="16">
-              {formatValue(Number(roundedValues.latest) - Number(roundedValues.goal ?? 0), locale)}{' '}
+              {formatNumber(Number(roundedValues.latest) - Number(roundedValues.goal ?? 0))}{' '}
               <SegmentUnit>{displayUnit ?? ''}</SegmentUnit>
             </SegmentValue>
           </text>
@@ -724,7 +723,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
             textAnchor={goalBar.w > 120 ? 'start' : 'end'}
             transform={`translate(${goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8} ${goalBar.y})`}
             date={graphValues.goalYear}
-            value={formatValue(roundedValues.goal ?? 0, locale)}
+            value={roundedValues.goal ? formatNumber(roundedValues.goal) : ''}
             unit={displayUnit ?? ''}
             locale={locale}
             textColor={
