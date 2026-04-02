@@ -261,7 +261,6 @@ const ParameterWidget = (props: ParameterWidgetProps) => {
         headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
       },
       onCompleted: () => {
-        console.log('UPDATED', activeScenarioVar);
         activeScenarioVar({ ...activeScenario });
       },
     }

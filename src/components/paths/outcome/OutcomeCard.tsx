@@ -200,7 +200,6 @@ const OutcomeCard = (props: OutcomeCardProps) => {
     }
   };
 
-  console.log('outcome card', goalOutcomeValue);
   return (
     <StyledTab
       key={node.id}

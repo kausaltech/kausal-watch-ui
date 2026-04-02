@@ -242,7 +242,6 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
     // using exhausive deps here causes an infinite loop
   }, [yearRange[1], refetching, metric]);
 
-  console.log('InventoryNodeSummary render emissions', { emissions, unit });
   return (
     <ValuesContainer>
       {emissions.map((em) => (
