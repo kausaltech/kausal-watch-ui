@@ -89,7 +89,7 @@ export default function IndicatorFactorValueSummaryBlock({ block, indicator }: P
 
             <ValueSummary>
               <ValueBlock>
-                <ValueLabel>Reference value</ValueLabel>
+                <ValueLabel>{t('indicator-reference-value')}</ValueLabel>
                 <ValueDate>{dayjs(reference.date).format(timeFormat)}</ValueDate>
                 <ValueDisplay>
                   <div>
@@ -100,7 +100,7 @@ export default function IndicatorFactorValueSummaryBlock({ block, indicator }: P
               </ValueBlock>
 
               <ValueBlock>
-                <ValueLabel>Latest value</ValueLabel>
+                <ValueLabel>{t('indicator-latest-value')}</ValueLabel>
                 <ValueDate>{dayjs(latest.date).format(timeFormat)}</ValueDate>
                 <ValueDisplay>
                   <div>
