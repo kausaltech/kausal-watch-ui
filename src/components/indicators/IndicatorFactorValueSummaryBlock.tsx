@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
-import { useFormatter } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 
 import type {
   IndicatorDetailsQuery,
   IndicatorFactorValueSummaryContentBlockFragmentFragment,
 } from '@/common/__generated__/graphql';
+import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 
+import dayjs from '../../common/dayjs';
 import PopoverTip from '../common/PopoverTip';
 import {
   ValueBlock,
@@ -50,11 +52,15 @@ type Props = {
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
 };
 
-const getYear = (date: string) => date.split('-')[0] ?? '';
-
 export default function IndicatorFactorValueSummaryBlock({ block, indicator }: Props) {
   const format = useFormatter();
+  const t = useTranslations();
   const series = getComputedMetricSeries(indicator.datasets);
+
+  let timeFormat = 'l';
+  if (indicator.timeResolution === IndicatorTimeResolution.Year) {
+    timeFormat = 'YYYY';
+  }
 
   if (!series.length) return null;
 
@@ -84,7 +90,7 @@ export default function IndicatorFactorValueSummaryBlock({ block, indicator }: P
             <ValueSummary>
               <ValueBlock>
                 <ValueLabel>Reference value</ValueLabel>
-                <ValueDate>{getYear(reference.date)}</ValueDate>
+                <ValueDate>{dayjs(reference.date).format(timeFormat)}</ValueDate>
                 <ValueDisplay>
                   <div>
                     {format.number(reference.value)}
@@ -95,7 +101,7 @@ export default function IndicatorFactorValueSummaryBlock({ block, indicator }: P
 
               <ValueBlock>
                 <ValueLabel>Latest value</ValueLabel>
-                <ValueDate>{getYear(latest.date)}</ValueDate>
+                <ValueDate>{dayjs(latest.date).format(timeFormat)}</ValueDate>
                 <ValueDisplay>
                   <div>
                     {format.number(latest.value)}
