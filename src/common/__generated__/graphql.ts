@@ -482,7 +482,7 @@ export type PlanInput = {
   /** ISO 3166-1 country code (e.g. FI, DE, US) */
   country: Scalars['String']['input'];
   features: InputMaybe<PlanFeaturesInput>;
-  /** A unique identifier for the plan used internally to distinguish between plans. This becomes part of the test site URL: https://[identifier].watch-test.kausal.tech. Use lowercase letters and dashes. */
+  /** A unique identifier for the plan used internally to distinguish between plans. This becomes part of the site URL used during onboarding. Use lowercase letters and dashes. */
   identifier: Scalars['ID']['input'];
   /** The official plan name in full form */
   name: Scalars['String']['input'];
@@ -15419,7 +15419,7 @@ export type GetPlanContextQuery = (
       )> }
       & { __typename: 'Footer' }
     ) | null, features: (
-      { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean }
+      { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean }
       & { __typename: 'PlanFeatures' }
     ), allRelatedPlans: Array<(
       { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null, image: (
@@ -15615,7 +15615,7 @@ export type PlanContextFragment = (
     )> }
     & { __typename: 'Footer' }
   ) | null, features: (
-    { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean }
+    { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean }
     & { __typename: 'PlanFeatures' }
   ), allRelatedPlans: Array<(
     { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null, image: (
