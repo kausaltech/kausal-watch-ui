@@ -14202,7 +14202,22 @@ export type IndicatorGraphDataQuery = (
         & { __typename: 'Scenario' }
       ) | null }
       & { __typename: 'IndicatorGoal' }
-    ) | null> | null, unit: (
+    ) | null> | null, datasets: Array<(
+      { uuid: string, schema: (
+        { uuid: string, metrics: Array<(
+          { label: string, unit: string, isComputed: boolean }
+          & { __typename: 'DatasetMetricNode' }
+        )> }
+        & { __typename: 'DatasetSchema' }
+      ) | null, computedDataPoints: Array<(
+        { date: string, value: number | null, metric: (
+          { label: string, unit: string }
+          & { __typename: 'DatasetMetricNode' }
+        ) }
+        & { __typename: 'ComputedDataPointNode' }
+      )> }
+      & { __typename: 'Dataset' }
+    )>, unit: (
       { id: string, name: string, shortName: string | null, verboseName: string | null, verboseNamePlural: string | null }
       & { __typename: 'Unit' }
     ), common: (
@@ -14515,7 +14530,7 @@ export type IndicatorDetailsQuery = (
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, defaultGoalYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
         & { __typename: 'IndicatorValueSummaryContentBlock' }
       ) | (
-        { fieldLabel: string | null, showFactorValues: boolean | null }
+        { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, showFactorValues: boolean | null }
         & { __typename: 'IndicatorVisualizationContentBlock' }
       )> | null, detailsMainBottom: Array<(
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, categoryType: (
@@ -14536,7 +14551,7 @@ export type IndicatorDetailsQuery = (
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, defaultGoalYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
         & { __typename: 'IndicatorValueSummaryContentBlock' }
       ) | (
-        { fieldLabel: string | null, showFactorValues: boolean | null }
+        { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, showFactorValues: boolean | null }
         & { __typename: 'IndicatorVisualizationContentBlock' }
       )> | null, detailsAside: Array<(
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, categoryType: (

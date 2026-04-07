@@ -21,6 +21,12 @@ type Trace = {
 
 type Spec = { unit?: string | null };
 
+type ExtraColumn = {
+  header: string;
+  x: XValue[];
+  y: Array<number | null>;
+};
+
 type GraphAsTableProps = {
   data: Trace[];
   goalTraces: Trace[];
@@ -28,6 +34,7 @@ type GraphAsTableProps = {
   specification: Spec;
   title?: string;
   language: string;
+  extraColumns?: ExtraColumn[];
 };
 
 const CollapsibleTable = styled.div`
@@ -94,6 +101,7 @@ function GraphAsTable({
   specification,
   title,
   language,
+  extraColumns = [],
 }: GraphAsTableProps) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
@@ -106,6 +114,7 @@ function GraphAsTable({
     const allXValues: XValue[] = [
       ...data.flatMap((trace) => trace.x),
       ...goalTraces.flatMap((trace) => trace.x),
+      ...extraColumns.flatMap((col) => col.x),
     ];
     const tableRows = Array.from(new Set(allXValues));
 
@@ -131,6 +140,11 @@ function GraphAsTable({
         values.push(index !== -1 ? (trace.y[index] ?? null) : null);
       });
 
+      extraColumns.forEach((col) => {
+        const index = col.x.map(normalize).indexOf(key);
+        values.push(index !== -1 ? (col.y[index] ?? null) : null);
+      });
+
       return {
         raw: row,
         label: formatLabel(row, isTime, timeResolution),
@@ -153,7 +167,7 @@ function GraphAsTable({
     }
 
     return { tableData, tableCategoryHeaders };
-  }, [data, goalTraces, isTime, timeResolution]);
+  }, [data, goalTraces, extraColumns, isTime, timeResolution]);
 
   return (
     <CollapsibleTable>
@@ -189,6 +203,11 @@ function GraphAsTable({
                   <th key={i} scope="col">
                     {trace.name}
                     {specification.unit ? ` (${specification.unit})` : ''}
+                  </th>
+                ))}
+                {extraColumns.map((col, i) => (
+                  <th key={`extra-${i}`} scope="col">
+                    {col.header}
                   </th>
                 ))}
               </tr>
