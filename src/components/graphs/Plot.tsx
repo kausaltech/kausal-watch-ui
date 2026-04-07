@@ -43,7 +43,9 @@ const Plot = (props: PlotProps) => {
 
   const lang = useLocale();
   config.locales = locales;
-  config.locale = lang;
+  // Plotly doesn't fall back from regional variants (e.g. es-US) to base locales (es),
+  // so we normalize to the base language code when no exact match is registered.
+  config.locale = lang in locales ? lang : lang.split('-')[0];
 
   config.responsive = true;
   if (!props.noValidate) {
