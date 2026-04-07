@@ -10,6 +10,7 @@ import images from '@/common/images';
 import {
   ATTRIBUTE_FRAGMENT,
   ATTRIBUTE_TYPE_FRAGMENT,
+  ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT,
 } from '../fragments/action-attribute.fragment';
 import { ACTION_CARD_FRAGMENT } from '../fragments/action-card.fragment';
 import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
@@ -226,6 +227,19 @@ const GET_ACTION_DETAILS = gql`
           avatarUrl
         }
         updatedAt
+      }
+      pledges {
+        id
+        name
+        description
+        slug
+        commitmentCount
+        image {
+          ...MultiUseImageFragment
+        }
+        attributes {
+          ...AttributesBlockAttributeWithNestedType
+        }
       }
       datasets {
         schema {
@@ -470,6 +484,10 @@ const GET_ACTION_DETAILS = gql`
         }
       }
     }
+    ... on ActionPledgesBlock {
+      fieldLabel
+      fieldHelpText
+    }
     ... on PlanDatasetsBlock {
       id
       heading
@@ -518,6 +536,7 @@ const GET_ACTION_DETAILS = gql`
   ${images.fragments.multiUseImage}
   ${ATTRIBUTE_FRAGMENT}
   ${ATTRIBUTE_TYPE_FRAGMENT}
+  ${ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT}
   ${RECURSIVE_CATEGORY_FRAGMENT}
   ${CATEGORY_TYPE_FRAGMENT}
 `;
