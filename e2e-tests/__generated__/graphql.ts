@@ -127,6 +127,7 @@ export enum ActionList_FiltersFieldName {
   MergedActions = 'MERGED_ACTIONS',
   Name = 'NAME',
   OfficialName = 'OFFICIAL_NAME',
+  Pledges = 'PLEDGES',
   PrimaryOrg = 'PRIMARY_ORG',
   RelatedActions = 'RELATED_ACTIONS',
   RelatedIndicators = 'RELATED_INDICATORS',

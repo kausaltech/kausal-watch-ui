@@ -27,6 +27,7 @@ import ActionLeadParagraphBlock from '@/components/actions/blocks/ActionLeadPara
 import ActionLinksBlock from '@/components/actions/blocks/ActionLinksBlock';
 import ActionMergedActionsBlock from '@/components/actions/blocks/ActionMergedActionsBlock';
 import ActionOfficialNameBlock from '@/components/actions/blocks/ActionOfficialNameBlock';
+import ActionPledgesBlock from '@/components/actions/blocks/ActionPledgesBlock';
 import ActionRelatedActionsBlock from '@/components/actions/blocks/ActionRelatedActionsBlock';
 import ActionRelatedIndicatorsBlock from '@/components/actions/blocks/ActionRelatedIndicatorsBlock';
 import ActionResponsiblePartiesBlock from '@/components/actions/blocks/ActionResponsiblePartiesBlock';
@@ -285,6 +286,9 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       if (!attribute) return null;
       return <ActionAttribute attribute={attribute} attributeType={block.attributeType} />;
     }
+    case 'ActionPledgesBlock':
+      if (!action.pledges?.length) return null;
+      return <ActionPledgesBlock pledges={action.pledges} heading={block.fieldLabel} />;
     case 'PlanDatasetsBlock': {
       const { heading, helpText, datasetSchema } = block;
       const dataset =
