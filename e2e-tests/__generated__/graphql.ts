@@ -481,7 +481,7 @@ export type PlanInput = {
   /** ISO 3166-1 country code (e.g. FI, DE, US) */
   country: Scalars['String']['input'];
   features: InputMaybe<PlanFeaturesInput>;
-  /** A unique identifier for the plan used internally to distinguish between plans. This becomes part of the test site URL: https://[identifier].watch-test.kausal.tech. Use lowercase letters and dashes. */
+  /** A unique identifier for the plan used internally to distinguish between plans. This becomes part of the site URL used during onboarding. Use lowercase letters and dashes. */
   identifier: Scalars['ID']['input'];
   /** The official plan name in full form */
   name: Scalars['String']['input'];
