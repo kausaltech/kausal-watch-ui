@@ -8,11 +8,13 @@ import 'dayjs/locale/el';
 import 'dayjs/locale/en-au';
 import 'dayjs/locale/en-gb';
 import 'dayjs/locale/es';
+import 'dayjs/locale/es-us';
 import 'dayjs/locale/fi';
 import 'dayjs/locale/fr';
 import 'dayjs/locale/fr-ca';
 import 'dayjs/locale/sv';
 import 'dayjs/locale/sv-fi';
+// No dayjs locale available for Somali (so) or Hmong (mww); they fall back to English.
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
