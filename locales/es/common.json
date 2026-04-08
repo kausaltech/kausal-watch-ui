@@ -28,6 +28,7 @@
     "error-with-code": "Error con el código",
     "error-no-layout": "No se ha definido ningún diseño. Añada contenido aquí.",
     "error-no-outcome-node": "Nodo de resultado [{outcomeNodeId}] no encontrado.",
+    "error-no-goals": "El indicador [{indicatorName}] no tiene metas definidas, por lo que la barra de progreso del indicador no se puede mostrar.",
     "export": "Exportar",
     "feedback": "Comentarios",
     "feedback-description": "¿Ha descubierto algo que no funciona? ¿O tiene ideas sobre algo que podamos mejorar?",

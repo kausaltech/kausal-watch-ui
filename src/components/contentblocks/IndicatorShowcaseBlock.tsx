@@ -1,9 +1,12 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+import { Paper } from '@mui/material';
+import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
-import { Col, Container, Row } from 'reactstrap';
+import { Alert, Col, Container, Row } from 'reactstrap';
 
+import { deploymentType } from '@/common/environment';
 import RichText from '@/components/common/RichText';
 import IndicatorProgressBar from '@/components/indicators/IndicatorProgressBar';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
@@ -56,41 +59,72 @@ const getNormalizedUnit = (indicator) => {
 const IndicatorShowcaseBlock = (props) => {
   const { id = '', indicator, title, body, significantDigits, linkButton } = props;
 
+  const t = useTranslations();
   const lastGoal = indicator.goals[indicator.goals.length - 1];
   const firstValue = indicator.values[0];
   const lastValue = indicator.values[indicator.values.length - 1];
 
   const indicatorHasGoal = indicator.goals.length > 0;
 
-  // Only show normalization if all values including goal are available as normalized
-  const canNormalize =
-    getNormalizedValue(firstValue, indicator) &&
-    getNormalizedValue(lastValue, indicator) &&
-    getNormalizedValue(lastGoal, indicator);
+  let indicatorVisualisation: React.ReactNode | null = null;
+  if (!indicatorHasGoal) {
+    indicatorVisualisation = (
+      <>
+        {deploymentType !== 'production' && (
+          <Alert color="warning">
+            {t('error-no-goals', { indicatorName: indicator?.name ?? 'undefined' })}
+          </Alert>
+        )}
+        <Paper>
+          <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
+        </Paper>
+      </>
+    );
+  } else {
+    console.log('indicator', indicator, indicatorHasGoal);
+    // Only show normalization if all values including goal are available as normalized
+    const canNormalize =
+      getNormalizedValue(firstValue, indicator) &&
+      getNormalizedValue(lastValue, indicator) &&
+      getNormalizedValue(lastGoal, indicator);
 
-  const baseValue = {
-    date: firstValue.date,
-    value: firstValue.value,
-    normalizedValue: getNormalizedValue(firstValue, indicator),
-  };
+    const baseValue = {
+      date: firstValue.date,
+      value: firstValue.value,
+      normalizedValue: getNormalizedValue(firstValue, indicator),
+    };
 
-  const latestValue = {
-    date: lastValue.date,
-    value: lastValue.value,
-    normalizedValue: getNormalizedValue(lastValue, indicator),
-  };
+    const latestValue = {
+      date: lastValue.date,
+      value: lastValue.value,
+      normalizedValue: getNormalizedValue(lastValue, indicator),
+    };
 
-  const goalValue = {
-    date: lastGoal.date,
-    value: lastGoal.value,
-    normalizedValue: getNormalizedValue(lastGoal, indicator),
-  };
+    const goalValue = {
+      date: lastGoal.date,
+      value: lastGoal.value,
+      normalizedValue: getNormalizedValue(lastGoal, indicator),
+    };
 
-  const unit = {
-    name: indicator.unit.shortName || indicator.unit.name || '',
-    normalizedName: getNormalizedUnit(indicator),
-  };
-
+    const unit = {
+      name: indicator.unit.shortName || indicator.unit.name || '',
+      normalizedName: getNormalizedUnit(indicator),
+    };
+    indicatorVisualisation = (
+      <IndicatorProgressBar
+        indicatorId={indicator.id}
+        note={indicator.name}
+        linkButton={linkButton}
+        significantDigits={significantDigits}
+        baseValue={baseValue}
+        lastValue={latestValue}
+        goalValue={goalValue}
+        normalize={canNormalize}
+        unit={unit}
+        indicator={indicator}
+      />
+    );
+  }
   return (
     <IndicatorShowcase id={id}>
       <Container>
@@ -98,25 +132,7 @@ const IndicatorShowcaseBlock = (props) => {
           <Col xl={{ size: 8, offset: 2 }} lg={{ size: 10, offset: 1 }}>
             <h2>{title}</h2>
             <RichText html={body} className="mb-5" />
-            {indicatorHasGoal ? (
-              <IndicatorProgressBar
-                indicatorId={indicator.id}
-                note={indicator.name}
-                linkButton={linkButton}
-                significantDigits={significantDigits}
-                baseValue={baseValue}
-                lastValue={latestValue}
-                goalValue={goalValue}
-                normalize={canNormalize}
-                unit={unit}
-                indicator={indicator}
-              />
-            ) : (
-              <>
-                <h2>{indicator.name}</h2>
-                <IndicatorVisualisation indicatorId={indicator.id} />
-              </>
-            )}
+            {indicatorVisualisation}
           </Col>
         </Row>
       </Container>
