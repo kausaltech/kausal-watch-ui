@@ -28,6 +28,7 @@
     "error-with-code": "Fehler mit Code",
     "error-no-layout": "Kein Layout definiert. Fügen Sie hier Inhalte hinzu.",
     "error-no-outcome-node": "Ergebnis-Knoten [{outcomeNodeId}] nicht gefunden.",
+    "error-no-goals": "Indikator [{indicatorName}] hat keine definierten Ziele, daher kann der Fortschrittsbalken des Indikators nicht angezeigt werden.",
     "export": "Exportieren",
     "feedback": "Feedback",
     "feedback-description": "Haben Sie etwas entdeckt, das nicht funktioniert? Oder haben Sie Ideen, was wir verbessern können?",

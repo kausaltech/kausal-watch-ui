@@ -29,6 +29,7 @@
     "error-with-code": "Error with code",
     "error-no-layout": "No layout defined. Add some content here.",
     "error-no-outcome-node": "Outcome node [{outcomeNodeId}] not found.",
+    "error-no-goals": "Indicator [{indicatorName}] has no goals defined, so indicator progress bar can not be displayed.",
     "export": "Export",
     "feedback": "Feedback",
     "feedback-description": "Did you discover something that does not work? Or do you have ideas on something we can improve?",
