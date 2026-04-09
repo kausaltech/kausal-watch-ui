@@ -72,7 +72,10 @@ type IndicatorCardListProps = {
 function IndicatorCardList(props: IndicatorCardListProps) {
   const t = useTranslations();
   const plan = usePlan();
-  const indicatorTermContext = getIndicatorTermContext(plan);
+  const indicatorContext = getIndicatorTermContext(plan).context;
+  const buttonLabel =
+    indicatorContext === 'MEASURE' ? t('see-all-measures') : t('see-all-indicators');
+
   const { indicators } = props;
 
   return (
@@ -104,7 +107,7 @@ function IndicatorCardList(props: IndicatorCardListProps) {
       <Col xs="12" className="mt-5 mb-3">
         <IndicatorListLink>
           <Button color="primary">
-            {t('see-all-indicators', indicatorTermContext)} <Icon.ArrowRight />
+            {buttonLabel} <Icon.ArrowRight />
           </Button>
         </IndicatorListLink>
       </Col>
