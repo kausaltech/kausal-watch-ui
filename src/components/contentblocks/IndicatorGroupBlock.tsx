@@ -120,8 +120,13 @@ export default function IndicatorGroupBlock(props: Props) {
   const { id = '', title, indicators } = props;
   const t = useTranslations();
   const plan = usePlan();
-  const indicatorTermContext = getIndicatorTermContext(plan);
+  const indicatorContext = getIndicatorTermContext(plan).context;
+  const indicatorTermContext = { context: indicatorContext };
+
   const displayHeader = title === '-' ? null : title || t('indicators', indicatorTermContext);
+
+  const buttonLabel =
+    indicatorContext === 'MEASURE' ? t('see-all-measures') : t('see-all-indicators');
 
   const hasIndicatorsPage =
     plan.mainMenu?.items.findIndex(
@@ -167,7 +172,7 @@ export default function IndicatorGroupBlock(props: Props) {
             <StyledColCentered>
               <IndicatorListLink>
                 <Button color="primary">
-                  {t('see-all-indicators', indicatorTermContext)} <Icon.ArrowRight />
+                  {buttonLabel} <Icon.ArrowRight />
                 </Button>
               </IndicatorListLink>
             </StyledColCentered>
