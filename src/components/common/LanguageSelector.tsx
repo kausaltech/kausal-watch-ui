@@ -118,7 +118,7 @@ const ActiveLanguage = styled.span`
 
 // For now, we only show language names without variants (e.g., "English" instead of "English (Australia)" as it's
 // arguably unlikely that a site uses two variants of the same base language.
-const languageNames = {
+const languageNames: Record<string, string> = {
   da: 'Dansk',
   de: 'Deutsch',
   el: 'Ελληνικά',
@@ -127,6 +127,8 @@ const languageNames = {
   fi: 'Suomi',
   fr: 'Français',
   lv: 'Latviešu',
+  mww: 'Hmoob Dawb',
+  so: 'Af Soomaali',
   sv: 'Svenska',
 };
 
