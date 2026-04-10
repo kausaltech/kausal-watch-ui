@@ -37,6 +37,7 @@ type InteractiveProps = BaseProps & {
   onCommitClick: (isCommitted: boolean) => void;
   shareUrl?: never;
   isMostCommitted?: boolean;
+  hideCommitButton?: boolean;
 };
 
 type ShareProps = BaseProps & {
@@ -279,6 +280,7 @@ function InteractivePledgeCard({
   isCommitted,
   onCommitClick,
   isMostCommitted = false,
+  hideCommitButton = false,
 }: InteractiveProps) {
   const t = useTranslations();
   const pledgeLink = usePrependPlanAndLocale(`${PLEDGE_PATH}/${slug}`);
@@ -309,17 +311,19 @@ function InteractivePledgeCard({
           {/* Render the container even when there's no description to fill vertical space for even layouts across cards */}
           {layout === 'default' && <StyledCardDescription>{description}</StyledCardDescription>}
 
-          <StyledCommitButton
-            color="primary"
-            outline={!isCommitted}
-            size="sm"
-            onClick={handleCommitButtonClick}
-            $isCommitted={isCommitted}
-            aria-pressed={isCommitted}
-          >
-            <Icon name="award" width="18px" height="18px" />
-            {isCommitted ? t('pledge-committed') : t('pledge-commit-to-this')}
-          </StyledCommitButton>
+          {!hideCommitButton && (
+            <StyledCommitButton
+              color="primary"
+              outline={!isCommitted}
+              size="sm"
+              onClick={handleCommitButtonClick}
+              $isCommitted={isCommitted}
+              aria-pressed={isCommitted}
+            >
+              <Icon name="award" width="18px" height="18px" />
+              {isCommitted ? t('pledge-committed') : t('pledge-commit-to-this')}
+            </StyledCommitButton>
+          )}
         </StyledCardContent>
       </StyledCardWrapper>
     </StyledCardLink>

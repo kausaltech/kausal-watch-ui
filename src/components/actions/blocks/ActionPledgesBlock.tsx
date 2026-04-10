@@ -81,6 +81,7 @@ export default function ActionPledgesBlock({ pledges, heading }: Props) {
             isCommitted={committedSlugs.has(pledge.slug)}
             committedCount={pledge.commitmentCount + getCommitmentCountAdjustment(pledge.slug)}
             onCommitClick={(isCommitted) => handleCommitClick(pledge, isCommitted)}
+            hideCommitButton
           />
         ))}
       </StyledPledgeGrid>
