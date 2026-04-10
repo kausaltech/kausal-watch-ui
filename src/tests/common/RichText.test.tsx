@@ -202,16 +202,15 @@ describe('<RichText /> with leadContent HTML', () => {
     });
   });
 
-  it('documents that javascript: URIs survive in links (known gap)', () => {
+  it('sanitizes javascript: URIs in links (blocked by React)', () => {
     const { container } = render(<RichText html={XSS_CONTENT} />);
-    // The javascript: URI link is treated as external, so RichText wraps it
-    // with target="_blank". Query by href to find it reliably.
-    const anchor = container.querySelector('a[href*="javascript:"]') as HTMLAnchorElement | null;
-    // This test documents the current behavior — the javascript: URI
-    // survives into the DOM. If/when a protocol allowlist is added, this
-    // assertion should flip to expect the anchor to be null or the href
-    // to be sanitized.
+    // React rewrites javascript: URIs — the original payload is replaced with
+    // a safe throw so the link cannot execute arbitrary code.
+    const anchor = container.querySelector('a[href^="javascript:"]') as HTMLAnchorElement | null;
     expect(anchor).not.toBeNull();
-    expect(anchor!.href).toContain('javascript:');
+    expect(anchor!.getAttribute('href')).not.toContain('alert');
+    expect(anchor!.getAttribute('href')).toContain(
+      'React has blocked a javascript: URL as a security precaution'
+    );
   });
 });
