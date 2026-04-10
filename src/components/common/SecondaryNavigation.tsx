@@ -6,11 +6,11 @@ import { Link } from '@/common/links';
 
 const NavigationContainer = styled(Container)`
   @media (min-width: ${(props) => props.theme.breakpointLg}) {
-    position: absolute;
+    position: relative;
     margin-left: auto;
     margin-right: auto;
-    left: 0;
-    right: 0;
+    left: auto;
+    right: auto;
     pointer-events: none;
   }
 `;
