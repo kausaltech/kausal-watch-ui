@@ -182,15 +182,22 @@ const StyledCategory = styled(StyledMetaItem)`
 `;
 
 const StyledCardDescription = styled.p`
-  flex: 1 0 auto; // Fill the remaining vertical space to ensure action buttons align in a card list
   font-size: ${({ theme }) => theme.fontSizeSm};
   color: ${({ theme }) => theme.textColor.secondary};
   margin: ${({ theme }) => theme.spaces.s100} 0 ${({ theme }) => theme.spaces.s150};
   line-height: ${({ theme }) => theme.lineHeightBase};
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  min-width: 0;
   overflow: hidden;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+
+  line-clamp: 4;
+`;
+
+const StyledCardFooterSpacer = styled.div`
+  flex: 1 1 auto;
 `;
 
 const StyledCommitButton = styled(Button, {
@@ -306,8 +313,14 @@ function InteractivePledgeCard({
 
           <StyledCardTitle $layout={layout}>{title}</StyledCardTitle>
 
-          {/* Render the container even when there's no description to fill vertical space for even layouts across cards */}
-          {layout === 'default' && <StyledCardDescription>{description}</StyledCardDescription>}
+          {/* Keep a spacer in default layout so buttons stay aligned across cards,
+              even when there is no description */}
+          {layout === 'default' && (
+            <>
+              {description ? <StyledCardDescription>{description}</StyledCardDescription> : null}
+              <StyledCardFooterSpacer />
+            </>
+          )}
 
           <StyledCommitButton
             color="primary"
