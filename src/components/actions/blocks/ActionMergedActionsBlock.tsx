@@ -1,24 +1,26 @@
 import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Badge, Col, Row } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 
 import { getActionTermContext } from '@/common/i18n';
 import type { ActionContentAction } from '@/components/actions/ActionContent';
 import { ActionSection, SectionHeader } from '@/components/actions/ActionContent';
 import { usePlan } from '@/context/plan';
 
-const ActionNumberBadge = styled(Badge)`
+const ActionNumberBadge = styled.span`
+  display: inline-block;
   font-size: ${(props) => props.theme.fontSizeBase};
   padding: ${(props) => props.theme.spaces.s025};
   border-radius: ${(props) => props.theme.btnBorderRadius};
-  background-color: ${(props) => props.theme.brandDark} !important;
+  background-color: ${(props) => props.theme.brandDark};
   color: ${(props) =>
     readableColor(
       props.theme.brandDark,
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )};
+  line-height: 1;
 `;
 
 const MergedActionSection = styled.div`
