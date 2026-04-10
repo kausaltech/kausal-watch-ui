@@ -413,6 +413,16 @@ type ActionListProps = {
   primaryOrgs: ActionListPrimaryOrg[];
 };
 
+function hasActivePrimaryCategoryFilter(
+  activeFilters: Filters,
+  primaryCatType?: ActionListCategoryType
+) {
+  if (!primaryCatType?.identifier) return false;
+
+  const value = activeFilters[getCategoryString(primaryCatType.identifier)];
+  return Array.isArray(value) ? value.length > 0 : Boolean(value);
+}
+
 const ActionList = (props: ActionListProps) => {
   const {
     actions,
@@ -503,14 +513,19 @@ const ActionList = (props: ActionListProps) => {
   });
 
   let groupBy: 'category' | 'primaryOrg' | 'plan' = 'category';
+
   if (
     plan.features.hasActionPrimaryOrgs &&
-    primaryCatType?.identifier &&
-    `${getCategoryString(primaryCatType.identifier)}` in activeFilters
+    hasActivePrimaryCategoryFilter(activeFilters, primaryCatType)
   ) {
     groupBy = 'primaryOrg';
   }
+
   // for umbrella plans group by plan if no common category exists
+  if (includeRelatedPlans && !plan.primaryActionClassification?.common) {
+    groupBy = 'plan';
+  }
+
   if (includeRelatedPlans && !plan.primaryActionClassification?.common) groupBy = 'plan';
 
   // add plan.feature.showActionUpdateStatus to backend
