@@ -45,6 +45,8 @@
     "filter-all-plans": "All plans",
     "filter-all-statuses": "All statuses",
     "filter-all-schedules": "All schedules",
+    "filter-clear": "Clear",
+    "filter-clear-all": "Clear all",
     "filter-impact": "Impact",
     "filter-organization": "{context, select, DIVISION {Division} other {Organization}}",
     "filter-phase": "Phase",
