@@ -82,14 +82,21 @@ const StyledFieldList = styled.ul`
   border-right: 1px solid ${(props) => props.theme.graphColors.grey020};
 `;
 
-const StyledFieldItem = styled('li', transientOptions)<{
+const StyledFieldItem = styled.li`
+  list-style: none;
+`;
+
+const StyledFieldButton = styled('button', transientOptions)<{
   $isSelected: boolean;
   $hasActive: boolean;
 }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   padding: ${(props) => `${props.theme.spaces.s050} ${props.theme.spaces.s100}`};
+  border: none;
+  text-align: left;
   cursor: pointer;
   font-size: ${(props) => props.theme.fontSizeBase};
   background: ${(props) => (props.$isSelected ? props.theme.brandDark : 'transparent')};
@@ -243,22 +250,23 @@ function FilterControl({ fields, activeFilters, onChange }: FilterControlProps) 
       >
         <StyledPanelWrapper>
           <StyledPanelBody>
-            <StyledFieldList role="listbox" aria-label={t('actions-filter-by')}>
+            <StyledFieldList aria-label={t('actions-filter-by')}>
               {fields.map((field) => {
                 const hasActive = (activeFilters[field.id]?.length ?? 0) > 0;
                 const isSelected = field.id === selectedFieldId;
 
                 return (
-                  <StyledFieldItem
-                    key={field.id}
-                    $isSelected={isSelected}
-                    $hasActive={hasActive}
-                    role="option"
-                    aria-selected={isSelected}
-                    onClick={() => setSelectedFieldId(field.id)}
-                  >
-                    {field.label}
-                    {hasActive && <StyledActiveDot $isOnSelected={isSelected} aria-hidden />}
+                  <StyledFieldItem key={field.id}>
+                    <StyledFieldButton
+                      type="button"
+                      $isSelected={isSelected}
+                      $hasActive={hasActive}
+                      aria-pressed={isSelected}
+                      onClick={() => setSelectedFieldId(field.id)}
+                    >
+                      {field.label}
+                      {hasActive && <StyledActiveDot $isOnSelected={isSelected} aria-hidden />}
+                    </StyledFieldButton>
                   </StyledFieldItem>
                 );
               })}
