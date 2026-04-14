@@ -14,6 +14,7 @@ import CategoryListBlock from '@/components/contentblocks/CategoryListBlock';
 import ExpandableFeedbackFormBlock from '@/components/contentblocks/ExpandableFeedbackFormBlock';
 import PlanDatasetsBlock from '@/components/contentblocks/PlanDatasetsBlock';
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
+import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
 
 import PathsNodeSummary from '../paths/PathsNodeSummary';
@@ -82,6 +83,7 @@ export default function CategoryPageStreamField({
 }: Props) {
   const theme = useTheme();
   const plan = usePlan();
+  const paths = usePaths();
   const columnProps = {};
   switch (block.__typename) {
     case 'CategoryPageAttributeTypeBlock': {
@@ -152,7 +154,7 @@ export default function CategoryPageStreamField({
     }
 
     case 'PathsNodeSummaryBlock': {
-      if (!page.category?.kausalPathsNodeUuid) {
+      if (!page.category?.kausalPathsNodeUuid || !paths?.instance) {
         return null;
       }
       return (
