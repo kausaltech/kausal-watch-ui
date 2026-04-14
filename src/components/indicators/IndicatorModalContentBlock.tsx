@@ -411,6 +411,11 @@ const IndicatorModalContentBlock = ({
     case 'IndicatorFactorValueSummaryContentBlock':
       return <IndicatorFactorValueSummaryBlock block={block} indicator={indicator} />;
     case 'IndicatorVisualizationContentBlock': {
+      // Check if it makes sense to show the visualisation
+      const showGraph = !(indicator.hideIndicatorGraph ?? false);
+      const showTable = !(indicator.hideIndicatorTable ?? false);
+      const indicatorHasData = indicator.values.length > 0;
+      if (!indicatorHasData || (!showGraph && !showTable)) return null;
       const visualisation = (
         <IndicatorVisualisation
           indicatorId={indicator.id}
