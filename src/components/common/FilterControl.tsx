@@ -244,8 +244,8 @@ function FilterControl({ fields, activeFilters, onChange }: FilterControlProps) 
         anchorEl={anchorEl}
         onClose={handleClose}
         disableScrollLock
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         slotProps={{ paper: { elevation: 3 } }}
       >
         <StyledPanelWrapper>
