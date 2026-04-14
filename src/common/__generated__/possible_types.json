@@ -243,7 +243,8 @@
     ],
     "CategoryPageMainTopBlock": [
       "CategoryPageAttributeTypeBlock",
-      "CategoryPageProgressBlock"
+      "CategoryPageProgressBlock",
+      "PathsNodeSummaryBlock"
     ],
     "ChangeLogMessageInterface": [
       "ActionChangeLogMessage",
@@ -608,6 +609,7 @@
       "OrganizationColumnBlock",
       "PageChooserBlock",
       "PageLinkBlock",
+      "PathsNodeSummaryBlock",
       "PathsOutcomeBlock",
       "PlanDatasetsBlock",
       "PlanFilterBlock",

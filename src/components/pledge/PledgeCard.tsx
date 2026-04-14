@@ -9,6 +9,8 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import { usePrependPlanAndLocale } from '@/common/links';
 import Button from '@/components/common/Button';
 import Icon, { type ValidIconName } from '@/components/common/Icon';
@@ -200,9 +202,7 @@ const StyledCardFooterSpacer = styled.div`
   flex: 1 1 auto;
 `;
 
-const StyledCommitButton = styled(Button, {
-  shouldForwardProp: (prop) => prop !== '$isCommitted',
-})<{ $isCommitted: boolean }>`
+const StyledCommitButton = styled(Button, transientOptions)<{ $isCommitted: boolean }>`
   align-self: flex-start;
   display: inline-flex;
   align-items: center;

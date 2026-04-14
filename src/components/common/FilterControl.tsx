@@ -228,7 +228,6 @@ function FilterControl({ fields, activeFilters, onChange }: FilterControlProps) 
   return (
     <>
       <StyledFilterButton
-        active={isOpen}
         outline
         color="primary"
         onClick={handleOpen}
@@ -244,6 +243,7 @@ function FilterControl({ fields, activeFilters, onChange }: FilterControlProps) 
         open={isOpen}
         anchorEl={anchorEl}
         onClose={handleClose}
+        disableScrollLock
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         slotProps={{ paper: { elevation: 3 } }}
