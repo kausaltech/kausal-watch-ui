@@ -19,7 +19,7 @@ type Trace = {
   y: Array<number | null>;
 };
 
-type Spec = { unit?: string | null };
+type Spec = { unit?: string | null; valueRounding?: number | null };
 
 type ExtraColumn = {
   header: string;
@@ -33,7 +33,7 @@ type GraphAsTableProps = {
   timeResolution: IndicatorTimeResolution;
   specification: Spec;
   title?: string;
-  language: string;
+  openByDefault?: boolean;
   extraColumns?: ExtraColumn[];
 };
 
@@ -100,13 +100,15 @@ function GraphAsTable({
   timeResolution,
   specification,
   title,
-  language,
   extraColumns = [],
+  openByDefault = false,
 }: GraphAsTableProps) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-  const formatNumber = useNumberFormatter();
+  const formatNumber = useNumberFormatter({
+    maximumSignificantDigits: specification.valueRounding ?? undefined,
+  });
   const isTime = data?.[0]?.xType === 'time';
 
   const { tableData, tableCategoryHeaders } = useMemo(() => {
@@ -169,6 +171,59 @@ function GraphAsTable({
     return { tableData, tableCategoryHeaders };
   }, [data, goalTraces, extraColumns, isTime, timeResolution]);
 
+  const dataTable = (
+    <TableContainer>
+      <Table responsive bordered size="sm">
+        {title && <caption>{title}</caption>}
+        <thead>
+          {tableCategoryHeaders.length > 0 && (
+            <tr>
+              <th></th>
+              {tableCategoryHeaders.map((header, i) => (
+                <th key={i} colSpan={header.count} scope="colgroup">
+                  {header.name}
+                </th>
+              ))}
+            </tr>
+          )}
+          <tr>
+            <td></td>
+            {data.map((trace, i) => (
+              <th key={i} scope="col">
+                {trace.name.replace(`${trace._parentName ?? ''}, `, '')}
+                {specification.unit ? ` (${specification.unit})` : ''}
+              </th>
+            ))}
+            {goalTraces.map((trace, i) => (
+              <th key={i} scope="col">
+                {trace.name}
+                {specification.unit ? ` (${specification.unit})` : ''}
+              </th>
+            ))}
+            {extraColumns.map((col, i) => (
+              <th key={`extra-${i}`} scope="col">
+                {col.header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {tableData.map((row, i) => (
+            <tr key={i}>
+              <th scope="row">{row.label}</th>
+              {row.values.map((value, j) => (
+                <td key={j}>{value != null ? formatNumber(value) : null}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </TableContainer>
+  );
+
+  if (openByDefault) {
+    return dataTable;
+  }
   return (
     <CollapsibleTable>
       <TriggerButton color="link" size="sm" onClick={toggle}>
@@ -176,55 +231,7 @@ function GraphAsTable({
         <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
       </TriggerButton>
 
-      <Collapse isOpen={isOpen}>
-        <TableContainer>
-          <Table responsive bordered size="sm">
-            {title && <caption>{title}</caption>}
-            <thead>
-              {tableCategoryHeaders.length > 0 && (
-                <tr>
-                  <th></th>
-                  {tableCategoryHeaders.map((header, i) => (
-                    <th key={i} colSpan={header.count} scope="colgroup">
-                      {header.name}
-                    </th>
-                  ))}
-                </tr>
-              )}
-              <tr>
-                <td></td>
-                {data.map((trace, i) => (
-                  <th key={i} scope="col">
-                    {trace.name.replace(`${trace._parentName ?? ''}, `, '')}
-                    {specification.unit ? ` (${specification.unit})` : ''}
-                  </th>
-                ))}
-                {goalTraces.map((trace, i) => (
-                  <th key={i} scope="col">
-                    {trace.name}
-                    {specification.unit ? ` (${specification.unit})` : ''}
-                  </th>
-                ))}
-                {extraColumns.map((col, i) => (
-                  <th key={`extra-${i}`} scope="col">
-                    {col.header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {tableData.map((row, i) => (
-                <tr key={i}>
-                  <th scope="row">{row.label}</th>
-                  {row.values.map((value, j) => (
-                    <td key={j}>{value != null ? formatNumber(value) : null}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </TableContainer>
-      </Collapse>
+      <Collapse isOpen={isOpen}>{dataTable}</Collapse>
     </CollapsibleTable>
   );
 }
