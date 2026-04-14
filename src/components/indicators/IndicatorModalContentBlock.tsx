@@ -118,6 +118,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
             useLegacyGraph={false}
             showGraph={showIndicatorGraph}
             showTable={showIndicatorTable}
+            showReference={false}
           />
         </ContentBlockWrapper>
       );
@@ -414,9 +415,11 @@ const IndicatorModalContentBlock = ({
         <IndicatorVisualisation
           indicatorId={indicator.id}
           useLegacyGraph={false}
-          showReference={true}
+          showReference={false}
           {...componentProps?.['IndicatorVisualisation']}
           showFactorValues={block.showFactorValues ?? false}
+          showGraph={!(indicator.hideIndicatorGraph ?? false)}
+          showTable={!(indicator.hideIndicatorTable ?? false)}
         />
       );
 
