@@ -12,6 +12,7 @@ import type {
   GetNodeContentQuery,
   GetNodeContentQueryVariables,
 } from '@/common/__generated__/paths/graphql';
+import { usePaths } from '@/context/paths/paths';
 import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 
@@ -38,17 +39,23 @@ const PathsContentLoader = (props) => {
   );
 };
 
+//   pathsInstance: GetInstanceContextQuery['instance'];
 type PathsNodeContentProps = {
   categoryId: string;
   node: string;
-  pathsInstance: GetInstanceContextQuery['instance'];
   onLoaded?: (id: string, impact: number) => void;
   targetNodeId?: string | null;
 };
 
 const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
-  const { categoryId, node, pathsInstance, onLoaded, targetNodeId } = props;
-  const pathsInstanceId = pathsInstance.id;
+  const { categoryId, node, onLoaded, targetNodeId } = props;
+  const paths = usePaths();
+  const pathsInstance = paths?.instance;
+  const pathsInstanceId = pathsInstance?.id;
+  if (!pathsInstance) {
+    captureException(new Error('Paths instance not found in context'));
+    return null;
+  }
   const activeGoal = useReactiveVar(activeGoalVar);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -76,7 +83,7 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
     variables: {
       node: node,
       goal: actionImpactGoal?.id ?? 'net_emissions',
-      targetNodeId: targetNodeId ?? undefined,
+      targetNodeId: targetNodeId ?? null,
     },
     notifyOnNetworkStatusChange: true,
     context: {

@@ -44,6 +44,11 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
             }
           }
         }
+        ... on PathsNodeSummaryBlock {
+          id
+          heading
+          pathsTargetNodeId
+        }
       }
       layoutMainBottom {
         __typename
