@@ -22,6 +22,7 @@ export const ATTRIBUTE_FRAGMENT = gql`
     ... on AttributeChoice {
       choice {
         id
+        identifier
         name
       }
       text
@@ -56,6 +57,7 @@ export const ATTRIBUTE_TYPE_FRAGMENT = gql`
     choiceOptions {
       id
       identifier
+      name
     }
     unit {
       id
