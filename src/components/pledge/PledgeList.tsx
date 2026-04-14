@@ -466,7 +466,7 @@ function PledgeList({ pledges }: Props) {
           </StyledPledgeGrid>
         )}
 
-        {view === 'MY_PLEDGES' && viewFiltered.length === 0 && (
+        {view === 'MY_PLEDGES' && viewFiltered.length === 0 && pledges.length > 0 && (
           <StyledEmptyState>
             <StyledEmptyIconWrapper>
               <Icon name="globe" width="48px" height="48px" />
