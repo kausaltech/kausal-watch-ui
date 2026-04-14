@@ -94,11 +94,9 @@ const StyledChipValue = styled.span`
  * Extracts the display value from an attribute as plain text for chip rendering.
  */
 export function getAttributeValueText(
-  attribute: AttributesBlockAttributeFragment | AttributesBlockAttributeWithNestedTypeFragment
+  attribute: AttributesBlockAttributeFragment | AttributesBlockAttributeWithNestedTypeFragment,
+  formatNumber = (n: number) => String(n)
 ): string | null {
-  // maximumFractionDigits: 100 ensures that the number is not rounded
-  const formatNumber = useNumberFormatter({ maximumFractionDigits: 100 });
-
   switch (attribute.__typename) {
     case 'AttributeChoice':
       return attribute.choice?.name ?? null;
@@ -143,7 +141,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
 
   // Chip variant with a simple "label: value" format
   if (variant === 'chip') {
-    const chipValue = getAttributeValueText(attribute);
+    const chipValue = getAttributeValueText(attribute, formatNumber);
 
     if (!chipValue) return null;
 
