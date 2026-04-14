@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
+import { Chip, Collapse, InputAdornment, TextField } from '@mui/material';
+import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
+import { Search } from 'react-bootstrap-icons';
 import { Button, ButtonGroup, Container } from 'reactstrap';
 
 import type { GetPledgesQuery } from '@/common/__generated__/graphql';
+import FilterControl, { type FilterField } from '@/components/common/FilterControl';
 import Icon from '@/components/common/Icon';
 import { getDefaultFormFields } from '@/utils/pledge.utils';
 
@@ -22,6 +26,46 @@ export type Pledge = NonNullable<
 type Props = {
   pledges: Pledge[];
 };
+
+function filterByOwnPledges(pledges: Pledge[], committedSlugs: Set<string>): Pledge[] {
+  return pledges.filter((pledge) => committedSlugs.has(pledge.slug));
+}
+
+function filterBySearch(pledges: Pledge[], searchQuery: string): Pledge[] {
+  const lowerQuery = searchQuery.toLowerCase();
+
+  if (!lowerQuery) {
+    return pledges;
+  }
+
+  return pledges.filter(
+    (pledge) =>
+      pledge.name.toLowerCase().includes(lowerQuery) ||
+      (pledge.description ?? '').toLowerCase().includes(lowerQuery)
+  );
+}
+
+function filterByAttributes(pledges: Pledge[], activeFilters: Record<string, string[]>): Pledge[] {
+  let filtered = pledges;
+
+  Object.entries(activeFilters).forEach(([fieldId, selectedValues]) => {
+    if (selectedValues.length === 0) {
+      return;
+    }
+
+    filtered = filtered.filter((pledge) =>
+      pledge.attributes.some((attribute) => {
+        if (attribute.__typename !== 'AttributeChoice' || attribute.type.id !== fieldId) {
+          return false;
+        }
+
+        return selectedValues.some((selected) => attribute.choice?.identifier === selected);
+      })
+    );
+  });
+
+  return filtered;
+}
 
 /**
  * Wrapper to allow child sections to stretch outside of the parent containers gutters
@@ -44,11 +88,43 @@ const StyledRadioButton = styled(Button)`
 `;
 
 const StyledTabsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spaces.s100};
+  flex-wrap: wrap;
   margin-bottom: ${({ theme }) => theme.spaces.s200};
+`;
 
-  @media (max-width: ${(props) => props.theme.breakpointSm}) {
-    text-align: center;
+const StyledToolbarLeft = styled.div`
+  flex-shrink: 0;
+`;
+
+const StyledToolbarRight = styled.div`
+  display: flex;
+  align-items: stretch;
+  gap: ${({ theme }) => theme.spaces.s100};
+  flex: 1;
+  flex-wrap: wrap;
+
+  @media (max-width: ${({ theme }) => theme.breakpointSm}) {
+    flex-basis: 100%;
   }
+`;
+
+const StyledActiveFiltersRow = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spaces.s100};
+  margin-bottom: ${({ theme }) => theme.spaces.s150};
+  padding-bottom: ${({ theme }) => theme.spaces.s150};
+  border-bottom: 1px solid ${({ theme }) => theme.graphColors.grey020};
+`;
+
+const StyledFilterCount = styled.span`
+  font-size: ${({ theme }) => theme.fontSizeBase};
+  font-weight: ${({ theme }) => theme.fontWeightBold};
+  margin-right: ${({ theme }) => theme.spaces.s050};
 `;
 
 const StyledPledgeGrid = styled.div`
@@ -119,12 +195,68 @@ const StyledBrowseAllButton = styled.button`
   }
 `;
 
+// Ensure the height of the search bar matches the other filter buttons
+const StyledTextField = styled(TextField)`
+  flex: 1;
+
+  .MuiInputBase-root {
+    height: 100%;
+  }
+
+  .MuiInputBase-input {
+    height: 100%;
+  }
+`;
+
 type ViewType = 'ALL' | 'MY_PLEDGES';
+
+type Attribute = {
+  id: string;
+  label: string;
+  options: { id: string; label: string }[];
+};
+
+// Takes all pledges and figures out the available filters based on their attributes
+function getFiltersFromPledgeAttributes(pledges: Pledge[]): Attribute[] {
+  const attributeMap = new Map<string, Attribute>();
+
+  for (const pledge of pledges) {
+    for (const attribute of pledge.attributes) {
+      if (!attributeMap.has(attribute.type.id)) {
+        attributeMap.set(attribute.type.id, {
+          id: attribute.type.id,
+          label: attribute.type.name,
+          options: attribute.type.choiceOptions.map((option) => ({
+            id: option.identifier,
+            label: option.name,
+          })),
+        });
+      }
+    }
+  }
+
+  return Array.from(attributeMap.values());
+}
 
 function PledgeList({ pledges }: Props) {
   const [view, setView] = useState<ViewType>('ALL');
   const [showConfirmDrawer, setShowConfirmDrawer] = useState(false);
   const [selectedPledge, setSelectedPledge] = useState<Pledge | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({});
+
+  // Search input is uncontrolled, store it in a ref for clearing
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const filterFields: FilterField[] = useMemo(
+    () => getFiltersFromPledgeAttributes(pledges),
+    [pledges]
+  );
+
+  const handleSearchChange = useMemo(
+    () => debounce((e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value), 600),
+    []
+  );
 
   const t = useTranslations();
   const {
@@ -155,8 +287,29 @@ function PledgeList({ pledges }: Props) {
     setSelectedPledge(null);
   };
 
-  const filteredPledges =
-    view === 'MY_PLEDGES' ? pledges.filter((pledge) => committedSlugs.has(pledge.slug)) : pledges;
+  const handleClearSearch = () => {
+    setSearchQuery('');
+
+    if (searchInputRef.current) {
+      searchInputRef.current.value = '';
+    }
+  };
+
+  const viewFiltered =
+    view === 'MY_PLEDGES' ? filterByOwnPledges(pledges, committedSlugs) : pledges;
+  const searchFiltered = filterBySearch(viewFiltered, searchQuery);
+  const filteredPledges = filterByAttributes(searchFiltered, activeFilters);
+
+  const activeFilterChips = filterFields.flatMap((field) =>
+    (activeFilters[field.id] ?? []).map((value) => ({
+      fieldId: field.id,
+      fieldLabel: field.label,
+      value: {
+        id: value,
+        label: field.options.find((option) => option.id === value)?.label ?? value,
+      },
+    }))
+  );
 
   const mostCommitted = pledges.reduce(
     (mostCommittedPledge: null | Pledge, pledge) =>
@@ -172,7 +325,7 @@ function PledgeList({ pledges }: Props) {
    * means any arrow key switches to the other option.
    * https://www.w3.org/WAI/ARIA/apg/patterns/radio/
    */
-  function handleRadiosKeyDown(e: React.KeyboardEvent) {
+  function handleMyPledgesKeyDown(e: React.KeyboardEvent) {
     if (
       e.key === 'ArrowLeft' ||
       e.key === 'ArrowUp' ||
@@ -193,38 +346,100 @@ function PledgeList({ pledges }: Props) {
     <StyledPageWrapper>
       <StyledContainer>
         <StyledTabsContainer>
-          <ButtonGroup
-            size="small"
-            role="radiogroup"
-            aria-label={t('pledge-list-view-toggle')}
-            onKeyDown={handleRadiosKeyDown}
-          >
-            <StyledRadioButton
-              color="black"
+          <StyledToolbarLeft>
+            <ButtonGroup
               size="small"
-              outline
-              onClick={() => setView('ALL')}
-              active={view === 'ALL'}
-              aria-checked={view === 'ALL'}
-              role="radio"
-              tabIndex={view === 'ALL' ? 0 : -1}
+              role="radiogroup"
+              aria-label={t('pledge-list-view-toggle')}
+              onKeyDown={handleMyPledgesKeyDown}
             >
-              {t('pledge-list-all')}
-            </StyledRadioButton>
-            <StyledRadioButton
-              color="black"
+              <StyledRadioButton
+                color="black"
+                size="small"
+                outline
+                onClick={() => setView('ALL')}
+                active={view === 'ALL'}
+                aria-checked={view === 'ALL'}
+                role="radio"
+                tabIndex={view === 'ALL' ? 0 : -1}
+              >
+                {t('pledge-list-all')}
+              </StyledRadioButton>
+              <StyledRadioButton
+                color="black"
+                size="small"
+                outline
+                onClick={() => setView('MY_PLEDGES')}
+                active={view === 'MY_PLEDGES'}
+                aria-checked={view === 'MY_PLEDGES'}
+                role="radio"
+                tabIndex={view === 'MY_PLEDGES' ? 0 : -1}
+              >
+                {t('pledge-list-mine')}
+              </StyledRadioButton>
+            </ButtonGroup>
+          </StyledToolbarLeft>
+
+          <StyledToolbarRight>
+            <StyledTextField
+              inputRef={searchInputRef}
+              hiddenLabel
+              type="search"
+              aria-label={t('search')}
+              variant="outlined"
+              placeholder={t('search')}
               size="small"
-              outline
-              onClick={() => setView('MY_PLEDGES')}
-              active={view === 'MY_PLEDGES'}
-              aria-checked={view === 'MY_PLEDGES'}
-              role="radio"
-              tabIndex={view === 'MY_PLEDGES' ? 0 : -1}
-            >
-              {t('pledge-list-mine')}
-            </StyledRadioButton>
-          </ButtonGroup>
+              onChange={handleSearchChange}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search size={16} />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+
+            {filterFields.length > 0 && (
+              <FilterControl
+                fields={filterFields}
+                activeFilters={activeFilters}
+                onChange={(fieldId, values) =>
+                  setActiveFilters((prev) => ({ ...prev, [fieldId]: values }))
+                }
+              />
+            )}
+          </StyledToolbarRight>
         </StyledTabsContainer>
+
+        <Collapse in={!!searchQuery || activeFilterChips.length > 0} mountOnEnter unmountOnExit>
+          <StyledActiveFiltersRow>
+            <StyledFilterCount>
+              {t('pledge-list-filtered-count', { count: filteredPledges.length })}
+            </StyledFilterCount>
+
+            {!!searchQuery && <Chip label={searchQuery.trim()} onDelete={handleClearSearch} />}
+
+            {activeFilterChips.map(({ fieldId, fieldLabel, value }) => (
+              <Chip
+                key={`${fieldId}-${value.id}`}
+                label={
+                  <>
+                    {!!fieldLabel && <>{fieldLabel}: </>}
+                    <strong>{value.label}</strong>
+                  </>
+                }
+                onDelete={() =>
+                  setActiveFilters((prev) => ({
+                    ...prev,
+                    [fieldId]: (prev[fieldId] ?? []).filter((id) => id !== value.id),
+                  }))
+                }
+              />
+            ))}
+          </StyledActiveFiltersRow>
+        </Collapse>
 
         {filteredPledges.length > 0 && (
           <StyledPledgeGrid>
@@ -251,7 +466,7 @@ function PledgeList({ pledges }: Props) {
           </StyledPledgeGrid>
         )}
 
-        {view === 'MY_PLEDGES' && filteredPledges.length === 0 && pledges.length > 0 && (
+        {view === 'MY_PLEDGES' && viewFiltered.length === 0 && (
           <StyledEmptyState>
             <StyledEmptyIconWrapper>
               <Icon name="globe" width="48px" height="48px" />
