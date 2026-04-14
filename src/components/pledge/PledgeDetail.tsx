@@ -7,6 +7,8 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Container, Spinner } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import type { GetPledgeQuery } from '@/common/__generated__/graphql';
 import { usePrependPlanAndLocale } from '@/common/links';
 import { excludeNullish } from '@/common/utils';
@@ -105,7 +107,7 @@ const StyledActionsRow = styled.div`
   gap: ${({ theme }) => theme.spaces.s050};
 `;
 
-const StyledCommitButton = styled(Button)<{ $isCommitted: boolean }>`
+const StyledCommitButton = styled(Button, transientOptions)<{ $isCommitted: boolean }>`
   display: inline-flex;
   align-items: center;
   gap: ${({ theme }) => theme.spaces.s050};
