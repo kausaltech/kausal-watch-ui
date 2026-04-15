@@ -87,12 +87,13 @@ const StyledRadioButton = styled(Button)`
   }
 `;
 
-const StyledTabsContainer = styled.div`
+const StyledToolbarContainer = styled.div`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spaces.s100};
   flex-wrap: wrap;
   margin-bottom: ${({ theme }) => theme.spaces.s200};
+  align-items: stretch;
 `;
 
 const StyledToolbarLeft = styled.div`
@@ -345,7 +346,7 @@ function PledgeList({ pledges }: Props) {
   return (
     <StyledPageWrapper>
       <StyledContainer>
-        <StyledTabsContainer>
+        <StyledToolbarContainer>
           <StyledToolbarLeft>
             <ButtonGroup
               size="small"
@@ -411,7 +412,7 @@ function PledgeList({ pledges }: Props) {
               />
             )}
           </StyledToolbarRight>
-        </StyledTabsContainer>
+        </StyledToolbarContainer>
 
         <Collapse in={!!searchQuery || activeFilterChips.length > 0} mountOnEnter unmountOnExit>
           <StyledActiveFiltersRow>
