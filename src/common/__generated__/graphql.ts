@@ -2001,7 +2001,7 @@ export type DashboardActionListQuery = (
     ) | (
       { columnLabel: string | null, field: string, attributeType: (
         { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-          { id: string, identifier: string }
+          { id: string, identifier: string, name: string }
           & { __typename: 'AttributeTypeChoiceOption' }
         )>, unit: (
           { id: string, name: string }
@@ -2475,7 +2475,7 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
 
 type AttributesBlockAttribute_AttributeChoice_Fragment = (
   { text: string | null, id: string, choice: (
-    { id: string, name: string }
+    { id: string, identifier: string, name: string }
     & { __typename: 'AttributeTypeChoiceOption' }
   ) | null, type: (
     { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
@@ -2513,7 +2513,7 @@ export type AttributesBlockAttributeFragment = AttributesBlockAttribute_Attribut
 
 export type AttributesBlockAttributeTypeFragment = (
   { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-    { id: string, identifier: string }
+    { id: string, identifier: string, name: string }
     & { __typename: 'AttributeTypeChoiceOption' }
   )>, unit: (
     { id: string, name: string }
@@ -2528,7 +2528,7 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
       { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) | null, choiceOptions: Array<(
-      { id: string, identifier: string }
+      { id: string, identifier: string, name: string }
       & { __typename: 'AttributeTypeChoiceOption' }
     )> }
     & { __typename: 'AttributeType' }
@@ -2782,12 +2782,12 @@ type AttributesBlockAttributeWithNestedType_AttributeChoice_Fragment = (
       { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) | null, choiceOptions: Array<(
-      { id: string, identifier: string }
+      { id: string, identifier: string, name: string }
       & { __typename: 'AttributeTypeChoiceOption' }
     )> }
     & { __typename: 'AttributeType' }
   ), choice: (
-    { id: string, name: string }
+    { id: string, identifier: string, name: string }
     & { __typename: 'AttributeTypeChoiceOption' }
   ) | null }
   & { __typename: 'AttributeChoice' }
@@ -2799,7 +2799,7 @@ type AttributesBlockAttributeWithNestedType_AttributeNumericValue_Fragment = (
       { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) | null, choiceOptions: Array<(
-      { id: string, identifier: string }
+      { id: string, identifier: string, name: string }
       & { __typename: 'AttributeTypeChoiceOption' }
     )> }
     & { __typename: 'AttributeType' }
@@ -2813,7 +2813,7 @@ type AttributesBlockAttributeWithNestedType_AttributeRichText_AttributeText_Frag
       { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) | null, choiceOptions: Array<(
-      { id: string, identifier: string }
+      { id: string, identifier: string, name: string }
       & { __typename: 'AttributeTypeChoiceOption' }
     )> }
     & { __typename: 'AttributeType' }
@@ -3287,7 +3287,7 @@ export type ActionTableColumnFragmentFragment = (
   ) | (
     { columnLabel: string | null, field: string, attributeType: (
       { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-        { id: string, identifier: string }
+        { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       )>, unit: (
         { id: string, name: string }
@@ -6930,7 +6930,7 @@ export type GetActionDetailsQuery = (
       & { __typename: 'AttributeCategoryChoice' }
     ) | (
       { text: string | null, id: string, choice: (
-        { id: string, name: string }
+        { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       ) | null, type: (
         { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
@@ -6989,7 +6989,7 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
@@ -7241,12 +7241,12 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
         ), choice: (
-          { id: string, name: string }
+          { id: string, identifier: string, name: string }
           & { __typename: 'AttributeTypeChoiceOption' }
         ) | null }
         & { __typename: 'AttributeChoice' }
@@ -7256,7 +7256,7 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
@@ -7268,7 +7268,7 @@ export type GetActionDetailsQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
@@ -7898,7 +7898,7 @@ export type GetActionDetailsQuery = (
           & { __typename: 'FieldBlockMetaData' }
         ) | null, attributeType: (
           { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )>, unit: (
             { id: string, name: string }
@@ -7953,7 +7953,7 @@ export type GetActionDetailsQuery = (
         ) | (
           { id: string | null, attributeType: (
             { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-              { id: string, identifier: string }
+              { id: string, identifier: string, name: string }
               & { __typename: 'AttributeTypeChoiceOption' }
             )>, unit: (
               { id: string, name: string }
@@ -8234,7 +8234,7 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'AttributeCategoryChoice' }
               ) | (
                 { text: string | null, id: string, choice: (
-                  { id: string, name: string }
+                  { id: string, identifier: string, name: string }
                   & { __typename: 'AttributeTypeChoiceOption' }
                 ) | null, type: (
                   { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
@@ -8569,7 +8569,7 @@ export type GetActionDetailsQuery = (
               & { __typename: 'AttributeCategoryChoice' }
             ) | (
               { text: string | null, id: string, choice: (
-                { id: string, name: string }
+                { id: string, identifier: string, name: string }
                 & { __typename: 'AttributeTypeChoiceOption' }
               ) | null, type: (
                 { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
@@ -8630,7 +8630,7 @@ export type GetActionDetailsQuery = (
           & { __typename: 'FieldBlockMetaData' }
         ) | null, attributeType: (
           { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )>, unit: (
             { id: string, name: string }
@@ -8685,7 +8685,7 @@ export type GetActionDetailsQuery = (
         ) | (
           { id: string | null, attributeType: (
             { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-              { id: string, identifier: string }
+              { id: string, identifier: string, name: string }
               & { __typename: 'AttributeTypeChoiceOption' }
             )>, unit: (
               { id: string, name: string }
@@ -8966,7 +8966,7 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'AttributeCategoryChoice' }
               ) | (
                 { text: string | null, id: string, choice: (
-                  { id: string, name: string }
+                  { id: string, identifier: string, name: string }
                   & { __typename: 'AttributeTypeChoiceOption' }
                 ) | null, type: (
                   { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
@@ -9301,7 +9301,7 @@ export type GetActionDetailsQuery = (
               & { __typename: 'AttributeCategoryChoice' }
             ) | (
               { text: string | null, id: string, choice: (
-                { id: string, name: string }
+                { id: string, identifier: string, name: string }
                 & { __typename: 'AttributeTypeChoiceOption' }
               ) | null, type: (
                 { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
@@ -9356,7 +9356,7 @@ export type GetActionDetailsQuery = (
           & { __typename: 'FieldBlockMetaData' }
         ) | null, attributeType: (
           { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )>, unit: (
             { id: string, name: string }
@@ -9390,7 +9390,7 @@ export type GetActionDetailsQuery = (
       & { __typename: 'ActionListPage' }
     ) | null, actionAttributeTypes: Array<(
       { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-        { id: string, identifier: string }
+        { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       )>, unit: (
         { id: string, name: string }
@@ -9989,7 +9989,7 @@ type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment =
     & { __typename: 'FieldBlockMetaData' }
   ) | null, attributeType: (
     { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-      { id: string, identifier: string }
+      { id: string, identifier: string, name: string }
       & { __typename: 'AttributeTypeChoiceOption' }
     )>, unit: (
       { id: string, name: string }
@@ -10049,7 +10049,7 @@ type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = 
     & { __typename: 'FieldBlockMetaData' }
   ) | null, attributeType: (
     { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-      { id: string, identifier: string }
+      { id: string, identifier: string, name: string }
       & { __typename: 'AttributeTypeChoiceOption' }
     )>, unit: (
       { id: string, name: string }
@@ -10108,7 +10108,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
   ) | (
     { id: string | null, attributeType: (
       { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-        { id: string, identifier: string }
+        { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       )>, unit: (
         { id: string, name: string }
@@ -10389,7 +10389,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
           & { __typename: 'AttributeCategoryChoice' }
         ) | (
           { text: string | null, id: string, choice: (
-            { id: string, name: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           ) | null, type: (
             { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
@@ -10738,7 +10738,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
         & { __typename: 'AttributeCategoryChoice' }
       ) | (
         { text: string | null, id: string, choice: (
-          { id: string, name: string }
+          { id: string, identifier: string, name: string }
           & { __typename: 'AttributeTypeChoiceOption' }
         ) | null, type: (
           { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
@@ -11042,7 +11042,7 @@ export type ReportComparisonBlockActionContentFragment = (
         & { __typename: 'AttributeCategoryChoice' }
       ) | (
         { text: string | null, id: string, choice: (
-          { id: string, name: string }
+          { id: string, identifier: string, name: string }
           & { __typename: 'AttributeTypeChoiceOption' }
         ) | null, type: (
           { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
@@ -11895,7 +11895,7 @@ export type GetContentPageQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
@@ -12147,12 +12147,12 @@ export type GetContentPageQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
         ), choice: (
-          { id: string, name: string }
+          { id: string, identifier: string, name: string }
           & { __typename: 'AttributeTypeChoiceOption' }
         ) | null }
         & { __typename: 'AttributeChoice' }
@@ -12162,7 +12162,7 @@ export type GetContentPageQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
@@ -12174,7 +12174,7 @@ export type GetContentPageQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
@@ -15348,7 +15348,7 @@ export type OrganizationDetailsQuery = (
       ) | (
         { columnLabel: string | null, field: string, attributeType: (
           { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )>, unit: (
             { id: string, name: string }
@@ -16098,7 +16098,7 @@ export type PledgeFragmentFragment = (
         { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) | null, choiceOptions: Array<(
-        { id: string, identifier: string }
+        { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       )> }
       & { __typename: 'AttributeType' }
@@ -16350,12 +16350,12 @@ export type PledgeFragmentFragment = (
         { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) | null, choiceOptions: Array<(
-        { id: string, identifier: string }
+        { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       )> }
       & { __typename: 'AttributeType' }
     ), choice: (
-      { id: string, name: string }
+      { id: string, identifier: string, name: string }
       & { __typename: 'AttributeTypeChoiceOption' }
     ) | null }
     & { __typename: 'AttributeChoice' }
@@ -16365,7 +16365,7 @@ export type PledgeFragmentFragment = (
         { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) | null, choiceOptions: Array<(
-        { id: string, identifier: string }
+        { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       )> }
       & { __typename: 'AttributeType' }
@@ -16377,7 +16377,7 @@ export type PledgeFragmentFragment = (
         { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) | null, choiceOptions: Array<(
-        { id: string, identifier: string }
+        { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       )> }
       & { __typename: 'AttributeType' }
@@ -16443,7 +16443,7 @@ export type GetPledgesQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
@@ -16695,12 +16695,12 @@ export type GetPledgesQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
         ), choice: (
-          { id: string, name: string }
+          { id: string, identifier: string, name: string }
           & { __typename: 'AttributeTypeChoiceOption' }
         ) | null }
         & { __typename: 'AttributeChoice' }
@@ -16710,7 +16710,7 @@ export type GetPledgesQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
@@ -16722,7 +16722,7 @@ export type GetPledgesQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
@@ -16851,7 +16851,7 @@ export type GetPledgeQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
@@ -17103,12 +17103,12 @@ export type GetPledgeQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
         ), choice: (
-          { id: string, name: string }
+          { id: string, identifier: string, name: string }
           & { __typename: 'AttributeTypeChoiceOption' }
         ) | null }
         & { __typename: 'AttributeChoice' }
@@ -17118,7 +17118,7 @@ export type GetPledgeQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
@@ -17130,7 +17130,7 @@ export type GetPledgeQuery = (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) | null, choiceOptions: Array<(
-            { id: string, identifier: string }
+            { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
