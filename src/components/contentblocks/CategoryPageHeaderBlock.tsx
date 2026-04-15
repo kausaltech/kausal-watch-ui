@@ -25,10 +25,8 @@ import CategoryPageStreamField, {
   type CategoryPageMainTopBlock,
 } from '@/components/common/CategoryPageStreamField';
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
-import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
 
-import PathsNodeSummary from '../paths/PathsNodeSummary';
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
@@ -180,10 +178,6 @@ const HeaderContent = styled.div<{
 const AttributesContainer = styled.div`
   max-width: ${(props) => props.theme.breakpointMd};
   margin: 0 ${({ theme }) => (theme.settings.layout.leftAlignCategoryPages ? '0' : 'auto')};
-`;
-
-const PathsContentWrapper = styled.div`
-  margin-bottom: ${({ theme }) => theme.spaces.s200};
 `;
 
 const getIconHeight = (size: IconSize = IconSize.M, theme: Theme) => {
@@ -367,8 +361,6 @@ export default function CategoryPageHeaderBlock(props: Props) {
   const plan = usePlan();
   const theme = useTheme();
   const t = useTranslations();
-  const paths = usePaths();
-  const pathsInstance = paths?.instance;
 
   const containImages = theme.settings.layout.containImages ?? false;
   const imageLayout = containImages ? 'contained' : 'full-width';
@@ -391,18 +383,6 @@ export default function CategoryPageHeaderBlock(props: Props) {
 
   const showLevel = level && !theme.settings.categories.categoryPageHideCategoryLabel;
   const parentCategory = page.category?.parent;
-
-  const pathsNodeId = page.category?.kausalPathsNodeUuid;
-  const PathsNodeAttribute =
-    pathsNodeId && pathsInstance?.id ? (
-      <PathsContentWrapper>
-        <PathsNodeSummary
-          categoryId={identifier ?? ''}
-          node={pathsNodeId}
-          pathsInstance={pathsInstance}
-        />
-      </PathsContentWrapper>
-    ) : null;
 
   return (
     <CategoryHeader $bg={containImages ? theme.brandDark : color} $hasImage={!!headerImage}>
@@ -460,18 +440,14 @@ export default function CategoryPageHeaderBlock(props: Props) {
               {lead && <p>{lead}</p>}
 
               {layout ? (
-                <CategoryHeaderAttributes page={page} layout={layout}>
-                  {PathsNodeAttribute}
-                </CategoryHeaderAttributes>
+                <CategoryHeaderAttributes page={page} layout={layout} />
               ) : (
                 <LegacyCategoryHeaderAttributes
                   attributes={attributes}
                   categoryTypes={data?.plan?.categoryTypes}
                   categoryId={categoryId}
                   typeId={typeId}
-                >
-                  {PathsNodeAttribute}
-                </LegacyCategoryHeaderAttributes>
+                />
               )}
             </HeaderContent>
           </Col>

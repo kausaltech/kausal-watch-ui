@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import * as Sentry from '@sentry/nextjs';
 import { Col, type ColProps, Container, Row } from 'reactstrap';
 
@@ -13,8 +14,10 @@ import CategoryListBlock from '@/components/contentblocks/CategoryListBlock';
 import ExpandableFeedbackFormBlock from '@/components/contentblocks/ExpandableFeedbackFormBlock';
 import PlanDatasetsBlock from '@/components/contentblocks/PlanDatasetsBlock';
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
+import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
 
+import PathsNodeSummary from '../paths/PathsNodeSummary';
 import ChangeHistory from './ChangeHistory';
 
 type OmitUnion<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
@@ -26,6 +29,9 @@ enum ProgressBasis {
   STATUS = 'status',
 }
 
+const PathsNodeWrapper = styled.div`
+  margin-bottom: ${({ theme }) => theme.spaces.s200};
+`;
 interface WrapperProps {
   children: React.ReactNode;
   withContainer?: boolean;
@@ -77,6 +83,7 @@ export default function CategoryPageStreamField({
 }: Props) {
   const theme = useTheme();
   const plan = usePlan();
+  const paths = usePaths();
   const columnProps = {};
   switch (block.__typename) {
     case 'CategoryPageAttributeTypeBlock': {
@@ -143,6 +150,21 @@ export default function CategoryPageStreamField({
             />
           </Col>
         </Wrapper>
+      );
+    }
+
+    case 'PathsNodeSummaryBlock': {
+      if (!page.category?.kausalPathsNodeUuid || !paths?.instance) {
+        return null;
+      }
+      return (
+        <PathsNodeWrapper>
+          <PathsNodeSummary
+            categoryId={page.category?.identifier ?? ''}
+            node={page.category?.kausalPathsNodeUuid}
+            targetNodeId={block?.pathsTargetNodeId || null}
+          />
+        </PathsNodeWrapper>
       );
     }
 
