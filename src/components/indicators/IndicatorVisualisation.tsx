@@ -520,8 +520,8 @@ function FactorCharts({
                   data={[factorTrace]}
                   goalTraces={[]}
                   title={metric.label}
-                  language={language}
                   extraColumns={[factorExtraColumn]}
+                  openByDefault={!showGraph}
                 />
               )}
             </div>
@@ -844,7 +844,7 @@ function IndicatorVisualisation({
           data={traces}
           goalTraces={goalTraces}
           title={plotTitle}
-          language={i18n.language}
+          openByDefault={!showGraph}
         />
       )}
       {showFactorValues && indicator.datasets && (

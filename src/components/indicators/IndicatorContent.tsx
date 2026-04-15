@@ -197,6 +197,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
                     <Col className="mb-4">
                       <GraphContainer>
                         {showGraphHeader && <h2>{indicator.name}</h2>}
+                        {/* In legacy layouts we show reference always with the visualisation */}
                         <IndicatorVisualisation
                           indicatorId={indicator.id}
                           showReference={true}
