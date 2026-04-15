@@ -1,6 +1,7 @@
 import React, { type ReactElement } from 'react';
 
 import styled from '@emotion/styled';
+import { readableColor } from 'polished';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -62,6 +63,8 @@ const AttributeChoiceLabel = styled.div`
   &.highlighted {
     display: inline-block;
     background-color: ${(props) => props.theme.brandLight};
+    color: ${({ theme }) =>
+      readableColor(theme.brandLight, theme.themeColors.black, theme.themeColors.white)};
     padding: ${(props) => props.theme.spaces.s025} ${(props) => props.theme.spaces.s050};
     border-radius: ${(props) => props.theme.badgeBorderRadius};
   }
@@ -82,11 +85,11 @@ const StyledChipContainer = styled.span`
 `;
 
 const StyledChipLabel = styled.span`
-  color: ${(props) => props.theme.textColor.secondary};
+  color: #ffffff;
 `;
 
 const StyledChipValue = styled.span`
-  color: ${(props) => props.theme.textColor.primary};
+  color: #990000;
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
