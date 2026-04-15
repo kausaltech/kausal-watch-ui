@@ -85,11 +85,11 @@ const StyledChipContainer = styled.span`
 `;
 
 const StyledChipLabel = styled.span`
-  color: #ffffff;
+  color: ${(props) => props.theme.textColor.secondary};
 `;
 
 const StyledChipValue = styled.span`
-  color: #990000;
+  color: ${(props) => props.theme.textColor.primary};
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
