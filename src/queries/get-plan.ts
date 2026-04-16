@@ -27,6 +27,7 @@ const GET_PLAN_CONTEXT = gql`
     shortName
     versionName
     themeIdentifier
+    timezone
     primaryLanguage
     otherLanguages
     hideActionIdentifiers

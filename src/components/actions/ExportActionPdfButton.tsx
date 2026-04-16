@@ -10,6 +10,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useLocale, useTranslations } from 'next-intl';
 import { ChevronDown, FilePdf } from 'react-bootstrap-icons';
 
+import { usePlan } from '@/context/plan';
+
 const ErrorMessage = styled.div`
   color: ${({ theme }) => theme.graphColors.red070};
   font-size: ${({ theme }) => theme.fontSizeSm};
@@ -20,6 +22,7 @@ export default function ExportActionPdfButton() {
   const t = useTranslations();
   const locale = useLocale();
   const pathname = usePathname();
+  const plan = usePlan();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -38,10 +41,13 @@ export default function ExportActionPdfButton() {
     setError(null);
 
     try {
+      const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const timezone = plan.timezone || browserTimezone;
+
       const response = await fetch('/api/export-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: pathname, locale }),
+        body: JSON.stringify({ path: pathname, locale, timezone }),
       });
 
       if (!response.ok) {
@@ -65,7 +71,7 @@ export default function ExportActionPdfButton() {
     } finally {
       setLoading(false);
     }
-  }, [pathname, locale, t]);
+  }, [pathname, locale, plan.timezone, t]);
 
   return (
     <div className="d-print-none">
