@@ -59,5 +59,17 @@
     "actions-continuous": "Acciones en curso",
     "actions-non-continuous": "Acciones no continuas",
     "filter-action-type": "Tipo de acción",
-    "see-all-actions": "Todas las acciones"
+    "see-all-actions": "Todas las acciones",
+    "action-dependencies": "{context, select, CASE_STUDY {Dependencias del estudio de caso} STRATEGY {Dependencias de la estrategia} other {Dependencias de la acción}}",
+    "action-end-date": "Fin",
+    "action-leadParagraph": "Párrafo principal",
+    "action-not-continuous": "No continua",
+    "action-start-date": "Inicio",
+    "download": "Descargar",
+    "download-page-as-pdf": "Página como PDF",
+    "feedback-on-category": "Dar su opinión sobre esta categoría",
+    "feedback-on-category-description": "Puede dejar un comentario o sugerencia sobre esta categoría",
+    "logo": "Logotipo",
+    "n-more-actions": "Más {count} {context, select, CASE_STUDY {{count, plural, =1 {estudio de caso} other {estudios de caso}}} STRATEGY {{count, plural, =1 {estrategia} other {estrategias}}} other {{count, plural, =1 {acción} other {acciones}}}}",
+    "pdf-export-failed": "La exportación de PDF falló"
 }
