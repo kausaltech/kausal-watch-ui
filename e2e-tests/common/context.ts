@@ -9,7 +9,7 @@ import type {
   PlaywrightGetPlanInfoQueryVariables,
 } from '../__generated__/graphql.ts';
 
-const { ApolloClient, InMemoryCache, gql } =
+const { ApolloClient, InMemoryCache, HttpLink, gql } =
   'default' in apolloModule ? (apolloModule.default as typeof apolloModule) : apolloModule;
 
 const GRAPHQL_API_URL = process.env.WATCH_BACKEND_URL
@@ -19,7 +19,7 @@ const BASE_URL = process.env.TEST_PAGE_BASE_URL || `http://{planId}.localhost:30
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: GRAPHQL_API_URL,
+  link: new HttpLink({ uri: GRAPHQL_API_URL }),
 });
 
 const GET_PLAN_BASICS = gql`
