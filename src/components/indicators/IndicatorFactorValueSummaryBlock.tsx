@@ -93,7 +93,9 @@ export default function IndicatorFactorValueSummaryBlock({ block, indicator }: P
                 <ValueDate>{dayjs(reference.date).format(timeFormat)}</ValueDate>
                 <ValueDisplay>
                   <div>
-                    {format.number(reference.value)}
+                    {format.number(reference.value, {
+                      maximumSignificantDigits: indicator.valueRounding ?? undefined,
+                    })}
                     {metric.unit && <ValueUnit>{metric.unit}</ValueUnit>}
                   </div>
                 </ValueDisplay>
@@ -104,7 +106,9 @@ export default function IndicatorFactorValueSummaryBlock({ block, indicator }: P
                 <ValueDate>{dayjs(latest.date).format(timeFormat)}</ValueDate>
                 <ValueDisplay>
                   <div>
-                    {format.number(latest.value)}
+                    {format.number(latest.value, {
+                      maximumSignificantDigits: indicator.valueRounding ?? undefined,
+                    })}
                     {metric.unit && <ValueUnit>{metric.unit}</ValueUnit>}
                   </div>
                 </ValueDisplay>
