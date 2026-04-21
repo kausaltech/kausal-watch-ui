@@ -12,12 +12,22 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Date: { input: string; output: string; }
   DateTime: { input: string; output: string; }
+  JSON: { input: any; output: any; }
   JSONString: { input: string; output: string; }
   PositiveInt: { input: number; output: number; }
   RichText: { input: string; output: string; }
   UUID: { input: string; output: string; }
   _Any: { input: any; output: any; }
+};
+
+export type ActionConfigInput = {
+  decisionLevel: InputMaybe<DecisionLevel>;
+  group: InputMaybe<Scalars['String']['input']>;
+  noEffectValue: InputMaybe<Scalars['Float']['input']>;
+  nodeClass: Scalars['String']['input'];
+  parent: InputMaybe<Scalars['String']['input']>;
 };
 
 /** An enumeration. */
@@ -29,6 +39,87 @@ export enum ActionSortOrder {
   /** Standard */
   Standard = 'STANDARD'
 }
+
+export type AssignCategoryTransformationInput = {
+  category: Scalars['String']['input'];
+  dimension: Scalars['String']['input'];
+};
+
+export enum ChangeTargetKind {
+  DatasetPort = 'DATASET_PORT',
+  DataPoint = 'DATA_POINT',
+  Dimension = 'DIMENSION',
+  DimensionCategory = 'DIMENSION_CATEGORY',
+  Edge = 'EDGE',
+  Instance = 'INSTANCE',
+  Node = 'NODE',
+  Unknown = 'UNKNOWN'
+}
+
+export type CreateDataPointInput = {
+  date: Scalars['Date']['input'];
+  dimensionCategoryIds: InputMaybe<Array<Scalars['UUID']['input']>>;
+  metricId: Scalars['UUID']['input'];
+  value: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type CreateDimensionCategoryInput = {
+  dimensionId: Scalars['UUID']['input'];
+  id: InputMaybe<Scalars['UUID']['input']>;
+  identifier: InputMaybe<Scalars['String']['input']>;
+  label: Scalars['String']['input'];
+  nextSibling: InputMaybe<Scalars['ID']['input']>;
+  previousSibling: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type CreateEdgeInput = {
+  fromNodeId: Scalars['String']['input'];
+  fromPort: Scalars['String']['input'];
+  instanceId: Scalars['ID']['input'];
+  toNodeId: Scalars['String']['input'];
+  toPort: InputMaybe<Scalars['String']['input']>;
+  transformations: InputMaybe<Array<EdgeTransformationInput>>;
+};
+
+export type CreateInstanceInput = {
+  frameworkId: Scalars['String']['input'];
+  identifier: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  organizationName: Scalars['String']['input'];
+};
+
+export type CreateNodeInput = {
+  allowNulls: Scalars['Boolean']['input'];
+  color: InputMaybe<Scalars['String']['input']>;
+  config: NodeConfigInput;
+  description: InputMaybe<Scalars['String']['input']>;
+  i18n: InputMaybe<Scalars['JSON']['input']>;
+  identifier: Scalars['ID']['input'];
+  inputDatasets: InputMaybe<Scalars['JSON']['input']>;
+  inputDimensions: InputMaybe<Array<Scalars['String']['input']>>;
+  inputPorts: InputMaybe<Array<InputPortInput>>;
+  isOutcome: Scalars['Boolean']['input'];
+  isVisible: Scalars['Boolean']['input'];
+  kind: NodeKind;
+  minimumYear: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  nodeGroup: InputMaybe<Scalars['ID']['input']>;
+  order: InputMaybe<Scalars['Int']['input']>;
+  outputDimensions: InputMaybe<Array<Scalars['String']['input']>>;
+  outputMetrics: InputMaybe<Array<OutputMetricInput>>;
+  outputPorts: InputMaybe<Array<OutputPortInput>>;
+  params: InputMaybe<Scalars['JSON']['input']>;
+  shortName: InputMaybe<Scalars['String']['input']>;
+  tags: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type CreateScenarioInput = {
+  allActionsEnabled: Scalars['Boolean']['input'];
+  identifier: Scalars['String']['input'];
+  instanceId: Scalars['ID']['input'];
+  kind: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
 
 /** Which governance level is applicable for an action */
 export enum DecisionLevel {
@@ -48,6 +139,20 @@ export enum DimensionKind {
   Node = 'NODE',
   Scenario = 'SCENARIO'
 }
+
+export type EdgeTransformationInput = {
+  assignCategory: InputMaybe<AssignCategoryTransformationInput>;
+  flatten: InputMaybe<FlattenTransformationInput>;
+  selectCategories: InputMaybe<SelectCategoriesTransformationInput>;
+};
+
+export type FlattenTransformationInput = {
+  dimension: Scalars['String']['input'];
+};
+
+export type FormulaConfigInput = {
+  formula: Scalars['String']['input'];
+};
 
 export type FrameworkConfigInput = {
   baselineYear: Scalars['Int']['input'];
@@ -74,10 +179,22 @@ export enum FrameworksMeasureTemplatePriorityChoices {
   Medium = 'MEDIUM'
 }
 
+export type InputPortInput = {
+  id: InputMaybe<Scalars['UUID']['input']>;
+  label: InputMaybe<Scalars['String']['input']>;
+  multi: Scalars['Boolean']['input'];
+  quantity: InputMaybe<Scalars['String']['input']>;
+  requiredDimensions: InputMaybe<Array<Scalars['String']['input']>>;
+  supportedDimensions: InputMaybe<Array<Scalars['String']['input']>>;
+  unit: InputMaybe<Scalars['String']['input']>;
+};
+
 export type InstanceContext = {
   hostname: InputMaybe<Scalars['String']['input']>;
   identifier: InputMaybe<Scalars['ID']['input']>;
   locale: InputMaybe<Scalars['String']['input']>;
+  preview: InputMaybe<PreviewMode>;
+  version: InputMaybe<Scalars['UUID']['input']>;
 };
 
 export enum LowHigh {
@@ -117,6 +234,77 @@ export type NzcCityEssentialData = {
   temperature: LowHigh;
 };
 
+export type NodeConfigInput = {
+  action: InputMaybe<ActionConfigInput>;
+  formula: InputMaybe<FormulaConfigInput>;
+  pipeline: InputMaybe<PipelineConfigInput>;
+  simple: InputMaybe<SimpleConfigInput>;
+};
+
+export enum NodeKind {
+  Action = 'ACTION',
+  Formula = 'FORMULA',
+  Pipeline = 'PIPELINE',
+  Simple = 'SIMPLE'
+}
+
+export enum OperationMessageKind {
+  Error = 'ERROR',
+  Info = 'INFO',
+  Permission = 'PERMISSION',
+  Validation = 'VALIDATION',
+  Warning = 'WARNING'
+}
+
+export type OutputMetricInput = {
+  columnId: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  label: InputMaybe<Scalars['String']['input']>;
+  portId: InputMaybe<Scalars['UUID']['input']>;
+  quantity: InputMaybe<Scalars['String']['input']>;
+  unit: Scalars['String']['input'];
+};
+
+export type OutputPortInput = {
+  columnId: InputMaybe<Scalars['String']['input']>;
+  dimensions: InputMaybe<Array<Scalars['String']['input']>>;
+  id: InputMaybe<Scalars['UUID']['input']>;
+  isEditable: Scalars['Boolean']['input'];
+  label: InputMaybe<Scalars['String']['input']>;
+  quantity: InputMaybe<Scalars['String']['input']>;
+  unit: Scalars['String']['input'];
+};
+
+export type PipelineConfigInput = {
+  operations: Array<PipelineOperationInput>;
+};
+
+export type PipelineOperationInput = {
+  operation: Scalars['String']['input'];
+};
+
+/** Which slice of an instance to resolve. `PUBLISHED` (default) serves the latest published revision; `DRAFT` serves the editor's in-progress state and requires edit permission on the instance. */
+export enum PreviewMode {
+  Draft = 'DRAFT',
+  Published = 'PUBLISHED'
+}
+
+export enum PrimaryLayoutClass {
+  Action = 'ACTION',
+  ContextSource = 'CONTEXT_SOURCE',
+  Core = 'CORE',
+  GhostableContextSource = 'GHOSTABLE_CONTEXT_SOURCE',
+  Outcome = 'OUTCOME'
+}
+
+export type RegisterUserInput = {
+  email: Scalars['String']['input'];
+  firstName: InputMaybe<Scalars['String']['input']>;
+  frameworkId: Scalars['String']['input'];
+  lastName: InputMaybe<Scalars['String']['input']>;
+  password: Scalars['String']['input'];
+};
+
 export enum ScenarioKind {
   Baseline = 'BASELINE',
   Custom = 'CUSTOM',
@@ -129,6 +317,53 @@ export enum SearchOperatorEnum {
   And = 'AND',
   Or = 'OR'
 }
+
+export type SelectCategoriesTransformationInput = {
+  categories: Array<Scalars['String']['input']>;
+  dimension: Scalars['String']['input'];
+  exclude: Scalars['Boolean']['input'];
+  flatten: Scalars['Boolean']['input'];
+};
+
+export type SimpleConfigInput = {
+  nodeClass: Scalars['String']['input'];
+};
+
+export type UpdateDataPointInput = {
+  date: InputMaybe<Scalars['Date']['input']>;
+  dimensionCategoryIds: InputMaybe<Array<Scalars['UUID']['input']>>;
+  metricId: InputMaybe<Scalars['UUID']['input']>;
+  value: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type UpdateDimensionCategoryInput = {
+  categoryId: Scalars['UUID']['input'];
+  identifier: InputMaybe<Scalars['String']['input']>;
+  label: InputMaybe<Scalars['String']['input']>;
+  nextSibling: InputMaybe<Scalars['ID']['input']>;
+  previousSibling: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type UpdateDimensionInput = {
+  dimensionId: Scalars['UUID']['input'];
+  name: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateNodeInput = {
+  color: InputMaybe<Scalars['String']['input']>;
+  isOutcome: InputMaybe<Scalars['Boolean']['input']>;
+  isVisible: InputMaybe<Scalars['Boolean']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateScenarioInput = {
+  allActionsEnabled: InputMaybe<Scalars['Boolean']['input']>;
+  description: InputMaybe<Scalars['String']['input']>;
+  kind: InputMaybe<Scalars['String']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+  parameterOverrides: InputMaybe<Scalars['JSON']['input']>;
+  scenarioId: Scalars['ID']['input'];
+};
 
 export enum VisualizationKind {
   Group = 'group',
@@ -158,15 +393,15 @@ export type SetParameterMutationVariables = Exact<{
 
 export type SetParameterMutation = (
   { setParameter: (
-    { ok: boolean | null, parameter: (
+    { ok: boolean, parameter: (
       { isCustomized: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null }
       & { __typename: 'BoolParameterType' }
     ) | (
       { isCustomized: boolean }
       & { __typename: 'NumberParameterType' | 'StringParameterType' | 'UnknownParameterType' }
     ) | null }
-    & { __typename: 'SetParameterMutation' }
-  ) | null }
+    & { __typename: 'SetParameterResult' }
+  ) }
   & { __typename: 'Mutation' }
 );
 
@@ -177,12 +412,12 @@ export type ActivateScenarioMutationVariables = Exact<{
 
 export type ActivateScenarioMutation = (
   { activateScenario: (
-    { ok: boolean | null, activeScenario: (
+    { ok: boolean, activeScenario: (
       { id: string, name: string }
       & { __typename: 'ScenarioType' }
-    ) | null }
-    & { __typename: 'ActivateScenarioMutation' }
-  ) | null }
+    ) }
+    & { __typename: 'ActivateScenarioResult' }
+  ) }
   & { __typename: 'Mutation' }
 );
 
@@ -196,15 +431,15 @@ export type SetGlobalParameterMutationVariables = Exact<{
 
 export type SetGlobalParameterMutation = (
   { setParameter: (
-    { ok: boolean | null, parameter: (
+    { ok: boolean, parameter: (
       { isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null }
       & { __typename: 'BoolParameterType' }
     ) | (
       { isCustomized: boolean, isCustomizable: boolean }
       & { __typename: 'NumberParameterType' | 'StringParameterType' | 'UnknownParameterType' }
     ) | null }
-    & { __typename: 'SetParameterMutation' }
-  ) | null }
+    & { __typename: 'SetParameterResult' }
+  ) }
   & { __typename: 'Mutation' }
 );
 
@@ -256,7 +491,7 @@ export type GetInstanceContextQuery = (
     { id: string, name: string, themeIdentifier: string | null, owner: string | null, defaultLanguage: string, supportedLanguages: Array<string>, targetYear: number | null, modelEndYear: number, referenceYear: number | null, minimumHistoricalYear: number, maximumHistoricalYear: number | null, leadTitle: string, leadParagraph: string | null, features: (
       { baselineVisibleInGraphs: boolean, hideNodeDetails: boolean, maximumFractionDigits: number | null, showAccumulatedEffects: boolean, showSignificantDigits: number | null }
       & { __typename: 'InstanceFeaturesType' }
-    ), introContent: Array<{ __typename: 'ActionImpactBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CallToActionBlock' | 'CardListBlock' | 'CategoryBreakdownBlock' | 'CharBlock' | 'ChoiceBlock' | 'CurrentProgressBarBlock' | 'DashboardCardBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'GoalProgressBarBlock' | 'ImageBlock' | 'ImageChooserBlock' } | { __typename: 'IntegerBlock' | 'ListBlock' | 'PageChooserBlock' | 'RawHTMLBlock' | 'ReferenceProgressBarBlock' | 'RegexBlock' | 'ScenarioProgressBarBlock' | 'SnippetChooserBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | (
+    ), introContent: Array<{ __typename: 'ActionImpactBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CallToActionBlock' | 'CardListBlock' | 'CategoryBreakdownBlock' | 'CharBlock' | 'ChoiceBlock' | 'CurrentProgressBarBlock' | 'DashboardCardBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'FloatBlock' | 'FrameworkLandingBlock' | 'GoalProgressBarBlock' | 'ImageBlock' } | { __typename: 'ImageChooserBlock' | 'IntegerBlock' | 'ListBlock' | 'PageChooserBlock' | 'RawHTMLBlock' | 'ReferenceProgressBarBlock' | 'RegexBlock' | 'ScenarioProgressBarBlock' | 'SnippetChooserBlock' | 'StaticBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' } | (
       { field: string, value: string }
       & { __typename: 'RichTextBlock' }
     )> | null, goals: Array<(
