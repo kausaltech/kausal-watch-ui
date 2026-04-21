@@ -1,5 +1,59 @@
 {
   "possibleTypes": {
+    "AddNodeInputPortPayload": [
+      "InputPortType",
+      "OperationInfo"
+    ],
+    "AddNodeOutputPortPayload": [
+      "OperationInfo",
+      "OutputPortType"
+    ],
+    "CreateDataPointPayload": [
+      "DataPoint",
+      "OperationInfo"
+    ],
+    "CreateDimensionCategoriesPayload": [
+      "InstanceDimension",
+      "OperationInfo"
+    ],
+    "CreateEdgePayload": [
+      "NodeEdgeType",
+      "OperationInfo"
+    ],
+    "CreateInstancePayload": [
+      "CreateInstanceResult",
+      "OperationInfo"
+    ],
+    "CreateNodePayload": [
+      "ActionNode",
+      "Node",
+      "OperationInfo"
+    ],
+    "CreateScenarioPayload": [
+      "OperationInfo",
+      "ScenarioType"
+    ],
+    "EdgeTransformationUnion": [
+      "AssignCategoryTransformationType",
+      "FlattenTransformationType",
+      "SelectCategoriesTransformationType"
+    ],
+    "EditableEntity": [
+      "ActionNode",
+      "DatasetPortType",
+      "Node",
+      "NodeEdgeType"
+    ],
+    "InputPortBindingUnion": [
+      "DatasetPortType",
+      "NodeEdgeType"
+    ],
+    "NodeConfigUnion": [
+      "ActionConfigType",
+      "FormulaConfigType",
+      "PipelineConfigType",
+      "SimpleConfigType"
+    ],
     "NodeInterface": [
       "ActionNode",
       "Node"
@@ -17,6 +71,14 @@
       "NumberParameterType",
       "StringParameterType",
       "UnknownParameterType"
+    ],
+    "PublishModelInstancePayload": [
+      "InstanceType",
+      "OperationInfo"
+    ],
+    "RegisterUserPayload": [
+      "OperationInfo",
+      "RegisterUserResult"
     ],
     "SnippetInterface": [
       "InstanceSiteContent"
@@ -39,6 +101,7 @@
       "EmailBlock",
       "EmbedBlock",
       "FloatBlock",
+      "FrameworkLandingBlock",
       "GoalProgressBarBlock",
       "ImageBlock",
       "ImageChooserBlock",
@@ -58,6 +121,27 @@
       "TextBlock",
       "TimeBlock",
       "URLBlock"
+    ],
+    "UpdateDataPointPayload": [
+      "DataPoint",
+      "OperationInfo"
+    ],
+    "UpdateDimensionCategoriesPayload": [
+      "InstanceDimension",
+      "OperationInfo"
+    ],
+    "UpdateDimensionPayload": [
+      "InstanceDimension",
+      "OperationInfo"
+    ],
+    "UpdateNodePayload": [
+      "ActionNode",
+      "Node",
+      "OperationInfo"
+    ],
+    "UpdateScenarioPayload": [
+      "OperationInfo",
+      "ScenarioType"
     ],
     "VisualizationEntry": [
       "VisualizationGroup",
