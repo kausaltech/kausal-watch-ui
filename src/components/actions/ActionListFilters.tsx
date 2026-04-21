@@ -1279,17 +1279,25 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           );
           break;
         }
-        case 'ActionStatusFilterBlock':
+        case 'ActionStatusFilterBlock': {
           if (!plan.actionStatuses.length) break;
+          const statusBlock = block as typeof block & {
+            fieldLabel?: string | null;
+            fieldHelpText?: string | null;
+            showAllLabel?: string | null;
+          };
           const statusOpts = {
             id: 'status',
             options: plan.actionStatuses.map((obj) => ({
               id: obj.identifier,
               label: obj.name,
             })),
-            label: t('filter-status'),
-            helpText: t('filter-status-help', getActionTermContext(plan)) || '',
-            showAllLabel: t('filter-all-statuses'),
+            label: asNonEmptyString(statusBlock.fieldLabel) ?? t('filter-status'),
+            helpText:
+              asNonEmptyString(statusBlock.fieldHelpText) ??
+              t('filter-status-help', getActionTermContext(plan)) ??
+              '',
+            showAllLabel: asNonEmptyString(statusBlock.showAllLabel) ?? t('filter-all-statuses'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.status?.identifier === val) return true;
               return false;
@@ -1306,16 +1314,28 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             })
           );
           break;
-        case 'PrimaryOrganizationFilterBlock':
+        }
+        case 'PrimaryOrganizationFilterBlock': {
+          const primaryOrgBlock = block as typeof block & {
+            fieldLabel?: string | null;
+            fieldHelpText?: string | null;
+            showAllLabel?: string | null;
+          };
           const primaryOrgOpts = {
             id: 'primary_org',
             options: primaryOrgs.map((obj) => ({
               id: obj.id,
               label: obj.abbreviation || obj.name,
             })),
-            label: t('filter-primary-organization', { context: 'other' }),
-            helpText: t('filter-primary-organization-help', { context: 'other' }),
-            showAllLabel: t('filter-all-organizations', { context: 'other' }),
+            label:
+              asNonEmptyString(primaryOrgBlock.fieldLabel) ??
+              t('filter-primary-organization', { context: 'other' }),
+            helpText:
+              asNonEmptyString(primaryOrgBlock.fieldHelpText) ??
+              t('filter-primary-organization-help', { context: 'other' }),
+            showAllLabel:
+              asNonEmptyString(primaryOrgBlock.showAllLabel) ??
+              t('filter-all-organizations', { context: 'other' }),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.primaryOrg?.id === val) return true;
               return false;
@@ -1332,17 +1352,26 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             })
           );
           break;
-        case 'ActionScheduleFilterBlock':
+        }
+        case 'ActionScheduleFilterBlock': {
           if (!plan.actionSchedules.length) break;
+          const scheduleBlock = block as typeof block & {
+            fieldLabel?: string | null;
+            fieldHelpText?: string | null;
+            showAllLabel?: string | null;
+          };
           const scheduleOpts = {
             id: 'schedule',
             options: plan.actionSchedules.map((obj) => ({
               id: obj.id,
               label: obj.name,
             })),
-            label: t('filter-schedule'),
-            helpText: t('filter-schedule-help', getActionTermContext(plan)) || '',
-            showAllLabel: t('filter-all-schedules'),
+            label: asNonEmptyString(scheduleBlock.fieldLabel) ?? t('filter-schedule'),
+            helpText:
+              asNonEmptyString(scheduleBlock.fieldHelpText) ??
+              t('filter-schedule-help', getActionTermContext(plan)) ??
+              '',
+            showAllLabel: asNonEmptyString(scheduleBlock.showAllLabel) ?? t('filter-all-schedules'),
             filterAction: (val: string, act: ActionListAction) => {
               if (act.schedule.some((sch) => sch.id === val)) return true;
               return false;
@@ -1359,15 +1388,24 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             })
           );
           break;
-        case 'PlanFilterBlock':
+        }
+        case 'PlanFilterBlock': {
+          const planFilterBlock = block as typeof block & {
+            fieldLabel?: string | null;
+            fieldHelpText?: string | null;
+            showAllLabel?: string | null;
+          };
           const relatedPlans = plan.allRelatedPlans;
           if (relatedPlans == null || relatedPlans.length === 0) break;
           const planOpts = {
             id: 'plan',
             options: relatedPlans.map((p) => ({ id: p.id, label: p.name })),
-            label: t('filter-plan'),
-            helpText: t('filter-plan-help', getActionTermContext(plan)) || '',
-            showAllLabel: t('filter-all-plans'),
+            label: asNonEmptyString(planFilterBlock.fieldLabel) ?? t('filter-plan'),
+            helpText:
+              asNonEmptyString(planFilterBlock.fieldHelpText) ??
+              t('filter-plan-help', getActionTermContext(plan)) ??
+              '',
+            showAllLabel: asNonEmptyString(planFilterBlock.showAllLabel) ?? t('filter-all-plans'),
             filterAction: (val: string, act: ActionListAction) => act.plan?.id === val,
           };
           filters.push(
@@ -1378,6 +1416,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             })
           );
           break;
+        }
         case 'ContinuousActionFilterBlock': {
           const fieldLabel = 'fieldLabel' in block ? asNonEmptyString(block.fieldLabel) : undefined;
           const fieldHelpText =
