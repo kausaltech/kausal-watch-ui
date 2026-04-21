@@ -59,6 +59,11 @@ const ACTION_LIST_FILTER = gql`
       fieldHelpText
       showAllLabel
     }
+    ... on ActionImplementationPhaseFilterBlock {
+      fieldLabel
+      fieldHelpText
+      showAllLabel
+    }
   }
 `;
 
