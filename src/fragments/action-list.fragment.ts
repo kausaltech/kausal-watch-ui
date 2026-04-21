@@ -64,6 +64,26 @@ const ACTION_LIST_FILTER = gql`
       fieldHelpText
       showAllLabel
     }
+    ... on ActionStatusFilterBlock {
+      fieldLabel
+      fieldHelpText
+      showAllLabel
+    }
+    ... on PrimaryOrganizationFilterBlock {
+      fieldLabel
+      fieldHelpText
+      showAllLabel
+    }
+    ... on ActionScheduleFilterBlock {
+      fieldLabel
+      fieldHelpText
+      showAllLabel
+    }
+    ... on PlanFilterBlock {
+      fieldLabel
+      fieldHelpText
+      showAllLabel
+    }
   }
 `;
 
