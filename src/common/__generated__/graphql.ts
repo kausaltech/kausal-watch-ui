@@ -5020,7 +5020,7 @@ type StreamFieldFragment_ActionListBlock_Fragment = (
 );
 
 type StreamFieldFragment_AdaptiveEmbedBlock_Fragment = (
-  { fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
+  { title: string | null, description: string | null, fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
     { html: string | null }
     & { __typename: 'EmbedHTMLValue' }
   ) | null }
@@ -12700,7 +12700,7 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'ActionListBlock' }
     ) | (
-      { fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
+      { title: string | null, description: string | null, fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
         { html: string | null }
         & { __typename: 'EmbedHTMLValue' }
       ) | null }
@@ -13354,7 +13354,7 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'Image' }
     ) | null, body: Array<(
-      { fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
+      { title: string | null, description: string | null, fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
         { html: string | null }
         & { __typename: 'EmbedHTMLValue' }
       ) | null }
@@ -14245,7 +14245,7 @@ export type GetHomePageQuery = (
       { id: string | null, blockType: string, field: string }
       & { __typename: 'ActionHighlightsBlock' | 'ActionStatusGraphsBlock' | 'ChangeLogMessageBlock' | 'IndicatorHighlightsBlock' | 'RelatedPlanListBlock' }
     ) | (
-      { fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
+      { title: string | null, description: string | null, fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
         { html: string | null }
         & { __typename: 'EmbedHTMLValue' }
       ) | null }

@@ -86,6 +86,8 @@ export const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ... on AdaptiveEmbedBlock {
+      title
+      description
       fullWidth
       embed {
         html

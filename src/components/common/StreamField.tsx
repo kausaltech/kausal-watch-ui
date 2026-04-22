@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useId, useRef } from 'react';
 
 import dynamic from 'next/dynamic';
 
@@ -194,6 +194,66 @@ const RichTextContainer = styled.div`
     flex: 0 1 800px;
   }
 `;
+
+type AccessibleEmbedProps = {
+  html: string;
+  title?: string | null;
+  description?: string | null;
+};
+
+const VisuallyHidden = styled.p`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+`;
+
+function AccessibleEmbed({ html, title, description }: AccessibleEmbedProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const descriptionId = useId();
+
+  useEffect(() => {
+    const root = containerRef.current;
+    if (!root) return;
+
+    const trimmedTitle = title?.trim();
+    const trimmedDescription = description?.trim();
+
+    root.querySelectorAll('iframe').forEach((iframe) => {
+      if (trimmedTitle) {
+        iframe.setAttribute('title', trimmedTitle);
+      }
+      if (trimmedDescription) {
+        iframe.setAttribute('aria-describedby', descriptionId);
+      }
+    });
+
+    root.querySelectorAll('object, embed').forEach((el) => {
+      if (trimmedTitle) {
+        el.setAttribute('title', trimmedTitle);
+      }
+      if (trimmedDescription) {
+        el.setAttribute('aria-describedby', descriptionId);
+      }
+    });
+  }, [html, title, description, descriptionId]);
+
+  return (
+    <>
+      {description?.trim() && <VisuallyHidden id={descriptionId}>{description}</VisuallyHidden>}
+      <ResponsiveStyles
+        ref={containerRef}
+        aria-label={title?.trim() || undefined}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    </>
+  );
+}
 
 type StreamFieldBlockPage = {
   __typename:
@@ -486,12 +546,13 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'AdaptiveEmbedBlock': {
       const fullWidth = block.fullWidth || false;
       const html = block.embed?.html;
+      const accessibleTitle = block.title;
+      const accessibleDescription = block.description;
 
       function getColSize(defaultSize: ColumnProps): ColumnProps {
         if (fullWidth) {
           return hasSidebar ? { size: 11, offset: 1 } : { size: 12, offset: 0 };
         }
-
         return defaultSize;
       }
 
@@ -508,7 +569,13 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
               className="my-4"
               {...columnProps}
             >
-              {!!html && <ResponsiveStyles dangerouslySetInnerHTML={{ __html: html }} />}
+              {!!html && (
+                <AccessibleEmbed
+                  html={html}
+                  title={accessibleTitle}
+                  description={accessibleDescription}
+                />
+              )}
             </Col>
           </Row>
         </Container>
