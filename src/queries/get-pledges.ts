@@ -71,18 +71,18 @@ const PLEDGE_FRAGMENT = gql`
 
 const GET_PLEDGES = gql`
   query GetPledges($plan: ID!) {
-    plan(id: $plan) {
-      id
-      pages {
-        ... on PledgeListPage {
-          id
-          title
-          leadContent
-          backgroundImage {
-            ...MultiUseImageFragment
-          }
+    planPage(plan: $plan, path: "/pledges") {
+      ... on PledgeListPage {
+        id
+        title
+        leadContent
+        backgroundImage {
+          ...MultiUseImageFragment
         }
       }
+    }
+    plan(id: $plan) {
+      id
       pledges {
         ...PledgeFragment
         actions {

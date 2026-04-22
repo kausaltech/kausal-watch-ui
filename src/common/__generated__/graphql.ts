@@ -1084,6 +1084,24 @@ export enum SiteGeneralContentOrganizationTerm {
   Organization = 'ORGANIZATION'
 }
 
+export type TestUserInput = {
+  defaultAdminPlanId: InputMaybe<Scalars['ID']['input']>;
+  email: Scalars['String']['input'];
+  isSuperuser: Scalars['Boolean']['input'];
+  password: Scalars['String']['input'];
+  roles: Array<TestUserRoleInput>;
+};
+
+export type TestUserRoleInput = {
+  kind: TestUserRoleKind;
+  targetId: Scalars['ID']['input'];
+};
+
+export enum TestUserRoleKind {
+  ActionContact = 'ACTION_CONTACT',
+  PlanAdmin = 'PLAN_ADMIN'
+}
+
 export type UserFeedbackMutationInput = {
   action: InputMaybe<Scalars['ID']['input']>;
   additionalFields: InputMaybe<Scalars['String']['input']>;
@@ -16868,29 +16886,29 @@ export type GetPledgesQueryVariables = Exact<{
 
 
 export type GetPledgesQuery = (
-  { plan: (
-    { id: string, pages: Array<{ __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } | (
-      { id: string | null, title: string, leadContent: string | null, backgroundImage: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null, large: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null, small: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null, social: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null, rendition: (
-          { id: string, width: number, height: number, src: string }
-          & { __typename: 'ImageRendition' }
-        ) | null }
-        & { __typename: 'Image' }
+  { planPage: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } | (
+    { id: string | null, title: string, leadContent: string | null, backgroundImage: (
+      { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename: 'ImageRendition' }
+      ) | null, large: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename: 'ImageRendition' }
+      ) | null, small: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename: 'ImageRendition' }
+      ) | null, social: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename: 'ImageRendition' }
+      ) | null, rendition: (
+        { id: string, width: number, height: number, src: string }
+        & { __typename: 'ImageRendition' }
       ) | null }
-      & { __typename: 'PledgeListPage' }
-    )> | null, pledges: Array<(
+      & { __typename: 'Image' }
+    ) | null }
+    & { __typename: 'PledgeListPage' }
+  ) | null, plan: (
+    { id: string, pledges: Array<(
       { id: string, name: string, description: string, uuid: string, slug: string, commitmentCount: number, residentCount: number | null, impactStatement: string, localEquivalency: string, actions: Array<(
         { id: string, identifier: string, name: string, viewUrl: string }
         & { __typename: 'Action' }
