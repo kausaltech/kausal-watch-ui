@@ -14,7 +14,8 @@ export default async function PledgeListPage({ params }: Props) {
 
   const { data } = await getPledges(planId);
   const plan = data?.plan;
-  const pledgeListPageConfig = plan?.pages?.find((page) => page.__typename === 'PledgeListPage');
+  const pledgeListPageConfig =
+    data?.planPage?.__typename === 'PledgeListPage' ? data.planPage : null;
 
   if (!plan || !pledgeListPageConfig) {
     notFound();
