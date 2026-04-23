@@ -195,7 +195,7 @@ const RichTextContainer = styled.div`
   }
 `;
 
-type AccessibleEmbedProps = {
+type InjectHTMLAccessiblyProps = {
   html: string;
   title?: string | null;
   description?: string | null;
@@ -213,7 +213,18 @@ const VisuallyHidden = styled.p`
   border: 0;
 `;
 
-function AccessibleEmbed({ html, title, description }: AccessibleEmbedProps) {
+function setA11yAttributes(elements: NodeListOf<Element>, title?: string, descriptionId?: string) {
+  elements.forEach((el) => {
+    if (title) {
+      el.setAttribute('title', title);
+    }
+    if (descriptionId) {
+      el.setAttribute('aria-describedby', descriptionId);
+    }
+  });
+}
+
+function InjectHTMLAccessibly({ html, title, description }: InjectHTMLAccessiblyProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const descriptionId = useId();
 
@@ -223,24 +234,10 @@ function AccessibleEmbed({ html, title, description }: AccessibleEmbedProps) {
 
     const trimmedTitle = title?.trim();
     const trimmedDescription = description?.trim();
+    const resolvedDescriptionId = trimmedDescription ? descriptionId : undefined;
 
-    root.querySelectorAll('iframe').forEach((iframe) => {
-      if (trimmedTitle) {
-        iframe.setAttribute('title', trimmedTitle);
-      }
-      if (trimmedDescription) {
-        iframe.setAttribute('aria-describedby', descriptionId);
-      }
-    });
-
-    root.querySelectorAll('object, embed').forEach((el) => {
-      if (trimmedTitle) {
-        el.setAttribute('title', trimmedTitle);
-      }
-      if (trimmedDescription) {
-        el.setAttribute('aria-describedby', descriptionId);
-      }
-    });
+    setA11yAttributes(root.querySelectorAll('iframe'), trimmedTitle, resolvedDescriptionId);
+    setA11yAttributes(root.querySelectorAll('object, embed'), trimmedTitle, resolvedDescriptionId);
   }, [html, title, description, descriptionId]);
 
   return (
@@ -570,7 +567,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
               {...columnProps}
             >
               {!!html && (
-                <AccessibleEmbed
+                <InjectHTMLAccessibly
                   html={html}
                   title={accessibleTitle}
                   description={accessibleDescription}
