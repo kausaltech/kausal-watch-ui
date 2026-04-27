@@ -157,6 +157,7 @@ export class PlanContext {
   planOrganizations: PlanOrganizations;
   planIndicators: PlanIndicators;
   baseURL: string;
+  failedAssetRequests: string[] = [];
 
   constructor(data: PlaywrightGetPlanInfoQuery, baseURL: string, planIndicators: PlanIndicators) {
     this.plan = data.plan!;
@@ -166,6 +167,44 @@ export class PlanContext {
   }
 
   beforeEach(page: Page) {
+    this.failedAssetRequests = [];
+
+    // Network-level failures (CORS, DNS, connection errors)
+    page.on('requestfailed', (request) => {
+      const resourceType = request.resourceType();
+      const errorText = request.failure()?.errorText ?? '';
+      // ERR_ABORTED and friends are fired when navigation cancels in-flight requests;
+      // HTTP-level errors (404, 500) are already caught by the response handler.
+      if (
+        errorText === 'net::ERR_ABORTED' || // chrome
+        errorText === 'NS_BINDING_ABORTED' || // firefox
+        errorText === 'Load request cancelled' // webkit
+      ) {
+        return;
+      }
+      this.failedAssetRequests.push(
+        `${resourceType} failed to load: ${request.url()} (${errorText})`
+      );
+    });
+
+    // HTTP-level failures (404, 500, etc.)
+    page.on('response', (response) => {
+      const request = response.request();
+      const resourceType = request.resourceType();
+      const status = response.status();
+      if (status >= 200 && status < 400) {
+        return;
+      }
+      this.failedAssetRequests.push(
+        `${resourceType} returned HTTP ${response.status()}: ${request.url()}`
+      );
+    });
+
+    // Unhandled exceptions
+    page.on('pageerror', (exception) => {
+      throw new Error(exception);
+    });
+
     page.on('console', (msg) => {
       const IGNORE_STARTSWITH = [
         'Public environment',
@@ -325,6 +364,7 @@ export class PlanContext {
   async waitForLoadingFinished(page: Page) {
     await expect(page.locator('*[aria-busy=true]')).toHaveCount(0, { timeout: 30000 });
     await page.waitForLoadState('networkidle');
+    expect(this.failedAssetRequests, 'Some assets failed to load').toEqual([]);
   }
 
   async checkAccessibility(page: Page) {
