@@ -8,8 +8,8 @@ export default function ActionStatusExport({ actions }) {
   const plan = usePlan();
   const url = plan.actionReportExportViewUrl;
   const actionIds = actions.map(({ id }) => id).join(',');
-  const csvExportUrl = `${url}?actions=${actionIds}&format=csv`;
-  const excelExportUrl = `${url}?actions=${actionIds}&format=xlsx`;
+  const csvExportUrl = `${url}?actions=${encodeURIComponent(actionIds)}&format=csv`;
+  const excelExportUrl = `${url}?actions=${encodeURIComponent(actionIds)}&format=xlsx`;
   return (
     <UncontrolledDropdown>
       <DropdownToggle caret>{t('export')}</DropdownToggle>
