@@ -23,13 +23,25 @@ export const fetchCache = 'default-no-store';
 const MAX_CONCURRENT_EXPORTS = 4;
 let inFlight = 0;
 
-function buildHeaderHtml(locale: string): string {
+function isValidTimezone(timezone: unknown): timezone is string {
+  if (typeof timezone !== 'string' || timezone.length === 0) return false;
+
+  try {
+    new Intl.DateTimeFormat('en', { timeZone: timezone }).format(new Date());
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function buildHeaderHtml(locale: string, timezone?: string): string {
   const date = new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
+    ...(timezone ? { timeZone: timezone } : {}),
   }).format(new Date());
 
   return `<div class="text left grow" style="font-size: 14px;">${date}</div>
@@ -54,7 +66,7 @@ export async function POST(request: NextRequest) {
   inFlight++;
 
   try {
-    let body: { path: string; locale?: string };
+    let body: { path: string; locale?: string; timezone?: string };
     try {
       const contentType = request.headers.get('content-type') || '';
       if (contentType.includes('application/x-www-form-urlencoded')) {
@@ -62,6 +74,7 @@ export async function POST(request: NextRequest) {
         body = {
           path: formData.get('path') as string,
           locale: (formData.get('locale') as string) || undefined,
+          timezone: (formData.get('timezone') as string) || undefined,
         };
       } else {
         body = await request.json();
@@ -71,6 +84,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { path, locale = 'en' } = body;
+    const timezone = isValidTimezone(body.timezone) ? body.timezone : undefined;
     if (!path || typeof path !== 'string' || !path.startsWith('/')) {
       return NextResponse.json({ error: 'Invalid path parameter' }, { status: 400 });
     }
@@ -101,7 +115,7 @@ export async function POST(request: NextRequest) {
 
     // Omit ?print=true from displayUrl (otherwise we could just use <span class="url"></span> in the footer)
     const displayUrl = `${forwardedProto}://${host}${path}`;
-    const headerHtml = buildHeaderHtml(locale);
+    const headerHtml = buildHeaderHtml(locale, timezone);
     const footerHtml = `<div class="text left grow" style="font-size: 14px;">${displayUrl}</div>
 <div class="text right" style="font-size: 14px;"><span class="pageNumber"></span> / <span class="totalPages"></span></div>`;
 
