@@ -7,7 +7,7 @@
     "action-id": "ID",
     "action-identifier": "Identificador",
     "action-impact": "Impacto",
-    "action-implementation-phase": "Fase de aplicación",
+    "action-implementation-phase": "Fase de implementación",
     "action-last-updated": "Información actualizada",
     "action-merged": "{context, select, STRATEGY {Estrategias fusionadas} other {Acciones fusionadas}}",
     "action-meta-header": "Resumen y contactos",
