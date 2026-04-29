@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { headers } from 'next/headers';
 import Script from 'next/script';
 
+import type { Metadata } from 'next';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import 'react-medium-image-zoom/dist/styles.css';
 
@@ -12,6 +13,7 @@ import { EmotionRegistry } from '@common/themes/StyledComponentsRegistry';
 import '@common/themes/styles/main.scss';
 
 import { DayjsLocaleProvider } from '@/common/dayjs';
+import { deploymentType } from '@/common/environment';
 import { ApolloWrapper } from '@/components/providers/ApolloWrapper';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { auth } from '@/config/auth';
@@ -19,6 +21,13 @@ import { auth } from '@/config/auth';
 type Props = {
   params: Promise<{ lang: string }>;
   children: ReactNode;
+};
+
+// Non-production deployments tell crawlers not to index any page.
+// `robots.ts` allows crawl on every deployment so the directive is actually seen;
+// child pages/layouts can override `robots` to opt back in if ever needed.
+export const metadata: Metadata = {
+  robots: deploymentType === 'production' ? undefined : { index: false, follow: false },
 };
 
 async function AsyncAuthProvider({ children }) {
