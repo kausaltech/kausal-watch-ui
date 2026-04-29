@@ -1,20 +1,13 @@
 import type { MetadataRoute } from 'next';
 
-import { deploymentType } from '@/common/environment';
-
-export const dynamic = 'force-dynamic';
-
 export default function robots(): MetadataRoute.Robots {
+  // Crawling is allowed on every deployment. Non-production deployments
+  // emit a `noindex, nofollow` robots meta tag via the layout's metadata
+  // export, so crawlers must be allowed to fetch the page to see it.
   return {
-    rules:
-      deploymentType === 'production'
-        ? {
-            userAgent: '*',
-            allow: '/',
-          }
-        : {
-            userAgent: '*',
-            disallow: '/',
-          },
+    rules: {
+      userAgent: '*',
+      allow: '/',
+    },
   };
 }
