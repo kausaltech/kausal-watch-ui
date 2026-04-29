@@ -497,8 +497,8 @@ importers:
         version: 5.104.1(esbuild@0.27.2)
     optionalDependencies:
       '@kausal-private/themes-private':
-        specifier: ^0.5.102
-        version: 0.5.102
+        specifier: ^0.5.104
+        version: 0.5.104
 
 packages:
 
@@ -1940,8 +1940,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@kausal-private/themes-private@0.5.102':
-    resolution: {integrity: sha512-IbqWH5g0vJBTYwSClAfLvLlqmFiFTRctiIqV3ha4ugMQ2FF0osFmaBWqCRtC+lKZOE/n1Gz9LPuAc8Sa+0foDQ==}
+  '@kausal-private/themes-private@0.5.104':
+    resolution: {integrity: sha512-I4XkHZEu4yEk0HOjQXTB7Y8L5R16LwaRhXIMSQsk923D+2uIV1auzcagUDDPCm4IeP9XwN7ulCIQXsmywd+sCA==}
 
   '@kausal/mapboxgl-legend@1.7.2':
     resolution: {integrity: sha512-qmjchiPrcer3gCLkln7z2e0o8i5XK2BNRbMMdr6/KHMxDTSeOOaN1PvRjXzrTAtewOyxztHxnyYH9KaoC5LJdQ==}
@@ -12241,7 +12241,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@kausal-private/themes-private@0.5.102':
+  '@kausal-private/themes-private@0.5.104':
     optional: true
 
   '@kausal/mapboxgl-legend@1.7.2': {}
