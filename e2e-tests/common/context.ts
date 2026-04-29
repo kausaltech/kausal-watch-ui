@@ -202,7 +202,7 @@ export class PlanContext {
 
     // Unhandled exceptions
     page.on('pageerror', (exception) => {
-      throw new Error(exception);
+      throw new Error(exception.toString());
     });
 
     page.on('console', (msg) => {
