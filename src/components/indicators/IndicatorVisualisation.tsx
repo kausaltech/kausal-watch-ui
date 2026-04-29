@@ -158,7 +158,7 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
       name: i18n.t('current-trend'),
     };
 
-    const highestDataYear = traces[0].y[traces[0].y.length - 1];
+    const highestDataYear = regData[regData.length - 1][0];
     const highestGoalYear = Math.max(
       ...goals.map((goal) => {
         const goalDate = goal.x[goal.x.length - 1];
@@ -166,7 +166,7 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
       })
     );
 
-    if (highestGoalYear && highestGoalYear > highestDataYear) {
+    if (!Number.isNaN(highestGoalYear) && highestGoalYear > highestDataYear) {
       predictedTrace.x.push(highestGoalYear);
     }
 
