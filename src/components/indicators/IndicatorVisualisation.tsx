@@ -152,6 +152,9 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
     const regData = mainValues
       .slice(mainValues.length - numberOfYears, mainValues.length)
       .map((item) => [parseInt(item.date, 10), item.value]);
+    if (regData.length < 5) {
+      return [undefined, undefined];
+    }
     const model = linearRegression(regData);
     const predictedTrace = {
       x: regData.map((item) => item[0]),
