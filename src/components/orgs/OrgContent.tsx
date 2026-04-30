@@ -105,7 +105,7 @@ const OrgLogo = styled.img`
   }
 `;
 
-const OrgDescription = styled.p`
+const OrgDescription = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
