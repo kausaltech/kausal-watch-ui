@@ -13,6 +13,7 @@ import type {
   GetSitemapQueryVariables,
 } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
+import { deploymentType } from '@/common/environment';
 import { ACTIONS_PATH, INDICATORS_PATH, STATIC_ROUTES } from '@/constants/routes';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 import { tryRequest } from '@/utils/api.utils';
@@ -76,6 +77,11 @@ function getDefaultPlanId(plans: NonNullable<GetPlansByHostnameQuery['plansForHo
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Non-production deployments should not advertise their URLs to crawlers.
+  if (deploymentType !== 'production') {
+    return [];
+  }
+
   const origin = await getRequestOrigin();
   const url = new URL(origin);
 
