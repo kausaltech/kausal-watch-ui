@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 import { activeGoalVar } from '@common/apollo/paths-cache';
 import { setUniqueColors } from '@common/utils/paths/colors';
-import { getMetricValue, getOutcomeTotal } from '@common/utils/paths/metric';
+import { getMetricValue } from '@common/utils/paths/metric';
 
 import OutcomeCard from '@/components/paths/outcome/OutcomeCard';
 import OutcomeNodeContent from '@/components/paths/outcome/OutcomeNodeContent';
@@ -153,7 +153,6 @@ type OutcomeCardSetProps = {
   endYear: number;
   activeScenario: string;
   activeNodeId: string | undefined;
-  lastActiveNodeId: string | undefined;
   setLastActiveNodeId: (s: string) => void;
   subNodesTitle: string;
   refetching: boolean;
@@ -167,13 +166,13 @@ const OutcomeCardSet = ({
   endYear,
   activeScenario,
   activeNodeId,
-  lastActiveNodeId,
   setLastActiveNodeId,
   subNodesTitle,
   refetching,
 }: OutcomeCardSetProps) => {
   const [hoveredNodeId, setHoveredNodeId] = useState(undefined);
-  const { cardNodes, subNodeMap } = useMemo(() => {
+
+  const cardNodes = useMemo(() => {
     const inputNodeIds = rootNode.inputNodes.map((node) => node.id);
     const cardNodes = [...nodeMap.values()]
       .filter((node) => inputNodeIds.indexOf(node.id) >= 0)
@@ -186,16 +185,7 @@ const OutcomeCardSet = ({
         node.color = color;
       }
     );
-    const subNodeMap = new Map(
-      cardNodes.map((cn) => [
-        cn.id,
-        cn.inputNodes.map((child) => nodeMap.get(child.id)!).filter((child) => !!child),
-      ])
-    );
-    return {
-      cardNodes,
-      subNodeMap,
-    };
+    return cardNodes;
   }, [nodeMap, rootNode.inputNodes]);
 
   const activeGoal = useReactiveVar(activeGoalVar);
@@ -204,7 +194,6 @@ const OutcomeCardSet = ({
   const chartType = activeGoal?.defaultOutcomeGraphType || 'bar';
   const hideForecast = separateYears && separateYears.length > 1;
   const colorAdjust = activeGoal?.colorAdjust;
-  const inputNodes = rootNode.inputNodes.filter((node) => !nodeMap.has(node.id));
 
   const handleHover = useCallback((evt) => {
     setHoveredNodeId(evt);
@@ -219,65 +208,65 @@ const OutcomeCardSet = ({
     [activeNodeId, rootNode.id, setLastActiveNodeId]
   );
 
-  const negativeNodesTotal = getOutcomeTotal(
-    cardNodes.filter((node) => getMetricValue(node, endYear) < 0),
-    endYear
-  );
-  const positiveNodesTotal = getOutcomeTotal(
-    cardNodes.filter((node) => getMetricValue(node, endYear) >= 0),
-    endYear
-  );
+  const { negativeNodesTotal, positiveNodesTotal } = useMemo(() => {
+    let negative = 0;
+    let positive = 0;
+    for (const node of cardNodes) {
+      const value = getMetricValue(node, endYear) ?? 0;
+      if (value < 0) negative += value;
+      else positive += value;
+    }
+    return { negativeNodesTotal: negative, positiveNodesTotal: positive };
+  }, [cardNodes, endYear]);
 
   return (
-    <>
-      <CardSet id={rootNode.id} $color={rootNode.color!} $haschildren={cardNodes.length > 0}>
-        <ContentArea>
-          <OutcomeNodeContent
-            node={rootNode}
-            subNodes={cardNodes}
-            color={rootNode.color || parentColor}
-            colorAdjust={colorAdjust}
-            startYear={startYear}
-            endYear={endYear}
-            activeScenario={activeScenario}
-            refetching={refetching}
-            separateYears={separateYears}
-            chartType={chartType}
-          />
-        </ContentArea>
-        {cardNodes.length > 0 && (
-          <SubNodes>
-            <BarHeader>{subNodesTitle}</BarHeader>
-            <CardDeck role="tablist">
-              {cardNodes.map((node, indx) => (
-                <OutcomeCard
-                  key={node.id}
-                  startYear={separateYears ? separateYears[0] : startYear}
-                  endYear={separateYears ? separateYears[separateYears.length - 1] : endYear}
-                  node={node}
-                  state={activeNodeId === undefined ? 'closed' : 'open'}
-                  hovered={hoveredNodeId === node.id}
-                  active={activeNodeId === node.id}
-                  onHover={handleHover}
-                  handleClick={handleClick}
-                  color={node.color || parentColor}
-                  colorAdjust={colorAdjust}
-                  total={positiveNodesTotal - negativeNodesTotal}
-                  positiveTotal={positiveNodesTotal}
-                  negativeTotal={negativeNodesTotal}
-                  refetching={refetching}
-                  hideForecast={hideForecast}
-                  disabled={
-                    node.metric?.forecastValues?.length === 0 &&
-                    node.metric?.historicalValues?.length === 0
-                  }
-                />
-              ))}
-            </CardDeck>
-          </SubNodes>
-        )}
-      </CardSet>
-    </>
+    <CardSet id={rootNode.id} $color={rootNode.color!} $haschildren={cardNodes.length > 0}>
+      <ContentArea>
+        <OutcomeNodeContent
+          node={rootNode}
+          subNodes={cardNodes}
+          color={rootNode.color || parentColor}
+          colorAdjust={colorAdjust}
+          startYear={startYear}
+          endYear={endYear}
+          activeScenario={activeScenario}
+          refetching={refetching}
+          separateYears={separateYears}
+          chartType={chartType}
+        />
+      </ContentArea>
+      {cardNodes.length > 0 && (
+        <SubNodes>
+          <BarHeader>{subNodesTitle}</BarHeader>
+          <CardDeck role="tablist">
+            {cardNodes.map((node) => (
+              <OutcomeCard
+                key={node.id}
+                startYear={separateYears ? separateYears[0] : startYear}
+                endYear={separateYears ? separateYears[separateYears.length - 1] : endYear}
+                node={node}
+                state={activeNodeId === undefined ? 'closed' : 'open'}
+                hovered={hoveredNodeId === node.id}
+                active={activeNodeId === node.id}
+                onHover={handleHover}
+                handleClick={handleClick}
+                color={node.color || parentColor}
+                colorAdjust={colorAdjust}
+                total={positiveNodesTotal - negativeNodesTotal}
+                positiveTotal={positiveNodesTotal}
+                negativeTotal={negativeNodesTotal}
+                refetching={refetching}
+                hideForecast={hideForecast}
+                disabled={
+                  node.metric?.forecastValues?.length === 0 &&
+                  node.metric?.historicalValues?.length === 0
+                }
+              />
+            ))}
+          </CardDeck>
+        </SubNodes>
+      )}
+    </CardSet>
   );
 };
 
