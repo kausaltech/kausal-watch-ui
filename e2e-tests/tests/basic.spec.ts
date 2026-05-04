@@ -62,6 +62,20 @@ const testPlan = (planId: string) => {
       test.skip(!listItem, 'No action list page for plan');
 
       const nav = page.locator('nav#global-navigation-bar');
+      const parentPage = listItem.parent?.page;
+      if (
+        parentPage != null &&
+        parentPage.showInMenus === true &&
+        parentPage.__typename !== 'PlanRootPage'
+      ) {
+        // The action list page link is inside a collapsiple submenu,
+        // click to open the submenu first.
+        const parentLink = nav.getByRole('button', {
+          name: parentPage.title,
+          exact: true,
+        });
+        await parentLink.click();
+      }
       const link = nav.getByRole('link', {
         name: listItem.page.title,
         exact: true,
