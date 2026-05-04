@@ -33,7 +33,7 @@ const Spacer = styled.div`
 
 const FixedPanel = styled.aside`
   position: fixed;
-  z-index: 255;
+  z-index: 500;
   left: 0;
   bottom: 0;
   width: 100%;
