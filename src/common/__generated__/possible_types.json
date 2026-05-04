@@ -280,10 +280,6 @@
       "OperationInfo",
       "Plan"
     ],
-    "CreateTestUserPayload": [
-      "OperationInfo",
-      "User"
-    ],
     "DashboardColumnInterface": [
       "FieldColumnBlock",
       "IndicatorCategoryColumn",
