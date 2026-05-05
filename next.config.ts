@@ -15,9 +15,12 @@ const baseConfig = getNextConfig(__dirname);
 
 let nextConfig: NextConfig = {
   ...baseConfig,
-  typescript: {
-    ...baseConfig.typescript,
-    tsconfigPath: 'configs/tsconfig.next.json',
+  turbopack: {
+    ...baseConfig.turbopack,
+    resolveAlias: {
+      ...baseConfig.turbopack?.resolveAlias,
+      '@/public/*': './public/*',
+    },
   },
   sassOptions: {
     quietDeps: true,
