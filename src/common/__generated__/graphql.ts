@@ -1084,24 +1084,6 @@ export enum SiteGeneralContentOrganizationTerm {
   Organization = 'ORGANIZATION'
 }
 
-export type TestUserInput = {
-  defaultAdminPlanId: InputMaybe<Scalars['ID']['input']>;
-  email: Scalars['String']['input'];
-  isSuperuser: Scalars['Boolean']['input'];
-  password: Scalars['String']['input'];
-  roles: Array<TestUserRoleInput>;
-};
-
-export type TestUserRoleInput = {
-  kind: TestUserRoleKind;
-  targetId: Scalars['ID']['input'];
-};
-
-export enum TestUserRoleKind {
-  ActionContact = 'ACTION_CONTACT',
-  PlanAdmin = 'PLAN_ADMIN'
-}
-
 export type UserFeedbackMutationInput = {
   action: InputMaybe<Scalars['ID']['input']>;
   additionalFields: InputMaybe<Scalars['String']['input']>;
@@ -4664,7 +4646,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
 );
 
 export type IndicatorListIndicatorFragment = (
-  { id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, sortKey: string | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+  { id: string, name: string, timeResolution: IndicatorTimeResolution, desiredTrend: IndicatorDesiredTrend | null, valueRounding: number | null, sortKey: string | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
     { id: string, name: string }
     & { __typename: 'Organization' }
   ), common: (
@@ -15118,7 +15100,7 @@ export type IndicatorListQuery = (
     )> }
     & { __typename: 'Plan' }
   ) | null, planIndicators?: Array<(
-    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, sortKey: string | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, desiredTrend: IndicatorDesiredTrend | null, valueRounding: number | null, sortKey: string | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
       { id: string, name: string }
       & { __typename: 'Organization' }
     ), common: (
@@ -15214,7 +15196,7 @@ export type IndicatorListQuery = (
     )> }
     & { __typename: 'Indicator' }
   )> | null, relatedPlanIndicators?: Array<(
-    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, valueRounding: number | null, sortKey: string | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
+    { level: string | null, id: string, name: string, timeResolution: IndicatorTimeResolution, desiredTrend: IndicatorDesiredTrend | null, valueRounding: number | null, sortKey: string | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
       { id: string, name: string }
       & { __typename: 'Organization' }
     ), common: (

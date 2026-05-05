@@ -80,6 +80,10 @@
       "OperationInfo",
       "RegisterUserResult"
     ],
+    "SetInstanceLockedPayload": [
+      "OperationInfo",
+      "SetInstanceLockedResult"
+    ],
     "SnippetInterface": [
       "InstanceSiteContent"
     ],

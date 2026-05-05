@@ -18,6 +18,7 @@ import BadgeTooltip from '../common/BadgeTooltip';
 import Icon from '../common/Icon';
 import { getIndicatorTranslation } from './IndicatorCard';
 import type { IndicatorListIndicator } from './IndicatorList';
+import { isGoalAlreadyExceeded } from './indicatorUtils';
 
 const DEFAULT_ROUNDING = 2;
 
@@ -52,6 +53,14 @@ const TrendIcon = styled(Icon)`
   width: 1.25em;
   margin-bottom: -0.1em;
   color: ${(props) => props.theme.graphColors.grey040};
+`;
+
+const GoalAchievedIcon = styled.span`
+  display: inline-block;
+  margin-right: ${(props) => props.theme.spaces.s025};
+  color: ${(props) => props.theme.actionColor};
+  font-weight: 400;
+  line-height: 1;
 `;
 
 const IndicatorLevelBadge = styled.span<{ $level: string }>`
@@ -254,6 +263,7 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
     maximumSignificantDigits: indicator.valueRounding ?? undefined,
   });
   const t = useTranslations();
+  const goalAchievedLabel = t('indicator-goal-exceeded');
 
   const { value, year } = getValue(indicator, valueType, isNormalized, defaultYear);
 
@@ -296,9 +306,30 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
 
   const unitName = unit.shortName || unit.name;
 
+  // Show the tick only for the Latest/current-status column.
+  // This uses the same goal-exceeded logic as the indicator summary utility.
+  const showGoalAchievedIcon =
+    valueType === IndicatorColumnValueType.Latest &&
+    isGoalAlreadyExceeded({
+      currentValue: value,
+      values: indicator.values,
+      goals: indicator.goals,
+      desiredTrend: indicator.desiredTrend,
+      defaultGoalYear: defaultYear,
+      isNormalized,
+    });
+
   return (
     <CellContent $numeric={true}>
-      <Value>{formatNumber(value)}</Value>
+      <Value title={showGoalAchievedIcon ? goalAchievedLabel : undefined}>
+        {showGoalAchievedIcon && (
+          <>
+            <GoalAchievedIcon aria-hidden="true">✓</GoalAchievedIcon>
+            <span className="visually-hidden">{goalAchievedLabel} </span>
+          </>
+        )}
+        {formatNumber(value)}
+      </Value>
       {!hideUnit && <Unit>{unitName}</Unit>}
       {defaultYear && year && year !== defaultYear && (
         <>

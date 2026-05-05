@@ -1,3 +1,6 @@
+import { IndicatorDesiredTrend } from '@/common/__generated__/graphql';
+import dayjs from '@/common/dayjs';
+
 import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
 import type { Hierarchy } from './process-indicators';
 
@@ -189,4 +192,162 @@ export const groupIndicatorsByCommonCategory = (
     grouped.set(commonId ?? '', [...group, indicator]);
   });
   return grouped;
+};
+
+type IndicatorGoalValue = IndicatorListIndicator['goals'][number];
+
+type IndicatorDataValue =
+  | IndicatorListIndicator['latestValue']
+  | IndicatorListIndicator['referenceValue']
+  | IndicatorListIndicator['values'][number]
+  | IndicatorGoalValue
+  | null
+  | undefined;
+
+export const getGoalValue = (
+  goals: IndicatorListIndicator['goals'],
+  defaultGoalYear: number | null
+): IndicatorGoalValue | null => {
+  if (!goals || goals.length === 0) {
+    return null;
+  }
+
+  const now = dayjs();
+
+  const validGoals = goals.filter(
+    (goal): goal is NonNullable<IndicatorGoalValue> & { date: string } =>
+      goal !== null && goal !== undefined && goal.date !== null && goal.date !== undefined
+  );
+
+  if (validGoals.length === 0) {
+    return null;
+  }
+
+  if (defaultGoalYear === null || defaultGoalYear === undefined) {
+    const nextGoal = validGoals.find((goal) => dayjs(goal.date).isSameOrAfter(now));
+    return nextGoal || null;
+  }
+
+  const defaultGoalYearStart = dayjs(`${defaultGoalYear}-01-01`);
+  const defaultGoalYearEnd = dayjs(`${defaultGoalYear}-12-31`).endOf('day');
+
+  const goalOnYear = validGoals.find((goal) => {
+    const goalDate = dayjs(goal.date);
+
+    return (
+      goalDate.isSameOrAfter(defaultGoalYearStart) &&
+      (goalDate.isBefore(defaultGoalYearEnd) || goalDate.isSame(defaultGoalYearEnd))
+    );
+  });
+
+  if (goalOnYear) {
+    return goalOnYear;
+  }
+
+  const goalsBeforeYear = validGoals
+    .filter((goal) => dayjs(goal.date).isBefore(defaultGoalYearStart))
+    .sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf());
+
+  if (goalsBeforeYear.length > 0) {
+    return goalsBeforeYear[0];
+  }
+
+  const goalsBetweenNowAndYear = validGoals.filter((goal) => {
+    const goalDate = dayjs(goal.date);
+
+    return (
+      goalDate.isSameOrAfter(now) &&
+      (goalDate.isBefore(defaultGoalYearEnd) || goalDate.isSame(defaultGoalYearEnd))
+    );
+  });
+
+  if (goalsBetweenNowAndYear.length === 0) {
+    const goalsAfterYear = validGoals
+      .filter((goal) => dayjs(goal.date).isAfter(defaultGoalYearEnd))
+      .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf());
+
+    if (goalsAfterYear.length > 0) {
+      return goalsAfterYear[0];
+    }
+  }
+
+  return validGoals[validGoals.length - 1];
+};
+
+const getNumberValue = (value: IndicatorDataValue, isNormalized: boolean): number | null => {
+  if (!value) {
+    return null;
+  }
+
+  if (isNormalized) {
+    return value.normalizedValues?.[0]?.value ?? null;
+  }
+
+  return value.value ?? null;
+};
+
+export const determineDesirableDirection = (
+  desiredTrend: IndicatorListIndicator['desiredTrend'] | null | undefined,
+  values: IndicatorListIndicator['values'],
+  goals: IndicatorListIndicator['goals']
+): '+' | '-' | null => {
+  if (desiredTrend === IndicatorDesiredTrend.Increasing) {
+    return '+';
+  }
+
+  if (desiredTrend === IndicatorDesiredTrend.Decreasing) {
+    return '-';
+  }
+
+  if (!values.length || !goals?.length) {
+    return null;
+  }
+
+  const latestValue = values[values.length - 1];
+  const latestGoal = goals[goals.length - 1];
+
+  if (
+    latestGoal?.value !== null &&
+    latestGoal?.value !== undefined &&
+    latestValue?.value !== null &&
+    latestValue?.value !== undefined &&
+    latestGoal.value - latestValue.value >= 0
+  ) {
+    return '+';
+  }
+
+  return '-';
+};
+
+export const isGoalAlreadyExceeded = (params: {
+  currentValue: number;
+  values: IndicatorListIndicator['values'];
+  goals: IndicatorListIndicator['goals'];
+  desiredTrend: IndicatorListIndicator['desiredTrend'] | null | undefined;
+  defaultGoalYear: number | null;
+  isNormalized: boolean;
+}): boolean => {
+  const { currentValue, values, goals, desiredTrend, defaultGoalYear, isNormalized } = params;
+
+  const displayGoal = getGoalValue(goals, defaultGoalYear);
+
+  if (!displayGoal) {
+    return false;
+  }
+
+  const goalValue = getNumberValue(displayGoal, isNormalized);
+
+  if (goalValue === null || !Number.isFinite(goalValue)) {
+    return false;
+  }
+
+  const desirableDirection = determineDesirableDirection(desiredTrend, values, goals);
+
+  if (!desirableDirection) {
+    return false;
+  }
+
+  const difference = goalValue - currentValue;
+
+  return desirableDirection === '+' ? difference <= 0 : difference >= 0;
 };

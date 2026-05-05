@@ -95,7 +95,6 @@ export type CreateNodeInput = {
   description: InputMaybe<Scalars['String']['input']>;
   i18n: InputMaybe<Scalars['JSON']['input']>;
   identifier: Scalars['ID']['input'];
-  inputDatasets: InputMaybe<Scalars['JSON']['input']>;
   inputDimensions: InputMaybe<Array<Scalars['String']['input']>>;
   inputPorts: InputMaybe<Array<InputPortInput>>;
   isOutcome: Scalars['Boolean']['input'];
@@ -168,6 +167,12 @@ export type FrameworkConfigInput = {
   /** UUID for the new framework config. If not set, will be generated automatically. */
   uuid: InputMaybe<Scalars['UUID']['input']>;
 };
+
+/** An enumeration. */
+export enum FrameworksMeasureTemplateDefaultValueScalingChoices {
+  /** Population */
+  Population = 'POPULATION'
+}
 
 /** An enumeration. */
 export enum FrameworksMeasureTemplatePriorityChoices {
@@ -350,10 +355,26 @@ export type UpdateDimensionInput = {
 };
 
 export type UpdateNodeInput = {
+  allowNulls: InputMaybe<Scalars['Boolean']['input']>;
   color: InputMaybe<Scalars['String']['input']>;
+  config: InputMaybe<NodeConfigInput>;
+  description: InputMaybe<Scalars['String']['input']>;
+  i18n: InputMaybe<Scalars['JSON']['input']>;
+  inputDimensions: InputMaybe<Array<Scalars['String']['input']>>;
+  inputPorts: InputMaybe<Array<InputPortInput>>;
   isOutcome: InputMaybe<Scalars['Boolean']['input']>;
   isVisible: InputMaybe<Scalars['Boolean']['input']>;
+  kind: InputMaybe<NodeKind>;
+  minimumYear: InputMaybe<Scalars['Int']['input']>;
   name: InputMaybe<Scalars['String']['input']>;
+  nodeGroup: InputMaybe<Scalars['ID']['input']>;
+  order: InputMaybe<Scalars['Int']['input']>;
+  outputDimensions: InputMaybe<Array<Scalars['String']['input']>>;
+  outputMetrics: InputMaybe<Array<OutputMetricInput>>;
+  outputPorts: InputMaybe<Array<OutputPortInput>>;
+  params: InputMaybe<Scalars['JSON']['input']>;
+  shortName: InputMaybe<Scalars['String']['input']>;
+  tags: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type UpdateScenarioInput = {
