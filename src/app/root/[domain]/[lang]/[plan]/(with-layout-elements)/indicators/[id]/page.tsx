@@ -38,8 +38,11 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
   return {
     title: `${name} | ${resolvedParent.title?.absolute}`,
     openGraph: {
+      type: 'website',
       title: `${name} | ${resolvedParent.openGraph?.title?.absolute}`,
       url: resolvedParent.openGraph?.url ?? undefined,
+      images: resolvedParent.openGraph?.images ?? undefined,
+      siteName: resolvedParent.openGraph?.siteName ?? undefined,
     },
   };
 }

@@ -33,9 +33,11 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
     title: `${data.planPage.title} | ${resolvedParent.title?.absolute}`,
     description: getMetaDescription(data.planPage),
     openGraph: {
+      type: 'website',
       title: `${data.planPage.title} | ${resolvedParent.openGraph?.title?.absolute}`,
       url: resolvedParent.openGraph?.url ?? undefined,
-      images: metaImage ? [metaImage] : undefined,
+      images: metaImage ? [metaImage] : (resolvedParent.openGraph?.images ?? undefined),
+      siteName: resolvedParent.openGraph?.siteName ?? undefined,
     },
   };
 }
