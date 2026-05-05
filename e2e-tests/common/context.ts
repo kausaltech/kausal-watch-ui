@@ -58,6 +58,7 @@ const GET_PLAN_INFO = gql`
       }
       actionListPage {
         urlPath
+        includeRelatedPlans
       }
       actions(first: 5) {
         identifier
@@ -102,12 +103,17 @@ const GET_PLAN_INFO = gql`
       id
       name
     }
+    relatedPlanActions(plan: $plan, first: 5) {
+      identifier
+      viewUrl(clientUrl: $clientURL)
+    }
   }
 `;
 
 type PlanInfo = NonNullable<PlaywrightGetPlanInfoQuery['plan']>;
 type PlanIndicators = NonNullable<PlaywrightGetPlanInfoQuery['planIndicators']>;
 type PlanOrganizations = NonNullable<PlaywrightGetPlanInfoQuery['planOrganizations']>;
+type RelatedPlanActions = NonNullable<PlaywrightGetPlanInfoQuery['relatedPlanActions']>;
 type ActionInfo = PlanInfo['actions'][0];
 
 export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][0] & {
@@ -156,14 +162,21 @@ export class PlanContext {
   plan: PlanInfo;
   planOrganizations: PlanOrganizations;
   planIndicators: PlanIndicators;
+  relatedPlanActions: RelatedPlanActions;
   baseURL: string;
   failedAssetRequests: string[] = [];
 
-  constructor(data: PlaywrightGetPlanInfoQuery, baseURL: string, planIndicators: PlanIndicators) {
+  constructor(
+    data: PlaywrightGetPlanInfoQuery,
+    baseURL: string,
+    planIndicators: PlanIndicators,
+    relatedPlanActions: RelatedPlanActions
+  ) {
     this.plan = data.plan!;
     this.planOrganizations = data.planOrganizations ?? [];
     this.baseURL = baseURL;
     this.planIndicators = planIndicators;
+    this.relatedPlanActions = relatedPlanActions;
   }
 
   beforeEach(page: Page) {
@@ -358,7 +371,8 @@ export class PlanContext {
     });
     const data = res.data;
     const planIndicators = res.data.planIndicators!;
-    return new PlanContext(data, baseURL, planIndicators);
+    const relatedPlanActions = res.data.relatedPlanActions!;
+    return new PlanContext(data, baseURL, planIndicators, relatedPlanActions);
   }
 
   async waitForLoadingFinished(page: Page) {

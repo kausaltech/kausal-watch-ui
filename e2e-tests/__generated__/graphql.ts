@@ -1149,7 +1149,7 @@ export type PlaywrightGetPlanInfoQuery = (
       { id: string, siteTitle: string, siteDescription: string }
       & { __typename: 'SiteGeneralContent' }
     ), actionListPage: (
-      { urlPath: string }
+      { urlPath: string, includeRelatedPlans: boolean | null }
       & { __typename: 'ActionListPage' }
     ) | null, actions: Array<(
       { identifier: string, viewUrl: string }
@@ -1180,6 +1180,9 @@ export type PlaywrightGetPlanInfoQuery = (
   ) | null, planIndicators: Array<(
     { id: string, name: string }
     & { __typename: 'Indicator' }
+  )> | null, relatedPlanActions: Array<(
+    { identifier: string, viewUrl: string }
+    & { __typename: 'Action' }
   )> | null }
   & { __typename: 'Query' }
 );
