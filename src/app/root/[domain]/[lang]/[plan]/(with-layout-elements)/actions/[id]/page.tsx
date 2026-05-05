@@ -56,9 +56,12 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
     title: `${title} | ${resolvedParent.title?.absolute}`,
     description: data.action.name,
     openGraph: {
+      type: 'website',
       title: `${title} | ${resolvedParent.openGraph?.title?.absolute}`,
       description: data.action.name,
-      images: image?.social?.src ? [image.social.src] : undefined,
+      images: image?.social?.src
+        ? [image.social.src]
+        : (resolvedParent.openGraph?.images ?? undefined),
       url: resolvedParent.openGraph?.url ?? undefined,
       siteName: resolvedParent.openGraph?.siteName ?? undefined,
     },
