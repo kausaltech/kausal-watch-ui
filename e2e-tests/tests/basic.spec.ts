@@ -96,7 +96,15 @@ const testPlan = (planId: string) => {
 
     test('action details page', async ({ page, ctx }) => {
       const listItem = ctx.getActionListMenuItem();
-      test.skip(!listItem, 'No actions defined in plan');
+      test.skip(!listItem, 'No action list page for plan');
+      if (ctx.plan.actionListPage?.includeRelatedPlans) {
+        test.skip(ctx.relatedPlanActions.length === 0, 'No actions defined for plan');
+      } else {
+        test.skip(ctx.plan.actions.length === 0, 'No actions defined for plan');
+      }
+      if (listItem == null) {
+        return;
+      }
       await page.goto(`${ctx.baseURL}${listItem.page.urlPath}`, { waitUntil: 'domcontentloaded' });
       await ctx.waitForLoadingFinished(page);
 
