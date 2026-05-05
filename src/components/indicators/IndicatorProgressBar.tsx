@@ -351,10 +351,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   };
   const goalBar = {
     name: 'goal',
-    x: bars.w - Math.max(MIN_BAR_WIDTH, +(roundedValues.goal || 0) * scale),
+    x: bars.w - Math.max(MIN_BAR_WIDTH, +(roundedValues.goal ?? 0) * scale),
     y: topMargin + 2 * barHeight,
     w:
-      roundedValues.goal && +roundedValues.goal > 0
+      roundedValues.goal != null && +roundedValues.goal > 0
         ? Math.max(MIN_BAR_WIDTH, +roundedValues.goal * scale)
         : 0,
   };
@@ -478,9 +478,10 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
     latestValue: `${roundedValues.latest} ${displayUnit ?? ''}`,
     goalValue: `${roundedValues.goal} ${displayUnit ?? ''}`,
     reduced: `${reductionCounterTo.toFixed(1)} ${displayUnit ?? ''}`,
-    toBeReduced: roundedValues.goal
-      ? `${roundedValues.latest - Number(roundedValues.goal)} ${displayUnit ?? ''}`
-      : '',
+    toBeReduced:
+      roundedValues.goal != null
+        ? `${roundedValues.latest - Number(roundedValues.goal)} ${displayUnit ?? ''}`
+        : '',
   };
   /*
     On the year {{startYear}} {{name}} was {{startValue}}.
@@ -723,7 +724,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
             textAnchor={goalBar.w > 120 ? 'start' : 'end'}
             transform={`translate(${goalBar.w > 120 ? goalBar.x + 4 : goalBar.x - 8} ${goalBar.y})`}
             date={graphValues.goalYear}
-            value={roundedValues.goal ? formatNumber(roundedValues.goal) : ''}
+            value={roundedValues.goal != null ? formatNumber(roundedValues.goal) : ''}
             unit={displayUnit ?? ''}
             locale={locale}
             textColor={
