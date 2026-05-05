@@ -27,7 +27,7 @@ export const getOrganizationDetails = async (
 
 const GET_ORG_DETAILS = gql`
   query OrganizationDetails($id: ID!, $plan: ID!, $clientUrl: String!) {
-    organization(id: $id) {
+    organization(id: $id, plan: $plan) {
       id
       classification {
         id
