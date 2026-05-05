@@ -226,7 +226,6 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
                       activeNodeId={
                         index < nodes.visible.length - 1 ? nodes.visible[index + 1].id : undefined
                       }
-                      lastActiveNodeId={lastActiveNodeId}
                       setLastActiveNodeId={setLastActiveNodeId}
                       refetching={refetching}
                     />

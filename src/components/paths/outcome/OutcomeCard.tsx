@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 
 import styled from '@emotion/styled';
 import chroma from 'chroma-js';
@@ -167,13 +167,17 @@ const OutcomeCard = (props: OutcomeCardProps) => {
 
   const cardRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (active && cardRef.current)
+    // Only scroll into view on initial mount (e.g. when landing with ?node=foo).
+    // Don't re-scroll on subsequent active toggles from clicks.
+    if (active && cardRef.current) {
       cardRef.current.scrollIntoView({
         inline: 'center',
         behavior: 'smooth',
-        block: 'nearest',
+        block: 'start',
       });
-  }, [active]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const displayColor = chroma(color)
     .brighten(colorAdjust || 0)
@@ -269,4 +273,4 @@ const OutcomeCard = (props: OutcomeCardProps) => {
   );
 };
 
-export default OutcomeCard;
+export default memo(OutcomeCard);
