@@ -2,9 +2,11 @@ import React from 'react';
 
 import Image from 'next/image';
 
-import { gql, useQuery } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';

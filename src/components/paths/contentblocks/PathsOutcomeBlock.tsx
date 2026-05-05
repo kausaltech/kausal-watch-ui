@@ -4,8 +4,10 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
+
+import { NetworkStatus } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client/react';
 import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';

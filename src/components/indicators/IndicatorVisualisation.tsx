@@ -2,8 +2,9 @@
 
 import React, { useMemo, useState } from 'react';
 
-import { useQuery } from '@apollo/client';
 import styled from '@emotion/styled';
+
+import { useQuery } from '@apollo/client/react';
 import { captureMessage } from '@sentry/nextjs';
 import { isEqual } from 'lodash-es';
 import { useLocale, useTranslations } from 'next-intl';

@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 
-import { gql, useSuspenseQuery } from '@apollo/client';
 import styled from '@emotion/styled';
+
+import { gql } from '@apollo/client';
+import { useSuspenseQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Col, type ColProps, Row } from 'reactstrap';
 

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import { useQuery } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
+import { useQuery } from '@apollo/client/react';
 import type { DatasetComponentOption } from 'echarts/components';
 import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';

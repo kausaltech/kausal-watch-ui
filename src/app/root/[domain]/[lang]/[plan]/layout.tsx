@@ -9,7 +9,8 @@ import * as Sentry from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
 import ThemedGlobalStyles from '@common/themes/ThemedGlobalStyles';
-import { getThemeStaticURL, loadTheme } from '@common/themes/theme';
+import { getThemeStaticURL } from '@common/themes/theme';
+import { loadTheme } from '@common/themes/theme-init.server';
 import { getRequestOrigin } from '@common/utils/request.server';
 
 import type { WorkflowState } from '@/common/__generated__/graphql';

@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
-import { useApolloClient } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
+import { useApolloClient } from '@apollo/client/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 

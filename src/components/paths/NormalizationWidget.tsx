@@ -1,5 +1,7 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
 import styled from '@emotion/styled';
+
+import { gql } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { FormGroup, Input, Label } from 'reactstrap';
 

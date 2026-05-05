@@ -1,7 +1,9 @@
 import React from 'react';
 
-import { gql, useQuery } from '@apollo/client';
 import { useTheme } from '@emotion/react';
+
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 

@@ -2,7 +2,8 @@ import { useState } from 'react';
 
 import { usePathname, useSearchParams } from 'next/navigation';
 
-import { gql, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Controller, useForm } from 'react-hook-form';
 import { Alert, Spinner } from 'reactstrap';

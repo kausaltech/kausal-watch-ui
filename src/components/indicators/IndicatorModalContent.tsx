@@ -1,5 +1,6 @@
-import type { ApolloError } from '@apollo/client';
 import styled from '@emotion/styled';
+
+import type { CombinedGraphQLErrors } from '@apollo/client/errors';
 import { useTranslations } from 'next-intl';
 import { Alert, Spinner } from 'reactstrap';
 
@@ -87,7 +88,7 @@ const ChangeHistoryInModal = styled.div`
 interface IndicatorModalContentProps {
   indicator?: IndicatorDetailsQuery['indicator'] | null;
   loading: boolean;
-  error: ApolloError | undefined;
+  error: CombinedGraphQLErrors | undefined;
   usableCategoryTypes: NonNullable<IndicatorListQuery['plan']>['categoryTypes'];
   layout: {
     detailsMainTop: NonNullable<

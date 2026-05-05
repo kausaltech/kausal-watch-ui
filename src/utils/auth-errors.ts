@@ -1,8 +1,8 @@
-import { ApolloError } from '@apollo/client';
+import { CombinedGraphQLErrors } from '@apollo/client/errors';
 
 export function hasUnauthenticatedErrors(error: unknown): boolean {
-  if (error instanceof ApolloError) {
-    return error.graphQLErrors.some((e) => e.extensions?.code === 'UNAUTHENTICATED');
+  if (CombinedGraphQLErrors.is(error)) {
+    return error.errors.some((e) => e.extensions?.code === 'UNAUTHENTICATED');
   }
   return false;
 }

@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 
-import { gql, useMutation } from '@apollo/client';
 import styled from '@emotion/styled';
+
+import { gql } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Alert, Spinner } from 'reactstrap';

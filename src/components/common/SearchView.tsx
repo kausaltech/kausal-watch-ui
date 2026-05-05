@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { useQuery } from '@apollo/client';
 import styled from '@emotion/styled';
+
+import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Alert, Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';

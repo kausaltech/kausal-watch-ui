@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { gql, useLazyQuery, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 
 import type {
   CommitToPledgeMutation,

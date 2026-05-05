@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import type { ObservableQuery } from '@apollo/client';
-import { NetworkStatus, gql, useMutation, useQuery } from '@apollo/client';
 import styled from '@emotion/styled';
+
+import type { ObservableQuery } from '@apollo/client';
+import { NetworkStatus, gql } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Button, Col, FormFeedback, FormGroup, Input, InputGroup, Label, Row } from 'reactstrap';
 
