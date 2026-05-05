@@ -51,6 +51,13 @@ const config: CodegenConfig = {
         { add: { content: '/* istanbul ignore file */' } },
         'typescript',
         'typescript-operations',
+        {
+          add: {
+            placement: 'append',
+            content:
+              "export type { DimensionalNodeMetricFragment } from './paths/graphql';\nexport { ScenarioKind } from './paths/graphql';",
+          },
+        },
       ],
       config: tsoConfig,
     },
