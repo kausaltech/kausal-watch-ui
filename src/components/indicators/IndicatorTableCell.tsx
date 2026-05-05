@@ -315,7 +315,7 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
       values: indicator.values,
       goals: indicator.goals,
       desiredTrend: indicator.desiredTrend,
-      defaultGoalYear: defaultYear ?? year,
+      defaultGoalYear: defaultYear,
       isNormalized,
     });
 
