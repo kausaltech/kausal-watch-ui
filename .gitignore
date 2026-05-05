@@ -36,3 +36,8 @@ build-storybook.log
 *.tsbuildinfo
 
 *storybook.log
+
+# Claude Code — local/runtime state (shared config like agents/skills can still be committed)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+.claude/.credentials.json
