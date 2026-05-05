@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../kausal_common/configs/tsconfig.react.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/public/*": ["../public/*"],
+      "@/*": ["../src/*"],
+      "@common/*": ["../kausal_common/src/*"]
+    },
+    "checkJs": true,
+    "allowImportingTsExtensions": true,
+    // TODO: enable full `strict` (drop these overrides) — see paths-ui's tsc-baseline workflow
+    "strict": false,
+    "strictNullChecks": true
+  },
+  "include": [
+    "../.next/types/**/*.ts",
+    "../kausal_common/src",
+    "../next-env.d.ts",
+    "../src",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["../src/embed", "../src/stories"]
+}

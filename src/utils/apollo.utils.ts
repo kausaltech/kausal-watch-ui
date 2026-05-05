@@ -105,7 +105,7 @@ export const operationEnd = new ApolloLink((operation, forward) => {
  * Log the outgoing GraphQL queries and variables server-side. Useful for debugging
  * purposes and enabled by setting the LOG_GRAPHQL_QUERIES env variable.
  */
-function fetchWithLogging(input: RequestInfo, init: RequestInit = {}): Promise<Response> {
+function fetchWithLogging(input: URL | RequestInfo, init: RequestInit = {}): Promise<Response> {
   const body = typeof init.body === 'string' ? JSON.parse(init.body) : init.body;
 
   if (body) {

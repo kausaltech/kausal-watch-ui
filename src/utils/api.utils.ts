@@ -1,4 +1,4 @@
-import { ApolloQueryResult } from '@apollo/client';
+import type { ApolloQueryResult } from '@apollo/client';
 
 type FailedRequest = {
   error: Error;

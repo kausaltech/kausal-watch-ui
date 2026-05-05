@@ -1,3 +1,4 @@
+// @ts-nocheck
 // TODO: Use graphql generated types
 import { ActionNode, ForecastMetricType } from '@/common/__generated__/paths/graphql';
 

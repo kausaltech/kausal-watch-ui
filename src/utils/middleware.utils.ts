@@ -3,7 +3,7 @@ import type { NextRequest, NextResponse } from 'next/server';
 
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client';
 import * as Sentry from '@sentry/nextjs';
-import type { NextAuthRequest } from 'next-auth/lib';
+import type { NextAuthRequest } from 'next-auth';
 import type { Logger } from 'pino';
 
 import type { ApolloClientType } from '@common/apollo';

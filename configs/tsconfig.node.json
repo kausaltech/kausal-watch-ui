@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../kausal_common/configs/tsconfig.node.base.json",
+  "include": [
+    "../*.ts",
+    "../*.mjs",
+    "../*.cjs",
+    "../*.js",
+    "../kausal_common/configs/*.ts",
+    "../kausal_common/scripts/*.js"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@common/*": ["./kausal_common/src/*"]
+    },
+    // TODO: enable full `strict` (drop these overrides) — see paths-ui's tsc-baseline workflow
+    "strict": false,
+    "strictNullChecks": true
+  }
+}

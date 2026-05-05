@@ -2,7 +2,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 import type { TypeScriptPluginConfig } from '@graphql-codegen/typescript';
 import type { TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations';
 
-import pathsApolloConfig from './apollo-paths.config';
+import pathsApolloConfig from './apollo-paths.config.cjs';
 import apolloConfig from './apollo.config.cjs';
 
 const tsoConfig: TypeScriptDocumentsPluginConfig & TypeScriptPluginConfig = {
