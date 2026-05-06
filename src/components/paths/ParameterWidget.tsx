@@ -1,8 +1,10 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
 
-import { gql, useMutation, useReactiveVar } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
+import { gql } from '@apollo/client';
+import { useMutation, useReactiveVar } from '@apollo/client/react';
 import { useFocusable } from '@react-aria/focus';
 import { useTranslations } from 'next-intl';
 import { Range, getTrackBackground } from 'react-range';

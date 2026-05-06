@@ -1,7 +1,8 @@
 import { memo, useMemo, useState } from 'react';
 
-import { useReactiveVar } from '@apollo/client';
 import styled from '@emotion/styled';
+
+import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Nav, NavItem, NavLink, TabContent } from 'reactstrap';
 

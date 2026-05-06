@@ -2,8 +2,9 @@ import React, { useCallback, useEffect } from 'react';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { useApolloClient } from '@apollo/client';
 import styled from '@emotion/styled';
+
+import { useApolloClient } from '@apollo/client/react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import {

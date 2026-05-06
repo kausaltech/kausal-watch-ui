@@ -5,7 +5,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
 

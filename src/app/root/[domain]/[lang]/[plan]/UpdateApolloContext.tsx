@@ -2,7 +2,7 @@
 
 import { PropsWithChildren } from 'react';
 
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { useSession } from 'next-auth/react';
 
 import { isServer } from '@/common/environment';

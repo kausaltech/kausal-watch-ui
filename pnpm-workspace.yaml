@@ -1,0 +1,26 @@
+packages:
+  - kausal_common
+allowBuilds:
+  '@parcel/watcher': false
+  '@sentry-internal/node-cpu-profiler': false
+  '@sentry/cli': false
+  '@swc/core': true
+  es5-ext: false
+  esbuild: false
+  libxmljs2: false
+  sharp: false
+  unrs-resolver: false
+hoistPattern:
+  - "@kausal/themes"
+  - "@kausal-private/themes-private"
+linkWorkspacePackages: false
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - 'typescript-eslint'
+  - '@typescript-eslint/*'
+  - 'next'
+  - '@next/*'
+publicHoistPattern:
+  - "@kausal/themes"
+  - "@kausal-private/themes-private"
+storeDir: ./.pnpm-store

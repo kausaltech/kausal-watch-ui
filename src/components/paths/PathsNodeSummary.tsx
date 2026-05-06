@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import { NetworkStatus, useQuery, useReactiveVar } from '@apollo/client';
 import { useTheme } from '@emotion/react';
+
+import { NetworkStatus } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client/react';
 import { captureException } from '@sentry/nextjs';
 import ContentLoader from 'react-content-loader';
 

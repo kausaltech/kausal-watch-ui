@@ -17744,3 +17744,6 @@ export type IndicatorSparklineGraphDataQuery = (
   ) | null }
   & { __typename: 'Query' }
 );
+
+export type { DimensionalNodeMetricFragment } from './paths/graphql';
+export { ScenarioKind } from './paths/graphql';

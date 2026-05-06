@@ -4,7 +4,7 @@ import React from 'react';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 
 import type {
   IndicatorDetailsQuery,

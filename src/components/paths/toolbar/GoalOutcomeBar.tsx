@@ -1,6 +1,8 @@
-import { NetworkStatus, gql, useQuery, useReactiveVar } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
+import { NetworkStatus, gql } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client/react';
 import { max, min, sortBy } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';

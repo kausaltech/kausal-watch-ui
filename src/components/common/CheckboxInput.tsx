@@ -1,7 +1,8 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
-import { ControllerRenderProps } from 'react-hook-form/dist/types/controller';
+
+import type { ControllerRenderProps } from 'react-hook-form';
 import {
   Input as BSInput,
   Label as BSLabel,

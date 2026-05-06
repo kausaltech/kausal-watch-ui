@@ -1,6 +1,6 @@
 'use client';
 
-import { ApolloLink, useApolloClient } from '@apollo/client';
+import { ApolloLink } from '@apollo/client';
 import {
   ApolloClient,
   ApolloNextAppProvider,
@@ -8,6 +8,7 @@ import {
   SSRMultipartLink,
 } from '@apollo/client-integration-nextjs';
 import { setContext } from '@apollo/client/link/context';
+import { useApolloClient } from '@apollo/client/react';
 import { disableFragmentWarnings } from 'graphql-tag';
 import { signOut, useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';

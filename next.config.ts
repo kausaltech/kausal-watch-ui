@@ -1,22 +1,27 @@
-import * as url from 'node:url';
-
 import type BundleAnalyzerPlugin from '@next/bundle-analyzer';
 import type { NextConfig } from 'next';
 import withNextIntl from 'next-intl/plugin';
 import type { Options as SassOptions } from 'sass';
 
-import { getNextConfig } from './kausal_common/configs/common-next-config';
-import { wrapWithSentryConfig } from './kausal_common/src/sentry/sentry-next-config';
+import { getNextConfig } from './kausal_common/configs/common-next-config.ts';
+import { wrapWithSentryConfig } from './kausal_common/configs/sentry-next-config.ts';
 import { initializeThemes } from './kausal_common/src/themes/next-config.mjs';
-
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 process.env.NEXT_TELEMETRY_DISABLED = '1';
 
 initializeThemes(__dirname);
 
+const baseConfig = getNextConfig(__dirname);
+
 let nextConfig: NextConfig = {
-  ...getNextConfig(__dirname, { isPagesRouter: false }),
+  ...baseConfig,
+  turbopack: {
+    ...baseConfig.turbopack,
+    resolveAlias: {
+      ...baseConfig.turbopack?.resolveAlias,
+      '@/public/*': './public/*',
+    },
+  },
   sassOptions: {
     quietDeps: true,
     silenceDeprecations: [

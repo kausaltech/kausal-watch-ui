@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { gql, useLazyQuery, useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 
 import type {
   CommitToPledgeMutation,
@@ -110,9 +111,18 @@ export function usePledgeUser() {
     PledgeUserQueryVariables
   >(GET_PLEDGE_USER, { fetchPolicy: 'network-only' });
 
-  // Fetch user data when UUID is available
+  // When ensureUser registers a new user it sets this flag so the effect
+  // doesn't fire a duplicate fetch — commitToPledge calls fetchUser explicitly.
+  const skipEffectFetch = useRef(false);
+
+  // Fetch user data when UUID is available (e.g. loaded from localStorage on mount)
   useEffect(() => {
     if (userUuid) {
+      if (skipEffectFetch.current) {
+        skipEffectFetch.current = false;
+        return;
+      }
+
       fetchUser({ variables: { user: userUuid } });
     }
   }, [userUuid, fetchUser]);
@@ -159,6 +169,7 @@ export function usePledgeUser() {
     if (!newUuid) throw new Error('Failed to register pledge user');
 
     storeUuid(newUuid);
+    skipEffectFetch.current = true;
     setUserUuid(newUuid);
 
     return newUuid;

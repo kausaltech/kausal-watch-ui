@@ -1,13 +1,9 @@
-const path = require('path');
-
 /**
  * Replicate the essential config from next/jest without loading next.config.ts,
  * which currently crashes due to kausal_common ESM imports in .js files.
  *
  * Uses Next.js's SWC jest transformer directly.
  */
-
-const nextMocksDir = path.join(path.dirname(require.resolve('next/jest')), 'dist/build/jest');
 
 /** @type {import('jest').Config} */
 module.exports = {

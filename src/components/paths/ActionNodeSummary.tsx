@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 
-import { useReactiveVar } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
+import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 
 import { yearRangeVar } from '@common/apollo/paths-cache';

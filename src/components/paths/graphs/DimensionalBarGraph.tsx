@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import { useReactiveVar } from '@apollo/client';
 import { useTheme } from '@emotion/react';
+
+import { useReactiveVar } from '@apollo/client/react';
 import { isEqual } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 

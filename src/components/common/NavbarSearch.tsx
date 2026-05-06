@@ -4,9 +4,10 @@ import React, { type MouseEventHandler, useEffect, useRef, useState } from 'reac
 
 import { useRouter } from 'next/navigation';
 
-import { useApolloClient } from '@apollo/client';
-import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
 import styled from '@emotion/styled';
+
+import { useApolloClient } from '@apollo/client/react';
+import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
 import { useTranslations } from 'next-intl';
 import { usePopper } from 'react-popper';
 import { InputGroup } from 'reactstrap';

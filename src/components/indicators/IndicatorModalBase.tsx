@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type { ApolloError } from '@apollo/client';
+import type { CombinedGraphQLErrors } from '@apollo/client/errors';
 import { Button as AriaButton } from 'react-aria-components';
 
 import type { IndicatorDetailsQuery, IndicatorListQuery } from '@/common/__generated__/graphql';
@@ -78,7 +78,7 @@ export function IndicatorModalBase({
             indicator={indicator}
             layout={layout}
             loading={loading}
-            error={error as ApolloError}
+            error={error as CombinedGraphQLErrors}
             usableCategoryTypes={
               usableCategoryTypes as NonNullable<IndicatorListQuery['plan']>['categoryTypes']
             }

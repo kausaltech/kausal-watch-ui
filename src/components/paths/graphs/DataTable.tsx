@@ -1,8 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { useReactiveVar } from '@apollo/client';
-import { useTheme } from '@emotion/react';
-import styled from '@emotion/styled';
 import {
   Paper,
   Table,
@@ -13,6 +10,11 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
+
+import { useReactiveVar } from '@apollo/client/react';
 import { isEqual } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';

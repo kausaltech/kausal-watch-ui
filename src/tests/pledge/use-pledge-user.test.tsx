@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { gql } from '@apollo/client';
-import { MockedProvider, type MockedResponse } from '@apollo/client/testing';
+import { type MockedResponse } from '@apollo/client/testing';
+import { MockedProvider } from '@apollo/client/testing/react';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { usePledgeUser } from '../../components/pledge/use-pledge-user';

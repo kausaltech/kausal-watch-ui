@@ -2,9 +2,11 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import { gql, useSuspenseQuery } from '@apollo/client';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
+import { gql } from '@apollo/client';
+import { useSuspenseQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Alert, Col, Container, Row } from 'reactstrap';

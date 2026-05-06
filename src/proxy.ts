@@ -76,7 +76,7 @@ function getMiddlewareLogger(request: NextAuthRequest, host: string, pathname: s
   return logger;
 }
 
-const middleware = auth(async (request: NextAuthRequest) => {
+const proxy = auth(async (request: NextAuthRequest) => {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
 
@@ -213,4 +213,4 @@ const middleware = auth(async (request: NextAuthRequest) => {
   return rewriteUrl(request, response, hostUrl, rewrittenUrl, parsedPlan.identifier);
 });
 
-export default middleware;
+export default proxy;

@@ -1,4 +1,4 @@
-import { GetContentPageQuery, GetPlanContextQuery } from '@/common/__generated__/graphql';
+import type { GetContentPageQuery, GetPlanContextQuery } from '@/common/__generated__/graphql';
 
 export function getMetaImage(page: GetContentPageQuery['planPage']) {
   switch (page?.__typename) {
