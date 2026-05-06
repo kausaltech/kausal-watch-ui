@@ -58,6 +58,7 @@ const GET_PLAN_INFO = gql`
       }
       actionListPage {
         urlPath
+        includeRelatedPlans
       }
       actions(first: 5) {
         identifier
@@ -102,12 +103,17 @@ const GET_PLAN_INFO = gql`
       id
       name
     }
+    relatedPlanActions(plan: $plan, first: 5) {
+      identifier
+      viewUrl(clientUrl: $clientURL)
+    }
   }
 `;
 
 type PlanInfo = NonNullable<PlaywrightGetPlanInfoQuery['plan']>;
 type PlanIndicators = NonNullable<PlaywrightGetPlanInfoQuery['planIndicators']>;
 type PlanOrganizations = NonNullable<PlaywrightGetPlanInfoQuery['planOrganizations']>;
+type RelatedPlanActions = NonNullable<PlaywrightGetPlanInfoQuery['relatedPlanActions']>;
 type ActionInfo = PlanInfo['actions'][0];
 
 export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][0] & {
@@ -156,16 +162,62 @@ export class PlanContext {
   plan: PlanInfo;
   planOrganizations: PlanOrganizations;
   planIndicators: PlanIndicators;
+  relatedPlanActions: RelatedPlanActions;
   baseURL: string;
+  failedAssetRequests: string[] = [];
 
-  constructor(data: PlaywrightGetPlanInfoQuery, baseURL: string, planIndicators: PlanIndicators) {
+  constructor(
+    data: PlaywrightGetPlanInfoQuery,
+    baseURL: string,
+    planIndicators: PlanIndicators,
+    relatedPlanActions: RelatedPlanActions
+  ) {
     this.plan = data.plan!;
     this.planOrganizations = data.planOrganizations ?? [];
     this.baseURL = baseURL;
     this.planIndicators = planIndicators;
+    this.relatedPlanActions = relatedPlanActions;
   }
 
   beforeEach(page: Page) {
+    this.failedAssetRequests = [];
+
+    // Network-level failures (CORS, DNS, connection errors)
+    page.on('requestfailed', (request) => {
+      const resourceType = request.resourceType();
+      const errorText = request.failure()?.errorText ?? '';
+      // ERR_ABORTED and friends are fired when navigation cancels in-flight requests;
+      // HTTP-level errors (404, 500) are already caught by the response handler.
+      if (
+        errorText === 'net::ERR_ABORTED' || // chrome
+        errorText === 'NS_BINDING_ABORTED' || // firefox
+        errorText === 'Load request cancelled' // webkit
+      ) {
+        return;
+      }
+      this.failedAssetRequests.push(
+        `${resourceType} failed to load: ${request.url()} (${errorText})`
+      );
+    });
+
+    // HTTP-level failures (404, 500, etc.)
+    page.on('response', (response) => {
+      const request = response.request();
+      const resourceType = request.resourceType();
+      const status = response.status();
+      if (status >= 200 && status < 400) {
+        return;
+      }
+      this.failedAssetRequests.push(
+        `${resourceType} returned HTTP ${response.status()}: ${request.url()}`
+      );
+    });
+
+    // Unhandled exceptions
+    page.on('pageerror', (exception) => {
+      throw new Error(exception.toString());
+    });
+
     page.on('console', (msg) => {
       const IGNORE_STARTSWITH = [
         'Public environment',
@@ -319,12 +371,14 @@ export class PlanContext {
     });
     const data = res.data;
     const planIndicators = res.data.planIndicators!;
-    return new PlanContext(data, baseURL, planIndicators);
+    const relatedPlanActions = res.data.relatedPlanActions!;
+    return new PlanContext(data, baseURL, planIndicators, relatedPlanActions);
   }
 
   async waitForLoadingFinished(page: Page) {
     await expect(page.locator('*[aria-busy=true]')).toHaveCount(0, { timeout: 30000 });
     await page.waitForLoadState('networkidle');
+    expect(this.failedAssetRequests, 'Some assets failed to load').toEqual([]);
   }
 
   async checkAccessibility(page: Page) {

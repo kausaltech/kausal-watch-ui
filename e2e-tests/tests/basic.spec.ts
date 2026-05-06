@@ -62,6 +62,20 @@ const testPlan = (planId: string) => {
       test.skip(!listItem, 'No action list page for plan');
 
       const nav = page.locator('nav#global-navigation-bar');
+      const parentPage = listItem.parent?.page;
+      if (
+        parentPage != null &&
+        parentPage.showInMenus === true &&
+        parentPage.__typename !== 'PlanRootPage'
+      ) {
+        // The action list page link is inside a collapsiple submenu,
+        // click to open the submenu first.
+        const parentLink = nav.getByRole('button', {
+          name: parentPage.title,
+          exact: true,
+        });
+        await parentLink.click();
+      }
       const link = nav.getByRole('link', {
         name: listItem.page.title,
         exact: true,
@@ -82,7 +96,15 @@ const testPlan = (planId: string) => {
 
     test('action details page', async ({ page, ctx }) => {
       const listItem = ctx.getActionListMenuItem();
-      test.skip(!listItem, 'No actions defined in plan');
+      test.skip(!listItem, 'No action list page for plan');
+      if (ctx.plan.actionListPage?.includeRelatedPlans) {
+        test.skip(ctx.relatedPlanActions.length === 0, 'No actions defined for plan');
+      } else {
+        test.skip(ctx.plan.actions.length === 0, 'No actions defined for plan');
+      }
+      if (listItem == null) {
+        return;
+      }
       await page.goto(`${ctx.baseURL}${listItem.page.urlPath}`, { waitUntil: 'domcontentloaded' });
       await ctx.waitForLoadingFinished(page);
 
