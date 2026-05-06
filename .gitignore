@@ -41,3 +41,5 @@ build-storybook.log
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 .claude/.credentials.json
+/.pnpm-store
+/schema.graphql

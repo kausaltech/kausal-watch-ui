@@ -195,6 +195,7 @@
     "source-map-loader": "^5.0.0",
     "storybook": "^10.3.3",
     "swc-plugin-coverage-instrument": "^0.0.28",
+    "ts-node": "^10.9.2",
     "tsc-baseline": "^1.9.0",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5.9.3",
