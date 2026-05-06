@@ -1,6 +1,7 @@
 import type { Operation } from '@apollo/client';
 import { ApolloLink, HttpLink } from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
+import { CombinedGraphQLErrors } from '@apollo/client/errors';
+import { ErrorLink } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
 import { type DirectiveNode, OperationTypeNode } from 'graphql';
 import { Kind } from 'graphql/language/kinds';
@@ -50,27 +51,21 @@ function logError(
 }
 
 export function createErrorLink(onUnauthenticated?: () => void) {
-  return onError(({ networkError, graphQLErrors, operation }) => {
-    if (networkError) {
-      logError(operation, networkError.message, networkError, {
-        cause: networkError.cause,
-        name: networkError.name,
-      });
-    }
-
-    if (graphQLErrors) {
-      graphQLErrors.forEach((error) => {
-        logError(operation, error.message, error, {
-          errorPath: error.path,
+  return new ErrorLink(({ error, operation }) => {
+    if (CombinedGraphQLErrors.is(error)) {
+      error.errors.forEach((gqlError) => {
+        logError(operation, gqlError.message, gqlError, {
+          errorPath: gqlError.path,
         });
       });
 
-      if (
-        onUnauthenticated &&
-        graphQLErrors.some((e) => e.extensions?.code === 'UNAUTHENTICATED')
-      ) {
+      if (onUnauthenticated && error.errors.some((e) => e.extensions?.code === 'UNAUTHENTICATED')) {
         onUnauthenticated();
       }
+    } else {
+      logError(operation, error.message, error, {
+        name: error.name,
+      });
     }
   });
 }
