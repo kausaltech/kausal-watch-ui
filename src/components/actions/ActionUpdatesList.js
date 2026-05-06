@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { gql } from '@apollo/client';
@@ -69,6 +70,8 @@ const GET_ACTION_UPDATES = gql`
 function ActionStatusUpdate(props) {
   const { author = null, date, title, content } = props;
 
+  const theme = useTheme();
+
   const defaultAvatarUrl = getThemeStaticURL(theme.defaultAvatarOrgImage);
 
   return (
@@ -96,8 +99,7 @@ function ActionStatusUpdate(props) {
   );
 }
 
-function ActionUpdatesList() {
-  const { id } = this.props;
+function ActionUpdatesList({ id }) {
   const t = useTranslations();
   const plan = usePlan();
   const { loading, error, data } = useQuery(GET_ACTION_UPDATES, {
