@@ -4,42 +4,6 @@
     "ignoreMessages": false
   },
   "errors": {
-    "c858fa7ac008efec288fe02f0f05475610b9733b": {
-      "file": "kausal_common/src/apollo/links.ts",
-      "code": "TS1484",
-      "count": 1,
-      "message": "'ServerError' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
-    },
-    "2ea609260aeda843bf1f44ad3aa53f3e7d97a468": {
-      "file": "kausal_common/src/apollo/links.ts",
-      "code": "TS2307",
-      "count": 1,
-      "message": "Cannot find module 'rxjs' or its corresponding type declarations."
-    },
-    "f329df01dabc13840d3dbbb63cc38fa69160a96a": {
-      "file": "kausal_common/src/apollo/links.ts",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'error' does not exist on type 'ErrorResponse'."
-    },
-    "b358b16e0c1ac10e86b3d82dcd75e7161772c431": {
-      "file": "kausal_common/src/apollo/links.ts",
-      "code": "TS2702",
-      "count": 2,
-      "message": "'ApolloLink' only refers to a type, but is being used as a namespace here."
-    },
-    "026bd21ebcc99c90fd5d38067a7710daf7755fa1": {
-      "file": "kausal_common/src/apollo/links.ts",
-      "code": "TS2693",
-      "count": 1,
-      "message": "'ServerError' only refers to a type, but is being used as a value here."
-    },
-    "fd5de6c50ff05eedbe74bd82bcd470a9310fd3be": {
-      "file": "kausal_common/src/apollo/links.ts",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'pipe' does not exist on type 'Observable<FetchResult<Record<string, any>, Record<string, any>, Record<string, any>>>'."
-    },
     "ec3b86efafe48b1a4d6c487602ac660a2d899acd": {
       "file": "kausal_common/src/components/paths/DimensionalNodeVisualisation.tsx",
       "code": "TS2307",
@@ -51,60 +15,6 @@
       "code": "TS2339",
       "count": 1,
       "message": "Property 'appendHeader' does not exist on type 'NextApiResponse'."
-    },
-    "53f5109ca932db1e269bac5860a9df789f6433f0": {
-      "file": "kausal_common/src/logging/apollo.ts",
-      "code": "TS2305",
-      "count": 1,
-      "message": "Module '\"@apollo/client/errors\"' has no exported member 'CombinedGraphQLErrors'."
-    },
-    "2057087aa8f2fa1d922399bd5a43c9d313ed718a": {
-      "file": "kausal_common/src/logging/apollo.ts",
-      "code": "TS2305",
-      "count": 1,
-      "message": "Module '\"@apollo/client/errors\"' has no exported member 'CombinedProtocolErrors'."
-    },
-    "5f6092b4ec03b1b25da251a268e6b9d8eb62a92a": {
-      "file": "kausal_common/src/logging/apollo.ts",
-      "code": "TS2305",
-      "count": 1,
-      "message": "Module '\"@apollo/client/errors\"' has no exported member 'LinkError'."
-    },
-    "38e82441069d7e6b4acce2bc75322f6a76deee9a": {
-      "file": "kausal_common/src/logging/apollo.ts",
-      "code": "TS2459",
-      "count": 1,
-      "message": "Module '\"@apollo/client/errors\"' declares 'ServerError' locally, but it is not exported."
-    },
-    "736d127c735279f493fe73aa51492ff7ebbe034f": {
-      "file": "kausal_common/src/logging/apollo.ts",
-      "code": "TS2459",
-      "count": 1,
-      "message": "Module '\"@apollo/client/errors\"' declares 'ServerParseError' locally, but it is not exported."
-    },
-    "7650174f86d10e9e423c8f8589829a29ea7ef3d3": {
-      "file": "kausal_common/src/logging/apollo.ts",
-      "code": "TS2305",
-      "count": 1,
-      "message": "Module '\"@apollo/client/errors\"' has no exported member 'isErrorLike'."
-    },
-    "49fbaeb1b68b4afc7a1139c3d88bf5b85669a34c": {
-      "file": "kausal_common/src/logging/apollo.ts",
-      "code": "TS2702",
-      "count": 1,
-      "message": "'ApolloLink' only refers to a type, but is being used as a namespace here."
-    },
-    "61a4eb0dc49ab20210baf0ec9224eb97c7f05688": {
-      "file": "kausal_common/src/logging/apollo.ts",
-      "code": "TS18046",
-      "count": 4,
-      "message": "'error' is of type 'unknown'."
-    },
-    "6589513e633c6f3422efc9ecf1fa87179e925d75": {
-      "file": "kausal_common/src/logging/apollo.ts",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'response' does not exist on type 'Record<\"statusCode\", unknown>'."
     },
     "516986047c70fcc9da3a7d3b7e09ad5fbdef232e": {
       "file": "kausal_common/src/logging/init.ts",
@@ -130,35 +40,11 @@
       "count": 2,
       "message": "Unused '@ts-expect-error' directive."
     },
-    "4ebe425f6da11607f8522a3ad3f47253934c20ce": {
-      "file": "kausal_common/src/themes/styled.ts",
-      "code": "TS2307",
-      "count": 1,
-      "message": "Cannot find module '@mui/styled-engine' or its corresponding type declarations."
-    },
-    "a1394c3cf0c504881741041806b7671e3c06d0ab": {
-      "file": "kausal_common/src/themes/styled.ts",
-      "code": "TS2307",
-      "count": 1,
-      "message": "Cannot find module '@mui/system' or its corresponding type declarations."
-    },
-    "1c69ce8fe91f8dea5ae5d62c9cfc78b5029428c0": {
+    "007e1f074951bf350d3d84817970a5233422ce71": {
       "file": "kausal_common/src/utils/paths/metric/slicing.ts",
       "code": "TS2322",
       "count": 1,
-      "message": "Type '{ id: string; type: string; options: string[]; }[]' is not assignable to type 'readonly { readonly id: string; readonly type: \"category\" | \"group\"; readonly options: readonly string[]; }[]'."
-    },
-    "570df683e2b1024a1328c3f4ba0fd74342b7db64": {
-      "file": "kausal_common/src/utils/paths/progress-tracking.ts",
-      "code": "TS2305",
-      "count": 1,
-      "message": "Module '\"@/common/__generated__/graphql\"' has no exported member 'DimensionalNodeMetricFragment'."
-    },
-    "759553434648b07a104aba04e0e378ed30a76254": {
-      "file": "kausal_common/src/utils/paths/progress-tracking.ts",
-      "code": "TS2305",
-      "count": 1,
-      "message": "Module '\"@/common/__generated__/graphql\"' has no exported member 'ScenarioKind'."
+      "message": "Type '{ id: string; type: string; options: string[]; }[]' is not assignable to type 'readonly { readonly id: string; readonly type: \"group\" | \"category\"; readonly options: readonly string[]; }[]'."
     },
     "ae9812eda76931093b36d51787db5781f73a7931": {
       "file": "kausal_common/src/utils/paths/progress-tracking.ts",
@@ -171,6 +57,24 @@
       "code": "TS2345",
       "count": 1,
       "message": "Argument of type 'Uint8Array<ArrayBuffer>' is not assignable to parameter of type 'ArrayBuffer'."
+    },
+    "c26c50b1def61e06225cb8e9cc3b6424882971a4": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/page.tsx",
+      "code": "TS2345",
+      "count": 2,
+      "message": "Argument of type 'Promise<QueryResult<GetContentPageQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<GetContentPageQuery>>'."
+    },
+    "03324248b2214ca3ba2a09f76fa947cfc377c4a8": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/page.tsx",
+      "code": "TS2345",
+      "count": 2,
+      "message": "Argument of type '({ id: string | null; slug: string; title: string; lastPublishedAt: string | null; body: (({ id: string | null; blockType: string; field: string; } & { __typename: \"AccessibilityStatementComplianceStatusBlock\" | \"AccessibilityStatementContactFormBlock\" | \"AccessibilityStatementPreparationInformationBlock\"; }) | ({ ....' is not assignable to parameter of type '({ id: string | null; slug: string; title: string; lastPublishedAt: string | null; body: (({ id: string | null; blockType: string; field: string; } & { __typename: \"AccessibilityStatementComplianceStatusBlock\" | \"AccessibilityStatementContactFormBlock\" | \"AccessibilityStatementPreparationInformationBlock\"; }) | ({ ....'."
+    },
+    "5ae7622dbaba308a2df6b52e70896c4c3967f7e5": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/page.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '({ id: string | null; slug: string; title: string; lastPublishedAt: string | null; body: (({ id: string | null; blockType: string; field: string; } & { __typename: \"AccessibilityStatementComplianceStatusBlock\" | \"AccessibilityStatementContactFormBlock\" | \"AccessibilityStatementPreparationInformationBlock\"; }) | ({ ....' is not assignable to type 'GeneralPlanPage'."
     },
     "e3d2b35c3fe997805f93b335ed49c78b64bb4d01": {
       "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/accessibility/page.tsx",
@@ -190,11 +94,47 @@
       "count": 1,
       "message": "'GeneralPlanPage' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
     },
+    "398d7d60dbb423ac7eccd5756cd1dc9ef48244a0": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/accessibility/page.tsx",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type 'Promise<QueryResult<GetContentPageQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<GetContentPageQuery | undefined>>'."
+    },
+    "72406d9c3beb3240a122d60e20a59b3d1a44bb10": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/accessibility/page.tsx",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type '({ id: string | null; slug: string; title: string; lastPublishedAt: string | null; body: (({ id: string | null; blockType: string; field: string; } & { __typename: \"AccessibilityStatementComplianceStatusBlock\" | \"AccessibilityStatementContactFormBlock\" | \"AccessibilityStatementPreparationInformationBlock\"; }) | ({ ....' is not assignable to parameter of type '({ id: string | null; slug: string; title: string; lastPublishedAt: string | null; body: (({ id: string | null; blockType: string; field: string; } & { __typename: \"AccessibilityStatementComplianceStatusBlock\" | \"AccessibilityStatementContactFormBlock\" | \"AccessibilityStatementPreparationInformationBlock\"; }) | ({ ....'."
+    },
+    "79d43df705011ad10fe5bfd36af75069e9dc3d3d": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/[id]/page.tsx",
+      "code": "TS2345",
+      "count": 2,
+      "message": "Argument of type 'Promise<QueryResult<GetActionDetailsQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<GetActionDetailsQuery | undefined>>'."
+    },
     "d01a53e79fb6232805bb4a06f220af2297a69c56": {
       "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/[id]/page.tsx",
       "code": "TS2345",
       "count": 1,
       "message": "Argument of type 'string' is not assignable to parameter of type '{ image: MultiUseImageFragmentFragment | null; }'."
+    },
+    "1b1d51fdf8cee1a35f192efa0b9552aed6bf495c": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/[id]/page.tsx",
+      "code": "TS18048",
+      "count": 1,
+      "message": "'data.action.plan' is possibly 'undefined'."
+    },
+    "7a728dbfef0ff0f75a570a44e6239518e919690e": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/[id]/page.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '({ id: string; identifier: string; name: string; officialName: string | null; leadParagraph: string; description: string | null; completion: number | null; color: string | null; updatedAt: string; ... 34 more ...; allDependencyRelationships: ({ ...; } & { ...; })[]; } & { ...; }) | DeepPartialObject<...>' is not assignable to type '{ id: string; identifier: string; name: string; officialName: string | null; leadParagraph: string; description: string | null; completion: number | null; color: string | null; updatedAt: string; ... 34 more ...; allDependencyRelationships: ({ ...; } & { ...; })[]; } & { ...; }'."
+    },
+    "0c664f850eca016a2dd8c9f39e16aca4dbefe17f": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/[id]/page.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '({ actionListPage: ({ id: string | null; actionDateFormat: string | null; taskDateFormat: string | null; detailsMainTop: (({ id: string | null; heading: string | null; description: string | null; ... 5 more ...; fields: ({ ...; } & { ...; })[]; } & { ...; }) | ... 9 more ... | ({ ...; } & { ...; }))[] | null; detail...' is not assignable to type '{ actionListPage: ({ id: string | null; actionDateFormat: string | null; taskDateFormat: string | null; detailsMainTop: (({ id: string | null; heading: string | null; description: string | null; ... 5 more ...; fields: ({ ...; } & { ...; })[]; } & { ...; }) | ... 9 more ... | ({ ...; } & { ...; }))[] | null; details...'."
     },
     "41b5aaf782d47a1889e2db96981c0e91fac3c82c": {
       "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage.tsx",
@@ -202,11 +142,41 @@
       "count": 1,
       "message": "Type '{ primaryFilters: (({ showAllLabel: string | null; field: string; id: string | null; attributeType: ({ id: string; identifier: string; format: AttributeTypeFormat; name: string; helpText: string; choiceOptions: Array<({ id: string; identifier: string; name: string; } & { __typename: \"AttributeTypeChoiceOption\"; })>;...' is not assignable to type 'ActionListPageFiltersFragment'."
     },
+    "32912c8322f886cbbb919807356de46104c3e704": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/page.tsx",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type 'Promise<QueryResult<GetActionListPageIncludeRelatedQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<GetActionListPageIncludeRelatedQuery | undefined>>'."
+    },
+    "30c2ac3515aec0e03ee322b18f16611de4bf6d37": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/page.tsx",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type 'Promise<QueryResult<GetActionListPageQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<GetActionListPageQuery | undefined>>'."
+    },
+    "2ab12b40c046844f9f458e48c115d9b25d455e12": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/page.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '({ leadContent: string | null; defaultView: ActionListPageView; headingHierarchyDepth: number; includeRelatedPlans: boolean | null; id: string | null; slug: string; ... 4 more ...; advancedFilters: (({ ...; } & { ...; }) | ... 2 more ... | ({ ...; } & { ...; }))[] | null; } & { ...; }) | DeepPartialObject<...>' is not assignable to type 'NonNullable<{ leadContent: string | null; defaultView: ActionListPageView; headingHierarchyDepth: number; includeRelatedPlans: boolean | null; id: string | null; slug: string; ... 4 more ...; advancedFilters: (({ ...; } & { ...; }) | ... 2 more ... | ({ ...; } & { ...; }))[] | null; } & { ...; } & { ...; }>'."
+    },
     "a827facb928266b7aeaa416b0a655a94692d5900": {
       "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/feedback/page.tsx",
       "code": "TS1484",
       "count": 1,
       "message": "'Metadata' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
+    },
+    "7571ee1681ff4466fb29a47a67e4a9879c6f6823": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/indicators/[id]/page.tsx",
+      "code": "TS2345",
+      "count": 2,
+      "message": "Argument of type 'Promise<QueryResult<IndicatorDetailsQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<IndicatorDetailsQuery | undefined>>'."
+    },
+    "2817becc13f79c68627afa0f92f966069fc2462b": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/indicators/[id]/page.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '({ id: string; identifier: string | null; name: string; hideIndicatorGraph: boolean; hideIndicatorTable: boolean; level: string | null; description: string | null; goalDescription: string | null; ... 20 more ...; changeLogMessage: ({ ...; } & { ...; }) | null; } & { ...; }) | DeepPartialObject<...>' is not assignable to type '{ id: string; identifier: string | null; name: string; hideIndicatorGraph: boolean; hideIndicatorTable: boolean; level: string | null; description: string | null; goalDescription: string | null; ... 20 more ...; changeLogMessage: ({ ...; } & { ...; }) | null; } & { ...; }'."
     },
     "45ffa1df336961d94f40f77a0b7b1ac1bd79c3df": {
       "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/indicators/[id]/page.tsx",
@@ -220,29 +190,125 @@
       "count": 1,
       "message": "'Metadata' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
     },
+    "694293807ff3532ce43ac9530136ddfb6497b460": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/organizations/[id]/page.tsx",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type 'Promise<QueryResult<OrganizationDetailsQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<OrganizationDetailsQuery>>'."
+    },
+    "7f735d29c528a2a25d91a3c172d50ce1c5d54ae5": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/organizations/[id]/page.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '({ id: string; name: string; abbreviation: string | null; distinctName: string | null; description: string; url: string; actionCount: number; contactPersonCount: number; classification: ({ ...; } & { ...; }) | null; ancestors: (({ ...; } & { ...; }) | null)[] | null; plansWithActionResponsibilities: ({ ...; } & { .....' is not assignable to type '{ id: string; name: string; abbreviation: string | null; distinctName: string | null; description: string; url: string; actionCount: number; contactPersonCount: number; classification: ({ ...; } & { ...; }) | null; ancestors: (({ ...; } & { ...; }) | null)[] | null; plansWithActionResponsibilities: ({ ...; } & { ......'."
+    },
+    "e6cd79aa5b88c6c712baf7f62b10c64373bc0a7a": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/organizations/[id]/page.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '({ id: string; name: string; shortName: string | null; versionName: string; viewUrl: string | null; actionListPage: ({ dashboardColumns: (({ columnLabel: string | null; } & { __typename: \"EndDateColumnBlock\" | ... 10 more ... | \"UpdatedAtColumnBlock\"; }) | ({ ...; } & { ...; }))[] | null; } & { ...; }) | null; ... 9...' is not assignable to type '{ id: string; name: string; shortName: string | null; versionName: string; viewUrl: string | null; actionListPage: ({ dashboardColumns: (({ columnLabel: string | null; } & { __typename: \"EndDateColumnBlock\" | ... 10 more ... | \"UpdatedAtColumnBlock\"; }) | ({ ...; } & { ...; }))[] | null; } & { ...; }) | null; ... 9 ...'."
+    },
+    "5e526df8a6d2f0d03cad7c6216a622077b6b1985": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/page.tsx",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type 'Promise<QueryResult<GetHomePageQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<GetHomePageQuery | undefined>>'."
+    },
+    "a8fff6efc34af1e1d787a4f3715374819876b9ea": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/page.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type 'GetHomePageQuery | DeepPartialObject<GetHomePageQuery>' is not assignable to type 'GetHomePageQuery'."
+    },
     "5b2ae3134e9daf6be674c3515848193bb390026d": {
       "file": "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/RootPage.tsx",
       "code": "TS2322",
       "count": 1,
       "message": "Type '{ statusCode: number; message: string; }' is not assignable to type 'IntrinsicAttributes & Props'."
     },
-    "4aedd7ff4701a6104a34accbe086d7a745641c38": {
+    "c03957b31990aa8a1029e2cf06162f046d5f4313": {
       "file": "src/app/root/[domain]/[lang]/[plan]/layout.tsx",
-      "code": "TS2305",
-      "count": 1,
-      "message": "Module '\"@common/themes/theme\"' has no exported member 'loadTheme'."
+      "code": "TS2345",
+      "count": 2,
+      "message": "Argument of type 'Promise<QueryResult<GetPlanContextQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<GetPlanContextQuery | undefined>>'."
     },
-    "89b6df43288a92ca69cbf3eebca37a980503afc8": {
+    "21568e23764e7ab88959fdba8f3117edd40a0b4c": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/layout.tsx",
+      "code": "TS18048",
+      "count": 2,
+      "message": "'plan.generalContent' is possibly 'undefined'."
+    },
+    "f35e0dda12735edd05f9741fd583f9bdc90c04de": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/layout.tsx",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type '({ id: string; identifier: string; name: string; shortName: string | null; versionName: string; themeIdentifier: string | null; timezone: string; primaryLanguage: string; otherLanguages: string[]; ... 33 more ...; actionListPage: ({ ...; } & { ...; }) | null; } & { ...; }) | DeepPartialObject<...>' is not assignable to parameter of type '{ id: string; identifier: string; name: string; shortName: string | null; versionName: string; themeIdentifier: string | null; timezone: string; primaryLanguage: string; otherLanguages: string[]; ... 33 more ...; actionListPage: ({ ...; } & { ...; }) | null; } & { ...; }'."
+    },
+    "d467c7c96f9f9b40acb5bed7171bb6bcdd41ebdf": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/layout.tsx",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type 'Promise<QueryResult<GetInstanceContextQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<GetInstanceContextQuery>>'."
+    },
+    "e6da97071478772bde27b2481330c8afb55ebe46": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/layout.tsx",
+      "code": "TS2339",
+      "count": 1,
+      "message": "Property 'errors' does not exist on type 'ApolloQueryResult<GetInstanceContextQuery>'."
+    },
+    "d0c28eb0f669bad41a77064c20e5ec4ac956698e": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/layout.tsx",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type 'string | undefined' is not assignable to parameter of type 'string'."
+    },
+    "60f734666521cd7b4a2e5d8f4d758c9b2514e9b7": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/layout.tsx",
+      "code": "TS2739",
+      "count": 1,
+      "message": "Type '{ [lang: string]: string; }' is missing the following properties from type '{ en: string; es: string; }': en, es"
+    },
+    "22e4782305fda6140a8eb18b172654f4cc9373e2": {
       "file": "src/app/root/[domain]/[lang]/[plan]/layout.tsx",
       "code": "TS2322",
       "count": 1,
-      "message": "Type 'GetInstanceContextQuery | undefined' is not assignable to type 'PathsInstanceType | undefined'."
+      "message": "Type '({ id: string; identifier: string; name: string; shortName: string | null; versionName: string; themeIdentifier: string | null; timezone: string; primaryLanguage: string; otherLanguages: string[]; ... 33 more ...; actionListPage: ({ ...; } & { ...; }) | null; } & { ...; }) | DeepPartialObject<...>' is not assignable to type 'PlanContextFragment'."
+    },
+    "204fe1b84e44b9535912001b2033eea0bb762846": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/layout.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type 'DeepPartialObject<GetInstanceContextQuery> | undefined' is not assignable to type 'PathsInstanceType | undefined'."
+    },
+    "9f5acc633e422e3c666402a88b46d9cdb7675df9": {
+      "file": "src/app/root/[domain]/[lang]/[plan]/layout.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '(({ id: string; description: string | null; } & { __typename: \"WorkflowStateDescription\"; }) | null)[] | (DeepPartialObject<{ id: string; description: string | null; } & { __typename: \"WorkflowStateDescription\"; }> | null)[] | null | undefined' is not assignable to type '(({ id: string; description: string | null; } & { __typename: \"WorkflowStateDescription\"; }) | null)[] | null'."
     },
     "dbe45cf1e4b54bb8f73408f061f9cb5b40f79c1e": {
       "file": "src/app/root/[domain]/[lang]/[plan]/UpdateApolloContext.tsx",
       "code": "TS1484",
       "count": 1,
       "message": "'PropsWithChildren' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
+    },
+    "bb7ab47cecb89f457e3022a1ca4b127cabd14482": {
+      "file": "src/app/sitemap.ts",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type 'Promise<QueryResult<GetPlansByHostnameQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<GetPlansByHostnameQuery | undefined>>'."
+    },
+    "9d607a8396a039efc11a0bd59f954536ec94d13c": {
+      "file": "src/app/sitemap.ts",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type '(({ id: string; identifier: string; otherLanguages: string[]; primaryLanguage: string; statusMessage: string | null; loginEnabled: boolean | null; domain: ({ hostname: string; redirectToHostname: string | null; basePath: string | null; status: import(\"/Users/tero/Projects/Kausal/kausal-watch-ui/src/common/__generate...' is not assignable to parameter of type '(({ id: string; identifier: string; otherLanguages: string[]; primaryLanguage: string; statusMessage: string | null; loginEnabled: boolean | null; domain: ({ hostname: string; redirectToHostname: string | null; basePath: string | null; status: import(\"/Users/tero/Projects/Kausal/kausal-watch-ui/src/common/__generate...'."
+    },
+    "8fc2968586e90651ae8ac11e5fd30cef003e172f": {
+      "file": "src/app/sitemap.ts",
+      "code": "TS2345",
+      "count": 1,
+      "message": "Argument of type 'Promise<QueryResult<GetSitemapQuery>>' is not assignable to parameter of type 'Promise<ApolloQueryResult<GetSitemapQuery | undefined>>'."
     },
     "f916fc3c05619c5ee79f0ac2e40ad83ff5e68247": {
       "file": "src/common/__tests__/links.test.ts",
@@ -322,6 +388,12 @@
       "count": 1,
       "message": "'RequestCookie' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
     },
+    "b7da0d9eb84daae2bb7d82a5f4fe156a85da3e74": {
+      "file": "src/common/cookies.ts",
+      "code": "TS2305",
+      "count": 1,
+      "message": "Module '\"next/headers\"' has no exported member 'UnsafeUnwrappedCookies'."
+    },
     "8109c6c08748be21ba855503ba43ff9d9cedc0ec": {
       "file": "src/common/dayjs.ts",
       "code": "TS1484",
@@ -345,6 +417,12 @@
       "code": "TS2304",
       "count": 1,
       "message": "Cannot find name 'Plan'."
+    },
+    "c4ca501911120076e3d9f8adad9f70ce9aadf084": {
+      "file": "src/common/search.ts",
+      "code": "TS2315",
+      "count": 2,
+      "message": "Type 'ApolloClient' is not generic."
     },
     "afd4dcf9bc5119d3bb9b37ec5af28749f31c6ef0": {
       "file": "src/components/actions/ActionCard.tsx",
@@ -508,12 +586,6 @@
       "count": 1,
       "message": "'actionImage.large' is possibly 'null'."
     },
-    "1e82c243f3d613149bd28d7b479027d20b5fe66b": {
-      "file": "src/components/actions/ActionContent.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '{ id: string; }' is not assignable to type 'IntrinsicAttributes'."
-    },
     "51ca37868c800889c6d36fe304b1ba689e678e0d": {
       "file": "src/components/actions/ActionContent.tsx",
       "code": "TS2322",
@@ -538,23 +610,23 @@
       "count": 3,
       "message": "Property 'parent' does not exist on type 'never'."
     },
-    "d0a601bb6648e1f0914d1a80e9983df81b343653": {
+    "53eaa1e63c39ecd0737fca303cfbe80be600ef7f": {
       "file": "src/components/actions/ActionImpact.js",
       "code": "TS2339",
       "count": 1,
-      "message": "Property '$size' does not exist on type '{ name?: \"search\" | \"link\" | \"user\" | \"table\" | \"sort\" | \"download\" | \"hidden\" | \"grid\" | \"list\" | \"action-dependency\" | \"angle-down\" | \"angle-left\" | \"angle-right\" | \"angle-up\" | ... 53 more ... | undefined; } & { ...; } & SVGProps<...> & { ...; } & { ...; }'."
+      "message": "Property '$size' does not exist on type '{ name?: \"search\" | \"link\" | \"table\" | \"sort\" | \"hidden\" | \"grid\" | \"list\" | \"download\" | \"file\" | \"user\" | \"version\" | \"home\" | \"award\" | \"handshake\" | \"arrow-down\" | \"chart-pie-simple\" | ... 51 more ... | undefined; } & { ...; } & SVGProps<...> & { ...; } & { ...; }'."
     },
-    "b5dfb97aa875b03eaecf610aeb3aa549f68a82ba": {
+    "080a46924681111424a628602b14e164d97a0167": {
       "file": "src/components/actions/ActionImpact.js",
       "code": "TS2322",
       "count": 1,
-      "message": "Type '{ key: string; name: \"exclamation-circle\"; className: string; $size: string; }' is not assignable to type 'IntrinsicAttributes & { name?: \"search\" | \"link\" | \"user\" | \"table\" | \"sort\" | \"download\" | \"hidden\" | \"grid\" | \"list\" | \"action-dependency\" | \"angle-down\" | ... 56 more ... | undefined; } & { ...; } & SVGProps<...> & { ...; }'."
+      "message": "Type '{ key: string; name: \"exclamation-circle\"; className: string; $size: string; }' is not assignable to type 'IntrinsicAttributes & { name?: \"search\" | \"link\" | \"table\" | \"sort\" | \"hidden\" | \"grid\" | \"list\" | \"download\" | \"file\" | \"user\" | \"version\" | \"home\" | \"award\" | ... 54 more ... | undefined; } & { ...; } & SVGProps<...> & { ...; }'."
     },
-    "9268f08351e84e1d02930b852a250305dedfb857": {
+    "dc0f03fafa76cb0a4fc54848a5acb0d91661bf5d": {
       "file": "src/components/actions/ActionImpact.js",
       "code": "TS2322",
       "count": 2,
-      "message": "Type '{ key: string; name: \"circle-full\"; className: string; $size: string; }' is not assignable to type 'IntrinsicAttributes & { name?: \"search\" | \"link\" | \"user\" | \"table\" | \"sort\" | \"download\" | \"hidden\" | \"grid\" | \"list\" | \"action-dependency\" | \"angle-down\" | ... 56 more ... | undefined; } & { ...; } & SVGProps<...> & { ...; }'."
+      "message": "Type '{ key: string; name: \"circle-full\"; className: string; $size: string; }' is not assignable to type 'IntrinsicAttributes & { name?: \"search\" | \"link\" | \"table\" | \"sort\" | \"hidden\" | \"grid\" | \"list\" | \"download\" | \"file\" | \"user\" | \"version\" | \"home\" | \"award\" | ... 54 more ... | undefined; } & { ...; } & SVGProps<...> & { ...; }'."
     },
     "ae6755a3b636e756cb292cf7a621dade2fa5689b": {
       "file": "src/components/actions/ActionListFilters.tsx",
@@ -634,11 +706,11 @@
       "count": 1,
       "message": "Type 'string | null' is not assignable to type 'string | number | Date'."
     },
-    "26f93bea5ef497e6c29e8a2cd751538d6806fdb2": {
+    "8db5ab27e0bb5f9e5f7bd5c7e3b0c3795ac7c9bb": {
       "file": "src/components/actions/ActionUpdatesList.js",
-      "code": "TS2304",
+      "code": "TS2339",
       "count": 1,
-      "message": "Cannot find name 'theme'."
+      "message": "Property 'action' does not exist on type 'unknown'."
     },
     "4436df2ecc3fdd8bbcb8bbeb5feeb71436bba236": {
       "file": "src/components/actions/blocks/action-dependencies/ActionDependenciesBlock.tsx",
@@ -712,6 +784,12 @@
       "count": 1,
       "message": "'ReactNode' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
     },
+    "44e536565410b46a2ced5ec2b8c27f6647eb3230": {
+      "file": "src/components/actions/CategoryActionList.js",
+      "code": "TS2339",
+      "count": 1,
+      "message": "Property 'planActions' does not exist on type 'unknown'."
+    },
     "c2ca19bbe4168b9c53c5c06b30ebc27cb5bb0ae2": {
       "file": "src/components/actions/CategoryActionList.js",
       "code": "TS2339",
@@ -730,11 +808,11 @@
       "count": 4,
       "message": "'org' is possibly 'null'."
     },
-    "b7b0e7365a1f98bae5b09946736237ddd4a86f98": {
+    "d35924c8590ed2f01c088bc4939f02227506840e": {
       "file": "src/components/actions/EmissionScopeIcon.js",
       "code": "TS2322",
       "count": 1,
-      "message": "Type '\"globe\" | \"home\" | \"circleOutline\"' is not assignable to type '\"search\" | \"link\" | \"user\" | \"table\" | \"sort\" | \"download\" | \"hidden\" | \"grid\" | \"list\" | \"action-dependency\" | \"angle-down\" | \"angle-left\" | \"angle-right\" | \"angle-up\" | \"angle-up-down\" | ... 52 more ... | undefined'."
+      "message": "Type '\"home\" | \"globe\" | \"circleOutline\"' is not assignable to type '\"search\" | \"link\" | \"table\" | \"sort\" | \"hidden\" | \"grid\" | \"list\" | \"download\" | \"file\" | \"user\" | \"version\" | \"home\" | \"award\" | \"handshake\" | \"arrow-down\" | \"chart-pie-simple\" | ... 51 more ... | undefined'."
     },
     "53a3d8ad0baf05ed769962a0df056fb90570a398": {
       "file": "src/components/actions/PhaseTimeline.tsx",
@@ -837,12 +915,6 @@
       "code": "TS2339",
       "count": 1,
       "message": "Property 'value' does not exist on type '{ __typename: \"AccessibilityStatementComplianceStatusBlock\" | \"AccessibilityStatementContactFormBlock\" | \"AccessibilityStatementContactInformationBlock\" | \"AccessibilityStatementPreparationInformationBlock\" | ... 15 more ... | \"ActionImplementationPhaseFilterBlock\"; } | ... 6 more ... | ({ ...; } & { ...; })'."
-    },
-    "0adbbe96d9fe07aec82e2b3b23a7525faeda1f0e": {
-      "file": "src/components/common/CheckboxInput.tsx",
-      "code": "TS2307",
-      "count": 1,
-      "message": "Cannot find module 'react-hook-form/dist/types/controller' or its corresponding type declarations."
     },
     "8871ca0d6c25b442442d8a7783e25ce51299be9b": {
       "file": "src/components/common/CheckboxInput.tsx",
@@ -1366,11 +1438,11 @@
       "count": 1,
       "message": "'ColumnConfig' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
     },
-    "153206a8016f47d270dd5b7b4756ddc8456e6a25": {
+    "55d5733f5c3c7a6bee4a36215016d7f72e8b9489": {
       "file": "src/components/dashboard/ActionStatusTable.tsx",
       "code": "TS2322",
       "count": 1,
-      "message": "Type '\"sort\" | \"sortDown\" | \"sortUp\"' is not assignable to type '\"search\" | \"link\" | \"user\" | \"table\" | \"sort\" | \"download\" | \"hidden\" | \"grid\" | \"list\" | \"action-dependency\" | \"angle-down\" | \"angle-left\" | \"angle-right\" | \"angle-up\" | \"angle-up-down\" | ... 52 more ... | undefined'."
+      "message": "Type '\"sort\" | \"sortDown\" | \"sortUp\"' is not assignable to type '\"search\" | \"link\" | \"table\" | \"sort\" | \"hidden\" | \"grid\" | \"list\" | \"download\" | \"file\" | \"user\" | \"version\" | \"home\" | \"award\" | \"handshake\" | \"arrow-down\" | \"chart-pie-simple\" | ... 51 more ... | undefined'."
     },
     "96fb344eb740f105b3225a65bd202fb44865cf8c": {
       "file": "src/components/dashboard/ActionStatusTable.tsx",
@@ -1390,11 +1462,11 @@
       "count": 2,
       "message": "Property 'format' does not exist on type '{ __typename?: \"ActionAttributeType\" | undefined; id: string; name: string; }'."
     },
-    "c1e6def72e6e6db0c35bc7c02445d6ab970cefa9": {
+    "a30502a0453f1eada47c85667e1a4744397330bb": {
       "file": "src/components/dashboard/ActionStatusTable.tsx",
       "code": "TS2322",
       "count": 1,
-      "message": "Type '\"__typename\" | \"id\" | \"plan\" | \"identifier\" | \"name\" | \"attributes\" | \"viewUrl\" | \"color\" | \"status\" | \"order\" | \"responsibleParties\" | \"statusSummary\" | \"scheduleContinuous\" | ... 18 more ... | undefined' is not assignable to type '\"__typename\" | \"id\" | \"plan\" | \"identifier\" | \"name\" | \"attributes\" | \"viewUrl\" | \"color\" | \"status\" | \"order\" | \"responsibleParties\" | \"statusSummary\" | \"scheduleContinuous\" | ... 18 more ... | null'."
+      "message": "Type '\"name\" | \"id\" | \"color\" | \"order\" | \"status\" | \"__typename\" | \"plan\" | \"identifier\" | \"attributes\" | \"viewUrl\" | \"statusSummary\" | \"scheduleContinuous\" | \"responsibleParties\" | ... 18 more ... | undefined' is not assignable to type '\"name\" | \"id\" | \"color\" | \"order\" | \"status\" | \"__typename\" | \"plan\" | \"identifier\" | \"attributes\" | \"viewUrl\" | \"statusSummary\" | \"scheduleContinuous\" | \"responsibleParties\" | ... 18 more ... | null'."
     },
     "f9dc85c69746ac6077292cde7a6c04fb132d9016": {
       "file": "src/components/dashboard/ActionTableTooltips.tsx",
@@ -1738,29 +1810,29 @@
       "count": 2,
       "message": "No overload matches this call."
     },
-    "ec679cf7440402131beef875297bae533a4bc452": {
+    "b827db07d0b77655d255c8167dc9be66035cc494": {
       "file": "src/components/Header.tsx",
       "code": "TS2339",
       "count": 3,
-      "message": "Property 'parent' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"AccessibilityStatementPage\" | ... 10 more ... | \"StaticPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
+      "message": "Property 'parent' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"ActionListPage\" | \"Page\" | ... 9 more ... | \"PrivacyPolicyPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
     },
-    "c85116904b0dd2eac7600ddc7c8d154aa66d1064": {
+    "531c208e52ded96e5d9aea11311a12bd32039a95": {
       "file": "src/components/Header.tsx",
       "code": "TS2339",
       "count": 2,
-      "message": "Property 'id' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"AccessibilityStatementPage\" | ... 10 more ... | \"StaticPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
+      "message": "Property 'id' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"ActionListPage\" | \"Page\" | ... 9 more ... | \"PrivacyPolicyPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
     },
-    "310f3eb64bb43d0602e1af0d63951b284d93c29d": {
+    "b9905a34b2953a995d745de42e569fdc36111072": {
       "file": "src/components/Header.tsx",
       "code": "TS2339",
       "count": 5,
-      "message": "Property 'page' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"AccessibilityStatementPage\" | ... 10 more ... | \"StaticPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
+      "message": "Property 'page' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"ActionListPage\" | \"Page\" | ... 9 more ... | \"PrivacyPolicyPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
     },
-    "7fb2890d743f8eaceacbac63fcdb83f89a5c528a": {
+    "ec13d9c32357ce2b13a4d47761b70bbf52063843": {
       "file": "src/components/Header.tsx",
       "code": "TS2322",
       "count": 1,
-      "message": "Type 'NavItems' is not assignable to type '(({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"AccessibilityStatementPage\" | ... 10 more ... | \"StaticPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; }))[] | null'."
+      "message": "Type 'NavItems' is not assignable to type '(({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"ActionListPage\" | \"Page\" | ... 9 more ... | \"PrivacyPolicyPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; }))[] | null'."
     },
     "a5a8cbb34c771b6ef15320ab8fe50f4d41ad15ba": {
       "file": "src/components/Header.tsx",
@@ -1912,11 +1984,23 @@
       "count": 1,
       "message": "Argument of type 'FilterValue' is not assignable to parameter of type 'string'."
     },
-    "01a30b33e30881986664445483df1dd839cccd72": {
+    "e48b296a14fe70906e128cdedd39593fb840137b": {
+      "file": "src/components/indicators/IndicatorProgressBar.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '{ children: Element[]; transform?: string | undefined; textAnchor?: string | undefined; }' is not assignable to type 'SVGTextElementAttributes<SVGTextElement>'."
+    },
+    "ab7b09a7286f90887949ffd1fe6d5ca3bc4fc831": {
       "file": "src/components/indicators/IndicatorTableHeader.tsx",
       "code": "TS2322",
       "count": 1,
-      "message": "Type '\"sort\" | \"sortDown\" | \"sortUp\"' is not assignable to type '\"search\" | \"link\" | \"user\" | \"table\" | \"sort\" | \"download\" | \"hidden\" | \"grid\" | \"list\" | \"action-dependency\" | \"angle-down\" | \"angle-left\" | \"angle-right\" | \"angle-up\" | \"angle-up-down\" | ... 52 more ... | undefined'."
+      "message": "Type '\"sort\" | \"sortDown\" | \"sortUp\"' is not assignable to type '\"search\" | \"link\" | \"table\" | \"sort\" | \"hidden\" | \"grid\" | \"list\" | \"download\" | \"file\" | \"user\" | \"version\" | \"home\" | \"award\" | \"handshake\" | \"arrow-down\" | \"chart-pie-simple\" | ... 51 more ... | undefined'."
+    },
+    "7c6cc0182f66830408eb9b0d3cb3ac2f746ca940": {
+      "file": "src/components/indicators/indicatorUtils.tsx",
+      "code": "TS2537",
+      "count": 1,
+      "message": "Type '(({ id: string; date: string | null; value: number; normalizedValues: ({ normalizerId: string | null; value: number | null; } & { __typename: \"NormalizedValue\"; })[]; scenario: ({ id: string; } & { ...; }) | null; } & { ...; }) | null)[] | null' has no matching index signature for type 'number'."
     },
     "e7dfdd062f286ad33ca5a1426fba642cd56f97f9": {
       "file": "src/components/indicators/IndicatorVisualisation.tsx",
@@ -2188,29 +2272,29 @@
       "count": 1,
       "message": "'NavItem' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
     },
-    "004609b635a00bf07f83e617c8c0aec3b135cd03": {
+    "d9bc0f212cc65b957ab7cccd3bcc92b19d41264c": {
       "file": "src/components/paths/custom/zurich/GlobalNav.tsx",
       "code": "TS2339",
       "count": 3,
-      "message": "Property 'active' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"AccessibilityStatementPage\" | ... 10 more ... | \"StaticPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
+      "message": "Property 'active' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"ActionListPage\" | \"Page\" | ... 9 more ... | \"PrivacyPolicyPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
     },
-    "17a284ecdd612967adcf0fae6fb92568dad9234c": {
+    "8ba8289747281fbaa6edfe5a21d8dd656a31d8dc": {
       "file": "src/components/paths/custom/zurich/GlobalNav.tsx",
       "code": "TS2339",
       "count": 1,
-      "message": "Property 'id' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"AccessibilityStatementPage\" | ... 10 more ... | \"StaticPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
+      "message": "Property 'id' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"ActionListPage\" | \"Page\" | ... 9 more ... | \"PrivacyPolicyPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
     },
-    "804ca066eead3f27f06f53df74309ed76df36000": {
+    "337874b68acc4aa94f02f902d6fd903848b5b6b9": {
       "file": "src/components/paths/custom/zurich/GlobalNav.tsx",
       "code": "TS2339",
       "count": 2,
-      "message": "Property 'urlPath' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"AccessibilityStatementPage\" | ... 10 more ... | \"StaticPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
+      "message": "Property 'urlPath' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"ActionListPage\" | \"Page\" | ... 9 more ... | \"PrivacyPolicyPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
     },
-    "3c023dabc6832e3192ff789deb142e337aa6f815": {
+    "8487abccc3ad909a3edcca05d87c43b757530593": {
       "file": "src/components/paths/custom/zurich/GlobalNav.tsx",
       "code": "TS2339",
       "count": 1,
-      "message": "Property 'name' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"AccessibilityStatementPage\" | ... 10 more ... | \"StaticPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
+      "message": "Property 'name' does not exist on type '({ linkText: string; url: string; } & { __typename: \"ExternalLinkMenuItem\"; }) | ({ id: string; page: { title: string; urlPath: string; slug: string; } & { __typename: \"ActionListPage\" | \"Page\" | ... 9 more ... | \"PrivacyPolicyPage\"; }; parent: ({ ...; } & { ...; }) | null; } & { ...; })'."
     },
     "db95c212460b3cf7fad0a027b5f5c1a9a130b76c": {
       "file": "src/components/paths/graphs/DimensionalBarGraph.tsx",
@@ -2350,17 +2434,29 @@
       "count": 1,
       "message": "Type 'PathsGoal[]' is not assignable to type '({ id: string; label: string | null; default: boolean; disabled: boolean; outcomeNode: { id: string; } & { __typename: \"Node\"; }; dimensions: ({ dimension: string; categories: string[]; groups: string[]; } & { ...; })[]; } & { ...; } & { ...; })[]'."
     },
-    "18629ac8b18bd5a36cb1fe391ac23e2e737551ba": {
+    "6a2ea176e1e8a22cb1dc40afe4fc5cd791382595": {
       "file": "src/components/paths/RangeSelector.tsx",
       "code": "TS2820",
       "count": 2,
-      "message": "Type '\"caretLeft\"' is not assignable to type '\"search\" | \"link\" | \"user\" | \"table\" | \"sort\" | \"download\" | \"hidden\" | \"grid\" | \"list\" | \"action-dependency\" | \"angle-down\" | \"angle-left\" | \"angle-right\" | \"angle-up\" | \"angle-up-down\" | ... 52 more ... | undefined'. Did you mean '\"caret-left\"'?"
+      "message": "Type '\"caretLeft\"' is not assignable to type '\"search\" | \"link\" | \"table\" | \"sort\" | \"hidden\" | \"grid\" | \"list\" | \"download\" | \"file\" | \"user\" | \"version\" | \"home\" | \"award\" | \"handshake\" | \"arrow-down\" | \"chart-pie-simple\" | ... 51 more ... | undefined'. Did you mean '\"caret-left\"'?"
     },
-    "b2c11d4580a6827478f0d91c45a6ab03a69e2b0f": {
+    "6ef2ac539e11bc993e6f2ea8269fee78c100d85f": {
       "file": "src/components/paths/RangeSelector.tsx",
       "code": "TS2820",
       "count": 1,
-      "message": "Type '\"caretRight\"' is not assignable to type '\"search\" | \"link\" | \"user\" | \"table\" | \"sort\" | \"download\" | \"hidden\" | \"grid\" | \"list\" | \"action-dependency\" | \"angle-down\" | \"angle-left\" | \"angle-right\" | \"angle-up\" | \"angle-up-down\" | ... 52 more ... | undefined'. Did you mean '\"caret-right\"'?"
+      "message": "Type '\"caretRight\"' is not assignable to type '\"search\" | \"link\" | \"table\" | \"sort\" | \"hidden\" | \"grid\" | \"list\" | \"download\" | \"file\" | \"user\" | \"version\" | \"home\" | \"award\" | \"handshake\" | \"arrow-down\" | \"chart-pie-simple\" | ... 51 more ... | undefined'. Did you mean '\"caret-right\"'?"
+    },
+    "39dd5ae05b8b25736e5efc26f6f79d1e043060a0": {
+      "file": "src/components/paths/ScenarioSelector.tsx",
+      "code": "TS2769",
+      "count": 1,
+      "message": "No overload matches this call."
+    },
+    "89afda6c9f37078969bc04175454aa7782661d72": {
+      "file": "src/components/paths/ScenarioSelector.tsx",
+      "code": "TS2339",
+      "count": 1,
+      "message": "Property 'scenarios' does not exist on type '{}'."
     },
     "8a971fcbd9eae8e333b51b8978c691f900c8e73f": {
       "file": "src/components/paths/toolbar/GlobalParameters.tsx",
@@ -2440,6 +2536,12 @@
       "count": 1,
       "message": "Property 'value' does not exist on type 'EventTarget'."
     },
+    "2d794c00720c1575181e8f8e3280fcd6b6f53c78": {
+      "file": "src/components/paths/toolbar/GlobalParameters.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '(variables?: Partial<OperationVariables> | undefined) => Promise<QueryResult<GetParametersQuery>>' is not assignable to type '(variables?: Partial<OperationVariables> | undefined) => ResultPromise<QueryResult<unknown>>'."
+    },
     "0c9421f775dda846acb4d7e8d19bfeab89e5ec9b": {
       "file": "src/components/paths/toolbar/GoalOutcomeBar.tsx",
       "code": "TS2353",
@@ -2512,32 +2614,32 @@
       "count": 1,
       "message": "Type 'string' is not assignable to type 'Date & string'."
     },
-    "12a10694df638ea91fff68af6ffaa2b95bf7a991": {
-      "file": "src/middleware.ts",
+    "ed4f6aaa22775f5fe850620ef8fedd6daec028ae": {
+      "file": "src/proxy.ts",
       "code": "TS2307",
       "count": 1,
       "message": "Cannot find module 'next-auth/lib' or its corresponding type declarations."
     },
-    "29d31b93d96c6f635cec45988df0216d507f209a": {
-      "file": "src/middleware.ts",
+    "c6168711c5a122ff0ee94474e8941f2ae32adbab": {
+      "file": "src/proxy.ts",
       "code": "TS2339",
       "count": 1,
       "message": "Property 'domain' does not exist on type 'never'."
     },
-    "aacaef6c2d3de8f1e85aeefa499f1306f6726709": {
-      "file": "src/middleware.ts",
+    "53bb225b134a441e16eee2d13163ea570e6f0fe9": {
+      "file": "src/proxy.ts",
       "code": "TS2339",
       "count": 1,
       "message": "Property 'statusMessage' does not exist on type 'never'."
     },
-    "7a585477e612b0ee0059b55e931cf3a0b6b8f07b": {
-      "file": "src/middleware.ts",
+    "5e4679a206f432e274a77ec0e37d9fec43dfec91": {
+      "file": "src/proxy.ts",
       "code": "TS2339",
       "count": 1,
       "message": "Property 'loginEnabled' does not exist on type 'never'."
     },
-    "d45c9b81f220a8e04967e58ea5de5583b2f26cb3": {
-      "file": "src/middleware.ts",
+    "2173490db5e2ef6e1f9d87260e407491cba02175": {
+      "file": "src/proxy.ts",
       "code": "TS2339",
       "count": 1,
       "message": "Property 'identifier' does not exist on type 'never'."
@@ -2590,6 +2692,12 @@
       "count": 1,
       "message": "Property 'toThrowError' does not exist on type 'JestMatchers<() => void>'."
     },
+    "2c0a682380004f7ab6d06ac067271e00411c1727": {
+      "file": "src/tests/pledge/use-pledge-user.test.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '{ children: ReactNode; mocks: MockedResponse[]; addTypename: boolean; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<MockedProvider> & Readonly<MockedProviderProps>'."
+    },
     "37bf8d15e6d74f076dd95bde5dc89a67eec6cb9e": {
       "file": "src/tests/preprocess.test.ts",
       "code": "TS2769",
@@ -2625,6 +2733,12 @@
       "code": "TS2352",
       "count": 1,
       "message": "Conversion of type '{ id: string; identifier: string; name: string; shortName: string; versionName: string; themeIdentifier: string; primaryLanguage: string; otherLanguages: string[]; hideActionIdentifiers: boolean; ... 30 more ...; __typename: string; }' to type 'PlanContextFragment' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first."
+    },
+    "28419f9096fbe9f50f6d7440a0f6f9d708b182ba": {
+      "file": "src/utils/apollo.utils.ts",
+      "code": "TS2339",
+      "count": 1,
+      "message": "Property 'map' does not exist on type 'Observable<FormattedExecutionResult<Record<string, any>, Record<string, any>>>'."
     }
   }
 }

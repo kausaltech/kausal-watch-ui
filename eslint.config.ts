@@ -26,7 +26,11 @@ const config: ConfigWithExtends[] = defineConfig(
   nodeConfig,
   storybookConfig,
   getGlobalIgnores(),
-  globalIgnores(['src/embed'])
+  globalIgnores(['src/embed']),
+  globalIgnores(
+    ['src/components/paths', 'src/context/paths', 'src/queries/paths', 'src/utils/paths'],
+    'no-paths'
+  )
 );
 
 export default config;
