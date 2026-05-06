@@ -152,13 +152,16 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
     const regData = mainValues
       .slice(mainValues.length - numberOfYears, mainValues.length)
       .map((item) => [parseInt(item.date, 10), item.value]);
+    if (regData.length < 5) {
+      return [undefined, undefined];
+    }
     const model = linearRegression(regData);
     const predictedTrace = {
       x: regData.map((item) => item[0]),
       name: i18n.t('current-trend'),
     };
 
-    const highestDataYear = traces[0].y[traces[0].y.length - 1];
+    const highestDataYear = regData[regData.length - 1][0];
     const highestGoalYear = Math.max(
       ...goals.map((goal) => {
         const goalDate = goal.x[goal.x.length - 1];
@@ -166,7 +169,7 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
       })
     );
 
-    if (highestGoalYear && highestGoalYear > highestDataYear) {
+    if (!Number.isNaN(highestGoalYear) && highestGoalYear > highestDataYear) {
       predictedTrace.x.push(highestGoalYear);
     }
 
