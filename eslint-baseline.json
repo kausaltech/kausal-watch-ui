@@ -1,0 +1,2836 @@
+{
+  "apollo-paths.config.cjs": {
+    "@typescript-eslint/no-var-requires": {
+      "count": 1
+    }
+  },
+  "global.d.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 4
+    }
+  },
+  "graphql.config.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "kausal_common/configs/common-next-config.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "kausal_common/src/components/paths/DimensionControls.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "kausal_common/src/components/paths/DimensionalNodeVisualisation.tsx": {
+    "@typescript-eslint/no-redundant-type-constituents": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 13
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "prefer-const": {
+      "count": 2
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "kausal_common/src/components/paths/NodeGraph.tsx": {
+    "no-useless-escape": {
+      "count": 8
+    }
+  },
+  "kausal_common/src/env/utils.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "kausal_common/src/graphql/proxy.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    }
+  },
+  "kausal_common/src/logging/chalk-logger.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    }
+  },
+  "kausal_common/src/logging/edge.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "kausal_common/src/themes/next-config.mjs": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "kausal_common/src/utils/cookies.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "kausal_common/src/utils/lru-cache.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 5
+    }
+  },
+  "kausal_common/src/utils/paths/colors.ts": {
+    "@typescript-eslint/no-redundant-type-constituents": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 8
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 32
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 30
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 8
+    }
+  },
+  "kausal_common/src/utils/paths/metric/dimensions.ts": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 2
+    }
+  },
+  "kausal_common/src/utils/paths/metric/table.ts": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 4
+    }
+  },
+  "kausal_common/src/utils/paths/progress-tracking.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    }
+  },
+  "src/app/api/auth/route.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/app/api/export-pdf/route.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "src/app/api/graphql-paths/route.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/app/api/health/route.ts": {
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/app/api/revalidate/route.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/app/global-error.tsx": {
+    "react/no-unescaped-entities": {
+      "count": 1
+    }
+  },
+  "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/accessibility/page.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    }
+  },
+  "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/feedback/page.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/insight/page.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/search/page.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    }
+  },
+  "src/app/root/[domain]/[lang]/[plan]/UpdateApolloContext.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "react-hooks/immutability": {
+      "count": 4
+    }
+  },
+  "src/app/root/[domain]/[lang]/[plan]/embed/layout.tsx": {
+    "react/prop-types": {
+      "count": 1
+    }
+  },
+  "src/app/root/[domain]/[lang]/[plan]/embed/v1/[...slug]/page.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-expressions": {
+      "count": 1
+    },
+    "no-case-declarations": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/app/root/[domain]/[lang]/[plan]/layout.tsx": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/app/root/[domain]/[lang]/layout.tsx": {
+    "react/prop-types": {
+      "count": 1
+    }
+  },
+  "src/app/root/[domain]/[lang]/not-found.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/app/sitemap.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/common/__tests__/links.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/common/api.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/common/blocks.types.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/common/categories.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 12
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 13
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 6
+    },
+    "no-constant-binary-expression": {
+      "count": 1
+    }
+  },
+  "src/common/cookies.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "src/common/data/actions.js": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/common/dayjs.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/common/hooks/update-search-params.ts": {
+    "react-hooks/refs": {
+      "count": 3
+    }
+  },
+  "src/common/i18n.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 2
+    }
+  },
+  "src/common/images.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/common/links.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 2
+    }
+  },
+  "src/common/preprocess.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-expressions": {
+      "count": 1
+    }
+  },
+  "src/common/search.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/common/utils.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    },
+    "no-useless-escape": {
+      "count": 3
+    }
+  },
+  "src/components/Footer.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 3
+    },
+    "react-hooks/static-components": {
+      "count": 1
+    }
+  },
+  "src/components/GoogleAnalytics.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/Header.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 14
+    },
+    "react-hooks/static-components": {
+      "count": 1
+    }
+  },
+  "src/components/MonsidoAccessibility.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "src/components/actions/ActionCard.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 3
+    }
+  },
+  "src/components/actions/ActionCardList.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/components/actions/ActionContent.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 16
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 10
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "no-case-declarations": {
+      "count": 2
+    },
+    "react/prop-types": {
+      "count": 9
+    }
+  },
+  "src/components/actions/ActionHero.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 6
+    }
+  },
+  "src/components/actions/ActionHighlightsList.tsx": {
+    "@graphql-eslint/require-selections": {
+      "count": 4
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/actions/ActionImpact.js": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    }
+  },
+  "src/components/actions/ActionListFilters.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 14
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 13
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 3
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
+    "no-case-declarations": {
+      "count": 4
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/components/actions/ActionLogBanner.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "react/prop-types": {
+      "count": 4
+    }
+  },
+  "src/components/actions/ActionUpdatesList.js": {
+    "@graphql-eslint/require-selections": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 19
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 20
+    }
+  },
+  "src/components/actions/CategoryActionList.js": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 19
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 5
+    }
+  },
+  "src/components/actions/ContactPerson.tsx": {
+    "@graphql-eslint/require-selections": {
+      "count": 1
+    }
+  },
+  "src/components/actions/ContactPersons.js": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 12
+    }
+  },
+  "src/components/actions/EmissionScopeIcon.js": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "react/prop-types": {
+      "count": 4
+    }
+  },
+  "src/components/actions/ExportActionPdfButton.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/actions/PhaseTimeline.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/components/actions/ResponsibleList.tsx": {
+    "react/jsx-key": {
+      "count": 1
+    }
+  },
+  "src/components/actions/TaskList.js": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 13
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 21
+    },
+    "react/prop-types": {
+      "count": 14
+    }
+  },
+  "src/components/actions/blocks/ActionContactPersonsBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 2
+    }
+  },
+  "src/components/actions/blocks/ActionDescriptionBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 3
+    }
+  },
+  "src/components/actions/blocks/ActionLeadParagraphBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 3
+    }
+  },
+  "src/components/actions/blocks/ActionLinksBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "react/prop-types": {
+      "count": 2
+    }
+  },
+  "src/components/actions/blocks/ActionOfficialNameBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 5
+    },
+    "react/prop-types": {
+      "count": 8
+    }
+  },
+  "src/components/actions/blocks/ActionPledgesBlock.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/actions/blocks/ActionRelatedActionsBlock.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 5
+    },
+    "react/prop-types": {
+      "count": 7
+    }
+  },
+  "src/components/actions/blocks/ActionResponsiblePartiesBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 3
+    }
+  },
+  "src/components/actions/blocks/ActionScheduleBlock.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/actions/blocks/ActionTasksBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "react/prop-types": {
+      "count": 1
+    }
+  },
+  "src/components/actions/blocks/ReportComparisonBlock.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 21
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 7
+    }
+  },
+  "src/components/actions/blocks/RestrictedBlockWrapper.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/actions/blocks/action-dependencies/ActionDependenciesBlock.tsx": {
+    "@graphql-eslint/require-selections": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/components/actions/blocks/action-dependencies/ActionDependenciesGroup.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/common/Accordion.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 2
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/components/common/ActionAttribute.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "no-case-declarations": {
+      "count": 3
+    }
+  },
+  "src/components/common/AttributesBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 6
+    }
+  },
+  "src/components/common/BadgeTooltip.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    }
+  },
+  "src/components/common/Card.tsx": {
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "react-hooks/static-components": {
+      "count": 1
+    }
+  },
+  "src/components/common/CategoryCardContent.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "src/components/common/CategoryPageStreamField.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 2
+    }
+  },
+  "src/components/common/ChangeHistory.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/common/CheckboxInput.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/common/DropDown.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 8
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 7
+    }
+  },
+  "src/components/common/FeedbackForm.tsx": {
+    "@graphql-eslint/require-selections": {
+      "count": 1
+    },
+    "@graphql-eslint/unique-operation-name": {
+      "count": 1
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/common/FilterControl.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/common/GlobalNav.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 52
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 61
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "react-hooks/static-components": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 3
+    }
+  },
+  "src/components/common/Icon.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "react/no-unknown-property": {
+      "count": 1
+    }
+  },
+  "src/components/common/Modal.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/common/NavBar.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/common/OrganizationChip.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 2
+    }
+  },
+  "src/components/common/PopoverTip.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/common/RichText.tsx": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 2
+    }
+  },
+  "src/components/common/SearchView.tsx": {
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    },
+    "@typescript-eslint/no-non-null-asserted-optional-chain": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "no-unsafe-optional-chaining": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/components/common/SelectDropdown.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    },
+    "react/jsx-key": {
+      "count": 1
+    }
+  },
+  "src/components/common/SelectInput.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/common/SiteFooter.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "react-hooks/static-components": {
+      "count": 2
+    }
+  },
+  "src/components/common/StatusBadge.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 5
+    }
+  },
+  "src/components/common/StatusMessage.js": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/components/common/StreamField.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 2
+    },
+    "react-hooks/static-components": {
+      "count": 1
+    }
+  },
+  "src/components/common/Switch.js": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    }
+  },
+  "src/components/common/Tooltip.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/common/TopToolBar.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/AccessibilityStatementComplianceStatusBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 8
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 3
+    },
+    "react/prop-types": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/AccessibilityStatementContactFormBlock.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/AccessibilityStatementContactInformationBlock.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 5
+    }
+  },
+  "src/components/contentblocks/ActionCategoryFilterCardsBlock.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 5
+    }
+  },
+  "src/components/contentblocks/ActionHighlightsBlock.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/ActionListBlock.tsx": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 4
+    },
+    "@graphql-eslint/unique-operation-name": {
+      "count": 1
+    },
+    "@typescript-eslint/no-redundant-type-constituents": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 11
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 11
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 5
+    }
+  },
+  "src/components/contentblocks/ActionStatusGraphsBlock.tsx": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 2
+    }
+  },
+  "src/components/contentblocks/AttentionBannerBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "react/prop-types": {
+      "count": 4
+    }
+  },
+  "src/components/contentblocks/CardListBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 6
+    },
+    "react/prop-types": {
+      "count": 5
+    }
+  },
+  "src/components/contentblocks/CartographyVisualisationBlock.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/CategoryListBlock.tsx": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 2
+    }
+  },
+  "src/components/contentblocks/CategoryPageHeaderBlock.tsx": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/CategoryTreeBlock.tsx": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/CategoryTypeListBlock.tsx": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 2
+    }
+  },
+  "src/components/contentblocks/DashboardIndicatorSummaryBlock.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/DashboardRowBlock.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 5
+    }
+  },
+  "src/components/contentblocks/FrontPageHeroBlock.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/components/contentblocks/IndicatorBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 5
+    }
+  },
+  "src/components/contentblocks/IndicatorHighlightsBlock.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/IndicatorShowcaseBlock.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 11
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    }
+  },
+  "src/components/contentblocks/indicator-chart/DashboardIndicatorAreaChartBlock.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 12
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 8
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/indicator-chart/DashboardIndicatorBarChartBlock.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 9
+    }
+  },
+  "src/components/contentblocks/indicator-chart/DashboardIndicatorLineChartBlock.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 12
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 8
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/indicator-chart/DashboardIndicatorPieChartBlock.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    },
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    },
+    "@typescript-eslint/no-empty-object-type": {
+      "count": 1
+    },
+    "@typescript-eslint/no-redundant-type-constituents": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 11
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 13
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    },
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    },
+    "react-hooks/rules-of-hooks": {
+      "count": 2
+    }
+  },
+  "src/components/contentblocks/indicator-chart/indicator-chart-colors.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/contentblocks/indicator-chart/indicator-charts-utility.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 14
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 41
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 4
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 2
+    }
+  },
+  "src/components/custom/IntroModal.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/components/dashboard/ActionList.tsx": {
+    "@graphql-eslint/naming-convention": {
+      "count": 4
+    },
+    "@graphql-eslint/no-deprecated": {
+      "count": 1
+    },
+    "@graphql-eslint/no-duplicate-fields": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 36
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 1
+    }
+  },
+  "src/components/dashboard/ActionStatusExport.js": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 2
+    }
+  },
+  "src/components/dashboard/ActionStatusGraphs.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 5
+    },
+    "react-hooks/rules-of-hooks": {
+      "count": 1
+    }
+  },
+  "src/components/dashboard/ActionStatusTable.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 6
+    }
+  },
+  "src/components/dashboard/ActionTableRow.tsx": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/dashboard/ActionTableTooltips.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 3
+    },
+    "react/prop-types": {
+      "count": 2
+    }
+  },
+  "src/components/dashboard/cells/DateCell.tsx": {
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/components/dashboard/cells/ImplementationPhaseCell.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "src/components/dashboard/cells/IndicatorsCell.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/dashboard/cells/OrganizationCell.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "react-hooks/rules-of-hooks": {
+      "count": 1
+    }
+  },
+  "src/components/dashboard/cells/ResponsiblePartiesCell.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/dashboard/cells/StatusCell.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "src/components/dashboard/cells/TasksStatusCell.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 3
+    }
+  },
+  "src/components/dashboard/cells/UpdatedAtCell.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/dashboard/dashboard.constants.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 3
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/components/dashboard/dashboard.types.ts": {
+    "@typescript-eslint/no-redundant-type-constituents": {
+      "count": 1
+    }
+  },
+  "src/components/embed/ActionEmbed.tsx": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 4
+    }
+  },
+  "src/components/embed/RecentActionsEmbed.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/components/graphs/CategoryTreeMap.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    }
+  },
+  "src/components/graphs/GraphAsTable.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 3
+    }
+  },
+  "src/components/graphs/IndicatorGraph.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 3
+    },
+    "no-constant-binary-expression": {
+      "count": 1
+    },
+    "react-hooks/preserve-manual-memoization": {
+      "count": 1
+    }
+  },
+  "src/components/graphs/InsightPageContent.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 6
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/graphs/Plot.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 6
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/components/graphs/ScheduleTimeline.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 18
+    },
+    "react/prop-types": {
+      "count": 4
+    }
+  },
+  "src/components/graphs/StatusDonut.js": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 10
+    },
+    "react/prop-types": {
+      "count": 19
+    }
+  },
+  "src/components/graphs/Timeline.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/components/graphs/legacy/IndicatorGraph.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 8
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 43
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 16
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 95
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 6
+    }
+  },
+  "src/components/indicators/Connector.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "prefer-const": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/GlobalIndicatorModal.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 2
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/IndicatorCard.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/IndicatorCausalVisualisation.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 5
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 35
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 20
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 109
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 5
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/IndicatorComparisonSelect.js": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 8
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 11
+    },
+    "react/prop-types": {
+      "count": 2
+    }
+  },
+  "src/components/indicators/IndicatorContent.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 4
+    }
+  },
+  "src/components/indicators/IndicatorFactorValueSummaryBlock.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 6
+    }
+  },
+  "src/components/indicators/IndicatorHero.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/components/indicators/IndicatorLinkClient.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/IndicatorList.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/IndicatorListFilters.tsx": {
+    "@typescript-eslint/restrict-template-expressions": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/IndicatorModal.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/IndicatorModalContent.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 5
+    }
+  },
+  "src/components/indicators/IndicatorModalContentBlock.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "no-case-declarations": {
+      "count": 6
+    }
+  },
+  "src/components/indicators/IndicatorNormalizationSelect.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/IndicatorProgressBar.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "no-constant-binary-expression": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 2
+    }
+  },
+  "src/components/indicators/IndicatorTableCell.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "no-case-declarations": {
+      "count": 9
+    }
+  },
+  "src/components/indicators/IndicatorTableHeader.tsx": {
+    "no-case-declarations": {
+      "count": 1
+    },
+    "no-fallthrough": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/IndicatorValueSummary.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/IndicatorVisualisation.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 20
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 89
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 53
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 154
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 35
+    },
+    "no-extra-boolean-cast": {
+      "count": 1
+    },
+    "prefer-const": {
+      "count": 3
+    }
+  },
+  "src/components/indicators/IndicatorsHero.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/Unit.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    }
+  },
+  "src/components/indicators/indicator-data-helpers.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/components/indicators/indicatorUtils.tsx": {
+    "@typescript-eslint/no-redundant-type-constituents": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 11
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    }
+  },
+  "src/components/insight/CytoGraph.js": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 44
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 32
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 83
+    },
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 28
+    }
+  },
+  "src/components/insight/VisGraph.js": {
+    "@next/next/no-sync-scripts": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 12
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 11
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 21
+    },
+    "react/prop-types": {
+      "count": 6
+    }
+  },
+  "src/components/orgs/OrgSelector.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 3
+    }
+  },
+  "src/components/plans/PlanChip.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/components/plans/PlanLink.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/plans/UnpublishedPlan.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/pledge/ConfirmPledge.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/pledge/PledgeCard.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/pledge/PledgeDetail.tsx": {
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    }
+  },
+  "src/components/pledge/PledgeFeedback.tsx": {
+    "@graphql-eslint/require-selections": {
+      "count": 1
+    },
+    "@graphql-eslint/unique-operation-name": {
+      "count": 1
+    }
+  },
+  "src/components/pledge/PledgeImpactComparison.tsx": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    },
+    "no-extra-boolean-cast": {
+      "count": 1
+    }
+  },
+  "src/components/pledge/PledgeList.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/pledge/ShareButton.tsx": {
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/pledge/use-pledge-user.ts": {
+    "@graphql-eslint/unique-operation-name": {
+      "count": 3
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 4
+    }
+  },
+  "src/components/providers/ApolloWrapper.tsx": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "react-hooks/immutability": {
+      "count": 1
+    }
+  },
+  "src/components/providers/AuthProvider.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/components/providers/PathsProvider.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 2
+    }
+  },
+  "src/components/providers/PlanProvider.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 2
+    }
+  },
+  "src/components/versioning/ActionVersionHistory.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-expressions": {
+      "count": 1
+    }
+  },
+  "src/components/versioning/PlanVersionBanner.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 5
+    },
+    "react/prop-types": {
+      "count": 7
+    }
+  },
+  "src/components/versioning/PlanVersionSelector.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 22
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 31
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    },
+    "react/prop-types": {
+      "count": 13
+    }
+  },
+  "src/config/auth.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/config/i18n.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 4
+    }
+  },
+  "src/context/print.tsx": {
+    "no-self-assign": {
+      "count": 1
+    }
+  },
+  "src/fragments/action-card.fragment.ts": {
+    "@graphql-eslint/require-selections": {
+      "count": 4
+    }
+  },
+  "src/fragments/action-list.fragment.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 15
+    }
+  },
+  "src/fragments/category-tags.fragment.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    }
+  },
+  "src/fragments/category.fragment.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 6
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 66
+    }
+  },
+  "src/fragments/dashboard-indicator-block.fragment.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 2
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 19
+    }
+  },
+  "src/fragments/indicator-list-indicator.fragment.ts": {
+    "@graphql-eslint/require-selections": {
+      "count": 3
+    }
+  },
+  "src/fragments/indicator-list.fragment.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/no-deprecated": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 1
+    }
+  },
+  "src/fragments/stream-field.fragment.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 21
+    }
+  },
+  "src/proxy.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 28
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 11
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 7
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 25
+    }
+  },
+  "src/queries/get-action.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 3
+    },
+    "@graphql-eslint/no-deprecated": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 33
+    },
+    "@graphql-eslint/selection-set-depth": {
+      "count": 339
+    }
+  },
+  "src/queries/get-actions-list-page.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 2
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 3
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/queries/get-content-page.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 5
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 44
+    },
+    "@graphql-eslint/selection-set-depth": {
+      "count": 360
+    }
+  },
+  "src/queries/get-home-page.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 5
+    },
+    "@graphql-eslint/selection-set-depth": {
+      "count": 102
+    }
+  },
+  "src/queries/get-indicator-graph-data.ts": {
+    "@graphql-eslint/require-selections": {
+      "count": 4
+    }
+  },
+  "src/queries/get-indicator-list.ts": {
+    "@graphql-eslint/require-selections": {
+      "count": 7
+    }
+  },
+  "src/queries/get-indicator.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 4
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 10
+    }
+  },
+  "src/queries/get-organization.ts": {
+    "@graphql-eslint/no-deprecated": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 26
+    }
+  },
+  "src/queries/get-plan-category-types.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    }
+  },
+  "src/queries/get-plan.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/no-deprecated": {
+      "count": 2
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 44
+    }
+  },
+  "src/queries/get-plans.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 2
+    }
+  },
+  "src/queries/get-pledges.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 5
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 7
+    },
+    "@graphql-eslint/selection-set-depth": {
+      "count": 102
+    }
+  },
+  "src/stories/ActionAttribute.stories.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/ActionCard.stories.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 5
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/ActionDependenciesBlock.stories.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/ActionHero.stories.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/FilterControl.stories.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/IndicatorCard.stories.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/IndicatorModalContentBlock.stories.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/IndicatorNumberFormatting.stories.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "no-loss-of-precision": {
+      "count": 1
+    }
+  },
+  "src/stories/IndicatorProgressBar.stories.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 5
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/OrganizationChip.stories.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/PhaseTimeline.stories.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/PlanChip.stories.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/RestrictedBlockWrapper.stories.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/ThemeAccessibility.stories.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/ThemeDesignTokens.stories.tsx": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/Timeline.stories.tsx": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/components/ThemeAccessibilityTest.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "react-hooks/static-components": {
+      "count": 1
+    }
+  },
+  "src/stories/components/ThemeDesignTokens.tsx": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 11
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 4
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    },
+    "react-hooks/set-state-in-effect": {
+      "count": 1
+    },
+    "react/prop-types": {
+      "count": 5
+    }
+  },
+  "src/stories/mocks/actions.mocks.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/stories/mocks/plan.mocks.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  },
+  "src/tests/common/Button.test.js": {
+    "no-undef": {
+      "count": 2
+    }
+  },
+  "src/tests/common/Card.test.js": {
+    "no-undef": {
+      "count": 13
+    }
+  },
+  "src/tests/common/ContentLoader.test.js": {
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "no-undef": {
+      "count": 12
+    }
+  },
+  "src/tests/common/ErrorMessage.test.js": {
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "no-undef": {
+      "count": 12
+    }
+  },
+  "src/tests/common/Icon.test.js": {
+    "no-undef": {
+      "count": 14
+    }
+  },
+  "src/tests/common/RichText.test.tsx": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 3
+    }
+  },
+  "src/tests/index.test.js": {
+    "no-undef": {
+      "count": 3
+    }
+  },
+  "src/tests/pledge/ConfirmPledge.test.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/tests/pledge/PledgeList.test.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 9
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 9
+    },
+    "@typescript-eslint/prefer-as-const": {
+      "count": 1
+    }
+  },
+  "src/tests/pledge/use-pledge-user.test.tsx": {
+    "@graphql-eslint/unique-operation-name": {
+      "count": 3
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/tests/preprocess.test.ts": {
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "src/tests/test-utils.js": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 2
+    },
+    "react/prop-types": {
+      "count": 1
+    }
+  },
+  "src/types/next-auth.d.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/utils/__tests__/middleware.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/utils/__tests__/urls.test.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
+  "src/utils/apollo.utils.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 3
+    }
+  },
+  "src/utils/auth.utils.ts": {
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/utils/dates.utils.ts": {
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 3
+    }
+  },
+  "src/utils/indicatorData.ts": {
+    "@graphql-eslint/require-selections": {
+      "count": 4
+    }
+  },
+  "src/utils/middleware.utils.ts": {
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
+    }
+  }
+}
