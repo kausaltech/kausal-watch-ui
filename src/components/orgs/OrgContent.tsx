@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Nav, NavItem, Row } from 'reactstrap';
@@ -205,7 +206,11 @@ function OrgContent({ org, planFromOrgQuery, testId }: Props) {
                       planShortName={`${p.shortName || p.name}${
                         p.versionName ? ` (${p.versionName})` : ''
                       }`}
-                      organization={p.shortName ? p.name : p.organization.abbreviation}
+                      organization={
+                        p.shortName
+                          ? p.name
+                          : p.organization?.abbreviation || p.organization?.name || ''
+                      }
                       size="md"
                       negative={i !== selectedPlanIndex}
                     />
