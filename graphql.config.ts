@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 
 import dotenv from 'dotenv';
-import type { IGraphQLProject } from 'graphql-config';
 
 dotenv.config({ quiet: true });
 
@@ -27,6 +26,6 @@ const config = {
   schema: getSchema(),
   documents: [`./src/**/${JS}`, `./e2e-tests/**/${JS}`, `./kausal_common/src/**/${JS}`],
   exclude: [`./src/*/paths/**/${JS}`],
-} satisfies IGraphQLProject;
+};
 
 export default config;

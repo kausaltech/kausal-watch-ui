@@ -19,12 +19,6 @@
     "strict": false,
     "strictNullChecks": true
   },
-  "include": [
-    "../.next/types/**/*.ts",
-    "../kausal_common/src",
-    "../next-env.d.ts",
-    "../src",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": ["../src/embed", "../src/stories"]
+  "include": ["../.next/types/**/*.ts", "../next-env.d.ts", "../src", ".next/types/**/*.ts"],
+  "exclude": ["../src/embed", "../src/stories", "../kausal_common"]
 }

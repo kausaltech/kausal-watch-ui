@@ -9,11 +9,6 @@
       "count": 4
     }
   },
-  "graphql.config.ts": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    }
-  },
   "kausal_common/configs/common-next-config.ts": {
     "@typescript-eslint/no-unnecessary-type-assertion": {
       "count": 1

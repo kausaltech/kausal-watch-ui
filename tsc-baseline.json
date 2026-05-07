@@ -34,12 +34,6 @@
       "count": 1,
       "message": "Unused '@ts-expect-error' directive."
     },
-    "c84fcf88af8fbe94b6b5429b7748fa62c4d17a37": {
-      "file": "kausal_common/src/themes/next-config.mjs",
-      "code": "TS2578",
-      "count": 2,
-      "message": "Unused '@ts-expect-error' directive."
-    },
     "007e1f074951bf350d3d84817970a5233422ce71": {
       "file": "kausal_common/src/utils/paths/metric/slicing.ts",
       "code": "TS2322",
@@ -2739,6 +2733,12 @@
       "code": "TS2339",
       "count": 1,
       "message": "Property 'map' does not exist on type 'Observable<FormattedExecutionResult<Record<string, any>, Record<string, any>>>'."
+    },
+    "c84fcf88af8fbe94b6b5429b7748fa62c4d17a37": {
+      "file": "kausal_common/src/themes/next-config.mjs",
+      "code": "TS2578",
+      "count": 1,
+      "message": "Unused '@ts-expect-error' directive."
     }
   }
 }
