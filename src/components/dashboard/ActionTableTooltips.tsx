@@ -174,6 +174,9 @@ export const ResponsiblePartiesTooltipContent = ({ action, plan }: TooltipWithPl
 
   const parties = action.responsibleParties ?? [];
 
+  const getResponsiblePartyLabel = (party: (typeof parties)[number]) =>
+    party.organization?.abbreviation || party.organization?.name;
+
   if (parties.length < 1)
     return (
       <div>
@@ -189,8 +192,10 @@ export const ResponsiblePartiesTooltipContent = ({ action, plan }: TooltipWithPl
         <strong>{t('with-contact-persons')}:</strong>
       )}
       <ResponsibleTooltipList>
-        {parties.map((party) =>
-          party.hasContactPerson ? (
+        {parties.map((party) => {
+          const label = getResponsiblePartyLabel(party);
+
+          return party.hasContactPerson && label ? (
             <ResponsibleTooltipListItem key={party.id}>
               <Icon
                 name={party.hasContactPerson ? 'dot-circle' : 'circle-outline'}
@@ -198,17 +203,19 @@ export const ResponsiblePartiesTooltipContent = ({ action, plan }: TooltipWithPl
                 width="1em"
                 height="1em"
               />{' '}
-              {party.organization?.abbreviation || party.organization?.name}
+              {label}
             </ResponsibleTooltipListItem>
-          ) : null
-        )}
+          ) : null;
+        })}
       </ResponsibleTooltipList>
       {parties.find((party) => !party.hasContactPerson) && (
         <strong>{t('without-contact-person')}:</strong>
       )}
       <ResponsibleTooltipList>
-        {parties.map((party) =>
-          !party.hasContactPerson ? (
+        {parties.map((party) => {
+          const label = getResponsiblePartyLabel(party);
+
+          return !party.hasContactPerson && label ? (
             <ResponsibleTooltipListItem key={party.id}>
               <Icon
                 name={party.hasContactPerson ? 'dot-circle' : 'circle-outline'}
@@ -216,10 +223,10 @@ export const ResponsiblePartiesTooltipContent = ({ action, plan }: TooltipWithPl
                 width="1em"
                 height="1em"
               />{' '}
-              {party.organization?.abbreviation || party.organization?.name}
+              {label}
             </ResponsibleTooltipListItem>
-          ) : null
-        )}
+          ) : null;
+        })}
       </ResponsibleTooltipList>
     </div>
   );
