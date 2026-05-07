@@ -2,6 +2,7 @@ import React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
@@ -171,7 +172,7 @@ export const ResponsiblePartiesTooltipContent = ({ action, plan }: TooltipWithPl
   const theme = useTheme();
   const organizationTerm = plan?.generalContent?.organizationTerm;
 
-  const parties = action.responsibleParties;
+  const parties = action.responsibleParties ?? [];
 
   if (parties.length < 1)
     return (
@@ -197,7 +198,7 @@ export const ResponsiblePartiesTooltipContent = ({ action, plan }: TooltipWithPl
                 width="1em"
                 height="1em"
               />{' '}
-              {party.organization.abbreviation || party.organization.name}
+              {party.organization?.abbreviation || party.organization?.name}
             </ResponsibleTooltipListItem>
           ) : null
         )}
@@ -215,7 +216,7 @@ export const ResponsiblePartiesTooltipContent = ({ action, plan }: TooltipWithPl
                 width="1em"
                 height="1em"
               />{' '}
-              {party.organization.abbreviation || party.organization.name}
+              {party.organization?.abbreviation || party.organization?.name}
             </ResponsibleTooltipListItem>
           ) : null
         )}
