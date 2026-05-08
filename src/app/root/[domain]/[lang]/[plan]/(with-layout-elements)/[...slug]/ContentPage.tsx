@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { Col, Container, Row } from 'reactstrap';
 
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
@@ -154,6 +155,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
 
   const categoryColor = isCategoryPage && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.themeColors.light;
+  const pageBodyHasBlocks = isPageWithBody && (page.body?.length ?? 0) > 0;
 
   /* Content pages can have a secondary side nav */
   const secondaryNavParent =
@@ -206,10 +208,11 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
               links={siblings}
               activeLink={page.id}
               title={secondaryNavParent.title || ''}
+              pageHasContent={pageBodyHasBlocks}
             />
           ) : null}
 
-          {isPageWithBody && page.body && (
+          {isPageWithBody && page.body && pageBodyHasBlocks && (
             <StreamField page={page} blocks={page.body} hasSidebar={siblings.length > 1} />
           )}
         </div>
