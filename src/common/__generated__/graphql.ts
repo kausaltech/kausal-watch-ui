@@ -2010,7 +2010,10 @@ export type GetActionListForGraphsQueryVariables = Exact<{
 
 export type GetActionListForGraphsQuery = (
   { planActions: Array<(
-    { color: string | null, scheduleContinuous: boolean, statusSummary: (
+    { color: string | null, scheduleContinuous: boolean, status: (
+      { identifier: string, name: string, color: string }
+      & { __typename: 'ActionStatus' }
+    ) | null, statusSummary: (
       { identifier: ActionStatusSummaryIdentifier }
       & { __typename: 'ActionStatusSummary' }
     ), timeliness: (

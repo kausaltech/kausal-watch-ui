@@ -24,6 +24,11 @@ const GET_ACTION_LIST_FOR_GRAPHS = gql`
     planActions(plan: $plan, category: $categoryId) {
       color
       scheduleContinuous
+      status {
+        identifier
+        name
+        color
+      }
       statusSummary {
         identifier
       }
