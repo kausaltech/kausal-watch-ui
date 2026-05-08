@@ -1,12 +1,17 @@
 import styled from '@emotion/styled';
+
 import { Col, Container, Row } from 'reactstrap';
+
+import { transientOptions } from '@common/themes/styles/styled';
 
 import { type StaticPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import { Link } from '@/common/links';
 
-const NavigationContainer = styled(Container)`
+const NavigationContainer = styled(Container, transientOptions)<{ $pageHasContent: boolean }>`
   @media (min-width: ${(props) => props.theme.breakpointLg}) {
-    position: absolute;
+    // When there is no body content, render the navigation as
+    // relative to ensure it's not clipped by the footer
+    position: ${(props) => (props.$pageHasContent ? 'absolute' : 'relative')};
     margin-left: auto;
     margin-right: auto;
     left: 0;
@@ -55,13 +60,14 @@ interface SecondaryNavigationProps {
   links: StaticPageParentsChildren;
   activeLink?: string | null;
   title?: string;
+  pageHasContent?: boolean;
 }
 
 const SecondaryNavigation = (props: SecondaryNavigationProps) => {
-  const { links, activeLink, title } = props;
+  const { links, activeLink, title, pageHasContent = true } = props;
 
   return (
-    <NavigationContainer>
+    <NavigationContainer $pageHasContent={pageHasContent}>
       <Row>
         <Col md={{ size: 10, offset: 1 }} lg={{ size: 4, offset: 0 }} xl={3}>
           <NavigationCard>
