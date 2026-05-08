@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
+
 import { PieChart } from 'echarts/charts';
 import type { PieSeriesOption } from 'echarts/charts';
 import { LegendComponent } from 'echarts/components';
@@ -9,23 +10,21 @@ import { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
-import {
-  Indicator,
-  DashboardIndicatorPieChartBlock as TDashboardIndicatorPieChartBlock,
-  Unit,
-} from '@/common/__generated__/graphql';
-
+import type { DashboardBlock } from '../DashboardRowBlock';
 import { getDefaultColors } from './indicator-chart-colors';
 
 echarts.use([PieChart, LegendComponent]);
+
+type Props = Extract<DashboardBlock, { __typename: 'DashboardIndicatorPieChartBlock' }>;
+type IndicatorType = NonNullable<Props['indicator']>;
+type UnitType = IndicatorType['unit'];
 
 interface SeriesData {
   name: string;
   value: number;
 }
-interface DashboardIndicatorPieChartBlockProps extends TDashboardIndicatorPieChartBlock {}
 
-function getLatestYear(chartSeries: DashboardIndicatorPieChartBlockProps['chartSeries']) {
+function getLatestYear(chartSeries: Props['chartSeries']) {
   const lastDate = chartSeries?.[0]?.values?.[chartSeries?.[0]?.values.length - 1]?.date;
 
   if (!lastDate) {
@@ -45,7 +44,7 @@ function doYearsMatch(year: number, date: string) {
  * Determine if we should show the segmented percentage in addition to the value.
  * If the indicator is already a percentage that sums to 100, we don't want to show the segmented percentage.
  */
-function showSegmentedPercentage(unit: Unit | undefined, values: SeriesData[]) {
+function showSegmentedPercentage(unit: UnitType | undefined, values: SeriesData[]) {
   if (!unit) {
     return true;
   }
@@ -60,7 +59,7 @@ function showSegmentedPercentage(unit: Unit | undefined, values: SeriesData[]) {
   return true;
 }
 
-function createTooltipFormatter(indicator: Indicator | null, seriesData: SeriesData[]) {
+function createTooltipFormatter(indicator: IndicatorType | null, seriesData: SeriesData[]) {
   const showPercentage = showSegmentedPercentage(indicator?.unit, seriesData);
 
   return (tooltipParams: CallbackDataParams) => {
@@ -74,12 +73,7 @@ function createTooltipFormatter(indicator: Indicator | null, seriesData: SeriesD
   };
 }
 
-const DashboardIndicatorPieChartBlock = ({
-  chartSeries,
-  dimension,
-  indicator,
-  year,
-}: DashboardIndicatorPieChartBlockProps) => {
+const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, year }: Props) => {
   const theme = useTheme();
   const assertedYear = year ?? getLatestYear(chartSeries);
 

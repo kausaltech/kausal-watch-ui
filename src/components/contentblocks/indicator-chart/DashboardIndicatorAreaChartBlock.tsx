@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { useTheme } from '@emotion/react';
+
 import { LineChart } from 'echarts/charts';
 import {
   GridComponent,
@@ -15,9 +16,9 @@ import { useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
-import { DashboardIndicatorAreaChartBlock as TDashboardIndicatorAreaChartBlock } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 
+import type { DashboardBlock } from '../DashboardRowBlock';
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   buildDimSeries,
@@ -30,7 +31,7 @@ import {
 
 echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent]);
 
-type Props = TDashboardIndicatorAreaChartBlock;
+type Props = Extract<DashboardBlock, { __typename: 'DashboardIndicatorAreaChartBlock' }>;
 
 const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }: Props) => {
   const theme = useTheme();

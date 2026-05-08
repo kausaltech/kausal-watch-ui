@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { useTheme } from '@emotion/react';
+
 import { LineChart, ScatterChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
@@ -10,9 +11,9 @@ import { useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
-import type { DashboardIndicatorBlockFragmentFragment as TDashboardIndicatorLineChartBlock } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 
+import type { DashboardBlock } from '../DashboardRowBlock';
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   type GraphsTheme,
@@ -27,7 +28,7 @@ import {
 
 echarts.use([LineChart, ScatterChart, GridComponent, TooltipComponent, LegendComponent]);
 
-type Props = TDashboardIndicatorLineChartBlock;
+type Props = Extract<DashboardBlock, { __typename: 'DashboardIndicatorLineChartBlock' }>;
 
 const DashboardIndicatorLineChartBlock = ({
   chartSeries,
