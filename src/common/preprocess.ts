@@ -33,9 +33,26 @@ type ActionWithPhaseAndStatus = {
     viewUrl: string;
   };
 };
+
 type ActionStatus = ActionWithPhaseAndStatus['status'] & {
   isCompleted?: boolean;
 };
+
+type ActionForStatusGraph = {
+  color: string | null;
+  statusSummary: {
+    identifier: ActionStatusSummaryIdentifier;
+  };
+  status?: {
+    identifier: string;
+    name: string;
+    color: string | null;
+  } | null;
+};
+
+const CUSTOM_STATUS_PREFIX = '__custom__';
+
+const CUSTOM_STATUS_COLOR_KEYS = ['grey060', 'grey040', 'grey070', 'grey030'] as const;
 
 // Clean up actionStatus so UI can handle edge cases
 const cleanActionStatus = (
@@ -105,11 +122,41 @@ class DonutSector {
   }
 }
 
+const getThemeGraphColor = (
+  theme: Theme,
+  colorKey: string | null | undefined
+): string | undefined => {
+  if (colorKey == null) {
+    return undefined;
+  }
+
+  return theme.graphColors[colorKey as keyof typeof theme.graphColors];
+};
+
+const getCustomStatusColor = (
+  theme: Theme,
+  colorKey: string | null,
+  assignedColors: Set<string>
+): string => {
+  const rawStatusColor = getThemeGraphColor(theme, colorKey);
+
+  if (rawStatusColor != null && !assignedColors.has(rawStatusColor)) {
+    return rawStatusColor;
+  }
+
+  const fallbackColorKey = CUSTOM_STATUS_COLOR_KEYS.find((key) => {
+    const color = theme.graphColors[key];
+    return color != null && !assignedColors.has(color);
+  });
+
+  return fallbackColorKey ? theme.graphColors[fallbackColorKey] : theme.graphColors.grey060;
+};
+
 /*
  Process a list of actions and return an ordered list of statuses for statistics
  */
 const getStatusData = (
-  actions: NonNullable<GetActionListForGraphsQuery['planActions']>,
+  actions: ActionForStatusGraph[],
   actionStatusSummaries: ActionStatusSummary[],
   theme: Theme,
   unknownLabelText: string = ''
@@ -125,15 +172,36 @@ const getStatusData = (
 
   const counts: Map<string, number> = new Map();
   const colors: Map<string, string | null> = new Map();
+  const customStatusMeta: Map<string, { name: string; color: string | null }> = new Map();
+
   for (const action of actions) {
     const {
       statusSummary: { identifier },
+      status,
       color,
     } = action;
-    const val = 1 + (counts.get(identifier) ?? 0);
-    counts.set(identifier, val);
-    colors.set(identifier, color ?? null);
+
+    // If the backend maps an action to UNDEFINED but the action has a raw status,
+    // show that raw status as a separate neutral slice instead of "no status".
+    const isCustomStatus = identifier === ActionStatusSummaryIdentifier.Undefined && status != null;
+
+    const bucketKey = isCustomStatus ? `${CUSTOM_STATUS_PREFIX}${status.identifier}` : identifier;
+
+    counts.set(bucketKey, 1 + (counts.get(bucketKey) ?? 0));
+
+    if (isCustomStatus) {
+      const customColor = status.color ?? color ?? null;
+
+      colors.set(bucketKey, customColor);
+      customStatusMeta.set(bucketKey, {
+        name: status.name,
+        color: customColor,
+      });
+    } else {
+      colors.set(bucketKey, color ?? null);
+    }
   }
+
   actionStatusSummaries.forEach(({ identifier, label, color, sentiment }) => {
     const statusCount = counts.get(identifier) ?? 0;
     if (statusCount > 0) {
@@ -153,7 +221,34 @@ const getStatusData = (
     }
     totalCount += statusCount;
   });
-  progress.total = `${Math.round((progress.good / totalCount) * 100)}%`;
+
+  const assignedColors = new Set(progress.colors.filter(Boolean));
+
+  for (const [bucketKey, statusCount] of counts.entries()) {
+    if (!bucketKey.startsWith(CUSTOM_STATUS_PREFIX) || statusCount === 0) {
+      continue;
+    }
+
+    const meta = customStatusMeta.get(bucketKey);
+
+    if (meta == null) {
+      continue;
+    }
+
+    const customColor = getCustomStatusColor(theme, meta.color, assignedColors);
+
+    assignedColors.add(customColor);
+
+    progress.values.push(statusCount);
+    progress.labels.push(meta.name);
+    progress.colors.push(customColor);
+
+    // Custom statuses are neutral: included in total, but not counted as good.
+    totalCount += statusCount;
+  }
+
+  progress.total = totalCount > 0 ? `${Math.round((progress.good / totalCount) * 100)}%` : '0%';
+
   return progress;
 };
 
@@ -267,7 +362,5 @@ const getPhaseData = (
     ongoingAndCompleted,
   } as Progress;
 };
-
-type StatusSummary = Plan['actionStatusSummaries'][0];
 
 export { cleanActionStatus, getPhaseData, getStatusData };
