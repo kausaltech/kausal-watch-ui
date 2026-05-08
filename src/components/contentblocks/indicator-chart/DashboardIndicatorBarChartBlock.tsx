@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
+
 import { BarChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
@@ -8,9 +9,9 @@ import { useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
-import { DashboardIndicatorBarChartBlock as TDashboardIndicatorBarChartBlock } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 
+import type { DashboardBlock } from '../DashboardRowBlock';
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   buildDimSeries,
@@ -22,7 +23,7 @@ import {
 
 echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
 
-type Props = TDashboardIndicatorBarChartBlock;
+type Props = Extract<DashboardBlock, { __typename: 'DashboardIndicatorBarChartBlock' }>;
 
 // FIX: Watch the card width so we can shrink the legend on small screens
 // (e.g. 3 charts per row) and keep more space for the bars—no scroll legend.

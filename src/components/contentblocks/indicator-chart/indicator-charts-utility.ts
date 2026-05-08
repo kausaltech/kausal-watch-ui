@@ -1,5 +1,8 @@
-import { DashboardIndicatorLineChartBlock as TDashboardIndicatorLineChartBlock } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
+
+import type { DashboardBlock } from '../DashboardRowBlock';
+
+type LineChartBlock = Extract<DashboardBlock, { __typename: 'DashboardIndicatorLineChartBlock' }>;
 
 type TFunction = (key: string) => string;
 
@@ -44,7 +47,7 @@ function getTimeKeyForSorting(key: string, timeResolution?: string | null): numb
 }
 
 export function buildDimSeries(
-  chartSeries: TDashboardIndicatorLineChartBlock['chartSeries'],
+  chartSeries: LineChartBlock['chartSeries'],
   palette: string[],
   timeResolution?: string | null
 ) {
@@ -87,7 +90,7 @@ export function buildDimSeries(
 }
 
 export function buildTotalSeries(
-  chartSeries: TDashboardIndicatorLineChartBlock['chartSeries'],
+  chartSeries: LineChartBlock['chartSeries'],
   totalLineColor: string,
   label = 'Total',
   timeResolution?: string | null
@@ -116,7 +119,7 @@ export function buildTotalSeries(
 }
 
 export function buildGoalSeries(
-  indicator: TDashboardIndicatorLineChartBlock['indicator'],
+  indicator: LineChartBlock['indicator'],
   unit: string,
   goalLineColors: string[],
   label = 'Goal',
@@ -140,7 +143,7 @@ export function buildGoalSeries(
 
 export function buildTrendSeries(
   totalRaw: [string, number][],
-  indicator: TDashboardIndicatorLineChartBlock['indicator'],
+  indicator: LineChartBlock['indicator'],
   trendLineColor: string,
   label = 'Trend',
   timeResolution?: string | null

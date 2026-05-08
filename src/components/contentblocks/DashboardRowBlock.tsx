@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 
@@ -81,46 +82,18 @@ const StyledLink = styled(IndicatorLink)`
 
 function getBlockComponent(block: DashboardBlock) {
   switch (block.__typename) {
-    case 'DashboardParagraphBlock': {
-      if ('text' in block) {
-        return block.text ? <div dangerouslySetInnerHTML={{ __html: block.text }} /> : null;
-      }
-      return null;
-    }
-    case 'DashboardIndicatorSummaryBlock': {
-      if ('indicator' in block) {
-        return <DashboardIndicatorSummaryBlockComponent indicator={block.indicator} />;
-      }
-      return null;
-    }
-    case 'DashboardIndicatorPieChartBlock': {
-      const pieBlock = block as Extract<
-        DashboardBlock,
-        { __typename: 'DashboardIndicatorPieChartBlock' }
-      >;
-      return <DashboardIndicatorPieChartBlockComponent {...(pieBlock as any)} />;
-    }
-    case 'DashboardIndicatorLineChartBlock': {
-      const lineBlock = block as Extract<
-        DashboardBlock,
-        { __typename: 'DashboardIndicatorLineChartBlock' }
-      >;
-      return <DashboardIndicatorLineChartBlockComponent {...(lineBlock as any)} />;
-    }
-    case 'DashboardIndicatorBarChartBlock': {
-      const barBlock = block as Extract<
-        DashboardBlock,
-        { __typename: 'DashboardIndicatorBarChartBlock' }
-      >;
-      return <DashboardIndicatorBarChartBlockComponent {...(barBlock as any)} />;
-    }
-    case 'DashboardIndicatorAreaChartBlock': {
-      const areaBlock = block as Extract<
-        DashboardBlock,
-        { __typename: 'DashboardIndicatorAreaChartBlock' }
-      >;
-      return <DashboardIndicatorAreaChartBlockComponent {...(areaBlock as any)} />;
-    }
+    case 'DashboardParagraphBlock':
+      return block.text ? <div dangerouslySetInnerHTML={{ __html: block.text }} /> : null;
+    case 'DashboardIndicatorSummaryBlock':
+      return <DashboardIndicatorSummaryBlockComponent indicator={block.indicator} />;
+    case 'DashboardIndicatorPieChartBlock':
+      return <DashboardIndicatorPieChartBlockComponent {...block} />;
+    case 'DashboardIndicatorLineChartBlock':
+      return <DashboardIndicatorLineChartBlockComponent {...block} />;
+    case 'DashboardIndicatorBarChartBlock':
+      return <DashboardIndicatorBarChartBlockComponent {...block} />;
+    case 'DashboardIndicatorAreaChartBlock':
+      return <DashboardIndicatorAreaChartBlockComponent {...block} />;
     default:
       return null;
   }
