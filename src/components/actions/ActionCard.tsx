@@ -2,6 +2,7 @@ import React, { Suspense, useState } from 'react';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
@@ -330,6 +331,8 @@ function ActionCard({
 
   const { mergedWith, implementationPhase, primaryOrg, scheduleContinuous } = action;
   const status = cleanActionStatus(action, plan.actionStatuses);
+  let fooBar: number = 1;
+  fooBar = 'string';
   let statusText = status.name || null;
 
   // if Action is set in one of the phases, create message accordingly
