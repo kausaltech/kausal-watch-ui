@@ -6,7 +6,7 @@ import { PieChart } from 'echarts/charts';
 import type { PieSeriesOption } from 'echarts/charts';
 import { LegendComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
-import { CallbackDataParams } from 'echarts/types/dist/shared';
+import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 

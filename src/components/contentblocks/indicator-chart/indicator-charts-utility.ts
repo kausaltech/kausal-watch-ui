@@ -53,10 +53,11 @@ export function buildDimSeries(
 ) {
   const dimCategoryMap = new Map<
     string,
-    { color: string; values: { date: string; value: number | null }[] }
+    { color: string; values: { date: string | null; value: number }[] }
   >();
 
-  chartSeries
+  (chartSeries ?? [])
+    .filter((s) => s != null)
     .filter((s) => s.dimensionCategory)
     .forEach((s) => {
       const name = s.dimensionCategory!.name;
@@ -68,7 +69,7 @@ export function buildDimSeries(
         dimCategoryMap.set(name, { color, values: [] });
       }
 
-      dimCategoryMap.get(name)!.values.push(...s.values);
+      dimCategoryMap.get(name)!.values.push(...s.values.filter((v) => v != null));
     });
 
   return Array.from(dimCategoryMap.entries()).map(([name, { color, values }]) => {
@@ -96,10 +97,12 @@ export function buildTotalSeries(
   timeResolution?: string | null
 ) {
   const totalMap = new Map<string, number>();
-  chartSeries
+  (chartSeries ?? [])
+    .filter((s) => s != null)
     .find((s) => !s.dimensionCategory)
-    ?.values.forEach((v) => {
-      if (v.value != null && v.date) {
+    ?.values.filter((v) => v != null)
+    .forEach((v) => {
+      if (v.date) {
         const key = formatDateKey(v.date, timeResolution);
         totalMap.set(key, (totalMap.get(key) || 0) + v.value);
       }
@@ -126,18 +129,20 @@ export function buildGoalSeries(
   timeResolution?: string | null
 ) {
   return (
-    indicator?.goals?.map((g) => {
-      const key = formatDateKey(g.date, timeResolution);
-      return {
-        name: label,
-        type: 'scatter' as const,
-        symbol: X_SYMBOL,
-        symbolSize: 10,
-        data: [[key, g.value]],
-        itemStyle: { color: goalLineColors?.[0] ?? '#3E9C88' },
-        tooltip: { formatter: `Goal: ${g.value} ${unit}` },
-      };
-    }) || []
+    indicator?.goals
+      ?.filter((g) => g?.date != null)
+      .map((g) => {
+        const key = formatDateKey(g!.date!, timeResolution);
+        return {
+          name: label,
+          type: 'scatter' as const,
+          symbol: X_SYMBOL,
+          symbolSize: 10,
+          data: [[key, g!.value]],
+          itemStyle: { color: goalLineColors?.[0] ?? '#3E9C88' },
+          tooltip: { formatter: `Goal: ${g!.value} ${unit}` },
+        };
+      }) ?? []
   );
 }
 
@@ -152,13 +157,15 @@ export function buildTrendSeries(
   const predictedTimes = regData.map(([key]) => getTimeKeyForSorting(key, timeResolution));
 
   if (indicator?.goals?.length) {
-    const highestGoalTime = Math.max(
-      ...indicator.goals.map((g) =>
-        getTimeKeyForSorting(formatDateKey(g.date, timeResolution), timeResolution)
-      )
-    );
-    if (highestGoalTime > predictedTimes[predictedTimes.length - 1]) {
-      predictedTimes.push(highestGoalTime);
+    const goalTimes = indicator.goals
+      .map((g) => g?.date)
+      .filter((d) => d != null)
+      .map((d) => getTimeKeyForSorting(formatDateKey(d, timeResolution), timeResolution));
+    if (goalTimes.length) {
+      const highestGoalTime = Math.max(...goalTimes);
+      if (highestGoalTime > predictedTimes[predictedTimes.length - 1]) {
+        predictedTimes.push(highestGoalTime);
+      }
     }
   }
 

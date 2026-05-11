@@ -14,6 +14,7 @@ import useNumberFormatter from '@/common/numbers';
 import type { DashboardBlock } from '../DashboardRowBlock';
 import { getDefaultColors } from './indicator-chart-colors';
 import {
+  type GraphsTheme,
   buildDimSeries,
   buildTooltipFormatter,
   buildTotalSeries,
@@ -55,7 +56,7 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
   const formatAxisValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
-  const graphsTheme = theme.settings?.graphs ?? {};
+  const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
   const unit = indicator?.unit?.name ?? '';
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const timeResolution = indicator?.timeResolution ?? 'YEAR';
@@ -98,7 +99,7 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
     type: 'bar' as const,
     stack: barType === 'stacked' ? 'total' : undefined,
     data,
-    emphasis: { focus: 'series' },
+    emphasis: { focus: 'series' as const },
     itemStyle: {
       color: dimSeries.find((d) => d.name === name)?.color,
     },
@@ -129,7 +130,14 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'shadow' },
-      formatter: buildTooltipFormatter(unit, legendData, t, formatValue, dimension, timeResolution),
+      formatter: buildTooltipFormatter(
+        unit,
+        legendData,
+        t,
+        formatValue,
+        dimension ?? undefined,
+        timeResolution
+      ),
     },
     grid: {
       left: 20,
@@ -146,7 +154,7 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
     yAxis: buildYAxisConfig(
       indicator?.unit?.name ?? '',
       formatAxisValue,
-      indicator,
+      indicator ?? undefined,
       theme.textColor.primary
     ),
     series,

@@ -65,7 +65,7 @@ const DashboardIndicatorLineChartBlock = ({
   );
   const totalRaw = totalDef.raw;
 
-  const goalDates = indicator?.goals?.map((g) => g.date) ?? [];
+  const goalDates = indicator?.goals?.map((g) => g?.date).filter((d) => d != null) ?? [];
   const { xCategories } = collectAllDates(
     [...dimSeries.map((d) => d.raw), totalRaw],
     timeResolution,
@@ -117,7 +117,7 @@ const DashboardIndicatorLineChartBlock = ({
     ...(trendSeries.length ? [trendLabel] : []),
   ];
 
-  const option: ECOption = {
+  const option = {
     legend: {
       show: true,
       data: legendData,
@@ -129,7 +129,14 @@ const DashboardIndicatorLineChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'line' },
-      formatter: buildTooltipFormatter(unit, legendData, t, formatValue, dimension, timeResolution),
+      formatter: buildTooltipFormatter(
+        unit,
+        legendData,
+        t,
+        formatValue,
+        dimension ?? undefined,
+        timeResolution
+      ),
     },
     grid: {
       left: 20,
@@ -147,7 +154,7 @@ const DashboardIndicatorLineChartBlock = ({
     yAxis: buildYAxisConfig(
       indicator?.unit?.name ?? '',
       formatAxisValue,
-      indicator,
+      indicator ?? undefined,
       theme.textColor.primary
     ),
     series: [...seriesLines, ...seriesTotal, ...goalSeries, ...trendSeries],
