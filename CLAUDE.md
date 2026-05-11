@@ -16,6 +16,12 @@ This file provides guidance to LLM agents when working with this codebase.
 - Embeddable widgets for external portals
 - Data export to CSV/Excel
 
+## Docs Index
+
+Detailed docs live in docs/. Read the relevant one before making changes in that area.
+
+- docs/types.md - Conventions for type annotations
+
 ## Tech Stack
 
 - **Framework:** Next.js 15 with App Router, React 19
