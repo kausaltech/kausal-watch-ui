@@ -284,7 +284,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           emphasis: {
             scale: true,
             scaleSize: 4,
-            focus: 'self',
+            focus: 'self' as const,
             itemStyle: {
               shadowBlur: 14,
               shadowOffsetY: 4,
@@ -308,19 +308,27 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
       graphic: currentValue
         ? [
             {
-              type: 'text',
-              left: 'center',
-              top: 'middle',
+              type: 'group' as const,
+              left: '50%',
+              top: '50%',
+              bounding: 'raw' as const,
               silent: true,
-              style: {
-                text: String(currentValue),
-                textAlign: 'center' as const,
-                textVerticalAlign: 'middle' as const,
-                fill: theme.themeColors.dark,
-                fontSize: 16,
-                fontWeight: 400,
-                fontFamily,
-              },
+              children: [
+                {
+                  type: 'text' as const,
+                  x: 0,
+                  y: -1,
+                  style: {
+                    text: String(currentValue),
+                    textAlign: 'center' as const,
+                    textVerticalAlign: 'middle' as const,
+                    fill: theme.themeColors.dark,
+                    fontSize: 16,
+                    fontWeight: 400,
+                    fontFamily,
+                  },
+                },
+              ],
             },
           ]
         : [],
@@ -336,8 +344,10 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
     ]
   );
 
-  const modalOption = useMemo(
-    () => ({
+  const modalOption = useMemo(() => {
+    const modalDonutCenter = ['50%', '40%'] as const;
+
+    return {
       ...baseOption,
       legend: {
         show: true,
@@ -358,7 +368,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         {
           ...baseOption.series[0],
           radius: ['34%', '64%'],
-          center: ['50%', '40%'],
+          center: modalDonutCenter,
           label: {
             show: true,
             position: 'inside' as const,
@@ -383,25 +393,32 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
       graphic: currentValue
         ? [
             {
-              type: 'text' as const,
-              left: 'center',
-              top: '40%',
+              type: 'group' as const,
+              left: modalDonutCenter[0],
+              top: modalDonutCenter[1],
+              bounding: 'raw' as const,
               silent: true,
-              style: {
-                text: String(currentValue),
-                textAlign: 'center' as const,
-                textVerticalAlign: 'middle' as const,
-                fill: theme.themeColors.dark,
-                fontSize: 16,
-                fontWeight: 400,
-                fontFamily,
-              },
+              children: [
+                {
+                  type: 'text' as const,
+                  x: 0,
+                  y: -1,
+                  style: {
+                    text: String(currentValue),
+                    textAlign: 'center' as const,
+                    textVerticalAlign: 'middle' as const,
+                    fill: theme.themeColors.dark,
+                    fontSize: 16,
+                    fontWeight: 400,
+                    fontFamily,
+                  },
+                },
+              ],
             },
           ]
         : [],
-    }),
-    [baseOption, currentValue, fontFamily, theme.themeColors.dark, total]
-  );
+    };
+  }, [baseOption, currentValue, fontFamily, theme.themeColors.dark, total]);
 
   return (
     <>
