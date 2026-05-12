@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import { usePaths } from '@/context/paths/paths';
@@ -53,7 +54,7 @@ function ResponsibleList(props: ResponsibleListProps) {
       <h3>{heading || t('responsible-parties', { context: organizationTerm })}</h3>
       <ResponsiblesList>
         {responsibleParties.map((item) => (
-          <ResponsibleItem>
+          <ResponsibleItem key={item.id}>
             <OrganizationChip
               key={item.id}
               organization={item.organization}
