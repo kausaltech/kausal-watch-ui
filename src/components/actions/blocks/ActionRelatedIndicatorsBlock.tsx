@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor, shade } from 'polished';
 import { Badge as BaseBadge, Card as BaseCard, CardBody, CardFooter, Col, Row } from 'reactstrap';
@@ -95,8 +96,8 @@ function ActionIndicator(props: ActionIndicatorProps) {
       {actions.length > 0 && (
         <CardFooter>
           <IndicatorActionsList title={t('indicator-also-for-actions')}>
-            {actions.map((action) => (
-              <IndicatorActionListItem key={action.identifier}>
+            {actions.map((action, i) => (
+              <IndicatorActionListItem key={`${action.identifier}-${i}`}>
                 <ActionLink action={action} className="me-2">
                   <Badge>
                     {!plan.hideActionIdentifiers && `${action.identifier}. `}
