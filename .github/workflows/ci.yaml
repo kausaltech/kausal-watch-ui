@@ -25,6 +25,7 @@ jobs:
             generateThemeSymlinks(path.join(process.cwd(), 'public', 'static', 'themes'), {verbose: false});
           "
       - run: pnpm test
+      - run: pnpm typecheck:baseline
 
   build:
     uses: kausaltech/github-actions/.github/workflows/build.yaml@main
