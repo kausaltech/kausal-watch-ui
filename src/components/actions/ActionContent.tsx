@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { captureMessage } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -356,8 +357,8 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
     const types = new Map(
       blocks.map((block) => {
         const { attributeType } = block as ActionContentAttributeTypeBlock;
-        attributeType.meta = block.meta;
-        return [attributeType!.id, attributeType!];
+        (attributeType as Record<string, unknown>).meta = (block as Record<string, unknown>).meta;
+        return [attributeType.id, attributeType];
       })
     );
 

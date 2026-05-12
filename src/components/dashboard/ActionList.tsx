@@ -471,7 +471,10 @@ const ActionList = (props: ActionListProps) => {
     ? plan.primaryActionClassification?.common
     : plan.primaryActionClassification;
 
-  const primaryCatType = cts.find((ct) => ct.id == primaryActionClassification?.id);
+  const primaryCatType =
+    primaryActionClassification && 'id' in primaryActionClassification
+      ? cts.find((ct) => ct.id == primaryActionClassification?.id)
+      : undefined;
 
   const filterSections: ActionListFilterSection[] = useMemo(() => {
     const opts = {
@@ -701,7 +704,11 @@ function ActionListLoader(props: StatusboardProps) {
   return (
     <ActionList
       title={title}
-      columns={planPage?.__typename === 'ActionListPage' ? (planPage.dashboardColumns ?? []) : []}
+      columns={
+        planPage?.__typename === 'ActionListPage'
+          ? ((planPage.dashboardColumns as ColumnConfig[]) ?? [])
+          : []
+      }
       leadContent={leadContent}
       defaultView={defaultView}
       headingHierarchyDepth={headingHierarchyDepth}

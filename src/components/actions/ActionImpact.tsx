@@ -1,11 +1,12 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
-import PropTypes from 'prop-types';
+
+import { transientOptions } from '@common/themes/styles/styled';
 
 import Icon from '../common/Icon';
 
-const ImpactIcon = styled(Icon)`
+const ImpactIcon = styled(Icon, transientOptions)<{ $size: string }>`
   font-size: ${(props) => {
     switch (props.$size) {
       case 'sm':
@@ -30,8 +31,15 @@ const ImpactIcon = styled(Icon)`
   }
 `;
 
-function ActionImpact({ identifier, name, max = 4, size = 'md' }) {
-  const bullets = [];
+interface Props {
+  identifier: string;
+  name: string;
+  max?: number;
+  size?: string;
+}
+
+function ActionImpact({ identifier, name, max = 4, size = 'md' }: Props) {
+  const bullets: { type: string; key: string }[] = [];
   const num = Number(identifier);
 
   if (num < 0) {
@@ -67,12 +75,5 @@ function ActionImpact({ identifier, name, max = 4, size = 'md' }) {
     </div>
   );
 }
-
-ActionImpact.propTypes = {
-  identifier: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  max: PropTypes.number,
-  size: PropTypes.string,
-};
 
 export default ActionImpact;

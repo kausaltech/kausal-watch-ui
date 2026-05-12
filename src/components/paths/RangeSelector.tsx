@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { Range, getTrackBackground } from 'react-range';
 import { ButtonToggle } from 'reactstrap';
@@ -186,7 +187,7 @@ const RangeSelector = (props: RangeSelectorProps) => {
                 }}
                 color={theme.brandDark}
               >
-                <Icon name="caretLeft" color="#eee" />
+                <Icon name="caret-left" color="#eee" />
               </Thumb>
             )}
           />
@@ -245,9 +246,9 @@ const RangeSelector = (props: RangeSelectorProps) => {
                 color={theme.brandDark}
               >
                 {index === 0 ? (
-                  <Icon name="caretRight" color={theme.graphColors.grey000} />
+                  <Icon name="caret-right" color={theme.graphColors.grey000} />
                 ) : (
-                  <Icon name="caretLeft" color={theme.graphColors.grey000} />
+                  <Icon name="caret-left" color={theme.graphColors.grey000} />
                 )}
               </Thumb>
             )}

@@ -31,7 +31,7 @@ import ResponsiblePartiesCell from './cells/ResponsiblePartiesCell';
 import StatusCell from './cells/StatusCell';
 import TasksStatusCell from './cells/TasksStatusCell';
 import UpdatedAtCell from './cells/UpdatedAtCell';
-import type { ActionListAction, ColumnBlock } from './dashboard.types';
+import type { ActionListAction, ActionListPlan, ColumnBlock } from './dashboard.types';
 
 const getPlanUrl = (
   mergedWith: ActionListAction['mergedWith'],
@@ -112,14 +112,19 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     renderHeader: (t, _, label) => label || t('action-implementation-phase'),
     renderCell: (_, action, plan) => {
       const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
-      return <ImplementationPhaseCell action={action} plan={fromOtherPlan ? action.plan : plan} />;
+      return (
+        <ImplementationPhaseCell
+          action={action}
+          plan={(fromOtherPlan ? action.plan : plan) as PlanContextFragment}
+        />
+      );
     },
     renderTooltipContent: (_, action, plan) => {
       const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
       return (
         <ImplementationPhaseTooltipContent
           action={action}
-          plan={fromOtherPlan ? action.plan : plan}
+          plan={(fromOtherPlan ? action.plan : plan) as ActionListPlan}
         />
       );
     },
@@ -130,7 +135,12 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     renderCell: (_, action, plan) => <TasksStatusCell action={action} plan={plan} />,
     renderTooltipContent: (_, action, plan) => {
       const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
-      return <TasksTooltipContent action={action} plan={fromOtherPlan ? action.plan : plan} />;
+      return (
+        <TasksTooltipContent
+          action={action}
+          plan={(fromOtherPlan ? action.plan : plan) as ActionListPlan}
+        />
+      );
     },
   },
 
@@ -142,7 +152,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
       return (
         <ResponsiblePartiesTooltipContent
           action={action}
-          plan={fromOtherPlan ? action.plan : plan}
+          plan={(fromOtherPlan ? action.plan : plan) as ActionListPlan}
         />
       );
     },

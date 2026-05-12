@@ -1,4 +1,4 @@
-import type { ApolloQueryResult } from '@apollo/client';
+import type { ApolloClient } from '@apollo/client';
 
 type FailedRequest = {
   error: Error;
@@ -10,8 +10,8 @@ type FailedRequest = {
  * which conform with Apollo query response.
  */
 export async function tryRequest<T>(
-  request: Promise<ApolloQueryResult<T>>
-): Promise<ApolloQueryResult<T> | FailedRequest> {
+  request: Promise<ApolloClient.QueryResult<T>>
+): Promise<ApolloClient.QueryResult<T> | FailedRequest> {
   try {
     const response = await request;
 

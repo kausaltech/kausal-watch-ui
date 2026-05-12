@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -14,6 +14,7 @@ import { getActionTermContext } from '@/common/i18n';
 import { OrganizationLink } from '@/common/links';
 import RichText from '@/components/common/RichText';
 import ActionStatusTable from '@/components/dashboard/ActionStatusTable';
+import type { ColumnConfig } from '@/components/dashboard/dashboard.types';
 import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';
 
@@ -235,7 +236,7 @@ function OrgContent({ org, planFromOrgQuery, testId }: Props) {
             <ActionStatusTable
               columns={
                 planFromOrgQuery.actionListPage?.__typename === 'ActionListPage'
-                  ? (planFromOrgQuery.actionListPage.dashboardColumns ?? [])
+                  ? ((planFromOrgQuery.actionListPage.dashboardColumns ?? []) as ColumnConfig[])
                   : []
               }
               enableExport={false}

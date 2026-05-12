@@ -174,8 +174,9 @@ export const ResponsiblePartiesTooltipContent = ({ action, plan }: TooltipWithPl
 
   const parties = action.responsibleParties ?? [];
 
-  const getResponsiblePartyLabel = (party: (typeof parties)[number]) =>
-    party.organization?.abbreviation || party.organization?.name;
+  const getResponsiblePartyLabel = (party: {
+    organization: { abbreviation: string | null; name: string } | null;
+  }) => party.organization?.abbreviation || party.organization?.name;
 
   if (parties.length < 1)
     return (

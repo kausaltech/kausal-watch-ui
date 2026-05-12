@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { Button, Table } from 'reactstrap';
 
@@ -127,7 +128,7 @@ const SortableTableHeader = ({
   className,
 }: SortableTableHeaderProps) => {
   const selected = isSameSortKey(sort.key, headerKey);
-  const iconName = selected ? ((sort.direction ?? 1) === 1 ? 'sortDown' : 'sortUp') : 'sort';
+  const iconName = selected ? ((sort.direction ?? 1) === 1 ? 'sort-down' : 'sort-up') : 'sort';
 
   return (
     <StyledTableHeader
@@ -323,7 +324,7 @@ const ActionStatusTable = (props: Props) => {
                   column.attributeType.format.toUpperCase().includes('NUMERIC');
                 const headerKey: Sort['key'] = isNumericFieldColumn
                   ? new AttributeType(column.attributeType!.id)
-                  : columnConfig.headerKey;
+                  : (columnConfig.headerKey ?? null);
                 // apply sorting only for numeric custom fields
                 const isSortable =
                   isNumericFieldColumn || (columnConfig.sortable && columnConfig.headerKey);

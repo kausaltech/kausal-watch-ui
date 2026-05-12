@@ -113,11 +113,13 @@ function isActionGroupActive(actions: ActionCardFragment[], activeActionId?: str
 type Action = NonNullable<GetActionDetailsQuery['action']>;
 
 export function mapActionToDependencyGroups(
-  action: Action | ActionCardFragment,
+  action: Action | ActionCardFragment | null,
   actionDependencyRoles: NonNullable<GetPlanContextQuery['plan']>['actionDependencyRoles'],
   getFullAction?: (id: string) => Action
 ): ActionGroup[] {
   if (
+    !action ||
+    !('dependencyRole' in action) ||
     !action.dependencyRole ||
     !action.allDependencyRelationships?.length ||
     !actionDependencyRoles?.length
@@ -239,7 +241,7 @@ export function ActionDependenciesBlock({
     );
 
   const actionGroups = mapActionToDependencyGroups(
-    skipFetchingDependencies ? action : data.action,
+    skipFetchingDependencies ? action : ((data?.action ?? null) as Action),
     plan.actionDependencyRoles,
     getFullAction
   );

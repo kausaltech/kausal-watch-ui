@@ -1,5 +1,3 @@
-import { headers } from 'next/headers';
-
 import { ApolloClient, InMemoryCache, from, gql } from '@apollo/client';
 import type { MetadataRoute } from 'next';
 
@@ -92,17 +90,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   );
 
-  if (plansError || !plansData?.plansForHostname?.length) {
+  const plansForHostname = plansData?.plansForHostname;
+
+  if (plansError || !plansForHostname?.length) {
     return [];
   }
 
-  const planId = getDefaultPlanId(plansData.plansForHostname);
+  const planId = getDefaultPlanId(plansForHostname);
 
   if (!planId) {
     return [];
   }
 
-  const { data, error } = await tryRequest(
+  const { data, error } = await tryRequest<GetSitemapQuery>(
     apolloClient.query<GetSitemapQuery, GetSitemapQueryVariables>({
       query: GET_SITEMAP_CONTENTS,
       variables: { id: planId },

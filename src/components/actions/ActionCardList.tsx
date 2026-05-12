@@ -2,6 +2,7 @@ import React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
@@ -104,8 +105,8 @@ function groupActions<T extends ActionListAction | ActionCardFragment>(
         crumb: categoryCrumb || null,
         displayIdentifier: `${identifier && !hideCategoryIdentifiers ? identifier : ''}`,
         // if cat=plan prefer shortName
-        name: ('shortName' in cat && cat.shortName) || cat.name,
-        identifier: ('identifier' in cat && cat.identifier) || cat.name,
+        name: ('shortName' in cat && cat.shortName) || ('name' in cat ? cat.name : ''),
+        identifier: ('identifier' in cat && cat.identifier) || ('name' in cat ? cat.name : ''),
         order: ('order' in cat && cat.order) || 0,
         elements: [],
       };
@@ -186,7 +187,7 @@ function ActionCardList<ActionT extends ActionListAction | ActionCardFragment>({
                   style={{ transition: 'all 0.5s ease' }}
                 >
                   <ActionCard
-                    action={item}
+                    action={item as ActionCardFragment}
                     showPlan={includeRelatedPlans}
                     size="xs"
                     getFullAction={getFullAction}
