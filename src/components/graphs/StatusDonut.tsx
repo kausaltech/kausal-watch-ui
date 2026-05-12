@@ -118,6 +118,24 @@ type DonutChartItem = {
   itemStyle: {
     color: string;
   };
+  label?: {
+    show: boolean;
+    position: 'inside' | 'outside';
+    formatter: string;
+    fontSize: number;
+    fontWeight: number;
+    fontFamily?: string;
+    color?: string;
+  };
+  labelLine?: {
+    show: boolean;
+    length?: number;
+    length2?: number;
+    lineStyle?: {
+      color?: string;
+      width?: number;
+    };
+  };
   hoverText?: string;
   text?: string;
 };
@@ -130,6 +148,7 @@ type FormatterParams = {
 };
 
 const FALLBACK_COLORS = ['#0f4c63', '#1f77b4', '#ff7f0e', '#2ca02c', '#d9d9d9'];
+const SMALL_SLICE_THRESHOLD = 3;
 
 const getNumberValue = (value: number | string | null | undefined) => {
   const numberValue = Number(value);
@@ -139,6 +158,12 @@ const getNumberValue = (value: number | string | null | undefined) => {
 
 const isValidColor = (color: string | null | undefined) =>
   typeof color === 'string' && color.trim().length > 0;
+
+const getSlicePercent = (value: number, total: number) => {
+  if (!total) return 0;
+
+  return (value / total) * 100;
+};
 
 const formatPercent = (value: number, total: number) => {
   if (!total) return '0%';
@@ -212,6 +237,38 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
   const total = useMemo(() => chartData.reduce((sum, item) => sum + item.value, 0), [chartData]);
 
   const fontFamily = `${theme.fontFamilyTiny}, ${theme.fontFamilyFallback}`;
+
+  const modalChartData = useMemo<DonutChartItem[]>(
+    () =>
+      chartData.map((item) => {
+        const percent = getSlicePercent(item.value, total);
+        const text = item.text ?? formatPrecisePercent(item.value, total);
+        const isSmallSlice = percent > 0 && percent < SMALL_SLICE_THRESHOLD;
+
+        return {
+          ...item,
+          label: {
+            show: item.value > 0,
+            position: isSmallSlice ? 'outside' : 'inside',
+            formatter: text,
+            fontSize: 11,
+            fontWeight: 700,
+            fontFamily,
+            color: isSmallSlice ? theme.themeColors.dark : undefined,
+          },
+          labelLine: {
+            show: isSmallSlice,
+            length: 10,
+            length2: 6,
+            lineStyle: {
+              color: theme.themeColors.dark,
+              width: 1,
+            },
+          },
+        };
+      }),
+    [chartData, fontFamily, theme.themeColors.dark, total]
+  );
 
   const baseOption = useMemo(
     () => ({
@@ -367,7 +424,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
             show: true,
             type: 'png',
             name: getDownloadFilename(header),
-            title: t('download-plot-as-png'),
+            title: t('download-chart-as-png'),
             pixelRatio: 2,
             backgroundColor: theme.themeColors.white ?? '#ffffff',
           },
@@ -391,26 +448,19 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
       series: [
         {
           ...baseOption.series[0],
+          data: modalChartData,
           radius: ['34%', '64%'],
           center: modalDonutCenter,
+          avoidLabelOverlap: true,
+          labelLayout: {
+            hideOverlap: false,
+          },
           label: {
             show: true,
-            position: 'inside' as const,
-            formatter: (params: FormatterParams) => {
-              const item = params.data;
-
-              if (item.text) {
-                return item.text;
-              }
-
-              return formatPrecisePercent(Number(params.value), total);
-            },
-            fontSize: 11,
-            fontWeight: 700,
             fontFamily,
           },
           labelLine: {
-            show: false,
+            show: true,
           },
         },
       ],
@@ -447,10 +497,10 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
     currentValue,
     fontFamily,
     header,
+    modalChartData,
     t,
     theme.themeColors.dark,
     theme.themeColors.white,
-    total,
   ]);
 
   return (
