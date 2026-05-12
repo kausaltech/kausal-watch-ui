@@ -71,5 +71,6 @@
     "feedback-on-category-description": "Puede dejar un comentario o sugerencia sobre esta categoría",
     "logo": "Logotipo",
     "n-more-actions": "Más {count} {context, select, CASE_STUDY {{count, plural, =1 {estudio de caso} other {estudios de caso}}} STRATEGY {{count, plural, =1 {estrategia} other {estrategias}}} other {{count, plural, =1 {acción} other {acciones}}}}",
-    "pdf-export-failed": "La exportación de PDF falló"
+    "pdf-export-failed": "La exportación de PDF falló",
+    "download-chart-as-png": "Descargar gráfico como PNG"
 }

@@ -19,5 +19,6 @@
     "actions-continuous": "Kontinuierliche Massnahmen",
     "actions-non-continuous": "Nicht kontinuierliche Massnahmen",
     "filter-action-type": "Art der Massnahmen",
-    "see-all-actions": "Alle Massnahmen"
+    "see-all-actions": "Alle Massnahmen",
+    "download-chart-as-png": "Diagramm als PNG herunterladen"
 }
