@@ -2,6 +2,7 @@ import React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import * as Sentry from '@sentry/nextjs';
 import { Col, type ColProps, Container, Row } from 'reactstrap';
 
@@ -133,7 +134,8 @@ export default function CategoryPageStreamField({
        * CategoryPageProgressBlock contains a single dropdown allowing allows the editor to
        * specify whether to visualise action progress by implementation phase or status.
        */
-      const progressBasis = block.blocks[0]?.value || ProgressBasis.PHASE;
+      const progressBasis =
+        'value' in block.blocks[0] ? (block.blocks[0].value as ProgressBasis) : ProgressBasis.PHASE;
 
       return (
         <Wrapper withContainer={context === 'main'}>

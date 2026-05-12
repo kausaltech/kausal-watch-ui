@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import { transientOptions } from '@common/themes/styles/styled';
@@ -145,7 +146,7 @@ const IndicatorTableHeader = (props: IndicatorTableHeaderProps) => {
   const isSortable = sortKey !== null;
 
   const selected = !!(sortKey && sort?.key === sortKey);
-  const iconName = selected ? (sort?.direction === 'asc' ? 'sortDown' : 'sortUp') : 'sort';
+  const iconName = selected ? (sort?.direction === 'asc' ? 'sort-down' : 'sort-up') : 'sort';
 
   const Th = isSortable ? SortableTh : StyledTh;
 
