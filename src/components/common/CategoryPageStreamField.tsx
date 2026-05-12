@@ -130,12 +130,16 @@ export default function CategoryPageStreamField({
         return null;
       }
 
+      const firstBlock = block.blocks[0];
+
       /**
        * CategoryPageProgressBlock contains a single dropdown allowing allows the editor to
        * specify whether to visualise action progress by implementation phase or status.
        */
       const progressBasis =
-        'value' in block.blocks[0] ? (block.blocks[0].value as ProgressBasis) : ProgressBasis.PHASE;
+        firstBlock && 'value' in block.blocks[0]
+          ? (block.blocks[0].value as ProgressBasis)
+          : ProgressBasis.PHASE;
 
       return (
         <Wrapper withContainer={context === 'main'}>
