@@ -1,6 +1,9 @@
 'use client';
 
+import { Fragment } from 'react';
+
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import { Table } from 'reactstrap';
@@ -186,8 +189,8 @@ export default function PlanDatasetsBlock(props: PlanDatasetsBlockProps) {
         </thead>
         <tbody>
           {tableData.map((table, tableIndex) => (
-            <>
-              <SubheaderRow key={tableIndex}>
+            <Fragment key={tableIndex}>
+              <SubheaderRow>
                 <th colSpan={headers.length}>
                   <h4>{table.label}</h4>
                 </th>
@@ -206,7 +209,7 @@ export default function PlanDatasetsBlock(props: PlanDatasetsBlockProps) {
                   <td key={totalIndex}>{formatNumber(total)}</td>
                 ))}
               </TotalsRow>
-            </>
+            </Fragment>
           ))}
         </tbody>
       </StyledTable>
