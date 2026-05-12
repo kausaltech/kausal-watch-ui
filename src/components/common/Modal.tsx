@@ -1,6 +1,7 @@
 import React, { type ReactNode, useEffect, useRef } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import Icon from '@/components/common/Icon';
@@ -13,6 +14,8 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  padding: 1rem;
+  box-sizing: border-box;
 `;
 
 const ModalBody = styled.div`
@@ -21,9 +24,15 @@ const ModalBody = styled.div`
   border-radius: 10px;
   width: auto;
   height: auto;
-  max-width: 100%;
-  max-height: 100%;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100vh - 2rem);
   padding: 30px;
+  overflow: auto;
+  box-sizing: border-box;
+
+  @media (max-width: 480px) {
+    padding: 24px 16px;
+  }
 `;
 
 const CloseButton = styled.button`

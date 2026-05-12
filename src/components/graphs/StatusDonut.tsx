@@ -48,15 +48,17 @@ const ChartWrapper = styled.div`
   }
 `;
 
+const MODAL_CHART_SIZE = 'min(350px, calc(100vw - 4rem))';
+
 const ModalChartWrapper = styled.div`
-  width: 480px;
-  height: 320px;
+  width: ${MODAL_CHART_SIZE};
+  height: ${MODAL_CHART_SIZE};
   max-width: 100%;
   margin: 0 auto;
 
   > div {
     width: 100% !important;
-    height: 320px !important;
+    height: 100% !important;
   }
 `;
 
@@ -223,25 +225,35 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         fontFamily,
       },
       tooltip: {
-        trigger: 'item',
+        trigger: 'item' as const,
         appendToBody: true,
         borderWidth: 0,
         padding: [8, 10],
+        backgroundColor: theme.themeColors.white,
         textStyle: {
           fontFamily,
           fontSize: 12,
+          color: theme.themeColors.dark,
         },
+        extraCssText: 'box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16); border-radius: 6px;',
         formatter: (params: FormatterParams) => {
           const item = params.data;
+          const color = item.itemStyle.color;
 
           if (item.hoverText) {
-            return item.hoverText;
+            return `
+              <div style="border-left: 4px solid ${color}; padding-left: 8px;">
+                ${item.hoverText}
+              </div>
+            `;
           }
 
           return `
-            <strong>${params.name}</strong><br />
-            ${params.value}<br />
-            ${formatPercent(Number(params.value), total)}
+            <div style="border-left: 4px solid ${color}; padding-left: 8px;">
+              <strong>${params.name}</strong><br />
+              ${params.value}<br />
+              ${formatPercent(Number(params.value), total)}
+            </div>
           `;
         },
       },
@@ -329,27 +341,27 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
       ...baseOption,
       legend: {
         show: true,
-        orient: 'vertical',
-        right: 16,
-        top: 'middle',
-        icon: 'rect',
-        itemWidth: 14,
-        itemHeight: 14,
+        orient: 'vertical' as const,
+        left: 'center',
+        bottom: 0,
+        icon: 'circle',
+        itemWidth: 9,
+        itemHeight: 9,
         itemGap: 8,
         textStyle: {
           fontFamily,
-          fontSize: 13,
+          fontSize: 12,
           color: theme.themeColors.dark,
         },
       },
       series: [
         {
           ...baseOption.series[0],
-          radius: ['34%', '62%'],
-          center: ['34%', '54%'],
+          radius: ['34%', '64%'],
+          center: ['50%', '40%'],
           label: {
             show: true,
-            position: 'inside',
+            position: 'inside' as const,
             formatter: (params: FormatterParams) => {
               const item = params.data;
 
@@ -371,9 +383,9 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
       graphic: currentValue
         ? [
             {
-              type: 'text',
-              left: '34%',
-              top: '54%',
+              type: 'text' as const,
+              left: 'center',
+              top: '40%',
               silent: true,
               style: {
                 text: String(currentValue),
@@ -426,7 +438,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           <Chart
             isLoading={false}
             data={modalOption}
-            height="320px"
+            height={MODAL_CHART_SIZE}
             renderer="svg"
             withResizeLegend={false}
             locale={locale}
