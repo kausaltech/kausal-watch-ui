@@ -51,6 +51,7 @@ const ChartWrapper = styled.div`
 const MODAL_CHART_SIZE = 'min(350px, calc(100vw - 4rem))';
 
 const ModalChartWrapper = styled.div`
+  position: relative;
   width: ${MODAL_CHART_SIZE};
   height: ${MODAL_CHART_SIZE};
   max-width: 100%;
@@ -153,6 +154,13 @@ const formatPrecisePercent = (value: number, total: number) => {
 
   return Number.isInteger(roundedPercent) ? `${roundedPercent}%` : `${roundedPercent}%`;
 };
+
+const getDownloadFilename = (header: string) =>
+  header
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\p{L}\p{N}-]+/gu, '') || 'status-donut';
 
 const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDonutProps) => {
   const theme = useTheme();
@@ -349,6 +357,22 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
 
     return {
       ...baseOption,
+      toolbox: {
+        show: true,
+        right: 0,
+        top: 0,
+        itemSize: 18,
+        feature: {
+          saveAsImage: {
+            show: true,
+            type: 'png',
+            name: getDownloadFilename(header),
+            title: t('download-plot-as-png'),
+            pixelRatio: 2,
+            backgroundColor: theme.themeColors.white ?? '#ffffff',
+          },
+        },
+      },
       legend: {
         show: true,
         orient: 'vertical' as const,
@@ -418,7 +442,16 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           ]
         : [],
     };
-  }, [baseOption, currentValue, fontFamily, theme.themeColors.dark, total]);
+  }, [
+    baseOption,
+    currentValue,
+    fontFamily,
+    header,
+    t,
+    theme.themeColors.dark,
+    theme.themeColors.white,
+    total,
+  ]);
 
   return (
     <>
@@ -456,7 +489,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
             isLoading={false}
             data={modalOption}
             height={MODAL_CHART_SIZE}
-            renderer="svg"
+            renderer="canvas"
             withResizeLegend={false}
             locale={locale}
           />

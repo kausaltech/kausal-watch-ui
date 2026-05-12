@@ -71,5 +71,6 @@
     "see-all-actions": "All actions",
     "download": "Download",
     "download-page-as-pdf": "Page as PDF",
-    "pdf-export-failed": "PDF export failed"
+    "pdf-export-failed": "PDF export failed",
+    "download-plot-as-png": "Download plot as a png"
 }
