@@ -30,7 +30,8 @@ const GraphHeader = styled.h2`
 `;
 
 const HelpText = styled.p`
-  margin-bottom: ${(props) => props.theme.spaces.s200};
+  margin-top: ${(props) => props.theme.spaces.s050};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
   text-align: center;
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
@@ -48,14 +49,15 @@ const ChartWrapper = styled.div`
   }
 `;
 
-const MODAL_CHART_SIZE = 'min(350px, calc(100vw - 4rem))';
+const MODAL_CHART_WIDTH = 'min(350px, calc(100vw - 4rem))';
+const MODAL_CHART_HEIGHT = 'min(430px, calc(100vh - 12rem))';
 
 const ModalChartWrapper = styled.div`
   position: relative;
-  width: ${MODAL_CHART_SIZE};
-  height: ${MODAL_CHART_SIZE};
+  width: ${MODAL_CHART_WIDTH};
+  height: ${MODAL_CHART_HEIGHT};
   max-width: 100%;
-  margin: 0 auto;
+  margin: -0.75rem auto -1rem;
 
   > div {
     width: 100% !important;
@@ -148,7 +150,7 @@ type FormatterParams = {
 };
 
 const FALLBACK_COLORS = ['#0f4c63', '#1f77b4', '#ff7f0e', '#2ca02c', '#d9d9d9'];
-const SMALL_SLICE_THRESHOLD = 3;
+const SMALL_SLICE_THRESHOLD = 6;
 
 const getNumberValue = (value: number | string | null | undefined) => {
   const numberValue = Number(value);
@@ -177,7 +179,7 @@ const formatPrecisePercent = (value: number, total: number) => {
   const percent = (value / total) * 100;
   const roundedPercent = Number(percent.toFixed(2));
 
-  return Number.isInteger(roundedPercent) ? `${roundedPercent}%` : `${roundedPercent}%`;
+  return `${roundedPercent}%`;
 };
 
 const getDownloadFilename = (header: string) =>
@@ -410,7 +412,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
   );
 
   const modalOption = useMemo(() => {
-    const modalDonutCenter = ['50%', '40%'] as const;
+    const modalDonutCenter = ['50%', '38%'] as const;
 
     return {
       ...baseOption,
@@ -434,26 +436,30 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         show: true,
         orient: 'vertical' as const,
         left: 'center',
-        bottom: 0,
+        top: '68%',
         icon: 'circle',
         itemWidth: 9,
         itemHeight: 9,
-        itemGap: 8,
+        itemGap: 6,
+        padding: 0,
         textStyle: {
           fontFamily,
           fontSize: 12,
           color: theme.themeColors.dark,
+          lineHeight: 16,
         },
       },
       series: [
         {
           ...baseOption.series[0],
           data: modalChartData,
-          radius: ['34%', '64%'],
+          radius: ['28%', '52%'],
           center: modalDonutCenter,
           avoidLabelOverlap: true,
+          minShowLabelAngle: 1,
           labelLayout: {
-            hideOverlap: false,
+            hideOverlap: true,
+            moveOverlap: 'shiftY' as const,
           },
           label: {
             show: true,
@@ -461,6 +467,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           },
           labelLine: {
             show: true,
+            maxSurfaceAngle: 80,
           },
         },
       ],
@@ -538,7 +545,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           <Chart
             isLoading={false}
             data={modalOption}
-            height={MODAL_CHART_SIZE}
+            height={MODAL_CHART_HEIGHT}
             renderer="canvas"
             withResizeLegend={false}
             locale={locale}
