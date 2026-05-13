@@ -115,6 +115,7 @@ type StatusDonutProps = {
 };
 
 type DonutChartItem = {
+  id: string;
   value: number;
   name: string;
   itemStyle: {
@@ -189,6 +190,9 @@ const getDownloadFilename = (header: string) =>
     .replace(/\s+/g, '-')
     .replace(/[^\p{L}\p{N}-]+/gu, '') || 'status-donut';
 
+const getChartItemId = (label: string | undefined, index: number) =>
+  label?.trim() ? `${label}-${index}` : `status-donut-item-${index}`;
+
 const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDonutProps) => {
   const theme = useTheme();
   const t = useTranslations();
@@ -216,15 +220,20 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
 
   const chartData = useMemo<DonutChartItem[]>(
     () =>
-      data.values.map((rawValue, index) => ({
-        value: getNumberValue(rawValue),
-        name: data.labels[index] ?? '',
-        itemStyle: {
-          color: chartColors[index],
-        },
-        hoverText: hasCustomHoverTexts ? data.hoverTexts?.[index] : undefined,
-        text: hasCustomTexts ? data.texts?.[index] : undefined,
-      })),
+      data.values.map((rawValue, index) => {
+        const label = data.labels[index] ?? '';
+
+        return {
+          id: getChartItemId(label, index),
+          value: getNumberValue(rawValue),
+          name: label,
+          itemStyle: {
+            color: chartColors[index],
+          },
+          hoverText: hasCustomHoverTexts ? data.hoverTexts?.[index] : undefined,
+          text: hasCustomTexts ? data.texts?.[index] : undefined,
+        };
+      }),
     [
       chartColors,
       data.hoverTexts,
@@ -281,6 +290,10 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
       animationDurationUpdate: 450,
       animationEasingUpdate: 'cubicOut' as const,
       animationDelayUpdate: (index: number) => index * 30,
+      stateAnimation: {
+        duration: 250,
+        easing: 'cubicOut' as const,
+      },
       color: chartColors,
       aria: {
         enabled: true,
@@ -306,20 +319,24 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         formatter: (params: FormatterParams) => {
           const item = params.data;
           const color = item.itemStyle.color;
+          const percent = formatPercent(Number(params.value), total);
 
           if (item.hoverText) {
             return `
-              <div style="border-left: 4px solid ${color}; padding-left: 8px;">
+              <div style="border-left: 4px solid ${color}; padding-left: 8px; max-width: 220px;">
                 ${item.hoverText}
               </div>
             `;
           }
 
           return `
-            <div style="border-left: 4px solid ${color}; padding-left: 8px;">
-              <strong>${params.name}</strong><br />
-              ${params.value}<br />
-              ${formatPercent(Number(params.value), total)}
+            <div style="min-width: 140px;">
+              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: ${color}; display: inline-block;"></span>
+                <strong>${params.name}</strong>
+              </div>
+              <div>${params.value}</div>
+              <div style="font-size: 16px; font-weight: 700; margin-top: 2px;">${percent}</div>
             </div>
           `;
         },
@@ -334,9 +351,12 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           clockwise: true,
           startAngle: 90,
           minAngle: 0,
+          padAngle: 0.5,
           stillShowZeroSum: true,
           avoidLabelOverlap: false,
-          selectedMode: false,
+          selectedMode: 'single' as const,
+          selectedOffset: 6,
+          universalTransition: true,
           label: {
             show: false,
           },
@@ -346,16 +366,21 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           itemStyle: {
             borderWidth: 1,
             borderColor: theme.themeColors.white,
-            borderRadius: 2,
+            borderRadius: 3,
           },
           emphasis: {
             scale: true,
-            scaleSize: 4,
+            scaleSize: 6,
             focus: 'self' as const,
             itemStyle: {
-              shadowBlur: 14,
-              shadowOffsetY: 4,
-              shadowColor: 'rgba(0, 0, 0, 0.22)',
+              borderWidth: 2,
+              borderColor: theme.themeColors.white,
+              shadowBlur: 18,
+              shadowOffsetY: 5,
+              shadowColor: 'rgba(0, 0, 0, 0.24)',
+            },
+            label: {
+              fontWeight: 800,
             },
           },
           blur: {
@@ -365,6 +390,8 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           },
           select: {
             itemStyle: {
+              borderWidth: 2,
+              borderColor: theme.themeColors.white,
               shadowBlur: 16,
               shadowOffsetY: 4,
               shadowColor: 'rgba(0, 0, 0, 0.24)',
@@ -442,6 +469,8 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         itemHeight: 9,
         itemGap: 6,
         padding: 0,
+        selectedMode: true,
+        inactiveColor: '#999',
         textStyle: {
           fontFamily,
           fontSize: 12,
@@ -455,8 +484,12 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           data: modalChartData,
           radius: ['28%', '52%'],
           center: modalDonutCenter,
+          padAngle: 1,
           avoidLabelOverlap: true,
           minShowLabelAngle: 1,
+          selectedMode: 'single' as const,
+          selectedOffset: 8,
+          universalTransition: true,
           labelLayout: {
             hideOverlap: true,
             moveOverlap: 'shiftY' as const,
@@ -468,6 +501,30 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           labelLine: {
             show: true,
             maxSurfaceAngle: 80,
+          },
+          emphasis: {
+            scale: true,
+            scaleSize: 8,
+            focus: 'self' as const,
+            itemStyle: {
+              borderWidth: 2,
+              borderColor: theme.themeColors.white,
+              shadowBlur: 20,
+              shadowOffsetY: 6,
+              shadowColor: 'rgba(0, 0, 0, 0.26)',
+            },
+            label: {
+              fontWeight: 800,
+            },
+          },
+          select: {
+            itemStyle: {
+              borderWidth: 2,
+              borderColor: theme.themeColors.white,
+              shadowBlur: 18,
+              shadowOffsetY: 5,
+              shadowColor: 'rgba(0, 0, 0, 0.26)',
+            },
           },
         },
       ],
