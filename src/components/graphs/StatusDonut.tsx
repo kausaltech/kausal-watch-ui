@@ -19,6 +19,12 @@ const GraphCard = styled.div`
   margin: 1rem;
   max-width: 260px;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid ${(props) => props.theme.themeColors.primary};
+    outline-offset: 2px;
+    border-radius: ${(props) => props.theme.cardBorderRadius ?? props.theme.btnBorderRadius};
+  }
 `;
 
 const GraphHeader = styled.h2`
@@ -84,7 +90,8 @@ const OpenModalButton = styled.button`
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
 
-  ${GraphCard}:hover & {
+  ${GraphCard}:hover &,
+  ${GraphCard}:focus-within & {
     opacity: 1;
   }
 
@@ -115,7 +122,6 @@ type StatusDonutProps = {
 };
 
 type DonutChartItem = {
-  id: string;
   value: number;
   name: string;
   itemStyle: {
@@ -183,15 +189,20 @@ const formatPrecisePercent = (value: number, total: number) => {
   return `${roundedPercent}%`;
 };
 
+const escapeHtml = (value: string | number) =>
+  String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
 const getDownloadFilename = (header: string) =>
   header
     .toLowerCase()
     .trim()
     .replace(/\s+/g, '-')
     .replace(/[^\p{L}\p{N}-]+/gu, '') || 'status-donut';
-
-const getChartItemId = (label: string | undefined, index: number) =>
-  label?.trim() ? `${label}-${index}` : `status-donut-item-${index}`;
 
 const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDonutProps) => {
   const theme = useTheme();
@@ -224,7 +235,6 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         const label = data.labels[index] ?? '';
 
         return {
-          id: getChartItemId(label, index),
           value: getNumberValue(rawValue),
           name: label,
           itemStyle: {
@@ -324,7 +334,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           if (item.hoverText) {
             return `
               <div style="border-left: 4px solid ${color}; padding-left: 8px; max-width: 220px;">
-                ${item.hoverText}
+                ${escapeHtml(item.hoverText)}
               </div>
             `;
           }
@@ -333,9 +343,9 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
             <div style="min-width: 140px;">
               <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
                 <span style="width: 8px; height: 8px; border-radius: 50%; background: ${color}; display: inline-block;"></span>
-                <strong>${params.name}</strong>
+                <strong>${escapeHtml(params.name)}</strong>
               </div>
-              <div>${params.value}</div>
+              <div>${escapeHtml(params.value)}</div>
               <div style="font-size: 16px; font-weight: 700; margin-top: 2px;">${percent}</div>
             </div>
           `;
@@ -354,9 +364,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           padAngle: 0.5,
           stillShowZeroSum: true,
           avoidLabelOverlap: false,
-          selectedMode: 'single' as const,
-          selectedOffset: 6,
-          universalTransition: true,
+          selectedMode: false,
           label: {
             show: false,
           },
@@ -469,7 +477,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         itemHeight: 9,
         itemGap: 6,
         padding: 0,
-        selectedMode: true,
+        selectedMode: false,
         inactiveColor: '#999',
         textStyle: {
           fontFamily,
@@ -489,7 +497,6 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           minShowLabelAngle: 1,
           selectedMode: 'single' as const,
           selectedOffset: 8,
-          universalTransition: true,
           labelLayout: {
             hideOverlap: true,
             moveOverlap: 'shiftY' as const,
@@ -569,7 +576,17 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
 
   return (
     <>
-      <GraphCard onClick={openModal}>
+      <GraphCard
+        role="button"
+        tabIndex={0}
+        onClick={openModal}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openModal();
+          }
+        }}
+      >
         <GraphHeader>{header}</GraphHeader>
 
         {helpText ? <HelpText>{helpText}</HelpText> : null}
