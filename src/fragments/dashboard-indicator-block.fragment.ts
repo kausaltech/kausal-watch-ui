@@ -1,33 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
-  fragment DashboardIndicatorFragment on Indicator {
-    id
-    name
-    description
-    showTrendline
-    valueRounding
-    minValue
-    maxValue
-    ticksCount
-    ticksRounding
-    timeResolution
-    latestValue {
-      value
-      date
-    }
-    dataCategoriesAreStackable
-    goals {
-      value
-      date
-    }
-    unit {
-      name
-      shortName
-    }
-    desiredTrend
-  }
+import { INDICATOR_CHART_FRAGMENTS } from './indicator-chart.fragment';
 
+export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
   fragment DashboardIndicatorBlockFragment on DashboardRowBlock {
     blockType
     blocks {
@@ -39,125 +14,33 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
 
       ... on DashboardIndicatorPieChartBlock {
         helpText
-        year
-        chartSeries {
-          dimensionCategory {
-            id
-            name
-            defaultColor
-          }
-          values {
-            id
-            value
-            date
-          }
-        }
-        dimension {
-          id
-          name
-          categories {
-            id
-            name
-          }
-        }
-        indicator {
-          ...DashboardIndicatorFragment
-        }
+        ...PieChartVisualization
       }
 
       ... on DashboardIndicatorLineChartBlock {
         id
         helpText
-        showTotalLine
-        chartSeries {
-          dimensionCategory {
-            id
-            name
-            defaultColor
-          }
-          values {
-            id
-            value
-            date
-          }
-        }
-        dimension {
-          id
-          name
-          categories {
-            id
-            name
-          }
-        }
-        indicator {
-          ...DashboardIndicatorFragment
-        }
+        ...LineChartVisualization
       }
 
       ... on DashboardIndicatorAreaChartBlock {
         id
         helpText
-        chartSeries {
-          dimensionCategory {
-            id
-            name
-            defaultColor
-          }
-          values {
-            id
-            value
-            date
-          }
-        }
-        dimension {
-          id
-          name
-          categories {
-            id
-            name
-          }
-        }
-        indicator {
-          ...DashboardIndicatorFragment
-        }
+        ...AreaChartVisualization
       }
 
       ... on DashboardIndicatorBarChartBlock {
         id
-        barType
         helpText
-        chartSeries {
-          dimensionCategory {
-            id
-            name
-            defaultColor
-          }
-          values {
-            id
-            value
-            date
-          }
-        }
-        dimension {
-          id
-          name
-          categories {
-            id
-            name
-          }
-        }
-        indicator {
-          ...DashboardIndicatorFragment
-        }
+        ...BarChartVisualization
       }
 
       ... on DashboardIndicatorSummaryBlock {
         id
         blockType
-        indicator {
-          ...DashboardIndicatorFragment
-        }
+        ...SummaryVisualization
       }
     }
   }
+  ${INDICATOR_CHART_FRAGMENTS}
 `;

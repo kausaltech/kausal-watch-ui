@@ -2,13 +2,14 @@ import React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useLocale, useTranslations } from 'next-intl';
 
+import type { SummaryVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 import Icon from '@/components/common/Icon';
 
 import dayjs from '../../common/dayjs';
-import type { DashboardBlock } from './DashboardRowBlock';
 
 const Container = styled.div<{ $hasDescription?: boolean }>`
   padding: 0;
@@ -95,14 +96,12 @@ const ArrowWrapper = styled.div`
   }
 `;
 
-// Extract the DashboardIndicatorSummaryBlock from the union
-type DashboardIndicatorSummaryBlockType = Extract<
-  DashboardBlock,
+type DashboardSummaryBlock = Extract<
+  SummaryVisualizationFragment,
   { __typename: 'DashboardIndicatorSummaryBlock' }
 >;
 
-// Get the indicator type from it
-type IndicatorType = DashboardIndicatorSummaryBlockType['indicator'];
+type IndicatorType = DashboardSummaryBlock['indicator'];
 
 type DashboardIndicatorSummaryBlockProps = {
   indicator: IndicatorType;

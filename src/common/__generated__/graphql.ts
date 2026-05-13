@@ -4467,20 +4467,6 @@ export type CategoryTagRecursiveFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type DashboardIndicatorFragmentFragment = (
-  { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-    { value: number, date: string | null }
-    & { __typename: 'IndicatorValue' }
-  ) | null, goals: Array<(
-    { value: number, date: string | null }
-    & { __typename: 'IndicatorGoal' }
-  ) | null> | null, unit: (
-    { name: string, shortName: string | null }
-    & { __typename: 'Unit' }
-  ) }
-  & { __typename: 'Indicator' }
-);
-
 export type DashboardIndicatorBlockFragmentFragment = (
   { blockType: string, blocks: Array<(
     { blockType: string }
@@ -4504,22 +4490,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
     { blockType: string }
     & { __typename: 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
   ) | (
-    { id: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
-      { dimensionCategory: (
-        { id: string, name: string, defaultColor: string }
-        & { __typename: 'DimensionCategory' }
-      ) | null, values: Array<(
-        { id: string, value: number, date: string | null }
-        & { __typename: 'IndicatorValue' }
-      ) | null> }
-      & { __typename: 'DashboardIndicatorChartSeries' }
-    ) | null> | null, dimension: (
-      { id: string, name: string, categories: Array<(
-        { id: string, name: string }
-        & { __typename: 'DimensionCategory' }
-      )> }
-      & { __typename: 'Dimension' }
-    ) | null, indicator: (
+    { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
@@ -4531,25 +4502,25 @@ export type DashboardIndicatorBlockFragmentFragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
-    ) | null }
-    & { __typename: 'DashboardIndicatorAreaChartBlock' }
+    ) | null, dimension: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'Dimension' }
+    ) | null, chartSeries: Array<(
+      { dimensionCategory: (
+        { id: string, name: string, defaultColor: string }
+        & { __typename: 'DimensionCategory' }
+      ) | null, values: Array<(
+        { id: string, value: number, date: string | null }
+        & { __typename: 'IndicatorValue' }
+      ) | null> }
+      & { __typename: 'DashboardIndicatorChartSeries' }
+    ) | null> | null }
+    & { __typename: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorLineChartBlock' }
   ) | (
-    { id: string | null, barType: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
-      { dimensionCategory: (
-        { id: string, name: string, defaultColor: string }
-        & { __typename: 'DimensionCategory' }
-      ) | null, values: Array<(
-        { id: string, value: number, date: string | null }
-        & { __typename: 'IndicatorValue' }
-      ) | null> }
-      & { __typename: 'DashboardIndicatorChartSeries' }
-    ) | null> | null, dimension: (
-      { id: string, name: string, categories: Array<(
-        { id: string, name: string }
-        & { __typename: 'DimensionCategory' }
-      )> }
-      & { __typename: 'Dimension' }
-    ) | null, indicator: (
+    { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
@@ -4561,25 +4532,25 @@ export type DashboardIndicatorBlockFragmentFragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
-    ) | null }
+    ) | null, dimension: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'Dimension' }
+    ) | null, chartSeries: Array<(
+      { dimensionCategory: (
+        { id: string, name: string, defaultColor: string }
+        & { __typename: 'DimensionCategory' }
+      ) | null, values: Array<(
+        { id: string, value: number, date: string | null }
+        & { __typename: 'IndicatorValue' }
+      ) | null> }
+      & { __typename: 'DashboardIndicatorChartSeries' }
+    ) | null> | null }
     & { __typename: 'DashboardIndicatorBarChartBlock' }
   ) | (
-    { id: string | null, helpText: string | null, showTotalLine: boolean | null, blockType: string, chartSeries: Array<(
-      { dimensionCategory: (
-        { id: string, name: string, defaultColor: string }
-        & { __typename: 'DimensionCategory' }
-      ) | null, values: Array<(
-        { id: string, value: number, date: string | null }
-        & { __typename: 'IndicatorValue' }
-      ) | null> }
-      & { __typename: 'DashboardIndicatorChartSeries' }
-    ) | null> | null, dimension: (
-      { id: string, name: string, categories: Array<(
-        { id: string, name: string }
-        & { __typename: 'DimensionCategory' }
-      )> }
-      & { __typename: 'Dimension' }
-    ) | null, indicator: (
+    { helpText: string | null, blockType: string, year: number | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
@@ -4591,10 +4562,13 @@ export type DashboardIndicatorBlockFragmentFragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
-    ) | null }
-    & { __typename: 'DashboardIndicatorLineChartBlock' }
-  ) | (
-    { helpText: string | null, year: number | null, blockType: string, chartSeries: Array<(
+    ) | null, dimension: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'Dimension' }
+    ) | null, chartSeries: Array<(
       { dimensionCategory: (
         { id: string, name: string, defaultColor: string }
         & { __typename: 'DimensionCategory' }
@@ -4603,25 +4577,7 @@ export type DashboardIndicatorBlockFragmentFragment = (
         & { __typename: 'IndicatorValue' }
       ) | null> }
       & { __typename: 'DashboardIndicatorChartSeries' }
-    ) | null> | null, dimension: (
-      { id: string, name: string, categories: Array<(
-        { id: string, name: string }
-        & { __typename: 'DimensionCategory' }
-      )> }
-      & { __typename: 'Dimension' }
-    ) | null, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
-        & { __typename: 'IndicatorValue' }
-      ) | null, goals: Array<(
-        { value: number, date: string | null }
-        & { __typename: 'IndicatorGoal' }
-      ) | null> | null, unit: (
-        { name: string, shortName: string | null }
-        & { __typename: 'Unit' }
-      ) }
-      & { __typename: 'Indicator' }
-    ) | null }
+    ) | null> | null }
     & { __typename: 'DashboardIndicatorPieChartBlock' }
   ) | (
     { id: string | null, blockType: string, indicator: (
@@ -4644,6 +4600,320 @@ export type DashboardIndicatorBlockFragmentFragment = (
   )> }
   & { __typename: 'DashboardRowBlock' }
 );
+
+export type DashboardIndicatorFragmentFragment = (
+  { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+    { value: number, date: string | null }
+    & { __typename: 'IndicatorValue' }
+  ) | null, goals: Array<(
+    { value: number, date: string | null }
+    & { __typename: 'IndicatorGoal' }
+  ) | null> | null, unit: (
+    { name: string, shortName: string | null }
+    & { __typename: 'Unit' }
+  ) }
+  & { __typename: 'Indicator' }
+);
+
+type BarChartVisualization_DashboardIndicatorBarChartBlock_Fragment = (
+  { barType: string | null, indicator: (
+    { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, goals: Array<(
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ) }
+    & { __typename: 'Indicator' }
+  ) | null, dimension: (
+    { id: string, name: string, categories: Array<(
+      { id: string, name: string }
+      & { __typename: 'DimensionCategory' }
+    )> }
+    & { __typename: 'Dimension' }
+  ) | null, chartSeries: Array<(
+    { dimensionCategory: (
+      { id: string, name: string, defaultColor: string }
+      & { __typename: 'DimensionCategory' }
+    ) | null, values: Array<(
+      { id: string, value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null> }
+    & { __typename: 'DashboardIndicatorChartSeries' }
+  ) | null> | null }
+  & { __typename: 'DashboardIndicatorBarChartBlock' }
+);
+
+type BarChartVisualization_IndicatorDefaultBarChart_Fragment = (
+  { barType: string | null, indicator: (
+    { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, goals: Array<(
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ) }
+    & { __typename: 'Indicator' }
+  ), dimension: (
+    { id: string, name: string, categories: Array<(
+      { id: string, name: string }
+      & { __typename: 'DimensionCategory' }
+    )> }
+    & { __typename: 'Dimension' }
+  ) | null, chartSeries: Array<(
+    { dimensionCategory: (
+      { id: string, name: string, defaultColor: string }
+      & { __typename: 'DimensionCategory' }
+    ) | null, values: Array<(
+      { id: string, value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null> }
+    & { __typename: 'DashboardIndicatorChartSeries' }
+  )> }
+  & { __typename: 'IndicatorDefaultBarChart' }
+);
+
+export type BarChartVisualizationFragment = BarChartVisualization_DashboardIndicatorBarChartBlock_Fragment | BarChartVisualization_IndicatorDefaultBarChart_Fragment;
+
+type LineChartVisualization_DashboardIndicatorLineChartBlock_Fragment = (
+  { showTotalLine: boolean | null, indicator: (
+    { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, goals: Array<(
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ) }
+    & { __typename: 'Indicator' }
+  ) | null, dimension: (
+    { id: string, name: string, categories: Array<(
+      { id: string, name: string }
+      & { __typename: 'DimensionCategory' }
+    )> }
+    & { __typename: 'Dimension' }
+  ) | null, chartSeries: Array<(
+    { dimensionCategory: (
+      { id: string, name: string, defaultColor: string }
+      & { __typename: 'DimensionCategory' }
+    ) | null, values: Array<(
+      { id: string, value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null> }
+    & { __typename: 'DashboardIndicatorChartSeries' }
+  ) | null> | null }
+  & { __typename: 'DashboardIndicatorLineChartBlock' }
+);
+
+type LineChartVisualization_IndicatorDefaultLineChart_Fragment = (
+  { showTotalLine: boolean | null, indicator: (
+    { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, goals: Array<(
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ) }
+    & { __typename: 'Indicator' }
+  ), dimension: (
+    { id: string, name: string, categories: Array<(
+      { id: string, name: string }
+      & { __typename: 'DimensionCategory' }
+    )> }
+    & { __typename: 'Dimension' }
+  ) | null, chartSeries: Array<(
+    { dimensionCategory: (
+      { id: string, name: string, defaultColor: string }
+      & { __typename: 'DimensionCategory' }
+    ) | null, values: Array<(
+      { id: string, value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null> }
+    & { __typename: 'DashboardIndicatorChartSeries' }
+  )> }
+  & { __typename: 'IndicatorDefaultLineChart' }
+);
+
+export type LineChartVisualizationFragment = LineChartVisualization_DashboardIndicatorLineChartBlock_Fragment | LineChartVisualization_IndicatorDefaultLineChart_Fragment;
+
+type AreaChartVisualization_DashboardIndicatorAreaChartBlock_Fragment = (
+  { showTotalLine: boolean | null, indicator: (
+    { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, goals: Array<(
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ) }
+    & { __typename: 'Indicator' }
+  ) | null, dimension: (
+    { id: string, name: string, categories: Array<(
+      { id: string, name: string }
+      & { __typename: 'DimensionCategory' }
+    )> }
+    & { __typename: 'Dimension' }
+  ) | null, chartSeries: Array<(
+    { dimensionCategory: (
+      { id: string, name: string, defaultColor: string }
+      & { __typename: 'DimensionCategory' }
+    ) | null, values: Array<(
+      { id: string, value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null> }
+    & { __typename: 'DashboardIndicatorChartSeries' }
+  ) | null> | null }
+  & { __typename: 'DashboardIndicatorAreaChartBlock' }
+);
+
+type AreaChartVisualization_IndicatorDefaultAreaChart_Fragment = (
+  { showTotalLine: boolean | null, indicator: (
+    { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, goals: Array<(
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ) }
+    & { __typename: 'Indicator' }
+  ), dimension: (
+    { id: string, name: string, categories: Array<(
+      { id: string, name: string }
+      & { __typename: 'DimensionCategory' }
+    )> }
+    & { __typename: 'Dimension' }
+  ) | null, chartSeries: Array<(
+    { dimensionCategory: (
+      { id: string, name: string, defaultColor: string }
+      & { __typename: 'DimensionCategory' }
+    ) | null, values: Array<(
+      { id: string, value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null> }
+    & { __typename: 'DashboardIndicatorChartSeries' }
+  )> }
+  & { __typename: 'IndicatorDefaultAreaChart' }
+);
+
+export type AreaChartVisualizationFragment = AreaChartVisualization_DashboardIndicatorAreaChartBlock_Fragment | AreaChartVisualization_IndicatorDefaultAreaChart_Fragment;
+
+type PieChartVisualization_DashboardIndicatorPieChartBlock_Fragment = (
+  { year: number | null, indicator: (
+    { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, goals: Array<(
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ) }
+    & { __typename: 'Indicator' }
+  ) | null, dimension: (
+    { id: string, name: string, categories: Array<(
+      { id: string, name: string }
+      & { __typename: 'DimensionCategory' }
+    )> }
+    & { __typename: 'Dimension' }
+  ) | null, chartSeries: Array<(
+    { dimensionCategory: (
+      { id: string, name: string, defaultColor: string }
+      & { __typename: 'DimensionCategory' }
+    ) | null, values: Array<(
+      { id: string, value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null> }
+    & { __typename: 'DashboardIndicatorChartSeries' }
+  ) | null> | null }
+  & { __typename: 'DashboardIndicatorPieChartBlock' }
+);
+
+type PieChartVisualization_IndicatorDefaultPieChart_Fragment = (
+  { year: number | null, indicator: (
+    { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, goals: Array<(
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ) }
+    & { __typename: 'Indicator' }
+  ), dimension: (
+    { id: string, name: string, categories: Array<(
+      { id: string, name: string }
+      & { __typename: 'DimensionCategory' }
+    )> }
+    & { __typename: 'Dimension' }
+  ) | null, chartSeries: Array<(
+    { dimensionCategory: (
+      { id: string, name: string, defaultColor: string }
+      & { __typename: 'DimensionCategory' }
+    ) | null, values: Array<(
+      { id: string, value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null> }
+    & { __typename: 'DashboardIndicatorChartSeries' }
+  )> }
+  & { __typename: 'IndicatorDefaultPieChart' }
+);
+
+export type PieChartVisualizationFragment = PieChartVisualization_DashboardIndicatorPieChartBlock_Fragment | PieChartVisualization_IndicatorDefaultPieChart_Fragment;
+
+type SummaryVisualization_DashboardIndicatorSummaryBlock_Fragment = (
+  { indicator: (
+    { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, goals: Array<(
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ) }
+    & { __typename: 'Indicator' }
+  ) | null }
+  & { __typename: 'DashboardIndicatorSummaryBlock' }
+);
+
+type SummaryVisualization_IndicatorDefaultSummary_Fragment = (
+  { indicator: (
+    { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, goals: Array<(
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ) }
+    & { __typename: 'Indicator' }
+  ) }
+  & { __typename: 'IndicatorDefaultSummary' }
+);
+
+export type SummaryVisualizationFragment = SummaryVisualization_DashboardIndicatorSummaryBlock_Fragment | SummaryVisualization_IndicatorDefaultSummary_Fragment;
 
 export type IndicatorListIndicatorFragment = (
   { id: string, name: string, timeResolution: IndicatorTimeResolution, desiredTrend: IndicatorDesiredTrend | null, valueRounding: number | null, sortKey: string | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: (
@@ -5676,22 +5946,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
     { blockType: string }
     & { __typename: 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
   ) | (
-    { id: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
-      { dimensionCategory: (
-        { id: string, name: string, defaultColor: string }
-        & { __typename: 'DimensionCategory' }
-      ) | null, values: Array<(
-        { id: string, value: number, date: string | null }
-        & { __typename: 'IndicatorValue' }
-      ) | null> }
-      & { __typename: 'DashboardIndicatorChartSeries' }
-    ) | null> | null, dimension: (
-      { id: string, name: string, categories: Array<(
-        { id: string, name: string }
-        & { __typename: 'DimensionCategory' }
-      )> }
-      & { __typename: 'Dimension' }
-    ) | null, indicator: (
+    { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
@@ -5703,25 +5958,25 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
-    ) | null }
-    & { __typename: 'DashboardIndicatorAreaChartBlock' }
+    ) | null, dimension: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'Dimension' }
+    ) | null, chartSeries: Array<(
+      { dimensionCategory: (
+        { id: string, name: string, defaultColor: string }
+        & { __typename: 'DimensionCategory' }
+      ) | null, values: Array<(
+        { id: string, value: number, date: string | null }
+        & { __typename: 'IndicatorValue' }
+      ) | null> }
+      & { __typename: 'DashboardIndicatorChartSeries' }
+    ) | null> | null }
+    & { __typename: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorLineChartBlock' }
   ) | (
-    { id: string | null, barType: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
-      { dimensionCategory: (
-        { id: string, name: string, defaultColor: string }
-        & { __typename: 'DimensionCategory' }
-      ) | null, values: Array<(
-        { id: string, value: number, date: string | null }
-        & { __typename: 'IndicatorValue' }
-      ) | null> }
-      & { __typename: 'DashboardIndicatorChartSeries' }
-    ) | null> | null, dimension: (
-      { id: string, name: string, categories: Array<(
-        { id: string, name: string }
-        & { __typename: 'DimensionCategory' }
-      )> }
-      & { __typename: 'Dimension' }
-    ) | null, indicator: (
+    { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
@@ -5733,25 +5988,25 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
-    ) | null }
+    ) | null, dimension: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'Dimension' }
+    ) | null, chartSeries: Array<(
+      { dimensionCategory: (
+        { id: string, name: string, defaultColor: string }
+        & { __typename: 'DimensionCategory' }
+      ) | null, values: Array<(
+        { id: string, value: number, date: string | null }
+        & { __typename: 'IndicatorValue' }
+      ) | null> }
+      & { __typename: 'DashboardIndicatorChartSeries' }
+    ) | null> | null }
     & { __typename: 'DashboardIndicatorBarChartBlock' }
   ) | (
-    { id: string | null, helpText: string | null, showTotalLine: boolean | null, blockType: string, chartSeries: Array<(
-      { dimensionCategory: (
-        { id: string, name: string, defaultColor: string }
-        & { __typename: 'DimensionCategory' }
-      ) | null, values: Array<(
-        { id: string, value: number, date: string | null }
-        & { __typename: 'IndicatorValue' }
-      ) | null> }
-      & { __typename: 'DashboardIndicatorChartSeries' }
-    ) | null> | null, dimension: (
-      { id: string, name: string, categories: Array<(
-        { id: string, name: string }
-        & { __typename: 'DimensionCategory' }
-      )> }
-      & { __typename: 'Dimension' }
-    ) | null, indicator: (
+    { helpText: string | null, blockType: string, year: number | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
         { value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
@@ -5763,10 +6018,13 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
-    ) | null }
-    & { __typename: 'DashboardIndicatorLineChartBlock' }
-  ) | (
-    { helpText: string | null, year: number | null, blockType: string, chartSeries: Array<(
+    ) | null, dimension: (
+      { id: string, name: string, categories: Array<(
+        { id: string, name: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'Dimension' }
+    ) | null, chartSeries: Array<(
       { dimensionCategory: (
         { id: string, name: string, defaultColor: string }
         & { __typename: 'DimensionCategory' }
@@ -5775,25 +6033,7 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
         & { __typename: 'IndicatorValue' }
       ) | null> }
       & { __typename: 'DashboardIndicatorChartSeries' }
-    ) | null> | null, dimension: (
-      { id: string, name: string, categories: Array<(
-        { id: string, name: string }
-        & { __typename: 'DimensionCategory' }
-      )> }
-      & { __typename: 'Dimension' }
-    ) | null, indicator: (
-      { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
-        & { __typename: 'IndicatorValue' }
-      ) | null, goals: Array<(
-        { value: number, date: string | null }
-        & { __typename: 'IndicatorGoal' }
-      ) | null> | null, unit: (
-        { name: string, shortName: string | null }
-        & { __typename: 'Unit' }
-      ) }
-      & { __typename: 'Indicator' }
-    ) | null }
+    ) | null> | null }
     & { __typename: 'DashboardIndicatorPieChartBlock' }
   ) | (
     { id: string | null, blockType: string, indicator: (
@@ -13040,22 +13280,7 @@ export type GetContentPageQuery = (
         { blockType: string }
         & { __typename: 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
       ) | (
-        { id: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
-          { dimensionCategory: (
-            { id: string, name: string, defaultColor: string }
-            & { __typename: 'DimensionCategory' }
-          ) | null, values: Array<(
-            { id: string, value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null> }
-          & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
+        { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
@@ -13067,25 +13292,25 @@ export type GetContentPageQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
-        ) | null }
-        & { __typename: 'DashboardIndicatorAreaChartBlock' }
+        ) | null, dimension: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename: 'DimensionCategory' }
+          )> }
+          & { __typename: 'Dimension' }
+        ) | null, chartSeries: Array<(
+          { dimensionCategory: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date: string | null }
+            & { __typename: 'IndicatorValue' }
+          ) | null> }
+          & { __typename: 'DashboardIndicatorChartSeries' }
+        ) | null> | null }
+        & { __typename: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorLineChartBlock' }
       ) | (
-        { id: string | null, barType: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
-          { dimensionCategory: (
-            { id: string, name: string, defaultColor: string }
-            & { __typename: 'DimensionCategory' }
-          ) | null, values: Array<(
-            { id: string, value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null> }
-          & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
+        { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
@@ -13097,25 +13322,25 @@ export type GetContentPageQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
-        ) | null }
+        ) | null, dimension: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename: 'DimensionCategory' }
+          )> }
+          & { __typename: 'Dimension' }
+        ) | null, chartSeries: Array<(
+          { dimensionCategory: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date: string | null }
+            & { __typename: 'IndicatorValue' }
+          ) | null> }
+          & { __typename: 'DashboardIndicatorChartSeries' }
+        ) | null> | null }
         & { __typename: 'DashboardIndicatorBarChartBlock' }
       ) | (
-        { id: string | null, helpText: string | null, showTotalLine: boolean | null, blockType: string, chartSeries: Array<(
-          { dimensionCategory: (
-            { id: string, name: string, defaultColor: string }
-            & { __typename: 'DimensionCategory' }
-          ) | null, values: Array<(
-            { id: string, value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null> }
-          & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
+        { helpText: string | null, blockType: string, year: number | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
@@ -13127,10 +13352,13 @@ export type GetContentPageQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
-        ) | null }
-        & { __typename: 'DashboardIndicatorLineChartBlock' }
-      ) | (
-        { helpText: string | null, year: number | null, blockType: string, chartSeries: Array<(
+        ) | null, dimension: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename: 'DimensionCategory' }
+          )> }
+          & { __typename: 'Dimension' }
+        ) | null, chartSeries: Array<(
           { dimensionCategory: (
             { id: string, name: string, defaultColor: string }
             & { __typename: 'DimensionCategory' }
@@ -13139,25 +13367,7 @@ export type GetContentPageQuery = (
             & { __typename: 'IndicatorValue' }
           ) | null> }
           & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null, goals: Array<(
-            { value: number, date: string | null }
-            & { __typename: 'IndicatorGoal' }
-          ) | null> | null, unit: (
-            { name: string, shortName: string | null }
-            & { __typename: 'Unit' }
-          ) }
-          & { __typename: 'Indicator' }
-        ) | null }
+        ) | null> | null }
         & { __typename: 'DashboardIndicatorPieChartBlock' }
       ) | (
         { id: string | null, blockType: string, indicator: (
@@ -13964,22 +14174,7 @@ export type GetContentPageQuery = (
         { blockType: string }
         & { __typename: 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
       ) | (
-        { id: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
-          { dimensionCategory: (
-            { id: string, name: string, defaultColor: string }
-            & { __typename: 'DimensionCategory' }
-          ) | null, values: Array<(
-            { id: string, value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null> }
-          & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
+        { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
@@ -13991,25 +14186,25 @@ export type GetContentPageQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
-        ) | null }
-        & { __typename: 'DashboardIndicatorAreaChartBlock' }
+        ) | null, dimension: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename: 'DimensionCategory' }
+          )> }
+          & { __typename: 'Dimension' }
+        ) | null, chartSeries: Array<(
+          { dimensionCategory: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date: string | null }
+            & { __typename: 'IndicatorValue' }
+          ) | null> }
+          & { __typename: 'DashboardIndicatorChartSeries' }
+        ) | null> | null }
+        & { __typename: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorLineChartBlock' }
       ) | (
-        { id: string | null, barType: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
-          { dimensionCategory: (
-            { id: string, name: string, defaultColor: string }
-            & { __typename: 'DimensionCategory' }
-          ) | null, values: Array<(
-            { id: string, value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null> }
-          & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
+        { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
@@ -14021,25 +14216,25 @@ export type GetContentPageQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
-        ) | null }
+        ) | null, dimension: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename: 'DimensionCategory' }
+          )> }
+          & { __typename: 'Dimension' }
+        ) | null, chartSeries: Array<(
+          { dimensionCategory: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date: string | null }
+            & { __typename: 'IndicatorValue' }
+          ) | null> }
+          & { __typename: 'DashboardIndicatorChartSeries' }
+        ) | null> | null }
         & { __typename: 'DashboardIndicatorBarChartBlock' }
       ) | (
-        { id: string | null, helpText: string | null, showTotalLine: boolean | null, blockType: string, chartSeries: Array<(
-          { dimensionCategory: (
-            { id: string, name: string, defaultColor: string }
-            & { __typename: 'DimensionCategory' }
-          ) | null, values: Array<(
-            { id: string, value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null> }
-          & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
+        { helpText: string | null, blockType: string, year: number | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
@@ -14051,10 +14246,13 @@ export type GetContentPageQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
-        ) | null }
-        & { __typename: 'DashboardIndicatorLineChartBlock' }
-      ) | (
-        { helpText: string | null, year: number | null, blockType: string, chartSeries: Array<(
+        ) | null, dimension: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename: 'DimensionCategory' }
+          )> }
+          & { __typename: 'Dimension' }
+        ) | null, chartSeries: Array<(
           { dimensionCategory: (
             { id: string, name: string, defaultColor: string }
             & { __typename: 'DimensionCategory' }
@@ -14063,25 +14261,7 @@ export type GetContentPageQuery = (
             & { __typename: 'IndicatorValue' }
           ) | null> }
           & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null, goals: Array<(
-            { value: number, date: string | null }
-            & { __typename: 'IndicatorGoal' }
-          ) | null> | null, unit: (
-            { name: string, shortName: string | null }
-            & { __typename: 'Unit' }
-          ) }
-          & { __typename: 'Indicator' }
-        ) | null }
+        ) | null> | null }
         & { __typename: 'DashboardIndicatorPieChartBlock' }
       ) | (
         { id: string | null, blockType: string, indicator: (
@@ -14618,22 +14798,7 @@ export type GetHomePageQuery = (
         { blockType: string }
         & { __typename: 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
       ) | (
-        { id: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
-          { dimensionCategory: (
-            { id: string, name: string, defaultColor: string }
-            & { __typename: 'DimensionCategory' }
-          ) | null, values: Array<(
-            { id: string, value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null> }
-          & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
+        { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
@@ -14645,25 +14810,25 @@ export type GetHomePageQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
-        ) | null }
-        & { __typename: 'DashboardIndicatorAreaChartBlock' }
+        ) | null, dimension: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename: 'DimensionCategory' }
+          )> }
+          & { __typename: 'Dimension' }
+        ) | null, chartSeries: Array<(
+          { dimensionCategory: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date: string | null }
+            & { __typename: 'IndicatorValue' }
+          ) | null> }
+          & { __typename: 'DashboardIndicatorChartSeries' }
+        ) | null> | null }
+        & { __typename: 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorLineChartBlock' }
       ) | (
-        { id: string | null, barType: string | null, helpText: string | null, blockType: string, chartSeries: Array<(
-          { dimensionCategory: (
-            { id: string, name: string, defaultColor: string }
-            & { __typename: 'DimensionCategory' }
-          ) | null, values: Array<(
-            { id: string, value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null> }
-          & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
+        { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
@@ -14675,25 +14840,25 @@ export type GetHomePageQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
-        ) | null }
+        ) | null, dimension: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename: 'DimensionCategory' }
+          )> }
+          & { __typename: 'Dimension' }
+        ) | null, chartSeries: Array<(
+          { dimensionCategory: (
+            { id: string, name: string, defaultColor: string }
+            & { __typename: 'DimensionCategory' }
+          ) | null, values: Array<(
+            { id: string, value: number, date: string | null }
+            & { __typename: 'IndicatorValue' }
+          ) | null> }
+          & { __typename: 'DashboardIndicatorChartSeries' }
+        ) | null> | null }
         & { __typename: 'DashboardIndicatorBarChartBlock' }
       ) | (
-        { id: string | null, helpText: string | null, showTotalLine: boolean | null, blockType: string, chartSeries: Array<(
-          { dimensionCategory: (
-            { id: string, name: string, defaultColor: string }
-            & { __typename: 'DimensionCategory' }
-          ) | null, values: Array<(
-            { id: string, value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null> }
-          & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
+        { helpText: string | null, blockType: string, year: number | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
             { value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
@@ -14705,10 +14870,13 @@ export type GetHomePageQuery = (
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
-        ) | null }
-        & { __typename: 'DashboardIndicatorLineChartBlock' }
-      ) | (
-        { helpText: string | null, year: number | null, blockType: string, chartSeries: Array<(
+        ) | null, dimension: (
+          { id: string, name: string, categories: Array<(
+            { id: string, name: string }
+            & { __typename: 'DimensionCategory' }
+          )> }
+          & { __typename: 'Dimension' }
+        ) | null, chartSeries: Array<(
           { dimensionCategory: (
             { id: string, name: string, defaultColor: string }
             & { __typename: 'DimensionCategory' }
@@ -14717,25 +14885,7 @@ export type GetHomePageQuery = (
             & { __typename: 'IndicatorValue' }
           ) | null> }
           & { __typename: 'DashboardIndicatorChartSeries' }
-        ) | null> | null, dimension: (
-          { id: string, name: string, categories: Array<(
-            { id: string, name: string }
-            & { __typename: 'DimensionCategory' }
-          )> }
-          & { __typename: 'Dimension' }
-        ) | null, indicator: (
-          { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
-            & { __typename: 'IndicatorValue' }
-          ) | null, goals: Array<(
-            { value: number, date: string | null }
-            & { __typename: 'IndicatorGoal' }
-          ) | null> | null, unit: (
-            { name: string, shortName: string | null }
-            & { __typename: 'Unit' }
-          ) }
-          & { __typename: 'Indicator' }
-        ) | null }
+        ) | null> | null }
         & { __typename: 'DashboardIndicatorPieChartBlock' }
       ) | (
         { id: string | null, blockType: string, indicator: (
@@ -15601,6 +15751,111 @@ export type IndicatorDetailsQuery = (
         & { __typename: 'Person' }
       ) | null }
       & { __typename: 'ActionChangeLogMessage' | 'CategoryChangeLogMessage' | 'IndicatorChangeLogMessage' | 'PageChangeLogMessage' }
+    ) | null, defaultVisualization: (
+      { showTotalLine: boolean | null, indicator: (
+        { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null, goals: Array<(
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName: string | null }
+          & { __typename: 'Unit' }
+        ) }
+        & { __typename: 'Indicator' }
+      ), dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) | null, chartSeries: Array<(
+        { dimensionCategory: (
+          { id: string, name: string, defaultColor: string }
+          & { __typename: 'DimensionCategory' }
+        ) | null, values: Array<(
+          { id: string, value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null> }
+        & { __typename: 'DashboardIndicatorChartSeries' }
+      )> }
+      & { __typename: 'IndicatorDefaultAreaChart' | 'IndicatorDefaultLineChart' }
+    ) | (
+      { barType: string | null, indicator: (
+        { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null, goals: Array<(
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName: string | null }
+          & { __typename: 'Unit' }
+        ) }
+        & { __typename: 'Indicator' }
+      ), dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) | null, chartSeries: Array<(
+        { dimensionCategory: (
+          { id: string, name: string, defaultColor: string }
+          & { __typename: 'DimensionCategory' }
+        ) | null, values: Array<(
+          { id: string, value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null> }
+        & { __typename: 'DashboardIndicatorChartSeries' }
+      )> }
+      & { __typename: 'IndicatorDefaultBarChart' }
+    ) | (
+      { year: number | null, indicator: (
+        { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null, goals: Array<(
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName: string | null }
+          & { __typename: 'Unit' }
+        ) }
+        & { __typename: 'Indicator' }
+      ), dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) | null, chartSeries: Array<(
+        { dimensionCategory: (
+          { id: string, name: string, defaultColor: string }
+          & { __typename: 'DimensionCategory' }
+        ) | null, values: Array<(
+          { id: string, value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null> }
+        & { __typename: 'DashboardIndicatorChartSeries' }
+      )> }
+      & { __typename: 'IndicatorDefaultPieChart' }
+    ) | (
+      { indicator: (
+        { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null, goals: Array<(
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName: string | null }
+          & { __typename: 'Unit' }
+        ) }
+        & { __typename: 'Indicator' }
+      ) }
+      & { __typename: 'IndicatorDefaultSummary' }
     ) | null }
     & { __typename: 'Indicator' }
   ) | null }

@@ -11,9 +11,9 @@ import { useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
+import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 
-import type { DashboardBlock } from '../DashboardRowBlock';
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   type GraphsTheme,
@@ -28,7 +28,10 @@ import {
 
 echarts.use([LineChart, ScatterChart, GridComponent, TooltipComponent, LegendComponent]);
 
-type Props = Extract<DashboardBlock, { __typename: 'DashboardIndicatorLineChartBlock' }>;
+type Props = Omit<
+  Extract<LineChartVisualizationFragment, { __typename: 'DashboardIndicatorLineChartBlock' }>,
+  '__typename'
+>;
 
 const DashboardIndicatorLineChartBlock = ({
   chartSeries,

@@ -345,10 +345,18 @@
       "TasksColumnBlock",
       "UpdatedAtColumnBlock"
     ],
+    "IndicatorAreaChartInterface": [
+      "DashboardIndicatorAreaChartBlock",
+      "IndicatorDefaultAreaChart"
+    ],
     "IndicatorAsideContentStream": [
       "IndicatorCategoryContentBlock",
       "IndicatorContentBlock",
       "IndicatorValueSummaryContentBlock"
+    ],
+    "IndicatorBarChartInterface": [
+      "DashboardIndicatorBarChartBlock",
+      "IndicatorDefaultBarChart"
     ],
     "IndicatorContentBlockInterface": [
       "IndicatorCategoryContentBlock",
@@ -357,8 +365,19 @@
       "IndicatorValueSummaryContentBlock",
       "IndicatorVisualizationContentBlock"
     ],
+    "IndicatorDefaultVisualization": [
+      "IndicatorDefaultAreaChart",
+      "IndicatorDefaultBarChart",
+      "IndicatorDefaultLineChart",
+      "IndicatorDefaultPieChart",
+      "IndicatorDefaultSummary"
+    ],
     "IndicatorFilterBlockInterface": [
       "IndicatorFilterBlock"
+    ],
+    "IndicatorLineChartInterface": [
+      "DashboardIndicatorLineChartBlock",
+      "IndicatorDefaultLineChart"
     ],
     "IndicatorListColumnInterface": [
       "IndicatorListColumn",
@@ -415,6 +434,14 @@
       "IndicatorFactorValueSummaryContentBlock",
       "IndicatorValueSummaryContentBlock",
       "IndicatorVisualizationContentBlock"
+    ],
+    "IndicatorPieChartInterface": [
+      "DashboardIndicatorPieChartBlock",
+      "IndicatorDefaultPieChart"
+    ],
+    "IndicatorSummaryInterface": [
+      "DashboardIndicatorSummaryBlock",
+      "IndicatorDefaultSummary"
     ],
     "MenuItem": [
       "ExternalLinkMenuItem",

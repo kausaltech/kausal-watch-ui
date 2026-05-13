@@ -1,8 +1,10 @@
+import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
 
-import type { DashboardBlock } from '../DashboardRowBlock';
-
-type LineChartBlock = Extract<DashboardBlock, { __typename: 'DashboardIndicatorLineChartBlock' }>;
+type LineChartBlock = Omit<
+  Extract<LineChartVisualizationFragment, { __typename: 'DashboardIndicatorLineChartBlock' }>,
+  '__typename'
+>;
 
 type TFunction = (key: string) => string;
 

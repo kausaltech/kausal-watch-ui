@@ -10,12 +10,16 @@ import type { CallbackDataParams } from 'echarts/types/dist/shared';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
-import type { DashboardBlock } from '../DashboardRowBlock';
+import type { PieChartVisualizationFragment } from '@/common/__generated__/graphql';
+
 import { getDefaultColors } from './indicator-chart-colors';
 
 echarts.use([PieChart, LegendComponent]);
 
-type Props = Extract<DashboardBlock, { __typename: 'DashboardIndicatorPieChartBlock' }>;
+type Props = Omit<
+  Extract<PieChartVisualizationFragment, { __typename: 'DashboardIndicatorPieChartBlock' }>,
+  '__typename'
+>;
 type IndicatorType = NonNullable<Props['indicator']>;
 type UnitType = IndicatorType['unit'];
 
