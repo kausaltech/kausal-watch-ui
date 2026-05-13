@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+
 import { upperFirst } from 'lodash-es';
 import { useFormatter, useTranslations } from 'next-intl';
 
@@ -119,6 +120,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
             showGraph={showIndicatorGraph}
             showTable={showIndicatorTable}
             showReference={false}
+            defaultVisualization={indicator.defaultVisualization}
           />
         </ContentBlockWrapper>
       );
@@ -425,6 +427,7 @@ const IndicatorModalContentBlock = ({
           showFactorValues={block.showFactorValues ?? false}
           showGraph={!(indicator.hideIndicatorGraph ?? false)}
           showTable={!(indicator.hideIndicatorTable ?? false)}
+          defaultVisualization={indicator.defaultVisualization}
         />
       );
 

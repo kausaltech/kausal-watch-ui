@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { type ReactElement, useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -13,6 +13,7 @@ import { Alert } from 'reactstrap';
 import ContentLoader from '@common/components/ContentLoader';
 
 import type {
+  IndicatorDetailsQuery,
   IndicatorGraphDataQuery,
   IndicatorGraphDataQueryVariables,
 } from '@/common/__generated__/graphql';
@@ -27,6 +28,7 @@ import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
 
 import RichText from '../common/RichText';
+import IndicatorVisualizationDispatcher from './IndicatorVisualizationDispatcher';
 
 function generateCube(dimensions, values, path) {
   const dim = dimensions[0];
@@ -390,6 +392,9 @@ function normalizeValuesByNormalizer(values, normalizerId) {
   );
 }
 
+type IndicatorDetailsIndicator = NonNullable<IndicatorDetailsQuery['indicator']>;
+type DefaultVisualization = IndicatorDetailsIndicator['defaultVisualization'];
+
 export type IndicatorVisualisationProps = {
   indicatorId: string;
   indicatorLink?: string;
@@ -398,6 +403,7 @@ export type IndicatorVisualisationProps = {
   showGraph?: boolean;
   showTable?: boolean;
   showFactorValues?: boolean;
+  defaultVisualization?: DefaultVisualization;
 };
 
 const FactorChartTitle = styled.div`
@@ -544,6 +550,7 @@ function IndicatorVisualisation({
   showGraph = true,
   showTable = true,
   showFactorValues = false,
+  defaultVisualization,
 }: IndicatorVisualisationProps) {
   const plan = usePlan();
   const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
@@ -788,6 +795,58 @@ function IndicatorVisualisation({
     .map((common) => common.organization)
     .filter((org) => org.id !== indicator.organization.id);
 
+  let graphComponent: ReactElement;
+  if (useLegacyGraph) {
+    /* TODO: All of the features still in use in LegacyIndicatorGraph
+       will be incorporated into IndicatorGraph.
+     */
+    graphComponent = (
+      <LegacyIndicatorGraph
+        specification={indicatorGraphSpecification}
+        yRange={yRange}
+        timeResolution={indicator.timeResolution}
+        traces={traces}
+        goalTraces={goalTraces}
+        trendTrace={trendTrace}
+        title={plotTitle}
+      />
+    );
+  } else if (defaultVisualization && !compareTo && !normalizeByPopulation) {
+    /* TODO: A generalized IndicatorGraph component
+       will be the internal implementation of the
+       graph component that IndicatorVisualizationDispatcher
+       dispatches to -- and also of all the
+       Indicator Visualization Blocks.
+
+       Currently, the block implementations are in use
+       and they do not support normalization or comparison.
+
+       Also, IndicatorVisualizationDispatcher now only supports the simplified
+       one-dimensioned data received straight from the backend.
+     */
+    graphComponent = <IndicatorVisualizationDispatcher block={defaultVisualization} />;
+  } else {
+    /* TODO: Generalize graphComponent to be the basis of all graphs. */
+    graphComponent = (
+      // TODO: Show title depending on context
+      <IndicatorGraph
+        specification={indicatorGraphSpecification}
+        yRange={yRange}
+        timeResolution={indicator.timeResolution}
+        traces={traces}
+        goalTraces={goalTraces}
+        trendTrace={trendTrace}
+        title={null}
+        desiredTrend={indicator.desiredTrend}
+        referenceValue={indicator.referenceValue}
+        nonQuantifiedGoal={{
+          trend: indicator.nonQuantifiedGoal,
+          date: indicator.nonQuantifiedGoalDate,
+        }}
+      />
+    );
+  }
+
   return (
     <div>
       {indicatorLink && (
@@ -809,38 +868,7 @@ function IndicatorVisualisation({
           currentValue={normalizeByPopulation}
         />
       )}
-      {showGraph && (
-        <div aria-hidden="true">
-          {useLegacyGraph ? (
-            <LegacyIndicatorGraph
-              specification={indicatorGraphSpecification}
-              yRange={yRange}
-              timeResolution={indicator.timeResolution}
-              traces={traces}
-              goalTraces={goalTraces}
-              trendTrace={trendTrace}
-              title={plotTitle}
-            />
-          ) : (
-            // TODO: Show title depending on context
-            <IndicatorGraph
-              specification={indicatorGraphSpecification}
-              yRange={yRange}
-              timeResolution={indicator.timeResolution}
-              traces={traces}
-              goalTraces={goalTraces}
-              trendTrace={trendTrace}
-              title={null}
-              desiredTrend={indicator.desiredTrend}
-              referenceValue={indicator.referenceValue}
-              nonQuantifiedGoal={{
-                trend: indicator.nonQuantifiedGoal,
-                date: indicator.nonQuantifiedGoalDate,
-              }}
-            />
-          )}
-        </div>
-      )}
+      {showGraph && <div aria-hidden="true">{graphComponent}</div>}
       {showTable && (
         <GraphAsTable
           specification={yRange}

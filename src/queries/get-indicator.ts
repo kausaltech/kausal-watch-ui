@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 
 import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
 import { RECURSIVE_CATEGORY_TAG_FRAGMENT } from '../fragments/category.fragment';
+import { INDICATOR_CHART_FRAGMENTS } from '../fragments/indicator-chart.fragment';
 
 export const GET_INDICATOR_DETAILS = gql`
   query IndicatorDetails($id: ID, $plan: ID, $sitePlan: ID) {
@@ -258,6 +259,28 @@ export const GET_INDICATOR_DETAILS = gql`
         }
         updatedAt
       }
+      defaultVisualization {
+        ... on IndicatorDefaultBarChart {
+          __typename
+          ...BarChartVisualization
+        }
+        ... on IndicatorDefaultLineChart {
+          __typename
+          ...LineChartVisualization
+        }
+        ... on IndicatorDefaultAreaChart {
+          __typename
+          ...AreaChartVisualization
+        }
+        ... on IndicatorDefaultPieChart {
+          __typename
+          ...PieChartVisualization
+        }
+        ... on IndicatorDefaultSummary {
+          __typename
+          ...SummaryVisualization
+        }
+      }
     }
   }
 
@@ -335,4 +358,5 @@ export const GET_INDICATOR_DETAILS = gql`
   }
   ${RECURSIVE_CATEGORY_TAG_FRAGMENT}
   ${CATEGORY_TYPE_FRAGMENT}
+  ${INDICATOR_CHART_FRAGMENTS}
 `;

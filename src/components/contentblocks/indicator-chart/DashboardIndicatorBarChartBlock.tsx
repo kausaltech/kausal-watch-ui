@@ -9,9 +9,9 @@ import { useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
+import type { BarChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 
-import type { DashboardBlock } from '../DashboardRowBlock';
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   type GraphsTheme,
@@ -24,7 +24,10 @@ import {
 
 echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
 
-type Props = Extract<DashboardBlock, { __typename: 'DashboardIndicatorBarChartBlock' }>;
+type Props = Omit<
+  Extract<BarChartVisualizationFragment, { __typename: 'DashboardIndicatorBarChartBlock' }>,
+  '__typename'
+>;
 
 // FIX: Watch the card width so we can shrink the legend on small screens
 // (e.g. 3 charts per row) and keep more space for the bars—no scroll legend.

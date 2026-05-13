@@ -7,13 +7,9 @@ import { Col, Container, Row } from 'reactstrap';
 
 import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';
+import IndicatorVisualizationDispatcher from '@/components/indicators/IndicatorVisualizationDispatcher';
 
 import Card from '../common/Card';
-import DashboardIndicatorSummaryBlockComponent from './DashboardIndicatorSummaryBlock';
-import DashboardIndicatorAreaChartBlockComponent from './indicator-chart/DashboardIndicatorAreaChartBlock';
-import DashboardIndicatorBarChartBlockComponent from './indicator-chart/DashboardIndicatorBarChartBlock';
-import DashboardIndicatorLineChartBlockComponent from './indicator-chart/DashboardIndicatorLineChartBlock';
-import DashboardIndicatorPieChartBlockComponent from './indicator-chart/DashboardIndicatorPieChartBlock';
 
 const DashboardRowSection = styled.div<{
   $topPadding?: boolean;
@@ -85,15 +81,11 @@ function getBlockComponent(block: DashboardBlock) {
     case 'DashboardParagraphBlock':
       return block.text ? <div dangerouslySetInnerHTML={{ __html: block.text }} /> : null;
     case 'DashboardIndicatorSummaryBlock':
-      return <DashboardIndicatorSummaryBlockComponent indicator={block.indicator} />;
     case 'DashboardIndicatorPieChartBlock':
-      return <DashboardIndicatorPieChartBlockComponent {...block} />;
     case 'DashboardIndicatorLineChartBlock':
-      return <DashboardIndicatorLineChartBlockComponent {...block} />;
     case 'DashboardIndicatorBarChartBlock':
-      return <DashboardIndicatorBarChartBlockComponent {...block} />;
     case 'DashboardIndicatorAreaChartBlock':
-      return <DashboardIndicatorAreaChartBlockComponent {...block} />;
+      return <IndicatorVisualizationDispatcher block={block} />;
     default:
       return null;
   }

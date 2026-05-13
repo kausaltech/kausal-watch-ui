@@ -16,9 +16,9 @@ import { useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
+import type { AreaChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 
-import type { DashboardBlock } from '../DashboardRowBlock';
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   type GraphsTheme,
@@ -32,7 +32,10 @@ import {
 
 echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent]);
 
-type Props = Extract<DashboardBlock, { __typename: 'DashboardIndicatorAreaChartBlock' }>;
+type Props = Omit<
+  Extract<AreaChartVisualizationFragment, { __typename: 'DashboardIndicatorAreaChartBlock' }>,
+  '__typename'
+>;
 
 const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }: Props) => {
   const theme = useTheme();
