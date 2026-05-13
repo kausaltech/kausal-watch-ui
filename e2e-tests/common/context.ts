@@ -344,7 +344,8 @@ export class PlanContext {
     if (this.plan.parent?.name) {
       await expect(siteName).toHaveAttribute('content', this.plan.parent?.name);
     } else {
-      await expect(siteName).toHaveAttribute('content', this.plan.generalContent.siteTitle);
+      const expected = this.plan.generalContent.siteTitle || this.plan.name;
+      await expect(siteName).toHaveAttribute('content', expected);
     }
   }
 
