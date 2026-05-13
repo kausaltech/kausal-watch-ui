@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 
 import { useTheme } from '@emotion/react';
+
 import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 
@@ -25,6 +26,7 @@ import { useCustomComponent } from './paths/custom';
 
 type MainMenu = PlanContextFragment['mainMenu'];
 type MenuItem = NonNullable<PlanContextFragment['mainMenu']>['items'][number];
+type PageMenuItem = Extract<MenuItem, { __typename: 'PageMenuItem' }>;
 
 export type NavItem = {
   id: string;
@@ -32,15 +34,17 @@ export type NavItem = {
   slug: string;
   urlPath: string;
   active: boolean;
-  children: MenuItem[] | null;
+  children: NavItem[] | null;
 };
 
 export type NavItems = NavItem[] | null;
 
-const getMenuStructure = (pages: MenuItem[], rootId: string): NavItems => {
+const isPageMenuItem = (item: MenuItem): item is PageMenuItem => item.__typename === 'PageMenuItem';
+
+const getMenuStructure = (pages: PageMenuItem[], rootId: string): NavItems => {
   const menuLevelItems: NavItems = [];
   pages.forEach((page) => {
-    if (page.parent.id === rootId) {
+    if (page.parent?.id === rootId) {
       menuLevelItems.push({
         id: `${page.id}`,
         name: page.page.title,
@@ -71,7 +75,7 @@ const setActivePages = (navLinks, pathname, activeBranch) => {
 };
 
 function createLocalizeMenuItem(currentLocale: string, primaryLocale: string) {
-  return function (menuItem: MenuItem) {
+  return function (menuItem: PageMenuItem): PageMenuItem {
     if (currentLocale === primaryLocale) {
       return menuItem;
     }
@@ -101,21 +105,16 @@ function Header() {
     let links = [];
 
     const mainMenu = plan.mainMenu;
-    const pageMenuItems: MenuItem[] = mainMenu.items
-      .filter((item) => item?.__typename == 'PageMenuItem')
+    const pageMenuItems = mainMenu.items
+      .filter(isPageMenuItem)
       .map(createLocalizeMenuItem(locale, plan.primaryLanguage));
 
     if (pageMenuItems.length > 0) {
       // find one menu item with root as parent to access the id of the rootPage
       const rootItemIndex = pageMenuItems.findIndex(
-        (page) => page.parent.page.__typename === 'PlanRootPage'
+        (page) => page.parent?.page.__typename === 'PlanRootPage'
       );
-      const staticPages = getMenuStructure(
-        pageMenuItems,
-        pageMenuItems[rootItemIndex].parent.id,
-        pathname,
-        activeBranch
-      );
+      const staticPages = getMenuStructure(pageMenuItems, pageMenuItems[rootItemIndex].parent!.id);
       links = links.concat(staticPages);
     }
     return links;
