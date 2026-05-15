@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import type { Theme } from '@kausal/themes/types';
 import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import debounce from 'lodash-es/debounce';
@@ -369,10 +370,34 @@ const StyledDropdown = styled(UncontrolledDropdown)`
   }
 `;
 
+const DropdownMenuWrapper = styled.div`
+  position: static;
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    position: absolute;
+  }
+`;
+
 const StyledDropdownMenu = styled(DropdownMenu)`
-  min-width: 260px;
+  min-width: 0;
+  width: 100%;
+
+  &.dropdown-menu {
+    position: static;
+    transform: none !important;
+  }
+
   &.dropdown-menu[data-bs-popper] {
     top: unset;
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    min-width: 260px;
+    width: auto;
+
+    &.dropdown-menu {
+      position: absolute;
+    }
   }
 `;
 
@@ -437,7 +462,7 @@ function DropdownList(props) {
           {parentName}
         </NavHighlighter>
       </StyledDropdownToggle>
-      <div style={{ position: 'absolute' }}>
+      <DropdownMenuWrapper>
         <StyledDropdownMenu>
           {items &&
             items.map((child) => (
@@ -450,7 +475,7 @@ function DropdownList(props) {
               </DropdownItem>
             ))}
         </StyledDropdownMenu>
-      </div>
+      </DropdownMenuWrapper>
     </StyledDropdown>
   );
 }
