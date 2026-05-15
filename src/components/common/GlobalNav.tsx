@@ -391,12 +391,20 @@ const StyledDropdownMenu = styled(DropdownMenu)`
     top: unset;
   }
 
+  .dropdown-item {
+    width: auto;
+  }
+
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     min-width: 260px;
     width: auto;
 
     &.dropdown-menu {
       position: absolute;
+    }
+
+    .dropdown-item {
+      width: 100%;
     }
   }
 `;
