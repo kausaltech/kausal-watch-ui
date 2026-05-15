@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch(`${gotenbergUrl}/forms/chromium/convert/url`, {
       method: 'POST',
       body: formData,
-      signal: AbortSignal.timeout(125_000),
+      signal: AbortSignal.timeout(245_000),
     });
 
     if (!response.ok) {
