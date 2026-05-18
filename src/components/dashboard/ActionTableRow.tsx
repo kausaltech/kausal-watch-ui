@@ -1,7 +1,9 @@
 import React from 'react';
 
-import styled from '@emotion/styled';
 import Tooltip from '@mui/material/Tooltip';
+
+import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
@@ -9,13 +11,16 @@ import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import { COLUMN_CONFIG } from './dashboard.constants';
 import type { ActionListAction, ColumnConfig } from './dashboard.types';
 
+const STICKY_ACTION_NAME_CLASS = 'sticky-action-name-column';
+
 const StyledRow = styled.tr`
   font-family: ${(props) => `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
   &.merged {
     opacity: 0.25;
   }
 
-  td {
+  td,
+  th {
     vertical-align: top;
     min-height: 1px;
 
@@ -53,6 +58,24 @@ interface Props {
   planViewUrl?: string | null;
 }
 
+const getCellClassName = ({
+  cellClassName,
+  hasTooltip,
+  rowHeader,
+}: {
+  cellClassName?: string;
+  hasTooltip: boolean;
+  rowHeader?: boolean;
+}) =>
+  [
+    cellClassName,
+    hasTooltip ? 'has-tooltip' : undefined,
+    rowHeader ? 'row-title' : undefined,
+    rowHeader ? STICKY_ACTION_NAME_CLASS : undefined,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
 const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
   const t = useTranslations();
 
@@ -69,9 +92,7 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
         const hasTooltip = !!renderTooltipContent;
         const content = renderCell(t, action, plan, planViewUrl, column?.attributeType);
         const id = `row-${action.id}-${i}`;
-        const className = `${cellClassName} ${
-          hasTooltip ? 'has-tooltip' : ''
-        } ${rowHeader ? 'row-title' : ''}`;
+        const className = getCellClassName({ cellClassName, hasTooltip, rowHeader });
         const tooltipContent = hasTooltip
           ? renderTooltipContent(t, action, plan, column?.attributeType)
           : undefined;

@@ -16,10 +16,12 @@ import ActionStatusExport from './ActionStatusExport';
 import { COLUMN_CONFIG } from './dashboard.constants';
 import { ActionListAction, ActionListOrganization, ColumnConfig } from './dashboard.types';
 
+const STICKY_ACTION_NAME_CLASS = 'sticky-action-name-column';
+
 const TableWrapper = styled.div`
   width: 100%;
-  display: flex;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 
   padding: 0 0 ${(props) => props.theme.spaces.s100} 0;
   background-image:
@@ -48,6 +50,48 @@ const DashTable = styled(Table)`
 
   .logo-column {
     width: 2rem;
+  }
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: max-content;
+
+    th,
+    td {
+      left: auto;
+      z-index: auto;
+    }
+
+    th:not(.${STICKY_ACTION_NAME_CLASS}),
+    td:not(.${STICKY_ACTION_NAME_CLASS}) {
+      position: static !important;
+    }
+
+    .${STICKY_ACTION_NAME_CLASS} {
+      position: sticky !important;
+      left: 0 !important;
+
+      width: min(44vw, 11rem);
+      min-width: 8.5rem;
+      max-width: 11rem;
+
+      white-space: normal;
+      overflow-wrap: normal;
+      word-break: normal;
+      hyphens: auto;
+
+      background-color: ${(props) => props.theme.themeColors.white};
+      background-clip: padding-box;
+    }
+
+    thead .${STICKY_ACTION_NAME_CLASS} {
+      z-index: 30 !important;
+    }
+
+    tbody .${STICKY_ACTION_NAME_CLASS} {
+      z-index: 20 !important;
+    }
   }
 `;
 
@@ -197,6 +241,16 @@ const compareNullableNumber = (a: number | null, b: number | null) => {
 const compareNullableString = (a?: string | null, b?: string | null) =>
   (a ?? '').localeCompare(b ?? '');
 
+const getColumnClassName = (column: ColumnConfig) => {
+  const columnConfig = COLUMN_CONFIG[column.__typename];
+  return [
+    columnConfig?.headerClassName,
+    columnConfig?.rowHeader ? STICKY_ACTION_NAME_CLASS : undefined,
+  ]
+    .filter(Boolean)
+    .join(' ');
+};
+
 interface Props {
   actions: ActionListAction[];
   orgs: ActionListOrganization[];
@@ -315,6 +369,7 @@ const ActionStatusTable = (props: Props) => {
                   return null;
                 }
 
+                const className = getColumnClassName(column);
                 const headerLabel = column.columnLabel || column?.attributeType?.name;
                 const isFieldColumn =
                   column.__typename === 'FieldColumnBlock' && !!column.attributeType?.id;
@@ -335,7 +390,7 @@ const ActionStatusTable = (props: Props) => {
                       sort={sort}
                       headerKey={headerKey}
                       onClick={sortHandler(headerKey)}
-                      className={columnConfig.headerClassName}
+                      className={className}
                     >
                       {columnConfig.renderHeader(t, plan, headerLabel)}
                     </SortableTableHeader>
@@ -343,7 +398,7 @@ const ActionStatusTable = (props: Props) => {
                 }
 
                 return (
-                  <th key={i} scope="col" className={columnConfig.headerClassName}>
+                  <th key={i} scope="col" className={className}>
                     {columnConfig.renderHeader(t, plan, headerLabel)}
                   </th>
                 );
