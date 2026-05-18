@@ -1,7 +1,10 @@
+import path from 'node:path';
+
 import type BundleAnalyzerPlugin from '@next/bundle-analyzer';
 import type { NextConfig } from 'next';
 import withNextIntl from 'next-intl/plugin';
 import type { Options as SassOptions } from 'sass';
+import type * as Webpack from 'webpack';
 
 import { getNextConfig } from './kausal_common/configs/common-next-config.ts';
 import { wrapWithSentryConfig } from './kausal_common/configs/sentry-next-config.ts';
@@ -21,6 +24,21 @@ let nextConfig: NextConfig = {
       ...baseConfig.turbopack?.resolveAlias,
       '@/public/*': './public/*',
     },
+  },
+  webpack: (cfg: Webpack.Configuration, context) => {
+    const result = baseConfig.webpack?.(cfg, context) as Webpack.Configuration;
+    if (result.resolve?.alias) {
+      // `@/public` must come before `@` in iteration order: enhanced-resolve
+      // tries aliases sequentially, and `@` would otherwise match first,
+      // rewrite to `src/public/...`, fail, and short-circuit (shouldStop).
+      const alias = result.resolve.alias as Record<string, string>;
+      const reordered: Record<string, string> = {
+        '@/public': path.join(__dirname, 'public'),
+      };
+      for (const [key, value] of Object.entries(alias)) reordered[key] = value;
+      result.resolve.alias = reordered;
+    }
+    return result;
   },
   sassOptions: {
     quietDeps: true,
