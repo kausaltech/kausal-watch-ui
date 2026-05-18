@@ -26,7 +26,7 @@ let nextConfig: NextConfig = {
     },
   },
   webpack: (cfg: Webpack.Configuration, context) => {
-    const result = baseConfig.webpack?.(cfg, context) as Webpack.Configuration;
+    const result = (baseConfig.webpack?.(cfg, context) ?? cfg) as Webpack.Configuration;
     if (result.resolve?.alias) {
       // `@/public` must come before `@` in iteration order: enhanced-resolve
       // tries aliases sequentially, and `@` would otherwise match first,
