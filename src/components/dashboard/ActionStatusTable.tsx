@@ -61,11 +61,29 @@ const DashTable = styled(Table)`
     td {
       left: auto;
       z-index: auto;
+      padding-left: ${(props) => props.theme.spaces.s050};
+      padding-right: ${(props) => props.theme.spaces.s050};
     }
 
     th:not(.${STICKY_ACTION_NAME_CLASS}),
     td:not(.${STICKY_ACTION_NAME_CLASS}) {
       position: static !important;
+      width: 8.5rem;
+      min-width: 8.5rem;
+      max-width: 8.5rem;
+    }
+
+    th:not(.${STICKY_ACTION_NAME_CLASS}) {
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: normal;
+      hyphens: auto;
+    }
+
+    td:not(.${STICKY_ACTION_NAME_CLASS}) {
+      white-space: normal;
+      overflow-wrap: normal;
+      word-break: normal;
     }
 
     .${STICKY_ACTION_NAME_CLASS} {
