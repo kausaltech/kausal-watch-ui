@@ -530,8 +530,8 @@ importers:
         version: 5.106.2(@swc/core@1.15.8(@swc/helpers@0.5.17))(esbuild@0.27.7)
     optionalDependencies:
       '@kausal-private/themes-private':
-        specifier: ^0.5.104
-        version: 0.5.104
+        specifier: ^0.5.105
+        version: 0.5.105
 
   kausal_common:
     dependencies:
@@ -2385,8 +2385,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@kausal-private/themes-private@0.5.104':
-    resolution: {integrity: sha512-I4XkHZEu4yEk0HOjQXTB7Y8L5R16LwaRhXIMSQsk923D+2uIV1auzcagUDDPCm4IeP9XwN7ulCIQXsmywd+sCA==}
+  '@kausal-private/themes-private@0.5.105':
+    resolution: {integrity: sha512-LIC1Ly8+QDrpKAkFReHy6W9YnuKNthPX+/x2pyk+9rdHZCTC/rDub7zDJ8vUWIga0/98sX/5zEahkB1qi8Eb7A==}
 
   '@kausal/mapboxgl-legend@1.7.2':
     resolution: {integrity: sha512-qmjchiPrcer3gCLkln7z2e0o8i5XK2BNRbMMdr6/KHMxDTSeOOaN1PvRjXzrTAtewOyxztHxnyYH9KaoC5LJdQ==}
@@ -10952,7 +10952,7 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@cyclonedx/cyclonedx-library@10.0.0(ajv-formats-draft2019@1.6.1(ajv@6.15.0))(ajv-formats@3.0.1(ajv@8.17.1))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)':
+  '@cyclonedx/cyclonedx-library@10.0.0(ajv-formats-draft2019@1.6.1(ajv@8.17.1))(ajv-formats@3.0.1(ajv@8.17.1))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)':
     optionalDependencies:
       ajv: 8.17.1
       ajv-formats: 3.0.1(ajv@8.17.1)
@@ -10964,7 +10964,7 @@ snapshots:
 
   '@cyclonedx/webpack-plugin@5.3.2(webpack@5.106.2(@swc/core@1.15.8(@swc/helpers@0.5.17))(esbuild@0.27.7))':
     dependencies:
-      '@cyclonedx/cyclonedx-library': 10.0.0(ajv-formats-draft2019@1.6.1(ajv@6.15.0))(ajv-formats@3.0.1(ajv@8.17.1))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)
+      '@cyclonedx/cyclonedx-library': 10.0.0(ajv-formats-draft2019@1.6.1(ajv@8.17.1))(ajv-formats@3.0.1(ajv@8.17.1))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)
       normalize-package-data: 7.0.0
       packageurl-js: 2.0.1
       spdx-expression-parse: 4.0.0
@@ -12316,7 +12316,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@kausal-private/themes-private@0.5.104':
+  '@kausal-private/themes-private@0.5.105':
     optional: true
 
   '@kausal/mapboxgl-legend@1.7.2': {}

@@ -20,6 +20,8 @@ minimumReleaseAgeExclude:
   - '@typescript-eslint/*'
   - 'next'
   - '@next/*'
+  - '@kausal/themes'
+  - '@kausal-private/themes-private'
 publicHoistPattern:
   - "@kausal/themes"
   - "@kausal-private/themes-private"
