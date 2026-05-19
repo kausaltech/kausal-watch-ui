@@ -15,6 +15,8 @@ import Icon from '@/components/common/Icon';
 import PopoverTip from '../common/PopoverTip';
 import type { SortState } from './indicatorUtils';
 
+const STICKY_INDICATOR_NAME_CLASS = 'sticky-indicator-name-column';
+
 const StyledTh = styled.th<{ $numeric?: boolean }>`
   text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
   line-height: ${(props) => props.theme.lineHeightSm};
@@ -87,7 +89,8 @@ const getColumnLabel = (
         default:
           return '';
       }
-    case 'IndicatorValueColumn':
+
+    case 'IndicatorValueColumn': {
       const normalized = column.isNormalized
         ? `(${t('indicator-population-normalized-value')})`
         : '';
@@ -125,6 +128,7 @@ const getColumnLabel = (
             </>
           );
       }
+    }
     default:
       return '';
   }
@@ -149,12 +153,14 @@ const IndicatorTableHeader = (props: IndicatorTableHeaderProps) => {
   const iconName = selected ? (sort?.direction === 'asc' ? 'sort-down' : 'sort-up') : 'sort';
 
   const Th = isSortable ? SortableTh : StyledTh;
+  const className = isNameColumn ? STICKY_INDICATOR_NAME_CLASS : undefined;
 
   return (
     <Th
       key={column.id}
       $numeric={isNumericColumn(column)}
       scope="col"
+      className={className}
       onClick={isSortable && sortKey ? () => onSortState?.(sortKey) : undefined}
       aria-sort={
         isSortable

@@ -7,7 +7,10 @@ import { Alert, Table } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
+import {
+  IndicatorDashboardFieldName,
+  type IndicatorListPageFragmentFragment,
+} from '@/common/__generated__/graphql';
 
 import Icon from '../common/Icon';
 import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
@@ -19,11 +22,13 @@ import type { Hierarchy } from './process-indicators';
 
 export const isEmptyFilter = (val) => val == null || val === '';
 
+const STICKY_INDICATOR_NAME_CLASS = 'sticky-indicator-name-column';
+
 const TableWrapper = styled.div`
   /*div className="mt-5 mb-5 pb-5"*/
   width: 100%;
-  display: flex;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 
   margin: ${(props) => props.theme.spaces.s200} 0;
   padding-bottom: ${(props) => props.theme.spaces.s200};
@@ -53,6 +58,62 @@ const TableWrapper = styled.div`
     25px 100%,
     25px 100%;
   background-attachment: local, local, scroll, scroll;
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    max-height: calc(100vh - ${(props) => props.theme.spaces.s100});
+    overflow: auto;
+  }
+`;
+
+const IndicatorListTable = styled(Table)`
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: max-content;
+
+    th,
+    td {
+      left: auto;
+      z-index: auto;
+    }
+
+    tbody td:not(.${STICKY_INDICATOR_NAME_CLASS}) {
+      position: static !important;
+    }
+
+    thead th {
+      position: sticky !important;
+      top: -1px;
+      z-index: 30 !important;
+      background-color: ${(props) => props.theme.themeColors.white};
+      background-clip: padding-box;
+      box-shadow:
+        0 -2px 0 ${(props) => props.theme.themeColors.white},
+        0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .${STICKY_INDICATOR_NAME_CLASS} {
+      position: sticky !important;
+      left: 0 !important;
+      width: min(44vw, 11rem);
+      min-width: 8.5rem;
+      max-width: 11rem;
+      white-space: normal;
+      overflow-wrap: normal;
+      word-break: normal;
+      hyphens: auto;
+      background-color: ${(props) => props.theme.themeColors.white};
+      background-clip: padding-box;
+    }
+
+    thead .${STICKY_INDICATOR_NAME_CLASS} {
+      z-index: 50 !important;
+    }
+
+    tbody .${STICKY_INDICATOR_NAME_CLASS} {
+      z-index: 20 !important;
+    }
+  }
 `;
 
 const Cell = styled.td`
@@ -111,10 +172,12 @@ const StyledCell = (props: {
   hasChildren: boolean;
   expanded: boolean;
   onToggle?: () => void;
+  className?: string;
 }) => {
-  const { indent, children, hasChildren, expanded, onToggle } = props;
+  const { indent, children, hasChildren, expanded, onToggle, className } = props;
+
   return (
-    <Cell>
+    <Cell className={className}>
       <CellWrapper>
         {indent > 0 ? <div style={{ paddingLeft: `${indent * 16}px` }}> </div> : null}
         {hasChildren ? (
@@ -233,9 +296,13 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
   const groupedIndicators = groupIndicatorsByCommonCategory(indicators);
   const columnCount = listColumns.length;
 
+  const isNameColumn = (column: (typeof listColumns)[number]) =>
+    column.__typename === 'IndicatorListColumn' &&
+    column.sourceField === IndicatorDashboardFieldName.Name;
+
   return (
     <TableWrapper>
-      <Table hover>
+      <IndicatorListTable hover>
         <thead>
           <tr>
             {listColumns.map((column) => (
@@ -296,6 +363,9 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
                             indent={index === 0 ? indent + 1 : 0}
                             hasChildren={false}
                             expanded={false}
+                            className={
+                              isNameColumn(column) ? STICKY_INDICATOR_NAME_CLASS : undefined
+                            }
                           >
                             <IndicatorTableCell
                               column={column}
@@ -329,6 +399,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
                               ? () => toggleCollapse(commonId)
                               : undefined
                           }
+                          className={isNameColumn(column) ? STICKY_INDICATOR_NAME_CLASS : undefined}
                         >
                           <IndicatorTableCell
                             column={column}
@@ -344,7 +415,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
             );
           })}
         </tbody>
-      </Table>
+      </IndicatorListTable>
     </TableWrapper>
   );
 }
