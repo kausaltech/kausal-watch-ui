@@ -41,6 +41,11 @@ const TableWrapper = styled.div`
     10px 100%,
     10px 100%;
   background-attachment: local, local, scroll, scroll;
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    max-height: calc(100vh - ${(props) => props.theme.spaces.s100});
+    overflow: auto;
+  }
 `;
 
 const DashTable = styled(Table)`
@@ -67,10 +72,13 @@ const DashTable = styled(Table)`
 
     th:not(.${STICKY_ACTION_NAME_CLASS}),
     td:not(.${STICKY_ACTION_NAME_CLASS}) {
-      position: static !important;
       width: 8.5rem;
       min-width: 8.5rem;
       max-width: 8.5rem;
+    }
+
+    tbody td:not(.${STICKY_ACTION_NAME_CLASS}) {
+      position: static !important;
     }
 
     th:not(.${STICKY_ACTION_NAME_CLASS}) {
@@ -84,6 +92,17 @@ const DashTable = styled(Table)`
       white-space: normal;
       overflow-wrap: normal;
       word-break: normal;
+    }
+
+    thead th {
+      position: sticky !important;
+      top: -1px;
+      z-index: 30 !important;
+      background-color: ${(props) => props.theme.themeColors.white};
+      background-clip: padding-box;
+      box-shadow:
+        0 -2px 0 ${(props) => props.theme.themeColors.white},
+        0 2px 4px rgba(0, 0, 0, 0.08);
     }
 
     .${STICKY_ACTION_NAME_CLASS} {
@@ -104,7 +123,7 @@ const DashTable = styled(Table)`
     }
 
     thead .${STICKY_ACTION_NAME_CLASS} {
-      z-index: 30 !important;
+      z-index: 50 !important;
     }
 
     tbody .${STICKY_ACTION_NAME_CLASS} {
@@ -261,6 +280,7 @@ const compareNullableString = (a?: string | null, b?: string | null) =>
 
 const getColumnClassName = (column: ColumnConfig) => {
   const columnConfig = COLUMN_CONFIG[column.__typename];
+
   return [
     columnConfig?.headerClassName,
     columnConfig?.rowHeader ? STICKY_ACTION_NAME_CLASS : undefined,
