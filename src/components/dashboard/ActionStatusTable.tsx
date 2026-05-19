@@ -72,9 +72,9 @@ const DashTable = styled(Table)`
 
     th:not(.${STICKY_ACTION_NAME_CLASS}),
     td:not(.${STICKY_ACTION_NAME_CLASS}) {
-      width: 8.5rem;
-      min-width: 8.5rem;
-      max-width: 8.5rem;
+      width: 9rem;
+      min-width: 9rem;
+      max-width: 9rem;
     }
 
     tbody td:not(.${STICKY_ACTION_NAME_CLASS}) {
@@ -92,6 +92,22 @@ const DashTable = styled(Table)`
       white-space: normal;
       overflow-wrap: normal;
       word-break: normal;
+      hyphens: none;
+      overflow: hidden;
+    }
+
+    td:not(.${STICKY_ACTION_NAME_CLASS}) > * {
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    td:not(.${STICKY_ACTION_NAME_CLASS}) * {
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: normal;
+      hyphens: none;
     }
 
     thead th {
