@@ -1,6 +1,7 @@
 import React, { type PropsWithChildren } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Card, CardBody, CardTitle } from 'reactstrap';
@@ -202,7 +203,7 @@ function CardLink(props: CardLinkProps) {
 export function getIndicatorTranslation(
   level: string | null,
   t: TFunction,
-  indicatorTermContext?: { context: string }
+  indicatorTermContext: { context: string } = { context: 'INDICATOR' }
 ) {
   if (!level) {
     return t('indicator', indicatorTermContext);
