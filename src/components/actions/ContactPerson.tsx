@@ -90,6 +90,7 @@ type AvatarProps = {
 const Avatar = styled.div<AvatarProps>`
   width: 5em;
   height: 5em;
+  flex-shrink: 0;
   border-radius: 50%;
   background-color: transparent;
   background-size: cover;
