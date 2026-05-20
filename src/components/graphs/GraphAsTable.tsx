@@ -61,6 +61,16 @@ const TableContainer = styled.div`
     th {
       text-align: right;
     }
+
+    @media (max-width: ${(p) => p.theme.breakpointMd}) {
+      width: 100%;
+      min-width: 0;
+
+      th[scope='row'] {
+        width: 1%;
+        white-space: nowrap;
+      }
+    }
   }
 `;
 const TriggerButton = styled(Button)`
