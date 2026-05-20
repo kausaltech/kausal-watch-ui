@@ -31,7 +31,7 @@ const ModalBody = styled.div`
   box-sizing: border-box;
 
   @media (max-width: 480px) {
-    padding: 24px 16px;
+    padding: ${(props) => props.theme.spaces.s300} ${(props) => props.theme.spaces.s200};
   }
 `;
 

@@ -156,7 +156,6 @@ type FormatterParams = {
   percent?: number;
 };
 
-const FALLBACK_COLORS = ['#0f4c63', '#1f77b4', '#ff7f0e', '#2ca02c', '#d9d9d9'];
 const SMALL_SLICE_THRESHOLD = 6;
 
 const getNumberValue = (value: number | string | null | undefined) => {
@@ -209,6 +208,23 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
   const t = useTranslations();
   const locale = useLocale();
 
+  const fallbackColors = useMemo(
+    () => [
+      theme.graphColors.blue070,
+      theme.graphColors.blue050,
+      // The legacy Plotly fallback used orange, but the theme graph palette hasn't orange
+      '#ff7f0e',
+      theme.graphColors.green050,
+      theme.graphColors.grey030,
+    ],
+    [  
+      theme.graphColors.blue070,
+      theme.graphColors.blue050,
+      theme.graphColors.green050,
+      theme.graphColors.grey030,
+    ]
+  );
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -224,9 +240,9 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
       data.values.map((_, index) =>
         isValidColor(colors[index])
           ? String(colors[index])
-          : FALLBACK_COLORS[index % FALLBACK_COLORS.length]
+          : fallbackColors[index % fallbackColors.length]
       ),
-    [colors, data.values]
+    [colors, data.values, fallbackColors]
   );
 
   const chartData = useMemo<DonutChartItem[]>(
