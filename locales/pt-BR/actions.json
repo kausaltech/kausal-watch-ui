@@ -62,5 +62,6 @@
     "actions-continuous": "Ações em andamento",
     "actions-non-continuous": "Ações não contínuas",
     "filter-action-type": "Tipo de ação",
-    "see-all-actions": "Todas as ações"
+    "see-all-actions": "Todas as ações",
+    "download-chart-as-png": "Baixar gráfico como PNG"
 }

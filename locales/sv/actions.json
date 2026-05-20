@@ -61,5 +61,6 @@
     "actions-non-continuous": "Icke ständiga åtgärder",
     "filter-action-type": "Typ av åtgärd",
     "see-all-actions": "Alla åtgärder",
-    "action-not-continuous": "Inte kontinuerlig"
+    "action-not-continuous": "Inte kontinuerlig",
+    "download-chart-as-png": "Ladda ner diagrammet som PNG"
 }
