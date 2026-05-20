@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
+
 import * as Sentry from '@sentry/nextjs';
-import type { truncate } from 'fs/promises';
 import { type DateTimeFormatOptions, useFormatter, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Button } from 'reactstrap';
@@ -11,16 +11,16 @@ import {
   type IndicatorListPageFragmentFragment,
   IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
+import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorLink } from '@/common/links';
 import useNumberFormatter from '@/common/numbers';
+import { usePlan } from '@/context/plan';
 
 import BadgeTooltip from '../common/BadgeTooltip';
 import Icon from '../common/Icon';
 import { getIndicatorTranslation } from './IndicatorCard';
 import type { IndicatorListIndicator } from './IndicatorList';
 import { isGoalAlreadyExceeded } from './indicatorUtils';
-
-const DEFAULT_ROUNDING = 2;
 
 const CellContent = styled.div<{ $numeric?: boolean }>`
   flex: 1;
@@ -415,6 +415,7 @@ const IndicatorListColumnCell = (props: IndicatorListColumnCellProps) => {
   const { sourceField, indicator } = props;
   const format = useFormatter();
   const t = useTranslations();
+  const plan = usePlan();
 
   switch (sourceField) {
     case IndicatorDashboardFieldName.Name:
@@ -422,7 +423,9 @@ const IndicatorListColumnCell = (props: IndicatorListColumnCellProps) => {
     case IndicatorDashboardFieldName.Level:
       // TODO: Use action name context
       const indicatorLevelName =
-        indicator.level === 'action' ? t('action') : getIndicatorTranslation(indicator.level, t);
+        indicator.level === 'action'
+          ? t('action', getActionTermContext(plan))
+          : getIndicatorTranslation(indicator.level, t, getIndicatorTermContext(plan));
       return (
         <CellContent>
           <IndicatorLevelBadge $level={indicator.level}>{indicatorLevelName}</IndicatorLevelBadge>

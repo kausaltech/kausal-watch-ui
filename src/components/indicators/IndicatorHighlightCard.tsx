@@ -1,11 +1,10 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Card, CardBody, CardImgOverlay, CardTitle } from 'reactstrap';
 
-import { getActionTermContext } from '@/common/i18n';
+import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorLink } from '@/common/links';
 import useNumberFormatter from '@/common/numbers';
 import { usePlan } from '@/context/plan';
@@ -108,7 +107,7 @@ function IndicatorHighlightCard({
   const indicatorType =
     level === 'action'
       ? t('action', getActionTermContext(plan))
-      : getIndicatorTranslation(level ?? null, t);
+      : getIndicatorTranslation(level ?? null, t, getIndicatorTermContext(plan));
 
   return (
     <StyledCard>

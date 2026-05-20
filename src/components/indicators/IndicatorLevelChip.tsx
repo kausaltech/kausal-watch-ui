@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 
-import { getActionTermContext } from '@/common/i18n';
+import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
 import { usePlan } from '@/context/plan';
 
@@ -74,7 +75,7 @@ const IndicatorLevelChip = ({ level }: { level: string }) => {
     level === 'action'
       ? t('action', getActionTermContext(plan))
       : level != null
-        ? getIndicatorTranslation(level, t)
+        ? getIndicatorTranslation(level, t, getIndicatorTermContext(plan))
         : null;
   return (
     <IndicatorLevel $level={level}>
