@@ -6,12 +6,15 @@ import { ActionSection, SectionHeader } from '@/components/actions/ActionContent
 import TaskList from '@/components/actions/TaskList';
 import { usePlan } from '@/context/plan';
 
+import PopoverTip from '@/components/common/PopoverTip';
+
 type ActionTasksBlockProps = {
   tasks: React.ComponentProps<typeof TaskList>['tasks'];
   heading?: string | null;
+  helpText?: string | null;
 };
 
-const ActionTasksBlock = ({ tasks, heading }: ActionTasksBlockProps) => {
+const ActionTasksBlock = ({ tasks, heading, helpText }: ActionTasksBlockProps) => {
   const t = useTranslations();
   const plan = usePlan();
 
@@ -21,6 +24,7 @@ const ActionTasksBlock = ({ tasks, heading }: ActionTasksBlockProps) => {
         <Col>
           <SectionHeader>
             {heading || t('action-tasks', getActionTaskTermContext(plan))}
+            {helpText && <PopoverTip content={helpText} identifier="action-tasks" />}
           </SectionHeader>
         </Col>
       </Row>
