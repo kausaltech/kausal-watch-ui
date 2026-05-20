@@ -8777,13 +8777,13 @@ export type GetActionDetailsQuery = (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
-        & { __typename: 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionPledgesBlock' | 'ActionRelatedActionsBlock' }
+        & { __typename: 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionPledgesBlock' | 'ActionRelatedActionsBlock' | 'ActionTasksBlock' }
       ) | (
         { id: string | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
-        & { __typename: 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+        & { __typename: 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' }
       ) | (
         { id: string | null, fieldLabel: string | null, caption: string | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
@@ -9509,13 +9509,13 @@ export type GetActionDetailsQuery = (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
-        & { __typename: 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionPledgesBlock' | 'ActionRelatedActionsBlock' }
+        & { __typename: 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionPledgesBlock' | 'ActionRelatedActionsBlock' | 'ActionTasksBlock' }
       ) | (
         { id: string | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
-        & { __typename: 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+        & { __typename: 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' }
       ) | (
         { id: string | null, fieldLabel: string | null, caption: string | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
@@ -10929,20 +10929,20 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
   & { __typename: 'ActionContentSectionBlock' }
 );
 
-type ActionMainContentBlocksFragment_EFuiMyhHxXMlyDc2rZGxX4i12M0MQf3It7MyMtuQQak_Fragment = (
+type ActionMainContentBlocksFragment_Pm7qvkEswOj3HalNkYhsetHyZj7fjuxRq5zDrUiKNw_Fragment = (
   { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null }
-  & { __typename: 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionPledgesBlock' | 'ActionRelatedActionsBlock' }
+  & { __typename: 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionPledgesBlock' | 'ActionRelatedActionsBlock' | 'ActionTasksBlock' }
 );
 
-type ActionMainContentBlocksFragment_UWgtElzWcIrkE20HqBetlMWpkiyr21UnWd1ytrejw0_Fragment = (
+type ActionMainContentBlocksFragment_ActionLinksBlock_ActionMergedActionsBlock_ActionRelatedIndicatorsBlock_Fragment = (
   { id: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null }
-  & { __typename: 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionTasksBlock' }
+  & { __typename: 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' }
 );
 
 type ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment = (
@@ -11276,7 +11276,7 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
   & { __typename: 'ReportComparisonBlock' }
 );
 
-export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_ActionContactFormBlock_Fragment | ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment | ActionMainContentBlocksFragment_EFuiMyhHxXMlyDc2rZGxX4i12M0MQf3It7MyMtuQQak_Fragment | ActionMainContentBlocksFragment_UWgtElzWcIrkE20HqBetlMWpkiyr21UnWd1ytrejw0_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment | ActionMainContentBlocksFragment_ChangeLogMessageBlock_Fragment | ActionMainContentBlocksFragment_IndicatorCausalChainBlock_Fragment | ActionMainContentBlocksFragment_PlanDatasetsBlock_Fragment | ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment;
+export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_ActionContactFormBlock_Fragment | ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment | ActionMainContentBlocksFragment_Pm7qvkEswOj3HalNkYhsetHyZj7fjuxRq5zDrUiKNw_Fragment | ActionMainContentBlocksFragment_ActionLinksBlock_ActionMergedActionsBlock_ActionRelatedIndicatorsBlock_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment | ActionMainContentBlocksFragment_ChangeLogMessageBlock_Fragment | ActionMainContentBlocksFragment_IndicatorCausalChainBlock_Fragment | ActionMainContentBlocksFragment_PlanDatasetsBlock_Fragment | ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment;
 
 export type ReportComparisonBlockActionContentFragment = (
   { reportField: string | null, reportType: (

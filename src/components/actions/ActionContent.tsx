@@ -248,7 +248,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       );
     case 'ActionTasksBlock':
       if (!action.tasks.length) return null;
-      return <ActionTasksBlock tasks={action.tasks} />;
+      return <ActionTasksBlock tasks={action.tasks} heading={block.fieldLabel} />;
     case 'ActionContactPersonsBlock':
       if (!action.contactPersons?.length) return null;
       return <ActionContactPersonsBlock contactPersons={action.contactPersons} />;

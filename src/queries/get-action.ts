@@ -395,6 +395,10 @@ const GET_ACTION_DETAILS = gql`
       fieldLabel
       fieldHelpText
     }
+    ... on ActionTasksBlock {
+      fieldLabel
+      fieldHelpText
+    }
     ... on ActionContentAttributeTypeBlock {
       attributeType {
         ...AttributesBlockAttributeType

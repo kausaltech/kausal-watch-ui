@@ -6,8 +6,12 @@ import { ActionSection, SectionHeader } from '@/components/actions/ActionContent
 import TaskList from '@/components/actions/TaskList';
 import { usePlan } from '@/context/plan';
 
-const ActionTasksBlock = (props) => {
-  const { tasks } = props;
+type ActionTasksBlockProps = {
+  tasks: React.ComponentProps<typeof TaskList>['tasks'];
+  heading?: string | null;
+};
+
+const ActionTasksBlock = ({ tasks, heading }: ActionTasksBlockProps) => {
   const t = useTranslations();
   const plan = usePlan();
 
@@ -15,7 +19,9 @@ const ActionTasksBlock = (props) => {
     <div>
       <Row>
         <Col>
-          <SectionHeader>{t('action-tasks', getActionTaskTermContext(plan))}</SectionHeader>
+          <SectionHeader>
+            {heading || t('action-tasks', getActionTaskTermContext(plan))}
+          </SectionHeader>
         </Col>
       </Row>
       <Row>
