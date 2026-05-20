@@ -17,7 +17,7 @@ export function getIndicatorTermContext(plan: {
   generalContent?: { indicatorTerm?: SiteGeneralContentIndicatorTerm };
 }) {
   const indicatorTerm = plan.generalContent?.indicatorTerm;
-  return { context: indicatorTerm || 'INDICATOR' };
+  return { context: indicatorTerm || SiteGeneralContentIndicatorTerm.Indicator };
 }
 
 export function getActionTaskTermContext(plan: {

@@ -8,6 +8,7 @@ import { Card, CardBody, CardTitle } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
+import { SiteGeneralContentIndicatorTerm } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import type { TFunction } from '@/common/i18n';
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
@@ -203,7 +204,7 @@ function CardLink(props: CardLinkProps) {
 export function getIndicatorTranslation(
   level: string | null,
   t: TFunction,
-  indicatorTermContext: { context: string } = { context: 'INDICATOR' }
+  indicatorTermContext: { context: string } = { context: SiteGeneralContentIndicatorTerm.Indicator }
 ) {
   if (!level) {
     return t('indicator', indicatorTermContext);
