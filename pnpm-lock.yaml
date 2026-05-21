@@ -309,6 +309,9 @@ importers:
       '@eslint/js':
         specifier: ^9.39.2
         version: 9.39.4
+      '@graphql-codegen/add':
+        specifier: ^7.0.0
+        version: 7.0.0(graphql@16.13.2)
       '@graphql-codegen/cli':
         specifier: ^5.0.7
         version: 5.0.7(@parcel/watcher@2.5.6)(@types/node@17.0.45)(encoding@0.1.13)(graphql@16.13.2)(typescript@5.9.3)
@@ -1746,6 +1749,12 @@ packages:
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
+  '@graphql-codegen/add@7.0.0':
+    resolution: {integrity: sha512-fQGlUQd0BpoevCTOKi3b7M+kuXCI13udXmJrIh1QMtTCLXUTYGgsubNVcPLr0cVjVwyBK/ZRgwtxdCmkVXqTwQ==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
   '@graphql-codegen/cli@5.0.7':
     resolution: {integrity: sha512-h/sxYvSaWtxZxo8GtaA8SvcHTyViaaPd7dweF/hmRDpaQU1o3iU3EZxlcJ+oLTunU0tSMFsnrIXm/mhXxI11Cw==}
     engines: {node: '>=16'}
@@ -1797,6 +1806,12 @@ packages:
 
   '@graphql-codegen/plugin-helpers@6.3.0':
     resolution: {integrity: sha512-Auc+/B7okDx9+pVgLVliZtZLYh6iltWXlnzzM+bRE+zh1T4r3hKbnr8xAmtT937ArfSgk5GHcQHr8LfPYnrRBg==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
+  '@graphql-codegen/plugin-helpers@7.0.1':
+    resolution: {integrity: sha512-S2X0YT3XQbP2haqhIeku8GOXo2j8QuBu7BrLsOEHz4UeMu78y3rja1Q4ri3oJ0jq4dMgaQlazoVHI/A+FAKMGw==}
     engines: {node: '>=16'}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -4760,8 +4775,14 @@ packages:
   change-case-all@1.0.15:
     resolution: {integrity: sha512-3+GIFhk3sNuvFAJKU46o26OdzudQlPNBCu1ZQi3cMeMHhty1bhDxu2WrEilVNYaGvqUtR1VSigFcJOiS13dRhQ==}
 
+  change-case-all@2.1.0:
+    resolution: {integrity: sha512-v6b0WWWkZUMHVuYk82l+WROgkUm4qEN2w5hKRNWtEOYwWqUGoi8C6xH0l1RLF1EoWqDFK6MFclmN3od6ws3/uw==}
+
   change-case@4.1.2:
     resolution: {integrity: sha512-bSxY2ws9OtviILG1EiY5K7NNxkqg/JnRnFxLtKQ96JaviiIxi7djMrSd0ECT9AC+lttClmYwKw53BWpOMblo7A==}
+
+  change-case@5.4.4:
+    resolution: {integrity: sha512-HRQyTk2/YPEkt9TnUPbOpr64Uw3KOicFWPVBb+xiHvd6eBx/qPr9xqfBFDT8P2vWsvvz4jbEkfDe71W3VyNu2w==}
 
   char-regex@1.0.2:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==}
@@ -9042,6 +9063,9 @@ packages:
   sponge-case@1.0.1:
     resolution: {integrity: sha512-dblb9Et4DAtiZ5YSUZHLl4XhH4uK80GhAZrVXdN4O2P4gQ40Wa5UIOPUHlA/nFd2PLblBZWUioLMMAVrgpoYcA==}
 
+  sponge-case@2.0.3:
+    resolution: {integrity: sha512-i4h9ZGRfxV6Xw3mpZSFOfbXjf0cQcYmssGWutgNIfFZ2VM+YIWfD71N/kjjwK6X/AAHzBr+rciEcn/L34S8TGw==}
+
   sprintf-js@1.0.3:
     resolution: {integrity: sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=}
 
@@ -9281,6 +9305,9 @@ packages:
 
   swap-case@2.0.2:
     resolution: {integrity: sha512-kc6S2YS/2yXbtkSMunBtKdah4VFETZ8Oh6ONSmSd9bRxhqTrtARUCBUiWXH3xVPpvR7tz2CSnkuXVE42EcGnMw==}
+
+  swap-case@3.0.3:
+    resolution: {integrity: sha512-6p4op8wE9CQv7uDFzulI6YXUw4lD9n4oQierdbFThEKVWVQcbQcUjdP27W8XE7V4QnWmnq9jueSHceyyQnqQVA==}
 
   swc-plugin-coverage-instrument@0.0.28:
     resolution: {integrity: sha512-ps70ske/LiIubyKOakw5rSOjHOIv6ecyyGQY0BctkVS2t776qtIVS2nqpAUaw3g5VMgAGoq/TShV12D3D7n3ag==}
@@ -10952,7 +10979,7 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@cyclonedx/cyclonedx-library@10.0.0(ajv-formats-draft2019@1.6.1(ajv@8.17.1))(ajv-formats@3.0.1(ajv@8.17.1))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)':
+  '@cyclonedx/cyclonedx-library@10.0.0(ajv-formats-draft2019@1.6.1(ajv@6.15.0))(ajv-formats@3.0.1(ajv@6.15.0))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)':
     optionalDependencies:
       ajv: 8.17.1
       ajv-formats: 3.0.1(ajv@8.17.1)
@@ -10964,7 +10991,7 @@ snapshots:
 
   '@cyclonedx/webpack-plugin@5.3.2(webpack@5.106.2(@swc/core@1.15.8(@swc/helpers@0.5.17))(esbuild@0.27.7))':
     dependencies:
-      '@cyclonedx/cyclonedx-library': 10.0.0(ajv-formats-draft2019@1.6.1(ajv@8.17.1))(ajv-formats@3.0.1(ajv@8.17.1))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)
+      '@cyclonedx/cyclonedx-library': 10.0.0(ajv-formats-draft2019@1.6.1(ajv@6.15.0))(ajv-formats@3.0.1(ajv@6.15.0))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)
       normalize-package-data: 7.0.0
       packageurl-js: 2.0.1
       spdx-expression-parse: 4.0.0
@@ -11330,6 +11357,12 @@ snapshots:
       graphql: 16.13.2
       tslib: 2.6.3
 
+  '@graphql-codegen/add@7.0.0(graphql@16.13.2)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 7.0.1(graphql@16.13.2)
+      graphql: 16.13.2
+      tslib: 2.8.1
+
   '@graphql-codegen/cli@5.0.7(@parcel/watcher@2.5.6)(@types/node@17.0.45)(encoding@0.1.13)(graphql@16.13.2)(typescript@5.9.3)':
     dependencies:
       '@babel/generator': 7.29.1
@@ -11447,6 +11480,15 @@ snapshots:
     dependencies:
       '@graphql-tools/utils': 11.1.0(graphql@16.13.2)
       change-case-all: 1.0.15
+      common-tags: 1.8.2
+      graphql: 16.13.2
+      import-from: 4.0.0
+      tslib: 2.8.1
+
+  '@graphql-codegen/plugin-helpers@7.0.1(graphql@16.13.2)':
+    dependencies:
+      '@graphql-tools/utils': 11.1.0(graphql@16.13.2)
+      change-case-all: 2.1.0
       common-tags: 1.8.2
       graphql: 16.13.2
       import-from: 4.0.0
@@ -14989,6 +15031,13 @@ snapshots:
       upper-case: 2.0.2
       upper-case-first: 2.0.2
 
+  change-case-all@2.1.0:
+    dependencies:
+      change-case: 5.4.4
+      sponge-case: 2.0.3
+      swap-case: 3.0.3
+      title-case: 3.0.3
+
   change-case@4.1.2:
     dependencies:
       camel-case: 4.1.2
@@ -15003,6 +15052,8 @@ snapshots:
       sentence-case: 3.0.4
       snake-case: 3.0.4
       tslib: 2.8.1
+
+  change-case@5.4.4: {}
 
   char-regex@1.0.2: {}
 
@@ -20201,6 +20252,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  sponge-case@2.0.3: {}
+
   sprintf-js@1.0.3: {}
 
   ssri@12.0.0:
@@ -20471,6 +20524,8 @@ snapshots:
   swap-case@2.0.2:
     dependencies:
       tslib: 2.8.1
+
+  swap-case@3.0.3: {}
 
   swc-plugin-coverage-instrument@0.0.28: {}
 
