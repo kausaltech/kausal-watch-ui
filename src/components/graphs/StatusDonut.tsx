@@ -21,7 +21,7 @@ const GraphCard = styled.div`
   cursor: pointer;
 
   &:focus-visible {
-    outline: 2px solid ${(props) => props.theme.themeColors.primary};
+    outline: 2px solid ${(props) => props.theme.themeColors.dark};
     outline-offset: 2px;
     border-radius: ${(props) => props.theme.cardBorderRadius ?? props.theme.btnBorderRadius};
   }
@@ -97,7 +97,7 @@ const OpenModalButton = styled.button`
 
   &:focus-visible {
     opacity: 1;
-    outline: 2px solid ${(props) => props.theme.themeColors.primary};
+    outline: 2px solid ${(props) => props.theme.themeColors.dark};
     outline-offset: 2px;
   }
 
@@ -217,7 +217,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
       theme.graphColors.green050,
       theme.graphColors.grey030,
     ],
-    [  
+    [
       theme.graphColors.blue070,
       theme.graphColors.blue050,
       theme.graphColors.green050,
