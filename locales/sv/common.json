@@ -194,5 +194,7 @@
     "ui-sign-out": "Logga ut",
     "action-versions": "Åtgärdsversioner",
     "collapse-row": "Kollapsa rad",
-    "expand-row": "Utvidga rad"
+    "expand-embed": "Expandera",
+    "click-to-interact-embed": "Klicka för att interagera med det här innehållet",
+    "expand-row": "Expandera"
 }

@@ -194,9 +194,18 @@ git submodule update --init --recursive
 
 ### Adding translations
 
-1. Add keys to `locales/en.json` first
+1. Add keys to `locales/en/common.json` first
 2. Add translations to other language files
 3. Use `useTranslations` hook in components
+
+**Locale variant files** (e.g. `en-AU`, `en-GB`, `de-CH`, `sv-FI`, `es-US`) only override strings that differ from their base language. Do not add a key to a variant file if the translation would be identical to the base — omit it and let the fallback chain resolve it. If a variant file becomes empty after removing redundant keys, leave it as `{}`.
+
+Known variants and their base languages:
+
+- `en-AU`, `en-GB` → `en`
+- `de-CH` → `de`
+- `sv-FI` → `sv`
+- `es-US` → `es`
 
 ## Debugging
 
