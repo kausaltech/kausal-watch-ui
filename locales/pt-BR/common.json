@@ -188,6 +188,8 @@
     "no-phase": "Nenhuma fase definida",
     "no-status": "Nenhum status definido",
     "collapse-row": "Recolher linha",
+    "expand-embed": "Expandir",
+    "click-to-interact-embed": "Clique para interagir com este conteúdo",
     "expand-row": "Expandir linha",
     "ui-sign-in": "Fazer login",
     "ui-sign-out": "Sair do sistema",

@@ -194,6 +194,8 @@
         "description-label": "Descripción de los cambios"
     },
     "collapse-row": "Contraer fila",
+    "expand-embed": "Expandir",
+    "click-to-interact-embed": "Haz clic para interactuar con este contenido",
     "expand-row": "Expandir fila",
     "dissatisfied": "Insatisfecho",
     "error": "Error",

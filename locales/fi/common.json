@@ -191,6 +191,8 @@
     "no-action-data-for-report": "Raportissa ei ole tätä toimenpidettä koskevia tietoja.",
     "filter-status-help": "Näytä valitun tilan mukaiset toimenpiteet",
     "collapse-row": "Sulje rivi",
+    "expand-embed": "Laajenna",
+    "click-to-interact-embed": "Napsauta vuorovaikuttaaksesi tähän sisältöön",
     "expand-row": "Laajenna rivi",
     "ui-sign-in": "Kirjaudu sisään",
     "ui-sign-out": "Kirjaudu ulos",

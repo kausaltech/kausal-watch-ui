@@ -192,6 +192,8 @@
     "number-of-search-results": "{count, plural, one {ein Treffer} other {# Treffer}} für die Suche",
     "error": "Fehler",
     "collapse-row": "Zeile zusammenklappen",
+    "expand-embed": "Erweitern",
+    "click-to-interact-embed": "Klicken Sie hier, um mit diesem Inhalt zu interagieren",
     "expand-row": "Zeile erweitern",
     "ui-sign-in": "Anmelden",
     "ui-sign-out": "Abmelden",
