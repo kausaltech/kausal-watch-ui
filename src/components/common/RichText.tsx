@@ -2,6 +2,7 @@ import type { PropsWithChildren, ReactElement } from 'react';
 import React, { type JSX, useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { withScope } from '@sentry/nextjs';
 import { ElementType } from 'domelementtype';
 import type { DOMNode, Element, HTMLReactParserOptions } from 'html-react-parser';
@@ -13,11 +14,13 @@ import { Collapse } from 'reactstrap';
 
 import { IndicatorLink } from '@/common/links';
 import Button from '@/components/common/Button';
+import ExpandableIframe from '@/components/common/ExpandableIframe';
 import Icon from '@/components/common/Icon';
 import { ImageCredit } from '@/components/contentblocks/ContentPageHeaderBlock';
 import { usePlan } from '@/context/plan';
 
 const CUSTOM_IFRAME_HEIGHT_PARAM = 'k_height';
+const CUSTOM_IFRAME_EXPANDABLE_PARAM = 'k_expandable';
 
 const BreakPoint = styled.div`
   text-align: center;
@@ -254,7 +257,9 @@ function getPlainText(node: React.ReactNode): string {
   if (node == null || typeof node === 'boolean') return '';
   if (typeof node === 'string' || typeof node === 'number') return String(node);
   if (Array.isArray(node)) return node.map(getPlainText).join('');
-  if (React.isValidElement(node)) return getPlainText(node.props.children);
+  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
+    return getPlainText(node.props.children);
+  }
   return '';
 }
 
@@ -373,13 +378,25 @@ export default function RichText(props: RichTextProps) {
       );
 
       /**
-       * Support custom iframe height based on a query parameter on the embed URL
+       * Support custom iframe height and expandable popup based on query parameters on the embed URL.
+       * k_height: sets a custom iframe height
+       * k_expandable: wraps iframe in an expandable fullscreen popup
        */
       if (name === 'iframe') {
         const iframeSrc = element.attribs.src;
         const iframeUrl = new URL(iframeSrc);
         const iframeParams = new URLSearchParams(iframeUrl.searchParams);
         const customHeight = iframeParams.get(CUSTOM_IFRAME_HEIGHT_PARAM);
+        const isExpandable = iframeParams.get(CUSTOM_IFRAME_EXPANDABLE_PARAM) != null;
+
+        if (isExpandable) {
+          const height =
+            typeof customHeight === 'string' && !isNaN(parseInt(customHeight))
+              ? customHeight
+              : undefined;
+
+          return <ExpandableIframe {...element.attribs} height={height} />;
+        }
 
         if (typeof customHeight === 'string' && !isNaN(parseInt(customHeight))) {
           return <iframe {...element.attribs} height={customHeight} />;
