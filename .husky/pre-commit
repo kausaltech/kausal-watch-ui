@@ -9,4 +9,4 @@ if [ -f ".nvmrc" ]; then
 fi
 
 npx lint-staged
-pnpm run typecheck:baseline
+pnpm run typecheck:baseline:changed

@@ -120,6 +120,7 @@
     "watch-embed-script": "tsc --watch --project embed",
     "typecheck": "tsc -b",
     "typecheck:baseline": "tsc -b | tsc-baseline -p tsc-baseline.json check",
+    "typecheck:baseline:changed": "node scripts/typecheck-changed.mjs",
     "typecheck:baseline:update": "tsc -b | tsc-baseline -p tsc-baseline.json save",
     "typecheck:intl": "npm run typecheck | grep \"MessageKeys\"",
     "prettier:fix": "prettier ./ --write",
