@@ -15,6 +15,7 @@ import {
 import { ACTION_CARD_FRAGMENT } from '../fragments/action-card.fragment';
 import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
 import { RECURSIVE_CATEGORY_FRAGMENT } from '../fragments/category.fragment';
+import { INDICATOR_CHART_FRAGMENTS } from '../fragments/indicator-chart.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
 
 export const getActionDetails = async (
@@ -186,6 +187,28 @@ const GET_ACTION_DETAILS = gql`
           }
           plans {
             id
+          }
+          defaultVisualization {
+            ... on IndicatorDefaultBarChart {
+              __typename
+              ...BarChartVisualization
+            }
+            ... on IndicatorDefaultLineChart {
+              __typename
+              ...LineChartVisualization
+            }
+            ... on IndicatorDefaultAreaChart {
+              __typename
+              ...AreaChartVisualization
+            }
+            ... on IndicatorDefaultPieChart {
+              __typename
+              ...PieChartVisualization
+            }
+            ... on IndicatorDefaultSummary {
+              __typename
+              ...SummaryVisualization
+            }
           }
         }
       }
@@ -547,4 +570,5 @@ const GET_ACTION_DETAILS = gql`
   ${ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT}
   ${RECURSIVE_CATEGORY_FRAGMENT}
   ${CATEGORY_TYPE_FRAGMENT}
+  ${INDICATOR_CHART_FRAGMENTS}
 `;

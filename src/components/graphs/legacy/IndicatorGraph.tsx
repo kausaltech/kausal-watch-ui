@@ -6,8 +6,9 @@ import dynamic from 'next/dynamic';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { merge } from 'lodash-es';
-import type { Data, Layout, PlotData } from 'plotly.js';
+import type { Data, Datum, Layout, PlotData } from 'plotly.js';
 import { transparentize } from 'polished';
 
 import { splitLines } from '@/common/utils';
@@ -223,7 +224,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
 
     // we have multiple categories in one time point - draw bar groups
     if (!hasTimeDimension) {
-      modTrace.x = modTrace.x.map((name) => splitLines(name));
+      modTrace.x = (modTrace.x as Datum[]).map((name) => splitLines(name as string));
       modTrace.type = 'bar';
       modTrace.marker = {
         color:
