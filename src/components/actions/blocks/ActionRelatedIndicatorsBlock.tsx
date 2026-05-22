@@ -90,7 +90,11 @@ function ActionIndicator(props: ActionIndicatorProps) {
           </h3>
         </IndicatorLink>
         {indicator.latestGraph || indicator.latestValue ? (
-          <IndicatorVisualisation indicatorId={indicator.id} />
+          <IndicatorVisualisation
+            indicatorId={indicator.id}
+            useLegacyGraph={!indicator.defaultVisualization}
+            defaultVisualization={indicator.defaultVisualization}
+          />
         ) : null}
       </CardBody>
       {actions.length > 0 && (
