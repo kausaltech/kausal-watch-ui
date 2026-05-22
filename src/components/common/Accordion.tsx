@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Collapse, UncontrolledTooltip } from 'reactstrap';
@@ -14,7 +15,7 @@ import { replaceHashWithoutScrolling } from '../../common/links';
 
 const Header = styled.h3<{ $small?: boolean }>`
   position: relative;
-  font-size: ${({ theme, $small }) => ($small ? theme.fontSizeMd : theme.fontSizeLg)};
+  font-size: ${({ theme, $small }) => ($small ? theme.fontSizeSm : theme.fontSizeMd)};
 
   &:hover {
     .copy-link {
@@ -35,6 +36,7 @@ const CopyLink = styled.button`
   @media print {
     display: none;
   }
+
   width: 2rem;
   right: -1rem;
   top: -0.5rem;
@@ -58,14 +60,16 @@ const CopyLink = styled.button`
 `;
 
 const TriggerIcon = styled.span`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-basis: ${(props) => props.theme.spaces.s200};
   flex-grow: 0;
   flex-shrink: 0;
   margin-right: ${(props) => props.theme.spaces.s050};
   color: ${(props) => props.theme.linkColor};
-  font-size: 2.5rem;
-  line-height: 1.5rem;
+  font-size: 1.15em;
+  line-height: 1;
   font-weight: ${(props) => props.theme.fontWeightNormal};
   text-align: center;
 
@@ -76,6 +80,7 @@ const TriggerIcon = styled.span`
 
 const QuestionTrigger = styled.button`
   display: flex;
+  align-items: flex-start;
   flex-grow: 1;
   width: 100%;
   padding: 0;
@@ -89,7 +94,6 @@ const QuestionTrigger = styled.button`
   border: none;
   overflow: visible;
   background: transparent;
-  line-height: normal;
   border-radius: 0;
   -webkit-appearance: none;
 `;
@@ -169,7 +173,7 @@ const AccordionHeader = ({
   identifier,
   small = false,
 }: AccordionHeaderProps) => (
-  <Header className={isOpen && 'is-open'} $small={small}>
+  <Header className={isOpen ? 'is-open' : undefined} $small={small}>
     <QuestionTrigger
       className="question-trigger"
       onClick={onClick}
