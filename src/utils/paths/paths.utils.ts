@@ -88,9 +88,11 @@ export const makeInstanceMiddleware = (opts: ApolloClientOpts) => {
       ...operation.query,
       definitions: operation.query.definitions.map((def) => {
         if (def.kind !== Kind.OPERATION_DEFINITION) return def;
-        const directives: DirectiveNode[] = [...(def.directives || [])];
-        if (locale) {
-          directives.push(createDirective('locale', [{ name: 'lang', val: locale }]));
+        const existingDirectives = def.directives || [];
+        const directives: DirectiveNode[] = [...existingDirectives];
+        const localeDirectiveName = 'locale';
+        if (locale && !existingDirectives.some((d) => d.name.value === localeDirectiveName)) {
+          directives.push(createDirective(localeDirectiveName, [{ name: 'lang', val: locale }]));
         }
         const instanceArgs: { name: string; val: string }[] = [];
         if (instanceIdentifier) {
@@ -99,8 +101,12 @@ export const makeInstanceMiddleware = (opts: ApolloClientOpts) => {
         if (instanceHostname) {
           instanceArgs.push({ name: 'hostname', val: instanceHostname });
         }
-        if (instanceArgs.length) {
-          directives.push(createDirective('instance', instanceArgs));
+        const instanceDirectiveName = 'instance';
+        if (
+          instanceArgs.length &&
+          !existingDirectives.some((d) => d.name.value === instanceDirectiveName)
+        ) {
+          directives.push(createDirective(instanceDirectiveName, instanceArgs));
         }
         return {
           ...def,

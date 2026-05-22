@@ -178,11 +178,18 @@ export const localeMiddleware = new ApolloLink((operation, forward) => {
     return forward(operation);
   }
 
+  const directiveName = 'locale';
+
+  // Avoid adding @locale twice if the document was already processed
+  if (definition.directives?.some((d) => d.name.value === directiveName)) {
+    return forward(operation);
+  }
+
   const localeDirective: DirectiveNode = {
     kind: Kind.DIRECTIVE,
     name: {
       kind: Kind.NAME,
-      value: 'locale',
+      value: directiveName,
     },
     arguments: [
       {
