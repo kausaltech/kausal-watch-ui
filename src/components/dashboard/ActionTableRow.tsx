@@ -100,6 +100,7 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
           title: tooltipContent,
           arrow: true,
           placement: 'top' as const,
+          disableTouchListener: true,
           slotProps: {
             tooltip: {
               sx: {
