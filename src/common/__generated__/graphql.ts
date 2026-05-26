@@ -6100,6 +6100,9 @@ type StreamFieldFragment_FrontPageHeroBlock_Fragment = (
       & { __typename: 'ImageRendition' }
     ) | null }
     & { __typename: 'Image' }
+  ) | null, additionalSettings: (
+    { backgroundColour: string | null, fitImage: boolean | null }
+    & { __typename: 'FrontPageHeroAdditionalSettingsBlock' }
   ) | null }
   & { __typename: 'FrontPageHeroBlock' }
 );
@@ -6223,8 +6226,8 @@ type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
 
 type StreamFieldFragment_LargeImageBlock_Fragment = (
   { width: string | null, id: string | null, blockType: string, field: string, image: (
-    { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
-      { src: string }
+    { id: string, title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
+      { id: string, src: string }
       & { __typename: 'ImageRendition' }
     ) | null }
     & { __typename: 'Image' }
@@ -14441,8 +14444,8 @@ export type GetContentPageQuery = (
       & { __typename: 'IndicatorGroupBlock' }
     ) | (
       { width: string | null, id: string | null, blockType: string, field: string, image: (
-        { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
-          { src: string }
+        { id: string, title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -15067,6 +15070,9 @@ export type GetHomePageQuery = (
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
+      ) | null, additionalSettings: (
+        { backgroundColour: string | null, fitImage: boolean | null }
+        & { __typename: 'FrontPageHeroAdditionalSettingsBlock' }
       ) | null }
       & { __typename: 'FrontPageHeroBlock' }
     ) | (
@@ -15176,8 +15182,8 @@ export type GetHomePageQuery = (
       & { __typename: 'IndicatorShowcaseBlock' }
     ) | (
       { width: string | null, id: string | null, blockType: string, field: string, image: (
-        { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
-          { src: string }
+        { id: string, title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
