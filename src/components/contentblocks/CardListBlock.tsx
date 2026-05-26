@@ -2,6 +2,7 @@ import React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 
@@ -43,6 +44,8 @@ const SectionHeader = styled.h2`
 `;
 
 const Content = styled.p`
+  max-width: 720px;
+  margin: 0 auto;
   text-align: center;
   color: ${(props) =>
     readableColor(
@@ -50,8 +53,14 @@ const Content = styled.p`
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )};
-  font-size: ${(props) => props.theme.fontSizeMd};
+  font-size: ${(props) => props.theme.fontSizeBase};
+  line-height: ${(props) => props.theme.lineHeightMd};
   margin-bottom: ${(props) => props.theme.spaces.s300};
+
+  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    font-size: ${(props) => props.theme.fontSizeMd};
+    line-height: ${(props) => props.theme.lineHeightBase};
+  }
 `;
 
 const CardHeader = styled.h3`
@@ -73,7 +82,7 @@ const CardListBlock = (props) => {
     <CardListSection id={id}>
       <Container>
         {heading && <SectionHeader>{heading}</SectionHeader>}
-        <Content>{lead}</Content>
+        {lead && <Content>{lead}</Content>}
         <Row tag="ul" className="justify-content-center">
           {cards?.map((card, inx) => (
             <Col
