@@ -1,13 +1,16 @@
 import React from 'react';
 
-import styled from '@emotion/styled';
 import Tooltip from '@mui/material/Tooltip';
+
+import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
 
 import { COLUMN_CONFIG } from './dashboard.constants';
 import type { ActionListAction, ColumnConfig } from './dashboard.types';
+import { STICKY_TABLE_NAME_COLUMN_CLASS } from '@/components/common/stickyTableStyles';
 
 const StyledRow = styled.tr`
   font-family: ${(props) => `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
@@ -15,7 +18,8 @@ const StyledRow = styled.tr`
     opacity: 0.25;
   }
 
-  td {
+  td,
+  th {
     vertical-align: top;
     min-height: 1px;
 
@@ -53,6 +57,24 @@ interface Props {
   planViewUrl?: string | null;
 }
 
+const getCellClassName = ({
+  cellClassName,
+  hasTooltip,
+  rowHeader,
+}: {
+  cellClassName?: string;
+  hasTooltip: boolean;
+  rowHeader?: boolean;
+}) =>
+  [
+    cellClassName,
+    hasTooltip ? 'has-tooltip' : undefined,
+    rowHeader ? 'row-title' : undefined,
+    rowHeader ? STICKY_TABLE_NAME_COLUMN_CLASS : undefined,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
 const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
   const t = useTranslations();
 
@@ -69,9 +91,7 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
         const hasTooltip = !!renderTooltipContent;
         const content = renderCell(t, action, plan, planViewUrl, column?.attributeType);
         const id = `row-${action.id}-${i}`;
-        const className = `${cellClassName} ${
-          hasTooltip ? 'has-tooltip' : ''
-        } ${rowHeader ? 'row-title' : ''}`;
+        const className = getCellClassName({ cellClassName, hasTooltip, rowHeader });
         const tooltipContent = hasTooltip
           ? renderTooltipContent(t, action, plan, column?.attributeType)
           : undefined;
@@ -80,6 +100,7 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
           title: tooltipContent,
           arrow: true,
           placement: 'top' as const,
+          disableTouchListener: true,
           slotProps: {
             tooltip: {
               sx: {

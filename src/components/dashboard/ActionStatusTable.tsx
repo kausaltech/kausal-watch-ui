@@ -14,12 +14,17 @@ import ActionTableRow from '@/components/dashboard/ActionTableRow';
 
 import ActionStatusExport from './ActionStatusExport';
 import { COLUMN_CONFIG } from './dashboard.constants';
+import {
+  mobileScrollableTableWrapperStyles,
+  mobileStickyTableStyles,
+  STICKY_TABLE_NAME_COLUMN_CLASS,
+} from '@/components/common/stickyTableStyles';
 import { ActionListAction, ActionListOrganization, ColumnConfig } from './dashboard.types';
+
 
 const TableWrapper = styled.div`
   width: 100%;
-  display: flex;
-  overflow-x: auto;
+  ${(props) => mobileScrollableTableWrapperStyles(props)};
 
   padding: 0 0 ${(props) => props.theme.spaces.s100} 0;
   background-image:
@@ -39,6 +44,11 @@ const TableWrapper = styled.div`
     10px 100%,
     10px 100%;
   background-attachment: local, local, scroll, scroll;
+
+  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    max-height: calc(100vh - ${(props) => props.theme.spaces.s100});
+    overflow: auto;
+  }
 `;
 
 const DashTable = styled(Table)`
@@ -49,6 +59,12 @@ const DashTable = styled(Table)`
   .logo-column {
     width: 2rem;
   }
+
+  ${(props) =>
+    mobileStickyTableStyles(props, {
+      scrollableColumnWidth: '9rem',
+      containScrollableCellContent: true,
+    })};
 `;
 
 const ToolBar = styled.div`
@@ -197,6 +213,17 @@ const compareNullableNumber = (a: number | null, b: number | null) => {
 const compareNullableString = (a?: string | null, b?: string | null) =>
   (a ?? '').localeCompare(b ?? '');
 
+const getColumnClassName = (column: ColumnConfig) => {
+  const columnConfig = COLUMN_CONFIG[column.__typename];
+
+  return [
+    columnConfig?.headerClassName,
+    columnConfig?.rowHeader ? STICKY_TABLE_NAME_COLUMN_CLASS : undefined,
+  ]
+    .filter(Boolean)
+    .join(' ');
+};
+
 interface Props {
   actions: ActionListAction[];
   orgs: ActionListOrganization[];
@@ -315,6 +342,7 @@ const ActionStatusTable = (props: Props) => {
                   return null;
                 }
 
+                const className = getColumnClassName(column);
                 const headerLabel = column.columnLabel || column?.attributeType?.name;
                 const isFieldColumn =
                   column.__typename === 'FieldColumnBlock' && !!column.attributeType?.id;
@@ -335,7 +363,7 @@ const ActionStatusTable = (props: Props) => {
                       sort={sort}
                       headerKey={headerKey}
                       onClick={sortHandler(headerKey)}
-                      className={columnConfig.headerClassName}
+                      className={className}
                     >
                       {columnConfig.renderHeader(t, plan, headerLabel)}
                     </SortableTableHeader>
@@ -343,7 +371,7 @@ const ActionStatusTable = (props: Props) => {
                 }
 
                 return (
-                  <th key={i} scope="col" className={columnConfig.headerClassName}>
+                  <th key={i} scope="col" className={className}>
                     {columnConfig.renderHeader(t, plan, headerLabel)}
                   </th>
                 );

@@ -9,6 +9,7 @@ import {
   IndicatorColumnValueType,
   IndicatorDashboardFieldName,
 } from '@/common/__generated__/graphql';
+import { STICKY_TABLE_NAME_COLUMN_CLASS } from '@/components/common/stickyTableStyles';
 import type { TFunction } from '@/common/i18n';
 import Icon from '@/components/common/Icon';
 
@@ -87,7 +88,8 @@ const getColumnLabel = (
         default:
           return '';
       }
-    case 'IndicatorValueColumn':
+
+    case 'IndicatorValueColumn': {
       const normalized = column.isNormalized
         ? `(${t('indicator-population-normalized-value')})`
         : '';
@@ -125,6 +127,7 @@ const getColumnLabel = (
             </>
           );
       }
+    }
     default:
       return '';
   }
@@ -149,12 +152,14 @@ const IndicatorTableHeader = (props: IndicatorTableHeaderProps) => {
   const iconName = selected ? (sort?.direction === 'asc' ? 'sort-down' : 'sort-up') : 'sort';
 
   const Th = isSortable ? SortableTh : StyledTh;
+  const className = isNameColumn ? STICKY_TABLE_NAME_COLUMN_CLASS : undefined;
 
   return (
     <Th
       key={column.id}
       $numeric={isNumericColumn(column)}
       scope="col"
+      className={className}
       onClick={isSortable && sortKey ? () => onSortState?.(sortKey) : undefined}
       aria-sort={
         isSortable
