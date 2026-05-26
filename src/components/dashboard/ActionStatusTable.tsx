@@ -14,14 +14,17 @@ import ActionTableRow from '@/components/dashboard/ActionTableRow';
 
 import ActionStatusExport from './ActionStatusExport';
 import { COLUMN_CONFIG } from './dashboard.constants';
+import {
+  mobileScrollableTableWrapperStyles,
+  mobileStickyTableStyles,
+  STICKY_TABLE_NAME_COLUMN_CLASS,
+} from '@/components/common/stickyTableStyles';
 import { ActionListAction, ActionListOrganization, ColumnConfig } from './dashboard.types';
 
-const STICKY_ACTION_NAME_CLASS = 'sticky-action-name-column';
 
 const TableWrapper = styled.div`
   width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  ${(props) => mobileScrollableTableWrapperStyles(props)};
 
   padding: 0 0 ${(props) => props.theme.spaces.s100} 0;
   background-image:
@@ -57,95 +60,11 @@ const DashTable = styled(Table)`
     width: 2rem;
   }
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    border-collapse: separate;
-    border-spacing: 0;
-    min-width: max-content;
-
-    th,
-    td {
-      left: auto;
-      z-index: auto;
-      padding-left: ${(props) => props.theme.spaces.s050};
-      padding-right: ${(props) => props.theme.spaces.s050};
-    }
-
-    th:not(.${STICKY_ACTION_NAME_CLASS}),
-    td:not(.${STICKY_ACTION_NAME_CLASS}) {
-      width: 9rem;
-      min-width: 9rem;
-      max-width: 9rem;
-    }
-
-    tbody td:not(.${STICKY_ACTION_NAME_CLASS}) {
-      position: static !important;
-    }
-
-    th:not(.${STICKY_ACTION_NAME_CLASS}) {
-      white-space: normal;
-      overflow-wrap: break-word;
-      word-break: normal;
-      hyphens: auto;
-    }
-
-    td:not(.${STICKY_ACTION_NAME_CLASS}) {
-      white-space: normal;
-      overflow-wrap: normal;
-      word-break: normal;
-      hyphens: none;
-      overflow: hidden;
-    }
-
-    td:not(.${STICKY_ACTION_NAME_CLASS}) > * {
-      max-width: 100%;
-      min-width: 0;
-      box-sizing: border-box;
-    }
-
-    td:not(.${STICKY_ACTION_NAME_CLASS}) * {
-      max-width: 100%;
-      white-space: normal;
-      overflow-wrap: break-word;
-      word-break: normal;
-      hyphens: none;
-    }
-
-    thead th {
-      position: sticky !important;
-      top: -1px;
-      z-index: 30 !important;
-      background-color: ${(props) => props.theme.themeColors.white};
-      background-clip: padding-box;
-      box-shadow:
-        0 -2px 0 ${(props) => props.theme.themeColors.white},
-        0 2px 4px rgba(0, 0, 0, 0.08);
-    }
-
-    .${STICKY_ACTION_NAME_CLASS} {
-      position: sticky !important;
-      left: 0 !important;
-
-      width: min(44vw, 11rem);
-      min-width: 8.5rem;
-      max-width: 11rem;
-
-      white-space: normal;
-      overflow-wrap: normal;
-      word-break: normal;
-      hyphens: auto;
-
-      background-color: ${(props) => props.theme.themeColors.white};
-      background-clip: padding-box;
-    }
-
-    thead .${STICKY_ACTION_NAME_CLASS} {
-      z-index: 50 !important;
-    }
-
-    tbody .${STICKY_ACTION_NAME_CLASS} {
-      z-index: 20 !important;
-    }
-  }
+  ${(props) =>
+    mobileStickyTableStyles(props, {
+      scrollableColumnWidth: '9rem',
+      containScrollableCellContent: true,
+    })};
 `;
 
 const ToolBar = styled.div`
@@ -299,7 +218,7 @@ const getColumnClassName = (column: ColumnConfig) => {
 
   return [
     columnConfig?.headerClassName,
-    columnConfig?.rowHeader ? STICKY_ACTION_NAME_CLASS : undefined,
+    columnConfig?.rowHeader ? STICKY_TABLE_NAME_COLUMN_CLASS : undefined,
   ]
     .filter(Boolean)
     .join(' ');

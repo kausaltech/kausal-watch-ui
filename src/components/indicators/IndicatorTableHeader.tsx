@@ -9,13 +9,12 @@ import {
   IndicatorColumnValueType,
   IndicatorDashboardFieldName,
 } from '@/common/__generated__/graphql';
+import { STICKY_TABLE_NAME_COLUMN_CLASS } from '@/components/common/stickyTableStyles';
 import type { TFunction } from '@/common/i18n';
 import Icon from '@/components/common/Icon';
 
 import PopoverTip from '../common/PopoverTip';
 import type { SortState } from './indicatorUtils';
-
-const STICKY_INDICATOR_NAME_CLASS = 'sticky-indicator-name-column';
 
 const StyledTh = styled.th<{ $numeric?: boolean }>`
   text-align: ${(props) => (props?.$numeric ? 'right' : 'left')};
@@ -153,7 +152,7 @@ const IndicatorTableHeader = (props: IndicatorTableHeaderProps) => {
   const iconName = selected ? (sort?.direction === 'asc' ? 'sort-down' : 'sort-up') : 'sort';
 
   const Th = isSortable ? SortableTh : StyledTh;
-  const className = isNameColumn ? STICKY_INDICATOR_NAME_CLASS : undefined;
+  const className = isNameColumn ? STICKY_TABLE_NAME_COLUMN_CLASS : undefined;
 
   return (
     <Th

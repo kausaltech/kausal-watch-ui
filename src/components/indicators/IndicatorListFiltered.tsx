@@ -8,6 +8,12 @@ import { Alert, Table } from 'reactstrap';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import {
+  mobileScrollableTableWrapperStyles,
+  mobileStickyTableStyles,
+  STICKY_TABLE_NAME_COLUMN_CLASS,
+} from '@/components/common/stickyTableStyles';
+
+import {
   IndicatorDashboardFieldName,
   type IndicatorListPageFragmentFragment,
 } from '@/common/__generated__/graphql';
@@ -22,13 +28,10 @@ import type { Hierarchy } from './process-indicators';
 
 export const isEmptyFilter = (val) => val == null || val === '';
 
-const STICKY_INDICATOR_NAME_CLASS = 'sticky-indicator-name-column';
-
 const TableWrapper = styled.div`
   /*div className="mt-5 mb-5 pb-5"*/
   width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+   ${(props) => mobileScrollableTableWrapperStyles(props)};
 
   margin: ${(props) => props.theme.spaces.s200} 0;
   padding-bottom: ${(props) => props.theme.spaces.s200};
@@ -58,62 +61,10 @@ const TableWrapper = styled.div`
     25px 100%,
     25px 100%;
   background-attachment: local, local, scroll, scroll;
-
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    max-height: calc(100vh - ${(props) => props.theme.spaces.s100});
-    overflow: auto;
-  }
 `;
 
 const IndicatorListTable = styled(Table)`
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
-    border-collapse: separate;
-    border-spacing: 0;
-    min-width: max-content;
-
-    th,
-    td {
-      left: auto;
-      z-index: auto;
-    }
-
-    tbody td:not(.${STICKY_INDICATOR_NAME_CLASS}) {
-      position: static !important;
-    }
-
-    thead th {
-      position: sticky !important;
-      top: -1px;
-      z-index: 30 !important;
-      background-color: ${(props) => props.theme.themeColors.white};
-      background-clip: padding-box;
-      box-shadow:
-        0 -2px 0 ${(props) => props.theme.themeColors.white},
-        0 2px 4px rgba(0, 0, 0, 0.08);
-    }
-
-    .${STICKY_INDICATOR_NAME_CLASS} {
-      position: sticky !important;
-      left: 0 !important;
-      width: min(44vw, 11rem);
-      min-width: 8.5rem;
-      max-width: 11rem;
-      white-space: normal;
-      overflow-wrap: normal;
-      word-break: normal;
-      hyphens: auto;
-      background-color: ${(props) => props.theme.themeColors.white};
-      background-clip: padding-box;
-    }
-
-    thead .${STICKY_INDICATOR_NAME_CLASS} {
-      z-index: 50 !important;
-    }
-
-    tbody .${STICKY_INDICATOR_NAME_CLASS} {
-      z-index: 20 !important;
-    }
-  }
+ ${(props) => mobileStickyTableStyles(props)};
 `;
 
 const Cell = styled.td`
@@ -364,7 +315,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
                             hasChildren={false}
                             expanded={false}
                             className={
-                              isNameColumn(column) ? STICKY_INDICATOR_NAME_CLASS : undefined
+                              isNameColumn(column) ? STICKY_TABLE_NAME_COLUMN_CLASS : undefined
                             }
                           >
                             <IndicatorTableCell
@@ -399,7 +350,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
                               ? () => toggleCollapse(commonId)
                               : undefined
                           }
-                          className={isNameColumn(column) ? STICKY_INDICATOR_NAME_CLASS : undefined}
+                          className={isNameColumn(column) ? STICKY_TABLE_NAME_COLUMN_CLASS : undefined}
                         >
                           <IndicatorTableCell
                             column={column}

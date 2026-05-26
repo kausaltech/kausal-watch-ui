@@ -10,8 +10,7 @@ import type { PlanContextFragment } from '@/common/__generated__/graphql';
 
 import { COLUMN_CONFIG } from './dashboard.constants';
 import type { ActionListAction, ColumnConfig } from './dashboard.types';
-
-const STICKY_ACTION_NAME_CLASS = 'sticky-action-name-column';
+import { STICKY_TABLE_NAME_COLUMN_CLASS } from '@/components/common/stickyTableStyles';
 
 const StyledRow = styled.tr`
   font-family: ${(props) => `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
@@ -71,7 +70,7 @@ const getCellClassName = ({
     cellClassName,
     hasTooltip ? 'has-tooltip' : undefined,
     rowHeader ? 'row-title' : undefined,
-    rowHeader ? STICKY_ACTION_NAME_CLASS : undefined,
+    rowHeader ? STICKY_TABLE_NAME_COLUMN_CLASS : undefined,
   ]
     .filter(Boolean)
     .join(' ');
