@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import * as Sentry from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import type { ColProps } from 'reactstrap';
@@ -408,7 +409,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'FrontPageHeroBlock': {
-      const { layout, image, heading, lead } = block;
+      const { layout, image, heading, lead, additionalSettings } = block;
       // TODO: Typecheck layout to be either 'small_image' or 'big_image'
 
       const focalBox =
@@ -426,10 +427,12 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
             }
           : undefined;
 
+      console.log('additionalSettings', additionalSettings);
+
       return (
         <FrontPageHeroBlock
           id={id}
-          layout={(layout as 'small_image' | 'big_image' | null) ?? 'small_image'}
+          layout={(layout as 'small_image' | 'big_image' | 'side_by_side' | null) ?? 'small_image'}
           image={image}
           imageAlign={getBgImageAlignment(image)}
           focalBox={focalBox}
@@ -437,6 +440,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           lead={lead}
           altText={image?.altText}
           imageCredit={image?.imageCredit}
+          additionalSettings={additionalSettings}
         />
       );
     }
