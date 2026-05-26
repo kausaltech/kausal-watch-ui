@@ -1,15 +1,15 @@
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
 
+import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTaskTermContext } from '@/common/i18n';
 import { ActionSection, SectionHeader } from '@/components/actions/ActionContent';
 import TaskList from '@/components/actions/TaskList';
+import PopoverTip from '@/components/common/PopoverTip';
 import { usePlan } from '@/context/plan';
 
-import PopoverTip from '@/components/common/PopoverTip';
-
 type ActionTasksBlockProps = {
-  tasks: React.ComponentProps<typeof TaskList>['tasks'];
+  tasks: NonNullable<GetActionDetailsQuery['action']>['tasks'];
   heading?: string | null;
   helpText?: string | null;
 };
