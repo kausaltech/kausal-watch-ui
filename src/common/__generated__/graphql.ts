@@ -4615,6 +4615,25 @@ export type DashboardIndicatorFragmentFragment = (
   & { __typename: 'Indicator' }
 );
 
+export type ChartDimensionFragmentFragment = (
+  { id: string, name: string, categories: Array<(
+    { id: string, name: string }
+    & { __typename: 'DimensionCategory' }
+  )> }
+  & { __typename: 'Dimension' }
+);
+
+export type ChartSeriesFragmentFragment = (
+  { dimensionCategory: (
+    { id: string, name: string, defaultColor: string }
+    & { __typename: 'DimensionCategory' }
+  ) | null, values: Array<(
+    { id: string, value: number, date: string | null }
+    & { __typename: 'IndicatorValue' }
+  ) | null> }
+  & { __typename: 'DashboardIndicatorChartSeries' }
+);
+
 type BarChartVisualization_DashboardIndicatorBarChartBlock_Fragment = (
   { barType: string | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (

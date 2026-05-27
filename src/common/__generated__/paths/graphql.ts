@@ -56,11 +56,32 @@ export enum ChangeTargetKind {
   Unknown = 'UNKNOWN'
 }
 
+export type CreateDataPointCommentInput = {
+  isReview: Scalars['Boolean']['input'];
+  isSticky: Scalars['Boolean']['input'];
+  reviewState: InputMaybe<DataPointCommentReviewState>;
+  text: Scalars['String']['input'];
+};
+
 export type CreateDataPointInput = {
   date: Scalars['Date']['input'];
   dimensionCategoryIds: InputMaybe<Array<Scalars['UUID']['input']>>;
   metricId: Scalars['UUID']['input'];
   value: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type CreateDataSourceInput = {
+  authority: InputMaybe<Scalars['String']['input']>;
+  description: InputMaybe<Scalars['String']['input']>;
+  edition: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  url: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateDatasetSourceReferenceInput = {
+  dataPointId: InputMaybe<Scalars['UUID']['input']>;
+  dataSourceId: Scalars['UUID']['input'];
+  toDataset: Scalars['Boolean']['input'];
 };
 
 export type CreateDimensionCategoryInput = {
@@ -119,6 +140,17 @@ export type CreateScenarioInput = {
   kind: Scalars['String']['input'];
   name: Scalars['String']['input'];
 };
+
+export enum DataPointCommentReviewState {
+  Resolved = 'RESOLVED',
+  Unresolved = 'UNRESOLVED'
+}
+
+export enum DatasetSourceReferenceTarget {
+  All = 'ALL',
+  Dataset = 'DATASET',
+  DataPoint = 'DATA_POINT'
+}
 
 /** Which governance level is applicable for an action */
 export enum DecisionLevel {
@@ -201,6 +233,13 @@ export type InstanceContext = {
   preview: InputMaybe<PreviewMode>;
   version: InputMaybe<Scalars['UUID']['input']>;
 };
+
+export enum InstanceMemberRole {
+  Admin = 'ADMIN',
+  Reviewer = 'REVIEWER',
+  SuperAdmin = 'SUPER_ADMIN',
+  Viewer = 'VIEWER'
+}
 
 export enum LowHigh {
   High = 'HIGH',
@@ -305,7 +344,8 @@ export enum PrimaryLayoutClass {
 export type RegisterUserInput = {
   email: Scalars['String']['input'];
   firstName: InputMaybe<Scalars['String']['input']>;
-  frameworkId: Scalars['String']['input'];
+  frameworkId: InputMaybe<Scalars['ID']['input']>;
+  invitationToken: InputMaybe<Scalars['String']['input']>;
   lastName: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
 };
@@ -334,11 +374,26 @@ export type SimpleConfigInput = {
   nodeClass: Scalars['String']['input'];
 };
 
+export type UpdateDataPointCommentInput = {
+  isReview: InputMaybe<Scalars['Boolean']['input']>;
+  isSticky: InputMaybe<Scalars['Boolean']['input']>;
+  reviewState: InputMaybe<DataPointCommentReviewState>;
+  text: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateDataPointInput = {
   date: InputMaybe<Scalars['Date']['input']>;
   dimensionCategoryIds: InputMaybe<Array<Scalars['UUID']['input']>>;
   metricId: InputMaybe<Scalars['UUID']['input']>;
   value: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type UpdateDataSourceInput = {
+  authority: InputMaybe<Scalars['String']['input']>;
+  description: InputMaybe<Scalars['String']['input']>;
+  edition: InputMaybe<Scalars['String']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+  url: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateDimensionCategoryInput = {

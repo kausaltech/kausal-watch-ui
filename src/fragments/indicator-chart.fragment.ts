@@ -28,30 +28,38 @@ export const INDICATOR_CHART_FRAGMENTS = gql`
     desiredTrend
   }
 
+  fragment ChartDimensionFragment on Dimension {
+    id
+    name
+    categories {
+      id
+      name
+    }
+  }
+
+  fragment ChartSeriesFragment on DashboardIndicatorChartSeries {
+    dimensionCategory {
+      id
+      name
+      defaultColor
+    }
+    values {
+      id
+      value
+      date
+    }
+  }
+
   fragment BarChartVisualization on IndicatorBarChartInterface {
     indicator {
       ...DashboardIndicatorFragment
     }
     dimension {
-      id
-      name
-      categories {
-        id
-        name
-      }
+      ...ChartDimensionFragment
     }
     barType
     chartSeries {
-      dimensionCategory {
-        id
-        name
-        defaultColor
-      }
-      values {
-        id
-        value
-        date
-      }
+      ...ChartSeriesFragment
     }
   }
 
@@ -60,25 +68,11 @@ export const INDICATOR_CHART_FRAGMENTS = gql`
       ...DashboardIndicatorFragment
     }
     dimension {
-      id
-      name
-      categories {
-        id
-        name
-      }
+      ...ChartDimensionFragment
     }
     showTotalLine
     chartSeries {
-      dimensionCategory {
-        id
-        name
-        defaultColor
-      }
-      values {
-        id
-        value
-        date
-      }
+      ...ChartSeriesFragment
     }
   }
 
@@ -87,25 +81,11 @@ export const INDICATOR_CHART_FRAGMENTS = gql`
       ...DashboardIndicatorFragment
     }
     dimension {
-      id
-      name
-      categories {
-        id
-        name
-      }
+      ...ChartDimensionFragment
     }
     showTotalLine
     chartSeries {
-      dimensionCategory {
-        id
-        name
-        defaultColor
-      }
-      values {
-        id
-        value
-        date
-      }
+      ...ChartSeriesFragment
     }
   }
 
@@ -114,25 +94,11 @@ export const INDICATOR_CHART_FRAGMENTS = gql`
       ...DashboardIndicatorFragment
     }
     dimension {
-      id
-      name
-      categories {
-        id
-        name
-      }
+      ...ChartDimensionFragment
     }
     year
     chartSeries {
-      dimensionCategory {
-        id
-        name
-        defaultColor
-      }
-      values {
-        id
-        value
-        date
-      }
+      ...ChartSeriesFragment
     }
   }
 
