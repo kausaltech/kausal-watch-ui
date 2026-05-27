@@ -11,7 +11,7 @@ import DashboardIndicatorBarChartBlock from '@/components/contentblocks/indicato
 import DashboardIndicatorLineChartBlock from '@/components/contentblocks/indicator-chart/DashboardIndicatorLineChartBlock';
 import DashboardIndicatorPieChartBlock from '@/components/contentblocks/indicator-chart/DashboardIndicatorPieChartBlock';
 
-export type IndicatorVisualizationDispatcherData =
+export type IndicatorVisualizationBlockData =
   | BarChartVisualizationFragment
   | LineChartVisualizationFragment
   | AreaChartVisualizationFragment
@@ -19,10 +19,10 @@ export type IndicatorVisualizationDispatcherData =
   | SummaryVisualizationFragment;
 
 interface Props {
-  block: IndicatorVisualizationDispatcherData;
+  block: IndicatorVisualizationBlockData;
 }
 
-const IndicatorVisualizationDispatcher = ({ block }: Props) => {
+const IndicatorVisualizationBlock = ({ block }: Props) => {
   switch (block.__typename) {
     case 'DashboardIndicatorBarChartBlock':
     case 'IndicatorDefaultBarChart': {
@@ -52,4 +52,4 @@ const IndicatorVisualizationDispatcher = ({ block }: Props) => {
   }
 };
 
-export default IndicatorVisualizationDispatcher;
+export default IndicatorVisualizationBlock;
