@@ -61,9 +61,8 @@ const StyledCard = styled(Card)`
   &.outline {
     ${({ theme }) =>
       theme.themeColors.light === '#fefefe' &&
-      theme.cardBorderWidth === '0' &&
       `
-        /* Improve white card contrast when dashboard section is also white. */
+        /* Improve white card contrast when dashboard section is also near-white. */
         border-width: 1px;
         border-color: ${theme.neutralLight};
       `}

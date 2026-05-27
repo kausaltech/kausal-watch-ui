@@ -33,6 +33,14 @@ const MainCard = styled.div`
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 100;
 
+  ${({ theme, color }) =>
+    color !== 'dark' &&
+    theme.themeColors.light === '#fefefe' &&
+    `
+      /* Improve white hero card contrast when used on a near-white theme. */
+      border: 1px solid ${theme.neutralLight};
+    `}
+
   h1 {
     font-size: ${(props) => props.theme.fontSizeLg};
     margin-bottom: ${(props) => props.theme.spaces.s100};
