@@ -801,15 +801,17 @@ function IndicatorVisualisation({
        will be incorporated into IndicatorGraph.
      */
     graphComponent = (
-      <LegacyIndicatorGraph
-        specification={indicatorGraphSpecification}
-        yRange={yRange}
-        timeResolution={indicator.timeResolution}
-        traces={traces}
-        goalTraces={goalTraces}
-        trendTrace={trendTrace}
-        title={plotTitle}
-      />
+      <div aria-hidden="true">
+        <LegacyIndicatorGraph
+          specification={indicatorGraphSpecification}
+          yRange={yRange}
+          timeResolution={indicator.timeResolution}
+          traces={traces}
+          goalTraces={goalTraces}
+          trendTrace={trendTrace}
+          title={plotTitle}
+        />
+      </div>
     );
   } else if (defaultVisualization && !compareTo && !normalizeByPopulation) {
     /* TODO: A generalized IndicatorGraph component
@@ -824,26 +826,32 @@ function IndicatorVisualisation({
        Also, IndicatorVisualizationDispatcher now only supports the simplified
        one-dimensioned data received straight from the backend.
      */
-    graphComponent = <IndicatorVisualizationDispatcher block={defaultVisualization} />;
+    graphComponent = (
+      <div aria-hidden={showTable}>
+        <IndicatorVisualizationDispatcher block={defaultVisualization} />
+      </div>
+    );
   } else {
     /* TODO: Generalize graphComponent to be the basis of all graphs. */
     graphComponent = (
       // TODO: Show title depending on context
-      <IndicatorGraph
-        specification={indicatorGraphSpecification}
-        yRange={yRange}
-        timeResolution={indicator.timeResolution}
-        traces={traces}
-        goalTraces={goalTraces}
-        trendTrace={trendTrace}
-        title={null}
-        desiredTrend={indicator.desiredTrend}
-        referenceValue={indicator.referenceValue}
-        nonQuantifiedGoal={{
-          trend: indicator.nonQuantifiedGoal,
-          date: indicator.nonQuantifiedGoalDate,
-        }}
-      />
+      <div aria-hidden={showTable}>
+        <IndicatorGraph
+          specification={indicatorGraphSpecification}
+          yRange={yRange}
+          timeResolution={indicator.timeResolution}
+          traces={traces}
+          goalTraces={goalTraces}
+          trendTrace={trendTrace}
+          title={null}
+          desiredTrend={indicator.desiredTrend}
+          referenceValue={indicator.referenceValue}
+          nonQuantifiedGoal={{
+            trend: indicator.nonQuantifiedGoal,
+            date: indicator.nonQuantifiedGoalDate,
+          }}
+        />
+      </div>
     );
   }
 
@@ -868,7 +876,7 @@ function IndicatorVisualisation({
           currentValue={normalizeByPopulation}
         />
       )}
-      {showGraph && <div aria-hidden="true">{graphComponent}</div>}
+      {showGraph && graphComponent}
       {showTable && (
         <GraphAsTable
           specification={yRange}
