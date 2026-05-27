@@ -7,7 +7,7 @@ import { Col, Container, Row } from 'reactstrap';
 
 import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';
-import IndicatorVisualizationDispatcher from '@/components/indicators/IndicatorVisualizationDispatcher';
+import IndicatorVisualizationBlock from '@/components/indicators/IndicatorVisualizationBlock';
 
 import Card from '../common/Card';
 
@@ -85,7 +85,7 @@ function getBlockComponent(block: DashboardBlock) {
     case 'DashboardIndicatorLineChartBlock':
     case 'DashboardIndicatorBarChartBlock':
     case 'DashboardIndicatorAreaChartBlock':
-      return <IndicatorVisualizationDispatcher block={block} />;
+      return <IndicatorVisualizationBlock block={block} />;
     default:
       return null;
   }

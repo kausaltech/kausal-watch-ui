@@ -28,7 +28,7 @@ import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
 
 import RichText from '../common/RichText';
-import IndicatorVisualizationDispatcher from './IndicatorVisualizationDispatcher';
+import IndicatorVisualizationBlock from './IndicatorVisualizationBlock';
 
 function generateCube(dimensions, values, path) {
   const dim = dimensions[0];
@@ -816,19 +816,19 @@ function IndicatorVisualisation({
   } else if (defaultVisualization && !compareTo && !normalizeByPopulation) {
     /* TODO: A generalized IndicatorGraph component
        will be the internal implementation of the
-       graph component that IndicatorVisualizationDispatcher
+       graph component that IndicatorVisualizationBlock
        dispatches to -- and also of all the
        Indicator Visualization Blocks.
 
        Currently, the block implementations are in use
        and they do not support normalization or comparison.
 
-       Also, IndicatorVisualizationDispatcher now only supports the simplified
+       Also, IndicatorVisualizationBlock now only supports the simplified
        one-dimensioned data received straight from the backend.
      */
     graphComponent = (
       <div aria-hidden={showTable}>
-        <IndicatorVisualizationDispatcher block={defaultVisualization} />
+        <IndicatorVisualizationBlock block={defaultVisualization} />
       </div>
     );
   } else {
