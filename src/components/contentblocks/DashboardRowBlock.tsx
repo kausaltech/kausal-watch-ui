@@ -58,6 +58,17 @@ const StyledCard = styled(Card)`
     flex-direction: column;
   }
 
+  &.outline {
+    ${({ theme }) =>
+      theme.themeColors.light === '#fefefe' &&
+      theme.cardBorderWidth === '0' &&
+      `
+        /* Improve white card contrast when dashboard section is also white. */
+        border-width: 1px;
+        border-color: ${theme.neutralLight};
+      `}
+  }
+
   h2 {
     font-size: ${({ theme }) => theme.fontSizeLg};
   }
