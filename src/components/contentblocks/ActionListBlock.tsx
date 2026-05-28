@@ -22,6 +22,8 @@ import ErrorMessage from '@/components/common/ErrorMessage';
 import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 
+import { getReadableThemeTextColor } from './colorUtils';
+
 const GET_ACTION_LIST_FOR_BLOCK = gql`
   query GetActionListForBlock(
     $plan: ID!
@@ -44,10 +46,14 @@ const ActionListSection = styled.div`
 
 export const SectionHeader = styled.h2`
   text-align: center;
-  padding: ${(props) => props.theme.spaces.s100};
-  border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) => props.theme.themeColors.white};
-  color: ${(props) => props.theme.headingsColor};
+  padding: 0;
+  background-color: transparent;
+  color: ${(props) =>
+    getReadableThemeTextColor(
+      props.theme.neutralLight,
+      props.theme.headingsColor,
+      props.theme.themeColors.white
+    )};
   margin-bottom: ${(props) => props.theme.spaces.s300};
   font-size: ${(props) => props.theme.fontSizeLg};
 
