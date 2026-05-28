@@ -19,6 +19,7 @@ import images, { getActionImage } from '@/common/images';
 import { ActionListLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { getReadableThemeTextColor } from '@/components/contentblocks/colorUtils';
 import EmbedContext from '@/context/embed';
 
 import Icon from '../common/Icon';
@@ -80,10 +81,13 @@ export const GET_ACTION_LIST = gql`
 const ListHeader = styled(Col)`
   h2 {
     text-align: center;
-    padding: ${(props) => props.theme.spaces.s100};
-    border-radius: ${(props) => props.theme.cardBorderRadius};
-    background-color: ${(props) => props.theme.themeColors.white};
-    color: ${(props) => props.theme.headingsColor};
+    padding: 0;
+    color: ${(props) =>
+      getReadableThemeTextColor(
+        props.theme.neutralLight,
+        props.theme.headingsColor,
+        props.theme.themeColors.white
+      )};
     margin-bottom: ${(props) => props.theme.spaces.s300};
     font-size: ${(props) => props.theme.fontSizeLg};
 

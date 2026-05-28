@@ -47,7 +47,6 @@ const ActionListSection = styled.div`
 export const SectionHeader = styled.h2`
   text-align: center;
   padding: 0;
-  background-color: transparent;
   color: ${(props) =>
     getReadableThemeTextColor(
       props.theme.neutralLight,
