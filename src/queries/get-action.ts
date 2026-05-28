@@ -6,6 +6,7 @@ import type {
   WorkflowState,
 } from '@/common/__generated__/graphql';
 import images from '@/common/images';
+import { WORKFLOW_DEFAULT } from '@/constants/workflow';
 
 import {
   ATTRIBUTE_FRAGMENT,
@@ -32,7 +33,7 @@ export const getActionDetails = async (
       plan,
       clientUrl,
       id,
-      workflow: workflow ?? null,
+      workflow: workflow ?? WORKFLOW_DEFAULT,
     },
     fetchPolicy: 'no-cache',
   });
