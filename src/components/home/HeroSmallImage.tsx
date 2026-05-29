@@ -2,11 +2,14 @@ import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Col, Container } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
 import RichText from '@/components/common/RichText';
+
+import { ImageCredit } from '../common/ImageCredit';
+import { HeroCard } from './heroStyles';
 
 const Hero = styled.div`
   width: 100%;
@@ -58,8 +61,7 @@ const HeroImage = styled('img', transientOptions)<{
         `}
 `;
 
-const MainCard = styled.div`
-  position: relative;
+const MainCard = styled(HeroCard)`
   margin-left: auto;
   margin-right: auto;
   margin-top: -${(props) => props.theme.spaces.s300};
@@ -127,7 +129,7 @@ const ImageCredit = styled.span`
 `;
 
 const StyledContainer = styled(Container, transientOptions)<{
-  $backgroundColour?: string | null;
+  $backgroundColor?: string | null;
 }>`
   --image-height: 70vh;
 
@@ -152,7 +154,7 @@ const StyledContainer = styled(Container, transientOptions)<{
     width: 100vw;
     height: calc(var(--image-height) / 2 + 50% + ${({ theme }) => theme.spaces.s150});
     max-height: calc(100% - ${({ theme }) => theme.spaces.s150});
-    background-color: ${({ $backgroundColour, theme }) => $backgroundColour || theme.neutralLight};
+    background-color: ${({ $backgroundColor, theme }) => $backgroundColor || theme.neutralLight};
     z-index: -1;
   }
 `;
@@ -165,7 +167,7 @@ interface HeroSmallImageProps {
   altText?: string | null | undefined;
   imageCredit?: string | null | undefined;
   aspectRatio?: number;
-  backgroundColour?: string | null;
+  backgroundColor?: string | null;
   fitImage?: boolean | null;
 }
 
@@ -177,7 +179,7 @@ const HeroSmallImage = (props: HeroSmallImageProps) => {
     lead,
     altText = '',
     imageCredit,
-    backgroundColour,
+    backgroundColor,
     fitImage,
   } = props;
 
@@ -188,7 +190,7 @@ const HeroSmallImage = (props: HeroSmallImageProps) => {
   const shouldFitImage = fitImage !== false;
 
   return (
-    <StyledContainer $backgroundColour={backgroundColour}>
+    <StyledContainer $backgroundColor={backgroundColor}>
       <Hero id={id}>
         <HeroImageWrapper $fitImage={shouldFitImage}>
           <HeroImage src={bgImage} alt={altText ?? undefined} $fitImage={shouldFitImage} />
@@ -196,7 +198,7 @@ const HeroSmallImage = (props: HeroSmallImageProps) => {
         </HeroImageWrapper>
 
         {showContentBox && (
-          <MainCard color={theme.settings?.frontHero ? theme.settings.frontHero?.color : 'light'}>
+          <MainCard $cardColor={theme.settings?.frontHero?.color ?? 'light'}>
             <h1>{title}</h1>
             {lead && <RichText html={lead} className="lead-content" />}
           </MainCard>
