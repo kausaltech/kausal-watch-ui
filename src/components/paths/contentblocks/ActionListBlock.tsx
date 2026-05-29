@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
+import { getReadableThemeTextColor } from '@/components/contentblocks/colorUtils';
 
 import type {
   ActionCardFragment,
@@ -94,10 +95,13 @@ const TabTitle = styled.h3`
 
 const SectionHeader = styled.h2`
   text-align: center;
-  padding: ${(props) => props.theme.spaces.s100};
-  border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) => props.theme.themeColors.white};
-  color: ${(props) => props.theme.headingsColor};
+  padding: 0;
+  color: ${(props) =>
+    getReadableThemeTextColor(
+      props.theme.neutralLight,
+      props.theme.headingsColor,
+      props.theme.themeColors.white
+    )};
   margin-bottom: ${(props) => props.theme.spaces.s300};
   font-size: ${(props) => props.theme.fontSizeLg};
 
