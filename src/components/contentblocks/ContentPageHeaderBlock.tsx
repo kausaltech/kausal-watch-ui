@@ -6,6 +6,8 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 
+import { ImageCredit } from '../common/ImageCredit';
+
 const HeaderImage = styled.div<{ $image: string; $imageAlign: string }>`
   background-image: url(${(props) => props.$image});
   background-size: cover;
@@ -44,17 +46,6 @@ const ContentHeader = styled.header`
   .lead {
     max-width: ${(props) => props.theme.breakpointLg};
   }
-`;
-
-export const ImageCredit = styled.span`
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.1rem 0.25rem;
-  background-color: rgba(255, 255, 255, 0.66);
-  color: #000000;
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
 type Props = {

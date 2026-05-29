@@ -29,6 +29,7 @@ import CategoryPageStreamField, {
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
 import { usePlan } from '@/context/plan';
 
+import { ImageCredit } from '../common/ImageCredit';
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
@@ -125,16 +126,6 @@ const HeaderImage = styled.div<{
 
 const Identifier = styled.span`
   color: ${(props) => props.theme.textColor.tertiary};
-`;
-
-const ImageCredit = styled.span`
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.1rem 0.25rem;
-  background-color: rgba(255, 255, 255, 0.66);
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
 const HeaderContent = styled.div<{

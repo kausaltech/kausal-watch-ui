@@ -16,8 +16,9 @@ import { IndicatorLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import ExpandableIframe from '@/components/common/ExpandableIframe';
 import Icon from '@/components/common/Icon';
-import { ImageCredit } from '@/components/contentblocks/ContentPageHeaderBlock';
 import { usePlan } from '@/context/plan';
+
+import { ImageCredit } from './ImageCredit';
 
 const CUSTOM_IFRAME_HEIGHT_PARAM = 'k_height';
 const CUSTOM_IFRAME_EXPANDABLE_PARAM = 'k_expandable';
