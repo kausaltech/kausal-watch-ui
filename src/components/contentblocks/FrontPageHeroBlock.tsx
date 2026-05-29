@@ -67,17 +67,6 @@ const FrontPageHeroBlock = (props: FrontPageHeroProps) => {
   const isFullImage = layout === 'small_image' || layout === 'side_by_side';
   const imageSrc = (isFullImage ? typedImage?.full?.src : typedImage?.large?.src) ?? '';
 
-  const getFullAspectRatio = (image?: ImageData) => {
-    const width = image?.full?.width;
-    const height = image?.full?.height;
-
-    if (typeof width === 'number' && typeof height === 'number') {
-      return width / height;
-    }
-
-    return undefined;
-  };
-
   if (layout === 'small_image') {
     return (
       <HeroSmallImage
@@ -87,7 +76,6 @@ const FrontPageHeroBlock = (props: FrontPageHeroProps) => {
         lead={lead}
         imageCredit={imageCredit}
         altText={altText}
-        aspectRatio={getFullAspectRatio(typedImage)}
         backgroundColor={additionalSettings?.backgroundColour}
         fitImage={additionalSettings?.fitImage}
         showImageAccent={additionalSettings?.showImageAccent}

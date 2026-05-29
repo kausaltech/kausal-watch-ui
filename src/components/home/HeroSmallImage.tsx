@@ -178,7 +178,6 @@ interface HeroSmallImageProps {
   lead: string | null | undefined;
   altText?: string | null | undefined;
   imageCredit?: string | null | undefined;
-  aspectRatio?: number;
   backgroundColor?: string | null;
   fitImage?: boolean | null;
   showImageAccent?: boolean | null;
