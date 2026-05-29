@@ -12,6 +12,7 @@ import { Link } from '@/common/links';
 import Card from '@/components/common/Card';
 import RichText from '@/components/common/RichText';
 import { SectionHeader } from '@/components/contentblocks/ActionListBlock';
+import { getReadableThemeTextColor } from './colorUtils';
 import { useFallbackCategories } from '@/context/categories';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
 
@@ -67,6 +68,15 @@ const CategoryListSection = styled.div`
       line-height: ${(props) => props.theme.lineHeightBase};
     }
   }
+`;
+
+const CategoryListHeader = styled(SectionHeader)`
+  color: ${({ theme }) =>
+    getReadableThemeTextColor(
+      getBackgroundColor(theme),
+      theme.headingsColor,
+      theme.themeColors.white
+    )};
 `;
 
 const CardHeader = styled.h3`
@@ -147,7 +157,7 @@ export default function CategoryListBlock(props: CategoryListBlockProps) {
   return (
     <CategoryListSection id={id}>
       <Container>
-        {heading ? <SectionHeader>{heading}</SectionHeader> : null}
+        {heading ? <CategoryListHeader>{heading}</CategoryListHeader> : null}
         {lead ? <RichText html={lead} className="lead-text" /> : null}
         <Row tag="ul" className="justify-content-center">
           {categories
