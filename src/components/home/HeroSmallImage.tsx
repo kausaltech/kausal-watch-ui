@@ -14,11 +14,12 @@ import { HeroCard } from './heroStyles';
 const Hero = styled.div`
   width: 100%;
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
 `;
 
-const HeroImageWrapper = styled('div', transientOptions)<{ $fitImage: boolean }>`
+const HeroImageWrapper = styled('div', transientOptions)<{
+  $fitImage: boolean;
+  $showImageAccent: boolean;
+}>`
   position: relative;
   max-width: ${({ $fitImage }) => ($fitImage ? 'fit-content' : '100%')};
   width: ${({ $fitImage }) => ($fitImage ? 'auto' : '100%')};
@@ -35,15 +36,20 @@ const HeroImageWrapper = styled('div', transientOptions)<{ $fitImage: boolean }>
     background: ${({ theme }) => theme.brandDark};
     border-radius: ${({ theme }) => `0 0 ${theme.cardBorderRadius} ${theme.cardBorderRadius}`};
     z-index: 1;
+    display: ${({ $showImageAccent }) => ($showImageAccent ? 'block' : 'none')};
   }
 `;
 
 const HeroImage = styled('img', transientOptions)<{
   $fitImage: boolean;
+  $showImageAccent: boolean;
 }>`
   display: block;
   max-width: 100%;
-  border-radius: ${({ theme }) => `${theme.cardBorderRadius} ${theme.cardBorderRadius} 0 0`};
+  border-radius: ${({ theme, $showImageAccent }) =>
+    $showImageAccent
+      ? `${theme.cardBorderRadius} ${theme.cardBorderRadius} 0 0`
+      : theme.cardBorderRadius};
 
   ${({ $fitImage, theme }) =>
     $fitImage
@@ -51,7 +57,7 @@ const HeroImage = styled('img', transientOptions)<{
           max-height: var(--image-height);
 
           @media (min-width: ${theme.breakpointMd}) {
-            min-height: 500px; // This causes issues when the image gets squished by the container horizontally
+            // min-height: 500px; // This causes issues when the image gets squished by the container horizontally
           }
         `
       : css`
@@ -132,6 +138,7 @@ const StyledContainer = styled(Container, transientOptions)<{
   $backgroundColor?: string | null;
 }>`
   --image-height: 70vh;
+  --image-height: calc(100vh - 135px - ${({ theme }) => theme.spaces.s300} * 2);
 
   position: relative;
   padding-top: ${(props) => props.theme.spaces.s100};
@@ -143,6 +150,7 @@ const StyledContainer = styled(Container, transientOptions)<{
 
   @media (min-height: 800px) {
     --image-height: 60vh;
+    --image-height: calc(100vh - 135px - ${({ theme }) => theme.spaces.s300} * 2);
   }
 
   &::after {
@@ -159,6 +167,10 @@ const StyledContainer = styled(Container, transientOptions)<{
   }
 `;
 
+const StyledImageCredit = styled(ImageCredit)`
+  border-top-right-radius: ${({ theme }) => theme.cardBorderRadius};
+`;
+
 interface HeroSmallImageProps {
   id?: string;
   bgImage: string;
@@ -169,6 +181,7 @@ interface HeroSmallImageProps {
   aspectRatio?: number;
   backgroundColor?: string | null;
   fitImage?: boolean | null;
+  showImageAccent?: boolean | null;
 }
 
 const HeroSmallImage = (props: HeroSmallImageProps) => {
@@ -181,6 +194,7 @@ const HeroSmallImage = (props: HeroSmallImageProps) => {
     imageCredit,
     backgroundColor,
     fitImage,
+    showImageAccent,
   } = props;
 
   const t = useTranslations();
@@ -188,13 +202,21 @@ const HeroSmallImage = (props: HeroSmallImageProps) => {
 
   const showContentBox = title || lead;
   const shouldFitImage = fitImage !== false;
+  const shouldShowImageAccent = showImageAccent !== false;
 
   return (
     <StyledContainer $backgroundColor={backgroundColor}>
       <Hero id={id}>
-        <HeroImageWrapper $fitImage={shouldFitImage}>
-          <HeroImage src={bgImage} alt={altText ?? undefined} $fitImage={shouldFitImage} />
-          {imageCredit && <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>}
+        <HeroImageWrapper $fitImage={shouldFitImage} $showImageAccent={shouldShowImageAccent}>
+          <HeroImage
+            src={bgImage}
+            alt={altText ?? undefined}
+            $fitImage={shouldFitImage}
+            $showImageAccent={shouldShowImageAccent}
+          />
+          {imageCredit && (
+            <StyledImageCredit>{`${t('image-credit')}: ${imageCredit}`}</StyledImageCredit>
+          )}
         </HeroImageWrapper>
 
         {showContentBox && (

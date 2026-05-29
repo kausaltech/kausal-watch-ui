@@ -162,6 +162,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
       additionalSettings {
         backgroundColour
         fitImage
+        showImageAccent
       }
     }
     ... on LargeImageBlock {
