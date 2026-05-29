@@ -31,7 +31,7 @@ const SideBySideInner = styled(Container, transientOptions)<{ $fitImage: boolean
   @media (min-width: ${getStackedBreakpoint}) {
     display: flex;
     flex-direction: row;
-    align-items: stretch;
+    align-items: center;
   }
 `;
 
@@ -43,8 +43,8 @@ const SideBySideImageWrapper = styled('div', transientOptions)<{ $fitImage: bool
 
   @media (min-width: ${getStackedBreakpoint}) {
     border-radius: ${({ theme }) => theme.cardBorderRadius};
-    flex: 0 0 50%;
-    max-width: 50%;
+    flex: 0 0 ${({ theme }) => `calc(50% + ${theme.spaces.s300})`};
+    max-width: ${({ theme }) => `calc(50% + ${theme.spaces.s300})`};
     ${({ $fitImage }) =>
       !$fitImage &&
       `
@@ -80,6 +80,10 @@ const SideBySideContent = styled('div', transientOptions)<{ $fitImage: boolean }
     padding: ${(props) => props.theme.spaces.s300};
     padding-left: 0;
     margin-top: 0;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpointXl}) {
+    padding-right: 0;
   }
 `;
 

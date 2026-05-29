@@ -26,6 +26,7 @@ interface ImageData {
 interface AdditionalSettings {
   backgroundColour?: string | null;
   fitImage?: boolean | null;
+  showImageAccent?: boolean | null;
 }
 
 interface FrontPageHeroProps {
@@ -89,6 +90,7 @@ const FrontPageHeroBlock = (props: FrontPageHeroProps) => {
         aspectRatio={getFullAspectRatio(typedImage)}
         backgroundColor={additionalSettings?.backgroundColour}
         fitImage={additionalSettings?.fitImage}
+        showImageAccent={additionalSettings?.showImageAccent}
       />
     );
   }
