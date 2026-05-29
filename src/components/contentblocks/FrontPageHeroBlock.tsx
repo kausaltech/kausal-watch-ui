@@ -87,7 +87,7 @@ const FrontPageHeroBlock = (props: FrontPageHeroProps) => {
         imageCredit={imageCredit}
         altText={altText}
         aspectRatio={getFullAspectRatio(typedImage)}
-        backgroundColour={additionalSettings?.backgroundColour}
+        backgroundColor={additionalSettings?.backgroundColour}
         fitImage={additionalSettings?.fitImage}
       />
     );
@@ -104,7 +104,7 @@ const FrontPageHeroBlock = (props: FrontPageHeroProps) => {
         altText={altText}
         imageWidth={typedImage?.full?.width}
         imageHeight={typedImage?.full?.height}
-        backgroundColour={additionalSettings?.backgroundColour}
+        backgroundColor={additionalSettings?.backgroundColour}
         fitImage={additionalSettings?.fitImage}
       />
     );

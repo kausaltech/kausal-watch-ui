@@ -2,16 +2,18 @@
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
-import { readableColor } from 'polished';
 import { Container } from 'reactstrap';
+
+import { transientOptions } from '@common/themes/styles/styled';
 
 import RichText from '@/components/common/RichText';
 
-/**
- * Pulls the specified hero height from the theme if defined
- */
+import { ImageCredit } from '../common/ImageCredit';
+import { HeroCard } from './heroStyles';
+
 const getHeight = (theme: Theme, defaultHeight: string) =>
   theme.settings.frontHero?.height ?? defaultHeight;
 
@@ -71,66 +73,9 @@ const HeroContent = styled.div`
   align-items: center;
 `;
 
-const MainCard = styled.div<{ $alignment: string; $color: string }>`
-  position: relative;
+const MainCard = styled(HeroCard, transientOptions)<{ $alignment: string }>`
   max-width: ${(props) => props.theme.breakpointSm};
   margin: -2rem auto 0;
-  padding: ${(props) =>
-    `${props.theme.spaces.s200} ${props.theme.spaces.s200} ${props.theme.spaces.s100}`};
-  border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) =>
-    props.$color === 'dark' ? props.theme.brandDark : props.theme.themeColors.white};
-  color: ${(props) =>
-    props.$color === 'dark'
-      ? readableColor(
-          props.theme.brandDark,
-          props.theme.themeColors.black,
-          props.theme.themeColors.white
-        )
-      : props.theme.neutralDark};
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-
-  h1 {
-    font-size: ${(props) => props.theme.fontSizeLg};
-    margin-bottom: ${(props) => props.theme.spaces.s100};
-  }
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    color: ${(props) =>
-      props.$color === 'dark'
-        ? readableColor(
-            props.theme.brandDark,
-            props.theme.themeColors.black,
-            props.theme.themeColors.white
-          )
-        : props.theme.neutralDark};
-  }
-
-  a {
-    color: ${(props) =>
-      props.$color === 'dark'
-        ? readableColor(
-            props.theme.brandDark,
-            props.theme.themeColors.black,
-            props.theme.themeColors.white
-          )
-        : props.theme.neutralDark};
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
-
-  .lead-content {
-    font-size: ${(props) => props.theme.fontSizeBase};
-    line-height: ${(props) => props.theme.lineHeightMd};
-    font-family: ${(props) =>
-      `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
-  }
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     margin: 3rem
@@ -146,25 +91,7 @@ const MainCard = styled.div<{ $alignment: string; $color: string }>`
             return '0';
         }
       }};
-
-    h1 {
-      font-size: ${(props) => props.theme.fontSizeXl};
-    }
-
-    .lead-content {
-      font-size: ${(props) => props.theme.fontSizeMd};
-    }
   }
-`;
-
-const ImageCredit = styled.span`
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.1rem 0.25rem;
-  background-color: rgba(255, 255, 255, 0.66);
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
 interface FocalBoxInfo {
@@ -202,15 +129,11 @@ const HeroFullImage = (props: HeroFullImageProps) => {
   const t = useTranslations();
   const theme = useTheme();
 
-  const contentAlignment = theme.settings?.frontHero?.cardPlacement
-    ? theme.settings.frontHero.cardPlacement
-    : 'left';
-
-  const contentColor = theme.settings?.frontHero?.color ? theme.settings.frontHero.color : 'light';
+  const contentAlignment = theme.settings?.frontHero?.cardPlacement ?? 'left';
+  const contentColor = theme.settings?.frontHero?.color ?? 'light';
 
   const showContentBox = title || lead;
 
-  // Calculate aspect ratio to ensure focal box is always visible
   // aspectRatio = imageWidth / focalBoxHeight ensures the container is tall enough
   // when the image is scaled to cover the container width
   const focalBoxAspectRatio = focalBox
@@ -225,7 +148,7 @@ const HeroFullImage = (props: HeroFullImageProps) => {
       {showContentBox && (
         <Container>
           <HeroContent>
-            <MainCard $alignment={contentAlignment} $color={contentColor}>
+            <MainCard $alignment={contentAlignment} $cardColor={contentColor}>
               <h1>{title}</h1>
               {lead ? <RichText html={lead} className="lead-content" /> : null}
             </MainCard>

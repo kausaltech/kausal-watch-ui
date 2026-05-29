@@ -1,90 +1,34 @@
-import { useTheme } from '@emotion/react';
+import { type Theme, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Col, Container } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
 import RichText from '@/components/common/RichText';
 
-const ImageCredit = styled.span`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 0.1rem 0.25rem;
-  background-color: rgba(255, 255, 255, 0.66);
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
-  z-index: 1;
-`;
+import { ImageCredit } from '../common/ImageCredit';
+import { HeroCard } from './heroStyles';
 
-const CardContent = styled.div<{ $color: string }>`
-  color: ${(props) =>
-    props.$color === 'dark' ? props.theme.themeColors.white : props.theme.neutralDark};
-
-  h1 {
-    font-size: ${(props) => props.theme.fontSizeLg};
-    margin-bottom: ${(props) => props.theme.spaces.s100};
-
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
-      font-size: ${(props) => props.theme.fontSizeXl};
-    }
-  }
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    color: ${(props) =>
-      props.$color === 'dark' ? props.theme.themeColors.white : props.theme.headingsColor};
-  }
-
-  a {
-    color: ${(props) =>
-      props.$color === 'dark' ? props.theme.themeColors.white : props.theme.neutralDark};
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
-
-  .lead-content {
-    font-size: ${(props) => props.theme.fontSizeBase};
-    line-height: ${(props) => props.theme.lineHeightMd};
-    font-family: ${(props) =>
-      `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
-
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
-      font-size: ${(props) => props.theme.fontSizeMd};
-    }
-  }
-`;
-
-const LandscapeHero = styled.div`
+const SideBySideHero = styled('div', transientOptions)<{ $backgroundColor?: string | null }>`
   width: 100%;
-  position: relative;
-  margin-top: ${(props) => props.theme.spaces.s300};
-  margin-bottom: ${(props) => props.theme.spaces.s300};
+  background-color: ${({ $backgroundColor, theme }) => $backgroundColor || theme.neutralLight};
 `;
 
-const LandscapeImage = styled.img`
-  display: block;
-  width: 100%;
-`;
+function getStackedBreakpoint({ theme, $fitImage }: { theme: Theme; $fitImage: boolean }) {
+  return $fitImage ? theme.breakpointLg : theme.breakpointMd;
+}
 
-const LandscapeCardRow = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: ${(props) => props.theme.spaces.s200};
-`;
+const SideBySideInner = styled(Container, transientOptions)<{ $fitImage: boolean }>`
+  padding-top: ${(props) => props.theme.spaces.s300};
+  padding-bottom: ${(props) => props.theme.spaces.s300};
 
-const SideBySideHero = styled('div', transientOptions)<{ $backgroundColour?: string | null }>`
-  width: 100%;
-  position: relative;
-  background-color: ${({ $backgroundColour, theme }) => $backgroundColour || theme.neutralLight};
+  @media (max-width: ${(props) => props.theme.breakpointSm}) {
+    padding-top: ${(props) => props.theme.spaces.s100};
+  }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  @media (min-width: ${getStackedBreakpoint}) {
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -94,38 +38,71 @@ const SideBySideHero = styled('div', transientOptions)<{ $backgroundColour?: str
 const SideBySideImageWrapper = styled('div', transientOptions)<{ $fitImage: boolean }>`
   position: relative;
   flex-shrink: 0;
+  border-radius: ${({ theme }) => `${theme.cardBorderRadius} ${theme.cardBorderRadius} 0 0`};
+  overflow: hidden;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    width: 50%;
+  @media (min-width: ${getStackedBreakpoint}) {
+    border-radius: ${({ theme }) => theme.cardBorderRadius};
+    flex: 0 0 50%;
+    max-width: 50%;
     ${({ $fitImage }) =>
       !$fitImage &&
       `
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      align-self: stretch;
+      min-height: 400px;
     `}
   }
 `;
 
 const SideBySideImage = styled('img', transientOptions)<{ $fitImage: boolean }>`
   display: block;
-  ${({ $fitImage }) =>
-    $fitImage
-      ? `width: 100%;`
-      : `
-    max-width: 100%;
-    max-height: 600px;
-    width: auto;
-  `}
+  width: 100%;
+
+  @media (min-width: ${getStackedBreakpoint}) {
+    ${({ $fitImage }) =>
+      !$fitImage &&
+      `
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    `}
+  }
 `;
 
-const SideBySideContent = styled.div`
+const SideBySideContent = styled('div', transientOptions)<{ $fitImage: boolean }>`
   display: flex;
   align-items: flex-start;
-  padding: ${(props) => props.theme.spaces.s200};
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  margin-top: -${(props) => props.theme.spaces.s300};
+
+  @media (min-width: ${getStackedBreakpoint}) {
     flex: 1;
+    align-items: center;
     padding: ${(props) => props.theme.spaces.s300};
+    padding-left: 0;
+    margin-top: 0;
+  }
+`;
+
+const SideBySideCard = styled(HeroCard, transientOptions)<{ $fitImage: boolean }>`
+  width: 100%;
+
+  @media (max-width: ${getStackedBreakpoint}) {
+    border-radius: ${({ theme }) => `0 0 ${theme.cardBorderRadius} ${theme.cardBorderRadius}`};
+  }
+
+  @media (min-width: ${getStackedBreakpoint}) {
+    width: auto;
+    max-width: 600px;
+    margin-left: -${(props) => props.theme.spaces.s300};
+  }
+`;
+
+const StyledImageCredit = styled(ImageCredit, transientOptions)<{ $fitImage: boolean }>`
+  @media (min-width: ${getStackedBreakpoint}) {
+    top: unset;
+    right: unset;
+    left: 0;
+    bottom: 0;
   }
 `;
 
@@ -138,7 +115,7 @@ interface HeroSideBySideProps {
   imageCredit?: string | null | undefined;
   imageWidth?: number | null;
   imageHeight?: number | null;
-  backgroundColour?: string | null;
+  backgroundColor?: string | null;
   fitImage?: boolean | null;
 }
 
@@ -150,9 +127,7 @@ const HeroSideBySide = (props: HeroSideBySideProps) => {
     lead,
     altText = '',
     imageCredit,
-    imageWidth,
-    imageHeight,
-    backgroundColour,
+    backgroundColor,
     fitImage,
   } = props;
 
@@ -163,43 +138,27 @@ const HeroSideBySide = (props: HeroSideBySideProps) => {
 
   const cardColor = theme.settings?.frontHero?.color ?? 'light';
   const showContentBox = title || lead;
-  const isLandscape = !imageWidth || !imageHeight || imageWidth / imageHeight >= 2.0;
-
-  if (isLandscape) {
-    return (
-      <Container>
-        <LandscapeHero id={id}>
-          <LandscapeImage src={bgImage} alt={altText ?? ''} />
-          {imageCredit && <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>}
-          {showContentBox && (
-            <LandscapeCardRow>
-              <Col xl={{ size: 6 }} lg={{ size: 8 }} md={{ size: 10 }}>
-                <CardContent $color={cardColor}>
-                  <h1>{title}</h1>
-                  {lead && <RichText html={lead} className="lead-content" />}
-                </CardContent>
-              </Col>
-            </LandscapeCardRow>
-          )}
-        </LandscapeHero>
-      </Container>
-    );
-  }
 
   return (
-    <SideBySideHero id={id} $backgroundColour={backgroundColour}>
-      <SideBySideImageWrapper $fitImage={shouldFitImage}>
-        <SideBySideImage src={bgImage} alt={altText ?? ''} $fitImage={shouldFitImage} />
-        {imageCredit && <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>}
-      </SideBySideImageWrapper>
-      {showContentBox && (
-        <SideBySideContent>
-          <CardContent $color={cardColor}>
-            <h1>{title}</h1>
-            {lead && <RichText html={lead} className="lead-content" />}
-          </CardContent>
-        </SideBySideContent>
-      )}
+    <SideBySideHero id={id} $backgroundColor={backgroundColor}>
+      <SideBySideInner $fitImage={shouldFitImage}>
+        <SideBySideImageWrapper $fitImage={shouldFitImage}>
+          <SideBySideImage src={bgImage} alt={altText ?? ''} $fitImage={shouldFitImage} />
+          {imageCredit && (
+            <StyledImageCredit
+              $fitImage={shouldFitImage}
+            >{`${t('image-credit')}: ${imageCredit}`}</StyledImageCredit>
+          )}
+        </SideBySideImageWrapper>
+        {showContentBox && (
+          <SideBySideContent $fitImage={shouldFitImage}>
+            <SideBySideCard $fitImage={shouldFitImage} $cardColor={cardColor}>
+              <h1>{title}</h1>
+              {lead && <RichText html={lead} className="lead-content" />}
+            </SideBySideCard>
+          </SideBySideContent>
+        )}
+      </SideBySideInner>
     </SideBySideHero>
   );
 };

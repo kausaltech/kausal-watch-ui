@@ -35,7 +35,6 @@ import CardListBlock from '@/components/contentblocks/CardListBlock';
 import CategoryListBlock, {
   type CategoryListBlockCategory,
 } from '@/components/contentblocks/CategoryListBlock';
-import { ImageCredit } from '@/components/contentblocks/ContentPageHeaderBlock';
 import DashboardRowBlock from '@/components/contentblocks/DashboardRowBlock';
 import FrontPageHeroBlock from '@/components/contentblocks/FrontPageHeroBlock';
 import IndicatorGroupBlock from '@/components/contentblocks/IndicatorGroupBlock';
@@ -51,6 +50,7 @@ import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
 import ChangeHistory from './ChangeHistory';
 import { ErrorBoundary } from './ErrorBoundary';
+import { ImageCredit } from './ImageCredit';
 
 const CategoryTreeBlock = dynamic(() => import('@/components/contentblocks/CategoryTreeBlock'), {
   ssr: false,
