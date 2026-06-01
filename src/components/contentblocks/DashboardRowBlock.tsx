@@ -44,14 +44,17 @@ type DashboardRowBlockFragment = Extract<
 // Get the element type of the blocks array
 export type DashboardBlock = NonNullable<DashboardRowBlockFragment['blocks']>[number];
 
-type DashboardHeaderBlock = Extract<DashboardBlock, { __typename: 'DashboardHeaderBlock' }>;
+type DashboardHeaderBlock = {
+  __typename?: 'DashboardHeaderBlock';
+  text?: string | null;
+};
 
-const isDashboardHeaderBlock = (block: DashboardBlock): block is DashboardHeaderBlock =>
-  block.__typename === 'DashboardHeaderBlock';
-
-const isDashboardCardBlock = (
+const isDashboardHeaderBlock = (
   block: DashboardBlock
-): block is Exclude<DashboardBlock, DashboardHeaderBlock> => !isDashboardHeaderBlock(block);
+): block is DashboardBlock & DashboardHeaderBlock =>
+  (block as { __typename?: string }).__typename === 'DashboardHeaderBlock';
+
+const isDashboardCardBlock = (block: DashboardBlock) => !isDashboardHeaderBlock(block);
 
 interface DashboardRowBlockProps extends Omit<DashboardRowBlockFragment, 'rawValue'> {
   topPadding?: boolean;
