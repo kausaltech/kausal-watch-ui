@@ -19,6 +19,7 @@ import images, { getActionImage } from '@/common/images';
 import { ActionListLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { getReadableThemeTextColor } from '@/components/contentblocks/colorUtils';
 import EmbedContext from '@/context/embed';
 
 import Icon from '../common/Icon';
@@ -77,22 +78,23 @@ export const GET_ACTION_LIST = gql`
   ${images.fragments.multiUseImage}
 `;
 
-const ListHeader = styled(Col)`
+const ListHeader = styled(Col, transientOptions)<{
+  $embed?: { active: boolean };
+}>`
   h2 {
     text-align: center;
-    padding: ${(props) => props.theme.spaces.s100};
-    border-radius: ${(props) => props.theme.cardBorderRadius};
-    background-color: ${(props) => props.theme.themeColors.white};
-    color: ${(props) => props.theme.headingsColor};
+    padding: 0;
+    color: ${(props) =>
+      getReadableThemeTextColor(
+        props.$embed?.active ? props.theme.themeColors.white : props.theme.neutralLight,
+        props.theme.headingsColor,
+        props.theme.themeColors.white
+      )};
     margin-bottom: ${(props) => props.theme.spaces.s300};
     font-size: ${(props) => props.theme.fontSizeLg};
 
     @media (min-width: ${(props) => props.theme.breakpointMd}) {
       font-size: ${(props) => props.theme.fontSizeXl};
-    }
-
-    @media print {
-      background-color: #fff;
     }
   }
 `;
@@ -137,7 +139,7 @@ function ActionCardList(props: ActionCardListProps) {
   return (
     <Row>
       {displayHeader && (
-        <ListHeader xs="12">
+        <ListHeader xs="12" $embed={embed}>
           <h2>{t('recently-updated-actions', getActionTermContext(plan) || {})}</h2>
         </ListHeader>
       )}
