@@ -8,6 +8,10 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
     blocks {
       blockType
 
+      ... on DashboardHeaderBlock {
+        text
+      } 
+
       ... on DashboardParagraphBlock {
         text
       }
