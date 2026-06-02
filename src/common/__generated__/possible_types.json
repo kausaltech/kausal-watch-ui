@@ -598,6 +598,7 @@
       "CharBlock",
       "ChoiceBlock",
       "ContinuousActionFilterBlock",
+      "DashboardHeaderBlock",
       "DashboardIndicatorAreaChartBlock",
       "DashboardIndicatorBarChartBlock",
       "DashboardIndicatorLineChartBlock",

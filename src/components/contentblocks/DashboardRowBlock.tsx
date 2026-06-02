@@ -11,6 +11,9 @@ import IndicatorVisualizationBlock from '@/components/indicators/IndicatorVisual
 
 import Card from '../common/Card';
 
+import { SectionHeader } from './ActionListBlock';
+import { getReadableThemeTextColor } from './colorUtils';
+
 const DashboardRowSection = styled.div<{
   $topPadding?: boolean;
   $bottomPadding?: boolean;
@@ -24,6 +27,15 @@ const DashboardRowSection = styled.div<{
     props.$bottomPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
 `;
 
+const DashboardSectionHeader = styled(SectionHeader)`
+  color: ${({ theme }) =>
+    getReadableThemeTextColor(
+      theme.themeColors.light,
+      theme.headingsColor,
+      theme.themeColors.white
+    )};
+`;
+
 // Extract the DashboardRowBlock fragment type from the union
 type DashboardRowBlockFragment = Extract<
   StreamFieldFragmentFragment,
@@ -31,6 +43,18 @@ type DashboardRowBlockFragment = Extract<
 >;
 // Get the element type of the blocks array
 export type DashboardBlock = NonNullable<DashboardRowBlockFragment['blocks']>[number];
+
+type DashboardHeaderBlock = {
+  __typename?: 'DashboardHeaderBlock';
+  text?: string | null;
+};
+
+const isDashboardHeaderBlock = (
+  block: DashboardBlock
+): block is DashboardBlock & DashboardHeaderBlock =>
+  (block as { __typename?: string }).__typename === 'DashboardHeaderBlock';
+
+const isDashboardCardBlock = (block: DashboardBlock) => !isDashboardHeaderBlock(block);
 
 interface DashboardRowBlockProps extends Omit<DashboardRowBlockFragment, 'rawValue'> {
   topPadding?: boolean;
@@ -78,6 +102,8 @@ const StyledLink = styled(IndicatorLink)`
 
 function getBlockComponent(block: DashboardBlock) {
   switch (block.__typename) {
+    case 'DashboardHeaderBlock':
+      return null;
     case 'DashboardParagraphBlock':
       return block.text ? <div dangerouslySetInnerHTML={{ __html: block.text }} /> : null;
     case 'DashboardIndicatorSummaryBlock':
@@ -114,7 +140,9 @@ const DashboardRowBlock = ({
   bottomPadding = true,
 }: DashboardRowBlockProps) => {
   const t = useTranslations();
-  const columnWidth = 12 / blocks.length;
+  const headerBlock = blocks.find(isDashboardHeaderBlock);
+  const cardBlocks = blocks.filter(isDashboardCardBlock);
+  const columnWidth = cardBlocks.length > 0 ? 12 / cardBlocks.length : 12;
   const chartTypes = [
     'DashboardIndicatorPieChartBlock',
     'DashboardIndicatorLineChartBlock',
@@ -129,26 +157,31 @@ const DashboardRowBlock = ({
       $bottomPadding={bottomPadding}
     >
       <Container>
-        <StyledRow>
-          {blocks.map((block, index) => {
-            const { blockType } = block;
-            const isChart = chartTypes.includes(blockType);
-            const indicatorId =
-              isChart && 'indicator' in block && block.indicator ? block.indicator.id : undefined;
+        {headerBlock?.text ? (
+          <DashboardSectionHeader>{headerBlock.text}</DashboardSectionHeader>
+        ) : null}
+        {cardBlocks.length > 0 && (
+          <StyledRow>
+            {cardBlocks.map((block, index) => {
+              const { blockType } = block;
+              const isChart = chartTypes.includes(blockType);
+              const indicatorId =
+                isChart && 'indicator' in block && block.indicator ? block.indicator.id : undefined;
 
-            const blockId = 'id' in block && block.id ? block.id : `${block.blockType}-${index}`;
-            return (
-              <Col key={blockId} md={columnWidth}>
-                <StyledCard outline>
-                  <DashboardCardContents block={block} />
-                  {isChart && indicatorId && (
-                    <StyledLink id={indicatorId}>{t('see-full-data')}</StyledLink>
-                  )}
-                </StyledCard>
-              </Col>
-            );
-          })}
-        </StyledRow>
+              const blockId = 'id' in block && block.id ? block.id : `${block.blockType}-${index}`;
+              return (
+                <Col key={blockId} md={columnWidth}>
+                  <StyledCard outline>
+                    <DashboardCardContents block={block} />
+                    {isChart && indicatorId && (
+                      <StyledLink id={indicatorId}>{t('see-full-data')}</StyledLink>
+                    )}
+                  </StyledCard>
+                </Col>
+              );
+            })}
+          </StyledRow>
+        )}
       </Container>
     </DashboardRowSection>
   );
