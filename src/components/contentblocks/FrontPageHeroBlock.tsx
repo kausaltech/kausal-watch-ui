@@ -27,6 +27,7 @@ interface AdditionalSettings {
   backgroundColour?: string | null;
   fitImage?: boolean | null;
   showImageAccent?: boolean | null;
+  backgroundCoversFullSection?: boolean | null;
 }
 
 interface FrontPageHeroProps {
@@ -79,6 +80,7 @@ const FrontPageHeroBlock = (props: FrontPageHeroProps) => {
         backgroundColor={additionalSettings?.backgroundColour}
         fitImage={additionalSettings?.fitImage}
         showImageAccent={additionalSettings?.showImageAccent}
+        fullBackground={additionalSettings?.backgroundCoversFullSection}
       />
     );
   }
