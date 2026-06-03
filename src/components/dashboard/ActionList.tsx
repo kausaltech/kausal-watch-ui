@@ -453,6 +453,10 @@ const ActionList = (props: ActionListProps) => {
   const displayDashboard =
     activeFilters.view === 'dashboard' ||
     (activeFilters.view == null && defaultView === ActionListPageView.Dashboard);
+
+  // Do not call it Dashboard in English if pie charts are hidden
+  const dashboardLabel =
+    theme.settings.dashboard.showPieCharts !== false ? t('dashboard') : t('dashboard-overview');
   const orgs: ActionListOrganization[] = useMemo(() => {
     const result = constructOrgHierarchy(organizations);
     if (includeRelatedPlans) {
@@ -588,7 +592,7 @@ const ActionList = (props: ActionListProps) => {
                 aria-controls="dashboard-view"
                 id="dashboard-tab"
               >
-                {t('dashboard')}
+                {dashboardLabel}
               </Tab>
             </div>
           )}
