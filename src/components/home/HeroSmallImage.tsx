@@ -11,6 +11,42 @@ import RichText from '@/components/common/RichText';
 import { ImageCredit } from '../common/ImageCredit';
 import { HeroCard } from './heroStyles';
 
+const StyledContainer = styled(Container, transientOptions)<{
+  $backgroundColor?: string | null;
+  $showImageAccent: boolean;
+  $fullBackground: boolean | null;
+}>`
+  --block-margin: ${({ theme }) => theme.spaces.s300};
+  --accent-bar-height: 0px;
+  --image-top-padding: ${({ theme }) => theme.spaces.s100};
+  --image-height: 70vh;
+  --image-height: calc(100vh - 135px - var(--image-top-padding) * 2);
+  --bg-color: ${({ $backgroundColor, theme }) => $backgroundColor || theme.neutralLight};
+
+  position: relative;
+  padding-top: var(--image-top-padding);
+  margin-bottom: var(--block-margin);
+
+  &::before {
+    content: '';
+    display: ${({ $fullBackground }) => ($fullBackground ? 'block' : 'none')};
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: calc(100% + var(--block-margin));
+    background-color: var(--bg-color);
+    z-index: -1;
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpointSm}) {
+    --image-top-padding: ${({ theme }) => theme.spaces.s300};
+    --accent-bar-height: ${({ $showImageAccent, theme }) =>
+      $showImageAccent ? theme.spaces.s150 : '0px'};
+  }
+`;
+
 const Hero = styled.div`
   width: 100%;
   position: relative;
@@ -19,12 +55,26 @@ const Hero = styled.div`
 const HeroImageWrapper = styled('div', transientOptions)<{
   $fitImage: boolean;
   $showImageAccent: boolean;
+  $fullBackground: boolean | null;
 }>`
   position: relative;
   max-width: ${({ $fitImage }) => ($fitImage ? 'fit-content' : '100%')};
   width: ${({ $fitImage }) => ($fitImage ? 'auto' : '100%')};
   margin-left: auto;
   margin-right: auto;
+
+  &::before {
+    content: '';
+    display: ${({ $fullBackground }) => ($fullBackground ? 'none' : 'block')};
+    position: absolute;
+    top: calc(var(--image-top-padding) * -1);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: calc(100% + var(--accent-bar-height) + var(--image-top-padding) * 2);
+    background-color: var(--bg-color);
+    z-index: -1;
+  }
 
   &::after {
     content: '';
@@ -51,14 +101,10 @@ const HeroImage = styled('img', transientOptions)<{
       ? `${theme.cardBorderRadius} ${theme.cardBorderRadius} 0 0`
       : theme.cardBorderRadius};
 
-  ${({ $fitImage, theme }) =>
+  ${({ $fitImage }) =>
     $fitImage
       ? css`
           max-height: var(--image-height);
-
-          @media (min-width: ${theme.breakpointMd}) {
-            // min-height: 500px; // This causes issues when the image gets squished by the container horizontally
-          }
         `
       : css`
           width: 100%;
@@ -134,39 +180,6 @@ const ImageCredit = styled.span`
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
-const StyledContainer = styled(Container, transientOptions)<{
-  $backgroundColor?: string | null;
-}>`
-  --image-height: 70vh;
-  --image-height: calc(100vh - 135px - ${({ theme }) => theme.spaces.s300} * 2);
-
-  position: relative;
-  padding-top: ${(props) => props.theme.spaces.s100};
-  margin-bottom: ${(props) => props.theme.spaces.s300};
-
-  @media (min-width: ${(props) => props.theme.breakpointSm}) {
-    padding-top: ${(props) => props.theme.spaces.s300};
-  }
-
-  @media (min-height: 800px) {
-    --image-height: 60vh;
-    --image-height: calc(100vh - 135px - ${({ theme }) => theme.spaces.s300} * 2);
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100vw;
-    height: calc(var(--image-height) / 2 + 50% + ${({ theme }) => theme.spaces.s150});
-    max-height: calc(100% - ${({ theme }) => theme.spaces.s150});
-    background-color: ${({ $backgroundColor, theme }) => $backgroundColor || theme.neutralLight};
-    z-index: -1;
-  }
-`;
-
 const StyledImageCredit = styled(ImageCredit)`
   border-top-right-radius: ${({ theme }) => theme.cardBorderRadius};
 `;
@@ -181,6 +194,7 @@ interface HeroSmallImageProps {
   backgroundColor?: string | null;
   fitImage?: boolean | null;
   showImageAccent?: boolean | null;
+  fullBackground?: boolean | null;
 }
 
 const HeroSmallImage = (props: HeroSmallImageProps) => {
@@ -194,6 +208,7 @@ const HeroSmallImage = (props: HeroSmallImageProps) => {
     backgroundColor,
     fitImage,
     showImageAccent,
+    fullBackground = false,
   } = props;
 
   const t = useTranslations();
@@ -204,9 +219,18 @@ const HeroSmallImage = (props: HeroSmallImageProps) => {
   const shouldShowImageAccent = showImageAccent !== false;
 
   return (
-    <StyledContainer $backgroundColor={backgroundColor}>
-      <Hero id={id}>
-        <HeroImageWrapper $fitImage={shouldFitImage} $showImageAccent={shouldShowImageAccent}>
+    <StyledContainer
+      id={id}
+      $backgroundColor={backgroundColor}
+      $fullBackground={fullBackground}
+      $showImageAccent={shouldShowImageAccent}
+    >
+      <Hero>
+        <HeroImageWrapper
+          $fitImage={shouldFitImage}
+          $showImageAccent={shouldShowImageAccent}
+          $fullBackground={fullBackground}
+        >
           <HeroImage
             src={bgImage}
             alt={altText ?? undefined}
