@@ -1,6 +1,5 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 
@@ -15,7 +14,7 @@ import IndicatorLevelChip from './IndicatorLevelChip';
 
 const Hero = styled.header`
   position: relative;
-  background-color: ${(props) => props.theme.brandDark};
+  background-color: ${(props) => props.theme.pageHeaderBackgroundColor};
   margin-bottom: ${(props) => props.theme.spaces.s400};
   a {
     color: ${(props) => props.theme.linkColor};

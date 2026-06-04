@@ -1,15 +1,15 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { transparentize } from 'polished';
+
+import { readableColor, transparentize } from 'polished';
 import { Container } from 'reactstrap';
 
 import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';
 
 const PlanListSection = styled.div`
-  background-color: ${(props) => props.theme.themeColors.dark};
+  background-color: ${(props) =>
+    props.theme.section.relatedPlans?.background || props.theme.themeColors.dark};
   padding: ${(props) => props.theme.spaces.s200} 0;
 
   h2,
@@ -17,7 +17,7 @@ const PlanListSection = styled.div`
     text-align: center;
     margin-bottom: ${(props) => props.theme.spaces.s100};
     font-size: ${(props) => props.theme.fontSizeMd};
-    color: ${(props) => props.theme.themeColors.white};
+    color: ${(props) => props.theme.section?.relatedPlans?.color || props.theme.themeColors.white};
   }
 `;
 
@@ -52,34 +52,37 @@ const RelatedPlanListBlock = ({ id }: Props) => {
   const siblingsOrChildren = plan.allRelatedPlans.filter((pl) => pl.id != plan.parent?.id);
   const isParentPlan = plan.children.length > 0;
 
+  const negativeChips = theme.section?.relatedPlans?.background
+    ? readableColor(theme.section?.relatedPlans?.background) === '#fff'
+    : true;
   return (
     <PlanListSection id={id}>
       <Container>
         <h2>
-          <a href={plan.parent?.viewUrl || null}>
+          <a href={plan.parent?.viewUrl || undefined}>
             {plan.parent ? `${plan.parent.name}` : plan.shortName}
           </a>
         </h2>
         <PlanList>
           {!isParentPlan && (
-            <a href={plan.viewUrl} key={plan.identifier}>
+            <a href={plan.viewUrl || undefined} key={plan.identifier}>
               <PlanChip
                 planImage={plan.image?.rendition?.src}
-                planShortName={plan.shortName}
+                planShortName={plan.shortName || undefined}
                 organization={theme.settings?.multiplan?.hideLongPlanNames ? undefined : plan.name}
                 size="lg"
-                negative={true}
+                negative={negativeChips}
               />
             </a>
           )}
           {siblingsOrChildren.map((pl) => (
-            <a href={pl.viewUrl} key={pl.identifier}>
+            <a href={pl.viewUrl || undefined} key={pl.identifier}>
               <PlanChip
                 planImage={pl.image?.rendition?.src}
-                planShortName={pl.shortName}
+                planShortName={pl.shortName || undefined}
                 organization={theme.settings?.multiplan?.hideLongPlanNames ? undefined : pl.name}
                 size="lg"
-                negative={true}
+                negative={negativeChips}
               />
             </a>
           ))}

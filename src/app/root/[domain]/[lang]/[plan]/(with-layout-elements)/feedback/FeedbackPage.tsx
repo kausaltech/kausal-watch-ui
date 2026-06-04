@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
@@ -9,7 +10,7 @@ import FeedbackForm from '@/components/common/FeedbackForm';
 import { usePlan } from '@/context/plan';
 
 const HeaderBg = styled.div`
-  background-color: ${(props) => props.theme.brandDark};
+  background-color: ${(props) => props.theme.pageHeaderBackgroundColor};
   position: relative;
 `;
 
@@ -17,7 +18,7 @@ const ContentHeader = styled.header`
   padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s200};
   color: ${(props) =>
     readableColor(
-      props.theme.brandDark,
+      props.theme.pageHeaderBackgroundColor,
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )};
@@ -27,7 +28,7 @@ const ContentHeader = styled.header`
     font-size: ${(props) => props.theme.fontSizeXxl};
     color: ${(props) =>
       readableColor(
-        props.theme.brandDark,
+        props.theme.pageHeaderBackgroundColor,
         props.theme.themeColors.black,
         props.theme.themeColors.white
       )} !important;
