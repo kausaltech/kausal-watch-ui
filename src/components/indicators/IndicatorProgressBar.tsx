@@ -31,13 +31,13 @@ const BarBase = styled.rect``;
 
 const DateText = styled.tspan`
   fill: ${(props) => props.theme.section.indicatorShowcase.color};
-  font-family: '${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`}}';
+  font-family: '${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`}';
   font-size: 13px;
 `;
 
 const ValueText = styled.tspan`
   fill: ${(props) => props.theme.themeColors.black};
-  font-family: '${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`}}';
+  font-family: '${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`}';
   font-size: 14px;
   font-weight: 700;
 `;
