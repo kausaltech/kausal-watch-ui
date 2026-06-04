@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
@@ -15,10 +16,10 @@ const HeaderImage = styled.div<{ $image: string; $imageAlign: string }>`
 `;
 
 const HeaderBg = styled.div`
-  background-color: ${(props) => props.theme.brandDark};
+  background-color: ${(props) => props.theme.pageHeaderBackgroundColor};
   color: ${(props) =>
     readableColor(
-      props.theme.brandDark,
+      props.theme.pageHeaderBackgroundColor,
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )};
@@ -33,7 +34,7 @@ const ContentHeader = styled.header`
     font-size: ${(props) => props.theme.fontSizeXxl};
     color: ${(props) =>
       readableColor(
-        props.theme.brandDark,
+        props.theme.pageHeaderBackgroundColor,
         props.theme.themeColors.black,
         props.theme.themeColors.white,
         true
