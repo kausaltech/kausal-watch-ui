@@ -430,14 +430,16 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       return '#000000';
     });
 
+  const themeCategoryColors = theme.settings?.graphs?.categoryColors;
+
   const plotColors = {
     trace: theme.settings.graphs.totalLineColor,
     trend: theme.settings.graphs.trendLineColor,
     goalScale: theme.settings.graphs.goalLineColors,
     mainScale: categoryColors?.length
       ? categoryColors
-      : theme.settings.graphs.categoryColors?.length
-        ? theme.settings.graphs.categoryColors
+      : themeCategoryColors?.length
+        ? themeCategoryColors
         : ['#000000'],
     fillMarkers: theme.settings.graphs.fillMarkers,
     symbols: theme.settings.graphs.categorySymbols,
