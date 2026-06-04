@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { transparentize } from 'polished';
+import { readableColor, transparentize } from 'polished';
 import { Container } from 'reactstrap';
 
 import PlanChip from '@/components/plans/PlanChip';
@@ -52,6 +52,9 @@ const RelatedPlanListBlock = ({ id }: Props) => {
   const siblingsOrChildren = plan.allRelatedPlans.filter((pl) => pl.id != plan.parent?.id);
   const isParentPlan = plan.children.length > 0;
 
+  const negativeChips = theme.section?.relatedPlans?.background
+    ? readableColor(theme.section?.relatedPlans?.background) === '#fff'
+    : true;
   return (
     <PlanListSection id={id}>
       <Container>
@@ -68,7 +71,7 @@ const RelatedPlanListBlock = ({ id }: Props) => {
                 planShortName={plan.shortName || undefined}
                 organization={theme.settings?.multiplan?.hideLongPlanNames ? undefined : plan.name}
                 size="lg"
-                negative={true}
+                negative={negativeChips}
               />
             </a>
           )}
@@ -79,7 +82,7 @@ const RelatedPlanListBlock = ({ id }: Props) => {
                 planShortName={pl.shortName || undefined}
                 organization={theme.settings?.multiplan?.hideLongPlanNames ? undefined : pl.name}
                 size="lg"
-                negative={true}
+                negative={negativeChips}
               />
             </a>
           ))}
