@@ -8,7 +8,8 @@ import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';
 
 const PlanListSection = styled.div`
-  background-color: ${(props) => props.theme.section.relatedPlans.background};
+  background-color: ${(props) =>
+    props.theme.section.relatedPlans?.background || props.theme.themeColors.dark};
   padding: ${(props) => props.theme.spaces.s200} 0;
 
   h2,
@@ -16,7 +17,7 @@ const PlanListSection = styled.div`
     text-align: center;
     margin-bottom: ${(props) => props.theme.spaces.s100};
     font-size: ${(props) => props.theme.fontSizeMd};
-    color: ${(props) => props.theme.section.relatedPlans.color};
+    color: ${(props) => props.theme.section?.relatedPlans?.color || props.theme.themeColors.white};
   }
 `;
 
