@@ -4,6 +4,7 @@ import NextLink from 'next/link';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import type { AnimationSequence } from 'motion/react';
 import { animate, useAnimate, useInView } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
@@ -30,40 +31,40 @@ const BarBase = styled.rect``;
 
 const DateText = styled.tspan`
   fill: ${(props) => props.theme.section.indicatorShowcase.color};
-  font-family: '${(props) => props.theme.fontFamily}';
+  font-family: '${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`}}';
   font-size: 13px;
 `;
 
 const ValueText = styled.tspan`
   fill: ${(props) => props.theme.themeColors.black};
-  font-family: '${(props) => props.theme.fontFamily}';
+  font-family: '${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`}}';
   font-size: 14px;
   font-weight: 700;
 `;
 
 const UnitText = styled.tspan`
   fill: ${(props) => props.theme.themeColors.black};
-  font-family: '${(props) => props.theme.fontFamily}';
+  font-family: '${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`}}';
   font-size: 11px;
 `;
 
 const SegmentHeader = styled.tspan`
   fill: ${(props) => props.theme.section.indicatorShowcase.color};
-  font-family: '${(props) => props.theme.fontFamily}';
+  font-family: '${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`}}';
   font-size: 13px;
   font-weight: bold;
 `;
 
 const SegmentValue = styled.tspan`
   fill: ${(props) => props.theme.section.indicatorShowcase.color};
-  font-family: '${(props) => props.theme.fontFamily}';
+  font-family: '${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`}}';
   font-size: 14px;
   font-weight: bold;
 `;
 
 const SegmentUnit = styled.tspan`
   fill: ${(props) => props.theme.section.indicatorShowcase.color};
-  font-family: '${(props) => props.theme.fontFamily}';
+  font-family: '${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`}}';
   font-size: 11px;
   font-weight: normal;
 `;
