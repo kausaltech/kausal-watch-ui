@@ -216,8 +216,8 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
 
   const getMainColor = (index: number) => {
     const colors = plotColors.mainScale?.length ? plotColors.mainScale : ['#000000'];
-
-    return colors[index % colors.length];
+    const colorCount = Math.max(1, Math.min(numColors, colors.length));
+    return colors[index % colorCount];
   };
 
   const allXValues = [];
