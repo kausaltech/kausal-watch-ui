@@ -120,19 +120,6 @@ const MainCard = styled(HeroCard)`
   margin-top: -${(props) => props.theme.spaces.s300};
   max-width: 600px;
 
-  padding: ${(props) =>
-    `${props.theme.spaces.s200} ${props.theme.spaces.s200} ${props.theme.spaces.s100}`};
-  border-radius: ${(props) => props.theme.cardBorderRadius};
-  background-color: ${(props) =>
-    props.color === 'dark' ? props.theme.brandDark : props.theme.cardBackground.primary};
-  color: ${(props) =>
-    props.color === 'dark' ? props.theme.themeColors.white : props.theme.neutralDark};
-  box-shadow:
-    0 5px 10px rgba(154, 160, 185, 0.05),
-    0 15px 40px rgba(166, 173, 201, 0.2);
-
-  z-index: 100;
-
   ${({ theme, color }) =>
     color !== 'dark' &&
     theme.themeColors.light === '#fefefe' &&
@@ -140,45 +127,6 @@ const MainCard = styled(HeroCard)`
       /* Improve white hero card contrast when used on a near-white theme. */
       border: 1px solid ${theme.neutralLight};
     `}
-
-  h1 {
-    font-size: ${(props) => props.theme.fontSizeLg};
-    margin-bottom: ${(props) => props.theme.spaces.s100};
-  }
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    color: ${(props) =>
-      props.color === 'dark' ? props.theme.themeColors.white : props.theme.headingsColor};
-  }
-
-  a {
-    color: ${(props) =>
-      props.color === 'dark' ? props.theme.themeColors.white : props.theme.neutralDark};
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
-
-  .lead-content {
-    font-size: ${(props) => props.theme.fontSizeBase};
-    line-height: ${(props) => props.theme.lineHeightMd};
-    font-family: ${(props) =>
-      `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
-  }
-`;
-
-const ImageCredit = styled.span`
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.1rem 0.25rem;
-  background-color: rgba(255, 255, 255, 0.66);
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
 const StyledImageCredit = styled(ImageCredit)`
