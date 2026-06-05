@@ -24,6 +24,7 @@ const StyledContainer = styled(Container, transientOptions)<{
   --bg-color: ${({ $backgroundColor, theme }) => $backgroundColor || theme.neutralLight};
 
   position: relative;
+  // TODO: If the previous block and this one are the same colour, this should be collapsed
   padding-top: var(--image-top-padding);
   margin-bottom: var(--block-margin);
 
