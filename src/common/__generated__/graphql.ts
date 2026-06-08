@@ -9155,7 +9155,7 @@ export type GetActionDetailsQuery = (
         ) | null }
         & { __typename: 'ActionOfficialNameBlock' }
       ) | (
-        { id: string | null }
+        { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
         & { __typename: 'ChangeLogMessageBlock' }
       ) | (
         { id: string | null, field: string, meta: (
@@ -9887,7 +9887,7 @@ export type GetActionDetailsQuery = (
         ) | null }
         & { __typename: 'ActionOfficialNameBlock' }
       ) | (
-        { id: string | null }
+        { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
         & { __typename: 'ChangeLogMessageBlock' }
       ) | (
         { id: string | null, field: string, meta: (
@@ -10241,7 +10241,7 @@ export type GetActionDetailsQuery = (
         ) | null }
         & { __typename: 'ActionResponsiblePartiesBlock' }
       ) | (
-        { id: string | null }
+        { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
         & { __typename: 'ChangeLogMessageBlock' }
       )> | null }
       & { __typename: 'ActionListPage' }
@@ -10880,7 +10880,7 @@ type ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment = (
 );
 
 type ActionAsideContentBlocksFragment_ChangeLogMessageBlock_Fragment = (
-  { id: string | null }
+  { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
   & { __typename: 'ChangeLogMessageBlock' }
 );
 
@@ -11318,7 +11318,7 @@ type ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment = (
 );
 
 type ActionMainContentBlocksFragment_ChangeLogMessageBlock_Fragment = (
-  { id: string | null }
+  { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
   & { __typename: 'ChangeLogMessageBlock' }
 );
 

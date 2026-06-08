@@ -333,6 +333,8 @@ function ActionContentBlock(props: ActionContentBlockProps) {
           entityType="action"
           entityId={String(action.id)}
           entry={action.changeLogMessage}
+          fieldLabel={block.fieldLabel}
+          fieldHelpText={block.fieldHelpText}
         />
       );
     }
