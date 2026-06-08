@@ -369,6 +369,10 @@ const GET_ACTION_DETAILS = gql`
     ... on StreamFieldInterface {
       id
     }
+    ... on ChangeLogMessageBlock {
+      fieldLabel
+      fieldHelpText
+    }
     ... on ActionContentAttributeTypeBlock {
       attributeType {
         ...AttributesBlockAttributeType
@@ -401,6 +405,10 @@ const GET_ACTION_DETAILS = gql`
       fieldHelpText
     }
     ... on ActionDependenciesBlock {
+      fieldLabel
+      fieldHelpText
+    }
+    ... on ChangeLogMessageBlock {
       fieldLabel
       fieldHelpText
     }
