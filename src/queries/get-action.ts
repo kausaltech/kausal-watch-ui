@@ -497,6 +497,10 @@ const GET_ACTION_DETAILS = gql`
             ...CategoryTypeFragment
           }
         }
+        ... on ChangeLogMessageBlock {
+          fieldLabel
+          fieldHelpText
+        }
         ... on ReportComparisonBlock {
           ...ReportComparisonBlockActionContent
         }
