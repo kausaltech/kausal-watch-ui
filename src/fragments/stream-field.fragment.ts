@@ -15,6 +15,8 @@ export const STREAM_FIELD_FRAGMENT = gql`
     }
     ... on ChangeLogMessageBlock {
       __typename
+      fieldLabel
+      fieldHelpText
     }
     ... on TextBlock {
       value
