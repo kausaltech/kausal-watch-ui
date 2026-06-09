@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import * as Sentry from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import type { ColProps } from 'reactstrap';
@@ -658,7 +659,15 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         const entityId = page.category?.id;
         if (!entry || !entityId) return null;
 
-        return <ChangeHistory entityType="category" entityId={entityId} entry={entry} />;
+        return (
+          <ChangeHistory
+            entityType="category"
+            entityId={entityId}
+            entry={entry}
+            fieldLabel={block.fieldLabel}
+            fieldHelpText={block.fieldHelpText}
+          />
+        );
       }
       // Static + Home
       if (page.__typename === 'StaticPage' || page.__typename === 'PlanRootPage') {
@@ -672,7 +681,13 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
                 xl={{ size: hasSidebar ? 9 : 12, offset: hasSidebar ? 3 : 0 }}
                 lg={{ size: hasSidebar ? 8 : 12, offset: hasSidebar ? 4 : 0 }}
               >
-                <ChangeHistory entityType="page" entityId={String(page.id)} entry={entry} />
+                <ChangeHistory
+                  entityType="page"
+                  entityId={String(page.id)}
+                  entry={entry}
+                  fieldLabel={block.fieldLabel}
+                  fieldHelpText={block.fieldHelpText}
+                />
               </Col>
             </Row>
           </Container>

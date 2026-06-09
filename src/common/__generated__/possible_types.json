@@ -223,9 +223,6 @@
       "AttributeRichText",
       "AttributeText"
     ],
-    "CategoryPageAsideBlock": [
-      "CategoryPageAttributeTypeBlock"
-    ],
     "CategoryPageBodyUnion": [
       "ActionListBlock",
       "AdaptiveEmbedBlock",
@@ -279,10 +276,6 @@
     "CreatePlanPayload": [
       "OperationInfo",
       "Plan"
-    ],
-    "CreateTestUserPayload": [
-      "OperationInfo",
-      "User"
     ],
     "DashboardColumnInterface": [
       "FieldColumnBlock",

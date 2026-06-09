@@ -1084,24 +1084,6 @@ export enum SiteGeneralContentOrganizationTerm {
   Organization = 'ORGANIZATION'
 }
 
-export type TestUserInput = {
-  defaultAdminPlanId: InputMaybe<Scalars['ID']['input']>;
-  email: Scalars['String']['input'];
-  isSuperuser: Scalars['Boolean']['input'];
-  password: Scalars['String']['input'];
-  roles: Array<TestUserRoleInput>;
-};
-
-export type TestUserRoleInput = {
-  kind: TestUserRoleKind;
-  targetId: Scalars['ID']['input'];
-};
-
-export enum TestUserRoleKind {
-  ActionContact = 'ACTION_CONTACT',
-  PlanAdmin = 'PLAN_ADMIN'
-}
-
 export type UserFeedbackMutationInput = {
   action: InputMaybe<Scalars['ID']['input']>;
   additionalFields: InputMaybe<Scalars['String']['input']>;
@@ -5252,24 +5234,24 @@ type StreamFieldFragment_R09yqk4psU42m1Xyl5uzMj8ASeDltROxoT0mwLuSlc_Fragment = (
   & { __typename: 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' | 'BlockQuoteBlock' | 'BooleanBlock' }
 );
 
-type StreamFieldFragment_JcAgCTcuFwxZpf8b4voMy1vApiHQdH3As00DYaD3Tgm_Fragment = (
+type StreamFieldFragment_OVWpOvqViBr7pviLj3iLFobjZcWpuNlFBt5QfC4_Fragment = (
   { id: string | null, blockType: string, field: string }
-  & { __typename: 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'ChangeLogMessageBlock' | 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' }
+  & { __typename: 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' }
 );
 
-type StreamFieldFragment_APZjNLnndh7iRd9qAjBzv9K4y6GooFDzOcjk39RkKeQ_Fragment = (
+type StreamFieldFragment_W2zOgck3SpPtZi5A5saJLpenH2ogwhIsYhGosbJ8c_Fragment = (
   { id: string | null, blockType: string, field: string }
-  & { __typename: 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroAdditionalSettingsBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorHighlightsBlock' }
+  & { __typename: 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroAdditionalSettingsBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' }
 );
 
-type StreamFieldFragment_VYbmLMfvNTozDKqhT2uRZfvFr2YqqIpSjZhK6dLkxe_Fragment = (
+type StreamFieldFragment_KTz1TgIjno5h7oJvKjoqnZxozYxzJxRk5jUApXzq_Fragment = (
   { id: string | null, blockType: string, field: string }
-  & { __typename: 'IndicatorListColumn' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' }
+  & { __typename: 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' }
 );
 
-type StreamFieldFragment_Ys4HYkQAlXwzZQnj9p7hTlYcZtqFBmul0FyeNgEuCf8_Fragment = (
+type StreamFieldFragment_ROQtCmpbhpHtWju3UmvLJiPdRdNespIkDrUlcLsw8s_Fragment = (
   { id: string | null, blockType: string, field: string }
-  & { __typename: 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+  & { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
 );
 
 type StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment = (
@@ -5947,6 +5929,11 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
   & { __typename: 'CategoryTypeLevelListBlock' }
 );
 
+type StreamFieldFragment_ChangeLogMessageBlock_Fragment = (
+  { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, blockType: string, field: string }
+  & { __typename: 'ChangeLogMessageBlock' }
+);
+
 type StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment = (
   { value: string, id: string | null, blockType: string, field: string }
   & { __typename: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
@@ -6258,7 +6245,7 @@ type StreamFieldFragment_QuestionAnswerBlock_Fragment = (
   & { __typename: 'QuestionAnswerBlock' }
 );
 
-export type StreamFieldFragmentFragment = StreamFieldFragment_CsWpOaD0dUEdhV96j5U9TnlDssZTxlWikakK8ZjePw_Fragment | StreamFieldFragment_R09yqk4psU42m1Xyl5uzMj8ASeDltROxoT0mwLuSlc_Fragment | StreamFieldFragment_JcAgCTcuFwxZpf8b4voMy1vApiHQdH3As00DYaD3Tgm_Fragment | StreamFieldFragment_APZjNLnndh7iRd9qAjBzv9K4y6GooFDzOcjk39RkKeQ_Fragment | StreamFieldFragment_VYbmLMfvNTozDKqhT2uRZfvFr2YqqIpSjZhK6dLkxe_Fragment | StreamFieldFragment_Ys4HYkQAlXwzZQnj9p7hTlYcZtqFBmul0FyeNgEuCf8_Fragment | StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment | StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment | StreamFieldFragment_ActionListBlock_Fragment | StreamFieldFragment_AdaptiveEmbedBlock_Fragment | StreamFieldFragment_CardListBlock_Fragment | StreamFieldFragment_CartographyVisualisationBlock_Fragment | StreamFieldFragment_CategoryListBlock_Fragment | StreamFieldFragment_CategoryTreeMapBlock_Fragment | StreamFieldFragment_CategoryTypeLevelListBlock_Fragment | StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment | StreamFieldFragment_ChoiceBlock_Fragment | StreamFieldFragment_DashboardRowBlock_Fragment | StreamFieldFragment_FrontPageHeroBlock_Fragment | StreamFieldFragment_IndicatorBlock_Fragment | StreamFieldFragment_IndicatorGroupBlock_Fragment | StreamFieldFragment_IndicatorShowcaseBlock_Fragment | StreamFieldFragment_LargeImageBlock_Fragment | StreamFieldFragment_PathsOutcomeBlock_Fragment | StreamFieldFragment_QuestionAnswerBlock_Fragment;
+export type StreamFieldFragmentFragment = StreamFieldFragment_CsWpOaD0dUEdhV96j5U9TnlDssZTxlWikakK8ZjePw_Fragment | StreamFieldFragment_R09yqk4psU42m1Xyl5uzMj8ASeDltROxoT0mwLuSlc_Fragment | StreamFieldFragment_OVWpOvqViBr7pviLj3iLFobjZcWpuNlFBt5QfC4_Fragment | StreamFieldFragment_W2zOgck3SpPtZi5A5saJLpenH2ogwhIsYhGosbJ8c_Fragment | StreamFieldFragment_KTz1TgIjno5h7oJvKjoqnZxozYxzJxRk5jUApXzq_Fragment | StreamFieldFragment_ROQtCmpbhpHtWju3UmvLJiPdRdNespIkDrUlcLsw8s_Fragment | StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment | StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment | StreamFieldFragment_ActionListBlock_Fragment | StreamFieldFragment_AdaptiveEmbedBlock_Fragment | StreamFieldFragment_CardListBlock_Fragment | StreamFieldFragment_CartographyVisualisationBlock_Fragment | StreamFieldFragment_CategoryListBlock_Fragment | StreamFieldFragment_CategoryTreeMapBlock_Fragment | StreamFieldFragment_CategoryTypeLevelListBlock_Fragment | StreamFieldFragment_ChangeLogMessageBlock_Fragment | StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment | StreamFieldFragment_ChoiceBlock_Fragment | StreamFieldFragment_DashboardRowBlock_Fragment | StreamFieldFragment_FrontPageHeroBlock_Fragment | StreamFieldFragment_IndicatorBlock_Fragment | StreamFieldFragment_IndicatorGroupBlock_Fragment | StreamFieldFragment_IndicatorShowcaseBlock_Fragment | StreamFieldFragment_LargeImageBlock_Fragment | StreamFieldFragment_PathsOutcomeBlock_Fragment | StreamFieldFragment_QuestionAnswerBlock_Fragment;
 
 export type GetActionDetailsQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
@@ -13397,8 +13384,8 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'CategoryListBlock' }
     ) | (
-      { id: string | null, blockType: string, field: string }
-      & { __typename: 'ChangeLogMessageBlock' | 'RelatedIndicatorsBlock' }
+      { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, blockType: string, field: string }
+      & { __typename: 'ChangeLogMessageBlock' }
     ) | (
       { id: string | null, blockType: string, field: string, blocks: Array<(
         { blockType: string }
@@ -13555,6 +13542,9 @@ export type GetContentPageQuery = (
         & { __typename: 'QuestionBlock' }
       )> | null }
       & { __typename: 'QuestionAnswerBlock' }
+    ) | (
+      { id: string | null, blockType: string, field: string }
+      & { __typename: 'RelatedIndicatorsBlock' }
     ) | (
       { value: string, id: string | null, blockType: string, field: string }
       & { __typename: 'RichTextBlock' }
@@ -14291,7 +14281,7 @@ export type GetContentPageQuery = (
       ) }
       & { __typename: 'CategoryTypeLevelListBlock' }
     ) | (
-      { id: string | null, blockType: string, field: string }
+      { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, blockType: string, field: string }
       & { __typename: 'ChangeLogMessageBlock' }
     ) | (
       { id: string | null, blockType: string, field: string, blocks: Array<(
@@ -14565,7 +14555,7 @@ export type GetHomePageQuery = (
       & { __typename: 'ActionCategoryFilterCardsBlock' }
     ) | (
       { id: string | null, blockType: string, field: string }
-      & { __typename: 'ActionHighlightsBlock' | 'ActionStatusGraphsBlock' | 'ChangeLogMessageBlock' | 'IndicatorHighlightsBlock' | 'RelatedPlanListBlock' }
+      & { __typename: 'ActionHighlightsBlock' | 'ActionStatusGraphsBlock' | 'IndicatorHighlightsBlock' | 'RelatedPlanListBlock' }
     ) | (
       { title: string | null, description: string | null, fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
         { html: string | null }
@@ -14917,6 +14907,9 @@ export type GetHomePageQuery = (
         & { __typename: 'CategoryType' }
       ) }
       & { __typename: 'CategoryTreeMapBlock' }
+    ) | (
+      { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, blockType: string, field: string }
+      & { __typename: 'ChangeLogMessageBlock' }
     ) | (
       { id: string | null, blockType: string, field: string, blocks: Array<(
         { blockType: string }
