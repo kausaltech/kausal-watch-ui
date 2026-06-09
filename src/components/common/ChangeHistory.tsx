@@ -144,11 +144,9 @@ const FooterMeta = styled.div`
   gap: ${(props) => props.theme.spaces.s050};
 `;
 
-const HelpText = styled.p`
-  margin: 0 0 ${(props) => props.theme.spaces.s150};
-  color: ${(props) => props.theme.themeColors.dark};
-  font-size: ${(props) => props.theme.fontSizeSm};
-  line-height: 1.5;
+const ChangesLabel = styled.div`
+  font-weight: 600;
+  margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
 const ChangeHistory: React.FC<ChangeHistoryProps> = ({
@@ -165,7 +163,7 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({
   const formattedDate = dayjs(entry.updatedAt).format('L');
 
   const modalTitle = fieldLabel?.trim() || t('change-history.modal-title');
-  const descriptionHelpText = fieldHelpText?.trim();
+  const descriptionLabel = fieldHelpText?.trim() || t('change-history.description-label');
 
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
@@ -208,7 +206,7 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({
               <Icon.Times />
             </CloseButton>
           </DialogHeader>
-          {descriptionHelpText && <HelpText>{descriptionHelpText}</HelpText>}
+          <ChangesLabel>{descriptionLabel}</ChangesLabel>
           {entry.content && <ChangesText>{entry.content}</ChangesText>}
           <ModalFooterRow>
             {entry.createdBy && <Avatar $url={entry.createdBy.avatarUrl} />}
