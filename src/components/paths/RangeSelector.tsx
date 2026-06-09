@@ -178,18 +178,22 @@ const RangeSelector = (props: RangeSelectorProps) => {
                 </div>
               </div>
             )}
-            renderThumb={({ props, isDragged, index }) => (
-              <Thumb
-                {...props}
-                $dragged={isDragged}
-                style={{
-                  ...props.style,
-                }}
-                color={theme.brandDark}
-              >
-                <Icon name="caret-left" color="#eee" />
-              </Thumb>
-            )}
+            renderThumb={({ props, isDragged }) => {
+              const { key, ...thumbProps } = props;
+              return (
+                <Thumb
+                  key={key}
+                  {...thumbProps}
+                  $dragged={isDragged}
+                  style={{
+                    ...props.style,
+                  }}
+                  color={theme.brandDark}
+                >
+                  <Icon name="caret-left" color="#eee" />
+                </Thumb>
+              );
+            }}
           />
         </RangeWrapper>
       ) : (
@@ -236,22 +240,26 @@ const RangeSelector = (props: RangeSelectorProps) => {
                 </div>
               </div>
             )}
-            renderThumb={({ props, isDragged, index }) => (
-              <Thumb
-                {...props}
-                $dragged={isDragged}
-                style={{
-                  ...props.style,
-                }}
-                color={theme.brandDark}
-              >
-                {index === 0 ? (
-                  <Icon name="caret-right" color={theme.graphColors.grey000} />
-                ) : (
-                  <Icon name="caret-left" color={theme.graphColors.grey000} />
-                )}
-              </Thumb>
-            )}
+            renderThumb={({ props, isDragged, index }) => {
+              const { key, ...thumbProps } = props;
+              return (
+                <Thumb
+                  key={key}
+                  {...thumbProps}
+                  $dragged={isDragged}
+                  style={{
+                    ...thumbProps.style,
+                  }}
+                  color={theme.brandDark}
+                >
+                  {index === 0 ? (
+                    <Icon name="caret-right" color={theme.graphColors.grey000} />
+                  ) : (
+                    <Icon name="caret-left" color={theme.graphColors.grey000} />
+                  )}
+                </Thumb>
+              );
+            }}
           />
         </RangeWrapper>
       )}
