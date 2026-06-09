@@ -12376,7 +12376,7 @@ export type TemplatedCategoryPageFragmentFragment = (
         & { __typename: 'AttributeType' }
       ) }
       & { __typename: 'CategoryPageAttributeTypeBlock' }
-    ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'ChangeLogMessageBlock' } | (
+    ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
       { id: string | null, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, fields: Array<(
         { id: string | null, fieldLabel: string | null, fieldType: string | null, fieldRequired: boolean | null, choices: Array<(
           { choiceLabel: string | null, choiceValue: string | null }
@@ -12391,6 +12391,9 @@ export type TemplatedCategoryPageFragmentFragment = (
         & { __typename: 'DatasetSchema' }
       ) }
       & { __typename: 'CategoryTypeDatasetsBlock' }
+    ) | (
+      { fieldLabel: string | null, fieldHelpText: string | null }
+      & { __typename: 'ChangeLogMessageBlock' }
     )> | null }
     & { __typename: 'CategoryTypePageLevelLayout' }
   ) | null }
@@ -13570,7 +13573,7 @@ export type GetContentPageQuery = (
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'CategoryPageAttributeTypeBlock' }
-      ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'ChangeLogMessageBlock' } | (
+      ) | { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' } | (
         { id: string | null, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, fields: Array<(
           { id: string | null, fieldLabel: string | null, fieldType: string | null, fieldRequired: boolean | null, choices: Array<(
             { choiceLabel: string | null, choiceValue: string | null }
@@ -13585,6 +13588,9 @@ export type GetContentPageQuery = (
           & { __typename: 'DatasetSchema' }
         ) }
         & { __typename: 'CategoryTypeDatasetsBlock' }
+      ) | (
+        { fieldLabel: string | null, fieldHelpText: string | null }
+        & { __typename: 'ChangeLogMessageBlock' }
       )> | null }
       & { __typename: 'CategoryTypePageLevelLayout' }
     ) | null }

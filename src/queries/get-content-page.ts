@@ -88,6 +88,10 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
             uuid
           }
         }
+        ... on ChangeLogMessageBlock {
+          fieldLabel
+          fieldHelpText
+        }
       }
     }
   }
