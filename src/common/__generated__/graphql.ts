@@ -6101,7 +6101,7 @@ type StreamFieldFragment_FrontPageHeroBlock_Fragment = (
     ) | null }
     & { __typename: 'Image' }
   ) | null, additionalSettings: (
-    { backgroundColour: string | null, fitImage: boolean | null }
+    { backgroundColour: string | null, fitImage: boolean | null, showImageAccent: boolean | null, backgroundCoversFullSection: boolean | null }
     & { __typename: 'FrontPageHeroAdditionalSettingsBlock' }
   ) | null }
   & { __typename: 'FrontPageHeroBlock' }
@@ -15071,7 +15071,7 @@ export type GetHomePageQuery = (
         ) | null }
         & { __typename: 'Image' }
       ) | null, additionalSettings: (
-        { backgroundColour: string | null, fitImage: boolean | null }
+        { backgroundColour: string | null, fitImage: boolean | null, showImageAccent: boolean | null, backgroundCoversFullSection: boolean | null }
         & { __typename: 'FrontPageHeroAdditionalSettingsBlock' }
       ) | null }
       & { __typename: 'FrontPageHeroBlock' }
