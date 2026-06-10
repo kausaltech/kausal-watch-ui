@@ -214,6 +214,12 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     numSymbols = numColors = styleCount;
   }
 
+  const getMainColor = (index: number) => {
+    const colors = plotColors.mainScale?.length ? plotColors.mainScale : ['#000000'];
+    const colorCount = Math.max(1, Math.min(numColors, colors.length));
+    return colors[index % colorCount];
+  };
+
   const allXValues = [];
 
   const newTraces = traces.map((trace, idx) => {
@@ -226,11 +232,12 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     if (!hasTimeDimension) {
       modTrace.x = (modTrace.x as Datum[]).map((name) => splitLines(name as string));
       modTrace.type = 'bar';
+      const hasSingleTraceWithMultipleBars = traceCount === 1 && trace.x.length > 1;
       modTrace.marker = {
         color:
-          categoryCount < 2
-            ? trace.y.map((y, i) => plotColors.mainScale[i % numColors])
-            : plotColors.mainScale[idx % numColors],
+          categoryCount < 2 || hasSingleTraceWithMultipleBars
+            ? trace.y.map((y, i) => getMainColor(i))
+            : getMainColor(idx),
       };
       layoutConfig.barmode = 'group';
       layoutConfig.xaxis!.type = 'category';
@@ -401,11 +408,15 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   const traceNames = traces.map((trace, idx) => {
     return trace.name;
   });
+  const traceCategoryNames = traces.flatMap((trace) =>
+    Array.isArray(trace.x) ? trace.x.map(String) : []
+  );
   const categoryColors = specification.dimensions[0]?.categories
     ?.filter((category) => {
       // Only include colours of existing traces. (Takes care of filtering out
       // total line if visualization has been defined not to include total line)
-      if (traceNames.includes(category.name)) return true;
+      if (traceNames.includes(category.name) || traceCategoryNames.includes(category.name))
+        return true;
       return false;
     })
     .map((category, idx) => {
@@ -419,11 +430,17 @@ function IndicatorGraph(props: IndicatorGraphProps) {
       return '#000000';
     });
 
+  const themeCategoryColors = theme.settings?.graphs?.categoryColors;
+
   const plotColors = {
     trace: theme.settings.graphs.totalLineColor,
     trend: theme.settings.graphs.trendLineColor,
     goalScale: theme.settings.graphs.goalLineColors,
-    mainScale: categoryColors ?? theme.settings.graphs.categoryColors,
+    mainScale: categoryColors?.length
+      ? categoryColors
+      : themeCategoryColors?.length
+        ? themeCategoryColors
+        : ['#000000'],
     fillMarkers: theme.settings.graphs.fillMarkers,
     symbols: theme.settings.graphs.categorySymbols,
     goalSymbol: theme.settings.graphs.goalSymbol,
