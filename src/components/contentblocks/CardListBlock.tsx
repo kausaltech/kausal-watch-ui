@@ -10,7 +10,7 @@ import Card from '@/components/common/Card';
 
 const CardListSection = styled.div`
   background-color: ${(props) => props.theme.brandDark};
-  padding: ${(props) => `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
+  padding: var(--block-padding-top) 0 var(--block-padding-bottom) 0;
 
   a.card-wrapper {
     display: flex;
@@ -29,6 +29,7 @@ const CardListSection = styled.div`
 
   ul {
     padding: 0;
+    margin-bottom: 0;
   }
 `;
 
@@ -40,7 +41,7 @@ const SectionHeader = styled.h2`
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )} !important;
-  margin-bottom: ${(props) => props.theme.spaces.s100};
+  margin-bottom: var(--block-header-margin-bottom);
 `;
 
 const Content = styled.p`
@@ -83,16 +84,9 @@ const CardListBlock = (props) => {
       <Container>
         {heading && <SectionHeader>{heading}</SectionHeader>}
         {lead && <Content>{lead}</Content>}
-        <Row tag="ul" className="justify-content-center">
+        <Row tag="ul" className="justify-content-center gy-4">
           {cards?.map((card, inx) => (
-            <Col
-              tag="li"
-              xs="12"
-              sm="6"
-              lg="4"
-              className="mb-5 d-flex align-items-stretch"
-              key={inx}
-            >
+            <Col tag="li" xs="12" sm="6" lg="4" className="d-flex align-items-stretch" key={inx}>
               <a href={card.link} className="card-wrapper">
                 <Card
                   imageUrl={card.image?.rendition && card.image.rendition.src}
