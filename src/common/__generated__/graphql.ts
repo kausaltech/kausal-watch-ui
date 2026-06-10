@@ -1084,6 +1084,24 @@ export enum SiteGeneralContentOrganizationTerm {
   Organization = 'ORGANIZATION'
 }
 
+export type TestUserInput = {
+  defaultAdminPlanId: InputMaybe<Scalars['ID']['input']>;
+  email: Scalars['String']['input'];
+  isSuperuser: Scalars['Boolean']['input'];
+  password: Scalars['String']['input'];
+  roles: Array<TestUserRoleInput>;
+};
+
+export type TestUserRoleInput = {
+  kind: TestUserRoleKind;
+  targetId: Scalars['ID']['input'];
+};
+
+export enum TestUserRoleKind {
+  ActionContact = 'ACTION_CONTACT',
+  PlanAdmin = 'PLAN_ADMIN'
+}
+
 export type UserFeedbackMutationInput = {
   action: InputMaybe<Scalars['ID']['input']>;
   additionalFields: InputMaybe<Scalars['String']['input']>;
@@ -5164,7 +5182,7 @@ export type IndicatorListPageFragmentFragment = (
     { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
     & { __typename: 'IndicatorListColumn' }
   ) | (
-    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, defaultYear: number | null, hideUnit: boolean }
+    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, defaultYear: number | null, hideUnit: boolean, highlightGoalMet: boolean }
     & { __typename: 'IndicatorValueColumn' }
   )> | null, primaryFilters: Array<(
     { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -13601,7 +13619,7 @@ export type GetContentPageQuery = (
       { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
       & { __typename: 'IndicatorListColumn' }
     ) | (
-      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, defaultYear: number | null, hideUnit: boolean }
+      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, defaultYear: number | null, hideUnit: boolean, highlightGoalMet: boolean }
       & { __typename: 'IndicatorValueColumn' }
     )> | null, primaryFilters: Array<(
       { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (

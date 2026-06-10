@@ -255,10 +255,11 @@ interface IndicatorValueCellProps {
   valueType: IndicatorColumnValueType;
   defaultYear: number | null;
   hideUnit: boolean;
+  highlightGoalMet: boolean;
 }
 
 const IndicatorValueCell = (props: IndicatorValueCellProps) => {
-  const { indicator, isNormalized, valueType, defaultYear, hideUnit } = props;
+  const { indicator, isNormalized, valueType, defaultYear, hideUnit, highlightGoalMet } = props;
   const formatNumber = useNumberFormatter({
     maximumSignificantDigits: indicator.valueRounding ?? undefined,
   });
@@ -306,10 +307,11 @@ const IndicatorValueCell = (props: IndicatorValueCellProps) => {
 
   const unitName = unit.shortName || unit.name;
 
-  // Show the tick only for the Latest/current-status column.
-  // This uses the same goal-exceeded logic as the indicator summary utility.
+  // Show the tick only for the Latest/current-status column when the
+  // admin has enabled `highlightGoalMet` on the column block.
   const showGoalAchievedIcon =
     valueType === IndicatorColumnValueType.Latest &&
+    highlightGoalMet &&
     isGoalAlreadyExceeded({
       currentValue: value,
       values: indicator.values,
@@ -475,6 +477,7 @@ const IndicatorTableCell = (props: IndicatorTableCellProps) => {
           valueType={column.valueType}
           defaultYear={column.defaultYear}
           hideUnit={column.hideUnit}
+          highlightGoalMet={column.highlightGoalMet}
         />
       );
     case 'IndicatorCategoryColumn':

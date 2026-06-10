@@ -238,6 +238,7 @@ const getDefaultColumns = (
     defaultYear: null,
     referenceYear: null, // @deprecated, remove when type is updated
     hideUnit: false,
+    highlightGoalMet: true,
   });
 
   if (displayNormalizedValues) {
@@ -252,6 +253,7 @@ const getDefaultColumns = (
       defaultYear: null,
       referenceYear: null, // @deprecated, remove when type is updated
       hideUnit: false,
+      highlightGoalMet: true,
     });
   }
   return columns;

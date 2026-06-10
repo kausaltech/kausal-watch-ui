@@ -82,6 +82,7 @@ export const INDICATOR_LIST_PAGE_FRAGMENT = gql`
         referenceYear
         defaultYear
         hideUnit
+        highlightGoalMet
       }
       ... on IndicatorCategoryColumn {
         id
