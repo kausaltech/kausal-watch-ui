@@ -59,9 +59,11 @@ const ContentArea = styled.div<ContentAreaProps>`
 
 export default function CategoryPageContent({
   page,
+  precedingBlockHasBackground,
 }: {
   page: CategoryPage;
   pageSectionColor: string;
+  precedingBlockHasBackground?: boolean;
 }) {
   const hasMainContentTemplate = !!page.layout?.layoutMainBottom?.length;
 
@@ -72,7 +74,13 @@ export default function CategoryPageContent({
           ? page.layout?.layoutMainBottom?.map((block, i) => (
               <CategoryPageStreamField key={i} page={page} block={block} />
             ))
-          : page.body && <StreamField page={page} blocks={page.body} />}
+          : page.body && (
+              <StreamField
+                page={page}
+                blocks={page.body}
+                precedingBlockHasBackground={precedingBlockHasBackground}
+              />
+            )}
       </MainContent>
     </ContentArea>
   );

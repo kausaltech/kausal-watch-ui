@@ -27,7 +27,7 @@ const getBackgroundColor = (theme: Theme) =>
 
 const CategoryListSection = styled.div`
   background-color: ${({ theme }) => getBackgroundColor(theme)};
-  padding: ${(props) => `${props.theme.spaces.s400} 0 ${props.theme.spaces.s100} 0`};
+  padding: var(--block-padding-top) 0 var(--block-padding-bottom) 0;
   color: ${({ theme }) => getColor(theme)};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
@@ -53,6 +53,7 @@ const CategoryListSection = styled.div`
 
   ul {
     padding: 0;
+    margin-bottom: 0;
   }
 
   .lead-text {
@@ -161,7 +162,7 @@ export default function CategoryListBlock(props: CategoryListBlockProps) {
       <Container>
         {heading ? <CategoryListHeader>{heading}</CategoryListHeader> : null}
         {lead ? <RichText html={lead} className="lead-text" /> : null}
-        <Row tag="ul" className="justify-content-center">
+        <Row tag="ul" className="justify-content-center gy-4">
           {categories
             ?.filter((cat) => cat?.categoryPage?.live)
             .map(
@@ -173,7 +174,7 @@ export default function CategoryListBlock(props: CategoryListBlockProps) {
                     sm="6"
                     lg="4"
                     key={cat.id}
-                    className="mb-5 d-flex align-items-stretch"
+                    className="d-flex align-items-stretch"
                   >
                     <Link href={cat.categoryPage.urlPath} className="card-wrapper">
                       <Card
