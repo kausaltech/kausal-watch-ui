@@ -104,12 +104,13 @@ const ReportComparisonBlock = (props) => {
       ({ field }) =>
         field.id === reportField && field.__typename === 'ActionAttributeTypeReportFieldBlock'
     )?.[0]?.attribute,
-  }));
-  reports.sort((a, b) => {
-    if (a.endDate == null || b.endDate == null) {
-      return 0;
-    }
-    return dayjs(a.endDate).diff(dayjs(b.endDate));
+  }))
+  .sort((a, b) => {
+    if (a.endDate == null && b.endDate == null) return 0;
+    if (a.endDate == null) return 1;
+    if (b.endDate == null) return -1;
+
+    return dayjs(b.endDate).diff(dayjs(a.endDate));
   });
 
   return (
