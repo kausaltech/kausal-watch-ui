@@ -41,7 +41,7 @@ const GET_ACTION_LIST_FOR_BLOCK = gql`
 
 const ActionListSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
-  padding: ${(props) => props.theme.spaces.s400} 0;
+  padding: var(--block-padding-top) 0 var(--block-padding-bottom);
 `;
 
 export const SectionHeader = styled.h2`
@@ -53,7 +53,7 @@ export const SectionHeader = styled.h2`
       props.theme.headingsColor,
       props.theme.themeColors.white
     )};
-  margin-bottom: ${(props) => props.theme.spaces.s300};
+  margin-bottom: var(--block-header-margin-bottom);
   font-size: ${(props) => props.theme.fontSizeLg};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {

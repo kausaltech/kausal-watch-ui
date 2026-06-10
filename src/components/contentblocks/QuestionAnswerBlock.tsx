@@ -2,6 +2,7 @@ import React from 'react';
 
 import { type Theme, css } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { Col, type ColProps, Container, Row } from 'reactstrap';
 
 import Accordion from '@/components/common/Accordion';
@@ -25,7 +26,7 @@ const breakOutStyles = (theme: Theme) => css`
 
 const FaqSection = styled.section<{ $inline?: boolean }>`
   ${({ $inline, theme }) => ($inline ? inlineStyles(theme) : breakOutStyles(theme))};
-  padding: ${(props) => props.theme.spaces.s400} 0;
+  padding: var(--block-padding-top) 0 var(--block-padding-bottom);
 
   h2 {
     margin-bottom: ${(props) => props.theme.spaces.s300};
