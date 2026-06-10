@@ -5,6 +5,7 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 
 import { useTheme } from '@emotion/react';
+
 import { useTranslations } from 'next-intl';
 
 import { getDeploymentType } from '@common/env';
@@ -76,7 +77,8 @@ function Footer() {
     });
 
   // TODO: Remove this when we have a proper way to add custom links
-  const additionalLinks: FooterAdditionalLink[] = theme.settings?.customAdditionalLinks || [];
+  const additionalLinks: FooterAdditionalLink[] =
+    theme.settings?.customAdditionalLinks?.slice() || [];
   const hasCustomAccessibilityPage = additionalLinks?.find((link) => link.id === 'accessibility');
 
   plan.additionalLinks?.items?.map((link) =>
