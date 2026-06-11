@@ -54,6 +54,12 @@ export type CategoryPageMainBottomBlock = NonNullable<
   CategoryPageLayout['layoutMainBottom']
 >[number];
 
+type ChangeLogMessageBlockWithOverrides = {
+  __typename: 'ChangeLogMessageBlock';
+  fieldLabel?: string | null;
+  fieldHelpText?: string | null;
+};
+
 interface Props {
   page: CategoryPage;
   context?: 'hero' | 'main' | 'aside';
@@ -223,6 +229,7 @@ export default function CategoryPageStreamField({
       if (!plan.features.enableChangeLog || !page.category?.id || !page.category?.changeLogMessage)
         return null;
 
+      const changeLogBlock = block as ChangeLogMessageBlockWithOverrides;
       const withContainer = context === 'main';
 
       return (
@@ -232,6 +239,8 @@ export default function CategoryPageStreamField({
               entityType="page"
               entityId={String(page.category.id)}
               entry={page.category.changeLogMessage}
+              fieldLabel={changeLogBlock.fieldLabel}
+              fieldHelpText={changeLogBlock.fieldHelpText}
             />
           </Col>
         </Wrapper>

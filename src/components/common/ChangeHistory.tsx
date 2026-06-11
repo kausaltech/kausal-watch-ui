@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import dayjs from '@/common/dayjs';
@@ -24,6 +25,8 @@ type ChangeHistoryProps = {
   entityType: EntityType;
   entityId: string;
   entry?: ChangeHistoryEntry | null;
+  fieldLabel?: string | null;
+  fieldHelpText?: string | null;
 };
 
 const Wrapper = styled.div`
@@ -122,11 +125,6 @@ const ChangesTitle = styled.h2`
   margin: 0 0 ${(props) => props.theme.spaces.s150};
 `;
 
-const ChangesLabel = styled.div`
-  font-weight: 600;
-  margin-bottom: ${(props) => props.theme.spaces.s050};
-`;
-
 const ChangesText = styled.p`
   margin: 0 0 ${(props) => props.theme.spaces.s200};
   line-height: 1.5;
@@ -146,12 +144,26 @@ const FooterMeta = styled.div`
   gap: ${(props) => props.theme.spaces.s050};
 `;
 
-const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entityType, entityId, entry }) => {
+const ChangesLabel = styled.div`
+  font-weight: 600;
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+`;
+
+const ChangeHistory: React.FC<ChangeHistoryProps> = ({
+  entityType,
+  entityId,
+  entry,
+  fieldLabel,
+  fieldHelpText,
+}) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   if (!entry) return null;
 
   const formattedDate = dayjs(entry.updatedAt).format('L');
+
+  const modalTitle = fieldLabel?.trim() || t('change-history.modal-title');
+  const descriptionLabel = fieldHelpText?.trim() || t('change-history.description-label');
 
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
@@ -185,7 +197,7 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entityType, entityId, ent
       >
         <Dialog onClick={(e) => e.stopPropagation()}>
           <DialogHeader>
-            <ChangesTitle>{t('change-history.modal-title')}</ChangesTitle>
+            <ChangesTitle>{modalTitle}</ChangesTitle>
             <CloseButton
               type="button"
               onClick={close}
@@ -194,8 +206,8 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entityType, entityId, ent
               <Icon.Times />
             </CloseButton>
           </DialogHeader>
-          <ChangesLabel>{t('change-history.description-label')}</ChangesLabel>
-          <ChangesText>{entry.content}</ChangesText>
+          <ChangesLabel>{descriptionLabel}</ChangesLabel>
+          {entry.content && <ChangesText>{entry.content}</ChangesText>}
           <ModalFooterRow>
             {entry.createdBy && <Avatar $url={entry.createdBy.avatarUrl} />}
             <FooterMeta>
