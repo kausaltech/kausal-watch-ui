@@ -2,8 +2,10 @@
 
 import { useMemo, useRef, useState } from 'react';
 
-import styled from '@emotion/styled';
 import { Chip, Collapse, InputAdornment, TextField } from '@mui/material';
+
+import styled from '@emotion/styled';
+
 import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { Search } from 'react-bootstrap-icons';
@@ -17,7 +19,7 @@ import { getDefaultFormFields } from '@/utils/pledge.utils';
 import { getAttributeValueText } from '../common/ActionAttribute';
 import ConfirmPledge from './ConfirmPledge';
 import PledgeCard, { type PledgeCategory } from './PledgeCard';
-import { usePledgeUser } from './use-pledge-user';
+import { usePublicUser } from './use-public-user';
 
 export type Pledge = NonNullable<
   NonNullable<NonNullable<GetPledgesQuery['plan']>['pledges']>[number]
@@ -266,7 +268,7 @@ function PledgeList({ pledges }: Props) {
     commitToPledge,
     uncommitFromPledge,
     getCommitmentCountAdjustment,
-  } = usePledgeUser();
+  } = usePublicUser();
 
   const handleCommitClick = (pledge: Pledge, isCurrentlyCommitted: boolean) => {
     if (isCurrentlyCommitted) {

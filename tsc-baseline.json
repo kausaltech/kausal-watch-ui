@@ -2116,8 +2116,8 @@
       "count": 1,
       "message": "Property 'toThrowError' does not exist on type 'JestMatchers<() => void>'."
     },
-    "2c0a682380004f7ab6d06ac067271e00411c1727": {
-      "file": "src/tests/pledge/use-pledge-user.test.tsx",
+    "45af6a2a2774835404d972f7e378ccb29764353c": {
+      "file": "src/tests/pledge/use-public-user.test.tsx",
       "code": "TS2322",
       "count": 1,
       "message": "Type '{ children: ReactNode; mocks: MockedResponse[]; addTypename: boolean; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<MockedProvider> & Readonly<MockedProviderProps>'."

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Container, Spinner } from 'reactstrap';
@@ -25,7 +26,7 @@ import ConfirmPledge from './ConfirmPledge';
 import PledgeFeedback from './PledgeFeedback';
 import PledgeImpactComparison from './PledgeImpactComparison';
 import { ShareButton } from './ShareButton';
-import { usePledgeUser } from './use-pledge-user';
+import { usePublicUser } from './use-public-user';
 
 type PledgeData = NonNullable<NonNullable<GetPledgeQuery['plan']>['pledge']>;
 
@@ -275,7 +276,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
     commitToPledge,
     uncommitFromPledge,
     getCommitmentCountAdjustment,
-  } = usePledgeUser();
+  } = usePublicUser();
 
   const isCommitted = committedSlugs.has(pledge.slug);
   const breadcrumbs = [{ id: 'pledges', name: t('pledge-list-title'), url: pledgeListLink }];
