@@ -5,10 +5,10 @@ import { type MockedResponse } from '@apollo/client/testing';
 import { MockedProvider } from '@apollo/client/testing/react';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { usePledgeUser } from '../../components/pledge/use-pledge-user';
+import { usePublicUser } from '../../components/pledge/use-public-user';
 
-const REGISTER_PLEDGE_USER = gql`
-  mutation RegisterPledgeUser {
+const REGISTER_PUBLIC_USER = gql`
+  mutation RegisterPublicUser {
     pledge {
       registerUser {
         uuid
@@ -27,9 +27,9 @@ const COMMIT_TO_PLEDGE = gql`
   }
 `;
 
-const GET_PLEDGE_USER = gql`
-  query PledgeUser($user: UUID!) {
-    pledgeUser(uuid: $user) {
+const GET_PUBLIC_USER = gql`
+  query PublicUser($user: UUID!) {
+    publicUser(uuid: $user) {
       id
       uuid
       userData
@@ -61,10 +61,10 @@ beforeEach(() => {
   localStorage.clear();
 });
 
-describe('usePledgeUser', () => {
+describe('usePublicUser', () => {
   describe('initialization', () => {
     it('returns null userUuid when no stored UUID', () => {
-      const { result } = renderHook(() => usePledgeUser(), {
+      const { result } = renderHook(() => usePublicUser(), {
         wrapper: createWrapper(),
       });
 
@@ -79,12 +79,12 @@ describe('usePledgeUser', () => {
       const mocks: MockedResponse[] = [
         {
           request: {
-            query: GET_PLEDGE_USER,
+            query: GET_PUBLIC_USER,
             variables: { user: TEST_UUID },
           },
           result: {
             data: {
-              pledgeUser: {
+              publicUser: {
                 id: '1',
                 uuid: TEST_UUID,
                 userData: '{}',
@@ -95,7 +95,7 @@ describe('usePledgeUser', () => {
         },
       ];
 
-      const { result } = renderHook(() => usePledgeUser(), {
+      const { result } = renderHook(() => usePublicUser(), {
         wrapper: createWrapper(mocks),
       });
 
@@ -108,12 +108,12 @@ describe('usePledgeUser', () => {
       const mocks: MockedResponse[] = [
         {
           request: {
-            query: GET_PLEDGE_USER,
+            query: GET_PUBLIC_USER,
             variables: { user: TEST_UUID },
           },
           result: {
             data: {
-              pledgeUser: {
+              publicUser: {
                 id: '1',
                 uuid: TEST_UUID,
                 userData: '{"zip_code": "02134"}',
@@ -129,7 +129,7 @@ describe('usePledgeUser', () => {
         },
       ];
 
-      const { result } = renderHook(() => usePledgeUser(), {
+      const { result } = renderHook(() => usePublicUser(), {
         wrapper: createWrapper(mocks),
       });
 
@@ -144,7 +144,7 @@ describe('usePledgeUser', () => {
 
   describe('getCommitmentCountAdjustment', () => {
     it('returns 0 when no user data loaded', () => {
-      const { result } = renderHook(() => usePledgeUser(), {
+      const { result } = renderHook(() => usePublicUser(), {
         wrapper: createWrapper(),
       });
 
@@ -157,12 +157,12 @@ describe('usePledgeUser', () => {
       const mocks: MockedResponse[] = [
         {
           request: {
-            query: GET_PLEDGE_USER,
+            query: GET_PUBLIC_USER,
             variables: { user: TEST_UUID },
           },
           result: {
             data: {
-              pledgeUser: {
+              publicUser: {
                 id: '1',
                 uuid: TEST_UUID,
                 userData: '{}',
@@ -178,7 +178,7 @@ describe('usePledgeUser', () => {
         },
       ];
 
-      const { result } = renderHook(() => usePledgeUser(), {
+      const { result } = renderHook(() => usePublicUser(), {
         wrapper: createWrapper(mocks),
       });
 
@@ -197,7 +197,7 @@ describe('usePledgeUser', () => {
     it('registers a new user when no UUID exists', async () => {
       const mocks: MockedResponse[] = [
         {
-          request: { query: REGISTER_PLEDGE_USER },
+          request: { query: REGISTER_PUBLIC_USER },
           result: {
             data: {
               pledge: {
@@ -221,12 +221,12 @@ describe('usePledgeUser', () => {
         },
         {
           request: {
-            query: GET_PLEDGE_USER,
+            query: GET_PUBLIC_USER,
             variables: { user: TEST_UUID },
           },
           result: {
             data: {
-              pledgeUser: {
+              publicUser: {
                 id: '1',
                 uuid: TEST_UUID,
                 userData: '{}',
@@ -242,7 +242,7 @@ describe('usePledgeUser', () => {
         },
       ];
 
-      const { result } = renderHook(() => usePledgeUser(), {
+      const { result } = renderHook(() => usePublicUser(), {
         wrapper: createWrapper(mocks),
       });
 
@@ -258,7 +258,7 @@ describe('usePledgeUser', () => {
 
   describe('uncommitFromPledge', () => {
     it('does nothing when no user UUID exists', async () => {
-      const { result } = renderHook(() => usePledgeUser(), {
+      const { result } = renderHook(() => usePublicUser(), {
         wrapper: createWrapper(),
       });
 
