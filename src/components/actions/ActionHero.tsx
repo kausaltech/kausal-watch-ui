@@ -2,6 +2,7 @@ import React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
@@ -16,6 +17,7 @@ import Breadcrumbs from '@/components/common/Breadcrumbs';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
+import { ImageCredit } from '../common/ImageCredit';
 import ActionLogBanner from './ActionLogBanner';
 
 const Hero = styled.header<{ $bgColor: string }>`
@@ -125,19 +127,6 @@ const NavDivider = styled.span`
 
 const IndexLink = styled.span`
   font-weight: ${(props) => props.theme.fontWeightBold};
-`;
-
-const ImageCredit = styled.span`
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.1rem 0.25rem;
-  background-color: rgba(255, 255, 255, 0.66);
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
-  @media print {
-    display: none;
-  }
 `;
 
 const ActionHeadline = styled.h1`

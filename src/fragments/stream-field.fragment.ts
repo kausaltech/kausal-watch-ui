@@ -157,14 +157,22 @@ export const STREAM_FIELD_FRAGMENT = gql`
       }
       heading
       lead
+      additionalSettings {
+        backgroundColour
+        fitImage
+        showImageAccent
+        backgroundCoversFullSection
+      }
     }
     ... on LargeImageBlock {
       image {
+        id
         title
         altText
         width
         height
         renditionUncropped: rendition(size: "1320x1320", crop: false) {
+          id
           src
         }
         imageCredit
