@@ -3,13 +3,14 @@
 import { useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getAttributeValueText } from '@/components/common/ActionAttribute';
 import ConfirmPledge from '@/components/pledge/ConfirmPledge';
 import PledgeCard, { type PledgeCategory } from '@/components/pledge/PledgeCard';
-import { usePledgeUser } from '@/components/pledge/use-pledge-user';
+import { usePublicUser } from '@/components/pledge/use-public-user';
 import { getDefaultFormFields } from '@/utils/pledge.utils';
 
 import { ActionSection } from '../ActionContent';
@@ -36,7 +37,7 @@ export default function ActionPledgesBlock({ pledges, heading }: Props) {
     commitToPledge,
     uncommitFromPledge,
     getCommitmentCountAdjustment,
-  } = usePledgeUser();
+  } = usePublicUser();
 
   const [showConfirmDrawer, setShowConfirmDrawer] = useState(false);
   const [selectedPledge, setSelectedPledge] = useState<ActionPledge | null>(null);

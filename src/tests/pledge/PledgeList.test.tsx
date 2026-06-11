@@ -3,11 +3,11 @@ import React from 'react';
 import { fireEvent, screen } from '@testing-library/react';
 
 import PledgeList, { type Pledge } from '../../components/pledge/PledgeList';
-import { usePledgeUser } from '../../components/pledge/use-pledge-user';
+import { usePublicUser } from '../../components/pledge/use-public-user';
 import { render } from '../test-utils';
 
-jest.mock('../../components/pledge/use-pledge-user');
-const mockedUsePledgeUser = jest.mocked(usePledgeUser);
+jest.mock('../../components/pledge/use-public-user');
+const mockedUsePublicUser = jest.mocked(usePublicUser);
 
 jest.mock('@/common/links', () => ({
   usePrependPlanAndLocale: (path: string) => `/en${path}`,
@@ -52,7 +52,7 @@ const defaultHookReturn = {
 };
 
 beforeEach(() => {
-  mockedUsePledgeUser.mockReturnValue(defaultHookReturn);
+  mockedUsePublicUser.mockReturnValue(defaultHookReturn);
 });
 
 const pledges = [
@@ -79,7 +79,7 @@ describe('PledgeList', () => {
 
   describe('MY_PLEDGES view', () => {
     it('shows only committed pledges', () => {
-      mockedUsePledgeUser.mockReturnValue({
+      mockedUsePublicUser.mockReturnValue({
         ...defaultHookReturn,
         committedSlugs: new Set(['bike-to-work']),
       });
@@ -140,7 +140,7 @@ describe('PledgeList', () => {
   describe('commitment interactions', () => {
     it('calls uncommitFromPledge when clicking committed card', () => {
       const uncommitFromPledge = jest.fn();
-      mockedUsePledgeUser.mockReturnValue({
+      mockedUsePublicUser.mockReturnValue({
         ...defaultHookReturn,
         committedSlugs: new Set(['bike-to-work']),
         uncommitFromPledge,
@@ -162,7 +162,7 @@ describe('PledgeList', () => {
         slug === 'bike-to-work' ? 1 : 0
       );
 
-      mockedUsePledgeUser.mockReturnValue({
+      mockedUsePublicUser.mockReturnValue({
         ...defaultHookReturn,
         getCommitmentCountAdjustment,
       });

@@ -8,18 +8,17 @@ import { useLazyQuery, useMutation } from '@apollo/client/react';
 import type {
   CommitToPledgeMutation,
   CommitToPledgeMutationVariables,
-  PledgeUserDataMutation,
-  PledgeUserDataMutationVariables,
-  PledgeUserQuery,
-  PledgeUserQueryVariables,
-  RegisterPledgeUserMutation,
+  PublicUserDataMutation,
+  PublicUserDataMutationVariables,
+  PublicUserQuery,
+  PublicUserQueryVariables,
+  RegisterPublicUserMutation,
 } from '@/common/__generated__/graphql';
 
-// Key for storing user's UUID in lcoalStorage
-const PLEDGE_USER_UUID_KEY = 'pledge-user-uuid';
+const PUBLIC_USER_UUID_KEY = 'pledge-user-uuid';
 
-const REGISTER_PLEDGE_USER = gql`
-  mutation RegisterPledgeUser {
+const REGISTER_PUBLIC_USER = gql`
+  mutation RegisterPublicUser {
     pledge {
       registerUser {
         uuid
@@ -39,7 +38,7 @@ const COMMIT_TO_PLEDGE = gql`
 `;
 
 const SET_USER_DATA = gql`
-  mutation PledgeUserData($user: UUID!, $key: String!, $value: String!) {
+  mutation PublicUserData($user: UUID!, $key: String!, $value: String!) {
     pledge {
       setUserData(key: $key, value: $value, userUuid: $user) {
         uuid
@@ -48,9 +47,9 @@ const SET_USER_DATA = gql`
   }
 `;
 
-const GET_PLEDGE_USER = gql`
-  query PledgeUser($user: UUID!) {
-    pledgeUser(uuid: $user) {
+const GET_PUBLIC_USER = gql`
+  query PublicUser($user: UUID!) {
+    publicUser(uuid: $user) {
       id
       uuid
       userData
@@ -67,14 +66,13 @@ const GET_PLEDGE_USER = gql`
 `;
 
 function getStoredUuid(): string | null {
-  // No need for SSR for pledge commitments, so we just use local storage
   if (typeof window === 'undefined') return null;
 
-  return localStorage.getItem(PLEDGE_USER_UUID_KEY);
+  return localStorage.getItem(PUBLIC_USER_UUID_KEY);
 }
 
 function storeUuid(uuid: string) {
-  localStorage.setItem(PLEDGE_USER_UUID_KEY, uuid);
+  localStorage.setItem(PUBLIC_USER_UUID_KEY, uuid);
 }
 
 function parseUserData(
@@ -93,23 +91,23 @@ function parseUserData(
   return raw;
 }
 
-export function usePledgeUser() {
+export function usePublicUser() {
   const [userUuid, setUserUuid] = useState<string | null>(() => getStoredUuid());
 
-  const [registerUser] = useMutation<RegisterPledgeUserMutation>(REGISTER_PLEDGE_USER);
+  const [registerUser] = useMutation<RegisterPublicUserMutation>(REGISTER_PUBLIC_USER);
   const [commitMutation] = useMutation<CommitToPledgeMutation, CommitToPledgeMutationVariables>(
     COMMIT_TO_PLEDGE
   );
 
   const [setUserDataMutation] = useMutation<
-    PledgeUserDataMutation,
-    PledgeUserDataMutationVariables
+    PublicUserDataMutation,
+    PublicUserDataMutationVariables
   >(SET_USER_DATA);
 
   const [fetchUser, { data: queryData, loading }] = useLazyQuery<
-    PledgeUserQuery,
-    PledgeUserQueryVariables
-  >(GET_PLEDGE_USER, { fetchPolicy: 'network-only' });
+    PublicUserQuery,
+    PublicUserQueryVariables
+  >(GET_PUBLIC_USER, { fetchPolicy: 'network-only' });
 
   // When ensureUser registers a new user it sets this flag so the effect
   // doesn't fire a duplicate fetch — commitToPledge calls fetchUser explicitly.
@@ -128,25 +126,25 @@ export function usePledgeUser() {
   }, [userUuid, fetchUser]);
 
   const userData = useMemo(
-    () => parseUserData(queryData?.pledgeUser?.userData),
-    [queryData?.pledgeUser?.userData]
+    () => parseUserData(queryData?.publicUser?.userData),
+    [queryData?.publicUser?.userData]
   );
 
   const committedSlugs = useMemo(
     () =>
       new Set(
-        (queryData?.pledgeUser?.commitments ?? [])
+        (queryData?.publicUser?.commitments ?? [])
           .map((c) => c.pledge?.slug)
           .filter((c) => c != null) ?? []
       ),
-    [queryData?.pledgeUser?.commitments]
+    [queryData?.publicUser?.commitments]
   );
 
   // Track the committed slugs from the first fetch so we can compute
   // a count adjustment without needing to refetch the pledge list query.
   const initialCommittedSlugs = useRef<Set<string> | null>(null);
 
-  if (initialCommittedSlugs.current === null && queryData?.pledgeUser) {
+  if (initialCommittedSlugs.current === null && queryData?.publicUser) {
     initialCommittedSlugs.current = new Set(committedSlugs);
   }
 
@@ -166,7 +164,7 @@ export function usePledgeUser() {
     const result = await registerUser();
     const newUuid = result.data?.pledge.registerUser?.uuid;
 
-    if (!newUuid) throw new Error('Failed to register pledge user');
+    if (!newUuid) throw new Error('Failed to register public user');
 
     storeUuid(newUuid);
     skipEffectFetch.current = true;
