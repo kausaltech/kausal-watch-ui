@@ -621,6 +621,7 @@
       "FloatBlock",
       "FormChoiceBlock",
       "FormFieldBlock",
+      "FrontPageHeroAdditionalSettingsBlock",
       "FrontPageHeroBlock",
       "IdentifierColumnBlock",
       "ImageBlock",
