@@ -86,6 +86,69 @@ const PER_INSTANCE_SETTINGS: Record<
       'net_emissions/emission_scope:direct+negative': false,
     },
   },
+  'zuerich-2025': {
+    showOutcomeNodeDetails: false,
+    defaultOutcomeGraphType: {
+      'net_emissions/emission_scope:indirect': 'bar',
+      'net_emissions/emission_scope:direct+negative': 'area',
+    },
+    separateYears: {
+      'net_emissions/emission_scope:indirect': [1990, 2010, 2015, 2020, 2022, 2023, 2024],
+      'net_emissions/emission_scope:direct+negative': null,
+    },
+    outcomeDisclaimers: [
+      {
+        year: 2024,
+        node: 'net_emissions',
+        goal: 'net_emissions/emission_scope:indirect',
+        disclaimer:
+          'Für die indirekten Emissionen in den Bereichen Ernährung und Konsum sowie teilweise im Bereich Mobilität (ca. 25%) im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
+      },
+      {
+        year: 2024,
+        node: 'food_consumption_emissions',
+        goal: 'net_emissions/emission_scope:indirect',
+        disclaimer:
+          'Für die indirekten Emissionen der Ernährung im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
+      },
+      {
+        year: 2024,
+        node: 'other_consumption_emissions',
+        goal: 'net_emissions/emission_scope:indirect',
+        disclaimer:
+          'Für die indirekten Emissionen des Konsums im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
+      },
+      {
+        year: 2024,
+        node: 'transportation_emissions',
+        goal: 'net_emissions/emission_scope:indirect',
+        disclaimer:
+          'Für die indirekten Emissionen der Mobilität der Stadtbevölkerung ausserhalb des Stadtgebiets (exkl. Flugzeug) und der Neufahrzeuge im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
+      },
+      {
+        year: 2024,
+        node: 'transportation_emissions_outside_city',
+        goal: 'net_emissions/emission_scope:indirect',
+        disclaimer:
+          'Für die indirekten Emissionen der Mobilität der Stadtbevölkerung ausserhalb des Stadtgebiets (exkl. Flugzeug) im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
+      },
+      {
+        year: 2024,
+        node: 'new_vehicle_emissions',
+        goal: 'net_emissions/emission_scope:indirect',
+        disclaimer:
+          'Für die indirekten Emissionen der Mobilität der Neufahrzeuge im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
+      },
+    ],
+    colorAdjust: {
+      'net_emissions/emission_scope:indirect': 1.75,
+      'net_emissions/emission_scope:direct+negative': 0,
+    },
+    hideForecast: {
+      'net_emissions/emission_scope:indirect': true,
+      'net_emissions/emission_scope:direct+negative': false,
+    },
+  },
   'zuerich-dev': {
     showOutcomeNodeDetails: false,
     defaultOutcomeGraphType: {
@@ -181,7 +244,7 @@ export default function PathsProvider({ instance, children }: PathsProviderProps
     node: string;
     goal: string;
     disclaimer: string;
-  }[] = instanceSettings?.outcomeDisclaimers || [];
+  }[] = instanceSettings?.outcomeDisclaimers ?? [];
 
   const augmentedInstance: PathsInstanceType | undefined =
     instance && pathsInstance
@@ -189,7 +252,7 @@ export default function PathsProvider({ instance, children }: PathsProviderProps
           ...instance,
           instance: {
             ...pathsInstance,
-            goals: instanceGoals || [],
+            goals: instanceGoals ?? [],
             outcomeDisclaimers,
             showOutcomeNodeDetails: instanceSettings?.showOutcomeNodeDetails ?? true,
           },
