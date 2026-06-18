@@ -387,7 +387,10 @@ export default function CategoryPageHeaderBlock(props: Props) {
   const parentCategory = page.category?.parent;
 
   return (
-    <CategoryHeader $bg={containImages ? theme.brandDark : color} $hasImage={!!headerImage}>
+    <CategoryHeader
+      $bg={containImages ? theme.pageHeaderBackgroundColor : color}
+      $hasImage={!!headerImage}
+    >
       <Container className="header-container">
         {headerImage && headerImage.large && (
           <HeaderImage $imageAlign={imageAlign} className={imageLayout}>
