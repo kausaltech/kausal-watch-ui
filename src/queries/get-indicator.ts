@@ -303,6 +303,21 @@ export const GET_INDICATOR_DETAILS = gql`
     }
     statusSummary {
       identifier
+      label
+      color
+      isActive
+      isCompleted
+      sentiment
+    }
+    mergedWith {
+      id
+      identifier
+      viewUrl
+      plan {
+        id
+        shortName
+        viewUrl
+      }
     }
     completion
     categories {

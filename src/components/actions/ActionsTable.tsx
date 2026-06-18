@@ -1,9 +1,6 @@
-import React from 'react';
-
 import { useTranslations } from 'next-intl';
 import { Table } from 'reactstrap';
 
-import { getStatusSummary } from '@/common/ActionStatusSummary';
 import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { ActionLink } from '@/common/links';
@@ -17,6 +14,7 @@ export default function ActionsTable({ actions }: { actions: Action[] }) {
   const t = useTranslations();
   const plan = usePlan();
 
+  const actionsUseImpact = actions.some((action) => action.impact != null);
   return (
     <Table hover responsive>
       <thead>
@@ -25,7 +23,7 @@ export default function ActionsTable({ actions }: { actions: Action[] }) {
             {t('action', getActionTermContext(plan))}
           </th>
           <th scope="col">{t('action-progress')}</th>
-          <th scope="col">{t('action-impact')}</th>
+          {actionsUseImpact && <th scope="col">{t('action-impact')}</th>}
         </tr>
       </thead>
       <tbody>
@@ -46,19 +44,23 @@ export default function ActionsTable({ actions }: { actions: Action[] }) {
             <td width="200">
               {action.status && (
                 <StatusBadge
+                  action={action}
                   plan={plan}
-                  action={{
-                    ...action,
-                    statusSummary: getStatusSummary(plan, action.statusSummary),
-                  }}
+                  statusName={
+                    action.mergedWith
+                      ? t('action-status-merged', getActionTermContext(plan))
+                      : action.status.name
+                  }
                 />
               )}
             </td>
-            <td>
-              {action.impact && (
-                <ActionImpact identifier={action.impact.identifier} name={action.impact.name} />
-              )}
-            </td>
+            {actionsUseImpact && (
+              <td>
+                {action.impact && (
+                  <ActionImpact identifier={action.impact.identifier} name={action.impact.name} />
+                )}
+              </td>
+            )}
           </tr>
         ))}
       </tbody>

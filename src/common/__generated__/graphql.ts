@@ -15816,9 +15816,15 @@ export type IndicatorDetailsQuery = (
         { id: string, identifier: string, name: string }
         & { __typename: 'ActionImplementationPhase' }
       ) | null, statusSummary: (
-        { identifier: ActionStatusSummaryIdentifier }
+        { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
         & { __typename: 'ActionStatusSummary' }
-      ), categories: Array<(
+      ), mergedWith: (
+        { id: string, identifier: string, viewUrl: string, plan: (
+          { id: string, shortName: string | null, viewUrl: string | null }
+          & { __typename: 'Plan' }
+        ) }
+        & { __typename: 'Action' }
+      ) | null, categories: Array<(
         { id: string, identifier: string, name: string, image: (
           { rendition: (
             { id: string, src: string }
@@ -16011,9 +16017,15 @@ export type ActionsTableRowFragmentFragment = (
     { id: string, identifier: string, name: string }
     & { __typename: 'ActionImplementationPhase' }
   ) | null, statusSummary: (
-    { identifier: ActionStatusSummaryIdentifier }
+    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
     & { __typename: 'ActionStatusSummary' }
-  ), categories: Array<(
+  ), mergedWith: (
+    { id: string, identifier: string, viewUrl: string, plan: (
+      { id: string, shortName: string | null, viewUrl: string | null }
+      & { __typename: 'Plan' }
+    ) }
+    & { __typename: 'Action' }
+  ) | null, categories: Array<(
     { id: string, identifier: string, name: string, image: (
       { rendition: (
         { id: string, src: string }
