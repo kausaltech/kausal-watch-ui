@@ -145,6 +145,7 @@
     "value": "Ist-Wert",
     "type": "Typ",
     "under-relative-time": "Weniger als {relativeTime}",
+    "unspecified-indicator": "Nicht spezifizierter Indikator",
     "updated": "Aktualisiert",
     "primary-organization": "{context, select, DIVISION {Abteilung} other {Organisation}}",
     "with-contact-persons": "Haben Ansprechperson",
