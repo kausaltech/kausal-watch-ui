@@ -142,6 +142,7 @@
     "versions-list": "Visas versijas",
     "over-relative-time": "Virs {relativeTime}",
     "under-relative-time": "Zem {relativeTime}",
+    "unspecified-indicator": "Nenoteikts rādītājs",
     "filter-text-default": "Meklēt pēc atslēgvārda",
     "filter-organization": "Organizācija",
     "filter-primary-organization": "Primārā organizācija",
