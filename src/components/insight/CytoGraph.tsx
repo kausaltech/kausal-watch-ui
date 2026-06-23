@@ -1,15 +1,16 @@
 import React from 'react';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import type { Theme } from '@emotion/react';
 import { withTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import PropTypes from 'prop-types';
 import {
   Col,
   Container,
@@ -20,10 +21,74 @@ import {
   UncontrolledButtonDropdown,
 } from 'reactstrap';
 
+import type { TFunction } from '@/common/i18n';
+import { usePlan } from '@/context/plan';
+
 import { getActionLinkProps, getIndicatorLinkProps } from '../../common/links';
 import InsightFilter from './InsightFilter';
 
 cytoscape.use(dagre);
+
+type Router = ReturnType<typeof useRouter>;
+
+// Nodes and edges as returned by the (legacy) insight API. Nodes are augmented
+// at render time with their resolved cause/effect relations.
+type InsightNode = {
+  id: string;
+  type: string;
+  indicator_level: string;
+  depth: number;
+  identifier: string;
+  name: string;
+  causes: InsightNode[];
+  effects: InsightNode[];
+  parent?: InsightNode;
+};
+
+type InsightEdge = {
+  id: string;
+  from: string;
+  to: string;
+  effect_type: string;
+  confidence_level: string;
+};
+
+type InsightFilters = {
+  indicator: number | null;
+};
+
+// dagre layout options are provided by the cytoscape-dagre plugin and aren't
+// part of cytoscape's built-in LayoutOptions union.
+type DagreLayoutOptions = cytoscape.BaseLayoutOptions & {
+  name: 'dagre';
+  ranker?: string;
+  edgeWeight?: (edge: cytoscape.EdgeSingular) => number;
+  nodeDimensionsIncludeLabels?: boolean;
+  animate?: boolean;
+  animateDuration?: number;
+  zoom?: number;
+  pan?: { x: number; y: number };
+};
+
+type CytoGraphOwnProps = {
+  nodes: InsightNode[];
+  edges: InsightEdge[];
+  filters: InsightFilters;
+  onFilterChange: (filters: InsightFilters) => void;
+};
+
+type CytoGraphProps = CytoGraphOwnProps & {
+  theme: Theme;
+  t: TFunction;
+  router: Router;
+  pathname: string;
+  searchParams: ReturnType<typeof useSearchParams>;
+  openIndicatorsInModal: boolean;
+};
+
+type CytoGraphState = {
+  filters: InsightFilters;
+};
 
 const VisContainer = styled.div`
   width: 100%;
@@ -32,13 +97,13 @@ const VisContainer = styled.div`
   margin: 2em 0;
 `;
 
-function wordWrap(inputStr, maxWidth) {
+function wordWrap(inputStr: string, maxWidth: number) {
   const newLineStr = '\n';
   let done = false;
   let res = '';
   let str = inputStr;
 
-  function testWhite(x) {
+  function testWhite(x: string) {
     const white = new RegExp(/^\s$/);
     return white.test(x.charAt(0));
   }
@@ -66,31 +131,14 @@ function wordWrap(inputStr, maxWidth) {
   return res + str;
 }
 
-/* eslint-disable react/static-property-placement */
-class CytoGraph extends React.Component {
-  static propTypes = {
-    filters: PropTypes.shape({
-      indicator: PropTypes.number,
-    }),
-    nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
-    edges: PropTypes.arrayOf(PropTypes.object).isRequired,
-    onFilterChange: PropTypes.func.isRequired,
-  };
+class CytoGraph extends React.Component<CytoGraphProps, CytoGraphState> {
+  visRef = React.createRef<HTMLDivElement>();
 
-  static defaultProps = {
-    filters: {
-      indicator: null,
-    },
-  };
+  cy?: cytoscape.Core;
 
-  constructor(props) {
-    super(props);
-    this.visRef = React.createRef();
-    this.handleFilterNode = this.handleFilterNode.bind(this);
-    this.state = {
-      filters: props.filters,
-    };
-  }
+  state: CytoGraphState = {
+    filters: this.props.filters,
+  };
 
   componentDidMount() {
     const { nodes } = this.props;
@@ -101,16 +149,21 @@ class CytoGraph extends React.Component {
     this.renderNetwork();
   }
 
-  componentDidUpdate() {
-    const { nodes } = this.props;
+  componentDidUpdate(prevProps: CytoGraphProps) {
+    const { nodes, edges } = this.props;
 
     if (!nodes) {
+      return;
+    }
+    // Only rebuild the graph when the underlying data changes. Other prop
+    // changes (e.g. the modal search param) must not trigger a full re-layout.
+    if (prevProps.nodes === nodes && prevProps.edges === edges) {
       return;
     }
     this.renderNetwork();
   }
 
-  handleFilterNode(nodeId) {
+  handleFilterNode = (nodeId: string | null) => {
     const { onFilterChange } = this.props;
 
     if (!nodeId) {
@@ -122,15 +175,18 @@ class CytoGraph extends React.Component {
     if (node.length !== 1) {
       throw new Error(`Node with id ${nodeId} not found`);
     }
-    onFilterChange({ indicator: parseInt(node[0].id.substr(1), 10) });
-  }
+    onFilterChange({ indicator: parseInt(node[0].id.slice(1), 10) });
+  };
 
-  downloadAs(el) {
+  downloadAs(el: React.MouseEvent<HTMLElement>) {
     const cygraph = this.cy;
-    const { target } = el;
+    if (!cygraph) {
+      return;
+    }
+    const target = el.currentTarget as HTMLAnchorElement;
     const exportOptions = {
       full: true,
-      output: 'blob',
+      output: 'blob' as const,
       maxWidth: 25000,
       bg: '#ffffff',
     };
@@ -143,9 +199,10 @@ class CytoGraph extends React.Component {
 
   renderNetwork() {
     const visNode = this.visRef.current;
-    const { nodes, edges, theme, router } = this.props;
-    const elements = [];
-    const nodeMap = {};
+    const { nodes, edges, theme, router, pathname, searchParams, openIndicatorsInModal } =
+      this.props;
+    const elements: cytoscape.ElementDefinition[] = [];
+    const nodeMap: Record<string, InsightNode> = {};
 
     nodes.forEach((node) => {
       nodeMap[node.id] = node;
@@ -165,7 +222,12 @@ class CytoGraph extends React.Component {
     });
 
     nodes.forEach((node) => {
-      const out = {
+      const label =
+        node.type === 'action'
+          ? wordWrap(`${node.identifier}. ${node.name}`, 40)
+          : wordWrap(node.name, 40);
+
+      const out: cytoscape.ElementDefinition = {
         data: {
           id: node.id,
           type: node.type,
@@ -173,32 +235,17 @@ class CytoGraph extends React.Component {
           depth: node.depth,
           identifier: node.identifier,
           node,
+          label,
         },
       };
 
-      if (node.type === 'action') {
-        out.data.label = wordWrap(`${node.identifier}. ${node.name}`, 40);
-      } else {
-        out.data.label = wordWrap(node.name, 40);
-      }
-
-      /*
-      if (node.parent && node.indicator_level === 'strategic') {
-        out.data.parent = node.parent.id;
-      }
-      */
       elements.push(out);
     });
 
     edges.forEach((edge) => {
-      let color;
-      let label;
+      let color: string | undefined;
+      let label: string | undefined;
 
-      /*
-      if (edge.effect_type === 'part_of') {
-        return;
-      }
-      */
       switch (edge.effect_type) {
         case 'increases':
           color = theme.graphColors.green050;
@@ -215,7 +262,7 @@ class CytoGraph extends React.Component {
         default:
           break;
       }
-      const out = {
+      const out: cytoscape.ElementDefinition = {
         data: {
           id: edge.id,
           source: edge.from,
@@ -228,7 +275,7 @@ class CytoGraph extends React.Component {
       elements.push(out);
     });
 
-    const cyLayoutOptions = {
+    const cyLayoutOptions: DagreLayoutOptions = {
       name: 'dagre',
       ranker: 'longest-path',
       edgeWeight: (edge) => {
@@ -261,7 +308,7 @@ class CytoGraph extends React.Component {
         {
           selector: '*',
           style: {
-            'font-family': `${theme.fontFamily}, sans-serif`,
+            'font-family': `sans-serif`,
           },
         },
         {
@@ -346,6 +393,18 @@ class CytoGraph extends React.Component {
             padding: '24px',
           },
         },
+        {
+          selector: 'node[level="unspecified"]',
+          style: {
+            shape: 'rectangle',
+            'background-color': theme.graphColors.grey020,
+            color: readableColor(theme.graphColors.grey020),
+            width: 'label',
+            height: 'label',
+            'text-valign': 'center',
+            padding: '24px',
+          },
+        },
       ],
     });
     this.cy = cy;
@@ -365,24 +424,32 @@ class CytoGraph extends React.Component {
         cy.center(rootNode);
       }
     }
-    function nodeTapHandler() {
-      if (this.data('type') === 'action') {
-        const id = this.data('identifier');
+    cy.on('tap', 'node', (evt) => {
+      const node = evt.target as cytoscape.NodeSingular;
+      if (node.data('type') === 'action') {
+        const id = node.data('identifier') as string;
         const link = getActionLinkProps(id);
         router.push(link.href);
       } else {
-        const id = this.data('id').substr(1);
-        const link = getIndicatorLinkProps(id);
-        router.push(link.href);
+        const id = (node.data('id') as string).slice(1);
+        if (openIndicatorsInModal) {
+          // Open the indicator in the global modal by setting the search param
+          // that GlobalIndicatorModal listens for, instead of navigating away.
+          const newSearchParams = new URLSearchParams(searchParams.toString());
+          newSearchParams.set('indicator', id);
+          router.replace(`${pathname}?${newSearchParams.toString()}`, { scroll: false });
+        } else {
+          const link = getIndicatorLinkProps(id);
+          router.push(link.href);
+        }
       }
-    }
-    cy.on('tap', 'node', nodeTapHandler);
+    });
   }
 
   render() {
     const { nodes, filters, t } = this.props;
     const { indicator } = filters;
-    let activeFilterNode;
+    let activeFilterNode: string | null = null;
 
     if (indicator != null) {
       activeFilterNode = `i${indicator.toString()}`;
@@ -420,11 +487,24 @@ class CytoGraph extends React.Component {
 }
 
 // Extend this legacy class component with translations and router hooks
-function ExtendedCytoGraph(props) {
+function ExtendedCytoGraph(props: CytoGraphOwnProps & { theme: Theme }) {
   const t = useTranslations();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const plan = usePlan();
+  const openIndicatorsInModal = plan.features.indicatorsOpenInModal === true;
 
-  return <CytoGraph {...props} t={t} router={router} />;
+  return (
+    <CytoGraph
+      {...props}
+      t={t}
+      router={router}
+      pathname={pathname}
+      searchParams={searchParams}
+      openIndicatorsInModal={openIndicatorsInModal}
+    />
+  );
 }
 
 export default withTheme(ExtendedCytoGraph);
