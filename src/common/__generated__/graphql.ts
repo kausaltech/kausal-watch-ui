@@ -15809,7 +15809,7 @@ export type IndicatorDetailsQuery = (
       )> }
       & { __typename: 'Dataset' }
     )>, actions: Array<(
-      { id: string, identifier: string, name: string, color: string | null, scheduleContinuous: boolean, completion: number | null, status: (
+      { id: string, identifier: string, name: string, color: string | null, viewUrl: string, scheduleContinuous: boolean, completion: number | null, status: (
         { id: string, identifier: string, name: string, color: string }
         & { __typename: 'ActionStatus' }
       ) | null, implementationPhase: (
@@ -15824,7 +15824,10 @@ export type IndicatorDetailsQuery = (
           & { __typename: 'Plan' }
         ) }
         & { __typename: 'Action' }
-      ) | null, categories: Array<(
+      ) | null, plan: (
+        { id: string, viewUrl: string | null }
+        & { __typename: 'Plan' }
+      ), categories: Array<(
         { id: string, identifier: string, name: string, image: (
           { rendition: (
             { id: string, src: string }
@@ -16010,7 +16013,7 @@ export type IndicatorDetailsQuery = (
 );
 
 export type ActionsTableRowFragmentFragment = (
-  { id: string, identifier: string, name: string, color: string | null, scheduleContinuous: boolean, completion: number | null, status: (
+  { id: string, identifier: string, name: string, color: string | null, viewUrl: string, scheduleContinuous: boolean, completion: number | null, status: (
     { id: string, identifier: string, name: string, color: string }
     & { __typename: 'ActionStatus' }
   ) | null, implementationPhase: (
@@ -16025,7 +16028,10 @@ export type ActionsTableRowFragmentFragment = (
       & { __typename: 'Plan' }
     ) }
     & { __typename: 'Action' }
-  ) | null, categories: Array<(
+  ) | null, plan: (
+    { id: string, viewUrl: string | null }
+    & { __typename: 'Plan' }
+  ), categories: Array<(
     { id: string, identifier: string, name: string, image: (
       { rendition: (
         { id: string, src: string }
