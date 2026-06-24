@@ -2,6 +2,7 @@ import React, { Suspense, useState } from 'react';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
@@ -23,6 +24,7 @@ import { cleanActionStatus } from '@/common/preprocess';
 import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';
 import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
+import { getMergedName } from '@/utils/action.utils';
 
 import Icon from '../common/Icon';
 import { ActionDependenciesBlock } from './blocks/action-dependencies/ActionDependenciesBlock';
@@ -348,11 +350,6 @@ function ActionCard({
     return undefined;
   };
 
-  const getMergedName = (mergedWith, planId) => {
-    if (mergedWith.plan.id !== planId)
-      return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
-    else return mergedWith.identifier;
-  };
   const primaryRootCategory = action.primaryCategories ? action.primaryCategories[0] : null;
 
   function getidentifierPosition(

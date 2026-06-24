@@ -1619,8 +1619,8 @@ export type GetActionListQuery = (
       ) | null }
       & { __typename: 'Organization' }
     ) | null, mergedWith: (
-      { id: string, identifier: string, plan: (
-        { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
+      { id: string, identifier: string, viewUrl: string, plan: (
+        { id: string, shortName: string | null, name: string, versionName: string, viewUrl: string | null }
         & { __typename: 'Plan' }
       ) }
       & { __typename: 'Action' }
@@ -1982,8 +1982,8 @@ export type GetActionListForBlockQuery = (
       ) | null }
       & { __typename: 'Organization' }
     ) | null, mergedWith: (
-      { id: string, identifier: string, plan: (
-        { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
+      { id: string, identifier: string, viewUrl: string, plan: (
+        { id: string, shortName: string | null, name: string, versionName: string, viewUrl: string | null }
         & { __typename: 'Plan' }
       ) }
       & { __typename: 'Action' }
@@ -3585,8 +3585,8 @@ export type ActionCardFragment = (
     ) | null }
     & { __typename: 'Organization' }
   ) | null, mergedWith: (
-    { id: string, identifier: string, plan: (
-      { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
+    { id: string, identifier: string, viewUrl: string, plan: (
+      { id: string, shortName: string | null, name: string, versionName: string, viewUrl: string | null }
       & { __typename: 'Plan' }
     ) }
     & { __typename: 'Action' }
@@ -6961,8 +6961,8 @@ export type GetActionDetailsQuery = (
         ) | null }
         & { __typename: 'Organization' }
       ) | null, mergedWith: (
-        { id: string, identifier: string, plan: (
-          { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
+        { id: string, identifier: string, viewUrl: string, plan: (
+          { id: string, shortName: string | null, name: string, versionName: string, viewUrl: string | null }
           & { __typename: 'Plan' }
         ) }
         & { __typename: 'Action' }
@@ -7243,8 +7243,8 @@ export type GetActionDetailsQuery = (
         ) | null }
         & { __typename: 'Organization' }
       ) | null, mergedWith: (
-        { id: string, identifier: string, plan: (
-          { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
+        { id: string, identifier: string, viewUrl: string, plan: (
+          { id: string, shortName: string | null, name: string, versionName: string, viewUrl: string | null }
           & { __typename: 'Plan' }
         ) }
         & { __typename: 'Action' }
@@ -7519,8 +7519,8 @@ export type GetActionDetailsQuery = (
         ) | null }
         & { __typename: 'Organization' }
       ) | null, mergedWith: (
-        { id: string, identifier: string, plan: (
-          { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
+        { id: string, identifier: string, viewUrl: string, plan: (
+          { id: string, shortName: string | null, name: string, versionName: string, viewUrl: string | null }
           & { __typename: 'Plan' }
         ) }
         & { __typename: 'Action' }
@@ -8441,8 +8441,8 @@ export type GetActionDetailsQuery = (
           ) | null }
           & { __typename: 'Organization' }
         ) | null, mergedWith: (
-          { id: string, identifier: string, plan: (
-            { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
+          { id: string, identifier: string, viewUrl: string, plan: (
+            { id: string, shortName: string | null, name: string, versionName: string, viewUrl: string | null }
             & { __typename: 'Plan' }
           ) }
           & { __typename: 'Action' }
@@ -8720,8 +8720,8 @@ export type GetActionDetailsQuery = (
           ) | null }
           & { __typename: 'Organization' }
         ) | null, mergedWith: (
-          { id: string, identifier: string, plan: (
-            { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
+          { id: string, identifier: string, viewUrl: string, plan: (
+            { id: string, shortName: string | null, name: string, versionName: string, viewUrl: string | null }
             & { __typename: 'Plan' }
           ) }
           & { __typename: 'Action' }
@@ -10536,8 +10536,8 @@ export type ActionDependenciesFragment = (
         ) | null }
         & { __typename: 'Organization' }
       ) | null, mergedWith: (
-        { id: string, identifier: string, plan: (
-          { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
+        { id: string, identifier: string, viewUrl: string, plan: (
+          { id: string, shortName: string | null, name: string, versionName: string, viewUrl: string | null }
           & { __typename: 'Plan' }
         ) }
         & { __typename: 'Action' }
@@ -10815,8 +10815,8 @@ export type ActionDependenciesFragment = (
         ) | null }
         & { __typename: 'Organization' }
       ) | null, mergedWith: (
-        { id: string, identifier: string, plan: (
-          { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
+        { id: string, identifier: string, viewUrl: string, plan: (
+          { id: string, shortName: string | null, name: string, versionName: string, viewUrl: string | null }
           & { __typename: 'Plan' }
         ) }
         & { __typename: 'Action' }
@@ -12212,8 +12212,8 @@ export type ActionCardWithDependencyRoleFragment = (
     ) | null }
     & { __typename: 'Organization' }
   ) | null, mergedWith: (
-    { id: string, identifier: string, plan: (
-      { id: string, shortName: string | null, versionName: string, viewUrl: string | null }
+    { id: string, identifier: string, viewUrl: string, plan: (
+      { id: string, shortName: string | null, name: string, versionName: string, viewUrl: string | null }
       & { __typename: 'Plan' }
     ) }
     & { __typename: 'Action' }
