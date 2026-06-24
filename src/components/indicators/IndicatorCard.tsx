@@ -1,5 +1,3 @@
-import React, { type PropsWithChildren } from 'react';
-
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
@@ -69,6 +67,8 @@ const StyledIndicator = styled(Card, transientOptions)<{ $level: string | null }
         return props.theme.themeColors.black;
       case 'strategic':
         return props.theme.themeColors.black;
+      case 'unspecified':
+        return props.theme.themeColors.black;
       default:
         return props.theme.themeColors.black;
     }
@@ -84,8 +84,10 @@ const StyledIndicator = styled(Card, transientOptions)<{ $level: string | null }
         return props.theme.graphColors.blue030;
       case 'strategic':
         return props.theme.graphColors.blue010;
+      case 'unspecified':
+        return props.theme.graphColors.grey030;
       default:
-        return '#cccccc';
+        return props.theme.graphColors.grey020;
     }
   }};
 
@@ -217,6 +219,8 @@ export function getIndicatorTranslation(
       return t('strategic-indicator');
     case 'tactical':
       return t('tactical-indicator');
+    default:
+      return t('indicator', indicatorTermContext);
   }
 }
 

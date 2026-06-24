@@ -98,7 +98,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
           <div>{indicator.goalDescription}</div>
         </ContentBlockWrapper>
       );
-    case IndicatorDetailsFieldName.Visualization:
+    case IndicatorDetailsFieldName.Visualization: {
       const indicatorHasData = indicator.values.length > 0;
       if (!indicatorHasData) return null;
 
@@ -124,6 +124,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
           />
         </ContentBlockWrapper>
       );
+    }
     case IndicatorDetailsFieldName.ConnectedActions:
       return (
         indicator.actions &&
@@ -139,7 +140,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
           </ContentBlockWrapper>
         )
       );
-    case IndicatorDetailsFieldName.CausalityNav:
+    case IndicatorDetailsFieldName.CausalityNav: {
       const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
       return (
         hasImpacts && (
@@ -160,18 +161,19 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
           </ContentBlockWrapper>
         )
       );
+    }
     case IndicatorDetailsFieldName.Level:
-      return (
+      return indicator.level !== 'unspecified' ? (
         <ContentBlockWrapper>
           <BlockLabel>
-            {block.fieldLabel || upperFirst(t('level'))}
+            {block.fieldLabel || upperFirst(t('type'))}
             {block.fieldHelpText && block.id && (
               <PopoverTip content={block.fieldHelpText} identifier={block.id} />
             )}
           </BlockLabel>
           {indicator.level && <IndicatorLevelChip level={indicator.level} />}
         </ContentBlockWrapper>
-      );
+      ) : null;
     case IndicatorDetailsFieldName.Organization:
       return (
         <ContentBlockWrapper>
@@ -200,7 +202,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
           </ContentBlockWrapper>
         )
       );
-    case IndicatorDetailsFieldName.UpdatedAt:
+    case IndicatorDetailsFieldName.UpdatedAt: {
       if (hideLegacyLastUpdated) return null;
       const updatedAt = new Date(indicator.updatedAt);
       const formattedUpdatedAt = format.dateTime(updatedAt, {
@@ -213,6 +215,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
           {block.fieldLabel || t('updated')} {formattedUpdatedAt}
         </ContentBlockWrapper>
       );
+    }
     default:
       console.log('📦 block not supported', block);
       return null;
