@@ -41,9 +41,11 @@ export const ACTION_CARD_FRAGMENT = gql`
     mergedWith {
       id
       identifier
+      viewUrl
       plan {
         id
         shortName
+        name
         versionName
         viewUrl(clientUrl: $clientUrl)
       }
