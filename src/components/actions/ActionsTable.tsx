@@ -69,7 +69,7 @@ export default function ActionsTable({ actions }: { actions: Action[] }) {
                     statusName={
                       action.mergedWith
                         ? t('action-status-merged', getActionTermContext(plan))
-                        : action.status.name
+                        : undefined
                     }
                   />
                 )}
