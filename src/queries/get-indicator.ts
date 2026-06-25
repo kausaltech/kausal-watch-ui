@@ -289,6 +289,7 @@ export const GET_INDICATOR_DETAILS = gql`
     identifier
     name
     color
+    viewUrl
     scheduleContinuous
     status {
       id
@@ -303,6 +304,25 @@ export const GET_INDICATOR_DETAILS = gql`
     }
     statusSummary {
       identifier
+      label
+      color
+      isActive
+      isCompleted
+      sentiment
+    }
+    mergedWith {
+      id
+      identifier
+      viewUrl
+      plan {
+        id
+        shortName
+        viewUrl
+      }
+    }
+    plan {
+      id
+      viewUrl
     }
     completion
     categories {

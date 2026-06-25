@@ -15815,15 +15815,24 @@ export type IndicatorDetailsQuery = (
       )> }
       & { __typename: 'Dataset' }
     )>, actions: Array<(
-      { id: string, identifier: string, name: string, color: string | null, scheduleContinuous: boolean, completion: number | null, status: (
+      { id: string, identifier: string, name: string, color: string | null, viewUrl: string, scheduleContinuous: boolean, completion: number | null, status: (
         { id: string, identifier: string, name: string, color: string }
         & { __typename: 'ActionStatus' }
       ) | null, implementationPhase: (
         { id: string, identifier: string, name: string }
         & { __typename: 'ActionImplementationPhase' }
       ) | null, statusSummary: (
-        { identifier: ActionStatusSummaryIdentifier }
+        { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
         & { __typename: 'ActionStatusSummary' }
+      ), mergedWith: (
+        { id: string, identifier: string, viewUrl: string, plan: (
+          { id: string, shortName: string | null, viewUrl: string | null }
+          & { __typename: 'Plan' }
+        ) }
+        & { __typename: 'Action' }
+      ) | null, plan: (
+        { id: string, viewUrl: string | null }
+        & { __typename: 'Plan' }
       ), categories: Array<(
         { id: string, identifier: string, name: string, image: (
           { rendition: (
@@ -16010,15 +16019,24 @@ export type IndicatorDetailsQuery = (
 );
 
 export type ActionsTableRowFragmentFragment = (
-  { id: string, identifier: string, name: string, color: string | null, scheduleContinuous: boolean, completion: number | null, status: (
+  { id: string, identifier: string, name: string, color: string | null, viewUrl: string, scheduleContinuous: boolean, completion: number | null, status: (
     { id: string, identifier: string, name: string, color: string }
     & { __typename: 'ActionStatus' }
   ) | null, implementationPhase: (
     { id: string, identifier: string, name: string }
     & { __typename: 'ActionImplementationPhase' }
   ) | null, statusSummary: (
-    { identifier: ActionStatusSummaryIdentifier }
+    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
     & { __typename: 'ActionStatusSummary' }
+  ), mergedWith: (
+    { id: string, identifier: string, viewUrl: string, plan: (
+      { id: string, shortName: string | null, viewUrl: string | null }
+      & { __typename: 'Plan' }
+    ) }
+    & { __typename: 'Action' }
+  ) | null, plan: (
+    { id: string, viewUrl: string | null }
+    & { __typename: 'Plan' }
   ), categories: Array<(
     { id: string, identifier: string, name: string, image: (
       { rendition: (
