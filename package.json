@@ -221,7 +221,7 @@
   },
   "packageManager": "pnpm@10.33.0",
   "optionalDependencies": {
-    "@kausal-private/themes-private": "^0.5.111"
+    "@kausal-private/themes-private": "^0.5.112"
   },
   "lint-staged": {
     "*.{tsx,ts,js,css,scss,md,json}": "prettier --write"
