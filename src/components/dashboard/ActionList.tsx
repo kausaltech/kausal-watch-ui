@@ -167,6 +167,9 @@ const planFragment = gql`
         name
         parent {
           id
+          common @include(if: $relatedPlanActions) {
+            id
+          }
         }
         ...CommonCategoryFragment @include(if: $relatedPlanActions)
 
@@ -471,13 +474,14 @@ const ActionList = (props: ActionListProps) => {
       includeRelatedPlans
     );
   }, [categoryTypes, includeRelatedPlans]);
-  const primaryActionClassification = includeRelatedPlans
-    ? plan.primaryActionClassification?.common
-    : plan.primaryActionClassification;
-
-  const primaryCatType =
-    primaryActionClassification && 'id' in primaryActionClassification
-      ? cts.find((ct) => ct.id == primaryActionClassification?.id)
+  const primaryCommonIdentifier = plan.primaryActionClassification?.common?.identifier;
+  const primaryCategoryTypeId = plan.primaryActionClassification?.id;
+  const primaryCatType = includeRelatedPlans
+    ? primaryCommonIdentifier
+      ? cts.find((ct) => ct.identifier === primaryCommonIdentifier)
+      : undefined
+    : primaryCategoryTypeId
+      ? cts.find((ct) => ct.id === primaryCategoryTypeId)
       : undefined;
 
   const filterSections: ActionListFilterSection[] = useMemo(() => {
@@ -504,7 +508,7 @@ const ActionList = (props: ActionListProps) => {
     ActionListCategoryType,
     ActionListCategory,
     ActionListAction
-  >(actionsWithRps, cts, primaryCatType, headingHierarchyDepth);
+  >(actionsWithRps, cts, primaryCatType, headingHierarchyDepth, includeRelatedPlans);
   const enabledFilters = filterSections
     .map((section) => section.filters.filter((filter) => activeFilters[filter.id]))
     .flat();
