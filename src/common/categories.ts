@@ -93,6 +93,9 @@ export interface CategoryMappedAction<
 export interface CategoryMappedActionInput {
   categories: {
     id: string;
+    common?: {
+      id: string;
+    } | null;
   }[];
 }
 
@@ -104,9 +107,9 @@ export function mapActionCategories<
   actions: CategoryMappedActionInput[],
   categoryTypes: CategoryTypeHierarchy<Cat>[],
   primaryRootCT: CT | null = null,
-  depth: number
+  depth: number,
+  useCommonCategories: boolean = (primaryRootCT as any)?.__typename === 'CommonCategoryType'
 ) {
-  const useCommonCategories = primaryRootCT?.__typename === 'CommonCategoryType' ?? false;
   const categories = categoryTypes.map((ct) => ct.categories).flat();
 
   const categoriesById: Map<string, Cat> = new Map(categories.map((c) => [c.id, c]));
