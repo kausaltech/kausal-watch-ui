@@ -87,12 +87,6 @@ export enum AttributeTypeFormat {
 }
 
 /** An enumeration. */
-export enum CartographyProviderCredentialsProvider {
-  /** MapBox */
-  Mapbox = 'MAPBOX'
-}
-
-/** An enumeration. */
 export enum CategoryTypeSelectWidget {
   /** Multiple */
   Multiple = 'MULTIPLE',
@@ -962,6 +956,51 @@ export type CreatePledgeFeedbackMutationVariables = Exact<{
   input: UserFeedbackMutationInput;
 }>;
 
+export type PledgeSignUpMutation_pledge_signUp = { __typename: 'SignUpPayload', sent: boolean };
+
+export type PledgeSignUpMutation_pledge = { __typename: 'PledgeMutations', signUp: PledgeSignUpMutation_pledge_signUp | null };
+
+export type PledgeSignUpMutation = { __typename: 'Mutation', pledge: PledgeSignUpMutation_pledge };
+
+
+export type PledgeSignUpMutationVariables = Exact<{
+  email: string;
+  termsAccepted: boolean;
+  marketingAccepted: boolean;
+  anonUuid: string | null | undefined;
+}>;
+
+export type PledgeSignInMutation_pledge_signIn = { __typename: 'SignInPayload', sent: boolean };
+
+export type PledgeSignInMutation_pledge = { __typename: 'PledgeMutations', signIn: PledgeSignInMutation_pledge_signIn | null };
+
+export type PledgeSignInMutation = { __typename: 'Mutation', pledge: PledgeSignInMutation_pledge };
+
+
+export type PledgeSignInMutationVariables = Exact<{
+  email: string;
+  anonUuid: string | null | undefined;
+}>;
+
+export type PledgeVerifyPinMutation_pledge_verifyPin = { __typename: 'VerifyPinPayload', userToken: string, pledgeIds: Array<string> };
+
+export type PledgeVerifyPinMutation_pledge = { __typename: 'PledgeMutations', verifyPin: PledgeVerifyPinMutation_pledge_verifyPin | null };
+
+export type PledgeVerifyPinMutation = { __typename: 'Mutation', pledge: PledgeVerifyPinMutation_pledge };
+
+
+export type PledgeVerifyPinMutationVariables = Exact<{
+  email: string;
+  pin: string;
+}>;
+
+export type PublicUserForNavQuery_publicUser = { __typename: 'PublicUser', id: string, email: string | null };
+
+export type PublicUserForNavQuery = { __typename: 'Query', publicUser: PublicUserForNavQuery_publicUser | null };
+
+
+export type PublicUserForNavQueryVariables = Exact<{ [key: string]: never; }>;
+
 export type RegisterPublicUserMutation_pledge_registerUser = { __typename: 'RegisterPublicUserPayload', uuid: string };
 
 export type RegisterPublicUserMutation_pledge = { __typename: 'PledgeMutations', registerUser: RegisterPublicUserMutation_pledge_registerUser | null };
@@ -979,7 +1018,7 @@ export type CommitToPledgeMutation = { __typename: 'Mutation', pledge: CommitToP
 
 
 export type CommitToPledgeMutationVariables = Exact<{
-  user: string;
+  user: string | null | undefined;
   pledge: string | number;
   committed: boolean;
 }>;
@@ -992,7 +1031,7 @@ export type PublicUserDataMutation = { __typename: 'Mutation', pledge: PublicUse
 
 
 export type PublicUserDataMutationVariables = Exact<{
-  user: string;
+  user: string | null | undefined;
   key: string;
   value: string;
 }>;
@@ -1001,13 +1040,13 @@ export type PublicUserQuery_publicUser_commitments_pledge = { __typename: 'Pledg
 
 export type PublicUserQuery_publicUser_commitments = { __typename: 'PledgeCommitment', id: string, pledge: PublicUserQuery_publicUser_commitments_pledge | null };
 
-export type PublicUserQuery_publicUser = { __typename: 'PublicUser', id: string, uuid: string, userData: string, commitments: Array<PublicUserQuery_publicUser_commitments> | null };
+export type PublicUserQuery_publicUser = { __typename: 'PublicUser', id: string, uuid: string, email: string | null, userData: string, commitments: Array<PublicUserQuery_publicUser_commitments> | null };
 
 export type PublicUserQuery = { __typename: 'Query', publicUser: PublicUserQuery_publicUser | null };
 
 
 export type PublicUserQueryVariables = Exact<{
-  user: string;
+  user: string | null | undefined;
 }>;
 
 export type AttributesBlockAttributeFragment_categories = { __typename: 'Category', id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: ActionListQuery_planActions_categories_level | null, image: ActionListQuery_planActions_categories_image | null, indicators: Array<ActionListQuery_planActions_categories_indicators>, indicatorRelationships: Array<ActionListQuery_planActions_categories_indicatorRelationships>, iconImage: ActionListQuery_planActions_categories_iconImage | null, categoryPage: ActionListQuery_planActions_categories_categoryPage | null, type: ActionListQuery_planActions_categories_type, attributes: Array<ActionListQuery_planActions_categories_attributes>, parent: ActionListQuery_planActions_categories_parent | null };
@@ -1165,8 +1204,6 @@ type ActionListFilter_BooleanBlock_Fragment = { __typename: 'BooleanBlock', fiel
 type ActionListFilter_CardBlock_Fragment = { __typename: 'CardBlock', field: string };
 
 type ActionListFilter_CardListBlock_Fragment = { __typename: 'CardListBlock', field: string };
-
-type ActionListFilter_CartographyVisualisationBlock_Fragment = { __typename: 'CartographyVisualisationBlock', field: string };
 
 type ActionListFilter_CategoryListBlock_Fragment = { __typename: 'CategoryListBlock', field: string };
 
@@ -1393,7 +1430,6 @@ export type ActionListFilterFragment =
   | ActionListFilter_BooleanBlock_Fragment
   | ActionListFilter_CardBlock_Fragment
   | ActionListFilter_CardListBlock_Fragment
-  | ActionListFilter_CartographyVisualisationBlock_Fragment
   | ActionListFilter_CategoryListBlock_Fragment
   | ActionListFilter_CategoryPageAttributeTypeBlock_Fragment
   | ActionListFilter_CategoryPageBodyBlock_Fragment
@@ -1759,8 +1795,6 @@ export type DashboardIndicatorBlockFragment_blocks_CardBlock = { __typename: 'Ca
 
 export type DashboardIndicatorBlockFragment_blocks_CardListBlock = { __typename: 'CardListBlock', blockType: string };
 
-export type DashboardIndicatorBlockFragment_blocks_CartographyVisualisationBlock = { __typename: 'CartographyVisualisationBlock', blockType: string };
-
 export type DashboardIndicatorBlockFragment_blocks_CategoryListBlock = { __typename: 'CategoryListBlock', blockType: string };
 
 export type DashboardIndicatorBlockFragment_blocks_CategoryPageAttributeTypeBlock = { __typename: 'CategoryPageAttributeTypeBlock', blockType: string };
@@ -1986,7 +2020,6 @@ export type DashboardIndicatorBlockFragment_blocks =
   | DashboardIndicatorBlockFragment_blocks_BooleanBlock
   | DashboardIndicatorBlockFragment_blocks_CardBlock
   | DashboardIndicatorBlockFragment_blocks_CardListBlock
-  | DashboardIndicatorBlockFragment_blocks_CartographyVisualisationBlock
   | DashboardIndicatorBlockFragment_blocks_CategoryListBlock
   | DashboardIndicatorBlockFragment_blocks_CategoryPageAttributeTypeBlock
   | DashboardIndicatorBlockFragment_blocks_CategoryPageBodyBlock
@@ -2295,8 +2328,6 @@ type IndicatorListFilter_CardBlock_Fragment = { __typename: 'CardBlock', field: 
 
 type IndicatorListFilter_CardListBlock_Fragment = { __typename: 'CardListBlock', field: string };
 
-type IndicatorListFilter_CartographyVisualisationBlock_Fragment = { __typename: 'CartographyVisualisationBlock', field: string };
-
 type IndicatorListFilter_CategoryListBlock_Fragment = { __typename: 'CategoryListBlock', field: string };
 
 type IndicatorListFilter_CategoryPageAttributeTypeBlock_Fragment = { __typename: 'CategoryPageAttributeTypeBlock', field: string };
@@ -2522,7 +2553,6 @@ export type IndicatorListFilterFragment =
   | IndicatorListFilter_BooleanBlock_Fragment
   | IndicatorListFilter_CardBlock_Fragment
   | IndicatorListFilter_CardListBlock_Fragment
-  | IndicatorListFilter_CartographyVisualisationBlock_Fragment
   | IndicatorListFilter_CategoryListBlock_Fragment
   | IndicatorListFilter_CategoryPageAttributeTypeBlock_Fragment
   | IndicatorListFilter_CategoryPageBodyBlock_Fragment
@@ -2753,8 +2783,6 @@ export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_bl
 
 export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_CardListBlock = { __typename: 'CardListBlock', field: string };
 
-export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_CartographyVisualisationBlock = { __typename: 'CartographyVisualisationBlock', field: string };
-
 export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_CategoryListBlock = { __typename: 'CategoryListBlock', field: string };
 
 export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_CategoryPageAttributeTypeBlock = { __typename: 'CategoryPageAttributeTypeBlock', field: string };
@@ -2980,7 +3008,6 @@ export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_bl
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_BooleanBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_CardBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_CardListBlock
-  | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_CartographyVisualisationBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_CategoryListBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_CategoryPageAttributeTypeBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_CategoryPageBodyBlock
@@ -3087,8 +3114,6 @@ export type StreamFieldFragment_AdaptiveEmbedBlock_embed = { __typename: 'EmbedH
 export type StreamFieldFragment_CardListBlock_cards_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
 
 export type StreamFieldFragment_CardListBlock_cards = { __typename: 'CardBlock', heading: string | null, content: string | null, link: string | null, image: StreamFieldFragment_CardListBlock_cards_image | null };
-
-export type StreamFieldFragment_CartographyVisualisationBlock_account = { __typename: 'CartographyProviderCredentials', provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string };
 
 export type StreamFieldFragment_CategoryListBlock_categoryType_categories = { __typename: 'Category', id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: ActionListQuery_planActions_categories_level | null, image: ActionListQuery_planActions_categories_image | null, indicators: Array<ActionListQuery_planActions_categories_indicators>, indicatorRelationships: Array<ActionListQuery_planActions_categories_indicatorRelationships>, iconImage: ActionListQuery_planActions_categories_iconImage | null, categoryPage: ActionListQuery_planActions_categories_categoryPage | null, type: ActionListQuery_planActions_categories_type, attributes: Array<ActionListQuery_planActions_categories_attributes>, parent: ActionListQuery_planActions_categories_parent | null };
 
@@ -3221,8 +3246,6 @@ export type StreamFieldFragment_IndicatorGroupBlock_indicators_BooleanBlock = { 
 export type StreamFieldFragment_IndicatorGroupBlock_indicators_CardBlock = { __typename: 'CardBlock' };
 
 export type StreamFieldFragment_IndicatorGroupBlock_indicators_CardListBlock = { __typename: 'CardListBlock' };
-
-export type StreamFieldFragment_IndicatorGroupBlock_indicators_CartographyVisualisationBlock = { __typename: 'CartographyVisualisationBlock' };
 
 export type StreamFieldFragment_IndicatorGroupBlock_indicators_CategoryListBlock = { __typename: 'CategoryListBlock' };
 
@@ -3449,7 +3472,6 @@ export type StreamFieldFragment_IndicatorGroupBlock_indicators =
   | StreamFieldFragment_IndicatorGroupBlock_indicators_BooleanBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_CardBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_CardListBlock
-  | StreamFieldFragment_IndicatorGroupBlock_indicators_CartographyVisualisationBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_CategoryListBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_CategoryPageAttributeTypeBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_CategoryPageBodyBlock
@@ -3632,8 +3654,6 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_BooleanBlock = { _
 export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_CardBlock = { __typename: 'CardBlock' };
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_CardListBlock = { __typename: 'CardListBlock' };
-
-export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_CartographyVisualisationBlock = { __typename: 'CartographyVisualisationBlock' };
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_CategoryListBlock = { __typename: 'CategoryListBlock' };
 
@@ -3860,7 +3880,6 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_blocks =
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_BooleanBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_CardBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_CardListBlock
-  | StreamFieldFragment_IndicatorShowcaseBlock_blocks_CartographyVisualisationBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_CategoryListBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_CategoryPageAttributeTypeBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_CategoryPageBodyBlock
@@ -4107,8 +4126,6 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_CardBlock = { 
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_CardListBlock = { __typename: 'CardListBlock', blockType: string };
 
-export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_CartographyVisualisationBlock = { __typename: 'CartographyVisualisationBlock', blockType: string };
-
 export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_CategoryListBlock = { __typename: 'CategoryListBlock', blockType: string };
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_CategoryPageAttributeTypeBlock = { __typename: 'CategoryPageAttributeTypeBlock', blockType: string };
@@ -4334,7 +4351,6 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton =
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_BooleanBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_CardBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_CardListBlock
-  | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_CartographyVisualisationBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_CategoryListBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_CategoryPageAttributeTypeBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_CategoryPageBodyBlock
@@ -4523,8 +4539,6 @@ type StreamField_BooleanBlock_Fragment = { __typename: 'BooleanBlock', blockType
 type StreamField_CardBlock_Fragment = { __typename: 'CardBlock', blockType: string, field: string };
 
 type StreamField_CardListBlock_Fragment = { __typename: 'CardListBlock', heading: string | null, lead: string | null, blockType: string, field: string, cards: Array<StreamFieldFragment_CardListBlock_cards> | null };
-
-type StreamField_CartographyVisualisationBlock_Fragment = { __typename: 'CartographyVisualisationBlock', styleOverrides: string | null, blockType: string, field: string, cartographyStyle: string | null, account: StreamFieldFragment_CartographyVisualisationBlock_account };
 
 type StreamField_CategoryListBlock_Fragment = { __typename: 'CategoryListBlock', style: string | null, heading: string | null, lead: string | null, blockType: string, field: string, categoryType: StreamFieldFragment_CategoryListBlock_categoryType | null, category: StreamFieldFragment_CategoryListBlock_category | null };
 
@@ -4751,7 +4765,6 @@ export type StreamFieldFragment =
   | StreamField_BooleanBlock_Fragment
   | StreamField_CardBlock_Fragment
   | StreamField_CardListBlock_Fragment
-  | StreamField_CartographyVisualisationBlock_Fragment
   | StreamField_CategoryListBlock_Fragment
   | StreamField_CategoryPageAttributeTypeBlock_Fragment
   | StreamField_CategoryPageBodyBlock_Fragment
@@ -5244,8 +5257,6 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_CardListBlock = { __typename: 'CardListBlock', field: string };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_CartographyVisualisationBlock = { __typename: 'CartographyVisualisationBlock', field: string };
-
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_CategoryListBlock = { __typename: 'CategoryListBlock', field: string };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_CategoryPageAttributeTypeBlock = { __typename: 'CategoryPageAttributeTypeBlock', field: string };
@@ -5471,7 +5482,6 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_BooleanBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_CardBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_CardListBlock
-  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_CartographyVisualisationBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_CategoryListBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_CategoryPageAttributeTypeBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_CategoryPageBodyBlock
@@ -5925,8 +5935,6 @@ export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgr
 
 export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_CardListBlock = { __typename: 'CardListBlock' };
 
-export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_CartographyVisualisationBlock = { __typename: 'CartographyVisualisationBlock' };
-
 export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_CategoryListBlock = { __typename: 'CategoryListBlock' };
 
 export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_CategoryPageAttributeTypeBlock = { __typename: 'CategoryPageAttributeTypeBlock' };
@@ -6152,7 +6160,6 @@ export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgr
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_BooleanBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_CardBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_CardListBlock
-  | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_CartographyVisualisationBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_CategoryListBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_CategoryPageAttributeTypeBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_CategoryPageBodyBlock
@@ -6444,8 +6451,6 @@ export type ContentPageQuery_planPage_StaticPage_headerImage = { __typename: 'Im
 
 export type ContentPageQuery_planPage_StaticPage_body_AdaptiveEmbedBlock = { __typename: 'AdaptiveEmbedBlock', title: string | null, description: string | null, fullWidth: boolean | null, blockType: string, field: string, embed: StreamFieldFragment_AdaptiveEmbedBlock_embed | null };
 
-export type ContentPageQuery_planPage_StaticPage_body_CartographyVisualisationBlock = { __typename: 'CartographyVisualisationBlock', styleOverrides: string | null, blockType: string, field: string, cartographyStyle: string | null, account: StreamFieldFragment_CartographyVisualisationBlock_account };
-
 export type ContentPageQuery_planPage_StaticPage_body_CategoryListBlock = { __typename: 'CategoryListBlock', style: string | null, heading: string | null, lead: string | null, blockType: string, field: string, categoryType: StreamFieldFragment_CategoryListBlock_categoryType | null, category: StreamFieldFragment_CategoryListBlock_category | null };
 
 export type ContentPageQuery_planPage_StaticPage_body_CategoryTreeMapBlock = { __typename: 'CategoryTreeMapBlock', heading: string | null, lead: string | null, blockType: string, field: string, valueAttribute: StreamFieldFragment_CategoryTreeMapBlock_valueAttribute, treeMapCategoryType: StreamFieldFragment_CategoryTreeMapBlock_treeMapCategoryType };
@@ -6468,7 +6473,6 @@ export type ContentPageQuery_planPage_StaticPage_body_RichTextBlock = { __typena
 
 export type ContentPageQuery_planPage_StaticPage_body =
   | ContentPageQuery_planPage_StaticPage_body_AdaptiveEmbedBlock
-  | ContentPageQuery_planPage_StaticPage_body_CartographyVisualisationBlock
   | ContentPageQuery_planPage_StaticPage_body_CategoryListBlock
   | ContentPageQuery_planPage_StaticPage_body_CategoryTreeMapBlock
   | ContentPageQuery_planPage_StaticPage_body_CategoryTypeLevelListBlock
@@ -7490,7 +7494,7 @@ export type PlanContextQuery_plan_footer_items =
 
 export type PlanContextQuery_plan_footer = { __typename: 'Footer', items: Array<PlanContextQuery_plan_footer_items> };
 
-export type PlanContextQuery_plan_features = { __typename: 'PlanFeatures', allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hideFromSearchEngines: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean };
+export type PlanContextQuery_plan_features = { __typename: 'PlanFeatures', allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hideFromSearchEngines: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean, enableCommunityEngagement: boolean };
 
 export type PlanContextQuery_plan_allRelatedPlans_image_rendition = { __typename: 'ImageRendition', id: string, src: string };
 
@@ -7615,8 +7619,6 @@ export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_A
 export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_CardBlock = { __typename: 'CardBlock', field: string };
 
 export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_CardListBlock = { __typename: 'CardListBlock', field: string };
-
-export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_CartographyVisualisationBlock = { __typename: 'CartographyVisualisationBlock', field: string };
 
 export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_CategoryListBlock = { __typename: 'CategoryListBlock', field: string };
 
@@ -7843,7 +7845,6 @@ export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_A
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_BooleanBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_CardBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_CardListBlock
-  | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_CartographyVisualisationBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_CategoryListBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_CategoryPageAttributeTypeBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_CategoryPageBodyBlock
@@ -8214,8 +8215,6 @@ type PledgeBody_CardBlock_Fragment = { __typename: 'CardBlock', blockType: strin
 
 type PledgeBody_CardListBlock_Fragment = { __typename: 'CardListBlock', blockType: string, field: string };
 
-type PledgeBody_CartographyVisualisationBlock_Fragment = { __typename: 'CartographyVisualisationBlock', blockType: string, field: string };
-
 type PledgeBody_CategoryListBlock_Fragment = { __typename: 'CategoryListBlock', blockType: string, field: string };
 
 type PledgeBody_CategoryPageAttributeTypeBlock_Fragment = { __typename: 'CategoryPageAttributeTypeBlock', blockType: string, field: string };
@@ -8441,7 +8440,6 @@ export type PledgeBodyFragment =
   | PledgeBody_BooleanBlock_Fragment
   | PledgeBody_CardBlock_Fragment
   | PledgeBody_CardListBlock_Fragment
-  | PledgeBody_CartographyVisualisationBlock_Fragment
   | PledgeBody_CategoryListBlock_Fragment
   | PledgeBody_CategoryPageAttributeTypeBlock_Fragment
   | PledgeBody_CategoryPageBodyBlock_Fragment
@@ -8642,6 +8640,38 @@ export type TestPlanInstanceAndLocaleQuery = { __typename: 'Query', plan: TestPl
 
 
 export type TestPlanInstanceAndLocaleQueryVariables = Exact<{ [key: string]: never; }>;
+
+export type TestCacheHeadersQuery_plan = { __typename: 'Plan', id: string };
+
+export type TestCacheHeadersQuery = { __typename: 'Query', plan: TestCacheHeadersQuery_plan | null };
+
+
+export type TestCacheHeadersQueryVariables = Exact<{ [key: string]: never; }>;
+
+export type TestPlanAgnosticQuery_plansForHostname_Plan = { __typename: 'Plan' };
+
+export type TestPlanAgnosticQuery_plansForHostname_RestrictedPlanNode = { __typename: 'RestrictedPlanNode' };
+
+export type TestPlanAgnosticQuery_plansForHostname =
+  | TestPlanAgnosticQuery_plansForHostname_Plan
+  | TestPlanAgnosticQuery_plansForHostname_RestrictedPlanNode
+;
+
+export type TestPlanAgnosticQuery = { __typename: 'Query', plansForHostname: Array<TestPlanAgnosticQuery_plansForHostname> | null };
+
+
+export type TestPlanAgnosticQueryVariables = Exact<{
+  hostname: string;
+}>;
+
+export type TestRscCacheHeadersQuery_plan = { __typename: 'Plan', id: string };
+
+export type TestRscCacheHeadersQuery = { __typename: 'Query', plan: TestRscCacheHeadersQuery_plan | null };
+
+
+export type TestRscCacheHeadersQueryVariables = Exact<{
+  id: string | number;
+}>;
 
 export type IndicatorSparklineGraphDataQuery_plan_scenarios = { __typename: 'Scenario', id: string, identifier: string, name: string };
 

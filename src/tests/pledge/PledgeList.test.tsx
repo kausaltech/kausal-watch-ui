@@ -9,6 +9,14 @@ import { render } from '../test-utils';
 jest.mock('../../components/pledge/use-public-user');
 const mockedUsePublicUser = jest.mocked(usePublicUser);
 
+jest.mock('../../components/pledge/use-pledge-auth', () => ({
+  usePledgeNavUser: () => ({ userEmail: null, isAuthenticated: false, signOut: jest.fn() }),
+}));
+
+jest.mock('next/navigation', () => ({
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 jest.mock('@/common/links', () => ({
   usePrependPlanAndLocale: (path: string) => `/en${path}`,
 }));
@@ -31,8 +39,8 @@ function createMockPledge(overrides: Partial<Pledge> = {}) {
     commitmentCount: 10,
     image: {
       __typename: 'Image' as const,
-      large: { __typename: 'ImageRendition' as const, src: '/large.jpg' },
-      full: { __typename: 'ImageRendition' as const, src: '/full.jpg' },
+      small: { __typename: 'ImageRendition' as const, src: '/small.jpg' },
+      fullSmall: { __typename: 'ImageRendition' as const, src: '/full-small.jpg' },
       altText: 'Test image',
       rendition: { __typename: 'ImageRendition' as const, src: '/rendition.jpg' },
     },
@@ -53,6 +61,7 @@ const defaultHookReturn = {
   commitToPledge: jest.fn(),
   uncommitFromPledge: jest.fn(),
   getCommitmentCountAdjustment: jest.fn(zeroCommitment),
+  mergePreExistingPledgeSlugs: jest.fn(),
 };
 
 beforeEach(() => {
