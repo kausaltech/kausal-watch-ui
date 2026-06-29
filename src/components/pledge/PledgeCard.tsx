@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 
 import NextLink from 'next/link';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
 
@@ -292,7 +293,7 @@ function InteractivePledgeCard({
   const t = useTranslations();
   const pledgeLink = usePrependPlanAndLocale(`${PLEDGE_PATH}/${slug}`);
 
-  const handleCommitButtonClick = (e: React.MouseEvent) => {
+  const handleCommitButtonClick = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     onCommitClick(isCommitted);

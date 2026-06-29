@@ -10,7 +10,7 @@ import { Container, Spinner } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import type { GetPledgeQuery } from '@/common/__generated__/graphql';
+import type { PledgeQuery } from '@/common/__generated__/graphql';
 import { usePrependPlanAndLocale } from '@/common/links';
 import { excludeNullish } from '@/common/utils';
 import Accordion from '@/components/common/Accordion';
@@ -26,9 +26,10 @@ import ConfirmPledge from './ConfirmPledge';
 import PledgeFeedback from './PledgeFeedback';
 import PledgeImpactComparison from './PledgeImpactComparison';
 import { ShareButton } from './ShareButton';
+import { usePledgeNavUser } from './use-pledge-auth';
 import { usePublicUser } from './use-public-user';
 
-type PledgeData = NonNullable<NonNullable<GetPledgeQuery['plan']>['pledge']>;
+type PledgeData = NonNullable<NonNullable<PledgeQuery['plan']>['pledge']>;
 
 type Props = {
   pledge: PledgeData;
@@ -270,6 +271,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
   const [isClient, setIsClient] = useState(false);
   const t = useTranslations();
   const pledgeListLink = usePrependPlanAndLocale(PLEDGE_PATH);
+  const { isAuthenticated } = usePledgeNavUser();
   const {
     userData,
     committedSlugs,
@@ -414,6 +416,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
         commitmentCount={pledge.commitmentCount}
         formFields={getDefaultFormFields(t)}
         userData={userData}
+        isSignedIn={isAuthenticated}
       />
     </>
   );

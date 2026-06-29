@@ -1,10 +1,18 @@
 {
   "possibleTypes": {
+    "AddInputPortPayload": [
+      "InputPortType",
+      "OperationInfo"
+    ],
     "AddNodeInputPortPayload": [
       "InputPortType",
       "OperationInfo"
     ],
     "AddNodeOutputPortPayload": [
+      "OperationInfo",
+      "OutputPortType"
+    ],
+    "AddOutputPortPayload": [
       "OperationInfo",
       "OutputPortType"
     ],
@@ -180,6 +188,11 @@
       "OperationInfo"
     ],
     "UpdateNodePayload": [
+      "ActionNode",
+      "Node",
+      "OperationInfo"
+    ],
+    "UpdatePayload": [
       "ActionNode",
       "Node",
       "OperationInfo"

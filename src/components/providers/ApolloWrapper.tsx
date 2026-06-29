@@ -24,12 +24,29 @@ import {
   headersMiddleware,
   localeMiddleware,
 } from '../../utils/apollo.utils';
+import { clearPledgeAuth } from '../pledge/use-pledge-auth';
 
 const authMiddleware = setContext((_, { sessionToken, headers: initialHeaders = {} }) => {
   return {
     headers: {
       ...initialHeaders,
       ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
+    },
+  };
+});
+
+// Injects the pledge bearer token for authenticated public users.
+const pledgeAuthMiddleware = setContext((_, context) => {
+  if (isServer || context.sessionToken) return {};
+
+  const pledgeToken = localStorage.getItem('pledge-auth-token');
+
+  if (!pledgeToken) return {};
+
+  return {
+    headers: {
+      ...(context.headers ?? {}),
+      'X-Public-User-Token': pledgeToken,
     },
   };
 });
@@ -42,7 +59,16 @@ function makeClient(config: {
   noProxy?: boolean;
 }) {
   const { initialLocale, sessionToken, planIdentifier, planDomain, noProxy } = config;
-  const unauthErrorLink = createErrorLink(() => {
+  const unauthErrorLink = createErrorLink((errors) => {
+    // Backend returns UNAUTHENTICATED with an `invalid_token:` message for
+    // expired/invalid pledge bearer tokens. Clear the pledge token locally
+    // rather than triggering a full next-auth sign-out redirect, which would
+    // loop because the token persists in localStorage across the redirect.
+    const hasPledgeTokenError = errors.some((e) => e.message.startsWith('invalid_token'));
+    if (hasPledgeTokenError) {
+      clearPledgeAuth();
+      return;
+    }
     signOut({ redirect: true });
   });
   return new ApolloClient({
@@ -59,6 +85,7 @@ function makeClient(config: {
       createSentryLink(getWatchGraphQLUrl()),
       localeMiddleware,
       authMiddleware,
+      pledgeAuthMiddleware,
       headersMiddleware,
       ...(isServer
         ? [

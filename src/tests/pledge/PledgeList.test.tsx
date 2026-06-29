@@ -9,6 +9,10 @@ import { render } from '../test-utils';
 jest.mock('../../components/pledge/use-public-user');
 const mockedUsePublicUser = jest.mocked(usePublicUser);
 
+jest.mock('../../components/pledge/use-pledge-auth', () => ({
+  usePledgeNavUser: () => ({ userEmail: null, isAuthenticated: false, signOut: jest.fn() }),
+}));
+
 jest.mock('@/common/links', () => ({
   usePrependPlanAndLocale: (path: string) => `/en${path}`,
 }));
@@ -49,6 +53,7 @@ const defaultHookReturn = {
   commitToPledge: jest.fn(),
   uncommitFromPledge: jest.fn(),
   getCommitmentCountAdjustment: jest.fn(() => 0 as 0),
+  mergePreExistingPledgeSlugs: jest.fn(),
 };
 
 beforeEach(() => {
