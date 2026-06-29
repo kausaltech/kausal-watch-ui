@@ -1,59 +1,22 @@
-import React from 'react';
+import type React from 'react';
 
 import { gql } from '@apollo/client';
-import { type MockedResponse } from '@apollo/client/testing';
+import { MockLink } from '@apollo/client/testing';
 import { MockedProvider } from '@apollo/client/testing/react';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { usePublicUser } from '../../components/pledge/use-public-user';
-
-const REGISTER_PUBLIC_USER = gql`
-  mutation RegisterPublicUser {
-    pledge {
-      registerUser {
-        uuid
-      }
-    }
-  }
-`;
-
-const COMMIT_TO_PLEDGE = gql`
-  mutation CommitToPledge($user: UUID!, $pledge: ID!, $committed: Boolean!) {
-    pledge {
-      commitToPledge(committed: $committed, pledgeId: $pledge, userUuid: $user) {
-        committed
-      }
-    }
-  }
-`;
-
-const GET_PUBLIC_USER = gql`
-  query PublicUser($user: UUID!) {
-    publicUser(uuid: $user) {
-      id
-      uuid
-      userData
-      commitments {
-        id
-        pledge {
-          id
-          slug
-          name
-        }
-      }
-    }
-  }
-`;
+import {
+  COMMIT_TO_PLEDGE,
+  GET_PUBLIC_USER,
+  REGISTER_PUBLIC_USER,
+  usePublicUser,
+} from '../../components/pledge/use-public-user';
 
 const TEST_UUID = 'test-uuid-1234';
 
-function createWrapper(mocks: MockedResponse[] = []) {
+function createWrapper(mocks: MockLink.MockedResponse[] = []) {
   return function Wrapper({ children }: { children: React.ReactNode }) {
-    return (
-      <MockedProvider mocks={mocks} addTypename={false}>
-        {children}
-      </MockedProvider>
-    );
+    return <MockedProvider mocks={mocks}>{children}</MockedProvider>;
   };
 }
 
@@ -76,7 +39,7 @@ describe('usePublicUser', () => {
     it('reads UUID from localStorage on init', () => {
       localStorage.setItem('pledge-user-uuid', TEST_UUID);
 
-      const mocks: MockedResponse[] = [
+      const mocks: MockLink.MockedResponse[] = [
         {
           request: {
             query: GET_PUBLIC_USER,
@@ -105,7 +68,7 @@ describe('usePublicUser', () => {
     it('fetches user data when UUID exists in localStorage', async () => {
       localStorage.setItem('pledge-user-uuid', TEST_UUID);
 
-      const mocks: MockedResponse[] = [
+      const mocks: MockLink.MockedResponse[] = [
         {
           request: {
             query: GET_PUBLIC_USER,
@@ -154,7 +117,7 @@ describe('usePublicUser', () => {
     it('returns 0 for unchanged commitments', async () => {
       localStorage.setItem('pledge-user-uuid', TEST_UUID);
 
-      const mocks: MockedResponse[] = [
+      const mocks: MockLink.MockedResponse[] = [
         {
           request: {
             query: GET_PUBLIC_USER,
@@ -195,7 +158,7 @@ describe('usePublicUser', () => {
 
   describe('commitToPledge', () => {
     it('registers a new user when no UUID exists', async () => {
-      const mocks: MockedResponse[] = [
+      const mocks: MockLink.MockedResponse[] = [
         {
           request: { query: REGISTER_PUBLIC_USER },
           result: {

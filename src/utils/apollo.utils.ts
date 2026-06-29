@@ -50,7 +50,9 @@ function logError(
   });
 }
 
-export function createErrorLink(onUnauthenticated?: () => void) {
+type UnauthError = { message: string; extensions?: Record<string, unknown> };
+
+export function createErrorLink(onUnauthenticated?: (errors: UnauthError[]) => void) {
   return new ErrorLink(({ error, operation }) => {
     if (CombinedGraphQLErrors.is(error)) {
       error.errors.forEach((gqlError) => {
@@ -59,8 +61,11 @@ export function createErrorLink(onUnauthenticated?: () => void) {
         });
       });
 
-      if (onUnauthenticated && error.errors.some((e) => e.extensions?.code === 'UNAUTHENTICATED')) {
-        onUnauthenticated();
+      if (onUnauthenticated) {
+        const unauthErrors = error.errors.filter((e) => e.extensions?.code === 'UNAUTHENTICATED');
+        if (unauthErrors.length > 0) {
+          onUnauthenticated(unauthErrors);
+        }
       }
     } else {
       logError(operation, error.message, error, {
