@@ -48,7 +48,7 @@ const isDashboardHeaderBlock = (
 ): block is DashboardBlock & DashboardHeaderBlock =>
   (block as { __typename?: string }).__typename === 'DashboardHeaderBlock';
 
-const isDashboardCardBlock = (block: DashboardBlock) => !isDashboardHeaderBlock(block);
+const isDashboardCardBlock = (block: DashboardBlock): boolean => !isDashboardHeaderBlock(block);
 
 interface DashboardRowBlockProps extends Omit<DashboardRowBlockFragment, 'rawValue'> {
   blocks: DashboardBlock[];
