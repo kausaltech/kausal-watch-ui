@@ -39,8 +39,8 @@ importers:
         specifier: ^2.32.0
         version: 2.35.2(mapbox-gl@3.23.1)(webpack@5.106.2(@swc/core@1.15.8(@swc/helpers@0.5.17))(esbuild@0.27.7))
       '@kausal/themes':
-        specifier: ^0.8.19
-        version: 0.8.19
+        specifier: ^0.8.22
+        version: 0.8.22
       '@mui/material':
         specifier: ^7.3.7
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -533,8 +533,8 @@ importers:
         version: 5.106.2(@swc/core@1.15.8(@swc/helpers@0.5.17))(esbuild@0.27.7)
     optionalDependencies:
       '@kausal-private/themes-private':
-        specifier: ^0.5.112
-        version: 0.5.112
+        specifier: ^0.5.113
+        version: 0.5.113
 
   kausal_common:
     dependencies:
@@ -549,7 +549,7 @@ importers:
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
       '@kausal/themes':
         specifier: '*'
-        version: 0.8.19
+        version: 0.8.22
       '@mui/material':
         specifier: '>=7'
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -2400,8 +2400,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@kausal-private/themes-private@0.5.112':
-    resolution: {integrity: sha512-em9BYhOtFycmhwBjKOclJJviU8snrXPWez53CwFxngHP72Beq7wVQyaME/0tbH5psdtzZiEBbI5CDUbwdYR9hA==}
+  '@kausal-private/themes-private@0.5.113':
+    resolution: {integrity: sha512-D9Yv1YINyDa5/cLVX/yu2Z3/epzF6t6CkR1nkTTv9Ic+XCp+nYsbBqphORvJjf4EccqUqzDTEyrRLDrAYi00+g==}
 
   '@kausal/mapboxgl-legend@1.7.2':
     resolution: {integrity: sha512-qmjchiPrcer3gCLkln7z2e0o8i5XK2BNRbMMdr6/KHMxDTSeOOaN1PvRjXzrTAtewOyxztHxnyYH9KaoC5LJdQ==}
@@ -2409,8 +2409,8 @@ packages:
   '@kausal/plotly-custom@2.35.2':
     resolution: {integrity: sha512-LTuhiMsKd36/1y2zebV9RcskUqLbKdPFiN0H2C/7UMUjtIW9sI+JkVL0d0jz6VlmQdhk6xoVA6pcFiXEa+0UPg==}
 
-  '@kausal/themes@0.8.19':
-    resolution: {integrity: sha512-LqMy8yRpwGsQZy3svVjGeua+bloeKCUDkfTOfe7au90IyYrMpOE6BHr20vYJtEpisJTSpmtHRwSBqJUhlBagEg==}
+  '@kausal/themes@0.8.22':
+    resolution: {integrity: sha512-lGl1YbYSu1Y0Hn+0AFIfbKsKUH3RbQ2SbPMNhd9CJ+u+OtDEmHETG/7LqTQlSc8Ds2ztVKy4frD4Mmuub+Fp7A==}
 
   '@mapbox/geojson-rewind@0.5.2':
     resolution: {integrity: sha512-tJaT+RbYGJYStt7wI3cq4Nl4SXxG8W7JDG5DMJu97V25RnbNg3QtQtf+KD+VLjNpWKYsRvXDNmNrBgEETr1ifA==}
@@ -10979,7 +10979,7 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@cyclonedx/cyclonedx-library@10.0.0(ajv-formats-draft2019@1.6.1(ajv@8.17.1))(ajv-formats@3.0.1(ajv@6.15.0))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)':
+  '@cyclonedx/cyclonedx-library@10.0.0(ajv-formats-draft2019@1.6.1(ajv@6.15.0))(ajv-formats@3.0.1(ajv@6.15.0))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)':
     optionalDependencies:
       ajv: 8.17.1
       ajv-formats: 3.0.1(ajv@8.17.1)
@@ -10991,7 +10991,7 @@ snapshots:
 
   '@cyclonedx/webpack-plugin@5.3.2(webpack@5.106.2(@swc/core@1.15.8(@swc/helpers@0.5.17))(esbuild@0.27.7))':
     dependencies:
-      '@cyclonedx/cyclonedx-library': 10.0.0(ajv-formats-draft2019@1.6.1(ajv@8.17.1))(ajv-formats@3.0.1(ajv@6.15.0))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)
+      '@cyclonedx/cyclonedx-library': 10.0.0(ajv-formats-draft2019@1.6.1(ajv@6.15.0))(ajv-formats@3.0.1(ajv@6.15.0))(ajv@8.17.1)(libxmljs2@0.37.0)(packageurl-js@2.0.1)(spdx-expression-parse@4.0.0)(xmlbuilder2@3.1.1)
       normalize-package-data: 7.0.0
       packageurl-js: 2.0.1
       spdx-expression-parse: 4.0.0
@@ -12358,7 +12358,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@kausal-private/themes-private@0.5.112':
+  '@kausal-private/themes-private@0.5.113':
     optional: true
 
   '@kausal/mapboxgl-legend@1.7.2': {}
@@ -12423,7 +12423,7 @@ snapshots:
       - supports-color
       - webpack
 
-  '@kausal/themes@0.8.19': {}
+  '@kausal/themes@0.8.22': {}
 
   '@mapbox/geojson-rewind@0.5.2':
     dependencies:
