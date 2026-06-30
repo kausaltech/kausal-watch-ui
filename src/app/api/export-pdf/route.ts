@@ -2,8 +2,8 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import * as Sentry from '@sentry/nextjs';
 
-import { ACTIONS_PATH } from '@/constants/routes';
 import { getPdfExportServiceUrl } from '@/utils/pdf-export';
+import { getSitemapUrlsForOrigin } from '@/utils/sitemap.server';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -22,6 +22,16 @@ export const fetchCache = 'default-no-store';
 //   - Adding a proper job queue (e.g. Redis-backed) for cross-process limiting
 const MAX_CONCURRENT_EXPORTS = 4;
 let inFlight = 0;
+
+type PdfExportRequestBody = {
+  path: string;
+  locale?: string;
+  timezone?: string;
+};
+
+function getStringField(value: unknown): string | undefined {
+  return typeof value === 'string' ? value : undefined;
+}
 
 function isValidTimezone(timezone: unknown): timezone is string {
   if (typeof timezone !== 'string' || timezone.length === 0) return false;
@@ -48,6 +58,17 @@ function buildHeaderHtml(locale: string, timezone?: string): string {
 <div class="text right" style="font-size: 14px;"><span class="title"></span></div>`;
 }
 
+function getComparableUrl(url: string): string | undefined {
+  let parsedUrl: URL;
+  try {
+    parsedUrl = new URL(url);
+  } catch {
+    return undefined;
+  }
+  const path = parsedUrl.pathname.replace(/\/+$/, '');
+  return `${parsedUrl.origin}${path}`;
+}
+
 export async function POST(request: NextRequest) {
   const gotenbergUrl = getPdfExportServiceUrl();
   if (!gotenbergUrl) {
@@ -66,18 +87,27 @@ export async function POST(request: NextRequest) {
   inFlight++;
 
   try {
-    let body: { path: string; locale?: string; timezone?: string };
+    let body: PdfExportRequestBody;
     try {
       const contentType = request.headers.get('content-type') || '';
       if (contentType.includes('application/x-www-form-urlencoded')) {
         const formData = await request.formData();
         body = {
-          path: formData.get('path') as string,
-          locale: (formData.get('locale') as string) || undefined,
-          timezone: (formData.get('timezone') as string) || undefined,
+          path: getStringField(formData.get('path')) ?? '',
+          locale: getStringField(formData.get('locale')),
+          timezone: getStringField(formData.get('timezone')),
         };
       } else {
-        body = await request.json();
+        const jsonBody: unknown = await request.json();
+        if (!jsonBody || typeof jsonBody !== 'object') {
+          return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+        }
+        const requestBody = jsonBody as Record<string, unknown>;
+        body = {
+          path: getStringField(requestBody.path) ?? '',
+          locale: getStringField(requestBody.locale),
+          timezone: getStringField(requestBody.timezone),
+        };
       }
     } catch {
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
@@ -85,21 +115,14 @@ export async function POST(request: NextRequest) {
 
     const { path, locale = 'en' } = body;
     const timezone = isValidTimezone(body.timezone) ? body.timezone : undefined;
-    if (!path || typeof path !== 'string' || !path.startsWith('/')) {
+    if (
+      !path ||
+      typeof path !== 'string' ||
+      !path.startsWith('/') ||
+      path.startsWith('//') ||
+      path.includes('\\')
+    ) {
       return NextResponse.json({ error: 'Invalid path parameter' }, { status: 400 });
-    }
-
-    // Only allow action detail pages to be exported. The path (after optional
-    // locale / plan prefix segments) must contain /actions/<id>.  This prevents
-    // callers from generating PDFs of arbitrary pages and ensures the export is
-    // scoped to the intended feature surface.
-    const segments = path.split('/').filter(Boolean);
-    const actionsIdx = segments.indexOf(ACTIONS_PATH.replace('/', ''));
-    if (actionsIdx === -1 || actionsIdx === segments.length - 1) {
-      return NextResponse.json(
-        { error: 'PDF export is only supported for action detail pages' },
-        { status: 403 }
-      );
     }
 
     // Construct the full URL that Gotenberg's Chromium will fetch.
@@ -110,11 +133,30 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing Host header' }, { status: 400 });
     }
 
-    const separator = path.includes('?') ? '&' : '?';
-    const pageUrl = `${forwardedProto}://${host}${path}${separator}print=true`;
+    const origin = `${forwardedProto}://${host}`;
+    const requestedUrl = new URL(path, origin);
+    const sitemapUrls = await getSitemapUrlsForOrigin(origin, {
+      includeAllPlans: true,
+      includeLocaleAndBasePathVariants: true,
+    });
+    const allowedUrls = new Set(
+      sitemapUrls.map(getComparableUrl).filter((url): url is string => !!url)
+    );
+    const comparableRequestedUrl = getComparableUrl(requestedUrl.href);
+
+    if (!comparableRequestedUrl || !allowedUrls.has(comparableRequestedUrl)) {
+      return NextResponse.json(
+        { error: 'PDF export is only supported for public sitemap pages' },
+        { status: 403 }
+      );
+    }
+
+    const printUrl = new URL(requestedUrl.href);
+    printUrl.searchParams.set('print', 'true');
+    const pageUrl = printUrl.href;
 
     // Omit ?print=true from displayUrl (otherwise we could just use <span class="url"></span> in the footer)
-    const displayUrl = `${forwardedProto}://${host}${path}`;
+    const displayUrl = `${origin}${path}`;
     const headerHtml = buildHeaderHtml(locale, timezone);
     const footerHtml = `<div class="text left grow" style="font-size: 14px;">${displayUrl}</div>
 <div class="text right" style="font-size: 14px;"><span class="pageNumber"></span> / <span class="totalPages"></span></div>`;

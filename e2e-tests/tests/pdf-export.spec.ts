@@ -166,27 +166,49 @@ test.describe('pdf-export', { annotation: annotations }, () => {
     await expect(errorMessage).toBeVisible({ timeout: 10_000 });
   });
 
-  test('api rejects non-action paths with 403', async ({ ctx }) => {
-    const response = await (
-      await import('@playwright/test')
-    ).request.newContext({
-      baseURL: ctx.baseURL,
+  test('api accepts non-action sitemap paths', async ({ request, ctx }) => {
+    const indicatorListPath = ctx.getIndicatorListMenuItem()?.page.urlPath ?? '/indicators';
+
+    const res = await request.post(`${ctx.baseURL}/api/export-pdf`, {
+      data: { path: indicatorListPath, locale: ctx.plan.primaryLanguage },
     });
 
-    const res = await response.post('/api/export-pdf', {
-      data: { path: '/indicators/1', locale: 'en' },
+    if (res.status() === 503) {
+      test.skip(true, 'PDF export service is not configured');
+    }
+
+    expect(res.status()).toBe(200);
+    expect(res.headers()['content-type']).toContain('application/pdf');
+  });
+
+  test('api rejects paths outside the sitemap', async ({ request, ctx }) => {
+    const res = await request.post(`${ctx.baseURL}/api/export-pdf`, {
+      data: { path: '/not-in-the-sitemap-pdf-export-test', locale: ctx.plan.primaryLanguage },
     });
 
-    // The route returns 503 when GOTENBERG_URL is not configured,
-    // before it ever reaches the path validation that returns 403.
     if (res.status() === 503) {
       test.skip(true, 'PDF export service is not configured');
     }
 
     expect(res.status()).toBe(403);
     const body = await res.json();
-    expect(body.error).toContain('action detail pages');
+    expect(body.error).toContain('public sitemap pages');
+  });
 
-    await response.dispose();
+  test('api rejects base-path-like paths outside the sitemap', async ({ request, ctx }) => {
+    const res = await request.post(`${ctx.baseURL}/api/export-pdf`, {
+      data: {
+        path: '/not-a-plan/actions/not-in-the-sitemap-pdf-export-test',
+        locale: ctx.plan.primaryLanguage,
+      },
+    });
+
+    if (res.status() === 503) {
+      test.skip(true, 'PDF export service is not configured');
+    }
+
+    expect(res.status()).toBe(403);
+    const body = await res.json();
+    expect(body.error).toContain('public sitemap pages');
   });
 });
