@@ -6,8 +6,6 @@ import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import { transientOptions } from '@common/themes/styles/styled';
-
 import RichText from '@/components/common/RichText';
 
 import { ImageCredit } from '../common/ImageCredit';
@@ -130,37 +128,6 @@ const MainCard = styled(HeroCard)`
 
 const StyledImageCredit = styled(ImageCredit)`
   border-top-right-radius: ${({ theme }) => theme.cardBorderRadius};
-`;
-
-const StyledContainer = styled(Container, transientOptions)<{
-  $backgroundColour?: string | null;
-}>`
-  --image-height: 70vh;
-
-  position: relative;
-  padding-top: ${(props) => props.theme.spaces.s100};
-  margin-bottom: ${(props) => props.theme.spaces.s300};
-
-  @media (min-width: ${(props) => props.theme.breakpointSm}) {
-    padding-top: ${(props) => props.theme.spaces.s300};
-  }
-
-  @media (min-height: 800px) {
-    --image-height: 60vh;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100vw;
-    height: calc(var(--image-height) / 2 + 50% + ${({ theme }) => theme.spaces.s150});
-    max-height: calc(100% - ${({ theme }) => theme.spaces.s150});
-    background-color: ${({ $backgroundColour, theme }) => $backgroundColour || theme.neutralLight};
-    z-index: -1;
-  }
 `;
 
 interface HeroSmallImageProps {
