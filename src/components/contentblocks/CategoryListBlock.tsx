@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import type { Theme } from '@kausal/themes/types';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
@@ -12,9 +13,10 @@ import { Link } from '@/common/links';
 import Card from '@/components/common/Card';
 import RichText from '@/components/common/RichText';
 import { SectionHeader } from '@/components/contentblocks/ActionListBlock';
-import { getReadableThemeTextColor } from './colorUtils';
 import { useFallbackCategories } from '@/context/categories';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
+
+import { getReadableThemeTextColor } from './colorUtils';
 
 const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
   theme.section.categoryList?.color ||
@@ -80,7 +82,7 @@ const CategoryListHeader = styled(SectionHeader)`
 `;
 
 const CardHeader = styled.h3`
-  color: ${(props) => props.theme.neutralDark};
+  color: ${(props) => props.theme.textColor.primary};
   font-size: ${(props) => props.theme.fontSizeMd};
   line-height: ${(props) => props.theme.lineHeightMd};
 `;
