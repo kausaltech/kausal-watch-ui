@@ -24,13 +24,17 @@ const apolloClient = new ApolloClient({
 });
 
 const GET_SITEMAP_CONTENTS = gql`
-  query GetSitemap($id: ID!) {
+  query GetSitemap($id: ID!, $hostname: String) {
     planIndicators(plan: $id) {
       id
     }
     plan(id: $id) {
       primaryLanguage
       otherLanguages
+      domain(hostname: $hostname) {
+        hostname
+        basePath
+      }
       actions {
         identifier
       }
@@ -77,9 +81,22 @@ type SitemapUrlOptions = {
   includeLocaleAndBasePathVariants?: boolean;
 };
 
+type DomainLike = { hostname: string; basePath: string | null } | null;
+
+// The subset of plan fields the URL-variant logic needs. Both the
+// `plansForHostname` plan (which carries the full `domains` list) and the
+// single-plan `GetSitemap` result (which only resolves `domain` for the
+// requested hostname) satisfy this shape.
+type PlanSitemapInfo = {
+  primaryLanguage: string;
+  otherLanguages?: string[] | null;
+  domain?: DomainLike;
+  domains?: ReadonlyArray<DomainLike> | null;
+};
+
 export function getSitemapUrlVariantsForPlan(
   path: string,
-  plan: PlanForHostname,
+  plan: PlanSitemapInfo,
   origin: string,
   hostname: string
 ): string[] {
@@ -89,7 +106,11 @@ export function getSitemapUrlVariantsForPlan(
   const matchingDomains = [plan.domain, ...(plan.domains ?? [])].filter(
     (domain) => domain?.hostname === hostname
   );
-  const hasRootDomain = matchingDomains.some((domain) => domain?.basePath === null);
+  // A domain serves the plan at the root when it has no base path. The backend
+  // represents "no base path" as either null (e.g. via `plansForHostname`) or
+  // an empty string (e.g. wildcard domains resolved via `domain(hostname:)`),
+  // so treat both as a root domain.
+  const hasRootDomain = matchingDomains.some((domain) => !domain?.basePath);
   const basePaths = [
     ...new Set(
       matchingDomains
@@ -150,7 +171,7 @@ async function getPlanUrls(
   const { data, error } = await tryRequest<GetSitemapQuery>(
     apolloClient.query<GetSitemapQuery, GetSitemapQueryVariables>({
       query: GET_SITEMAP_CONTENTS,
-      variables: { id: plan.id },
+      variables: { id: plan.id, hostname },
       fetchPolicy: 'no-cache',
     })
   );
@@ -202,4 +223,42 @@ export async function getSitemapUrlsForOrigin(
   );
 
   return [...new Set(planUrls.flat())];
+}
+
+export async function getSitemapUrlsForPlan(
+  origin: string,
+  planId: string,
+  options: SitemapUrlOptions = {}
+): Promise<string[]> {
+  const url = new URL(origin);
+
+  const { data, error } = await tryRequest<GetSitemapQuery>(
+    apolloClient.query<GetSitemapQuery, GetSitemapQueryVariables>({
+      query: GET_SITEMAP_CONTENTS,
+      // Resolve the plan's domain for the requesting hostname so the base-path
+      // (or lack thereof) matches how the page is actually served on this host.
+      // This works for wildcard/staging hosts that are not registered as a
+      // dedicated plan domain, where the plan is served at the root.
+      variables: { id: planId, hostname: url.hostname },
+      fetchPolicy: 'no-cache',
+    })
+  );
+
+  if (error || !data?.plan) {
+    return [];
+  }
+
+  const plan = data.plan;
+
+  return [
+    ...new Set(
+      getPlanPaths(data).flatMap((path) => {
+        if (!options.includeLocaleAndBasePathVariants) {
+          return path === '/' ? url.origin : `${url.origin}${path}`;
+        }
+
+        return getSitemapUrlVariantsForPlan(path, plan, url.origin, url.hostname);
+      })
+    ),
+  ];
 }

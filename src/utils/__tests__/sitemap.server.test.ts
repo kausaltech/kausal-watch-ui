@@ -38,6 +38,15 @@ describe('getSitemapUrlVariantsForPlan', () => {
     ]);
   });
 
+  it('treats an empty base path as a root domain', () => {
+    // `domain(hostname:)` resolves wildcard/staging hosts to an empty base path
+    // rather than null; these should still be treated as root domains.
+    expect(getSitemapUrlVariantsForPlan('/actions/foo', makePlan(''), origin, hostname)).toEqual([
+      'https://example.com/actions/foo',
+      'https://example.com/de/actions/foo',
+    ]);
+  });
+
   it('generates both root and base-path variants when both matching domains exist', () => {
     expect(
       getSitemapUrlVariantsForPlan('/actions/foo', makePlan(null, ['climate']), origin, hostname)

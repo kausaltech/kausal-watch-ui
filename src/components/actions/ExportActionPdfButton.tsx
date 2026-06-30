@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import { type MouseEvent, useCallback, useState } from 'react';
 
 import { usePathname } from 'next/navigation';
 
-import styled from '@emotion/styled';
 import { Button, Menu, MenuItem } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
+
+import styled from '@emotion/styled';
+
 import { useLocale, useTranslations } from 'next-intl';
 import { ChevronDown, FilePdf } from 'react-bootstrap-icons';
 
@@ -18,6 +20,15 @@ const ErrorMessage = styled.div`
   margin-top: ${({ theme }) => theme.spaces.s050};
 `;
 
+function getErrorMessage(data: unknown): string | undefined {
+  if (!data || typeof data !== 'object') {
+    return undefined;
+  }
+
+  const error = (data as Record<string, unknown>).error;
+  return typeof error === 'string' ? error : undefined;
+}
+
 export default function ExportActionPdfButton() {
   const t = useTranslations();
   const locale = useLocale();
@@ -27,7 +38,7 @@ export default function ExportActionPdfButton() {
   const [error, setError] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -47,12 +58,12 @@ export default function ExportActionPdfButton() {
       const response = await fetch('/api/export-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: pathname, locale, timezone }),
+        body: JSON.stringify({ path: pathname, locale, timezone, plan: plan.identifier }),
       });
 
       if (!response.ok) {
-        const data = await response.json().catch(() => null);
-        throw new Error(data?.error || t('pdf-export-failed'));
+        const data: unknown = await response.json().catch(() => null);
+        throw new Error(getErrorMessage(data) || t('pdf-export-failed'));
       }
 
       const blob = await response.blob();
@@ -71,7 +82,7 @@ export default function ExportActionPdfButton() {
     } finally {
       setLoading(false);
     }
-  }, [pathname, locale, plan.timezone, t]);
+  }, [pathname, locale, plan.identifier, plan.timezone, t]);
 
   return (
     <div className="d-print-none">
@@ -87,7 +98,7 @@ export default function ExportActionPdfButton() {
         {t('download')}
       </Button>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem onClick={handleExport}>
+        <MenuItem onClick={() => void handleExport()}>
           <FilePdf style={{ marginRight: '0.5rem' }} />
           {t('download-page-as-pdf')}
         </MenuItem>

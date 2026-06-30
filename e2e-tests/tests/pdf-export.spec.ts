@@ -91,6 +91,7 @@ test.describe('pdf-export', { annotation: annotations }, () => {
       // Verify the request payload
       expect(postData.path).toContain('/actions/');
       expect(postData.locale).toBeTruthy();
+      expect(postData.plan).toBe(ctx.plan.identifier);
 
       await route.fulfill({
         status: 200,
@@ -170,7 +171,11 @@ test.describe('pdf-export', { annotation: annotations }, () => {
     const indicatorListPath = ctx.getIndicatorListMenuItem()?.page.urlPath ?? '/indicators';
 
     const res = await request.post(`${ctx.baseURL}/api/export-pdf`, {
-      data: { path: indicatorListPath, locale: ctx.plan.primaryLanguage },
+      data: {
+        path: indicatorListPath,
+        locale: ctx.plan.primaryLanguage,
+        plan: ctx.plan.identifier,
+      },
     });
 
     if (res.status() === 503) {
@@ -183,7 +188,11 @@ test.describe('pdf-export', { annotation: annotations }, () => {
 
   test('api rejects paths outside the sitemap', async ({ request, ctx }) => {
     const res = await request.post(`${ctx.baseURL}/api/export-pdf`, {
-      data: { path: '/not-in-the-sitemap-pdf-export-test', locale: ctx.plan.primaryLanguage },
+      data: {
+        path: '/not-in-the-sitemap-pdf-export-test',
+        locale: ctx.plan.primaryLanguage,
+        plan: ctx.plan.identifier,
+      },
     });
 
     if (res.status() === 503) {
@@ -200,6 +209,7 @@ test.describe('pdf-export', { annotation: annotations }, () => {
       data: {
         path: '/not-a-plan/actions/not-in-the-sitemap-pdf-export-test',
         locale: ctx.plan.primaryLanguage,
+        plan: ctx.plan.identifier,
       },
     });
 

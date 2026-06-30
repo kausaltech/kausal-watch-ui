@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import * as Sentry from '@sentry/nextjs';
 
 import { getPdfExportServiceUrl } from '@/utils/pdf-export';
-import { getSitemapUrlsForOrigin } from '@/utils/sitemap.server';
+import { getSitemapUrlsForOrigin, getSitemapUrlsForPlan } from '@/utils/sitemap.server';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -26,6 +26,7 @@ let inFlight = 0;
 type PdfExportRequestBody = {
   path: string;
   locale?: string;
+  plan?: string;
   timezone?: string;
 };
 
@@ -95,6 +96,7 @@ export async function POST(request: NextRequest) {
         body = {
           path: getStringField(formData.get('path')) ?? '',
           locale: getStringField(formData.get('locale')),
+          plan: getStringField(formData.get('plan')),
           timezone: getStringField(formData.get('timezone')),
         };
       } else {
@@ -106,6 +108,7 @@ export async function POST(request: NextRequest) {
         body = {
           path: getStringField(requestBody.path) ?? '',
           locale: getStringField(requestBody.locale),
+          plan: getStringField(requestBody.plan),
           timezone: getStringField(requestBody.timezone),
         };
       }
@@ -135,10 +138,15 @@ export async function POST(request: NextRequest) {
 
     const origin = `${forwardedProto}://${host}`;
     const requestedUrl = new URL(path, origin);
-    const sitemapUrls = await getSitemapUrlsForOrigin(origin, {
-      includeAllPlans: true,
+    const sitemapOptions = {
       includeLocaleAndBasePathVariants: true,
-    });
+    };
+    const sitemapUrls = body.plan
+      ? await getSitemapUrlsForPlan(origin, body.plan, sitemapOptions)
+      : await getSitemapUrlsForOrigin(origin, {
+          ...sitemapOptions,
+          includeAllPlans: true,
+        });
     const allowedUrls = new Set(
       sitemapUrls.map(getComparableUrl).filter((url): url is string => !!url)
     );
