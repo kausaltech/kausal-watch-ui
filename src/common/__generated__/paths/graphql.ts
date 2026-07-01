@@ -231,8 +231,6 @@ export type InstanceContext = {
   identifier: InputMaybe<Scalars['ID']['input']>;
   locale: InputMaybe<Scalars['String']['input']>;
   preview: InputMaybe<PreviewMode>;
-  /** Run the model in fault-tolerant mode: quarantine node failures and report them as node status (via the node editor) instead of aborting the whole computation. For draft model editing; defaults to false. See docs/architecture/fault-tolerance.md. */
-  tolerateNodeFailures: Scalars['Boolean']['input'];
   version: InputMaybe<Scalars['UUID']['input']>;
 };
 
@@ -287,23 +285,11 @@ export type NodeConfigInput = {
   simple: InputMaybe<SimpleConfigInput>;
 };
 
-export enum NodeErrorPhase {
-  Computation = 'COMPUTATION',
-  Initialization = 'INITIALIZATION'
-}
-
 export enum NodeKind {
   Action = 'ACTION',
   Formula = 'FORMULA',
   Pipeline = 'PIPELINE',
   Simple = 'SIMPLE'
-}
-
-export enum NodeStatus {
-  Degraded = 'DEGRADED',
-  Failed = 'FAILED',
-  Incomplete = 'INCOMPLETE',
-  Ok = 'OK'
 }
 
 export enum OperationMessageKind {
