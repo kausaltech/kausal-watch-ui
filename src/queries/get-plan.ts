@@ -208,6 +208,9 @@ const GET_PLAN_CONTEXT = gql`
         name
       }
       viewUrl(clientUrl: $clientUrl)
+      generalContent {
+        siteDescription
+      }
     }
     supersededBy {
       name

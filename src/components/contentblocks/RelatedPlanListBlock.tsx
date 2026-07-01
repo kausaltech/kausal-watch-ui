@@ -41,11 +41,77 @@ const PlanList = styled.div`
   }
 `;
 
+const PlanCardList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: ${(props) => props.theme.spaces.s200};
+`;
+
+const PlanCardLink = styled.a`
+  display: flex;
+  flex: 0 1 300px;
+  /* Leave room for the avatar that overlaps the top of the card */
+  padding-top: ${(props) => props.theme.spaces.s400};
+
+  &:hover {
+    text-decoration: none;
+  }
+`;
+
+const PlanCard = styled.div`
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  background-color: ${(props) => props.theme.themeColors.white};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
+  padding: 0 ${(props) => props.theme.spaces.s150} ${(props) => props.theme.spaces.s200};
+`;
+
+const PlanCardImage = styled.img`
+  width: 160px;
+  height: 160px;
+  margin-top: -80px;
+  margin-bottom: ${(props) => props.theme.spaces.s150};
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const PlanCardTitle = styled.h3`
+  margin-bottom: ${(props) => props.theme.spaces.s100};
+  font-size: ${(props) => props.theme.fontSizeLg};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  line-height: 1.2;
+  text-align: center;
+  color: ${(props) => props.theme.themeColors.dark};
+`;
+
+const PlanCardText = styled.p`
+  margin-bottom: 0;
+  text-align: center;
+  color: ${(props) => props.theme.graphColors.grey070};
+`;
+
+/**
+ * Placeholder body copy for the cards layout. Related plans don't yet expose a
+ * description field via GraphQL, so this mocks the design until one is added.
+ */
+const MOCK_CARD_DESCRIPTION =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
 interface Props {
   id?: string;
+  /**
+   * Render the related plans as full cards (image, title, description) instead
+   * of compact chips.
+   */
+  listStyle?: 'cards' | 'chips';
 }
 
-const RelatedPlanListBlock = ({ id }: Props) => {
+const RelatedPlanListBlock = ({ id, listStyle = 'cards' }: Props) => {
   const plan = usePlan();
   const theme = useTheme();
   if (!plan.allRelatedPlans) return null;
@@ -55,6 +121,11 @@ const RelatedPlanListBlock = ({ id }: Props) => {
   const negativeChips = theme.section?.relatedPlans?.background
     ? readableColor(theme.section?.relatedPlans?.background) === '#fff'
     : true;
+
+  // The plans to display: the current plan first (unless it's the parent of the
+  // listed plans), followed by its siblings or children.
+  const plansToShow = [...(isParentPlan ? [] : [plan]), ...siblingsOrChildren];
+
   return (
     <PlanListSection id={id}>
       <Container>
@@ -63,30 +134,37 @@ const RelatedPlanListBlock = ({ id }: Props) => {
             {plan.parent ? `${plan.parent.name}` : plan.shortName}
           </a>
         </h2>
-        <PlanList>
-          {!isParentPlan && (
-            <a href={plan.viewUrl || undefined} key={plan.identifier}>
-              <PlanChip
-                planImage={plan.image?.rendition?.src}
-                planShortName={plan.shortName || undefined}
-                organization={theme.settings?.multiplan?.hideLongPlanNames ? undefined : plan.name}
-                size="lg"
-                negative={negativeChips}
-              />
-            </a>
-          )}
-          {siblingsOrChildren.map((pl) => (
-            <a href={pl.viewUrl || undefined} key={pl.identifier}>
-              <PlanChip
-                planImage={pl.image?.rendition?.src}
-                planShortName={pl.shortName || undefined}
-                organization={theme.settings?.multiplan?.hideLongPlanNames ? undefined : pl.name}
-                size="lg"
-                negative={negativeChips}
-              />
-            </a>
-          ))}
-        </PlanList>
+        {listStyle === 'cards' ? (
+          <PlanCardList>
+            {plansToShow.map((pl) => (
+              <PlanCardLink href={pl.viewUrl || undefined} key={pl.identifier}>
+                <PlanCard>
+                  {pl.image?.rendition?.src && (
+                    <PlanCardImage src={pl.image.rendition.src} alt="" />
+                  )}
+                  <PlanCardTitle>{pl.shortName || pl.name}</PlanCardTitle>
+                  <PlanCardText>
+                    {pl.generalContent.siteDescription || MOCK_CARD_DESCRIPTION}
+                  </PlanCardText>
+                </PlanCard>
+              </PlanCardLink>
+            ))}
+          </PlanCardList>
+        ) : (
+          <PlanList>
+            {plansToShow.map((pl) => (
+              <a href={pl.viewUrl || undefined} key={pl.identifier}>
+                <PlanChip
+                  planImage={pl.image?.rendition?.src}
+                  planShortName={pl.shortName || undefined}
+                  organization={theme.settings?.multiplan?.hideLongPlanNames ? undefined : pl.name}
+                  size="lg"
+                  negative={negativeChips}
+                />
+              </a>
+            ))}
+          </PlanList>
+        )}
       </Container>
     </PlanListSection>
   );
