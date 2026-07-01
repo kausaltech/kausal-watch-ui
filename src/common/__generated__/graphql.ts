@@ -1118,28 +1118,6 @@ export enum WorkflowStateStatus {
   NeedsChanges = 'NEEDS_CHANGES'
 }
 
-export type GetSitemapQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type GetSitemapQuery = (
-  { planIndicators: Array<(
-    { id: string }
-    & { __typename: 'Indicator' }
-  )> | null, plan: (
-    { primaryLanguage: string, otherLanguages: Array<string>, actions: Array<(
-      { identifier: string }
-      & { __typename: 'Action' }
-    )>, pages: Array<(
-      { urlPath: string }
-      & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
-    )> | null }
-    & { __typename: 'Plan' }
-  ) | null }
-  & { __typename: 'Query' }
-);
-
 export type MultiUseImageFragmentFragment = (
   { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
     { id: string, width: number, height: number, src: string }
@@ -16660,6 +16638,9 @@ export type GetPlanContextQuery = (
       ) | null, organization: (
         { name: string }
         & { __typename: 'Organization' }
+      ), generalContent: (
+        { siteDescription: string }
+        & { __typename: 'SiteGeneralContent' }
       ) }
       & { __typename: 'Plan' }
     )>, supersededBy: (
@@ -16856,6 +16837,9 @@ export type PlanContextFragment = (
     ) | null, organization: (
       { name: string }
       & { __typename: 'Organization' }
+    ), generalContent: (
+      { siteDescription: string }
+      & { __typename: 'SiteGeneralContent' }
     ) }
     & { __typename: 'Plan' }
   )>, supersededBy: (
@@ -18172,6 +18156,28 @@ export type IndicatorSparklineGraphDataQuery = (
       & { __typename: 'CommonIndicator' }
     ) | null }
     & { __typename: 'Indicator' }
+  ) | null }
+  & { __typename: 'Query' }
+);
+
+export type GetSitemapQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetSitemapQuery = (
+  { planIndicators: Array<(
+    { id: string }
+    & { __typename: 'Indicator' }
+  )> | null, plan: (
+    { primaryLanguage: string, otherLanguages: Array<string>, actions: Array<(
+      { identifier: string }
+      & { __typename: 'Action' }
+    )>, pages: Array<(
+      { urlPath: string }
+      & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+    )> | null }
+    & { __typename: 'Plan' }
   ) | null }
   & { __typename: 'Query' }
 );
