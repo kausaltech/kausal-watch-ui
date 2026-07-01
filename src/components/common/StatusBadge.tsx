@@ -1,11 +1,11 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { setLightness } from 'polished';
 
-import { ActionWithStatusSummary, getStatusColorForAction } from '@/common/ActionStatusSummary';
+import type { ActionWithStatusSummary } from '@/common/ActionStatusSummary';
+import { getStatusColorForAction } from '@/common/ActionStatusSummary';
 import { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
 import type { PlanContextType } from '@/context/plan';
 
@@ -73,19 +73,19 @@ const StatusBadge = ({ action, statusName, plan, reason, subtle = false }: Statu
 
   const theme = useTheme();
   let statusColor = status?.color
-    ? theme.graphColors[status.color]
+    ? theme.graphColors[status.color as keyof typeof theme.graphColors]
     : getStatusColorForAction(action, plan, theme);
-  let label = statusName;
-  if (label == null) {
-    if (
-      action.scheduleContinuous &&
-      action.statusSummary?.identifier === ActionStatusSummaryIdentifier.Completed
-    ) {
-      label = t('action-continuous');
-      statusColor = theme.actionContinuousColor;
-    } else {
-      label = statusSummary?.label;
-    }
+  let label: string | undefined;
+  // Continuous actions that are "completed" get a dedicated label/color in every
+  // view, regardless of the status name the caller would otherwise pass in.
+  if (
+    action.scheduleContinuous &&
+    statusSummary?.identifier === ActionStatusSummaryIdentifier.Completed
+  ) {
+    label = t('action-continuous');
+    statusColor = theme.actionContinuousColor;
+  } else {
+    label = statusName ?? statusSummary?.label;
   }
   if (!label) {
     return null;
