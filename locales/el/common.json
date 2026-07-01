@@ -148,6 +148,7 @@
     "search-no-results": "Δεν υπάρχουν αποτελέσματα για αυτή την αναζήτηση. Δοκιμάστε να αλλάξετε τους όρους αναζήτησης.",
     "over-relative-time": "Over {relativeTime}",
     "under-relative-time": "Κάτω από το {relativeTime}",
+    "unspecified-indicator": "Μη καθορισμένος δείκτης",
     "admin-login-not-defined": "Η σελίδα σύνδεσης διαχειριστή δεν έχει οριστεί",
     "organization": "Οργανισμός",
     "nav-primary": "Πρωτογενές",
