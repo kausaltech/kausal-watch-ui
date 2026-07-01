@@ -78,13 +78,13 @@ const MainCard = styled(HeroCard, transientOptions)<{ $alignment: string }>`
   margin: -2rem auto 0;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
-    margin: var(--block-padding-top)
+    margin: 3rem
       ${(props) => {
         switch (props.$alignment) {
           case 'left':
-            return '0 var(--block-padding-bottom) 0';
+            return '0 2rem 0';
           case 'right':
-            return '0 var(--block-padding-bottom) auto';
+            return '0 2rem auto';
           case 'center':
             return 'auto';
           default:

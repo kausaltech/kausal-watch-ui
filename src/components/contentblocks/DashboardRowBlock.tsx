@@ -10,15 +10,21 @@ import { IndicatorLink } from '@/common/links';
 import IndicatorVisualizationBlock from '@/components/indicators/IndicatorVisualizationBlock';
 
 import Card from '../common/Card';
+
 import { SectionHeader } from './ActionListBlock';
 import { getReadableThemeTextColor } from './colorUtils';
 
-const DashboardRowSection = styled.div`
+const DashboardRowSection = styled.div<{
+  $topPadding?: boolean;
+  $bottomPadding?: boolean;
+}>`
   background-color: ${(props) => props.theme.themeColors.light};
   color: ${(props) => props.theme.neutralDark};
   position: relative;
-  padding-top: var(--block-padding-top);
-  padding-bottom: var(--block-padding-bottom);
+  padding-top: ${(props) =>
+    props.$topPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
+  padding-bottom: ${(props) =>
+    props.$bottomPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
 `;
 
 const DashboardSectionHeader = styled(SectionHeader)`
@@ -51,6 +57,8 @@ const isDashboardHeaderBlock = (
 const isDashboardCardBlock = (block: DashboardBlock) => !isDashboardHeaderBlock(block);
 
 interface DashboardRowBlockProps extends Omit<DashboardRowBlockFragment, 'rawValue'> {
+  topPadding?: boolean;
+  bottomPadding?: boolean;
   blocks: DashboardBlock[];
 }
 
@@ -135,7 +143,12 @@ const DashboardCardContents = ({ block }: { block: DashboardBlock }) => {
   );
 };
 
-const DashboardRowBlock = ({ id, blocks }: DashboardRowBlockProps) => {
+const DashboardRowBlock = ({
+  id,
+  blocks,
+  topPadding = true,
+  bottomPadding = true,
+}: DashboardRowBlockProps) => {
   const t = useTranslations();
   const headerBlock = blocks.find(isDashboardHeaderBlock);
   const cardBlocks = blocks.filter(isDashboardCardBlock);
@@ -148,7 +161,11 @@ const DashboardRowBlock = ({ id, blocks }: DashboardRowBlockProps) => {
   ];
 
   return (
-    <DashboardRowSection id={id ?? undefined}>
+    <DashboardRowSection
+      id={id ?? undefined}
+      $topPadding={topPadding}
+      $bottomPadding={bottomPadding}
+    >
       <Container>
         {headerBlock?.text ? (
           <DashboardSectionHeader>{headerBlock.text}</DashboardSectionHeader>

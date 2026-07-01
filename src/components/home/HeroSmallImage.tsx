@@ -18,6 +18,7 @@ const StyledContainer = styled(Container, transientOptions)<{
   $showImageAccent: boolean;
   $fullBackground: boolean | null;
 }>`
+  --block-margin: ${({ theme }) => theme.spaces.s300};
   --accent-bar-height: 0px;
   --image-top-padding: ${({ theme }) => theme.spaces.s100};
   --image-height: 70vh;
@@ -25,7 +26,9 @@ const StyledContainer = styled(Container, transientOptions)<{
   --bg-color: ${({ $backgroundColor, theme }) => $backgroundColor || theme.neutralLight};
 
   position: relative;
+  // TODO: If the previous block and this one are the same colour, this should be collapsed
   padding-top: var(--image-top-padding);
+  margin-bottom: var(--block-margin);
 
   &::before {
     content: '';
@@ -35,7 +38,7 @@ const StyledContainer = styled(Container, transientOptions)<{
     left: 50%;
     transform: translateX(-50%);
     width: 100vw;
-    height: 100%;
+    height: calc(100% + var(--block-margin));
     background-color: var(--bg-color);
     z-index: -1;
   }

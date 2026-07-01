@@ -153,9 +153,6 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
     page.body[0]?.blockType &&
     streamFieldBlockTypesThatHavePageHeader.includes(page.body[0]?.blockType);
 
-  const hasPageHeader =
-    typenameMatches(page, 'CategoryPage', 'StaticPage') && !pageHeaderinStreamField;
-
   const categoryColor = isCategoryPage && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.themeColors.light;
   const pageBodyHasBlocks = isPageWithBody && (page.body?.length ?? 0) > 0;
@@ -189,11 +186,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
       ) : null}
 
       {isCategoryPage ? (
-        <CategoryPageContent
-          page={page}
-          pageSectionColor={pageSectionColor}
-          precedingBlockHasBackground={hasPageHeader}
-        />
+        <CategoryPageContent page={page} pageSectionColor={pageSectionColor} />
       ) : (
         <div>
           {typenameMatches(page, 'ActionListPage') && <ActionListPage actionListPage={page} />}
@@ -220,12 +213,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
           ) : null}
 
           {isPageWithBody && page.body && pageBodyHasBlocks && (
-            <StreamField
-              page={page}
-              blocks={page.body}
-              hasSidebar={siblings.length > 1}
-              precedingBlockHasBackground={hasPageHeader}
-            />
+            <StreamField page={page} blocks={page.body} hasSidebar={siblings.length > 1} />
           )}
         </div>
       )}

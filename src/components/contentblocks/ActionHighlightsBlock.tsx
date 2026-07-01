@@ -1,16 +1,17 @@
-import styled from '@emotion/styled';
+import React, { useContext } from 'react';
 
+import styled from '@emotion/styled';
 import { readableColor } from 'polished';
 import { Container } from 'reactstrap';
 
-import type { CommonContentBlockProps } from '@/common/blocks.types';
+import { CommonContentBlockProps } from '@/common/blocks.types';
 import ActionHighlightsList from '@/components/actions/ActionHighlightsList';
-import { usePlan } from '@/context/plan';
+import PlanContext, { usePlan } from '@/context/plan';
 
 const ActionsSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   position: relative;
-  padding: var(--block-padding-bottom) 0 var(--block-padding-bottom);
+  padding: ${(props) => props.theme.spaces.s800} 0 ${(props) => props.theme.spaces.s400};
   color: ${(props) =>
     readableColor(
       props.theme.neutralLight,

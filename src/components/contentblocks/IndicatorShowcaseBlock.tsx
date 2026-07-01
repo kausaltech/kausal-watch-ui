@@ -1,9 +1,7 @@
 import React from 'react';
 
-import { Paper } from '@mui/material';
-
 import styled from '@emotion/styled';
-
+import { Paper } from '@mui/material';
 import { useTranslations } from 'next-intl';
 import { Alert, Col, Container, Row } from 'reactstrap';
 
@@ -29,7 +27,7 @@ interface IndicatorShowcaseBlockProps {
 }
 
 const IndicatorShowcase = styled.div`
-  padding: var(--block-padding-top) 0 var(--block-padding-bottom);
+  padding: ${(props) => props.theme.spaces.s400} 0;
   background-color: ${({ theme }) => theme.section.indicatorShowcase.background};
   color: ${({ theme }) => theme.section.indicatorShowcase.color};
   text-align: center;

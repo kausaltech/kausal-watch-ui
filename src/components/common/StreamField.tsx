@@ -3,7 +3,6 @@ import React, { Suspense, useEffect, useId, useRef } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import type { Theme } from '@emotion/react';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -15,7 +14,6 @@ import type { ColumnProps } from 'reactstrap/types/lib/Col';
 
 import { showSettingsPanelVar } from '@common/apollo/paths-cache';
 import ContentLoader from '@common/components/ContentLoader';
-import { transientOptions } from '@common/themes/styles/styled';
 
 import type {
   MultiUseImageFragmentFragment,
@@ -172,44 +170,6 @@ const ResponsiveStyles = styled.div`
   }
 `;
 
-function blockHasBackground(block: StreamFieldFragmentFragment, theme: Theme): boolean {
-  switch (block.__typename) {
-    case 'CardListBlock':
-    case 'ActionListBlock':
-    case 'ActionHighlightsBlock':
-    case 'CategoryListBlock':
-    case 'DashboardRowBlock':
-    case 'QuestionAnswerBlock':
-    case 'IndicatorShowcaseBlock':
-    case 'ActionCategoryFilterCardsBlock':
-    case 'CategoryTypeLevelListBlock':
-    case 'RelatedPlanListBlock':
-    case 'FrontPageHeroBlock':
-    case 'RelatedIndicatorsBlock':
-    case 'IndicatorGroupBlock':
-      return true;
-    case 'RichTextBlock':
-      return theme.section.richText.sectionBackground !== theme.themeColors.white;
-    default:
-      return false;
-  }
-}
-
-interface BlockWrapperProps {
-  $hasBackground: boolean;
-  $prevHasBackground: boolean;
-  $isFirst: boolean;
-}
-
-const BlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
-  margin-top: ${({ $isFirst, $hasBackground, $prevHasBackground }) => {
-    if ($isFirst) return '0';
-    if ($hasBackground && $prevHasBackground) return 'var(--block-gap-coloured)';
-    if ($hasBackground || $prevHasBackground) return '0';
-    return 'var(--block-gap)';
-  }};
-`;
-
 function hasPathsContent(body: StreamFieldFragmentFragment[]) {
   return body.some(
     (block) =>
@@ -217,9 +177,11 @@ function hasPathsContent(body: StreamFieldFragmentFragment[]) {
   );
 }
 
-const RichTextSection = styled.div`
-  padding-top: var(--block-padding-top);
-  padding-bottom: var(--block-padding-bottom);
+const RichTextSection = styled.div<{ $topPadding: boolean; $bottomPadding: boolean }>`
+  padding-top: ${(props) =>
+    props.$topPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
+  padding-bottom: ${(props) =>
+    props.$bottomPadding ? props.theme.spaces.s400 : props.theme.spaces.s100};
   background-color: ${({ theme }) => theme.section.richText.sectionBackground};
 `;
 
@@ -227,14 +189,10 @@ const RichTextContainer = styled.div`
   display: flex;
   justify-content: center;
   background-color: ${({ theme }) => theme.themeColors.white};
-  padding: 0 ${({ theme }) => theme.spaces.s200};
+  padding: ${({ theme }) => theme.spaces.s200};
 
   > div {
     flex: 0 1 800px;
-
-    > *:first-child {
-      margin-top: 0;
-    }
   }
 `;
 
@@ -319,10 +277,12 @@ type StreamFieldBlockProps = {
   block: StreamFieldFragmentFragment;
   hasSidebar: boolean;
   columnProps?: ColProps;
+  previousBlockType?: string;
+  nextBlockType?: string;
 };
 
 function StreamFieldBlock(props: StreamFieldBlockProps) {
-  const { id, page, block, hasSidebar, columnProps } = props;
+  const { id, page, block, hasSidebar, columnProps, previousBlockType, nextBlockType } = props;
   const { __typename } = block;
   const plan = usePlan();
   const theme = useTheme();
@@ -341,7 +301,16 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       const COLLAPSIBLE_BREAKPOINT = 1200;
       const isCollapsible = canCollapse && value.length > COLLAPSIBLE_BREAKPOINT;
       return (
-        <RichTextSection>
+        <RichTextSection
+          $topPadding={
+            previousBlockType !== 'RichTextBlock' &&
+            theme.section.richText.sectionBackground !== theme.themeColors.white
+          }
+          $bottomPadding={
+            nextBlockType !== 'RichTextBlock' &&
+            theme.section.richText.sectionBackground !== theme.themeColors.white
+          }
+        >
           <Container id={id}>
             <Row>
               <Col
@@ -676,7 +645,14 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'DashboardRowBlock': {
-      return <DashboardRowBlock {...block} id={id} />;
+      return (
+        <DashboardRowBlock
+          {...block}
+          id={id}
+          topPadding={previousBlockType !== 'DashboardRowBlock'}
+          bottomPadding={nextBlockType !== 'DashboardRowBlock'}
+        />
+      );
     }
     case 'ChangeLogMessageBlock': {
       if (!plan.features.enableChangeLog) return null;
@@ -732,13 +708,11 @@ interface StreamFieldProps {
   blocks: StreamFieldFragmentFragment[];
   hasSidebar?: boolean;
   columnProps?: ColProps;
-  precedingBlockHasBackground?: boolean;
 }
 
 export default function StreamField(props: StreamFieldProps) {
-  const { page, blocks, hasSidebar = false, columnProps, precedingBlockHasBackground } = props;
+  const { page, blocks, hasSidebar = false, columnProps } = props;
   const t = useTranslations();
-  const theme = useTheme();
 
   const isCategoryPage = page.__typename === 'CategoryPage';
   useEffect(() => {
@@ -754,40 +728,28 @@ export default function StreamField(props: StreamFieldProps) {
 
   return (
     <div className={`custom-${page.slug}`}>
-      {blocks.map((block, index) => {
-        const hasBackground = blockHasBackground(block, theme);
-        const prevHasBackground =
-          index === 0
-            ? (precedingBlockHasBackground ?? false)
-            : blockHasBackground(blocks[index - 1], theme);
-
-        return (
-          <ErrorBoundary
-            key={block.id}
-            fallback={<ErrorMessage message={t('error-loading-data')} details={block.__typename} />}
-            errorExtras={{
-              type: 'StreamFieldBlock',
-              block: JSON.stringify(block),
-            }}
-          >
-            <Suspense fallback={<ContentLoader message={t('loading')} />}>
-              <BlockWrapper
-                $hasBackground={hasBackground}
-                $prevHasBackground={prevHasBackground}
-                $isFirst={index === 0}
-              >
-                <StreamFieldBlock
-                  id={`section-${index + 1}`}
-                  block={block}
-                  page={page}
-                  hasSidebar={hasSidebar}
-                  columnProps={columnProps}
-                />
-              </BlockWrapper>
-            </Suspense>
-          </ErrorBoundary>
-        );
-      })}
+      {blocks.map((block, index) => (
+        <ErrorBoundary
+          key={block.id}
+          fallback={<ErrorMessage message={t('error-loading-data')} details={block.__typename} />}
+          errorExtras={{
+            type: 'StreamFieldBlock',
+            block: JSON.stringify(block),
+          }}
+        >
+          <Suspense fallback={<ContentLoader message={t('loading')} />}>
+            <StreamFieldBlock
+              id={`section-${index + 1}`}
+              block={block}
+              page={page}
+              hasSidebar={hasSidebar}
+              columnProps={columnProps}
+              previousBlockType={blocks[index - 1]?.__typename}
+              nextBlockType={blocks[index + 1]?.__typename}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      ))}
     </div>
   );
 }
