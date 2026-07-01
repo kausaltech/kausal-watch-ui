@@ -129,7 +129,7 @@ const YearRangeSelector = (props) => {
         isOpen={popoverOpen}
         target="rangeSelector"
         toggle={toggle}
-        trigger="click"
+        trigger="legacy"
         aria-modal="true"
       >
         <PopoverBody>
