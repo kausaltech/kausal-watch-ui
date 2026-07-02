@@ -25,7 +25,13 @@ import {
   localeMiddleware,
 } from '../../utils/apollo.utils';
 
-const authMiddleware = setContext((_, { sessionToken, headers: initialHeaders = {} }) => {
+const authMiddleware = setContext((_, { uri, sessionToken, headers: initialHeaders = {} }) => {
+  // Operations that override the uri target the Paths API, which uses its own
+  // authentication; the Watch ID token must not be sent there.
+  if (uri) {
+    return { headers: initialHeaders };
+  }
+
   return {
     headers: {
       ...initialHeaders,
