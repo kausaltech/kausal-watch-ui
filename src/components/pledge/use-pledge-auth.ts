@@ -6,6 +6,14 @@ import { gql } from '@apollo/client';
 import { CombinedGraphQLErrors } from '@apollo/client/errors';
 import { useApolloClient, useMutation, useQuery } from '@apollo/client/react';
 
+import type {
+  PledgeSignInMutation,
+  PledgeSignInMutationVariables,
+  PledgeSignUpMutation,
+  PledgeSignUpMutationVariables,
+  PledgeVerifyPinMutation,
+  PledgeVerifyPinMutationVariables,
+} from '@/common/__generated__/graphql';
 import { isServer } from '@/common/environment';
 
 const PLEDGE_AUTH_TOKEN_KEY = 'pledge-auth-token';
@@ -69,9 +77,9 @@ const PLEDGE_SIGN_IN = gql`
 `;
 
 const PLEDGE_VERIFY_PIN = gql`
-  mutation PledgeVerifyPin($email: String!, $pin: String!) {
+  mutation PledgeVerifyPin($email: String!, $pin: String!, $anonUuid: UUID) {
     pledge {
-      verifyPin(email: $email, pin: $pin) {
+      verifyPin(email: $email, pin: $pin, anonUuid: $anonUuid) {
         userToken
         pledgeIds
       }
@@ -79,25 +87,9 @@ const PLEDGE_VERIFY_PIN = gql`
   }
 `;
 
-type PledgeSignUpResult = { pledge: { signUp: { sent: boolean } } };
-type PledgeSignUpVars = {
-  email: string;
-  termsAccepted: boolean;
-  marketingAccepted: boolean;
-  anonUuid?: string;
-};
-
-type PledgeSignInResult = { pledge: { signIn: { sent: boolean } } };
-type PledgeSignInVars = { email: string; anonUuid?: string };
-
-type PledgeVerifyPinResult = {
-  pledge: { verifyPin: { userToken: string; pledgeIds: string[] } };
-};
-type PledgeVerifyPinVars = { email: string; pin: string };
-
 type PendingFlow =
-  | { type: 'signUp'; termsAccepted: boolean; marketingAccepted: boolean; anonUuid?: string }
-  | { type: 'signIn'; anonUuid?: string };
+  | { type: 'signUp'; termsAccepted: boolean; marketingAccepted: boolean; anonUuid: string | null }
+  | { type: 'signIn'; anonUuid: string | null };
 
 export type SignInStep = 'email' | 'pin';
 
@@ -118,11 +110,16 @@ export function usePledgeSignIn() {
   const [error, setError] = useState<string | null>(null);
   const [pendingFlow, setPendingFlow] = useState<PendingFlow | null>(null);
 
-  const [signUpMutation] = useMutation<PledgeSignUpResult, PledgeSignUpVars>(PLEDGE_SIGN_UP);
-  const [signInMutation] = useMutation<PledgeSignInResult, PledgeSignInVars>(PLEDGE_SIGN_IN);
-  const [verifyPinMutation] = useMutation<PledgeVerifyPinResult, PledgeVerifyPinVars>(
-    PLEDGE_VERIFY_PIN
+  const [signUpMutation] = useMutation<PledgeSignUpMutation, PledgeSignUpMutationVariables>(
+    PLEDGE_SIGN_UP
   );
+  const [signInMutation] = useMutation<PledgeSignInMutation, PledgeSignInMutationVariables>(
+    PLEDGE_SIGN_IN
+  );
+  const [verifyPinMutation] = useMutation<
+    PledgeVerifyPinMutation,
+    PledgeVerifyPinMutationVariables
+  >(PLEDGE_VERIFY_PIN);
 
   const signUp = useCallback(
     async (
@@ -132,7 +129,7 @@ export function usePledgeSignIn() {
       anonymousUserToken?: string
     ): Promise<boolean> => {
       // Prefer the passed token; fall back to localStorage so the anon UUID is always included
-      const anonUuid = anonymousUserToken ?? getStoredPublicUserUuid();
+      const anonUuid = anonymousUserToken ?? getStoredPublicUserUuid() ?? null;
       setLoading(true);
       setError(null);
 
@@ -168,7 +165,7 @@ export function usePledgeSignIn() {
 
   const signIn = useCallback(
     async (email: string, anonymousUserToken?: string): Promise<boolean> => {
-      const anonUuid = anonymousUserToken ?? getStoredPublicUserUuid();
+      const anonUuid = anonymousUserToken ?? getStoredPublicUserUuid() ?? null;
 
       setLoading(true);
       setError(null);
@@ -206,7 +203,9 @@ export function usePledgeSignIn() {
       setError(null);
 
       try {
-        const result = await verifyPinMutation({ variables: { email: pendingEmail, pin } });
+        const result = await verifyPinMutation({
+          variables: { email: pendingEmail, pin, anonUuid: pendingFlow?.anonUuid ?? null },
+        });
         const payload = result.data?.pledge.verifyPin;
 
         if (!payload) throw new Error('No response');
@@ -224,7 +223,7 @@ export function usePledgeSignIn() {
         setLoading(false);
       }
     },
-    [pendingEmail, verifyPinMutation]
+    [pendingEmail, pendingFlow, verifyPinMutation]
   );
 
   const resendCode = useCallback(async (): Promise<void> => {
@@ -240,12 +239,12 @@ export function usePledgeSignIn() {
             email: pendingEmail,
             termsAccepted: pendingFlow.termsAccepted,
             marketingAccepted: pendingFlow.marketingAccepted,
-            anonUuid: pendingFlow.anonUuid,
+            anonUuid: pendingFlow.anonUuid ?? null,
           },
         });
       } else {
         await signInMutation({
-          variables: { email: pendingEmail, anonUuid: pendingFlow.anonUuid },
+          variables: { email: pendingEmail, anonUuid: pendingFlow.anonUuid ?? null },
         });
       }
     } catch (err) {

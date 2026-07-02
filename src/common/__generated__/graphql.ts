@@ -992,6 +992,7 @@ export type PledgeVerifyPinMutation = { __typename: 'Mutation', pledge: PledgeVe
 export type PledgeVerifyPinMutationVariables = Exact<{
   email: string;
   pin: string;
+  anonUuid: string | null | undefined;
 }>;
 
 export type PublicUserForNavQuery_publicUser = { __typename: 'PublicUser', id: string, email: string | null };
