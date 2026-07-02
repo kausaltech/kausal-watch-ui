@@ -384,7 +384,9 @@ export enum IndicatorLevelLevel {
   /** strategic */
   Strategic = 'STRATEGIC',
   /** tactical */
-  Tactical = 'TACTICAL'
+  Tactical = 'TACTICAL',
+  /** unspecified */
+  Unspecified = 'UNSPECIFIED'
 }
 
 /** An enumeration. */

@@ -145,6 +145,7 @@
     "value": "arvo",
     "type": "Tyyppi",
     "under-relative-time": "Alle {relativeTime}",
+    "unspecified-indicator": "Määrittelemätön mittari",
     "updated": "Päivitetty",
     "primary-organization": "Organisaatio",
     "with-contact-persons": "On yhteyshenkilö",

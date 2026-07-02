@@ -144,6 +144,7 @@
     "value": "valor",
     "type": "Tipo",
     "under-relative-time": "Menos de {relativeTime}",
+    "unspecified-indicator": "Indicador no especificado",
     "updated": "Actualizado",
     "primary-organization": "Organización",
     "with-contact-persons": "Tener persona de contacto",

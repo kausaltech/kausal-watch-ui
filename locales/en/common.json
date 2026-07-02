@@ -152,6 +152,7 @@
     "value": "Value",
     "type": "Type",
     "under-relative-time": "Under {relativeTime}",
+    "unspecified-indicator": "Unspecified indicator",
     "updated": "Updated",
     "primary-organization": "{context, select, DIVISION {Division} other {Organization}}",
     "with-contact-persons": "Have contact person",

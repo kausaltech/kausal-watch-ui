@@ -25,12 +25,10 @@ import { transientOptions } from '@common/themes/styles/styled';
 import {
   type ActionListFilterFragment,
   type ActionListPageFiltersFragment,
-  type IndicatorListFilterFragment,
-  type IndicatorListPageFiltersFragment,
-} from '@/common/__generated__/graphql';
-import {
   ActionResponsiblePartyRole,
   CategoryTypeSelectWidget,
+  type IndicatorListFilterFragment,
+  type IndicatorListPageFiltersFragment,
 } from '@/common/__generated__/graphql';
 import type { CategoryHierarchyMember, CategoryTypeHierarchy } from '@/common/categories';
 import { constructCatHierarchy, getCategoryString } from '@/common/categories';
@@ -1236,7 +1234,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                 : t('see-all-actions', getActionTermContext(plan));
           filters.push(createCategoryFilter(block, filterByCommonCategory, plan, t));
           break;
-        case 'ActionAttributeTypeFilterBlock':
+        case 'ActionAttributeTypeFilterBlock': {
           const allowedFormats = ['ORDERED_CHOICE', 'UNORDERED_CHOICE', 'OPTIONAL_CHOICE'];
           if (!allowedFormats.includes(block.attributeType.format)) {
             console.error(
@@ -1247,6 +1245,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           }
           filters.push(createAttributeTypeFilter(block, t));
           break;
+        }
         case 'ActionImplementationPhaseFilterBlock': {
           if (!plan.actionImplementationPhases.length) break;
           const phaseBlock = block as typeof block & {
@@ -1444,11 +1443,12 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
         case 'IndicatorFilterBlock':
           if (block.__typename === 'IndicatorFilterBlock') {
             switch (block.field) {
-              case 'level':
+              case 'level': {
                 const indicatorLevels = [
                   { id: 'operational', label: t('operational-indicator') },
                   { id: 'strategic', label: t('strategic-indicator') },
                   { id: 'tactical', label: t('tactical-indicator') },
+                  { id: 'unspecified', label: t('unspecified-indicator') },
                 ];
                 const levelOpts = {
                   id: 'indicator-level',
@@ -1474,7 +1474,8 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                   })
                 );
                 break;
-              case 'organization':
+              }
+              case 'organization': {
                 const organizationOpts = {
                   id: 'indicator-organization',
                   options: [],
@@ -1495,6 +1496,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                   })
                 );
                 break;
+              }
             }
           }
           break;

@@ -148,6 +148,7 @@
     "value": "valor",
     "type": "Tipo",
     "under-relative-time": "Em {relativeTime}",
+    "unspecified-indicator": "Indicador não especificado",
     "updated": "Atualizado",
     "primary-organization": "{context, select, DIVISION {Divisão} other {Organização}}",
     "with-contact-persons": "Tenha uma pessoa de contato",

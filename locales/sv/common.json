@@ -133,6 +133,7 @@
     "value": "värde",
     "type": "Typ",
     "under-relative-time": "Lägre som {relativeTime}",
+    "unspecified-indicator": "Ospecificerad indikator",
     "updated": "Uppdaterad",
     "return-to-front": "Tillbaka till förstasidan",
     "admin-login-not-defined": "Admininloggningssida är inte definierad",
