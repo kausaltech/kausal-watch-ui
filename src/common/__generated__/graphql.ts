@@ -2674,6 +2674,7 @@ export type PledgeSignInMutation = (
 export type PledgeVerifyPinMutationVariables = Exact<{
   email: Scalars['String']['input'];
   pin: Scalars['String']['input'];
+  anonUuid: InputMaybe<Scalars['UUID']['input']>;
 }>;
 
 
@@ -17033,28 +17034,277 @@ export type PledgeFragmentFragment = (
     & { __typename: 'Image' }
   ) | null, attributes: Array<(
     { id: string, type: (
-      { id: string, identifier: string, name: string, choiceOptions: Array<(
+      { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+        { id: string, name: string, shortName: string | null }
+        & { __typename: 'Unit' }
+      ) | null, choiceOptions: Array<(
         { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       )> }
       & { __typename: 'AttributeType' }
-    ) }
+    ), categories: Array<(
+      { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+        { id: string, name: string, namePlural: string | null }
+        & { __typename: 'CategoryLevel' }
+      ) | null, image: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null, large: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null, small: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null, social: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null, rendition: (
+          { id: string, width: number, height: number, src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null }
+        & { __typename: 'Image' }
+      ) | null, indicators: Array<(
+        { id: string, values: Array<(
+          { date: string | null, value: number }
+          & { __typename: 'IndicatorValue' }
+        )>, goals: Array<(
+          { date: string | null, value: number }
+          & { __typename: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName: string | null }
+          & { __typename: 'Unit' }
+        ) }
+        & { __typename: 'Indicator' }
+      )>, indicatorRelationships: Array<(
+        { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string }
+          & { __typename: 'Indicator' }
+        ) }
+        & { __typename: 'IndicatorCategoryRelationship' }
+      )>, iconImage: (
+        { rendition: (
+          { src: string }
+          & { __typename: 'ImageRendition' }
+        ) | null }
+        & { __typename: 'Image' }
+      ) | null, categoryPage: (
+        { id: string | null, title: string, urlPath: string, live: boolean }
+        & { __typename: 'CategoryPage' }
+      ) | null, type: (
+        { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+        & { __typename: 'CategoryType' }
+      ), attributes: Array<(
+        { id: string, key: string }
+        & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+      ) | (
+        { value: string, id: string, key: string }
+        & { __typename: 'AttributeRichText' | 'AttributeText' }
+      )>, parent: (
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+              { id: string, name: string, namePlural: string | null }
+              & { __typename: 'CategoryLevel' }
+            ) | null, image: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, large: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, small: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, social: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, rendition: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, indicators: Array<(
+              { id: string, values: Array<(
+                { date: string | null, value: number }
+                & { __typename: 'IndicatorValue' }
+              )>, goals: Array<(
+                { date: string | null, value: number }
+                & { __typename: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName: string | null }
+                & { __typename: 'Unit' }
+              ) }
+              & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
+            )>, iconImage: (
+              { rendition: (
+                { src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, categoryPage: (
+              { id: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename: 'CategoryType' }
+            ), attributes: Array<(
+              { id: string, key: string }
+              & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+            ) | (
+              { value: string, id: string, key: string }
+              & { __typename: 'AttributeRichText' | 'AttributeText' }
+            )> }
+            & { __typename: 'Category' }
+          ) | null, level: (
+            { id: string, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          ) | null, image: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, large: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, small: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, social: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, rendition: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, indicators: Array<(
+            { id: string, values: Array<(
+              { date: string | null, value: number }
+              & { __typename: 'IndicatorValue' }
+            )>, goals: Array<(
+              { date: string | null, value: number }
+              & { __typename: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName: string | null }
+              & { __typename: 'Unit' }
+            ) }
+            & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
+          )>, iconImage: (
+            { rendition: (
+              { src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, categoryPage: (
+            { id: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename: 'CategoryType' }
+          ), attributes: Array<(
+            { id: string, key: string }
+            & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+          ) | (
+            { value: string, id: string, key: string }
+            & { __typename: 'AttributeRichText' | 'AttributeText' }
+          )> }
+          & { __typename: 'Category' }
+        ) | null, level: (
+          { id: string, name: string, namePlural: string | null }
+          & { __typename: 'CategoryLevel' }
+        ) | null, image: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null, large: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null, small: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null, social: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null, rendition: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null }
+          & { __typename: 'Image' }
+        ) | null, indicators: Array<(
+          { id: string, values: Array<(
+            { date: string | null, value: number }
+            & { __typename: 'IndicatorValue' }
+          )>, goals: Array<(
+            { date: string | null, value: number }
+            & { __typename: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) }
+          & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
+        )>, iconImage: (
+          { rendition: (
+            { src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null }
+          & { __typename: 'Image' }
+        ) | null, categoryPage: (
+          { id: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename: 'CategoryType' }
+        ), attributes: Array<(
+          { id: string, key: string }
+          & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+        ) | (
+          { value: string, id: string, key: string }
+          & { __typename: 'AttributeRichText' | 'AttributeText' }
+        )> }
+        & { __typename: 'Category' }
+      ) | null }
+      & { __typename: 'Category' }
+    )> }
     & { __typename: 'AttributeCategoryChoice' }
   ) | (
-    { text: string | null, id: string, choice: (
-      { id: string, identifier: string, name: string }
-      & { __typename: 'AttributeTypeChoiceOption' }
-    ) | null, type: (
-      { id: string, identifier: string, name: string, choiceOptions: Array<(
+    { text: string | null, id: string, type: (
+      { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+        { id: string, name: string, shortName: string | null }
+        & { __typename: 'Unit' }
+      ) | null, choiceOptions: Array<(
         { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       )> }
       & { __typename: 'AttributeType' }
-    ) }
+    ), choice: (
+      { id: string, identifier: string, name: string }
+      & { __typename: 'AttributeTypeChoiceOption' }
+    ) | null }
     & { __typename: 'AttributeChoice' }
   ) | (
     { id: string, numericValue: number, type: (
-      { id: string, identifier: string, name: string, choiceOptions: Array<(
+      { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+        { id: string, name: string, shortName: string | null }
+        & { __typename: 'Unit' }
+      ) | null, choiceOptions: Array<(
         { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       )> }
@@ -17063,7 +17313,10 @@ export type PledgeFragmentFragment = (
     & { __typename: 'AttributeNumericValue' }
   ) | (
     { value: string, id: string, type: (
-      { id: string, identifier: string, name: string, choiceOptions: Array<(
+      { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+        { id: string, name: string, shortName: string | null }
+        & { __typename: 'Unit' }
+      ) | null, choiceOptions: Array<(
         { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
       )> }
@@ -17126,28 +17379,277 @@ export type PledgesQuery = (
         & { __typename: 'Image' }
       ) | null, attributes: Array<(
         { id: string, type: (
-          { id: string, identifier: string, name: string, choiceOptions: Array<(
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
             { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
-        ) }
+        ), categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+            { id: string, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          ) | null, image: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, large: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, small: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, social: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, rendition: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, indicators: Array<(
+            { id: string, values: Array<(
+              { date: string | null, value: number }
+              & { __typename: 'IndicatorValue' }
+            )>, goals: Array<(
+              { date: string | null, value: number }
+              & { __typename: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName: string | null }
+              & { __typename: 'Unit' }
+            ) }
+            & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
+          )>, iconImage: (
+            { rendition: (
+              { src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, categoryPage: (
+            { id: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename: 'CategoryType' }
+          ), attributes: Array<(
+            { id: string, key: string }
+            & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+          ) | (
+            { value: string, id: string, key: string }
+            & { __typename: 'AttributeRichText' | 'AttributeText' }
+          )>, parent: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+                  { id: string, name: string, namePlural: string | null }
+                  & { __typename: 'CategoryLevel' }
+                ) | null, image: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null, large: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null, small: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null, social: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null, rendition: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null }
+                  & { __typename: 'Image' }
+                ) | null, indicators: Array<(
+                  { id: string, values: Array<(
+                    { date: string | null, value: number }
+                    & { __typename: 'IndicatorValue' }
+                  )>, goals: Array<(
+                    { date: string | null, value: number }
+                    & { __typename: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName: string | null }
+                    & { __typename: 'Unit' }
+                  ) }
+                  & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
+                )>, iconImage: (
+                  { rendition: (
+                    { src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null }
+                  & { __typename: 'Image' }
+                ) | null, categoryPage: (
+                  { id: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename: 'CategoryType' }
+                ), attributes: Array<(
+                  { id: string, key: string }
+                  & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+                ) | (
+                  { value: string, id: string, key: string }
+                  & { __typename: 'AttributeRichText' | 'AttributeText' }
+                )> }
+                & { __typename: 'Category' }
+              ) | null, level: (
+                { id: string, name: string, namePlural: string | null }
+                & { __typename: 'CategoryLevel' }
+              ) | null, image: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null, large: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null, small: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null, social: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null, rendition: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null }
+                & { __typename: 'Image' }
+              ) | null, indicators: Array<(
+                { id: string, values: Array<(
+                  { date: string | null, value: number }
+                  & { __typename: 'IndicatorValue' }
+                )>, goals: Array<(
+                  { date: string | null, value: number }
+                  & { __typename: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName: string | null }
+                  & { __typename: 'Unit' }
+                ) }
+                & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
+              )>, iconImage: (
+                { rendition: (
+                  { src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null }
+                & { __typename: 'Image' }
+              ) | null, categoryPage: (
+                { id: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename: 'CategoryType' }
+              ), attributes: Array<(
+                { id: string, key: string }
+                & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+              ) | (
+                { value: string, id: string, key: string }
+                & { __typename: 'AttributeRichText' | 'AttributeText' }
+              )> }
+              & { __typename: 'Category' }
+            ) | null, level: (
+              { id: string, name: string, namePlural: string | null }
+              & { __typename: 'CategoryLevel' }
+            ) | null, image: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, large: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, small: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, social: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, rendition: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, indicators: Array<(
+              { id: string, values: Array<(
+                { date: string | null, value: number }
+                & { __typename: 'IndicatorValue' }
+              )>, goals: Array<(
+                { date: string | null, value: number }
+                & { __typename: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName: string | null }
+                & { __typename: 'Unit' }
+              ) }
+              & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
+            )>, iconImage: (
+              { rendition: (
+                { src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, categoryPage: (
+              { id: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename: 'CategoryType' }
+            ), attributes: Array<(
+              { id: string, key: string }
+              & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+            ) | (
+              { value: string, id: string, key: string }
+              & { __typename: 'AttributeRichText' | 'AttributeText' }
+            )> }
+            & { __typename: 'Category' }
+          ) | null }
+          & { __typename: 'Category' }
+        )> }
         & { __typename: 'AttributeCategoryChoice' }
       ) | (
-        { text: string | null, id: string, choice: (
-          { id: string, identifier: string, name: string }
-          & { __typename: 'AttributeTypeChoiceOption' }
-        ) | null, type: (
-          { id: string, identifier: string, name: string, choiceOptions: Array<(
+        { text: string | null, id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
             { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
-        ) }
+        ), choice: (
+          { id: string, identifier: string, name: string }
+          & { __typename: 'AttributeTypeChoiceOption' }
+        ) | null }
         & { __typename: 'AttributeChoice' }
       ) | (
         { id: string, numericValue: number, type: (
-          { id: string, identifier: string, name: string, choiceOptions: Array<(
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
             { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
@@ -17156,7 +17658,10 @@ export type PledgesQuery = (
         & { __typename: 'AttributeNumericValue' }
       ) | (
         { value: string, id: string, type: (
-          { id: string, identifier: string, name: string, choiceOptions: Array<(
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
             { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
@@ -17282,28 +17787,277 @@ export type PledgeQuery = (
         & { __typename: 'Image' }
       ) | null, attributes: Array<(
         { id: string, type: (
-          { id: string, identifier: string, name: string, choiceOptions: Array<(
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
             { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
-        ) }
+        ), categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+            { id: string, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          ) | null, image: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, large: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, small: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, social: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, rendition: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, indicators: Array<(
+            { id: string, values: Array<(
+              { date: string | null, value: number }
+              & { __typename: 'IndicatorValue' }
+            )>, goals: Array<(
+              { date: string | null, value: number }
+              & { __typename: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { name: string, shortName: string | null }
+              & { __typename: 'Unit' }
+            ) }
+            & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
+          )>, iconImage: (
+            { rendition: (
+              { src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, categoryPage: (
+            { id: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename: 'CategoryType' }
+          ), attributes: Array<(
+            { id: string, key: string }
+            & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+          ) | (
+            { value: string, id: string, key: string }
+            & { __typename: 'AttributeRichText' | 'AttributeText' }
+          )>, parent: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+                  { id: string, name: string, namePlural: string | null }
+                  & { __typename: 'CategoryLevel' }
+                ) | null, image: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null, large: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null, small: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null, social: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null, rendition: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null }
+                  & { __typename: 'Image' }
+                ) | null, indicators: Array<(
+                  { id: string, values: Array<(
+                    { date: string | null, value: number }
+                    & { __typename: 'IndicatorValue' }
+                  )>, goals: Array<(
+                    { date: string | null, value: number }
+                    & { __typename: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { name: string, shortName: string | null }
+                    & { __typename: 'Unit' }
+                  ) }
+                  & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
+                )>, iconImage: (
+                  { rendition: (
+                    { src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null }
+                  & { __typename: 'Image' }
+                ) | null, categoryPage: (
+                  { id: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename: 'CategoryType' }
+                ), attributes: Array<(
+                  { id: string, key: string }
+                  & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+                ) | (
+                  { value: string, id: string, key: string }
+                  & { __typename: 'AttributeRichText' | 'AttributeText' }
+                )> }
+                & { __typename: 'Category' }
+              ) | null, level: (
+                { id: string, name: string, namePlural: string | null }
+                & { __typename: 'CategoryLevel' }
+              ) | null, image: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null, large: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null, small: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null, social: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null, rendition: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null }
+                & { __typename: 'Image' }
+              ) | null, indicators: Array<(
+                { id: string, values: Array<(
+                  { date: string | null, value: number }
+                  & { __typename: 'IndicatorValue' }
+                )>, goals: Array<(
+                  { date: string | null, value: number }
+                  & { __typename: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { name: string, shortName: string | null }
+                  & { __typename: 'Unit' }
+                ) }
+                & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
+              )>, iconImage: (
+                { rendition: (
+                  { src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null }
+                & { __typename: 'Image' }
+              ) | null, categoryPage: (
+                { id: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename: 'CategoryType' }
+              ), attributes: Array<(
+                { id: string, key: string }
+                & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+              ) | (
+                { value: string, id: string, key: string }
+                & { __typename: 'AttributeRichText' | 'AttributeText' }
+              )> }
+              & { __typename: 'Category' }
+            ) | null, level: (
+              { id: string, name: string, namePlural: string | null }
+              & { __typename: 'CategoryLevel' }
+            ) | null, image: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, large: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, small: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, social: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, rendition: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, indicators: Array<(
+              { id: string, values: Array<(
+                { date: string | null, value: number }
+                & { __typename: 'IndicatorValue' }
+              )>, goals: Array<(
+                { date: string | null, value: number }
+                & { __typename: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { name: string, shortName: string | null }
+                & { __typename: 'Unit' }
+              ) }
+              & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
+            )>, iconImage: (
+              { rendition: (
+                { src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, categoryPage: (
+              { id: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename: 'CategoryType' }
+            ), attributes: Array<(
+              { id: string, key: string }
+              & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+            ) | (
+              { value: string, id: string, key: string }
+              & { __typename: 'AttributeRichText' | 'AttributeText' }
+            )> }
+            & { __typename: 'Category' }
+          ) | null }
+          & { __typename: 'Category' }
+        )> }
         & { __typename: 'AttributeCategoryChoice' }
       ) | (
-        { text: string | null, id: string, choice: (
-          { id: string, identifier: string, name: string }
-          & { __typename: 'AttributeTypeChoiceOption' }
-        ) | null, type: (
-          { id: string, identifier: string, name: string, choiceOptions: Array<(
+        { text: string | null, id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
             { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
           & { __typename: 'AttributeType' }
-        ) }
+        ), choice: (
+          { id: string, identifier: string, name: string }
+          & { __typename: 'AttributeTypeChoiceOption' }
+        ) | null }
         & { __typename: 'AttributeChoice' }
       ) | (
         { id: string, numericValue: number, type: (
-          { id: string, identifier: string, name: string, choiceOptions: Array<(
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
             { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
@@ -17312,7 +18066,10 @@ export type PledgeQuery = (
         & { __typename: 'AttributeNumericValue' }
       ) | (
         { value: string, id: string, type: (
-          { id: string, identifier: string, name: string, choiceOptions: Array<(
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
             { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
           )> }
