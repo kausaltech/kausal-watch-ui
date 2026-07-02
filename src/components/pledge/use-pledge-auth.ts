@@ -29,6 +29,7 @@ function getStoredToken(): string | null {
 
 function storeAuth(token: string): void {
   localStorage.setItem(PLEDGE_AUTH_TOKEN_KEY, token);
+  localStorage.removeItem(PUBLIC_USER_UUID_KEY);
   window.dispatchEvent(new CustomEvent(PLEDGE_AUTH_CHANGED_EVENT));
 }
 
