@@ -34,12 +34,6 @@
       "count": 1,
       "message": "Unused '@ts-expect-error' directive."
     },
-    "007e1f074951bf350d3d84817970a5233422ce71": {
-      "file": "kausal_common/src/utils/paths/metric/slicing.ts",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '{ id: string; type: string; options: string[]; }[]' is not assignable to type 'readonly { readonly id: string; readonly type: \"group\" | \"category\"; readonly options: readonly string[]; }[]'."
-    },
     "ae9812eda76931093b36d51787db5781f73a7931": {
       "file": "kausal_common/src/utils/paths/progress-tracking.ts",
       "code": "TS2307",
@@ -184,18 +178,6 @@
       "count": 1,
       "message": "Type '{ id: string; } | null | undefined' is not assignable to type 'CatType | null'."
     },
-    "6e86539b25ade18f39f3827c123080678d9743ed": {
-      "file": "src/common/categories.ts",
-      "code": "TS2869",
-      "count": 1,
-      "message": "Right operand of ?? is unreachable because the left operand is never nullish."
-    },
-    "35aab42e9bf0a4f5d3d25457c95d51fdbeba3c69": {
-      "file": "src/common/categories.ts",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property '__typename' does not exist on type 'CT'."
-    },
     "eb65dd4f1c640e2428503f8d64041c3b6e803ba8": {
       "file": "src/common/categories.ts",
       "code": "TS2339",
@@ -285,12 +267,6 @@
       "code": "TS2322",
       "count": 1,
       "message": "Type '((id: string) => { id: string; identifier: string; name: string; officialName: string | null; leadParagraph: string; description: string | null; completion: number | null; color: string | null; ... 35 more ...; allDependencyRelationships: ({ ...; } & { ...; })[]; } & { ...; }) | undefined' is not assignable to type '(id: string) => { id: string; identifier: string; name: string; officialName: string | null; leadParagraph: string; description: string | null; completion: number | null; color: string | null; ... 35 more ...; allDependencyRelationships: ({ ...; } & { ...; })[]; } & { ...; }'."
-    },
-    "071406cf0b4ed06e8eebd7fff7632c3dea3e3bcb": {
-      "file": "src/components/actions/ActionCard.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'viewUrl' does not exist on type '{ id: string; identifier: string; plan: { id: string; shortName: string | null; versionName: string; viewUrl: string | null; } & { __typename: \"Plan\"; }; } & { __typename: \"Action\"; }'."
     },
     "9a80bfc5770e48b79743f64c2c03d60359ba70d6": {
       "file": "src/components/actions/ActionCardList.tsx",
@@ -796,12 +772,6 @@
       "count": 1,
       "message": "Type 'ForwardedRef<HTMLSelectElement>' is not assignable to type 'Ref<HTMLInputElement | HTMLTextAreaElement> | undefined'."
     },
-    "965528ee7f9ee14e05a7caae8a00c6ff14ec26b5": {
-      "file": "src/components/common/StatusBadge.tsx",
-      "code": "TS1484",
-      "count": 1,
-      "message": "'ActionWithStatusSummary' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
-    },
     "96b17545d40db48dd0fb2524c394f8a94a75d285": {
       "file": "src/components/common/StreamField.tsx",
       "code": "TS2322",
@@ -880,12 +850,6 @@
       "count": 3,
       "message": "Property 'value' does not exist on type '{}'."
     },
-    "687c96369e8fec8ddf9c59f03e7ddf60e3a08f85": {
-      "file": "src/components/contentblocks/ActionCategoryFilterCardsBlock.tsx",
-      "code": "TS1484",
-      "count": 1,
-      "message": "'CommonContentBlockProps' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
-    },
     "4422eb9a2061cdc945b3f59e38698a9b4e0c708a": {
       "file": "src/components/contentblocks/ActionCategoryFilterCardsBlock.tsx",
       "code": "TS2322",
@@ -897,12 +861,6 @@
       "code": "TS2339",
       "count": 1,
       "message": "Property 'map' does not exist on type '{}'."
-    },
-    "2f4ebd76e066ca7119f09952d1818b9f0143825a": {
-      "file": "src/components/contentblocks/ActionHighlightsBlock.tsx",
-      "code": "TS1484",
-      "count": 1,
-      "message": "'CommonContentBlockProps' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
     },
     "346d60ce5b9ce2f5db2f25449783ffd426215812": {
       "file": "src/components/contentblocks/ActionListBlock.tsx",
@@ -1303,7 +1261,7 @@
     "caf022d8f1ba279d6aee9c803d834ee2a6b01c53": {
       "file": "src/components/graphs/legacy/IndicatorGraph.tsx",
       "code": "TS18048",
-      "count": 8,
+      "count": 7,
       "message": "'theme.settings.graphs' is possibly 'undefined'."
     },
     "fd5636d4bd1af315d3fe77741eeb30c2f79f28fa": {
@@ -1341,12 +1299,6 @@
       "code": "TS18047",
       "count": 1,
       "message": "'plan.mainMenu' is possibly 'null'."
-    },
-    "f5dbd2d707db937143c9fd8b712c129762c7d1bd": {
-      "file": "src/components/home/HeroSmallImage.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type 'string | null' is not assignable to type 'string | undefined'."
     },
     "e9cce0de30b4a8ea055f601f3f037ebeee4ee882": {
       "file": "src/components/indicators/Connector.tsx",
@@ -1407,36 +1359,6 @@
       "code": "TS18049",
       "count": 1,
       "message": "'d' is possibly 'null' or 'undefined'."
-    },
-    "f1d2c60aa74fdd9a22b94f6a3a499a00e49715f4": {
-      "file": "src/components/indicators/IndicatorCausalVisualisation.tsx",
-      "code": "TS1484",
-      "count": 1,
-      "message": "'ReactElement' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
-    },
-    "6cf292655f7910026c9bb6defeb59118d6bf6f4b": {
-      "file": "src/components/indicators/IndicatorCausalVisualisation.tsx",
-      "code": "TS2345",
-      "count": 1,
-      "message": "Argument of type 'any' is not assignable to parameter of type 'never'."
-    },
-    "f6e6e0321acb2857d40af3b52c40f3731d40ae7e": {
-      "file": "src/components/indicators/IndicatorCausalVisualisation.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'message' does not exist on type 'never'."
-    },
-    "343d91aa9089fb2728e62af96d1efad10d0da11d": {
-      "file": "src/components/indicators/IndicatorCausalVisualisation.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'nodes' does not exist on type 'string'."
-    },
-    "fd64e80453c3fba7e8f9e3a21022289d21eca37e": {
-      "file": "src/components/indicators/IndicatorCausalVisualisation.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'edges' does not exist on type 'string'."
     },
     "877037190c5a73ac657b2767990c5c14b4d114aa": {
       "file": "src/components/indicators/indicatorFactorUtils.ts",
@@ -1623,24 +1545,6 @@
       "code": "TS2305",
       "count": 1,
       "message": "Module '\"@/common/__generated__/graphql\"' has no exported member 'Unit'."
-    },
-    "ff0d5da1f3105de1c27065c094682e6bdf9fdc7f": {
-      "file": "src/components/insight/CytoGraph.js",
-      "code": "TS18048",
-      "count": 1,
-      "message": "'cygraph' is possibly 'undefined'."
-    },
-    "95599889eb7e9cd29e2eb194028cb86f33c5a404": {
-      "file": "src/components/insight/CytoGraph.js",
-      "code": "TS2769",
-      "count": 1,
-      "message": "No overload matches this call."
-    },
-    "35bbee7ee5ea0cd7c03b3005149faa0c0481233e": {
-      "file": "src/components/insight/CytoGraph.js",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type 'string | undefined' is not assignable to type 'string | null'."
     },
     "f306d0583698adab58cbfabf15027be41385eb7d": {
       "file": "src/components/insight/VisGraph.js",
@@ -1983,18 +1887,6 @@
       "code": "TS2322",
       "count": 1,
       "message": "Type '(node: HTMLButtonElement | null) => void' is not assignable to type 'HTMLButtonElement & (Ref<HTMLButtonElement> | undefined)'."
-    },
-    "1df4961cbb5d669dc5b0ff4877f3a2e6c9ead211": {
-      "file": "src/components/plans/PlanChip.tsx",
-      "code": "TS1484",
-      "count": 1,
-      "message": "'Theme' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
-    },
-    "67d3019b1e68dd9fd96fe53c6b90578044eea5e5": {
-      "file": "src/components/plans/PlanChip.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type 'string' is not assignable to type '\"s000\" | \"s025\" | \"s050\" | \"s100\" | \"s150\" | \"s200\" | \"s300\" | \"s400\" | \"s600\" | \"s800\"'."
     },
     "203b3b6e2fcca0dc4953f7c675134e483d0d734d": {
       "file": "src/components/plans/PlanLink.tsx",

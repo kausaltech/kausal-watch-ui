@@ -2,17 +2,27 @@ import React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Theme } from '@kausal/themes/types';
+
+import type { Theme } from '@kausal/themes/types';
 import { transparentize } from 'polished';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
-const Tag = styled.div<{ $minWidth: string }>`
+const Tag = styled.div<{ $minWidth: string; $link?: boolean; $size: string }>`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   min-width: ${(props) => props.$minWidth};
   max-width: 600px;
-  border-radius: 4px;
+  padding: ${(props) => (props.$size === 'lg' ? props.theme.spaces.s050 : 0)};
+
+  ${(props) =>
+    props.$link === true &&
+    `
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  `}
 `;
 
 type PlanAvatarProps = {
@@ -24,9 +34,9 @@ const PlanAvatar = styled.img<PlanAvatarProps>`
   width: ${(props) => props.theme.spaces[props.size]};
   height: ${(props) => props.theme.spaces[props.size]};
   margin: 0
-    ${(props) => (props.size === 's300' ? props.theme.spaces.s100 : props.theme.spaces.s050)};
+    ${(props) => (props.size === 's400' ? props.theme.spaces.s100 : props.theme.spaces.s050)} 0 0;
   border-radius: 50%;
-  box-shadow: 0 0 3px 1px ${(props) => transparentize(0.8, props.theme.themeColors.black)};
+  box-shadow: 0 0 3px 1px ${(props) => transparentize(0.9, props.theme.themeColors.black)};
 `;
 
 const PlanName = styled.div<{ $negative?: boolean }>`
@@ -37,12 +47,13 @@ const PlanName = styled.div<{ $negative?: boolean }>`
 `;
 
 const PlanTitle = styled.div<{
-  $size: string;
+  $size: 'fontSizeSm' | 'fontSizeMd';
   $weight: 'fontWeightNormal' | 'fontWeightBold';
 }>`
   font-size: ${(props) => props.theme[props.$size]};
   font-weight: ${(props) => props.theme[props.$weight]};
-  line-height: 1.2;
+  line-height: ${(props) => props.theme.lineHeightSm};
+  margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
 const PlanOrg = styled.div<{ $negative?: boolean }>`
@@ -74,21 +85,25 @@ interface PlanChipProps {
    * Is this a negative variant?
    */
   negative?: boolean;
+  /**
+   * Should this chip be a link?
+   */
+  link?: boolean;
 }
 
 const IMAGE_SIZES = {
   xs: 's100',
   sm: 's100',
   md: 's200',
-  lg: 's300',
-};
+  lg: 's400',
+} satisfies Record<NonNullable<PlanChipProps['size']>, keyof Theme['spaces']>;
 
 const FONT_SIZES = {
   xs: 'fontSizeSm',
   sm: 'fontSizeSm',
   md: 'fontSizeSm',
   lg: 'fontSizeMd',
-};
+} satisfies Record<NonNullable<PlanChipProps['size']>, 'fontSizeSm' | 'fontSizeMd'>;
 
 const MIN_WIDTH = {
   xs: '80px',
@@ -98,11 +113,23 @@ const MIN_WIDTH = {
 };
 
 const PlanChip = React.forwardRef<HTMLDivElement, PlanChipProps>((props, ref) => {
-  const { planImage, planShortName, organization, size = 'md', negative = false } = props;
+  const {
+    planImage,
+    planShortName,
+    organization,
+    size = 'md',
+    negative = false,
+    link = false,
+  } = props;
   const theme = useTheme();
   const avatarOnly = !planShortName && !organization;
   return (
-    <Tag ref={ref} $minWidth={avatarOnly ? 'auto' : MIN_WIDTH[size]}>
+    <Tag
+      ref={ref}
+      $minWidth={avatarOnly ? 'auto' : MIN_WIDTH[size]}
+      $link={link ? true : undefined}
+      $size={size}
+    >
       <PlanAvatar
         src={planImage ?? getThemeStaticURL(theme.defaultAvatarOrgImage)}
         size={IMAGE_SIZES[size]}
