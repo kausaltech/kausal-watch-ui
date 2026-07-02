@@ -10,12 +10,12 @@ import { usePlan } from '@/context/plan';
 const PlanListSection = styled.div`
   background-color: ${(props) =>
     props.theme.section.relatedPlans?.background || props.theme.themeColors.dark};
-  padding: ${(props) => props.theme.spaces.s200} 0;
+  padding: ${(props) => props.theme.spaces.s300} 0;
 
   h2,
   h2 a {
     text-align: center;
-    margin-bottom: ${(props) => props.theme.spaces.s100};
+    margin-bottom: ${(props) => props.theme.spaces.s200};
     font-size: ${(props) => props.theme.fontSizeMd};
     color: ${(props) => props.theme.section?.relatedPlans?.color || props.theme.themeColors.white};
   }
@@ -72,6 +72,7 @@ const RelatedPlanListBlock = ({ id }: Props) => {
                 organization={theme.settings?.multiplan?.hideLongPlanNames ? undefined : plan.name}
                 size="lg"
                 negative={negativeChips}
+                link={true}
               />
             </a>
           )}
@@ -83,6 +84,7 @@ const RelatedPlanListBlock = ({ id }: Props) => {
                 organization={theme.settings?.multiplan?.hideLongPlanNames ? undefined : pl.name}
                 size="lg"
                 negative={negativeChips}
+                link={true}
               />
             </a>
           ))}
