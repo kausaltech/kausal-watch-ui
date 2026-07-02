@@ -124,25 +124,17 @@ export function usePublicUser() {
   // doesn't fire a duplicate fetch — commitToPledge calls fetchUser explicitly.
   const skipEffectFetchRef = useRef(false);
 
-  // Stable ref so the auth-change handler always sees the latest UUID without
-  // needing to re-register on every UUID change.
-  const userUuidRef = useRef(userUuid);
-
+  // Fetch user data on mount: token takes precedence over UUID.
   useEffect(() => {
-    userUuidRef.current = userUuid;
-  });
-
-  // Fetch user data on mount: via UUID (anon), bearer token (signed in), or both.
-  useEffect(() => {
-    if (userUuid) {
+    if (getPledgeAuthToken()) {
+      void fetchUser({ variables: {} });
+    } else if (userUuid) {
       if (skipEffectFetchRef.current) {
         skipEffectFetchRef.current = false;
         return;
       }
+
       void fetchUser({ variables: { user: userUuid } });
-    } else if (getPledgeAuthToken()) {
-      // No anon UUID (cleared on a previous sign-in), but bearer token present
-      void fetchUser({ variables: {} });
     }
   }, [userUuid, fetchUser]);
 
@@ -150,10 +142,8 @@ export function usePublicUser() {
   useEffect(() => {
     const handler = () => {
       if (getPledgeAuthToken()) {
-        // Signed in — refresh committed pledges from the bearer token user
-        const uuid = userUuidRef.current;
-
-        void fetchUser({ variables: uuid ? { user: uuid } : {} });
+        // Signed in — identify via token, UUID has been cleared from localStorage
+        void fetchUser({ variables: {} });
       } else {
         // Signed out — clear the session entirely
         localStorage.removeItem(PUBLIC_USER_UUID_KEY);
@@ -267,7 +257,11 @@ export function usePublicUser() {
       }
 
       await commitMutation({
-        variables: { user: userUuid ?? undefined, pledge: pledgeId, committed: false },
+        variables: {
+          user: isAuth ? undefined : (userUuid ?? undefined),
+          pledge: pledgeId,
+          committed: false,
+        },
       });
 
       if (isAuth) {
