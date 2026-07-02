@@ -4,8 +4,7 @@ import { transientOptions } from '@common/themes/styles/styled';
 
 export const HeroCard = styled('div', transientOptions)<{ $cardColor: string }>`
   position: relative;
-  padding: ${(props) =>
-    `${props.theme.spaces.s200} ${props.theme.spaces.s200} ${props.theme.spaces.s100}`};
+  padding: var(--inner-block-padding-y) var(--inner-block-padding-x);
   border-radius: ${(props) => props.theme.cardBorderRadius};
   background-color: ${(props) =>
     props.$cardColor === 'dark' ? props.theme.brandDark : props.theme.cardBackground.primary};
