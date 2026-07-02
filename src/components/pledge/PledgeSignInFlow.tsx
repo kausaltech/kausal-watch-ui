@@ -293,10 +293,10 @@ function PledgeSignInFlow({
   const handlePinSubmit = useCallback(async () => {
     const ids = await verifyPin(pin);
 
-    if (ids.length > 0 || !error) {
+    if (ids !== null) {
       onComplete(ids);
     }
-  }, [pin, verifyPin, error, onComplete]);
+  }, [pin, verifyPin, onComplete]);
 
   const handleResend = useCallback(async () => {
     setPin('');

@@ -201,7 +201,7 @@ export function usePledgeSignIn() {
   );
 
   const verifyPin = useCallback(
-    async (pin: string): Promise<string[]> => {
+    async (pin: string): Promise<string[] | null> => {
       setLoading(true);
       setError(null);
 
@@ -219,7 +219,7 @@ export function usePledgeSignIn() {
 
         setError(code ?? 'INVALID_PIN');
 
-        return [];
+        return null;
       } finally {
         setLoading(false);
       }
@@ -302,15 +302,12 @@ type PublicUserNavQuery = { publicUser: { id: string; email: string } | null };
  * Reacts to auth changes dispatched in the same tab.
  */
 export function usePledgeNavUser() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!getStoredToken());
   const apolloClient = useApolloClient();
 
   useEffect(() => {
     const handler = () => {
-      setIsAuthenticated(!!getStoredToken());
-
       const authenticated = !!getStoredToken();
-
       setIsAuthenticated(authenticated);
 
       if (!authenticated) {
