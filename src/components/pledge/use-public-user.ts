@@ -87,7 +87,7 @@ function parseUserData(
 
   if (typeof raw === 'string') {
     try {
-      return JSON.parse(raw);
+      return JSON.parse(raw) as { [key: string]: string };
     } catch {
       return {};
     }
