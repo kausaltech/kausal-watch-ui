@@ -227,7 +227,7 @@ const RichTextContainer = styled.div`
   display: flex;
   justify-content: center;
   background-color: ${({ theme }) => theme.themeColors.white};
-  padding: 0 ${({ theme }) => theme.spaces.s200};
+  padding: var(--inner-block-padding-y) var(--inner-block-padding-x);
 
   > div {
     flex: 0 1 800px;

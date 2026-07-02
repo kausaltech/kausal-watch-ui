@@ -96,6 +96,14 @@ const StyledRichText = styled.div`
     width: 100%;
     height: 100%;
   }
+
+  > *:first-child {
+    margin-top: 0;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 //Fallback collapse based on height. Only used when the safe breakpoint not found.
