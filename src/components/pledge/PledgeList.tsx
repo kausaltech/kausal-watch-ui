@@ -493,6 +493,7 @@ function PledgeList({ pledges }: Props) {
                     isMostCommitted={pledge.id === mostCommitted?.id}
                   />
 
+                  {/* TODO: This is causing hydration errors after user loads and its hidden */}
                   {showCreateAccountCard && (
                     <PledgeCreateAccountCard onCreateAccount={() => setShowSignInDrawer(true)} />
                   )}
