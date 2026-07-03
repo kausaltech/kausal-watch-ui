@@ -10,6 +10,8 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Container, Spinner } from 'reactstrap';
 
+import type { TFunction } from '@common/i18n';
+
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 
@@ -158,6 +160,20 @@ type ConfirmPledgeProps = {
 
 type Step = 'form' | 'account' | 'pin' | 'success';
 
+function getDrawerTitle(step: Step, t: TFunction) {
+  if (step === 'form') {
+    return t('pledge-confirm-title');
+  }
+
+  if (step === 'account' || step === 'pin') {
+    t('pledge-sign-in-banner-title');
+  }
+
+  if (step === 'success') {
+    return t('pledge-success-title');
+  }
+}
+
 function ConfirmPledge({
   isOpen,
   onClose,
@@ -256,13 +272,7 @@ function ConfirmPledge({
           <StyledDrawer>
             <StyledDrawerHeader>
               <StyledIcon name="award" width="20px" height="20px" />
-              <StyledDrawerTitle>
-                {step === 'form'
-                  ? t('pledge-confirm-title')
-                  : step === 'account' || step === 'pin'
-                    ? t('pledge-sign-in-banner-title')
-                    : t('pledge-success-title')}
-              </StyledDrawerTitle>
+              <StyledDrawerTitle>{getDrawerTitle(step, t)}</StyledDrawerTitle>
               <StyledCloseButton onClick={handleClose} aria-label={t('close')}>
                 <Icon name="times" width="32px" height="32px" />
               </StyledCloseButton>

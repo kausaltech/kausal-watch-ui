@@ -10,7 +10,7 @@ const StyledCard = styled.div`
   background: ${({ theme }) => theme.brandDark};
   color: ${({ theme }) => theme.themeColors.white};
   border-radius: ${({ theme }) => theme.cardBorderRadius};
-  padding: ${({ theme }) => theme.spaces.s200};
+  padding: ${({ theme }) => theme.spaces.s150};
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spaces.s150};
@@ -28,6 +28,7 @@ const StyledDescription = styled.p`
   margin: 0;
   line-height: ${({ theme }) => theme.lineHeightMd};
   opacity: 0.9;
+  flex: 1 0 auto;
 `;
 
 const StyledButton = styled(Button)`
@@ -45,7 +46,7 @@ function PledgeCreateAccountCard({ onCreateAccount }: Props) {
     <StyledCard>
       <StyledTitle>{t('pledge-create-account-title')}</StyledTitle>
       <StyledDescription>{t('pledge-create-account-description')}</StyledDescription>
-      <StyledButton color="light" onClick={onCreateAccount}>
+      <StyledButton size="sm" color="light" onClick={onCreateAccount}>
         {t('pledge-create-account-button')}
       </StyledButton>
     </StyledCard>

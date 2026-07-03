@@ -9,7 +9,6 @@ import { Chip, Collapse, InputAdornment, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 
 import { debounce } from 'lodash-es';
-import { AnimatePresence } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Search } from 'react-bootstrap-icons';
 import { Button, ButtonGroup, Container } from 'reactstrap';
@@ -547,17 +546,12 @@ function PledgeList({ pledges }: Props) {
           />
         )}
 
-        <AnimatePresence>
-          {showSignInDrawer && (
-            <SignInDrawer
-              key="sign-in-drawer"
-              isOpen={showSignInDrawer}
-              onClose={() => setShowSignInDrawer(false)}
-              onComplete={handleSignInComplete}
-              anonymousUserToken={userUuid ?? undefined}
-            />
-          )}
-        </AnimatePresence>
+        <SignInDrawer
+          isOpen={showSignInDrawer}
+          onClose={() => setShowSignInDrawer(false)}
+          onComplete={handleSignInComplete}
+          anonymousUserToken={userUuid ?? undefined}
+        />
       </StyledContainer>
     </StyledPageWrapper>
   );

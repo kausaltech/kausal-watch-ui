@@ -35,6 +35,7 @@ const StyledDrawer = styled(Container)`
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
   max-height: 90vh;
   overflow-y: auto;
+  max-width: 800px;
 `;
 
 const StyledDrawerHeader = styled.div`
@@ -119,7 +120,7 @@ function SignInDrawer({ isOpen, onClose, onComplete, anonymousUserToken, termsUr
           <StyledDrawer>
             <StyledDrawerHeader>
               <Icon name="user" width="20px" height="20px" />
-              <StyledDrawerTitle>{t('pledge-sign-in-banner-title')}</StyledDrawerTitle>
+              <StyledDrawerTitle>{t('pledge-sign-in-welcome')}</StyledDrawerTitle>
               <StyledCloseButton onClick={onClose} aria-label={t('close')}>
                 <Icon name="times" width="32px" height="32px" />
               </StyledCloseButton>
