@@ -248,7 +248,7 @@ function getFiltersFromPledgeAttributes(pledges: Pledge[]): Attribute[] {
 function PledgeList({ pledges }: Props) {
   const searchParams = useSearchParams();
   const [view, setView] = useState<ViewType>(() =>
-    searchParams.get('view') === 'my-pledges' ? 'MY_PLEDGES' : 'ALL'
+    searchParams?.get('view') === 'my-pledges' ? 'MY_PLEDGES' : 'ALL'
   );
   const [showConfirmDrawer, setShowConfirmDrawer] = useState(false);
   const [selectedPledge, setSelectedPledge] = useState<Pledge | null>(null);
