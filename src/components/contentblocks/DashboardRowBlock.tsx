@@ -13,12 +13,12 @@ import Card from '../common/Card';
 import { SectionHeader } from './ActionListBlock';
 import { getReadableThemeTextColor } from './colorUtils';
 
-const DashboardRowSection = styled.div`
+const DashboardRowSection = styled.div<{ $isFirst: boolean; $isLast: boolean }>`
   background-color: ${(props) => props.theme.themeColors.light};
   color: ${(props) => props.theme.neutralDark};
   position: relative;
-  padding-top: var(--block-padding-top);
-  padding-bottom: var(--block-padding-bottom);
+  padding-top: ${({ $isFirst }) => ($isFirst ? 'var(--block-padding-top)' : 0)};
+  padding-bottom: ${({ $isLast }) => ($isLast ? 'var(--block-padding-bottom)' : 0)};
 `;
 
 const DashboardSectionHeader = styled(SectionHeader)`
@@ -52,10 +52,14 @@ const isDashboardCardBlock = (block: DashboardBlock): boolean => !isDashboardHea
 
 interface DashboardRowBlockProps extends Omit<DashboardRowBlockFragment, 'rawValue'> {
   blocks: DashboardBlock[];
+  isFirst: boolean;
+  isLast: boolean;
 }
 
 const StyledRow = styled(Row)`
+  padding-bottom: ${({ theme }) => theme.spaces.s200};
   --bs-gutter-y: ${({ theme }) => theme.spaces.s200};
+  --bs-gutter-x: ${({ theme }) => theme.spaces.s200};
 `;
 
 /* Style richtext content slightly smaller on dashboard cards*/
@@ -135,7 +139,7 @@ const DashboardCardContents = ({ block }: { block: DashboardBlock }) => {
   );
 };
 
-const DashboardRowBlock = ({ id, blocks }: DashboardRowBlockProps) => {
+const DashboardRowBlock = ({ id, blocks, isFirst, isLast }: DashboardRowBlockProps) => {
   const t = useTranslations();
   const headerBlock = blocks.find(isDashboardHeaderBlock);
   const cardBlocks = blocks.filter(isDashboardCardBlock);
@@ -148,7 +152,7 @@ const DashboardRowBlock = ({ id, blocks }: DashboardRowBlockProps) => {
   ];
 
   return (
-    <DashboardRowSection id={id ?? undefined}>
+    <DashboardRowSection id={id ?? undefined} $isFirst={isFirst} $isLast={isLast}>
       <Container>
         {headerBlock?.text ? (
           <DashboardSectionHeader>{headerBlock.text}</DashboardSectionHeader>

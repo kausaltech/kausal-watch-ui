@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { Suspense, useEffect, useId, useRef } from 'react';
+import { type PropsWithChildren, Suspense, useEffect, useId, useRef } from 'react';
 
 import dynamic from 'next/dynamic';
 
@@ -201,7 +201,7 @@ interface BlockWrapperProps {
   $isFirst: boolean;
 }
 
-const BlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
+const StyledBlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
   margin-top: ${({ $isFirst, $hasBackground, $prevHasBackground }) => {
     if ($isFirst) return '0';
     if ($hasBackground && $prevHasBackground) return 'var(--block-gap-coloured)';
@@ -209,6 +209,20 @@ const BlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
     return 'var(--block-gap)';
   }};
 `;
+
+function BlockWrapper({
+  blockType,
+  ...props
+}: { blockType: string } & BlockWrapperProps & PropsWithChildren) {
+  // Prevent wrapping DashboardRowBlock to preserve the grid-like layout
+  // where multiple DashboardRowBlooks behave as a single grid with equal
+  // vertical and horizontal spacing
+  if (blockType === 'DashboardRowBlock') {
+    return props.children;
+  }
+
+  return <StyledBlockWrapper {...props} />;
+}
 
 function hasPathsContent(body: StreamFieldFragmentFragment[]) {
   return body.some(
@@ -319,10 +333,11 @@ type StreamFieldBlockProps = {
   block: StreamFieldFragmentFragment;
   hasSidebar: boolean;
   columnProps?: ColProps;
+  getSiblingBlockTypes: () => { prev: string | null; next: string | null };
 };
 
 function StreamFieldBlock(props: StreamFieldBlockProps) {
-  const { id, page, block, hasSidebar, columnProps } = props;
+  const { id, page, block, hasSidebar, columnProps, getSiblingBlockTypes } = props;
   const { __typename } = block;
   const plan = usePlan();
   const theme = useTheme();
@@ -676,7 +691,16 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'DashboardRowBlock': {
-      return <DashboardRowBlock {...block} id={id} />;
+      const siblingTypes = getSiblingBlockTypes();
+
+      return (
+        <DashboardRowBlock
+          {...block}
+          id={id}
+          isFirst={siblingTypes.prev !== 'DashboardRowBlock'}
+          isLast={siblingTypes.next !== 'DashboardRowBlock'}
+        />
+      );
     }
     case 'ChangeLogMessageBlock': {
       if (!plan.features.enableChangeLog) return null;
@@ -735,6 +759,16 @@ interface StreamFieldProps {
   precedingBlockHasBackground?: boolean;
 }
 
+function getSiblingBlockTypes(blocks: StreamFieldProps['blocks'], i: number) {
+  const prevBlock = blocks[i - 1];
+  const nextBlock = blocks[i + 1];
+
+  return {
+    prev: prevBlock?.blockType ?? null,
+    next: nextBlock?.blockType ?? null,
+  };
+}
+
 export default function StreamField(props: StreamFieldProps) {
   const { page, blocks, hasSidebar = false, columnProps, precedingBlockHasBackground } = props;
   const t = useTranslations();
@@ -772,6 +806,7 @@ export default function StreamField(props: StreamFieldProps) {
           >
             <Suspense fallback={<ContentLoader message={t('loading')} />}>
               <BlockWrapper
+                blockType={block.blockType}
                 $hasBackground={hasBackground}
                 $prevHasBackground={prevHasBackground}
                 $isFirst={index === 0}
@@ -782,6 +817,7 @@ export default function StreamField(props: StreamFieldProps) {
                   page={page}
                   hasSidebar={hasSidebar}
                   columnProps={columnProps}
+                  getSiblingBlockTypes={() => getSiblingBlockTypes(blocks, index)}
                 />
               </BlockWrapper>
             </Suspense>
