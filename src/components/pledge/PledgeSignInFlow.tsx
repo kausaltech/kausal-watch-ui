@@ -112,10 +112,6 @@ const StyledModeToggleLink = styled.button`
   }
 `;
 
-// ---------------------------------------------------------------------------
-// PIN input
-// ---------------------------------------------------------------------------
-
 const StyledPinWrapper = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spaces.s050};
@@ -205,10 +201,6 @@ function PinInput({ value, onChange, disabled = false }: PinInputProps) {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Public types
-// ---------------------------------------------------------------------------
-
 export type PledgeSignInFlowProps = {
   anonymousUserToken?: string;
   commitmentCount?: number;
@@ -220,10 +212,6 @@ export type PledgeSignInFlowProps = {
 };
 
 type FlowMode = 'signUp' | 'signIn';
-
-// ---------------------------------------------------------------------------
-// Error message resolver
-// ---------------------------------------------------------------------------
 
 function getPinErrorKey(code: string | null): string {
   switch (code) {
@@ -237,10 +225,6 @@ function getPinErrorKey(code: string | null): string {
       return 'pledge-sign-in-error-invalid-pin';
   }
 }
-
-// ---------------------------------------------------------------------------
-// Main component
-// ---------------------------------------------------------------------------
 
 function PledgeSignInFlow({
   anonymousUserToken,
