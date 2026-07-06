@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
+import { Fade, Popover } from '@mui/material';
 
 import styled from '@emotion/styled';
 
 import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Col, Container, Popover, PopoverBody, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 
 import { activeGoalVar, yearRangeVar } from '@common/apollo/paths-cache';
 
@@ -16,6 +18,10 @@ import { usePaths } from '@/context/paths/paths';
 
 const PanelContent = styled.div`
   padding: ${({ theme }) => `${theme.spaces.s150} ${theme.spaces.s050} ${theme.spaces.s050}`};
+`;
+
+const PopoverBody = styled.div`
+  padding: ${({ theme }) => theme.spaces.s100};
 `;
 
 const ButtonLabel = styled.label`
@@ -48,7 +54,7 @@ const StyledOutcomeCol = styled(Col)`
   }
 `;
 
-const StyledButton = styled.button<{ ref: HTMLButtonElement }>`
+const StyledButton = styled.button`
   width: 100%;
   text-align: left;
   white-space: nowrap;
@@ -69,11 +75,12 @@ const YearRangeSelector = (props) => {
   const inputReference = useRef<HTMLDivElement>(null);
   const triggerReference = useRef<HTMLButtonElement | null>(null);
 
-  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const popoverOpen = Boolean(anchorEl);
 
   useEffect(() => {
     if (disabled) {
-      setPopoverOpen(false);
+      setAnchorEl(null);
       yearRangeVar([minYear, maxYear]);
     }
   }, [disabled, maxYear, minYear]);
@@ -82,31 +89,23 @@ const YearRangeSelector = (props) => {
   // Year range
   const yearRange = useReactiveVar(yearRangeVar) ?? [minYear, maxYear];
 
-  const toggle = () => {
-    setPopoverOpen(!popoverOpen);
-    // Focus on the input when the popover is opened
-    setTimeout(() => {
-      if (popoverOpen) {
-        triggerReference?.current?.focus();
-      } else {
-        inputReference?.current?.focus();
-      }
-    }, 0);
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const setTriggerRef = useCallback(
-    (node: HTMLButtonElement | null) => {
-      triggerReference.current = node;
-    },
-    [triggerReference]
-  );
+  const handleClose = () => {
+    setAnchorEl(null);
+    // Return focus to the trigger when the popover closes
+    triggerReference?.current?.focus();
+  };
 
-  const setYearRange = useCallback(
-    (newRange: [number, number]) => {
-      yearRangeVar(newRange);
-    },
-    [yearRangeVar]
-  );
+  const setTriggerRef = useCallback((node: HTMLButtonElement | null) => {
+    triggerReference.current = node;
+  }, []);
+
+  const setYearRange = useCallback((newRange: [number, number]) => {
+    yearRangeVar(newRange);
+  }, []);
   const t = useTranslations();
   const buttonLabel = disabled ? '-' : `${yearRange[0]}–${yearRange[1]}`;
   if (!yearRange) return <div>Loading...</div>;
@@ -115,22 +114,24 @@ const YearRangeSelector = (props) => {
       <ButtonLabel>{t('comparing-years')}</ButtonLabel>
       <StyledButton
         className={`btn btn-light ${disabled ? 'disabled' : ''}`}
-        id="rangeSelector"
         aria-expanded={popoverOpen}
         aria-haspopup="dialog"
-        aria-controls="rangeSelectorPopover"
         ref={setTriggerRef}
         disabled={disabled}
+        onClick={handleOpen}
       >
         {buttonLabel}
       </StyledButton>
       <Popover
-        placement="bottom"
-        isOpen={popoverOpen}
-        target="rangeSelector"
-        toggle={toggle}
-        trigger="click"
-        aria-modal="true"
+        open={popoverOpen}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        // Fade avoids Grow's scale transform, which mis-positions react-range thumbs
+        slots={{ transition: Fade }}
+        // Focus the range selector once the popover has opened
+        slotProps={{ transition: { onEntered: () => inputReference?.current?.focus() } }}
       >
         <PopoverBody>
           <div tabIndex={-1} ref={inputReference}>

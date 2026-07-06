@@ -86,6 +86,32 @@ const PER_INSTANCE_SETTINGS: Record<
       'net_emissions/emission_scope:direct+negative': false,
     },
   },
+  'zuerich-2024': {
+    defaultOutcomeGraphType: {
+      'net_emissions/emission_scope:indirect': 'bar',
+      'net_emissions/emission_scope:direct+negative': 'area',
+    },
+    separateYears: {
+      'net_emissions/emission_scope:indirect': [1990, 2010, 2015, 2020, 2022, 2023],
+      'net_emissions/emission_scope:direct+negative': null,
+    },
+    outcomeDisclaimers: [
+      {
+        year: 2023,
+        node: 'net_emissions',
+        goal: 'net_emissions/emission_scope:direct+negative',
+        disclaimer: 'Die Werte für den Bereich Mobilität 2023 sind provisorisch',
+      },
+    ],
+    colorAdjust: {
+      'net_emissions/emission_scope:indirect': 1.75,
+      'net_emissions/emission_scope:direct+negative': 0,
+    },
+    hideForecast: {
+      'net_emissions/emission_scope:indirect': true,
+      'net_emissions/emission_scope:direct+negative': false,
+    },
+  },
   'zuerich-2025': {
     showOutcomeNodeDetails: false,
     defaultOutcomeGraphType: {
