@@ -108,7 +108,12 @@ function buildGroupsForPageCategory(
     parentGroup: CategoryNode;
     children: Array<{ group: CategoryNode; actions: ActionCardFragment[] }>;
   }>;
+  /** Actions that don't resolve to any category at the grouping level */
+  ungrouped: ActionCardFragment[];
 } {
+  const groupedActionIds = new Set<string>();
+  const getUngrouped = () => actions.filter((a) => !groupedActionIds.has(a.id));
+
   let sample: { parentId?: string; grandParentId?: string } | null = null;
   outer: for (const a of actions) {
     for (const c of a.categories as unknown as CategoryNode[]) {
@@ -132,10 +137,11 @@ function buildGroupsForPageCategory(
         if (!node) continue;
         if (!map.has(node.id)) map.set(node.id, { group: node, actions: [] });
         map.get(node.id)!.actions.push(a);
+        groupedActionIds.add(a.id);
       }
     }
     const oneLevel = Array.from(map.values()).sort((x, y) => compareOrderName(x.group, y.group));
-    return { mode: 'oneLevel', oneLevel };
+    return { mode: 'oneLevel', oneLevel, ungrouped: getUngrouped() };
   }
 
   // twoLevels-level (group is a grandchild under page category)
@@ -167,6 +173,7 @@ function buildGroupsForPageCategory(
           parentBucket.children.set(node.id, child);
         }
         child.actions.push(a);
+        groupedActionIds.add(a.id);
       }
     }
 
@@ -177,7 +184,7 @@ function buildGroupsForPageCategory(
         children: Array.from(children.values()).sort((a, b) => compareOrderName(a.group, b.group)),
       }));
 
-    return { mode: 'twoLevels', twoLevels };
+    return { mode: 'twoLevels', twoLevels, ungrouped: getUngrouped() };
   }
 
   const fallback = new Map<string, { group: CategoryNode; actions: ActionCardFragment[] }>();
@@ -187,10 +194,11 @@ function buildGroupsForPageCategory(
       if (!node) continue;
       if (!fallback.has(node.id)) fallback.set(node.id, { group: node, actions: [] });
       fallback.get(node.id)!.actions.push(a);
+      groupedActionIds.add(a.id);
     }
   }
   const oneLevel = Array.from(fallback.values()).sort((x, y) => compareOrderName(x.group, y.group));
-  return { mode: 'oneLevel', oneLevel };
+  return { mode: 'oneLevel', oneLevel, ungrouped: getUngrouped() };
 }
 
 type ActionListBlockProps = {
@@ -230,9 +238,31 @@ const ActionListBlock = (props: ActionListBlockProps) => {
     [planActions, groupLevelId, categoryId]
   );
 
-  const innerGroupBy = plan.primaryOrgs.length > 0 ? 'primaryOrg' : 'none';
+  // Don't group by primary org inside the cards when grouping by category level
+  const innerGroupBy = !groupLevelId && plan.primaryOrgs.length > 0 ? 'primaryOrg' : 'none';
 
   const displayHeader = heading ? heading : t('actions-plural', getActionTermContext(plan));
+
+  const namedGroupCount = groups
+    ? groups.mode === 'oneLevel'
+      ? groups.oneLevel!.length
+      : groups.twoLevels!.length
+    : 0;
+
+  // Actions whose categories don't resolve to any group are listed last under "Other"
+  const ungroupedSection = groups && groups.ungrouped.length > 0 && (
+    <section aria-labelledby="group-other">
+      <GroupHeading id="group-other">{t('other')}</GroupHeading>
+      <ActionCardList
+        actions={groups.ungrouped}
+        groupBy={innerGroupBy}
+        headingHierarchyDepth={2}
+        includeRelatedPlans={false}
+        showOtherCategory={false}
+        compactTopMargin={true}
+      />
+    </section>
+  );
 
   if (error)
     return (
@@ -250,7 +280,8 @@ const ActionListBlock = (props: ActionListBlockProps) => {
         {displayHeader && displayHeader !== '-' ? (
           <SectionHeader>{displayHeader}</SectionHeader>
         ) : null}
-        {!groups ? (
+        {!groups || namedGroupCount === 0 ? (
+          // No grouping configured, or nothing resolved to a group — plain list
           <ActionCardList
             actions={planActions}
             groupBy={innerGroupBy}
@@ -260,38 +291,44 @@ const ActionListBlock = (props: ActionListBlockProps) => {
             compactTopMargin={false}
           />
         ) : groups.mode === 'oneLevel' ? (
-          groups.oneLevel!.map(({ group, actions }) => (
-            <section key={group.id} aria-labelledby={`group-${group.id}`}>
-              <GroupHeading id={`group-${group.id}`}>{group.name ?? '—'}</GroupHeading>
-              <ActionCardList
-                actions={actions}
-                groupBy={innerGroupBy}
-                headingHierarchyDepth={2}
-                includeRelatedPlans={false}
-                showOtherCategory={false}
-                compactTopMargin={true}
-              />
-            </section>
-          ))
+          <>
+            {groups.oneLevel!.map(({ group, actions }) => (
+              <section key={group.id} aria-labelledby={`group-${group.id}`}>
+                <GroupHeading id={`group-${group.id}`}>{group.name ?? '—'}</GroupHeading>
+                <ActionCardList
+                  actions={actions}
+                  groupBy={innerGroupBy}
+                  headingHierarchyDepth={2}
+                  includeRelatedPlans={false}
+                  showOtherCategory={false}
+                  compactTopMargin={true}
+                />
+              </section>
+            ))}
+            {ungroupedSection}
+          </>
         ) : (
-          groups.twoLevels!.map(({ parentGroup, children }) => (
-            <div key={parentGroup.id}>
-              <ParentGroupHeading>{parentGroup.name ?? '—'}</ParentGroupHeading>
-              {children.map(({ group, actions }) => (
-                <section key={group.id} aria-labelledby={`group-${group.id}`}>
-                  <GroupHeading id={`group-${group.id}`}>{group.name ?? '—'}</GroupHeading>
-                  <ActionCardList
-                    actions={actions}
-                    groupBy={innerGroupBy}
-                    headingHierarchyDepth={2}
-                    includeRelatedPlans={false}
-                    showOtherCategory={false}
-                    compactTopMargin={true}
-                  />
-                </section>
-              ))}
-            </div>
-          ))
+          <>
+            {groups.twoLevels!.map(({ parentGroup, children }) => (
+              <div key={parentGroup.id}>
+                <ParentGroupHeading>{parentGroup.name ?? '—'}</ParentGroupHeading>
+                {children.map(({ group, actions }) => (
+                  <section key={group.id} aria-labelledby={`group-${group.id}`}>
+                    <GroupHeading id={`group-${group.id}`}>{group.name ?? '—'}</GroupHeading>
+                    <ActionCardList
+                      actions={actions}
+                      groupBy={innerGroupBy}
+                      headingHierarchyDepth={2}
+                      includeRelatedPlans={false}
+                      showOtherCategory={false}
+                      compactTopMargin={true}
+                    />
+                  </section>
+                ))}
+              </div>
+            ))}
+            {ungroupedSection}
+          </>
         )}
       </Container>
     </ActionListSection>
