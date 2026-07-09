@@ -103,11 +103,12 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 async function getPathsData(pathsInstance: string) {
   if (pathsInstance) {
-    const result = await tryRequest<GetInstanceContextQuery>(getPathsInstance(pathsInstance));
+    // Errors thrown by the query are captured to Sentry by tryRequest
+    const result = await tryRequest<GetInstanceContextQuery>(getPathsInstance(pathsInstance), {
+      pathsInstance,
+      context: 'getPathsData',
+    });
     if ('error' in result && result.error) {
-      captureException(result.error, {
-        extra: { pathsInstance, context: 'getPathsData' },
-      });
       return undefined;
     }
     const { data: pathsData, errors } = result as ApolloQueryResult<GetInstanceContextQuery>;
@@ -133,9 +134,18 @@ export default async function PlanLayout(props: Props) {
   Sentry.getIsolationScope().setTags({ 'plan.identifier': plan, 'plan.domain': domain });
   const cookieStore = await cookies();
   const origin = await getRequestOrigin();
-  const { data: planData } = await tryRequest(getPlan(domain, plan, origin));
+  const planResult = await tryRequest(getPlan(domain, plan, origin));
+  const planData = planResult.data;
 
   if (!planData?.plan) {
+    // The middleware resolved this plan for the hostname moments ago, so a
+    // missing plan here is a backend inconsistency rather than a bad URL.
+    // Query errors are already captured to Sentry by tryRequest.
+    if (!('error' in planResult) || !planResult.error) {
+      captureException(new Error(`GetPlanContext returned no plan before 404`), {
+        extra: { domain, plan, context: 'PlanLayout' },
+      });
+    }
     notFound();
   }
 
