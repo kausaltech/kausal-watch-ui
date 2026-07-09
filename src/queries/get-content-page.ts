@@ -314,6 +314,7 @@ const GET_CONTENT_PAGE = gql`
 
   fragment CategoryParentFragment on Category {
     parent {
+      id
       identifier
       name
       categoryPage {

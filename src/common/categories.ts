@@ -1,16 +1,33 @@
 import type { TCrumb } from '@/components/common/Breadcrumbs';
 
-import type { Category, PlanContextFragment } from './__generated__/graphql';
+import type { PlanContextFragment } from './__generated__/graphql';
+
+/**
+ * Minimal structural shape of a category required by the helpers below.
+ * (The generated GraphQL module no longer exports raw schema types.)
+ */
+export type Category = {
+  id: string;
+  identifier?: string | null;
+  name: string;
+  categoryPage?: { urlPath: string } | null;
+  parent?: Category | null;
+};
 
 export interface CategoryInput {
   id: string;
   parent?: {
     id: string;
+    common?: { id: string } | null;
   } | null;
+  common?: { id: string } | null;
 }
 
 export interface CategoryTypeInput {
   id: string;
+  identifier?: string;
+  __typename?: string;
+  common?: { id?: string; identifier?: string; name?: string } | null;
   categories: CategoryInput[];
 }
 
@@ -35,27 +52,26 @@ export function constructCatHierarchy<
   const cts: CTType[] = ctsIn
     .filter((ctIn) => mapToCommonCategories === false || ctIn.common != null)
     .map((ctIn) => {
-      // @ts-ignore
-      const categoryOrCommonCategoryType = mapToCommonCategories ? ctIn.common : ctIn;
-      const ct: CTType = {
+      // The filter above guarantees `common` exists when mapping to common categories
+      const categoryOrCommonCategoryType = (mapToCommonCategories ? ctIn.common : ctIn) ?? ctIn;
+      const ct = {
         ...categoryOrCommonCategoryType,
-      };
+      } as CTType;
       ct.categories = ctIn.categories.flatMap((cat) => {
         // Some categories don't have a common mapping.
-        // @ts-ignore
-        if (mapToCommonCategories && cat.common == null) return [];
-        // @ts-ignore
         const categoryOrCommon = mapToCommonCategories ? cat.common : cat;
-        const newCat: CatType = {
+        if (!categoryOrCommon) return [];
+        const newCat = {
           ...categoryOrCommon,
           type: ct,
           children: [],
-        };
+        } as unknown as CatType;
+        // Parents are provisionally plain ids; they are replaced with the real
+        // hierarchy objects below.
         if (mapToCommonCategories) {
-          // @ts-ignore
-          newCat.parent = cat.parent?.common ?? null;
+          newCat.parent = (cat.parent?.common ?? null) as CatType | null;
         } else {
-          newCat.parent = cat.parent;
+          newCat.parent = (cat.parent ?? null) as CatType | null;
         }
         objsById.set(newCat.id, newCat);
         return [newCat];
@@ -108,16 +124,15 @@ export function mapActionCategories<
   categoryTypes: CategoryTypeHierarchy<Cat>[],
   primaryRootCT: CT | null = null,
   depth: number,
-  useCommonCategories: boolean = (primaryRootCT as any)?.__typename === 'CommonCategoryType'
+  useCommonCategories: boolean = primaryRootCT?.__typename === 'CommonCategoryType'
 ) {
   const categories = categoryTypes.map((ct) => ct.categories).flat();
 
   const categoriesById: Map<string, Cat> = new Map(categories.map((c) => [c.id, c]));
   const mappedActions: ActionType[] = actions.map((action) => {
     let actionPrimaryCategories: Cat[] = [];
-    const actionCategories: (ActionType['categories'][0] | null)[] = action.categories
+    const actionCategories = action.categories
       .map((cat) => {
-        // @ts-ignore
         const category = useCommonCategories ? cat.common : cat;
         if (!category) return null;
         const catObj = categoriesById.get(category.id);
@@ -136,12 +151,11 @@ export function mapActionCategories<
         return catObj;
       })
       .filter((cat) => cat != null);
-    // @ts-ignore
-    const mappedAction: ActionType = {
+    const mappedAction = {
       ...action,
       categories: actionCategories,
       primaryCategories: actionPrimaryCategories,
-    };
+    } as unknown as ActionType;
     return mappedAction;
   });
   return mappedActions;
@@ -154,11 +168,11 @@ export const getCategoryString = (catIdentifier: string) => `cat-${catIdentifier
 
 export const MAX_CRUMB_LENGTH = 90;
 
-export const isIdentifierVisible = (category: Category, showIdentifiers: boolean) =>
-  category.categoryPage && category.identifier && showIdentifiers;
+export const isIdentifierVisible = (category: Category, showIdentifiers: boolean): boolean =>
+  !!(category.categoryPage && category.identifier && showIdentifiers);
 
 export const getCategoryName = (category: Category, showIdentifiers: boolean) =>
-  isIdentifierVisible(category, showIdentifiers)
+  category.categoryPage && category.identifier && showIdentifiers
     ? `${category.identifier}. ${category.name}`
     : category.name;
 
@@ -178,7 +192,7 @@ export const getCategoryUrl = (
 };
 
 // Convert a category parent hierarchy to a flat array
-export const getDeepParents = (category: Category): Category[] =>
+export const getDeepParents = <T extends { parent?: T | null }>(category: T): T[] =>
   !category.parent ? [category] : [...getDeepParents(category.parent), category];
 
 /**
@@ -191,9 +205,9 @@ export const getBreadcrumbsFromCategoryHierarchy = (
   primaryCategory?: PlanContextFragment['primaryActionClassification']
 ): TCrumb[] | null | undefined =>
   categories
-    .reduce(
+    .reduce<Category[]>(
       // Convert categories to a flat array representing the hierarchy
-      (categories, category) => [...getDeepParents(category), ...categories],
+      (acc, category) => [...getDeepParents(category), ...acc],
       []
     )
     .map((category) => ({

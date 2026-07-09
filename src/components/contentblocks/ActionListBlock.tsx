@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -11,10 +11,9 @@ import ContentLoader from '@common/components/ContentLoader';
 
 import type {
   ActionCardFragment,
-  GetActionListForBlockQuery,
-  GetActionListForBlockQueryVariables,
+  ActionListForBlockQuery,
+  ActionListForBlockQueryVariables,
 } from '@/common/__generated__/graphql';
-import { getDeepParents } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';
 import ActionCardList from '@/components/actions/ActionCardList';
@@ -25,12 +24,8 @@ import { useWorkflowSelector } from '@/context/workflow-selector';
 import { getReadableThemeTextColor } from './colorUtils';
 
 const GET_ACTION_LIST_FOR_BLOCK = gql`
-  query GetActionListForBlock(
-    $plan: ID!
-    $category: ID
-    $clientUrl: String
-    $workflow: WorkflowState
-  ) @workflow(state: $workflow) {
+  query ActionListForBlock($plan: ID!, $category: ID, $clientUrl: String, $workflow: WorkflowState)
+  @workflow(state: $workflow) {
     planActions(plan: $plan, category: $category) {
       ...ActionCard
       hasDependencyRelationships
@@ -73,13 +68,19 @@ const GroupHeading = styled.h4`
   color: ${({ theme }) => theme.textColor.primary};
 `;
 
-type CategoryNode = Pick<Category, 'id' | 'name' | 'order'> & {
+type CategoryNode = {
+  id: string;
+  name?: string | null;
+  order?: number | null;
   level?: { id?: string | null } | null;
   parent?: CategoryNode | null;
 };
 
-const getParents = (cat?: CategoryNode | null): CategoryNode[] =>
-  (cat ? getDeepParents(cat as unknown as Category) : []) as unknown as CategoryNode[];
+// Convert a category parent hierarchy to a flat array (typed version of getDeepParents)
+const getParents = (cat?: CategoryNode | null): CategoryNode[] => {
+  if (!cat) return [];
+  return [...getParents(cat.parent), cat];
+};
 
 const getNodeAtLevel = (cat?: CategoryNode | null, levelId?: string | null) => {
   if (!cat || !levelId) return undefined;
@@ -197,18 +198,18 @@ type ActionListBlockProps = {
   categoryId: string;
   heading?: string | null;
   lead?: string | null;
-  groupByLevel?: CategoryLevel | null;
+  groupByLevel?: { id: string } | null;
 };
 
 const ActionListBlock = (props: ActionListBlockProps) => {
-  const { id = '', categoryId, heading, lead, groupByLevel } = props;
+  const { id = '', categoryId, heading, groupByLevel } = props;
   const t = useTranslations();
 
   const plan = usePlan();
   const { workflow, setLoading } = useWorkflowSelector();
   const { loading, error, data } = useQuery<
-    GetActionListForBlockQuery,
-    GetActionListForBlockQueryVariables
+    ActionListForBlockQuery,
+    ActionListForBlockQueryVariables
   >(GET_ACTION_LIST_FOR_BLOCK, {
     variables: {
       plan: plan.identifier,
@@ -221,7 +222,7 @@ const ActionListBlock = (props: ActionListBlockProps) => {
     if (!loading) setLoading(false);
   }, [loading, setLoading]);
 
-  const planActions: ActionCardFragment[] = data?.planActions ?? [];
+  const planActions: ActionCardFragment[] = useMemo(() => data?.planActions ?? [], [data]);
   const groupLevelId = groupByLevel?.id ?? null;
 
   const groups = useMemo(
