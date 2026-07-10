@@ -155,7 +155,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
     ... on FrontPageHeroBlock {
       layout
       image {
-        ...MultiUseImageFragment
+        ...HeroImageFragment
       }
       heading
       lead
@@ -259,7 +259,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
       cards {
         ... on CardBlock {
           image {
-            ...MultiUseImageFragment
+            ...CardImageFragment
           }
           heading
           content
@@ -320,7 +320,8 @@ export const STREAM_FIELD_FRAGMENT = gql`
       ...DashboardIndicatorBlockFragment
     }
   }
-  ${images.fragments.multiUseImage}
+  ${images.fragments.heroImage}
+  ${images.fragments.cardImage}
   ${CATEGORY_FRAGMENT}
   ${RECURSIVE_CATEGORY_FRAGMENT}
   ${DASHBOARD_INDICATOR_BLOCK_FRAGMENT}

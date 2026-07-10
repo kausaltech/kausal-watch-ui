@@ -18,7 +18,7 @@ import ContentLoader from '@common/components/ContentLoader';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type {
-  MultiUseImageFragmentFragment,
+  CardImageFragmentFragment,
   StreamFieldFragmentFragment,
 } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
@@ -321,7 +321,7 @@ type StreamFieldBlockPage = {
     id: string;
     name: string;
     children: CategoryListBlockCategory[];
-    image?: MultiUseImageFragmentFragment | null;
+    image?: CardImageFragmentFragment | null;
     indicators: { id: string }[];
   } | null;
   body: StreamFieldFragmentFragment[] | null;

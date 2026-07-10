@@ -3,9 +3,14 @@ import type { GetContentPageQuery, GetPlanContextQuery } from '@/common/__genera
 export function getMetaImage(page: GetContentPageQuery['planPage']) {
   switch (page?.__typename) {
     case 'StaticPage':
-      return page.headerImage?.large?.src;
+      return page.headerImage?.social?.src ?? page.headerImage?.fullMedium?.src;
     case 'CategoryPage':
-      return page.category?.image?.large?.src ?? page.category?.parent?.image?.large?.src;
+      return (
+        page.category?.image?.social?.src ??
+        page.category?.image?.fullMedium?.src ??
+        page.category?.parent?.image?.social?.src ??
+        page.category?.parent?.image?.fullMedium?.src
+      );
     default:
       return undefined;
   }

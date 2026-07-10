@@ -6,11 +6,10 @@ import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import { getImageSrcSet } from '@/common/images';
+import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import RichText from '@/components/common/RichText';
 
 import { ImageCredit } from '../common/ImageCredit';
-import type { HeroImageRenditions } from './HeroSmallImage';
 import { HeroCard } from './heroStyles';
 
 const SideBySideHero = styled('div', transientOptions)<{ $backgroundColor?: string | null }>`

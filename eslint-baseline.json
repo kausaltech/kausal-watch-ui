@@ -342,9 +342,6 @@
     "@graphql-eslint/naming-convention": {
       "count": 1
     },
-    "@graphql-eslint/require-selections": {
-      "count": 1
-    },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
     }
@@ -497,21 +494,7 @@
       "count": 9
     }
   },
-  "src/components/actions/ActionHero.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 10
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 6
-    }
-  },
   "src/components/actions/ActionHighlightsList.tsx": {
-    "@graphql-eslint/require-selections": {
-      "count": 4
-    },
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
     }
@@ -1529,9 +1512,6 @@
   "src/components/embed/ActionEmbed.tsx": {
     "@graphql-eslint/naming-convention": {
       "count": 1
-    },
-    "@graphql-eslint/require-selections": {
-      "count": 4
     }
   },
   "src/components/embed/RecentActionsEmbed.tsx": {
@@ -2079,7 +2059,7 @@
       "count": 1
     },
     "@graphql-eslint/require-selections": {
-      "count": 20
+      "count": 18
     }
   },
   "src/proxy.ts": {
@@ -2101,10 +2081,10 @@
       "count": 3
     },
     "@graphql-eslint/require-selections": {
-      "count": 33
+      "count": 31
     },
     "@graphql-eslint/selection-set-depth": {
-      "count": 339
+      "count": 250
     }
   },
   "src/queries/get-actions-list-page.ts": {
@@ -2126,7 +2106,7 @@
       "count": 44
     },
     "@graphql-eslint/selection-set-depth": {
-      "count": 360
+      "count": 269
     }
   },
   "src/queries/get-home-page.ts": {
@@ -2134,10 +2114,10 @@
       "count": 1
     },
     "@graphql-eslint/require-selections": {
-      "count": 5
+      "count": 4
     },
     "@graphql-eslint/selection-set-depth": {
-      "count": 102
+      "count": 76
     }
   },
   "src/queries/get-indicator-graph-data.ts": {
@@ -2173,7 +2153,7 @@
       "count": 1
     },
     "@graphql-eslint/require-selections": {
-      "count": 44
+      "count": 42
     }
   },
   "src/queries/get-plans.ts": {
@@ -2189,10 +2169,10 @@
       "count": 5
     },
     "@graphql-eslint/require-selections": {
-      "count": 7
+      "count": 3
     },
     "@graphql-eslint/selection-set-depth": {
-      "count": 102
+      "count": 76
     }
   },
   "src/stories/ActionAttribute.stories.tsx": {

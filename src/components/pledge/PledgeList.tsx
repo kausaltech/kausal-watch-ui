@@ -458,7 +458,7 @@ function PledgeList({ pledges }: Props) {
                   }))
                   .filter((category): category is PledgeCategory => !!category.label)}
                 slug={pledge.slug}
-                image={pledge.image?.large?.src ?? pledge.image?.full?.src}
+                image={pledge.image?.small?.src ?? pledge.image?.fullSmall?.src}
                 imageAlt={pledge.image?.altText ?? pledge.name}
                 isCommitted={committedSlugs.has(pledge.slug)}
                 committedCount={pledge.commitmentCount + getCommitmentCountAdjustment(pledge.slug)}
@@ -481,7 +481,7 @@ function PledgeList({ pledges }: Props) {
                 layout="mini"
                 title={pledges[0].name}
                 slug={pledges[0].slug}
-                image={pledges[0].image?.large?.src ?? pledges[0].image?.full?.src}
+                image={pledges[0].image?.small?.src ?? pledges[0].image?.fullSmall?.src}
                 imageAlt={pledges[0].image?.altText ?? pledges[0].name}
                 committedCount={
                   pledges[0].commitmentCount + getCommitmentCountAdjustment(pledges[0].slug)

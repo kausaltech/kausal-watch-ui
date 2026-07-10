@@ -54,7 +54,9 @@ const GET_PLAN_CONTEXT = gql`
       matomoAnalyticsUrl
     }
     image {
-      ...MultiUseImageFragment
+      ...HeroImageFragment
+      ...CardImageFragment
+      ...SocialImageFragment
     }
     serveFileBaseUrl
     actionSchedules {
@@ -302,7 +304,9 @@ const GET_PLAN_CONTEXT = gql`
       taskDateFormat
     }
   }
-  ${images.fragments.multiUseImage}
+  ${images.fragments.heroImage}
+  ${images.fragments.cardImage}
+  ${images.fragments.socialImage}
 `;
 
 export const getPlan = async (hostname: string, planIdentifier: string, clientUrl: string) =>

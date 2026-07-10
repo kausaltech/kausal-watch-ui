@@ -10,8 +10,8 @@ import { Col, Container, Row } from 'reactstrap';
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import type {
   GetContentPageQuery,
+  HeroImageFragmentFragment,
   IndicatorListPageFragmentFragment,
-  MultiUseImageFragmentFragment,
 } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
 import { typenameMatches } from '@/common/utils';
@@ -93,8 +93,8 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
         throw new Error('Category page without category configured');
       }
       const headerImage =
-        (category.image satisfies MultiUseImageFragmentFragment | null) ||
-        ((category.parent?.image ?? null) satisfies MultiUseImageFragmentFragment | null);
+        (category.image satisfies HeroImageFragmentFragment | null) ||
+        ((category.parent?.image ?? null) satisfies HeroImageFragmentFragment | null);
       const iconImage = category.iconImage?.rendition?.src;
 
       return (
@@ -117,7 +117,7 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
     }
     case 'StaticPage': {
       const { headerImage } = page as {
-        headerImage: MultiUseImageFragmentFragment | null;
+        headerImage: HeroImageFragmentFragment | null;
       };
 
       return (

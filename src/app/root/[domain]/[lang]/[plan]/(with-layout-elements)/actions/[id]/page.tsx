@@ -46,7 +46,7 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
     return {};
   }
   const resolvedParent = await parent;
-  const image = getActionImage(plan, data.action);
+  const image = getActionImage({ image: null }, data.action);
   const actionTerm = t('action', data.plan ? getActionTermContext(data.plan) : undefined);
   const title = `${actionTerm}: ${
     data.action.plan.hideActionIdentifiers ? data.action.name : data.action.identifier

@@ -29,7 +29,7 @@ export default async function PledgeListPage({ params }: Props) {
 
   return (
     <>
-      {!!heroImage?.large?.src && (
+      {!!(heroImage?.fullMedium ?? heroImage?.full ?? heroImage?.fullSmall)?.src && (
         <HeroFullImage
           title={heroTitle}
           lead={heroLead}

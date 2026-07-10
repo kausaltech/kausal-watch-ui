@@ -10,7 +10,7 @@ import { getThemeStaticURL } from '@common/themes/theme';
 import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
-import { type ImageRenditionRef, getImageSrcSet } from '@/common/images';
+import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import { ActionLink, ActionListLink, OrganizationLink } from '@/common/links';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import Icon from '@/components/common/Icon';
@@ -224,12 +224,6 @@ function ActionCategories({ categories }: { categories: Category[] }) {
   );
 }
 
-interface HeroImageRenditions {
-  small?: ImageRenditionRef;
-  large?: ImageRenditionRef;
-  full?: ImageRenditionRef;
-}
-
 type ActionHeroProps = {
   categories: Category[];
   previousAction: ActionDetails['previousAction'];
@@ -280,7 +274,7 @@ function ActionHero(props: ActionHeroProps) {
     categoryColor = categoryWithColor.color || categoryWithColor.parent?.color || categoryColor;
   }
 
-  const imageSrc = image ? (image.large ?? image.full ?? image.small)?.src : undefined;
+  const imageSrc = image ? (image.fullMedium ?? image.full ?? image.fullSmall)?.src : undefined;
 
   return (
     <Hero $bgColor={theme.brandDark}>
@@ -288,7 +282,7 @@ function ActionHero(props: ActionHeroProps) {
         {image && imageSrc && (
           <ActionBgImageImg
             src={imageSrc}
-            srcSet={getImageSrcSet([image.small, image.large, image.full])}
+            srcSet={getImageSrcSet([image.fullSmall, image.fullMedium, image.full])}
             sizes="100vw"
             alt={altText ?? ''}
             $imageAlign={imageAlign}

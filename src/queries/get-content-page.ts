@@ -152,8 +152,8 @@ const GET_CONTENT_PAGE = gql`
           }
         }
         headerImage {
-          id
-          ...MultiUseImageFragment
+          ...HeroImageFragment
+          ...SocialImageFragment
         }
         leadParagraph
         body {
@@ -218,8 +218,9 @@ const GET_CONTENT_PAGE = gql`
             hideCategoryIdentifiers
           }
           image {
-            id
-            ...MultiUseImageFragment
+            ...HeroImageFragment
+            ...SocialImageFragment
+            ...CardImageFragment
           }
           indicators {
             id
@@ -246,8 +247,9 @@ const GET_CONTENT_PAGE = gql`
               namePlural
             }
             image {
-              id
-              ...MultiUseImageFragment
+              ...HeroImageFragment
+              ...SocialImageFragment
+              ...CardImageFragment
             }
             color
             iconSvgUrl
@@ -302,7 +304,9 @@ const GET_CONTENT_PAGE = gql`
   ${PlanDatasetsBlockFragment}
   ${TEMPLATED_CATEGORY_PAGE_FRAGMENT}
   ${STREAM_FIELD_FRAGMENT}
-  ${images.fragments.multiUseImage}
+  ${images.fragments.heroImage}
+  ${images.fragments.socialImage}
+  ${images.fragments.cardImage}
   ${ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT}
   ${CATEGORY_FRAGMENT}
   ${ALL_ACTION_LIST_FILTERS}

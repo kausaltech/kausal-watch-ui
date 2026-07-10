@@ -15,7 +15,10 @@ import {
 } from '../fragments/action-attribute.fragment';
 import { ACTION_CARD_FRAGMENT } from '../fragments/action-card.fragment';
 import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
-import { RECURSIVE_CATEGORY_FRAGMENT } from '../fragments/category.fragment';
+import {
+  CATEGORY_HERO_IMAGES_FRAGMENT,
+  RECURSIVE_CATEGORY_FRAGMENT,
+} from '../fragments/category.fragment';
 import { INDICATOR_CHART_FRAGMENTS } from '../fragments/indicator-chart.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
 
@@ -57,7 +60,8 @@ const GET_ACTION_DETAILS = gql`
       description
       completion
       image {
-        ...MultiUseImageFragment
+        ...HeroImageFragment
+        ...SocialImageFragment
       }
       color
       statusSummary {
@@ -87,6 +91,7 @@ const GET_ACTION_DETAILS = gql`
       }
       categories {
         ...CategoryRecursiveFragment
+        ...CategoryHeroImagesFragment
       }
       emissionScopes: categories(categoryType: "emission_scope") {
         id
@@ -259,7 +264,7 @@ const GET_ACTION_DETAILS = gql`
         slug
         commitmentCount
         image {
-          ...MultiUseImageFragment
+          ...CardImageFragment
         }
         attributes {
           ...AttributesBlockAttributeWithNestedType
@@ -577,7 +582,10 @@ const GET_ACTION_DETAILS = gql`
   }
 
   ${ACTION_CARD_FRAGMENT}
-  ${images.fragments.multiUseImage}
+  ${images.fragments.heroImage}
+  ${images.fragments.cardImage}
+  ${images.fragments.socialImage}
+  ${CATEGORY_HERO_IMAGES_FRAGMENT}
   ${ATTRIBUTE_FRAGMENT}
   ${ATTRIBUTE_TYPE_FRAGMENT}
   ${ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT}

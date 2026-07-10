@@ -22,8 +22,6 @@ interface ImageData {
   full?: ImageRendition | null;
   fullMedium?: ImageRendition | null;
   fullSmall?: ImageRendition | null;
-  large?: ImageRendition | null;
-  small?: ImageRendition | null;
 }
 
 interface AdditionalSettings {

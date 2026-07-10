@@ -35,7 +35,7 @@ export const GET_ACTION_LIST = gql`
       completion
       updatedAt
       image {
-        ...MultiUseImageFragment
+        ...CardImageFragment
       }
       plan {
         id
@@ -58,24 +58,24 @@ export const GET_ACTION_LIST = gql`
       categories {
         id
         image {
-          ...MultiUseImageFragment
+          ...CardImageFragment
         }
         parent {
           id
           image {
-            ...MultiUseImageFragment
+            ...CardImageFragment
           }
           parent {
             id
             image {
-              ...MultiUseImageFragment
+              ...CardImageFragment
             }
           }
         }
       }
     }
   }
-  ${images.fragments.multiUseImage}
+  ${images.fragments.cardImage}
 `;
 
 const ListHeader = styled(Col, transientOptions)<{

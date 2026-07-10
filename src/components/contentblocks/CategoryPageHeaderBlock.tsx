@@ -16,7 +16,7 @@ import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layou
 import type {
   AttributesBlockAttributeFragment,
   GetCategoryAttributeTypesQuery,
-  MultiUseImageFragmentFragment,
+  HeroImageFragmentFragment,
 } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { getImageSrcSet } from '@/common/images';
@@ -320,7 +320,7 @@ interface Props {
   identifier: string | null | undefined;
   lead?: string;
   iconImage: string | null | undefined;
-  headerImage: MultiUseImageFragmentFragment | null | undefined;
+  headerImage: HeroImageFragmentFragment | null | undefined;
   imageAlign?: string;
   color?: string | null | undefined;
   attributes: AttributesBlockAttributeFragment[] | null | undefined;
@@ -378,11 +378,15 @@ export default function CategoryPageHeaderBlock(props: Props) {
       $hasImage={!!headerImage}
     >
       <Container className="header-container">
-        {headerImage && headerImage.large && (
+        {headerImage && (headerImage.fullMedium ?? headerImage.full ?? headerImage.fullSmall) && (
           <HeaderImage $imageAlign={imageAlign} className={imageLayout}>
             <HeaderImageImg
-              src={headerImage.large.src}
-              srcSet={getImageSrcSet([headerImage.small, headerImage.large, headerImage.full])}
+              src={(headerImage.fullMedium ?? headerImage.full ?? headerImage.fullSmall)!.src}
+              srcSet={getImageSrcSet([
+                headerImage.fullSmall,
+                headerImage.fullMedium,
+                headerImage.full,
+              ])}
               sizes="100vw"
               alt={headerImage.altText ?? ''}
               $imageAlign={imageAlign}

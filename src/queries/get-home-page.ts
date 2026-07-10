@@ -37,7 +37,7 @@ export const GET_HOME_PAGE = gql`
           name
           leadParagraph
           image {
-            ...MultiUseImageFragment
+            ...CardImageFragment
           }
           color
           categoryPage {
@@ -63,7 +63,7 @@ export const GET_HOME_PAGE = gql`
   }
 
   ${STREAM_FIELD_FRAGMENT}
-  ${images.fragments.multiUseImage}
+  ${images.fragments.cardImage}
 `;
 
 export const getHomePage = async (plan: string) =>

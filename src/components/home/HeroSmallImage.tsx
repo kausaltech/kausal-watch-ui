@@ -6,7 +6,7 @@ import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import { type ImageRenditionRef, getImageSrcSet } from '@/common/images';
+import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import RichText from '@/components/common/RichText';
 
 import { ImageCredit } from '../common/ImageCredit';
@@ -130,12 +130,6 @@ const MainCard = styled(HeroCard)`
 const StyledImageCredit = styled(ImageCredit)`
   border-top-right-radius: ${({ theme }) => theme.cardBorderRadius};
 `;
-
-export interface HeroImageRenditions {
-  fullSmall?: ImageRenditionRef;
-  fullMedium?: ImageRenditionRef;
-  full?: ImageRenditionRef;
-}
 
 interface HeroSmallImageProps {
   id?: string;

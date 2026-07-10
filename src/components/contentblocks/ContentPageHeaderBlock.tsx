@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 
-import { type ImageRenditionRef, getImageSrcSet } from '@/common/images';
+import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 
 import { ImageCredit } from '../common/ImageCredit';
 
@@ -66,16 +66,10 @@ const ContentHeader = styled.header`
   }
 `;
 
-interface HeaderImageRenditions {
-  small?: ImageRenditionRef;
-  large?: ImageRenditionRef;
-  full?: ImageRenditionRef;
-}
-
 type Props = {
   title: string;
   lead?: string | null;
-  headerImage?: HeaderImageRenditions | null;
+  headerImage?: HeroImageRenditions | null;
   imageAlign?: string;
   altText?: string;
   imageCredit?: string;
@@ -94,7 +88,7 @@ export default function ContentPageHeaderBlock(props: Props) {
   const t = useTranslations();
 
   const headerImageSrc = headerImage
-    ? (headerImage.large ?? headerImage.full ?? headerImage.small)?.src
+    ? (headerImage.fullMedium ?? headerImage.full ?? headerImage.fullSmall)?.src
     : undefined;
 
   return (
@@ -104,7 +98,11 @@ export default function ContentPageHeaderBlock(props: Props) {
           <HeaderImage>
             <HeaderImageImg
               src={headerImageSrc}
-              srcSet={getImageSrcSet([headerImage.small, headerImage.large, headerImage.full])}
+              srcSet={getImageSrcSet([
+                headerImage.fullSmall,
+                headerImage.fullMedium,
+                headerImage.full,
+              ])}
               sizes="100vw"
               alt={altText ?? ''}
               $imageAlign={imageAlign}
