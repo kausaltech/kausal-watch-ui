@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Image from 'next/image';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -28,6 +26,7 @@ import CategoryPageStreamField, {
 } from '@/components/common/CategoryPageStreamField';
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
 import { usePlan } from '@/context/plan';
+import { ATTRIBUTE_TYPE_FRAGMENT } from '@/fragments/action-attribute.fragment';
 
 import { ImageCredit } from '../common/ImageCredit';
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
@@ -40,26 +39,12 @@ export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
         id
         name
         attributeTypes {
-          __typename
-          id
-          format
-          name
-          identifier
-          helpText
-          showChoiceNames
-          hasZeroOption
-          choiceOptions {
-            id
-            identifier
-          }
-          unit {
-            id
-            name
-          }
+          ...AttributesBlockAttributeType
         }
       }
     }
   }
+  ${ATTRIBUTE_TYPE_FRAGMENT}
 `;
 
 enum IconSize {
@@ -88,6 +73,15 @@ const CategoryHeader = styled.div<{ $bg: string | null | undefined; $hasImage?: 
   @media (min-width: ${(props) => props.theme.breakpointXl}) {
     min-height: ${(props) => (props.$hasImage ? '32rem' : '0')};
   }
+`;
+
+const HeaderImageImg = styled.img<{ $imageAlign?: string | null | undefined }>`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: ${(props) => props.$imageAlign ?? 'center center'};
 `;
 
 const HeaderImage = styled.div<{
@@ -385,15 +379,15 @@ export default function CategoryPageHeaderBlock(props: Props) {
       <Container className="header-container">
         {headerImage && headerImage.large && (
           <HeaderImage $imageAlign={imageAlign} className={imageLayout}>
-            <Image
+            <HeaderImageImg
               src={headerImage.large.src}
-              alt={headerImage.altText ?? ''}
+              srcSet={[headerImage.small, headerImage.large, headerImage.full]
+                .filter((rendition) => rendition != null)
+                .map((rendition) => `${rendition.src} ${rendition.width}w`)
+                .join(', ')}
               sizes="100vw"
-              fill
-              style={{
-                objectFit: 'cover',
-                objectPosition: imageAlign,
-              }}
+              alt={headerImage.altText ?? ''}
+              $imageAlign={imageAlign}
             />
           </HeaderImage>
         )}

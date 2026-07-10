@@ -2015,7 +2015,7 @@ export type GetCategoryAttributeTypesQuery = (
     { id: string, categoryTypes: Array<(
       { id: string, name: string, attributeTypes: Array<(
         { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
-          { id: string, identifier: string }
+          { id: string, identifier: string, name: string }
           & { __typename: 'AttributeTypeChoiceOption' }
         )>, unit: (
           { id: string, name: string }
@@ -2084,7 +2084,10 @@ export type PlanFragmentFragment = (
       & { __typename: 'CommonCategoryType' }
     ) | null, categories: Array<(
       { id: string, identifier: string, order: number, name: string, color: string, iconSvgUrl: string | null, parent: (
-        { id: string }
+        { id: string, common?: (
+          { id: string }
+          & { __typename: 'CommonCategory' }
+        ) | null }
         & { __typename: 'Category' }
       ) | null, iconImage: (
         { rendition: (
@@ -2243,7 +2246,10 @@ export type DashboardActionListQuery = (
         & { __typename: 'CommonCategoryType' }
       ) | null, categories: Array<(
         { id: string, identifier: string, order: number, name: string, color: string, iconSvgUrl: string | null, parent: (
-          { id: string }
+          { id: string, common?: (
+            { id: string }
+            & { __typename: 'CommonCategory' }
+          ) | null }
           & { __typename: 'Category' }
         ) | null, iconImage: (
           { rendition: (
