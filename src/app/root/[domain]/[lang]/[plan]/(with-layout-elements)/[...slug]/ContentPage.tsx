@@ -124,7 +124,7 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
         <ContentPageHeaderBlock
           title={page.title}
           lead={page.leadParagraph}
-          headerImage={headerImage?.large?.src}
+          headerImage={headerImage}
           imageAlign={getBgImageAlignment(headerImage)}
           altText={headerImage?.altText}
           imageCredit={headerImage?.imageCredit}
