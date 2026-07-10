@@ -12,6 +12,7 @@ import { getThemeStaticURL } from '@common/themes/theme';
 import type { ActionCardFragment } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
+import { type ImageRenditionRef, getImageSrcSet } from '@/common/images';
 import { ActionLink, ActionListLink, OrganizationLink } from '@/common/links';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import Icon from '@/components/common/Icon';
@@ -37,21 +38,26 @@ const Hero = styled.header<{ $bgColor: string }>`
   }
 `;
 
-type ActionBgImageProps = {
-  $bgColor: string;
-  $bgImage: string;
-  $imageAlign: string;
-};
-
-const ActionBgImage = styled.div<ActionBgImageProps>`
+const ActionBgImage = styled.div<{ $bgColor: string }>`
+  position: relative;
+  /* Keep the image's multiply blending contained to this element */
+  isolation: isolate;
   background-color: ${(props) => props.$bgColor};
-  background-image: url(${(props) => props.$bgImage});
-  background-position: ${(props) => props.$imageAlign};
-  background-size: cover;
-  background-blend-mode: multiply;
   @media print {
-    background-image: none;
     background-color: transparent;
+  }
+`;
+
+const ActionBgImageImg = styled.img<{ $imageAlign: string }>`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: ${(props) => props.$imageAlign};
+  mix-blend-mode: multiply;
+  @media print {
+    display: none;
   }
 `;
 
@@ -90,6 +96,7 @@ const CardContent = styled.div`
 `;
 
 const OverlayContainer = styled.div`
+  position: relative;
   display: flex;
   align-items: flex-end;
   min-height: 24rem;
@@ -211,13 +218,19 @@ function ActionCategories({ categories }: { categories: Category[] }) {
   );
 }
 
+interface HeroImageRenditions {
+  small?: ImageRenditionRef;
+  large?: ImageRenditionRef;
+  full?: ImageRenditionRef;
+}
+
 type ActionHeroProps = {
   categories: [];
   previousAction: any; //TODO: type these
   nextAction: any;
   identifier?: string;
   name: string;
-  imageUrl: string;
+  image?: HeroImageRenditions | null;
   imageAlign: string;
   altText?: string;
   imageCredit?: string;
@@ -239,7 +252,7 @@ function ActionHero(props: ActionHeroProps) {
     nextAction,
     identifier,
     name,
-    imageUrl,
+    image,
     imageAlign,
     altText,
     imageCredit,
@@ -266,9 +279,20 @@ function ActionHero(props: ActionHeroProps) {
       : categoryWithColor?.parent?.color;
   }
 
+  const imageSrc = image ? (image.large ?? image.full ?? image.small)?.src : undefined;
+
   return (
     <Hero $bgColor={theme.brandDark}>
-      <ActionBgImage $bgImage={imageUrl} $imageAlign={imageAlign} $bgColor={categoryColor}>
+      <ActionBgImage $bgColor={categoryColor}>
+        {image && imageSrc && (
+          <ActionBgImageImg
+            src={imageSrc}
+            srcSet={getImageSrcSet([image.small, image.large, image.full])}
+            sizes="100vw"
+            alt={altText ?? ''}
+            $imageAlign={imageAlign}
+          />
+        )}
         <OverlayContainer>
           <Container>
             <Row>
@@ -330,7 +354,6 @@ function ActionHero(props: ActionHeroProps) {
               </Col>
             </Row>
           </Container>
-          {altText && <span className="sr-only" role="img" aria-label={altText} />}
           {imageCredit && <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>}
         </OverlayContainer>
       </ActionBgImage>

@@ -19,7 +19,7 @@ const meta = {
     nextAction: undefined,
     identifier: 'AC1',
     name: 'Amend the land development code to include a new zoning district for the area surrounding the new transit station',
-    imageUrl: 'https://picsum.photos/1600/600',
+    image: { large: { src: 'https://picsum.photos/1600/600', width: 1600 } },
     imageAlign: 'top',
     altText: 'string',
     imageCredit: 'Picsum',
