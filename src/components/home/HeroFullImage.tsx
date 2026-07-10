@@ -52,18 +52,25 @@ const Hero = styled.div<{ $focalBoxAspectRatio?: number }>`
   }
 `;
 
-const HeroImage = styled.div<{ $image: string; $imageAlign: string }>`
+const HeroImage = styled.div`
   min-height: 14rem;
-  background-size: cover;
-  background-position: ${(props) => props.$imageAlign};
-  background-image: url(${(props) => props.$image});
-  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     position: absolute;
     width: 100%;
     height: 100%;
   }
+`;
+
+const HeroImageImg = styled.img<{ $imageAlign: string }>`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: ${(props) => props.$imageAlign};
 `;
 
 const HeroContent = styled.div`
@@ -103,9 +110,20 @@ interface FocalBoxInfo {
   imageHeight: number;
 }
 
+type ImageRendition = {
+  src: string;
+  width: number;
+} | null;
+
+interface HeroImageRenditions {
+  small?: ImageRendition;
+  large?: ImageRendition;
+  full?: ImageRendition;
+}
+
 interface HeroFullImageProps {
   id?: string;
-  bgImage: string;
+  image: HeroImageRenditions;
   imageAlign?: string;
   focalBox?: FocalBoxInfo;
   title?: string;
@@ -117,7 +135,7 @@ interface HeroFullImageProps {
 const HeroFullImage = (props: HeroFullImageProps) => {
   const {
     id = '',
-    bgImage,
+    image,
     imageAlign = 'center center',
     focalBox,
     title,
@@ -140,10 +158,24 @@ const HeroFullImage = (props: HeroFullImageProps) => {
     ? focalBox.imageWidth / focalBox.focalPointHeight
     : undefined;
 
+  const fallbackSrc = (image.large ?? image.full ?? image.small)?.src;
+
   return (
     <Hero id={id} $focalBoxAspectRatio={focalBoxAspectRatio}>
-      <HeroImage $image={bgImage} $imageAlign={imageAlign} />
-      {altText && <span className="sr-only" role="img" aria-label={altText} />}
+      {fallbackSrc && (
+        <HeroImage>
+          <HeroImageImg
+            src={fallbackSrc}
+            srcSet={[image.small, image.large, image.full]
+              .filter((rendition) => rendition != null)
+              .map((rendition) => `${rendition.src} ${rendition.width}w`)
+              .join(', ')}
+            sizes="100vw"
+            alt={altText ?? ''}
+            $imageAlign={imageAlign}
+          />
+        </HeroImage>
+      )}
       {imageCredit && <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>}
       {showContentBox && (
         <Container>

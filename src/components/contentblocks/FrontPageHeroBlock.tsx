@@ -13,14 +13,15 @@ interface FocalBoxInfo {
 }
 
 interface ImageRendition {
-  src?: string;
-  width?: number;
+  src: string;
+  width: number;
   height?: number;
 }
 
 interface ImageData {
-  full?: ImageRendition;
-  large?: ImageRendition;
+  full?: ImageRendition | null;
+  large?: ImageRendition | null;
+  small?: ImageRendition | null;
 }
 
 interface AdditionalSettings {
@@ -105,7 +106,7 @@ const FrontPageHeroBlock = (props: FrontPageHeroProps) => {
   return (
     <HeroFullImage
       id={id}
-      bgImage={imageSrc}
+      image={typedImage ?? {}}
       imageAlign={imageAlign}
       focalBox={focalBox}
       title={heading ?? undefined}

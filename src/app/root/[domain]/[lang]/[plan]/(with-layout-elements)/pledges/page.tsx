@@ -33,7 +33,7 @@ export default async function PledgeListPage({ params }: Props) {
         <HeroFullImage
           title={heroTitle}
           lead={heroLead}
-          bgImage={heroImage.large.src}
+          image={heroImage}
           imageAlign={imageAlign}
           altText={heroImage.altText}
           imageCredit={heroImage.imageCredit}
