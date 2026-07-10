@@ -1,6 +1,9 @@
+import type { Theme } from '@kausal/themes/types';
 import type { Metadata } from 'next';
 
 import UnpublishedPlan from '@/components/plans/UnpublishedPlan';
+import ThemeProvider from '@/components/providers/ThemeProvider';
+import defaultTheme from '@/public/static/themes/default/theme.json';
 
 type Props = {
   searchParams: Promise<{
@@ -19,6 +22,8 @@ export default async function UnpublishedPage(props: Props) {
   const loginEnabled = searchParams.loginEnabled === 'true';
   const message = searchParams.message;
   return (
-    <UnpublishedPlan message={message} loginEnabled={loginEnabled} testId="unpublished-page" />
+    <ThemeProvider theme={defaultTheme as Theme}>
+      <UnpublishedPlan message={message} loginEnabled={loginEnabled} testId="unpublished-page" />
+    </ThemeProvider>
   );
 }
