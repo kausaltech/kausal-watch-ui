@@ -340,47 +340,11 @@
       "count": 1,
       "message": "Type 'string | null' is not assignable to type 'number'."
     },
-    "add0c83bcd286e53cc779d4623755d931ef61fa2": {
-      "file": "src/components/actions/ActionContent.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '({ id: string; identifier: string; name: string; leadParagraph: string; order: number; kausalPathsNodeUuid: string; color: string; iconSvgUrl: string | null; helpText: string; level: ({ id: string; name: string; namePlural: string | null; } & { ...; }) | null; ... 7 more ...; parent: ({ ...; } & { ...; }) | null; } ...' is not assignable to type '[]'."
-    },
-    "b463a6035ab394908c93ae5792464616c0555248": {
-      "file": "src/components/actions/ActionContent.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type 'string | undefined' is not assignable to type 'string'."
-    },
-    "8c16c3d2680e0c300c4fafa4c9b292cf5190aa9f": {
-      "file": "src/components/actions/ActionContent.tsx",
-      "code": "TS18047",
-      "count": 1,
-      "message": "'actionImage.large' is possibly 'null'."
-    },
     "51ca37868c800889c6d36fe304b1ba689e678e0d": {
       "file": "src/components/actions/ActionContent.tsx",
       "code": "TS2322",
       "count": 1,
       "message": "Type 'number | null' is not assignable to type 'number | undefined'."
-    },
-    "a700f4bba313178074de4e957942d688b4ff3b10": {
-      "file": "src/components/actions/ActionHero.tsx",
-      "code": "TS2345",
-      "count": 2,
-      "message": "Argument of type '{ id: string; identifier: string; name: string; leadParagraph: string; order: number; kausalPathsNodeUuid: string; color: string; iconSvgUrl: string | null; helpText: string; parent: ({ id: string; ... 16 more ...; attributes: (({ ...; } & { ...; }) | ({ ...; } & { ...; }))[]; } & { ...; }) | null; ... 7 more ...; a...' is not assignable to parameter of type '{ id: string; identifier: string; name: string; leadParagraph: string; order: number; kausalPathsNodeUuid: string; color: string; iconSvgUrl: string | null; helpText: string; level: ({ id: string; name: string; namePlural: string | null; } & { ...; }) | null; ... 7 more ...; parent: ({ ...; } & { ...; }) | null; } &...'."
-    },
-    "52f638b3ed234519692d72f56c90675ac33bd5f8": {
-      "file": "src/components/actions/ActionHero.tsx",
-      "code": "TS2339",
-      "count": 3,
-      "message": "Property 'color' does not exist on type 'never'."
-    },
-    "17171fbf93ba1ef18034f0e992d17690e091559b": {
-      "file": "src/components/actions/ActionHero.tsx",
-      "code": "TS2339",
-      "count": 3,
-      "message": "Property 'parent' does not exist on type 'never'."
     },
     "ae6755a3b636e756cb292cf7a621dade2fa5689b": {
       "file": "src/components/actions/ActionListFilters.tsx",
@@ -892,12 +856,6 @@
       "count": 1,
       "message": "Property 'categoryPage' does not exist on type 'never'."
     },
-    "fb256bda518f983d6200853a026aedd9d0a12e4f": {
-      "file": "src/components/contentblocks/CategoryPageHeaderBlock.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '({ id: string; format: AttributeTypeFormat; name: string; identifier: string; helpText: string; showChoiceNames: boolean; hasZeroOption: boolean; choiceOptions: ({ ...; } & { ...; })[]; unit: ({ ...; } & { ...; }) | null; } & { ...; })[]' is not assignable to type 'AttributesBlockAttributeTypeFragment[]'."
-    },
     "dc3acc65cfa052784c05385137df2c79b86e52fe": {
       "file": "src/components/contentblocks/CategoryTreeBlock.tsx",
       "code": "TS2339",
@@ -1155,12 +1113,6 @@
       "code": "TS2305",
       "count": 1,
       "message": "Module '\"@/common/__generated__/graphql\"' has no exported member 'Plan'."
-    },
-    "624900460b7f2b647ff0db369314cf415b386cde": {
-      "file": "src/components/embed/ActionEmbed.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '{ id: string; identifier: string; name: string; officialName: string | null; completion: number | null; updatedAt: string; color: string | null; image: ({ title: string; altText: string; ... 11 more ...; rendition: ({ ...; } & { ...; }) | null; } & { ...; }) | null; ... 4 more ...; categories: ({ ...; } & { ...; })[...' is not assignable to type 'ActionHighlightListAction'."
     },
     "2361bbb3274e39f8ca2fbef709fc794ee2d1cf66": {
       "file": "src/components/Footer.tsx",
@@ -1881,12 +1833,6 @@
       "code": "TS18047",
       "count": 1,
       "message": "'activeScenario' is possibly 'null'."
-    },
-    "adc59f14b198534f34acbee7d7207e2647d65afc": {
-      "file": "src/components/paths/toolbar/MediumSettings.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '(node: HTMLButtonElement | null) => void' is not assignable to type 'HTMLButtonElement & (Ref<HTMLButtonElement> | undefined)'."
     },
     "203b3b6e2fcca0dc4953f7c675134e483d0d734d": {
       "file": "src/components/plans/PlanLink.tsx",

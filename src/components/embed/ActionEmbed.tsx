@@ -39,6 +39,7 @@ const GET_ACTION = gql`
       }
       implementationPhase {
         id
+        name
         identifier
       }
       categories {

@@ -2633,7 +2633,7 @@ export type GetEmbedActionQuery = (
       { id: string, identifier: string, name: string, color: string }
       & { __typename: 'ActionStatus' }
     ) | null, implementationPhase: (
-      { id: string, identifier: string }
+      { id: string, name: string, identifier: string }
       & { __typename: 'ActionImplementationPhase' }
     ) | null, categories: Array<(
       { id: string, image: (
