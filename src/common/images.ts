@@ -2,6 +2,22 @@ import { gql } from '@apollo/client';
 
 import type { MultiUseImageFragmentFragment } from './__generated__/graphql';
 
+/*
+ * With `object-fit: cover`, an object-position of P% hides P% of the
+ * overflowing image before the visible window. Positioning by the slack on
+ * either side of the focal area makes cropping consume the space outside the
+ * area first, so the whole focal area stays visible whenever it fits in the
+ * container — regardless of the container's aspect ratio.
+ */
+const getAxisPositionPercent = (focalCenter: number, focalSize: number, imageSize: number) => {
+  const start = Math.max(0, focalCenter - focalSize / 2);
+  const end = Math.min(imageSize, focalCenter + focalSize / 2);
+  const slackBefore = start;
+  const slackAfter = imageSize - end;
+  const position = slackBefore + slackAfter > 0 ? slackBefore / (slackBefore + slackAfter) : 0.5;
+  return (position * 100).toFixed(1);
+};
+
 export const getBgImageAlignment = (
   image: {
     focalPointX: number | null;
@@ -16,13 +32,19 @@ export const getBgImageAlignment = (
     return 'center center';
   }
 
-  const focalCenterX = image.focalPointX + (image.focalPointWidth ?? 0) / 2;
-  const focalCenterY = image.focalPointY + (image.focalPointHeight ?? 0) / 2;
+  // Wagtail stores focalPointX/Y as the center of the focal area
+  const xPercent = getAxisPositionPercent(
+    image.focalPointX,
+    image.focalPointWidth ?? 0,
+    image.width
+  );
+  const yPercent = getAxisPositionPercent(
+    image.focalPointY,
+    image.focalPointHeight ?? 0,
+    image.height
+  );
 
-  const xPercent = (focalCenterX / image.width) * 100;
-  const yPercent = (focalCenterY / image.height) * 100;
-
-  return `${xPercent.toFixed(1)}% ${yPercent.toFixed(1)}%`;
+  return `${xPercent}% ${yPercent}%`;
 };
 
 type ActionWithImage = {
@@ -77,7 +99,7 @@ const images = {
         focalPointY
         focalPointWidth
         focalPointHeight
-        full: rendition(size: "1600x1600", crop: false) {
+        full: rendition(size: "3840x2560", crop: false) {
           id
           width
           height
