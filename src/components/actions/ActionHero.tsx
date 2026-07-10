@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -9,7 +7,7 @@ import { Col, Container, Row } from 'reactstrap';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
-import type { ActionCardFragment } from '@/common/__generated__/graphql';
+import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
 import { type ImageRenditionRef, getImageSrcSet } from '@/common/images';
@@ -174,15 +172,23 @@ const ActionName = styled.span`
   max-width: 100%;
 `;
 
-type Category = ActionCardFragment['categories'][number];
+type ActionDetails = NonNullable<GetActionDetailsQuery['action']>;
+type Category = ActionDetails['categories'][number];
+
+/* The generated category types bound the parent recursion depth, so the
+ * hierarchy helpers only require the fields they actually traverse */
+type CategoryHierarchy = {
+  id: string;
+  parent?: CategoryHierarchy | null;
+};
 
 /**
  * Check whether multiple categories at different levels of a single category type hierarchy
  * have been added to an action. Required to filter duplicate categories from the breadcrumb.
  */
 function isCategoryInSiblingsParentTree(
-  category: Category,
-  siblingParentCategory: Category
+  category: { id: string },
+  siblingParentCategory: CategoryHierarchy
 ): boolean {
   if (category.id === siblingParentCategory.id) return true;
   if (!siblingParentCategory.parent) return false;
@@ -225,9 +231,9 @@ interface HeroImageRenditions {
 }
 
 type ActionHeroProps = {
-  categories: [];
-  previousAction: any; //TODO: type these
-  nextAction: any;
+  categories: Category[];
+  previousAction: ActionDetails['previousAction'];
+  nextAction: ActionDetails['nextAction'];
   identifier?: string;
   name: string;
   image?: HeroImageRenditions | null;
@@ -236,10 +242,9 @@ type ActionHeroProps = {
   imageCredit?: string;
   imageTitle?: string;
   hideActionIdentifiers?: boolean;
-  primaryOrg: any;
-  state: string;
-  actionID: string;
-  matchingVersion: any;
+  primaryOrg: ActionDetails['primaryOrg'];
+  state?: string;
+  matchingVersion: NonNullable<ActionDetails['workflowStatus']>['matchingVersion'] | null;
   updatedAt: string;
 };
 
@@ -256,9 +261,7 @@ function ActionHero(props: ActionHeroProps) {
     imageAlign,
     altText,
     imageCredit,
-    imageTitle,
     primaryOrg,
-    state,
   } = props;
   const theme = useTheme();
   const t = useTranslations();
@@ -274,9 +277,7 @@ function ActionHero(props: ActionHeroProps) {
   );
   // Override overlay color with that
   if (categoryWithColor && theme.imageOverlay !== 'rgb(255, 255, 255)') {
-    categoryColor = categoryWithColor.color
-      ? categoryWithColor?.color
-      : categoryWithColor?.parent?.color;
+    categoryColor = categoryWithColor.color || categoryWithColor.parent?.color || categoryColor;
   }
 
   const imageSrc = image ? (image.large ?? image.full ?? image.small)?.src : undefined;
