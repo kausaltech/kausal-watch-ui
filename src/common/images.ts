@@ -47,6 +47,18 @@ export const getBgImageAlignment = (
   return `${xPercent}% ${yPercent}%`;
 };
 
+export type ImageRenditionRef = {
+  src: string;
+  width: number;
+} | null;
+
+/* Build an <img> srcSet string out of image renditions of different sizes */
+export const getImageSrcSet = (renditions: (ImageRenditionRef | undefined)[]) =>
+  renditions
+    .filter((rendition) => rendition != null)
+    .map((rendition) => `${rendition.src} ${rendition.width}w`)
+    .join(', ');
+
 type ActionWithImage = {
   image: MultiUseImageFragmentFragment | null;
   categories: {
@@ -100,6 +112,18 @@ const images = {
         focalPointWidth
         focalPointHeight
         full: rendition(size: "3840x2560", crop: false) {
+          id
+          width
+          height
+          src
+        }
+        fullSmall: rendition(size: "800x800", crop: false) {
+          id
+          width
+          height
+          src
+        }
+        fullMedium: rendition(size: "1600x1600", crop: false) {
           id
           width
           height

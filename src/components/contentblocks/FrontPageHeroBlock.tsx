@@ -20,6 +20,8 @@ interface ImageRendition {
 
 interface ImageData {
   full?: ImageRendition | null;
+  fullMedium?: ImageRendition | null;
+  fullSmall?: ImageRendition | null;
   large?: ImageRendition | null;
   small?: ImageRendition | null;
 }
@@ -66,14 +68,12 @@ const FrontPageHeroBlock = (props: FrontPageHeroProps) => {
   */
 
   const typedImage = image as ImageData | undefined;
-  const isFullImage = layout === 'small_image' || layout === 'side_by_side';
-  const imageSrc = (isFullImage ? typedImage?.full?.src : typedImage?.large?.src) ?? '';
 
   if (layout === 'small_image') {
     return (
       <HeroSmallImage
         id={id}
-        bgImage={imageSrc}
+        image={typedImage ?? {}}
         title={heading}
         lead={lead}
         imageCredit={imageCredit}
@@ -90,7 +90,7 @@ const FrontPageHeroBlock = (props: FrontPageHeroProps) => {
     return (
       <HeroSideBySide
         id={id}
-        bgImage={imageSrc}
+        image={typedImage ?? {}}
         title={heading}
         lead={lead}
         imageCredit={imageCredit}

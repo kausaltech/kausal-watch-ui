@@ -19,6 +19,7 @@ import type {
   MultiUseImageFragmentFragment,
 } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
+import { getImageSrcSet } from '@/common/images';
 import AttributesBlock, { Attributes } from '@/components/common/AttributesBlock';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import CategoryPageStreamField, {
@@ -381,10 +382,7 @@ export default function CategoryPageHeaderBlock(props: Props) {
           <HeaderImage $imageAlign={imageAlign} className={imageLayout}>
             <HeaderImageImg
               src={headerImage.large.src}
-              srcSet={[headerImage.small, headerImage.large, headerImage.full]
-                .filter((rendition) => rendition != null)
-                .map((rendition) => `${rendition.src} ${rendition.width}w`)
-                .join(', ')}
+              srcSet={getImageSrcSet([headerImage.small, headerImage.large, headerImage.full])}
               sizes="100vw"
               alt={headerImage.altText ?? ''}
               $imageAlign={imageAlign}

@@ -9,6 +9,7 @@ import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
+import { type ImageRenditionRef, getImageSrcSet } from '@/common/images';
 import RichText from '@/components/common/RichText';
 
 import { ImageCredit } from '../common/ImageCredit';
@@ -110,15 +111,10 @@ interface FocalBoxInfo {
   imageHeight: number;
 }
 
-type ImageRendition = {
-  src: string;
-  width: number;
-} | null;
-
 interface HeroImageRenditions {
-  small?: ImageRendition;
-  large?: ImageRendition;
-  full?: ImageRendition;
+  small?: ImageRenditionRef;
+  large?: ImageRenditionRef;
+  full?: ImageRenditionRef;
 }
 
 interface HeroFullImageProps {
@@ -166,10 +162,7 @@ const HeroFullImage = (props: HeroFullImageProps) => {
         <HeroImage>
           <HeroImageImg
             src={fallbackSrc}
-            srcSet={[image.small, image.large, image.full]
-              .filter((rendition) => rendition != null)
-              .map((rendition) => `${rendition.src} ${rendition.width}w`)
-              .join(', ')}
+            srcSet={getImageSrcSet([image.small, image.large, image.full])}
             sizes="100vw"
             alt={altText ?? ''}
             $imageAlign={imageAlign}
