@@ -2,7 +2,6 @@ import { useTranslations } from 'next-intl';
 
 import {
   CategoryTypeSelectWidget,
-  type IndicatorListFilterFragment,
   type IndicatorListPageFiltersFragment,
 } from '@/common/__generated__/graphql';
 import { type TFunction, getIndicatorTermContext } from '@/common/i18n';
@@ -14,9 +13,12 @@ import ActionListFilters, {
   type FilterValue,
   type Filters,
 } from '../actions/ActionListFilters';
-import { type CategoryType, type IndicatorCategory } from './IndicatorList';
-import { type IndicatorListIndicator } from './IndicatorList';
-import { type CollectedCommonCategory } from './IndicatorList';
+import {
+  type CategoryType,
+  type CollectedCommonCategory,
+  type IndicatorCategory,
+  type IndicatorListIndicator,
+} from './IndicatorList';
 
 const createFilterUnusedCategories =
   (indicators: IndicatorListIndicator[]) =>
@@ -101,8 +103,6 @@ const getFilterConfig = (
 
   // If we are provided with a custom layout, we convert the indicator list filters to action list filters
   if (!useDefaultFilters) {
-    // console.log('-----------------> Using custom filters', filterLayout);
-
     // if (!filter.showAllLabel) filter.showAllLabel = t('filter-all-categories');
     return {
       mainFilters: indicatorFiltersToActionListFilters(filterLayout.mainFilters, t) as NonNullable<
@@ -122,7 +122,6 @@ const getFilterConfig = (
 
   // If we are not provided with a custom layout, we generate the default (legacy) filters
   if (!commonCategories && !categoryType) {
-    // console.log('-----------------> Using empty default filters');
     return {
       mainFilters: [],
       primaryFilters: [],
@@ -131,7 +130,6 @@ const getFilterConfig = (
     };
   }
 
-  // console.log('-----------------> Using default filters with category type', categoryType);
   const mainTypeFilter = categoryType
     ? {
         __typename: 'CategoryTypeFilterBlock' as const,

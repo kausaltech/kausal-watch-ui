@@ -189,11 +189,25 @@ export async function POST(request: NextRequest) {
     formData.append('paperHeight', '11.69'); // A4
     formData.append('printBackground', 'true');
 
-    const response = await fetch(`${gotenbergUrl}/forms/chromium/convert/url`, {
-      method: 'POST',
-      body: formData,
-      signal: AbortSignal.timeout(65_000),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${gotenbergUrl}/forms/chromium/convert/url`, {
+        method: 'POST',
+        body: formData,
+        signal: AbortSignal.timeout(65_000),
+      });
+    } catch (err) {
+      // Let the outer catch turn request timeouts into a 504.
+      if (err instanceof DOMException && err.name === 'TimeoutError') {
+        throw err;
+      }
+      // Connection refused / DNS / other network failures reaching Gotenberg
+      // mean the upstream service is unavailable — report it as such rather
+      // than as a generic 500, so callers can distinguish it from a real bug.
+      console.error('Gotenberg unreachable:', err);
+      Sentry.captureException(err);
+      return NextResponse.json({ error: 'PDF export service unavailable' }, { status: 503 });
+    }
 
     if (!response.ok) {
       const errorText = await response.text();

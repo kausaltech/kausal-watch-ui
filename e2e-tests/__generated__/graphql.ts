@@ -1132,6 +1132,19 @@ export type PlaywrightGetPlanBasicsQuery = (
   & { __typename: 'Query' }
 );
 
+export type PlaywrightGetPlansForHostnameQueryVariables = Exact<{
+  hostname: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type PlaywrightGetPlansForHostnameQuery = (
+  { plansForHostname: Array<(
+    { identifier: string }
+    & { __typename: 'Plan' }
+  ) | { __typename: 'RestrictedPlanNode' }> | null }
+  & { __typename: 'Query' }
+);
+
 export type PlaywrightGetPlanInfoQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   locale: Scalars['String']['input'];

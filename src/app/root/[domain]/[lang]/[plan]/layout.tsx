@@ -4,10 +4,11 @@ import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import type { ApolloQueryResult } from '@apollo/client';
-import { captureException } from '@sentry/nextjs';
 import * as Sentry from '@sentry/nextjs';
+import { captureException } from '@sentry/nextjs';
 import type { Metadata } from 'next';
 
+import { getLogger } from '@common/logging';
 import ThemedGlobalStyles from '@common/themes/ThemedGlobalStyles';
 import { getThemeStaticURL } from '@common/themes/theme';
 import { loadTheme } from '@common/themes/theme-init.server';
@@ -29,6 +30,8 @@ import { getPlan } from '@/queries/get-plan';
 import { getPathsInstance } from '@/queries/paths/get-paths-instance';
 import { tryRequest } from '@/utils/api.utils';
 import { getMetaTitles } from '@/utils/metadata';
+
+const logger = getLogger('plan-layout');
 
 type Props = {
   params: Promise<{ plan: string; domain: string; lang: string }>;
@@ -138,13 +141,23 @@ export default async function PlanLayout(props: Props) {
   const planData = planResult.data;
 
   if (!planData?.plan) {
+    const queryFailed = 'error' in planResult && !!planResult.error;
     // The middleware resolved this plan for the hostname moments ago, so a
-    // missing plan here is a backend inconsistency rather than a bad URL.
-    // Query errors are already captured to Sentry by tryRequest.
-    if (!('error' in planResult) || !planResult.error) {
-      captureException(new Error(`GetPlanContext returned no plan before 404`), {
-        extra: { domain, plan, context: 'PlanLayout' },
-      });
+    // missing plan here is a backend inconsistency (query error, or the query
+    // succeeded but returned no plan) rather than a bad URL.
+    logger.error(
+      { domain, plan, queryFailed, error: queryFailed ? planResult.error : undefined },
+      `No plan resolved for ${domain}/${plan}; returning 404`
+    );
+    // Query errors are already captured to Sentry by tryRequest, so only
+    // capture the case where the query succeeded but returned no plan.
+    if (!queryFailed) {
+      captureException(
+        new Error(`GetPlanContext returned no plan for ${domain}/${plan} before 404`),
+        {
+          extra: { domain, plan, context: 'PlanLayout' },
+        }
+      );
     }
     notFound();
   }

@@ -32,14 +32,34 @@ const testPlan = (planId: string) => {
   test.describe(planId, { annotation: annotatations }, () => {
     test.describe.configure({ mode: 'serial' });
 
+    // `null` when the plan exists but can't be rendered standalone (see
+    // PlanContext.fromPlanId). Such plans are skipped in beforeEach rather
+    // than failing the whole suite.
+    let planCtx: PlanContext | null = null;
+
     test.use({
       ctx: async ({}, use) => {
-        const planInfo = await PlanContext.fromPlanId(planId);
-        await use(planInfo);
+        planCtx = await PlanContext.fromPlanId(planId);
+        // Pass the context through even when null; unrenderable plans are
+        // skipped in beforeEach before any test body dereferences `ctx`.
+        await use(planCtx as PlanContext);
       },
     });
 
     test.beforeEach(async ({ page, ctx }) => {
+      if (planCtx === null) {
+        // Surface as a distinct "warning" annotation (not just a plain skip) so
+        // it stands out from ordinary "no such page for plan" skips in the
+        // generated HTML/JSON report.
+        test.info().annotations.push({
+          type: 'warning',
+          description:
+            `Plan "${planId}" resolves via plansForHostname but not via plan(id:) ` +
+            `(likely no registered domain), so it cannot be rendered standalone. ` +
+            `Skipped — expected, not a failure.`,
+        });
+        test.skip(true, `Plan "${planId}" is not renderable standalone (no registered domain).`);
+      }
       ctx.beforeEach(page);
       await navigateAndCheckLayout(page, ctx.baseURL, ctx);
       const modalLocator = page.getByTestId('intro-modal');

@@ -7,6 +7,8 @@ import type {
   PlaywrightGetPlanBasicsQueryVariables,
   PlaywrightGetPlanInfoQuery,
   PlaywrightGetPlanInfoQueryVariables,
+  PlaywrightGetPlansForHostnameQuery,
+  PlaywrightGetPlansForHostnameQueryVariables,
 } from '../__generated__/graphql.ts';
 
 const { ApolloClient, InMemoryCache, HttpLink, gql } =
@@ -29,6 +31,21 @@ const GET_PLAN_BASICS = gql`
       identifier
       primaryLanguage
       otherLanguages
+    }
+  }
+`;
+
+// Used to tell apart two ways `plan(id:)` can come back empty:
+//  - the plan genuinely doesn't exist (typo in TEST_PLAN_IDENTIFIERS) → fail
+//  - the plan exists and is reachable by hostname, but has no registered
+//    domain so the top-level `plan(id:)` resolver returns null (e.g. an
+//    indicators-only plan only reachable via the dev wildcard hostname) → skip
+const GET_PLANS_FOR_HOSTNAME = gql`
+  query PlaywrightGetPlansForHostname($hostname: String) {
+    plansForHostname(hostname: $hostname) {
+      ... on Plan {
+        identifier
+      }
     }
   }
 `;
@@ -353,7 +370,15 @@ export class PlanContext {
     return getPageBaseUrlToTest(planId);
   }
 
-  static async fromPlanId(planId: string) {
+  /**
+   * Build a PlanContext for the given plan, or return `null` when the plan
+   * cannot be rendered standalone even though it exists (see
+   * {@link resolvesViaHostname}). Callers should skip such plans with a
+   * warning rather than failing. A plan that exists by neither `plan(id:)`
+   * nor hostname resolution throws, since that indicates a misconfigured
+   * TEST_PLAN_IDENTIFIERS entry.
+   */
+  static async fromPlanId(planId: string): Promise<PlanContext | null> {
     const langRes = await apolloClient.query<
       PlaywrightGetPlanBasicsQuery,
       PlaywrightGetPlanBasicsQueryVariables
@@ -361,7 +386,23 @@ export class PlanContext {
       query: GET_PLAN_BASICS,
       variables: { plan: planId },
     });
-    const primaryLanguage = langRes.data.plan!.primaryLanguage;
+
+    if (!langRes.data.plan) {
+      if (await resolvesViaHostname(planId)) {
+        console.warn(
+          `⚠️  Skipping plan "${planId}": it resolves via plansForHostname but not ` +
+            `via plan(id:) (likely no registered domain), so it cannot be rendered ` +
+            `standalone. This is expected for some plans and is not a test failure.`
+        );
+        return null;
+      }
+      throw new Error(
+        `Plan "${planId}" could not be resolved by plan(id:) or by hostname. ` +
+          `Check the TEST_PLAN_IDENTIFIERS environment variable.`
+      );
+    }
+
+    const primaryLanguage = langRes.data.plan.primaryLanguage;
     const baseURL = getPageBaseUrlToTest(planId);
     const res = await apolloClient.query<
       PlaywrightGetPlanInfoQuery,
@@ -410,6 +451,42 @@ export function getPageBaseUrlToTest(planId: string): string {
   // strip tailing slash
   baseUrl = baseUrl.replace(/\/$/, '');
   return baseUrl;
+}
+
+/**
+ * Check whether a plan is resolvable via `plansForHostname` for its test
+ * hostname. The dev/test setup serves each plan at `<planId>.<wildcard>`
+ * (e.g. `sunnydale.localhost`), so we resolve the hostname from the plan's
+ * base URL and pass the parent domain as the wildcard-domains header — the
+ * same mechanism the app's middleware uses.
+ */
+async function resolvesViaHostname(planId: string): Promise<boolean> {
+  let hostname: string;
+  try {
+    hostname = new URL(getPageBaseUrlToTest(planId)).hostname;
+  } catch {
+    return false;
+  }
+  // For `foo.localhost` the wildcard domain is `localhost`; empty when the
+  // hostname has no parent label (e.g. plain `localhost`).
+  const wildcardDomain = hostname.split('.').slice(1).join('.');
+
+  try {
+    const res = await apolloClient.query<
+      PlaywrightGetPlansForHostnameQuery,
+      PlaywrightGetPlansForHostnameQueryVariables
+    >({
+      query: GET_PLANS_FOR_HOSTNAME,
+      variables: { hostname },
+      fetchPolicy: 'no-cache',
+      context: wildcardDomain ? { headers: { 'x-wildcard-domains': wildcardDomain } } : undefined,
+    });
+    return (res.data.plansForHostname ?? []).some(
+      (plan) => plan && 'identifier' in plan && plan.identifier === planId
+    );
+  } catch {
+    return false;
+  }
 }
 
 export function displayConfiguration() {

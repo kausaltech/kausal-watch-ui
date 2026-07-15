@@ -35,6 +35,9 @@ test.describe('pdf-export', { annotation: annotations }, () => {
   test.use({
     ctx: async ({}, use) => {
       const planInfo = await PlanContext.fromPlanId(PLAN_ID);
+      if (!planInfo) {
+        throw new Error(`Plan "${PLAN_ID}" could not be loaded for the PDF export tests`);
+      }
       await use(planInfo);
     },
   });
