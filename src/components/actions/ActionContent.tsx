@@ -19,7 +19,7 @@ import {
   type GetActionDetailsQuery,
 } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
-import { isLocal } from '@/common/environment';
+import { deploymentType } from '@/common/environment';
 import { getActionTermContext } from '@/common/i18n';
 import { getActionImage, getBgImageAlignment } from '@/common/images';
 import { getActionLinkProps } from '@/common/links';
@@ -507,7 +507,10 @@ function ActionContent(props: ActionContentProps) {
   }, [action]);
 
   useEffect(() => {
-    if (plan.features.enableActionPdfExportInPublicUi && !pdfExportConfigured && !isLocal) {
+    // Only report this misconfiguration on real deployments; it's noise in
+    // development, CI, testing, preview and wip environments.
+    const isRealDeployment = deploymentType === 'production' || deploymentType === 'staging';
+    if (plan.features.enableActionPdfExportInPublicUi && !pdfExportConfigured && isRealDeployment) {
       captureMessage(
         'Plan has enableActionPdfExportInPublicUi enabled but the PDF export service is not configured',
         'error'
