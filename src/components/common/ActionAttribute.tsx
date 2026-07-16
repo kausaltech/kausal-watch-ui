@@ -1,6 +1,7 @@
 import React, { type ReactElement } from 'react';
 
 import styled from '@emotion/styled';
+
 import { readableColor } from 'polished';
 
 import { transientOptions } from '@common/themes/styles/styled';
@@ -136,7 +137,7 @@ type AttributeContentNestedTypeProps = {
 };
 
 const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTypeProps) => {
-  const formatNumber = useNumberFormatter({ maximumFractionDigits: 100 });
+  const formatNumber = useNumberFormatter({ maximumFractionDigits: 20 });
   const { attribute, attributeType, fontSize, notitle = false, variant = 'default' } = props;
   const type = attributeType ?? attribute.type;
   const isMinimized = variant === 'minimized';
