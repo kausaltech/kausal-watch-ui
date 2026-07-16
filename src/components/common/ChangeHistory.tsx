@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 
 import dayjs from '@/common/dayjs';
 import Icon from '@/components/common/Icon';
+import { usePlan } from '@/context/plan';
 
 export type EntityType = 'action' | 'indicator' | 'page';
 
@@ -157,10 +158,12 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({
   fieldHelpText,
 }) => {
   const t = useTranslations();
+  const plan = usePlan();
   const [isOpen, setIsOpen] = useState(false);
   if (!entry) return null;
 
-  const formattedDate = dayjs(entry.updatedAt).format('L');
+  // Format in the plan's time zone so the server and client agree.
+  const formattedDate = dayjs(entry.updatedAt).tz(plan.timezone).format('L');
 
   const modalTitle = fieldLabel?.trim() || t('change-history.modal-title');
   const descriptionLabel = fieldHelpText?.trim() || t('change-history.description-label');
