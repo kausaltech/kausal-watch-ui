@@ -19,6 +19,7 @@ import {
   type GetActionDetailsQuery,
 } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
+import { isLocal } from '@/common/environment';
 import { getActionTermContext } from '@/common/i18n';
 import { getActionImage, getBgImageAlignment } from '@/common/images';
 import { getActionLinkProps } from '@/common/links';
@@ -506,7 +507,7 @@ function ActionContent(props: ActionContentProps) {
   }, [action]);
 
   useEffect(() => {
-    if (plan.features.enableActionPdfExportInPublicUi && !pdfExportConfigured) {
+    if (plan.features.enableActionPdfExportInPublicUi && !pdfExportConfigured && !isLocal) {
       captureMessage(
         'Plan has enableActionPdfExportInPublicUi enabled but the PDF export service is not configured',
         'error'
