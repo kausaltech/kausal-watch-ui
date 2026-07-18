@@ -2,6 +2,7 @@
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import Icon, { type ValidIconName } from '@/components/common/Icon';
@@ -57,7 +58,7 @@ const StyledBubble = styled.div<{ $arrow?: 'left' | 'right' }>`
     font-weight: ${({ theme }) => theme.fontWeightBold};
   }
 
-  ${({ $arrow }) =>
+  ${({ $arrow, theme }) =>
     !$arrow
       ? null
       : css`
@@ -66,8 +67,8 @@ const StyledBubble = styled.div<{ $arrow?: 'left' | 'right' }>`
             position: absolute;
             top: calc(50% - 1px); // Subtract a pixel for perfect positioning due to border width
             display: block;
-            border-left: 2px solid ${({ theme }) => theme.brandDark};
-            border-top: 2px solid ${({ theme }) => theme.brandDark};
+            border-left: 2px solid ${theme.brandDark};
+            border-top: 2px solid ${theme.brandDark};
             width: 14px;
             height: 14px;
 

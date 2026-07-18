@@ -193,6 +193,7 @@ const GET_PLAN_CONTEXT = gql`
       minimalStatuses
       enableChangeLog
       enableActionPdfExportInPublicUi
+      enableCommunityEngagement
     }
     allRelatedPlans {
       id

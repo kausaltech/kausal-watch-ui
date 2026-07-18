@@ -11,13 +11,17 @@ import type {
   PublicUserDataMutation,
   PublicUserDataMutationVariables,
   PublicUserQuery,
-  PublicUserQueryVariables,
   RegisterPublicUserMutation,
 } from '@/common/__generated__/graphql';
+import { isServer } from '@/common/environment';
 
-const PUBLIC_USER_UUID_KEY = 'pledge-user-uuid';
+import {
+  PLEDGE_AUTH_CHANGED_EVENT,
+  PUBLIC_USER_UUID_KEY,
+  getPledgeAuthToken,
+} from './use-pledge-auth';
 
-const REGISTER_PUBLIC_USER = gql`
+export const REGISTER_PUBLIC_USER = gql`
   mutation RegisterPublicUser {
     pledge {
       registerUser {
@@ -27,8 +31,8 @@ const REGISTER_PUBLIC_USER = gql`
   }
 `;
 
-const COMMIT_TO_PLEDGE = gql`
-  mutation CommitToPledge($user: UUID!, $pledge: ID!, $committed: Boolean!) {
+export const COMMIT_TO_PLEDGE = gql`
+  mutation CommitToPledge($user: UUID, $pledge: ID!, $committed: Boolean!) {
     pledge {
       commitToPledge(committed: $committed, pledgeId: $pledge, userUuid: $user) {
         committed
@@ -37,8 +41,8 @@ const COMMIT_TO_PLEDGE = gql`
   }
 `;
 
-const SET_USER_DATA = gql`
-  mutation PublicUserData($user: UUID!, $key: String!, $value: String!) {
+export const SET_USER_DATA = gql`
+  mutation PublicUserData($user: UUID, $key: String!, $value: String!) {
     pledge {
       setUserData(key: $key, value: $value, userUuid: $user) {
         uuid
@@ -47,11 +51,12 @@ const SET_USER_DATA = gql`
   }
 `;
 
-const GET_PUBLIC_USER = gql`
-  query PublicUser($user: UUID!) {
+export const GET_PUBLIC_USER = gql`
+  query PublicUser($user: UUID) {
     publicUser(uuid: $user) {
       id
       uuid
+      email
       userData
       commitments {
         id
@@ -66,7 +71,7 @@ const GET_PUBLIC_USER = gql`
 `;
 
 function getStoredUuid(): string | null {
-  if (typeof window === 'undefined') return null;
+  if (isServer) return null;
 
   return localStorage.getItem(PUBLIC_USER_UUID_KEY);
 }
@@ -82,7 +87,7 @@ function parseUserData(
 
   if (typeof raw === 'string') {
     try {
-      return JSON.parse(raw);
+      return JSON.parse(raw) as { [key: string]: string };
     } catch {
       return {};
     }
@@ -94,63 +99,102 @@ function parseUserData(
 export function usePublicUser() {
   const [userUuid, setUserUuid] = useState<string | null>(() => getStoredUuid());
 
-  const [registerUser] = useMutation<RegisterPublicUserMutation>(REGISTER_PUBLIC_USER);
-  const [commitMutation] = useMutation<CommitToPledgeMutation, CommitToPledgeMutationVariables>(
-    COMMIT_TO_PLEDGE
+  const [preExistingCommittedSlugs, setPreExistingCommittedSlugs] = useState<Set<string>>(
+    () => new Set()
   );
+
+  const [registerUser] = useMutation<RegisterPublicUserMutation>(REGISTER_PUBLIC_USER);
+  // UUID is optional when the pledge bearer token handles auth instead
+  const [commitMutation] = useMutation<
+    CommitToPledgeMutation,
+    Omit<CommitToPledgeMutationVariables, 'user'> & { user?: string | null }
+  >(COMMIT_TO_PLEDGE);
 
   const [setUserDataMutation] = useMutation<
     PublicUserDataMutation,
-    PublicUserDataMutationVariables
+    Omit<PublicUserDataMutationVariables, 'user'> & { user?: string | null }
   >(SET_USER_DATA);
 
   const [fetchUser, { data: queryData, loading }] = useLazyQuery<
     PublicUserQuery,
-    PublicUserQueryVariables
+    { user?: string | null }
   >(GET_PUBLIC_USER, { fetchPolicy: 'network-only' });
 
   // When ensureUser registers a new user it sets this flag so the effect
   // doesn't fire a duplicate fetch — commitToPledge calls fetchUser explicitly.
-  const skipEffectFetch = useRef(false);
+  const skipEffectFetchRef = useRef(false);
 
-  // Fetch user data when UUID is available (e.g. loaded from localStorage on mount)
+  // Fetch user data on mount: token takes precedence over UUID.
   useEffect(() => {
-    if (userUuid) {
-      if (skipEffectFetch.current) {
-        skipEffectFetch.current = false;
+    if (getPledgeAuthToken()) {
+      void fetchUser({ variables: {} });
+    } else if (userUuid) {
+      if (skipEffectFetchRef.current) {
+        skipEffectFetchRef.current = false;
         return;
       }
 
-      fetchUser({ variables: { user: userUuid } });
+      void fetchUser({ variables: { user: userUuid } });
     }
   }, [userUuid, fetchUser]);
+
+  // Distinguish sign-in from sign-out via the same auth-changed event
+  useEffect(() => {
+    const handler = () => {
+      if (getPledgeAuthToken()) {
+        // Signed in — identify via token, UUID has been cleared from localStorage
+        void fetchUser({ variables: {} });
+      } else {
+        // Signed out — clear the session entirely
+        localStorage.removeItem(PUBLIC_USER_UUID_KEY);
+        setUserUuid(null);
+        setPreExistingCommittedSlugs(new Set());
+      }
+    };
+
+    window.addEventListener(PLEDGE_AUTH_CHANGED_EVENT, handler);
+
+    return () => window.removeEventListener(PLEDGE_AUTH_CHANGED_EVENT, handler);
+  }, [fetchUser, setPreExistingCommittedSlugs]);
 
   const userData = useMemo(
     () => parseUserData(queryData?.publicUser?.userData),
     [queryData?.publicUser?.userData]
   );
 
+  // Committed slugs from both the fetched user and any pre-existing slugs from sign-in.
+  // Gated on having an active session (UUID or bearer token) so that stale queryData
+  // from a previous user cannot leak through the Apollo lazy-query React state after
+  // sign-out but before a full cache eviction has been processed
+  const hasSession = userUuid != null || (!isServer && !!getPledgeAuthToken());
   const committedSlugs = useMemo(
-    () =>
-      new Set(
-        (queryData?.publicUser?.commitments ?? [])
+    () => {
+      if (!hasSession) return new Set<string>();
+
+      return new Set([
+        ...(queryData?.publicUser?.commitments ?? [])
           .map((c) => c.pledge?.slug)
-          .filter((c) => c != null) ?? []
-      ),
-    [queryData?.publicUser?.commitments]
+          .filter((c) => c != null),
+        ...preExistingCommittedSlugs,
+      ]);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [hasSession, queryData?.publicUser?.commitments, preExistingCommittedSlugs]
   );
 
   // Track the committed slugs from the first fetch so we can compute
   // a count adjustment without needing to refetch the pledge list query.
-  const initialCommittedSlugs = useRef<Set<string> | null>(null);
+  const initialCommittedSlugsRef = useRef<Set<string> | null>(null);
 
-  if (initialCommittedSlugs.current === null && queryData?.publicUser) {
-    initialCommittedSlugs.current = new Set(committedSlugs);
-  }
+  useEffect(() => {
+    if (initialCommittedSlugsRef.current === null && queryData?.publicUser) {
+      initialCommittedSlugsRef.current = new Set(committedSlugs);
+    }
+  }, [queryData?.publicUser, committedSlugs]);
 
   const getCommitmentCountAdjustment = useCallback(
     (slug: string) => {
-      const wasCommitted = initialCommittedSlugs.current?.has(slug) ?? false;
+      const wasCommitted = initialCommittedSlugsRef.current?.has(slug) ?? false;
       const isNowCommitted = committedSlugs.has(slug);
       if (wasCommitted === isNowCommitted) return 0;
       return isNowCommitted ? 1 : -1;
@@ -167,7 +211,7 @@ export function usePublicUser() {
     if (!newUuid) throw new Error('Failed to register public user');
 
     storeUuid(newUuid);
-    skipEffectFetch.current = true;
+    skipEffectFetchRef.current = true;
     setUserUuid(newUuid);
 
     return newUuid;
@@ -175,7 +219,8 @@ export function usePublicUser() {
 
   const commitToPledge = useCallback(
     async (pledgeId: string, formData: Record<string, string> = {}) => {
-      const uuid = await ensureUser();
+      const isAuth = !!getPledgeAuthToken();
+      const uuid = isAuth ? null : await ensureUser();
 
       // Only send mutations for changed fields
       const changedEntries = Object.entries(formData).filter(
@@ -185,31 +230,54 @@ export function usePublicUser() {
       if (changedEntries.length > 0) {
         await Promise.all(
           changedEntries.map(([key, value]) =>
-            setUserDataMutation({ variables: { user: uuid, key, value } })
+            setUserDataMutation({ variables: { user: uuid ?? undefined, key, value } })
           )
         );
       }
 
       await commitMutation({
-        variables: { user: uuid, pledge: pledgeId, committed: true },
+        variables: { user: uuid ?? undefined, pledge: pledgeId, committed: true },
       });
 
-      await fetchUser({ variables: { user: uuid } });
+      if (isAuth) {
+        await fetchUser({ variables: {} });
+      } else if (uuid) {
+        await fetchUser({ variables: { user: uuid } });
+      }
     },
     [ensureUser, userData, setUserDataMutation, commitMutation, fetchUser]
   );
 
   const uncommitFromPledge = useCallback(
     async (pledgeId: string) => {
-      if (!userUuid) return;
+      const isAuth = !!getPledgeAuthToken();
+
+      if (!isAuth && !userUuid) {
+        return;
+      }
 
       await commitMutation({
-        variables: { user: userUuid, pledge: pledgeId, committed: false },
+        variables: {
+          user: isAuth ? undefined : (userUuid ?? undefined),
+          pledge: pledgeId,
+          committed: false,
+        },
       });
 
-      await fetchUser({ variables: { user: userUuid } });
+      if (isAuth) {
+        await fetchUser({ variables: {} });
+      } else if (userUuid) {
+        await fetchUser({ variables: { user: userUuid } });
+      }
     },
     [userUuid, commitMutation, fetchUser]
+  );
+
+  const mergePreExistingPledgeSlugs = useCallback(
+    (slugs: string[]) => {
+      setPreExistingCommittedSlugs((prev) => new Set([...prev, ...slugs]));
+    },
+    [setPreExistingCommittedSlugs]
   );
 
   return {
@@ -220,5 +288,6 @@ export function usePublicUser() {
     commitToPledge,
     uncommitFromPledge,
     getCommitmentCountAdjustment,
+    mergePreExistingPledgeSlugs,
   };
 }

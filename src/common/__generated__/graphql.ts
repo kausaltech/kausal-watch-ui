@@ -2635,6 +2635,71 @@ export type IndicatorHightlightListQuery = (
   & { __typename: 'Query' }
 );
 
+export type PledgeSignUpMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  termsAccepted: Scalars['Boolean']['input'];
+  marketingAccepted: Scalars['Boolean']['input'];
+  anonUuid: InputMaybe<Scalars['UUID']['input']>;
+}>;
+
+
+export type PledgeSignUpMutation = (
+  { pledge: (
+    { signUp: (
+      { sent: boolean }
+      & { __typename: 'SignUpPayload' }
+    ) | null }
+    & { __typename: 'PledgeMutations' }
+  ) }
+  & { __typename: 'Mutation' }
+);
+
+export type PledgeSignInMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  anonUuid: InputMaybe<Scalars['UUID']['input']>;
+}>;
+
+
+export type PledgeSignInMutation = (
+  { pledge: (
+    { signIn: (
+      { sent: boolean }
+      & { __typename: 'SignInPayload' }
+    ) | null }
+    & { __typename: 'PledgeMutations' }
+  ) }
+  & { __typename: 'Mutation' }
+);
+
+export type PledgeVerifyPinMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  pin: Scalars['String']['input'];
+  anonUuid: InputMaybe<Scalars['UUID']['input']>;
+}>;
+
+
+export type PledgeVerifyPinMutation = (
+  { pledge: (
+    { verifyPin: (
+      { userToken: string, pledgeIds: Array<string> }
+      & { __typename: 'VerifyPinPayload' }
+    ) | null }
+    & { __typename: 'PledgeMutations' }
+  ) }
+  & { __typename: 'Mutation' }
+);
+
+export type PublicUserForNavQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PublicUserForNavQuery = (
+  { publicUser: (
+    { id: string, email: string | null }
+    & { __typename: 'PublicUser' }
+  ) | null }
+  & { __typename: 'Query' }
+);
+
 export type RegisterPublicUserMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2650,7 +2715,7 @@ export type RegisterPublicUserMutation = (
 );
 
 export type CommitToPledgeMutationVariables = Exact<{
-  user: Scalars['UUID']['input'];
+  user: InputMaybe<Scalars['UUID']['input']>;
   pledge: Scalars['ID']['input'];
   committed: Scalars['Boolean']['input'];
 }>;
@@ -2668,7 +2733,7 @@ export type CommitToPledgeMutation = (
 );
 
 export type PublicUserDataMutationVariables = Exact<{
-  user: Scalars['UUID']['input'];
+  user: InputMaybe<Scalars['UUID']['input']>;
   key: Scalars['String']['input'];
   value: Scalars['String']['input'];
 }>;
@@ -2686,13 +2751,13 @@ export type PublicUserDataMutation = (
 );
 
 export type PublicUserQueryVariables = Exact<{
-  user: Scalars['UUID']['input'];
+  user: InputMaybe<Scalars['UUID']['input']>;
 }>;
 
 
 export type PublicUserQuery = (
   { publicUser: (
-    { id: string, uuid: string, userData: string, commitments: Array<(
+    { id: string, uuid: string, email: string | null, userData: string, commitments: Array<(
       { id: string, pledge: (
         { id: string, slug: string, name: string }
         & { __typename: 'Pledge' }
@@ -16628,7 +16693,7 @@ export type GetPlanContextQuery = (
       )> }
       & { __typename: 'Footer' }
     ) | null, features: (
-      { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean }
+      { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean, enableCommunityEngagement: boolean }
       & { __typename: 'PlanFeatures' }
     ), allRelatedPlans: Array<(
       { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null, image: (
@@ -16824,7 +16889,7 @@ export type PlanContextFragment = (
     )> }
     & { __typename: 'Footer' }
   ) | null, features: (
-    { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean }
+    { allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean, enableCommunityEngagement: boolean }
     & { __typename: 'PlanFeatures' }
   ), allRelatedPlans: Array<(
     { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null, image: (
@@ -16950,7 +17015,7 @@ export type GetPlansByHostnameQuery = (
 
 export type PledgeFragmentFragment = (
   { id: string, name: string, description: string, uuid: string, slug: string, commitmentCount: number, residentCount: number | null, impactStatement: string, localEquivalency: string, image: (
-    { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
       { id: string, width: number, height: number, src: string }
       & { __typename: 'ImageRendition' }
     ) | null, large: (
@@ -17262,12 +17327,12 @@ export type PledgeFragmentFragment = (
   & { __typename: 'Pledge' }
 );
 
-export type GetPledgesQueryVariables = Exact<{
+export type PledgesQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
 }>;
 
 
-export type GetPledgesQuery = (
+export type PledgesQuery = (
   { planPage: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } | (
     { id: string | null, title: string, leadContent: string | null, backgroundImage: (
       { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
@@ -17295,7 +17360,7 @@ export type GetPledgesQuery = (
         { id: string, identifier: string, name: string, viewUrl: string }
         & { __typename: 'Action' }
       )> | null, image: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -17672,13 +17737,13 @@ type PledgeBodyFragment_RichTextBlock_Fragment = (
 
 export type PledgeBodyFragmentFragment = PledgeBodyFragment_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment | PledgeBodyFragment_Lrr2Fl8Se3u5PeLKw5dI21X2VgwGptdIrN1YaLxh00_Fragment | PledgeBodyFragment_DCiMtWTjVHcMJlWmTrxLDb0m3cl5Ha0YuNph9nWt8E_Fragment | PledgeBodyFragment_O6yiIaiIXrBAuCqj4Usrc0eUxTgDeFjRkKlJwjRwna_Fragment | PledgeBodyFragment_KZmexPyDcZFmxLkcenFpyeXmtVp7H1eJxNPg02xKLs_Fragment | PledgeBodyFragment_CNtvxS0zAxTpijnH9ZeSlUeWtdDj51HzvpQ4bUg_Fragment | PledgeBodyFragment_8vtSixVuMrtoI07nft7JyY3uvOn1ds6gUIeEfxgMy_Fragment | PledgeBodyFragment_LargeImageBlock_Fragment | PledgeBodyFragment_QuestionAnswerBlock_Fragment | PledgeBodyFragment_RichTextBlock_Fragment;
 
-export type GetPledgeQueryVariables = Exact<{
+export type PledgeQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   slug: Scalars['String']['input'];
 }>;
 
 
-export type GetPledgeQuery = (
+export type PledgeQuery = (
   { plan: (
     { id: string, pledge: (
       { id: string, name: string, description: string, uuid: string, slug: string, commitmentCount: number, residentCount: number | null, impactStatement: string, localEquivalency: string, body: Array<(
@@ -17703,7 +17768,7 @@ export type GetPledgeQuery = (
         { id: string, identifier: string, name: string, viewUrl: string }
         & { __typename: 'Action' }
       )> | null, image: (
-        { title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+        { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
         ) | null, large: (
@@ -18019,12 +18084,12 @@ export type GetPledgeQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetPledgeFeatureEnabledQueryVariables = Exact<{
+export type PledgeFeatureEnabledQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
 }>;
 
 
-export type GetPledgeFeatureEnabledQuery = (
+export type PledgeFeatureEnabledQuery = (
   { plan: (
     { id: string, features: (
       { enableCommunityEngagement: boolean }

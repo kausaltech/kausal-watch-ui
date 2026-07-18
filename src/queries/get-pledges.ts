@@ -1,12 +1,12 @@
 import { gql } from '@apollo/client';
 
 import type {
-  GetPledgeFeatureEnabledQuery,
-  GetPledgeFeatureEnabledQueryVariables,
-  GetPledgeQuery,
-  GetPledgeQueryVariables,
-  GetPledgesQuery,
-  GetPledgesQueryVariables,
+  PledgeFeatureEnabledQuery,
+  PledgeFeatureEnabledQueryVariables,
+  PledgeQuery,
+  PledgeQueryVariables,
+  PledgesQuery,
+  PledgesQueryVariables,
 } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 import { ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT } from '@/fragments/action-attribute.fragment';
@@ -16,7 +16,7 @@ import { getClient } from '../utils/apollo-rsc-client';
 export const getPledgeFeatureEnabled = async (plan: string) =>
   await (
     await getClient()
-  ).query<GetPledgeFeatureEnabledQuery, GetPledgeFeatureEnabledQueryVariables>({
+  ).query<PledgeFeatureEnabledQuery, PledgeFeatureEnabledQueryVariables>({
     query: GET_PLEDGE_FEATURE_ENABLED,
     variables: {
       plan,
@@ -27,7 +27,7 @@ export const getPledgeFeatureEnabled = async (plan: string) =>
 export const getPledges = async (plan: string) =>
   await (
     await getClient()
-  ).query<GetPledgesQuery, GetPledgesQueryVariables>({
+  ).query<PledgesQuery, PledgesQueryVariables>({
     query: GET_PLEDGES,
     variables: {
       plan,
@@ -38,7 +38,7 @@ export const getPledges = async (plan: string) =>
 export const getPledge = async (plan: string, slug: string) =>
   await (
     await getClient()
-  ).query<GetPledgeQuery, GetPledgeQueryVariables>({
+  ).query<PledgeQuery, PledgeQueryVariables>({
     query: GET_PLEDGE,
     variables: {
       plan,
@@ -55,6 +55,7 @@ const PLEDGE_FRAGMENT = gql`
     uuid
     slug
     image {
+      id
       ...MultiUseImageFragment
     }
     commitmentCount
@@ -70,7 +71,7 @@ const PLEDGE_FRAGMENT = gql`
 `;
 
 const GET_PLEDGES = gql`
-  query GetPledges($plan: ID!) {
+  query Pledges($plan: ID!) {
     planPage(plan: $plan, path: "/pledges") {
       ... on PledgeListPage {
         id
@@ -130,7 +131,7 @@ const PLEDGE_BODY_FRAGMENT = gql`
 `;
 
 const GET_PLEDGE = gql`
-  query GetPledge($plan: ID!, $slug: String!) {
+  query Pledge($plan: ID!, $slug: String!) {
     plan(id: $plan) {
       id
       pledge(slug: $slug) {
@@ -152,7 +153,7 @@ const GET_PLEDGE = gql`
 `;
 
 const GET_PLEDGE_FEATURE_ENABLED = gql`
-  query GetPledgeFeatureEnabled($plan: ID!) {
+  query PledgeFeatureEnabled($plan: ID!) {
     plan(id: $plan) {
       id
       features {

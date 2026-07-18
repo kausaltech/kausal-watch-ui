@@ -1,6 +1,8 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
+
+import { useSearchParams } from 'next/navigation';
 
 import { Chip, Collapse, InputAdornment, TextField } from '@mui/material';
 
@@ -11,7 +13,7 @@ import { useTranslations } from 'next-intl';
 import { Search } from 'react-bootstrap-icons';
 import { Button, ButtonGroup, Container } from 'reactstrap';
 
-import type { GetPledgesQuery } from '@/common/__generated__/graphql';
+import type { PledgesQuery } from '@/common/__generated__/graphql';
 import FilterControl, { type FilterField } from '@/components/common/FilterControl';
 import Icon from '@/components/common/Icon';
 import { getDefaultFormFields } from '@/utils/pledge.utils';
@@ -19,11 +21,12 @@ import { getDefaultFormFields } from '@/utils/pledge.utils';
 import { getAttributeValueText } from '../common/ActionAttribute';
 import ConfirmPledge from './ConfirmPledge';
 import PledgeCard, { type PledgeCategory } from './PledgeCard';
+import PledgeCreateAccountCard from './PledgeCreateAccountCard';
+import SignInDrawer from './SignInDrawer';
+import { usePledgeNavUser } from './use-pledge-auth';
 import { usePublicUser } from './use-public-user';
 
-export type Pledge = NonNullable<
-  NonNullable<NonNullable<GetPledgesQuery['plan']>['pledges']>[number]
->;
+export type Pledge = NonNullable<NonNullable<NonNullable<PledgesQuery['plan']>['pledges']>[number]>;
 
 type Props = {
   pledges: Pledge[];
@@ -242,7 +245,10 @@ function getFiltersFromPledgeAttributes(pledges: Pledge[]): Attribute[] {
 }
 
 function PledgeList({ pledges }: Props) {
-  const [view, setView] = useState<ViewType>('ALL');
+  const searchParams = useSearchParams();
+  const [view, setView] = useState<ViewType>(() =>
+    searchParams?.get('view') === 'my-pledges' ? 'MY_PLEDGES' : 'ALL'
+  );
   const [showConfirmDrawer, setShowConfirmDrawer] = useState(false);
   const [selectedPledge, setSelectedPledge] = useState<Pledge | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -261,18 +267,23 @@ function PledgeList({ pledges }: Props) {
     []
   );
 
+  const [showSignInDrawer, setShowSignInDrawer] = useState(false);
+
   const t = useTranslations();
+  const { isAuthenticated } = usePledgeNavUser();
   const {
     userData,
+    userUuid,
     committedSlugs,
     commitToPledge,
     uncommitFromPledge,
     getCommitmentCountAdjustment,
+    mergePreExistingPledgeSlugs,
   } = usePublicUser();
 
-  const handleCommitClick = (pledge: Pledge, isCurrentlyCommitted: boolean) => {
+  const handleCommitClick = async (pledge: Pledge, isCurrentlyCommitted: boolean) => {
     if (isCurrentlyCommitted) {
-      uncommitFromPledge(pledge.id);
+      await uncommitFromPledge(pledge.id);
     } else {
       setSelectedPledge(pledge);
       setShowConfirmDrawer(true);
@@ -282,6 +293,16 @@ function PledgeList({ pledges }: Props) {
   const handleConfirmPledge = async (formData: Record<string, string>) => {
     if (selectedPledge) {
       await commitToPledge(selectedPledge.id, formData);
+    }
+  };
+
+  const handleSignInComplete = (pledgeIds: string[]) => {
+    if (pledgeIds.length > 0) {
+      const slugs = pledgeIds
+        .map((id) => pledges.find((pledge) => pledge.id === id)?.slug)
+        .filter((slug) => slug != null);
+
+      mergePreExistingPledgeSlugs(slugs);
     }
   };
 
@@ -446,26 +467,38 @@ function PledgeList({ pledges }: Props) {
 
         {filteredPledges.length > 0 && (
           <StyledPledgeGrid>
-            {filteredPledges.map((pledge) => (
-              <PledgeCard
-                key={pledge.slug}
-                title={pledge.name}
-                description={pledge.description}
-                categories={pledge.attributes
-                  .map((attribute) => ({
-                    // TODO: Add icon when supported by the backend
-                    label: getAttributeValueText(attribute),
-                  }))
-                  .filter((category): category is PledgeCategory => !!category.label)}
-                slug={pledge.slug}
-                image={pledge.image?.large?.src ?? pledge.image?.full?.src}
-                imageAlt={pledge.image?.altText ?? pledge.name}
-                isCommitted={committedSlugs.has(pledge.slug)}
-                committedCount={pledge.commitmentCount + getCommitmentCountAdjustment(pledge.slug)}
-                onCommitClick={(isCommitted) => handleCommitClick(pledge, isCommitted)}
-                isMostCommitted={pledge.id === mostCommitted?.id}
-              />
-            ))}
+            {filteredPledges.map((pledge, index) => {
+              const showCreateAccountCard = !isAuthenticated && index === 1;
+
+              return (
+                <React.Fragment key={pledge.slug}>
+                  <PledgeCard
+                    title={pledge.name}
+                    description={pledge.description}
+                    categories={pledge.attributes
+                      .map((attribute) => ({
+                        // TODO: Add icon when supported by the backend
+                        label: getAttributeValueText(attribute),
+                      }))
+                      .filter((category): category is PledgeCategory => !!category.label)}
+                    slug={pledge.slug}
+                    image={pledge.image?.large?.src ?? pledge.image?.full?.src}
+                    imageAlt={pledge.image?.altText ?? pledge.name}
+                    isCommitted={committedSlugs.has(pledge.slug)}
+                    committedCount={
+                      pledge.commitmentCount + getCommitmentCountAdjustment(pledge.slug)
+                    }
+                    onCommitClick={(isCommitted) => void handleCommitClick(pledge, isCommitted)}
+                    isMostCommitted={pledge.id === mostCommitted?.id}
+                  />
+
+                  {/* TODO: This is causing hydration errors after user loads and its hidden */}
+                  {showCreateAccountCard && (
+                    <PledgeCreateAccountCard onCreateAccount={() => setShowSignInDrawer(true)} />
+                  )}
+                </React.Fragment>
+              );
+            })}
           </StyledPledgeGrid>
         )}
 
@@ -487,7 +520,7 @@ function PledgeList({ pledges }: Props) {
                   pledges[0].commitmentCount + getCommitmentCountAdjustment(pledges[0].slug)
                 }
                 isCommitted={false}
-                onCommitClick={() => handleCommitClick(pledges[0], false)}
+                onCommitClick={() => void handleCommitClick(pledges[0], false)}
               />
             </StyledEmptyCardWrapper>
             <StyledBrowseAllButton onClick={() => setView('ALL')}>
@@ -501,14 +534,24 @@ function PledgeList({ pledges }: Props) {
             isOpen={showConfirmDrawer}
             onClose={handleCloseDrawer}
             onConfirm={handleConfirmPledge}
+            onSignInComplete={handleSignInComplete}
             pledgeName={selectedPledge.name}
             pledgeSlug={selectedPledge.slug}
             pledgeImage={selectedPledge.image?.rendition?.src ?? null}
             commitmentCount={selectedPledge.commitmentCount}
             formFields={getDefaultFormFields(t)}
             userData={userData}
+            anonymousUserToken={userUuid ?? undefined}
+            isSignedIn={isAuthenticated}
           />
         )}
+
+        <SignInDrawer
+          isOpen={showSignInDrawer}
+          onClose={() => setShowSignInDrawer(false)}
+          onComplete={handleSignInComplete}
+          anonymousUserToken={userUuid ?? undefined}
+        />
       </StyledContainer>
     </StyledPageWrapper>
   );
