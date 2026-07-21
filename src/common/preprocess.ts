@@ -143,7 +143,9 @@ const getStatusData = (
           ? unknownLabelText
           : label || unknownLabelText
       );
-      progress.colors.push(theme.graphColors[colors.get(identifier) ?? color]);
+      progress.colors.push(
+        theme.graphColors[(colors.get(identifier) ?? color) as keyof Theme['graphColors']]
+      );
       if (
         sentiment === Sentiment.Positive ||
         identifier === ActionStatusSummaryIdentifier.NotStarted
@@ -184,23 +186,21 @@ const getPhaseData = (
       theme.graphColors.green070,
       theme.graphColors.green050,
       theme.graphColors.green030,
-      theme.graphColors.green020,
       theme.graphColors.green010,
       theme.graphColors.grey030,
     ];
   }
 
-  console.log(
-    'phaseColors',
-    phaseColors,
-    phases.map((p) => p.color)
-  );
-  const donutSectorFromPhase = (phase, idx, isNotStartedPhase) => {
+  const donutSectorFromPhase = (
+    phase: PlanContextType['actionImplementationPhases'][number],
+    idx: number,
+    isNotStartedPhase: boolean
+  ) => {
     return new DonutSector(
       phase.name,
       isNotStartedPhase
         ? theme.graphColors.grey020
-        : (phaseColors[idx] ?? theme.graphColors.yellow020),
+        : (phaseColors[idx] ?? theme.graphColors.yellow010),
       !isNotStartedPhase
     );
   };
@@ -220,7 +220,7 @@ const getPhaseData = (
     theme.graphColors.grey000,
     false
   );
-  inactiveActionsDonutSector;
+
   const phaselessActionsDonutSector: DonutSector = new DonutSector(
     // Donut sector for active actions without a phase
     t('no-phase'),
@@ -269,9 +269,7 @@ const getPhaseData = (
     good: ongoingAndCompleted,
     total: String(totalAll),
     ongoingAndCompleted,
-  } as Progress;
+  };
 };
-
-type StatusSummary = Plan['actionStatusSummaries'][0];
 
 export { cleanActionStatus, getPhaseData, getStatusData };
