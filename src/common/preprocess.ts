@@ -170,9 +170,7 @@ const getPhaseData = (
   if (phases.length == 0 || actions.length == 0) {
     return null;
   }
-  let phaseColors = phases
-    .filter((p) => p.color != null)
-    .map((p) => theme.graphColors[p.color] as string);
+  let phaseColors = phases.filter((p) => p.color).map((p) => theme.graphColors[p.color] as string);
 
   /* We assume that if a custom color has not been set for *all*
      phases in a plan, the sparse colors will not form a coherent
@@ -191,6 +189,12 @@ const getPhaseData = (
       theme.graphColors.grey030,
     ];
   }
+
+  console.log(
+    'phaseColors',
+    phaseColors,
+    phases.map((p) => p.color)
+  );
   const donutSectorFromPhase = (phase, idx, isNotStartedPhase) => {
     return new DonutSector(
       phase.name,
