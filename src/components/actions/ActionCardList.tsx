@@ -44,6 +44,21 @@ const ActionGroup = styled(Row)`
 const ActionGroupList = styled(Row)`
   padding: 0;
 `;
+
+// Centre the cards when there are fewer cards that fit into a row
+// to avoid a center aligned title and a few cards dangling off to the left.
+// Use this rather than justify-content: center; so that the action cards on
+// multiple rows are still left aligned for consistency with the action grid.
+const ActionCol = styled(Col)`
+  &:first-child {
+    margin-left: auto;
+  }
+
+  &:last-child {
+    margin-right: auto;
+  }
+`;
+
 const OTHER_GROUP_ID = 'other';
 
 type ActionGroup<T extends ActionListAction | ActionCardFragment> = {
@@ -176,7 +191,7 @@ function ActionCardList<ActionT extends ActionListAction | ActionCardFragment>({
           <Col xs="12">
             <ActionGroupList tag="ul">
               {group.elements.map((item) => (
-                <Col
+                <ActionCol
                   tag="li"
                   xs="6"
                   sm="4"
@@ -192,7 +207,7 @@ function ActionCardList<ActionT extends ActionListAction | ActionCardFragment>({
                     size="xs"
                     getFullAction={getFullAction}
                   />
-                </Col>
+                </ActionCol>
               ))}
             </ActionGroupList>
           </Col>

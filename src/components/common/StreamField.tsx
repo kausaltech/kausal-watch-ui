@@ -473,8 +473,6 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
             }
           : undefined;
 
-      console.log('additionalSettings', additionalSettings);
-
       return (
         <FrontPageHeroBlock
           id={id}
