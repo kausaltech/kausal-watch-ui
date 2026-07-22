@@ -6,6 +6,7 @@ import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
+import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import RichText from '@/components/common/RichText';
 
 import { ImageCredit } from '../common/ImageCredit';
@@ -112,7 +113,7 @@ const StyledImageCredit = styled(ImageCredit, transientOptions)<{ $fitImage: boo
 
 interface HeroSideBySideProps {
   id?: string;
-  bgImage: string;
+  image: HeroImageRenditions;
   title: string | null | undefined;
   lead: string | null | undefined;
   altText?: string | null | undefined;
@@ -126,7 +127,7 @@ interface HeroSideBySideProps {
 const HeroSideBySide = (props: HeroSideBySideProps) => {
   const {
     id = '',
-    bgImage,
+    image,
     title,
     lead,
     altText = '',
@@ -140,6 +141,8 @@ const HeroSideBySide = (props: HeroSideBySideProps) => {
   const t = useTranslations();
   const theme = useTheme();
 
+  const stackedBreakpoint = getStackedBreakpoint({ theme, $fitImage: shouldFitImage });
+
   const cardColor = theme.settings?.frontHero?.color ?? 'light';
   const showContentBox = title || lead;
 
@@ -147,7 +150,15 @@ const HeroSideBySide = (props: HeroSideBySideProps) => {
     <SideBySideHero id={id} $backgroundColor={backgroundColor}>
       <SideBySideInner $fitImage={shouldFitImage}>
         <SideBySideImageWrapper $fitImage={shouldFitImage}>
-          <SideBySideImage src={bgImage} alt={altText ?? ''} $fitImage={shouldFitImage} />
+          {/* The image renders at half the container width at most, so the
+              largest rendition the layout can make use of is fullMedium */}
+          <SideBySideImage
+            src={(image.fullMedium ?? image.fullSmall ?? image.full)?.src}
+            srcSet={getImageSrcSet([image.fullSmall, image.fullMedium])}
+            sizes={`(min-width: ${stackedBreakpoint}) 50vw, 100vw`}
+            alt={altText ?? ''}
+            $fitImage={shouldFitImage}
+          />
           {imageCredit && (
             <StyledImageCredit
               $fitImage={shouldFitImage}

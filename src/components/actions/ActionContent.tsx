@@ -658,7 +658,7 @@ function ActionContent(props: ActionContentProps) {
         nextAction={action.nextAction}
         identifier={plan.hideActionIdentifiers ? undefined : action.identifier}
         name={action.name}
-        imageUrl={actionImage?.large.src}
+        image={actionImage}
         imageCredit={actionImage?.imageCredit}
         imageTitle={actionImage?.title}
         altText={actionImage?.altText}

@@ -22,7 +22,7 @@ const GET_ACTION = gql`
       completion
       updatedAt
       image {
-        ...MultiUseImageFragment
+        ...CardImageFragment
       }
       plan {
         id
@@ -39,29 +39,30 @@ const GET_ACTION = gql`
       }
       implementationPhase {
         id
+        name
         identifier
       }
       categories {
         id
         image {
-          ...MultiUseImageFragment
+          ...CardImageFragment
         }
         parent {
           id
           image {
-            ...MultiUseImageFragment
+            ...CardImageFragment
           }
           parent {
             id
             image {
-              ...MultiUseImageFragment
+              ...CardImageFragment
             }
           }
         }
       }
     }
   }
-  ${images.fragments.multiUseImage}
+  ${images.fragments.cardImage}
 `;
 
 interface ActionEmbedPropsType {
@@ -104,7 +105,7 @@ const ActionEmbed = ({ path, maxWidth }: ActionEmbedPropsType) => {
     <ActionCardWrapper maxWidth={maxWidth ?? DEFAULT_MAX_WIDTH}>
       <ActionHighlightCard
         action={data.action}
-        imageUrl={data.action?.image?.large?.src || undefined}
+        imageUrl={data.action?.image?.small?.src || undefined}
         hideIdentifier={plan.hideActionIdentifiers}
       />
     </ActionCardWrapper>

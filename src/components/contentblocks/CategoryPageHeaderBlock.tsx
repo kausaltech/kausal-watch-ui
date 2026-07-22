@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Image from 'next/image';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -18,9 +16,10 @@ import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layou
 import type {
   AttributesBlockAttributeFragment,
   GetCategoryAttributeTypesQuery,
-  MultiUseImageFragmentFragment,
+  HeroImageFragmentFragment,
 } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
+import { getImageSrcSet } from '@/common/images';
 import AttributesBlock, { Attributes } from '@/components/common/AttributesBlock';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import CategoryPageStreamField, {
@@ -28,6 +27,7 @@ import CategoryPageStreamField, {
 } from '@/components/common/CategoryPageStreamField';
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
 import { usePlan } from '@/context/plan';
+import { ATTRIBUTE_TYPE_FRAGMENT } from '@/fragments/action-attribute.fragment';
 
 import { ImageCredit } from '../common/ImageCredit';
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
@@ -40,26 +40,12 @@ export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
         id
         name
         attributeTypes {
-          __typename
-          id
-          format
-          name
-          identifier
-          helpText
-          showChoiceNames
-          hasZeroOption
-          choiceOptions {
-            id
-            identifier
-          }
-          unit {
-            id
-            name
-          }
+          ...AttributesBlockAttributeType
         }
       }
     }
   }
+  ${ATTRIBUTE_TYPE_FRAGMENT}
 `;
 
 enum IconSize {
@@ -88,6 +74,15 @@ const CategoryHeader = styled.div<{ $bg: string | null | undefined; $hasImage?: 
   @media (min-width: ${(props) => props.theme.breakpointXl}) {
     min-height: ${(props) => (props.$hasImage ? '32rem' : '0')};
   }
+`;
+
+const HeaderImageImg = styled.img<{ $imageAlign?: string | null | undefined }>`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: ${(props) => props.$imageAlign ?? 'center center'};
 `;
 
 const HeaderImage = styled.div<{
@@ -325,7 +320,7 @@ interface Props {
   identifier: string | null | undefined;
   lead?: string;
   iconImage: string | null | undefined;
-  headerImage: MultiUseImageFragmentFragment | null | undefined;
+  headerImage: HeroImageFragmentFragment | null | undefined;
   imageAlign?: string;
   color?: string | null | undefined;
   attributes: AttributesBlockAttributeFragment[] | null | undefined;
@@ -383,17 +378,18 @@ export default function CategoryPageHeaderBlock(props: Props) {
       $hasImage={!!headerImage}
     >
       <Container className="header-container">
-        {headerImage && headerImage.large && (
+        {headerImage && (headerImage.fullMedium ?? headerImage.full ?? headerImage.fullSmall) && (
           <HeaderImage $imageAlign={imageAlign} className={imageLayout}>
-            <Image
-              src={headerImage.large.src}
-              alt={headerImage.altText ?? ''}
+            <HeaderImageImg
+              src={(headerImage.fullMedium ?? headerImage.full ?? headerImage.fullSmall)!.src}
+              srcSet={getImageSrcSet([
+                headerImage.fullSmall,
+                headerImage.fullMedium,
+                headerImage.full,
+              ])}
               sizes="100vw"
-              fill
-              style={{
-                objectFit: 'cover',
-                objectPosition: imageAlign,
-              }}
+              alt={headerImage.altText ?? ''}
+              $imageAlign={imageAlign}
             />
           </HeaderImage>
         )}

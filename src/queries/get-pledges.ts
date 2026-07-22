@@ -55,7 +55,8 @@ const PLEDGE_FRAGMENT = gql`
     uuid
     slug
     image {
-      ...MultiUseImageFragment
+      ...HeroImageFragment
+      ...CardImageFragment
     }
     commitmentCount
     residentCount
@@ -65,7 +66,8 @@ const PLEDGE_FRAGMENT = gql`
       ...AttributesBlockAttributeWithNestedType
     }
   }
-  ${images.fragments.multiUseImage}
+  ${images.fragments.heroImage}
+  ${images.fragments.cardImage}
   ${ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT}
 `;
 
@@ -77,7 +79,7 @@ const GET_PLEDGES = gql`
         title
         leadContent
         backgroundImage {
-          ...MultiUseImageFragment
+          ...HeroImageFragment
         }
       }
     }

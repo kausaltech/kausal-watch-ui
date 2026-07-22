@@ -1,6 +1,20 @@
 import { gql } from '@apollo/client';
 
-import type { MultiUseImageFragmentFragment } from './__generated__/graphql';
+/*
+ * With `object-fit: cover`, an object-position of P% hides P% of the
+ * overflowing image before the visible window. Positioning by the slack on
+ * either side of the focal area makes cropping consume the space outside the
+ * area first, so the whole focal area stays visible whenever it fits in the
+ * container — regardless of the container's aspect ratio.
+ */
+const getAxisPositionPercent = (focalCenter: number, focalSize: number, imageSize: number) => {
+  const start = Math.max(0, focalCenter - focalSize / 2);
+  const end = Math.min(imageSize, focalCenter + focalSize / 2);
+  const slackBefore = start;
+  const slackAfter = imageSize - end;
+  const position = slackBefore + slackAfter > 0 ? slackBefore / (slackBefore + slackAfter) : 0.5;
+  return (position * 100).toFixed(1);
+};
 
 export const getBgImageAlignment = (
   image: {
@@ -16,41 +30,66 @@ export const getBgImageAlignment = (
     return 'center center';
   }
 
-  const focalCenterX = image.focalPointX + (image.focalPointWidth ?? 0) / 2;
-  const focalCenterY = image.focalPointY + (image.focalPointHeight ?? 0) / 2;
+  // Wagtail stores focalPointX/Y as the center of the focal area
+  const xPercent = getAxisPositionPercent(
+    image.focalPointX,
+    image.focalPointWidth ?? 0,
+    image.width
+  );
+  const yPercent = getAxisPositionPercent(
+    image.focalPointY,
+    image.focalPointHeight ?? 0,
+    image.height
+  );
 
-  const xPercent = (focalCenterX / image.width) * 100;
-  const yPercent = (focalCenterY / image.height) * 100;
-
-  return `${xPercent.toFixed(1)}% ${yPercent.toFixed(1)}%`;
+  return `${xPercent}% ${yPercent}%`;
 };
 
-type ActionWithImage = {
-  image: MultiUseImageFragmentFragment | null;
+export type ImageRenditionRef = {
+  src: string;
+  width: number;
+} | null;
+
+/* The aspect-preserving rendition ladder served by HeroImageFragment */
+export interface HeroImageRenditions {
+  fullSmall?: ImageRenditionRef;
+  fullMedium?: ImageRenditionRef;
+  full?: ImageRenditionRef;
+}
+
+/* Build an <img> srcSet string out of image renditions of different sizes */
+export const getImageSrcSet = (renditions: (ImageRenditionRef | undefined)[]) =>
+  renditions
+    .filter((rendition) => rendition != null)
+    .map((rendition) => `${rendition.src} ${rendition.width}w`)
+    .join(', ');
+
+type ActionWithImage<TImage> = {
+  image?: TImage | null;
   categories: {
-    image: MultiUseImageFragmentFragment | null;
+    image?: TImage | null;
     parent?: {
-      image: MultiUseImageFragmentFragment | null;
+      image?: TImage | null;
     } | null;
   }[];
 };
 
 /* Resolve image for an action */
 /* If not available fallback on category or plan image */
-export function getActionImage(
-  plan: { image: MultiUseImageFragmentFragment | null },
-  action: ActionWithImage
-) {
-  let image: MultiUseImageFragmentFragment | null = null;
+export function getActionImage<TImage>(
+  plan: { image?: TImage | null },
+  action: ActionWithImage<TImage>
+): TImage | null {
+  let image: TImage | null = null;
 
-  if (action.image?.rendition?.src) {
+  if (action.image) {
     image = action.image;
   } else {
     action.categories.forEach((cat) => {
       if (image) return;
-      let parent: typeof cat | null | undefined = cat;
+      let parent: (typeof action.categories)[number] | null | undefined = cat;
       while (parent) {
-        if (parent.image?.rendition?.src) {
+        if (parent.image) {
           image = parent.image;
           return;
         }
@@ -59,15 +98,26 @@ export function getActionImage(
     });
   }
   if (!image) {
-    image = plan.image;
+    image = plan.image ?? null;
   }
   return image;
 }
 
+/*
+ * Purpose-specific image fragments. Pick the one matching how the image is
+ * displayed so queries don't request renditions they never use:
+ *
+ * - heroImage: full-width or hero images rendered with a responsive srcSet.
+ *   Aspect-preserving renditions, so focal-point based `object-position`
+ *   percentages stay exact; CSS `object-fit: cover` does any cropping.
+ * - cardImage: card and thumbnail images.
+ * - socialImage: og/social sharing metadata only.
+ */
 const images = {
   fragments: {
-    multiUseImage: gql`
-      fragment MultiUseImageFragment on Image {
+    heroImage: gql`
+      fragment HeroImageFragment on Image {
+        id
         title
         altText
         imageCredit
@@ -77,31 +127,56 @@ const images = {
         focalPointY
         focalPointWidth
         focalPointHeight
-        full: rendition(size: "1600x1600", crop: false) {
+        full: rendition(size: "3840x2560", crop: false) {
           id
           width
           height
           src
         }
-        large: rendition(size: "1600x600") {
+        fullMedium: rendition(size: "1600x1600", crop: false) {
           id
           width
           height
           src
         }
+        fullSmall: rendition(size: "800x800", crop: false) {
+          id
+          width
+          height
+          src
+        }
+      }
+    `,
+    cardImage: gql`
+      fragment CardImageFragment on Image {
+        id
+        title
+        altText
+        imageCredit
+        width
+        height
+        focalPointX
+        focalPointY
+        focalPointWidth
+        focalPointHeight
         small: rendition(size: "600x300") {
           id
           width
           height
           src
         }
-        social: rendition(size: "1200x627") {
+        rendition(size: "300x200") {
           id
           width
           height
           src
         }
-        rendition(size: "300x200") {
+      }
+    `,
+    socialImage: gql`
+      fragment SocialImageFragment on Image {
+        id
+        social: rendition(size: "1200x627") {
           id
           width
           height

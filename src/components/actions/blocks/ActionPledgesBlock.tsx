@@ -77,7 +77,7 @@ export default function ActionPledgesBlock({ pledges, heading }: Props) {
               }))
               .filter((category): category is PledgeCategory => !!category.label)}
             slug={pledge.slug}
-            image={pledge.image?.large?.src ?? pledge.image?.full?.src}
+            image={pledge.image?.small?.src}
             imageAlt={pledge.image?.altText ?? pledge.name}
             isCommitted={committedSlugs.has(pledge.slug)}
             committedCount={pledge.commitmentCount + getCommitmentCountAdjustment(pledge.slug)}

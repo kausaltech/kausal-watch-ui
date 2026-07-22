@@ -6,6 +6,7 @@ import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
+import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import RichText from '@/components/common/RichText';
 
 import { ImageCredit } from '../common/ImageCredit';
@@ -132,7 +133,7 @@ const StyledImageCredit = styled(ImageCredit)`
 
 interface HeroSmallImageProps {
   id?: string;
-  bgImage: string;
+  image: HeroImageRenditions;
   title: string | null | undefined;
   lead: string | null | undefined;
   altText?: string | null | undefined;
@@ -146,7 +147,7 @@ interface HeroSmallImageProps {
 const HeroSmallImage = (props: HeroSmallImageProps) => {
   const {
     id = '',
-    bgImage,
+    image,
     title,
     lead,
     altText = '',
@@ -178,7 +179,9 @@ const HeroSmallImage = (props: HeroSmallImageProps) => {
           $fullBackground={fullBackground}
         >
           <HeroImage
-            src={bgImage}
+            src={(image.full ?? image.fullMedium ?? image.fullSmall)?.src}
+            srcSet={getImageSrcSet([image.fullSmall, image.fullMedium, image.full])}
+            sizes="(min-width: 1400px) 1320px, (min-width: 1200px) 1140px, 100vw"
             alt={altText ?? undefined}
             $fitImage={shouldFitImage}
             $showImageAccent={shouldShowImageAccent}

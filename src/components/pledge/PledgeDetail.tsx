@@ -281,7 +281,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
   const isCommitted = committedSlugs.has(pledge.slug);
   const breadcrumbs = [{ id: 'pledges', name: t('pledge-list-title'), url: pledgeListLink }];
 
-  const heroImage = pledge.image?.large?.src ?? pledge.image?.full?.src ?? '';
+  const heroImage = pledge.image?.fullMedium?.src ?? pledge.image?.full?.src ?? '';
   const actions = pledge.actions ?? [];
 
   useEffect(() => setIsClient(true), []);

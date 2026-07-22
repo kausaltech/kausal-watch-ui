@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -9,9 +7,10 @@ import { Col, Container, Row } from 'reactstrap';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
-import type { ActionCardFragment } from '@/common/__generated__/graphql';
+import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
+import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import { ActionLink, ActionListLink, OrganizationLink } from '@/common/links';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import Icon from '@/components/common/Icon';
@@ -37,21 +36,26 @@ const Hero = styled.header<{ $bgColor: string }>`
   }
 `;
 
-type ActionBgImageProps = {
-  $bgColor: string;
-  $bgImage: string;
-  $imageAlign: string;
-};
-
-const ActionBgImage = styled.div<ActionBgImageProps>`
+const ActionBgImage = styled.div<{ $bgColor: string }>`
+  position: relative;
+  /* Keep the image's multiply blending contained to this element */
+  isolation: isolate;
   background-color: ${(props) => props.$bgColor};
-  background-image: url(${(props) => props.$bgImage});
-  background-position: ${(props) => props.$imageAlign};
-  background-size: cover;
-  background-blend-mode: multiply;
   @media print {
-    background-image: none;
     background-color: transparent;
+  }
+`;
+
+const ActionBgImageImg = styled.img<{ $imageAlign: string }>`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: ${(props) => props.$imageAlign};
+  mix-blend-mode: multiply;
+  @media print {
+    display: none;
   }
 `;
 
@@ -90,6 +94,7 @@ const CardContent = styled.div`
 `;
 
 const OverlayContainer = styled.div`
+  position: relative;
   display: flex;
   align-items: flex-end;
   min-height: 24rem;
@@ -167,15 +172,23 @@ const ActionName = styled.span`
   max-width: 100%;
 `;
 
-type Category = ActionCardFragment['categories'][number];
+type ActionDetails = NonNullable<GetActionDetailsQuery['action']>;
+type Category = ActionDetails['categories'][number];
+
+/* The generated category types bound the parent recursion depth, so the
+ * hierarchy helpers only require the fields they actually traverse */
+type CategoryHierarchy = {
+  id: string;
+  parent?: CategoryHierarchy | null;
+};
 
 /**
  * Check whether multiple categories at different levels of a single category type hierarchy
  * have been added to an action. Required to filter duplicate categories from the breadcrumb.
  */
 function isCategoryInSiblingsParentTree(
-  category: Category,
-  siblingParentCategory: Category
+  category: { id: string },
+  siblingParentCategory: CategoryHierarchy
 ): boolean {
   if (category.id === siblingParentCategory.id) return true;
   if (!siblingParentCategory.parent) return false;
@@ -212,21 +225,20 @@ function ActionCategories({ categories }: { categories: Category[] }) {
 }
 
 type ActionHeroProps = {
-  categories: [];
-  previousAction: any; //TODO: type these
-  nextAction: any;
+  categories: Category[];
+  previousAction: ActionDetails['previousAction'];
+  nextAction: ActionDetails['nextAction'];
   identifier?: string;
   name: string;
-  imageUrl: string;
+  image?: HeroImageRenditions | null;
   imageAlign: string;
   altText?: string;
   imageCredit?: string;
   imageTitle?: string;
   hideActionIdentifiers?: boolean;
-  primaryOrg: any;
-  state: string;
-  actionID: string;
-  matchingVersion: any;
+  primaryOrg: ActionDetails['primaryOrg'];
+  state?: string;
+  matchingVersion: NonNullable<ActionDetails['workflowStatus']>['matchingVersion'] | null;
   updatedAt: string;
 };
 
@@ -239,13 +251,11 @@ function ActionHero(props: ActionHeroProps) {
     nextAction,
     identifier,
     name,
-    imageUrl,
+    image,
     imageAlign,
     altText,
     imageCredit,
-    imageTitle,
     primaryOrg,
-    state,
   } = props;
   const theme = useTheme();
   const t = useTranslations();
@@ -261,14 +271,23 @@ function ActionHero(props: ActionHeroProps) {
   );
   // Override overlay color with that
   if (categoryWithColor && theme.imageOverlay !== 'rgb(255, 255, 255)') {
-    categoryColor = categoryWithColor.color
-      ? categoryWithColor?.color
-      : categoryWithColor?.parent?.color;
+    categoryColor = categoryWithColor.color || categoryWithColor.parent?.color || categoryColor;
   }
+
+  const imageSrc = image ? (image.fullMedium ?? image.full ?? image.fullSmall)?.src : undefined;
 
   return (
     <Hero $bgColor={theme.brandDark}>
-      <ActionBgImage $bgImage={imageUrl} $imageAlign={imageAlign} $bgColor={categoryColor}>
+      <ActionBgImage $bgColor={categoryColor}>
+        {image && imageSrc && (
+          <ActionBgImageImg
+            src={imageSrc}
+            srcSet={getImageSrcSet([image.fullSmall, image.fullMedium, image.full])}
+            sizes="100vw"
+            alt={altText ?? ''}
+            $imageAlign={imageAlign}
+          />
+        )}
         <OverlayContainer>
           <Container>
             <Row>
@@ -330,7 +349,6 @@ function ActionHero(props: ActionHeroProps) {
               </Col>
             </Row>
           </Container>
-          {altText && <span className="sr-only" role="img" aria-label={altText} />}
           {imageCredit && <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>}
         </OverlayContainer>
       </ActionBgImage>

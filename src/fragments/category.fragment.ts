@@ -18,8 +18,7 @@ export const CATEGORY_FRAGMENT = gql`
       namePlural
     }
     image {
-      id
-      ...MultiUseImageFragment
+      ...CardImageFragment
     }
     indicators {
       id
@@ -72,7 +71,7 @@ export const CATEGORY_FRAGMENT = gql`
       }
     }
   }
-  ${images.fragments.multiUseImage}
+  ${images.fragments.cardImage}
 `;
 
 export const RECURSIVE_CATEGORY_FRAGMENT = gql`
@@ -95,6 +94,45 @@ export const RECURSIVE_CATEGORY_FRAGMENT = gql`
   }
 
   ${CATEGORY_FRAGMENT}
+`;
+
+/*
+ * Hero-quality images for a category and its parents. Layer this on top of
+ * CategoryRecursiveFragment in contexts where the category image can end up
+ * as a page hero or og image (e.g. the action details page via getActionImage).
+ */
+export const CATEGORY_HERO_IMAGES_FRAGMENT = gql`
+  fragment CategoryHeroImagesFragment on Category {
+    id
+    image {
+      ...HeroImageFragment
+      ...SocialImageFragment
+    }
+    parent {
+      id
+      image {
+        ...HeroImageFragment
+        ...SocialImageFragment
+      }
+      parent {
+        id
+        image {
+          ...HeroImageFragment
+          ...SocialImageFragment
+        }
+        parent {
+          id
+          image {
+            ...HeroImageFragment
+            ...SocialImageFragment
+          }
+        }
+      }
+    }
+  }
+
+  ${images.fragments.heroImage}
+  ${images.fragments.socialImage}
 `;
 
 /* Simplified category query for category tags */
