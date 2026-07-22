@@ -33,7 +33,9 @@ export const ACTION_CARD_FRAGMENT = gql`
       abbreviation
       name
       logo {
+        id
         rendition(size: "128x128", crop: true) {
+          id
           src
         }
       }
@@ -52,13 +54,16 @@ export const ACTION_CARD_FRAGMENT = gql`
     }
     plan {
       id
+      name
       shortName
       versionName
       viewUrl(clientUrl: $clientUrl)
       hideActionIdentifiers
       publishedAt
       image {
+        id
         rendition(size: "128x128", crop: true) {
+          id
           src
         }
       }

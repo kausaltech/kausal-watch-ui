@@ -1532,8 +1532,8 @@ export type GetActionListQuery = (
       & { __typename: 'ActionImplementationPhase' }
     ) | null, primaryOrg: (
       { id: string, abbreviation: string | null, name: string, logo: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -1546,9 +1546,9 @@ export type GetActionListQuery = (
       ) }
       & { __typename: 'Action' }
     ) | null, plan: (
-      { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-        { rendition: (
-          { src: string }
+      { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -1634,7 +1634,7 @@ export type CreateUserFeedbackMutation = (
   & { __typename: 'Mutation' }
 );
 
-export type GetActionListForBlockQueryVariables = Exact<{
+export type ActionListForBlockQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   category: InputMaybe<Scalars['ID']['input']>;
   clientUrl: InputMaybe<Scalars['String']['input']>;
@@ -1642,7 +1642,7 @@ export type GetActionListForBlockQueryVariables = Exact<{
 }>;
 
 
-export type GetActionListForBlockQuery = (
+export type ActionListForBlockQuery = (
   { planActions: Array<(
     { hasDependencyRelationships: boolean | null, id: string, identifier: string, name: string, viewUrl: string, color: string | null, scheduleContinuous: boolean, completion: number | null, status: (
       { id: string, identifier: string, name: string, color: string }
@@ -1859,8 +1859,8 @@ export type GetActionListForBlockQuery = (
       & { __typename: 'ActionImplementationPhase' }
     ) | null, primaryOrg: (
       { id: string, abbreviation: string | null, name: string, logo: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -1873,9 +1873,9 @@ export type GetActionListForBlockQuery = (
       ) }
       & { __typename: 'Action' }
     ) | null, plan: (
-      { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-        { rendition: (
-          { src: string }
+      { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -3324,8 +3324,8 @@ export type ActionCardFragment = (
     & { __typename: 'ActionImplementationPhase' }
   ) | null, primaryOrg: (
     { id: string, abbreviation: string | null, name: string, logo: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -3338,9 +3338,9 @@ export type ActionCardFragment = (
     ) }
     & { __typename: 'Action' }
   ) | null, plan: (
-    { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-      { rendition: (
-        { src: string }
+    { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -6582,8 +6582,8 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ActionImplementationPhase' }
       ) | null, primaryOrg: (
         { id: string, abbreviation: string | null, name: string, logo: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -6596,9 +6596,9 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'Action' }
       ) | null, plan: (
-        { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-          { rendition: (
-            { src: string }
+        { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -6828,8 +6828,8 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ActionImplementationPhase' }
       ) | null, primaryOrg: (
         { id: string, abbreviation: string | null, name: string, logo: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -6842,9 +6842,9 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'Action' }
       ) | null, plan: (
-        { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-          { rendition: (
-            { src: string }
+        { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -7068,8 +7068,8 @@ export type GetActionDetailsQuery = (
         & { __typename: 'ActionImplementationPhase' }
       ) | null, primaryOrg: (
         { id: string, abbreviation: string | null, name: string, logo: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -7082,9 +7082,9 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'Action' }
       ) | null, plan: (
-        { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-          { rendition: (
-            { src: string }
+        { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -7873,8 +7873,8 @@ export type GetActionDetailsQuery = (
           & { __typename: 'ActionImplementationPhase' }
         ) | null, primaryOrg: (
           { id: string, abbreviation: string | null, name: string, logo: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -7887,9 +7887,9 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename: 'Action' }
         ) | null, plan: (
-          { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-            { rendition: (
-              { src: string }
+          { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -8116,8 +8116,8 @@ export type GetActionDetailsQuery = (
           & { __typename: 'ActionImplementationPhase' }
         ) | null, primaryOrg: (
           { id: string, abbreviation: string | null, name: string, logo: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -8130,9 +8130,9 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename: 'Action' }
         ) | null, plan: (
-          { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-            { rendition: (
-              { src: string }
+          { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -9752,8 +9752,8 @@ export type ActionDependenciesFragment = (
         & { __typename: 'ActionImplementationPhase' }
       ) | null, primaryOrg: (
         { id: string, abbreviation: string | null, name: string, logo: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -9766,9 +9766,9 @@ export type ActionDependenciesFragment = (
         ) }
         & { __typename: 'Action' }
       ) | null, plan: (
-        { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-          { rendition: (
-            { src: string }
+        { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -9995,8 +9995,8 @@ export type ActionDependenciesFragment = (
         & { __typename: 'ActionImplementationPhase' }
       ) | null, primaryOrg: (
         { id: string, abbreviation: string | null, name: string, logo: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -10009,9 +10009,9 @@ export type ActionDependenciesFragment = (
         ) }
         & { __typename: 'Action' }
       ) | null, plan: (
-        { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-          { rendition: (
-            { src: string }
+        { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -11248,8 +11248,8 @@ export type ActionCardWithDependencyRoleFragment = (
     & { __typename: 'ActionImplementationPhase' }
   ) | null, primaryOrg: (
     { id: string, abbreviation: string | null, name: string, logo: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -11262,9 +11262,9 @@ export type ActionCardWithDependencyRoleFragment = (
     ) }
     & { __typename: 'Action' }
   ) | null, plan: (
-    { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-      { rendition: (
-        { src: string }
+    { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -11740,22 +11740,22 @@ export type GetContentPageQuery = (
           { id: string, hideCategoryIdentifiers: boolean }
           & { __typename: 'CategoryType' }
         ), parent: (
-          { identifier: string, name: string, categoryPage: (
+          { id: string, identifier: string, name: string, categoryPage: (
             { urlPath: string }
             & { __typename: 'CategoryPage' }
           ) | null, type: (
             { id: string, hideCategoryIdentifiers: boolean }
             & { __typename: 'CategoryType' }
           ), parent: (
-            { identifier: string, name: string, parent: (
-              { identifier: string, name: string, categoryPage: (
+            { id: string, identifier: string, name: string, parent: (
+              { id: string, identifier: string, name: string, categoryPage: (
                 { urlPath: string }
                 & { __typename: 'CategoryPage' }
               ) | null, type: (
                 { id: string, hideCategoryIdentifiers: boolean }
                 & { __typename: 'CategoryType' }
               ), parent: (
-                { identifier: string, name: string, categoryPage: (
+                { id: string, identifier: string, name: string, categoryPage: (
                   { urlPath: string }
                   & { __typename: 'CategoryPage' }
                 ) | null, type: (
@@ -13359,7 +13359,7 @@ export type GetContentPageQuery = (
 
 export type CategoryParentFragmentFragment = (
   { parent: (
-    { identifier: string, name: string, categoryPage: (
+    { id: string, identifier: string, name: string, categoryPage: (
       { urlPath: string }
       & { __typename: 'CategoryPage' }
     ) | null, type: (
@@ -13374,15 +13374,15 @@ export type CategoryParentFragmentFragment = (
 export type RecursiveCategoryParentFragmentFragment = (
   { parent: (
     { parent: (
-      { identifier: string, name: string, parent: (
-        { identifier: string, name: string, categoryPage: (
+      { id: string, identifier: string, name: string, parent: (
+        { id: string, identifier: string, name: string, categoryPage: (
           { urlPath: string }
           & { __typename: 'CategoryPage' }
         ) | null, type: (
           { id: string, hideCategoryIdentifiers: boolean }
           & { __typename: 'CategoryType' }
         ), parent: (
-          { identifier: string, name: string, categoryPage: (
+          { id: string, identifier: string, name: string, categoryPage: (
             { urlPath: string }
             & { __typename: 'CategoryPage' }
           ) | null, type: (

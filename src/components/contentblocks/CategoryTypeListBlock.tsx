@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
@@ -264,8 +265,12 @@ const hasParent = (cat, parentId) => {
   return catParents.some((parent) => parent.id === parentId);
 };
 
+type CategoryWithParent = CategoryFragmentFragment & {
+  parent?: CategoryWithParent | null;
+};
+
 const getParentCategoryOfLevel = (
-  cat: CategoryFragmentFragment,
+  cat: CategoryWithParent,
   levelId: string
 ): CategoryFragmentFragment => {
   const catParents = getDeepParents(cat);

@@ -406,7 +406,7 @@ type ActionListProps = {
   actions: NonNullable<DashboardActionListQuery['planActions']>;
   columns: ColumnConfig[];
   categoryTypes: NonNullable<DashboardActionListQuery['plan']>['categoryTypes'];
-  organizations: DashboardActionListQuery['planOrganizations'];
+  organizations: NonNullable<DashboardActionListQuery['planOrganizations']>;
   availableFilters: ActionListPageFiltersFragment;
   activeFilters: Filters;
   onFilterChange: FilterChangeCallback;
@@ -416,6 +416,7 @@ type ActionListProps = {
   includeRelatedPlans: boolean;
   defaultView: ActionListPageView;
   primaryOrgs: ActionListPrimaryOrg[];
+  testId?: string;
 };
 
 function hasActivePrimaryCategoryFilter(
@@ -450,12 +451,15 @@ const ActionList = (props: ActionListProps) => {
   const theme = useTheme();
   const plan = usePlan();
   const pathsInstance = usePaths();
-  // TODO: Remove this once we have a proper way to check if the dashboard is supported
-  const supportDashboard = pathsInstance ? false : true;
+  // TODO: Remove the paths check once we have a proper way to check if the dashboard is supported.
+  // The dashboard table columns are configured on the action list page in the
+  // admin UI; without any columns the table would render empty, so hide the tab.
+  const supportDashboard = !pathsInstance && columns.length > 0;
 
   const displayDashboard =
-    activeFilters.view === 'dashboard' ||
-    (activeFilters.view == null && defaultView === ActionListPageView.Dashboard);
+    supportDashboard &&
+    (activeFilters.view === 'dashboard' ||
+      (activeFilters.view == null && defaultView === ActionListPageView.Dashboard));
 
   // Do not call it Dashboard in English if pie charts are hidden
   const dashboardLabel =
@@ -723,8 +727,8 @@ function ActionListLoader(props: StatusboardProps) {
       availableFilters={availableFilters}
       activeFilters={filters}
       onFilterChange={onFilterChange}
-      organizations={planOrganizations}
-      actions={actions}
+      organizations={planOrganizations ?? []}
+      actions={actions ?? []}
       categoryTypes={categoryTypes}
       primaryOrgs={primaryOrgs}
       includeRelatedPlans={includeRelatedPlans}
