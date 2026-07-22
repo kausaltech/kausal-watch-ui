@@ -54,6 +54,7 @@ export const ACTION_CARD_FRAGMENT = gql`
     }
     plan {
       id
+      name
       shortName
       versionName
       viewUrl(clientUrl: $clientUrl)
