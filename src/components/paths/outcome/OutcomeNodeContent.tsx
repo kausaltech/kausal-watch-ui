@@ -8,6 +8,7 @@ import { Nav, NavItem, NavLink, TabContent } from 'reactstrap';
 
 import { activeGoalVar } from '@common/apollo/paths-cache';
 import DimensionalNodeVisualisation from '@common/components/paths/DimensionalNodeVisualisation';
+import DimensionalPieGraph from '@common/components/paths/DimensionalPieGraph';
 import { getMetricChange, getMetricValue } from '@common/utils/paths/metric';
 
 import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
@@ -17,7 +18,6 @@ import Icon from '@/components/common/Icon';
 import HighlightValue from '@/components/paths/HighlightValue';
 import ScenarioBadge from '@/components/paths/ScenarioBadge';
 import DataTable from '@/components/paths/graphs/DataTable';
-import DimensionalPieGraph from '@/components/paths/graphs/DimensionalPieGraph';
 import OutcomeNodeDetails from '@/components/paths/outcome/OutcomeNodeDetails';
 import { usePaths } from '@/context/paths/paths';
 
@@ -203,18 +203,21 @@ function OutcomeNodeContent({
     );
   }, [node, color, startYear, endYear, instance, nodeName, t]);
 
-  const singleYearGraph = useMemo(
-    () => (
+  const singleYearGraph = useMemo(() => {
+    if (!instance) return null;
+
+    return (
       <div>
         <DimensionalPieGraph
           metric={node.metricDim!}
           endYear={separateYears ? separateYears[separateYears.length - 1] : endYear}
           colorChange={colorAdjust}
+          instance={{ features: instance.features }}
+          t={t}
         />
       </div>
-    ),
-    [node, endYear, separateYears, colorAdjust]
-  );
+    );
+  }, [node, endYear, separateYears, colorAdjust, instance, t]);
 
   if (!instance) return null;
 
