@@ -6,7 +6,7 @@ on:
         description: 'Comma separated list of instance identifiers'
         required: false
         type: string
-        default: 'sunnydale,tampere-ilmasto,espoo-ilmasto,longmont-indicators,hame-ilmasto'
+        default: 'sunnydale,tampere-ilmasto,espoo-ilmasto,hame-ilmasto'
       image:
         description: 'Image (incl. repo, path, tag) to test'
         required: true
