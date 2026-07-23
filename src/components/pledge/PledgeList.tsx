@@ -551,6 +551,7 @@ function PledgeList({ pledges }: Props) {
           onClose={() => setShowSignInDrawer(false)}
           onComplete={handleSignInComplete}
           anonymousUserToken={userUuid ?? undefined}
+          termsUrl="https://kausal.tech/yolo-county-kausal-watch-terms-of-use-2026-07" // TODO: To come from the backend
         />
       </StyledContainer>
     </StyledPageWrapper>
