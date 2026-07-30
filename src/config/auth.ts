@@ -1,10 +1,11 @@
 /* istanbul ignore file */
 import { NextRequest } from 'next/server';
 
+import * as Sentry from '@sentry/nextjs';
 import NextAuth, { type NextAuthConfig, type User } from 'next-auth';
 import type { OIDCConfig } from 'next-auth/providers';
 
-import { getAuthIssuer } from '@common/env';
+import { getAuthIssuer, isLocalDev } from '@common/env';
 import { getLogger } from '@common/logging';
 import { userLogContext } from '@common/logging/logger';
 
@@ -63,6 +64,7 @@ const nextAuth = NextAuth({
   logger: {
     error(error: Error) {
       const authLogger = getAuthLogger();
+      Sentry.captureException(error);
       authLogger.error(error);
     },
     debug(_message, _metadata) {
@@ -81,7 +83,10 @@ const nextAuth = NextAuth({
 
 function fixNextUrl(req: NextRequest) {
   const { href, origin } = req.nextUrl;
-  const realOrigin = `${req.headers.get('x-forwarded-proto')}://${req.headers.get('host')}`;
+  const host = isLocalDev
+    ? req.headers.get('x-forwarded-host') || req.headers.get('host')
+    : req.headers.get('host');
+  const realOrigin = `${req.headers.get('x-forwarded-proto')}://${host}`;
   return new NextRequest(href.replace(origin, realOrigin), req);
 }
 
