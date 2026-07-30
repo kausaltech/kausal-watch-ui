@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
@@ -10,6 +8,7 @@ import { IndicatorLink } from '@/common/links';
 import IndicatorVisualizationBlock from '@/components/indicators/IndicatorVisualizationBlock';
 
 import Card from '../common/Card';
+import RichText from '../common/RichText';
 import { SectionHeader } from './ActionListBlock';
 import { getReadableThemeTextColor } from './colorUtils';
 
@@ -72,6 +71,7 @@ const StyledCard = styled(Card)`
     flex: 1;
     display: flex;
     flex-direction: column;
+    padding-bottom: ${({ theme }) => theme.spaces.s200};
   }
 
   &.outline {
@@ -87,6 +87,7 @@ const StyledCard = styled(Card)`
   h2 {
     font-size: ${({ theme }) => theme.fontSizeLg};
   }
+
   h3 {
     font-size: ${({ theme }) => theme.fontSizeMd};
   }
@@ -111,7 +112,7 @@ function getBlockComponent(block: DashboardBlock) {
     case 'DashboardHeaderBlock':
       return null;
     case 'DashboardParagraphBlock':
-      return block.text ? <div dangerouslySetInnerHTML={{ __html: block.text }} /> : null;
+      return block.text ? <RichText html={block.text} /> : null;
     case 'DashboardIndicatorSummaryBlock':
     case 'DashboardIndicatorPieChartBlock':
     case 'DashboardIndicatorLineChartBlock':
