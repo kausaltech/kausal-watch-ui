@@ -22,6 +22,7 @@ import GlobalIndicatorModalWrapper from '@/components/indicators/GlobalIndicator
 import PathsProvider from '@/components/providers/PathsProvider';
 import PlanProvider from '@/components/providers/PlanProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
+import TimeZoneProvider from '@/components/providers/TimeZoneProvider';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { PrintProvider } from '@/context/print';
 import { WorkflowProvider } from '@/context/workflow-selector';
@@ -162,22 +163,24 @@ export default async function PlanLayout(props: Props) {
       )}
 
       {!!matomoAnalyticsUrl && <MatomoAnalytics matomoAnalyticsUrl={matomoAnalyticsUrl} />}
-      <ThemeProvider theme={theme}>
-        <ThemedGlobalStyles />
-        <SharedIcons />
-        {theme.introModal?.videoUrls && <IntroModal videoUrls={theme.introModal.videoUrls} />}
-        <PlanProvider plan={planData.plan}>
-          <GlobalIndicatorModalWrapper />
-          <PathsProvider instance={pathsData}>
-            <WorkflowProvider
-              initialWorkflow={selectedWorkflow?.value as WorkflowState | undefined}
-              workflowStates={planData.workflowStates}
-            >
-              <PrintProvider>{children}</PrintProvider>
-            </WorkflowProvider>
-          </PathsProvider>
-        </PlanProvider>
-      </ThemeProvider>
+      <TimeZoneProvider locale={params.lang} timeZone={planData.plan.timezone}>
+        <ThemeProvider theme={theme}>
+          <ThemedGlobalStyles />
+          <SharedIcons />
+          {theme.introModal?.videoUrls && <IntroModal videoUrls={theme.introModal.videoUrls} />}
+          <PlanProvider plan={planData.plan}>
+            <GlobalIndicatorModalWrapper />
+            <PathsProvider instance={pathsData}>
+              <WorkflowProvider
+                initialWorkflow={selectedWorkflow?.value as WorkflowState | undefined}
+                workflowStates={planData.workflowStates}
+              >
+                <PrintProvider>{children}</PrintProvider>
+              </WorkflowProvider>
+            </PathsProvider>
+          </PlanProvider>
+        </ThemeProvider>
+      </TimeZoneProvider>
     </>
   );
 }

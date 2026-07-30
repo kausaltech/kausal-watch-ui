@@ -18,12 +18,17 @@ import 'dayjs/locale/sv-fi';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(localizedFormat);
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
+// `timezone` (depends on `utc`) lets us format dates in the plan's time zone so
+// that the server and client agree, avoiding hydration mismatches for users
+// whose local zone differs from the server's.
+dayjs.extend(timezone);
 
 export function DayjsLocaleProvider({ locale, children }: { locale: string; children: ReactNode }) {
   dayjs.locale(locale);

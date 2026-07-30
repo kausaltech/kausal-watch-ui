@@ -24,7 +24,6 @@ import {
 import { transientOptions } from '@common/themes/styles/styled';
 import { getThemeStaticURL } from '@common/themes/theme';
 
-import { isServer } from '@/common/environment';
 import { Link, NavigationLink } from '@/common/links';
 import PlanSelector from '@/components/plans/PlanSelector';
 import PlanVersionSelector from '@/components/versioning/PlanVersionSelector';
@@ -518,7 +517,11 @@ const getIsPrimaryNavSticky = (theme: Theme, width: number) => width < parseInt(
 const useStickyNavigation = (isStickyEnabled: boolean = false) => {
   const primaryNavRef = useRef<HTMLDivElement>(null);
   const secondaryNavRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(!isServer ? window.innerWidth : 0);
+  // Start at 0 on both server and client to keep the first client render
+  // identical to the SSR output; the real width is set in the effect below
+  // after mount. Reading `window.innerWidth` in the initializer would diverge
+  // between server and client and cause a hydration mismatch.
+  const [width, setWidth] = useState(0);
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [navHeight, setNavHeight] = useState<number>();
@@ -527,6 +530,9 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
   const isPrimaryNavSticky = getIsPrimaryNavSticky(theme, width);
 
   useEffect(() => {
+    // Capture the real viewport width after mount (see the `width` initializer).
+    setWidth(window.innerWidth);
+
     if (!isStickyEnabled) {
       return;
     }
