@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 
 import * as Sentry from '@sentry/nextjs';
-import type { NextAuthRequest } from 'next-auth/lib';
+import type { NextAuthRequest } from 'next-auth';
 import createIntlMiddleware from 'next-intl/middleware';
 
 import { HEALTH_CHECK_PUBLIC_PATH } from '@common/constants/routes.mjs';
@@ -80,8 +80,9 @@ const proxy = auth(async (request: NextAuthRequest) => {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
 
+  console.log(request.headers);
   const host =
-    request.headers.get('host') || request.headers.get('x-forwarded-host') || request.nextUrl.host;
+    request.headers.get('x-forwarded-host') || request.headers.get('host') || request.nextUrl.host;
   const hostname = host.split(':')[0];
   const protocol = request.headers.get('x-forwarded-proto');
   const hostUrl = new URL(`${protocol}://${host}`);
