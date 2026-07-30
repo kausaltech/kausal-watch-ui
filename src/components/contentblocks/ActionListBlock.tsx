@@ -289,6 +289,7 @@ const ActionListBlock = (props: ActionListBlockProps) => {
             includeRelatedPlans={false}
             showOtherCategory={false}
             compactTopMargin={false}
+            centerAlignOnSingleRow
           />
         ) : groups.mode === 'oneLevel' ? (
           <>
