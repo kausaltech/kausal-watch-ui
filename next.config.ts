@@ -8,6 +8,8 @@ import type * as Webpack from 'webpack';
 
 import { getNextConfig } from './kausal_common/configs/common-next-config.ts';
 import { wrapWithSentryConfig } from './kausal_common/configs/sentry-next-config.ts';
+import { getWildcardDomains } from './kausal_common/src/env/runtime.ts';
+import { isLocalDev } from './kausal_common/src/env/static.ts';
 import { initializeThemes } from './kausal_common/src/themes/next-config.mjs';
 
 process.env.NEXT_TELEMETRY_DISABLED = '1';
@@ -59,6 +61,10 @@ let nextConfig: NextConfig = {
     ],
   },
 };
+
+if (isLocalDev) {
+  nextConfig.allowedDevOrigins = getWildcardDomains().map((domain) => `*.${domain}`);
+}
 
 nextConfig = wrapWithSentryConfig(nextConfig);
 nextConfig = withNextIntl('./src/config/i18n.ts')(nextConfig);
