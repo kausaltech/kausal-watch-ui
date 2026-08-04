@@ -10,6 +10,12 @@
       "count": 1,
       "message": "Cannot find module '@generated/paths/graphql' or its corresponding type declarations."
     },
+    "45a2db91cd0222a1fd7a4165a86c742effb38c94": {
+      "file": "kausal_common/src/components/paths/DimensionalPieGraph.tsx",
+      "code": "TS2307",
+      "count": 1,
+      "message": "Cannot find module '@generated/paths/graphql' or its corresponding type declarations."
+    },
     "89904c8852098d9f0e021d8168ac5fa212a5d01a": {
       "file": "kausal_common/src/graphql/proxy.ts",
       "code": "TS2339",
