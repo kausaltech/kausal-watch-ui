@@ -124,13 +124,13 @@ export type ActionHighlightListAction = NonNullable<
   NonNullable<ActionHightlightListQuery['planActions']>[number]
 >;
 
-type ActionCardListProps = {
+type ActionHighlightsCardListProps = {
   actions: ActionHighlightListAction[];
   plan: PlanContextFragment;
   displayHeader?: boolean;
 };
 
-function ActionCardList(props: ActionCardListProps) {
+function ActionHighlightsCardList(props: ActionHighlightsCardListProps) {
   const t = useTranslations();
   const { actions, plan, displayHeader } = props;
   // Components which use the EmbedContext support embedding
@@ -204,7 +204,11 @@ function ActionHighlightsList(props: ActionHighlightsListProps) {
     );
 
   return (
-    <ActionCardList actions={data.planActions} plan={plan} displayHeader={displayHeader ?? true} />
+    <ActionHighlightsCardList
+      actions={data.planActions}
+      plan={plan}
+      displayHeader={displayHeader ?? true}
+    />
   );
 }
 

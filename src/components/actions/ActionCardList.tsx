@@ -7,6 +7,8 @@ import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
 
+import { transientOptions } from '@common/themes/styles/styled';
+
 import type { ActionCardFragment } from '@/common/__generated__/graphql';
 import type { TFunction } from '@/common/i18n';
 
@@ -49,14 +51,19 @@ const ActionGroupList = styled(Row)`
 // to avoid a center aligned title and a few cards dangling off to the left.
 // Use this rather than justify-content: center; so that the action cards on
 // multiple rows are still left aligned for consistency with the action grid.
-const ActionCol = styled(Col)`
-  &:first-child {
-    margin-left: auto;
-  }
+const ActionCol = styled(Col, transientOptions)<{ $centerAlignOnSingleRow: boolean }>`
+  ${({ $centerAlignOnSingleRow }) =>
+    $centerAlignOnSingleRow
+      ? `
+        &:first-child {
+          margin-left: auto;
+        }
 
-  &:last-child {
-    margin-right: auto;
-  }
+        &:last-child {
+          margin-right: auto;
+        }
+        `
+      : undefined}
 `;
 
 const OTHER_GROUP_ID = 'other';
@@ -152,6 +159,7 @@ type ActionCardListProps<ActionT extends ActionListAction | ActionCardFragment> 
   includeRelatedPlans: boolean;
   showOtherCategory?: boolean;
   compactTopMargin?: boolean;
+  centerAlignOnSingleRow?: boolean;
 };
 
 function ActionCardList<ActionT extends ActionListAction | ActionCardFragment>({
@@ -161,6 +169,7 @@ function ActionCardList<ActionT extends ActionListAction | ActionCardFragment>({
   includeRelatedPlans,
   showOtherCategory = true,
   compactTopMargin = false,
+  centerAlignOnSingleRow = false,
 }: ActionCardListProps<ActionT>) {
   const theme = useTheme();
   const t = useTranslations();
@@ -200,6 +209,8 @@ function ActionCardList<ActionT extends ActionListAction | ActionCardFragment>({
                   key={item.id}
                   className="mb-4 d-flex align-items-stretch"
                   style={{ transition: 'all 0.5s ease' }}
+                  // When grouped, keep action cards left aligned to align with the group title and hr
+                  $centerAlignOnSingleRow={centerAlignOnSingleRow && groups.length < 2}
                 >
                   <ActionCard
                     action={item as ActionCardFragment}
