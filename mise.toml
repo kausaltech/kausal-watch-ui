@@ -35,7 +35,7 @@ run = 'pnpx @graphql-inspector/cli introspect ${WATCH_BACKEND_URL}/v1/graphql/ -
 
 [tasks.portless]
 description = "Run the backend with Portless"
-run = "portless --name watch-ui --app-port 8052 pnpm dev"
+run = "portless --name watch-ui --app-port 8052 pnpm dev --webpack"
 env = { PORTLESS_WILDCARD = "1", "PORTLESS_TLD" = "test", WILDCARD_DOMAINS = "watch-ui.test" }
 raw = true
 
