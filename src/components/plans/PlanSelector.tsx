@@ -35,6 +35,7 @@ const PlanAvatar = styled.img`
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
+  object-fit: cover;
   box-shadow: 0 0 3px 1px ${(props) => transparentize(0.8, props.theme.themeColors.black)};
 `;
 
@@ -97,7 +98,11 @@ export default function PlanSelector(props: PlanSelectorProps) {
       <UncontrolledDropdown>
         <StyledDropdownToggle data-toggle="dropdown" tag="button" $color={color}>
           <PlanAvatar
-            src={plan.image?.small?.src ?? getThemeStaticURL(theme.defaultAvatarOrgImage)}
+            src={
+              plan.image?.planSelectorAvatar?.src ??
+              plan.image?.small?.src ??
+              getThemeStaticURL(theme.defaultAvatarOrgImage)
+            }
             alt=""
           />
           <PlanTitle>{plan.shortName || plan.name}</PlanTitle>
