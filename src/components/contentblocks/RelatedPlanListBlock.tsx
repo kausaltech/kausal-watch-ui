@@ -77,8 +77,12 @@ const RelatedPlanListBlock = ({ id }: Props) => {
   if (!plan.allRelatedPlans) return null;
   const siblingsOrChildren = plan.allRelatedPlans.filter((pl) => pl.id != plan.parent?.id);
   const isParentPlan = plan.children.length > 0;
-  // A non-parent plan shows its own chip alongside its siblings.
-  const cards = isParentPlan ? siblingsOrChildren : [plan, ...siblingsOrChildren];
+  // A non-parent plan shows its own chip alongside its siblings. Its default
+  // rendition is a non-square card image, so swap in the square one to match
+  // the sibling avatars.
+  const cards = isParentPlan
+    ? siblingsOrChildren
+    : [{ ...plan, image: plan.image && { rendition: plan.image.square } }, ...siblingsOrChildren];
 
   const negativeChips = theme.section?.relatedPlans?.background
     ? readableColor(theme.section?.relatedPlans?.background) === '#fff'

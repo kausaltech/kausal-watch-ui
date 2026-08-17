@@ -64,6 +64,11 @@ export interface ActionListPlan {
     rendition: {
       src: string;
     };
+    /* Square-cropped rendition; only fetched for the plan context plan,
+     * whose default rendition is a non-square 300x200 card image. */
+    square?: {
+      src: string;
+    } | null;
   };
   actionImplementationPhases: Plan['actionImplementationPhases'];
 }

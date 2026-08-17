@@ -228,7 +228,11 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
       action.plan?.shortIdentifier ||
       plan?.shortIdentifier || (
         <PlanChip
-          planImage={action.plan?.image?.rendition?.src || plan?.image?.rendition?.src}
+          planImage={
+            action.plan?.image?.rendition?.src ||
+            plan?.image?.square?.src ||
+            plan?.image?.rendition?.src
+          }
           size="lg"
         />
       ),

@@ -33,6 +33,7 @@ const PlanAvatar = styled.img<PlanAvatarProps>`
   display: block;
   width: ${(props) => props.theme.spaces[props.size]};
   height: ${(props) => props.theme.spaces[props.size]};
+  object-fit: cover;
   margin: 0
     ${(props) => (props.size === 's400' ? props.theme.spaces.s100 : props.theme.spaces.s050)} 0 0;
   border-radius: 50%;

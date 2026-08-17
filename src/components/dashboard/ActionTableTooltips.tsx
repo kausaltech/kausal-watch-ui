@@ -278,7 +278,11 @@ export const PlanTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
     <div>
       <PlanChip
         planShortName={action.plan?.shortName || action.plan?.name}
-        planImage={action.plan?.image?.rendition?.src || plan?.image?.rendition?.src}
+        planImage={
+          action.plan?.image?.rendition?.src ||
+          plan?.image?.square?.src ||
+          plan?.image?.rendition?.src
+        }
         size="md"
       />
     </div>
