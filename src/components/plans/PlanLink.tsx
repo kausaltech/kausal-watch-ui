@@ -1,13 +1,13 @@
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { PlanContextType } from '@/context/plan';
+import type { PlanContextType } from '@/context/plan';
 
 import PlanChip from './PlanChip';
 
 const PlanDropdownItem = styled.a`
   display: block;
-  padding: 0.25rem 0;
+  padding: 0.25rem;
   margin: 0 0.5rem 0.5rem;
   border: 1px solid ${(props) => props.theme.themeColors.light};
   border-radius: 0.5rem;

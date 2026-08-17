@@ -54,7 +54,8 @@ const PlanTitle = styled.div<{
   font-size: ${(props) => props.theme[props.$size]};
   font-weight: ${(props) => props.theme[props.$weight]};
   line-height: ${(props) => props.theme.lineHeightSm};
-  margin-bottom: ${(props) => props.theme.spaces.s050};
+  margin-bottom: ${(props) =>
+    props.$size === 'fontSizeMd' ? props.theme.spaces.s050 : props.theme.spaces.s025};
 `;
 
 const PlanOrg = styled.div<{ $negative?: boolean }>`
