@@ -29,7 +29,12 @@ const PlanList = styled.div`
     display: flex;
     flex: 240px 0 0;
     padding: ${(props) => props.theme.spaces.s050};
-    border: 1px solid ${(props) => transparentize(0.8, props.theme.themeColors.light)};
+    border: 1px solid
+      ${(props) =>
+        transparentize(
+          0.8,
+          props.theme.section?.relatedPlans?.color || props.theme.themeColors.white
+        )};
     border-radius: ${(props) => props.theme.cardBorderRadius};
     // margin: 0 ${(props) => props.theme.spaces.s100} ${(props) => props.theme.spaces.s100} 0;
 
