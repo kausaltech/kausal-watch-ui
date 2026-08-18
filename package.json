@@ -228,7 +228,8 @@
   },
   "pnpm": {
     "overrides": {
-      "@types/react": "19.2.14"
+      "@types/react": "19.2.14",
+      "@kausal/themes": "$@kausal/themes"
     }
   }
 }
