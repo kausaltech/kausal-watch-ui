@@ -1,6 +1,10 @@
 {
-  "extends": "../kausal_common/configs/tsconfig.json",
+  "extends": "../kausal_common/configs/tsconfig.node.base.json",
   "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "resolveJsonModule": true,
+    // TODO: enable full `strict` (the removed tsconfig.json base had it off)
+    "strict": false,
     "paths": {
       "@common/*": ["../kausal_common/src/*"],
       "@/*": ["./*"]

@@ -22,9 +22,6 @@ const config: StorybookConfig = {
       nextConfigPath: path.resolve(projectRoot, 'next.config.ts'),
     },
   },
-  core: {
-    builder: '@storybook/builder-vite',
-  },
   staticDirs: ['../public'],
   env: (config) => ({
     ...config,
