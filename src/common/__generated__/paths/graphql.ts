@@ -40,9 +40,28 @@ export enum ActionSortOrder {
   Standard = 'STANDARD'
 }
 
-export type AssignCategoryTransformationInput = {
+export type AssignCategoryInput = {
   category: Scalars['String']['input'];
   dimension: Scalars['String']['input'];
+};
+
+export type AssignDimensionInput = {
+  category: Scalars['String']['input'];
+  dimension: Scalars['String']['input'];
+};
+
+/** Bind a dataset metric to an existing input port on a node. */
+export type BindDatasetInput = {
+  /** UUID or identifier of the dataset to bind. */
+  datasetId: Scalars['ID']['input'];
+  /** Dataset metric this binding carries. May be omitted only when the dataset exposes exactly one metric. */
+  metricId: InputMaybe<Scalars['ID']['input']>;
+  /** Input port to bind to. The port must already exist. */
+  portId: Scalars['ID']['input'];
+  /** Atomically displace whatever occupies the port — an edge or a dataset binding — instead of rejecting the bind. Validation runs first, so a rejected bind leaves the old binding untouched. Not valid for `multi` ports; delete a specific binding there. */
+  replace: Scalars['Boolean']['input'];
+  /** Transformations to apply. When omitted, a working default list is generated; an explicit empty list means none, which a metric-named binding rejects. */
+  transformations: InputMaybe<Array<DatasetTransformationInput>>;
 };
 
 export enum ChangeTargetKind {
@@ -94,11 +113,11 @@ export type CreateDimensionCategoryInput = {
 };
 
 export type CreateEdgeInput = {
-  fromNodeId: Scalars['String']['input'];
-  fromPort: Scalars['String']['input'];
+  fromRef: InputMaybe<NodePortRefInput>;
   instanceId: Scalars['ID']['input'];
-  toNodeId: Scalars['String']['input'];
-  toPort: InputMaybe<Scalars['String']['input']>;
+  portRef: InputMaybe<NodePortRefInput>;
+  /** Atomically displace whatever occupies the target port — an edge or a dataset binding — instead of rejecting the edge. Validation runs first, so a rejected edge leaves the old binding untouched. Requires an explicit `toPort` (an auto-selected port is never occupied) and is not valid for `multi` ports. */
+  replace: Scalars['Boolean']['input'];
   transformations: InputMaybe<Array<EdgeTransformationInput>>;
 };
 
@@ -129,6 +148,7 @@ export type CreateNodeInput = {
   outputMetrics: InputMaybe<Array<OutputMetricInput>>;
   outputPorts: InputMaybe<Array<OutputPortInput>>;
   params: InputMaybe<Scalars['JSON']['input']>;
+  shortDescription: InputMaybe<Scalars['String']['input']>;
   shortName: InputMaybe<Scalars['String']['input']>;
   tags: InputMaybe<Array<Scalars['String']['input']>>;
 };
@@ -146,11 +166,34 @@ export enum DataPointCommentReviewState {
   Unresolved = 'UNRESOLVED'
 }
 
+/** BLOCK_EDIT rules reject mutations that introduce new violations; BLOCK_PUBLISH rules allow edits but block publication while violations remain. */
+export enum DatasetRuleEnforcement {
+  BlockEdit = 'BLOCK_EDIT',
+  BlockPublish = 'BLOCK_PUBLISH'
+}
+
 export enum DatasetSourceReferenceTarget {
   All = 'ALL',
   Dataset = 'DATASET',
   DataPoint = 'DATA_POINT'
 }
+
+/** Exactly one transformation of a dataset binding. Order in the containing list is execution order. */
+export type DatasetTransformationInput = {
+  assignDimension: InputMaybe<AssignDimensionInput>;
+  dropNulls: InputMaybe<Scalars['Boolean']['input']>;
+  ensureUnit: InputMaybe<EnsureUnitInput>;
+  filterColumn: InputMaybe<FilterColumnInput>;
+  filterDimension: InputMaybe<FilterDimensionInput>;
+  filterTemporal: InputMaybe<FilterTemporalInput>;
+  indexTemporal: InputMaybe<Scalars['Boolean']['input']>;
+  remapLegacyYears: InputMaybe<Scalars['Boolean']['input']>;
+  renameColumn: InputMaybe<RenameColumnInput>;
+  renameItem: InputMaybe<RenameItemInput>;
+  selectMetric: InputMaybe<Scalars['Boolean']['input']>;
+  setForecastFrom: InputMaybe<SetForecastFromInput>;
+  tagOperation: InputMaybe<TagOperationInput>;
+};
 
 /** Which governance level is applicable for an action */
 export enum DecisionLevel {
@@ -171,13 +214,47 @@ export enum DimensionKind {
   Scenario = 'SCENARIO'
 }
 
-export type EdgeTransformationInput = {
-  assignCategory: InputMaybe<AssignCategoryTransformationInput>;
-  flatten: InputMaybe<FlattenTransformationInput>;
-  selectCategories: InputMaybe<SelectCategoriesTransformationInput>;
+export type DimensionSumRuleInput = {
+  dimension: Scalars['String']['input'];
+  enforcement: DatasetRuleEnforcement;
+  target: Scalars['Float']['input'];
+  tolerance: Scalars['Float']['input'];
 };
 
-export type FlattenTransformationInput = {
+/** Exactly one transformation of an edge binding. Order in the containing list is execution order. Only the dimension-reshaping transformations are accepted until edges execute the shared transform pipeline. */
+export type EdgeTransformationInput = {
+  assignDimension: InputMaybe<AssignDimensionInput>;
+  filterDimension: InputMaybe<FilterDimensionInput>;
+};
+
+export type EnsureUnitInput = {
+  unit: Scalars['String']['input'];
+};
+
+export type FilterColumnInput = {
+  column: Scalars['String']['input'];
+  dropCol: Scalars['Boolean']['input'];
+  exclude: Scalars['Boolean']['input'];
+  flatten: Scalars['Boolean']['input'];
+  ref: InputMaybe<Scalars['String']['input']>;
+  value: InputMaybe<Scalars['String']['input']>;
+  values: Array<Scalars['String']['input']>;
+};
+
+export type FilterDimensionInput = {
+  categories: Array<Scalars['String']['input']>;
+  dimension: Scalars['String']['input'];
+  exclude: Scalars['Boolean']['input'];
+  flatten: Scalars['Boolean']['input'];
+  groups: Array<Scalars['String']['input']>;
+};
+
+export type FilterTemporalInput = {
+  maxYear: InputMaybe<Scalars['Int']['input']>;
+  minYear: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type FlattenInput = {
   dimension: Scalars['String']['input'];
 };
 
@@ -218,11 +295,13 @@ export enum FrameworksMeasureTemplatePriorityChoices {
 
 export type InputPortInput = {
   id: InputMaybe<Scalars['UUID']['input']>;
+  identifier: InputMaybe<Scalars['String']['input']>;
   label: InputMaybe<Scalars['String']['input']>;
   multi: Scalars['Boolean']['input'];
   quantity: InputMaybe<Scalars['String']['input']>;
   requiredDimensions: InputMaybe<Array<Scalars['String']['input']>>;
-  supportedDimensions: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Semantic role from the node class's input port declarations. */
+  role: InputMaybe<Scalars['String']['input']>;
   unit: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -263,7 +342,6 @@ export type MeasureInput = {
   measureTemplateId: Scalars['ID']['input'];
 };
 
-/** An enumeration. */
 export enum ModelAction {
   Add = 'ADD',
   Change = 'CHANGE',
@@ -278,6 +356,10 @@ export type NzcCityEssentialData = {
   renewableMix: LowHigh;
   /** Average yearly temperature (low or high) */
   temperature: LowHigh;
+};
+
+export type NoGapsRuleInput = {
+  enforcement: DatasetRuleEnforcement;
 };
 
 export type NodeConfigInput = {
@@ -298,6 +380,16 @@ export enum NodeKind {
   Pipeline = 'PIPELINE',
   Simple = 'SIMPLE'
 }
+
+export enum NodeLayoutSource {
+  Auto = 'AUTO',
+  User = 'USER'
+}
+
+export type NodePortRefInput = {
+  nodeUuid: Scalars['UUID']['input'];
+  portId: Scalars['UUID']['input'];
+};
 
 export enum NodeStatus {
   Degraded = 'DEGRADED',
@@ -327,6 +419,7 @@ export type OutputPortInput = {
   columnId: InputMaybe<Scalars['String']['input']>;
   dimensions: InputMaybe<Array<Scalars['String']['input']>>;
   id: InputMaybe<Scalars['UUID']['input']>;
+  identifier: InputMaybe<Scalars['String']['input']>;
   isEditable: Scalars['Boolean']['input'];
   label: InputMaybe<Scalars['String']['input']>;
   quantity: InputMaybe<Scalars['String']['input']>;
@@ -355,6 +448,12 @@ export enum PrimaryLayoutClass {
   Outcome = 'OUTCOME'
 }
 
+/** How a problem is presented; every problem blocks publication. */
+export enum ProblemSeverity {
+  Error = 'ERROR',
+  Warning = 'WARNING'
+}
+
 export type RegisterUserInput = {
   email: Scalars['String']['input'];
   firstName: InputMaybe<Scalars['String']['input']>;
@@ -362,6 +461,17 @@ export type RegisterUserInput = {
   invitationToken: InputMaybe<Scalars['String']['input']>;
   lastName: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
+};
+
+export type RenameColumnInput = {
+  column: Scalars['String']['input'];
+  newName: InputMaybe<Scalars['String']['input']>;
+};
+
+export type RenameItemInput = {
+  column: Scalars['String']['input'];
+  newItem: Scalars['String']['input'];
+  oldItem: Scalars['String']['input'];
 };
 
 export enum ScenarioKind {
@@ -377,15 +487,23 @@ export enum SearchOperatorEnum {
   Or = 'OR'
 }
 
-export type SelectCategoriesTransformationInput = {
+export type SelectCategoriesInput = {
   categories: Array<Scalars['String']['input']>;
   dimension: Scalars['String']['input'];
   exclude: Scalars['Boolean']['input'];
   flatten: Scalars['Boolean']['input'];
 };
 
+export type SetForecastFromInput = {
+  year: Scalars['Int']['input'];
+};
+
 export type SimpleConfigInput = {
   nodeClass: Scalars['String']['input'];
+};
+
+export type TagOperationInput = {
+  tag: Scalars['String']['input'];
 };
 
 export type UpdateDataPointCommentInput = {
@@ -402,12 +520,25 @@ export type UpdateDataPointInput = {
   value: InputMaybe<Scalars['Float']['input']>;
 };
 
+export type UpdateDataPointItemInput = {
+  dataPointId: Scalars['ID']['input'];
+  input: UpdateDataPointInput;
+};
+
 export type UpdateDataSourceInput = {
   authority: InputMaybe<Scalars['String']['input']>;
   description: InputMaybe<Scalars['String']['input']>;
   edition: InputMaybe<Scalars['String']['input']>;
   name: InputMaybe<Scalars['String']['input']>;
   url: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Change what a dataset binding carries or does. */
+export type UpdateDatasetBindingInput = {
+  metricId: InputMaybe<Scalars['ID']['input']>;
+  tags: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Replaces the whole list; order is execution order. */
+  transformations: InputMaybe<Array<DatasetTransformationInput>>;
 };
 
 export type UpdateDimensionCategoryInput = {
@@ -421,6 +552,13 @@ export type UpdateDimensionCategoryInput = {
 export type UpdateDimensionInput = {
   dimensionId: Scalars['UUID']['input'];
   name: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Change what an edge binding does. */
+export type UpdateEdgeBindingInput = {
+  tags: InputMaybe<Array<Scalars['String']['input']>>;
+  /** Replaces the whole list; order is execution order. */
+  transformations: InputMaybe<Array<EdgeTransformationInput>>;
 };
 
 export type UpdateNodeInput = {
@@ -442,8 +580,16 @@ export type UpdateNodeInput = {
   outputMetrics: InputMaybe<Array<OutputMetricInput>>;
   outputPorts: InputMaybe<Array<OutputPortInput>>;
   params: InputMaybe<Scalars['JSON']['input']>;
+  shortDescription: InputMaybe<Scalars['String']['input']>;
   shortName: InputMaybe<Scalars['String']['input']>;
   tags: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type UpdateNodeLayoutInput = {
+  nodeId: Scalars['ID']['input'];
+  source: NodeLayoutSource;
+  x: Scalars['Float']['input'];
+  y: Scalars['Float']['input'];
 };
 
 export type UpdateScenarioInput = {
@@ -453,6 +599,26 @@ export type UpdateScenarioInput = {
   name: InputMaybe<Scalars['String']['input']>;
   parameterOverrides: InputMaybe<Scalars['JSON']['input']>;
   scenarioId: Scalars['ID']['input'];
+};
+
+export type ValidationRuleInput = {
+  /** The rule; set exactly one variant field. */
+  rule: ValidationRuleSpecInput;
+  /** Identity of an existing rule to keep; omit for a new rule. */
+  uuid: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** One validation rule; exactly one variant field must be set. */
+export type ValidationRuleSpecInput = {
+  dimensionSum: InputMaybe<DimensionSumRuleInput>;
+  noGaps: InputMaybe<NoGapsRuleInput>;
+  valueRange: InputMaybe<ValueRangeRuleInput>;
+};
+
+export type ValueRangeRuleInput = {
+  enforcement: DatasetRuleEnforcement;
+  max: InputMaybe<Scalars['Float']['input']>;
+  min: InputMaybe<Scalars['Float']['input']>;
 };
 
 export enum VisualizationKind {

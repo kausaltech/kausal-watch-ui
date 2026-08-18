@@ -57,6 +57,10 @@ const GET_PLAN_CONTEXT = gql`
       ...HeroImageFragment
       ...CardImageFragment
       ...SocialImageFragment
+      square: rendition(size: "128x128", crop: true) {
+        id
+        src
+      }
     }
     serveFileBaseUrl
     actionSchedules {

@@ -32,12 +32,25 @@ const pathsConfigDocs = [
   ...pathsApolloConfig.client.excludes.map((exclude) => `!${exclude}`),
 ];
 
+/*
+ * Load schemas with the shared loader instead of the default URL loader: it
+ * strips directive locations that the backends' graphql-core advertises but
+ * our graphql-js version cannot parse.
+ */
+const schemaLoader = './kausal_common/configs/codegen-schema-loader.cjs';
+const watchSchema = {
+  [apolloConfig.client.service.url]: { loader: schemaLoader },
+};
+const pathsSchema = {
+  [pathsApolloConfig.client.service.url]: { loader: schemaLoader },
+};
+
 const config: CodegenConfig = {
   overwrite: true,
 
   generates: {
     'src/common/__generated__/possible_types.json': {
-      schema: apolloConfig.client.service.url,
+      schema: watchSchema,
       documents: watchConfigDocs,
       plugins: ['fragment-matcher'],
       config: {
@@ -45,7 +58,7 @@ const config: CodegenConfig = {
       },
     },
     'src/common/__generated__/graphql.ts': {
-      schema: apolloConfig.client.service.url,
+      schema: watchSchema,
       documents: watchConfigDocs,
       plugins: [
         { add: { content: '/* istanbul ignore file */' } },
@@ -62,7 +75,7 @@ const config: CodegenConfig = {
       config: tsoConfig,
     },
     'src/common/__generated__/paths/possible_types.json': {
-      schema: pathsApolloConfig.client.service.url,
+      schema: pathsSchema,
       documents: pathsConfigDocs,
       plugins: ['fragment-matcher'],
       config: {
@@ -70,13 +83,13 @@ const config: CodegenConfig = {
       },
     },
     'src/common/__generated__/paths/graphql.ts': {
-      schema: pathsApolloConfig.client.service.url,
+      schema: pathsSchema,
       documents: pathsConfigDocs,
       plugins: ['typescript', 'typescript-operations'],
       config: tsoConfig,
     },
     'e2e-tests/__generated__/graphql.ts': {
-      schema: apolloConfig.client.service.url,
+      schema: watchSchema,
       plugins: ['typescript', 'typescript-operations'],
       config: {
         ...tsoConfig,

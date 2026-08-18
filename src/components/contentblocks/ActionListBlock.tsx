@@ -35,7 +35,7 @@ const GET_ACTION_LIST_FOR_BLOCK = gql`
 `;
 
 const ActionListSection = styled.div`
-  background-color: ${(props) => props.theme.neutralLight};
+  background-color: ${(props) => props.theme.section.actionListBlock.background};
   padding: var(--block-padding-top) 0 var(--block-padding-bottom);
 `;
 

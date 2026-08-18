@@ -15371,7 +15371,10 @@ export type GetPlanContextQuery = (
       { id: string, basePath: string | null, googleSiteVerificationTag: string | null, matomoAnalyticsUrl: string | null }
       & { __typename: 'PlanDomain' }
     ) | null, image: (
-      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+      { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, square: (
+        { id: string, src: string }
+        & { __typename: 'ImageRendition' }
+      ) | null, full: (
         { id: string, width: number, height: number, src: string }
         & { __typename: 'ImageRendition' }
       ) | null, fullMedium: (
@@ -15570,7 +15573,10 @@ export type PlanContextFragment = (
     { id: string, basePath: string | null, googleSiteVerificationTag: string | null, matomoAnalyticsUrl: string | null }
     & { __typename: 'PlanDomain' }
   ) | null, image: (
-    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
+    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, square: (
+      { id: string, src: string }
+      & { __typename: 'ImageRendition' }
+    ) | null, full: (
       { id: string, width: number, height: number, src: string }
       & { __typename: 'ImageRendition' }
     ) | null, fullMedium: (

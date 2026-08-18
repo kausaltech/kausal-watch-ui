@@ -33,6 +33,7 @@ const PlanAvatar = styled.img<PlanAvatarProps>`
   display: block;
   width: ${(props) => props.theme.spaces[props.size]};
   height: ${(props) => props.theme.spaces[props.size]};
+  object-fit: cover;
   margin: 0
     ${(props) => (props.size === 's400' ? props.theme.spaces.s100 : props.theme.spaces.s050)} 0 0;
   border-radius: 50%;
@@ -53,7 +54,8 @@ const PlanTitle = styled.div<{
   font-size: ${(props) => props.theme[props.$size]};
   font-weight: ${(props) => props.theme[props.$weight]};
   line-height: ${(props) => props.theme.lineHeightSm};
-  margin-bottom: ${(props) => props.theme.spaces.s050};
+  margin-bottom: ${(props) =>
+    props.$size === 'fontSizeMd' ? props.theme.spaces.s050 : props.theme.spaces.s025};
 `;
 
 const PlanOrg = styled.div<{ $negative?: boolean }>`

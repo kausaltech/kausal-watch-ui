@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { transparentize } from 'polished';
 import { DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
@@ -97,7 +98,7 @@ export default function PlanSelector(props: PlanSelectorProps) {
       <UncontrolledDropdown>
         <StyledDropdownToggle data-toggle="dropdown" tag="button" $color={color}>
           <PlanAvatar
-            src={plan.image?.small?.src ?? getThemeStaticURL(theme.defaultAvatarOrgImage)}
+            src={plan.image?.square?.src ?? getThemeStaticURL(theme.defaultAvatarOrgImage)}
             alt=""
           />
           <PlanTitle>{plan.shortName || plan.name}</PlanTitle>
