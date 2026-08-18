@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite';
+import { promises as fs } from 'fs';
 import path from 'path';
 
 import { loadThemes } from './themes.ts';
@@ -6,6 +7,21 @@ import { loadThemes } from './themes.ts';
 // Load themes at build time (Node.js context)
 const themes = await loadThemes();
 const projectRoot = process.cwd();
+
+/**
+ * Optional, machine-local (gitignored) list of backend instances and their
+ * plans, used by dev-tool stories such as IndicatorExplorer. Shape:
+ * [{ "name": "EU", "apiUrl": "https://api...", "plans": ["plan-id", ...] }]
+ */
+async function loadLocalInstances() {
+  try {
+    const data = await fs.readFile(path.join(projectRoot, '.env.instances.local.json'), 'utf8');
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
+}
+const localInstances = await loadLocalInstances();
 
 const config: StorybookConfig = {
   stories: ['../src/stories/**/*.mdx', '../src/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -57,6 +73,8 @@ const config: StorybookConfig = {
         // themes is an object, so we stringify it once to create a JSON string
         // In preview.ts, this will be parsed back to an object with JSON.parse()
         'process.env.THEMES': JSON.stringify(JSON.stringify(themes)),
+        // null when .env.instances.local.json does not exist
+        'process.env.LOCAL_INSTANCES': JSON.stringify(JSON.stringify(localInstances)),
       },
     });
   },
