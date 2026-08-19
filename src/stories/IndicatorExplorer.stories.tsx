@@ -1,16 +1,25 @@
-import { type FormEvent, useMemo, useState } from 'react';
+import { type FormEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
 
 import { ApolloClient, HttpLink, InMemoryCache, gql } from '@apollo/client';
-import { useQuery } from '@apollo/client/react';
+import { ApolloProvider, useQuery } from '@apollo/client/react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { UPDATE_GLOBALS } from 'storybook/internal/core-events';
+import { addons } from 'storybook/preview-api';
+
+import type { PlanContextFragment } from '@/common/__generated__/graphql';
+import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
+import PlanProvider from '@/components/providers/PlanProvider';
+import { MOCK_PLAN } from '@/stories/mocks/plan.mocks';
 
 /**
- * A developer tool for inspecting the indicators of any plan (instance),
+ * A developer tool for comparing the legacy (Plotly) and new (ECharts)
+ * IndicatorGraph components side by side with real data from any plan,
  * independent of the URL-based plan resolution used by the app. It talks
  * directly to the backend GraphQL API (which allows CORS from any origin),
- * so no Next.js proxy or PlanContext is needed.
+ * so no Next.js proxy is needed. Each row renders the production
+ * IndicatorVisualisation pipeline twice: legacy graph left, new graph right.
  *
  * If a gitignored `.env.instances.local.json` exists at the repo root
  * (see `loadLocalInstances()` in .storybook/main.ts for the shape), the
@@ -38,11 +47,22 @@ function toGraphqlEndpoint(apiUrl: string) {
   return `${apiUrl.replace(/\/+$/, '')}/v1/graphql/`;
 }
 
+// All themes known to Storybook, keyed by theme identifier
+// (injected by .storybook/main.ts, same data the theme toolbar uses).
+function getThemes(): Record<string, Record<string, unknown>> {
+  try {
+    return JSON.parse(process.env.THEMES ?? 'null') ?? {};
+  } catch {
+    return {};
+  }
+}
+
 const GET_PLAN_INDICATORS = gql`
   query StorybookIndicatorExplorer($plan: ID!) {
     plan(id: $plan) {
       id
       name
+      themeIdentifier
       organization {
         name
       }
@@ -60,8 +80,37 @@ const GET_PLAN_INDICATORS = gql`
         date
         value
       }
-      organization {
+      values(includeDimensions: true) {
+        id
+      }
+      goals {
+        id
+      }
+      minValue
+      maxValue
+      ticksCount
+      ticksRounding
+      valueRounding
+      desiredTrend
+      showTrendline
+      showTotalLine
+      dataCategoriesAreStackable
+      nonQuantifiedGoal
+      nonQuantifiedGoalDate
+      quantity {
         name
+      }
+      referenceValue {
+        value
+        date
+      }
+      defaultVisualization {
+        __typename
+      }
+      dimensions {
+        dimension {
+          name
+        }
       }
     }
   }
@@ -71,6 +120,7 @@ interface ExplorerQueryData {
   plan: {
     id: string;
     name: string;
+    themeIdentifier: string | null;
     organization: { name: string };
   } | null;
   planIndicators:
@@ -81,10 +131,28 @@ interface ExplorerQueryData {
         timeResolution: string;
         unit: { name: string; shortName: string | null } | null;
         latestValue: { date: string; value: number } | null;
-        organization: { name: string } | null;
+        values: { id: string }[];
+        goals: { id: string }[] | null;
+        minValue: number | null;
+        maxValue: number | null;
+        ticksCount: number | null;
+        ticksRounding: number | null;
+        valueRounding: number | null;
+        desiredTrend: string | null;
+        showTrendline: boolean;
+        showTotalLine: boolean;
+        dataCategoriesAreStackable: boolean;
+        nonQuantifiedGoal: string | null;
+        nonQuantifiedGoalDate: string | null;
+        quantity: { name: string } | null;
+        referenceValue: { value: number; date: string | null } | null;
+        defaultVisualization: { __typename: string } | null;
+        dimensions: { dimension: { name: string } }[];
       }[]
     | null;
 }
+
+type ExplorerIndicator = NonNullable<ExplorerQueryData['planIndicators']>[number];
 
 interface ExplorerQueryVariables {
   plan: string;
@@ -110,6 +178,7 @@ const Header = styled.header`
   color: #fff;
   position: sticky;
   top: 0;
+  z-index: 100;
 
   h1 {
     font-size: 1rem;
@@ -154,31 +223,6 @@ const Header = styled.header`
 
 const Content = styled.main`
   padding: 1.5rem;
-
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 0.85rem;
-  }
-
-  th,
-  td {
-    text-align: left;
-    padding: 0.4rem 0.75rem;
-    border-bottom: 1px solid #e2e2e2;
-    vertical-align: top;
-  }
-
-  th {
-    background: #f4f4f4;
-    position: sticky;
-    top: 3.3rem;
-  }
-
-  td.numeric {
-    text-align: right;
-    white-space: nowrap;
-  }
 `;
 
 const Message = styled.p`
@@ -196,92 +240,273 @@ const LevelBadge = styled.span`
   text-transform: capitalize;
 `;
 
-interface IndicatorExplorerProps {
-  /** Fallback GraphQL API root when no .env.instances.local.json is present */
-  apiUrl: string;
-  /** Plan identifier to load on first render */
-  initialPlanIdentifier?: string;
+const ComparisonRow = styled.section`
+  margin-bottom: 2.5rem;
+  border: 1px solid #e2e2e2;
+  border-radius: 6px;
+
+  > header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    background: #f4f4f4;
+    border-bottom: 1px solid #e2e2e2;
+    font-size: 0.9rem;
+
+    h3 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    small {
+      color: #666;
+    }
+  }
+`;
+
+const SettingsDetails = styled.details`
+  position: relative;
+  margin-left: auto;
+  font-size: 0.75rem;
+
+  summary {
+    cursor: pointer;
+    color: #2ba0a0;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  > div {
+    position: absolute;
+    right: 0;
+    z-index: 20;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  td {
+    padding: 0.1rem 0 0.1rem 0.75rem;
+    white-space: nowrap;
+    text-align: left;
+
+    &:first-of-type {
+      color: #666;
+      padding-left: 0;
+    }
+  }
+`;
+
+function formatSettingValue(value: unknown): string {
+  if (value == null || value === '') return '–';
+  if (typeof value === 'boolean') return value ? 'true' : 'false';
+  return String(value);
 }
 
-function IndicatorList({ client, plan }: { client: ApolloClient; plan: string }) {
+/** Collapsible listing of the indicator's own visualisation-affecting
+ *  settings, which override theme defaults in the graph components. */
+function VisualisationSettings({ indicator }: { indicator: ExplorerIndicator }) {
+  const entries: [string, unknown][] = [
+    ['quantity', indicator.quantity?.name],
+    ['minValue', indicator.minValue],
+    ['maxValue', indicator.maxValue],
+    ['ticksCount', indicator.ticksCount],
+    ['ticksRounding', indicator.ticksRounding],
+    ['valueRounding', indicator.valueRounding],
+    ['desiredTrend', indicator.desiredTrend],
+    ['showTrendline', indicator.showTrendline],
+    ['showTotalLine', indicator.showTotalLine],
+    ['stackable', indicator.dataCategoriesAreStackable],
+    ['nonQuantifiedGoal', indicator.nonQuantifiedGoal],
+    ['nonQuantifiedGoalDate', indicator.nonQuantifiedGoalDate],
+    [
+      'referenceValue',
+      indicator.referenceValue &&
+        `${indicator.referenceValue.value} (${indicator.referenceValue.date ?? 'no date'})`,
+    ],
+    ['defaultVisualization', indicator.defaultVisualization?.__typename],
+    [
+      'dimensions',
+      indicator.dimensions.length
+        ? indicator.dimensions.map((d) => d.dimension.name).join(', ')
+        : null,
+    ],
+  ];
+  const setCount = entries.filter(
+    ([, value]) => value != null && value !== false && value !== ''
+  ).length;
+
+  return (
+    <SettingsDetails>
+      <summary>settings ({setCount} set)</summary>
+      <div>
+        <table>
+          <tbody>
+            {entries.map(([key, value]) => (
+              <tr key={key} style={value == null ? { opacity: 0.5 } : undefined}>
+                <td>{key}</td>
+                <td>{formatSettingValue(value)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </SettingsDetails>
+  );
+}
+
+const GraphColumns = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  > div {
+    padding: 0.75rem;
+    min-width: 0;
+
+    &:first-of-type {
+      border-right: 1px solid #e2e2e2;
+    }
+
+    > h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #666;
+      margin: 0 0 0.5rem;
+    }
+  }
+`;
+
+/** Mount children only when scrolled near the viewport, to avoid rendering
+ *  dozens of heavy Plotly/ECharts instances at once. */
+function LazyRender({ children, minHeight = 500 }: { children: ReactNode; minHeight?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || visible) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '500px' }
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [visible]);
+
+  return (
+    <div ref={ref} style={visible ? undefined : { minHeight }}>
+      {visible ? children : null}
+    </div>
+  );
+}
+
+function IndicatorComparisonList({ plan }: { plan: string }) {
+  const themes = useMemo(getThemes, []);
   const { data, loading, error } = useQuery<ExplorerQueryData, ExplorerQueryVariables>(
     GET_PLAN_INDICATORS,
-    { client, variables: { plan } }
+    { variables: { plan } }
   );
+
+  // Resolve the plan's theme the same way the app does (layout.tsx):
+  // explicit themeIdentifier, falling back to the plan identifier.
+  const themeKey = data?.plan ? data.plan.themeIdentifier || plan : undefined;
+  const themeFound = themeKey != null && themeKey in themes;
+
+  // Wire the resolved theme to the addon-themes toolbar: updating the
+  // `theme` global makes the withKausalThemes decorator re-render the story
+  // with the plan's theme (Emotion + MUI providers, global styles, and the
+  // theme CSS file), and keeps the toolbar selector in sync. The toolbar can
+  // still be used to override the theme afterwards.
+  useEffect(() => {
+    if (!themeFound) return;
+    addons.getChannel().emit(UPDATE_GLOBALS, { globals: { theme: themeKey } });
+  }, [themeFound, themeKey]);
 
   if (loading) return <Message>Loading indicators for “{plan}”…</Message>;
   if (error) return <Message>Error: {error.message}</Message>;
   if (!data?.plan) return <Message>No plan found with identifier “{plan}”.</Message>;
 
   const indicators = data.planIndicators ?? [];
-  const numberFormat = new Intl.NumberFormat();
 
   return (
     <>
       <h2>
         {data.plan.name}{' '}
         <small>
-          ({data.plan.organization.name} · {indicators.length} indicators)
+          ({data.plan.organization.name} · {indicators.length} indicators · theme:{' '}
+          {themeFound ? themeKey : `${themeKey} not found locally, using toolbar theme`})
         </small>
       </h2>
-      {indicators.length === 0 ? (
-        <Message>This plan has no indicators.</Message>
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Level</th>
-              <th>Latest value</th>
-              <th>Unit</th>
-              <th>Resolution</th>
-              <th>Organization</th>
-            </tr>
-          </thead>
-          <tbody>
-            {indicators.map((indicator) => (
-              <tr key={indicator.id}>
-                <td>{indicator.id}</td>
-                <td>{indicator.name}</td>
-                <td>{indicator.level && <LevelBadge>{indicator.level}</LevelBadge>}</td>
-                <td className="numeric">
-                  {indicator.latestValue &&
-                    `${numberFormat.format(indicator.latestValue.value)} (${
-                      indicator.latestValue.date
-                    })`}
-                </td>
-                <td>{indicator.unit?.shortName ?? indicator.unit?.name}</td>
-                <td>{indicator.timeResolution.toLowerCase()}</td>
-                <td>{indicator.organization?.name}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      {indicators.length === 0 && <Message>This plan has no indicators.</Message>}
+      {indicators.map((indicator) => (
+        <ComparisonRow key={indicator.id}>
+          <header>
+            <h3>{indicator.name}</h3>
+            <small>#{indicator.id}</small>
+            {indicator.level && <LevelBadge>{indicator.level}</LevelBadge>}
+            <small>
+              {indicator.unit?.shortName ?? indicator.unit?.name}
+              {' · '}
+              {indicator.timeResolution.toLowerCase()}
+              {` · ${indicator.values.length} data points`}
+              {(indicator.goals?.length ?? 0) > 0 && ` · ${indicator.goals!.length} goals`}
+              {indicator.latestValue && ` · latest ${indicator.latestValue.date}`}
+            </small>
+            <VisualisationSettings indicator={indicator} />
+          </header>
+          <LazyRender>
+            <GraphColumns>
+              <div>
+                <h4>Legacy (Plotly)</h4>
+                <IndicatorVisualisation
+                  indicatorId={indicator.id}
+                  useLegacyGraph
+                  showTable={false}
+                />
+              </div>
+              <div>
+                <h4>New (ECharts)</h4>
+                <IndicatorVisualisation
+                  indicatorId={indicator.id}
+                  useLegacyGraph={false}
+                  showTable={false}
+                />
+              </div>
+            </GraphColumns>
+          </LazyRender>
+        </ComparisonRow>
+      ))}
     </>
   );
 }
 
 function InstanceSelector({
   instances,
-  initialPlanIdentifier,
+  value,
   onChange,
 }: {
   instances: LocalInstance[];
-  initialPlanIdentifier?: string;
+  value: { apiUrl: string; plan: string };
   onChange: (apiUrl: string, plan: string) => void;
 }) {
   const initialInstance =
-    (initialPlanIdentifier &&
-      instances.find((instance) => instance.plans.includes(initialPlanIdentifier))) ||
-    instances[0];
+    instances.find((instance) => instance.apiUrl === value.apiUrl) ?? instances[0];
   const [instanceName, setInstanceName] = useState(initialInstance.name);
-  const [plan, setPlan] = useState(
-    initialPlanIdentifier && initialInstance.plans.includes(initialPlanIdentifier)
-      ? initialPlanIdentifier
-      : ''
-  );
+  const [plan, setPlan] = useState(value.plan);
   const instance = instances.find((i) => i.name === instanceName) ?? instances[0];
   const sortedPlans = useMemo(() => [...instance.plans].sort(), [instance]);
 
@@ -352,18 +577,37 @@ function PlanIdentifierInput({
   );
 }
 
+interface IndicatorExplorerProps {
+  /** Fallback GraphQL API root when no .env.instances.local.json is present */
+  apiUrl: string;
+  /** Plan identifier to load on first render */
+  initialPlanIdentifier?: string;
+}
+
+// Preserve the selection across story remounts (updating the theme global
+// re-renders the story through the decorators).
+let lastSelection: { apiUrl: string; plan: string } | undefined;
+
 function IndicatorExplorer({ apiUrl, initialPlanIdentifier = '' }: IndicatorExplorerProps) {
   const instances = useMemo(getLocalInstances, []);
   const hasInstances = instances.length > 0;
-  const [selection, setSelection] = useState(() => ({
-    apiUrl: hasInstances
-      ? (instances.find((i) => i.plans.includes(initialPlanIdentifier)) ?? instances[0]).apiUrl
-      : apiUrl,
-    plan:
-      hasInstances && !instances.some((i) => i.plans.includes(initialPlanIdentifier))
-        ? ''
-        : initialPlanIdentifier,
-  }));
+  const [selection, setSelectionState] = useState(
+    () =>
+      lastSelection ?? {
+        apiUrl: hasInstances
+          ? (instances.find((i) => i.plans.includes(initialPlanIdentifier)) ?? instances[0]).apiUrl
+          : apiUrl,
+        plan:
+          hasInstances && !instances.some((i) => i.plans.includes(initialPlanIdentifier))
+            ? ''
+            : initialPlanIdentifier,
+      }
+  );
+
+  function setSelection(next: { apiUrl: string; plan: string }) {
+    lastSelection = next;
+    setSelectionState(next);
+  }
 
   const endpoint = toGraphqlEndpoint(hasInstances ? selection.apiUrl : apiUrl);
   const client = useMemo(
@@ -375,6 +619,18 @@ function IndicatorExplorer({ apiUrl, initialPlanIdentifier = '' }: IndicatorExpl
     [endpoint]
   );
 
+  // IndicatorVisualisation reads the plan identifier for its GraphQL query
+  // from PlanContext, so override the decorator-provided mock plan with the
+  // selected identifier (and disable features whose UI we don't want here).
+  const contextPlan: PlanContextFragment = useMemo(
+    () => ({
+      ...MOCK_PLAN,
+      identifier: selection.plan,
+      features: { ...MOCK_PLAN.features, enableIndicatorComparison: false },
+    }),
+    [selection.plan]
+  );
+
   return (
     <Page>
       <Header>
@@ -382,19 +638,23 @@ function IndicatorExplorer({ apiUrl, initialPlanIdentifier = '' }: IndicatorExpl
         {hasInstances ? (
           <InstanceSelector
             instances={instances}
-            initialPlanIdentifier={initialPlanIdentifier}
+            value={selection}
             onChange={(newApiUrl, plan) => setSelection({ apiUrl: newApiUrl, plan })}
           />
         ) : (
           <PlanIdentifierInput
-            initialPlanIdentifier={initialPlanIdentifier}
-            onSubmit={(plan) => setSelection((prev) => ({ ...prev, plan }))}
+            initialPlanIdentifier={selection.plan}
+            onSubmit={(plan) => setSelection({ apiUrl: selection.apiUrl, plan })}
           />
         )}
       </Header>
       <Content>
         {selection.plan ? (
-          <IndicatorList client={client} plan={selection.plan} />
+          <ApolloProvider client={client}>
+            <PlanProvider plan={contextPlan}>
+              <IndicatorComparisonList plan={selection.plan} />
+            </PlanProvider>
+          </ApolloProvider>
         ) : (
           <Message>
             {hasInstances
