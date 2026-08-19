@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
+
 import { cloneDeep, get, isObject, set } from 'lodash-es';
 import defaultTheme from 'public/static/themes/default/theme.json';
 import { ChromePicker } from 'react-color';
@@ -70,12 +71,21 @@ const ColorPicker = (props) => {
   );
 };
 
+// The theme from context is augmented with the full generated MUI theme
+// (palette scales, typography variants, component overrides, ...). Only the
+// keys of the base Kausal theme are design tokens meant to be edited here,
+// so drop everything else.
+const filterToBaseThemeKeys = (theme) =>
+  Object.fromEntries(Object.entries(theme ?? {}).filter(([key]) => key in defaultTheme));
+
 const ThemeDesignTokens = () => {
   const themeContext = useTheme();
-  const [editedTheme, setEditedTheme] = useState(cloneDeep(themeContext));
+  const [editedTheme, setEditedTheme] = useState(() =>
+    filterToBaseThemeKeys(cloneDeep(themeContext))
+  );
 
   useEffect(() => {
-    setEditedTheme(cloneDeep(themeContext));
+    setEditedTheme(filterToBaseThemeKeys(cloneDeep(themeContext)));
     console.log('Theme Changed');
   }, [themeContext]);
 
@@ -176,21 +186,22 @@ const ThemeDesignTokens = () => {
       <hr />
       <h2>Theme Design Token editor</h2>
       <p>This can be used as a testground and documentation for theme variables</p>
-      <Table responsive size="sm">
-        <thead>
-          <tr>
-            <th>Key</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {themeContext &&
-            Object.entries(themeContext).map(([key, value]) => renderTokenRows(value, key))}
-        </tbody>
-      </Table>
+      <div style={{ maxHeight: '70vh', overflow: 'auto' }}>
+        <Table responsive size="sm">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(editedTheme).map(([key, value]) => renderTokenRows(value, key))}
+          </tbody>
+        </Table>
+      </div>
       <h3>Theme JSON: {editedTheme.name}</h3>
       <div contentEditable="true">
-        <pre className="pre-scrollable bg-light">
+        <pre className="bg-light" style={{ maxHeight: '400px', overflow: 'auto' }}>
           <code>{JSON.stringify(editedTheme, null, 2)}</code>
         </pre>
       </div>

@@ -672,6 +672,9 @@ const meta = {
   component: IndicatorExplorer,
   parameters: {
     layout: 'fullscreen',
+    // A dev tool rendering live, nondeterministic API data — not something
+    // Chromatic can meaningfully snapshot.
+    chromatic: { disableSnapshot: true },
   },
 } satisfies Meta<typeof IndicatorExplorer>;
 
