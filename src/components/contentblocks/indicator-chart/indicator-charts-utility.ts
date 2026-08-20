@@ -1,5 +1,3 @@
-import type { CallbackDataParams } from 'echarts/types/dist/shared';
-
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
 
@@ -25,23 +23,19 @@ export interface GraphsTheme {
   showTrendline?: boolean;
 }
 
-export type TrendSeries = {
-  name: string;
-  type: 'line';
-  symbol: 'none';
-  showSymbol: boolean;
-  smooth: boolean;
-  data: [string, number][];
-  lineStyle: { type: 'dashed'; width: number; color: string };
-  itemStyle: { color: string };
-  tooltip: { show: boolean };
-};
+/** Unit label matching IndicatorVisualisation's default graph: prefer the
+ *  short name, and hide the pseudo-unit 'no unit' entirely. */
+export function getUnitLabel(indicator: LineChartBlock['indicator']): string {
+  const unit = indicator?.unit;
+  if (!unit || unit.name === 'no unit') return '';
+  return unit.shortName || unit.name;
+}
 
 function formatDateKey(date: string, timeResolution?: string | null): string {
   const d = new Date(date);
   if (Number.isNaN(d.getTime())) return date;
 
-  const resolution = String(timeResolution ?? 'YEAR').toUpperCase();
+  const resolution = String(timeResolution || 'YEAR').toUpperCase();
   if (resolution === 'YEAR') {
     return String(d.getUTCFullYear());
   } else if (resolution === 'MONTH') {
@@ -93,7 +87,7 @@ export function buildDimSeries(
     values.forEach((v) => {
       if (v.value != null && v.date) {
         const key = formatDateKey(v.date, timeResolution);
-        timeMap.set(key, (timeMap.get(key) ?? 0) + v.value);
+        timeMap.set(key, (timeMap.get(key) || 0) + v.value);
       }
     });
     const raw = Array.from(timeMap.entries())
@@ -120,7 +114,7 @@ export function buildTotalSeries(
     .forEach((v) => {
       if (v.date) {
         const key = formatDateKey(v.date, timeResolution);
-        totalMap.set(key, (totalMap.get(key) ?? 0) + v.value);
+        totalMap.set(key, (totalMap.get(key) || 0) + v.value);
       }
     });
 
@@ -168,7 +162,7 @@ export function buildTrendSeries(
   trendLineColor: string,
   label = 'Trend',
   timeResolution?: string | null
-): TrendSeries[] {
+) {
   const regData = totalRaw.slice(-Math.min(totalRaw.length, 10));
   const predictedTimes = regData.map(([key]) => getTimeKeyForSorting(key, timeResolution));
 
@@ -208,11 +202,11 @@ export function buildTrendSeries(
         {
           name: label,
           type: 'line' as const,
-          symbol: 'none' as const,
+          symbol: 'none',
           showSymbol: false,
           smooth: false,
           data: predictedKeys.map((key, i) => [key, predictedValues[i]] as [string, number]),
-          lineStyle: { type: 'dashed' as const, width: 2, color: trendLineColor },
+          lineStyle: { type: 'dashed', width: 2, color: trendLineColor },
           itemStyle: { color: trendLineColor },
           tooltip: { show: false },
         },
@@ -225,14 +219,13 @@ export function buildTooltipFormatter(
   legendData: string[],
   t: TFunction,
   formatValue: (value: number) => string,
-  _dimension?: { name: string },
+  dimension?: { name: string },
   timeResolution?: string | null
 ) {
-  return (params: CallbackDataParams | CallbackDataParams[]) => {
+  return (params: any[]) => {
     const processedSeries = new Set<string>();
     const paramsArray = Array.isArray(params) ? params : [params];
-    const firstParam = paramsArray[0] as (CallbackDataParams & { axisValue?: unknown }) | undefined;
-    const timeKey = firstParam?.axisValue;
+    const timeKey = paramsArray[0]?.axisValue;
 
     let formattedTime: string;
     if (timeResolution === 'YEAR') {
@@ -240,9 +233,7 @@ export function buildTooltipFormatter(
     } else if (timeResolution === 'MONTH') {
       formattedTime = String(timeKey);
     } else {
-      const date = new Date(
-        typeof timeKey === 'string' || typeof timeKey === 'number' ? timeKey : ''
-      );
+      const date = new Date(timeKey);
       formattedTime = Number.isNaN(date.getTime())
         ? String(timeKey)
         : date.toISOString().split('T')[0];
@@ -250,25 +241,22 @@ export function buildTooltipFormatter(
 
     const rows = paramsArray
       .filter((p) => {
-        const seriesName = p.seriesName ?? '';
-        if (!legendData.includes(seriesName)) return false;
-        if (processedSeries.has(seriesName)) return false;
-        processedSeries.add(seriesName);
+        if (!legendData.includes(p.seriesName)) return false;
+        if (processedSeries.has(p.seriesName)) return false;
+        processedSeries.add(p.seriesName);
         return true;
       })
       .map((p) => {
-        const data: unknown = p.data;
         const value =
-          Array.isArray(data) && typeof data[1] === 'number'
-            ? formatValue(data[1])
-            : typeof data === 'number'
-              ? formatValue(data)
+          Array.isArray(p.data) && typeof p.data[1] === 'number'
+            ? formatValue(p.data[1])
+            : typeof p.data === 'number'
+              ? formatValue(p.data)
               : '-';
 
-        const label = p.seriesName ?? '';
-        const marker = typeof p.marker === 'string' ? p.marker : '';
+        const label = dimension ? p.seriesName : p.seriesName;
 
-        return `${marker} ${label}: ${value} ${unit}`;
+        return `${p.marker} ${label}: ${value} ${unit}`;
       });
 
     return `<strong>${formattedTime}</strong><br/>${rows.join('<br/>')}`;
@@ -285,15 +273,7 @@ export function buildYAxisConfig(
   },
   color?: string
 ) {
-  const yAxis: {
-    axisLabel: { color?: string; formatter: (value: number) => string };
-    max?: number;
-    min?: number;
-    name: string;
-    nameTextStyle: { align: 'left'; fontSize: number; padding: number[] };
-    splitNumber?: number;
-    type: 'value';
-  } = {
+  const yAxis: any = {
     type: 'value',
     name: unit,
     nameTextStyle: {
