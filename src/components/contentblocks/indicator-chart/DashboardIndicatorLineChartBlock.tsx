@@ -123,6 +123,7 @@ const DashboardIndicatorLineChartBlock = ({
   ];
 
   const option = {
+    backgroundColor: theme.themeColors.white,
     legend: {
       show: true,
       data: legendData,
