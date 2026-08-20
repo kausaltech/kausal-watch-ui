@@ -130,6 +130,7 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
   }, [theme.breakpointXl]);
 
   const option: ECOption & { series: PieSeriesOption[] } = {
+    backgroundColor: theme.themeColors.white,
     tooltip: {
       appendTo: 'body',
       trigger: 'item',

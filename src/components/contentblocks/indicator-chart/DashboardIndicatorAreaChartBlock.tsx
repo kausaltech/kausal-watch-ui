@@ -142,6 +142,7 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
   const seriesWithStack = stackable ? series.map((s) => ({ ...s, stack: 'categories' })) : series;
 
   const option: ECOption = {
+    backgroundColor: theme.themeColors.white,
     legend: {
       show: true,
       bottom: 0,

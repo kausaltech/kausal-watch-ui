@@ -129,6 +129,7 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
   });
 
   const option: ECOption = {
+    backgroundColor: theme.themeColors.white,
     legend: buildLegend(theme),
     tooltip: {
       trigger: 'axis',

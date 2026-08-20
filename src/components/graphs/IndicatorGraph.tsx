@@ -946,6 +946,7 @@ function IndicatorGraph({
     const gridTop = 65 + extraLines * 24;
 
     const option: ECOption = {
+      backgroundColor: theme.themeColors.white,
       title: {
         text: wrappedTitle ?? undefined,
         subtext: yRange.unit,
@@ -1173,6 +1174,7 @@ function IndicatorGraph({
     xAxisCategories,
     title,
     theme.themeColors.dark,
+    theme.themeColors.white,
     nonQuantifiedGoal?.trend,
     nonQuantifiedGoal?.date,
     referenceValue,
