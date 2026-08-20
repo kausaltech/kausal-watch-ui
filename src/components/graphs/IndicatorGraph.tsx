@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -13,13 +13,10 @@ import { transparentize } from 'polished';
 import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { IndicatorDesiredTrend } from '@/common/__generated__/graphql';
-import {
-  IndicatorNonQuantifiedGoal,
-  IndicatorTimeResolution,
-} from '@/common/__generated__/graphql';
+import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter } from '@/common/utils';
 
-export type ChartTrace = {
+type ChartTrace = {
   name: string;
   dataType?: 'total' | null;
   xType?: 'time' | 'category';
@@ -28,7 +25,7 @@ export type ChartTrace = {
   _parentName?: string | null;
 };
 
-export type GoalTrace = {
+type GoalTrace = {
   name: string;
   x: Array<string | number>;
   y: Array<number | null>;
@@ -45,7 +42,7 @@ type IndicatorGraphProps = {
     includeZero: boolean;
     range: number[];
   };
-  timeResolution?: IndicatorTimeResolution;
+  timeResolution?: 'YEAR' | 'MONTH';
   traces: ChartTrace[];
   goalTraces: GoalTrace[];
   trendTrace: GoalTrace | null;
@@ -151,14 +148,63 @@ type GraphSettings = {
   lineShape?: string;
   drawGoalLine?: boolean;
   roundIndicatorValue?: boolean;
+  categorySymbols?: string[];
+  fillMarkers?: boolean;
+  goalSymbol?: string;
 };
+
+/**
+ * Themes define marker symbols with Plotly symbol names. Map them to ECharts
+ * equivalents: built-in symbols have `empty*` hollow variants, the rest are
+ * drawn as `path://` shapes (unit coordinates; ECharts scales the bounding
+ * box to symbolSize) and made hollow by swapping fill/border styles.
+ */
+const BUILTIN_SYMBOLS: Record<string, string> = {
+  circle: 'circle',
+  square: 'rect',
+  diamond: 'diamond',
+  'triangle-up': 'triangle',
+};
+
+const PATH_SYMBOLS: Record<string, string> = {
+  pentagon: 'path://M0,-1L0.951,-0.309L0.588,0.809L-0.588,0.809L-0.951,-0.309Z',
+  hexagram:
+    'path://M0,-1L-0.289,-0.5L-0.866,-0.5L-0.577,0L-0.866,0.5L-0.289,0.5L0,1L0.289,0.5L0.866,0.5L0.577,0L0.866,-0.5L0.289,-0.5Z',
+  'star-diamond': 'path://M1,0L0.283,0.283L0,1L-0.283,0.283L-1,0L-0.283,-0.283L0,-1L0.283,-0.283Z',
+  hash: 'path://M-0.6,-1L-0.2,-1L-0.2,1L-0.6,1ZM0.2,-1L0.6,-1L0.6,1L0.2,1ZM-1,-0.6L1,-0.6L1,-0.2L-1,-0.2ZM-1,0.2L1,0.2L1,0.6L-1,0.6Z',
+  'y-down':
+    'path://M-0.15,0L0.15,0L0.15,1L-0.15,1ZM0.075,-0.13L-0.075,0.13L-0.941,-0.37L-0.791,-0.63ZM-0.075,-0.13L0.075,0.13L0.941,-0.37L0.791,-0.63Z',
+  x: 'path://M0,-0.4L0.6,-1L1,-0.6L0.4,0L1,0.6L0.6,1L0,0.4L-0.6,1L-1,0.6L-0.4,0L-1,-0.6L-0.6,-1Z',
+  cross:
+    'path://M-0.2,-1L0.2,-1L0.2,-0.2L1,-0.2L1,0.2L0.2,0.2L0.2,1L-0.2,1L-0.2,0.2L-1,0.2L-1,-0.2L-0.2,-0.2Z',
+};
+
+function resolveMarkerSymbol(
+  name: string,
+  hollow: boolean
+): { symbol: string; manualHollow: boolean } {
+  const builtin = BUILTIN_SYMBOLS[name];
+  if (builtin) {
+    return {
+      symbol: hollow ? `empty${builtin[0].toUpperCase()}${builtin.slice(1)}` : builtin,
+      manualHollow: false,
+    };
+  }
+  const path = PATH_SYMBOLS[name];
+  if (path) {
+    return { symbol: path, manualHollow: hollow };
+  }
+  return { symbol: hollow ? 'emptyCircle' : 'circle', manualHollow: false };
+}
 
 const buildSeriesFromTraces = ({
   traces,
   colors,
   hasTimeDimension,
   useAreaGraph,
-  lineShape: _lineShape,
+  lineShape,
+  categorySymbols,
+  fillMarkers,
   valueRounding,
   format,
 }: {
@@ -170,6 +216,8 @@ const buildSeriesFromTraces = ({
   hasTimeDimension: boolean;
   useAreaGraph: boolean;
   lineShape: string;
+  categorySymbols: string[];
+  fillMarkers: boolean;
   valueRounding?: number;
   format: ReturnType<typeof useFormatter>;
 }): Array<LineSeriesOption | BarSeriesOption> => {
@@ -182,6 +230,22 @@ const buildSeriesFromTraces = ({
 
     // Use line chart for time dimension
     if (hasTimeDimension) {
+      // Markers follow the legacy graph: 8px symbols cycled per trace from
+      // the theme's categorySymbols, hollow with a 2px rim in the trace
+      // color unless the theme sets fillMarkers.
+      const symbolName = categorySymbols.length
+        ? categorySymbols[idx % categorySymbols.length]
+        : 'circle';
+      const { symbol, manualHollow } = resolveMarkerSymbol(symbolName, !fillMarkers);
+      // Dense traces get smaller markers instead of hiding them like the
+      // legacy graph did; on very dense traces (e.g. daily values) even
+      // small markers fuse into a solid band, so hide them entirely there.
+      // Count actual data points — the trace may be aligned to the full
+      // axis-date range with null padding (e.g. for goal years), which
+      // must not count towards density.
+      const dataPointCount = trace.y.filter((value) => value != null).length;
+      const denseMarkers = dataPointCount > 30;
+      const hideMarkers = dataPointCount > 100;
       // Map x and y values together for time axis
       const data = trace.x.map((xVal, idx) => [xVal, trace.y[idx] ?? null]);
       const series: LineSeriesOption = {
@@ -189,19 +253,26 @@ const buildSeriesFromTraces = ({
         name: trace.name,
         data: data,
         connectNulls: true,
-        showSymbol: trace.x.length <= 30,
-        symbol: 'circle',
-        symbolSize: 7,
+        showSymbol: !hideMarkers,
+        symbol,
+        symbolSize: denseMarkers ? 5 : 8,
         sampling: 'lttb',
-        smooth: false, // TODO: enable once we have a proper smooth line shape
+        smooth: lineShape === 'spline' || lineShape === 'smooth',
         lineStyle: {
           width: trace.dataType === 'total' ? 3 : 2,
           color,
         },
-        itemStyle: {
-          color,
-          borderWidth: 0,
-        },
+        itemStyle: manualHollow
+          ? {
+              color: '#ffffff',
+              borderColor: color,
+              borderWidth: denseMarkers ? 1 : 2,
+            }
+          : {
+              color,
+              borderColor: color,
+              borderWidth: denseMarkers ? 1 : 2,
+            },
         z: 2,
         emphasis: {
           focus: 'series',
@@ -298,6 +369,15 @@ function IndicatorGraph({
       typeof rawGraphSettings?.roundIndicatorValue === 'boolean'
         ? rawGraphSettings.roundIndicatorValue
         : undefined,
+    categorySymbols: Array.isArray(rawGraphSettings?.categorySymbols)
+      ? rawGraphSettings.categorySymbols.filter(
+          (symbol): symbol is string => typeof symbol === 'string'
+        )
+      : undefined,
+    fillMarkers:
+      typeof rawGraphSettings?.fillMarkers === 'boolean' ? rawGraphSettings.fillMarkers : undefined,
+    goalSymbol:
+      typeof rawGraphSettings?.goalSymbol === 'string' ? rawGraphSettings.goalSymbol : undefined,
   };
 
   const fallbackColor = graphSettings.totalLineColor || theme.brandDark || '#0070f3';
@@ -387,7 +467,7 @@ function IndicatorGraph({
         return String(d);
       }
       // For YEAR resolution, ensure format is YYYY-1-1
-      if (timeResolution === IndicatorTimeResolution.Year) {
+      if (timeResolution === 'YEAR') {
         return `${dateObj.getFullYear()}-1-1`;
       }
       return d;
@@ -423,11 +503,7 @@ function IndicatorGraph({
     });
 
     // Extend to nonQuantifiedGoalDate if needed (for directional goal arrow)
-    if (
-      nonQuantifiedGoal?.trend &&
-      nonQuantifiedGoal?.date &&
-      timeResolution === IndicatorTimeResolution.Year
-    ) {
+    if (nonQuantifiedGoal?.trend && nonQuantifiedGoal?.date && timeResolution === 'YEAR') {
       // Normalize the date to YYYY-1-1 format for YEAR resolution
       const goalDateObj = new Date(nonQuantifiedGoal.date);
       if (!Number.isNaN(goalDateObj.getTime())) {
@@ -448,7 +524,14 @@ function IndicatorGraph({
     }
 
     return datesArray;
-  }, [hasTimeDimension, traces, goalTraces, timeResolution, nonQuantifiedGoal]);
+  }, [
+    hasTimeDimension,
+    traces,
+    goalTraces,
+    timeResolution,
+    nonQuantifiedGoal?.trend,
+    nonQuantifiedGoal?.date,
+  ]);
 
   // Create category labels - either from traces or from formatted time data
   const xAxisCategories = useMemo(() => {
@@ -468,9 +551,9 @@ function IndicatorGraph({
         }
 
         let formattedValue: string;
-        if (timeResolution === IndicatorTimeResolution.Year) {
+        if (timeResolution === 'YEAR') {
           formattedValue = String(date.getFullYear());
-        } else if (timeResolution === IndicatorTimeResolution.Month) {
+        } else if (timeResolution === 'MONTH') {
           formattedValue = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
         } else {
           formattedValue = date.toISOString().split('T')[0];
@@ -496,11 +579,7 @@ function IndicatorGraph({
 
   // Check if all dates are in the same year (for YEAR resolution)
   const hasSingleYear = useMemo(() => {
-    if (
-      !hasTimeDimension ||
-      timeResolution !== IndicatorTimeResolution.Year ||
-      allDates.length === 0
-    ) {
+    if (!hasTimeDimension || timeResolution !== 'YEAR' || allDates.length === 0) {
       return false;
     }
     const years = new Set<number>();
@@ -526,7 +605,7 @@ function IndicatorGraph({
       if (Number.isNaN(dateObj.getTime())) {
         return String(d);
       }
-      if (timeResolution === IndicatorTimeResolution.Year) {
+      if (timeResolution === 'YEAR') {
         return `${dateObj.getFullYear()}-1-1`;
       }
       return d;
@@ -562,6 +641,8 @@ function IndicatorGraph({
       hasTimeDimension,
       useAreaGraph,
       lineShape,
+      categorySymbols: graphSettings.categorySymbols ?? ['circle'],
+      fillMarkers: graphSettings.fillMarkers === true,
       colors: {
         totalLine: colors.totalLineColor,
         categoryColors: colors.categoryColors,
@@ -663,11 +744,11 @@ function IndicatorGraph({
         // For time-based graphs, use the normalized date
         const nonQuantifiedGoalDate = normalizeDateForComparison(nonQuantifiedGoal.date);
         const goalDirection = nonQuantifiedGoal.trend ? nonQuantifiedGoal.trend.toString() : '';
-        const goalStartValue =
-          referenceValue?.value ??
-          (nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
+        const goalStartValue = referenceValue?.value
+          ? referenceValue.value
+          : nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
             ? yRange.range[0]
-            : yRange.range[1]);
+            : yRange.range[1];
         const goalEndValue =
           nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
             ? yRange.range[1]
@@ -718,7 +799,7 @@ function IndicatorGraph({
         if (Number.isNaN(dateObj.getTime())) {
           return String(d);
         }
-        if (timeResolution === IndicatorTimeResolution.Year) {
+        if (timeResolution === 'YEAR') {
           return `${dateObj.getFullYear()}-1-1`;
         }
         return d;
@@ -744,16 +825,23 @@ function IndicatorGraph({
         name: goalTrace.name,
         data: goalData,
         showSymbol: true,
-        symbolSize: 11,
+        // Goal markers follow the legacy graph: the theme's goalSymbol
+        // ('x' in most themes) at size 12, filled in the goal color,
+        // drawn translucent.
+        symbol: resolveMarkerSymbol(graphSettings.goalSymbol ?? 'circle', false).symbol,
+        symbolSize: 12,
         lineStyle: {
           width: graphSettings.drawGoalLine ? 2 : 0,
           type: graphSettings.drawGoalLine ? 'dashed' : 'dotted',
           color: colors.goalColors[idx % colors.goalColors.length],
+          opacity: 0.5,
         },
         itemStyle: {
           color: colors.goalColors[idx % colors.goalColors.length],
+          // Goal markers are translucent in the legacy graph; ECharts ignores
+          // series-level opacity for line series, so set it on the styles.
+          opacity: 0.5,
         },
-        opacity: 0.8,
         connectNulls: true,
         z: 1,
         tooltip: {
@@ -792,10 +880,15 @@ function IndicatorGraph({
                 name: trendTrace.name,
                 data: trendData,
                 symbol: 'none',
+                // The trend extends to the highest goal year, so its data has
+                // nulls at goal-only dates in between — connect over them so
+                // the line reaches the end instead of stopping at the last
+                // consecutive point.
+                connectNulls: true,
                 lineStyle: {
                   width: 3,
                   color: colors.trendColor,
-                  type: 'dotted',
+                  type: 'dashed',
                 },
                 itemStyle: {
                   color: colors.trendColor,
@@ -910,10 +1003,10 @@ function IndicatorGraph({
 
               // Format the date based on timeResolution
               let formattedDate: string;
-              if (timeResolution === IndicatorTimeResolution.Year) {
+              if (timeResolution === 'YEAR') {
                 const date = new Date(axisValue);
                 formattedDate = String(date.getFullYear());
-              } else if (timeResolution === IndicatorTimeResolution.Month) {
+              } else if (timeResolution === 'MONTH') {
                 const date = new Date(axisValue);
                 formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
               } else {
@@ -963,9 +1056,7 @@ function IndicatorGraph({
         ? (() => {
             // For single year case, we need to track the year range to show only middle label
             const yearRange =
-              hasSingleYear &&
-              timeResolution === IndicatorTimeResolution.Year &&
-              allDates.length > 0
+              hasSingleYear && timeResolution === 'YEAR' && allDates.length > 0
                 ? (() => {
                     const timestamps = allDates
                       .map((d) => new Date(d).getTime())
@@ -987,7 +1078,7 @@ function IndicatorGraph({
                 showMaxLabel: hasSingleYear ? false : true,
                 formatter: (value: number) => {
                   const date = new Date(value);
-                  if (timeResolution === IndicatorTimeResolution.Year) {
+                  if (timeResolution === 'YEAR') {
                     // For single year case, only show label for ticks near the middle
                     if (yearRange) {
                       const timestamp = date.getTime();
@@ -999,14 +1090,14 @@ function IndicatorGraph({
                       }
                     }
                     return String(date.getFullYear());
-                  } else if (timeResolution === IndicatorTimeResolution.Month) {
+                  } else if (timeResolution === 'MONTH') {
                     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
                   }
                   return date.toISOString().split('T')[0];
                 },
               },
               // Configure time axis to show appropriate intervals
-              ...(timeResolution === IndicatorTimeResolution.Year
+              ...(timeResolution === 'YEAR'
                 ? {
                     // For year resolution, show one tick per year
                     minInterval: 31536000000, // 1 year in milliseconds
@@ -1032,11 +1123,12 @@ function IndicatorGraph({
         },
         splitNumber: yRange.ticksCount ?? undefined,
         min:
-          yRange.range[0] ??
-          (yRange.includeZero
-            ? (value: { min: number }) => (value.min > 0 ? 0 : value.min)
-            : undefined),
-        max: yRange.range[1] ?? undefined,
+          yRange.range[0] != null
+            ? yRange.range[0]
+            : yRange.includeZero
+              ? (value: { min: number }) => (value.min > 0 ? 0 : value.min)
+              : undefined,
+        max: yRange.range[1] != null ? yRange.range[1] : undefined,
         axisLabel: {
           formatter: (value: number) => {
             // Round tick values more aggressively for cleaner labels
@@ -1074,19 +1166,20 @@ function IndicatorGraph({
     yRange.unit,
     yRange.valueRounding,
     graphSettings.roundIndicatorValue,
+    graphSettings.categorySymbols,
+    graphSettings.fillMarkers,
+    graphSettings.goalSymbol,
     trendTrace,
     xAxisCategories,
     title,
     theme.themeColors.dark,
-    nonQuantifiedGoal,
+    nonQuantifiedGoal?.trend,
+    nonQuantifiedGoal?.date,
     referenceValue,
     theme.graphColors.blue030,
     theme.graphColors.grey030,
     format,
     hideLegend,
-    t,
-    xAxisRange,
-    yRange.ticksCount,
   ]);
 
   useEffect(() => {

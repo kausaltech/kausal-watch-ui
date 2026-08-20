@@ -164,6 +164,7 @@ const DashboardIndicatorLineChartBlock = ({
   return (
     <>
       <h5>{dimension?.name}</h5>
+      sdfsdfsdfds
       <Chart data={option} isLoading={false} height="300px" />
     </>
   );
