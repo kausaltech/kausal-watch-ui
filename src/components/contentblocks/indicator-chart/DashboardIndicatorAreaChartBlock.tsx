@@ -28,6 +28,7 @@ import {
   buildYAxisConfig,
   collectAllDates,
   getUnitLabel,
+  shouldSmoothLines,
 } from './indicator-charts-utility';
 
 echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -123,6 +124,8 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
           type: 'line' as const,
           areaStyle: { opacity: 0.9 },
           symbol: 'none' as const,
+          connectNulls: true,
+          smooth: shouldSmoothLines(graphsTheme),
           data,
           itemStyle: { color: d.color },
           lineStyle: { color: d.color },
@@ -136,6 +139,8 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
           areaStyle: { opacity: 0.9 },
           symbol: 'circle' as const,
           symbolSize: 6,
+          connectNulls: true,
+          smooth: shouldSmoothLines(graphsTheme),
           data: (() => {
             const dataMap = new Map(totalRaw.map(([key, value]) => [key, value]));
             return xCategories.map(

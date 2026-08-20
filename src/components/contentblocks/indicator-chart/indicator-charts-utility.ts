@@ -21,6 +21,15 @@ export interface GraphsTheme {
   trendLineColor?: string;
   goalLineColors?: string[];
   showTrendline?: boolean;
+  lineShape?: string;
+}
+
+/** Whether lines should be drawn smoothed, from the theme's `lineShape`
+ *  setting. Follows the same convention as IndicatorGraph: 'spline' (the
+ *  default when unset) and 'smooth' curve, anything else is linear. */
+export function shouldSmoothLines(graphsTheme: GraphsTheme): boolean {
+  const lineShape = graphsTheme.lineShape ?? 'spline';
+  return lineShape === 'spline' || lineShape === 'smooth';
 }
 
 /** Unit label matching IndicatorVisualisation's default graph: prefer the
@@ -359,7 +368,43 @@ export function sortDates(dates: string[]): string[] {
 }
 
 /**
- * Collects and sorts all unique dates from multiple raw series arrays.
+ * Fills the gaps between the first and last date so the category x-axis
+ * represents a continuous timeline (a year without data still occupies a
+ * slot, like on a continuous time axis). Only YEAR and MONTH resolutions
+ * are filled; anything unparseable or absurdly long is returned as-is.
+ */
+function fillMissingPeriods(
+  allDates: string[],
+  timeResolution: string | null | undefined
+): string[] {
+  const resolution = String(timeResolution || 'YEAR').toUpperCase();
+  if (allDates.length < 2 || (resolution !== 'YEAR' && resolution !== 'MONTH')) {
+    return allDates;
+  }
+  const parsed = allDates.map((d) => new Date(d));
+  if (parsed.some((d) => Number.isNaN(d.getTime()))) {
+    return allDates;
+  }
+  if (resolution === 'YEAR') {
+    const years = parsed.map((d) => d.getUTCFullYear());
+    const min = Math.min(...years);
+    const max = Math.max(...years);
+    if (max - min > 500) return allDates;
+    return Array.from({ length: max - min + 1 }, (_, i) => `${min + i}-01-01`);
+  }
+  const months = parsed.map((d) => d.getUTCFullYear() * 12 + d.getUTCMonth());
+  const min = Math.min(...months);
+  const max = Math.max(...months);
+  if (max - min > 1200) return allDates;
+  return Array.from({ length: max - min + 1 }, (_, i) => {
+    const month = min + i;
+    return `${Math.floor(month / 12)}-${String((month % 12) + 1).padStart(2, '0')}-01`;
+  });
+}
+
+/**
+ * Collects and sorts all unique dates from multiple raw series arrays,
+ * filling gap periods so the axis is a continuous timeline.
  * Returns both the sorted normalized dates and the display-formatted categories.
  */
 export function collectAllDates(
@@ -377,7 +422,7 @@ export function collectAllDates(
     normalizedDateSet.add(normalizeDateForSet(date, timeResolution))
   );
 
-  const allDates = sortDates(Array.from(normalizedDateSet));
+  const allDates = fillMissingPeriods(sortDates(Array.from(normalizedDateSet)), timeResolution);
   const xCategories = allDates.map((d) => formatDateForDisplay(d, timeResolution));
 
   return { allDates, xCategories };
