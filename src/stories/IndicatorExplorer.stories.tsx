@@ -1,5 +1,6 @@
 import { type FormEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { ApolloClient, HttpLink, InMemoryCache, gql } from '@apollo/client';
@@ -10,6 +11,9 @@ import { addons } from 'storybook/preview-api';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
+import IndicatorVisualizationBlock, {
+  type IndicatorVisualizationBlockData,
+} from '@/components/indicators/IndicatorVisualizationBlock';
 import PlanProvider from '@/components/providers/PlanProvider';
 import { MOCK_PLAN } from '@/stories/mocks/plan.mocks';
 
@@ -80,11 +84,19 @@ const GET_PLAN_INDICATORS = gql`
         date
         value
       }
+      description
       values(includeDimensions: true) {
         id
+        value
+        date
+        categories {
+          id
+        }
       }
       goals {
         id
+        value
+        date
       }
       minValue
       maxValue
@@ -109,7 +121,13 @@ const GET_PLAN_INDICATORS = gql`
       }
       dimensions {
         dimension {
+          id
           name
+          categories {
+            id
+            name
+            defaultColor
+          }
         }
       }
     }
@@ -131,8 +149,14 @@ interface ExplorerQueryData {
         timeResolution: string;
         unit: { name: string; shortName: string | null } | null;
         latestValue: { date: string; value: number } | null;
-        values: { id: string }[];
-        goals: { id: string }[] | null;
+        description: string | null;
+        values: {
+          id: string;
+          value: number;
+          date: string | null;
+          categories: { id: string }[];
+        }[];
+        goals: { id: string; value: number; date: string | null }[] | null;
         minValue: number | null;
         maxValue: number | null;
         ticksCount: number | null;
@@ -147,7 +171,13 @@ interface ExplorerQueryData {
         quantity: { name: string } | null;
         referenceValue: { value: number; date: string | null } | null;
         defaultVisualization: { __typename: string } | null;
-        dimensions: { dimension: { name: string } }[];
+        dimensions: {
+          dimension: {
+            id: string;
+            name: string;
+            categories: { id: string; name: string; defaultColor: string }[];
+          };
+        }[];
       }[]
     | null;
 }
@@ -374,7 +404,7 @@ const GraphColumns = styled.div`
       border-right: 1px solid #e2e2e2;
     }
 
-    > h4 {
+    h4 {
       font-size: 0.8rem;
       font-weight: 600;
       text-transform: uppercase;
@@ -384,6 +414,183 @@ const GraphColumns = styled.div`
     }
   }
 `;
+
+const ColumnHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  h4 {
+    margin: 0 !important;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  select {
+    font-size: 0.8rem;
+    padding: 0.15rem 0.3rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    color: #1a1a1a;
+  }
+`;
+
+const VISUALIZATION_KINDS = ['default', 'bar', 'line', 'area', 'pie', 'summary'] as const;
+type VisualizationKind = (typeof VISUALIZATION_KINDS)[number];
+
+/** Replicate the backend's DashboardIndicatorChartBaseBlock.chart_series:
+ *  one series per category of the chosen dimension containing the values
+ *  tagged with that category, or a single dimensionless series of the
+ *  values that have no categories. */
+function buildChartSeries(indicator: ExplorerIndicator) {
+  const dimension = indicator.dimensions[0]?.dimension ?? null;
+  const sortedValues = [...indicator.values].sort((a, b) =>
+    (a.date ?? '').localeCompare(b.date ?? '')
+  );
+  const categories = dimension ? dimension.categories : [null];
+  const chartSeries = categories.map((category) => ({
+    __typename: 'DashboardIndicatorChartSeries' as const,
+    dimensionCategory: category,
+    values: sortedValues.filter((value) =>
+      category ? value.categories.some((c) => c.id === category.id) : value.categories.length === 0
+    ),
+  }));
+  return { dimension, chartSeries };
+}
+
+/** Build the same block data shape the backend would return in
+ *  `defaultVisualization` if the given visualization kind were configured
+ *  on the indicator, so any kind can be previewed with live data even
+ *  though the API only serves the one actually stored. */
+function synthesizeVisualization(
+  indicator: ExplorerIndicator,
+  kind: Exclude<VisualizationKind, 'default'>
+): IndicatorVisualizationBlockData {
+  const blockIndicator = {
+    __typename: 'Indicator' as const,
+    id: indicator.id,
+    name: indicator.name,
+    description: indicator.description,
+    showTrendline: indicator.showTrendline,
+    valueRounding: indicator.valueRounding,
+    minValue: indicator.minValue,
+    maxValue: indicator.maxValue,
+    ticksCount: indicator.ticksCount,
+    ticksRounding: indicator.ticksRounding,
+    timeResolution: indicator.timeResolution,
+    latestValue: indicator.latestValue,
+    dataCategoriesAreStackable: indicator.dataCategoriesAreStackable,
+    goals: indicator.goals,
+    unit: indicator.unit,
+    desiredTrend: indicator.desiredTrend,
+  };
+
+  if (kind === 'summary') {
+    return {
+      __typename: 'IndicatorDefaultSummary',
+      indicator: blockIndicator,
+    } as unknown as IndicatorVisualizationBlockData;
+  }
+
+  const { dimension, chartSeries } = buildChartSeries(indicator);
+  const common = { indicator: blockIndicator, dimension, chartSeries };
+
+  switch (kind) {
+    case 'bar':
+      return {
+        __typename: 'IndicatorDefaultBarChart',
+        ...common,
+        barType: 'stacked',
+      } as unknown as IndicatorVisualizationBlockData;
+    case 'line':
+    case 'area':
+      return {
+        __typename: kind === 'line' ? 'IndicatorDefaultLineChart' : 'IndicatorDefaultAreaChart',
+        ...common,
+        showTotalLine: indicator.showTotalLine,
+      } as unknown as IndicatorVisualizationBlockData;
+    case 'pie': {
+      const years = chartSeries
+        .flatMap((series) => series.values)
+        .map((value) => (value.date ? new Date(value.date).getFullYear() : null))
+        .filter((year): year is number => year != null);
+      return {
+        __typename: 'IndicatorDefaultPieChart',
+        ...common,
+        year: years.length ? Math.max(...years) : null,
+      } as unknown as IndicatorVisualizationBlockData;
+    }
+  }
+}
+
+/** Right-hand column: the new ECharts rendering, with a selector for
+ *  previewing the indicator as any of the visualization kinds an admin
+ *  could configure as its defaultVisualization. */
+const KIND_BY_DEFAULT_VISUALIZATION: Record<string, VisualizationKind> = {
+  IndicatorDefaultBarChart: 'bar',
+  IndicatorDefaultLineChart: 'line',
+  IndicatorDefaultAreaChart: 'area',
+  IndicatorDefaultPieChart: 'pie',
+  IndicatorDefaultSummary: 'summary',
+};
+
+/** Tinted when previewing a specific visualization kind, so synthesized
+ *  block previews are easy to tell apart from the app's default rendering. */
+const PreviewColumn = styled.div<{ $active: boolean }>`
+  background: ${({ $active, theme }) => ($active ? theme.graphColors.blue010 : 'transparent')};
+`;
+
+function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
+  const [kind, setKind] = useState<VisualizationKind>(
+    () =>
+      (indicator.defaultVisualization &&
+        KIND_BY_DEFAULT_VISUALIZATION[indicator.defaultVisualization.__typename]) ||
+      'default'
+  );
+  const block = useMemo(
+    () => (kind === 'default' ? null : synthesizeVisualization(indicator, kind)),
+    [indicator, kind]
+  );
+
+  return (
+    <PreviewColumn $active={kind !== 'default'}>
+      <ColumnHeader>
+        <h4>New (ECharts)</h4>
+        <label>
+          Preview as
+          <select
+            value={kind}
+            onChange={(event) => setKind(event.target.value as VisualizationKind)}
+          >
+            {VISUALIZATION_KINDS.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </label>
+      </ColumnHeader>
+      {block ? (
+        <IndicatorVisualizationBlock block={block} />
+      ) : (
+        <IndicatorVisualisation
+          indicatorId={indicator.id}
+          useLegacyGraph={false}
+          showTable={false}
+        />
+      )}
+    </PreviewColumn>
+  );
+}
 
 /** Mount children only when scrolled near the viewport, to avoid rendering
  *  dozens of heavy Plotly/ECharts instances at once. */
@@ -411,6 +618,97 @@ function LazyRender({ children, minHeight = 500 }: { children: ReactNode; minHei
     <div ref={ref} style={visible ? undefined : { minHeight }}>
       {visible ? children : null}
     </div>
+  );
+}
+
+const PlanHeader = styled.div`
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  h2 {
+    margin: 0;
+  }
+`;
+
+const Swatch = styled.span`
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  margin-right: 3px;
+  vertical-align: middle;
+`;
+
+const isColorValue = (value: unknown): value is string =>
+  typeof value === 'string' &&
+  (value.startsWith('#') || value.startsWith('rgb') || value.startsWith('hsl'));
+
+function renderGraphSettingValue(value: unknown): ReactNode {
+  if (value == null || (Array.isArray(value) && value.length === 0)) return '–';
+  if (Array.isArray(value)) {
+    if (value.every(isColorValue)) {
+      return value.map((color, i) => (
+        <Swatch key={i} style={{ background: color }} title={color} />
+      ));
+    }
+    return value.map(String).join(', ');
+  }
+  if (typeof value === 'boolean') return value ? 'true' : 'false';
+  if (isColorValue(value)) {
+    return (
+      <>
+        <Swatch style={{ background: value }} title={value} /> {value}
+      </>
+    );
+  }
+  if (typeof value === 'object') return JSON.stringify(value);
+  return String(value);
+}
+
+/** Collapsible listing of the active theme's `settings.graphs` variables
+ *  (as the chart components see them via the Emotion theme), highlighting
+ *  the ones that differ from the default theme. */
+function GraphSettingsPanel({ defaultGraphs }: { defaultGraphs: Record<string, unknown> }) {
+  const theme = useTheme();
+  const activeGraphs: Record<string, unknown> = theme.settings?.graphs ?? {};
+  const keys = Array.from(
+    new Set([...Object.keys(defaultGraphs), ...Object.keys(activeGraphs)])
+  ).sort();
+  const rows = keys.map((key) => ({
+    key,
+    value: activeGraphs[key],
+    defaultValue: defaultGraphs[key],
+    differs: JSON.stringify(activeGraphs[key]) !== JSON.stringify(defaultGraphs[key]),
+  }));
+  const diffCount = rows.filter((row) => row.differs).length;
+
+  return (
+    <SettingsDetails>
+      <summary>graph settings ({diffCount} differ from default)</summary>
+      <div>
+        <table>
+          <thead>
+            <tr style={{ fontWeight: 600 }}>
+              <td />
+              <td>value</td>
+              <td>default</td>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.key} style={row.differs ? { background: '#fff3cd' } : undefined}>
+                <td>{row.key}</td>
+                <td>{renderGraphSettingValue(row.value)}</td>
+                <td>{row.differs ? renderGraphSettingValue(row.defaultValue) : ''}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </SettingsDetails>
   );
 }
 
@@ -444,13 +742,20 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
 
   return (
     <>
-      <h2>
-        {data.plan.name}{' '}
-        <small>
-          ({data.plan.organization.name} · {indicators.length} indicators · theme:{' '}
-          {themeFound ? themeKey : `${themeKey} not found locally, using toolbar theme`})
-        </small>
-      </h2>
+      <PlanHeader>
+        <h2>
+          {data.plan.name}{' '}
+          <small>
+            ({data.plan.organization.name} · {indicators.length} indicators · theme:{' '}
+            {themeFound ? themeKey : `${themeKey} not found locally, using toolbar theme`})
+          </small>
+        </h2>
+        <GraphSettingsPanel
+          defaultGraphs={
+            (themes.default?.settings?.graphs ?? {}) as unknown as Record<string, unknown>
+          }
+        />
+      </PlanHeader>
       {indicators.length === 0 && <Message>This plan has no indicators.</Message>}
       {indicators.map((indicator) => (
         <ComparisonRow key={indicator.id}>
@@ -463,6 +768,7 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
               {' · '}
               {indicator.timeResolution.toLowerCase()}
               {` · ${indicator.values.length} data points`}
+              {` · ${indicator.dimensions.length} dimensions`}
               {(indicator.goals?.length ?? 0) > 0 && ` · ${indicator.goals!.length} goals`}
               {indicator.latestValue && ` · latest ${indicator.latestValue.date}`}
             </small>
@@ -478,14 +784,7 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
                   showTable={false}
                 />
               </div>
-              <div>
-                <h4>New (ECharts)</h4>
-                <IndicatorVisualisation
-                  indicatorId={indicator.id}
-                  useLegacyGraph={false}
-                  showTable={false}
-                />
-              </div>
+              <EChartsPreviewColumn indicator={indicator} />
             </GraphColumns>
           </LazyRender>
         </ComparisonRow>
