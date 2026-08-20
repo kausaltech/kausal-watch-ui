@@ -24,6 +24,7 @@ import {
   buildTrendSeries,
   buildYAxisConfig,
   collectAllDates,
+  getUnitLabel,
 } from './indicator-charts-utility';
 
 echarts.use([LineChart, ScatterChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -48,7 +49,7 @@ const DashboardIndicatorLineChartBlock = ({
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
-  const unit = indicator?.unit?.name ?? '';
+  const unit = getUnitLabel(indicator);
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const timeResolution = indicator?.timeResolution ?? 'YEAR';
   const totalLabel = t('total');
@@ -154,19 +155,13 @@ const DashboardIndicatorLineChartBlock = ({
       boundaryGap: false,
       axisLabel: { color: theme.textColor.primary },
     },
-    yAxis: buildYAxisConfig(
-      indicator?.unit?.name ?? '',
-      formatAxisValue,
-      indicator ?? undefined,
-      theme.textColor.primary
-    ),
+    yAxis: buildYAxisConfig(unit, formatAxisValue, indicator ?? undefined, theme.textColor.primary),
     series: [...seriesLines, ...seriesTotal, ...goalSeries, ...trendSeries],
   };
 
   return (
     <>
       <h5>{dimension?.name}</h5>
-      sdfsdfsdfds
       <Chart data={option} isLoading={false} height="300px" />
     </>
   );

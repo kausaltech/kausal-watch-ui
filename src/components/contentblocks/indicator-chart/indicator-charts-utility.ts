@@ -23,6 +23,14 @@ export interface GraphsTheme {
   showTrendline?: boolean;
 }
 
+/** Unit label matching IndicatorVisualisation's default graph: prefer the
+ *  short name, and hide the pseudo-unit 'no unit' entirely. */
+export function getUnitLabel(indicator: LineChartBlock['indicator']): string {
+  const unit = indicator?.unit;
+  if (!unit || unit.name === 'no unit') return '';
+  return unit.shortName || unit.name;
+}
+
 function formatDateKey(date: string, timeResolution?: string | null): string {
   const d = new Date(date);
   if (Number.isNaN(d.getTime())) return date;

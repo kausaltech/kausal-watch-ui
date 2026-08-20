@@ -20,6 +20,7 @@ import {
   buildTotalSeries,
   buildYAxisConfig,
   collectAllDates,
+  getUnitLabel,
 } from './indicator-charts-utility';
 
 echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -60,7 +61,7 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
-  const unit = indicator?.unit?.name ?? '';
+  const unit = getUnitLabel(indicator);
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const timeResolution = indicator?.timeResolution ?? 'YEAR';
 
@@ -154,12 +155,7 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
       data: xCategories,
       axisLabel: { color: theme.textColor.primary },
     },
-    yAxis: buildYAxisConfig(
-      indicator?.unit?.name ?? '',
-      formatAxisValue,
-      indicator ?? undefined,
-      theme.textColor.primary
-    ),
+    yAxis: buildYAxisConfig(unit, formatAxisValue, indicator ?? undefined, theme.textColor.primary),
     series,
   };
 
