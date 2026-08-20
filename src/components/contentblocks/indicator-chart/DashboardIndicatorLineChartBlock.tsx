@@ -9,7 +9,7 @@ import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/compon
 import * as echarts from 'echarts/core';
 import { useTranslations } from 'next-intl';
 
-import { Chart, type ECOption } from '@common/components/Chart';
+import { Chart } from '@common/components/Chart';
 
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
@@ -166,6 +166,7 @@ const DashboardIndicatorLineChartBlock = ({
   return (
     <>
       <h5>{dimension?.name}</h5>
+      sdfsdfsdfds
       <Chart data={option} isLoading={false} height="300px" />
     </>
   );
