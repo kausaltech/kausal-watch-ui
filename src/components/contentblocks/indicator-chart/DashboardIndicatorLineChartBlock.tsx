@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 
 import { LineChart, ScatterChart } from 'echarts/charts';
@@ -25,6 +23,7 @@ import {
   buildYAxisConfig,
   collectAllDates,
   getUnitLabel,
+  shouldSmoothLines,
 } from './indicator-charts-utility';
 
 echarts.use([LineChart, ScatterChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -87,10 +86,12 @@ const DashboardIndicatorLineChartBlock = ({
         name,
         type: 'line' as const,
         data,
+        // Draw through gap periods without data, like the legacy time axis
+        connectNulls: true,
         showLine: true,
         showSymbol: true,
         symbolSize: 8,
-        smooth: raw.length > 1,
+        smooth: shouldSmoothLines(graphsTheme) && raw.length > 1,
         lineStyle: { width, color },
         itemStyle: { color },
       };
