@@ -209,7 +209,7 @@ const testPlan = (planId: string) => {
     });
 
     test('indicator page', async ({ page, ctx }) => {
-      const indicatorListItem = ctx.getIndicatorListMenuItem();
+      const indicatorListItem = ctx.getIndicatorListMenuItem()!;
       test.skip(!indicatorListItem, 'No indicator list for plan');
       const nav = page.locator('nav#global-navigation-bar');
       await nav.getByRole('link', { name: indicatorListItem.page.title, exact: true }).click();

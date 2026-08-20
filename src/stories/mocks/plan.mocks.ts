@@ -60,6 +60,20 @@ export const MOCK_PLAN: PlanContextFragment = {
       color: null,
     },
   ],
+  actionDependencyRoles: [
+    {
+      id: 'role-discovery',
+      name: 'Discovery',
+    },
+    {
+      id: 'role-implementation',
+      name: 'Implementation',
+    },
+    {
+      id: 'role-follow-up',
+      name: 'Follow up',
+    },
+  ],
   actionImpacts: [
     {
       id: '35',

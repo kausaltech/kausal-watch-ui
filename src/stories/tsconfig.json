@@ -1,5 +1,5 @@
 {
-  "extends": "../../kausal_common/configs/tsconfig.base.json",
+  "extends": "../../kausal_common/configs/tsconfig.react.json",
   "compilerOptions": {
     "moduleResolution": "bundler",
     "esModuleInterop": true,

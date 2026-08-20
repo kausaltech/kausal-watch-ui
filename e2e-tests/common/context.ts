@@ -1,5 +1,5 @@
 import * as apolloModule from '@apollo/client';
-import AxeBuilder from '@axe-core/playwright';
+import { AxeBuilder } from '@axe-core/playwright';
 import { type ConsoleMessage, type Page, expect } from '@playwright/test';
 
 import type {

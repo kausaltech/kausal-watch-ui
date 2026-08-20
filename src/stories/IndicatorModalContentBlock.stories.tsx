@@ -1,3 +1,4 @@
+import { MockedProvider } from '@apollo/client/testing/react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 import {
@@ -8,6 +9,9 @@ import {
   IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
 import IndicatorModalContentBlock from '@/components/indicators/IndicatorModalContentBlock';
+import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
+
+import { MOCK_PLAN } from './mocks/plan.mocks';
 
 // Mock indicator data
 const mockIndicator: NonNullable<IndicatorDetailsQuery['indicator']> = {
@@ -259,7 +263,105 @@ export const GoalDescriptionBlockEmpty: Story = {
   },
 };
 
+// The visualization block renders IndicatorVisualisation, which fetches its
+// graph data over GraphQL, so provide the response through a mocked Apollo
+// client.
+const MOCK_GRAPH_DATA_QUERY = {
+  request: {
+    query: GET_INDICATOR_GRAPH_DATA,
+    variables: {
+      id: mockIndicator.id,
+      plan: MOCK_PLAN.identifier,
+    },
+  },
+  result: {
+    data: {
+      plan: {
+        __typename: 'Plan',
+        scenarios: [],
+      },
+      indicator: {
+        __typename: 'Indicator',
+        id: mockIndicator.id,
+        name: mockIndicator.name,
+        timeResolution: mockIndicator.timeResolution,
+        showTrendline: false,
+        showTotalLine: false,
+        desiredTrend: mockIndicator.desiredTrend,
+        reference: null,
+        minValue: null,
+        maxValue: null,
+        ticksCount: null,
+        ticksRounding: null,
+        valueRounding: mockIndicator.valueRounding,
+        dataCategoriesAreStackable: false,
+        organization: {
+          __typename: 'Organization',
+          id: 'org-1',
+          name: 'City Planning Department',
+          abbreviation: 'CPD',
+        },
+        quantity: {
+          __typename: 'Quantity',
+          id: 'quantity-1',
+          name: 'emissions',
+        },
+        values: [
+          {
+            __typename: 'IndicatorValue',
+            id: 'val-1',
+            date: '2021-12-31',
+            value: 90,
+            normalizedValues: [],
+            categories: [],
+          },
+          {
+            __typename: 'IndicatorValue',
+            id: 'val-2',
+            date: '2022-12-31',
+            value: 85,
+            normalizedValues: [],
+            categories: [],
+          },
+          {
+            __typename: 'IndicatorValue',
+            id: 'val-3',
+            date: '2023-12-31',
+            value: 80,
+            normalizedValues: [],
+            categories: [],
+          },
+        ],
+        referenceValue: null,
+        dimensions: [],
+        goals: [
+          {
+            __typename: 'IndicatorGoal',
+            id: 'goal-1',
+            date: '2030-12-31',
+            value: 50,
+            normalizedValues: [],
+            scenario: null,
+          },
+        ],
+        nonQuantifiedGoal: null,
+        nonQuantifiedGoalDate: null,
+        datasets: [],
+        unit: mockIndicator.unit,
+        common: null,
+      },
+    },
+  },
+};
+
 export const VisualizationBlock: Story = {
+  decorators: [
+    (Story) => (
+      <MockedProvider mocks={[MOCK_GRAPH_DATA_QUERY]}>
+        <Story />
+      </MockedProvider>
+    ),
+  ],
   args: {
     block: {
       __typename: 'IndicatorContentBlock',
