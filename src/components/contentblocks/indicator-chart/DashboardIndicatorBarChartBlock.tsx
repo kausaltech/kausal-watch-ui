@@ -98,10 +98,16 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
     seriesDataMap[name] = xCategories.map((key) => valuesByKey[key] ?? null);
   });
 
+  // An explicit block barType wins over the indicator's own
+  // dataCategoriesAreStackable default; without one, the indicator decides.
+  const stackBars = barType
+    ? barType === 'stacked'
+    : (indicator?.dataCategoriesAreStackable ?? false);
+
   const series = Object.entries(seriesDataMap).map(([name, data]) => ({
     name,
     type: 'bar' as const,
-    stack: barType === 'stacked' ? 'total' : undefined,
+    stack: stackBars ? 'total' : undefined,
     data,
     emphasis: { focus: 'series' as const },
     itemStyle: {
