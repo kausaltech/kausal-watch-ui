@@ -1,4 +1,12 @@
-import { type FormEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type FormEvent,
+  type ReactNode,
+  isValidElement,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -67,6 +75,7 @@ const GET_PLAN_INDICATORS = gql`
       id
       name
       themeIdentifier
+      viewUrl
       organization {
         name
       }
@@ -118,6 +127,32 @@ const GET_PLAN_INDICATORS = gql`
       }
       defaultVisualization {
         __typename
+        ... on IndicatorDefaultBarChart {
+          dimension {
+            id
+            name
+          }
+          barType
+        }
+        ... on IndicatorDefaultLineChart {
+          dimension {
+            id
+            name
+          }
+        }
+        ... on IndicatorDefaultAreaChart {
+          dimension {
+            id
+            name
+          }
+        }
+        ... on IndicatorDefaultPieChart {
+          dimension {
+            id
+            name
+          }
+          year
+        }
       }
       dimensions {
         dimension {
@@ -139,6 +174,7 @@ interface ExplorerQueryData {
     id: string;
     name: string;
     themeIdentifier: string | null;
+    viewUrl: string | null;
     organization: { name: string };
   } | null;
   planIndicators:
@@ -170,7 +206,12 @@ interface ExplorerQueryData {
         nonQuantifiedGoalDate: string | null;
         quantity: { name: string } | null;
         referenceValue: { value: number; date: string | null } | null;
-        defaultVisualization: { __typename: string } | null;
+        defaultVisualization: {
+          __typename: string;
+          dimension?: { id: string; name: string } | null;
+          barType?: string | null;
+          year?: number | null;
+        } | null;
         dimensions: {
           dimension: {
             id: string;
@@ -287,6 +328,16 @@ const ComparisonRow = styled.section`
     h3 {
       font-size: 1rem;
       margin: 0;
+
+      a {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover {
+          color: #2ba0a0;
+          text-decoration: underline;
+        }
+      }
     }
 
     small {
@@ -354,19 +405,38 @@ function VisualisationSettings({ indicator }: { indicator: ExplorerIndicator }) 
     ['showTrendline', indicator.showTrendline],
     ['showTotalLine', indicator.showTotalLine],
     ['stackable', indicator.dataCategoriesAreStackable],
-    ['nonQuantifiedGoal', indicator.nonQuantifiedGoal],
-    ['nonQuantifiedGoalDate', indicator.nonQuantifiedGoalDate],
+    [
+      'nonQuantifiedGoal',
+      indicator.nonQuantifiedGoal &&
+        `${indicator.nonQuantifiedGoal} (${indicator.nonQuantifiedGoalDate ?? 'no date'})`,
+    ],
     [
       'referenceValue',
       indicator.referenceValue &&
         `${indicator.referenceValue.value} (${indicator.referenceValue.date ?? 'no date'})`,
     ],
     ['defaultVisualization', indicator.defaultVisualization?.__typename],
+    ['groupingDimension', indicator.defaultVisualization?.dimension?.name],
+    ['barType', indicator.defaultVisualization?.barType],
+    ['pieChartYear', indicator.defaultVisualization?.year],
     [
       'dimensions',
-      indicator.dimensions.length
-        ? indicator.dimensions.map((d) => d.dimension.name).join(', ')
-        : null,
+      indicator.dimensions.length ? (
+        <>
+          {indicator.dimensions.map(({ dimension }) => (
+            <div key={dimension.id}>
+              {dimension.name}:{' '}
+              {dimension.categories.map((cat) => (
+                <Swatch
+                  key={cat.id}
+                  style={{ background: cat.defaultColor || 'transparent' }}
+                  title={`${cat.name}: ${cat.defaultColor || 'no color'}`}
+                />
+              ))}
+            </div>
+          ))}
+        </>
+      ) : null,
     ],
   ];
   const setCount = entries.filter(
@@ -382,7 +452,7 @@ function VisualisationSettings({ indicator }: { indicator: ExplorerIndicator }) 
             {entries.map(([key, value]) => (
               <tr key={key} style={value == null ? { opacity: 0.5 } : undefined}>
                 <td>{key}</td>
-                <td>{formatSettingValue(value)}</td>
+                <td>{isValidElement(value) ? value : formatSettingValue(value)}</td>
               </tr>
             ))}
           </tbody>
@@ -509,7 +579,14 @@ function synthesizeVisualization(
       return {
         __typename: 'IndicatorDefaultBarChart',
         ...common,
-        barType: 'stacked',
+        // When the indicator's configured default visualization is a bar
+        // chart, preview with the backend-resolved barType (which overrides
+        // the indicator's stackable setting). Otherwise leave unset so the
+        // stackable setting decides.
+        barType:
+          indicator.defaultVisualization?.__typename === 'IndicatorDefaultBarChart'
+            ? (indicator.defaultVisualization.barType ?? null)
+            : null,
       } as unknown as IndicatorVisualizationBlockData;
     case 'line':
     case 'area':
@@ -549,6 +626,72 @@ const PreviewColumn = styled.div<{ $active: boolean }>`
   background: ${({ $active, theme }) => ($active ? theme.graphColors.blue010 : 'transparent')};
 `;
 
+const BlockSettingsRow = styled.div`
+  font-size: 0.75rem;
+  color: #555;
+  margin: -0.25rem 0 0.5rem;
+
+  code {
+    font-size: inherit;
+  }
+`;
+
+/** The block-type-specific settings of the previewed visualization block,
+ *  i.e. what an editor would configure on the Wagtail chart block. */
+function getBlockSettings(block: IndicatorVisualizationBlockData): [string, unknown][] {
+  switch (block.__typename) {
+    case 'DashboardIndicatorBarChartBlock':
+    case 'IndicatorDefaultBarChart':
+      return [
+        ['dimension', block.dimension?.name],
+        ['barType', block.barType],
+      ];
+    case 'DashboardIndicatorLineChartBlock':
+    case 'IndicatorDefaultLineChart':
+    case 'DashboardIndicatorAreaChartBlock':
+    case 'IndicatorDefaultAreaChart':
+      return [
+        ['dimension', block.dimension?.name],
+        ['showTotalLine', block.showTotalLine],
+      ];
+    case 'DashboardIndicatorPieChartBlock':
+    case 'IndicatorDefaultPieChart':
+      return [
+        ['dimension', block.dimension?.name],
+        ['year', block.year],
+      ];
+    default:
+      return [];
+  }
+}
+
+const OverrideAlert = styled.div`
+  font-size: 0.75rem;
+  background: #fff3cd;
+  border: 1px solid #ffe08a;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  color: #7a5d00;
+  margin: 0 0 0.5rem;
+`;
+
+/** Cases where a block setting overrides the indicator's own default,
+ *  worth calling out when eyeballing renders. */
+function getBlockOverrideWarnings(block: IndicatorVisualizationBlockData): string[] {
+  const warnings: string[] = [];
+  if (
+    (block.__typename === 'DashboardIndicatorBarChartBlock' ||
+      block.__typename === 'IndicatorDefaultBarChart') &&
+    block.barType === 'stacked' &&
+    block.indicator?.dataCategoriesAreStackable === false
+  ) {
+    warnings.push(
+      'barType: stacked overrides the indicator setting stackable: false — bars are stacked'
+    );
+  }
+  return warnings;
+}
+
 function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
   const [kind, setKind] = useState<VisualizationKind>(
     () =>
@@ -579,6 +722,20 @@ function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
           </select>
         </label>
       </ColumnHeader>
+      {block && (
+        <BlockSettingsRow>
+          block settings:{' '}
+          <code>
+            {getBlockSettings(block)
+              .map(([key, value]) => `${key}: ${formatSettingValue(value)}`)
+              .join(' · ')}
+          </code>
+        </BlockSettingsRow>
+      )}
+      {block &&
+        getBlockOverrideWarnings(block).map((warning) => (
+          <OverrideAlert key={warning}>⚠️ {warning}</OverrideAlert>
+        ))}
       {block ? (
         <IndicatorVisualizationBlock block={block} />
       ) : (
@@ -712,6 +869,30 @@ function GraphSettingsPanel({ defaultGraphs }: { defaultGraphs: Record<string, u
   );
 }
 
+const plural = (count: number, noun: string) => `${count} ${noun}${count === 1 ? '' : 's'}`;
+
+/** One-line summary of the indicator's data shape for the row header. */
+function describeIndicator(indicator: ExplorerIndicator): string {
+  const parts = [
+    indicator.timeResolution.toLowerCase(),
+    plural(indicator.values.length, 'data point'),
+  ];
+  if (indicator.dimensions.length > 0) {
+    const catCounts = indicator.dimensions.map((d) => d.dimension.categories.length).join('/');
+    parts.push(`${plural(indicator.dimensions.length, 'dim')} with ${catCounts} cats`);
+  }
+  if (indicator.goals?.length) {
+    parts.push(plural(indicator.goals.length, 'goal'));
+  }
+  const defaultViz =
+    indicator.defaultVisualization &&
+    KIND_BY_DEFAULT_VISUALIZATION[indicator.defaultVisualization.__typename];
+  if (defaultViz) {
+    parts.push(`default viz: ${defaultViz}`);
+  }
+  return parts.join(' · ');
+}
+
 function IndicatorComparisonList({ plan }: { plan: string }) {
   const themes = useMemo(getThemes, []);
   const { data, loading, error } = useQuery<ExplorerQueryData, ExplorerQueryVariables>(
@@ -760,18 +941,25 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
       {indicators.map((indicator) => (
         <ComparisonRow key={indicator.id}>
           <header>
-            <h3>{indicator.name}</h3>
+            <h3>
+              {data.plan.viewUrl ? (
+                <a
+                  href={`${data.plan.viewUrl.replace(/\/+$/, '')}/indicators/${indicator.id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Open the live indicator view"
+                >
+                  {indicator.name}
+                </a>
+              ) : (
+                indicator.name
+              )}
+            </h3>
             <small>#{indicator.id}</small>
-            {indicator.level && <LevelBadge>{indicator.level}</LevelBadge>}
-            <small>
-              {indicator.unit?.shortName ?? indicator.unit?.name}
-              {' · '}
-              {indicator.timeResolution.toLowerCase()}
-              {` · ${indicator.values.length} data points`}
-              {` · ${indicator.dimensions.length} dimensions`}
-              {(indicator.goals?.length ?? 0) > 0 && ` · ${indicator.goals!.length} goals`}
-              {indicator.latestValue && ` · latest ${indicator.latestValue.date}`}
-            </small>
+            {indicator.level && indicator.level.toLowerCase() !== 'unspecified' && (
+              <LevelBadge>{indicator.level}</LevelBadge>
+            )}
+            <small>{describeIndicator(indicator)}</small>
             <VisualisationSettings indicator={indicator} />
           </header>
           <LazyRender>
