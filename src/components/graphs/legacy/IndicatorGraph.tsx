@@ -58,10 +58,6 @@ const createLayout = (
 
   // Define y-axis range
   yaxes.yaxis.title = { text: yRange.unit };
-  if (yRange.includeZero && yRange.range[0] == null) {
-    yaxes.yaxis.fixedrange = false;
-    yaxes.yaxis.rangemode = 'tozero';
-  }
 
   // If min and max values are set, do not use autorange
   if (yRange.range[0] != null || yRange.range[1] != null) {
@@ -224,7 +220,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
 
   const newTraces = traces.map((trace, idx) => {
     // Here we are excluding some properties from the trace
-    const { xType, dataType, ...plotlyTrace } = trace;
+    const { xType, dataType, color, colors, ...plotlyTrace } = trace;
     const modTrace: PlotData = { ...plotlyTrace };
     allXValues.push(...trace.x);
 
@@ -382,7 +378,6 @@ interface IndicatorGraphProps {
     ticksCount: number | undefined;
     ticksRounding: number | undefined;
     valueRounding: number | undefined;
-    includeZero: boolean;
     range: number[];
   };
   timeResolution?: 'YEAR' | 'MONTH';

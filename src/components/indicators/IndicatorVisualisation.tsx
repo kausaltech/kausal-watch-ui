@@ -106,6 +106,7 @@ function getTraces(dimensions, cube, names, hasTimeDimension, i18n, quantityName
           dataType: cat.id === 'total' ? 'total' : null,
           name: traceName,
           _parentName: names ? Array.from(names).join(', ') : null,
+          color: cat.defaultColor ?? null,
           x,
           y,
         };
@@ -118,6 +119,7 @@ function getTraces(dimensions, cube, names, hasTimeDimension, i18n, quantityName
         xType: 'category',
         name: Array.from(new Set(names ?? [firstDimension.name])).join(', '),
         _parentName: names ? Array.from(names).join(', ') : null,
+        colors: firstDimension.categories.map((cat) => cat.defaultColor ?? null),
         x: firstDimension.categories.map((cat) => cat.name),
         y: cube.map((c) => c[0]?.value),
       },
@@ -251,6 +253,43 @@ function calculateBounds(values) {
   return {
     min: Math.min(...values),
     max: Math.max(...values),
+  };
+}
+
+/**
+ * Pad a data extent by 10% on each side, then round the bounds outward to a
+ * "nice" step (1, 2, 2.5 or 5 × 10^k) so the axis min/max land on round
+ * numbers. The step is roughly half a tick interval: coarse enough for round
+ * boundary labels, fine enough that the extra padding stays small and a
+ * positive-only axis isn't dragged down to zero.
+ */
+function padAndRoundBounds(
+  bounds: { min: number; max: number },
+  tickCount: number
+): { min: number; max: number } {
+  const delta = bounds.max - bounds.min;
+  if (!Number.isFinite(delta)) {
+    return bounds;
+  }
+  // Flat data has no extent to pad or derive a step from; use the value itself
+  const span = delta > 0 ? delta : Math.abs(bounds.max) || 1;
+  const rough = span / Math.max(2 * tickCount, 1);
+  const magnitude = 10 ** Math.floor(Math.log10(rough));
+  const normalized = rough / magnitude;
+  const nice =
+    normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 2.5 ? 2.5 : normalized <= 5 ? 5 : 10;
+  const step = nice * magnitude;
+  let min = Math.floor((bounds.min - span * 0.1) / step) * step;
+  let max = Math.ceil((bounds.max + span * 0.1) / step) * step;
+  // Padding must not make the axis cross zero when the data doesn't; the
+  // opposite-end checks keep flat-at-zero data from collapsing the range
+  if (bounds.min >= 0 && min < 0 && max > 0) min = 0;
+  if (bounds.max <= 0 && max > 0 && min < 0) max = 0;
+  // toPrecision trims float artifacts like 0.6000000000000001 from the
+  // step multiplication
+  return {
+    min: Number(min.toPrecision(12)),
+    max: Number(max.toPrecision(12)),
   };
 }
 
@@ -485,11 +524,7 @@ function FactorCharts({
 
           const pointValues = points.map((p) => p.value).filter((v): v is number => v !== null);
           const factorBounds = calculateBounds(pointValues) ?? { min: 0, max: 0 };
-          const delta = factorBounds.max - factorBounds.min;
-          const paddedBounds = {
-            min: factorBounds.min - delta * 0.1,
-            max: factorBounds.max + delta * 0.1,
-          };
+          const paddedBounds = padAndRoundBounds(factorBounds, 2);
           const factorYRange = {
             unit: metric.unit,
             minDigits: 0,
@@ -497,7 +532,6 @@ function FactorCharts({
             ticksCount: 2,
             ticksRounding: undefined,
             valueRounding: valueRounding ?? undefined,
-            includeZero: false,
             range: [paddedBounds.min, paddedBounds.max],
           };
           const factorSpec = { axes: [['time', 1]] as [string, number][] };
@@ -705,37 +739,10 @@ function IndicatorVisualisation({
     }
   }
 
-  // Round bounds to avoid overly precise floating point values
-  // Use a reasonable precision based on the magnitude of the values
-  const roundBounds = (value: number): number => {
-    if (value === 0 || !isFinite(value)) return value;
-    const absValue = Math.abs(value);
-    // Determine appropriate precision based on magnitude
-    let precision: number;
-    if (absValue >= 1000) {
-      precision = 1; // Round to nearest integer for large numbers
-    } else if (absValue >= 100) {
-      precision = 1; // Round to 1 decimal place
-    } else if (absValue >= 10) {
-      precision = 2; // Round to 2 decimal places
-    } else if (absValue >= 1) {
-      precision = 3; // Round to 3 decimal places
-    } else {
-      // For values < 1, use more precision
-      const magnitude = Math.floor(Math.log10(absValue));
-      precision = Math.abs(magnitude) + 3;
-    }
-    const factor = Math.pow(10, precision);
-    return Math.round(value * factor) / factor;
-  };
-
-  // Only add 10% padding if explicit minValue/maxValue are NOT set
+  // Only add padding if explicit minValue/maxValue are NOT set
   // If explicit values are provided, use them directly without padding
   if (indicator.minValue == null && indicator.maxValue == null) {
-    // Add 10% padding to bounds (adds 10% extra space above and below the data range)
-    const delta = bounds.max - bounds.min;
-    bounds.max = roundBounds(bounds.max + delta * 0.1);
-    bounds.min = roundBounds(bounds.min - delta * 0.1);
+    bounds = padAndRoundBounds(bounds, indicator.ticksCount ?? 5);
   }
   indicatorGraphSpecification.bounds = bounds;
 
@@ -746,16 +753,8 @@ function IndicatorVisualisation({
     ticksCount: indicator.ticksCount ?? undefined,
     ticksRounding: indicator.ticksRounding ?? undefined,
     valueRounding: indicator.valueRounding ?? undefined,
-    includeZero: false,
     range: [] as number[],
   };
-  // includeZero is kept for backwards compatibility but not used since we always set range
-  // Only set to true if explicitly requested via minValue or maxValue
-  if (indicator.minValue === 0 || indicator.maxValue === 0) {
-    yRange.includeZero = true;
-  } else if (indicator?.quantity?.name === 'päästöt' && indicator.minValue == null) {
-    yRange.includeZero = true;
-  }
 
   // If explicit minValue/maxValue are set, use them directly without any modification
   // Otherwise, use calculated bounds (but don't force 0 unless explicitly requested)
