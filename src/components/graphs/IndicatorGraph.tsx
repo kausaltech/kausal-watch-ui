@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -15,6 +15,7 @@ import { Chart, type ECOption } from '@common/components/Chart';
 import type { IndicatorDesiredTrend } from '@/common/__generated__/graphql';
 import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter } from '@/common/utils';
+import { getDefaultColors } from '@/components/contentblocks/indicator-chart/indicator-chart-colors';
 
 type ChartTrace = {
   name: string;
@@ -23,6 +24,10 @@ type ChartTrace = {
   x: Array<string | number>;
   y: Array<number | null>;
   _parentName?: string | null;
+  /** Editor-chosen color of the trace's dimension category (backend `defaultColor`). */
+  color?: string | null;
+  /** Per-point editor colors for category-axis traces, aligned with `x`. */
+  colors?: Array<string | null>;
 };
 
 type GoalTrace = {
@@ -39,7 +44,6 @@ type IndicatorGraphProps = {
     ticksCount: number | undefined;
     ticksRounding: number | undefined;
     valueRounding: number | undefined;
-    includeZero: boolean;
     range: number[];
   };
   timeResolution?: 'YEAR' | 'MONTH';
@@ -97,33 +101,6 @@ const wrapTitle = (title: string, maxWidth: number): string => {
   }
 
   return lines.join('\n');
-};
-
-const roundTickValue = (value: number): number => {
-  if (value === 0 || !isFinite(value)) return value;
-  const absValue = Math.abs(value);
-
-  // Determine rounding precision based on magnitude
-  // For larger numbers, round to fewer decimal places
-  if (absValue >= 1000) {
-    // Round to nearest 10 for values >= 1000
-    return Math.round(value / 10) * 10;
-  } else if (absValue >= 100) {
-    // Round to nearest integer for values >= 100
-    return Math.round(value);
-  } else if (absValue >= 10) {
-    // Round to 1 decimal place for values >= 10
-    return Math.round(value * 10) / 10;
-  } else if (absValue >= 1) {
-    // Round to 2 decimal places for values >= 1
-    return Math.round(value * 100) / 100;
-  } else {
-    // For values < 1, use more precision
-    const magnitude = Math.floor(Math.log10(absValue));
-    const precision = Math.abs(magnitude) + 2;
-    const factor = Math.pow(10, precision);
-    return Math.round(value * factor) / factor;
-  }
 };
 
 /**
@@ -197,6 +174,13 @@ function resolveMarkerSymbol(
   return { symbol: hollow ? 'emptyCircle' : 'circle', manualHollow: false };
 }
 
+// Same rule as buildDimSeries in the dashboard chart blocks: an editor-chosen
+// category color from the backend wins; blank/missing falls back to the palette.
+const resolveCategoryColor = (
+  explicitColor: string | null | undefined,
+  paletteColor: string
+): string => (explicitColor && explicitColor.trim() !== '' ? explicitColor : paletteColor);
+
 const buildSeriesFromTraces = ({
   traces,
   colors,
@@ -222,11 +206,18 @@ const buildSeriesFromTraces = ({
   format: ReturnType<typeof useFormatter>;
 }): Array<LineSeriesOption | BarSeriesOption> => {
   const traceCount = traces.length;
+  // Count palette slots per category, skipping total traces, so a category
+  // keeps the same slot as in the dashboard chart blocks (whose palette
+  // indexing never includes the total series).
+  let categoryIdx = 0;
   return traces.map<LineSeriesOption | BarSeriesOption>((trace, idx) => {
     const color =
       trace.dataType === 'total'
         ? colors.totalLine
-        : colors.categoryColors[idx % colors.categoryColors.length];
+        : resolveCategoryColor(
+            trace.color,
+            colors.categoryColors[categoryIdx++ % colors.categoryColors.length]
+          );
 
     // Use line chart for time dimension
     if (hasTimeDimension) {
@@ -296,10 +287,23 @@ const buildSeriesFromTraces = ({
       return series;
     }
 
+    // Like the legacy graph: when one trace holds all the category bars,
+    // color each bar by its own category; with multiple traces, color per trace.
+    const colorPerBar = traceCount === 1 && trace.y.length > 1;
     const series: BarSeriesOption = {
       type: 'bar',
       name: trace.name,
-      data: trace.y,
+      data: colorPerBar
+        ? trace.y.map((value, i) => ({
+            value: value ?? undefined,
+            itemStyle: {
+              color: resolveCategoryColor(
+                trace.colors?.[i],
+                colors.categoryColors[i % colors.categoryColors.length]
+              ),
+            },
+          }))
+        : trace.y,
       barGap: '20%',
       itemStyle: {
         color,
@@ -381,10 +385,12 @@ function IndicatorGraph({
   };
 
   const fallbackColor = graphSettings.totalLineColor || theme.brandDark || '#0070f3';
+  // Same fallback palette as the dashboard indicator chart blocks, so the
+  // same category gets the same color in both views.
   const categoryColors =
     graphSettings.categoryColors && graphSettings.categoryColors.length > 0
       ? graphSettings.categoryColors
-      : [fallbackColor];
+      : getDefaultColors(theme);
   const goalColors =
     graphSettings.goalLineColors && graphSettings.goalLineColors.length > 0
       ? graphSettings.goalLineColors
@@ -1123,20 +1129,13 @@ function IndicatorGraph({
           align: 'left',
         },
         splitNumber: yRange.ticksCount ?? undefined,
-        min:
-          yRange.range[0] != null
-            ? yRange.range[0]
-            : yRange.includeZero
-              ? (value: { min: number }) => (value.min > 0 ? 0 : value.min)
-              : undefined,
-        max: yRange.range[1] != null ? yRange.range[1] : undefined,
+        min: yRange.range[0] ?? undefined,
+        max: yRange.range[1] ?? undefined,
         axisLabel: {
           formatter: (value: number) => {
-            // Round tick values more aggressively for cleaner labels
-            const roundedValue = roundTickValue(value);
             const rounding = yRange.ticksRounding ?? yRange.valueRounding;
             return formatNumber(
-              roundedValue,
+              value,
               format,
               rounding ? { maximumSignificantDigits: rounding } : undefined
             );
@@ -1161,7 +1160,6 @@ function IndicatorGraph({
     goalTraces,
     graphSettings.drawGoalLine,
     timeResolution,
-    yRange.includeZero,
     yRange.range,
     yRange.ticksRounding,
     yRange.unit,

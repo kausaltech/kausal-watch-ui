@@ -1,16 +1,16 @@
 'use client';
 
+import React from 'react';
+
 import dynamic from 'next/dynamic';
 
 import { useTheme } from '@emotion/react';
-import type { Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { merge } from 'lodash-es';
-import type { Annotations, Datum, Layout, MarkerSymbol, PlotData } from 'plotly.js';
+import type { Data, Datum, Layout, PlotData } from 'plotly.js';
 import { transparentize } from 'polished';
 
-import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { splitLines } from '@/common/utils';
 
 const PlotContainer = styled.div<{ $vizHeight: number }>`
@@ -19,70 +19,16 @@ const PlotContainer = styled.div<{ $vizHeight: number }>`
 
 const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
 
-type YRange = {
-  unit: string;
-  minDigits: number;
-  maxDigits: number;
-  ticksCount: number | undefined;
-  ticksRounding: number | undefined;
-  valueRounding: number | undefined;
-  includeZero: boolean;
-  range: number[];
-};
-
-type PlotColors = {
-  trace: string;
-  trend: string;
-  goalScale: string[];
-  mainScale: string[];
-  fillMarkers: boolean;
-  symbols: MarkerSymbol[];
-  goalSymbol: MarkerSymbol;
-  goalLine: boolean;
-};
-
-type LegacyTrace = {
-  name: string;
-  x: Array<string | number>;
-  y: Array<number | null>;
-  xType?: 'time' | 'category';
-  dataType?: 'total' | null;
-  _parentName?: string | null;
-};
-
-type GoalTrace = Pick<LegacyTrace, 'name' | 'x' | 'y'>;
-
-type GraphDimension = {
-  categories: Array<{ name: string; defaultColor?: string | null }>;
-};
-
-type GraphSpecification = {
-  axes: Array<[string, number]>;
-  dimensions: GraphDimension[];
-};
-
-type LayoutConfig = Partial<Layout> & {
-  subplotCount?: number;
-  yRange?: [number | undefined, number | undefined];
-};
-
-type PlotTrace = Omit<Partial<PlotData>, 'x' | 'y'> & {
-  x?: Array<string | number>;
-  y?: Array<number | null>;
-  _parentName?: string | null;
-  legendGroup?: string;
-  [key: string]: unknown;
-};
-
 const createLayout = (
-  theme: Theme,
-  timeResolution: IndicatorTimeResolution | undefined,
-  xInterval: number | undefined,
-  yRange: YRange,
-  plotColors: PlotColors,
-  config: LayoutConfig,
-  subplotsNeeded: boolean,
-  graphCustomBackground: string | undefined
+  theme,
+  timeResolution,
+  xInterval,
+  yRange,
+  plotColors,
+  config,
+  hasTimeDimension,
+  subplotsNeeded,
+  graphCustomBackground
 ): Partial<Layout> => {
   const fontFamily =
     '-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, ' +
@@ -94,45 +40,43 @@ const createLayout = (
   // With higher precision (.3r) you get more unique numbers but small numbers have decimals
   // Like 0.0 whiich is not very nice.
 
-  const yaxis: NonNullable<Layout['yaxis']> = {
-    automargin: true,
-    hoverformat: ',.3r',
-    tickformat: typeof yRange.ticksRounding === 'number' ? `,.${yRange.ticksRounding}~r` : ',.2~r',
-    fixedrange: true,
-    tickmode: 'auto',
-    nticks: yRange.ticksCount ?? 5,
-    tickfont: {
-      family: fontFamily,
-      size: 14,
+  const yaxes: NonNullable<Pick<Layout, 'yaxis'>> = {
+    yaxis: {
+      automargin: true,
+      hoverformat: ',.3r',
+      tickformat:
+        typeof yRange.ticksRounding === 'number' ? `,.${yRange.ticksRounding}~r` : ',.2~r',
+      fixedrange: true,
+      tickmode: 'auto',
+      nticks: yRange.ticksCount ?? 5,
+      tickfont: {
+        family: fontFamily,
+        size: 14,
+      },
     },
   };
-  const yaxes: Partial<Layout> & Record<string, unknown> = { yaxis };
 
   // Define y-axis range
-  yaxis.title = { text: yRange.unit };
-  if (yRange.includeZero && yRange.range[0] == null) {
-    yaxis.fixedrange = false;
-    yaxis.rangemode = 'tozero';
-  }
+  yaxes.yaxis.title = { text: yRange.unit };
 
   // If min and max values are set, do not use autorange
   if (yRange.range[0] != null || yRange.range[1] != null) {
-    yaxis.range = [yRange.range[0], yRange.range[1]];
+    yaxes.yaxis.range = [yRange.range[0], yRange.range[1]];
     if (yRange.range[0] != null && yRange.range[1] != null) {
-      yaxis.autorange = false;
+      yaxes.yaxis.autorange = false;
     }
   } else if (config.yRange) {
-    yaxis.autorange = false;
-    yaxis.range = [config.yRange[0], config.yRange[1]];
+    yaxes.yaxis.autorange = false;
+    yaxes.yaxis.range = [config.yRange[0], config.yRange[1]];
   }
 
   // copy y-axis settings to all subplots
-  for (let y = 2; y <= (config.subplotCount ?? 1); y += 1) {
-    yaxes[`yaxis${y}`] = yaxis;
+  for (let y = 2; y <= config.subplotCount; y += 1) {
+    yaxes[`yaxis${y}`] = yaxes.yaxis;
   }
 
   // X axis can be time or category
-  const xaxes: Partial<Layout> & Record<string, unknown> = hasCategories
+  const xaxes = hasCategories
     ? {
         xaxis: {
           automargin: true,
@@ -150,7 +94,7 @@ const createLayout = (
           fixedrange: true,
           showgrid: false,
           showline: false,
-          tickformat: timeResolution === IndicatorTimeResolution.Year ? '%Y' : '%b %Y',
+          tickformat: timeResolution === 'YEAR' ? '%Y' : '%b %Y',
           tickmode: 'linear',
           dtick: `M${xInterval}`,
           tickfont: {
@@ -161,11 +105,11 @@ const createLayout = (
       };
 
   // copy x-axis settings to all subplots
-  for (let x = 2; x <= (config.subplotCount ?? 1); x += 1) {
+  for (let x = 2; x <= config.subplotCount; x += 1) {
     xaxes[`xaxis${x}`] = xaxes.xaxis;
   }
 
-  const newLayout = {
+  const newLayout: Partial<Layout> = {
     title: {},
     margin: {
       t: 25,
@@ -178,7 +122,7 @@ const createLayout = (
     ...xaxes,
     hovermode: 'x unified',
     paper_bgcolor: theme.themeColors.white,
-    plot_bgcolor: graphCustomBackground ?? theme.themeColors.white,
+    plot_bgcolor: graphCustomBackground || theme.themeColors.white,
     autosize: true,
     colorway: plotColors.mainScale,
     font: { family: fontFamily, size: 12 },
@@ -203,9 +147,9 @@ const createLayout = (
       bgcolor: theme.cardBackground.primary,
       activecolor: theme.brandDark,
     },
-  } as Partial<Layout>;
+  };
 
-  if (config.annotations?.length) {
+  if (config?.annotations?.length > 0) {
     newLayout.annotations = config.annotations;
   }
   merge(newLayout, config);
@@ -214,13 +158,13 @@ const createLayout = (
 };
 
 interface CreateTracesParams {
-  traces: LegacyTrace[];
+  traces: any[];
   unit: string;
-  plotColors: PlotColors;
-  theme: Theme;
+  plotColors: any;
   styleCount?: number;
   categoryCount: number;
   hasTimeDimension: boolean;
+  timeResolution?: string;
   lineShape: string;
   useAreaGraph?: boolean | undefined;
   graphCustomBackground?: string | undefined;
@@ -228,8 +172,8 @@ interface CreateTracesParams {
 }
 
 interface TracesOutput {
-  layoutConfig: LayoutConfig;
-  traces: PlotTrace[];
+  layoutConfig: any;
+  traces: Partial<Data>[];
 }
 
 const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
@@ -237,10 +181,10 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     traces,
     unit,
     plotColors,
-    theme,
     styleCount,
     categoryCount,
     hasTimeDimension,
+    timeResolution,
     lineShape,
     useAreaGraph,
     valueRounding,
@@ -254,7 +198,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
 
   if (!traceCount)
     return {
-      layoutConfig: {},
+      layoutConfig: undefined,
       traces: [],
     };
 
@@ -272,12 +216,12 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     return colors[index % colorCount];
   };
 
-  const allXValues: Datum[] = [];
+  const allXValues = [];
 
   const newTraces = traces.map((trace, idx) => {
     // Here we are excluding some properties from the trace
-    const { xType, dataType, ...plotlyTrace } = trace;
-    const modTrace: PlotTrace = { ...plotlyTrace };
+    const { xType, dataType, color, colors, ...plotlyTrace } = trace;
+    const modTrace: PlotData = { ...plotlyTrace };
     allXValues.push(...trace.x);
 
     // we have multiple categories in one time point - draw bar groups
@@ -288,7 +232,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       modTrace.marker = {
         color:
           categoryCount < 2 || hasSingleTraceWithMultipleBars
-            ? trace.y.map((_, i) => getMainColor(i))
+            ? trace.y.map((y, i) => getMainColor(i))
             : getMainColor(idx),
       };
       layoutConfig.barmode = 'group';
@@ -339,6 +283,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
       }
     }
 
+    const theme = useTheme();
     // Theme setting is a hack for single user. Should be deprecated and use admin setting only.
     // If valueRounding for this indicator is defined we use it
     // If valueRounding is not defined we check if theme doesn't want rounding
@@ -363,25 +308,22 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
   };
 };
 
-function getSubplotHeaders(
-  subPlotRowCount: number,
-  names: Array<string | null | undefined>
-): Partial<Annotations>[] {
+function getSubplotHeaders(subPlotRowCount, names) {
   return names.map((name, idx) => {
     const column = (idx / 2) % 1;
     const row = Math.floor(idx / 2) / subPlotRowCount;
     return {
-      text: `<b>${splitLines(name ?? '')}</b>`,
+      text: `<b>${splitLines(name)}</b>`,
       font: {
         size: 16,
       },
       showarrow: false,
       x: column + column * 0.1 + 0.02,
       y: 1 - row - row * 0.3 * (1 / subPlotRowCount), // wild improvisation
-      xref: 'paper' as const,
-      xanchor: 'left' as const,
-      yref: 'paper' as const,
-      yanchor: 'bottom' as const,
+      xref: 'paper',
+      xanchor: 'left',
+      yref: 'paper',
+      yanchor: 'bottom',
     };
   });
 }
@@ -389,28 +331,24 @@ function getSubplotHeaders(
 // Since plotlyjs is not great with determining x axis range, we do it ourselves
 // Return nice interval in months depending on timeResolution
 // We want max 10 xticks
-const getXInterval = (
-  dataset: PlotTrace[],
-  timeResolution: IndicatorTimeResolution | undefined
-) => {
+const getXInterval = (dataset, timeResolution) => {
   // Use flatMap to simplify the creation of allXValues
-  const allXValues = dataset
-    .flatMap((trace) => trace.x ?? [])
-    .map((x) => new Date(x))
-    .filter((d) => !Number.isNaN(d.getTime()));
+  const allXValues = dataset.flatMap((trace) =>
+    trace.x.map((x) => new Date(x)).filter((d) => !isNaN(d.getTime()))
+  );
 
   // It's a category dataset or all dates were invalid
   if (allXValues.length === 0) return undefined;
 
-  const min = new Date(Math.min(...allXValues.map((date) => date.getTime())));
-  const max = new Date(Math.max(...allXValues.map((date) => date.getTime())));
+  const min = new Date(Math.min(...allXValues));
+  const max = new Date(Math.max(...allXValues));
 
   // Simplified month calculation
   const months = (max.getFullYear() - min.getFullYear()) * 12 + max.getMonth() - min.getMonth();
 
   const MAX_TICKS = 10;
 
-  if (timeResolution === IndicatorTimeResolution.Year) {
+  if (timeResolution === 'YEAR') {
     // For yearly data, ensure the interval is divisible by 12
     return Math.max(12, Math.ceil(months / MAX_TICKS / 12) * 12);
   } else {
@@ -433,13 +371,23 @@ const getXInterval = (
 };
 
 interface IndicatorGraphProps {
-  title?: string;
-  yRange: YRange;
-  timeResolution?: IndicatorTimeResolution;
-  traces: LegacyTrace[];
-  goalTraces: GoalTrace[];
-  trendTrace: GoalTrace | null;
-  specification: GraphSpecification;
+  yRange: {
+    unit: string;
+    minDigits: number;
+    maxDigits: number;
+    ticksCount: number | undefined;
+    ticksRounding: number | undefined;
+    valueRounding: number | undefined;
+    range: number[];
+  };
+  timeResolution?: 'YEAR' | 'MONTH';
+  traces: any;
+  goalTraces: any;
+  trendTrace: any;
+  specification: {
+    axes: any;
+    dimensions: any;
+  };
 }
 
 const Plot = dynamic(() => import('@/components/graphs/Plot'));
@@ -452,7 +400,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
   }
   const { yRange, timeResolution, traces, goalTraces, trendTrace, specification } = props;
 
-  const traceNames = traces.map((trace) => {
+  const traceNames = traces.map((trace, idx) => {
     return trace.name;
   });
   const traceCategoryNames = traces.flatMap((trace) =>
@@ -479,20 +427,19 @@ function IndicatorGraph(props: IndicatorGraphProps) {
 
   const themeCategoryColors = theme.settings?.graphs?.categoryColors;
 
-  const graphSettings = theme.settings.graphs!;
   const plotColors = {
-    trace: graphSettings.totalLineColor,
-    trend: graphSettings.trendLineColor,
-    goalScale: graphSettings.goalLineColors,
+    trace: theme.settings.graphs.totalLineColor,
+    trend: theme.settings.graphs.trendLineColor,
+    goalScale: theme.settings.graphs.goalLineColors,
     mainScale: categoryColors?.length
       ? categoryColors
       : themeCategoryColors?.length
         ? themeCategoryColors
         : ['#000000'],
-    fillMarkers: graphSettings.fillMarkers ?? false,
-    symbols: graphSettings.categorySymbols ?? ['circle'],
-    goalSymbol: graphSettings.goalSymbol ?? 'circle',
-    goalLine: graphSettings.drawGoalLine ?? false,
+    fillMarkers: theme.settings.graphs.fillMarkers,
+    symbols: theme.settings.graphs.categorySymbols,
+    goalSymbol: theme.settings.graphs.goalSymbol,
+    goalLine: theme.settings.graphs.drawGoalLine,
   };
 
   // TODO: these ought to be set in the backend
@@ -536,10 +483,10 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     traces,
     unit: yRange.unit,
     plotColors,
-    theme,
     styleCount,
     categoryCount,
     hasTimeDimension,
+    timeResolution,
     lineShape,
     useAreaGraph,
     graphCustomBackground,
@@ -636,6 +583,7 @@ function IndicatorGraph(props: IndicatorGraphProps) {
     yRange,
     plotColors,
     layoutConfig,
+    hasTimeDimension,
     subplotsNeeded,
     graphCustomBackground
   );

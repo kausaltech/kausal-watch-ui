@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactElement, useState } from 'react';
+import React, { type ReactElement, useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -15,15 +15,12 @@ import ContentLoader from '@common/components/ContentLoader';
 import type {
   IndicatorDetailsQuery,
   IndicatorGraphDataQuery,
+  IndicatorGraphDataQueryVariables,
 } from '@/common/__generated__/graphql';
-import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
 import { capitalizeFirstLetter } from '@/common/utils';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
-import IndicatorGraph, {
-  type ChartTrace,
-  type GoalTrace,
-} from '@/components/graphs/IndicatorGraph';
+import IndicatorGraph from '@/components/graphs/IndicatorGraph';
 import LegacyIndicatorGraph from '@/components/graphs/legacy/IndicatorGraph';
 import IndicatorComparisonSelect from '@/components/indicators/IndicatorComparisonSelect';
 import IndicatorNormalizationSelect from '@/components/indicators/IndicatorNormalizationSelect';
@@ -33,41 +30,7 @@ import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
 import RichText from '../common/RichText';
 import IndicatorVisualizationBlock from './IndicatorVisualizationBlock';
 
-type GraphIndicator = NonNullable<IndicatorGraphDataQuery['indicator']>;
-type ComparisonIndicator = NonNullable<GraphIndicator['common']>['indicators'][number];
-type GraphValue = {
-  date: string | null;
-  value: number;
-  categories: Array<{ id: string }>;
-  normalizedValues: Array<{ normalizerId: string | null; value: number | null }>;
-};
-type GraphDimension = {
-  id: string;
-  name: string;
-  sort?: string;
-  type?: string;
-  categories: Array<{ id: string; name: string; defaultColor?: string; type?: string }>;
-};
-type ProcessedValue = Pick<GraphValue, 'value' | 'categories'> & { date: string };
-type CubeLeafValue = Pick<ProcessedValue, 'date' | 'value'>;
-type DataCube = CubeLeafValue[] | DataCube[];
-type Bounds = { min: number; max: number };
-type GraphSpecification = {
-  axes: Array<[string, number]>;
-  bounds: Bounds;
-  dimensions: GraphDimension[];
-  name: string;
-  cube?: unknown[];
-};
-type Translator = { t: (key: string) => string };
-type Scenario = NonNullable<IndicatorGraphDataQuery['plan']>['scenarios'][number];
-type ScenarioGoalTrace = GoalTrace & { scenario?: Scenario | Record<string, never> };
-
-function generateCube(
-  dimensions: GraphDimension[],
-  values: ProcessedValue[],
-  path: string[] = []
-): DataCube {
+function generateCube(dimensions, values, path) {
   const dim = dimensions[0];
   const rest = dimensions.slice(1);
 
@@ -86,75 +49,64 @@ function generateCube(
   return array;
 }
 
-function generateCubeFromValues(
-  indicator: GraphIndicator,
-  indicatorGraphSpecification: GraphSpecification,
-  combinedValues: GraphValue[]
-): DataCube {
+function generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues) {
   const values = [...combinedValues]
-    .sort((a, b) => Number(a.date) - Number(b.date))
+    .sort((a, b) => a.date - b.date)
     .map((item) => {
       const { date, value, categories } = item;
       // Make yearly value dates YYYY-1-1 so plotly places them correctly on axis
-      const newDate =
-        indicator.timeResolution === IndicatorTimeResolution.Year
-          ? `${date!.split('-')[0]}-1-1`
-          : date!;
+      const newDate = indicator.timeResolution === 'YEAR' ? `${date.split('-')[0]}-1-1` : date;
       return { date: newDate, value, categories };
     });
   if (indicatorGraphSpecification.dimensions.length === 0) {
     return values;
   }
-  indicatorGraphSpecification.dimensions = indicatorGraphSpecification.dimensions.sort((a, b) => {
-    if (a.sort === 'last') {
-      return 1;
-    } else if (b.sort === 'last') {
-      return -1;
-    }
-    const categoryCountDifference = a.categories.length - b.categories.length;
-    return categoryCountDifference !== 0 ? categoryCountDifference : Number(a.id) - Number(b.id);
-  });
+  indicatorGraphSpecification.dimensions = indicatorGraphSpecification.dimensions
+    .map((d) => d.dimension)
+    .sort((a, b) => {
+      if (a.sort === 'last') {
+        return 1;
+      } else if (b.sort === 'last') {
+        return -1;
+      }
+      return a.categories.length - b.categories.length || a.id - b.id;
+    });
   return generateCube(indicatorGraphSpecification.dimensions, values);
 }
 
-function getTraces(
-  dimensions: GraphDimension[],
-  cube: DataCube,
-  names: Set<string> | null,
-  hasTimeDimension: boolean,
-  i18n: Translator
-): ChartTrace[] {
+function getTraces(dimensions, cube, names, hasTimeDimension, i18n, quantityName) {
   // TODO: We could use quantity name but we can not tell if it's in the correct language
   // const name = capitalizeFirstLetter(quantityName ?? i18n.t('value'));
   const name = capitalizeFirstLetter(i18n.t('value'));
   if (dimensions.length === 0) {
-    const values = cube as CubeLeafValue[];
     return [
       {
         xType: 'time',
         name: name,
         dataType: 'total',
-        x: values.map((val) => {
+        x: cube.map((val) => {
           return val.date;
         }),
-        y: values.map((val) => val.value),
+        y: cube.map((val) => val.value),
       },
     ];
   }
   const [firstDimension, ...rest] = dimensions;
   if (dimensions.length === 1) {
-    const dimensionValues = cube as CubeLeafValue[][];
     if (hasTimeDimension) {
       return firstDimension.categories.map((cat, idx) => {
         const traceName = Array.from(new Set(names ?? undefined).add(cat.name)).join(', ');
-        const cubeValues = dimensionValues[idx] ?? [];
-        const x = cubeValues.map((val) => val.date);
-        const y = cubeValues.map((val) => val.value);
+        let x,
+          y,
+          _cube = cube[idx];
+        x = _cube.map((val) => val.date);
+        y = _cube.map((val) => val.value);
         return {
           xType: 'time',
           dataType: cat.id === 'total' ? 'total' : null,
           name: traceName,
           _parentName: names ? Array.from(names).join(', ') : null,
+          color: cat.defaultColor ?? null,
           x,
           y,
         };
@@ -167,18 +119,18 @@ function getTraces(
         xType: 'category',
         name: Array.from(new Set(names ?? [firstDimension.name])).join(', '),
         _parentName: names ? Array.from(names).join(', ') : null,
+        colors: firstDimension.categories.map((cat) => cat.defaultColor ?? null),
         x: firstDimension.categories.map((cat) => cat.name),
-        y: dimensionValues.map((values) => values[0]?.value ?? null),
+        y: cube.map((c) => c[0]?.value),
       },
     ];
   }
-  let traces: ChartTrace[] = [];
-  const nestedCubes = cube as DataCube[];
+  let traces = [];
 
   firstDimension.categories.forEach((cat, idx) => {
     const out = getTraces(
       rest,
-      nestedCubes[idx],
+      cube[idx],
       new Set(names ?? undefined).add(cat.name),
       hasTimeDimension,
       i18n
@@ -190,37 +142,27 @@ function getTraces(
   return traces.filter((t) => t.x.length > 0);
 }
 
-const generateTrendTrace = (
-  indicator: GraphIndicator,
-  traces: ScenarioGoalTrace[],
-  goals: GoalTrace[],
-  i18n: Translator
-): [GoalTrace | undefined, Bounds | null | undefined] => {
+const generateTrendTrace = (indicator, traces, goals, i18n) => {
   const hasPotentialScenario = traces.find((goal) => goal.scenario?.identifier === 'potential');
-  if (
-    indicator.timeResolution === IndicatorTimeResolution.Year &&
-    traces[0].y.length >= 5 &&
-    !hasPotentialScenario
-  ) {
+  if (indicator.timeResolution === 'YEAR' && traces[0].y.length >= 5 && !hasPotentialScenario) {
     const values = [...indicator.values]
-      .sort((a, b) => Number(a.date) - Number(b.date))
+      .sort((a, b) => a.date - b.date)
       .map((item) => {
         const { date, value, categories } = item;
         // Make yearly value dates YYYY-1-1 so plotly places them correctly on axis
-        return { date: date!, value, categories };
+        return { date, value, categories };
       });
     const mainValues = values.filter((item) => !item.categories.length);
     const numberOfYears = Math.min(mainValues.length, 10);
     const regData = mainValues
       .slice(mainValues.length - numberOfYears, mainValues.length)
-      .map((item) => [parseInt(item.date, 10), item.value] as [number, number]);
+      .map((item) => [parseInt(item.date, 10), item.value]);
     if (regData.length < 5) {
       return [undefined, undefined];
     }
     const model = linearRegression(regData);
-    const predictedTrace: GoalTrace = {
+    const predictedTrace = {
       x: regData.map((item) => item[0]),
-      y: [],
       name: i18n.t('current-trend'),
     };
 
@@ -236,7 +178,7 @@ const generateTrendTrace = (
       predictedTrace.x.push(highestGoalYear);
     }
 
-    predictedTrace.y = predictedTrace.x.map((year) => model.m * Number(year) + model.b);
+    predictedTrace.y = predictedTrace.x.map((year) => model.m * year + model.b);
     // We want the year format 2019-1-1 so plotly places them correctly on axis
     const formattedTrace = {
       x: predictedTrace.x.map((year) => `${year}-1-1`),
@@ -248,25 +190,17 @@ const generateTrendTrace = (
   return [undefined, undefined];
 };
 
-const generateGoalTraces = (
-  indicator: GraphIndicator,
-  planScenarios: Scenario[],
-  i18n: Translator
-): [ScenarioGoalTrace[], Bounds | null] => {
+const generateGoalTraces = (indicator, planScenarios, i18n) => {
   // Group goals by scenario
-  type Goal = NonNullable<NonNullable<GraphIndicator['goals']>[number]>;
-  type GoalScenario = { goals: Goal[]; config: Scenario | Record<string, never>; name: string };
-  const traceScenarios = new Map<string | null, GoalScenario>();
-  const goalTraces: ScenarioGoalTrace[] = [];
-  (indicator.goals ?? []).forEach((goal) => {
-    if (!goal) return;
+  const traceScenarios = new Map();
+  const goalTraces = [];
+  (indicator.goals || []).forEach((goal) => {
     const scenarioId = goal.scenario ? goal.scenario.id : null;
 
     if (!traceScenarios.has(scenarioId)) {
-      const scenario: GoalScenario = {
+      const scenario = {
         goals: [],
         config: planScenarios?.find((sc) => sc.id === scenarioId) ?? {},
-        name: i18n.t('goal'),
       };
 
       if (scenarioId && scenario.config?.name) {
@@ -276,20 +210,30 @@ const generateGoalTraces = (
       }
       traceScenarios.set(scenarioId, scenario);
     }
-    traceScenarios.get(scenarioId)!.goals.push(goal);
+    traceScenarios.get(scenarioId).goals.push(goal);
+  });
+
+  // Sort
+  traceScenarios.forEach((scenario) => {
+    const { goals } = scenario;
+    scenario.goals = goals
+      .sort((a, b) => a.date - b.date)
+      .map((item) => {
+        const { date, value, categories } = item;
+        const newDate = indicator.timeResolution === 'YEAR' ? `${date.split('-')[0]}-1-1` : date;
+        return { date: newDate, value, categories };
+      });
   });
 
   traceScenarios.forEach((scenario) => {
-    const goals = [...scenario.goals].sort((a, b) => Number(a.date) - Number(b.date));
+    const { goals } = scenario;
 
     const trace = {
       scenario: scenario.config,
       y: goals.map((item) => item.value),
       x: goals.map((item) => {
         const newDate =
-          indicator.timeResolution === IndicatorTimeResolution.Year
-            ? `${item.date!.split('-')[0]}-1-1`
-            : item.date!;
+          indicator.timeResolution === 'YEAR' ? `${item.date.split('-')[0]}-1-1` : item.date;
         return newDate;
       }),
       name: scenario.name,
@@ -302,26 +246,57 @@ const generateGoalTraces = (
   return [goalTraces, bounds];
 };
 
-function calculateBounds(values: Array<number | null>): Bounds | null {
+function calculateBounds(values) {
   if (values.length === 0) {
     return null;
   }
   return {
-    min: Math.min(...values.map(Number)),
-    max: Math.max(...values.map(Number)),
+    min: Math.min(...values),
+    max: Math.max(...values),
   };
 }
 
-function getIndicatorGraphSpecification(
-  indicator: GraphIndicator,
-  compareOrganization: string | undefined,
-  t: (key: string) => string,
-  normalizerId: string | null
-): GraphSpecification {
-  const indicators: Array<GraphIndicator | ComparisonIndicator> = [indicator];
-  let dimensions = JSON.parse(JSON.stringify(indicator.dimensions)) as Array<{
-    dimension: GraphDimension;
-  }>;
+/**
+ * Pad a data extent by 10% on each side, then round the bounds outward to a
+ * "nice" step (1, 2, 2.5 or 5 × 10^k) so the axis min/max land on round
+ * numbers. The step is roughly half a tick interval: coarse enough for round
+ * boundary labels, fine enough that the extra padding stays small and a
+ * positive-only axis isn't dragged down to zero.
+ */
+function padAndRoundBounds(
+  bounds: { min: number; max: number },
+  tickCount: number
+): { min: number; max: number } {
+  const delta = bounds.max - bounds.min;
+  if (!Number.isFinite(delta)) {
+    return bounds;
+  }
+  // Flat data has no extent to pad or derive a step from; use the value itself
+  const span = delta > 0 ? delta : Math.abs(bounds.max) || 1;
+  const rough = span / Math.max(2 * tickCount, 1);
+  const magnitude = 10 ** Math.floor(Math.log10(rough));
+  const normalized = rough / magnitude;
+  const nice =
+    normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 2.5 ? 2.5 : normalized <= 5 ? 5 : 10;
+  const step = nice * magnitude;
+  let min = Math.floor((bounds.min - span * 0.1) / step) * step;
+  let max = Math.ceil((bounds.max + span * 0.1) / step) * step;
+  // Padding must not make the axis cross zero when the data doesn't; the
+  // opposite-end checks keep flat-at-zero data from collapsing the range
+  if (bounds.min >= 0 && min < 0 && max > 0) min = 0;
+  if (bounds.max <= 0 && max > 0 && min < 0) max = 0;
+  // toPrecision trims float artifacts like 0.6000000000000001 from the
+  // step multiplication
+  return {
+    min: Number(min.toPrecision(12)),
+    max: Number(max.toPrecision(12)),
+  };
+}
+
+function getIndicatorGraphSpecification(indicator, compareOrganization, t, normalizerId) {
+  const specification = {};
+  const indicators = [indicator];
+  let dimensions = JSON.parse(JSON.stringify(indicator.dimensions));
 
   const dimensionedValues = indicator.values.filter((val) => val.categories.length > 0);
   if (dimensionedValues.length === 0 && dimensions.length !== 0) {
@@ -332,18 +307,12 @@ function getIndicatorGraphSpecification(
   }
 
   if (compareOrganization) {
-    const compareIndicator = indicator.common!.indicators.find(
+    const compareIndicator = indicator.common.indicators.find(
       (x) => x.organization.id === compareOrganization
     );
-    if (compareIndicator) indicators.push(compareIndicator);
-    const comparisonDimension: { dimension: GraphDimension } = {
-      dimension: {
-        id: 'organization',
-        name: 'organization',
-        sort: 'last',
-        type: 'organization',
-        categories: [],
-      } satisfies GraphDimension,
+    indicators.push(compareIndicator);
+    const comparisonDimension = {
+      dimension: { sort: 'last', type: 'organization' },
     };
     comparisonDimension.dimension.categories = indicators.map((i) => ({
       id: `org:${i.organization.id}`,
@@ -356,7 +325,7 @@ function getIndicatorGraphSpecification(
   const allValues = indicators
     .map((i) => i.values.map((x) => getNormalizedValue(x, normalizerId)))
     .flat();
-  const bounds = calculateBounds(allValues);
+  specification.bounds = calculateBounds(allValues);
 
   const times = new Set(indicators.map((i) => i.values.map((x) => x.date)).flat());
   const hasTime = times.size > 1;
@@ -375,7 +344,7 @@ function getIndicatorGraphSpecification(
     });
   }
 
-  const axes: Array<[string, number]> = [];
+  const axes = [];
   if (indicator.dimensions.length > 0) {
     axes.push(['categories', indicator.dimensions.length]);
   }
@@ -386,23 +355,22 @@ function getIndicatorGraphSpecification(
     axes.push(['time', 1]);
   }
 
-  return {
-    axes,
-    dimensions: dimensions.map((d) => d.dimension),
-    name: indicator.name,
-    bounds: bounds!,
-  };
+  specification.axes = axes;
+  specification.dimensions = dimensions;
+  specification.name = indicator.name;
+
+  return specification;
 }
 
-function addOrganizationCategory(value: GraphValue, orgId: string): GraphValue {
+function addOrganizationCategory(value, orgId) {
   const newCategories = [...value.categories]; //
   newCategories.push({ id: `org:${orgId}` });
   return Object.assign({}, value, { categories: newCategories });
 }
 
-function _addTotal(v: GraphValue, categoryCount: number): GraphValue {
+function _addTotal(v, categoryCount) {
   if (v.categories.length === 0) {
-    const newCategories = Array.from({ length: categoryCount }, () => ({ id: 'total' }));
+    const newCategories = new Array(categoryCount).fill({ id: 'total' });
     return Object.assign({}, v, {
       categories: [...v.categories, ...newCategories],
     });
@@ -410,17 +378,13 @@ function _addTotal(v: GraphValue, categoryCount: number): GraphValue {
   return v;
 }
 
-function combineValues(
-  indicator: GraphIndicator,
-  comparisonIndicator: ComparisonIndicator | undefined,
-  indicatorGraphSpecification: GraphSpecification
-): GraphValue[] {
+function combineValues(indicator, comparisonIndicator, indicatorGraphSpecification) {
   let categoryCount = 0;
   const categoryAxis = indicatorGraphSpecification.axes.filter((a) => a[0] === 'categories');
   if (categoryAxis.length > 0) {
     categoryCount = categoryAxis[0][1];
   }
-  const getValues = (indicator: GraphIndicator | ComparisonIndicator) =>
+  const getValues = (indicator) =>
     indicator.values
       .map((v) => _addTotal(v, categoryCount))
       .filter((v) => v.categories.length === categoryCount)
@@ -439,30 +403,27 @@ const NORMALIZE_DEFAULT = 'default';
 const NORMALIZE_PREFER_ENABLED = 'enabled';
 const NORMALIZE_PREFER_DISABLED = 'disabled';
 
-function normalizeByPopulationSetter(callback: (value: string) => void) {
-  return (value: boolean) => {
+function normalizeByPopulationSetter(callback) {
+  return (value) => {
     callback(value ? NORMALIZE_PREFER_ENABLED : NORMALIZE_PREFER_DISABLED);
   };
 }
 
-function getNormalizeByPopulation(
-  preferNormalizeByPopulation: string,
-  comparisonIndicator: ComparisonIndicator | undefined
-) {
+function getNormalizeByPopulation(preferNormalizeByPopulation, comparisonIndicator) {
   if (preferNormalizeByPopulation === NORMALIZE_DEFAULT) {
     return comparisonIndicator != null;
   }
   return preferNormalizeByPopulation === NORMALIZE_PREFER_ENABLED;
 }
 
-function getNormalizedValue(valueObject: GraphValue, normalizerId: string | null): number {
+function getNormalizedValue(valueObject, normalizerId) {
   if (normalizerId != null) {
-    return valueObject.normalizedValues.find((nv) => nv.normalizerId === normalizerId)!.value!;
+    return valueObject.normalizedValues.find((nv) => nv.normalizerId === normalizerId).value;
   }
   return valueObject.value;
 }
 
-function normalizeValuesByNormalizer(values: GraphValue[], normalizerId: string): GraphValue[] {
+function normalizeValuesByNormalizer(values, normalizerId) {
   return values.map((valueObject) =>
     Object.assign({}, valueObject, {
       value: getNormalizedValue(valueObject, normalizerId),
@@ -512,6 +473,7 @@ function FactorCharts({
   showTable,
   unitLabel,
   mainXAxisRange,
+  language,
 }: FactorChartsProps) {
   const t = useTranslations();
 
@@ -536,9 +498,7 @@ function FactorCharts({
             name: capitalizeFirstLetter(t('value')),
             dataType: 'total' as const,
             x: points.map((p) =>
-              timeResolution === IndicatorTimeResolution.Year
-                ? `${p.date.split('-')[0]}-1-1`
-                : p.date
+              timeResolution === 'YEAR' ? `${p.date.split('-')[0]}-1-1` : p.date
             ),
             y: points.map((p) => p.value),
           };
@@ -548,8 +508,7 @@ function FactorCharts({
           points.forEach((p) => {
             const yearKey = p.date.split('-')[0];
             const indicatorVal = indicatorValueByYear.get(yearKey) ?? null;
-            const dateStr =
-              timeResolution === IndicatorTimeResolution.Year ? `${yearKey}-1-1` : p.date;
+            const dateStr = timeResolution === 'YEAR' ? `${yearKey}-1-1` : p.date;
             factorX.push(dateStr);
             factorY.push(
               p.value !== null && indicatorVal !== null && indicatorVal !== 0
@@ -565,11 +524,7 @@ function FactorCharts({
 
           const pointValues = points.map((p) => p.value).filter((v): v is number => v !== null);
           const factorBounds = calculateBounds(pointValues) ?? { min: 0, max: 0 };
-          const delta = factorBounds.max - factorBounds.min;
-          const paddedBounds = {
-            min: factorBounds.min - delta * 0.1,
-            max: factorBounds.max + delta * 0.1,
-          };
+          const paddedBounds = padAndRoundBounds(factorBounds, 2);
           const factorYRange = {
             unit: metric.unit,
             minDigits: 0,
@@ -577,7 +532,6 @@ function FactorCharts({
             ticksCount: 2,
             ticksRounding: undefined,
             valueRounding: valueRounding ?? undefined,
-            includeZero: false,
             range: [paddedBounds.min, paddedBounds.max],
           };
           const factorSpec = { axes: [['time', 1]] as [string, number][] };
@@ -590,7 +544,7 @@ function FactorCharts({
                   <IndicatorGraph
                     specification={factorSpec}
                     yRange={factorYRange}
-                    timeResolution={timeResolution}
+                    timeResolution={timeResolution as 'YEAR' | 'MONTH'}
                     traces={[factorTrace]}
                     goalTraces={[]}
                     trendTrace={null}
@@ -641,10 +595,13 @@ function IndicatorVisualisation({
     t,
     language: locale,
   };
-  const [compareTo, setCompareTo] = useState<string | undefined>(undefined);
+  const [compareTo, setCompareTo] = useState(undefined);
   const [preferNormalizeByPopulation, setPreferNormalizeByPopulation] = useState(NORMALIZE_DEFAULT);
 
-  const { loading, error, data } = useQuery(GET_INDICATOR_GRAPH_DATA, {
+  const { loading, error, data } = useQuery<
+    IndicatorGraphDataQuery,
+    IndicatorGraphDataQueryVariables
+  >(GET_INDICATOR_GRAPH_DATA, {
     variables: {
       id: indicatorId,
       plan: plan.identifier,
@@ -676,7 +633,7 @@ function IndicatorVisualisation({
   let canBeNormalized = false;
   if (populationNormalizer !== undefined) {
     let values = indicator.values;
-    if (comparisonIndicator) {
+    if (!!comparisonIndicator) {
       values = values.concat(comparisonIndicator.values);
     }
     if (
@@ -711,13 +668,19 @@ function IndicatorVisualisation({
   const unitLabel =
     unitHasName && unit.name === 'no unit' ? '' : unit.shortName || (unitHasName ? unit.name : '');
 
-  const plotTitle = indicator.name;
+  /// Handle object type indicator name (?)
+  let plotTitle = '';
+  if (typeof indicator.name === 'object') {
+    plotTitle = indicator.name.text;
+  } else if (typeof indicator.name === 'string') {
+    plotTitle = indicator.name;
+  }
 
   let combinedValues = combineValues(indicator, comparisonIndicator, indicatorGraphSpecification);
   if (normalizeByPopulation) {
     combinedValues = normalizeValuesByNormalizer(
       combinedValues,
-      populationNormalizer!.normalizer.id
+      populationNormalizer.normalizer.id
     );
   }
   /// Process data for data traces
@@ -732,7 +695,8 @@ function IndicatorVisualisation({
     cube,
     null,
     hasTimeDimension,
-    i18n
+    i18n,
+    undefined
   );
   // If all traces are "total" (no dimensions), keep them regardless of showTotalLine.
   // Otherwise, filter out the total when showTotalLine is false.
@@ -741,8 +705,8 @@ function IndicatorVisualisation({
     ? allTraces
     : allTraces.filter((t) => t.dataType !== 'total' || showTotalLine);
 
-  const [goalTraces, goalBounds]: [ScenarioGoalTrace[], Bounds | null] = normalizeByPopulation
-    ? [[], null]
+  const [goalTraces, goalBounds] = normalizeByPopulation
+    ? [[], []]
     : generateGoalTraces(indicator, scenarios, i18n);
 
   // Get the x-axis date range from the main chart for use by factor charts
@@ -756,7 +720,7 @@ function IndicatorVisualisation({
       ? undefined
       : { min: Math.min(...timestamps), max: Math.max(...timestamps) };
 
-  const [trendTrace, trendBounds]: [GoalTrace | null | undefined, Bounds | null | undefined] =
+  const [trendTrace, trendBounds] =
     normalizeByPopulation ||
     !hasTimeDimension ||
     !indicator.showTrendline ||
@@ -765,47 +729,20 @@ function IndicatorVisualisation({
       : generateTrendTrace(indicator, traces, goalTraces, i18n);
 
   // Include trend and goal bounds in the calculation
-  let bounds: Bounds = indicatorGraphSpecification.bounds;
+  let bounds = indicatorGraphSpecification.bounds;
   for (const addBounds of [goalBounds, trendBounds]) {
     if (addBounds) {
       bounds = calculateBounds([
         ...Object.values(bounds),
         ...Object.values(addBounds).filter((b) => b != null && !isNaN(b)),
-      ])!;
+      ]);
     }
   }
 
-  // Round bounds to avoid overly precise floating point values
-  // Use a reasonable precision based on the magnitude of the values
-  const roundBounds = (value: number): number => {
-    if (value === 0 || !isFinite(value)) return value;
-    const absValue = Math.abs(value);
-    // Determine appropriate precision based on magnitude
-    let precision: number;
-    if (absValue >= 1000) {
-      precision = 1; // Round to nearest integer for large numbers
-    } else if (absValue >= 100) {
-      precision = 1; // Round to 1 decimal place
-    } else if (absValue >= 10) {
-      precision = 2; // Round to 2 decimal places
-    } else if (absValue >= 1) {
-      precision = 3; // Round to 3 decimal places
-    } else {
-      // For values < 1, use more precision
-      const magnitude = Math.floor(Math.log10(absValue));
-      precision = Math.abs(magnitude) + 3;
-    }
-    const factor = Math.pow(10, precision);
-    return Math.round(value * factor) / factor;
-  };
-
-  // Only add 10% padding if explicit minValue/maxValue are NOT set
+  // Only add padding if explicit minValue/maxValue are NOT set
   // If explicit values are provided, use them directly without padding
   if (indicator.minValue == null && indicator.maxValue == null) {
-    // Add 10% padding to bounds (adds 10% extra space above and below the data range)
-    const delta = bounds.max - bounds.min;
-    bounds.max = roundBounds(bounds.max + delta * 0.1);
-    bounds.min = roundBounds(bounds.min - delta * 0.1);
+    bounds = padAndRoundBounds(bounds, indicator.ticksCount ?? 5);
   }
   indicatorGraphSpecification.bounds = bounds;
 
@@ -816,26 +753,15 @@ function IndicatorVisualisation({
     ticksCount: indicator.ticksCount ?? undefined,
     ticksRounding: indicator.ticksRounding ?? undefined,
     valueRounding: indicator.valueRounding ?? undefined,
-    includeZero: false,
     range: [] as number[],
   };
-  // includeZero is kept for backwards compatibility but not used since we always set range
-  // Only set to true if explicitly requested via minValue or maxValue
-  if (indicator.minValue === 0 || indicator.maxValue === 0) {
-    yRange.includeZero = true;
-  } else if (indicator?.quantity?.name === 'päästöt' && indicator.minValue == null) {
-    yRange.includeZero = true;
-  }
 
   // If explicit minValue/maxValue are set, use them directly without any modification
   // Otherwise, use calculated bounds (but don't force 0 unless explicitly requested)
-  const explicitMinValue: unknown = indicator.minValue;
-  const explicitMaxValue: unknown = indicator.maxValue;
-  let minValue: number;
-  let maxValue: number;
-  if (typeof explicitMinValue === 'number') {
+  let minValue, maxValue;
+  if (indicator.minValue != null) {
     // Use explicit minValue exactly as provided
-    minValue = explicitMinValue;
+    minValue = indicator.minValue;
   } else {
     minValue = indicatorGraphSpecification.bounds.min;
     // Legacy support: for 'päästöt' quantity, include 0 if no explicit minValue is set
@@ -844,9 +770,9 @@ function IndicatorVisualisation({
     }
   }
 
-  if (typeof explicitMaxValue === 'number') {
+  if (indicator.maxValue != null) {
     // Use explicit maxValue exactly as provided
-    maxValue = explicitMaxValue;
+    maxValue = indicator.maxValue;
   } else {
     maxValue = indicatorGraphSpecification.bounds.max;
   }
@@ -881,7 +807,7 @@ function IndicatorVisualisation({
           timeResolution={indicator.timeResolution}
           traces={traces}
           goalTraces={goalTraces}
-          trendTrace={trendTrace ?? null}
+          trendTrace={trendTrace}
           title={plotTitle}
         />
       </div>
@@ -915,7 +841,7 @@ function IndicatorVisualisation({
           timeResolution={indicator.timeResolution}
           traces={traces}
           goalTraces={goalTraces}
-          trendTrace={trendTrace ?? null}
+          trendTrace={trendTrace}
           title={null}
           desiredTrend={indicator.desiredTrend}
           referenceValue={indicator.referenceValue}
