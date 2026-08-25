@@ -596,13 +596,26 @@ function synthesizeVisualization(
         showTotalLine: indicator.showTotalLine,
       } as unknown as IndicatorVisualizationBlockData;
     case 'pie': {
-      const years = chartSeries
+      // A pie slice can only represent a value that belongs to the chosen
+      // dimension's category alone. On a multi-dimensional indicator the
+      // series also contain cross-dimension combination values (tagged with
+      // a second dimension's category), and no per-category aggregation of
+      // those is meaningful in general — so leave them out, like a
+      // backend-aggregated total would.
+      const pieChartSeries = chartSeries.map((series) => ({
+        ...series,
+        values: series.values.filter(
+          (value) => value.categories.length === (series.dimensionCategory ? 1 : 0)
+        ),
+      }));
+      const years = pieChartSeries
         .flatMap((series) => series.values)
         .map((value) => (value.date ? new Date(value.date).getFullYear() : null))
         .filter((year): year is number => year != null);
       return {
         __typename: 'IndicatorDefaultPieChart',
         ...common,
+        chartSeries: pieChartSeries,
         year: years.length ? Math.max(...years) : null,
       } as unknown as IndicatorVisualizationBlockData;
     }
@@ -1075,7 +1088,7 @@ function PlanIdentifierInput({
         type="text"
         value={input}
         onChange={(event) => setInput(event.target.value)}
-        placeholder="Plan identifier, e.g. tampere-ilmasto"
+        placeholder="Plan identifier, e.g. sunnydale"
         aria-label="Plan identifier"
       />
       <button type="submit">Load</button>
@@ -1190,6 +1203,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     apiUrl: DEFAULT_API_URL,
-    initialPlanIdentifier: 'tampere-ilmasto',
+    initialPlanIdentifier: 'sunnydale',
   },
 };

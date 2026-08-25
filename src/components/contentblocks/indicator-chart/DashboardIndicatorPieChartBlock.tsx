@@ -5,6 +5,7 @@ import type { PieSeriesOption } from 'echarts/charts';
 import { LegendComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import type { CallbackDataParams } from 'echarts/types/dist/shared';
+import { useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
@@ -78,14 +79,17 @@ function createTooltipFormatter(indicator: IndicatorType | null, seriesData: Ser
 
 const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, year }: Props) => {
   const theme = useTheme();
+  const t = useTranslations();
   // Same palette resolution as the bar/line/area chart blocks, so a
   // category gets the same color in every chart type
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const assertedYear = year ?? getLatestYear(chartSeries);
 
+  // No explicit year and none derivable from the data means there is
+  // nothing to slice
   if (!assertedYear) {
-    return <div>No year provided</div>;
+    return <div>{t('data-not-available')}</div>;
   }
 
   const seriesData =
@@ -99,13 +103,17 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
         (v): v is NonNullable<typeof v> => v?.date != null && doYearsMatch(assertedYear, v.date)
       )?.value;
 
-      const value = valueForYear ?? 0;
+      // A category with no value for the chosen year gets no slice — a
+      // zero-value slice would misrepresent missing data as a measured zero
+      if (valueForYear == null) {
+        return acc;
+      }
 
       return [
         ...acc,
         {
           name: categoryName,
-          value: value,
+          value: valueForYear,
           itemStyle: {
             // An unset defaultColor is returned as an empty string
             color: series.dimensionCategory.defaultColor || undefined,
@@ -113,6 +121,10 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
         },
       ];
     }, [] as SeriesData[]) ?? [];
+
+  if (!seriesData.length) {
+    return <div>{t('data-not-available')}</div>;
+  }
 
   // With only a few categories there's room to name the slices directly, so
   // the legend would just duplicate the labels; with more, the slice labels
