@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from 'react';
-
 import { useTheme } from '@emotion/react';
 
 import { PieChart } from 'echarts/charts';
@@ -13,6 +11,7 @@ import { Chart, type ECOption } from '@common/components/Chart';
 import type { PieChartVisualizationFragment } from '@/common/__generated__/graphql';
 
 import { getDefaultColors } from './indicator-chart-colors';
+import type { GraphsTheme } from './indicator-charts-utility';
 
 echarts.use([PieChart, LegendComponent]);
 
@@ -79,6 +78,10 @@ function createTooltipFormatter(indicator: IndicatorType | null, seriesData: Ser
 
 const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, year }: Props) => {
   const theme = useTheme();
+  // Same palette resolution as the bar/line/area chart blocks, so a
+  // category gets the same color in every chart type
+  const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
+  const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const assertedYear = year ?? getLatestYear(chartSeries);
 
   if (!assertedYear) {
@@ -111,23 +114,10 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
       ];
     }, [] as SeriesData[]) ?? [];
 
-  //hide legends on smaller screens to prevent overlapping in some cases
-  const [isCompactLayout, setIsCompactLayout] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const breakpoint = theme.breakpointXl;
-    const mediaQuery = window.matchMedia(`(max-width: ${breakpoint})`);
-
-    const update = (event?: MediaQueryList | MediaQueryListEvent) => {
-      setIsCompactLayout((event ?? mediaQuery).matches);
-    };
-    update();
-
-    mediaQuery.addEventListener('change', update);
-    return () => mediaQuery.removeEventListener('change', update);
-  }, [theme.breakpointXl]);
+  // With only a few categories there's room to name the slices directly, so
+  // the legend would just duplicate the labels; with more, the slice labels
+  // fall back to percent only and the legend carries the names.
+  const labelSegments = seriesData.length < 5;
 
   const option: ECOption & { series: PieSeriesOption[] } = {
     backgroundColor: theme.themeColors.white,
@@ -137,16 +127,20 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
       formatter: createTooltipFormatter(indicator ?? null, seriesData),
     },
     legend: {
-      show: !isCompactLayout,
+      show: !labelSegments,
       orient: 'horizontal',
       bottom: 0,
-      left: 'center',
+      right: 0,
+      // Keep swatches left of their labels (auto flips them for a
+      // right-anchored legend)
+      align: 'left',
       type: 'plain',
       selectedMode: false,
-      itemGap: 20,
+      // Also the gap between wrapped legend rows — ECharts has no separate
+      // row-gap setting
+      itemGap: 10,
       itemWidth: 18,
       itemHeight: 12,
-      formatter: (name: string) => `${name}\u00A0\u00A0\u00A0\u00A0`,
       textStyle: {
         color: theme.textColor.primary,
       },
@@ -156,14 +150,21 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
       pageIconColor: theme.textColor.primary,
       pageIconInactiveColor: theme.textColor.tertiary,
     },
-    color: getDefaultColors(theme),
+    color: palette,
     series: [
       {
         type: 'pie',
-        center: ['50%', isCompactLayout ? '50%' : '40%'],
-        top: 0,
-        bottom: isCompactLayout ? 0 : 20,
+        // Pin the pie to the upper part of the chart with an explicit
+        // center and radius, leaving the bottom ~quarter free for the
+        // wrapping legend (up to ~4 rows) so they can't overlap. Without a
+        // legend the pie takes the full height.
+        center: ['50%', labelSegments ? '50%' : '40%'],
+        radius: '58%',
         avoidLabelOverlap: true,
+        // Sliver slices get no label; their share is still in the tooltip.
+        // When the legend is hidden the label is a category's only
+        // identification, so always attempt one.
+        minShowLabelAngle: labelSegments ? 0 : 8,
         itemStyle: {
           borderRadius: 0,
           borderColor: theme.themeColors.white,
@@ -172,13 +173,22 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
 
         label: {
           show: true,
-          formatter: (params: CallbackDataParams) =>
-            `${params.name}\n${params.percent ? `${Math.round(params.percent)}%` : ''}`,
+          fontSize: 14,
+          // Wrap long category names instead of running off the canvas
+          width: 160,
+          overflow: 'break',
+          formatter: (params: CallbackDataParams) => {
+            const percent = params.percent ? `${Math.round(params.percent)}%` : '';
+            return labelSegments ? `${params.name}\n${percent}` : percent;
+          },
         },
         labelLine: {
           show: true,
-          length: 0,
+          length: labelSegments ? 10 : 0,
           length2: 6,
+        },
+        labelLayout: {
+          hideOverlap: true,
         },
         emphasis: {
           label: {
@@ -197,7 +207,7 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
       <h5>
         {dimension?.name} ({assertedYear})
       </h5>
-      <Chart data={option} isLoading={false} height="300px" />
+      <Chart data={option} isLoading={false} height="400px" />
     </>
   );
 };

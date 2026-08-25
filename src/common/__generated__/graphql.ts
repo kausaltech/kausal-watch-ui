@@ -14052,7 +14052,7 @@ export type IndicatorGraphDataQueryVariables = Exact<{
 
 export type IndicatorGraphDataQuery = (
   { plan: (
-    { scenarios: Array<(
+    { id: string, scenarios: Array<(
       { id: string, identifier: string, name: string }
       & { __typename: 'Scenario' }
     )> }
@@ -16754,6 +16754,73 @@ export type GetPledgeFeatureEnabledQuery = (
     ) }
     & { __typename: 'Plan' }
   ) | null }
+  & { __typename: 'Query' }
+);
+
+export type StorybookIndicatorExplorerQueryVariables = Exact<{
+  plan: Scalars['ID']['input'];
+}>;
+
+
+export type StorybookIndicatorExplorerQuery = (
+  { plan: (
+    { id: string, name: string, themeIdentifier: string | null, viewUrl: string | null, organization: (
+      { name: string }
+      & { __typename: 'Organization' }
+    ) }
+    & { __typename: 'Plan' }
+  ) | null, planIndicators: Array<(
+    { id: string, name: string, level: string | null, timeResolution: IndicatorTimeResolution, description: string | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, valueRounding: number | null, desiredTrend: IndicatorDesiredTrend | null, showTrendline: boolean, showTotalLine: boolean, dataCategoriesAreStackable: boolean, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ), latestValue: (
+      { date: string | null, value: number }
+      & { __typename: 'IndicatorValue' }
+    ) | null, values: Array<(
+      { id: string, value: number, date: string | null, categories: Array<(
+        { id: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    )>, goals: Array<(
+      { id: string, value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, quantity: (
+      { name: string }
+      & { __typename: 'Quantity' }
+    ) | null, referenceValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, defaultVisualization: (
+      { dimension: (
+        { id: string, name: string }
+        & { __typename: 'Dimension' }
+      ) | null }
+      & { __typename: 'IndicatorDefaultAreaChart' | 'IndicatorDefaultLineChart' }
+    ) | (
+      { barType: string | null, dimension: (
+        { id: string, name: string }
+        & { __typename: 'Dimension' }
+      ) | null }
+      & { __typename: 'IndicatorDefaultBarChart' }
+    ) | (
+      { year: number | null, dimension: (
+        { id: string, name: string }
+        & { __typename: 'Dimension' }
+      ) | null }
+      & { __typename: 'IndicatorDefaultPieChart' }
+    ) | { __typename: 'IndicatorDefaultSummary' } | null, dimensions: Array<(
+      { dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string, defaultColor: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) }
+      & { __typename: 'IndicatorDimension' }
+    )> }
+    & { __typename: 'Indicator' }
+  )> | null }
   & { __typename: 'Query' }
 );
 

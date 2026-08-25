@@ -275,8 +275,10 @@
       "ScenarioType"
     ],
     "ValidationRule": [
+      "AllowedCombinationsRule",
       "DimensionSumRule",
       "NoGapsRule",
+      "RequiredCombinationsRule",
       "ValueRangeRule"
     ],
     "VisualizationEntry": [

@@ -124,12 +124,23 @@ const DashboardIndicatorLineChartBlock = ({
 
   const option = {
     backgroundColor: theme.themeColors.white,
+    // Same legend style as the pie chart block
     legend: {
       show: true,
-      data: legendData,
-      left: 'center',
+      orient: 'horizontal',
       bottom: 0,
-      textStyle: { color: theme.textColor.secondary },
+      right: 0,
+      // Keep swatches left of their labels (auto flips them for a
+      // right-anchored legend)
+      align: 'left',
+      type: 'plain',
+      data: legendData,
+      // Also the gap between wrapped legend rows — ECharts has no separate
+      // row-gap setting
+      itemGap: 10,
+      itemWidth: 18,
+      itemHeight: 12,
+      textStyle: { color: theme.textColor.primary },
     },
     tooltip: {
       trigger: 'axis',
@@ -148,7 +159,9 @@ const DashboardIndicatorLineChartBlock = ({
       left: 20,
       right: 20,
       top: 40,
-      bottom: 60,
+      // Reserve the bottom ~quarter for the wrapping legend (up to ~4
+      // rows), like the pie chart block does
+      bottom: 100,
       containLabel: true,
     },
     xAxis: {
@@ -164,7 +177,7 @@ const DashboardIndicatorLineChartBlock = ({
   return (
     <>
       <h5>{dimension?.name}</h5>
-      <Chart data={option} isLoading={false} height="300px" />
+      <Chart data={option} isLoading={false} height="400px" />
     </>
   );
 };
