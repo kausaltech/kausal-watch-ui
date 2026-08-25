@@ -771,8 +771,12 @@ function LazyRender({ children, minHeight = 500 }: { children: ReactNode; minHei
     return () => observer.disconnect();
   }, [visible]);
 
+  // Keep minHeight as a permanent floor: the children start out as short
+  // loading placeholders while their queries run, and letting the row
+  // collapse below the placeholder height while scrolling makes the page
+  // height yo-yo, which throws the scroll position back up the page.
   return (
-    <div ref={ref} style={visible ? undefined : { minHeight }}>
+    <div ref={ref} style={{ minHeight }}>
       {visible ? children : null}
     </div>
   );
@@ -895,10 +899,19 @@ function describeIndicator(indicator: ExplorerIndicator): string {
 
 function IndicatorComparisonList({ plan }: { plan: string }) {
   const themes = useMemo(getThemes, []);
-  const { data, loading, error } = useQuery<ExplorerQueryData, ExplorerQueryVariables>(
-    GET_PLAN_INDICATORS,
-    { variables: { plan } }
-  );
+  const {
+    data: currentData,
+    previousData,
+    loading,
+    error,
+  } = useQuery<ExplorerQueryData, ExplorerQueryVariables>(GET_PLAN_INDICATORS, {
+    variables: { plan },
+  });
+  // Keep rendering the previous result if the query ever reloads (e.g. a
+  // cache write from a row's own indicator query invalidating this one) —
+  // unmounting the whole list would reset the scroll position and all
+  // LazyRender states.
+  const data = currentData ?? previousData;
 
   // Resolve the plan's theme the same way the app does (layout.tsx):
   // explicit themeIdentifier, falling back to the plan identifier.
@@ -915,9 +928,15 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
     addons.getChannel().emit(UPDATE_GLOBALS, { globals: { theme: themeKey } });
   }, [themeFound, themeKey]);
 
-  if (loading) return <Message>Loading indicators for “{plan}”…</Message>;
+  if (loading && !data) return <Message>Loading indicators for “{plan}”…</Message>;
   if (error) return <Message>Error: {error.message}</Message>;
-  if (!data?.plan) return <Message>No plan found with identifier “{plan}”.</Message>;
+  if (!data?.plan) {
+    return loading ? (
+      <Message>Loading indicators for “{plan}”…</Message>
+    ) : (
+      <Message>No plan found with identifier “{plan}”.</Message>
+    );
+  }
 
   const indicators = data.planIndicators ?? [];
 

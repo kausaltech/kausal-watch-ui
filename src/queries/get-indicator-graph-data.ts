@@ -1,16 +1,11 @@
-import { type TypedDocumentNode, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
 
-import type {
-  IndicatorGraphDataQuery,
-  IndicatorGraphDataQueryVariables,
-} from '@/common/__generated__/graphql';
-
-export const GET_INDICATOR_GRAPH_DATA: TypedDocumentNode<
-  IndicatorGraphDataQuery,
-  IndicatorGraphDataQueryVariables
-> = gql`
+export const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
     plan(id: $plan) {
+      # Select id so the result is normalized and merged into the cached
+      # Plan entity — an unidentifiable plan object would *replace* the
+      # cached plan(id:) reference and wipe other queries' plan fields
       id
       scenarios {
         id
@@ -63,7 +58,6 @@ export const GET_INDICATOR_GRAPH_DATA: TypedDocumentNode<
         }
       }
       dimensions {
-        id
         dimension {
           id
           name
@@ -119,7 +113,6 @@ export const GET_INDICATOR_GRAPH_DATA: TypedDocumentNode<
         name
         normalizations {
           unit {
-            id
             shortName
           }
           normalizer {
@@ -155,7 +148,6 @@ export const GET_INDICATOR_GRAPH_DATA: TypedDocumentNode<
             }
           }
           dimensions {
-            id
             dimension {
               id
               name
