@@ -3,6 +3,10 @@ import { gql } from '@apollo/client';
 export const GET_INDICATOR_GRAPH_DATA = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
     plan(id: $plan) {
+      # Select id so the result is normalized and merged into the cached
+      # Plan entity — an unidentifiable plan object would *replace* the
+      # cached plan(id:) reference and wipe other queries' plan fields
+      id
       scenarios {
         id
         identifier
