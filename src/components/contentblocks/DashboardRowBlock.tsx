@@ -3,40 +3,40 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 
-import { transientOptions } from '@common/themes/styles/styled';
-
-import type { StreamFieldFragment } from '@/common/__generated__/graphql';
+import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';
 import IndicatorVisualizationBlock from '@/components/indicators/IndicatorVisualizationBlock';
 
 import Card from '../common/Card';
 import RichText from '../common/RichText';
 import { SectionHeader } from './ActionListBlock';
-import { getReadableThemeTextColor, hasLowContrast } from './colorUtils';
+import { getReadableThemeTextColor } from './colorUtils';
 
 const DashboardRowSection = styled.div<{ $isFirst: boolean; $isLast: boolean }>`
-  background-color: ${(props) => props.theme.section.dashboardRowBlock.background};
-  color: ${(props) => props.theme.section.dashboardRowBlock.color};
+  background-color: ${(props) => props.theme.themeColors.light};
+  color: ${(props) => props.theme.neutralDark};
   position: relative;
   padding-top: ${({ $isFirst }) => ($isFirst ? 'var(--block-padding-top)' : 0)};
   padding-bottom: ${({ $isLast }) => ($isLast ? 'var(--block-padding-bottom)' : 0)};
 `;
 
-const DashboardSectionHeader = styled(SectionHeader, transientOptions)<{ $isFirst: boolean }>`
-  /* Default colors in theme are derived from other variables so we still need to check for contrast */
+const DashboardSectionHeader = styled(SectionHeader)`
   color: ${({ theme }) =>
     getReadableThemeTextColor(
-      theme.section.dashboardRowBlock.background,
-      theme.section.dashboardRowBlock.color,
+      theme.themeColors.light,
+      theme.headingsColor,
       theme.themeColors.white
     )};
-  padding-top: ${({ $isFirst }) => ($isFirst ? 0 : 'calc(var(--block-header-margin-bottom) * 1.5)')};
+  padding-top: var(--block-header-margin-bottom);
   padding-bottom: var(--block-header-margin-bottom);
   margin-bottom: 0;
 `;
 
 // Extract the DashboardRowBlock fragment type from the union
-type DashboardRowBlockFragment = Extract<StreamFieldFragment, { __typename: 'DashboardRowBlock' }>;
+type DashboardRowBlockFragment = Extract<
+  StreamFieldFragmentFragment,
+  { __typename: 'DashboardRowBlock' }
+>;
 // Get the element type of the blocks array
 export type DashboardBlock = NonNullable<DashboardRowBlockFragment['blocks']>[number];
 
@@ -56,21 +56,6 @@ interface DashboardRowBlockProps extends Omit<DashboardRowBlockFragment, 'rawVal
   blocks: DashboardBlock[];
   isFirst: boolean;
   isLast: boolean;
-}
-
-/* Cards stack on narrow screens, go two per row on medium screens and only
- * split into the full number of columns once there's room for them. */
-function getColumnProps(cardCount: number) {
-  switch (cardCount) {
-    case 1:
-      return {};
-    case 2:
-      return { md: 6 };
-    case 3:
-      return { md: 6, lg: 4 };
-    default:
-      return { md: 6, lg: Math.max(Math.floor(12 / cardCount), 3) };
-  }
 }
 
 const StyledRow = styled(Row)`
@@ -94,9 +79,9 @@ const StyledCard = styled(Card)`
 
   &.outline {
     ${({ theme }) =>
-      hasLowContrast(theme.section.dashboardRowBlock.background, theme.themeColors.white) &&
+      theme.themeColors.light === '#fefefe' &&
       `
-        /* Improve card contrast when the dashboard background is nearly the same as the card. */
+        /* Improve white card contrast when dashboard section is also near-white. */
         border-width: 1px;
         border-color: ${theme.neutralLight};
       `}
@@ -158,6 +143,23 @@ const DashboardCardContents = ({ block }: { block: DashboardBlock }) => {
   );
 };
 
+/* Cards stack on narrow screens, go two per row on medium screens and only
+ * split into the full number of columns once there's room for them. */
+function getColumnProps(cardCount: number) {
+  switch (cardCount) {
+    case 1:
+      return {};
+    case 2:
+      return { md: 6 };
+    case 3:
+      return { md: 6, lg: 4 };
+    case 4:
+      return { md: 6, xl: 3 };
+    default:
+      return { md: 6, lg: Math.max(Math.floor(12 / cardCount), 3) };
+  }
+}
+
 const DashboardRowBlock = ({ id, blocks, isFirst, isLast }: DashboardRowBlockProps) => {
   const t = useTranslations();
   const headerBlock = blocks.find(isDashboardHeaderBlock);
@@ -174,7 +176,7 @@ const DashboardRowBlock = ({ id, blocks, isFirst, isLast }: DashboardRowBlockPro
     <DashboardRowSection id={id ?? undefined} $isFirst={isFirst} $isLast={isLast}>
       <Container>
         {headerBlock?.text ? (
-          <DashboardSectionHeader $isFirst={isFirst}>{headerBlock.text}</DashboardSectionHeader>
+          <DashboardSectionHeader>{headerBlock.text}</DashboardSectionHeader>
         ) : null}
         {cardBlocks.length > 0 && (
           <StyledRow>
