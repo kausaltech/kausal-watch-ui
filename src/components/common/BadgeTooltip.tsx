@@ -1,15 +1,15 @@
-import React from 'react';
+import type React from 'react';
 
 import styled from '@emotion/styled';
+
 import { readableColor, shade } from 'polished';
-import { Button, TooltipTrigger } from 'react-aria-components';
 import SVG from 'react-inlinesvg';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
 import Tooltip from './Tooltip';
 
-const WrapperButton = styled(Button, transientOptions)<{ $isLink: boolean }>`
+const WrapperButton = styled.button<{ $isLink: boolean }>`
   padding: 0;
   margin: 0;
   background-color: transparent;
@@ -211,16 +211,13 @@ const BadgeTooltip = (props: BadgeTooltipProps) => {
     );
   }
 
-  return (
-    <span id={badgeId}>
-      <TooltipTrigger>
-        <WrapperButton $isLink={badgeContentProps.isLink}>
-          <BadgeContent {...badgeContentProps} />
-        </WrapperButton>
-        {tooltip && <Tooltip>{tooltip}</Tooltip>}
-      </TooltipTrigger>
-    </span>
+  const badge = (
+    <WrapperButton type="button" $isLink={badgeContentProps.isLink}>
+      <BadgeContent {...badgeContentProps} />
+    </WrapperButton>
   );
+
+  return <span id={badgeId}>{tooltip ? <Tooltip title={tooltip}>{badge}</Tooltip> : badge}</span>;
 };
 
 export default BadgeTooltip;

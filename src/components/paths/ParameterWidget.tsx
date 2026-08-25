@@ -1,11 +1,10 @@
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { gql } from '@apollo/client';
 import { useMutation, useReactiveVar } from '@apollo/client/react';
-import { useFocusable } from '@react-aria/focus';
 import { useTranslations } from 'next-intl';
 import { Range, getTrackBackground } from 'react-range';
 
@@ -14,7 +13,7 @@ import { activeScenarioVar } from '@common/apollo/paths-cache';
 import { ParameterInterface } from '@/common/__generated__/paths/graphql';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
-import Tooltip, { TooltipTrigger } from '@/components/common/Tooltip';
+import Tooltip from '@/components/common/Tooltip';
 import { usePaths } from '@/context/paths/paths';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 
@@ -208,39 +207,31 @@ export const BoolWidget = (props: BoolWidgetProps) => {
 
   const label = parameter.label || parameter.description || t('will_be_implemented');
 
-  // Solution for non-button components triggering tooltip: https://github.com/adobe/react-spectrum/issues/6142
-  const FocusableInput = forwardRef((props, ref) => {
-    // forwardRef doesn't guarantee a ref, so need to create a backup one so that we have a ref to our trigger every time
-    let backupRef = useRef(null);
-    let determinedRef = ref ?? backupRef;
-    const { focusableProps } = useFocusable(props, determinedRef);
-    // if display: block is used it'll take the entire width and render the tooltip off screen
-    return <input ref={determinedRef} {...focusableProps} {...props} />;
-  });
-
   if (!isCustomizable) return null;
   return (
     <WidgetWrapper className="form-check form-switch">
-      <TooltipTrigger>
-        <FocusableInput
-          className="form-check-input"
-          type="checkbox"
-          role="switch"
-          id={id!}
-          name={id!}
-          checked={boolValue!}
-          onChange={() => handleChange({ parameterId: id!, boolValue: !boolValue })}
-          disabled={loading}
-          style={{ transform: 'scale(1.5)' }}
-        />
-        {!hideLabel && (
-          <label className="form-check-label" htmlFor={id!}>
-            {label}
-            {isCustomized ? '*' : ''}
-          </label>
-        )}
-        <Tooltip>{parameter.description || label}</Tooltip>
-      </TooltipTrigger>
+      <Tooltip title={parameter.description || label}>
+        {/* The tooltip needs a wrapper that receives events even while the input is disabled */}
+        <span>
+          <input
+            className="form-check-input"
+            type="checkbox"
+            role="switch"
+            id={id!}
+            name={id!}
+            checked={boolValue!}
+            onChange={() => handleChange({ parameterId: id!, boolValue: !boolValue })}
+            disabled={loading}
+            style={{ transform: 'scale(1.5)' }}
+          />
+          {!hideLabel && (
+            <label className="form-check-label" htmlFor={id!}>
+              {label}
+              {isCustomized ? '*' : ''}
+            </label>
+          )}
+        </span>
+      </Tooltip>
     </WidgetWrapper>
   );
 };

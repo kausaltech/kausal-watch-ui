@@ -1,12 +1,10 @@
-import React from 'react';
-
 import type { CombinedGraphQLErrors } from '@apollo/client/errors';
-import { Button as AriaButton } from 'react-aria-components';
+import { useTranslations } from 'next-intl';
 
 import type { IndicatorDetailsQuery, IndicatorListQuery } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
 
-import { AriaDialog, AriaModal, AriaModalOverlay } from './IndicatorModal.styles';
+import { StyledDialog } from './IndicatorModal.styles';
 import IndicatorModalContent from './IndicatorModalContent';
 import { IndicatorModalNavigation } from './IndicatorModalNavigation';
 
@@ -48,54 +46,45 @@ export function IndicatorModalBase({
   onClose,
   navigation,
 }: IndicatorModalBaseProps) {
+  const t = useTranslations();
+
   return (
-    <AriaModalOverlay
-      isDismissable
-      isOpen={isOpen}
-      onOpenChange={(open) => {
-        if (!open) {
-          onClose();
+    <StyledDialog open={isOpen} onClose={onClose} aria-labelledby="indicator-modal-title">
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label={t('close')}
+        style={{
+          position: 'absolute',
+          top: '5px',
+          right: '0',
+          zIndex: 1001,
+          border: 0,
+          background: 'transparent',
+        }}
+      >
+        <Icon.Times width="32px" height="32px" />
+      </button>
+      <IndicatorModalContent
+        indicator={indicator}
+        layout={layout}
+        loading={loading}
+        error={error as CombinedGraphQLErrors}
+        usableCategoryTypes={
+          usableCategoryTypes as NonNullable<IndicatorListQuery['plan']>['categoryTypes']
         }
-      }}
-    >
-      <AriaModal>
-        <AriaDialog aria-labelledby="indicator-modal-title">
-          <AriaButton
-            slot="close"
-            onClick={onClose}
-            style={{
-              position: 'absolute',
-              top: '5px',
-              right: '0',
-              zIndex: 1001,
-              border: 0,
-              background: 'transparent',
-            }}
-          >
-            <Icon.Times width="32px" height="32px" />
-          </AriaButton>
-          <IndicatorModalContent
-            indicator={indicator}
-            layout={layout}
-            loading={loading}
-            error={error as CombinedGraphQLErrors}
-            usableCategoryTypes={
-              usableCategoryTypes as NonNullable<IndicatorListQuery['plan']>['categoryTypes']
-            }
-          />
-          {navigation && (
-            <IndicatorModalNavigation
-              prevIndicatorId={navigation.prevIndicatorId}
-              nextIndicatorId={navigation.nextIndicatorId}
-              currentIndicatorNumber={navigation.currentIndicatorNumber}
-              indicatorCount={navigation.indicatorCount}
-              loading={loading}
-              onPrevious={() => navigation.onPrevious()}
-              onNext={() => navigation.onNext()}
-            />
-          )}
-        </AriaDialog>
-      </AriaModal>
-    </AriaModalOverlay>
+      />
+      {navigation && (
+        <IndicatorModalNavigation
+          prevIndicatorId={navigation.prevIndicatorId}
+          nextIndicatorId={navigation.nextIndicatorId}
+          currentIndicatorNumber={navigation.currentIndicatorNumber}
+          indicatorCount={navigation.indicatorCount}
+          loading={loading}
+          onPrevious={() => navigation.onPrevious()}
+          onNext={() => navigation.onNext()}
+        />
+      )}
+    </StyledDialog>
   );
 }

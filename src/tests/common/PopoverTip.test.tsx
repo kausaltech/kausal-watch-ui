@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { screen } from '@testing-library/react';
+import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import PopoverTip from '../../components/common/PopoverTip';
@@ -28,6 +28,7 @@ describe('PopoverTip', () => {
     await user.tab();
     expect(await screen.findByRole('tooltip')).toBeInTheDocument();
     await user.tab();
-    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+    // The MUI tooltip fades out with a transition, so wait for it to be removed
+    await waitForElementToBeRemoved(() => screen.queryByRole('tooltip'));
   });
 });
