@@ -39,6 +39,20 @@ const WidgetWrapper = styled.div`
   }
 `;
 
+const SwitchWrapper = styled.span`
+  /* This wrapper is the tooltip anchor and hover target (a disabled input can't
+     receive pointer events). Bootstrap floats .form-check-input out of the flow,
+     which would leave this box empty, so float the wrapper instead and unfloat
+     the input inside it. The margin matches .form-switch's input margin. */
+  float: left;
+  margin-left: -2.5em;
+
+  && .form-check-input {
+    float: none;
+    margin-left: 0;
+  }
+`;
+
 const RangeValue = styled.div`
   display: flex;
   white-space: nowrap;
@@ -211,8 +225,7 @@ export const BoolWidget = (props: BoolWidgetProps) => {
   return (
     <WidgetWrapper className="form-check form-switch">
       <Tooltip title={parameter.description || label}>
-        {/* The tooltip needs a wrapper that receives events even while the input is disabled */}
-        <span>
+        <SwitchWrapper>
           <input
             className="form-check-input"
             type="checkbox"
@@ -224,14 +237,14 @@ export const BoolWidget = (props: BoolWidgetProps) => {
             disabled={loading}
             style={{ transform: 'scale(1.5)' }}
           />
-          {!hideLabel && (
-            <label className="form-check-label" htmlFor={id!}>
-              {label}
-              {isCustomized ? '*' : ''}
-            </label>
-          )}
-        </span>
+        </SwitchWrapper>
       </Tooltip>
+      {!hideLabel && (
+        <label className="form-check-label" htmlFor={id!}>
+          {label}
+          {isCustomized ? '*' : ''}
+        </label>
+      )}
     </WidgetWrapper>
   );
 };
