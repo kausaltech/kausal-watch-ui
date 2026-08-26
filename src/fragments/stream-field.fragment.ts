@@ -189,6 +189,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
       title
       body
       significantDigits
+      indicatorIsNormalized
       indicator {
         id
         identifier
