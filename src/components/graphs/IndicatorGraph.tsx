@@ -951,6 +951,32 @@ function IndicatorGraph({
     const extraLines = titleLines - 1;
     const gridTop = 65 + extraLines * 24;
 
+    // The tick interval ECharts will derive from the axis extent (the same
+    // nice() rounding padAndRoundBounds uses when snapping the range).
+    const [rangeMin, rangeMax] = yRange.range;
+    const yTickInterval =
+      rangeMin != null && rangeMax != null && rangeMax > rangeMin
+        ? (() => {
+            const rough = (rangeMax - rangeMin) / (yRange.ticksCount ?? 5);
+            const magnitude = 10 ** Math.floor(Math.log10(rough));
+            const fraction = rough / magnitude;
+            const niceFraction =
+              fraction < 1.5 ? 1 : fraction < 2.5 ? 2 : fraction < 4 ? 3 : fraction < 7 ? 5 : 10;
+            return niceFraction * magnitude;
+          })()
+        : null;
+    // ticksRounding is a maximum-significant-digits setting; applied blindly
+    // it collapses neighboring ticks into the same label once values need
+    // more digits (with 1 significant digit, the 110 tick renders as "100"
+    // right above the real 100). Never round a tick label below the
+    // precision of the tick interval.
+    const tickSignificantDigits = (value: number, rounding: number): number => {
+      if (!yTickInterval || value === 0) return rounding;
+      const needed =
+        Math.floor(Math.log10(Math.abs(value))) - Math.floor(Math.log10(yTickInterval)) + 1;
+      return Math.min(Math.max(rounding, needed), 21);
+    };
+
     const option: ECOption = {
       backgroundColor: theme.themeColors.white,
       title: {
@@ -1137,7 +1163,9 @@ function IndicatorGraph({
             return formatNumber(
               value,
               format,
-              rounding ? { maximumSignificantDigits: rounding } : undefined
+              rounding
+                ? { maximumSignificantDigits: tickSignificantDigits(value, rounding) }
+                : undefined
             );
           },
         },
@@ -1161,6 +1189,7 @@ function IndicatorGraph({
     graphSettings.drawGoalLine,
     timeResolution,
     yRange.range,
+    yRange.ticksCount,
     yRange.ticksRounding,
     yRange.unit,
     yRange.valueRounding,

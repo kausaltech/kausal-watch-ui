@@ -273,14 +273,32 @@ function padAndRoundBounds(
   }
   // Flat data has no extent to pad or derive a step from; use the value itself
   const span = delta > 0 ? delta : Math.abs(bounds.max) || 1;
-  const rough = span / Math.max(2 * tickCount, 1);
-  const magnitude = 10 ** Math.floor(Math.log10(rough));
-  const normalized = rough / magnitude;
-  const nice =
-    normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 2.5 ? 2.5 : normalized <= 5 ? 5 : 10;
-  const step = nice * magnitude;
-  let min = Math.floor((bounds.min - span * 0.1) / step) * step;
-  let max = Math.ceil((bounds.max + span * 0.1) / step) * step;
+  let min = bounds.min - span * 0.1;
+  let max = bounds.max + span * 0.1;
+
+  // The tick interval ECharts will pick for the axis (its nice() rounding
+  // with round=true). Snapping the bounds to multiples of anything finer
+  // leaves the axis min/max between nice ticks, and ECharts labels those
+  // boundary values too — after tick rounding the boundary label can
+  // duplicate the neighboring nice tick (e.g. "100" printed twice).
+  const niceInterval = (roughStep: number): number => {
+    const magnitude = 10 ** Math.floor(Math.log10(roughStep));
+    const fraction = roughStep / magnitude;
+    const niceFraction =
+      fraction < 1.5 ? 1 : fraction < 2.5 ? 2 : fraction < 4 ? 3 : fraction < 7 ? 5 : 10;
+    return niceFraction * magnitude;
+  };
+
+  // Snapping widens the extent, which can change the interval ECharts
+  // derives from it; iterate until the snapped bounds are stable.
+  for (let i = 0; i < 3; i++) {
+    const step = niceInterval((max - min) / Math.max(tickCount, 1));
+    const snappedMin = Math.floor(min / step) * step;
+    const snappedMax = Math.ceil(max / step) * step;
+    if (snappedMin === min && snappedMax === max) break;
+    min = snappedMin;
+    max = snappedMax;
+  }
   // Padding must not make the axis cross zero when the data doesn't; the
   // opposite-end checks keep flat-at-zero data from collapsing the range
   if (bounds.min >= 0 && min < 0 && max > 0) min = 0;
@@ -739,10 +757,22 @@ function IndicatorVisualisation({
     }
   }
 
-  // Only add padding if explicit minValue/maxValue are NOT set
-  // If explicit values are provided, use them directly without padding
-  if (indicator.minValue == null && indicator.maxValue == null) {
-    bounds = padAndRoundBounds(bounds, indicator.ticksCount ?? 5);
+  // Pad and snap only derived bounds; an explicit minValue/maxValue is used
+  // exactly as provided. With a single explicit bound the other side is
+  // still derived — without snapping it, the axis boundary tick would show
+  // the raw data/trend extreme (e.g. "22,567.568").
+  if (indicator.minValue == null || indicator.maxValue == null) {
+    const padded = padAndRoundBounds(
+      {
+        min: indicator.minValue ?? bounds.min,
+        max: indicator.maxValue ?? bounds.max,
+      },
+      indicator.ticksCount ?? 5
+    );
+    bounds = {
+      min: indicator.minValue ?? padded.min,
+      max: indicator.maxValue ?? padded.max,
+    };
   }
   indicatorGraphSpecification.bounds = bounds;
 
