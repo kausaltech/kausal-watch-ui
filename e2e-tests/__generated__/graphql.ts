@@ -424,7 +424,6 @@ export type InstanceContext = {
   locale: InputMaybe<Scalars['String']['input']>;
 };
 
-/** An enumeration. */
 export enum ModelAction {
   Add = 'ADD',
   Change = 'CHANGE',
