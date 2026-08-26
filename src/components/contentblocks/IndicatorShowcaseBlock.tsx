@@ -13,6 +13,13 @@ import RichText from '@/components/common/RichText';
 import IndicatorProgressBar from '@/components/indicators/IndicatorProgressBar';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 
+import {
+  canNormalize,
+  getNormalizedUnit,
+  getNormalizedValue,
+  normalizesByDefault,
+} from './indicatorShowcase.utils';
+
 type IndicatorShowcaseBlockData = Extract<
   StreamFieldFragmentFragment,
   { __typename: 'IndicatorShowcaseBlock' }
@@ -24,6 +31,7 @@ interface IndicatorShowcaseBlockProps {
   title: IndicatorShowcaseBlockData['title'];
   body: IndicatorShowcaseBlockData['body'];
   significantDigits: IndicatorShowcaseBlockData['significantDigits'];
+  indicatorIsNormalized: IndicatorShowcaseBlockData['indicatorIsNormalized'];
   indicator: Indicator;
   linkButton: IndicatorShowcaseBlockData['linkButton'];
 }
@@ -48,33 +56,16 @@ const IndicatorShowcase = styled.div`
   }
 `;
 
-const getNormalizedValue = (indicatorValue, indicator) => {
-  const populationNormalizer = indicator.common?.normalizations.find(
-    (normalization) => normalization.normalizer.identifier === 'population'
-  );
-  if (populationNormalizer && indicatorValue.normalizedValues.length > 0) {
-    const normalized = indicatorValue.normalizedValues.find(
-      (normed) => normed.normalizerId === populationNormalizer.normalizer.id
-    );
-    return normalized?.value;
-  } else {
-    return undefined;
-  }
-};
-
-const getNormalizedUnit = (indicator) => {
-  const populationNormalizer = indicator.common?.normalizations.find(
-    (normalization) => normalization.normalizer.identifier === 'population'
-  );
-  if (populationNormalizer) {
-    return populationNormalizer.unit.shortName || populationNormalizer.unit.name;
-  } else {
-    return '';
-  }
-};
-
 const IndicatorShowcaseBlock = (props: IndicatorShowcaseBlockProps) => {
-  const { id = '', indicator, title, body, significantDigits, linkButton } = props;
+  const {
+    id = '',
+    indicator,
+    title,
+    body,
+    significantDigits,
+    indicatorIsNormalized,
+    linkButton,
+  } = props;
 
   const t = useTranslations();
   const goals = indicator.goals ?? [];
@@ -105,10 +96,8 @@ const IndicatorShowcaseBlock = (props: IndicatorShowcaseBlockProps) => {
     );
   } else {
     // Only show normalization if all values including goal are available as normalized
-    const canNormalize =
-      !!getNormalizedValue(firstValue, indicator) &&
-      !!getNormalizedValue(lastValue, indicator) &&
-      !!getNormalizedValue(lastGoal, indicator);
+    const normalizable = canNormalize(firstValue, lastValue, lastGoal, indicator);
+    const normalizeByDefault = normalizesByDefault(normalizable, indicatorIsNormalized);
 
     const baseValue = {
       date: firstValue.date ?? '',
@@ -141,7 +130,8 @@ const IndicatorShowcaseBlock = (props: IndicatorShowcaseBlockProps) => {
         baseValue={baseValue}
         lastValue={latestValue}
         goalValue={goalValue}
-        normalize={canNormalize}
+        normalize={normalizable}
+        normalizeByDefault={normalizeByDefault}
         unit={unit}
       />
     );
