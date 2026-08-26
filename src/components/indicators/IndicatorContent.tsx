@@ -201,6 +201,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
                         {/* In legacy layouts we show reference always with the visualisation */}
                         <IndicatorVisualisation
                           indicatorId={indicator.id}
+                          useLegacyGraph={false}
                           showReference={true}
                           showGraph={showIndicatorGraph}
                           showTable={showIndicatorTable}

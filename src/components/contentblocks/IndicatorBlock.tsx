@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
 
@@ -19,7 +20,7 @@ const IndicatorBlock = (props) => {
         <Row>
           <Col>
             <h2>{indicator.id}</h2>
-            <IndicatorVisualisation indicatorId={indicator.id} />
+            <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
           </Col>
         </Row>
       </Container>

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import PropTypes from 'prop-types';
@@ -29,7 +30,7 @@ const IndicatorItem = (props: { indicator: string; indicatorCount: number }) => 
 
   return (
     <Col className="mb-5" lg={{ size: singleIndicator ? 8 : 6, offset: singleIndicator ? 2 : 0 }}>
-      <IndicatorVisualisation indicatorId={indicator} />
+      <IndicatorVisualisation indicatorId={indicator} useLegacyGraph={false} />
       {showLink && (
         <div className="mt-2 text-right">
           <IndicatorLink id={indicator}>
