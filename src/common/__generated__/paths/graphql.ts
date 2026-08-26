@@ -40,6 +40,10 @@ export enum ActionSortOrder {
   Standard = 'STANDARD'
 }
 
+export type AllowedCombinationsRuleInput = {
+  enforcement: DatasetRuleEnforcement;
+};
+
 export type AssignCategoryInput = {
   category: Scalars['String']['input'];
   dimension: Scalars['String']['input'];
@@ -474,6 +478,16 @@ export type RenameItemInput = {
   oldItem: Scalars['String']['input'];
 };
 
+export type RequiredCombinationGroupInput = {
+  combinations: Array<Scalars['UUID']['input']>;
+  id: Scalars['String']['input'];
+};
+
+export type RequiredCombinationsRuleInput = {
+  enforcement: DatasetRuleEnforcement;
+  groups: Array<RequiredCombinationGroupInput>;
+};
+
 export enum ScenarioKind {
   Baseline = 'BASELINE',
   Custom = 'CUSTOM',
@@ -610,13 +624,17 @@ export type ValidationRuleInput = {
 
 /** One validation rule; exactly one variant field must be set. */
 export type ValidationRuleSpecInput = {
+  allowedCombinations: InputMaybe<AllowedCombinationsRuleInput>;
   dimensionSum: InputMaybe<DimensionSumRuleInput>;
   noGaps: InputMaybe<NoGapsRuleInput>;
+  requiredCombinations: InputMaybe<RequiredCombinationsRuleInput>;
   valueRange: InputMaybe<ValueRangeRuleInput>;
 };
 
 export type ValueRangeRuleInput = {
   enforcement: DatasetRuleEnforcement;
+  exclusiveMax: Scalars['Boolean']['input'];
+  exclusiveMin: Scalars['Boolean']['input'];
   max: InputMaybe<Scalars['Float']['input']>;
   min: InputMaybe<Scalars['Float']['input']>;
 };

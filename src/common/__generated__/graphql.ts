@@ -425,7 +425,6 @@ export type InstanceContext = {
   locale: InputMaybe<Scalars['String']['input']>;
 };
 
-/** An enumeration. */
 export enum ModelAction {
   Add = 'ADD',
   Change = 'CHANGE',
@@ -5789,7 +5788,7 @@ type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
 );
 
 type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
-  { title: string | null, body: string | null, significantDigits: number | null, id: string | null, blockType: string, field: string, blocks: Array<(
+  { title: string | null, body: string | null, significantDigits: number | null, indicatorIsNormalized: boolean | null, id: string | null, blockType: string, field: string, blocks: Array<(
     { id: string | null }
     & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
   ) | (
@@ -13907,7 +13906,7 @@ export type GetHomePageQuery = (
       ) | null> | null }
       & { __typename: 'IndicatorGroupBlock' }
     ) | (
-      { title: string | null, body: string | null, significantDigits: number | null, id: string | null, blockType: string, field: string, blocks: Array<(
+      { title: string | null, body: string | null, significantDigits: number | null, indicatorIsNormalized: boolean | null, id: string | null, blockType: string, field: string, blocks: Array<(
         { id: string | null }
         & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
       ) | (
@@ -16754,6 +16753,73 @@ export type GetPledgeFeatureEnabledQuery = (
     ) }
     & { __typename: 'Plan' }
   ) | null }
+  & { __typename: 'Query' }
+);
+
+export type StorybookIndicatorExplorerQueryVariables = Exact<{
+  plan: Scalars['ID']['input'];
+}>;
+
+
+export type StorybookIndicatorExplorerQuery = (
+  { plan: (
+    { id: string, name: string, themeIdentifier: string | null, viewUrl: string | null, organization: (
+      { name: string }
+      & { __typename: 'Organization' }
+    ) }
+    & { __typename: 'Plan' }
+  ) | null, planIndicators: Array<(
+    { id: string, name: string, level: string | null, timeResolution: IndicatorTimeResolution, description: string | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, valueRounding: number | null, desiredTrend: IndicatorDesiredTrend | null, showTrendline: boolean, showTotalLine: boolean, dataCategoriesAreStackable: boolean, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, unit: (
+      { name: string, shortName: string | null }
+      & { __typename: 'Unit' }
+    ), latestValue: (
+      { date: string | null, value: number }
+      & { __typename: 'IndicatorValue' }
+    ) | null, values: Array<(
+      { id: string, value: number, date: string | null, categories: Array<(
+        { id: string }
+        & { __typename: 'DimensionCategory' }
+      )> }
+      & { __typename: 'IndicatorValue' }
+    )>, goals: Array<(
+      { id: string, value: number, date: string | null }
+      & { __typename: 'IndicatorGoal' }
+    ) | null> | null, quantity: (
+      { name: string }
+      & { __typename: 'Quantity' }
+    ) | null, referenceValue: (
+      { value: number, date: string | null }
+      & { __typename: 'IndicatorValue' }
+    ) | null, defaultVisualization: (
+      { dimension: (
+        { id: string, name: string }
+        & { __typename: 'Dimension' }
+      ) | null }
+      & { __typename: 'IndicatorDefaultAreaChart' | 'IndicatorDefaultLineChart' }
+    ) | (
+      { barType: string | null, dimension: (
+        { id: string, name: string }
+        & { __typename: 'Dimension' }
+      ) | null }
+      & { __typename: 'IndicatorDefaultBarChart' }
+    ) | (
+      { year: number | null, dimension: (
+        { id: string, name: string }
+        & { __typename: 'Dimension' }
+      ) | null }
+      & { __typename: 'IndicatorDefaultPieChart' }
+    ) | { __typename: 'IndicatorDefaultSummary' } | null, dimensions: Array<(
+      { dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string, defaultColor: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) }
+      & { __typename: 'IndicatorDimension' }
+    )> }
+    & { __typename: 'Indicator' }
+  )> | null }
   & { __typename: 'Query' }
 );
 
