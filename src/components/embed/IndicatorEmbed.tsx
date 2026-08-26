@@ -16,6 +16,7 @@ const IndicatorEmbed = ({ path }: IndicatorEmbedPropsType) => {
     <IndicatorVisualisation
       indicatorId={indicatorId}
       indicatorLink={getIndicatorLinkProps(indicatorId).href}
+      useLegacyGraph={false}
     />
   );
 };

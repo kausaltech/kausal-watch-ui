@@ -1,5 +1,8 @@
+import React from 'react';
+
 import styled from '@emotion/styled';
 
+import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
 
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
@@ -9,11 +12,7 @@ const IndicatorGraphSection = styled.div`
   padding: ${(props) => props.theme.spaces.s300};
 `;
 
-type IndicatorBlockProps = {
-  indicator: { id: string };
-};
-
-const IndicatorBlock = (props: IndicatorBlockProps) => {
+const IndicatorBlock = (props) => {
   const { indicator } = props;
   return (
     <IndicatorGraphSection>
@@ -21,12 +20,18 @@ const IndicatorBlock = (props: IndicatorBlockProps) => {
         <Row>
           <Col>
             <h2>{indicator.id}</h2>
-            <IndicatorVisualisation indicatorId={indicator.id} />
+            <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
           </Col>
         </Row>
       </Container>
     </IndicatorGraphSection>
   );
+};
+
+IndicatorBlock.propTypes = {
+  indicator: PropTypes.shape({
+    id: PropTypes.string,
+  }).isRequired,
 };
 
 export default IndicatorBlock;
