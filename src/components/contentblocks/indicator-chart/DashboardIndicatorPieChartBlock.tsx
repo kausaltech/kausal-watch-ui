@@ -28,6 +28,17 @@ interface SeriesData {
   value: number;
 }
 
+/**
+ * Read the year from an ISO-ish date string textually. Parsing through
+ * `Date` is timezone-dependent: date-only ISO values parse as UTC midnight,
+ * so local getters report the previous year for users west of UTC — a
+ * configured 2024 pie would then reject every 2024 value.
+ */
+function yearOfDate(date: string): number | undefined {
+  const match = /^(\d{4})\b/.exec(date);
+  return match ? Number(match[1]) : undefined;
+}
+
 function getLatestYear(chartSeries: Props['chartSeries']) {
   const lastDate = chartSeries?.[0]?.values?.[chartSeries?.[0]?.values.length - 1]?.date;
 
@@ -35,13 +46,11 @@ function getLatestYear(chartSeries: Props['chartSeries']) {
     return undefined;
   }
 
-  return new Date(lastDate).getFullYear();
+  return yearOfDate(lastDate);
 }
 
 function doYearsMatch(year: number, date: string) {
-  const yearFromDate = new Date(date).getFullYear();
-
-  return yearFromDate === year;
+  return yearOfDate(date) === year;
 }
 
 /**
