@@ -194,7 +194,13 @@ function IndicatorVisualisation({
     ? allTraces
     : allTraces.filter((t) => t.dataType !== 'total' || showTotalLine);
 
-  const [goalTraces, goalBounds] = normalizeByPopulation
+  // Goal and trend overlays derive solely from the primary indicator, so in
+  // comparison mode they would show over both organizations' series without
+  // attribution — suppress them like the legacy renderer did. Suppressing at
+  // the source also keeps them out of the table and the y-axis bounds.
+  const suppressOverlays = normalizeByPopulation || compareTo != null;
+
+  const [goalTraces, goalBounds] = suppressOverlays
     ? [[], []]
     : generateGoalTraces(indicator, scenarios, i18n);
 
@@ -210,10 +216,7 @@ function IndicatorVisualisation({
       : { min: Math.min(...timestamps), max: Math.max(...timestamps) };
 
   const [rawTrendTrace, trendBounds] =
-    normalizeByPopulation ||
-    !hasTimeDimension ||
-    !indicator.showTrendline ||
-    !indicator.showTotalLine
+    suppressOverlays || !hasTimeDimension || !indicator.showTrendline || !indicator.showTotalLine
       ? [null, null]
       : generateTrendTrace(indicator, traces, goalTraces, i18n);
   const trendTrace = rawTrendTrace ?? null;
