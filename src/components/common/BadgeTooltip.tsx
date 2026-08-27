@@ -217,7 +217,17 @@ const BadgeTooltip = (props: BadgeTooltipProps) => {
     </WrapperButton>
   );
 
-  return <span id={badgeId}>{tooltip ? <Tooltip title={tooltip}>{badge}</Tooltip> : badge}</span>;
+  return (
+    <span id={badgeId}>
+      {tooltip ? (
+        <Tooltip title={tooltip} describeChild>
+          {badge}
+        </Tooltip>
+      ) : (
+        badge
+      )}
+    </span>
+  );
 };
 
 export default BadgeTooltip;

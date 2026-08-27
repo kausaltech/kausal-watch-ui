@@ -44,7 +44,7 @@ const PopoverTip = (props: PopoverTipProps) => {
   const id = `tt-${identifier}`;
 
   return (
-    <Tooltip title={content}>
+    <Tooltip title={content} describeChild>
       <InfoButton type="button" $invert={invert.toString()} $compact={compact} id={id}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
