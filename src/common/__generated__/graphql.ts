@@ -425,7 +425,6 @@ export type InstanceContext = {
   locale: InputMaybe<Scalars['String']['input']>;
 };
 
-/** An enumeration. */
 export enum ModelAction {
   Add = 'ADD',
   Change = 'CHANGE',
@@ -14097,7 +14096,112 @@ export type IndicatorGraphDataQuery = (
         & { __typename: 'Scenario' }
       ) | null }
       & { __typename: 'IndicatorGoal' }
-    ) | null> | null, datasets: Array<(
+    ) | null> | null, defaultVisualization: (
+      { showTotalLine: boolean | null, indicator: (
+        { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null, goals: Array<(
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName: string | null }
+          & { __typename: 'Unit' }
+        ) }
+        & { __typename: 'Indicator' }
+      ), dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) | null, chartSeries: Array<(
+        { dimensionCategory: (
+          { id: string, name: string, defaultColor: string }
+          & { __typename: 'DimensionCategory' }
+        ) | null, values: Array<(
+          { id: string, value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null> }
+        & { __typename: 'DashboardIndicatorChartSeries' }
+      )> }
+      & { __typename: 'IndicatorDefaultAreaChart' | 'IndicatorDefaultLineChart' }
+    ) | (
+      { barType: string | null, indicator: (
+        { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null, goals: Array<(
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName: string | null }
+          & { __typename: 'Unit' }
+        ) }
+        & { __typename: 'Indicator' }
+      ), dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) | null, chartSeries: Array<(
+        { dimensionCategory: (
+          { id: string, name: string, defaultColor: string }
+          & { __typename: 'DimensionCategory' }
+        ) | null, values: Array<(
+          { id: string, value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null> }
+        & { __typename: 'DashboardIndicatorChartSeries' }
+      )> }
+      & { __typename: 'IndicatorDefaultBarChart' }
+    ) | (
+      { year: number | null, indicator: (
+        { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null, goals: Array<(
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName: string | null }
+          & { __typename: 'Unit' }
+        ) }
+        & { __typename: 'Indicator' }
+      ), dimension: (
+        { id: string, name: string, categories: Array<(
+          { id: string, name: string }
+          & { __typename: 'DimensionCategory' }
+        )> }
+        & { __typename: 'Dimension' }
+      ) | null, chartSeries: Array<(
+        { dimensionCategory: (
+          { id: string, name: string, defaultColor: string }
+          & { __typename: 'DimensionCategory' }
+        ) | null, values: Array<(
+          { id: string, value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null> }
+        & { __typename: 'DashboardIndicatorChartSeries' }
+      )> }
+      & { __typename: 'IndicatorDefaultPieChart' }
+    ) | (
+      { indicator: (
+        { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorValue' }
+        ) | null, goals: Array<(
+          { value: number, date: string | null }
+          & { __typename: 'IndicatorGoal' }
+        ) | null> | null, unit: (
+          { name: string, shortName: string | null }
+          & { __typename: 'Unit' }
+        ) }
+        & { __typename: 'Indicator' }
+      ) }
+      & { __typename: 'IndicatorDefaultSummary' }
+    ) | null, datasets: Array<(
       { uuid: string, schema: (
         { uuid: string, metrics: Array<(
           { label: string, unit: string, isComputed: boolean }
@@ -16785,7 +16889,10 @@ export type StorybookIndicatorExplorerQuery = (
     )>, goals: Array<(
       { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
-    ) | null> | null, quantity: (
+    ) | null> | null, actions: Array<(
+      { id: string, identifier: string, name: string }
+      & { __typename: 'Action' }
+    )>, quantity: (
       { name: string }
       & { __typename: 'Quantity' }
     ) | null, referenceValue: (

@@ -18,6 +18,7 @@ import { UPDATE_GLOBALS } from 'storybook/internal/core-events';
 import { addons } from 'storybook/preview-api';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
+import possibleTypes from '@/common/__generated__/possible_types.json';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 import IndicatorVisualizationBlock, {
   type IndicatorVisualizationBlockData,
@@ -107,6 +108,11 @@ const GET_PLAN_INDICATORS = gql`
         value
         date
       }
+      actions(plan: $plan) {
+        id
+        identifier
+        name
+      }
       minValue
       maxValue
       ticksCount
@@ -193,6 +199,7 @@ interface ExplorerQueryData {
           categories: { id: string }[];
         }[];
         goals: { id: string; value: number; date: string | null }[] | null;
+        actions: { id: string; identifier: string | null; name: string }[];
         minValue: number | null;
         maxValue: number | null;
         ticksCount: number | null;
@@ -393,7 +400,13 @@ function formatSettingValue(value: unknown): string {
 
 /** Collapsible listing of the indicator's own visualisation-affecting
  *  settings, which override theme defaults in the graph components. */
-function VisualisationSettings({ indicator }: { indicator: ExplorerIndicator }) {
+function VisualisationSettings({
+  indicator,
+  planViewUrl,
+}: {
+  indicator: ExplorerIndicator;
+  planViewUrl?: string | null;
+}) {
   const entries: [string, unknown][] = [
     ['quantity', indicator.quantity?.name],
     ['minValue', indicator.minValue],
@@ -414,6 +427,32 @@ function VisualisationSettings({ indicator }: { indicator: ExplorerIndicator }) 
       'referenceValue',
       indicator.referenceValue &&
         `${indicator.referenceValue.value} (${indicator.referenceValue.date ?? 'no date'})`,
+    ],
+    [
+      'actions',
+      indicator.actions.length ? (
+        <>
+          {indicator.actions.map((action, idx) => {
+            const label = action.identifier || action.name;
+            const actionUrl =
+              planViewUrl && action.identifier
+                ? `${planViewUrl.replace(/\/+$/, '')}/actions/${action.identifier}`
+                : null;
+            return (
+              <span key={action.id}>
+                {idx > 0 && ', '}
+                {actionUrl ? (
+                  <a href={actionUrl} target="_blank" rel="noreferrer" title={action.name}>
+                    {label}
+                  </a>
+                ) : (
+                  <span title={action.name}>{label}</span>
+                )}
+              </span>
+            );
+          })}
+        </>
+      ) : null,
     ],
     ['defaultVisualization', indicator.defaultVisualization?.__typename],
     ['groupingDimension', indicator.defaultVisualization?.dimension?.name],
@@ -901,6 +940,9 @@ function describeIndicator(indicator: ExplorerIndicator): string {
   if (indicator.goals?.length) {
     parts.push(plural(indicator.goals.length, 'goal'));
   }
+  if (indicator.actions.length) {
+    parts.push(plural(indicator.actions.length, 'action'));
+  }
   const defaultViz =
     indicator.defaultVisualization &&
     KIND_BY_DEFAULT_VISUALIZATION[indicator.defaultVisualization.__typename];
@@ -992,7 +1034,7 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
               <LevelBadge>{indicator.level}</LevelBadge>
             )}
             <small>{describeIndicator(indicator)}</small>
-            <VisualisationSettings indicator={indicator} />
+            <VisualisationSettings indicator={indicator} planViewUrl={data.plan.viewUrl} />
           </header>
           <LazyRender>
             <GraphColumns>
@@ -1133,7 +1175,9 @@ function IndicatorExplorer({ apiUrl, initialPlanIdentifier = '' }: IndicatorExpl
     () =>
       new ApolloClient({
         link: new HttpLink({ uri: endpoint }),
-        cache: new InMemoryCache(),
+        // possibleTypes is required for fragments on unions/interfaces
+        // (e.g. defaultVisualization) to resolve from the cache
+        cache: new InMemoryCache({ possibleTypes: possibleTypes.possibleTypes }),
       }),
     [endpoint]
   );
