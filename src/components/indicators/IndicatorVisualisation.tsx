@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactElement, useState } from 'react';
+import { type ReactElement, useEffect, useState } from 'react';
 
 import { useQuery } from '@apollo/client/react';
 import { useLocale, useTranslations } from 'next-intl';
@@ -50,6 +50,21 @@ export type IndicatorVisualisationProps = {
   showFactorValues?: boolean;
   defaultVisualization?: DefaultVisualization;
 };
+
+/**
+ * The embed page sizes its iframe to the loading placeholder first and
+ * re-measures on `indicator_graph_ready`. IndicatorGraph dispatches that
+ * event itself, but the configured visualization blocks don't — without it,
+ * embeds stay clipped at the placeholder height. Rendered as the last
+ * sibling of the block so its mount effect runs after the block subtree's
+ * effects (including chart initialization).
+ */
+function VisualizationReadySignal() {
+  useEffect(() => {
+    document.dispatchEvent(new Event('indicator_graph_ready'));
+  }, []);
+  return null;
+}
 
 function IndicatorVisualisation({
   indicatorId,
@@ -305,6 +320,7 @@ function IndicatorVisualisation({
     graphComponent = (
       <div aria-hidden={showTable}>
         <IndicatorVisualizationBlock block={effectiveDefaultVisualization} />
+        <VisualizationReadySignal />
       </div>
     );
   } else {
