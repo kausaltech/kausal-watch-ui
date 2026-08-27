@@ -73,6 +73,8 @@ export type GraphSettings = {
   categorySymbols?: string[];
   fillMarkers?: boolean;
   goalSymbol?: string;
+  /** Tenant-configured chart background; the canvas is white when unset. */
+  customBackground?: string;
 };
 
 export type GraphColors = {
@@ -102,6 +104,7 @@ export function parseGraphSettings(rawGraphSettings: unknown): GraphSettings {
     categorySymbols: strArray(raw.categorySymbols),
     fillMarkers: bool(raw.fillMarkers),
     goalSymbol: str(raw.goalSymbol),
+    customBackground: str(raw.customBackground),
   };
 }
 

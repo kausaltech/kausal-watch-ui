@@ -3,6 +3,7 @@ import {
   formatDateLabel,
   niceTickInterval,
   normalizeDate,
+  parseGraphSettings,
   tickSignificantDigits,
   wrapTitle,
 } from '../indicator-graph.utils';
@@ -113,5 +114,16 @@ describe('wrapTitle', () => {
 
   it('wraps long titles at word boundaries', () => {
     expect(wrapTitle('one two three four', 9)).toBe('one two\nthree\nfour');
+  });
+});
+
+describe('parseGraphSettings', () => {
+  it('parses the custom chart background', () => {
+    expect(parseGraphSettings({ customBackground: '#f4efe9' }).customBackground).toBe('#f4efe9');
+  });
+
+  it('drops non-string values and tolerates missing settings', () => {
+    expect(parseGraphSettings({ customBackground: 42 }).customBackground).toBeUndefined();
+    expect(parseGraphSettings(undefined).customBackground).toBeUndefined();
   });
 });

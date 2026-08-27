@@ -189,7 +189,9 @@ function IndicatorGraph({
         : null;
 
     return {
-      backgroundColor: theme.themeColors.white,
+      // The legacy renderer used the tenant-configured custom background as
+      // its plot background; keep honoring it, white when unset
+      backgroundColor: graphSettings.customBackground || theme.themeColors.white,
       title: {
         text: wrappedTitle ?? undefined,
         subtext: yRange.unit,
@@ -302,6 +304,7 @@ function IndicatorGraph({
     graphSettings.categorySymbols,
     graphSettings.fillMarkers,
     graphSettings.goalSymbol,
+    graphSettings.customBackground,
     timeResolution,
     yRange,
     trendTrace,
