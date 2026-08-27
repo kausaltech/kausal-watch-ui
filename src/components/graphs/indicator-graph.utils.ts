@@ -179,20 +179,44 @@ export const formatNumber = (
  * `YYYY-1-1`, and any parseable date is truncated to `YYYY-1-1` for YEAR
  * resolution. Unparseable values pass through as strings.
  */
+/**
+ * Date-string handling must be timezone-proof. ECharts parses timezone-less
+ * date strings as LOCAL time with its own parser (unlike native `Date`,
+ * which treats ISO date-only strings as UTC midnight) — so tick timestamps
+ * and hovered data points sit on local calendar boundaries. Format date
+ * STRINGS by extracting their calendar parts textually (never through
+ * `Date`, whose UTC/local behavior depends on the string format), and
+ * format tick TIMESTAMPS with local getters, matching how ECharts placed
+ * them.
+ */
+const DATE_PARTS_RE = /^(\d{4})-(\d{1,2})(?:-(\d{1,2}))?$/;
+
 export function normalizeDate(d: string | number, timeResolution: TimeResolution): string {
+  // Normalized dates use the ISO-padded YYYY-01-01 form: like the backend's
+  // ISO date values it parses as UTC midnight, so the chart data lands
+  // exactly on the UTC-computed axis ticks (option useUTC). The legacy
+  // YYYY-1-1 form would parse as local midnight and drift off by a timezone
+  // offset.
   if (typeof d === 'number') {
-    // If it's a number (likely a year), convert to YYYY-1-1 format
+    // If it's a number (likely a year), treat it as one
     if (d > 1900 && d < 2100) {
-      return `${d}-1-1`;
+      return `${d}-01-01`;
     }
     return String(d);
+  }
+  const parts = DATE_PARTS_RE.exec(d);
+  if (parts) {
+    if (timeResolution === 'YEAR') {
+      return `${parts[1]}-01-01`;
+    }
+    return d;
   }
   const dateObj = new Date(d);
   if (Number.isNaN(dateObj.getTime())) {
     return String(d);
   }
   if (timeResolution === 'YEAR') {
-    return `${dateObj.getFullYear()}-1-1`;
+    return `${dateObj.getUTCFullYear()}-01-01`;
   }
   return d;
 }
@@ -202,17 +226,32 @@ export function formatDateLabel(
   value: string | number | Date,
   timeResolution: TimeResolution
 ): string {
+  if (typeof value === 'string') {
+    const parts = DATE_PARTS_RE.exec(value);
+    if (parts) {
+      if (timeResolution === 'YEAR') {
+        return parts[1];
+      }
+      if (timeResolution === 'MONTH') {
+        return `${parts[1]}-${parts[2].padStart(2, '0')}`;
+      }
+      return `${parts[1]}-${parts[2].padStart(2, '0')}-${(parts[3] ?? '1').padStart(2, '0')}`;
+    }
+  }
   const date = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(date.getTime())) {
     return String(value);
   }
+  // Timestamps come from ECharts' local-calendar tick placement — read them
+  // back with local getters (toISOString would shift the period near
+  // midnight boundaries in non-UTC timezones)
   if (timeResolution === 'YEAR') {
     return String(date.getFullYear());
   }
   if (timeResolution === 'MONTH') {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
   }
-  return date.toISOString().split('T')[0];
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
 const compareDateStrings = (a: string | number, b: string | number): number => {
@@ -262,13 +301,10 @@ export function collectChartDates({
 
   // Extend to nonQuantifiedGoalDate if needed (for directional goal arrow)
   if (nonQuantifiedGoal?.trend && nonQuantifiedGoal?.date && timeResolution === 'YEAR') {
-    const goalDateObj = new Date(nonQuantifiedGoal.date);
-    if (!Number.isNaN(goalDateObj.getTime())) {
-      const planEndDate = `${goalDateObj.getFullYear()}-1-1`;
-      if (!datesArray.includes(planEndDate)) {
-        datesArray.push(planEndDate);
-        datesArray.sort(compareDateStrings);
-      }
+    const planEndDate = normalizeDate(nonQuantifiedGoal.date, 'YEAR');
+    if (DATE_PARTS_RE.test(planEndDate) && !datesArray.includes(planEndDate)) {
+      datesArray.push(planEndDate);
+      datesArray.sort(compareDateStrings);
     }
   }
 
@@ -316,11 +352,11 @@ export function buildXAxisCategories({
 
 /** Whether all (time) dates fall within one calendar year. */
 export function datesSpanSingleYear(allDates: Array<string | number>): boolean {
-  const years = new Set<number>();
+  const years = new Set<string>();
   allDates.forEach((date) => {
-    const dateObj = new Date(date);
-    if (!Number.isNaN(dateObj.getTime())) {
-      years.add(dateObj.getFullYear());
+    const year = formatDateLabel(date, 'YEAR');
+    if (/^\d{4}$/.test(year)) {
+      years.add(year);
     }
   });
   return years.size === 1;
@@ -860,7 +896,7 @@ export function applyGoalMarkers({
       },
       name: 'Reference Value',
       label: {
-        formatter: `${new Date(referenceValue.date ?? '').getFullYear().toString()}: ${t('indicator-graph-reference-line')}`,
+        formatter: `${formatDateLabel(referenceValue.date, 'YEAR')}: ${t('indicator-graph-reference-line')}`,
         position: 'insideEndBottom',
       },
     });
@@ -893,7 +929,7 @@ export function applyGoalMarkers({
         symbol: 'none',
         name: 'Goal',
         label: {
-          formatter: `${t('indicator-goal')} ${new Date(nonQuantifiedGoal.date ?? '').getFullYear().toString()}: ${t(`indicator-desired-trend-${goalDirection.toLowerCase()}`)}`,
+          formatter: `${t('indicator-goal')} ${formatDateLabel(nonQuantifiedGoal.date, 'YEAR')}: ${t(`indicator-desired-trend-${goalDirection.toLowerCase()}`)}`,
           position: 'insideEndBottom',
         },
       },

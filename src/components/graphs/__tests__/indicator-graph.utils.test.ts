@@ -10,12 +10,12 @@ import {
 
 describe('normalizeDate', () => {
   it('converts bare years to YYYY-1-1', () => {
-    expect(normalizeDate(2023, 'YEAR')).toBe('2023-1-1');
-    expect(normalizeDate(2023, 'MONTH')).toBe('2023-1-1');
+    expect(normalizeDate(2023, 'YEAR')).toBe('2023-01-01');
+    expect(normalizeDate(2023, 'MONTH')).toBe('2023-01-01');
   });
 
   it('truncates dates to the year for YEAR resolution', () => {
-    expect(normalizeDate('2023-12-31', 'YEAR')).toBe('2023-1-1');
+    expect(normalizeDate('2023-12-31', 'YEAR')).toBe('2023-01-01');
   });
 
   it('keeps full dates for finer resolutions', () => {
@@ -80,7 +80,7 @@ describe('collectChartDates', () => {
         hasTimeDimension: true,
         timeResolution: 'YEAR',
       })
-    ).toEqual(['2022-1-1', '2023-1-1', '2025-1-1']);
+    ).toEqual(['2022-01-01', '2023-01-01', '2025-01-01']);
   });
 
   it('extends to the non-quantified goal date', () => {
@@ -92,7 +92,7 @@ describe('collectChartDates', () => {
         timeResolution: 'YEAR',
         nonQuantifiedGoal: { trend: 'INCREASE' as never, date: '2030-06-30' },
       })
-    ).toEqual(['2022-1-1', '2023-1-1', '2030-1-1']);
+    ).toEqual(['2022-01-01', '2023-01-01', '2030-01-01']);
   });
 
   it('returns the category values for non-time data', () => {
@@ -125,5 +125,27 @@ describe('parseGraphSettings', () => {
   it('drops non-string values and tolerates missing settings', () => {
     expect(parseGraphSettings({ customBackground: 42 }).customBackground).toBeUndefined();
     expect(parseGraphSettings(undefined).customBackground).toBeUndefined();
+  });
+});
+
+describe('timezone stability of date handling', () => {
+  // These must hold in every timezone (see the TZ-matrix run in CI/dev):
+  // ISO date-only strings parse as UTC midnight, the internal non-ISO
+  // YYYY-1-1 form parses as local midnight — both must label the same period.
+  it('labels ISO date-only values by their calendar parts', () => {
+    expect(formatDateLabel('2024-01-01', 'MONTH')).toBe('2024-01');
+    expect(formatDateLabel('2024-01-01', 'YEAR')).toBe('2024');
+    expect(formatDateLabel('2024-01-05', undefined)).toBe('2024-01-05');
+  });
+
+  it('labels the internal non-ISO normalized form by its calendar parts', () => {
+    expect(formatDateLabel('2024-1-1', 'YEAR')).toBe('2024');
+    expect(formatDateLabel('2024-1-1', 'MONTH')).toBe('2024-01');
+  });
+
+  it('normalizes date strings without timezone-dependent parsing', () => {
+    expect(normalizeDate('2024-01-01', 'YEAR')).toBe('2024-01-01');
+    expect(normalizeDate('2024-1-1', 'YEAR')).toBe('2024-01-01');
+    expect(normalizeDate('2024-12-31', 'YEAR')).toBe('2024-01-01');
   });
 });
