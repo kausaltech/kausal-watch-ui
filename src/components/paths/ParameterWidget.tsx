@@ -230,6 +230,9 @@ export const BoolWidget = (props: BoolWidgetProps) => {
             className="form-check-input"
             type="checkbox"
             role="switch"
+            /* The tooltip's ARIA attributes land on SwitchWrapper, not on this
+               input, so with the label hidden the switch needs its own name. */
+            aria-label={hideLabel ? parameter.description || label : undefined}
             id={id!}
             name={id!}
             checked={boolValue!}
