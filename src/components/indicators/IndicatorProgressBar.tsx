@@ -195,6 +195,8 @@ type IndicatorType = {
 interface IndicatorProgressBarProps {
   indicatorId: string;
   normalize: boolean;
+  /** Whether to open in the normalized (per capita) view; set by the content editor. */
+  normalizeByDefault: boolean;
   baseValue: {
     value: number;
     normalizedValue?: number;
@@ -230,6 +232,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const {
     indicatorId,
     normalize,
+    normalizeByDefault,
     baseValue,
     lastValue,
     goalValue,
@@ -242,16 +245,11 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const width = useChartWidth();
   const [scope, animate] = useAnimate();
   const isInView = useInView(scope, { once: true });
-  const [isNormalized, setIsNormalized] = useState(false);
-
-  // Normalize by default if non normalized latest value is larger than base value
-  const normalizeByDefault = normalize && baseValue.value < lastValue.value;
+  const [isNormalized, setIsNormalized] = useState(normalizeByDefault);
 
   useEffect(() => {
-    if (normalize) {
-      setIsNormalized(normalizeByDefault);
-    }
-  }, [normalize, normalizeByDefault]);
+    setIsNormalized(normalizeByDefault);
+  }, [normalizeByDefault]);
 
   // The bar is built for showing reduction goals
   // we swap the goal and start values if the goal is to increase

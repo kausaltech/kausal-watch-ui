@@ -545,7 +545,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'IndicatorShowcaseBlock': {
-      const { indicator, title, body, significantDigits } = block;
+      const { indicator, title, body, significantDigits, indicatorIsNormalized } = block;
       return (
         <IndicatorShowcaseBlock
           id={id}
@@ -553,6 +553,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
           title={title}
           body={body}
           significantDigits={significantDigits}
+          indicatorIsNormalized={indicatorIsNormalized}
           linkButton={block.linkButton}
         />
       );

@@ -5788,7 +5788,7 @@ type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
 );
 
 type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
-  { title: string | null, body: string | null, significantDigits: number | null, id: string | null, blockType: string, field: string, blocks: Array<(
+  { title: string | null, body: string | null, significantDigits: number | null, indicatorIsNormalized: boolean | null, id: string | null, blockType: string, field: string, blocks: Array<(
     { id: string | null }
     & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
   ) | (
@@ -13906,7 +13906,7 @@ export type GetHomePageQuery = (
       ) | null> | null }
       & { __typename: 'IndicatorGroupBlock' }
     ) | (
-      { title: string | null, body: string | null, significantDigits: number | null, id: string | null, blockType: string, field: string, blocks: Array<(
+      { title: string | null, body: string | null, significantDigits: number | null, indicatorIsNormalized: boolean | null, id: string | null, blockType: string, field: string, blocks: Array<(
         { id: string | null }
         & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
       ) | (

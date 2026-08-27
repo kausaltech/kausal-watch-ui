@@ -37,6 +37,7 @@ const meta = {
   args: {
     indicatorId: '3',
     normalize: false,
+    normalizeByDefault: false,
     baseValue: {
       date: '2021',
       value: 1900,
