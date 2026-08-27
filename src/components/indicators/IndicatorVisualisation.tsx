@@ -44,6 +44,9 @@ type DefaultVisualization = IndicatorDetailsIndicator['defaultVisualization'];
 export type IndicatorVisualisationProps = {
   indicatorId: string;
   indicatorLink?: string;
+  /** Render the indicator name as a heading — for callers that don't
+   *  provide a heading of their own (e.g. RelatedIndicatorsBlock). */
+  showTitle?: boolean;
   showReference?: boolean;
   showGraph?: boolean;
   showTable?: boolean;
@@ -69,6 +72,7 @@ function VisualizationReadySignal() {
 function IndicatorVisualisation({
   indicatorId,
   indicatorLink,
+  showTitle = false,
   showReference = false,
   showGraph = true,
   showTable = true,
@@ -368,10 +372,12 @@ function IndicatorVisualisation({
 
   return (
     <div>
-      {indicatorLink && (
+      {indicatorLink ? (
         <a href={indicatorLink} target="_blank" rel="noreferrer">
           <h2>{plotTitle}</h2>
         </a>
+      ) : (
+        showTitle && <h2>{plotTitle}</h2>
       )}
       {enableIndicatorComparison && comparisonOrgs && comparisonOrgs.length > 0 && (
         <IndicatorComparisonSelect
