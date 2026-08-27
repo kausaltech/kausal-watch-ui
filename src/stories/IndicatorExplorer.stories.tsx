@@ -648,11 +648,18 @@ function synthesizeVisualization(
         .flatMap((series) => series.values)
         .map((value) => (value.date ? new Date(value.date).getFullYear() : null))
         .filter((year): year is number => year != null);
+      // When the indicator's configured default visualization is a pie
+      // chart, preview with its configured (possibly historical) year;
+      // otherwise synthesize the latest year found in the data.
+      const configuredYear =
+        indicator.defaultVisualization?.__typename === 'IndicatorDefaultPieChart'
+          ? (indicator.defaultVisualization.year ?? null)
+          : null;
       return {
         __typename: 'IndicatorDefaultPieChart',
         ...common,
         chartSeries: pieChartSeries,
-        year: years.length ? Math.max(...years) : null,
+        year: configuredYear ?? (years.length ? Math.max(...years) : null),
       } as unknown as IndicatorVisualizationBlockData;
     }
   }
