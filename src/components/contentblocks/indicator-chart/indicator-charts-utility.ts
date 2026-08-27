@@ -282,7 +282,16 @@ export function buildYAxisConfig(
   },
   color?: string
 ) {
-  const yAxis: any = {
+  const yAxis: {
+    type: 'value';
+    name: string;
+    nameTextStyle: { align: string; padding: number[]; fontSize: number };
+    axisLabel: { color?: string; formatter: (value: number) => string };
+    min?: number;
+    max?: number;
+    scale?: boolean;
+    splitNumber?: number;
+  } = {
     type: 'value',
     name: unit,
     nameTextStyle: {
@@ -298,6 +307,12 @@ export function buildYAxisConfig(
 
   if (typeof indicator?.minValue === 'number') {
     yAxis.min = indicator.minValue;
+  } else {
+    // Without an explicit minimum, don't force zero into the range: data
+    // lying away from zero (e.g. 95–105) would otherwise be compressed
+    // into a 0-based axis. `scale` lets ECharts pick nice bounds around
+    // the data, matching the ordinary indicator view's derived range.
+    yAxis.scale = true;
   }
   if (typeof indicator?.maxValue === 'number') {
     yAxis.max = indicator.maxValue;
