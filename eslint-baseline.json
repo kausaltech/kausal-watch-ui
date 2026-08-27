@@ -1200,18 +1200,6 @@
   "src/components/contentblocks/IndicatorShowcaseBlock.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 7
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 2
     }
   },
   "src/components/contentblocks/indicator-chart/DashboardIndicatorAreaChartBlock.tsx": {

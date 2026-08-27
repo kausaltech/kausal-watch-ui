@@ -1420,24 +1420,6 @@
       "count": 1,
       "message": "Type '{ children: ReactNode; disabled: any; ref: RefObject<any>; style: { height: string; width: string; borderRadius: string; background: string; alignSelf: \"center\"; }; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'."
     },
-    "5b4fc1112f5833924640143edd02e9b50de60784": {
-      "file": "src/components/paths/ParameterWidget.tsx",
-      "code": "TS2345",
-      "count": 1,
-      "message": "Argument of type '((instance: unknown) => void) | RefObject<unknown>' is not assignable to parameter of type 'RefObject<FocusableElement | null>'."
-    },
-    "9c5aa54b1a2ea83e8d819075a16b18489a578bb7": {
-      "file": "src/components/paths/ParameterWidget.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '((instance: unknown) => void) | RefObject<unknown>' is not assignable to type 'Ref<HTMLInputElement> | undefined'."
-    },
-    "be18f58acb80a3cc31d4abfdfe89dc66f4e108d9": {
-      "file": "src/components/paths/ParameterWidget.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '{ className: string; type: string; role: string; id: any; name: any; checked: any; onChange: () => void; disabled: boolean; style: { transform: string; }; }' is not assignable to type 'IntrinsicAttributes & RefAttributes<unknown>'."
-    },
     "d05d3771ee9b37add58767a6acade772d5bbd8eb": {
       "file": "src/components/paths/ParameterWidget.tsx",
       "code": "TS2345",

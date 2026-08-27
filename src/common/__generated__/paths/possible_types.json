@@ -26,6 +26,10 @@
       "DatasetPortType",
       "OperationInfo"
     ],
+    "CreateActionGroupPayload": [
+      "ActionGroupType",
+      "OperationInfo"
+    ],
     "CreateDataPointCommentPayload": [
       "DataPointComment",
       "OperationInfo"
@@ -220,6 +224,10 @@
     ],
     "UnresolveDataPointCommentPayload": [
       "DataPointComment",
+      "OperationInfo"
+    ],
+    "UpdateActionGroupPayload": [
+      "ActionGroupType",
       "OperationInfo"
     ],
     "UpdateDataPointCommentPayload": [

@@ -1,4 +1,11 @@
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -209,14 +216,28 @@ export const BoolWidget = (props: BoolWidgetProps) => {
   const label = parameter.label || parameter.description || t('will_be_implemented');
 
   // Solution for non-button components triggering tooltip: https://github.com/adobe/react-spectrum/issues/6142
-  const FocusableInput = forwardRef((props, ref) => {
-    // forwardRef doesn't guarantee a ref, so need to create a backup one so that we have a ref to our trigger every time
-    let backupRef = useRef(null);
-    let determinedRef = ref ?? backupRef;
-    const { focusableProps } = useFocusable(props, determinedRef);
-    // if display: block is used it'll take the entire width and render the tooltip off screen
-    return <input ref={determinedRef} {...focusableProps} {...props} />;
-  });
+  const FocusableInput = forwardRef<HTMLInputElement, ComponentPropsWithoutRef<'input'>>(
+    (props, forwardedRef) => {
+      // useFocusable needs an object ref, but forwardRef may hand us a
+      // callback ref or null — keep a local object ref and sync whatever
+      // was forwarded from it
+      const localRef = useRef<HTMLInputElement>(null);
+      const setRef = useCallback(
+        (element: HTMLInputElement | null) => {
+          localRef.current = element;
+          if (typeof forwardedRef === 'function') {
+            forwardedRef(element);
+          } else if (forwardedRef) {
+            forwardedRef.current = element;
+          }
+        },
+        [forwardedRef]
+      );
+      const { focusableProps } = useFocusable(props, localRef);
+      // if display: block is used it'll take the entire width and render the tooltip off screen
+      return <input ref={setRef} {...focusableProps} {...props} />;
+    }
+  );
 
   if (!isCustomizable) return null;
   return (

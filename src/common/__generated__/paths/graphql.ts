@@ -24,7 +24,7 @@ export type Scalars = {
 
 export type ActionConfigInput = {
   decisionLevel: InputMaybe<DecisionLevel>;
-  group: InputMaybe<Scalars['String']['input']>;
+  group: InputMaybe<Scalars['UUID']['input']>;
   noEffectValue: InputMaybe<Scalars['Float']['input']>;
   nodeClass: Scalars['String']['input'];
   parent: InputMaybe<Scalars['String']['input']>;
@@ -69,6 +69,7 @@ export type BindDatasetInput = {
 };
 
 export enum ChangeTargetKind {
+  ActionGroup = 'ACTION_GROUP',
   DatasetPort = 'DATASET_PORT',
   DataPoint = 'DATA_POINT',
   Dimension = 'DIMENSION',
@@ -78,6 +79,16 @@ export enum ChangeTargetKind {
   Node = 'NODE',
   Unknown = 'UNKNOWN'
 }
+
+export type CreateActionGroupInput = {
+  color: InputMaybe<Scalars['String']['input']>;
+  /** Optional UUID for the new action group. */
+  id: InputMaybe<Scalars['UUID']['input']>;
+  identifier: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  nextSibling: InputMaybe<Scalars['UUID']['input']>;
+  previousSibling: InputMaybe<Scalars['UUID']['input']>;
+};
 
 export type CreateDataPointCommentInput = {
   isReview: Scalars['Boolean']['input'];
@@ -518,6 +529,14 @@ export type SimpleConfigInput = {
 
 export type TagOperationInput = {
   tag: Scalars['String']['input'];
+};
+
+export type UpdateActionGroupInput = {
+  color: InputMaybe<Scalars['String']['input']>;
+  identifier: InputMaybe<Scalars['String']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+  nextSibling: InputMaybe<Scalars['UUID']['input']>;
+  previousSibling: InputMaybe<Scalars['UUID']['input']>;
 };
 
 export type UpdateDataPointCommentInput = {
