@@ -78,7 +78,7 @@ function IndicatorItem(props: IndicatorItemProps) {
           ) : (
             <h3>{indicator.name}</h3>
           )}
-          <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
+          <IndicatorVisualisation indicatorId={indicator.id} />
         </IndicatorContainer>
       </Col>
     );

@@ -27,12 +27,13 @@ import PlanProvider from '@/components/providers/PlanProvider';
 import { MOCK_PLAN } from '@/stories/mocks/plan.mocks';
 
 /**
- * A developer tool for comparing the legacy (Plotly) and new (ECharts)
- * IndicatorGraph components side by side with real data from any plan,
- * independent of the URL-based plan resolution used by the app. It talks
- * directly to the backend GraphQL API (which allows CORS from any origin),
- * so no Next.js proxy is needed. Each row renders the production
- * IndicatorVisualisation pipeline twice: legacy graph left, new graph right.
+ * A developer tool for inspecting indicator visualizations with real data
+ * from any plan, independent of the URL-based plan resolution used by the
+ * app. It talks directly to the backend GraphQL API (which allows CORS from
+ * any origin), so no Next.js proxy is needed. Each row renders the
+ * production IndicatorVisualisation pipeline; the "Preview as" dropdown
+ * additionally previews the indicator as any visualization block type,
+ * with synthesized chart data mirroring the backend's chartSeries logic.
  *
  * If a gitignored `.env.instances.local.json` exists at the repo root
  * (see `loadLocalInstances()` in .storybook/main.ts for the shape), the
@@ -503,15 +504,11 @@ function VisualisationSettings({
 
 const GraphColumns = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 800px);
 
   > div {
     padding: 0.75rem;
     min-width: 0;
-
-    &:first-of-type {
-      border-right: 1px solid #e2e2e2;
-    }
 
     h4 {
       font-size: 0.8rem;
@@ -759,7 +756,7 @@ function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
   return (
     <PreviewColumn $active={kind !== 'default'}>
       <ColumnHeader>
-        <h4>New (ECharts)</h4>
+        <h4>Rendered indicator</h4>
         <label>
           Preview as
           <select
@@ -791,11 +788,7 @@ function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
       {block ? (
         <IndicatorVisualizationBlock block={block} />
       ) : (
-        <IndicatorVisualisation
-          indicatorId={indicator.id}
-          useLegacyGraph={false}
-          showTable={false}
-        />
+        <IndicatorVisualisation indicatorId={indicator.id} showTable={false} />
       )}
     </PreviewColumn>
   );
@@ -1038,14 +1031,6 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
           </header>
           <LazyRender>
             <GraphColumns>
-              <div>
-                <h4>Legacy (Plotly)</h4>
-                <IndicatorVisualisation
-                  indicatorId={indicator.id}
-                  useLegacyGraph
-                  showTable={false}
-                />
-              </div>
               <EChartsPreviewColumn indicator={indicator} />
             </GraphColumns>
           </LazyRender>

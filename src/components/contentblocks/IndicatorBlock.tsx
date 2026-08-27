@@ -20,7 +20,7 @@ const IndicatorBlock = (props) => {
         <Row>
           <Col>
             <h2>{indicator.id}</h2>
-            <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
+            <IndicatorVisualisation indicatorId={indicator.id} />
           </Col>
         </Row>
       </Container>
