@@ -162,7 +162,9 @@ export const generateTrendTrace = (
     const highestGoalYear = Math.max(
       ...goals.map((goal) => {
         const goalDate = goal.x[goal.x.length - 1];
-        return goalDate ? new Date(goalDate).getFullYear() : NaN;
+        // Goal dates start with the year — read it textually; Date parsing
+        // is timezone-dependent for ISO date-only strings
+        return goalDate ? parseInt(String(goalDate), 10) : NaN;
       })
     );
 

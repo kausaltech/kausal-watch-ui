@@ -663,8 +663,10 @@ function synthesizeVisualization(
         }));
       const years = pieChartSeries
         .flatMap((series) => series.values)
-        .map((value) => (value.date ? new Date(value.date).getFullYear() : null))
-        .filter((year): year is number => year != null);
+        // Textual year: Date-parsing ISO date-only strings is timezone-
+        // dependent (previous year west of UTC)
+        .map((value) => (value.date ? parseInt(value.date, 10) : null))
+        .filter((year): year is number => year != null && !Number.isNaN(year));
       // When the indicator's configured default visualization is a pie
       // chart, preview with its configured (possibly historical) year;
       // otherwise synthesize the latest year found in the data.
