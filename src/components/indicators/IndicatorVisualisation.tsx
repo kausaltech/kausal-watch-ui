@@ -1,12 +1,8 @@
 'use client';
 
-import React, { type ReactElement, useMemo, useState } from 'react';
-
-import styled from '@emotion/styled';
+import { type ReactElement, useState } from 'react';
 
 import { useQuery } from '@apollo/client/react';
-import { captureMessage } from '@sentry/nextjs';
-import { isEqual } from 'lodash-es';
 import { useLocale, useTranslations } from 'next-intl';
 import { Alert } from 'reactstrap';
 
@@ -17,8 +13,6 @@ import type {
   IndicatorGraphDataQuery,
   IndicatorGraphDataQueryVariables,
 } from '@/common/__generated__/graphql';
-import { linearRegression } from '@/common/math';
-import { capitalizeFirstLetter } from '@/common/utils';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
 import LegacyIndicatorGraph from '@/components/graphs/legacy/IndicatorGraph';
@@ -28,426 +22,22 @@ import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
 
 import RichText from '../common/RichText';
+import FactorCharts from './FactorCharts';
 import IndicatorVisualizationBlock from './IndicatorVisualizationBlock';
-
-function generateCube(dimensions, values, path) {
-  const dim = dimensions[0];
-  const rest = dimensions.slice(1);
-
-  const array = dim.categories.map((cat) => {
-    const catPath = path ? [...path, cat.id] : [cat.id];
-    catPath.sort();
-
-    if (rest.length) return generateCube(rest, values, catPath);
-
-    const found = values.filter((val) => {
-      const ids = val.categories.map((valCat) => valCat.id).sort();
-      return isEqual(ids, catPath);
-    });
-    return found.map(({ date, value }) => ({ date, value }));
-  });
-  return array;
-}
-
-function generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues) {
-  const values = [...combinedValues]
-    .sort((a, b) => a.date - b.date)
-    .map((item) => {
-      const { date, value, categories } = item;
-      // Make yearly value dates YYYY-1-1 so plotly places them correctly on axis
-      const newDate = indicator.timeResolution === 'YEAR' ? `${date.split('-')[0]}-1-1` : date;
-      return { date: newDate, value, categories };
-    });
-  if (indicatorGraphSpecification.dimensions.length === 0) {
-    return values;
-  }
-  indicatorGraphSpecification.dimensions = indicatorGraphSpecification.dimensions
-    .map((d) => d.dimension)
-    .sort((a, b) => {
-      if (a.sort === 'last') {
-        return 1;
-      } else if (b.sort === 'last') {
-        return -1;
-      }
-      return a.categories.length - b.categories.length || a.id - b.id;
-    });
-  return generateCube(indicatorGraphSpecification.dimensions, values);
-}
-
-function getTraces(dimensions, cube, names, hasTimeDimension, i18n, quantityName) {
-  // TODO: We could use quantity name but we can not tell if it's in the correct language
-  // const name = capitalizeFirstLetter(quantityName ?? i18n.t('value'));
-  const name = capitalizeFirstLetter(i18n.t('value'));
-  if (dimensions.length === 0) {
-    return [
-      {
-        xType: 'time',
-        name: name,
-        dataType: 'total',
-        x: cube.map((val) => {
-          return val.date;
-        }),
-        y: cube.map((val) => val.value),
-      },
-    ];
-  }
-  const [firstDimension, ...rest] = dimensions;
-  if (dimensions.length === 1) {
-    if (hasTimeDimension) {
-      return firstDimension.categories.map((cat, idx) => {
-        const traceName = Array.from(new Set(names ?? undefined).add(cat.name)).join(', ');
-        let x,
-          y,
-          _cube = cube[idx];
-        x = _cube.map((val) => val.date);
-        y = _cube.map((val) => val.value);
-        return {
-          xType: 'time',
-          dataType: cat.id === 'total' ? 'total' : null,
-          name: traceName,
-          _parentName: names ? Array.from(names).join(', ') : null,
-          color: cat.defaultColor ?? null,
-          x,
-          y,
-        };
-      });
-    }
-
-    // No time dimension, 'x' axis will be categories
-    return [
-      {
-        xType: 'category',
-        name: Array.from(new Set(names ?? [firstDimension.name])).join(', '),
-        _parentName: names ? Array.from(names).join(', ') : null,
-        colors: firstDimension.categories.map((cat) => cat.defaultColor ?? null),
-        x: firstDimension.categories.map((cat) => cat.name),
-        y: cube.map((c) => c[0]?.value),
-      },
-    ];
-  }
-  let traces = [];
-
-  firstDimension.categories.forEach((cat, idx) => {
-    const out = getTraces(
-      rest,
-      cube[idx],
-      new Set(names ?? undefined).add(cat.name),
-      hasTimeDimension,
-      i18n
-    );
-    traces = traces.concat(out);
-  });
-  // Filter out empty traces resulting from
-  // unavailable (total, category) combinations
-  return traces.filter((t) => t.x.length > 0);
-}
-
-const generateTrendTrace = (indicator, traces, goals, i18n) => {
-  const hasPotentialScenario = traces.find((goal) => goal.scenario?.identifier === 'potential');
-  if (indicator.timeResolution === 'YEAR' && traces[0].y.length >= 5 && !hasPotentialScenario) {
-    const values = [...indicator.values]
-      .sort((a, b) => a.date - b.date)
-      .map((item) => {
-        const { date, value, categories } = item;
-        // Make yearly value dates YYYY-1-1 so plotly places them correctly on axis
-        return { date, value, categories };
-      });
-    const mainValues = values.filter((item) => !item.categories.length);
-    const numberOfYears = Math.min(mainValues.length, 10);
-    const regData = mainValues
-      .slice(mainValues.length - numberOfYears, mainValues.length)
-      .map((item) => [parseInt(item.date, 10), item.value]);
-    if (regData.length < 5) {
-      return [undefined, undefined];
-    }
-    const model = linearRegression(regData);
-    const predictedTrace = {
-      x: regData.map((item) => item[0]),
-      name: i18n.t('current-trend'),
-    };
-
-    const highestDataYear = regData[regData.length - 1][0];
-    const highestGoalYear = Math.max(
-      ...goals.map((goal) => {
-        const goalDate = goal.x[goal.x.length - 1];
-        return goalDate ? new Date(goalDate).getFullYear() : NaN;
-      })
-    );
-
-    if (!Number.isNaN(highestGoalYear) && highestGoalYear > highestDataYear) {
-      predictedTrace.x.push(highestGoalYear);
-    }
-
-    predictedTrace.y = predictedTrace.x.map((year) => model.m * year + model.b);
-    // We want the year format 2019-1-1 so plotly places them correctly on axis
-    const formattedTrace = {
-      x: predictedTrace.x.map((year) => `${year}-1-1`),
-      y: predictedTrace.y,
-      name: i18n.t('current-trend'),
-    };
-    return [formattedTrace, calculateBounds(predictedTrace.y)];
-  }
-  return [undefined, undefined];
-};
-
-const generateGoalTraces = (indicator, planScenarios, i18n) => {
-  // Group goals by scenario
-  const traceScenarios = new Map();
-  const goalTraces = [];
-  (indicator.goals || []).forEach((goal) => {
-    const scenarioId = goal.scenario ? goal.scenario.id : null;
-
-    if (!traceScenarios.has(scenarioId)) {
-      const scenario = {
-        goals: [],
-        config: planScenarios?.find((sc) => sc.id === scenarioId) ?? {},
-      };
-
-      if (scenarioId && scenario.config?.name) {
-        scenario.name = scenario.config.name;
-      } else {
-        scenario.name = i18n.t('goal');
-      }
-      traceScenarios.set(scenarioId, scenario);
-    }
-    traceScenarios.get(scenarioId).goals.push(goal);
-  });
-
-  // Sort
-  traceScenarios.forEach((scenario) => {
-    const { goals } = scenario;
-    scenario.goals = goals
-      .sort((a, b) => a.date - b.date)
-      .map((item) => {
-        const { date, value, categories } = item;
-        const newDate = indicator.timeResolution === 'YEAR' ? `${date.split('-')[0]}-1-1` : date;
-        return { date: newDate, value, categories };
-      });
-  });
-
-  traceScenarios.forEach((scenario) => {
-    const { goals } = scenario;
-
-    const trace = {
-      scenario: scenario.config,
-      y: goals.map((item) => item.value),
-      x: goals.map((item) => {
-        const newDate =
-          indicator.timeResolution === 'YEAR' ? `${item.date.split('-')[0]}-1-1` : item.date;
-        return newDate;
-      }),
-      name: scenario.name,
-    };
-
-    goalTraces.push(trace);
-  });
-
-  const bounds = calculateBounds(goalTraces.map((t) => t.y).flat());
-  return [goalTraces, bounds];
-};
-
-function calculateBounds(values) {
-  if (values.length === 0) {
-    return null;
-  }
-  return {
-    min: Math.min(...values),
-    max: Math.max(...values),
-  };
-}
-
-/**
- * Pad a data extent by 10% on each side, then round the bounds outward to a
- * "nice" step (1, 2, 2.5 or 5 × 10^k) so the axis min/max land on round
- * numbers. The step is roughly half a tick interval: coarse enough for round
- * boundary labels, fine enough that the extra padding stays small and a
- * positive-only axis isn't dragged down to zero.
- */
-function padAndRoundBounds(
-  bounds: { min: number; max: number },
-  tickCount: number
-): { min: number; max: number } {
-  const delta = bounds.max - bounds.min;
-  if (!Number.isFinite(delta)) {
-    return bounds;
-  }
-  // Flat data has no extent to pad or derive a step from; use the value itself
-  const span = delta > 0 ? delta : Math.abs(bounds.max) || 1;
-  let min = bounds.min - span * 0.1;
-  let max = bounds.max + span * 0.1;
-
-  // The tick interval ECharts will pick for the axis (its nice() rounding
-  // with round=true). Snapping the bounds to multiples of anything finer
-  // leaves the axis min/max between nice ticks, and ECharts labels those
-  // boundary values too — after tick rounding the boundary label can
-  // duplicate the neighboring nice tick (e.g. "100" printed twice).
-  const niceInterval = (roughStep: number): number => {
-    const magnitude = 10 ** Math.floor(Math.log10(roughStep));
-    const fraction = roughStep / magnitude;
-    const niceFraction =
-      fraction < 1.5 ? 1 : fraction < 2.5 ? 2 : fraction < 4 ? 3 : fraction < 7 ? 5 : 10;
-    return niceFraction * magnitude;
-  };
-
-  // Snapping widens the extent, which can change the interval ECharts
-  // derives from it; iterate until the snapped bounds are stable.
-  for (let i = 0; i < 3; i++) {
-    const step = niceInterval((max - min) / Math.max(tickCount, 1));
-    const snappedMin = Math.floor(min / step) * step;
-    const snappedMax = Math.ceil(max / step) * step;
-    if (snappedMin === min && snappedMax === max) break;
-    min = snappedMin;
-    max = snappedMax;
-  }
-  // Padding must not make the axis cross zero when the data doesn't; the
-  // opposite-end checks keep flat-at-zero data from collapsing the range
-  if (bounds.min >= 0 && min < 0 && max > 0) min = 0;
-  if (bounds.max <= 0 && max > 0 && min < 0) max = 0;
-  // toPrecision trims float artifacts like 0.6000000000000001 from the
-  // step multiplication
-  return {
-    min: Number(min.toPrecision(12)),
-    max: Number(max.toPrecision(12)),
-  };
-}
-
-function getIndicatorGraphSpecification(indicator, compareOrganization, t, normalizerId) {
-  const specification = {};
-  const indicators = [indicator];
-  let dimensions = JSON.parse(JSON.stringify(indicator.dimensions));
-
-  const dimensionedValues = indicator.values.filter((val) => val.categories.length > 0);
-  if (dimensionedValues.length === 0 && dimensions.length !== 0) {
-    captureMessage(
-      `Data consistency error: indicator ${indicator.id} has dimensions, but the data does not`
-    );
-    dimensions = [];
-  }
-
-  if (compareOrganization) {
-    const compareIndicator = indicator.common.indicators.find(
-      (x) => x.organization.id === compareOrganization
-    );
-    indicators.push(compareIndicator);
-    const comparisonDimension = {
-      dimension: { sort: 'last', type: 'organization' },
-    };
-    comparisonDimension.dimension.categories = indicators.map((i) => ({
-      id: `org:${i.organization.id}`,
-      name: i.organization.name,
-      type: 'organization',
-    }));
-    dimensions.push(comparisonDimension);
-  }
-
-  const allValues = indicators
-    .map((i) => i.values.map((x) => getNormalizedValue(x, normalizerId)))
-    .flat();
-  specification.bounds = calculateBounds(allValues);
-
-  const times = new Set(indicators.map((i) => i.values.map((x) => x.date)).flat());
-  const hasTime = times.size > 1;
-
-  if (hasTime) {
-    dimensions.forEach((d) => {
-      const { categories, type } = d.dimension;
-      if (type === 'organization') {
-        return;
-      }
-      categories.unshift({
-        id: `total`,
-        type: 'aggregate',
-        name: capitalizeFirstLetter(t('total')),
-      });
-    });
-  }
-
-  const axes = [];
-  if (indicator.dimensions.length > 0) {
-    axes.push(['categories', indicator.dimensions.length]);
-  }
-  if (compareOrganization != null) {
-    axes.push(['comparison', 1]);
-  }
-  if (hasTime) {
-    axes.push(['time', 1]);
-  }
-
-  specification.axes = axes;
-  specification.dimensions = dimensions;
-  specification.name = indicator.name;
-
-  return specification;
-}
-
-function addOrganizationCategory(value, orgId) {
-  const newCategories = [...value.categories]; //
-  newCategories.push({ id: `org:${orgId}` });
-  return Object.assign({}, value, { categories: newCategories });
-}
-
-function _addTotal(v, categoryCount) {
-  if (v.categories.length === 0) {
-    const newCategories = new Array(categoryCount).fill({ id: 'total' });
-    return Object.assign({}, v, {
-      categories: [...v.categories, ...newCategories],
-    });
-  }
-  return v;
-}
-
-function combineValues(indicator, comparisonIndicator, indicatorGraphSpecification) {
-  let categoryCount = 0;
-  const categoryAxis = indicatorGraphSpecification.axes.filter((a) => a[0] === 'categories');
-  if (categoryAxis.length > 0) {
-    categoryCount = categoryAxis[0][1];
-  }
-  const getValues = (indicator) =>
-    indicator.values
-      .map((v) => _addTotal(v, categoryCount))
-      .filter((v) => v.categories.length === categoryCount)
-      .map((v) =>
-        comparisonIndicator == null ? v : addOrganizationCategory(v, indicator.organization.id)
-      );
-  const indicatorValues = getValues(indicator);
-  if (comparisonIndicator == null) {
-    return indicatorValues;
-  }
-
-  return indicatorValues.concat(getValues(comparisonIndicator));
-}
-
-const NORMALIZE_DEFAULT = 'default';
-const NORMALIZE_PREFER_ENABLED = 'enabled';
-const NORMALIZE_PREFER_DISABLED = 'disabled';
-
-function normalizeByPopulationSetter(callback) {
-  return (value) => {
-    callback(value ? NORMALIZE_PREFER_ENABLED : NORMALIZE_PREFER_DISABLED);
-  };
-}
-
-function getNormalizeByPopulation(preferNormalizeByPopulation, comparisonIndicator) {
-  if (preferNormalizeByPopulation === NORMALIZE_DEFAULT) {
-    return comparisonIndicator != null;
-  }
-  return preferNormalizeByPopulation === NORMALIZE_PREFER_ENABLED;
-}
-
-function getNormalizedValue(valueObject, normalizerId) {
-  if (normalizerId != null) {
-    return valueObject.normalizedValues.find((nv) => nv.normalizerId === normalizerId).value;
-  }
-  return valueObject.value;
-}
-
-function normalizeValuesByNormalizer(values, normalizerId) {
-  return values.map((valueObject) =>
-    Object.assign({}, valueObject, {
-      value: getNormalizedValue(valueObject, normalizerId),
-    })
-  );
-}
+import {
+  NORMALIZE_DEFAULT,
+  calculateBounds,
+  combineValues,
+  generateCubeFromValues,
+  generateGoalTraces,
+  generateTrendTrace,
+  getIndicatorGraphSpecification,
+  getNormalizeByPopulation,
+  getTraces,
+  normalizeByPopulationSetter,
+  normalizeValuesByNormalizer,
+  padAndRoundBounds,
+} from './indicator-data-helpers';
 
 type IndicatorDetailsIndicator = NonNullable<IndicatorDetailsQuery['indicator']>;
 type DefaultVisualization = IndicatorDetailsIndicator['defaultVisualization'];
@@ -462,137 +52,6 @@ export type IndicatorVisualisationProps = {
   showFactorValues?: boolean;
   defaultVisualization?: DefaultVisualization;
 };
-
-const FactorChartTitle = styled.div`
-  margin-top: ${(props) => props.theme.spaces.s200};
-  margin-bottom: ${(props) => props.theme.spaces.s050};
-  font-size: ${(props) => props.theme.fontSizeBase};
-  font-weight: ${(props) => props.theme.fontWeightBold};
-`;
-
-type FactorChartsProps = {
-  datasets: NonNullable<IndicatorGraphDataQuery['indicator']>['datasets'];
-  timeResolution: NonNullable<IndicatorGraphDataQuery['indicator']>['timeResolution'];
-  values: NonNullable<IndicatorGraphDataQuery['indicator']>['values'];
-  valueRounding?: number | null;
-  showGraph: boolean;
-  showTable: boolean;
-  unitLabel: string;
-  mainXAxisRange?: { min: number; max: number };
-  language: string;
-};
-
-function FactorCharts({
-  datasets,
-  timeResolution,
-  values,
-  valueRounding,
-  showGraph,
-  showTable,
-  unitLabel,
-  mainXAxisRange,
-  language,
-}: FactorChartsProps) {
-  const t = useTranslations();
-
-  const indicatorValueByYear = new Map<string, number | null>();
-  values.forEach((v) => {
-    if (!v.date) return;
-    indicatorValueByYear.set(v.date.split('-')[0], v.value);
-  });
-
-  return (
-    <>
-      {datasets?.flatMap((dataset) => {
-        const computedMetrics = dataset.schema?.metrics.filter((m) => m.isComputed) ?? [];
-        return computedMetrics.map((metric) => {
-          const points = dataset.computedDataPoints
-            .filter((p) => p.metric.label === metric.label)
-            .sort((a, b) => a.date.localeCompare(b.date));
-          if (points.length === 0) return null;
-
-          const factorTrace = {
-            xType: 'time' as const,
-            name: capitalizeFirstLetter(t('value')),
-            dataType: 'total' as const,
-            x: points.map((p) =>
-              timeResolution === 'YEAR' ? `${p.date.split('-')[0]}-1-1` : p.date
-            ),
-            y: points.map((p) => p.value),
-          };
-
-          const factorX: string[] = [];
-          const factorY: Array<number | null> = [];
-          points.forEach((p) => {
-            const yearKey = p.date.split('-')[0];
-            const indicatorVal = indicatorValueByYear.get(yearKey) ?? null;
-            const dateStr = timeResolution === 'YEAR' ? `${yearKey}-1-1` : p.date;
-            factorX.push(dateStr);
-            factorY.push(
-              p.value !== null && indicatorVal !== null && indicatorVal !== 0
-                ? p.value / indicatorVal
-                : null
-            );
-          });
-          const factorExtraColumn = {
-            header: `Factor (${metric.unit}/${unitLabel})`,
-            x: factorX,
-            y: factorY,
-          };
-
-          const pointValues = points.map((p) => p.value).filter((v): v is number => v !== null);
-          const factorBounds = calculateBounds(pointValues) ?? { min: 0, max: 0 };
-          const paddedBounds = padAndRoundBounds(factorBounds, 2);
-          const factorYRange = {
-            unit: metric.unit,
-            minDigits: 0,
-            maxDigits: 0,
-            ticksCount: 2,
-            ticksRounding: undefined,
-            valueRounding: valueRounding ?? undefined,
-            range: [paddedBounds.min, paddedBounds.max],
-          };
-          const factorSpec = { axes: [['time', 1]] as [string, number][] };
-
-          return (
-            <div key={`${dataset.uuid}-${metric.label}`}>
-              <FactorChartTitle>{metric.label}</FactorChartTitle>
-              {showGraph && (
-                <div aria-hidden="true">
-                  <IndicatorGraph
-                    specification={factorSpec}
-                    yRange={factorYRange}
-                    timeResolution={timeResolution as 'YEAR' | 'MONTH'}
-                    traces={[factorTrace]}
-                    goalTraces={[]}
-                    trendTrace={null}
-                    title={null}
-                    desiredTrend={null}
-                    referenceValue={null}
-                    nonQuantifiedGoal={{ trend: null, date: null }}
-                    height={225}
-                    xAxisRange={mainXAxisRange}
-                  />
-                </div>
-              )}
-              {showTable && (
-                <GraphAsTable
-                  specification={factorYRange}
-                  timeResolution={timeResolution}
-                  data={[factorTrace]}
-                  goalTraces={[]}
-                  title={metric.label}
-                  extraColumns={[factorExtraColumn]}
-                  openByDefault={!showGraph}
-                />
-              )}
-            </div>
-          );
-        });
-      })}
-    </>
-  );
-}
 
 function IndicatorVisualisation({
   indicatorId,
@@ -651,7 +110,7 @@ function IndicatorVisualisation({
   let canBeNormalized = false;
   if (populationNormalizer !== undefined) {
     let values = indicator.values;
-    if (!!comparisonIndicator) {
+    if (comparisonIndicator) {
       values = values.concat(comparisonIndicator.values);
     }
     if (
@@ -738,22 +197,24 @@ function IndicatorVisualisation({
       ? undefined
       : { min: Math.min(...timestamps), max: Math.max(...timestamps) };
 
-  const [trendTrace, trendBounds] =
+  const [rawTrendTrace, trendBounds] =
     normalizeByPopulation ||
     !hasTimeDimension ||
     !indicator.showTrendline ||
     !indicator.showTotalLine
       ? [null, null]
       : generateTrendTrace(indicator, traces, goalTraces, i18n);
+  const trendTrace = rawTrendTrace ?? null;
 
   // Include trend and goal bounds in the calculation
   let bounds = indicatorGraphSpecification.bounds;
   for (const addBounds of [goalBounds, trendBounds]) {
     if (addBounds) {
+      // The input always contains the current bounds, so the result is non-null
       bounds = calculateBounds([
         ...Object.values(bounds),
         ...Object.values(addBounds).filter((b) => b != null && !isNaN(b)),
-      ]);
+      ])!;
     }
   }
 
@@ -824,6 +285,12 @@ function IndicatorVisualisation({
     .map((common) => common.organization)
     .filter((org) => org.id !== indicator.organization.id);
 
+  // Callers that fetch the indicator's default visualization themselves can
+  // pass it as a prop; otherwise fall back to the one from this component's
+  // own graph-data query, so callers that only know the indicator id (e.g.
+  // IndicatorBlock) still honor the configured default visualization.
+  const effectiveDefaultVisualization = defaultVisualization ?? indicator.defaultVisualization;
+
   let graphComponent: ReactElement;
   if (useLegacyGraph) {
     /* TODO: All of the features still in use in LegacyIndicatorGraph
@@ -842,7 +309,7 @@ function IndicatorVisualisation({
         />
       </div>
     );
-  } else if (defaultVisualization && !compareTo && !normalizeByPopulation) {
+  } else if (effectiveDefaultVisualization && !compareTo && !normalizeByPopulation) {
     /* TODO: A generalized IndicatorGraph component
        will be the internal implementation of the
        graph component that IndicatorVisualizationBlock
@@ -857,7 +324,7 @@ function IndicatorVisualisation({
      */
     graphComponent = (
       <div aria-hidden={showTable}>
-        <IndicatorVisualizationBlock block={defaultVisualization} />
+        <IndicatorVisualizationBlock block={effectiveDefaultVisualization} />
       </div>
     );
   } else {
@@ -926,7 +393,6 @@ function IndicatorVisualisation({
           showTable={showTable}
           unitLabel={unitLabel}
           mainXAxisRange={mainXAxisRange}
-          language={i18n.language}
         />
       )}
       {indicator.reference && showReference && (
