@@ -160,30 +160,6 @@
       "count": 1,
       "message": "'ColProps' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
     },
-    "3e1db2f6a520b4c6b5f739f4768ff65bb44b2154": {
-      "file": "src/common/categories.ts",
-      "code": "TS2305",
-      "count": 1,
-      "message": "Module '\"./__generated__/graphql\"' has no exported member 'Category'."
-    },
-    "8290dedbf450226f714790753a3cd5507b6bfc1b": {
-      "file": "src/common/categories.ts",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'common' does not exist on type 'CategoryTypeInput'."
-    },
-    "a0abae147487bd10b95bc702204e4f1270e67d9b": {
-      "file": "src/common/categories.ts",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '{ id: string; } | null | undefined' is not assignable to type 'CatType | null'."
-    },
-    "eb65dd4f1c640e2428503f8d64041c3b6e803ba8": {
-      "file": "src/common/categories.ts",
-      "code": "TS2339",
-      "count": 2,
-      "message": "Property 'identifier' does not exist on type 'CT'."
-    },
     "38b98bbe7e0cf5ac06fba6b01e25e8ac72f6ec60": {
       "file": "src/common/cookies.ts",
       "code": "TS1484",
@@ -202,24 +178,6 @@
       "count": 1,
       "message": "'ReactNode' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
     },
-    "ff46cebaf1d19eed315e11c7c282d1b06f64091c": {
-      "file": "src/common/preprocess.ts",
-      "code": "TS2551",
-      "count": 1,
-      "message": "Property 'green020' does not exist on type '{ grey000: string; grey005: string; grey010: string; grey020: string; grey030: string; grey040: string; grey050: string; grey060: string; grey070: string; grey080: string; grey090: string; grey100: string; ... 19 more ...; yellow090: string; }'. Did you mean 'green010'?"
-    },
-    "358be05115a1fc7ae6d157452210fca43ec6b92a": {
-      "file": "src/common/preprocess.ts",
-      "code": "TS2551",
-      "count": 1,
-      "message": "Property 'yellow020' does not exist on type '{ grey000: string; grey005: string; grey010: string; grey020: string; grey030: string; grey040: string; grey050: string; grey060: string; grey070: string; grey080: string; grey090: string; grey100: string; ... 19 more ...; yellow090: string; }'. Did you mean 'yellow010'?"
-    },
-    "830dbadc424cd57f618ecc184dabec8e5c0a5c24": {
-      "file": "src/common/preprocess.ts",
-      "code": "TS2304",
-      "count": 1,
-      "message": "Cannot find name 'Plan'."
-    },
     "c4ca501911120076e3d9f8adad9f70ce9aadf084": {
       "file": "src/common/search.ts",
       "code": "TS2315",
@@ -237,12 +195,6 @@
       "code": "TS2339",
       "count": 2,
       "message": "Property 'primaryCategories' does not exist on type 'ActionCardFragment'."
-    },
-    "0e8e04c6e39d255912bf6eac463e3b4cc6fde078": {
-      "file": "src/components/actions/ActionCard.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'name' does not exist on type '{ id: string; shortName: string | null; versionName: string; viewUrl: string | null; hideActionIdentifiers: boolean; publishedAt: string | null; image: ({ rendition: ({ src: string; } & { ...; }) | null; } & { ...; }) | null; } & { ...; }'."
     },
     "e801a44efa6a2ed805a67eb29739c06635636a55": {
       "file": "src/components/actions/ActionCard.tsx",
@@ -826,18 +778,6 @@
       "count": 1,
       "message": "Property 'map' does not exist on type '{}'."
     },
-    "346d60ce5b9ce2f5db2f25449783ffd426215812": {
-      "file": "src/components/contentblocks/ActionListBlock.tsx",
-      "code": "TS2304",
-      "count": 2,
-      "message": "Cannot find name 'Category'."
-    },
-    "6b5661c4fd2e15435ffe293b9fde77e87b17604d": {
-      "file": "src/components/contentblocks/ActionListBlock.tsx",
-      "code": "TS2304",
-      "count": 1,
-      "message": "Cannot find name 'CategoryLevel'."
-    },
     "1e03d4d6e0417c8ddd384e0a21dde840eaa64767": {
       "file": "src/components/contentblocks/CartographyVisualisationBlock.tsx",
       "code": "TS18047",
@@ -873,24 +813,6 @@
       "code": "TS1484",
       "count": 1,
       "message": "'CommonContentBlockProps' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
-    },
-    "28be87c6c3b2a4344382fe49611996c7cb279bbf": {
-      "file": "src/components/dashboard/ActionList.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'testId' does not exist on type 'ActionListProps'."
-    },
-    "74716826f47de08240b569620861aa2c7e9c1ea5": {
-      "file": "src/components/dashboard/ActionList.tsx",
-      "code": "TS2345",
-      "count": 1,
-      "message": "Argument of type '({ id: string; abbreviation: string | null; name: string; contactPersonCount: number; actionCount: number; classification: ({ name: string; } & { __typename: \"OrganizationClass\"; }) | null; parent: ({ ...; } & { ...; }) | null; } & { ...; })[] | null' is not assignable to parameter of type '({ id: string; abbreviation: string | null; name: string; contactPersonCount: number; actionCount: number; classification: ({ name: string; } & { __typename: \"OrganizationClass\"; }) | null; parent: ({ ...; } & { ...; }) | null; } & { ...; })[]'."
-    },
-    "d866b279a2d33292e39746adbe05f2f43ad06298": {
-      "file": "src/components/dashboard/ActionList.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '({ id: string; identifier: string; name: string; viewUrl?: string | undefined; color: string | null; hasDependencyRelationships: boolean | null; manualStatusReason: string | null; ... 21 more ...; mergedWith: ({ ...; } & { ...; }) | null; } & { ...; })[] | null | undefined' is not assignable to type '({ id: string; identifier: string; name: string; viewUrl?: string | undefined; color: string | null; hasDependencyRelationships: boolean | null; manualStatusReason: string | null; ... 21 more ...; mergedWith: ({ ...; } & { ...; }) | null; } & { ...; })[]'."
     },
     "e85e6a6e46cfa25ac69193279e6ee53dfe95bcf1": {
       "file": "src/components/dashboard/ActionStatusGraphs.tsx",
@@ -1198,42 +1120,6 @@
       "count": 1,
       "message": "No overload matches this call."
     },
-    "4b43275c149cefeb88ca9f5e1f488384d2488e8e": {
-      "file": "src/components/graphs/legacy/IndicatorGraph.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '{ hovermode: \"x unified\"; paper_bgcolor: any; plot_bgcolor: any; autosize: true; colorway: any; font: { family: string; size: number; }; hoverlabel: { namelength: number; }; modebar: { add: \"toImage\"[]; remove: (\"lasso2d\" | ... 7 more ... | \"resetScale2d\")[]; color: any; bgcolor: any; activecolor: any; }; xaxis: { ....' is not assignable to type 'Partial<Layout>'."
-    },
-    "0ecda4c8acd00872e63005d7fc8382012c0641df": {
-      "file": "src/components/graphs/legacy/IndicatorGraph.tsx",
-      "code": "TS2345",
-      "count": 1,
-      "message": "Argument of type 'any' is not assignable to parameter of type 'never'."
-    },
-    "caf022d8f1ba279d6aee9c803d834ee2a6b01c53": {
-      "file": "src/components/graphs/legacy/IndicatorGraph.tsx",
-      "code": "TS18048",
-      "count": 7,
-      "message": "'theme.settings.graphs' is possibly 'undefined'."
-    },
-    "fd5636d4bd1af315d3fe77741eeb30c2f79f28fa": {
-      "file": "src/components/graphs/legacy/IndicatorGraph.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property '_parentName' does not exist on type 'Partial<Data>'."
-    },
-    "ad47a23fe3c3d48ec348d04c42671ebdb982f005": {
-      "file": "src/components/graphs/legacy/IndicatorGraph.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'showlegend' does not exist on type 'Partial<Data>'."
-    },
-    "00e0a52e0cc872b7a2bd32f14c2a3c503611a9ed": {
-      "file": "src/components/graphs/legacy/IndicatorGraph.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'legendGroup' does not exist on type 'Partial<Data>'."
-    },
     "a5a8cbb34c771b6ef15320ab8fe50f4d41ad15ba": {
       "file": "src/components/Header.tsx",
       "code": "TS18047",
@@ -1288,30 +1174,6 @@
       "count": 2,
       "message": "Property 'borderBottomWidth' does not exist on type '{ width: string; height: string; borderStyle: string; }'."
     },
-    "20b19f2c5f286ae3ffda297e326d2b3b6c016598": {
-      "file": "src/components/indicators/indicator-data-helpers.ts",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'type' does not exist on type '{ id: string; name: string; categories: ({ id: string; name: string; defaultColor: string; } & { __typename: \"DimensionCategory\"; })[]; } & { __typename: \"Dimension\"; }'."
-    },
-    "f9b28c9e12d791678204ce1bf1967823fe7c8124": {
-      "file": "src/components/indicators/indicator-data-helpers.ts",
-      "code": "TS2345",
-      "count": 1,
-      "message": "Argument of type '{ id: string; name: string; __typename: \"DimensionCategory\"; }' is not assignable to parameter of type '{ id: string; name: string; defaultColor: string; } & { __typename: \"DimensionCategory\"; }'."
-    },
-    "2709f1e3d26915fecf000ed0239814e67625081f": {
-      "file": "src/components/indicators/indicator-data-helpers.ts",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'map' does not exist on type 'DataPoint | NestedArray'."
-    },
-    "cb9465efc64697d64a223aea15607d9ade89c95d": {
-      "file": "src/components/indicators/indicator-data-helpers.ts",
-      "code": "TS18049",
-      "count": 1,
-      "message": "'d' is possibly 'null' or 'undefined'."
-    },
     "877037190c5a73ac657b2767990c5c14b4d114aa": {
       "file": "src/components/indicators/indicatorFactorUtils.ts",
       "code": "TS2322",
@@ -1348,90 +1210,6 @@
       "count": 1,
       "message": "Type '(({ id: string; date: string | null; value: number; normalizedValues: ({ normalizerId: string | null; value: number | null; } & { __typename: \"NormalizedValue\"; })[]; scenario: ({ id: string; } & { ...; }) | null; } & { ...; }) | null)[] | null' has no matching index signature for type 'number'."
     },
-    "e7dfdd062f286ad33ca5a1426fba642cd56f97f9": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2554",
-      "count": 1,
-      "message": "Expected 3 arguments, but got 2."
-    },
-    "8af04ccd0052fc352e55859504d9a3e39a2e6ec5": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2554",
-      "count": 1,
-      "message": "Expected 6 arguments, but got 5."
-    },
-    "7f18ba2ac676d3ee53f8faa1ac10858d6c28cdfa": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'x' does not exist on type 'never'."
-    },
-    "e2f705bec77c7f132993b0a326c3e8d794aa7326": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2339",
-      "count": 3,
-      "message": "Property 'y' does not exist on type '{ x: any[]; name: any; }'."
-    },
-    "a4768b2c01dfc7cd8a5ed6410ca51c7d309f6bd8": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2339",
-      "count": 2,
-      "message": "Property 'name' does not exist on type '{ goals: never[]; config: any; }'."
-    },
-    "e15d9cb2ba041de37b9113fd7b834afe1fa53a69": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2345",
-      "count": 1,
-      "message": "Argument of type '{ scenario: any; y: any; x: any; name: any; }' is not assignable to parameter of type 'never'."
-    },
-    "e33e7be9e668af76a7816ff5b71cc368d6ee6e9a": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'y' does not exist on type 'never'."
-    },
-    "4f008939a7035c2d9d60e54524a53113cd34ee28": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'categories' does not exist on type '{ sort: string; type: string; }'."
-    },
-    "266fa9eb550e04e673c97210393516ed7c71a845": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2339",
-      "count": 6,
-      "message": "Property 'bounds' does not exist on type '{}'."
-    },
-    "103b1d247700fcfc4a70dd0efcc4bfd07df4584d": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2345",
-      "count": 1,
-      "message": "Argument of type 'any[]' is not assignable to parameter of type 'never'."
-    },
-    "ea5c7c832270e8777f0d130450149887f3950076": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2345",
-      "count": 2,
-      "message": "Argument of type '(string | number)[]' is not assignable to parameter of type 'never'."
-    },
-    "9f9c700f318d122ed01708ffd7dafe9bab723a6c": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2339",
-      "count": 2,
-      "message": "Property 'axes' does not exist on type '{}'."
-    },
-    "a6e09cae334d053167f0d18b5f10871c0e321e49": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2339",
-      "count": 2,
-      "message": "Property 'dimensions' does not exist on type '{}'."
-    },
-    "c747d526aca69ee507ab4d204926f6ea9562789d": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'name' does not exist on type '{}'."
-    },
     "b2829f56eac8d8ddfbb7bb63b2d1042ad5d66ecb": {
       "file": "src/components/indicators/IndicatorVisualisation.tsx",
       "code": "TS2339",
@@ -1444,47 +1222,11 @@
       "count": 1,
       "message": "'populationNormalizer' is possibly 'undefined'."
     },
-    "dd22c79523d808c9603966a258f1a5bbd5ebd28e": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2339",
-      "count": 1,
-      "message": "Property 'cube' does not exist on type '{}'."
-    },
-    "af586cbd93da1b4b3f1dee78c848554462b9607d": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2739",
-      "count": 1,
-      "message": "Type '{}' is missing the following properties from type '{ axes: any; dimensions: any; }': axes, dimensions"
-    },
     "a43822b9457f92b2765304b863e51a8946df4f9a": {
       "file": "src/components/indicators/IndicatorVisualisation.tsx",
       "code": "TS2322",
-      "count": 2,
+      "count": 1,
       "message": "Type 'IndicatorTimeResolution' is not assignable to type '\"YEAR\" | \"MONTH\" | undefined'."
-    },
-    "8248b8eb502a31dee56ffb5bdc67be3a02b3b9eb": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2741",
-      "count": 1,
-      "message": "Property 'axes' is missing in type '{}' but required in type '{ axes: [string, number][]; }'."
-    },
-    "07413a7d6a46177cc013500091c6064e1fce4cda": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type 'never[] | { min: number; max: number; } | null' is not assignable to type 'GoalTrace[]'."
-    },
-    "05125771aa52136bc05a51d0e3b00a32fddb0c6a": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type '{ min: number; max: number; } | { x: string[]; y: any; name: any; } | null | undefined' is not assignable to type 'GoalTrace | null'."
-    },
-    "e01eca4aebdd66793f7b1a220ca5b26a6c557d43": {
-      "file": "src/components/indicators/IndicatorVisualisation.tsx",
-      "code": "TS2322",
-      "count": 1,
-      "message": "Type 'never[] | { min: number; max: number; } | null' is not assignable to type 'Trace[]'."
     },
     "2a2214a2dddb87658c03522564c52ea9cde92877": {
       "file": "src/components/indicators/tests/IndicatorList.test.ts",
@@ -1533,24 +1275,6 @@
       "code": "TS2322",
       "count": 1,
       "message": "Type '{ categoryId: string; node: string; pathsInstance: { id: string; name: string; themeIdentifier: string | null; owner: string | null; defaultLanguage: string; supportedLanguages: string[]; ... 9 more ...; goals: ({ ...; } & { ...; })[]; } & { ...; }; onLoaded: (id: string, impact: number) => void; targetNodeId: strin...' is not assignable to type 'IntrinsicAttributes & PathsNodeContentProps'."
-    },
-    "4ca57d684f73b3505237236e23edcb6ab79298ae": {
-      "file": "src/components/paths/contentblocks/ActionListBlock.tsx",
-      "code": "TS2305",
-      "count": 1,
-      "message": "Module '\"@/common/__generated__/graphql\"' has no exported member 'Category'."
-    },
-    "fa7d2d0c1d566ba3e51858decc6dcac2e961f3e6": {
-      "file": "src/components/paths/contentblocks/ActionListBlock.tsx",
-      "code": "TS2305",
-      "count": 1,
-      "message": "Module '\"@/common/__generated__/graphql\"' has no exported member 'CategoryLevel'."
-    },
-    "ffddd13d7e3d4ba750543ae7f5fabe986e5ead40": {
-      "file": "src/components/paths/contentblocks/ActionListBlock.tsx",
-      "code": "TS2741",
-      "count": 1,
-      "message": "Property 'groupBy' is missing in type '{ actions: ActionCardFragment[]; showOtherCategory: false; includeRelatedPlans: false; headingHierarchyDepth: number; }' but required in type 'ActionCardListProps<ActionCardFragment>'."
     },
     "31dfe0b55f825d0e7b53c703266e84749bc54a64": {
       "file": "src/components/paths/contentblocks/CategoryListBlock.tsx",
@@ -1696,17 +1420,17 @@
       "count": 1,
       "message": "Type '{ children: ReactNode; disabled: any; ref: RefObject<any>; style: { height: string; width: string; borderRadius: string; background: string; alignSelf: \"center\"; }; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'."
     },
-    "424a8d6570eac689f7738abb10d1ff56f6aaa8e6": {
+    "5b4fc1112f5833924640143edd02e9b50de60784": {
       "file": "src/components/paths/ParameterWidget.tsx",
       "code": "TS2345",
       "count": 1,
-      "message": "Argument of type 'RefObject<unknown> | ((instance: unknown) => void)' is not assignable to parameter of type 'RefObject<FocusableElement | null>'."
+      "message": "Argument of type '((instance: unknown) => void) | RefObject<unknown>' is not assignable to parameter of type 'RefObject<FocusableElement | null>'."
     },
-    "a8f37fb4735c998c274c095210abc040c2b48cc0": {
+    "9c5aa54b1a2ea83e8d819075a16b18489a578bb7": {
       "file": "src/components/paths/ParameterWidget.tsx",
       "code": "TS2322",
       "count": 1,
-      "message": "Type 'RefObject<unknown> | ((instance: unknown) => void)' is not assignable to type 'Ref<HTMLInputElement> | undefined'."
+      "message": "Type '((instance: unknown) => void) | RefObject<unknown>' is not assignable to type 'Ref<HTMLInputElement> | undefined'."
     },
     "be18f58acb80a3cc31d4abfdfe89dc66f4e108d9": {
       "file": "src/components/paths/ParameterWidget.tsx",
@@ -1834,12 +1558,6 @@
       "count": 1,
       "message": "'activeScenario' is possibly 'null'."
     },
-    "203b3b6e2fcca0dc4953f7c675134e483d0d734d": {
-      "file": "src/components/plans/PlanLink.tsx",
-      "code": "TS1484",
-      "count": 1,
-      "message": "'PlanContextType' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled."
-    },
     "a528a64086f36f43df1202580debaa573ded6059": {
       "file": "src/components/pledge/PledgeImpactComparison.tsx",
       "code": "TS2769",
@@ -1875,12 +1593,6 @@
       "code": "TS2322",
       "count": 1,
       "message": "Type 'string' is not assignable to type 'Date & string'."
-    },
-    "ed4f6aaa22775f5fe850620ef8fedd6daec028ae": {
-      "file": "src/proxy.ts",
-      "code": "TS2307",
-      "count": 1,
-      "message": "Cannot find module 'next-auth/lib' or its corresponding type declarations."
     },
     "c6168711c5a122ff0ee94474e8941f2ae32adbab": {
       "file": "src/proxy.ts",

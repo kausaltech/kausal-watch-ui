@@ -12,6 +12,7 @@ import { isEqual } from 'lodash-es';
 
 import { linearRegression } from '@/common/math';
 import { capitalizeFirstLetter } from '@/common/utils';
+import { niceTickInterval } from '@/components/graphs/indicator-graph.utils';
 
 export function generateCube(dimensions, values, path?) {
   const dim = dimensions[0];
@@ -271,23 +272,14 @@ export function padAndRoundBounds(
   let min = bounds.min - span * 0.1;
   let max = bounds.max + span * 0.1;
 
-  // The tick interval ECharts will pick for the axis (its nice() rounding
-  // with round=true). Snapping the bounds to multiples of anything finer
-  // leaves the axis min/max between nice ticks, and ECharts labels those
-  // boundary values too — after tick rounding the boundary label can
-  // duplicate the neighboring nice tick (e.g. "100" printed twice).
-  const niceInterval = (roughStep: number): number => {
-    const magnitude = 10 ** Math.floor(Math.log10(roughStep));
-    const fraction = roughStep / magnitude;
-    const niceFraction =
-      fraction < 1.5 ? 1 : fraction < 2.5 ? 2 : fraction < 4 ? 3 : fraction < 7 ? 5 : 10;
-    return niceFraction * magnitude;
-  };
-
-  // Snapping widens the extent, which can change the interval ECharts
-  // derives from it; iterate until the snapped bounds are stable.
+  // Snap the bounds to the tick interval ECharts will pick for the axis.
+  // Snapping to multiples of anything finer leaves the axis min/max between
+  // nice ticks, and ECharts labels those boundary values too — after tick
+  // rounding the boundary label can duplicate the neighboring nice tick
+  // (e.g. "100" printed twice). Snapping also widens the extent, which can
+  // change the interval ECharts derives from it; iterate until stable.
   for (let i = 0; i < 3; i++) {
-    const step = niceInterval((max - min) / Math.max(tickCount, 1));
+    const step = niceTickInterval(max - min, tickCount);
     const snappedMin = Math.floor(min / step) * step;
     const snappedMax = Math.ceil(max / step) * step;
     if (snappedMin === min && snappedMax === max) break;

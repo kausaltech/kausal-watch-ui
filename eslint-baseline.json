@@ -293,20 +293,6 @@
       "count": 1
     }
   },
-  "src/common/categories.ts": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 13
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 6
-    }
-  },
   "src/common/cookies.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 2
@@ -352,23 +338,6 @@
     },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 2
-    }
-  },
-  "src/common/preprocess.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unused-expressions": {
-      "count": 1
     }
   },
   "src/common/search.ts": {
@@ -454,7 +423,7 @@
   },
   "src/components/actions/ActionCard.tsx": {
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 4
+      "count": 3
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 5
@@ -565,9 +534,6 @@
   "src/components/actions/CategoryActionList.js": {
     "@graphql-eslint/naming-convention": {
       "count": 1
-    },
-    "@graphql-eslint/require-selections": {
-      "count": 4
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 9
@@ -1129,38 +1095,6 @@
       "count": 5
     }
   },
-  "src/components/contentblocks/ActionListBlock.tsx": {
-    "@graphql-eslint/naming-convention": {
-      "count": 1
-    },
-    "@graphql-eslint/require-selections": {
-      "count": 4
-    },
-    "@graphql-eslint/unique-operation-name": {
-      "count": 1
-    },
-    "@typescript-eslint/no-redundant-type-constituents": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 5
-    }
-  },
   "src/components/contentblocks/ActionStatusGraphsBlock.tsx": {
     "@graphql-eslint/naming-convention": {
       "count": 1
@@ -1231,7 +1165,7 @@
   },
   "src/components/contentblocks/CategoryTypeListBlock.tsx": {
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 2
@@ -1289,13 +1223,7 @@
     }
   },
   "src/components/contentblocks/indicator-chart/DashboardIndicatorBarChartBlock.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
     }
   },
@@ -1310,9 +1238,6 @@
     },
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
-    },
-    "react-hooks/rules-of-hooks": {
-      "count": 2
     }
   },
   "src/components/contentblocks/indicator-chart/indicator-chart-colors.tsx": {
@@ -1354,12 +1279,6 @@
     },
     "@graphql-eslint/require-selections": {
       "count": 36
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "react/prop-types": {
-      "count": 1
     }
   },
   "src/components/dashboard/ActionStatusExport.js": {
@@ -1532,17 +1451,6 @@
       "count": 3
     }
   },
-  "src/components/graphs/IndicatorGraph.tsx": {
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 3
-    },
-    "no-constant-binary-expression": {
-      "count": 1
-    },
-    "react-hooks/preserve-manual-memoization": {
-      "count": 1
-    }
-  },
   "src/components/graphs/InsightPageContent.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 6
@@ -1606,26 +1514,6 @@
     },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
-    }
-  },
-  "src/components/graphs/legacy/IndicatorGraph.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 8
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 9
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 43
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 16
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 95
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 6
     }
   },
   "src/components/indicators/Connector.tsx": {
@@ -1749,28 +1637,16 @@
   },
   "src/components/indicators/IndicatorVisualisation.tsx": {
     "@typescript-eslint/no-unsafe-argument": {
-      "count": 20
+      "count": 3
     },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 89
+      "count": 13
     },
     "@typescript-eslint/no-unsafe-call": {
-      "count": 53
-    },
-    "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 2
+      "count": 4
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 154
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 35
-    },
-    "no-extra-boolean-cast": {
-      "count": 1
-    },
-    "prefer-const": {
-      "count": 3
+      "count": 8
     }
   },
   "src/components/indicators/IndicatorsHero.tsx": {
@@ -1802,9 +1678,6 @@
     }
   },
   "src/components/indicators/indicator-data-helpers.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 2
-    },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
     },
@@ -1813,9 +1686,6 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 4
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
     }
   },
   "src/components/indicators/indicatorUtils.tsx": {
@@ -1870,11 +1740,6 @@
     },
     "react/prop-types": {
       "count": 3
-    }
-  },
-  "src/components/plans/PlanLink.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
     }
   },
   "src/components/plans/UnpublishedPlan.tsx": {
@@ -2007,11 +1872,6 @@
       "count": 1
     }
   },
-  "src/fragments/action-card.fragment.ts": {
-    "@graphql-eslint/require-selections": {
-      "count": 4
-    }
-  },
   "src/fragments/action-list.fragment.ts": {
     "@graphql-eslint/naming-convention": {
       "count": 1
@@ -2064,16 +1924,13 @@
   },
   "src/proxy.ts": {
     "@typescript-eslint/no-unsafe-argument": {
-      "count": 28
+      "count": 1
     },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 7
+      "count": 3
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 25
+      "count": 1
     }
   },
   "src/queries/get-action.ts": {
@@ -2081,7 +1938,7 @@
       "count": 3
     },
     "@graphql-eslint/require-selections": {
-      "count": 31
+      "count": 15
     },
     "@graphql-eslint/selection-set-depth": {
       "count": 250
@@ -2103,7 +1960,7 @@
       "count": 5
     },
     "@graphql-eslint/require-selections": {
-      "count": 44
+      "count": 36
     },
     "@graphql-eslint/selection-set-depth": {
       "count": 269
@@ -2122,7 +1979,7 @@
   },
   "src/queries/get-indicator-graph-data.ts": {
     "@graphql-eslint/require-selections": {
-      "count": 4
+      "count": 3
     }
   },
   "src/queries/get-indicator-list.ts": {
@@ -2175,69 +2032,12 @@
       "count": 76
     }
   },
-  "src/stories/ActionAttribute.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/ActionCard.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 5
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/ActionDependenciesBlock.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 3
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/ActionHero.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/FilterControl.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/IndicatorCard.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
   "src/stories/IndicatorModalContentBlock.stories.tsx": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
     }
   },
   "src/stories/IndicatorNumberFormatting.stories.tsx": {
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    },
     "no-loss-of-precision": {
       "count": 1
     }
@@ -2247,80 +2047,23 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 5
+      "count": 4
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 3
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/OrganizationChip.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/PhaseTimeline.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
     }
   },
   "src/stories/PlanChip.stories.tsx": {
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 3
+      "count": 2
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/RestrictedBlockWrapper.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/ThemeAccessibility.stories.tsx": {
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/ThemeDesignTokens.stories.tsx": {
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/Timeline.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
     }
   },
   "src/stories/components/ThemeAccessibilityTest.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 6
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 6
-    },
     "@typescript-eslint/no-unsafe-return": {
       "count": 2
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
     },
     "react-hooks/static-components": {
       "count": 1
@@ -2340,10 +2083,7 @@
       "count": 4
     },
     "@typescript-eslint/no-unsafe-return": {
-      "count": 4
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
+      "count": 3
     },
     "react-hooks/set-state-in-effect": {
       "count": 1
@@ -2355,16 +2095,10 @@
   "src/stories/mocks/actions.mocks.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
     }
   },
   "src/stories/mocks/plan.mocks.ts": {
     "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
     }
   },
