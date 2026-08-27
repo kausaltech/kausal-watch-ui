@@ -37,7 +37,12 @@ type Props = Omit<
   '__typename'
 >;
 
-const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }: Props) => {
+const DashboardIndicatorAreaChartBlock = ({
+  chartSeries,
+  indicator,
+  dimension,
+  showTotalLine,
+}: Props) => {
   const theme = useTheme();
   const t = useTranslations();
   const formatValue = useNumberFormatter({
@@ -69,6 +74,11 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
     timeResolution
   );
   const totalRaw = totalDef.raw;
+  // On dimensional charts the categoryless aggregate isn't among the area
+  // series; when the block enables the total, draw it as a line on top,
+  // like the line chart block does. Without a dimension the total IS the
+  // area, so no overlay is needed.
+  const showTotalOverlay = hasDimension && !!showTotalLine && totalRaw.length > 0;
 
   const trendSeries =
     indicator?.showTrendline && totalRaw.length >= 2
@@ -83,6 +93,7 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
 
   const legendLabels: string[] = [
     ...(hasDimension ? dimSeries.map((d) => d.name) : [totalLabel]),
+    ...(showTotalOverlay ? [totalLabel] : []),
     ...(trendSeries.length ? [trendLabel] : []),
   ];
 
@@ -94,9 +105,19 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
     ? [{ name: trendLabel }]
     : [];
 
-  const legendData: LegendComponentOption['data'] = [...areaLegendItems, ...trendLegendItems];
+  const totalLegendItems: LegendComponentOption['data'] = showTotalOverlay
+    ? [{ name: totalLabel }]
+    : [];
 
-  const dataSources = hasDimension ? dimSeries.map((d) => d.raw) : [totalRaw];
+  const legendData: LegendComponentOption['data'] = [
+    ...areaLegendItems,
+    ...totalLegendItems,
+    ...trendLegendItems,
+  ];
+
+  const dataSources = hasDimension
+    ? [...dimSeries.map((d) => d.raw), ...(showTotalOverlay ? [totalRaw] : [])]
+    : [totalRaw];
   const { xCategories } = collectAllDates(dataSources, timeResolution);
 
   const series = hasDimension
@@ -140,6 +161,29 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
       ];
 
   const seriesWithStack = stackable ? series.map((s) => ({ ...s, stack: 'categories' })) : series;
+
+  const totalLineColor = graphsTheme.totalLineColor ?? '#000';
+  const totalLineSeries = showTotalOverlay
+    ? [
+        (() => {
+          const dataMap = new Map(totalRaw.map(([key, value]) => [key, value]));
+          return {
+            name: totalLabel,
+            type: 'line' as const,
+            data: xCategories.map(
+              (key) => [key, dataMap.get(key) ?? null] as [string, number | null]
+            ),
+            connectNulls: true,
+            smooth: shouldSmoothLines(graphsTheme),
+            showSymbol: true,
+            symbolSize: 8,
+            lineStyle: { width: 3, color: totalLineColor },
+            itemStyle: { color: totalLineColor },
+            z: 3,
+          };
+        })(),
+      ]
+    : [];
 
   const option: ECOption = {
     backgroundColor: theme.themeColors.white,
@@ -201,7 +245,7 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
       },
     },
     yAxis: buildYAxisConfig(unit, formatAxisValue, indicator ?? undefined, theme.textColor.primary),
-    series: [...seriesWithStack, ...trendSeries],
+    series: [...seriesWithStack, ...totalLineSeries, ...trendSeries],
   };
 
   return (
