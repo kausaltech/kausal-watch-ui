@@ -570,6 +570,19 @@ function buildChartSeries(indicator: ExplorerIndicator) {
       category ? value.categories.some((c) => c.id === category.id) : value.categories.length === 0
     ),
   }));
+  // Dimensional charts additionally carry the categoryless aggregate as a
+  // dimensionCategory: null series — buildTotalSeries in the chart blocks
+  // reads the total line from it (category series builders ignore it).
+  if (dimension) {
+    const totalValues = sortedValues.filter((value) => value.categories.length === 0);
+    if (totalValues.length) {
+      chartSeries.push({
+        __typename: 'DashboardIndicatorChartSeries' as const,
+        dimensionCategory: null,
+        values: totalValues,
+      });
+    }
+  }
   return { dimension, chartSeries };
 }
 
@@ -638,12 +651,16 @@ function synthesizeVisualization(
       // a second dimension's category), and no per-category aggregation of
       // those is meaningful in general — so leave them out, like a
       // backend-aggregated total would.
-      const pieChartSeries = chartSeries.map((series) => ({
-        ...series,
-        values: series.values.filter(
-          (value) => value.categories.length === (series.dimensionCategory ? 1 : 0)
-        ),
-      }));
+      const pieChartSeries = chartSeries
+        // The categoryless aggregate series would render as an unnamed slice
+        // doubling the whole pie; slices come from the categories alone.
+        .filter((series) => !dimension || series.dimensionCategory)
+        .map((series) => ({
+          ...series,
+          values: series.values.filter(
+            (value) => value.categories.length === (series.dimensionCategory ? 1 : 0)
+          ),
+        }));
       const years = pieChartSeries
         .flatMap((series) => series.values)
         .map((value) => (value.date ? new Date(value.date).getFullYear() : null))
