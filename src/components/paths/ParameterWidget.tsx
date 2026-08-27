@@ -1,18 +1,10 @@
-import {
-  type ComponentPropsWithoutRef,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { gql } from '@apollo/client';
 import { useMutation, useReactiveVar } from '@apollo/client/react';
-import { useFocusable } from '@react-aria/focus';
 import { useTranslations } from 'next-intl';
 import { Range, getTrackBackground } from 'react-range';
 
@@ -21,7 +13,7 @@ import { activeScenarioVar } from '@common/apollo/paths-cache';
 import { ParameterInterface } from '@/common/__generated__/paths/graphql';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
-import Tooltip, { TooltipTrigger } from '@/components/common/Tooltip';
+import Tooltip from '@/components/common/Tooltip';
 import { usePaths } from '@/context/paths/paths';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
 
@@ -44,6 +36,20 @@ const WidgetWrapper = styled.div`
   .form-check-label {
     margin-left: 0.5rem;
     line-height: 1;
+  }
+`;
+
+const SwitchWrapper = styled.span`
+  /* This wrapper is the tooltip anchor and hover target (a disabled input can't
+     receive pointer events). Bootstrap floats .form-check-input out of the flow,
+     which would leave this box empty, so float the wrapper instead and unfloat
+     the input inside it. The margin matches .form-switch's input margin. */
+  float: left;
+  margin-left: -2.5em;
+
+  && .form-check-input {
+    float: none;
+    margin-left: 0;
   }
 `;
 
@@ -215,53 +221,33 @@ export const BoolWidget = (props: BoolWidgetProps) => {
 
   const label = parameter.label || parameter.description || t('will_be_implemented');
 
-  // Solution for non-button components triggering tooltip: https://github.com/adobe/react-spectrum/issues/6142
-  const FocusableInput = forwardRef<HTMLInputElement, ComponentPropsWithoutRef<'input'>>(
-    (props, forwardedRef) => {
-      // useFocusable needs an object ref, but forwardRef may hand us a
-      // callback ref or null — keep a local object ref and sync whatever
-      // was forwarded from it
-      const localRef = useRef<HTMLInputElement>(null);
-      const setRef = useCallback(
-        (element: HTMLInputElement | null) => {
-          localRef.current = element;
-          if (typeof forwardedRef === 'function') {
-            forwardedRef(element);
-          } else if (forwardedRef) {
-            forwardedRef.current = element;
-          }
-        },
-        [forwardedRef]
-      );
-      const { focusableProps } = useFocusable(props, localRef);
-      // if display: block is used it'll take the entire width and render the tooltip off screen
-      return <input ref={setRef} {...focusableProps} {...props} />;
-    }
-  );
-
   if (!isCustomizable) return null;
   return (
     <WidgetWrapper className="form-check form-switch">
-      <TooltipTrigger>
-        <FocusableInput
-          className="form-check-input"
-          type="checkbox"
-          role="switch"
-          id={id!}
-          name={id!}
-          checked={boolValue!}
-          onChange={() => handleChange({ parameterId: id!, boolValue: !boolValue })}
-          disabled={loading}
-          style={{ transform: 'scale(1.5)' }}
-        />
-        {!hideLabel && (
-          <label className="form-check-label" htmlFor={id!}>
-            {label}
-            {isCustomized ? '*' : ''}
-          </label>
-        )}
-        <Tooltip>{parameter.description || label}</Tooltip>
-      </TooltipTrigger>
+      <Tooltip title={parameter.description || label}>
+        <SwitchWrapper>
+          <input
+            className="form-check-input"
+            type="checkbox"
+            role="switch"
+            /* The tooltip's ARIA attributes land on SwitchWrapper, not on this
+               input, so with the label hidden the switch needs its own name. */
+            aria-label={hideLabel ? parameter.description || label : undefined}
+            id={id!}
+            name={id!}
+            checked={boolValue!}
+            onChange={() => handleChange({ parameterId: id!, boolValue: !boolValue })}
+            disabled={loading}
+            style={{ transform: 'scale(1.5)' }}
+          />
+        </SwitchWrapper>
+      </Tooltip>
+      {!hideLabel && (
+        <label className="form-check-label" htmlFor={id!}>
+          {label}
+          {isCustomized ? '*' : ''}
+        </label>
+      )}
     </WidgetWrapper>
   );
 };
