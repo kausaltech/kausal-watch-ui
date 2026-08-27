@@ -149,3 +149,21 @@ describe('timezone stability of date handling', () => {
     expect(normalizeDate('2024-12-31', 'YEAR')).toBe('2024-01-01');
   });
 });
+
+describe('timestamp labels match ECharts date parsing', () => {
+  // ECharts parses timezone-less date strings with its OWN parser as LOCAL
+  // time (unlike native Date, which reads ISO date-only strings as UTC).
+  // Axis tick timestamps and tooltip axisValues therefore sit on local
+  // calendar boundaries, and formatDateLabel must read them back with local
+  // getters: UTC getters would report the previous period east of UTC.
+  // Run under several TZ values (see the TZ-matrix runs) to verify.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { time } = require('echarts') as { time: { parse: (v: string) => Date } };
+
+  it('labels an ECharts-parsed date-only value as its own period in any timezone', () => {
+    const timestamp = time.parse('2024-01-01').getTime();
+    expect(formatDateLabel(timestamp, 'YEAR')).toBe('2024');
+    expect(formatDateLabel(timestamp, 'MONTH')).toBe('2024-01');
+    expect(formatDateLabel(timestamp, undefined)).toBe('2024-01-01');
+  });
+});
