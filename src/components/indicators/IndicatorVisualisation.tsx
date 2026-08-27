@@ -306,6 +306,22 @@ function IndicatorVisualisation({
   // IndicatorBlock) still honor the configured default visualization.
   const effectiveDefaultVisualization = defaultVisualization ?? indicator.defaultVisualization;
 
+  // Reference markers must use the same units as the traces: with population
+  // normalization active, substitute the reference value's matching per-capita
+  // entry, and suppress the marker entirely when none exists — the raw value
+  // would land outside (or misplaced within) the per-capita axis.
+  const graphReferenceValue = (() => {
+    const ref = indicator.referenceValue;
+    if (!ref || ref.value == null) return null;
+    if (!normalizeByPopulation) {
+      return { date: ref.date, value: ref.value };
+    }
+    const normalized = ref.normalizedValues?.find(
+      (nv) => nv?.normalizerId === populationNormalizer!.normalizer.id
+    );
+    return normalized?.value != null ? { date: ref.date, value: normalized.value } : null;
+  })();
+
   let graphComponent: ReactElement;
   if (effectiveDefaultVisualization && !compareTo && !normalizeByPopulation) {
     /* TODO: A generalized IndicatorGraph component
@@ -340,7 +356,7 @@ function IndicatorVisualisation({
           trendTrace={trendTrace}
           title={null}
           desiredTrend={indicator.desiredTrend}
-          referenceValue={indicator.referenceValue}
+          referenceValue={graphReferenceValue}
           nonQuantifiedGoal={{
             trend: indicator.nonQuantifiedGoal,
             date: indicator.nonQuantifiedGoalDate,
