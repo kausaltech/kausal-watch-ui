@@ -92,7 +92,6 @@ function ActionIndicator(props: ActionIndicatorProps) {
         {indicator.latestGraph || indicator.latestValue ? (
           <IndicatorVisualisation
             indicatorId={indicator.id}
-            useLegacyGraph={false}
             defaultVisualization={indicator.defaultVisualization}
           />
         ) : null}

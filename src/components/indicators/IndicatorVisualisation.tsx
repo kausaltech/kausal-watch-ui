@@ -15,7 +15,6 @@ import type {
 } from '@/common/__generated__/graphql';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
-import LegacyIndicatorGraph from '@/components/graphs/legacy/IndicatorGraph';
 import IndicatorComparisonSelect from '@/components/indicators/IndicatorComparisonSelect';
 import IndicatorNormalizationSelect from '@/components/indicators/IndicatorNormalizationSelect';
 import { usePlan } from '@/context/plan';
@@ -45,7 +44,6 @@ type DefaultVisualization = IndicatorDetailsIndicator['defaultVisualization'];
 export type IndicatorVisualisationProps = {
   indicatorId: string;
   indicatorLink?: string;
-  useLegacyGraph?: boolean;
   showReference?: boolean;
   showGraph?: boolean;
   showTable?: boolean;
@@ -56,7 +54,6 @@ export type IndicatorVisualisationProps = {
 function IndicatorVisualisation({
   indicatorId,
   indicatorLink,
-  useLegacyGraph = true,
   showReference = false,
   showGraph = true,
   showTable = true,
@@ -292,24 +289,7 @@ function IndicatorVisualisation({
   const effectiveDefaultVisualization = defaultVisualization ?? indicator.defaultVisualization;
 
   let graphComponent: ReactElement;
-  if (useLegacyGraph) {
-    /* TODO: All of the features still in use in LegacyIndicatorGraph
-       will be incorporated into IndicatorGraph.
-     */
-    graphComponent = (
-      <div aria-hidden="true">
-        <LegacyIndicatorGraph
-          specification={indicatorGraphSpecification}
-          yRange={yRange}
-          timeResolution={indicator.timeResolution}
-          traces={traces}
-          goalTraces={goalTraces}
-          trendTrace={trendTrace}
-          title={plotTitle}
-        />
-      </div>
-    );
-  } else if (effectiveDefaultVisualization && !compareTo && !normalizeByPopulation) {
+  if (effectiveDefaultVisualization && !compareTo && !normalizeByPopulation) {
     /* TODO: A generalized IndicatorGraph component
        will be the internal implementation of the
        graph component that IndicatorVisualizationBlock

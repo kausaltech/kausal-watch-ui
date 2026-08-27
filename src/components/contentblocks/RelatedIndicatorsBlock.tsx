@@ -30,7 +30,7 @@ const IndicatorItem = (props: { indicator: string; indicatorCount: number }) => 
 
   return (
     <Col className="mb-5" lg={{ size: singleIndicator ? 8 : 6, offset: singleIndicator ? 2 : 0 }}>
-      <IndicatorVisualisation indicatorId={indicator} useLegacyGraph={false} />
+      <IndicatorVisualisation indicatorId={indicator} />
       {showLink && (
         <div className="mt-2 text-right">
           <IndicatorLink id={indicator}>

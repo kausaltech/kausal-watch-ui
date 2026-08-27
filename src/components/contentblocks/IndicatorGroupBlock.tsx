@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
@@ -81,7 +82,7 @@ function IndicatorItem(props: IndicatorItemProps) {
           ) : (
             <h3>{indicator.name}</h3>
           )}
-          <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
+          <IndicatorVisualisation indicatorId={indicator.id} />
         </IndicatorContainer>
       </Col>
     );
