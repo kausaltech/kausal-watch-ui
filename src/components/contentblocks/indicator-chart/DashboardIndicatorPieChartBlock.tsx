@@ -96,6 +96,9 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
   // Same palette resolution as the bar/line/area chart blocks, so a
   // category gets the same color in every chart type
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
+  // Same rule as IndicatorGraph: honor the tenant-configured chart
+  // background, white when unset
+  const chartBackground = graphsTheme.customBackground || theme.themeColors.white;
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const assertedYear = year ?? getLatestYear(chartSeries);
 
@@ -148,9 +151,9 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
     toolbox: buildSaveAsImageToolbox({
       filename: getChartDownloadFilename(indicator?.name),
       buttonTitle: t('download-chart-as-png'),
-      backgroundColor: theme.themeColors.white,
+      backgroundColor: chartBackground,
     }),
-    backgroundColor: theme.themeColors.white,
+    backgroundColor: chartBackground,
     tooltip: {
       appendTo: 'body',
       trigger: 'item',

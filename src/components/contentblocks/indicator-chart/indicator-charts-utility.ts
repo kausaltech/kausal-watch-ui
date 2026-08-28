@@ -22,6 +22,8 @@ export interface GraphsTheme {
   goalLineColors?: string[];
   showTrendline?: boolean;
   lineShape?: string;
+  /** Tenant-configured chart background; the canvas is white when unset. */
+  customBackground?: string;
 }
 
 /** Whether lines should be drawn smoothed, from the theme's `lineShape`

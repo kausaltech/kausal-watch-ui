@@ -52,6 +52,9 @@ const DashboardIndicatorLineChartBlock = ({
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
+  // Same rule as IndicatorGraph: honor the tenant-configured chart
+  // background, white when unset
+  const chartBackground = graphsTheme.customBackground || theme.themeColors.white;
   const unit = getUnitLabel(indicator);
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const timeResolution = indicator?.timeResolution ?? 'YEAR';
@@ -136,9 +139,9 @@ const DashboardIndicatorLineChartBlock = ({
     toolbox: buildSaveAsImageToolbox({
       filename: getChartDownloadFilename(indicator?.name),
       buttonTitle: t('download-chart-as-png'),
-      backgroundColor: theme.themeColors.white,
+      backgroundColor: chartBackground,
     }),
-    backgroundColor: theme.themeColors.white,
+    backgroundColor: chartBackground,
     // Same legend style as the pie chart block
     legend: {
       show: true,
