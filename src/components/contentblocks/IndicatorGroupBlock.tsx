@@ -40,12 +40,6 @@ const IndicatorContainer = styled.div`
   border-radius: ${(props) => props.theme.cardBorderRadius};
   h3 {
     font-size: ${(props) => props.theme.fontSizeBase};
-    color: ${(props) =>
-      readableColor(
-        props.theme.neutralLight,
-        props.theme.themeColors.black,
-        props.theme.themeColors.white
-      )};
   }
 `;
 
