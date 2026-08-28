@@ -20,13 +20,14 @@ import { getDefaultColors } from '@/components/contentblocks/indicator-chart/ind
 export type Formatter = ReturnType<typeof useFormatter>;
 type Translator = (key: string) => string;
 
-export type TimeResolution = 'YEAR' | 'MONTH' | undefined;
+export type TimeResolution = 'YEAR' | 'MONTH' | 'DAY' | undefined;
 
 export type ChartTrace = {
   name: string;
   dataType?: 'total' | null;
   xType?: 'time' | 'category';
-  x: Array<string | number>;
+  /** Null dates are schema-permitted; the axis collectors skip them */
+  x: Array<string | number | null>;
   y: Array<number | null>;
   _parentName?: string | null;
   /** Editor-chosen color of the trace's dimension category (backend `defaultColor`). */
@@ -223,9 +224,12 @@ export function normalizeDate(
 
 /** Format a date (string, timestamp or Date) as an axis/tooltip label. */
 export function formatDateLabel(
-  value: string | number | Date,
+  value: string | number | Date | null | undefined,
   timeResolution: TimeResolution
 ): string {
+  if (value == null) {
+    return String(value);
+  }
   if (typeof value === 'string') {
     const parts = DATE_PARTS_RE.exec(value);
     if (parts) {
@@ -281,7 +285,7 @@ export function collectChartDates({
   hasTimeDimension: boolean;
   timeResolution: TimeResolution;
   nonQuantifiedGoal?: NonQuantifiedGoalProp;
-}): Array<string | number> {
+}): Array<string | number | null> {
   if (!hasTimeDimension) {
     // For non-time dimension, return category data
     return traces.length > 0 ? traces[0].x : [];
@@ -323,7 +327,7 @@ export function buildXAxisCategories({
   timeResolution,
 }: {
   traces: ChartTrace[];
-  allDates: Array<string | number>;
+  allDates: Array<string | number | null>;
   hasTimeDimension: boolean;
   timeResolution: TimeResolution;
 }): string[] {
@@ -351,7 +355,7 @@ export function buildXAxisCategories({
 }
 
 /** Whether all (time) dates fall within one calendar year. */
-export function datesSpanSingleYear(allDates: Array<string | number>): boolean {
+export function datesSpanSingleYear(allDates: Array<string | number | null>): boolean {
   const years = new Set<string>();
   allDates.forEach((date) => {
     const year = formatDateLabel(date, 'YEAR');
@@ -480,7 +484,7 @@ export function tickSignificantDigits(
 /** Align time traces to the full axis-date range, padding gaps with nulls. */
 export function alignTracesToDates(
   traces: ChartTrace[],
-  allDates: Array<string | number>,
+  allDates: Array<string | number | null>,
   timeResolution: TimeResolution
 ): ChartTrace[] {
   return traces.map((trace) => {
@@ -655,7 +659,7 @@ export function buildGoalSeries({
   format,
 }: {
   goalTraces: GoalTrace[];
-  allDates: Array<string | number>;
+  allDates: Array<string | number | null>;
   timeResolution: TimeResolution;
   goalColors: string[];
   goalSymbol: string;
@@ -723,7 +727,7 @@ export function buildTrendSeries({
 }: {
   trendTrace: GoalTrace | null;
   hasTimeDimension: boolean;
-  allDates: Array<string | number>;
+  allDates: Array<string | number | null>;
   timeResolution: TimeResolution;
   trendColor: string;
   valueRounding: number | undefined;
@@ -1018,7 +1022,7 @@ export function buildTimeXAxis({
   xAxisRange,
 }: {
   timeResolution: TimeResolution;
-  allDates: Array<string | number>;
+  allDates: Array<string | number | null>;
   hasSingleYear: boolean;
   xAxisRange?: { min: number; max: number };
 }) {
@@ -1027,6 +1031,7 @@ export function buildTimeXAxis({
     hasSingleYear && timeResolution === 'YEAR' && allDates.length > 0
       ? (() => {
           const timestamps = allDates
+            .filter((d): d is string | number => d != null)
             .map((d) => new Date(d).getTime())
             .filter((ts) => !Number.isNaN(ts));
           return {

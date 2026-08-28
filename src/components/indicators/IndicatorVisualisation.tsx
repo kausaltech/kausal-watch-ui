@@ -13,6 +13,7 @@ import type {
   IndicatorGraphDataQuery,
   IndicatorGraphDataQueryVariables,
 } from '@/common/__generated__/graphql';
+import type { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
 import IndicatorComparisonSelect from '@/components/indicators/IndicatorComparisonSelect';
@@ -25,6 +26,7 @@ import FactorCharts from './FactorCharts';
 import IndicatorVisualizationBlock from './IndicatorVisualizationBlock';
 import {
   NORMALIZE_DEFAULT,
+  type PipelineDimension,
   calculateBounds,
   combineValues,
   generateCubeFromValues,
@@ -109,6 +111,9 @@ function IndicatorVisualisation({
     indicator,
     plan: { scenarios },
   } = data;
+  // The generated enum's values are exactly the literal strings the chart
+  // layer's TimeResolution uses
+  const timeResolution = indicator?.timeResolution as `${IndicatorTimeResolution}` | undefined;
 
   if (!indicator) return <Alert color="danger">{t('indicator-not-found')}</Alert>;
 
@@ -161,19 +166,13 @@ function IndicatorVisualisation({
   const unitLabel =
     unitHasName && unit.name === 'no unit' ? '' : unit.shortName || (unitHasName ? unit.name : '');
 
-  /// Handle object type indicator name (?)
-  let plotTitle = '';
-  if (typeof indicator.name === 'object') {
-    plotTitle = indicator.name.text;
-  } else if (typeof indicator.name === 'string') {
-    plotTitle = indicator.name;
-  }
+  const plotTitle = indicator.name;
 
   let combinedValues = combineValues(indicator, comparisonIndicator, indicatorGraphSpecification);
   if (normalizeByPopulation) {
     combinedValues = normalizeValuesByNormalizer(
       combinedValues,
-      populationNormalizer.normalizer.id
+      populationNormalizer!.normalizer.id
     );
   }
   /// Process data for data traces
@@ -184,7 +183,8 @@ function IndicatorVisualisation({
     indicatorGraphSpecification.axes.filter((a) => a[0] === 'time').length > 0;
   const showTotalLine = indicator.showTotalLine;
   const allTraces = getTraces(
-    indicatorGraphSpecification.dimensions,
+    // generateCubeFromValues has unwrapped the {dimension} wrappers in place
+    indicatorGraphSpecification.dimensions as PipelineDimension[],
     cube,
     null,
     hasTimeDimension,
@@ -268,7 +268,8 @@ function IndicatorVisualisation({
 
   // If explicit minValue/maxValue are set, use them directly without any modification
   // Otherwise, use calculated bounds (but don't force 0 unless explicitly requested)
-  let minValue, maxValue;
+  let minValue: number;
+  let maxValue: number;
   if (indicator.minValue != null) {
     // Use explicit minValue exactly as provided
     minValue = indicator.minValue;
@@ -354,7 +355,7 @@ function IndicatorVisualisation({
         <IndicatorGraph
           specification={indicatorGraphSpecification}
           yRange={yRange}
-          timeResolution={indicator.timeResolution}
+          timeResolution={timeResolution}
           traces={traces}
           goalTraces={goalTraces}
           trendTrace={trendTrace}

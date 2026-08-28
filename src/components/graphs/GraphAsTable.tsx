@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { Button, Collapse, Table } from 'reactstrap';
 
@@ -9,7 +10,7 @@ import dayjs from '@/common/dayjs';
 import useNumberFormatter from '@/common/numbers';
 import Icon from '@/components/common/Icon';
 
-type XValue = string | number | Date;
+type XValue = string | number | Date | null;
 
 type Trace = {
   name: string;

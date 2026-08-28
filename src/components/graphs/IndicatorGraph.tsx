@@ -17,6 +17,7 @@ import {
   type GoalTrace,
   type NonQuantifiedGoalProp,
   type ReferenceValueProp,
+  type TimeResolution,
   type YRange,
   alignTracesToDates,
   applyGoalMarkers,
@@ -41,7 +42,7 @@ import {
 
 type IndicatorGraphProps = {
   yRange: YRange;
-  timeResolution?: 'YEAR' | 'MONTH';
+  timeResolution?: TimeResolution;
   traces: ChartTrace[];
   goalTraces: GoalTrace[];
   trendTrace: GoalTrace | null;
