@@ -10,7 +10,7 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
 
       ... on DashboardHeaderBlock {
         text
-      } 
+      }
 
       ... on DashboardParagraphBlock {
         text

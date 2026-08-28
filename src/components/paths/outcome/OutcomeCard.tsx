@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef } from 'react';
 
 import styled from '@emotion/styled';
+
 import chroma from 'chroma-js';
 import { useTranslations } from 'next-intl';
 

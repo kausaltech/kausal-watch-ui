@@ -4,6 +4,7 @@ import React, { useEffect, useMemo } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import type { BarSeriesOption, LineSeriesOption } from 'echarts/charts';
 import type { MarkLineOption } from 'echarts/types/dist/shared';
 import { useFormatter, useTranslations } from 'next-intl';

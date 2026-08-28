@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 
 import styled from '@emotion/styled';
+
 import 'mapbox-gl/dist/mapbox-gl.css';
 import LegendControl, { type MapboxMap } from 'mapboxgl-legend';
 import 'mapboxgl-legend/dist/style.css';

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { Card as BSCard, CardBody } from 'reactstrap';

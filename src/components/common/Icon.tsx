@@ -3,6 +3,7 @@
 import React, { type JSX } from 'react';
 
 import { useTheme } from '@emotion/react';
+
 import { captureMessage } from '@sentry/nextjs';
 import SVG from 'react-inlinesvg';
 

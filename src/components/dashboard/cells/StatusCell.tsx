@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import { PlanContextFragment } from '@/common/__generated__/graphql';

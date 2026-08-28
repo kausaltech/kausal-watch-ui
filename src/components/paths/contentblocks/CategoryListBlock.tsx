@@ -3,6 +3,7 @@
 import React, { Suspense } from 'react';
 
 import styled from '@emotion/styled';
+
 import { Col, Container, Row } from 'reactstrap';
 
 import { CategoryFragmentFragment } from '@/common/__generated__/graphql';
