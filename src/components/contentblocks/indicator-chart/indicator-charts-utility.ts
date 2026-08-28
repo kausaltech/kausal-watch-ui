@@ -98,7 +98,7 @@ export function buildDimSeries(
     values.forEach((v) => {
       if (v.value != null && v.date) {
         const key = formatDateKey(v.date, timeResolution);
-        timeMap.set(key, (timeMap.get(key) || 0) + v.value);
+        timeMap.set(key, (timeMap.get(key) ?? 0) + v.value);
       }
     });
     const raw = Array.from(timeMap.entries())
@@ -125,7 +125,7 @@ export function buildTotalSeries(
     .forEach((v) => {
       if (v.date) {
         const key = formatDateKey(v.date, timeResolution);
-        totalMap.set(key, (totalMap.get(key) || 0) + v.value);
+        totalMap.set(key, (totalMap.get(key) ?? 0) + v.value);
       }
     });
 
@@ -193,7 +193,7 @@ export function buildTrendSeries(
   const numericData = regData.map(
     ([key, value]) => [getTimeKeyForSorting(key, timeResolution), value] as [number, number]
   );
-  const model = linearRegression(numericData);
+  const model = linearRegression(numericData) as { m: number; b: number };
   const predictedValues = predictedTimes.map((timeKey) => model.m * timeKey + model.b);
 
   const predictedKeys = predictedTimes.map((timeKey) => {
@@ -217,7 +217,7 @@ export function buildTrendSeries(
           showSymbol: false,
           smooth: false,
           data: predictedKeys.map((key, i) => [key, predictedValues[i]] as [string, number]),
-          lineStyle: { type: 'dashed', width: 2, color: trendLineColor },
+          lineStyle: { type: 'dashed' as const, width: 2, color: trendLineColor },
           itemStyle: { color: trendLineColor },
           tooltip: { show: false },
         },
@@ -233,9 +233,17 @@ export function buildTooltipFormatter(
   dimension?: { name: string },
   timeResolution?: string | null
 ) {
-  return (params: any[]) => {
+  // The shape ECharts passes to axis-trigger tooltip formatters, reduced to
+  // the fields read below
+  type TooltipParam = {
+    seriesName?: string;
+    axisValue?: string | number;
+    data?: number | [string | number, number | null] | null;
+    marker?: string;
+  };
+  return (params: unknown) => {
     const processedSeries = new Set<string>();
-    const paramsArray = Array.isArray(params) ? params : [params];
+    const paramsArray = (Array.isArray(params) ? params : [params]) as TooltipParam[];
     const timeKey = paramsArray[0]?.axisValue;
 
     let formattedTime: string;
@@ -244,7 +252,7 @@ export function buildTooltipFormatter(
     } else if (timeResolution === 'MONTH') {
       formattedTime = String(timeKey);
     } else {
-      const date = new Date(timeKey);
+      const date = new Date(timeKey ?? NaN);
       formattedTime = Number.isNaN(date.getTime())
         ? String(timeKey)
         : date.toISOString().split('T')[0];
@@ -252,7 +260,7 @@ export function buildTooltipFormatter(
 
     const rows = paramsArray
       .filter((p) => {
-        if (!legendData.includes(p.seriesName)) return false;
+        if (!p.seriesName || !legendData.includes(p.seriesName)) return false;
         if (processedSeries.has(p.seriesName)) return false;
         processedSeries.add(p.seriesName);
         return true;
@@ -265,9 +273,7 @@ export function buildTooltipFormatter(
               ? formatValue(p.data)
               : '-';
 
-        const label = dimension ? p.seriesName : p.seriesName;
-
-        return `${p.marker} ${label}: ${value} ${unit}`;
+        return `${p.marker ?? ''} ${p.seriesName ?? ''}: ${value} ${unit}`;
       });
 
     return `<strong>${formattedTime}</strong><br/>${rows.join('<br/>')}`;
@@ -287,7 +293,7 @@ export function buildYAxisConfig(
   const yAxis: {
     type: 'value';
     name: string;
-    nameTextStyle: { align: string; padding: number[]; fontSize: number };
+    nameTextStyle: { align: 'left' | 'center' | 'right'; padding: number[]; fontSize: number };
     axisLabel: { color?: string; formatter: (value: number) => string };
     min?: number;
     max?: number;

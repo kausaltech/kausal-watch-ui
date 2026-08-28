@@ -80,7 +80,13 @@ function createTooltipFormatter(indicator: IndicatorType | null, seriesData: Ser
   const showPercentage = showSegmentedPercentage(indicator?.unit, seriesData);
 
   return (tooltipParams: CallbackDataParams) => {
-    const nameAndValue = `${tooltipParams.name}: ${tooltipParams.value}`;
+    // The pie data is plain numbers, but the ECharts callback type is a broad
+    // union — narrow before stringifying
+    const value =
+      typeof tooltipParams.value === 'number' || typeof tooltipParams.value === 'string'
+        ? tooltipParams.value
+        : '-';
+    const nameAndValue = `${tooltipParams.name}: ${value}`;
 
     if (!showPercentage || !tooltipParams.percent) {
       return nameAndValue;

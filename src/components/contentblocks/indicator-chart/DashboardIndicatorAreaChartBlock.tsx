@@ -2,7 +2,7 @@
 
 import { useTheme } from '@emotion/react';
 
-import { LineChart } from 'echarts/charts';
+import { LineChart, type LineSeriesOption } from 'echarts/charts';
 import {
   GridComponent,
   LegendComponent,
@@ -133,7 +133,9 @@ const DashboardIndicatorAreaChartBlock = ({
     : [totalRaw];
   const { xCategories } = collectAllDates(dataSources, timeResolution);
 
-  const series = hasDimension
+  // Annotated so the dimensional/dimensionless branches don't form an
+  // inference-hostile union (`.map` over it degrades to `any`)
+  const series: LineSeriesOption[] = hasDimension
     ? dimSeries.map((d) => {
         const dataMap = new Map(d.raw.map(([key, value]) => [key, value]));
         const data = xCategories.map(
