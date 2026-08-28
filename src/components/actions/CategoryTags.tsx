@@ -1,6 +1,7 @@
 import React, { type ComponentType, type PropsWithChildren } from 'react';
 
 import styled from '@emotion/styled';
+
 import { readableColor } from 'polished';
 
 import {
@@ -118,9 +119,28 @@ const Identifier = styled.span`
     )};
 `;
 
+/**
+ * The minimal category shape CategoryContent renders. Structural on purpose:
+ * both the category-tag fragments and the heavier category fragments (e.g.
+ * the ones on attribute values) satisfy it, and the attribute types passed
+ * as `categoryType` only need to provide the identifier used for links.
+ */
+type CategoryContentCategory = {
+  id: string;
+  identifier: string;
+  name: string;
+  helpText?: string | null;
+  color?: string | null;
+  iconSvgUrl?: string | null;
+  iconImage?: { rendition?: { src?: string | null } | null } | null;
+  categoryPage?: { urlPath: string } | null;
+  type: { hideCategoryIdentifiers: boolean };
+  parent?: CategoryContentCategory | null;
+};
+
 type CategoryContentProps = {
-  categories: CategoryTagRecursiveFragmentFragment[];
-  categoryType: CategoryTypeFragmentFragment;
+  categories: CategoryContentCategory[];
+  categoryType: { identifier: string };
   categoryTypeHeader?: string | null;
   noLink?: boolean;
   compact?: boolean;
@@ -153,7 +173,7 @@ export const CategoryContent = (props: CategoryContentProps) => {
           >
             <BadgeTooltip
               id={item.id}
-              tooltip={item.helpText}
+              tooltip={item.helpText ?? undefined}
               content={
                 item.identifier && !item.type.hideCategoryIdentifiers ? (
                   <>
@@ -163,7 +183,11 @@ export const CategoryContent = (props: CategoryContentProps) => {
                   item.name
                 )
               }
-              iconImage={item.iconImage?.rendition?.src || item.parent?.iconImage?.rendition?.src}
+              iconImage={
+                item.iconImage?.rendition?.src ||
+                item.parent?.iconImage?.rendition?.src ||
+                undefined
+              }
               iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl || undefined}
               size={compact ? 'sm' : 'md'}
               themeColor="neutralLight"
