@@ -341,8 +341,12 @@ function IndicatorVisualisation({
        Also, IndicatorVisualizationBlock now only supports the simplified
        one-dimensioned data received straight from the backend.
      */
+    // The data table below is an accessible alternative for chart canvases
+    // only; a summary block is meaningful text (description, latest value,
+    // goal) with no table equivalent, so it must stay visible to AT.
+    const isSummaryBlock = effectiveDefaultVisualization.__typename === 'IndicatorDefaultSummary';
     graphComponent = (
-      <div aria-hidden={showTable}>
+      <div aria-hidden={showTable && !isSummaryBlock}>
         <IndicatorVisualizationBlock block={effectiveDefaultVisualization} />
         <VisualizationReadySignal />
       </div>
