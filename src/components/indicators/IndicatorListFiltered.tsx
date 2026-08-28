@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { Alert, Table } from 'reactstrap';
@@ -8,15 +9,14 @@ import { Alert, Table } from 'reactstrap';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import {
-  mobileScrollableTableWrapperStyles,
-  mobileStickyTableStyles,
-  STICKY_TABLE_NAME_COLUMN_CLASS,
-} from '@/components/common/stickyTableStyles';
-
-import {
   IndicatorDashboardFieldName,
   type IndicatorListPageFragmentFragment,
 } from '@/common/__generated__/graphql';
+import {
+  STICKY_TABLE_NAME_COLUMN_CLASS,
+  mobileScrollableTableWrapperStyles,
+  mobileStickyTableStyles,
+} from '@/components/common/stickyTableStyles';
 
 import Icon from '../common/Icon';
 import type { CategoryType, IndicatorListIndicator } from './IndicatorList';
@@ -31,7 +31,7 @@ export const isEmptyFilter = (val) => val == null || val === '';
 const TableWrapper = styled.div`
   /*div className="mt-5 mb-5 pb-5"*/
   width: 100%;
-   ${(props) => mobileScrollableTableWrapperStyles(props)};
+  ${(props) => mobileScrollableTableWrapperStyles(props)};
 
   margin: ${(props) => props.theme.spaces.s200} 0;
   padding-bottom: ${(props) => props.theme.spaces.s200};
@@ -64,7 +64,7 @@ const TableWrapper = styled.div`
 `;
 
 const IndicatorListTable = styled(Table)`
- ${(props) => mobileStickyTableStyles(props)};
+  ${(props) => mobileStickyTableStyles(props)};
 `;
 
 const Cell = styled.td`
@@ -350,7 +350,9 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
                               ? () => toggleCollapse(commonId)
                               : undefined
                           }
-                          className={isNameColumn(column) ? STICKY_TABLE_NAME_COLUMN_CLASS : undefined}
+                          className={
+                            isNameColumn(column) ? STICKY_TABLE_NAME_COLUMN_CLASS : undefined
+                          }
                         >
                           <IndicatorTableCell
                             column={column}

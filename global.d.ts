@@ -5,7 +5,4 @@ type PathsMessages = typeof import('./locales/en/paths.json');
 type A11yMessages = typeof import('./locales/en/a11y.json');
 
 declare interface IntlMessages
-  extends CommonMessages,
-    ActionsMessages,
-    PathsMessages,
-    A11yMessages {}
+  extends CommonMessages, ActionsMessages, PathsMessages, A11yMessages {}

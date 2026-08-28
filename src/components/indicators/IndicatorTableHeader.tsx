@@ -9,9 +9,9 @@ import {
   IndicatorColumnValueType,
   IndicatorDashboardFieldName,
 } from '@/common/__generated__/graphql';
-import { STICKY_TABLE_NAME_COLUMN_CLASS } from '@/components/common/stickyTableStyles';
 import type { TFunction } from '@/common/i18n';
 import Icon from '@/components/common/Icon';
+import { STICKY_TABLE_NAME_COLUMN_CLASS } from '@/components/common/stickyTableStyles';
 
 import PopoverTip from '../common/PopoverTip';
 import type { SortState } from './indicatorUtils';

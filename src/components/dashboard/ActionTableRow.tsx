@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Tooltip from '@mui/material/Tooltip';
 
 import styled from '@emotion/styled';
@@ -7,10 +5,10 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
+import { STICKY_TABLE_NAME_COLUMN_CLASS } from '@/components/common/stickyTableStyles';
 
 import { COLUMN_CONFIG } from './dashboard.constants';
 import type { ActionListAction, ColumnConfig } from './dashboard.types';
-import { STICKY_TABLE_NAME_COLUMN_CLASS } from '@/components/common/stickyTableStyles';
 
 const StyledRow = styled.tr`
   font-family: ${(props) => `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};

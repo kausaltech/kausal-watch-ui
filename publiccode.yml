@@ -1,9 +1,9 @@
-publiccodeYmlVersion: "0.4"
-name: "Kausal Watch Action Plan Monitoring UI"
-url: "https://github.com/kausaltech/kausal-watch-ui"
-landingURL: "https://kausal.tech"
-softwareVersion: "2.4.2"
-releaseDate: "2025-11-14"
+publiccodeYmlVersion: '0.4'
+name: 'Kausal Watch Action Plan Monitoring UI'
+url: 'https://github.com/kausaltech/kausal-watch-ui'
+landingURL: 'https://kausal.tech'
+softwareVersion: '2.4.2'
+releaseDate: '2025-11-14'
 logo: public/static/themes/default/images/default-logo-white-KUB6ICTS.svg
 platforms:
   - web
@@ -14,9 +14,8 @@ categories:
   - data-visualization
   - project-management
 
-
 developmentStatus: stable
-softwareType: "standalone/web"
+softwareType: 'standalone/web'
 localization:
   localizationReady: true
   availableLanguages:
@@ -38,26 +37,26 @@ localization:
     - sv-FI
 intendedAudience:
   countries:
-    - "au"
-    - "ca"
-    - "ch"
-    - "de"
-    - "dk"
-    - "es"
-    - "fi"
-    - "gr"
-    - "lv"
-    - "pt"
-    - "se"
-    - "us"
+    - 'au'
+    - 'ca'
+    - 'ch'
+    - 'de'
+    - 'dk'
+    - 'es'
+    - 'fi'
+    - 'gr'
+    - 'lv'
+    - 'pt'
+    - 'se'
+    - 'us'
   scope:
     - local-authorities
     - environment
     - government
 description:
   de:
-    genericName: "Monitoring-Dashboard"
-    shortDescription: "Next.js-Oberfläche zum Veröffentlichen und Überwachen kommunaler Klima- und Nachhaltigkeitsprogramme."
+    genericName: 'Monitoring-Dashboard'
+    shortDescription: 'Next.js-Oberfläche zum Veröffentlichen und Überwachen kommunaler Klima- und Nachhaltigkeitsprogramme.'
     longDescription: >
       Die Anwendung ist ein mit Next.js und React entwickeltes Frontend, das Maßnahmenpläne aus dem Kausal Watch GraphQL-Backend visualisiert.
       Mehrere Mandanten erhalten vorkonfigurierte Themen, Karten und KPI-Dashboards, um Fortschritt, Budget und Verantwortlichkeiten transparent zu machen.
@@ -70,8 +69,8 @@ description:
       - Mehrsprachige Inhaltsverwaltung mit über 15 Sprachpaketen, Feedback-Workflow und barrierefreier UI.
       - Exporte nach CSV/Excel, offene GraphQL-APIs und wiederverwendbare Embeds für Portale und Berichte.
   en:
-    genericName: "Action Plan Monitoring UI"
-    shortDescription: "Next.js-based UI that publishes, tracks, and narrates municipal climate and sustainability plans with live indicators."
+    genericName: 'Action Plan Monitoring UI'
+    shortDescription: 'Next.js-based UI that publishes, tracks, and narrates municipal climate and sustainability plans with live indicators.'
     longDescription: >
       Kausal Watch Action Plan Monitoring UI is a Next.js/React front end.
       It consumes the Kausal Watch GraphQL API to publish and monitor municipal climate programs and sustainability roadmaps.
@@ -90,8 +89,8 @@ legal:
 maintenance:
   type: contract
   contacts:
-    - name: "Kausal Oy"
-      email: "info@kausal.tech"
+    - name: 'Kausal Oy'
+      email: 'info@kausal.tech'
   # contractors:
   #   - name: "Kausal Oy"
   #     email: "info@kausal.tech"
