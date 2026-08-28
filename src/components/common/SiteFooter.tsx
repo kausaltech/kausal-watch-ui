@@ -1,11 +1,10 @@
-import React from 'react';
-
-import { css, useTheme } from '@emotion/react';
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
+import { BoxArrowRight } from 'react-bootstrap-icons';
 import SVG from 'react-inlinesvg';
 import { Container, Spinner } from 'reactstrap';
 
@@ -653,6 +652,8 @@ function SiteFooter(props: SiteFooterProps) {
                 >
                   {isAuthLoading ? (
                     <Spinner size="sm" color="light" />
+                  ) : isAuthenticated ? (
+                    <BoxArrowRight color={theme.footerColor} aria-hidden="true" className="me-1" />
                   ) : (
                     <Icon.Lock color={theme.footerColor} aria-hidden="true" className="me-1" />
                   )}

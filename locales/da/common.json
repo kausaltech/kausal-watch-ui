@@ -4,7 +4,7 @@
     "actions-plural": "{context, select, STRATEGY {Strategier} other {Handlinger}}",
     "actions-as-list": "Som en liste",
     "active-filters": "Aktive filtre",
-    "admin-login": "Admin login",
+    "admin-login": "Admin",
     "back-to-top": "Tilbage til toppen",
     "bar-goal": "Mål",
     "close": "Tæt",
