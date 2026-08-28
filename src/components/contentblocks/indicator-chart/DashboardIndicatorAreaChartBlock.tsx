@@ -84,8 +84,14 @@ const DashboardIndicatorAreaChartBlock = ({
   // area, so no overlay is needed.
   const showTotalOverlay = hasDimension && !!showTotalLine && totalRaw.length > 0;
 
+  // The trend regresses the categoryless aggregate. On dimensional charts
+  // that aggregate is only visible as the total overlay — without it an
+  // aggregate trend over category areas would be unattributed (the generic
+  // indicator view gates the same way). Dimensionless charts render the
+  // aggregate as the area itself, so the trend always has its anchor.
+  const trendVisible = !hasDimension || showTotalOverlay;
   const trendSeries =
-    indicator?.showTrendline && totalRaw.length >= 2
+    trendVisible && indicator?.showTrendline && totalRaw.length >= 2
       ? buildTrendSeries(
           totalRaw,
           indicator,

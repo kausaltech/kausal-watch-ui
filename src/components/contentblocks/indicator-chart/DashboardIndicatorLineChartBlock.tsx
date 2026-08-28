@@ -104,13 +104,19 @@ const DashboardIndicatorLineChartBlock = ({
 
   const seriesLines = buildLines(dimSeries);
   const seriesTotal = showTotalLine && totalRaw.length ? buildLines([totalDef], 3) : [];
-  const trendSeries = buildTrendSeries(
-    totalRaw,
-    indicator,
-    graphsTheme.trendLineColor ?? '#aaa',
-    trendLabel,
-    timeResolution
-  );
+  // The trend regresses the categoryless aggregate; when the editor hides
+  // the total line, an aggregate trend over category series would be
+  // unattributed — same gate the generic indicator view applies
+  const trendSeries =
+    showTotalLine && totalRaw.length
+      ? buildTrendSeries(
+          totalRaw,
+          indicator,
+          graphsTheme.trendLineColor ?? '#aaa',
+          trendLabel,
+          timeResolution
+        )
+      : [];
   const goalSeries = buildGoalSeries(
     indicator,
     unit,
