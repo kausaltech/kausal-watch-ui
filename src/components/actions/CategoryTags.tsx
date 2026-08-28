@@ -1,9 +1,13 @@
-import { type ComponentType, type PropsWithChildren } from 'react';
+import React, { type ComponentType, type PropsWithChildren } from 'react';
 
 import styled from '@emotion/styled';
 
 import { readableColor } from 'polished';
 
+import {
+  type CategoryTagRecursiveFragmentFragment,
+  type CategoryTypeFragmentFragment,
+} from '@/common/__generated__/graphql';
 import { ActionListLink, StaticPageLink } from '@/common/links';
 import BadgeTooltip from '@/components/common/BadgeTooltip';
 import PopoverTip from '@/components/common/PopoverTip';
@@ -109,37 +113,34 @@ function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
 const Identifier = styled.span`
   color: ${(props) =>
     readableColor(
-      props.theme.badgeColorNeutral,
+      props.theme.neutralLight,
       props.theme.graphColors.grey070,
       props.theme.graphColors.grey020
     )};
 `;
 
-type CategoryTagLike = {
+/**
+ * The minimal category shape CategoryContent renders. Structural on purpose:
+ * both the category-tag fragments and the heavier category fragments (e.g.
+ * the ones on attribute values) satisfy it, and the attribute types passed
+ * as `categoryType` only need to provide the identifier used for links.
+ */
+type CategoryContentCategory = {
   id: string;
   identifier: string;
   name: string;
-  helpText: string;
-  color: string;
-  iconSvgUrl: string | null;
-  iconImage?: { rendition?: { src: string } | null } | null;
+  helpText?: string | null;
+  color?: string | null;
+  iconSvgUrl?: string | null;
+  iconImage?: { rendition?: { src?: string | null } | null } | null;
   categoryPage?: { urlPath: string } | null;
-  level?: { name: string } | null;
-  parent?: CategoryTagLike | null;
-  type: { id: string; hideCategoryIdentifiers: boolean };
-};
-
-type CategoryTypeLike = {
-  id: string;
-  identifier: string;
-  name?: string;
-  helpText?: string;
-  levels?: Array<{ name: string }>;
+  type: { hideCategoryIdentifiers: boolean };
+  parent?: CategoryContentCategory | null;
 };
 
 type CategoryContentProps = {
-  categories: CategoryTagLike[];
-  categoryType: CategoryTypeLike;
+  categories: CategoryContentCategory[];
+  categoryType: { identifier: string };
   categoryTypeHeader?: string | null;
   noLink?: boolean;
   compact?: boolean;
@@ -172,7 +173,7 @@ export const CategoryContent = (props: CategoryContentProps) => {
           >
             <BadgeTooltip
               id={item.id}
-              tooltip={item.helpText}
+              tooltip={item.helpText ?? undefined}
               content={
                 item.identifier && !item.type.hideCategoryIdentifiers ? (
                   <>
@@ -182,10 +183,14 @@ export const CategoryContent = (props: CategoryContentProps) => {
                   item.name
                 )
               }
-              iconImage={item.iconImage?.rendition?.src || item.parent?.iconImage?.rendition?.src}
+              iconImage={
+                item.iconImage?.rendition?.src ||
+                item.parent?.iconImage?.rendition?.src ||
+                undefined
+              }
               iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl || undefined}
               size={compact ? 'sm' : 'md'}
-              themeColor="badgeColorNeutral"
+              themeColor="neutralLight"
               color={item.color || item.parent?.color || undefined}
               isLink={!noLink}
               maxLines={item.name.length > 50 ? 2 : 4}
@@ -198,8 +203,8 @@ export const CategoryContent = (props: CategoryContentProps) => {
 };
 
 type CategoryTagsProps = {
-  categories: CategoryTagLike[];
-  types: CategoryTypeLike[];
+  categories: CategoryTagRecursiveFragmentFragment[];
+  types: CategoryTypeFragmentFragment[];
   noLink?: boolean;
   compact?: boolean;
   ListLinkComponent?: ComponentType<ListLinkComponentProps>;
@@ -224,7 +229,7 @@ function CategoryTags(props: CategoryTagsProps) {
         as section header */
 
     const categoryTypeHeader =
-      (ct.levels?.length ?? 0) > 0 && cats[0].level?.name ? cats[0].level.name : ct.name;
+      ct.levels?.length > 0 && cats[0].level?.name ? cats[0].level.name : ct.name;
 
     return (
       <CategoryGroup key={ct.id} $compact={compact}>
