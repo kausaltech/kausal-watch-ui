@@ -10,6 +10,10 @@ import { useTranslations } from 'next-intl';
 import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { PieChartVisualizationFragment } from '@/common/__generated__/graphql';
+import {
+  buildSaveAsImageToolbox,
+  getChartDownloadFilename,
+} from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import type { GraphsTheme } from './indicator-charts-utility';
@@ -141,6 +145,11 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
   const labelSegments = seriesData.length < 5;
 
   const option: ECOption & { series: PieSeriesOption[] } = {
+    toolbox: buildSaveAsImageToolbox({
+      filename: getChartDownloadFilename(indicator?.name),
+      buttonTitle: t('download-chart-as-png'),
+      backgroundColor: theme.themeColors.white,
+    }),
     backgroundColor: theme.themeColors.white,
     tooltip: {
       appendTo: 'body',

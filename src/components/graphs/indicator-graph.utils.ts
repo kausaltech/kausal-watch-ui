@@ -175,11 +175,6 @@ export const formatNumber = (
 };
 
 /**
- * Normalize a trace/goal date to a comparable string: bare years become
- * `YYYY-1-1`, and any parseable date is truncated to `YYYY-1-1` for YEAR
- * resolution. Unparseable values pass through as strings.
- */
-/**
  * Date-string handling must be timezone-proof. ECharts parses timezone-less
  * date strings as LOCAL time with its own parser (unlike native `Date`,
  * which treats ISO date-only strings as UTC midnight) — so tick timestamps
@@ -192,11 +187,8 @@ export const formatNumber = (
 const DATE_PARTS_RE = /^(\d{4})-(\d{1,2})(?:-(\d{1,2}))?$/;
 
 export function normalizeDate(d: string | number, timeResolution: TimeResolution): string {
-  // Normalized dates use the ISO-padded YYYY-01-01 form: like the backend's
-  // ISO date values it parses as UTC midnight, so the chart data lands
-  // exactly on the UTC-computed axis ticks (option useUTC). The legacy
-  // YYYY-1-1 form would parse as local midnight and drift off by a timezone
-  // offset.
+  // Normalized dates use the ISO-padded YYYY-01-01 form; ECharts parses it
+  // as local time like every other timezone-less date string it receives.
   if (typeof d === 'number') {
     // If it's a number (likely a year), treat it as one
     if (d > 1900 && d < 2100) {
@@ -1063,5 +1055,50 @@ export function buildTimeXAxis({
           minInterval: 31536000000, // 1 year in milliseconds
         }
       : {}),
+  };
+}
+
+/** Slugified filename for chart image downloads. */
+export function getChartDownloadFilename(
+  title: string | null | undefined,
+  fallback = 'indicator'
+): string {
+  const slug = (title ?? '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\p{L}\p{N}-]+/gu, '');
+  return slug || fallback;
+}
+
+/**
+ * The save-as-PNG toolbox button — the ECharts equivalent of the legacy
+ * Plotly modebar's toImage option. ToolboxComponent is registered globally
+ * by the shared Chart wrapper.
+ */
+export function buildSaveAsImageToolbox({
+  filename,
+  buttonTitle,
+  backgroundColor,
+}: {
+  filename: string;
+  buttonTitle: string;
+  backgroundColor: string;
+}) {
+  return {
+    show: true,
+    right: 0,
+    top: 0,
+    itemSize: 18,
+    feature: {
+      saveAsImage: {
+        show: true,
+        type: 'png' as const,
+        name: filename,
+        title: buttonTitle,
+        pixelRatio: 2,
+        backgroundColor,
+      },
+    },
   };
 }

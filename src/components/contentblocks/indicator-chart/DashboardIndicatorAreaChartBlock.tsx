@@ -16,6 +16,10 @@ import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { AreaChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
+import {
+  buildSaveAsImageToolbox,
+  getChartDownloadFilename,
+} from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
@@ -186,6 +190,11 @@ const DashboardIndicatorAreaChartBlock = ({
     : [];
 
   const option: ECOption = {
+    toolbox: buildSaveAsImageToolbox({
+      filename: getChartDownloadFilename(indicator?.name),
+      buttonTitle: t('download-chart-as-png'),
+      backgroundColor: theme.themeColors.white,
+    }),
     backgroundColor: theme.themeColors.white,
     // Same legend style as the pie chart block
     legend: {
@@ -233,15 +242,6 @@ const DashboardIndicatorAreaChartBlock = ({
       boundaryGap: false,
       axisLabel: {
         color: theme.textColor.primary,
-        formatter: (value: string) => {
-          if (timeResolution === 'YEAR') {
-            return String(value);
-          } else if (timeResolution === 'MONTH') {
-            return String(value);
-          } else {
-            return value;
-          }
-        },
       },
     },
     yAxis: buildYAxisConfig(unit, formatAxisValue, indicator ?? undefined, theme.textColor.primary),

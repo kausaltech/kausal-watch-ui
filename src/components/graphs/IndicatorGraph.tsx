@@ -21,6 +21,7 @@ import {
   alignTracesToDates,
   applyGoalMarkers,
   buildGoalSeries,
+  buildSaveAsImageToolbox,
   buildSeriesFromTraces,
   buildTimeTooltipFormatter,
   buildTimeXAxis,
@@ -30,6 +31,7 @@ import {
   datesSpanSingleYear,
   detectTimeDimension,
   formatNumber,
+  getChartDownloadFilename,
   niceTickInterval,
   parseGraphSettings,
   resolveGraphColors,
@@ -47,6 +49,8 @@ type IndicatorGraphProps = {
     axes: Array<[string, number]>;
   };
   title: string | null;
+  /** Basename for the save-as-PNG download; the indicator name in practice */
+  downloadFilename?: string | null;
   desiredTrend?: IndicatorDesiredTrend | null;
   nonQuantifiedGoal?: NonQuantifiedGoalProp;
   referenceValue: ReferenceValueProp;
@@ -70,6 +74,7 @@ function IndicatorGraph({
   trendTrace,
   specification,
   title,
+  downloadFilename,
   nonQuantifiedGoal,
   referenceValue,
   height = 450,
@@ -192,6 +197,11 @@ function IndicatorGraph({
       // The legacy renderer used the tenant-configured custom background as
       // its plot background; keep honoring it, white when unset
       backgroundColor: graphSettings.customBackground || theme.themeColors.white,
+      toolbox: buildSaveAsImageToolbox({
+        filename: getChartDownloadFilename(downloadFilename ?? title),
+        buttonTitle: t('download-chart-as-png'),
+        backgroundColor: graphSettings.customBackground || theme.themeColors.white,
+      }),
       title: {
         text: wrappedTitle ?? undefined,
         subtext: yRange.unit,
@@ -311,6 +321,7 @@ function IndicatorGraph({
     xAxisCategories,
     xAxisRange,
     title,
+    downloadFilename,
     theme,
     nonQuantifiedGoal,
     referenceValue,

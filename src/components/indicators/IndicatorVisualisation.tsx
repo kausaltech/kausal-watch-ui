@@ -359,6 +359,7 @@ function IndicatorVisualisation({
           goalTraces={goalTraces}
           trendTrace={trendTrace}
           title={null}
+          downloadFilename={plotTitle}
           desiredTrend={indicator.desiredTrend}
           referenceValue={graphReferenceValue}
           nonQuantifiedGoal={{
