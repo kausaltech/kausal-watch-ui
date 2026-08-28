@@ -59,7 +59,6 @@ const WORKFLOW_STATE_ICONS: Record<WorkflowState, BootstrapIcon> = {
 
 const ToolbarContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   margin: 0 auto;
   padding: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.themeColors.black};
@@ -92,6 +91,12 @@ const ToolbarButton = styled(Button)`
   &.Mui-disabled {
     color: ${(props) => props.theme.themeColors.light};
   }
+`;
+
+/* Keeps the user menu at the right edge regardless of which other
+ * toolbar items are rendered */
+const UserMenuContainer = styled.div`
+  margin-left: auto;
 `;
 
 export const TopToolBar = () => {
@@ -204,7 +209,7 @@ export const TopToolBar = () => {
           </Menu>
         </div>
       )}
-      <div>
+      <UserMenuContainer>
         <ToolbarButton
           size="small"
           onClick={openUserMenu}
@@ -236,7 +241,7 @@ export const TopToolBar = () => {
             {t('ui-sign-out')}
           </MenuItem>
         </Menu>
-      </div>
+      </UserMenuContainer>
     </ToolbarContainer>
   );
 };
