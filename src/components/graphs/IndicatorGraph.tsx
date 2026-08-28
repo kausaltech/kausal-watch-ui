@@ -5,7 +5,7 @@ import { useEffect, useMemo } from 'react';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { useFormatter, useTranslations } from 'next-intl';
+import { useFormatter, useLocale, useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
@@ -84,6 +84,7 @@ function IndicatorGraph({
   const theme = useTheme();
   const t = useTranslations();
   const format = useFormatter();
+  const locale = useLocale();
 
   const graphSettings = parseGraphSettings(theme.settings?.graphs);
   const colors = resolveGraphColors(graphSettings, theme);
@@ -195,6 +196,15 @@ function IndicatorGraph({
         : null;
 
     return {
+      // Have ECharts generate an aria-label describing the chart contents
+      // (localized via the locale registered in the Chart wrapper). Time-axis
+      // data items are [epoch-ms, value] pairs and the generated description
+      // would recite the raw millisecond timestamps, so exclude dimension 0
+      // there; category charts hold the plain value in dimension 0.
+      aria: {
+        enabled: true,
+        label: hasTimeDimension ? { data: { excludeDimensionId: [0] } } : {},
+      },
       // The legacy renderer used the tenant-configured custom background as
       // its plot background; keep honoring it, white when unset
       backgroundColor: graphSettings.customBackground || theme.themeColors.white,
@@ -343,7 +353,7 @@ function IndicatorGraph({
 
   return (
     <PlotContainer data-element="indicator-graph-plot-container" $vizHeight={chartHeight}>
-      <Chart data={option} isLoading={false} height={`${chartHeight}px`} />
+      <Chart data={option} isLoading={false} height={`${chartHeight}px`} locale={locale} />
     </PlotContainer>
   );
 }
