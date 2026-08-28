@@ -9,6 +9,10 @@ import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { BarChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
+import {
+  buildSaveAsImageToolbox,
+  getChartDownloadFilename,
+} from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
@@ -92,6 +96,11 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
   const legendData = dimSeries.map((d) => d.name);
 
   const option: ECOption = {
+    toolbox: buildSaveAsImageToolbox({
+      filename: getChartDownloadFilename(indicator?.name),
+      buttonTitle: t('download-chart-as-png'),
+      backgroundColor: theme.themeColors.white,
+    }),
     backgroundColor: theme.themeColors.white,
     // Same legend style as the pie chart block
     legend: {
