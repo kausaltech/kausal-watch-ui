@@ -496,11 +496,11 @@
       "count": 1,
       "message": "Type '({ id: string; identifier: string; name: string; leadParagraph: string; order: number; kausalPathsNodeUuid: string; color: string; iconSvgUrl: string | null; helpText: string; level: ({ ...; } & { ...; }) | null; ... 7 more ...; parent: ({ ...; } & { ...; }) | null; } & { ...; })[] | ({ ...; } & { ...; })[]' is not assignable to type 'CategoryTagRecursiveFragmentFragment[]'."
     },
-    "520c56f4283496999abeb85deb0121c8326dd5d8": {
+    "71040a1f7ae6a39238e858f93622dc82fcc2748d": {
       "file": "src/components/common/ActionAttribute.tsx",
       "code": "TS2322",
       "count": 1,
-      "message": "Type '({ id: string; identifier: string; name: string; format: AttributeTypeFormat; unit: ({ id: string; name: string; shortName: string | null; } & { __typename: \"Unit\"; }) | null; } & { ...; }) | ({ ...; } & { ...; })' is not assignable to type 'CategoryTypeFragmentFragment'."
+      "message": "Type '({ id: string; identifier: string; name: string; format: AttributeTypeFormat; helpText: string; showChoiceNames: boolean; hasZeroOption: boolean; unit: ({ id: string; name: string; shortName: string | null; } & { ...; }) | null; choiceOptions: ({ ...; } & { ...; })[]; } & { ...; }) | ({ ...; } & { ...; })' is not assignable to type 'CategoryTypeFragmentFragment'."
     },
     "88b80ac9197d130045320d30c4822ab11594085e": {
       "file": "src/components/common/AttributesBlock.tsx",
@@ -801,6 +801,18 @@
       "code": "TS2339",
       "count": 1,
       "message": "Property 'value' does not exist on type '{ __typename: \"AttributeCategoryChoice\" | \"AttributeChoice\" | \"AttributeRichText\" | \"AttributeText\"; } | ({ value: number; } & { __typename: \"AttributeNumericValue\"; })'."
+    },
+    "b671eb5e6eb333aa124317afee4f2b79ffbb6643": {
+      "file": "src/components/contentblocks/indicator-chart/DashboardIndicatorAreaChartBlock.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '{ type: \"value\"; name: string; nameTextStyle: { align: string; padding: number[]; fontSize: number; }; axisLabel: { color?: string | undefined; formatter: (value: number) => string; }; min?: number | undefined; max?: number | undefined; scale?: boolean | undefined; splitNumber?: number | undefined; }' is not assignable to type 'Arrayable<YAXisOption> | undefined'."
+    },
+    "f12bb52d0b55ece38165fb1ca00c630a37fbb2b7": {
+      "file": "src/components/contentblocks/indicator-chart/DashboardIndicatorBarChartBlock.tsx",
+      "code": "TS2322",
+      "count": 1,
+      "message": "Type '{ type: \"value\"; name: string; nameTextStyle: { align: string; padding: number[]; fontSize: number; }; axisLabel: { color?: string | undefined; formatter: (value: number) => string; }; min?: number | undefined; max?: number | undefined; scale?: boolean | undefined; splitNumber?: number | undefined; }' is not assignable to type 'Arrayable<YAXisOption> | undefined'."
     },
     "2f45dfcb88d929ade68022d41483e051c236c142": {
       "file": "src/components/contentblocks/indicator-chart/indicator-chart-colors.tsx",
