@@ -1622,20 +1622,6 @@
       "count": 1
     }
   },
-  "src/components/indicators/IndicatorVisualisation.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 13
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 8
-    }
-  },
   "src/components/indicators/IndicatorsHero.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -1662,29 +1648,6 @@
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 2
-    }
-  },
-  "src/components/indicators/indicator-data-helpers.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 13
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 58
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 40
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 115
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 34
-    },
-    "prefer-const": {
-      "count": 3
     }
   },
   "src/components/indicators/indicatorUtils.tsx": {

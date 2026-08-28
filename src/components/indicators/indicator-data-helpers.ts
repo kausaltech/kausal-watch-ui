@@ -3,6 +3,10 @@
  * values into graph traces (via an n-dimensional "cube"), deriving goal and
  * trend traces, and computing the y-axis bounds.
  *
+ * The types here are structural on purpose: they describe only the fields
+ * the pipeline consumes, so the generated GraphQL query types satisfy them
+ * without coupling this module to a specific query document.
+ *
  * Note: the cube/trace machinery predates the dashboard chart blocks and is
  * expected to retire once the blocks (fed by backend chartSeries) support
  * comparison and normalization. Keep changes here mechanical.
@@ -12,9 +16,45 @@ import { isEqual } from 'lodash-es';
 
 import { linearRegression } from '@/common/math';
 import { capitalizeFirstLetter } from '@/common/utils';
-import { niceTickInterval } from '@/components/graphs/indicator-graph.utils';
+import { type ChartTrace, niceTickInterval } from '@/components/graphs/indicator-graph.utils';
 
-export function generateCube(dimensions, values, path?) {
+export type I18n = { t: (key: string) => string; language?: string };
+
+export type PipelineValue = {
+  date: string | null;
+  value: number | null;
+  categories: Array<{ id: string }>;
+  normalizedValues?: Array<{ normalizerId: string | null; value: number | null } | null> | null;
+};
+
+export type PipelineDimensionCategory = {
+  id: string;
+  name: string;
+  defaultColor?: string | null;
+  type?: string;
+};
+
+export type PipelineDimension = {
+  id?: string;
+  name: string;
+  sort?: string | null;
+  type?: string;
+  categories: PipelineDimensionCategory[];
+};
+
+type DimensionWrapper = { dimension: PipelineDimension };
+
+export type CubePoint = { date: string | null; value: number | null };
+/** Leaf level holds the data points; every enclosing dimension nests one array level. */
+export type Cube = CubePoint[] | Cube[];
+
+export type Bounds = { min: number; max: number } | null;
+
+export function generateCube(
+  dimensions: PipelineDimension[],
+  values: PipelineValue[],
+  path?: string[]
+): Cube {
   const dim = dimensions[0];
   const rest = dimensions.slice(1);
 
@@ -33,9 +73,13 @@ export function generateCube(dimensions, values, path?) {
   return array;
 }
 
-export function generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues) {
+export function generateCubeFromValues(
+  indicator: { timeResolution?: string | null },
+  indicatorGraphSpecification: Pick<IndicatorGraphSpecification, 'dimensions'>,
+  combinedValues: PipelineValue[]
+): Cube {
   const values = [...combinedValues]
-    .sort((a, b) => a.date - b.date)
+    .sort((a, b) => (a.date ?? '').localeCompare(b.date ?? ''))
     .map((item) => {
       const { date, value, categories } = item;
       // Make yearly value dates YYYY-1-1 so they land correctly on the time
@@ -48,7 +92,9 @@ export function generateCubeFromValues(indicator, indicatorGraphSpecification, c
   if (indicatorGraphSpecification.dimensions.length === 0) {
     return values;
   }
-  indicatorGraphSpecification.dimensions = indicatorGraphSpecification.dimensions
+  // The specification holds {dimension} wrappers until the cube is built;
+  // this unwraps and sorts them in place (getTraces consumes the result)
+  const sortedDimensions = (indicatorGraphSpecification.dimensions as DimensionWrapper[])
     .map((d) => d.dimension)
     .sort((a, b) => {
       if (a.sort === 'last') {
@@ -56,46 +102,50 @@ export function generateCubeFromValues(indicator, indicatorGraphSpecification, c
       } else if (b.sort === 'last') {
         return -1;
       }
-      return a.categories.length - b.categories.length || a.id - b.id;
+      return a.categories.length - b.categories.length;
     });
-  return generateCube(indicatorGraphSpecification.dimensions, values);
+  indicatorGraphSpecification.dimensions = sortedDimensions;
+  return generateCube(sortedDimensions, values);
 }
 
-export function getTraces(dimensions, cube, names, hasTimeDimension, i18n, quantityName?) {
+export function getTraces(
+  dimensions: PipelineDimension[],
+  cube: Cube,
+  names: Set<string> | null,
+  hasTimeDimension: boolean,
+  i18n: I18n,
+  _quantityName?: string
+): ChartTrace[] {
   // TODO: We could use quantity name but we can not tell if it's in the correct language
   // const name = capitalizeFirstLetter(quantityName ?? i18n.t('value'));
   const name = capitalizeFirstLetter(i18n.t('value'));
   if (dimensions.length === 0) {
+    const points = cube as CubePoint[];
     return [
       {
         xType: 'time',
         name: name,
         dataType: 'total',
-        x: cube.map((val) => {
-          return val.date;
-        }),
-        y: cube.map((val) => val.value),
+        x: points.map((val) => val.date),
+        y: points.map((val) => val.value),
       },
     ];
   }
   const [firstDimension, ...rest] = dimensions;
   if (dimensions.length === 1) {
+    const leafCube = cube as CubePoint[][];
     if (hasTimeDimension) {
       return firstDimension.categories.map((cat, idx) => {
         const traceName = Array.from(new Set(names ?? undefined).add(cat.name)).join(', ');
-        let x,
-          y,
-          _cube = cube[idx];
-        x = _cube.map((val) => val.date);
-        y = _cube.map((val) => val.value);
+        const points = leafCube[idx];
         return {
           xType: 'time',
           dataType: cat.id === 'total' ? 'total' : null,
           name: traceName,
           _parentName: names ? Array.from(names).join(', ') : null,
           color: cat.defaultColor ?? null,
-          x,
-          y,
+          x: points.map((val) => val.date),
+          y: points.map((val) => val.value),
         };
       });
     }
@@ -108,16 +158,16 @@ export function getTraces(dimensions, cube, names, hasTimeDimension, i18n, quant
         _parentName: names ? Array.from(names).join(', ') : null,
         colors: firstDimension.categories.map((cat) => cat.defaultColor ?? null),
         x: firstDimension.categories.map((cat) => cat.name),
-        y: cube.map((c) => c[0]?.value),
+        y: leafCube.map((c) => c[0]?.value ?? null),
       },
     ];
   }
-  let traces: any[] = [];
+  let traces: ChartTrace[] = [];
 
   firstDimension.categories.forEach((cat, idx) => {
     const out = getTraces(
       rest,
-      cube[idx],
+      (cube as Cube[])[idx],
       new Set(names ?? undefined).add(cat.name),
       hasTimeDimension,
       i18n
@@ -130,32 +180,35 @@ export function getTraces(dimensions, cube, names, hasTimeDimension, i18n, quant
 }
 
 export type TrendTrace = { x: string[]; y: number[]; name: string };
-type Bounds = { min: number; max: number } | null;
 
 export const generateTrendTrace = (
-  indicator,
-  traces,
-  goals,
-  i18n
+  indicator: { timeResolution?: string | null; values: PipelineValue[] },
+  traces: Array<{ y: unknown[]; scenario?: { identifier?: string | null } | null }>,
+  goals: Array<{ x: Array<string | number | null> }>,
+  i18n: I18n
 ): [TrendTrace | undefined, Bounds | undefined] => {
-  const hasPotentialScenario = traces.find((goal) => goal.scenario?.identifier === 'potential');
+  const hasPotentialScenario = traces.find((trace) => trace.scenario?.identifier === 'potential');
   if (indicator.timeResolution === 'YEAR' && traces[0].y.length >= 5 && !hasPotentialScenario) {
     const values = [...indicator.values]
-      .sort((a, b) => a.date - b.date)
+      .sort((a, b) => (a.date ?? '').localeCompare(b.date ?? ''))
       .map((item) => {
         const { date, value, categories } = item;
         return { date, value, categories };
       });
     // Only dated, categoryless values can contribute to the regression
-    const mainValues = values.filter((item) => !item.categories.length && item.date != null);
+    const mainValues = values.filter(
+      (item): item is { date: string; value: number; categories: PipelineValue['categories'] } =>
+        !item.categories.length && item.date != null && item.value != null
+    );
     const numberOfYears = Math.min(mainValues.length, 10);
-    const regData = mainValues
+    const regData: Array<[number, number]> = mainValues
       .slice(mainValues.length - numberOfYears, mainValues.length)
       .map((item) => [parseInt(item.date, 10), item.value]);
     if (regData.length < 5) {
       return [undefined, undefined];
     }
-    const model = linearRegression(regData);
+    // linearRegression lives in untyped legacy JS
+    const model = linearRegression(regData) as { m: number; b: number };
     const predictedTrace: { x: number[]; y: number[]; name: string } = {
       x: regData.map((item) => item[0]),
       y: [],
@@ -197,14 +250,16 @@ type IndicatorGoal = {
 
 type DatedGoal = NonNullable<IndicatorGoal> & { date: string };
 
+export type PlanScenario = { id: string; identifier?: string | null; name?: string | null };
+
 type GoalTraceScenario = {
   goals: DatedGoal[];
-  config: any;
+  config: PlanScenario | null;
   name?: string;
 };
 
 export type GeneratedGoalTrace = {
-  scenario: any;
+  scenario: PlanScenario | null;
   name: string;
   x: string[];
   y: Array<number | null>;
@@ -212,8 +267,8 @@ export type GeneratedGoalTrace = {
 
 export const generateGoalTraces = (
   indicator: { timeResolution?: string | null; goals?: IndicatorGoal[] | null },
-  planScenarios,
-  i18n: { t: (key: string) => string }
+  planScenarios: PlanScenario[] | null | undefined,
+  i18n: I18n
 ): [GeneratedGoalTrace[], Bounds] => {
   // Group goals by scenario
   const traceScenarios = new Map<string | null, GoalTraceScenario>();
@@ -227,13 +282,11 @@ export const generateGoalTraces = (
     const scenarioId = goal.scenario ? goal.scenario.id : null;
 
     if (!traceScenarios.has(scenarioId)) {
-      const scenario: GoalTraceScenario = {
-        goals: [],
-        config: planScenarios?.find((sc) => sc.id === scenarioId) ?? {},
-      };
+      const config = planScenarios?.find((sc) => sc.id === scenarioId) ?? null;
+      const scenario: GoalTraceScenario = { goals: [], config };
 
-      if (scenarioId && scenario.config?.name) {
-        scenario.name = scenario.config.name;
+      if (scenarioId && config?.name) {
+        scenario.name = config.name;
       } else {
         scenario.name = i18n.t('goal');
       }
@@ -275,13 +328,16 @@ export const generateGoalTraces = (
   return [goalTraces, bounds];
 };
 
-export function calculateBounds(values) {
-  if (values.length === 0) {
+export function calculateBounds(values: Array<number | null | undefined>): Bounds {
+  // Nulls carry no extent information; Math.min/max would coerce them to 0
+  // and silently drag the bounds to zero
+  const numbers = values.filter((v): v is number => v != null);
+  if (numbers.length === 0) {
     return null;
   }
   return {
-    min: Math.min(...values),
-    max: Math.max(...values),
+    min: Math.min(...numbers),
+    max: Math.max(...numbers),
   };
 }
 
@@ -332,22 +388,36 @@ export function padAndRoundBounds(
 export type IndicatorGraphSpecification = {
   bounds: { min: number; max: number };
   axes: [string, number][];
-  // The dimension/cube structures are untyped legacy shapes consumed by the
-  // graph components; typing them properly isn't worth it before the planned
-  // migration to backend-computed chart series.
-  dimensions: any[];
+  /**
+   * Starts as {dimension} wrappers; generateCubeFromValues unwraps and sorts
+   * them in place, after which the array holds bare dimensions (the shape
+   * getTraces consumes).
+   */
+  dimensions: DimensionWrapper[] | PipelineDimension[];
   name: string;
-  cube?: unknown;
+  cube?: Cube;
+};
+
+export type SpecificationIndicator = {
+  id: string;
+  name: string;
+  organization: { id: string; name: string };
+  values: PipelineValue[];
+  dimensions: Array<{ dimension: PipelineDimension }>;
+  common?: {
+    indicators: Array<{ organization: { id: string; name: string }; values: PipelineValue[] }>;
+  } | null;
 };
 
 export function getIndicatorGraphSpecification(
-  indicator,
-  compareOrganization,
-  t,
-  normalizerId
+  indicator: SpecificationIndicator,
+  compareOrganization: string | null | undefined,
+  t: I18n['t'],
+  normalizerId: string | null
 ): IndicatorGraphSpecification {
-  const indicators = [indicator];
-  let dimensions = JSON.parse(JSON.stringify(indicator.dimensions));
+  const indicators: Array<{ organization: { id: string; name: string }; values: PipelineValue[] }> =
+    [indicator];
+  let dimensions = JSON.parse(JSON.stringify(indicator.dimensions)) as DimensionWrapper[];
 
   const dimensionedValues = indicator.values.filter((val) => val.categories.length > 0);
   if (dimensionedValues.length === 0 && dimensions.length !== 0) {
@@ -358,14 +428,17 @@ export function getIndicatorGraphSpecification(
   }
 
   if (compareOrganization) {
-    const compareIndicator = indicator.common.indicators.find(
+    const compareIndicator = indicator.common?.indicators.find(
       (x) => x.organization.id === compareOrganization
     );
-    indicators.push(compareIndicator);
-    const comparisonDimension = {
+    if (compareIndicator) {
+      indicators.push(compareIndicator);
+    }
+    const comparisonDimension: DimensionWrapper = {
       dimension: {
         sort: 'last',
         type: 'organization',
+        name: 'organization',
         categories: indicators.map((i) => ({
           id: `org:${i.organization.id}`,
           name: i.organization.name,
@@ -418,15 +491,15 @@ export function getIndicatorGraphSpecification(
   };
 }
 
-function addOrganizationCategory(value, orgId) {
+function addOrganizationCategory(value: PipelineValue, orgId: string): PipelineValue {
   const newCategories = [...value.categories];
   newCategories.push({ id: `org:${orgId}` });
   return Object.assign({}, value, { categories: newCategories });
 }
 
-function _addTotal(v, categoryCount) {
+function _addTotal(v: PipelineValue, categoryCount: number): PipelineValue {
   if (v.categories.length === 0) {
-    const newCategories = new Array(categoryCount).fill({ id: 'total' });
+    const newCategories = new Array<{ id: string }>(categoryCount).fill({ id: 'total' });
     return Object.assign({}, v, {
       categories: [...v.categories, ...newCategories],
     });
@@ -434,18 +507,24 @@ function _addTotal(v, categoryCount) {
   return v;
 }
 
-export function combineValues(indicator, comparisonIndicator, indicatorGraphSpecification) {
+type CombinableIndicator = { organization: { id: string }; values: PipelineValue[] };
+
+export function combineValues(
+  indicator: CombinableIndicator,
+  comparisonIndicator: CombinableIndicator | null | undefined,
+  indicatorGraphSpecification: Pick<IndicatorGraphSpecification, 'axes'>
+): PipelineValue[] {
   let categoryCount = 0;
   const categoryAxis = indicatorGraphSpecification.axes.filter((a) => a[0] === 'categories');
   if (categoryAxis.length > 0) {
     categoryCount = categoryAxis[0][1];
   }
-  const getValues = (indicator) =>
-    indicator.values
+  const getValues = (ind: CombinableIndicator) =>
+    ind.values
       .map((v) => _addTotal(v, categoryCount))
       .filter((v) => v.categories.length === categoryCount)
       .map((v) =>
-        comparisonIndicator == null ? v : addOrganizationCategory(v, indicator.organization.id)
+        comparisonIndicator == null ? v : addOrganizationCategory(v, ind.organization.id)
       );
   const indicatorValues = getValues(indicator);
   if (comparisonIndicator == null) {
@@ -459,27 +538,38 @@ export const NORMALIZE_DEFAULT = 'default';
 const NORMALIZE_PREFER_ENABLED = 'enabled';
 const NORMALIZE_PREFER_DISABLED = 'disabled';
 
-export function normalizeByPopulationSetter(callback) {
-  return (value) => {
+export function normalizeByPopulationSetter(callback: (value: string) => void) {
+  return (value: boolean) => {
     callback(value ? NORMALIZE_PREFER_ENABLED : NORMALIZE_PREFER_DISABLED);
   };
 }
 
-export function getNormalizeByPopulation(preferNormalizeByPopulation, comparisonIndicator) {
+export function getNormalizeByPopulation(
+  preferNormalizeByPopulation: string,
+  comparisonIndicator: unknown
+): boolean {
   if (preferNormalizeByPopulation === NORMALIZE_DEFAULT) {
     return comparisonIndicator != null;
   }
   return preferNormalizeByPopulation === NORMALIZE_PREFER_ENABLED;
 }
 
-function getNormalizedValue(valueObject, normalizerId) {
+function getNormalizedValue(
+  valueObject: PipelineValue,
+  normalizerId: string | null
+): number | null {
   if (normalizerId != null) {
-    return valueObject.normalizedValues.find((nv) => nv.normalizerId === normalizerId).value;
+    // Callers only pass a normalizer id after checking every value has a
+    // matching normalized entry (see canBeNormalized)
+    return valueObject.normalizedValues!.find((nv) => nv?.normalizerId === normalizerId)!.value;
   }
   return valueObject.value;
 }
 
-export function normalizeValuesByNormalizer(values, normalizerId) {
+export function normalizeValuesByNormalizer(
+  values: PipelineValue[],
+  normalizerId: string
+): PipelineValue[] {
   return values.map((valueObject) =>
     Object.assign({}, valueObject, {
       value: getNormalizedValue(valueObject, normalizerId),

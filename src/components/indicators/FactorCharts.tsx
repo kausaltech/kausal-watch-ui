@@ -112,7 +112,7 @@ function FactorCharts({
                   <IndicatorGraph
                     specification={factorSpec}
                     yRange={factorYRange}
-                    timeResolution={timeResolution as 'YEAR' | 'MONTH'}
+                    timeResolution={timeResolution}
                     traces={[factorTrace]}
                     goalTraces={[]}
                     trendTrace={null}
