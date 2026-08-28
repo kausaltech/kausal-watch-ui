@@ -201,6 +201,9 @@
   "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/accessibility/page.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 3
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
     }
   },
   "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/feedback/page.tsx": {
@@ -269,6 +272,28 @@
       "count": 1
     }
   },
+  "src/app/root/[domain]/[lang]/unpublished/page.tsx": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "src/common/__tests__/categories.test.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 5
+    }
+  },
   "src/common/__tests__/links.test.ts": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -326,7 +351,7 @@
   },
   "src/common/images.ts": {
     "@graphql-eslint/naming-convention": {
-      "count": 1
+      "count": 3
     },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
@@ -379,7 +404,7 @@
       "count": 3
     },
     "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 3
+      "count": 4
     },
     "react-hooks/static-components": {
       "count": 1
@@ -408,6 +433,9 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 7
+    },
+    "@typescript-eslint/prefer-nullish-coalescing": {
+      "count": 1
     },
     "react-hooks/static-components": {
       "count": 1
@@ -728,7 +756,7 @@
       "count": 4
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 21
+      "count": 23
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 1
@@ -1168,6 +1196,11 @@
       "count": 1
     }
   },
+  "src/components/contentblocks/IndicatorGroupBlock.tsx": {
+    "@typescript-eslint/no-unsafe-enum-comparison": {
+      "count": 1
+    }
+  },
   "src/components/contentblocks/IndicatorHighlightsBlock.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -1280,7 +1313,7 @@
       "count": 2
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 6
+      "count": 7
     }
   },
   "src/components/dashboard/ActionTableRow.tsx": {
@@ -1632,14 +1665,26 @@
     }
   },
   "src/components/indicators/indicator-data-helpers.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 13
+    },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
+      "count": 58
     },
     "@typescript-eslint/no-unsafe-call": {
-      "count": 1
+      "count": 40
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
+      "count": 115
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 34
+    },
+    "prefer-const": {
+      "count": 3
     }
   },
   "src/components/indicators/indicatorUtils.tsx": {
@@ -1748,6 +1793,20 @@
       "count": 1
     }
   },
+  "src/components/pledge/use-public-user.ts": {
+    "@graphql-eslint/unique-operation-name": {
+      "count": 3
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "react-hooks/refs": {
+      "count": 4
+    }
+  },
   "src/components/providers/ApolloWrapper.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
@@ -1841,7 +1900,7 @@
   },
   "src/fragments/category.fragment.ts": {
     "@graphql-eslint/naming-convention": {
-      "count": 6
+      "count": 7
     },
     "@graphql-eslint/require-selections": {
       "count": 66
@@ -1853,6 +1912,14 @@
     },
     "@graphql-eslint/require-selections": {
       "count": 1
+    }
+  },
+  "src/fragments/indicator-chart.fragment.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 3
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 18
     }
   },
   "src/fragments/indicator-list-indicator.fragment.ts": {
@@ -1986,6 +2053,23 @@
       "count": 76
     }
   },
+  "src/stories/IndicatorExplorer.stories.tsx": {
+    "@graphql-eslint/require-selections": {
+      "count": 6
+    },
+    "@typescript-eslint/no-base-to-string": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 2
+    },
+    "react-hooks/use-memo": {
+      "count": 2
+    }
+  },
   "src/stories/IndicatorModalContentBlock.stories.tsx": {
     "@typescript-eslint/consistent-type-imports": {
       "count": 1
@@ -2025,7 +2109,7 @@
   },
   "src/stories/components/ThemeDesignTokens.tsx": {
     "@typescript-eslint/no-unsafe-argument": {
-      "count": 3
+      "count": 4
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 11
@@ -2125,6 +2209,14 @@
       "count": 1
     }
   },
+  "src/tests/pledge/use-public-user.test.tsx": {
+    "@graphql-eslint/unique-operation-name": {
+      "count": 3
+    },
+    "@typescript-eslint/consistent-type-imports": {
+      "count": 1
+    }
+  },
   "src/tests/preprocess.test.ts": {
     "@typescript-eslint/no-unsafe-return": {
       "count": 1
@@ -2136,6 +2228,11 @@
     },
     "react/prop-types": {
       "count": 1
+    }
+  },
+  "src/tests/utils/apollo-middleware.test.ts": {
+    "@graphql-eslint/unique-operation-name": {
+      "count": 2
     }
   },
   "src/types/next-auth.d.ts": {
@@ -2188,6 +2285,14 @@
   "src/utils/middleware.utils.ts": {
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
+    }
+  },
+  "src/utils/sitemap.server.ts": {
+    "@graphql-eslint/naming-convention": {
+      "count": 1
+    },
+    "@graphql-eslint/require-selections": {
+      "count": 4
     }
   }
 }

@@ -38,8 +38,11 @@ export function generateCubeFromValues(indicator, indicatorGraphSpecification, c
     .sort((a, b) => a.date - b.date)
     .map((item) => {
       const { date, value, categories } = item;
-      // Make yearly value dates YYYY-1-1 so they land correctly on the time axis
-      const newDate = indicator.timeResolution === 'YEAR' ? `${date.split('-')[0]}-1-1` : date;
+      // Make yearly value dates YYYY-1-1 so they land correctly on the time
+      // axis. The schema permits null dates (category-only indicators);
+      // preserve them instead of crashing on the split.
+      const newDate =
+        indicator.timeResolution === 'YEAR' && date != null ? `${date.split('-')[0]}-1-1` : date;
       return { date: newDate, value, categories };
     });
   if (indicatorGraphSpecification.dimensions.length === 0) {
@@ -143,7 +146,8 @@ export const generateTrendTrace = (
         const { date, value, categories } = item;
         return { date, value, categories };
       });
-    const mainValues = values.filter((item) => !item.categories.length);
+    // Only dated, categoryless values can contribute to the regression
+    const mainValues = values.filter((item) => !item.categories.length && item.date != null);
     const numberOfYears = Math.min(mainValues.length, 10);
     const regData = mainValues
       .slice(mainValues.length - numberOfYears, mainValues.length)
@@ -184,17 +188,42 @@ export const generateTrendTrace = (
   return [undefined, undefined];
 };
 
+type IndicatorGoal = {
+  date?: string | null;
+  value?: number | null;
+  categories?: unknown;
+  scenario?: { id: string } | null;
+} | null;
+
+type DatedGoal = NonNullable<IndicatorGoal> & { date: string };
+
 type GoalTraceScenario = {
-  goals: any[];
+  goals: DatedGoal[];
   config: any;
   name?: string;
 };
 
-export const generateGoalTraces = (indicator, planScenarios, i18n): [any[], Bounds] => {
+export type GeneratedGoalTrace = {
+  scenario: any;
+  name: string;
+  x: string[];
+  y: Array<number | null>;
+};
+
+export const generateGoalTraces = (
+  indicator: { timeResolution?: string | null; goals?: IndicatorGoal[] | null },
+  planScenarios,
+  i18n: { t: (key: string) => string }
+): [GeneratedGoalTrace[], Bounds] => {
   // Group goals by scenario
   const traceScenarios = new Map<string | null, GoalTraceScenario>();
-  const goalTraces: any[] = [];
-  (indicator.goals || []).forEach((goal) => {
+  const goalTraces: GeneratedGoalTrace[] = [];
+  // The schema permits goals without a target date; they can't be placed on
+  // the time axis, so skip them instead of crashing on date parsing below
+  const datedGoals = (indicator.goals ?? []).filter(
+    (goal): goal is DatedGoal => goal?.date != null
+  );
+  datedGoals.forEach((goal) => {
     const scenarioId = goal.scenario ? goal.scenario.id : null;
 
     if (!traceScenarios.has(scenarioId)) {
@@ -213,11 +242,11 @@ export const generateGoalTraces = (indicator, planScenarios, i18n): [any[], Boun
     traceScenarios.get(scenarioId)?.goals.push(goal);
   });
 
-  // Sort
+  // Sort chronologically (ISO date strings compare lexicographically)
   traceScenarios.forEach((scenario) => {
     const { goals } = scenario;
     scenario.goals = goals
-      .sort((a, b) => a.date - b.date)
+      .sort((a, b) => a.date.localeCompare(b.date))
       .map((item) => {
         const { date, value, categories } = item;
         const newDate = indicator.timeResolution === 'YEAR' ? `${date.split('-')[0]}-1-1` : date;
@@ -228,15 +257,15 @@ export const generateGoalTraces = (indicator, planScenarios, i18n): [any[], Boun
   traceScenarios.forEach((scenario) => {
     const { goals } = scenario;
 
-    const trace = {
+    const trace: GeneratedGoalTrace = {
       scenario: scenario.config,
-      y: goals.map((item) => item.value),
+      y: goals.map((item) => item.value ?? null),
       x: goals.map((item) => {
         const newDate =
           indicator.timeResolution === 'YEAR' ? `${item.date.split('-')[0]}-1-1` : item.date;
         return newDate;
       }),
-      name: scenario.name,
+      name: scenario.name ?? i18n.t('goal'),
     };
 
     goalTraces.push(trace);

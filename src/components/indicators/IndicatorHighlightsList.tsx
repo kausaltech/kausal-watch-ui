@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
 
 import { gql } from '@apollo/client';
@@ -10,6 +8,7 @@ import { Col, Row } from 'reactstrap';
 import ContentLoader from '@common/components/ContentLoader';
 
 import type { IndicatorHightlightListQuery } from '@/common/__generated__/graphql';
+import { SiteGeneralContentIndicatorTerm } from '@/common/__generated__/graphql';
 import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
 import Button from '@/components/common/Button';
@@ -76,7 +75,9 @@ function IndicatorCardList(props: IndicatorCardListProps) {
   const plan = usePlan();
   const indicatorContext = getIndicatorTermContext(plan).context;
   const buttonLabel =
-    indicatorContext === 'MEASURE' ? t('see-all-measures') : t('see-all-indicators');
+    indicatorContext === SiteGeneralContentIndicatorTerm.Measure
+      ? t('see-all-measures')
+      : t('see-all-indicators');
 
   const { indicators } = props;
 
