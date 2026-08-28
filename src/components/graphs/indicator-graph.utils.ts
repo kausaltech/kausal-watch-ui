@@ -186,9 +186,17 @@ export const formatNumber = (
  */
 const DATE_PARTS_RE = /^(\d{4})-(\d{1,2})(?:-(\d{1,2}))?$/;
 
-export function normalizeDate(d: string | number, timeResolution: TimeResolution): string {
+export function normalizeDate(
+  d: string | number | null | undefined,
+  timeResolution: TimeResolution
+): string {
   // Normalized dates use the ISO-padded YYYY-01-01 form; ECharts parses it
   // as local time like every other timezone-less date string it receives.
+  // Null dates (schema-permitted) must not fall into Date parsing, where
+  // new Date(null) would silently become the 1970 epoch.
+  if (d == null) {
+    return String(d);
+  }
   if (typeof d === 'number') {
     // If it's a number (likely a year), treat it as one
     if (d > 1900 && d < 2100) {

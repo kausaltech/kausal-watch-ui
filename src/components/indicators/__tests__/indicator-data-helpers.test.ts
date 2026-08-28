@@ -1,4 +1,9 @@
-import { calculateBounds, padAndRoundBounds } from '../indicator-data-helpers';
+import {
+  calculateBounds,
+  generateCubeFromValues,
+  generateGoalTraces,
+  padAndRoundBounds,
+} from '../indicator-data-helpers';
 
 describe('calculateBounds', () => {
   it('returns null for an empty array', () => {
@@ -48,5 +53,53 @@ describe('padAndRoundBounds', () => {
     // Snapped values are multiples of the step with no 0.6000000000000001-style noise
     expect(String(result.max).length).toBeLessThanOrEqual(6);
     expect(result.max).toBeGreaterThanOrEqual(0.55);
+  });
+});
+
+describe('generateGoalTraces', () => {
+  const i18n = { t: (key: string) => key };
+
+  it('skips goals without a target date instead of crashing', () => {
+    const indicator = {
+      timeResolution: 'YEAR',
+      goals: [
+        { date: '2035-12-31', value: 10, categories: [] },
+        { date: null, value: 5, categories: [] },
+        null,
+        { date: '2030-06-30', value: 20, categories: [] },
+      ],
+    };
+    const [goalTraces, bounds] = generateGoalTraces(indicator, [], i18n);
+    expect(goalTraces).toHaveLength(1);
+    // Undated goals are skipped; the rest are sorted chronologically
+    expect(goalTraces[0].x).toEqual(['2030-1-1', '2035-1-1']);
+    expect(goalTraces[0].y).toEqual([20, 10]);
+    expect(bounds).toEqual({ min: 10, max: 20 });
+  });
+
+  it('returns no traces when no goal has a date', () => {
+    const indicator = { timeResolution: 'YEAR', goals: [{ date: null, value: 5 }] };
+    const [goalTraces, bounds] = generateGoalTraces(indicator, [], i18n);
+    expect(goalTraces).toEqual([]);
+    expect(bounds).toBeNull();
+  });
+});
+
+describe('generateCubeFromValues', () => {
+  it('preserves null dates instead of crashing on yearly normalization', () => {
+    const indicator = { timeResolution: 'YEAR' };
+    const spec = { dimensions: [] };
+    const values = [
+      { date: '2023-12-31', value: 1, categories: [] },
+      { date: null, value: 2, categories: [] },
+    ];
+    const cube = generateCubeFromValues(indicator, spec, values) as Array<{
+      date: string | null;
+      value: number;
+    }>;
+    expect(cube).toHaveLength(2);
+    const dates = cube.map((v) => v.date);
+    expect(dates).toContain('2023-1-1');
+    expect(dates).toContain(null);
   });
 });

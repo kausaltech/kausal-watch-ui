@@ -167,3 +167,10 @@ describe('timestamp labels match ECharts date parsing', () => {
     expect(formatDateLabel(timestamp, undefined)).toBe('2024-01-01');
   });
 });
+
+describe('normalizeDate with null dates', () => {
+  it('passes null through as a string instead of the 1970 epoch', () => {
+    expect(normalizeDate(null, 'YEAR')).toBe('null');
+    expect(normalizeDate(undefined, 'YEAR')).toBe('undefined');
+  });
+});

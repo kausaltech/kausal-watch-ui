@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 
 import type { IndicatorGraphDataQuery } from '@/common/__generated__/graphql';
+import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter } from '@/common/utils';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
@@ -62,7 +63,9 @@ function FactorCharts({
             name: capitalizeFirstLetter(t('value')),
             dataType: 'total' as const,
             x: points.map((p) =>
-              timeResolution === 'YEAR' ? `${p.date.split('-')[0]}-1-1` : p.date
+              timeResolution === IndicatorTimeResolution.Year
+                ? `${p.date.split('-')[0]}-1-1`
+                : p.date
             ),
             y: points.map((p) => p.value),
           };
@@ -72,7 +75,8 @@ function FactorCharts({
           points.forEach((p) => {
             const yearKey = p.date.split('-')[0];
             const indicatorVal = indicatorValueByYear.get(yearKey) ?? null;
-            const dateStr = timeResolution === 'YEAR' ? `${yearKey}-1-1` : p.date;
+            const dateStr =
+              timeResolution === IndicatorTimeResolution.Year ? `${yearKey}-1-1` : p.date;
             factorX.push(dateStr);
             factorY.push(
               p.value !== null && indicatorVal !== null && indicatorVal !== 0
