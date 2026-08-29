@@ -3,6 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 
 import { useTheme } from '@emotion/react';
+
 import { useTranslations } from 'next-intl';
 import type { PlotParams } from 'react-plotly.js';
 

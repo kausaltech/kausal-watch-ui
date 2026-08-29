@@ -2,8 +2,9 @@
 
 import type { ReactNode } from 'react';
 
-import type { Theme } from '@kausal/themes/types';
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
+
+import type { Theme } from '@kausal/themes/types';
 
 import { initializeMuiTheme } from '@common/themes/mui-theme/theme';
 

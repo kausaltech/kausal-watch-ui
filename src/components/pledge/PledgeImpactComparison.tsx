@@ -2,6 +2,7 @@
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import Icon, { type ValidIconName } from '@/components/common/Icon';

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useLocale, useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 

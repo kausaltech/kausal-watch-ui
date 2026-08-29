@@ -715,7 +715,7 @@ export const MOCK_PLAN: PlanContextFragment = {
       shortName: 'Biodiversity',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/pexels-manoj-poosam-7199929.2e16d0ba.fill-128x128-c50_nTuEZJJ.jpg',
+          src: 'https://placehold.co/128x128/1565c0/fff/jpeg',
         },
       },
       organization: {
@@ -730,7 +730,7 @@ export const MOCK_PLAN: PlanContextFragment = {
       shortName: 'Plans',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/pexels-pixabay-414807.2e16d0ba.fill-128x128-c50_K7MPdwW.jpg',
+          src: 'https://placehold.co/128x128/6a1b9a/fff/jpeg',
         },
       },
       organization: {
@@ -754,7 +754,7 @@ export const MOCK_PLAN: PlanContextFragment = {
     },
     image: {
       rendition: {
-        src: 'https://watch-media.staging.kausal.tech/images/pexels-pixabay-414807.2e16d0ba.fill-128x128-c50_K7MPdwW.jpg',
+        src: 'https://placehold.co/128x128/6a1b9a/fff/jpeg',
       },
     },
     organization: {

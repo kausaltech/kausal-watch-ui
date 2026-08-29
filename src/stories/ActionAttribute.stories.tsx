@@ -556,7 +556,13 @@ const categoryType = {
   ],
 };
 
-const makeCategory = (id: string, identifier: string, name: string, color: string) => ({
+const makeCategory = (
+  id: string,
+  identifier: string,
+  name: string,
+  color: string,
+  icon?: { iconSvgUrl?: string; iconImageSrc?: string }
+) => ({
   __typename: 'Category' as const,
   id,
   identifier,
@@ -565,13 +571,21 @@ const makeCategory = (id: string, identifier: string, name: string, color: strin
   order: 1,
   kausalPathsNodeUuid: '',
   color,
-  iconSvgUrl: null,
+  iconSvgUrl: icon?.iconSvgUrl ?? null,
   helpText: '',
   level: { id: 'cl-1', name: 'Theme', namePlural: 'Themes', __typename: 'CategoryLevel' as const },
   image: null,
   indicators: [],
   indicatorRelationships: [],
-  iconImage: null,
+  iconImage: icon?.iconImageSrc
+    ? {
+        __typename: 'Image' as const,
+        rendition: {
+          __typename: 'ImageRendition' as const,
+          src: icon.iconImageSrc,
+        },
+      }
+    : null,
   categoryPage: null,
   type: categoryType,
   attributes: [],
@@ -624,6 +638,74 @@ export const CategoryChoiceMultiple: Story = {
         makeCategory('cat-1', '1', 'Sustainable mobility', '#2e7d32'),
         makeCategory('cat-2', '2', 'Energy efficiency', '#1565c0'),
         makeCategory('cat-3', '3', 'Biodiversity', '#6a1b9a'),
+      ],
+    },
+    attributeType: null,
+  },
+};
+
+export const CategoryChoiceMultipleWithSvgIcons: Story = {
+  parameters: {},
+  args: {
+    attribute: {
+      __typename: 'AttributeCategoryChoice',
+      id: '803',
+      type: {
+        id: 'ct-1',
+        identifier: 'theme',
+        name: 'Theme',
+        unit: null,
+        format: AttributeTypeFormat.CategoryChoice,
+        helpText: '',
+        showChoiceNames: false,
+        hasZeroOption: false,
+        choiceOptions: [],
+        __typename: 'AttributeType',
+      },
+      categories: [
+        makeCategory('cat-1', '1', 'Sustainable mobility', '#2e7d32', {
+          iconSvgUrl: '/static/themes/default/icons/globe-ZJ5MOONS.svg',
+        }),
+        makeCategory('cat-2', '2', 'Energy efficiency', '#1565c0', {
+          iconSvgUrl: '/static/themes/default/icons/home-2EDDLX2V.svg',
+        }),
+        makeCategory('cat-3', '3', 'Health & Wellness', '#FF671D', {
+          iconSvgUrl: '/static/themes/default/icons/heart-CDIWP5VJ.svg',
+        }),
+      ],
+    },
+    attributeType: null,
+  },
+};
+
+export const CategoryChoiceMultipleWithImageIcons: Story = {
+  parameters: {},
+  args: {
+    attribute: {
+      __typename: 'AttributeCategoryChoice',
+      id: '804',
+      type: {
+        id: 'ct-1',
+        identifier: 'theme',
+        name: 'Theme',
+        unit: null,
+        format: AttributeTypeFormat.CategoryChoice,
+        helpText: '',
+        showChoiceNames: false,
+        hasZeroOption: false,
+        choiceOptions: [],
+        __typename: 'AttributeType',
+      },
+      categories: [
+        makeCategory('cat-1', '1', 'Sustainable mobility', '#2e7d32', {
+          iconImageSrc: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
+        }),
+        makeCategory('cat-2', '2', 'Energy efficiency', '#1565c0', {
+          iconImageSrc: 'https://placehold.co/128x128/1565c0/fff/jpeg',
+        }),
+        makeCategory('cat-3', '3', 'Health & Wellness', '#FF671D', {
+          iconImageSrc: 'https://placehold.co/128x128/6a1b9a/fff/jpeg',
+        }),
       ],
     },
     attributeType: null,

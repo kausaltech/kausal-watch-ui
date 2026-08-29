@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { getContrast, meetsContrastGuidelines, readableColor } from 'polished';
 
 const TextContrastOutput = styled.div<{

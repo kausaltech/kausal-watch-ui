@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 
 import styled from '@emotion/styled';
+
 import { Container } from 'reactstrap';
 
 import { CommonContentBlockProps } from '@/common/blocks.types';

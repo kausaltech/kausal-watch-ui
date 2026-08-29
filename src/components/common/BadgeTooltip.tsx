@@ -72,15 +72,15 @@ const TruncatedContent = styled.span<{ $maxLines: number }>`
   overflow: hidden;
 `;
 
-const IconBadge = styled.div<{ $themeColor: ThemeColorOption; $isLink: boolean; $color?: string }>`
+const IconBadge = styled.div<{ $themeColor: ThemeColorOption; $isLink: boolean }>`
   overflow: hidden;
   display: flex;
   align-items: center;
   max-width: 320px;
-  background-color: ${(props) => props.theme.neutralLight};
+  background-color: ${(props) => props.theme[props.$themeColor]};
   color: ${(props) =>
     readableColor(
-      props.$color || props.theme[props.$themeColor],
+      props.theme[props.$themeColor],
       props.theme.themeColors.black,
       props.theme.themeColors.white
     )};
@@ -89,17 +89,21 @@ const IconBadge = styled.div<{ $themeColor: ThemeColorOption; $isLink: boolean; 
 
   &:hover {
     background-color: ${(props) =>
-      props.$isLink && shade(0.05, props.theme.neutralLight)} !important;
+      props.$isLink && shade(0.05, props.theme[props.$themeColor])} !important;
   }
 `;
 
-const IconImage = styled.div<{ $imageSrc?: string; $color?: string }>`
+const IconImage = styled.div<{
+  $imageSrc?: string;
+  $color?: string;
+  $themeColor: ThemeColorOption;
+}>`
   display: block;
   text-align: center;
   height: ${(props) => (props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300)};
   flex: 0 0 ${(props) => (props.$imageSrc ? props.theme.spaces.s600 : props.theme.spaces.s300)};
   margin-right: ${(props) => props.theme.spaces.s050};
-  background-color: ${(props) => props.$color || props.theme.neutralLight}!important;
+  background-color: ${(props) => props.$color || props.theme[props.$themeColor]}!important;
   ${(props) => !!props.$imageSrc && `background-image: url(${props.$imageSrc});`};
   background-size: cover;
   background-position: center center;
@@ -108,7 +112,7 @@ const IconImage = styled.div<{ $imageSrc?: string; $color?: string }>`
   -webkit-print-color-adjust: exact;
 `;
 
-const IconSvg = styled(SVG, transientOptions)<{ $bgcolor?: string; $themeColor: string }>`
+const IconSvg = styled(SVG, transientOptions)<{ $bgcolor?: string; $themeColor: ThemeColorOption }>`
   height: ${(props) => props.theme.spaces.s200};
   margin: ${(props) => props.theme.spaces.s050};
 
@@ -158,7 +162,6 @@ const BadgeContent = (props: BadgeContentProps) => {
     maxLines,
   } = props;
   const hasNoIcon = iconSvg == null && iconImage == null;
-
   const renderContent = maxLines ? (
     <TruncatedContent $maxLines={maxLines}>{content}</TruncatedContent>
   ) : (
@@ -176,9 +179,9 @@ const BadgeContent = (props: BadgeContentProps) => {
       {renderContent}
     </StyledBadge>
   ) : (
-    <IconBadge $themeColor={themeColor} $isLink={isLink} $color={color}>
+    <IconBadge $themeColor={themeColor} $isLink={isLink}>
       {iconSvg ? (
-        <IconImage $color={color}>
+        <IconImage $color={color} $themeColor={themeColor}>
           <IconSvg
             $bgcolor={color}
             $themeColor={themeColor}
@@ -187,7 +190,7 @@ const BadgeContent = (props: BadgeContentProps) => {
           />
         </IconImage>
       ) : (
-        <IconImage $imageSrc={iconImage} $color={color} />
+        <IconImage $imageSrc={iconImage} $color={color} $themeColor={themeColor} />
       )}
       <IconName>{renderContent}</IconName>
     </IconBadge>

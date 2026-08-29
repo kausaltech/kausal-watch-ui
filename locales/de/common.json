@@ -4,7 +4,7 @@
     "actions-plural": "{context, select, STRATEGY {Strategien} CASE_STUDY {Fallstudien} other {Maßnahmen}}",
     "actions-as-list": "Als Liste",
     "active-filters": "Aktive Filter",
-    "admin-login": "Admin Login",
+    "admin-login": "Admin",
     "back-to-top": "Zurück nach oben",
     "bar-goal": "Ziel",
     "close": "Schließen",

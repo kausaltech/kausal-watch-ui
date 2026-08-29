@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 const OfficialText = styled.div`

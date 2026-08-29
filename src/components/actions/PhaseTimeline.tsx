@@ -2,6 +2,7 @@ import { type RefObject, useEffect, useRef, useState } from 'react';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import type { Theme } from '@kausal/themes/types';
 import { debounce, get } from 'lodash-es';
 import { useTranslations } from 'next-intl';

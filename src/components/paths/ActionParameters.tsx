@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import { ParameterInterface } from '@/common/__generated__/paths/graphql';

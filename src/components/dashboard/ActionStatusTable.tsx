@@ -10,17 +10,16 @@ import { transientOptions } from '@common/themes/styles/styled';
 import { PlanContextFragment } from '@/common/__generated__/graphql';
 import { actionStatusOrder } from '@/common/data/actions';
 import Icon from '@/components/common/Icon';
+import {
+  STICKY_TABLE_NAME_COLUMN_CLASS,
+  mobileScrollableTableWrapperStyles,
+  mobileStickyTableStyles,
+} from '@/components/common/stickyTableStyles';
 import ActionTableRow from '@/components/dashboard/ActionTableRow';
 
 import ActionStatusExport from './ActionStatusExport';
 import { COLUMN_CONFIG } from './dashboard.constants';
-import {
-  mobileScrollableTableWrapperStyles,
-  mobileStickyTableStyles,
-  STICKY_TABLE_NAME_COLUMN_CLASS,
-} from '@/components/common/stickyTableStyles';
 import { ActionListAction, ActionListOrganization, ColumnConfig } from './dashboard.types';
-
 
 const TableWrapper = styled.div`
   width: 100%;

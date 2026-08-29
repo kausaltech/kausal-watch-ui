@@ -1,4 +1,5 @@
 import { useTheme } from '@emotion/react';
+
 import { useTranslations } from 'next-intl';
 
 import { ActionSection } from '@/components/actions/ActionContent';

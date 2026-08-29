@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useLocale, useTranslations } from 'next-intl';
 import { PropTypes } from 'prop-types';
 import {

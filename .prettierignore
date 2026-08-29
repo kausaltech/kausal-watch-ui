@@ -26,3 +26,9 @@ yarn-error.log
 /.envrc
 /public/static/themes/
 /.rgignore
+
+# Generated files whose generators use their own formatting
+/pnpm-lock.yaml
+/e2e-tests/pnpm-lock.yaml
+/public/static/embed-a.js
+/tsc-baseline.json

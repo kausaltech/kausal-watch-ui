@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { Button, Col, Collapse, Row } from 'reactstrap';
 
@@ -98,20 +99,21 @@ const ReportComparisonBlock = (props) => {
   const { reportField, reportsToCompare } = block;
   // Augment each report with the field we're looking for
   // TODO: Right now we're only interested in attributes. Display report field values of other types as well.
-  const reports = reportsToCompare.map((report) => ({
-    ...report,
-    attribute: report.valuesForAction?.filter(
-      ({ field }) =>
-        field.id === reportField && field.__typename === 'ActionAttributeTypeReportFieldBlock'
-    )?.[0]?.attribute,
-  }))
-  .sort((a, b) => {
-    if (a.endDate == null && b.endDate == null) return 0;
-    if (a.endDate == null) return 1;
-    if (b.endDate == null) return -1;
+  const reports = reportsToCompare
+    .map((report) => ({
+      ...report,
+      attribute: report.valuesForAction?.filter(
+        ({ field }) =>
+          field.id === reportField && field.__typename === 'ActionAttributeTypeReportFieldBlock'
+      )?.[0]?.attribute,
+    }))
+    .sort((a, b) => {
+      if (a.endDate == null && b.endDate == null) return 0;
+      if (a.endDate == null) return 1;
+      if (b.endDate == null) return -1;
 
-    return dayjs(b.endDate).diff(dayjs(a.endDate));
-  });
+      return dayjs(b.endDate).diff(dayjs(a.endDate));
+    });
 
   return (
     <ReportSection className="text-content">
