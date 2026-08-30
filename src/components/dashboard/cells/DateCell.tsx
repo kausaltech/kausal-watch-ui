@@ -15,6 +15,10 @@ const Wrapper = styled.span`
 `;
 
 const DateCell = ({ date }: Props) => {
+  // These are date-only calendar values (an action's start/end date), which
+  // have no time zone. Formatting them directly is deterministic across the
+  // server and client; applying `.tz()` here would instead re-parse the date
+  // in the local zone first and could shift it by a day, causing a mismatch.
   const formattedDate = date ? dayjs(date).format('L') : null;
   return <Wrapper>{formattedDate}</Wrapper>;
 };
