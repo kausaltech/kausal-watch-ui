@@ -1,17 +1,14 @@
-# monorepo_root = true
+#:schema https://mise.jdx.dev/schema/mise.json
+[settings]
+python.uv_venv_auto = "source"
+experimental = true
+idiomatic_version_file_enable_tools = ['pnpm', 'node']
 
 [monorepo]
 # config_roots = ["e2e-tests"]
 
 [tools]
 fnox = "latest"
-node = "latest"
-
-[hooks]
-postinstall = 'npm install -g corepack'
-
-[settings]
-node.corepack = true
 
 [deps]
 disable = ["npm", "yarn"]

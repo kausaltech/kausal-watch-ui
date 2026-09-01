@@ -5,13 +5,13 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: true
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '26'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - name: Generate theme symlinks
@@ -45,7 +45,7 @@ jobs:
     uses: ./.github/workflows/e2e-image.yaml
     with:
       image: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.image_tag }}
-      backend_base_url: https://api.watch.kausal.tech
+      backend_base_url: https://api.watch.kausal.dev
       build_id: ${{ needs.build.outputs.build_id }}
       s3_endpoint: ${{ vars.BUILD_S3_ENDPOINT }}
       s3_bucket: ${{ vars.BUILD_S3_BUCKET }}

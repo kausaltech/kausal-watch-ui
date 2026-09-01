@@ -10,7 +10,7 @@
   "author": "",
   "license": "AGPL-3.0-or-later",
   "private": true,
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@11.25.0",
   "type": "module",
   "dependencies": {
     "@apollo/client": "^3.14.1",

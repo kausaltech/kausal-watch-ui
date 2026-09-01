@@ -62,7 +62,7 @@
     "morgan": "^1.10.0",
     "motion": "^12.38.0",
     "nanoid": "^5.1.11",
-    "next": "16.2.9",
+    "next": "16.3.4",
     "next-auth": "5.0.0-beta.30",
     "next-images": "^1.8.5",
     "next-intl": "^4.11.0",
@@ -161,7 +161,7 @@
     "@types/cytoscape-dagre": "^2.3.4",
     "@types/jest": "^30.0.0",
     "@types/lodash-es": "^4.17.12",
-    "@types/node": "^17.0.31",
+    "@types/node": "^26.4.0",
     "@types/plotly.js": "^2.35.13",
     "@types/proper-lockfile": "^4.1.4",
     "@types/react": "19.2.14",
@@ -215,19 +215,13 @@
     "url": "https://github.com/kausaltech/kausal-watch-ui"
   },
   "engines": {
-    "node": "24.x"
+    "node": "26.8.1"
   },
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.25.0",
   "optionalDependencies": {
     "@kausal-private/themes-private": "^0.5.121"
   },
   "lint-staged": {
     "*.{tsx,ts,js,css,scss,md,json}": "prettier --write"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.2.14",
-      "@kausal/themes": "$@kausal/themes"
-    }
   }
 }

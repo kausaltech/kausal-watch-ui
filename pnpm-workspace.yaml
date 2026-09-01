@@ -1,5 +1,8 @@
 packages:
   - kausal_common
+overrides:
+  '@types/react': '19.2.14'
+
 allowBuilds:
   '@parcel/watcher': false
   '@sentry-internal/node-cpu-profiler': false
