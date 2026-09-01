@@ -15,11 +15,19 @@
   "dependencies": {
     "@apollo/client": "^3.14.1",
     "@axe-core/playwright": "^4.11.1",
-    "@playwright/test": "^1.58.1",
+    "@playwright/test": "^1.62.0",
     "dotenv": "^17.2.3",
-    "playwright": "^1.58.1",
+    "playwright": "^1.62.0",
     "playwright-lighthouse": "^4.0.0",
     "react": "^19.1.0",
     "typescript": "^5.8.3"
-  }
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.8.1",
+      "onFail": "download"
+    }
+  },
+  "devDependencies": {}
 }

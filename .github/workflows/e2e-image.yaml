@@ -49,8 +49,11 @@ jobs:
   e2e_test:
     name: Run tests
     runs-on: runner-prod
+    defaults:
+      run:
+        working-directory: ./e2e-tests
     container:
-      image: harbor.kausal.tech/library/playwright:v1.58.1
+      image: harbor.kausal.tech/library/playwright:v1.62.0
     env:
       TEST_PLAN_IDENTIFIERS: ${{ inputs.instance_identifiers }}
       WATCH_BACKEND_URL: ${{ inputs.backend_base_url }}
@@ -76,20 +79,15 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install dependencies for e2e tests
-        run: |
-          corepack enable
-          if [ -f pnpm-lock.yaml ]; then
-            pnpm install
-          else
-            npm ci
-          fi
-        working-directory: ./e2e-tests
+      - uses: pnpm/setup@703c52620218391530e48b9e8870d5c0082e1b9b
+        with:
+          runtime: node
+          cache: true
+          working-directory: ./e2e-tests
 
       - name: Running Playwright e2e tests
         run: node_modules/.bin/playwright test --project chromium --workers ${{ inputs.nr_workers }}
         id: playwright_test
-        working-directory: ./e2e-tests
 
       - name: Upload test report to S3
         id: upload
@@ -111,7 +109,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         shell: bash
-        working-directory: ./e2e-tests
 
       - uses: daun/playwright-report-summary@v4
         if: always()

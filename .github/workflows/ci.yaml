@@ -8,12 +8,11 @@ jobs:
       - uses: actions/checkout@v7
         with:
           submodules: true
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: pnpm/setup@v2
         with:
-          node-version: '26'
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
+          runtime: node
+          cache: true
+
       - name: Generate theme symlinks
         run: |
           mkdir -p public/static
@@ -45,7 +44,7 @@ jobs:
     uses: ./.github/workflows/e2e-image.yaml
     with:
       image: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.image_tag }}
-      backend_base_url: https://api.watch.kausal.dev
+      backend_base_url: https://api.watch.kausal.tech
       build_id: ${{ needs.build.outputs.build_id }}
       s3_endpoint: ${{ vars.BUILD_S3_ENDPOINT }}
       s3_bucket: ${{ vars.BUILD_S3_BUCKET }}
