@@ -106,7 +106,7 @@ function ActionUpdatesList({ id }) {
 
   if (loading) return <span>{t('loading')}</span>;
   if (error) return <span>{error.message}</span>;
-  const { action } = data;
+  const { action } = /** @type {{ action: any }} */ (/** @type {unknown} */ (data));
 
   return (
     <Row>

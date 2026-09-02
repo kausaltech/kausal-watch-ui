@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 
-import type { ObservableQuery } from '@apollo/client';
 import { NetworkStatus, gql } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
@@ -18,6 +17,7 @@ import {
 import Icon from '@/components/common/Icon';
 import { usePaths } from '@/context/paths/paths';
 import { GET_PARAMETERS } from '@/queries/paths/get-paths-parameters';
+import { getHttpHeaders } from '@/utils/paths/paths.utils';
 
 const GlobalParametersPanel = styled(Row)`
   .form-group {
@@ -115,11 +115,6 @@ const NumericParameter = (props) => {
         onKeyPress={(e) => handleInput(e)}
       />
       <FormFeedback tooltip>{invalid}</FormFeedback>
-      {false && (
-        <Button size="sm" outline color="black" disabled={!parameter.isCustomized}>
-          <Icon name="version" />
-        </Button>
-      )}
     </InputGroup>
   );
 };
@@ -127,23 +122,21 @@ const NumericParameter = (props) => {
 type ParameterWidgetProps = {
   param: GetParametersQuery['parameters'][0];
   refetching: boolean;
-  refetch: ObservableQuery['refetch'];
 };
 
+type ParameterSelection =
+  | { type: 'NumberParameterType'; parameterId: string; numberValue: number; char?: string }
+  | { type: 'StringParameterType'; parameterId: string; stringValue: string; char?: string }
+  | { type: 'BoolParameterType'; parameterId: string; boolValue: boolean; char?: string };
+
 const ParameterWidget = (props: ParameterWidgetProps) => {
-  const { refetch, refetching, param } = props;
-  const {
-    __typename,
-    id,
-    isCustomizable,
-    isCustomized,
-    label,
-    numberValue,
-    boolValue,
-    stringValue,
-  } = props.param;
-  const [invalid, setInvalid] = useState(false);
-  const [parameterValue, setParameterValue] = useState(numberValue || boolValue || stringValue);
+  const { refetching, param } = props;
+  const { __typename, id, isCustomized, label } = param;
+  const numberValue = param.__typename === 'NumberParameterType' ? param.numberValue : undefined;
+  const boolValue = param.__typename === 'BoolParameterType' ? param.boolValue : undefined;
+  const stringValue = param.__typename === 'StringParameterType' ? param.stringValue : undefined;
+  const [invalid, setInvalid] = useState<string | false | undefined>(false);
+  const paths = usePaths();
 
   const [SetParameter, { loading: mutationLoading, error: mutationError }] = useMutation(
     SET_PARAMETER,
@@ -161,20 +154,26 @@ const ParameterWidget = (props: ParameterWidgetProps) => {
   );
 
   useEffect(() => {
-    const validity = isInvalid({
-      __typename,
-      numberValue,
-      stringValue,
-      boolValue,
-    });
+    const validity =
+      param.__typename === 'NumberParameterType'
+        ? isInvalid({
+            type: 'NumberParameterType',
+            parameterId: param.id,
+            numberValue: param.numberValue ?? NaN,
+          })
+        : false;
     setInvalid(validity);
   }, [numberValue, stringValue, boolValue]);
 
-  const isInvalid = (input) => {
-    switch (__typename) {
+  const isInvalid = (input: ParameterSelection): string | false | undefined => {
+    switch (input.type) {
       case 'NumberParameterType':
+        if (param.__typename !== 'NumberParameterType') return false;
         if (isNaN(input.numberValue)) return 'Please provide a number';
-        if (input.numberValue >= param.minValue && input.numberValue <= param.maxValue)
+        if (
+          input.numberValue >= Number(param.minValue) &&
+          input.numberValue <= Number(param.maxValue)
+        )
           return false;
         else return `Value must be between ${param.minValue} - ${param.maxValue}`;
       case 'StringParameterType':
@@ -184,7 +183,7 @@ const ParameterWidget = (props: ParameterWidgetProps) => {
     }
   };
 
-  const handleUserSelection = (evt) => {
+  const handleUserSelection = (evt: ParameterSelection) => {
     // Don't send mutation if value is not valid
     const validity = isInvalid(evt);
     setInvalid(validity);
@@ -245,7 +244,7 @@ const ParameterWidget = (props: ParameterWidgetProps) => {
                 handleUserSelection({
                   type: 'StringParameterType',
                   parameterId: param.id,
-                  stringValue: e.target.value,
+                  stringValue: e.currentTarget.value,
                   char: e.key,
                 })
               }
@@ -334,14 +333,16 @@ const GlobalParameters = () => {
   const paths = usePaths();
   const t = useTranslations();
 
-  const { loading, error, data, previousData, refetch, networkStatus } =
-    useQuery<GetParametersQuery>(GET_PARAMETERS, {
+  const { loading, error, data, previousData, networkStatus } = useQuery<GetParametersQuery>(
+    GET_PARAMETERS,
+    {
       context: {
         uri: '/api/graphql-paths',
         headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
       },
       notifyOnNetworkStatusChange: true,
-    });
+    }
+  );
 
   const refetching = networkStatus === NetworkStatus.refetch;
 
@@ -360,19 +361,14 @@ const GlobalParameters = () => {
     );
   }
 
-  const { availableNormalizations, parameters } = data;
+  const { parameters } = data;
 
   return (
     <GlobalParametersPanel>
       {parameters.map(
         (param) =>
           param.isCustomizable && (
-            <ParameterWidget
-              key={param.id}
-              param={param}
-              refetch={refetch}
-              refetching={refetching}
-            />
+            <ParameterWidget key={param.id} param={param} refetching={refetching} />
           )
       )}
     </GlobalParametersPanel>

@@ -390,7 +390,7 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
   useEffect(() => {
     const handlePageClick = (e: MouseEvent) => {
       if (!e.target) return;
-      if (!searchElement.current?.contains(e.target)) {
+      if (e.target instanceof Node && !searchElement.current?.contains(e.target)) {
         setSearchOpen(false);
       }
     };

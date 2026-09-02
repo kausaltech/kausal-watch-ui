@@ -61,7 +61,7 @@ const applyStyleOverrides = (style: mapboxgl.Style, overrides: StyleOverride | n
       };
     });
 
-  style.layers = style.layers.filter((l) => (overrides.selections.layers[l.id] ?? true) !== false);
+  style.layers = style.layers.filter((l) => (overrides?.selections.layers[l.id] ?? true) !== false);
   return style;
 };
 
@@ -94,7 +94,9 @@ const LegendWithOverrides = ({ styleOverrides }: { styleOverrides: string | null
 
     const legend = new LegendControl({ layers: layersToAdd });
     mapInstance.addControl(legend, 'top-left');
-    mapInstance.setStyle(style, { diff: false });
+    mapInstance.setStyle(style, {
+      diff: false,
+    } as Parameters<typeof mapInstance.setStyle>[1]);
   }, [map, mapInstance, overrides]);
   useEffect(() => {
     if (!mapInstance) return;

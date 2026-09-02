@@ -257,7 +257,11 @@ const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
     .filter(([key]) => !configuredFilterIds.has(key))
     .map(([key, value]) => {
       const typeIdentifier = getCategoryTypeIdentifierFromFilterKey(key);
-      const badgeData = getCategoryBadgeDataByTypeAndId(indicators, typeIdentifier, value);
+      const badgeData = getCategoryBadgeDataByTypeAndId(
+        indicators,
+        typeIdentifier,
+        value as string
+      );
       if (!badgeData) return null;
       const fallbackLabel = `${badgeData.typeName}: ${badgeData.categoryName}`;
 

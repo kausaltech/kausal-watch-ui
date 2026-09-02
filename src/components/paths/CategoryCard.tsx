@@ -105,7 +105,6 @@ const CategoryCard = (props: CategoryCardProps) => {
               <PathsNodeSummary
                 categoryId={category.id}
                 node={category.kausalPathsNodeUuid}
-                pathsInstance={pathsInstance}
                 onLoaded={onLoaded}
                 targetNodeId={targetNodeId}
               />

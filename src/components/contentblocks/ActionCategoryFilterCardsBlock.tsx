@@ -61,13 +61,20 @@ const CardHeader = styled.h3`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 interface Props extends CommonContentBlockProps {
-  cards: unknown; // TODO: Type this prop
+  cards: Array<{
+    heading: string | null;
+    lead: string | null;
+    category: {
+      id: string;
+      type: { identifier: string };
+    };
+  }> | null;
 }
 
 const CategoryListBlock = ({ id = '', cards }: Props) => {
   const theme = useTheme();
   return (
-    <CategoryListSection id={id} bg={theme.themeColors.dark}>
+    <CategoryListSection id={id}>
       <Container>
         <Row tag="ul" className="justify-content-center gy-4">
           {cards?.map((card) => (

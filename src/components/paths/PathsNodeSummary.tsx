@@ -130,7 +130,9 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
           categoryId={categoryId}
           node={data.node}
           onLoaded={onLoaded ? onLoaded : () => void 0}
-          displayGoals={displayGoals}
+          displayGoals={
+            displayGoals as React.ComponentProps<typeof InventoryNodeSummary>['displayGoals']
+          }
           refetching={refetching}
         />
       );

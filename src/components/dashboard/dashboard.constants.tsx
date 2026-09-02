@@ -38,7 +38,7 @@ const getPlanUrl = (
   planId: string
 ) => {
   if (mergedWith && mergedWith?.plan.id !== planId) return mergedWith.plan.viewUrl;
-  if (actionPlan.id !== planId) return actionPlan.viewUrl;
+  if (actionPlan && actionPlan.id !== planId) return actionPlan.viewUrl;
   return undefined;
 };
 
@@ -131,7 +131,9 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
 
   TasksColumnBlock: {
     renderHeader: (t, plan, label) => label || t('action-tasks', getActionTaskTermContext(plan)),
-    renderCell: (_, action, plan) => <TasksStatusCell action={action} plan={plan} />,
+    renderCell: (_, action, plan) => (
+      <TasksStatusCell action={action} plan={plan as ActionListPlan} />
+    ),
     renderTooltipContent: (_, action, plan) => {
       const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
       return (
@@ -161,7 +163,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     renderHeader: (t, plan, label) => label || t('indicators', getIndicatorTermContext(plan)),
     renderCell: (_, action) => <IndicatorsCell action={action} />,
     renderTooltipContent: (_, action, plan) => (
-      <IndicatorsTooltipContent action={action} plan={plan} />
+      <IndicatorsTooltipContent action={action} plan={plan as ActionListPlan} />
     ),
   },
 
@@ -208,10 +210,12 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
       if (!attributeContent) return null;
       return (
         <ActionAttribute
-          attribute={attributeContent}
-          attributeType={attributeType}
-          notitle
-          variant="minimized"
+          {...({
+            attribute: attributeContent,
+            attributeType,
+            notitle: true,
+            variant: 'minimized',
+          } as Parameters<typeof ActionAttribute>[0])}
         />
       );
     },
@@ -225,7 +229,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     renderHeader: (t, _, label) => label || t('filter-plan'),
     renderCell: (_, action, plan) =>
       action.plan?.shortIdentifier ||
-      plan?.shortIdentifier || (
+      plan?.identifier || (
         <PlanChip
           planImage={
             action.plan?.image?.rendition?.src ||
@@ -235,6 +239,8 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
           size="lg"
         />
       ),
-    renderTooltipContent: (_, action, plan) => <PlanTooltipContent action={action} plan={plan} />,
+    renderTooltipContent: (_, action, plan) => (
+      <PlanTooltipContent action={action} plan={plan as ActionListPlan} />
+    ),
   },
 };

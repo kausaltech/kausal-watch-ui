@@ -12,11 +12,14 @@ import { transparentize } from 'polished';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
-import type { IndicatorDesiredTrend } from '@/common/__generated__/graphql';
+import type {
+  IndicatorDesiredTrend,
+  IndicatorTimeResolution,
+} from '@/common/__generated__/graphql';
 import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter } from '@/common/utils';
 
-type ChartTrace = {
+export type ChartTrace = {
   name: string;
   dataType?: 'total' | null;
   xType?: 'time' | 'category';
@@ -25,7 +28,7 @@ type ChartTrace = {
   _parentName?: string | null;
 };
 
-type GoalTrace = {
+export type GoalTrace = {
   name: string;
   x: Array<string | number>;
   y: Array<number | null>;
@@ -42,7 +45,7 @@ type IndicatorGraphProps = {
     includeZero: boolean;
     range: number[];
   };
-  timeResolution?: 'YEAR' | 'MONTH';
+  timeResolution?: IndicatorTimeResolution;
   traces: ChartTrace[];
   goalTraces: GoalTrace[];
   trendTrace: GoalTrace | null;

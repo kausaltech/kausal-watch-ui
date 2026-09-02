@@ -32,13 +32,13 @@ type ActionGroup = {
 };
 
 type Props = {
-  action: Action;
+  action?: Action;
   activeActionId?: string;
   size?: 'default' | 'small';
   showTitle?: boolean;
   title?: string;
   helpText?: string;
-  getFullAction: (id: string) => Action;
+  getFullAction?: (id: string) => Action | undefined;
   loading?: boolean;
 };
 
@@ -115,7 +115,7 @@ type Action = NonNullable<GetActionDetailsQuery['action']>;
 export function mapActionToDependencyGroups(
   action: Action | ActionCardFragment | null,
   actionDependencyRoles: NonNullable<GetPlanContextQuery['plan']>['actionDependencyRoles'],
-  getFullAction?: (id: string) => Action
+  getFullAction?: (id: string) => Action | undefined
 ): ActionGroup[] {
   if (
     !action ||
@@ -241,7 +241,7 @@ export function ActionDependenciesBlock({
     );
 
   const actionGroups = mapActionToDependencyGroups(
-    skipFetchingDependencies ? action : ((data?.action ?? null) as Action),
+    skipFetchingDependencies ? (action ?? null) : ((data?.action ?? null) as Action),
     plan.actionDependencyRoles,
     getFullAction
   );

@@ -31,8 +31,8 @@ const getCacheKey = (plan: PlanContextType, statusSummary: MinimalActionStatusSu
 
 export const getStatusSummary = memoize(_getStatusSummary, getCacheKey);
 
-export const getThemeColor = (color: keyof Theme['graphColors'], theme: Theme) => {
-  return theme.graphColors[color];
+export const getThemeColor = (color: string, theme: Theme) => {
+  return theme.graphColors[color as keyof Theme['graphColors']];
 };
 
 export interface ActionWithStatusSummary {
@@ -70,6 +70,8 @@ export const getStatusColorForAction = (
   if (statusSummary.color != null) {
     return getThemeColor(statusSummary.color, theme);
   }
-  const statusSummaryWithColor = getStatusSummary(plan, statusSummary);
+  const statusSummaryWithColor = getStatusSummary(plan, {
+    identifier: statusSummary.identifier!,
+  });
   return getThemeColor(statusSummaryWithColor.color, theme);
 };

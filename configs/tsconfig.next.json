@@ -11,7 +11,8 @@
     "paths": {
       "@/public/*": ["../public/*"],
       "@/*": ["../src/*"],
-      "@common/*": ["../kausal_common/src/*"]
+      "@common/*": ["../kausal_common/src/*"],
+      "@generated/*": ["../src/common/__generated__/*"]
     },
     "checkJs": true,
     "allowImportingTsExtensions": true,

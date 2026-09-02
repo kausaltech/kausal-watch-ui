@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -8,6 +8,12 @@ import { useTranslations } from 'next-intl';
 
 import { activeScenarioVar } from '@common/apollo/paths-cache';
 
+import type {
+  ActivateScenarioMutation,
+  ActivateScenarioMutationVariables,
+  GetScenariosQuery,
+  GetScenariosQueryVariables,
+} from '@/common/__generated__/paths/graphql';
 import SelectDropdown, { type SelectDropdownOption } from '@/components/common/SelectDropdown';
 import { usePaths } from '@/context/paths/paths';
 import { GET_SCENARIOS } from '@/queries/paths/get-paths-scenarios';
@@ -67,32 +73,39 @@ const ScenarioSelector = ({ disabled = false }: { disabled?: boolean }) => {
   const t = useTranslations();
   const paths = usePaths();
 
-  const { loading, error, data } = useQuery(GET_SCENARIOS, {
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
-    },
-    fetchPolicy: 'network-only',
-    notifyOnNetworkStatusChange: true,
-    onCompleted: (dat) => activeScenarioVar(dat.scenarios.find((scen) => scen.isActive)),
-  });
-
-  const [activateScenario, { loading: mutationLoading, error: mutationError }] = useMutation(
-    ACTIVATE_SCENARIO,
+  const { loading, error, data } = useQuery<GetScenariosQuery, GetScenariosQueryVariables>(
+    GET_SCENARIOS,
     {
       context: {
         uri: '/api/graphql-paths',
         headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
       },
-      refetchQueries: pathsQueries,
+      fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true,
     }
   );
 
+  const [activateScenario, { loading: mutationLoading, error: mutationError }] = useMutation<
+    ActivateScenarioMutation,
+    ActivateScenarioMutationVariables
+  >(ACTIVATE_SCENARIO, {
+    context: {
+      uri: '/api/graphql-paths',
+      headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
+    },
+    refetchQueries: pathsQueries,
+  });
+
   //const hideBaseScenario = instance.features?.baselineVisibleInGraphs === false;
   const hideBaseScenario = false;
-  const scenarios =
-    data?.scenarios?.filter((scen) => (hideBaseScenario ? scen.id !== 'baseline' : true)) ?? [];
+  const scenarios = ((data as GetScenariosQuery | undefined)?.scenarios ?? []).filter((scen) =>
+    hideBaseScenario ? scen.id !== 'baseline' : true
+  );
   const activeScenario = scenarios.find((scen) => scen.isActive);
+
+  useEffect(() => {
+    activeScenarioVar(activeScenario ?? null);
+  }, [activeScenario]);
 
   // Convert scenarios to SelectDropdownOption format
   const options: SelectDropdownOption[] = useMemo(

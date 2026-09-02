@@ -3,7 +3,7 @@ import _mockPlan from '@/tests/__mocks__/mock-plan-context.json';
 
 import { isAbsoluteUrl, stripLocaleAndPlan, stripSlashes } from '../urls';
 
-const mockPlan = _mockPlan as PlanContextFragment;
+const mockPlan = _mockPlan as unknown as PlanContextFragment;
 
 describe('isAbsoluteUrl', () => {
   it('returns true for absolute URLs', () => {

@@ -147,9 +147,6 @@ function OrgContent({ org, planFromOrgQuery, testId }: Props) {
   const allPlans = [planFromOrgQuery, ...org.plansWithActionResponsibilities];
   const selectedPlan = allPlans[selectedPlanIndex];
 
-  // add plan.feature.showActionUpdateStatus to backend
-  const showUpdateStatus = theme.settings.dashboard?.showActionUpdateStatus;
-
   return (
     <div className="mb-5" data-testid={testId}>
       <OrgHeader>
@@ -241,10 +238,13 @@ function OrgContent({ org, planFromOrgQuery, testId }: Props) {
               }
               enableExport={false}
               planViewUrl={selectedPlan.viewUrl}
-              plan={selectedPlan}
-              actions={selectedPlan.actions}
+              plan={selectedPlan as unknown as Parameters<typeof ActionStatusTable>[0]['plan']}
+              actions={
+                selectedPlan.actions as unknown as Parameters<
+                  typeof ActionStatusTable
+                >[0]['actions']
+              }
               orgs={[]}
-              showUpdateStatus={showUpdateStatus}
             />
           </ActionTableContainer>
         </Container>

@@ -141,7 +141,7 @@ const Task = (props) => {
   const toggle = () => setIsOpen(!isOpen);
   const plan = usePlan();
 
-  const dateFormat = task.dateFormat || plan.actionListPage.taskDateFormat;
+  const dateFormat = task.dateFormat || plan.actionListPage?.taskDateFormat;
   const formattedDueAt = new Date(task.dueAt).toLocaleDateString(locale, getDateFormat(dateFormat));
 
   return (

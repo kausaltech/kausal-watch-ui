@@ -4,8 +4,10 @@ import { Col, Container, Row } from 'reactstrap';
 import { type CommonContentBlockProps } from '@/common/blocks.types';
 import { usePlan } from '@/context/plan';
 
+type ContactContentBlock = { id?: string | null; value?: string | null };
+
 interface Props extends CommonContentBlockProps {
-  content?: unknown[]; // TODO: Type this prop
+  content?: ContactContentBlock[];
 }
 
 const AccessibilityStatementContactInformationBlock = ({ id = '', content }: Props) => {

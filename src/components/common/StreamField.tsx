@@ -317,12 +317,15 @@ type StreamFieldBlockPage = {
     | 'StaticPage'
     | 'PlanRootPage';
   slug: string;
+  id?: string | null;
+  changeLogMessage?: React.ComponentProps<typeof ChangeHistory>['entry'];
   category?: {
     id: string;
     name: string;
     children: CategoryListBlockCategory[];
     image?: CardImageFragmentFragment | null;
     indicators: { id: string }[];
+    changeLogMessage?: React.ComponentProps<typeof ChangeHistory>['entry'];
   } | null;
   body: StreamFieldFragmentFragment[] | null;
 };
@@ -549,7 +552,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return (
         <IndicatorShowcaseBlock
           id={id}
-          indicator={indicator}
+          indicator={indicator as React.ComponentProps<typeof IndicatorShowcaseBlock>['indicator']}
           title={title}
           body={body}
           significantDigits={significantDigits}
@@ -721,7 +724,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       }
       // Static + Home
       if (page.__typename === 'StaticPage' || page.__typename === 'PlanRootPage') {
-        const entry = (page as any).changeLogMessage;
+        const entry = page.changeLogMessage;
         if (!entry) return null;
 
         return (

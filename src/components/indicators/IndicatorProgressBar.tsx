@@ -101,7 +101,7 @@ interface ValueGroupProps {
   value: string;
   unit: string;
   transform?: string;
-  textAnchor?: string;
+  textAnchor?: React.SVGProps<SVGTextElement>['textAnchor'];
   startDate?: string;
   date?: string;
   locale?: string;

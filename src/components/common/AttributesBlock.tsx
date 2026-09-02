@@ -41,7 +41,9 @@ const AttributeItem = styled(Col)`
   display: block;
 `;
 
-export function attributeHasValue(attribute: AttributesBlockProps['attributes'][0]) {
+type Attribute = AttributesBlockAttributeFragment | AttributesBlockAttributeWithNestedTypeFragment;
+
+export function attributeHasValue(attribute: Attribute) {
   const { __typename } = attribute;
 
   if (__typename === 'AttributeChoice') {
@@ -64,20 +66,11 @@ type AttributeContentNestedTypeProps = {
   attributeType: null | undefined;
 };
 
-type AttributesBlockProps = PropsWithChildren<
-  {
-    vertical?: boolean;
-  } & (
-    | {
-        attributes?: AttributeContentProps['attribute'][];
-        types?: AttributeContentProps['attributeType'][];
-      }
-    | {
-        attributes?: AttributeContentNestedTypeProps['attribute'][];
-        types?: undefined;
-      }
-  )
->;
+type AttributesBlockProps = PropsWithChildren<{
+  vertical?: boolean;
+  attributes?: Attribute[];
+  types?: AttributeContentProps['attributeType'][];
+}>;
 
 function AttributesBlock(props: AttributesBlockProps) {
   const {
@@ -110,18 +103,30 @@ function AttributesBlock(props: AttributesBlockProps) {
     <Attributes $vertical={vertical ?? false}>
       <AttributesList tag="ul">
         {attributesWithValue.map((item: (typeof attributes)[0]) => {
+          const attributeType = typesById?.get(item.type.id);
+          const typeMeta = attributeType as
+            | (typeof attributeType & { meta?: { restricted?: boolean; hidden?: boolean } })
+            | undefined;
           return (
             <RestrictedBlockWrapper
               key={item.id}
-              isRestricted={(typesById && typesById.get(item.type.id)?.meta?.restricted) ?? false}
-              isHidden={(typesById && typesById.get(item.type.id)?.meta?.hidden) ?? false}
+              isRestricted={typeMeta?.meta?.restricted ?? false}
+              isHidden={typeMeta?.meta?.hidden ?? false}
             >
               <AttributeItem tag="li" key={item.id} md={vertical ? 12 : 6}>
-                <ActionAttribute
-                  key={item.id}
-                  attribute={item}
-                  attributeType={typesById && typesById.get(item.type.id)}
-                />
+                {attributeType ? (
+                  <ActionAttribute
+                    key={item.id}
+                    attribute={item as AttributesBlockAttributeFragment}
+                    attributeType={attributeType}
+                  />
+                ) : (
+                  <ActionAttribute
+                    key={item.id}
+                    attribute={item as AttributesBlockAttributeWithNestedTypeFragment}
+                    attributeType={undefined}
+                  />
+                )}
               </AttributeItem>
             </RestrictedBlockWrapper>
           );

@@ -194,7 +194,7 @@ export const groupIndicatorsByCommonCategory = (
   return grouped;
 };
 
-type IndicatorGoalValue = IndicatorListIndicator['goals'][number];
+type IndicatorGoalValue = NonNullable<NonNullable<IndicatorListIndicator['goals']>[number]>;
 
 type IndicatorDataValue =
   | IndicatorListIndicator['latestValue']

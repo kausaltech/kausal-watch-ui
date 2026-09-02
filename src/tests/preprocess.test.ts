@@ -17,7 +17,7 @@ const defaultPhases = [
   },
 ];
 
-const defaultActions = [1, 2, 5]
+const defaultActions: any[] = [1, 2, 5]
   .map((count, idx) =>
     new Array(count).fill(null).map((count) => ({
       implementationPhase: defaultPhases[idx],
@@ -119,14 +119,20 @@ const defaultPlan = {
 
 const mockT = (x) => x;
 
+const getTestPhaseData = (actions: unknown, plan: unknown) =>
+  getPhaseData(
+    actions as Parameters<typeof getPhaseData>[0],
+    plan as Parameters<typeof getPhaseData>[1],
+    { graphColors: {} } as Parameters<typeof getPhaseData>[2],
+    mockT as Parameters<typeof getPhaseData>[3]
+  );
+
 describe('getPhaseData', () => {
   it('returns null for no actions', () => {
-    expect(
-      getPhaseData([], { actionImplementationPhases: [] }, { graphColors: {} }, mockT)
-    ).toEqual(null);
+    expect(getTestPhaseData([], { actionImplementationPhases: [] })).toEqual(null);
   });
   it('returns the correct series with default actions', () => {
-    expect(getPhaseData(defaultActions, defaultPlan, { graphColors: {} }, mockT)).toMatchObject({
+    expect(getTestPhaseData(defaultActions, defaultPlan)).toMatchObject({
       labels: ['Completed', 'In progress', 'Not started'],
       values: [5, 2, 1],
       colors: [undefined, undefined, undefined],
@@ -135,9 +141,7 @@ describe('getPhaseData', () => {
     });
   });
   it('returns the correct series with actions that have an inactive status', () => {
-    expect(
-      getPhaseData(actionsWithInActiveActions, defaultPlan, { graphColors: {} }, mockT)
-    ).toMatchObject({
+    expect(getTestPhaseData(actionsWithInActiveActions, defaultPlan)).toMatchObject({
       labels: ['Completed', 'In progress', 'Not started', 'no-phase', 'inactive-actions'],
       values: [5, 2, 1, 1, 8],
       colors: [undefined, undefined, undefined, undefined, undefined],

@@ -38,7 +38,7 @@ function makeTrace(
     .filter((cat) => cat.children.length === 0)
     .forEach((cat) => {
       let { parent } = cat;
-      cat.value = cat.attributes[0].value;
+      cat.value = (cat.attributes[0] as { value: number }).value;
       while (parent) {
         const p = catMap.get(parent.id)!;
         p.value += cat.value;
@@ -51,7 +51,7 @@ function makeTrace(
     segment ? readableColor(segment) : null
   );
 
-  const trace: Plotly.Data = {
+  const trace = {
     type: 'icicle',
     name: heading || '',
     labels: cats.map((cat) => `<b>${cat.name}</b>`),
@@ -82,7 +82,7 @@ function makeTrace(
       pad: 2,
     },
   };
-  return trace;
+  return trace as unknown as Plotly.Data;
 }
 
 type CategoryTreeMapProps = {
@@ -116,7 +116,7 @@ const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeM
 
   const handleSectionChange = useCallback(
     (evt: Readonly<Plotly.FrameAnimationEvent>) => {
-      const newCat: string = evt.frame.data[0].level;
+      const newCat = (evt.frame.data[0] as { level: string }).level;
       onChangeSection(newCat);
     },
     [onChangeSection]
@@ -125,10 +125,12 @@ const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeM
   return (
     <Plot
       data={[trace]}
-      layout={layout}
+      layout={layout as React.ComponentProps<typeof Plot>['layout']}
       config={config}
       useResizeHandler
-      onAnimatingFrame={handleSectionChange}
+      onAnimatingFrame={
+        handleSectionChange as React.ComponentProps<typeof Plot>['onAnimatingFrame']
+      }
       style={{ width: '100%', height: '100%' }}
     />
   );

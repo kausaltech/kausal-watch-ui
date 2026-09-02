@@ -38,6 +38,7 @@ import ActionTasksBlock from '@/components/actions/blocks/ActionTasksBlock';
 import ReportComparisonBlock from '@/components/actions/blocks/ReportComparisonBlock';
 import ActionAttribute from '@/components/common/ActionAttribute';
 import AttributesBlock from '@/components/common/AttributesBlock';
+import type { FeedbackFormAdditionalField } from '@/components/common/FeedbackForm';
 import PopoverTip from '@/components/common/PopoverTip';
 import StatusBadge from '@/components/common/StatusBadge';
 import ExpandableFeedbackFormBlock from '@/components/contentblocks/ExpandableFeedbackFormBlock';
@@ -195,7 +196,7 @@ type ActionContentBlockProps = {
   block: ActionMainContentBlocksFragmentFragment | ActionAsideContentBlocksFragmentFragment;
   action: ActionContentAction;
   section: SectionIdentifier;
-  pageId: number;
+  pageId: string | null;
 };
 function ActionContentBlock(props: ActionContentBlockProps) {
   const { block, action, section, pageId } = props;
@@ -268,9 +269,9 @@ function ActionContentBlock(props: ActionContentBlockProps) {
         />
       );
     case 'ActionScheduleBlock':
-      return <ActionScheduleBlock heading={block.fieldLabel} action={action} plan={plan} />;
+      return <ActionScheduleBlock heading={block.fieldLabel ?? ''} action={action} plan={plan} />;
     case 'ActionContentSectionBlock':
-      const { heading, helpText, layout, blocks, pageid } = block;
+      const { heading, helpText, layout, blocks } = block;
       return (
         <ActionContentSectionBlock
           blocks={blocks}
@@ -279,11 +280,23 @@ function ActionContentBlock(props: ActionContentBlockProps) {
           heading={heading}
           layout={layout}
           helpText={helpText}
-          pageId={pageid}
+          pageId={pageId}
         />
       );
     case 'ActionContactFormBlock': {
-      return <ExpandableFeedbackFormBlock {...block} action={action} pageId={pageId} />;
+      return (
+        <ExpandableFeedbackFormBlock
+          action={action}
+          pageId={pageId}
+          heading={block.heading ?? undefined}
+          description={block.description ?? undefined}
+          emailVisible={block.emailVisible ?? undefined}
+          emailRequired={block.emailRequired ?? undefined}
+          feedbackVisible={block.feedbackVisible ?? undefined}
+          feedbackRequired={block.feedbackRequired ?? undefined}
+          fields={block.fields as FeedbackFormAdditionalField[]}
+        />
+      );
     }
     case 'ActionContentCategoryTypeBlock': {
       const categories = action.categories.filter((cat) => cat.type.id === block.categoryType.id);
@@ -301,9 +314,9 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       const { heading, helpText, datasetSchema } = block;
       const dataset =
         action?.datasets && datasetSchema?.uuid
-          ? action.datasets.find((set) => set?.schema.uuid === datasetSchema.uuid)
+          ? action.datasets.find((set) => set?.schema?.uuid === datasetSchema.uuid)
           : undefined;
-      if (!dataset) return null;
+      if (!dataset?.schema) return null;
       return (
         <PlanDatasetsBlock
           heading={heading}
@@ -342,7 +355,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
     case 'IndicatorCausalChainBlock':
       return null;
     default:
-      console.error('Unknown action content block', block.__typename);
+      console.error('Unknown action content block', (block as { __typename?: string }).__typename);
       return null;
   }
 }
@@ -563,10 +576,11 @@ function ActionContent(props: ActionContentProps) {
 
       const allSections: JSX.Element[] = [];
       let previousSectionBlock: undefined | (typeof blocks)[0];
-      let groupedBlocks: typeof blocks = [];
+      let groupedBlocks: ActionContentBlockProps['block'][] = [];
       const staticProps = {
         action,
         section,
+        pageId: actionListPage.id,
       };
 
       function emitGroupedBlocks() {
@@ -608,21 +622,15 @@ function ActionContent(props: ActionContentProps) {
         // some blocks get special treatment so that they can be grouped together
         if (automaticallyGroupedBlockTypes.includes(block.__typename)) {
           previousSectionBlock = block;
-          // @ts-ignore
-          groupedBlocks.push(block);
+          groupedBlocks.push(block as unknown as ActionContentBlockProps['block']);
         } else {
           allSections.push(
             <RestrictedBlockWrapper
               key={block.id}
-              isRestricted={block.meta?.restricted}
-              isHidden={block.meta?.hidden}
+              isRestricted={('meta' in block && block.meta?.restricted) ?? false}
+              isHidden={('meta' in block && block.meta?.hidden) ?? false}
             >
-              <ActionContentBlock
-                key={block.id}
-                block={block}
-                pageId={actionListPage.id}
-                {...staticProps}
-              />
+              <ActionContentBlock key={block.id} block={block} {...staticProps} />
             </RestrictedBlockWrapper>
           );
         }
@@ -699,7 +707,7 @@ function ActionContent(props: ActionContentProps) {
               <ActionImpact
                 name={action.impact.name}
                 identifier={action.impact.identifier}
-                max={getMaxImpact(plan)}
+                max={getMaxImpact(plan) ?? undefined}
               />
             </ActionSection>
           )}

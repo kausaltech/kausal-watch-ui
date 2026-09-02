@@ -46,7 +46,7 @@ export function getComputedMetricSeries(
   });
 
   return Array.from(grouped.entries())
-    .map(([key, points]) => {
+    .map(([key, points]): ComputedMetricSeries | null => {
       const meta = metaByKey.get(key);
       if (!meta) return null;
 

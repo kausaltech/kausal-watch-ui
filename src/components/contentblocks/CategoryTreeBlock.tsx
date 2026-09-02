@@ -223,7 +223,7 @@ const CategoryTreeSection = ({
                   <CategoryCardContent
                     category={activeCategory}
                     isRoot={activeCategory.id == rootSection.id}
-                    sumValues={rootSection.attributes[0].value}
+                    sumValues={(rootSection.attributes[0] as { value: number }).value}
                     key={activeCategory.id}
                   />
                 </CategoryCard>

@@ -60,7 +60,7 @@ class VisGraph extends React.Component {
 
   renderNetwork() {
     const visNode = this.visRef.current;
-    const { vis } = window;
+    const { vis } = /** @type {{ vis: any }} */ (/** @type {unknown} */ (window));
     const { nodes, edges } = this.props;
     const nodesOut = [];
     const edgesOut = [];

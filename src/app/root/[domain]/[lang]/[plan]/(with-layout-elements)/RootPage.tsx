@@ -23,7 +23,14 @@ function HomePage({ categories, page, testId }: HomePageProps) {
 
   return (
     <CategoriesContext.Provider value={categories ?? []}>
-      <div data-testid={testId}>{page.body && <StreamField page={page} blocks={page.body} />}</div>
+      <div data-testid={testId}>
+        {page.body && (
+          <StreamField
+            page={page as Parameters<typeof StreamField>[0]['page']}
+            blocks={page.body}
+          />
+        )}
+      </div>
     </CategoriesContext.Provider>
   );
 }

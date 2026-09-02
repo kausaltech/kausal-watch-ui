@@ -41,8 +41,8 @@ const CategoryCardContent = (props: CategoryCardContentProps) => {
 
   const textcontent = category?.leadParagraph;
   const catImageSrc = category?.image?.rendition?.src;
-  const categoryEmissions = category?.attributes?.[0]?.value;
-  const emissionShare = formatEmissionSharePercent(categoryEmissions, sumValues);
+  const categoryEmissions = (category?.attributes?.[0] as { value?: number } | undefined)?.value;
+  const emissionShare = formatEmissionSharePercent(categoryEmissions ?? 0, sumValues);
   const ofAllLabel = t('common-of-all-emissions');
 
   return (

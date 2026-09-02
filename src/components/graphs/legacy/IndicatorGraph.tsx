@@ -9,6 +9,7 @@ import { merge } from 'lodash-es';
 import type { Data, Datum, Layout, PlotData } from 'plotly.js';
 import { transparentize } from 'polished';
 
+import type { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { splitLines } from '@/common/utils';
 
 const PlotContainer = styled.div<{ $vizHeight: number }>`
@@ -111,7 +112,7 @@ const createLayout = (
     xaxes[`xaxis${x}`] = xaxes.xaxis;
   }
 
-  const newLayout: Partial<Layout> = {
+  const newLayout = {
     title: {},
     margin: {
       t: 25,
@@ -149,7 +150,7 @@ const createLayout = (
       bgcolor: theme.cardBackground.primary,
       activecolor: theme.brandDark,
     },
-  };
+  } as Partial<Layout>;
 
   if (config?.annotations?.length > 0) {
     newLayout.annotations = config.annotations;
@@ -175,7 +176,14 @@ interface CreateTracesParams {
 
 interface TracesOutput {
   layoutConfig: any;
-  traces: Partial<Data>[];
+  traces: Array<
+    Partial<PlotData> & {
+      _parentName?: string;
+      showlegend?: boolean;
+      legendGroup?: string;
+      [key: string]: unknown;
+    }
+  >;
 }
 
 const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
@@ -218,7 +226,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
     return colors[index % colorCount];
   };
 
-  const allXValues = [];
+  const allXValues: Datum[] = [];
 
   const newTraces = traces.map((trace, idx) => {
     // Here we are excluding some properties from the trace
@@ -306,7 +314,7 @@ const createTraces: (params: CreateTracesParams) => TracesOutput = (params) => {
 
   return {
     layoutConfig,
-    traces: newTraces,
+    traces: newTraces as TracesOutput['traces'],
   };
 };
 
@@ -373,6 +381,7 @@ const getXInterval = (dataset, timeResolution) => {
 };
 
 interface IndicatorGraphProps {
+  title?: string;
   yRange: {
     unit: string;
     minDigits: number;
@@ -383,7 +392,7 @@ interface IndicatorGraphProps {
     includeZero: boolean;
     range: number[];
   };
-  timeResolution?: 'YEAR' | 'MONTH';
+  timeResolution?: IndicatorTimeResolution;
   traces: any;
   goalTraces: any;
   trendTrace: any;
@@ -430,19 +439,20 @@ function IndicatorGraph(props: IndicatorGraphProps) {
 
   const themeCategoryColors = theme.settings?.graphs?.categoryColors;
 
+  const graphSettings = theme.settings.graphs!;
   const plotColors = {
-    trace: theme.settings.graphs.totalLineColor,
-    trend: theme.settings.graphs.trendLineColor,
-    goalScale: theme.settings.graphs.goalLineColors,
+    trace: graphSettings.totalLineColor,
+    trend: graphSettings.trendLineColor,
+    goalScale: graphSettings.goalLineColors,
     mainScale: categoryColors?.length
       ? categoryColors
       : themeCategoryColors?.length
         ? themeCategoryColors
         : ['#000000'],
-    fillMarkers: theme.settings.graphs.fillMarkers,
-    symbols: theme.settings.graphs.categorySymbols,
-    goalSymbol: theme.settings.graphs.goalSymbol,
-    goalLine: theme.settings.graphs.drawGoalLine,
+    fillMarkers: graphSettings.fillMarkers,
+    symbols: graphSettings.categorySymbols,
+    goalSymbol: graphSettings.goalSymbol,
+    goalLine: graphSettings.drawGoalLine,
   };
 
   // TODO: these ought to be set in the backend

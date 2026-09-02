@@ -11,7 +11,7 @@ const Wrapper = styled.span`
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   white-space: nowrap;
   padding: ${(props) => props.theme.spaces.s050};
-  color: ${(props) => props.theme.textColorPrimary};
+  color: ${(props) => props.theme.textColor.primary};
 `;
 
 const DateCell = ({ date }: Props) => {

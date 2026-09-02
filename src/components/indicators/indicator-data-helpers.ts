@@ -89,15 +89,12 @@ export function getIndicatorDimensions(indicator: Indicator, t: TFunction) {
 
   if (hasTime) {
     dimensions.forEach((d) => {
-      const { categories, type } = d.dimension;
-      if (type === 'organization') {
-        return;
-      }
+      const { categories } = d.dimension;
       categories.unshift({
         id: `total`,
         name: capitalizeFirstLetter(t('total')),
         __typename: 'DimensionCategory',
-      });
+      } as DimensionCategory);
     });
   }
   return dimensions;
@@ -197,7 +194,7 @@ export function getEchartTraces(
   return categories.map((cat, idx) => ({
     name: cat.name,
     type: 'line',
-    data: cube[idx].map((val) => [val.date as string, val.value as number]),
+    data: (cube[idx] as DataPoint[]).map((val) => [val.date, val.value]),
   }));
 }
 
@@ -288,6 +285,10 @@ export const generateGoalTraces = (
     goalTraces.push(trace);
   });
 
-  const bounds = calculateBounds(goalTraces.map((t) => t.data?.map((d) => d[1] as number)).flat());
+  const bounds = calculateBounds(
+    goalTraces
+      .flatMap((t) => t.data ?? [])
+      .map((d) => (Array.isArray(d) ? (d[1] as number) : undefined))
+  );
   return [goalTraces, bounds];
 };

@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import ContentLoader from '@common/components/ContentLoader';
 import { getMetricChange, getMetricValue } from '@common/utils/paths/metric';
 
+import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
 import useNumberFormatter from '@/common/numbers';
 import DashCard from '@/components/paths/DashCard';
 
@@ -190,7 +191,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
   const goalOutcomeValue = getMetricValue(node, endYear);
   const change = getMetricChange(baseOutcomeValue, goalOutcomeValue);
   const lastMeasuredYear =
-    node?.metric.historicalValues[node.metric.historicalValues.length - 1]?.year;
+    node.metric?.historicalValues[node.metric.historicalValues.length - 1]?.year;
   const isForecast = !lastMeasuredYear || endYear > lastMeasuredYear;
 
   // const unit = `kt CO<sub>2</sub>e${t('abbr-per-annum')}`;

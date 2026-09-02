@@ -81,7 +81,7 @@ export function ActionListPage({ actionListPage, testId }: Props) {
       headingHierarchyDepth={actionListPage.headingHierarchyDepth}
       filters={filters}
       onFilterChange={handleFilterChange}
-      availableFilters={availableFilters}
+      availableFilters={availableFilters as Parameters<typeof ActionList>[0]['availableFilters']}
     />
   );
 }

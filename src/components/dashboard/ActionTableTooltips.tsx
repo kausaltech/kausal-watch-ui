@@ -55,6 +55,11 @@ interface TooltipWithPlanProps extends TooltipProps {
   plan: ActionListPlan;
 }
 
+interface AttributeTooltipProps {
+  attribute: ActionListAction['attributes'][number];
+  attributeType: ActionListAction['attributes'][number]['type'];
+}
+
 export const OrganizationTooltipContent = ({ action }: TooltipProps) => {
   const t = useTranslations();
 
@@ -287,6 +292,10 @@ export const PlanTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
   );
 };
 
-export const AttributeTooltipContent = ({ attribute, attributeType }: TooltipProps) => {
-  return <ActionAttribute attribute={attribute} attributeType={attributeType} notitle />;
+export const AttributeTooltipContent = ({ attribute, attributeType }: AttributeTooltipProps) => {
+  return (
+    <ActionAttribute
+      {...({ attribute, attributeType, notitle: true } as Parameters<typeof ActionAttribute>[0])}
+    />
+  );
 };

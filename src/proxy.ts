@@ -151,7 +151,9 @@ const proxy = auth(async (request: NextAuthRequest) => {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
-  requestScope.setTag('plan.identifier', parsedPlan.identifier);
+  const planIdentifier = 'identifier' in parsedPlan ? parsedPlan.identifier : 'restricted';
+  const otherLanguages = 'otherLanguages' in parsedPlan ? parsedPlan.otherLanguages : [];
+  requestScope.setTag('plan.identifier', planIdentifier);
   requestScope.setTag('locale', parsedLocale);
 
   if (isLegacyPathStructure(pathname, parsedLocale, parsedPlan)) {
@@ -167,7 +169,7 @@ const proxy = auth(async (request: NextAuthRequest) => {
   }
 
   const handleI18nRouting = createIntlMiddleware({
-    locales: [parsedPlan.primaryLanguage, ...(parsedPlan.otherLanguages ?? [])],
+    locales: [parsedPlan.primaryLanguage, ...otherLanguages],
     defaultLocale: parsedPlan.primaryLanguage,
     localePrefix: 'as-needed',
     localeDetection: false,
@@ -201,7 +203,7 @@ const proxy = auth(async (request: NextAuthRequest) => {
       request.url
     );
 
-    return rewriteUrl(request, response, hostUrl, rewrittenUrl, parsedPlan.identifier);
+    return rewriteUrl(request, response, hostUrl, rewrittenUrl, planIdentifier);
   }
 
   const searchParams = getSearchParamsString(request);
@@ -211,7 +213,7 @@ const proxy = auth(async (request: NextAuthRequest) => {
     request.url
   );
 
-  return rewriteUrl(request, response, hostUrl, rewrittenUrl, parsedPlan.identifier);
+  return rewriteUrl(request, response, hostUrl, rewrittenUrl, planIdentifier);
 });
 
 export default proxy;

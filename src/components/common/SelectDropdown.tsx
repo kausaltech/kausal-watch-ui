@@ -9,7 +9,9 @@ import Select, {
   type DropdownIndicatorProps,
   type MultiValueProps,
   type OptionProps,
+  type Props as ReactSelectProps,
   type Theme as SelectTheme,
+  type StylesConfig,
   type ValueContainerProps,
   components,
 } from 'react-select';
@@ -52,13 +54,13 @@ function getSelectStyles<Option extends SelectDropdownOption>(
   theme: Theme,
   multi: boolean,
   size: string = ''
-) {
+): StylesConfig<Option, boolean> {
   const suffix = size ? `-${size}` : '';
   const inputHeight =
     `calc((${theme.inputLineHeight}*${theme.fontSizeBase}) +` +
     ` (${theme.inputPaddingY}*2) + (${theme.inputBorderWidth}*2))`;
 
-  const styles: SelectDropdownProps<Option>['styles'] = {
+  const styles: StylesConfig<Option, boolean> = {
     control: (provided, { isDisabled, isFocused }) => ({
       ...provided,
       backgroundColor: `var(--bs-select${isDisabled ? '-disabled' : ''}-bg)`,
@@ -149,7 +151,7 @@ function IndicatorSeparator() {
   return null;
 }
 
-function DropdownIndicator(props: DropdownIndicatorProps) {
+function DropdownIndicator(props: DropdownIndicatorProps<SelectDropdownOption, boolean>) {
   return (
     <components.DropdownIndicator {...props}>
       <span></span>
@@ -160,7 +162,6 @@ function DropdownIndicator(props: DropdownIndicatorProps) {
 function getSelectTheme(theme: SelectTheme) {
   const ret: SelectTheme = {
     ...theme,
-    // @ts-ignore
     colors: {
       ...theme.colors,
       primary: 'var(--bs-light)',
@@ -178,30 +179,30 @@ const CountContainer = styled.span`
 
 const Counter = ({ count }: { count: number }) => <CountContainer> + {count}</CountContainer>;
 
-const ValueContainer = (props: ValueContainerProps) => {
+const ValueContainer = (props: ValueContainerProps<SelectDropdownOption, boolean>) => {
   const { children, ...rest } = props;
-  const [firstChild, ...remainingChildren] = children;
+  const [firstChild, ...remainingChildren] = children as React.ReactNode[];
   const realChildren =
-    (firstChild?.length ?? 0) > 1
+    Array.isArray(firstChild) && firstChild.length > 1
       ? [firstChild[0], <Counter count={firstChild.length - 1} />, ...remainingChildren]
       : children;
   return <components.ValueContainer {...rest}>{realChildren}</components.ValueContainer>;
 };
 
-const MultiValue = (props: MultiValueProps) => {
+const MultiValue = (props: MultiValueProps<SelectDropdownOption, boolean>) => {
   const { data, ...rest } = props;
   const newData = {
     id: '__combined__',
-    label: props.getValue()[0].label,
-    indent: Math.min(...props.getValue().map((v) => v.indent)),
+    label: props.getValue()[0]!.label,
+    indent: Math.min(...props.getValue().map((v) => v.indent ?? 0)),
   };
   return <components.SingleValue data={newData} {...rest}></components.SingleValue>;
 };
 
-const Option = (props: OptionProps) => {
+const Option = (props: OptionProps<SelectDropdownOption, boolean>) => {
   const { data, children, options } = props;
-  const { indent } = data;
-  const isHierarchical: boolean = options.some((o) => o?.indent > 0);
+  const indent = data.indent ?? 0;
+  const isHierarchical: boolean = options.some((o) => 'indent' in o && (o.indent ?? 0) > 0);
   const indents: JSX.Element[] = [];
   for (let i = 0; i < indent; i++) {
     indents.push(<DropdownIndent key={`indent-${i}`} />);
@@ -228,9 +229,10 @@ export interface SelectDropdownOption {
   indent?: number;
 }
 
-type SelectDropdownProps<Option extends SelectDropdownOption> = Parameters<
-  typeof Select<Option>
->[0] & {
+type SelectDropdownProps<Option extends SelectDropdownOption> = Omit<
+  ReactSelectProps<Option, boolean>,
+  'isMulti' | 'value' | 'onChange'
+> & {
   id: string;
   label?: string;
   size?: string;
@@ -241,9 +243,7 @@ type SelectDropdownProps<Option extends SelectDropdownOption> = Parameters<
   onChange: (option: SelectDropdownOption[] | SelectDropdownOption | null) => void;
 };
 
-function SelectDropdown<Option extends SelectDropdownOption, IsMulti extends boolean>(
-  props: SelectDropdownProps<Option>
-) {
+function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdownProps<Option>) {
   const { size, id, label, value, onChange, helpText, invert, isMulti = false, ...rest } = props;
   const theme = useTheme();
   const styles = getSelectStyles(theme, props.isMulti === true, size);
@@ -276,7 +276,7 @@ function SelectDropdown<Option extends SelectDropdownOption, IsMulti extends boo
 
       {/* Select doesn't support SSR */}
       {isClient && (
-        <Select<SelectDropdownOption, IsMulti>
+        <Select<SelectDropdownOption, boolean>
           inputId={id}
           isMulti={isMulti}
           components={getCustomComponents(isMulti)}
@@ -297,7 +297,9 @@ function SelectDropdown<Option extends SelectDropdownOption, IsMulti extends boo
               />
             );
           }}
-          onChange={onChange}
+          onChange={(newValue) =>
+            onChange(newValue as SelectDropdownOption[] | SelectDropdownOption | null)
+          }
           {...rest}
         />
       )}

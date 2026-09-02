@@ -27,7 +27,7 @@ const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
 
 type PlanForHostname = NonNullable<GetPlansByHostnameQuery['plansForHostname']>[0];
 
-export type PlanFromPlansQuery = PlanForHostname & { __typename: 'Plan' };
+export type PlanFromPlansQuery = PlanForHostname;
 
 export function getSearchParamsString(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams.toString();
@@ -75,7 +75,8 @@ export function getParsedPlan(
 }
 
 export function getParsedLocale(localePossibilities: string[], plan: PlanFromPlansQuery) {
-  const locale = [plan.primaryLanguage, ...(plan.otherLanguages ?? [])].find((locale) =>
+  const otherLanguages = 'otherLanguages' in plan ? plan.otherLanguages : [];
+  const locale = [plan.primaryLanguage, ...otherLanguages].find((locale) =>
     localePossibilities
       .map((possibleLocale) => possibleLocale.toLowerCase())
       .includes(locale.toLowerCase())

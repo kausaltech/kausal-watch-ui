@@ -22,6 +22,13 @@ import SiteFooter, {
 import { useCustomComponent } from './paths/custom';
 
 type NavItem = NonNullable<PlanContextFragment['footer']>['items'][0];
+type PageNavItem = Extract<NavItem, { __typename: 'PageMenuItem' }>;
+type AdditionalNavItem = NonNullable<PlanContextFragment['additionalLinks']>['items'][number];
+type AdditionalPageNavItem = Extract<AdditionalNavItem, { __typename: 'PageMenuItem' }>;
+
+const isPageNavItem = (item: NavItem): item is PageNavItem => item.__typename === 'PageMenuItem';
+const isAdditionalPageNavItem = (item: AdditionalNavItem): item is AdditionalPageNavItem =>
+  item.__typename === 'PageMenuItem';
 
 const getFeedbackUrl = (currentURL: string) => {
   const feedbackPageUrlBase = '/feedback';
@@ -57,12 +64,8 @@ function Footer() {
   const t = useTranslations();
 
   const navLinks: FooterNavItem[] = (plan.footer?.items || [])
-    .filter((navItem): navItem is NonNullable<typeof navItem> => !!navItem)
+    .filter(isPageNavItem)
     .map((navItem) => {
-      if (!navItem || !('id' in navItem)) {
-        return null;
-      }
-
       return {
         id: navItem.id,
         name: navItem.page.title,
@@ -79,14 +82,14 @@ function Footer() {
     theme.settings?.customAdditionalLinks?.slice() || [];
   const hasCustomAccessibilityPage = additionalLinks?.find((link) => link.id === 'accessibility');
 
-  plan.additionalLinks?.items?.map((link) =>
+  plan.additionalLinks?.items?.filter(isAdditionalPageNavItem).forEach((link) =>
     additionalLinks.push({
       id: link.id,
       name: link.page.title,
       slug: link.page.urlPath,
-      url: link.page.url,
-      crossPlanLink: link.crossPlanLink,
-      viewUrl: link.viewUrl,
+      url: link.page.url ?? undefined,
+      crossPlanLink: link.crossPlanLink ?? undefined,
+      viewUrl: link.viewUrl ?? undefined,
     } satisfies FooterAdditionalLink)
   );
 

@@ -327,7 +327,7 @@ function ActionListDropdownInput<Value extends FilterValue>(props: ActionListDro
   }
 
   return (
-    <SelectDropdown<SelectDropdownOption, Value extends MultipleFilterValue ? true : false>
+    <SelectDropdown<SelectDropdownOption>
       label={label}
       id={`${id}-field`}
       name={id}
@@ -640,8 +640,9 @@ function createContinuousActionFilter(opts: {
     showAllLabel,
     filterAction: (value, action) => {
       if (!value) return true;
-      if (value === 'continuous') return action.scheduleContinuous === true;
-      if (value === 'non_continuous') return action.scheduleContinuous === false;
+      const actionItem = action as ActionListAction;
+      if (value === 'continuous') return actionItem.scheduleContinuous === true;
+      if (value === 'non_continuous') return actionItem.scheduleContinuous === false;
       return true;
     },
   };
@@ -672,7 +673,7 @@ function createAttributeTypeFilter(
     filterAction: (value, action) => {
       if (!value) return true;
 
-      return action.attributes.some((actAtt) => {
+      return (action as ActionListAction).attributes.some((actAtt) => {
         if (actAtt.__typename !== 'AttributeChoice') return false;
         return actAtt.choice?.id === value;
       });
@@ -813,9 +814,10 @@ function createResponsiblePartyFilter(
     showAllLabel,
     filterAction: (value, action) => {
       if (!value) return true;
-      if (action.primaryOrg?.id === value) return true;
+      const actionItem = action as ActionListAction;
+      if (actionItem.primaryOrg?.id === value) return true;
 
-      return action.responsibleParties.some((rp) => {
+      return actionItem.responsibleParties.some((rp) => {
         let org: ActionListOrganization | null = rp.organization as ActionListOrganization;
         while (org) {
           if (org.id === value) return true;
@@ -842,10 +844,11 @@ function createPrimaryResponsiblePartyFilter(t: TFunction): ActionListFilter<str
     showAllLabel: '',
     filterAction: (value, action) => {
       if (!value) return true;
+      const actionItem = action as ActionListAction;
 
       return (
-        action.primaryOrg?.id === value ||
-        action.responsibleParties.some(
+        actionItem.primaryOrg?.id === value ||
+        actionItem.responsibleParties.some(
           (rp) => rp.role === ActionResponsiblePartyRole.Primary && rp.organization.id === value
         )
       );
@@ -945,7 +948,7 @@ const FilterField = React.memo(function FilterField({
         <MainCategory>
           <MainCategoryLabel id={`label-${filter.id}`}>
             {filter.label}
-            {filter.helpText && <PopoverTip header="Main Category" content={filter.helpText} />}
+            {filter.helpText && <PopoverTip identifier={filter.id} content={filter.helpText} />}
           </MainCategoryLabel>
           <ButtonGroup role="radiogroup" aria-labelledby={`label-${filter.id}`}>
             <RButton
@@ -1235,6 +1238,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           filters.push(createCategoryFilter(block, filterByCommonCategory, plan, t));
           break;
         case 'ActionAttributeTypeFilterBlock': {
+          if (!('attributeType' in block)) break;
           const allowedFormats = ['ORDERED_CHOICE', 'UNORDERED_CHOICE', 'OPTIONAL_CHOICE'];
           if (!allowedFormats.includes(block.attributeType.format)) {
             console.error(

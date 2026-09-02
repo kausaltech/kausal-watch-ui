@@ -169,7 +169,7 @@ const getAttributeComparableValue = (action: ActionListAction, attributeTypeId: 
   const attr = action.attributes?.find(
     (a) => a.type?.id === attributeTypeId && a.__typename === 'AttributeNumericValue'
   );
-  if (!attr) return null;
+  if (!attr || !('numericValue' in attr)) return null;
 
   const n = attr.numericValue;
   if (typeof n === 'number') return n;
@@ -289,7 +289,7 @@ const ActionStatusTable = (props: Props) => {
 
     const [v1, v2] = preprocessForSorting(sort.key, [g1, g2], hasImplementationPhases);
 
-    const val = v1 == v2 ? 0 : v1 == null || v2 > v1 ? -1 : 1;
+    const val = v1 == v2 ? 0 : v1 == null || v2 == null || v2 > v1 ? -1 : 1;
 
     return sort.direction === 1 ? val : -val;
   };

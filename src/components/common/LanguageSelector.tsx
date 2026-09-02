@@ -162,7 +162,7 @@ const LanguageSelector = (props: LanguageSelectorProps) => {
 
   return (
     <LanguageSelectorListItem>
-      <Selector inNavbar $mobile={mobile} className={mobile && 'd-md-none'}>
+      <Selector inNavbar $mobile={mobile} className={mobile ? 'd-md-none' : undefined}>
         <StyledDropdownToggle
           color="link"
           data-toggle="dropdown"

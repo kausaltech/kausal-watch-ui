@@ -246,7 +246,7 @@ const StyledActionDependencyIconWrapper = styled.span`
 `;
 
 type PrimaryIconProps = {
-  category: ActionCardFragment['categories'][number];
+  category: ActionCardFragment['categories'][number] | null;
 };
 
 const PrimaryIcon = (props: PrimaryIconProps) => {
@@ -289,14 +289,19 @@ const SecondaryIcons = (props: SecondaryIconsProps) => {
 const getDependencyTooltipId = (actionId: string) => `dependency-tooltip-${actionId}`;
 
 type Action = NonNullable<GetActionDetailsQuery['action']>;
+type ActionCardData = ActionCardFragment & {
+  primaryCategories?: ActionCardFragment['categories'];
+  hasDependencyRelationships?: boolean | null;
+};
 
 type ActionCardProps = {
-  action: ActionCardFragment;
+  action: ActionCardData;
   showPlan?: boolean;
   variant?: 'primary' | 'mini' | 'text-only';
+  size?: string;
   isLink?: boolean;
   isHighlighted?: boolean;
-  getFullAction?: (id: string) => Action;
+  getFullAction?: (id: string) => unknown;
 };
 
 function ActionCard({
@@ -331,7 +336,10 @@ function ActionCard({
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
   const { mergedWith, implementationPhase, primaryOrg, scheduleContinuous } = action;
-  const status = cleanActionStatus(action, plan.actionStatuses);
+  const status = cleanActionStatus(
+    action as Parameters<typeof cleanActionStatus>[0],
+    plan.actionStatuses
+  );
   let statusText = status.name || null;
 
   // if Action is set in one of the phases, create message accordingly
@@ -449,10 +457,10 @@ function ActionCard({
           >
             <Suspense fallback={<ActionDependenciesBlock loading={true} />}>
               <ActionDependenciesBlock
-                action={action}
+                action={action as unknown as Action}
                 size="small"
                 activeActionId={action.id}
-                getFullAction={getFullAction}
+                getFullAction={getFullAction as ((id: string) => Action | undefined) | undefined}
                 showTitle
               />
             </Suspense>

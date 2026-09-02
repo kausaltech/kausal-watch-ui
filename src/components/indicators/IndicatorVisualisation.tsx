@@ -20,7 +20,10 @@ import type {
 import { linearRegression } from '@/common/math';
 import { capitalizeFirstLetter } from '@/common/utils';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
-import IndicatorGraph from '@/components/graphs/IndicatorGraph';
+import IndicatorGraph, {
+  type ChartTrace,
+  type GoalTrace,
+} from '@/components/graphs/IndicatorGraph';
 import LegacyIndicatorGraph from '@/components/graphs/legacy/IndicatorGraph';
 import IndicatorComparisonSelect from '@/components/indicators/IndicatorComparisonSelect';
 import IndicatorNormalizationSelect from '@/components/indicators/IndicatorNormalizationSelect';
@@ -30,7 +33,39 @@ import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
 import RichText from '../common/RichText';
 import IndicatorVisualizationBlock from './IndicatorVisualizationBlock';
 
-function generateCube(dimensions, values, path) {
+type GraphIndicator = NonNullable<IndicatorGraphDataQuery['indicator']>;
+type ComparisonIndicator = NonNullable<GraphIndicator['common']>['indicators'][number];
+type GraphValue = {
+  date: string | null;
+  value: number;
+  categories: Array<{ id: string }>;
+  normalizedValues: Array<{ normalizerId: string | null; value: number | null }>;
+};
+type GraphDimension = {
+  id: string;
+  name: string;
+  sort?: string;
+  type?: string;
+  categories: Array<{ id: string; name: string; defaultColor?: string; type?: string }>;
+};
+type ProcessedValue = Pick<GraphValue, 'value' | 'categories'> & { date: string };
+type Bounds = { min: number; max: number };
+type GraphSpecification = {
+  axes: Array<[string, number]>;
+  bounds: Bounds;
+  dimensions: GraphDimension[];
+  name: string;
+  cube?: unknown[];
+};
+type Translator = { t: (key: string) => string };
+type Scenario = NonNullable<IndicatorGraphDataQuery['plan']>['scenarios'][number];
+type ScenarioGoalTrace = GoalTrace & { scenario?: Scenario | Record<string, never> };
+
+function generateCube(
+  dimensions: GraphDimension[],
+  values: ProcessedValue[],
+  path: string[] = []
+): unknown[] {
   const dim = dimensions[0];
   const rest = dimensions.slice(1);
 
@@ -49,32 +84,41 @@ function generateCube(dimensions, values, path) {
   return array;
 }
 
-function generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues) {
+function generateCubeFromValues(
+  indicator: GraphIndicator,
+  indicatorGraphSpecification: GraphSpecification,
+  combinedValues: GraphValue[]
+): unknown[] {
   const values = [...combinedValues]
-    .sort((a, b) => a.date - b.date)
+    .sort((a, b) => Number(a.date) - Number(b.date))
     .map((item) => {
       const { date, value, categories } = item;
       // Make yearly value dates YYYY-1-1 so plotly places them correctly on axis
-      const newDate = indicator.timeResolution === 'YEAR' ? `${date.split('-')[0]}-1-1` : date;
+      const newDate = indicator.timeResolution === 'YEAR' ? `${date!.split('-')[0]}-1-1` : date!;
       return { date: newDate, value, categories };
     });
   if (indicatorGraphSpecification.dimensions.length === 0) {
     return values;
   }
-  indicatorGraphSpecification.dimensions = indicatorGraphSpecification.dimensions
-    .map((d) => d.dimension)
-    .sort((a, b) => {
-      if (a.sort === 'last') {
-        return 1;
-      } else if (b.sort === 'last') {
-        return -1;
-      }
-      return a.categories.length - b.categories.length || a.id - b.id;
-    });
+  indicatorGraphSpecification.dimensions = indicatorGraphSpecification.dimensions.sort((a, b) => {
+    if (a.sort === 'last') {
+      return 1;
+    } else if (b.sort === 'last') {
+      return -1;
+    }
+    return a.categories.length - b.categories.length || Number(a.id) - Number(b.id);
+  });
   return generateCube(indicatorGraphSpecification.dimensions, values);
 }
 
-function getTraces(dimensions, cube, names, hasTimeDimension, i18n, quantityName) {
+function getTraces(
+  dimensions: GraphDimension[],
+  cube: any[],
+  names: Set<string> | null,
+  hasTimeDimension: boolean,
+  i18n: Translator,
+  quantityName?: string
+): ChartTrace[] {
   // TODO: We could use quantity name but we can not tell if it's in the correct language
   // const name = capitalizeFirstLetter(quantityName ?? i18n.t('value'));
   const name = capitalizeFirstLetter(i18n.t('value'));
@@ -123,7 +167,7 @@ function getTraces(dimensions, cube, names, hasTimeDimension, i18n, quantityName
       },
     ];
   }
-  let traces = [];
+  let traces: ChartTrace[] = [];
 
   firstDimension.categories.forEach((cat, idx) => {
     const out = getTraces(
@@ -140,15 +184,20 @@ function getTraces(dimensions, cube, names, hasTimeDimension, i18n, quantityName
   return traces.filter((t) => t.x.length > 0);
 }
 
-const generateTrendTrace = (indicator, traces, goals, i18n) => {
+const generateTrendTrace = (
+  indicator: GraphIndicator,
+  traces: ScenarioGoalTrace[],
+  goals: GoalTrace[],
+  i18n: Translator
+): [GoalTrace | undefined, Bounds | null | undefined] => {
   const hasPotentialScenario = traces.find((goal) => goal.scenario?.identifier === 'potential');
   if (indicator.timeResolution === 'YEAR' && traces[0].y.length >= 5 && !hasPotentialScenario) {
     const values = [...indicator.values]
-      .sort((a, b) => a.date - b.date)
+      .sort((a, b) => Number(a.date) - Number(b.date))
       .map((item) => {
         const { date, value, categories } = item;
         // Make yearly value dates YYYY-1-1 so plotly places them correctly on axis
-        return { date, value, categories };
+        return { date: date!, value, categories };
       });
     const mainValues = values.filter((item) => !item.categories.length);
     const numberOfYears = Math.min(mainValues.length, 10);
@@ -159,8 +208,9 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
       return [undefined, undefined];
     }
     const model = linearRegression(regData);
-    const predictedTrace = {
+    const predictedTrace: GoalTrace = {
       x: regData.map((item) => item[0]),
+      y: [],
       name: i18n.t('current-trend'),
     };
 
@@ -176,7 +226,7 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
       predictedTrace.x.push(highestGoalYear);
     }
 
-    predictedTrace.y = predictedTrace.x.map((year) => model.m * year + model.b);
+    predictedTrace.y = predictedTrace.x.map((year) => model.m * Number(year) + model.b);
     // We want the year format 2019-1-1 so plotly places them correctly on axis
     const formattedTrace = {
       x: predictedTrace.x.map((year) => `${year}-1-1`),
@@ -188,17 +238,25 @@ const generateTrendTrace = (indicator, traces, goals, i18n) => {
   return [undefined, undefined];
 };
 
-const generateGoalTraces = (indicator, planScenarios, i18n) => {
+const generateGoalTraces = (
+  indicator: GraphIndicator,
+  planScenarios: Scenario[],
+  i18n: Translator
+): [ScenarioGoalTrace[], Bounds | null] => {
   // Group goals by scenario
-  const traceScenarios = new Map();
-  const goalTraces = [];
+  type Goal = NonNullable<NonNullable<GraphIndicator['goals']>[number]>;
+  type GoalScenario = { goals: Goal[]; config: Scenario | Record<string, never>; name: string };
+  const traceScenarios = new Map<string | null, GoalScenario>();
+  const goalTraces: ScenarioGoalTrace[] = [];
   (indicator.goals || []).forEach((goal) => {
+    if (!goal) return;
     const scenarioId = goal.scenario ? goal.scenario.id : null;
 
     if (!traceScenarios.has(scenarioId)) {
-      const scenario = {
+      const scenario: GoalScenario = {
         goals: [],
         config: planScenarios?.find((sc) => sc.id === scenarioId) ?? {},
+        name: i18n.t('goal'),
       };
 
       if (scenarioId && scenario.config?.name) {
@@ -208,30 +266,18 @@ const generateGoalTraces = (indicator, planScenarios, i18n) => {
       }
       traceScenarios.set(scenarioId, scenario);
     }
-    traceScenarios.get(scenarioId).goals.push(goal);
-  });
-
-  // Sort
-  traceScenarios.forEach((scenario) => {
-    const { goals } = scenario;
-    scenario.goals = goals
-      .sort((a, b) => a.date - b.date)
-      .map((item) => {
-        const { date, value, categories } = item;
-        const newDate = indicator.timeResolution === 'YEAR' ? `${date.split('-')[0]}-1-1` : date;
-        return { date: newDate, value, categories };
-      });
+    traceScenarios.get(scenarioId)!.goals.push(goal);
   });
 
   traceScenarios.forEach((scenario) => {
-    const { goals } = scenario;
+    const goals = [...scenario.goals].sort((a, b) => Number(a.date) - Number(b.date));
 
     const trace = {
       scenario: scenario.config,
       y: goals.map((item) => item.value),
       x: goals.map((item) => {
         const newDate =
-          indicator.timeResolution === 'YEAR' ? `${item.date.split('-')[0]}-1-1` : item.date;
+          indicator.timeResolution === 'YEAR' ? `${item.date!.split('-')[0]}-1-1` : item.date!;
         return newDate;
       }),
       name: scenario.name,
@@ -244,20 +290,26 @@ const generateGoalTraces = (indicator, planScenarios, i18n) => {
   return [goalTraces, bounds];
 };
 
-function calculateBounds(values) {
+function calculateBounds(values: Array<number | null>): Bounds | null {
   if (values.length === 0) {
     return null;
   }
   return {
-    min: Math.min(...values),
-    max: Math.max(...values),
+    min: Math.min(...values.map(Number)),
+    max: Math.max(...values.map(Number)),
   };
 }
 
-function getIndicatorGraphSpecification(indicator, compareOrganization, t, normalizerId) {
-  const specification = {};
-  const indicators = [indicator];
-  let dimensions = JSON.parse(JSON.stringify(indicator.dimensions));
+function getIndicatorGraphSpecification(
+  indicator: GraphIndicator,
+  compareOrganization: string | undefined,
+  t: (key: string) => string,
+  normalizerId: string | null
+): GraphSpecification {
+  const indicators: Array<GraphIndicator | ComparisonIndicator> = [indicator];
+  let dimensions = JSON.parse(JSON.stringify(indicator.dimensions)) as Array<{
+    dimension: GraphDimension;
+  }>;
 
   const dimensionedValues = indicator.values.filter((val) => val.categories.length > 0);
   if (dimensionedValues.length === 0 && dimensions.length !== 0) {
@@ -268,12 +320,18 @@ function getIndicatorGraphSpecification(indicator, compareOrganization, t, norma
   }
 
   if (compareOrganization) {
-    const compareIndicator = indicator.common.indicators.find(
+    const compareIndicator = indicator.common!.indicators.find(
       (x) => x.organization.id === compareOrganization
     );
-    indicators.push(compareIndicator);
-    const comparisonDimension = {
-      dimension: { sort: 'last', type: 'organization' },
+    if (compareIndicator) indicators.push(compareIndicator);
+    const comparisonDimension: { dimension: GraphDimension } = {
+      dimension: {
+        id: 'organization',
+        name: 'organization',
+        sort: 'last',
+        type: 'organization',
+        categories: [],
+      } satisfies GraphDimension,
     };
     comparisonDimension.dimension.categories = indicators.map((i) => ({
       id: `org:${i.organization.id}`,
@@ -286,7 +344,7 @@ function getIndicatorGraphSpecification(indicator, compareOrganization, t, norma
   const allValues = indicators
     .map((i) => i.values.map((x) => getNormalizedValue(x, normalizerId)))
     .flat();
-  specification.bounds = calculateBounds(allValues);
+  const bounds = calculateBounds(allValues);
 
   const times = new Set(indicators.map((i) => i.values.map((x) => x.date)).flat());
   const hasTime = times.size > 1;
@@ -305,7 +363,7 @@ function getIndicatorGraphSpecification(indicator, compareOrganization, t, norma
     });
   }
 
-  const axes = [];
+  const axes: Array<[string, number]> = [];
   if (indicator.dimensions.length > 0) {
     axes.push(['categories', indicator.dimensions.length]);
   }
@@ -316,20 +374,21 @@ function getIndicatorGraphSpecification(indicator, compareOrganization, t, norma
     axes.push(['time', 1]);
   }
 
-  specification.axes = axes;
-  specification.dimensions = dimensions;
-  specification.name = indicator.name;
-
-  return specification;
+  return {
+    axes,
+    dimensions: dimensions.map((d) => d.dimension),
+    name: indicator.name,
+    bounds: bounds!,
+  };
 }
 
-function addOrganizationCategory(value, orgId) {
+function addOrganizationCategory(value: GraphValue, orgId: string): GraphValue {
   const newCategories = [...value.categories]; //
   newCategories.push({ id: `org:${orgId}` });
   return Object.assign({}, value, { categories: newCategories });
 }
 
-function _addTotal(v, categoryCount) {
+function _addTotal(v: GraphValue, categoryCount: number): GraphValue {
   if (v.categories.length === 0) {
     const newCategories = new Array(categoryCount).fill({ id: 'total' });
     return Object.assign({}, v, {
@@ -339,13 +398,17 @@ function _addTotal(v, categoryCount) {
   return v;
 }
 
-function combineValues(indicator, comparisonIndicator, indicatorGraphSpecification) {
+function combineValues(
+  indicator: GraphIndicator,
+  comparisonIndicator: ComparisonIndicator | undefined,
+  indicatorGraphSpecification: GraphSpecification
+): GraphValue[] {
   let categoryCount = 0;
   const categoryAxis = indicatorGraphSpecification.axes.filter((a) => a[0] === 'categories');
   if (categoryAxis.length > 0) {
     categoryCount = categoryAxis[0][1];
   }
-  const getValues = (indicator) =>
+  const getValues = (indicator: GraphIndicator | ComparisonIndicator) =>
     indicator.values
       .map((v) => _addTotal(v, categoryCount))
       .filter((v) => v.categories.length === categoryCount)
@@ -364,27 +427,30 @@ const NORMALIZE_DEFAULT = 'default';
 const NORMALIZE_PREFER_ENABLED = 'enabled';
 const NORMALIZE_PREFER_DISABLED = 'disabled';
 
-function normalizeByPopulationSetter(callback) {
-  return (value) => {
+function normalizeByPopulationSetter(callback: (value: string) => void) {
+  return (value: boolean) => {
     callback(value ? NORMALIZE_PREFER_ENABLED : NORMALIZE_PREFER_DISABLED);
   };
 }
 
-function getNormalizeByPopulation(preferNormalizeByPopulation, comparisonIndicator) {
+function getNormalizeByPopulation(
+  preferNormalizeByPopulation: string,
+  comparisonIndicator: ComparisonIndicator | undefined
+) {
   if (preferNormalizeByPopulation === NORMALIZE_DEFAULT) {
     return comparisonIndicator != null;
   }
   return preferNormalizeByPopulation === NORMALIZE_PREFER_ENABLED;
 }
 
-function getNormalizedValue(valueObject, normalizerId) {
+function getNormalizedValue(valueObject: GraphValue, normalizerId: string | null): number {
   if (normalizerId != null) {
-    return valueObject.normalizedValues.find((nv) => nv.normalizerId === normalizerId).value;
+    return valueObject.normalizedValues.find((nv) => nv.normalizerId === normalizerId)!.value!;
   }
   return valueObject.value;
 }
 
-function normalizeValuesByNormalizer(values, normalizerId) {
+function normalizeValuesByNormalizer(values: GraphValue[], normalizerId: string): GraphValue[] {
   return values.map((valueObject) =>
     Object.assign({}, valueObject, {
       value: getNormalizedValue(valueObject, normalizerId),
@@ -510,7 +576,7 @@ function FactorCharts({
                   <IndicatorGraph
                     specification={factorSpec}
                     yRange={factorYRange}
-                    timeResolution={timeResolution as 'YEAR' | 'MONTH'}
+                    timeResolution={timeResolution}
                     traces={[factorTrace]}
                     goalTraces={[]}
                     trendTrace={null}
@@ -561,7 +627,7 @@ function IndicatorVisualisation({
     t,
     language: locale,
   };
-  const [compareTo, setCompareTo] = useState(undefined);
+  const [compareTo, setCompareTo] = useState<string | undefined>(undefined);
   const [preferNormalizeByPopulation, setPreferNormalizeByPopulation] = useState(NORMALIZE_DEFAULT);
 
   const { loading, error, data } = useQuery<
@@ -634,19 +700,13 @@ function IndicatorVisualisation({
   const unitLabel =
     unitHasName && unit.name === 'no unit' ? '' : unit.shortName || (unitHasName ? unit.name : '');
 
-  /// Handle object type indicator name (?)
-  let plotTitle = '';
-  if (typeof indicator.name === 'object') {
-    plotTitle = indicator.name.text;
-  } else if (typeof indicator.name === 'string') {
-    plotTitle = indicator.name;
-  }
+  const plotTitle = indicator.name;
 
   let combinedValues = combineValues(indicator, comparisonIndicator, indicatorGraphSpecification);
   if (normalizeByPopulation) {
     combinedValues = normalizeValuesByNormalizer(
       combinedValues,
-      populationNormalizer.normalizer.id
+      populationNormalizer!.normalizer.id
     );
   }
   /// Process data for data traces
@@ -671,8 +731,8 @@ function IndicatorVisualisation({
     ? allTraces
     : allTraces.filter((t) => t.dataType !== 'total' || showTotalLine);
 
-  const [goalTraces, goalBounds] = normalizeByPopulation
-    ? [[], []]
+  const [goalTraces, goalBounds]: [ScenarioGoalTrace[], Bounds | null] = normalizeByPopulation
+    ? [[], null]
     : generateGoalTraces(indicator, scenarios, i18n);
 
   // Get the x-axis date range from the main chart for use by factor charts
@@ -686,7 +746,7 @@ function IndicatorVisualisation({
       ? undefined
       : { min: Math.min(...timestamps), max: Math.max(...timestamps) };
 
-  const [trendTrace, trendBounds] =
+  const [trendTrace, trendBounds]: [GoalTrace | null | undefined, Bounds | null | undefined] =
     normalizeByPopulation ||
     !hasTimeDimension ||
     !indicator.showTrendline ||
@@ -695,13 +755,13 @@ function IndicatorVisualisation({
       : generateTrendTrace(indicator, traces, goalTraces, i18n);
 
   // Include trend and goal bounds in the calculation
-  let bounds = indicatorGraphSpecification.bounds;
+  let bounds: Bounds = indicatorGraphSpecification.bounds;
   for (const addBounds of [goalBounds, trendBounds]) {
     if (addBounds) {
       bounds = calculateBounds([
         ...Object.values(bounds),
         ...Object.values(addBounds).filter((b) => b != null && !isNaN(b)),
-      ]);
+      ])!;
     }
   }
 
@@ -808,7 +868,7 @@ function IndicatorVisualisation({
           timeResolution={indicator.timeResolution}
           traces={traces}
           goalTraces={goalTraces}
-          trendTrace={trendTrace}
+          trendTrace={trendTrace ?? null}
           title={plotTitle}
         />
       </div>
@@ -842,7 +902,7 @@ function IndicatorVisualisation({
           timeResolution={indicator.timeResolution}
           traces={traces}
           goalTraces={goalTraces}
-          trendTrace={trendTrace}
+          trendTrace={trendTrace ?? null}
           title={null}
           desiredTrend={indicator.desiredTrend}
           referenceValue={indicator.referenceValue}

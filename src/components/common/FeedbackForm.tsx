@@ -153,6 +153,7 @@ const FeedbackForm = (props: FeedbackFormProps) => {
       url: makeAbsoluteUrl(decodeURIComponent(searchParams.get('lastUrl') || pathname)).toString(),
       id: null,
       clientMutationId: null,
+      pledge: null,
     };
     setSent(true);
     setFormEmptyError(false);
@@ -268,7 +269,6 @@ const FeedbackForm = (props: FeedbackFormProps) => {
                 <TextInput {...field} id="name-field" autoComplete="name" label={t('name')} />
               )}
               name="name"
-              id="name-field"
               control={control}
               defaultValue=""
             />
@@ -285,14 +285,11 @@ const FeedbackForm = (props: FeedbackFormProps) => {
                   />
                 )}
                 name="email"
-                id="email-field"
                 control={control}
                 defaultValue=""
                 rules={{
                   required: emailRequired,
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  },
+                  pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 }}
               />
             )}
@@ -314,7 +311,6 @@ const FeedbackForm = (props: FeedbackFormProps) => {
                   />
                 )}
                 name="comment"
-                id="comment-field"
                 control={control}
                 rules={{ required: feedbackRequired }}
                 defaultValue=""

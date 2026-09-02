@@ -47,7 +47,12 @@ const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(functi
   return (
     <FormGroup>
       {label && <Label htmlFor={id}>{label}</Label>}
-      <Select id={id} type="select" {...rest} innerRef={ref}>
+      <Select
+        id={id}
+        type="select"
+        {...rest}
+        innerRef={ref as React.Ref<HTMLInputElement | HTMLTextAreaElement>}
+      >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

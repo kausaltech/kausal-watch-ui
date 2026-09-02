@@ -408,27 +408,27 @@ export type UtilityLink = {
 export type FooterNavItem = {
   id: string;
   name: string;
-  slug: string;
+  slug?: string;
   children?: FooterNavItem[];
 };
 
 export type FooterAdditionalLink = {
   id: string;
   name: string;
-  slug: string;
+  slug?: string;
   url?: string;
   viewUrl?: string;
   crossPlanLink?: boolean;
 };
 
 type SiteFooterProps = {
-  siteTitle: string;
+  siteTitle?: string;
   ownerUrl: string;
   ownerName: string;
   creativeCommonsLicense: string;
   copyrightText: string;
-  footerStatement: string;
-  ownerLinks: { id: string; title: string; url: string }[];
+  footerStatement?: string;
+  ownerLinks?: { title: string; url: string }[];
   navItems: FooterNavItem[];
   utilityLinks: UtilityLink[];
   additionalLinks: FooterAdditionalLink[];
@@ -567,7 +567,7 @@ function SiteFooter(props: SiteFooterProps) {
                       <FooterSubnav aria-labelledby={`footer-nav-heading-${page.id}`}>
                         {page.children.map((childPage) => (
                           <FooterNavSubItem key={childPage.slug}>
-                            <NavigationLink slug={childPage.slug}>
+                            <NavigationLink slug={childPage.slug ?? ''}>
                               <>
                                 {theme?.navLinkIcons && (
                                   <Icon.AngleRight
@@ -610,7 +610,7 @@ function SiteFooter(props: SiteFooterProps) {
             </UtilityItem>
             {ownerLinks &&
               ownerLinks.map((page) => (
-                <UtilityItem key={page.id}>
+                <UtilityItem key={page.url}>
                   <NavigationLink slug={page.url}>
                     {theme?.navLinkIcons && (
                       <Icon.AngleRight
@@ -698,7 +698,9 @@ function SiteFooter(props: SiteFooterProps) {
                 } else {
                   return (
                     <BaseLink key={page.slug}>
-                      <NavigationLink slug={page.slug}>{page.name}</NavigationLink>
+                      <NavigationLink slug={page.slug ?? page.url ?? ''}>
+                        {page.name}
+                      </NavigationLink>
                     </BaseLink>
                   );
                 }

@@ -10,7 +10,7 @@ import { useTranslations } from 'next-intl';
 import dayjs from '@/common/dayjs';
 import Icon from '@/components/common/Icon';
 
-export type EntityType = 'action' | 'indicator' | 'page';
+export type EntityType = 'action' | 'category' | 'indicator' | 'page';
 
 export type ChangeHistoryEntry = {
   updatedAt: string | null;

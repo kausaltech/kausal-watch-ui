@@ -124,7 +124,7 @@ interface CategoryListBlockProps extends CommonContentBlockProps {
 export default function CategoryListBlock(props: CategoryListBlockProps) {
   const fallbackCategories = useFallbackCategories();
   const { id = '', fallbackImage, heading, lead, categories: providedCategories } = props;
-  const categories = providedCategories ?? fallbackCategories;
+  const categories = (providedCategories ?? fallbackCategories) as CategoryListBlockCategory[];
 
   /*
     Determine what image to use on category card

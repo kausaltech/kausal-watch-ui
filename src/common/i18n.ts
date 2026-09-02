@@ -26,7 +26,7 @@ export function getActionTaskTermContext(plan: {
   };
 }) {
   const actionTaskTerm = plan.generalContent?.actionTaskTerm;
-  return actionTaskTerm === 'TASK' ? { context: undefined } : { context: actionTaskTerm };
+  return actionTaskTerm === 'TASK' ? { context: '' } : { context: actionTaskTerm ?? '' };
 }
 
 export type TFunction = ReturnType<typeof useTranslations>;

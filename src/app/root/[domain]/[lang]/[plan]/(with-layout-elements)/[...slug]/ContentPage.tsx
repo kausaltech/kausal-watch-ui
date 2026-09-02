@@ -215,7 +215,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
 
           {isPageWithBody && page.body && pageBodyHasBlocks && (
             <StreamField
-              page={page}
+              page={page as Parameters<typeof StreamField>[0]['page']}
               blocks={page.body}
               hasSidebar={siblings.length > 1}
               precedingBlockHasBackground={hasPageHeader}

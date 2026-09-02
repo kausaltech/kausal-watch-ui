@@ -132,14 +132,16 @@ const CategoryActionList = (props) => {
       />
     );
 
-  const { planActions } = data;
+  const { planActions } = /** @type {{ planActions: any[] | null }} */ (
+    /** @type {unknown} */ (data)
+  );
   const isCategoryRoot = activeCategory.parent == null;
 
   if (!planActions) {
     return (
       <ErrorMessage
         message={t('error-loading-actions', getActionTermContext(plan))}
-        details={error?.message}
+        details={undefined}
       />
     );
   }
@@ -171,13 +173,7 @@ const CategoryActionList = (props) => {
         )}
         <ListRow>
           {filteredActions.map((action) => (
-            <ListColumn
-              key={action.id}
-              className="mb-4 d-flex align-items-stretch"
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              layout
-            >
+            <ListColumn key={action.id} className="mb-4 d-flex align-items-stretch">
               <ActionCard action={action} />
             </ListColumn>
           ))}

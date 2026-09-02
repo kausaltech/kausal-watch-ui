@@ -252,7 +252,7 @@ type SearchViewProps = {
 
 function SearchView(props: SearchViewProps) {
   const { search, onSearchChange, testId } = props;
-  const [userSearch, setUserSearch] = useState<SearchResultsProps['search'] | null>(null);
+  const [userSearch, setUserSearch] = useState<SearchResultsProps['search']>(search);
   const t = useTranslations();
 
   useEffect(() => {
@@ -270,7 +270,7 @@ function SearchView(props: SearchViewProps) {
     }
     // We use form- as a prefix to avoid name collisions with other components
     setUserSearch({
-      ...(userSearch || {}),
+      ...userSearch,
       [name.replace('form-', '')]: value,
     });
   };

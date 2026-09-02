@@ -122,8 +122,11 @@ export default function CategoryPageStreamField({
               feedbackVisible={block.feedbackVisible ?? undefined}
               feedbackRequired={block.feedbackRequired ?? undefined}
               categoryId={page.category?.id || undefined}
-              fields={block.fields ?? []}
-              id={block.id}
+              fields={
+                (block.fields ?? []) as NonNullable<
+                  React.ComponentProps<typeof ExpandableFeedbackFormBlock>['fields']
+                >
+              }
               pageId={page.id}
             />
           </Col>
