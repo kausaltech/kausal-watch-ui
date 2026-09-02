@@ -101,15 +101,14 @@ const GET_PLEDGES = gql`
 
 const PLEDGE_BODY_FRAGMENT = gql`
   fragment PledgeBody on StreamFieldInterface {
-    id
     blockType
+    field
     ... on RichTextBlock {
       value
     }
     ... on QuestionAnswerBlock {
       heading
       questions {
-        id
         ... on QuestionBlock {
           question
           answer

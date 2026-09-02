@@ -7,7 +7,6 @@ import { DASHBOARD_INDICATOR_BLOCK_FRAGMENT } from './dashboard-indicator-block.
 
 export const STREAM_FIELD_FRAGMENT = gql`
   fragment StreamField on StreamFieldInterface {
-    id
     blockType
     field
     ... on CharBlock {
@@ -34,7 +33,6 @@ export const STREAM_FIELD_FRAGMENT = gql`
     ... on QuestionAnswerBlock {
       heading
       questions {
-        id
         ... on QuestionBlock {
           question
           answer
@@ -50,7 +48,6 @@ export const STREAM_FIELD_FRAGMENT = gql`
     ... on IndicatorGroupBlock {
       title
       indicators {
-        id
         ... on IndicatorBlock {
           style
           indicator {
@@ -162,7 +159,6 @@ export const STREAM_FIELD_FRAGMENT = gql`
       heading
       lead
       additionalSettings {
-        id
         backgroundColour
         fitImage
         showImageAccent
@@ -186,7 +182,6 @@ export const STREAM_FIELD_FRAGMENT = gql`
     }
     ... on IndicatorShowcaseBlock {
       blocks {
-        id
         __typename
       }
       title
@@ -247,7 +242,6 @@ export const STREAM_FIELD_FRAGMENT = gql`
         }
       }
       linkButton {
-        id
         blockType
         ... on PageLinkBlock {
           text
@@ -264,7 +258,6 @@ export const STREAM_FIELD_FRAGMENT = gql`
       heading
       lead
       cards {
-        id
         ... on CardBlock {
           image {
             ...CardImage
@@ -277,7 +270,6 @@ export const STREAM_FIELD_FRAGMENT = gql`
     }
     ... on ActionCategoryFilterCardsBlock {
       cards {
-        id
         ... on ActionCategoryFilterCardBlock {
           heading
           lead
@@ -322,7 +314,6 @@ export const STREAM_FIELD_FRAGMENT = gql`
       blockType
       field
       blocks {
-        id
         field
         ... on CharBlock {
           value

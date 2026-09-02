@@ -796,7 +796,7 @@ export default function StreamField(props: StreamFieldProps) {
 
         return (
           <ErrorBoundary
-            key={block.id}
+            key={`${block.blockType}-${block.field}-${index}`}
             fallback={<ErrorMessage message={t('error-loading-data')} details={block.__typename} />}
             errorExtras={{
               type: 'StreamFieldBlock',

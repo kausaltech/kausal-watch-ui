@@ -487,11 +487,11 @@ function ActionContentSectionBlock(props: ActionContentSectionBlockProps) {
         {helpText && <PopoverTip content={helpText} identifier={section} />}
       </h2>
       <Row>
-        {renderableBlocks?.map((block) => {
+        {renderableBlocks?.map((block, index) => {
           if (!block) return null;
           const meta = 'meta' in block ? block.meta : null;
           return (
-            <Col md={layout === 'grid' ? 4 : 12} key={block.id} className="mb-3">
+            <Col md={layout === 'grid' ? 4 : 12} key={`${block.field}-${index}`} className="mb-3">
               <RestrictedBlockWrapper
                 isRestricted={meta?.restricted ?? false}
                 isHidden={meta?.hidden ?? false}
@@ -600,7 +600,7 @@ function ActionContent(props: ActionContentProps) {
         if (!groupedBlocks.length) return;
         allSections.push(
           <ActionContentBlockGroup
-            key={groupedBlocks[0].id}
+            key={`group-${groupedBlocks[0].field}-${allSections.length}`}
             blocks={groupedBlocks}
             {...staticProps}
           />
@@ -614,7 +614,7 @@ function ActionContent(props: ActionContentProps) {
         'ActionContentCategoryTypeBlock',
       ];
 
-      for (const block of blocks) {
+      for (const [blockIndex, block] of blocks.entries()) {
         if (previousSectionBlock && block.__typename !== previousSectionBlock.__typename) {
           emitGroupedBlocks();
         }
@@ -626,11 +626,11 @@ function ActionContent(props: ActionContentProps) {
         } else {
           allSections.push(
             <RestrictedBlockWrapper
-              key={block.id}
+              key={`${block.field}-${blockIndex}`}
               isRestricted={('meta' in block && block.meta?.restricted) ?? false}
               isHidden={('meta' in block && block.meta?.hidden) ?? false}
             >
-              <ActionContentBlock key={block.id} block={block} {...staticProps} />
+              <ActionContentBlock block={block} {...staticProps} />
             </RestrictedBlockWrapper>
           );
         }

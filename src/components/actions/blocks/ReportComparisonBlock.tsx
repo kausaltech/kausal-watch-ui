@@ -111,7 +111,7 @@ const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
       if (!report) return [];
       const reportValue = report.valuesForAction?.find(
         (value) =>
-          value?.field.id === reportField &&
+          value?.field.field === reportField &&
           value.field.__typename === 'ActionAttributeTypeReportFieldBlock'
       );
       const attribute = reportValue && 'attribute' in reportValue ? reportValue.attribute : null;

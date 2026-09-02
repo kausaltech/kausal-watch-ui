@@ -6,7 +6,6 @@ const ACTION_LIST_FILTER = gql`
   fragment ActionListFilter on StreamFieldInterface {
     __typename
     field
-    id
     ... on ResponsiblePartyFilterBlock {
       fieldLabel
       fieldHelpText
@@ -110,55 +109,42 @@ export const ACTION_TABLE_COLUMN_FRAGMENT = gql`
     dashboardColumns {
       __typename
       ... on IdentifierColumnBlock {
-        id
         columnLabel
       }
       ... on NameColumnBlock {
-        id
         columnLabel
       }
       ... on ImplementationPhaseColumnBlock {
-        id
         columnLabel
       }
       ... on StatusColumnBlock {
-        id
         columnLabel
       }
       ... on TasksColumnBlock {
-        id
         columnLabel
       }
       ... on ResponsiblePartiesColumnBlock {
-        id
         columnLabel
       }
       ... on IndicatorsColumnBlock {
-        id
         columnLabel
       }
       ... on UpdatedAtColumnBlock {
-        id
         columnLabel
       }
       ... on StartDateColumnBlock {
-        id
         columnLabel
       }
       ... on EndDateColumnBlock {
-        id
         columnLabel
       }
       ... on ScheduleContinuousColumnBlock {
-        id
         columnLabel
       }
       ... on OrganizationColumnBlock {
-        id
         columnLabel
       }
       ... on FieldColumnBlock {
-        id
         columnLabel
         field
         __typename

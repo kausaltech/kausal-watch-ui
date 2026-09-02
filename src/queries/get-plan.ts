@@ -304,9 +304,7 @@ const GET_PLAN_CONTEXT = gql`
               ... on AccessibilityStatementPage {
                 body {
                   ... on AccessibilityStatementContactInformationBlock {
-                    id
                     blocks {
-                      id
                       field
                       ... on CharBlock {
                         value

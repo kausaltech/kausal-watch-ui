@@ -10,17 +10,14 @@ export const DASHBOARD_INDICATOR_BLOCK_FRAGMENT = gql`
       blockType
 
       ... on DashboardHeaderBlock {
-        id
         text
       }
 
       ... on DashboardParagraphBlock {
-        id
         text
       }
 
       ... on DashboardIndicatorPieChartBlock {
-        id
         helpText
         ...PieChartVisualization
       }

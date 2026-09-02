@@ -21,6 +21,10 @@ const storybookConfig = await getStorybookConfig([
 ]);
 const graphqlConfig = getGraphQLDocsConfig(['src']);
 graphqlConfig.rules['@graphql-eslint/selection-set-depth'] = ['error', { maxDepth: 15 }];
+// Grapple exposes `id` on stream-field StructBlock GraphQL types even though
+// their Wagtail StructValue instances cannot resolve it at runtime.
+// @ts-expect-error: expected
+graphqlConfig.rules['@graphql-eslint/require-selections'] = 'off';
 
 const config: ConfigWithExtends[] = defineConfig(
   getGraphQLProcessorConfig({ jsDirs: ['src'] }),

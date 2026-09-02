@@ -39,7 +39,6 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
         }
         ... on CategoryPageProgressBlock {
           blocks {
-            id
             ... on ChoiceBlock {
               value
             }
@@ -74,7 +73,6 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
               fieldType
               fieldRequired
               choices {
-                id
                 ... on FormChoiceBlock {
                   choiceLabel
                   choiceValue

@@ -367,8 +367,8 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
 
         {pledge.body && pledge.body.length > 0 && (
           <StyledBodySection>
-            {pledge.body.map((block) => (
-              <PledgeBodyBlock key={block.id} block={block} />
+            {pledge.body.map((block, index) => (
+              <PledgeBodyBlock key={`${block.blockType}-${block.field}-${index}`} block={block} />
             ))}
           </StyledBodySection>
         )}

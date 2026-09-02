@@ -147,7 +147,6 @@ const GET_CATEGORIES_FOR_TREEMAP = gql`
         contentType
         body {
           ... on RichTextBlock {
-            id
             value
           }
         }

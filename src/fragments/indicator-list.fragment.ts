@@ -4,7 +4,6 @@ const INDICATOR_LIST_FILTER = gql`
   fragment IndicatorListFilter on StreamFieldInterface {
     __typename
     field
-    id
     ... on IndicatorFilterBlock {
       fieldLabel
       fieldHelpText

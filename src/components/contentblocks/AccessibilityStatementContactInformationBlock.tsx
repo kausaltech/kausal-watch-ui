@@ -4,7 +4,7 @@ import { Col, Container, Row } from 'reactstrap';
 import { type CommonContentBlockProps } from '@/common/blocks.types';
 import { usePlan } from '@/context/plan';
 
-type ContactContentBlock = { id?: string | null; value?: string | null };
+type ContactContentBlock = { field?: string | null; value?: string | null };
 
 interface Props extends CommonContentBlockProps {
   content?: ContactContentBlock[];
@@ -15,10 +15,10 @@ const AccessibilityStatementContactInformationBlock = ({ id = '', content }: Pro
   const plan = usePlan();
 
   const accessibilityContactEmail =
-    content?.find((block) => block.id === 'email')?.value || 'accessibility@kausal.tech';
-  const publisher = content?.find((block) => block.id === 'publisher')?.value;
+    content?.find((block) => block.field === 'email')?.value || 'accessibility@kausal.tech';
+  const publisher = content?.find((block) => block.field === 'publisher')?.value;
   const customParagraph = content?.find(
-    (block) => block.id === 'maintenance_responsibility_paragraph'
+    (block) => block.field === 'maintenance_responsibility_paragraph'
   )?.value;
   const responsibleBody = publisher || plan.generalContent.ownerName;
 

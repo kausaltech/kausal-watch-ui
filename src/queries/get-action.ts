@@ -377,11 +377,11 @@ const GET_ACTION_DETAILS = gql`
       }
     }
     __typename
+    ... on StreamFieldInterface {
+      field
+    }
     ... on ActionResponsiblePartiesBlock {
       heading
-    }
-    ... on StreamFieldInterface {
-      id
     }
     ... on ChangeLogMessageBlock {
       fieldLabel
@@ -408,7 +408,7 @@ const GET_ACTION_DETAILS = gql`
     }
     __typename
     ... on StreamFieldInterface {
-      id
+      field
     }
     ... on ActionDescriptionBlock {
       fieldLabel
@@ -429,9 +429,6 @@ const GET_ACTION_DETAILS = gql`
     ... on IndicatorCausalChainBlock {
       id
       field
-    }
-    ... on StreamFieldInterface {
-      id
     }
     ... on ActionOfficialNameBlock {
       fieldLabel
@@ -472,7 +469,6 @@ const GET_ACTION_DETAILS = gql`
           fieldType
           fieldRequired
           choices {
-            id
             ... on FormChoiceBlock {
               choiceLabel
               choiceValue
@@ -488,7 +484,7 @@ const GET_ACTION_DETAILS = gql`
       layout
       blocks {
         ... on StreamFieldInterface {
-          id
+          field
         }
         ... on ActionOfficialNameBlock {
           fieldLabel
@@ -533,7 +529,6 @@ const GET_ACTION_DETAILS = gql`
               fieldType
               fieldRequired
               choices {
-                id
                 ... on FormChoiceBlock {
                   choiceLabel
                   choiceValue
@@ -559,7 +554,6 @@ const GET_ACTION_DETAILS = gql`
   }
 
   fragment ReportComparisonBlockActionContent on ReportComparisonBlock {
-    id
     reportField
     reportType {
       id
@@ -574,7 +568,7 @@ const GET_ACTION_DETAILS = gql`
         field {
           __typename
           ... on StreamFieldInterface {
-            id
+            field
           }
         }
         ... on ActionAttributeReportValue {
