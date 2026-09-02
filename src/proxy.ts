@@ -80,7 +80,6 @@ const proxy = auth(async (request: NextAuthRequest) => {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
 
-  console.log(request.headers);
   const host =
     request.headers.get('x-forwarded-host') || request.headers.get('host') || request.nextUrl.host;
   const hostname = host.split(':')[0];
