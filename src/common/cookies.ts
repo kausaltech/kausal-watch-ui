@@ -1,6 +1,6 @@
-import { RequestCookie, parseSetCookie } from 'next/dist/compiled/@edge-runtime/cookies';
-import { type UnsafeUnwrappedCookies, cookies } from 'next/headers';
-import { NextRequest } from 'next/server';
+import { type RequestCookie, parseSetCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+import { cookies } from 'next/headers';
+import type { NextRequest } from 'next/server';
 
 export type BackendCookieOptions = {
   prefix: string;

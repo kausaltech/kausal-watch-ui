@@ -1,4 +1,4 @@
-import { PlanFromPlansQuery, getParsedLocale } from '../middleware.utils';
+import { type PlanFromPlansQuery, getParsedLocale } from '../middleware.utils';
 
 const primaryLanguage = 'en-US';
 const otherLanguages = ['es-US', 'DOTHRAKI'];

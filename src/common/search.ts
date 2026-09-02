@@ -73,16 +73,10 @@ export const SEARCH_QUERY = gql`
 export type SearchHit = SearchQueryQuery['search']['hits'][number];
 
 class WatchSearchAPIConnector implements APIConnector {
-  apolloClient: ApolloClient<unknown>;
+  apolloClient: ApolloClient;
   plan: PlanContextFragment;
 
-  constructor({
-    apolloClient,
-    plan,
-  }: {
-    apolloClient: ApolloClient<unknown>;
-    plan: PlanContextFragment;
-  }) {
+  constructor({ apolloClient, plan }: { apolloClient: ApolloClient; plan: PlanContextFragment }) {
     this.apolloClient = apolloClient;
     this.plan = plan;
   }

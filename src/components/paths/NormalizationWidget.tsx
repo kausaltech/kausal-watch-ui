@@ -6,9 +6,9 @@ import { useTranslations } from 'next-intl';
 import { FormGroup, Input, Label } from 'reactstrap';
 
 import {
-  GetParametersQuery,
-  SetNormalizationMutation,
-  SetNormalizationMutationVariables,
+  type GetParametersQuery,
+  type SetNormalizationMutation,
+  type SetNormalizationMutationVariables,
 } from '@/common/__generated__/paths/graphql';
 import { usePaths } from '@/context/paths/paths';
 import { GET_PARAMETERS } from '@/queries/paths/get-paths-parameters';

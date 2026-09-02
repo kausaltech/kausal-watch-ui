@@ -1,4 +1,5 @@
-import React, { ReactNode, useState } from 'react';
+import type React from 'react';
+import { type ReactNode, useState } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -7,7 +8,7 @@ import { Button, Table } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { type PlanContextFragment } from '@/common/__generated__/graphql';
 import { actionStatusOrder } from '@/common/data/actions';
 import Icon from '@/components/common/Icon';
 import {
@@ -19,7 +20,11 @@ import ActionTableRow from '@/components/dashboard/ActionTableRow';
 
 import ActionStatusExport from './ActionStatusExport';
 import { COLUMN_CONFIG } from './dashboard.constants';
-import { ActionListAction, ActionListOrganization, ColumnConfig } from './dashboard.types';
+import {
+  type ActionListAction,
+  type ActionListOrganization,
+  type ColumnConfig,
+} from './dashboard.types';
 
 const TableWrapper = styled.div`
   width: 100%;

@@ -9,7 +9,7 @@ import { deploymentType } from '@/common/environment';
 import { ActionLink } from '@/common/links';
 import Icon from '@/components/common/Icon';
 
-import { ActionContentAction } from '../actions/ActionContent';
+import { type ActionContentAction } from '../actions/ActionContent';
 
 const VersionHistory = styled.div`
   color: ${(props) => props.theme.textColor.secondary};

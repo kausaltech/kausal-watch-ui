@@ -7,7 +7,7 @@ import {
   Label as BSLabel,
   FormFeedback,
   FormGroup,
-  InputProps,
+  type InputProps,
 } from 'reactstrap';
 
 const Label = styled(BSLabel)`

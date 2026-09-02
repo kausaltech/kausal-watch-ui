@@ -1,6 +1,6 @@
 import _mockPlan from '@/tests/__mocks__/mock-plan-context.json';
 
-import { PlanContextFragment } from '../__generated__/graphql';
+import { type PlanContextFragment } from '../__generated__/graphql';
 import { prependPlanAndLocale } from '../links';
 
 const mockPlan = _mockPlan as PlanContextFragment;

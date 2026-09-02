@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
-import { ActionListAction } from '../dashboard.types';
+import { type ActionListAction } from '../dashboard.types';
 
 interface Props {
   action: ActionListAction;

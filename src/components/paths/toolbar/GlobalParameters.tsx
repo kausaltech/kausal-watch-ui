@@ -11,9 +11,9 @@ import { Button, Col, FormFeedback, FormGroup, Input, InputGroup, Label, Row } f
 import ContentLoader from '@common/components/ContentLoader';
 
 import {
-  GetParametersQuery,
-  SetNormalizationMutation,
-  SetNormalizationMutationVariables,
+  type GetParametersQuery,
+  type SetNormalizationMutation,
+  type SetNormalizationMutationVariables,
 } from '@/common/__generated__/paths/graphql';
 import Icon from '@/components/common/Icon';
 import { usePaths } from '@/context/paths/paths';

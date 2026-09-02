@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 
 import { getActionTaskTermContext } from '@/common/i18n';
 
-import { ActionListAction, ActionListPlan } from '../dashboard.types';
+import { type ActionListAction, type ActionListPlan } from '../dashboard.types';
 
 interface Props {
   action: ActionListAction;

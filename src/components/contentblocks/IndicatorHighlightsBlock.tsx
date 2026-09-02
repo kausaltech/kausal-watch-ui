@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 import { Container } from 'reactstrap';
 
-import { CommonContentBlockProps } from '@/common/blocks.types';
+import { type CommonContentBlockProps } from '@/common/blocks.types';
 import IndicatorHighlightsList from '@/components/indicators/IndicatorHighlightsList';
 import PlanContext, { usePlan } from '@/context/plan';
 

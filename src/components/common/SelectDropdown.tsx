@@ -6,11 +6,11 @@ import styled from '@emotion/styled';
 
 import Highlighter from 'react-highlight-words';
 import Select, {
-  DropdownIndicatorProps,
-  MultiValueProps,
-  OptionProps,
-  Theme as SelectTheme,
-  ValueContainerProps,
+  type DropdownIndicatorProps,
+  type MultiValueProps,
+  type OptionProps,
+  type Theme as SelectTheme,
+  type ValueContainerProps,
   components,
 } from 'react-select';
 import { Label as BSLabel, FormGroup } from 'reactstrap';

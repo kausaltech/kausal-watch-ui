@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import Icon from '@/components/common/Icon';
 
-import { ActionListAction } from '../dashboard.types';
+import { type ActionListAction } from '../dashboard.types';
 
 const ResponsibleList = styled.div`
   display: flex;

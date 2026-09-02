@@ -1,4 +1,4 @@
-import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { type PlanContextFragment } from '@/common/__generated__/graphql';
 import _mockPlan from '@/tests/__mocks__/mock-plan-context.json';
 
 import { isAbsoluteUrl, stripLocaleAndPlan, stripSlashes } from '../urls';

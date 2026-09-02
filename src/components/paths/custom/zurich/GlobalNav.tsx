@@ -15,7 +15,7 @@ import { getThemeStaticURL } from '@common/themes/theme';
 
 import { deploymentType } from '@/common/environment';
 import { NavigationLink } from '@/common/links';
-import { NavItem as NavItemType } from '@/components/Header';
+import { type NavItem as NavItemType } from '@/components/Header';
 import Icon from '@/components/common/Icon';
 
 //import NavDropdown, { type NavDropdownProps } from '@/components/common/NavDropdown';

@@ -6,8 +6,8 @@ import styled from '@emotion/styled';
 
 import { Col, Container, Row } from 'reactstrap';
 
-import { CategoryFragmentFragment } from '@/common/__generated__/graphql';
-import { CommonContentBlockProps } from '@/common/blocks.types';
+import { type CategoryFragmentFragment } from '@/common/__generated__/graphql';
+import { type CommonContentBlockProps } from '@/common/blocks.types';
 import { useFallbackCategories } from '@/context/categories';
 import { usePaths } from '@/context/paths/paths';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';

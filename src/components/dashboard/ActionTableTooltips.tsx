@@ -18,7 +18,7 @@ import Icon from '@/components/common/Icon';
 import PlanChip from '@/components/plans/PlanChip';
 
 import { getTaskCounts } from './cells/TasksStatusCell';
-import { ActionListAction, ActionListPlan } from './dashboard.types';
+import { type ActionListAction, type ActionListPlan } from './dashboard.types';
 
 const TooltipTitle = styled.p`
   font-weight: ${(props) => props.theme.fontWeightBold};

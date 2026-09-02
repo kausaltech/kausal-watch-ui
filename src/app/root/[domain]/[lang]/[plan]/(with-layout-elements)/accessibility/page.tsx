@@ -1,11 +1,11 @@
-import { Metadata } from 'next';
+import { type Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
-import { GetContentPageQuery } from '@/common/__generated__/graphql';
+import { type GetContentPageQuery } from '@/common/__generated__/graphql';
 import { getContentPage } from '@/queries/get-content-page';
 import { tryRequest } from '@/utils/api.utils';
 
-import Content, { GeneralPlanPage } from '../[...slug]/ContentPage';
+import Content, { type GeneralPlanPage } from '../[...slug]/ContentPage';
 import { AccessibilityPage } from './AccessibilityPage';
 
 type Props = {

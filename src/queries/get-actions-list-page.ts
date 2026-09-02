@@ -1,10 +1,10 @@
 import { gql } from '@apollo/client';
 
 import {
-  GetActionListPageIncludeRelatedQuery,
-  GetActionListPageIncludeRelatedQueryVariables,
-  GetActionListPageQuery,
-  GetActionListPageQueryVariables,
+  type GetActionListPageIncludeRelatedQuery,
+  type GetActionListPageIncludeRelatedQueryVariables,
+  type GetActionListPageQuery,
+  type GetActionListPageQueryVariables,
 } from '@/common/__generated__/graphql';
 
 import { ALL_ACTION_LIST_FILTERS } from '../fragments/action-list.fragment';

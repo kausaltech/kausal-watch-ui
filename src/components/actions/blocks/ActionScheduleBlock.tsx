@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 
-import {
+import type {
   ActionDateFormat,
   GetActionDetailsQuery,
   PlanContextFragment,

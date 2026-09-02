@@ -1,6 +1,6 @@
 'use client';
 
-import { PropsWithChildren } from 'react';
+import { type PropsWithChildren } from 'react';
 
 import { useApolloClient } from '@apollo/client/react';
 import { useSession } from 'next-auth/react';
