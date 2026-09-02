@@ -1,16 +1,16 @@
 import { gql } from '@apollo/client';
 
-import type { GetPlanContextQuery } from '@/common/__generated__/graphql';
+import type { PlanContextQuery } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 
 import { getClient } from '../utils/apollo-rsc-client';
 
 export type ActionStatusSummary = NonNullable<
-  NonNullable<GetPlanContextQuery['plan']>['actionStatusSummaries']
+  NonNullable<PlanContextQuery['plan']>['actionStatusSummaries']
 >[number];
 
 const GET_PLAN_CONTEXT = gql`
-  query GetPlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
+  query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
     plan(id: $identifier) {
       ...PlanContext
     }
@@ -133,6 +133,7 @@ const GET_PLAN_CONTEXT = gql`
         ... on PageMenuItem {
           id
           page {
+            id
             title
             urlPath
             slug
@@ -140,6 +141,7 @@ const GET_PLAN_CONTEXT = gql`
           parent {
             id
             page {
+              id
               __typename
             }
           }
@@ -155,6 +157,7 @@ const GET_PLAN_CONTEXT = gql`
         ... on PageMenuItem {
           id
           page {
+            id
             title
             urlPath
             slug
@@ -162,6 +165,7 @@ const GET_PLAN_CONTEXT = gql`
           parent {
             id
             page {
+              id
               __typename
             }
           }
@@ -169,6 +173,7 @@ const GET_PLAN_CONTEXT = gql`
             __typename
             id
             page {
+              id
               title
               urlPath
               slug
@@ -204,16 +209,20 @@ const GET_PLAN_CONTEXT = gql`
       name
       shortName
       image {
+        id
         rendition(size: "128x128", crop: true) {
+          id
           src
         }
       }
       organization {
+        id
         name
       }
       viewUrl(clientUrl: $clientUrl)
     }
     supersededBy {
+      id
       name
       shortName
       versionName
@@ -222,6 +231,7 @@ const GET_PLAN_CONTEXT = gql`
       publishedAt
     }
     supersededPlans(recursive: true) {
+      id
       name
       shortName
       versionName
@@ -230,6 +240,7 @@ const GET_PLAN_CONTEXT = gql`
       publishedAt
     }
     supersedingPlans(recursive: true) {
+      id
       name
       shortName
       versionName
@@ -243,11 +254,14 @@ const GET_PLAN_CONTEXT = gql`
       name
       shortName
       image {
+        id
         rendition(size: "128x128", crop: true) {
+          id
           src
         }
       }
       organization {
+        id
         name
       }
       viewUrl(clientUrl: $clientUrl)
@@ -262,11 +276,14 @@ const GET_PLAN_CONTEXT = gql`
         siteTitle
       }
       image {
+        id
         rendition(size: "128x128", crop: true) {
+          id
           src
         }
       }
       organization {
+        id
         name
       }
       viewUrl(clientUrl: $clientUrl)
@@ -279,6 +296,7 @@ const GET_PLAN_CONTEXT = gql`
             crossPlanLink
             viewUrl
             page {
+              id
               title
               url
               urlPath
@@ -286,7 +304,9 @@ const GET_PLAN_CONTEXT = gql`
               ... on AccessibilityStatementPage {
                 body {
                   ... on AccessibilityStatementContactInformationBlock {
+                    id
                     blocks {
+                      id
                       field
                       ... on CharBlock {
                         value
@@ -301,6 +321,7 @@ const GET_PLAN_CONTEXT = gql`
       }
     }
     actionListPage {
+      id
       includeRelatedPlans
       actionDateFormat
       taskDateFormat
@@ -314,7 +335,7 @@ const GET_PLAN_CONTEXT = gql`
 export const getPlan = async (hostname: string, planIdentifier: string, clientUrl: string) =>
   await (
     await getClient()
-  ).query<GetPlanContextQuery>({
+  ).query<PlanContextQuery>({
     query: GET_PLAN_CONTEXT,
     variables: {
       identifier: planIdentifier,

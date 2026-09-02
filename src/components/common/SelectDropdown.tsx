@@ -1,4 +1,4 @@
-import { type JSX, useEffect, useState } from 'react';
+import { type JSX, useSyncExternalStore } from 'react';
 
 import { useTheme } from '@emotion/react';
 import type { Theme } from '@emotion/react';
@@ -184,7 +184,11 @@ const ValueContainer = (props: ValueContainerProps<SelectDropdownOption, boolean
   const [firstChild, ...remainingChildren] = children as React.ReactNode[];
   const realChildren =
     Array.isArray(firstChild) && firstChild.length > 1
-      ? [firstChild[0], <Counter count={firstChild.length - 1} />, ...remainingChildren]
+      ? [
+          firstChild[0],
+          <Counter key="remaining-option-count" count={firstChild.length - 1} />,
+          ...remainingChildren,
+        ]
       : children;
   return <components.ValueContainer {...rest}>{realChildren}</components.ValueContainer>;
 };
@@ -247,17 +251,17 @@ function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdo
   const { size, id, label, value, onChange, helpText, invert, isMulti = false, ...rest } = props;
   const theme = useTheme();
   const styles = getSelectStyles(theme, props.isMulti === true, size);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const isClient = useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false
+  );
 
   /* Do not wrap the tooltip icon on a new line alone */
   /* Join it with the last word of the label instead */
   /* TODO: Make this a part of the label/PopoverTip component */
   const labelLastWord = label?.split(' ').pop();
-  const labelText = helpText ? label?.slice(0, label.length - (labelLastWord?.length || 0)) : label;
+  const labelText = helpText ? label?.slice(0, label.length - (labelLastWord?.length ?? 0)) : label;
   const tooltipElement = helpText ? (
     <TooltipWrapper>
       {labelLastWord}

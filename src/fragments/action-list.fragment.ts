@@ -89,6 +89,7 @@ const ACTION_LIST_FILTER = gql`
 
 export const ALL_ACTION_LIST_FILTERS = gql`
   fragment ActionListPageFilters on ActionListPage {
+    id
     primaryFilters {
       ...ActionListFilter
     }
@@ -104,46 +105,60 @@ export const ALL_ACTION_LIST_FILTERS = gql`
 `;
 
 export const ACTION_TABLE_COLUMN_FRAGMENT = gql`
-  fragment ActionTableColumnFragment on ActionListPage {
+  fragment ActionTableColumn on ActionListPage {
+    id
     dashboardColumns {
       __typename
       ... on IdentifierColumnBlock {
+        id
         columnLabel
       }
       ... on NameColumnBlock {
+        id
         columnLabel
       }
       ... on ImplementationPhaseColumnBlock {
+        id
         columnLabel
       }
       ... on StatusColumnBlock {
+        id
         columnLabel
       }
       ... on TasksColumnBlock {
+        id
         columnLabel
       }
       ... on ResponsiblePartiesColumnBlock {
+        id
         columnLabel
       }
       ... on IndicatorsColumnBlock {
+        id
         columnLabel
       }
       ... on UpdatedAtColumnBlock {
+        id
         columnLabel
       }
       ... on StartDateColumnBlock {
+        id
         columnLabel
       }
       ... on EndDateColumnBlock {
+        id
         columnLabel
       }
       ... on ScheduleContinuousColumnBlock {
+        id
         columnLabel
       }
       ... on OrganizationColumnBlock {
+        id
         columnLabel
       }
       ... on FieldColumnBlock {
+        id
         columnLabel
         field
         __typename

@@ -8,10 +8,7 @@ import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import { Table } from 'reactstrap';
 
-import type {
-  ActionDateFormat,
-  PlanDatasetsBlockFragmentFragment,
-} from '@/common/__generated__/graphql';
+import type { ActionDateFormat, PlanDatasetsBlockFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 import { SectionHeader } from '@/components/actions/ActionContent';
 import PopoverTip from '@/components/common/PopoverTip';
@@ -79,8 +76,8 @@ const TotalsRow = styled.tr`
   }
 `;
 
-type DatasetSchema = NonNullable<PlanDatasetsBlockFragmentFragment['schema']>;
-type DataPoint = NonNullable<PlanDatasetsBlockFragmentFragment['dataPoints']>[number];
+type DatasetSchema = NonNullable<PlanDatasetsBlockFragment['schema']>;
+type DataPoint = NonNullable<PlanDatasetsBlockFragment['dataPoints']>[number];
 
 interface PlanDatasetsBlockProps {
   heading?: string | null;

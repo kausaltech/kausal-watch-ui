@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Spinner } from 'reactstrap';
 
-import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
+import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 
@@ -35,7 +35,7 @@ const DraftBannerDate = styled.div`
 `;
 
 type ActionWorkflowStatus = NonNullable<
-  NonNullable<GetActionDetailsQuery['action']>['workflowStatus']
+  NonNullable<ActionDetailsQuery['action']>['workflowStatus']
 >;
 
 type Props = {

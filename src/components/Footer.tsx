@@ -1,5 +1,7 @@
 'use client';
 
+import { createElement } from 'react';
+
 import { usePathname } from 'next/navigation';
 
 import { useTheme } from '@emotion/react';
@@ -144,23 +146,24 @@ function Footer() {
   }
 
   const monsidoToken = theme.settings?.monsidoToken;
+  const footer = createElement(FooterComponent, {
+    siteTitle,
+    ownerName: generalContent.ownerName,
+    ownerUrl: generalContent.ownerUrl,
+    creativeCommonsLicense: generalContent.creativeCommonsLicense,
+    copyrightText: generalContent.copyrightText,
+    utilityLinks,
+    additionalLinks,
+    navItems: navLinks,
+    fundingInstruments,
+    otherLogos,
+    footerStatement,
+    ownerLinks,
+  });
 
   return (
     <>
-      <FooterComponent
-        siteTitle={siteTitle}
-        ownerName={generalContent.ownerName}
-        ownerUrl={generalContent.ownerUrl}
-        creativeCommonsLicense={generalContent.creativeCommonsLicense}
-        copyrightText={generalContent.copyrightText}
-        utilityLinks={utilityLinks}
-        additionalLinks={additionalLinks}
-        navItems={navLinks}
-        fundingInstruments={fundingInstruments}
-        otherLogos={otherLogos}
-        footerStatement={footerStatement}
-        ownerLinks={ownerLinks}
-      />
+      {footer}
       <ApplicationStateBanner deploymentType={getDeploymentType()} />
       {monsidoToken && <MonsidoAccessibility token={monsidoToken} />}
     </>

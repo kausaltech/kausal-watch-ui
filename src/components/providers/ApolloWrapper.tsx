@@ -49,7 +49,7 @@ function makeClient(config: {
 }) {
   const { initialLocale, sessionToken, planIdentifier, planDomain, noProxy } = config;
   const unauthErrorLink = createErrorLink(() => {
-    signOut({ redirect: true });
+    void signOut({ redirect: true });
   });
   return new ApolloClient({
     defaultContext: {
@@ -87,6 +87,8 @@ function UpdateLocale({ children }: React.PropsWithChildren) {
   const locale = useLocale();
   const apolloClient = useApolloClient();
 
+  // Apollo intentionally exposes mutable defaults for updating link context.
+  // eslint-disable-next-line react-hooks/immutability
   apolloClient.defaultContext.locale = locale;
 
   return children;

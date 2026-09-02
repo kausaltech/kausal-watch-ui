@@ -16,10 +16,10 @@ const OrgLogo = styled.img`
 `;
 
 const OrganizationCell = ({ action }: Props) => {
+  const theme = useTheme();
   if (!action.primaryOrg) {
     return null;
   }
-  const theme = useTheme();
 
   return (
     <OrgLogo

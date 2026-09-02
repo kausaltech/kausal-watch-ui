@@ -1,6 +1,6 @@
-import type { GetContentPageQuery, GetPlanContextQuery } from '@/common/__generated__/graphql';
+import type { ContentPageQuery, PlanContextQuery } from '@/common/__generated__/graphql';
 
-export function getMetaImage(page: GetContentPageQuery['planPage']) {
+export function getMetaImage(page: ContentPageQuery['planPage']) {
   switch (page?.__typename) {
     case 'StaticPage':
       return page.headerImage?.social?.src ?? page.headerImage?.fullMedium?.src;
@@ -16,7 +16,7 @@ export function getMetaImage(page: GetContentPageQuery['planPage']) {
   }
 }
 
-export function getMetaDescription(page: GetContentPageQuery['planPage']) {
+export function getMetaDescription(page: ContentPageQuery['planPage']) {
   switch (page?.__typename) {
     case 'StaticPage':
       return page.leadParagraph;
@@ -27,7 +27,7 @@ export function getMetaDescription(page: GetContentPageQuery['planPage']) {
   }
 }
 
-export function getMetaTitles(plan: NonNullable<GetPlanContextQuery['plan']>) {
+export function getMetaTitles(plan: NonNullable<PlanContextQuery['plan']>) {
   if (plan.parent) {
     return {
       title: plan.parent.name,

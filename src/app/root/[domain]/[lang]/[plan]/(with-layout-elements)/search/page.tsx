@@ -3,23 +3,21 @@
 import { notFound, useSearchParams } from 'next/navigation';
 
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
-import SearchView from '@/components/common/SearchView';
+import SearchView, { type SearchState, getSearchFromQuery } from '@/components/common/SearchView';
 import { usePlan } from '@/context/plan';
 
 function SearchPage() {
   const plan = usePlan();
   const searchParams = useSearchParams();
   const handleUpdateSearchParams = useUpdateSearchParams();
-  const search = SearchView.getSearchFromQuery(
-    searchParams ? Object.fromEntries(searchParams) : {}
-  );
+  const search = getSearchFromQuery(searchParams ? Object.fromEntries(searchParams) : {});
 
-  const handleSearchChange = (newFilters) => {
-    const query = {};
+  const handleSearchChange = (newFilters: SearchState) => {
+    const query: Record<string, string> = {};
 
     Object.entries(newFilters).forEach(([key, val]) => {
       if (!val) return;
-      query[key] = val;
+      query[key] = String(val);
     });
 
     handleUpdateSearchParams(query);

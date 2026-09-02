@@ -1,19 +1,21 @@
 import { gql } from '@apollo/client';
 
 import {
-  type GetActionListPageIncludeRelatedQuery,
-  type GetActionListPageIncludeRelatedQueryVariables,
-  type GetActionListPageQuery,
-  type GetActionListPageQueryVariables,
+  type ActionListPageIncludeRelatedQuery,
+  type ActionListPageIncludeRelatedQueryVariables,
+  type ActionListPageQuery,
+  type ActionListPageQueryVariables,
 } from '@/common/__generated__/graphql';
 
 import { ALL_ACTION_LIST_FILTERS } from '../fragments/action-list.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
 
 const GET_INCLUDE_RELATED_ACTIONS = gql`
-  query GetActionListPageIncludeRelated($plan: ID!) {
+  query ActionListPageIncludeRelated($plan: ID!) {
     plan(id: $plan) {
+      id
       actionListPage {
+        id
         includeRelatedPlans
       }
     }
@@ -23,15 +25,16 @@ const GET_INCLUDE_RELATED_ACTIONS = gql`
 export const getIncludeRelatedActions = async (plan: string) =>
   await (
     await getClient()
-  ).query<GetActionListPageIncludeRelatedQuery, GetActionListPageIncludeRelatedQueryVariables>({
+  ).query<ActionListPageIncludeRelatedQuery, ActionListPageIncludeRelatedQueryVariables>({
     query: GET_INCLUDE_RELATED_ACTIONS,
     variables: { plan },
     fetchPolicy: 'no-cache',
   });
 
 const GET_ACTIONS_LIST_PAGE = gql`
-  query GetActionListPage($plan: ID!, $onlyWithActions: Boolean!) {
+  query ActionListPage($plan: ID!, $onlyWithActions: Boolean!) {
     plan(id: $plan) {
+      id
       actionListPage {
         __typename
         id
@@ -54,7 +57,7 @@ const GET_ACTIONS_LIST_PAGE = gql`
 export const getActionsListPage = async (plan: string, excludeCategoriesWithoutActions: boolean) =>
   await (
     await getClient()
-  ).query<GetActionListPageQuery, GetActionListPageQueryVariables>({
+  ).query<ActionListPageQuery, ActionListPageQueryVariables>({
     query: GET_ACTIONS_LIST_PAGE,
     variables: {
       plan,

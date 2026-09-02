@@ -74,19 +74,22 @@ const EmbeddablePage = (props: Props) => {
   const slug = params.slug.map(decodeURIComponent);
   const wrapperElement = useRef<HTMLDivElement>(null);
   const query = useSearchParams();
-  const queryEmbId = query.get('embId');
-  const embId = (Array.isArray(queryEmbId) ? queryEmbId[0] : queryEmbId) ?? 'kausal-watch-embed';
-  const postWrapperHeight = () => {
-    const el = wrapperElement.current;
-    if (el !== null) postHeight(el.offsetHeight, embId);
-  };
-  const debouncedPostWrapperHeight = useRef(debounce(postWrapperHeight, 200));
-  (useEffect(() => {
+  const embId = query.get('embId') ?? 'kausal-watch-embed';
+  useEffect(() => {
+    const postWrapperHeight = () => {
+      const el = wrapperElement.current;
+      if (el !== null) postHeight(el.offsetHeight, embId);
+    };
+    const debouncedPostWrapperHeight = debounce(postWrapperHeight, 200);
     postWrapperHeight();
     document.addEventListener('indicator_graph_ready', postWrapperHeight);
-    window.addEventListener('resize', debouncedPostWrapperHeight.current);
-  }),
-    [embId, wrapperElement]);
+    window.addEventListener('resize', debouncedPostWrapperHeight);
+    return () => {
+      document.removeEventListener('indicator_graph_ready', postWrapperHeight);
+      window.removeEventListener('resize', debouncedPostWrapperHeight);
+      debouncedPostWrapperHeight.cancel();
+    };
+  }, [embId]);
   let error = validateUrl(slug);
   let component: JSX.Element;
   let embedType: string | null = null;
@@ -98,7 +101,7 @@ const EmbeddablePage = (props: Props) => {
       case 'actions-recent':
         component = <RecentActionsEmbed />;
         break;
-      case 'actions':
+      case 'actions': {
         let maxWidth: string[] | string | number | undefined = query.get('maxWidth') ?? undefined;
         if (Array.isArray(maxWidth)) {
           maxWidth = maxWidth[0] as string | number | undefined;
@@ -113,6 +116,7 @@ const EmbeddablePage = (props: Props) => {
         }
         component = <ActionEmbed path={slug.slice(1)} maxWidth={maxWidth} />;
         break;
+      }
       case 'indicators':
         component = <IndicatorEmbed path={slug.slice(1)} />;
         break;

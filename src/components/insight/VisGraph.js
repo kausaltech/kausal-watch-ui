@@ -2,7 +2,10 @@ import React from 'react';
 
 import Head from 'next/head';
 
+import PropTypes from 'prop-types';
 import { Container, Row } from 'reactstrap';
+
+/* eslint-disable @next/next/no-sync-scripts -- This legacy component requires the global before componentDidMount. */
 
 function wordWrap(inputStr, maxWidth) {
   const newLineStr = '\n';
@@ -170,6 +173,7 @@ class VisGraph extends React.Component {
             crossOrigin="anonymous"
           />
           <script
+            // The legacy global must exist before componentDidMount constructs the network.
             src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js"
             integrity="sha256-ff7iz7mLH5QJA9IUC44b+sqjMi7c2aTR9YO2DSzAGZo="
             crossOrigin="anonymous"
@@ -182,5 +186,10 @@ class VisGraph extends React.Component {
     );
   }
 }
+
+VisGraph.propTypes = {
+  edges: PropTypes.arrayOf(PropTypes.object).isRequired,
+  nodes: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 export default VisGraph;

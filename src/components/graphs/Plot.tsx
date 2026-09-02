@@ -20,7 +20,6 @@ import * as sv from 'plotly.js-locales/sv';
 import type { PlotParams } from 'react-plotly.js';
 import createPlotlyComponent from 'react-plotly.js/factory';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const locales = { sv, de, de_ch, cs, da, es, lv, pl, fi, fr };
 
 const getSeparators = (locale: string): string | undefined => {
@@ -39,8 +38,8 @@ type PlotProps = PlotParams & {
 
 const Plot = (props: PlotProps) => {
   const { data } = props;
-  const config: NonNullable<PlotParams['config']> = { ...(props.config || {}) };
-  const layout = props.layout || {};
+  const config: NonNullable<PlotParams['config']> = { ...(props.config ?? {}) };
+  const layout = props.layout ?? {};
 
   const lang = useLocale();
   config.locales = locales;
@@ -50,7 +49,7 @@ const Plot = (props: PlotProps) => {
 
   config.responsive = true;
   if (!props.noValidate) {
-    const ret = Plotly.validate(data, layout);
+    const ret = Plotly.validate(data, layout ?? {});
     if (ret && ret.length) {
       console.warn('Plotly validation returned errors');
       console.log(ret);
@@ -79,7 +78,7 @@ export function usePlotlyBasic({ data, layout, config, noValidate }: UsePlotlyAr
   const ref = useRef<HTMLDivElement>(null);
 
   if (!noValidate) {
-    const ret = Plotly.validate(data, layout);
+    const ret = Plotly.validate(data, layout ?? {});
     if (ret && ret.length) {
       console.warn('Plotly validation errors:');
       console.log(ret);
@@ -88,7 +87,7 @@ export function usePlotlyBasic({ data, layout, config, noValidate }: UsePlotlyAr
   useLayoutEffect(() => {
     const { current } = ref;
     if (current) {
-      Plotly.react(current, data, layout, config);
+      void Plotly.react(current, data, layout, config);
     }
   }, [ref, data, layout, config]);
 

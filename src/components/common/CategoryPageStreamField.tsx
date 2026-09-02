@@ -20,7 +20,7 @@ import { usePlan } from '@/context/plan';
 import PathsNodeSummary from '../paths/PathsNodeSummary';
 import ChangeHistory from './ChangeHistory';
 
-type OmitUnion<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+type OmitUnion<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 
 type OmitFields<T> = OmitUnion<T, 'blockType' | 'field' | 'rawValue'>;
 
@@ -190,11 +190,11 @@ export default function CategoryPageStreamField({
 
     case 'CategoryPageCategoryListBlock': {
       const childCategories = page.category?.children ?? [];
-      const fallbackImage = page.category?.image || plan.image;
+      const fallbackImage = page.category?.image ?? plan.image;
       if (childCategories.length) {
         return (
           <CategoryListBlock
-            fallbackImage={fallbackImage || undefined}
+            fallbackImage={fallbackImage ?? undefined}
             categories={childCategories}
           />
         );

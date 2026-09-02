@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 
+import type { Theme } from '@kausal/themes/types';
 import { BarChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
@@ -110,7 +111,7 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
 
   const legendData = dimSeries.map((d) => d.name);
 
-  const buildLegend = (theme: any): ECOption['legend'] => ({
+  const buildLegend = (theme: Theme): ECOption['legend'] => ({
     show: true,
     bottom: isCompact ? 6 : 10,
     left: 'center',

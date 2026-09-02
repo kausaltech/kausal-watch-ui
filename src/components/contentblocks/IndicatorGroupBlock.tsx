@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 
-import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
+import type { StreamFieldFragment } from '@/common/__generated__/graphql';
 import { SiteGeneralContentIndicatorTerm } from '@/common/__generated__/graphql';
 import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorLink, IndicatorListLink } from '@/common/links';
@@ -48,10 +48,7 @@ const IndicatorContainer = styled.div`
   }
 `;
 
-type IndicatorGroupBlock = Extract<
-  StreamFieldFragmentFragment,
-  { __typename: 'IndicatorGroupBlock' }
->;
+type IndicatorGroupBlock = Extract<StreamFieldFragment, { __typename: 'IndicatorGroupBlock' }>;
 type IndicatorGroupItems = NonNullable<IndicatorGroupBlock['indicators']>;
 type IndicatorBlockItem = Extract<
   NonNullable<IndicatorGroupItems[number]>,

@@ -7,7 +7,7 @@ import { type IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
 import IndicatorValueSummary from '@/components/indicators/IndicatorValueSummary';
-import OrgSelector from '@/components/orgs/OrgSelector';
+import OrgSelector, { type OrganizationOption } from '@/components/orgs/OrgSelector';
 import { usePlan } from '@/context/plan';
 
 import IndicatorLevelChip from './IndicatorLevelChip';
@@ -71,8 +71,8 @@ const IndicatorHeadline = styled.h1`
 
 interface IndicatorHeroProps {
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
-  orgs: any;
-  goals: any;
+  orgs: OrganizationOption[] | null;
+  goals: NonNullable<NonNullable<IndicatorDetailsQuery['indicator']>['goals']>;
   legacyMode?: boolean;
 }
 

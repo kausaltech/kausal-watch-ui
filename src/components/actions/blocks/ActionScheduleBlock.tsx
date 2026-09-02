@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 
 import type {
   ActionDateFormat,
-  GetActionDetailsQuery,
+  ActionDetailsQuery,
   PlanContextFragment,
 } from '@/common/__generated__/graphql';
 import { ActionSection } from '@/components/actions/ActionContent';
@@ -17,7 +17,7 @@ const SideHeader = styled.h3`
 `;
 
 type Props = {
-  action: NonNullable<GetActionDetailsQuery['action']>;
+  action: NonNullable<ActionDetailsQuery['action']>;
   plan: PlanContextFragment;
   heading: string;
 };

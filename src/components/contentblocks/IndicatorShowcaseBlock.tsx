@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Alert, Col, Container, Row } from 'reactstrap';
 
-import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
+import type { StreamFieldFragment } from '@/common/__generated__/graphql';
 import { deploymentType } from '@/common/environment';
 import RichText from '@/components/common/RichText';
 import IndicatorProgressBar from '@/components/indicators/IndicatorProgressBar';
@@ -21,7 +21,7 @@ import {
 } from './indicatorShowcase.utils';
 
 type IndicatorShowcaseBlockData = Extract<
-  StreamFieldFragmentFragment,
+  StreamFieldFragment,
   { __typename: 'IndicatorShowcaseBlock' }
 >;
 type Indicator = NonNullable<IndicatorShowcaseBlockData['indicator']>;

@@ -150,7 +150,6 @@ const IconComponent = ({
   return (
     <svg
       className={`icon ${className}`}
-      onError={() => console.error(`Failed to load icon ${name}`)}
       key={`${theme.name}-${name}`}
       style={{ width, height }}
       aria-hidden={alt ? 'false' : 'true'}

@@ -5,6 +5,7 @@ import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from
 
 import { deploymentType } from '@/common/environment';
 import Icon from '@/components/common/Icon';
+import type { PlanContextType } from '@/context/plan';
 
 const VersionSelect = styled.div`
   display: flex;
@@ -74,7 +75,11 @@ const StyledDropdownToggle = styled(DropdownToggle)<{ islatest?: string }>`
   }
 `;
 
-const PlanVersionSelector = (props) => {
+type PlanVersionSelectorProps = {
+  plan: PlanContextType;
+};
+
+const PlanVersionSelector = (props: PlanVersionSelectorProps) => {
   const { plan } = props;
   const t = useTranslations();
   const isProduction = deploymentType === 'production';
@@ -115,7 +120,7 @@ const PlanVersionSelector = (props) => {
     return null;
   }
 
-  const activeVersion = allVersions.find((v) => v.active);
+  const activeVersion = allVersions.find((v) => v.active)!;
   const latestVersion = allVersions[allVersions.length - 1];
 
   return (
@@ -134,7 +139,7 @@ const PlanVersionSelector = (props) => {
           <DropdownItem header>{t('versions-list')}</DropdownItem>
           {allVersions.reverse().map((v) => (
             <VersionDropdownItem
-              href={v.viewUrl}
+              href={v.viewUrl ?? undefined}
               key={v.identifier}
               // $isLatest={v.identifier === latestVersion.identifier}
               $isActive={v.active}

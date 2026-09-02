@@ -5,9 +5,9 @@ import dynamic from 'next/dynamic';
 import { useLocale } from 'next-intl';
 import { readableColor } from 'polished';
 
-import type { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
+import type { CategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
 
-type CategoryInput = NonNullable<GetCategoriesForTreeMapQuery['planCategories']>[number];
+type CategoryInput = NonNullable<CategoriesForTreeMapQuery['planCategories']>[number];
 type Category = CategoryInput & {
   value: number;
   children: Category[];

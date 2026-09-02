@@ -18,9 +18,10 @@ import type { TFunction } from '@/common/i18n';
 import Button from '@/components/common/Button';
 
 const CREATE_USER_FEEDBACK = gql`
-  mutation CreateUserFeedback($input: UserFeedbackMutationInput!) {
+  mutation CreatePledgeFeedback($input: UserFeedbackMutationInput!) {
     createUserFeedback(input: $input) {
       feedback {
+        id
         createdAt
       }
       errors {

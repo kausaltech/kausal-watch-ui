@@ -81,10 +81,12 @@ const GlobalIndicatorModal = () => {
 
   // Update indicator plan identifier once we have indicator data
   React.useEffect(() => {
-    const indicator = data?.indicator || previousData?.indicator;
+    const indicator = data?.indicator ?? previousData?.indicator;
     if (indicator) {
       const planId = getIndicatorPlanIdentifier(indicator, plan.identifier);
       if (planId !== indicatorPlanIdentifier) {
+        // The query result determines which plan must service the next request.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIndicatorPlanIdentifier(planId);
       }
     }
@@ -137,7 +139,7 @@ const GlobalIndicatorModal = () => {
 
   return (
     <IndicatorModalBase
-      indicator={data?.indicator || previousData?.indicator}
+      indicator={data?.indicator ?? previousData?.indicator}
       loading={loading}
       error={error}
       layout={{

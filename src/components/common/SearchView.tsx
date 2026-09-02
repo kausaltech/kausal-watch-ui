@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { type ChangeEvent, type SyntheticEvent, useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -9,7 +9,7 @@ import { Alert, Col, Container, FormGroup, Input, Label, Row } from 'reactstrap'
 
 import ContentLoader from '@common/components/ContentLoader';
 
-import type { SearchQueryQuery, SearchQueryQueryVariables } from '@/common/__generated__/graphql';
+import type { SearchQuery, SearchQueryVariables } from '@/common/__generated__/graphql';
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { Link } from '@/common/links';
 import { SEARCH_QUERY } from '@/common/search';
@@ -117,7 +117,7 @@ const ResultExcerpt = styled.div`
 `;
 
 type SearchResultItemProps = {
-  hit: NonNullable<NonNullable<SearchQueryQuery['search']>['hits']>[number];
+  hit: NonNullable<NonNullable<SearchQuery['search']>['hits']>[number];
 };
 
 function SearchResultItem({ hit }: SearchResultItemProps) {
@@ -141,8 +141,8 @@ function SearchResultItem({ hit }: SearchResultItemProps) {
     if (!hitTypeName) hitTypeName = t('page');
   }
   const showPlanChip = true;
-  const hitImage = primaryOrg?.logo?.rendition?.src || hit.plan.image?.rendition?.src || undefined;
-  const hitOrganization = primaryOrg?.name || hit.plan.organization.name;
+  const hitImage = primaryOrg?.logo?.rendition?.src ?? hit.plan.image?.rendition?.src ?? undefined;
+  const hitOrganization = primaryOrg?.name ?? hit.plan.organization.name;
 
   return (
     <StyledSearchResultItem>
@@ -165,7 +165,7 @@ function SearchResultItem({ hit }: SearchResultItemProps) {
         <h3>{hit.title}</h3>
       )}
       <ResultExcerpt>
-        <span dangerouslySetInnerHTML={{ __html: hit.highlight || '' }} />
+        <span dangerouslySetInnerHTML={{ __html: hit.highlight ?? '' }} />
         ...
       </ResultExcerpt>
       {/* TODO: Add ellipsis or indication for truncated text */}
@@ -183,21 +183,18 @@ type SearchResultsProps = {
 function SearchResults({ search }: SearchResultsProps) {
   const plan = usePlan();
   const t = useTranslations();
-  const { error, loading, data } = useQuery<SearchQueryQuery, SearchQueryQueryVariables>(
-    SEARCH_QUERY,
-    {
-      variables: {
-        plan: plan.identifier,
-        query: search.q,
-        onlyOtherPlans: search.onlyOtherPlans,
-        clientUrl: plan.viewUrl,
-      },
-    }
-  );
+  const { error, loading, data } = useQuery<SearchQuery, SearchQueryVariables>(SEARCH_QUERY, {
+    variables: {
+      plan: plan.identifier,
+      query: search.q,
+      onlyOtherPlans: search.onlyOtherPlans,
+      clientUrl: plan.viewUrl,
+    },
+  });
 
   useEffect(() => {
     if (search.q && data?.search?.hits) {
-      trackSearch(search.q, search.onlyOtherPlans, data.search.hits.length || 0);
+      trackSearch(search.q, search.onlyOtherPlans, data.search.hits.length);
     }
   }, [search, data]);
 
@@ -206,7 +203,7 @@ function SearchResults({ search }: SearchResultsProps) {
       <ResultsHeader>
         <Alert color="warning">
           <h2>{t('error-with-code')}</h2>
-          {error.toString()}
+          {error.message}
         </Alert>
       </ResultsHeader>
     );
@@ -218,7 +215,7 @@ function SearchResults({ search }: SearchResultsProps) {
       </ResultsHeader>
     );
   }
-  const { hits } = data?.search!;
+  const hits = data?.search?.hits ?? [];
 
   return (
     <Row>
@@ -241,28 +238,27 @@ function SearchResults({ search }: SearchResultsProps) {
   );
 }
 
+export type SearchState = {
+  q: string;
+  onlyOtherPlans: boolean;
+  [key: string]: boolean | string;
+};
+
 type SearchViewProps = {
-  search: {
-    q: string;
-    onlyOtherPlans: boolean;
-  };
-  onSearchChange: (search: { q: string; onlyOtherPlans: boolean }) => void;
+  search: SearchState;
+  onSearchChange: (search: SearchState) => void;
   testId?: string;
 };
 
-function SearchView(props: SearchViewProps) {
+function SearchViewContent(props: SearchViewProps) {
   const { search, onSearchChange, testId } = props;
   const [userSearch, setUserSearch] = useState<SearchResultsProps['search']>(search);
   const t = useTranslations();
 
-  useEffect(() => {
-    setUserSearch(search);
-  }, [search]);
-
-  const handleValueChange = (event) => {
+  const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { target } = event;
     const { name } = target;
-    let value;
+    let value: boolean | string;
     if (target.type === 'checkbox') {
       value = target.checked;
     } else {
@@ -274,7 +270,7 @@ function SearchView(props: SearchViewProps) {
       [name.replace('form-', '')]: value,
     });
   };
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSearchChange(userSearch);
   };
@@ -287,7 +283,7 @@ function SearchView(props: SearchViewProps) {
             <Row>
               <Col sm="12" md={{ offset: 3, size: 6 }}>
                 <h1>{t('search')}</h1>
-                <form>
+                <form onSubmit={handleSubmit}>
                   <TextInput
                     type="search"
                     id="form-q"
@@ -308,13 +304,7 @@ function SearchView(props: SearchViewProps) {
                     />
                     <Label for="other-plans-only">{t('other-plans-only')}</Label>
                   </FormGroup>
-                  <Button
-                    type="submit"
-                    color="primary"
-                    className="mb-3"
-                    onClick={handleSubmit}
-                    block
-                  >
+                  <Button type="submit" color="primary" className="mb-3" block>
                     {t('search')}
                   </Button>
                 </form>
@@ -337,13 +327,22 @@ function SearchView(props: SearchViewProps) {
     </>
   );
 }
-SearchView.getSearchFromQuery = (query) => {
+export function getSearchFromQuery(query: Record<string, string>): SearchState {
   const { q, onlyOtherPlans, ...rest } = query;
   return {
-    q,
+    q: q ?? '',
     onlyOtherPlans: onlyOtherPlans === 'true',
     ...rest,
   };
-};
+}
+
+function SearchView(props: SearchViewProps) {
+  return (
+    <SearchViewContent
+      key={`${props.search.q}:${String(props.search.onlyOtherPlans)}`}
+      {...props}
+    />
+  );
+}
 
 export default SearchView;

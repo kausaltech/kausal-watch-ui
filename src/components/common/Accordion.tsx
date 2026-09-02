@@ -159,9 +159,9 @@ const LinkCopyButton = ({ identifier }: { identifier?: string }) => {
 };
 
 interface AccordionHeaderProps {
-  children: React.ReactElement<any> | string;
+  children: React.ReactElement<unknown> | string;
   isOpen?: boolean;
-  onClick?(...args: unknown[]): unknown;
+  onClick?: () => void;
   identifier?: string;
   small?: boolean;
 }
@@ -210,7 +210,7 @@ interface AccordionItemProps {
   id?: string;
   open?: boolean;
   isOpen?: boolean;
-  onClick?(...args: unknown[]): unknown;
+  onClick?: () => void;
   identifier?: string;
   children?: React.ReactNode;
 }
@@ -240,20 +240,18 @@ function Accordion(props: AccordionProps) {
   const { open, children } = props;
   const [openItem, setOpenItem] = useState(open);
 
-  const getOpenQuestionId = () => {
-    const { hash } = window.location;
-    return hash && hash.length > 2 ? hash.slice(2) : undefined;
-  };
-
   useEffect(() => {
     // Read open question id from location.hash.
     // Unfortunately this can't be done in server side because
     // hash is not available there.
-    const openNow = getOpenQuestionId();
+    const { hash } = window.location;
+    const openNow = hash && hash.length > 2 ? hash.slice(2) : undefined;
+    // Initialize from the client-only URL fragment after hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (openNow) setOpenItem(openNow);
-  }, [openItem]);
+  }, []);
 
-  const toggleSection = (id) => () => {
+  const toggleSection = (id: string) => () => {
     const prevOpen = openItem;
     setOpenItem(id === openItem ? undefined : id);
 

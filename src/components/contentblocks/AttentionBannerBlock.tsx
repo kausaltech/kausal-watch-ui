@@ -5,6 +5,12 @@ import { Container, UncontrolledAlert } from 'reactstrap';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 
+type AttentionBannerBlockProps = {
+  buttons: Array<{ id: string; label: string; url: string }>;
+  content: string;
+  header: string;
+};
+
 const AttentionBanner = styled.div`
   background-color: ${(props) => props.theme.brandDark};
   position: relative;
@@ -36,7 +42,7 @@ const AttentionBox = styled(UncontrolledAlert)`
   }
 `;
 
-const AttentionBannerBlock = (props) => {
+const AttentionBannerBlock = (props: AttentionBannerBlockProps) => {
   const { header, content, buttons } = props;
 
   return (

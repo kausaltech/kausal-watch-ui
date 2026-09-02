@@ -10,7 +10,7 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 
-import type { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
+import type { CategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
 import type { CommonContentBlockProps } from '@/common/blocks.types';
 import CategoryActionList from '@/components/actions/CategoryActionList';
 import CategoryCardContent from '@/components/common/CategoryCardContent';
@@ -118,7 +118,7 @@ const CategoryVizColumn = styled.div`
 // TODO: clean out unecessary fields. Fetching a lot for now
 
 const GET_CATEGORIES_FOR_TREEMAP = gql`
-  query GetCategoriesForTreeMap($plan: ID!, $categoryType: ID!, $attributeType: ID!) {
+  query CategoriesForTreeMap($plan: ID!, $categoryType: ID!, $attributeType: ID!) {
     planCategories(plan: $plan, categoryType: $categoryType) {
       id
       name
@@ -147,6 +147,7 @@ const GET_CATEGORIES_FOR_TREEMAP = gql`
         contentType
         body {
           ... on RichTextBlock {
+            id
             value
           }
         }
@@ -165,6 +166,7 @@ const GET_CATEGORIES_FOR_TREEMAP = gql`
         hideCategoryIdentifiers
       }
       attributes(id: $attributeType) {
+        id
         ... on AttributeNumericValue {
           value
         }
@@ -177,7 +179,7 @@ type CategoryTreeSectionProps = {
   id?: string;
   heading?: string | null;
   lead?: string | null;
-  sections: NonNullable<GetCategoriesForTreeMapQuery['planCategories']>;
+  sections: NonNullable<CategoriesForTreeMapQuery['planCategories']>;
   valueAttribute: {
     unit: {
       shortName: string | null;
@@ -264,7 +266,7 @@ interface CategoryTreeBlockProps extends CommonContentBlockProps {
 
 function CategoryTreeBlockBrowser(
   props: CategoryTreeBlockProps & {
-    categories: NonNullable<GetCategoriesForTreeMapQuery['planCategories']>;
+    categories: NonNullable<CategoriesForTreeMapQuery['planCategories']>;
   }
 ) {
   const { id = '', categories: cats, heading, lead, hasSidebar } = props;
@@ -310,16 +312,13 @@ function CategoryTreeBlock(props: CategoryTreeBlockProps) {
   const { treeMapCategoryType, valueAttribute, hasSidebar } = props;
   const t = useTranslations();
   const plan = usePlan();
-  const { data, error } = useSuspenseQuery<GetCategoriesForTreeMapQuery>(
-    GET_CATEGORIES_FOR_TREEMAP,
-    {
-      variables: {
-        plan: plan.identifier,
-        categoryType: treeMapCategoryType.identifier,
-        attributeType: valueAttribute.identifier,
-      },
-    }
-  );
+  const { data, error } = useSuspenseQuery<CategoriesForTreeMapQuery>(GET_CATEGORIES_FOR_TREEMAP, {
+    variables: {
+      plan: plan.identifier,
+      categoryType: treeMapCategoryType.identifier,
+      attributeType: valueAttribute.identifier,
+    },
+  });
 
   if (error) return <ErrorMessage message={t('error-loading-data')} details={error.message} />;
   if (!data || !data.planCategories) {

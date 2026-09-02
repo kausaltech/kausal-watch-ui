@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
 import { Search } from 'react-bootstrap-icons';
 import { Button, ButtonGroup, Container } from 'reactstrap';
 
-import type { GetPledgesQuery } from '@/common/__generated__/graphql';
+import type { PledgesQuery } from '@/common/__generated__/graphql';
 import FilterControl, { type FilterField } from '@/components/common/FilterControl';
 import Icon from '@/components/common/Icon';
 import { getDefaultFormFields } from '@/utils/pledge.utils';
@@ -21,9 +21,7 @@ import ConfirmPledge from './ConfirmPledge';
 import PledgeCard, { type PledgeCategory } from './PledgeCard';
 import { usePublicUser } from './use-public-user';
 
-export type Pledge = NonNullable<
-  NonNullable<NonNullable<GetPledgesQuery['plan']>['pledges']>[number]
->;
+export type Pledge = NonNullable<NonNullable<NonNullable<PledgesQuery['plan']>['pledges']>[number]>;
 
 type Props = {
   pledges: Pledge[];
@@ -272,7 +270,7 @@ function PledgeList({ pledges }: Props) {
 
   const handleCommitClick = (pledge: Pledge, isCurrentlyCommitted: boolean) => {
     if (isCurrentlyCommitted) {
-      uncommitFromPledge(pledge.id);
+      void uncommitFromPledge(pledge.id);
     } else {
       setSelectedPledge(pledge);
       setShowConfirmDrawer(true);

@@ -97,9 +97,7 @@ export function getActionImage<TImage>(
       }
     });
   }
-  if (!image) {
-    image = plan.image ?? null;
-  }
+  image ??= plan.image ?? null;
   return image;
 }
 

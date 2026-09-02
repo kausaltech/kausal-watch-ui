@@ -1,16 +1,18 @@
 import type { useTranslations } from 'next-intl';
 
-import type {
+import {
   SiteGeneralContentActionTaskTerm,
   SiteGeneralContentActionTerm,
+  SiteGeneralContentIndicatorTerm,
 } from './__generated__/graphql';
-import { SiteGeneralContentIndicatorTerm } from './__generated__/graphql';
 
 export function getActionTermContext(plan: {
   generalContent?: { actionTerm?: SiteGeneralContentActionTerm };
 }) {
   const actionTerm = plan.generalContent?.actionTerm;
-  return actionTerm === 'ACTION' ? { context: '' } : { context: actionTerm || '' };
+  return actionTerm === SiteGeneralContentActionTerm.Action
+    ? { context: '' }
+    : { context: actionTerm ?? '' };
 }
 
 export function getIndicatorTermContext(plan: {
@@ -26,7 +28,9 @@ export function getActionTaskTermContext(plan: {
   };
 }) {
   const actionTaskTerm = plan.generalContent?.actionTaskTerm;
-  return actionTaskTerm === 'TASK' ? { context: '' } : { context: actionTaskTerm ?? '' };
+  return actionTaskTerm === SiteGeneralContentActionTaskTerm.Task
+    ? { context: '' }
+    : { context: actionTaskTerm ?? '' };
 }
 
 export type TFunction = ReturnType<typeof useTranslations>;

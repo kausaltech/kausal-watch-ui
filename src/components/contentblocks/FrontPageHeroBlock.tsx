@@ -34,8 +34,7 @@ interface AdditionalSettings {
 interface FrontPageHeroProps {
   id: string;
   layout: 'small_image' | 'big_image' | 'side_by_side';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  image: any;
+  image: ImageData | null;
   imageAlign: string;
   focalBox?: FocalBoxInfo;
   heading: string | null | undefined;

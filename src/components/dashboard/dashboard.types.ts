@@ -1,6 +1,6 @@
 import type {
   ActionListFilterFragment,
-  ActionTableColumnFragmentFragment,
+  ActionTableColumnFragment,
   DashboardActionListQuery,
   PlanContextFragment,
 } from '@/common/__generated__/graphql';
@@ -39,7 +39,7 @@ export type ActionListCategoryType = QueryCategoryType & CategoryTypeHierarchy<A
 
 export type ActionListPrimaryOrg = NonNullable<DashboardActionListQuery['plan']>['primaryOrgs'][0];
 
-type ActionTableColumn = NonNullable<ActionTableColumnFragmentFragment['dashboardColumns']>[number];
+type ActionTableColumn = NonNullable<ActionTableColumnFragment['dashboardColumns']>[number];
 
 export type ColumnBlock = ActionTableColumn['__typename'] | 'PlanColumnBlock';
 

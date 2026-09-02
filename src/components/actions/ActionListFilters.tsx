@@ -405,7 +405,8 @@ function buildBadges(
 
   const seenFilterKeyValues = new Set<string>();
   const uniqueFilters = enabled.filter((item) => {
-    const uniqueKey = `${item.id}-${activeFilters[item.id]}`;
+    const activeValue = activeFilters[item.id];
+    const uniqueKey = `${item.id}-${Array.isArray(activeValue) ? activeValue.join(',') : (activeValue ?? '')}`;
     if (seenFilterKeyValues.has(uniqueKey)) return false;
     seenFilterKeyValues.add(uniqueKey);
     return true;
@@ -726,9 +727,8 @@ function createCategoryFilter(
     if (!categoryId) return true;
 
     return action.categories.some((actCat) => {
-      const actCatKey = filterByCommonCategory
-        ? ((actCat as any).common?.id ?? actCat.id)
-        : actCat.id;
+      const actCatKey =
+        filterByCommonCategory && 'common' in actCat ? (actCat.common?.id ?? actCat.id) : actCat.id;
       let cat = actCatKey ? catById.get(actCatKey) : undefined;
 
       while (cat) {
@@ -1016,6 +1016,8 @@ function useFilterState(
   const [filterState, setFilterState] = useState(activeFilters);
 
   useEffect(() => {
+    // Keep the editable, debounced filter state aligned with external navigation changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFilterState(activeFilters);
   }, [activeFilters]);
 

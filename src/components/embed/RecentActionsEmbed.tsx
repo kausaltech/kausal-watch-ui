@@ -6,9 +6,9 @@ import { usePlan } from '@/context/plan';
 const DEFAULT_COUNT = 3;
 const DEFAULT_DISPLAY_HEADER = true;
 
-const validateQueryParameters = (query) => {
-  const count = Number.parseInt(query['count'] ?? DEFAULT_COUNT.toString(), 10);
-  const displayHeader = (query['header'] ?? DEFAULT_DISPLAY_HEADER.toString()) === 'true';
+const validateQueryParameters = (query: Record<string, string>) => {
+  const count = Number.parseInt(query.count ?? DEFAULT_COUNT.toString(), 10);
+  const displayHeader = (query.header ?? DEFAULT_DISPLAY_HEADER.toString()) === 'true';
   return {
     count,
     displayHeader,

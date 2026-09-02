@@ -1,29 +1,31 @@
 import { gql } from '@apollo/client';
 
-import type { GetHomePageQuery } from '@/common/__generated__/graphql';
+import type { HomePageQuery } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 
 import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
 
 export const GET_HOME_PAGE = gql`
-  query GetHomePage($plan: ID!, $path: String!) {
+  query HomePage($plan: ID!, $path: String!) {
     planPage(plan: $plan, path: $path) {
       __typename
       id
       slug
       ... on PlanRootPage {
         changeLogMessage {
+          id
           content
           createdAt
           createdBy {
+            id
             firstName
             lastName
             avatarUrl
           }
         }
         body {
-          ...StreamFieldFragment
+          ...StreamField
         }
       }
       lastPublishedAt
@@ -31,6 +33,7 @@ export const GET_HOME_PAGE = gql`
     plan(id: $plan) {
       id
       primaryActionClassification {
+        id
         categories(onlyRoot: true) {
           id
           identifier
@@ -47,6 +50,7 @@ export const GET_HOME_PAGE = gql`
             urlPath
           }
           level {
+            id
             name
             namePlural
           }
@@ -69,7 +73,7 @@ export const GET_HOME_PAGE = gql`
 export const getHomePage = async (plan: string) =>
   await (
     await getClient()
-  ).query<GetHomePageQuery>({
+  ).query<HomePageQuery>({
     query: GET_HOME_PAGE,
     variables: {
       plan,

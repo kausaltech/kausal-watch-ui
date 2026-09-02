@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 
-import type { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
+import type { CategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
 import { Link } from '@/common/links';
 import Icon from '@/components/common/Icon';
 
@@ -30,7 +30,7 @@ const formatEmissionSharePercent = (share: number, total: number) => {
 };
 
 type CategoryCardContentProps = {
-  category: NonNullable<GetCategoriesForTreeMapQuery['planCategories']>[0];
+  category: NonNullable<CategoriesForTreeMapQuery['planCategories']>[0];
   isRoot: boolean;
   sumValues: number;
 };

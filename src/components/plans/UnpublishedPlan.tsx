@@ -48,7 +48,7 @@ export default function UnpublishedPlan({ message, loginEnabled, testId }: Props
               {message}
             </Typography>
             {loginEnabled && (
-              <Button variant="contained" onClick={() => signIn('watch-oidc-provider')}>
+              <Button variant="contained" onClick={() => void signIn('watch-oidc-provider')}>
                 {t('ui-sign-in')}
               </Button>
             )}

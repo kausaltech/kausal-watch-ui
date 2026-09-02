@@ -1,9 +1,6 @@
 import { gql } from '@apollo/client';
 
-import type {
-  GetContentPageQuery,
-  GetContentPageQueryVariables,
-} from '@/common/__generated__/graphql';
+import type { ContentPageQuery, ContentPageQueryVariables } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 import { ALL_ACTION_LIST_FILTERS } from '@/fragments/action-list.fragment';
 import { INDICATOR_LIST_PAGE_FRAGMENT } from '@/fragments/indicator-list.fragment';
@@ -16,7 +13,7 @@ import { getClient } from '../utils/apollo-rsc-client';
 export const getContentPage = async (plan: string, path: string) =>
   await (
     await getClient()
-  ).query<GetContentPageQuery, GetContentPageQueryVariables>({
+  ).query<ContentPageQuery, ContentPageQueryVariables>({
     query: GET_CONTENT_PAGE,
     variables: {
       plan,
@@ -26,19 +23,23 @@ export const getContentPage = async (plan: string, path: string) =>
   });
 
 const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
-  fragment TemplatedCategoryPageFragment on CategoryPage {
+  fragment TemplatedCategoryPage on CategoryPage {
+    id
     layout {
+      id
       __typename
       iconSize
       layoutMainTop {
         __typename
         ... on CategoryPageAttributeTypeBlock {
           attributeType {
+            id
             identifier
           }
         }
         ... on CategoryPageProgressBlock {
           blocks {
+            id
             ... on ChoiceBlock {
               value
             }
@@ -54,6 +55,7 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
         __typename
         ... on CategoryPageAttributeTypeBlock {
           attributeType {
+            id
             identifier
           }
         }
@@ -72,6 +74,7 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
               fieldType
               fieldRequired
               choices {
+                id
                 ... on FormChoiceBlock {
                   choiceLabel
                   choiceValue
@@ -98,7 +101,7 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
 `;
 
 export const PlanDatasetsBlockFragment = gql`
-  fragment PlanDatasetsBlockFragment on Dataset {
+  fragment PlanDatasetsBlock on Dataset {
     schema {
       uuid
       name
@@ -135,7 +138,7 @@ export const PlanDatasetsBlockFragment = gql`
 `;
 
 const GET_CONTENT_PAGE = gql`
-  query GetContentPage($plan: ID!, $path: String!, $onlyWithActions: Boolean = true) {
+  query ContentPage($plan: ID!, $path: String!, $onlyWithActions: Boolean = true) {
     planPage(plan: $plan, path: $path) {
       __typename
       id
@@ -143,9 +146,11 @@ const GET_CONTENT_PAGE = gql`
       title
       ... on StaticPage {
         changeLogMessage {
+          id
           content
           createdAt
           createdBy {
+            id
             firstName
             lastName
             avatarUrl
@@ -157,7 +162,7 @@ const GET_CONTENT_PAGE = gql`
         }
         leadParagraph
         body {
-          ...StreamFieldFragment
+          ...StreamField
         }
         siblings {
           id
@@ -188,17 +193,17 @@ const GET_CONTENT_PAGE = gql`
       }
       ... on AccessibilityStatementPage {
         body {
-          ...StreamFieldFragment
+          ...StreamField
         }
       }
       ... on PrivacyPolicyPage {
         leadContent
       }
       ... on IndicatorListPage {
-        ...IndicatorListPageFragment
+        ...IndicatorListPage
       }
       ... on CategoryPage {
-        ...TemplatedCategoryPageFragment
+        ...TemplatedCategoryPage
         category {
           id
           identifier
@@ -229,7 +234,9 @@ const GET_CONTENT_PAGE = gql`
           color
           iconSvgUrl
           iconImage {
+            id
             rendition(size: "400x400", crop: false) {
+              id
               src
             }
           }
@@ -237,12 +244,13 @@ const GET_CONTENT_PAGE = gql`
             ...Category
           }
           parent {
-            ...CategoryParentFragment
-            ...RecursiveCategoryParentFragment
+            ...CategoryParent
+            ...RecursiveCategoryParent
             id
             identifier
             name
             level {
+              id
               name
               namePlural
             }
@@ -254,7 +262,9 @@ const GET_CONTENT_PAGE = gql`
             color
             iconSvgUrl
             iconImage {
+              id
               rendition(size: "400x400", crop: false) {
+                id
                 src
               }
             }
@@ -272,11 +282,12 @@ const GET_CONTENT_PAGE = gql`
             ...AttributesBlockAttributeWithNestedType
           }
           datasets {
-            ...PlanDatasetsBlockFragment
+            ...PlanDatasetsBlock
           }
           changeLogMessage {
             content
             createdBy {
+              id
               firstName
               lastName
               avatarUrl
@@ -285,7 +296,7 @@ const GET_CONTENT_PAGE = gql`
           }
         }
         body {
-          ...StreamFieldFragment
+          ...StreamField
         }
       }
       ... on CategoryTypePage {
@@ -312,12 +323,14 @@ const GET_CONTENT_PAGE = gql`
   ${ALL_ACTION_LIST_FILTERS}
   ${INDICATOR_LIST_PAGE_FRAGMENT}
 
-  fragment CategoryParentFragment on Category {
+  fragment CategoryParent on Category {
+    id
     parent {
       id
       identifier
       name
       categoryPage {
+        id
         urlPath
       }
       type {
@@ -328,13 +341,17 @@ const GET_CONTENT_PAGE = gql`
   }
 
   # Fetch basic parent category data up to three levels deep for breadcrumbs
-  fragment RecursiveCategoryParentFragment on Category {
+  fragment RecursiveCategoryParent on Category {
+    id
     parent {
-      ...CategoryParentFragment
+      id
+      ...CategoryParent
       parent {
-        ...CategoryParentFragment
+        id
+        ...CategoryParent
         parent {
-          ...CategoryParentFragment
+          id
+          ...CategoryParent
         }
       }
     }

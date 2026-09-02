@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import PropTypes from 'prop-types';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
 import { usePlan } from '@/context/plan';
@@ -20,3 +21,11 @@ export default function ActionStatusExport({ actions }) {
     </UncontrolledDropdown>
   );
 }
+
+ActionStatusExport.propTypes = {
+  actions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 import type {
-  GetActionDetailsQuery,
-  GetActionDetailsQueryVariables,
+  ActionDetailsQuery,
+  ActionDetailsQueryVariables,
   WorkflowState,
 } from '@/common/__generated__/graphql';
 import images from '@/common/images';
@@ -30,7 +30,7 @@ export const getActionDetails = async (
 ) =>
   await (
     await getClient()
-  ).query<GetActionDetailsQuery, GetActionDetailsQueryVariables>({
+  ).query<ActionDetailsQuery, ActionDetailsQueryVariables>({
     query: GET_ACTION_DETAILS,
     variables: {
       plan,
@@ -42,7 +42,7 @@ export const getActionDetails = async (
   });
 
 const GET_ACTION_DETAILS = gql`
-  query GetActionDetails($plan: ID!, $id: ID!, $clientUrl: String!, $workflow: WorkflowState)
+  query ActionDetails($plan: ID!, $id: ID!, $clientUrl: String!, $workflow: WorkflowState)
   @workflow(state: $workflow) {
     action(plan: $plan, identifier: $id) {
       ...ActionDependencies
@@ -107,6 +107,7 @@ const GET_ACTION_DETAILS = gql`
           avatarUrl(size: "150x150")
           title
           organization {
+            id
             name
           }
         }
@@ -116,7 +117,9 @@ const GET_ACTION_DETAILS = gql`
         abbreviation
         name
         logo {
+          id
           rendition(size: "128x128", crop: true) {
+            id
             src
           }
         }
@@ -250,6 +253,7 @@ const GET_ACTION_DETAILS = gql`
       changeLogMessage {
         content
         createdBy {
+          id
           firstName
           lastName
           avatarUrl
@@ -310,42 +314,48 @@ const GET_ACTION_DETAILS = gql`
         viewUrl(clientUrl: $clientUrl)
         hideActionIdentifiers
         image {
+          id
           rendition(size: "128x128", crop: true) {
+            id
             src
           }
         }
       }
     }
     plan(id: $plan) {
+      id
       actionListPage {
         id
         actionDateFormat
         taskDateFormat
         detailsMainTop {
-          ...ActionMainContentBlocksFragment
+          ...ActionMainContentBlocks
         }
         detailsMainBottom {
-          ...ActionMainContentBlocksFragment
+          ...ActionMainContentBlocks
         }
         detailsAside {
-          ...ActionAsideContentBlocksFragment
+          ...ActionAsideContentBlocks
         }
       }
       actionAttributeTypes {
         ...AttributesBlockAttributeType
       }
       generalContent {
+        id
         actionTerm
       }
     }
   }
 
   fragment ActionDependencies on Action {
+    id
     dependencyRole {
       id
       name
     }
     allDependencyRelationships {
+      id
       preceding {
         ...ActionCardWithDependencyRole
       }
@@ -355,7 +365,7 @@ const GET_ACTION_DETAILS = gql`
     }
   }
 
-  fragment ActionAsideContentBlocksFragment on ActionAsideContentBlock {
+  fragment ActionAsideContentBlocks on ActionAsideContentBlock {
     ... on ActionContentBlockInterface {
       fieldLabel
       fieldHelpText
@@ -384,12 +394,12 @@ const GET_ACTION_DETAILS = gql`
     }
     ... on ActionContentCategoryTypeBlock {
       categoryType {
-        ...CategoryTypeFragment
+        ...CategoryType
       }
     }
   }
 
-  fragment ActionMainContentBlocksFragment on ActionMainContentBlock {
+  fragment ActionMainContentBlocks on ActionMainContentBlock {
     ... on FieldBlockMetaInterface {
       meta {
         restricted
@@ -442,7 +452,7 @@ const GET_ACTION_DETAILS = gql`
     }
     ... on ActionContentCategoryTypeBlock {
       categoryType {
-        ...CategoryTypeFragment
+        ...CategoryType
       }
     }
     ... on ReportComparisonBlock {
@@ -462,6 +472,7 @@ const GET_ACTION_DETAILS = gql`
           fieldType
           fieldRequired
           choices {
+            id
             ... on FormChoiceBlock {
               choiceLabel
               choiceValue
@@ -498,7 +509,7 @@ const GET_ACTION_DETAILS = gql`
         }
         ... on ActionContentCategoryTypeBlock {
           categoryType {
-            ...CategoryTypeFragment
+            ...CategoryType
           }
         }
         ... on ChangeLogMessageBlock {
@@ -522,6 +533,7 @@ const GET_ACTION_DETAILS = gql`
               fieldType
               fieldRequired
               choices {
+                id
                 ... on FormChoiceBlock {
                   choiceLabel
                   choiceValue
@@ -547,8 +559,10 @@ const GET_ACTION_DETAILS = gql`
   }
 
   fragment ReportComparisonBlockActionContent on ReportComparisonBlock {
+    id
     reportField
     reportType {
+      id
       name
     }
     reportsToCompare {

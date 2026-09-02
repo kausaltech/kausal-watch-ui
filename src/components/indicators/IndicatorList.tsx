@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useState } from 'react';
 
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
@@ -15,7 +15,7 @@ import {
   IndicatorColumnValueType,
   IndicatorDashboardFieldName,
   type IndicatorListIndicatorFragment,
-  type IndicatorListPageFragmentFragment,
+  type IndicatorListPageFragment,
   type IndicatorListQuery,
   type IndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
@@ -176,8 +176,8 @@ const getDefaultColumns = (
   displayNormalizedValues: boolean,
   displayLevel: boolean,
   t: ReturnType<typeof useTranslations<string>>
-): NonNullable<IndicatorListPageFragmentFragment['listColumns']> => {
-  const columns: NonNullable<IndicatorListPageFragmentFragment['listColumns']> = [
+): NonNullable<IndicatorListPageFragment['listColumns']> => {
+  const columns: NonNullable<IndicatorListPageFragment['listColumns']> = [
     {
       __typename: 'IndicatorListColumn',
       id: 'default-column-name',
@@ -257,7 +257,7 @@ const getDefaultColumns = (
   return columns;
 };
 interface IndicatorListPageProps {
-  page: IndicatorListPageFragmentFragment;
+  page: IndicatorListPageFragment;
   testId?: string;
 }
 
@@ -275,13 +275,9 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     advancedFilters,
   } = page;
   const filterSections = {
-    mainFilters: mainFilters as NonNullable<IndicatorListPageFragmentFragment['mainFilters']>,
-    primaryFilters: primaryFilters as NonNullable<
-      IndicatorListPageFragmentFragment['primaryFilters']
-    >,
-    advancedFilters: advancedFilters as NonNullable<
-      IndicatorListPageFragmentFragment['advancedFilters']
-    >,
+    mainFilters: mainFilters as NonNullable<IndicatorListPageFragment['mainFilters']>,
+    primaryFilters: primaryFilters as NonNullable<IndicatorListPageFragment['primaryFilters']>,
+    advancedFilters: advancedFilters as NonNullable<IndicatorListPageFragment['advancedFilters']>,
   };
 
   const plan = usePlan();
@@ -299,9 +295,6 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     () => searchParams.get('indicator') ?? null
   );
 
-  // Store filtered indicators in a ref so handleChangeModal can access them
-  const filteredIndicatorsRef = useRef<IndicatorListIndicator[]>([]);
-
   const [sort, setSort] = useState<SortState>(null);
 
   // click handler for Name/Level sorting
@@ -311,27 +304,6 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
       return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' };
     });
   };
-
-  const handleChangeModal = useCallback(
-    (indicatorId?: string | null) => {
-      setIndicatorModalId(indicatorId ?? null);
-      if (openIndicatorsInModal) {
-        // When using global modal, store indicatorsOrder in sessionStorage for navigation
-        const order = filteredIndicatorsRef.current.map((ind) => ind.id).join(',');
-        if (indicatorId && order) {
-          sessionStorage.setItem('indicatorModalOrder', order);
-        } else {
-          sessionStorage.removeItem('indicatorModalOrder');
-        }
-        updateSearchParams({
-          indicator: indicatorId ?? undefined,
-        });
-      } else {
-        updateSearchParams({ indicator: indicatorId ?? undefined });
-      }
-    },
-    [openIndicatorsInModal, updateSearchParams]
-  );
 
   const { loading, error, data } = useQuery<IndicatorListQuery, IndicatorListQueryVariables>(
     GET_INDICATOR_LIST,
@@ -361,7 +333,7 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     (includeRelatedPlans ?? false) ? data.relatedPlanIndicators : data.planIndicators
   ) as IndicatorListIndicator[];
 
-  const indicatorListColumns: NonNullable<IndicatorListPageFragmentFragment['listColumns']> = [];
+  const indicatorListColumns: NonNullable<IndicatorListPageFragment['listColumns']> = [];
   const displayMunicipality = plan?.features.hasActionPrimaryOrgs === true;
 
   /* This collects the common categories from the indicators that belong to different plans */
@@ -454,8 +426,19 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
   );
   const filteredIndicators = filterIndicators(sortedIndicators, filters);
 
-  // Update ref with current filtered indicators (refs can be updated during render)
-  filteredIndicatorsRef.current = filteredIndicators;
+  const handleChangeModal = (indicatorId?: string | null) => {
+    setIndicatorModalId(indicatorId ?? null);
+    if (openIndicatorsInModal) {
+      // When using global modal, store indicatorsOrder in sessionStorage for navigation
+      const order = filteredIndicators.map((ind) => ind.id).join(',');
+      if (indicatorId && order) {
+        sessionStorage.setItem('indicatorModalOrder', order);
+      } else {
+        sessionStorage.removeItem('indicatorModalOrder');
+      }
+    }
+    updateSearchParams({ indicator: indicatorId ?? undefined });
+  };
 
   const getIndicatorPlanIdentifier = (
     indicator: IndicatorListIndicator | undefined,

@@ -74,9 +74,9 @@ const ActionVersionHistory = ({ action }: Props) => {
   versions.push(action);
 
   if (action?.supersededBy) {
-    !isProduction
-      ? versions.push(action.supersededBy)
-      : action.supersededBy.plan.publishedAt && versions.push(action.supersededBy);
+    if (!isProduction || action.supersededBy.plan.publishedAt) {
+      versions.push(action.supersededBy);
+    }
   }
   if (versions.length < 2) return null;
 

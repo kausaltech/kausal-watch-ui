@@ -66,7 +66,7 @@ interface ConnectorProps {
 }
 
 function Connector({ startPoint, endPoint, color, bend, icon, faded = false }: ConnectorProps) {
-  const offset = bend ? bend : 0;
+  const offset = bend ?? 0;
   const edgeWidth = endPoint.x - startPoint.x;
   const edgeHeight = endPoint.y - startPoint.y;
   let direction = 0;

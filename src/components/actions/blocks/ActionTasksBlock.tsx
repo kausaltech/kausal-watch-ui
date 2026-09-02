@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
 
-import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
+import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTaskTermContext } from '@/common/i18n';
 import { ActionSection, SectionHeader } from '@/components/actions/ActionContent';
 import TaskList from '@/components/actions/TaskList';
@@ -9,7 +9,7 @@ import PopoverTip from '@/components/common/PopoverTip';
 import { usePlan } from '@/context/plan';
 
 type ActionTasksBlockProps = {
-  tasks: NonNullable<GetActionDetailsQuery['action']>['tasks'];
+  tasks: NonNullable<ActionDetailsQuery['action']>['tasks'];
   heading?: string | null;
   helpText?: string | null;
 };

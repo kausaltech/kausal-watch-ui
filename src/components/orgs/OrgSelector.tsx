@@ -59,7 +59,19 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 `;
 
-const OrgSelector = (props) => {
+export type OrganizationOption = {
+  active: boolean;
+  id: string;
+  image: string | null | undefined;
+  orgUrl: string;
+  shortName: string | null;
+};
+
+type OrgSelectorProps = {
+  orgs: OrganizationOption[];
+};
+
+const OrgSelector = (props: OrgSelectorProps) => {
   const { orgs } = props;
   const activeOrg = orgs.find((org) => org.active === true);
   if (!activeOrg) {
@@ -70,7 +82,7 @@ const OrgSelector = (props) => {
       <OrgDivider />
       <UncontrolledDropdown>
         <StyledDropdownToggle data-toggle="dropdown" tag="button">
-          <OrgAvatar src={activeOrg.image} alt="" />
+          <OrgAvatar src={activeOrg.image ?? ''} alt="" />
           <OrgTitle>{activeOrg.shortName}</OrgTitle>
           <Icon.AngleDown />
         </StyledDropdownToggle>
@@ -78,7 +90,7 @@ const OrgSelector = (props) => {
           <DropdownContent>
             {orgs.map((org) => (
               <OrgDropdownItem href={org.orgUrl} key={org.id} role="menuitem">
-                <OrgChip image={org.image} name={org.shortName} size="md" />
+                <OrgChip image={org.image ?? ''} name={org.shortName ?? ''} size="md" />
               </OrgDropdownItem>
             ))}
           </DropdownContent>

@@ -80,11 +80,13 @@ const IntroModal = ({ videoUrls }: IntroModalProps) => {
 
   useEffect(() => {
     const show = localStorage.getItem('show-intro-modal');
+    /* eslint-disable react-hooks/set-state-in-effect -- localStorage is only available after hydration. */
     if (show === null || JSON.parse(show) === true) {
       setEnabled(true);
     } else {
       setEnabled(false);
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   const handleClose = () => {

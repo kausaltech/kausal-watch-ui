@@ -1,6 +1,7 @@
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 
 import { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
@@ -33,7 +34,7 @@ const ResponsibleTooltipListItem = styled.li``;
 
 const TaskTooltip = styled.div``;
 
-const StatusLabel = styled.div<{ $color: string }>`
+const StatusLabel = styled.div<{ $color: keyof Theme['graphColors'] }>`
   &:before {
     content: '';
     display: inline-block;
@@ -126,7 +127,10 @@ export const ImplementationPhaseTooltipContent = ({ action, plan }: TooltipWithP
     return null;
   }
 
-  const getMergedName = (mergedWith, planId) => {
+  const getMergedName = (
+    mergedWith: NonNullable<ActionListAction['mergedWith']>,
+    planId: string
+  ) => {
     if (mergedWith.plan.id !== planId) {
       return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
     } else {
@@ -135,7 +139,9 @@ export const ImplementationPhaseTooltipContent = ({ action, plan }: TooltipWithP
   };
 
   const statusDisplay = (
-    <StatusLabel $color={action.color ?? 'grey050'}>{status.label}</StatusLabel>
+    <StatusLabel $color={(action.color ?? 'grey050') as keyof Theme['graphColors']}>
+      {status.label}
+    </StatusLabel>
   );
 
   // If action is merged, display merged status

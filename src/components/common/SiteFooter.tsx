@@ -471,7 +471,7 @@ function SiteFooter(props: SiteFooterProps) {
   const isAuthLoading = session.status === 'loading';
   const isAuthenticated = session.status === 'authenticated';
 
-  const OrgLogo = () => {
+  const orgLogo = (() => {
     if (theme.themeLogoWhiteUrl.endsWith('.png')) {
       return (
         // Theme assets are already deployment-owned static files; Next image optimization adds no value.
@@ -494,7 +494,7 @@ function SiteFooter(props: SiteFooterProps) {
         />
       );
     }
-  };
+  })();
 
   function scrollToTop(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
@@ -529,10 +529,10 @@ function SiteFooter(props: SiteFooterProps) {
                     href={theme.footerLogoLink}
                     aria-label={`${ownerName}, ${siteTitle} ${t('front-page')}`}
                   >
-                    <OrgLogo />
+                    {orgLogo}
                   </FooterLogoLink>
                 ) : (
-                  <OrgLogo />
+                  orgLogo
                 )}
               </Logo>
             )}

@@ -7,7 +7,7 @@ import { Col, Container, Row } from 'reactstrap';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
-import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
+import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
@@ -172,7 +172,7 @@ const ActionName = styled.span`
   max-width: 100%;
 `;
 
-type ActionDetails = NonNullable<GetActionDetailsQuery['action']>;
+type ActionDetails = NonNullable<ActionDetailsQuery['action']>;
 type Category = ActionDetails['categories'][number];
 
 /* The generated category types bound the parent recursion depth, so the

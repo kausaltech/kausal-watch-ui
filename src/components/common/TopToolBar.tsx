@@ -29,7 +29,7 @@ import {
   Person,
 } from 'react-bootstrap-icons';
 
-import { type GetPlanContextQuery, WorkflowState } from '@/common/__generated__/graphql';
+import { type PlanContextQuery, WorkflowState } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
@@ -37,7 +37,7 @@ import { useHandleSignOut } from '@/utils/auth.utils';
 import { hasSessionExpired } from '@/utils/session.utils';
 
 type WorkflowStateDescription = NonNullable<
-  NonNullable<GetPlanContextQuery['workflowStates']>[number]
+  NonNullable<PlanContextQuery['workflowStates']>[number]
 >;
 
 /* The workflow id is sent back as a GraphQL variable of the WorkflowState

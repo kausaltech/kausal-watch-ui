@@ -65,7 +65,8 @@ const GET_ORG_DETAILS = gql`
       ...OrgContentPlan
 
       actionListPage {
-        ...ActionTableColumnFragment
+        id
+        ...ActionTableColumn
       }
     }
   }
@@ -96,6 +97,7 @@ const GET_ORG_DETAILS = gql`
       sentiment
     }
     image {
+      id
       rendition(size: "128x128", crop: true) {
         id
         src
@@ -203,7 +205,9 @@ const GET_ORG_DETAILS = gql`
         abbreviation
         name
         logo {
+          id
           rendition(size: "128x128", crop: true) {
+            id
             src
           }
         }
@@ -241,6 +245,7 @@ const GET_ORG_DETAILS = gql`
       }
     }
     generalContent {
+      id
       organizationTerm
     }
   }

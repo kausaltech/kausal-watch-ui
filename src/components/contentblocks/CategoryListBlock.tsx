@@ -151,7 +151,7 @@ export default function CategoryListBlock(props: CategoryListBlockProps) {
       return {
         type: 'image',
         src: categryImageSrc || fallbackImage?.small?.src,
-        alignment: getBgImageAlignment(category.image || fallbackImage || null),
+        alignment: getBgImageAlignment(category.image ?? fallbackImage ?? null),
       };
   };
 

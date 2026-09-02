@@ -1,4 +1,5 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
+import globals from 'globals';
 import type { ConfigWithExtends } from 'typescript-eslint';
 
 import {
@@ -27,6 +28,34 @@ const config: ConfigWithExtends[] = defineConfig(
   nextConfig,
   nodeConfig,
   storybookConfig,
+  {
+    name: 'typescript-react',
+    files: ['src/**/*.@(ts|tsx)'],
+    rules: {
+      // TypeScript interfaces provide the component prop validation.
+      'react/prop-types': 'off',
+    },
+  },
+  {
+    name: 'javascript',
+    files: ['**/*.@(js|jsx)'],
+    rules: {
+      // These rules require TypeScript declarations at the value boundary;
+      // JavaScript files remain covered by the base, React, and hooks rules.
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+    },
+  },
+  {
+    name: 'jest',
+    files: ['src/tests/**/*.js'],
+    languageOptions: {
+      globals: globals.jest,
+    },
+  },
   getGlobalIgnores(),
   globalIgnores(['kausal_common/**']),
   globalIgnores(['src/embed']),

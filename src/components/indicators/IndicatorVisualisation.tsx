@@ -148,11 +148,9 @@ function getTraces(
     if (hasTimeDimension) {
       return firstDimension.categories.map((cat, idx) => {
         const traceName = Array.from(new Set(names ?? undefined).add(cat.name)).join(', ');
-        let x,
-          y,
-          _cube = dimensionValues[idx];
-        x = _cube.map((val) => val.date);
-        y = _cube.map((val) => val.value);
+        const cubeValues = dimensionValues[idx] ?? [];
+        const x = cubeValues.map((val) => val.date);
+        const y = cubeValues.map((val) => val.value);
         return {
           xType: 'time',
           dataType: cat.id === 'total' ? 'total' : null,
@@ -216,7 +214,7 @@ const generateTrendTrace = (
     const numberOfYears = Math.min(mainValues.length, 10);
     const regData = mainValues
       .slice(mainValues.length - numberOfYears, mainValues.length)
-      .map((item) => [parseInt(item.date, 10), item.value]);
+      .map((item) => [parseInt(item.date, 10), item.value] as [number, number]);
     if (regData.length < 5) {
       return [undefined, undefined];
     }
@@ -405,7 +403,7 @@ function addOrganizationCategory(value: GraphValue, orgId: string): GraphValue {
 
 function _addTotal(v: GraphValue, categoryCount: number): GraphValue {
   if (v.categories.length === 0) {
-    const newCategories = new Array(categoryCount).fill({ id: 'total' });
+    const newCategories = Array.from({ length: categoryCount }, () => ({ id: 'total' }));
     return Object.assign({}, v, {
       categories: [...v.categories, ...newCategories],
     });
@@ -835,10 +833,13 @@ function IndicatorVisualisation({
 
   // If explicit minValue/maxValue are set, use them directly without any modification
   // Otherwise, use calculated bounds (but don't force 0 unless explicitly requested)
-  let minValue, maxValue;
-  if (indicator.minValue != null) {
+  const explicitMinValue: unknown = indicator.minValue;
+  const explicitMaxValue: unknown = indicator.maxValue;
+  let minValue: number;
+  let maxValue: number;
+  if (typeof explicitMinValue === 'number') {
     // Use explicit minValue exactly as provided
-    minValue = indicator.minValue;
+    minValue = explicitMinValue;
   } else {
     minValue = indicatorGraphSpecification.bounds.min;
     // Legacy support: for 'päästöt' quantity, include 0 if no explicit minValue is set
@@ -847,9 +848,9 @@ function IndicatorVisualisation({
     }
   }
 
-  if (indicator.maxValue != null) {
+  if (typeof explicitMaxValue === 'number') {
     // Use explicit maxValue exactly as provided
-    maxValue = indicator.maxValue;
+    maxValue = explicitMaxValue;
   } else {
     maxValue = indicatorGraphSpecification.bounds.max;
   }

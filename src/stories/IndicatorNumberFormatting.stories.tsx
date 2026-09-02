@@ -88,7 +88,7 @@ const meta = {
     locale: 'fi',
     maximumSignificantDigits: '2',
     maximumFractionDigits: '3',
-    numbers: [0.0075087155164786906, 233.22779556372646, 2901.32413739182, 92875863.242415788],
+    numbers: [0.0075087155164786906, 233.22779556372646, 2901.32413739182, 92875863.24241579],
   },
 } satisfies Meta<typeof IndicatorNumberFormatting>;
 

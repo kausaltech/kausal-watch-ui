@@ -104,6 +104,7 @@ const getFilterConfig = (
 
     // if (!filter.showAllLabel) filter.showAllLabel = t('filter-all-categories');
     return {
+      id: null,
       mainFilters: indicatorFiltersToActionListFilters(filterLayout.mainFilters, t) as NonNullable<
         IndicatorListPageFiltersFragment['mainFilters']
       >,
@@ -123,6 +124,7 @@ const getFilterConfig = (
   if (!commonCategories && !categoryType) {
     // console.log('-----------------> Using empty default filters');
     return {
+      id: null,
       mainFilters: [],
       primaryFilters: [],
       advancedFilters: [],
@@ -194,6 +196,7 @@ const getFilterConfig = (
     : [];
 
   return {
+    id: null,
     mainFilters: [
       ...(commonCategories ? commonCategoryFilters : mainTypeFilter ? [mainTypeFilter] : []),
     ],
@@ -266,7 +269,7 @@ const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
       const fallbackLabel = `${badgeData.typeName}: ${badgeData.categoryName}`;
 
       return {
-        key: `${key}-${value}`,
+        key: `${key}-${String(value)}`,
         id: key,
         value,
         label:

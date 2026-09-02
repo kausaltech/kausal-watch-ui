@@ -137,6 +137,7 @@ const Tab = styled.button`
 
 const commonCategory = gql`
   fragment CommonCategory on Category {
+    id
     common {
       id
       identifier
@@ -147,7 +148,7 @@ const commonCategory = gql`
 `;
 
 const planFragment = gql`
-  fragment PlanFragment on Plan {
+  fragment Plan on Plan {
     id
     categoryTypes(usableForActions: true) {
       id
@@ -176,7 +177,9 @@ const planFragment = gql`
         color
         iconSvgUrl
         iconImage {
+          id
           rendition(size: "120x120", crop: false) {
+            id
             src
           }
         }
@@ -196,7 +199,37 @@ const planFragment = gql`
 `;
 
 const actionFragment = gql`
-  fragment ActionFragment on Action {
+  fragment RelatedPlan on Plan {
+    id
+    shortName
+    name
+    shortIdentifier
+    versionName
+    viewUrl
+    hideActionIdentifiers
+    publishedAt
+    image {
+      id
+      rendition(size: "128x128", crop: true) {
+        id
+        src
+      }
+    }
+    generalContent {
+      id
+      actionTaskTerm
+      organizationTerm
+    }
+    actionImplementationPhases {
+      id
+      identifier
+      name
+      order
+      color
+    }
+  }
+
+  fragment Action on Action {
     id
     identifier
     name(hyphenated: true)
@@ -239,34 +272,9 @@ const actionFragment = gql`
     startDate
     endDate
     order
-    plan @include(if: $relatedPlanActions) {
+    plan {
       id
-      shortName
-      name
-      shortIdentifier
-      versionName
-      viewUrl
-      hideActionIdentifiers
-      publishedAt
-      image {
-        rendition(size: "128x128", crop: true) {
-          src
-        }
-      }
-      generalContent {
-        actionTaskTerm
-        organizationTerm
-      }
-      actionImplementationPhases {
-        id
-        identifier
-        name
-        order
-        color
-      }
-    }
-    plan @skip(if: $relatedPlanActions) {
-      id
+      ...RelatedPlan @include(if: $relatedPlanActions)
     }
     schedule {
       id
@@ -321,7 +329,9 @@ const actionFragment = gql`
       abbreviation
       name
       logo {
+        id
         rendition(size: "128x128", crop: true) {
+          id
           src
         }
       }
@@ -347,13 +357,14 @@ const actionFragment = gql`
 `;
 
 const organizationFragment = gql`
-  fragment OrganizationFragment on Organization {
+  fragment Organization on Organization {
     id
     abbreviation
     name
     contactPersonCount
     actionCount
     classification {
+      id
       name
     }
     parent {
@@ -370,17 +381,18 @@ export const GET_ACTION_LIST = gql`
     $workflow: WorkflowState
   ) @workflow(state: $workflow) {
     plan(id: $plan) {
-      ...PlanFragment
+      ...Plan
     }
     planActions(plan: $plan) @skip(if: $relatedPlanActions) {
-      ...ActionFragment
+      ...Action
     }
     relatedPlanActions(plan: $plan) @include(if: $relatedPlanActions) {
-      ...ActionFragment
+      ...Action
     }
     planPage(plan: $plan, path: $path) {
+      id
       __typename
-      ...ActionTableColumnFragment
+      ...ActionTableColumn
     }
 
     planOrganizations(
@@ -390,7 +402,7 @@ export const GET_ACTION_LIST = gql`
       forResponsibleParties: true
       includeRelatedPlans: $relatedPlanActions
     ) {
-      ...OrganizationFragment
+      ...Organization
     }
   }
   ${planFragment}

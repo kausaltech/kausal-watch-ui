@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 
+import { ActionTaskState } from '@/common/__generated__/graphql';
 import { getActionTaskTermContext } from '@/common/i18n';
 
 import { type ActionListAction, type ActionListPlan } from '../dashboard.types';
@@ -11,7 +12,11 @@ interface Props {
   plan: ActionListPlan;
 }
 
-export const getTaskCounts = (tasks: ActionListAction['tasks'] = [], plan, t) => {
+export const getTaskCounts = (
+  tasks: ActionListAction['tasks'] = [],
+  plan: ActionListPlan,
+  t: ReturnType<typeof useTranslations>
+) => {
   let tasksCount = tasks.length;
   let ontimeTasks = 0;
   let lateTasks = 0;
@@ -21,12 +26,12 @@ export const getTaskCounts = (tasks: ActionListAction['tasks'] = [], plan, t) =>
   tasks.forEach((task) => {
     const taskDue = new Date(task.dueAt);
     switch (task.state) {
-      case 'NOT_STARTED':
-      case 'IN_PROGRESS':
+      case ActionTaskState.NotStarted:
+      case ActionTaskState.InProgress:
         if (taskDue < nowDate) lateTasks += 1;
         else ontimeTasks += 1;
         break;
-      case 'COMPLETED':
+      case ActionTaskState.Completed:
         completedTasks += 1;
         break;
       default:

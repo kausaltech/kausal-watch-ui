@@ -15,7 +15,7 @@ import { transientOptions } from '@common/themes/styles/styled';
 import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import type {
   AttributesBlockAttributeFragment,
-  GetCategoryAttributeTypesQuery,
+  CategoryAttributeTypesQuery,
   HeroImageFragment,
 } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
@@ -33,7 +33,7 @@ import { ImageCredit } from '../common/ImageCredit';
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
-  query GetCategoryAttributeTypes($plan: ID!) {
+  query CategoryAttributeTypes($plan: ID!) {
     plan(id: $plan) {
       id
       categoryTypes {
@@ -203,7 +203,7 @@ const CategoryLevelName = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
-type CategoryTypes = NonNullable<GetCategoryAttributeTypesQuery['plan']>['categoryTypes'];
+type CategoryTypes = NonNullable<CategoryAttributeTypesQuery['plan']>['categoryTypes'];
 
 interface CategoryHeaderAttributesProps extends Pick<Props, 'page'> {
   layout: CategoryPageMainTopBlock[];
@@ -355,7 +355,7 @@ export default function CategoryPageHeaderBlock(props: Props) {
   //const contentAlignment = theme.settings.layout.leftAlignCategoryPages ? 'left' : 'center';
   const showIdentifiers = !plan.primaryActionClassification?.hideCategoryIdentifiers;
 
-  const { data } = useQuery<GetCategoryAttributeTypesQuery>(GET_CATEGORY_ATTRIBUTE_TYPES, {
+  const { data } = useQuery<CategoryAttributeTypesQuery>(GET_CATEGORY_ATTRIBUTE_TYPES, {
     variables: {
       plan: plan.identifier,
     },

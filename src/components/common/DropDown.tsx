@@ -1,8 +1,10 @@
-import { useCallback, useState } from 'react';
+import { type ChangeEventHandler, type ReactNode, useCallback, useState } from 'react';
 
 import styled from '@emotion/styled';
 
 import { Menu, MenuItem, Typeahead } from 'react-bootstrap-typeahead';
+import type { RenderMenuProps } from 'react-bootstrap-typeahead/types/components/Typeahead/Typeahead';
+import type { Option } from 'react-bootstrap-typeahead/types/types';
 import { Input as BSCustomInput, Label as BSLabel, FormGroup } from 'reactstrap';
 
 const Label = styled(BSLabel)`
@@ -24,7 +26,17 @@ const CustomInput = styled(BSCustomInput)`
   background-image: ${(props) => props.theme.customSelectIndicator};
 `;
 
-function DropDown(props) {
+type DropDownProps = {
+  children: ReactNode;
+  disabled?: boolean;
+  id: string;
+  label?: string;
+  name: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  value?: number | readonly string[] | string;
+};
+
+function DropDown(props: DropDownProps) {
   const { label, id, name, value, onChange, children, disabled } = props;
   return (
     <FormGroup>
@@ -51,6 +63,9 @@ export type DropDownTypeaheadOption = {
   indent?: number;
 };
 
+const isDropDownTypeaheadOption = (option: Option): option is DropDownTypeaheadOption =>
+  typeof option !== 'string' && typeof option.id === 'string' && typeof option.label === 'string';
+
 type DropDownTypeaheadProps = {
   label?: string;
   id: string;
@@ -65,16 +80,17 @@ export function DropDownTypeahead(props: DropDownTypeaheadProps) {
   const { label, id, placeholder, selectedOption, onChange, options } = props;
   const [selection, setSelection] = useState(selectedOption ? [selectedOption] : []);
   const typeaheadOnChange = useCallback(
-    (selected: DropDownTypeaheadOption[]) => {
-      setSelection(selected);
-      onChange(selected.length ? selected[0] : null);
+    (selected: Option[]) => {
+      const typedSelection = selected.filter(isDropDownTypeaheadOption);
+      setSelection(typedSelection);
+      onChange(typedSelection[0] ?? null);
     },
     [setSelection, onChange]
   );
 
-  const renderMenu = (results, menuProps) => (
+  const renderMenu = (results: Option[], menuProps: RenderMenuProps) => (
     <Menu {...menuProps}>
-      {results.map((result: DropDownTypeaheadOption, index) => (
+      {results.filter(isDropDownTypeaheadOption).map((result, index) => (
         <MenuItem
           key={result.id}
           style={{

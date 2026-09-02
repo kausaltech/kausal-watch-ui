@@ -37,6 +37,7 @@ function logError(
     console.error(`An error occurred while querying ${operation.operationName}: ${message}`, error);
   }
 
+  const { hostname } = operation.variables as Record<string, unknown>;
   captureException(message, {
     extra: {
       query: operation.query,
@@ -45,7 +46,7 @@ function logError(
       ...sentryExtras,
     },
     tags: {
-      hostname: operation?.variables?.hostname,
+      hostname: typeof hostname === 'string' ? hostname : undefined,
     },
   });
 }
@@ -103,15 +104,19 @@ export const operationEnd = new ApolloLink((operation, forward) => {
  * purposes and enabled by setting the LOG_GRAPHQL_QUERIES env variable.
  */
 function fetchWithLogging(input: URL | RequestInfo, init: RequestInit = {}): Promise<Response> {
-  const body = typeof init.body === 'string' ? JSON.parse(init.body) : init.body;
+  const parsedBody: unknown = typeof init.body === 'string' ? JSON.parse(init.body) : init.body;
+  const body =
+    typeof parsedBody === 'object' && parsedBody !== null
+      ? (parsedBody as Record<string, unknown>)
+      : null;
 
   if (body) {
     console.log(
-      `📡 ${new Date().toISOString().slice(-13)} 📡 Sending query ${
+      `📡 ${new Date().toISOString().slice(-13)} 📡 Sending query ${String(
         body.operationName
-      } with variables:\n${JSON.stringify(body.variables, null, 2)}\n\n${
+      )} with variables:\n${JSON.stringify(body.variables, null, 2)}\n\n${String(
         body.query
-      }\n🎬 End of query ${body.operationName}\n`
+      )}\n🎬 End of query ${String(body.operationName)}\n`
     );
   }
 

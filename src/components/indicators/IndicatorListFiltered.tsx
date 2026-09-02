@@ -10,7 +10,7 @@ import { transientOptions } from '@common/themes/styles/styled';
 
 import {
   IndicatorDashboardFieldName,
-  type IndicatorListPageFragmentFragment,
+  type IndicatorListPageFragment,
 } from '@/common/__generated__/graphql';
 import {
   STICKY_TABLE_NAME_COLUMN_CLASS,
@@ -173,7 +173,7 @@ interface IndicatorListFilteredProps {
   indicators: IndicatorListIndicator[];
   hierarchy?: Hierarchy;
   openIndicatorsInModal?: (id: string) => void | null;
-  listColumns: NonNullable<IndicatorListPageFragmentFragment['listColumns']>;
+  listColumns: NonNullable<IndicatorListPageFragment['listColumns']>;
   sort: SortState;
   onSortState: (key: 'name' | 'level') => void;
 }

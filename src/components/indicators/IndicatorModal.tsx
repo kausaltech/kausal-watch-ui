@@ -50,7 +50,7 @@ const IndicatorModal = (props: IndicatorModalProps) => {
 
   return (
     <IndicatorModalBase
-      indicator={data?.indicator || previousData?.indicator}
+      indicator={data?.indicator ?? previousData?.indicator}
       loading={loading}
       error={error}
       layout={{

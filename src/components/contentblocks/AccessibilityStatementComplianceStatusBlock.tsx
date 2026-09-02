@@ -3,7 +3,26 @@ import { Col, Container, Row } from 'reactstrap';
 
 import accessibilityStatementData from '@/public/static/accessibility';
 
-function getComplianceStatusText(t, complianceStatus) {
+type ComplianceStatus = 'partial' | 'full' | 'not';
+type AccessibilityProblem = {
+  WCAGSection: string;
+  description: string;
+  id: string;
+  title: string;
+};
+type AccessibilityStatement = {
+  complianceStatus: ComplianceStatus;
+  nonAccessibleContent: {
+    nonCompliant: AccessibilityProblem[];
+  };
+};
+
+const statements = accessibilityStatementData as Record<string, AccessibilityStatement>;
+
+function getComplianceStatusText(
+  t: ReturnType<typeof useTranslations>,
+  complianceStatus: ComplianceStatus
+) {
   switch (complianceStatus) {
     case 'partial':
       return t('partial-compliant');
@@ -14,16 +33,22 @@ function getComplianceStatusText(t, complianceStatus) {
   }
 }
 
-const AccessibilityStatementComplianceStatusBlock = ({ id = '' }) => {
+type AccessibilityStatementComplianceStatusBlockProps = {
+  id?: string;
+};
+
+const AccessibilityStatementComplianceStatusBlock = ({
+  id = '',
+}: AccessibilityStatementComplianceStatusBlockProps) => {
   const t = useTranslations();
   let locale = useLocale();
 
-  if (!(locale in accessibilityStatementData)) {
+  if (!(locale in statements)) {
     locale = 'en';
   }
-  const accessibilityProblems =
-    accessibilityStatementData[locale].nonAccessibleContent.nonCompliant;
-  const complianceStatus = accessibilityStatementData[locale].complianceStatus;
+  const statement = statements[locale];
+  const accessibilityProblems = statement.nonAccessibleContent.nonCompliant;
+  const complianceStatus = statement.complianceStatus;
   const complianceStatusText = getComplianceStatusText(t, complianceStatus);
 
   return (

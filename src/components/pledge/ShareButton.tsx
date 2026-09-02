@@ -29,7 +29,13 @@ export function ShareButton({
   };
 
   return (
-    <StyledShareButton color="primary" outline size="sm" onClick={handleShare} {...buttonProps}>
+    <StyledShareButton
+      color="primary"
+      outline
+      size="sm"
+      onClick={() => void handleShare()}
+      {...buttonProps}
+    >
       <Icon name="arrow-up-right-from-square" width="16px" height="16px" />
       {t('share')}
     </StyledShareButton>

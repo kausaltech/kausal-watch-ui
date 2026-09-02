@@ -33,7 +33,7 @@ type Router = ReturnType<typeof useRouter>;
 
 // Nodes and edges as returned by the (legacy) insight API. Nodes are augmented
 // at render time with their resolved cause/effect relations.
-type InsightNode = {
+export type InsightNode = {
   id: string;
   type: string;
   indicator_level: string;
@@ -45,7 +45,7 @@ type InsightNode = {
   parent?: InsightNode;
 };
 
-type InsightEdge = {
+export type InsightEdge = {
   id: string;
   from: string;
   to: string;
@@ -53,7 +53,7 @@ type InsightEdge = {
   confidence_level: string;
 };
 
-type InsightFilters = {
+export type InsightFilters = {
   indicator: number | null;
 };
 
@@ -70,7 +70,7 @@ type DagreLayoutOptions = cytoscape.BaseLayoutOptions & {
   pan?: { x: number; y: number };
 };
 
-type CytoGraphOwnProps = {
+export type CytoGraphOwnProps = {
   nodes: InsightNode[];
   edges: InsightEdge[];
   filters: InsightFilters;

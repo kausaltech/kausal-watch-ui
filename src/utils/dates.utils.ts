@@ -1,12 +1,12 @@
-import type { ActionDateFormat } from '@/common/__generated__/graphql';
+import { ActionDateFormat } from '@/common/__generated__/graphql';
 
 export function getDateFormat(format?: ActionDateFormat): Intl.DateTimeFormatOptions {
   switch (format) {
-    case 'YEAR':
+    case ActionDateFormat.Year:
       return { year: 'numeric' };
-    case 'MONTH_YEAR':
+    case ActionDateFormat.MonthYear:
       return { month: 'numeric', year: 'numeric' };
-    case 'FULL':
+    case ActionDateFormat.Full:
     default:
       return { day: 'numeric', month: 'numeric', year: 'numeric' };
   }

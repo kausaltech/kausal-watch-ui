@@ -17,6 +17,7 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
       name
       normalizations {
         unit {
+          id
           name
           shortName
         }
@@ -87,6 +88,7 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
       }
     }
     dimensions {
+      id
       dimension {
         id
         name
@@ -123,6 +125,7 @@ export const INDICATOR_LIST_INDICATOR_FRAGMENT = gql`
     nonQuantifiedGoal
     nonQuantifiedGoalDate
     unit {
+      id
       name
       shortName
     }

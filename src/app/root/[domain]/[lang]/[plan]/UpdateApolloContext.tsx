@@ -20,6 +20,7 @@ export function UpdateApolloContext({ children, domain }: Props) {
   const session = useSession();
   const { workflow } = useWorkflowSelector();
 
+  /* eslint-disable react-hooks/immutability -- Apollo intentionally exposes mutable defaults for updating link context. */
   apolloClient.defaultContext.planIdentifier = plan.identifier;
   apolloClient.defaultContext.planDomain = domain;
   apolloClient.defaultContext.sessionToken =
@@ -27,10 +28,11 @@ export function UpdateApolloContext({ children, domain }: Props) {
   apolloClient.defaultOptions.query = {
     ...(apolloClient.defaultOptions.query ?? {}),
     variables: {
-      ...(apolloClient.defaultOptions.query?.variables ?? {}),
+      ...((apolloClient.defaultOptions.query?.variables ?? {}) as Record<string, unknown>),
       workflow,
     },
   };
+  /* eslint-enable react-hooks/immutability */
 
   return children;
 }

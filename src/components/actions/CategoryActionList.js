@@ -14,7 +14,7 @@ import ErrorMessage from '@/components/common/ErrorMessage';
 import { usePlan } from '@/context/plan';
 
 const GET_ACTION_LIST = gql`
-  query GetActionList($plan: ID!, $clientUrl: String!) {
+  query ActionList($plan: ID!, $clientUrl: String!) {
     planActions(plan: $plan) {
       ...ActionCard
       hasDependencyRelationships

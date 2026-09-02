@@ -158,7 +158,7 @@ const buildSeriesFromTraces = ({
   colors,
   hasTimeDimension,
   useAreaGraph,
-  lineShape,
+  lineShape: _lineShape,
   valueRounding,
   format,
 }: {
@@ -193,7 +193,7 @@ const buildSeriesFromTraces = ({
         symbol: 'circle',
         symbolSize: 7,
         sampling: 'lttb',
-        smooth: false && (lineShape === 'spline' || lineShape === 'smooth'), // TODO: remove false once we have a proper smooth line shape
+        smooth: false, // TODO: enable once we have a proper smooth line shape
         lineStyle: {
           width: trace.dataType === 'total' ? 3 : 2,
           color,
@@ -663,11 +663,11 @@ function IndicatorGraph({
         // For time-based graphs, use the normalized date
         const nonQuantifiedGoalDate = normalizeDateForComparison(nonQuantifiedGoal.date);
         const goalDirection = nonQuantifiedGoal.trend ? nonQuantifiedGoal.trend.toString() : '';
-        const goalStartValue = referenceValue?.value
-          ? referenceValue.value
-          : nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
+        const goalStartValue =
+          referenceValue?.value ??
+          (nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
             ? yRange.range[0]
-            : yRange.range[1];
+            : yRange.range[1]);
         const goalEndValue =
           nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
             ? yRange.range[1]
@@ -1032,12 +1032,11 @@ function IndicatorGraph({
         },
         splitNumber: yRange.ticksCount ?? undefined,
         min:
-          yRange.range[0] != null
-            ? yRange.range[0]
-            : yRange.includeZero
-              ? (value: { min: number }) => (value.min > 0 ? 0 : value.min)
-              : undefined,
-        max: yRange.range[1] != null ? yRange.range[1] : undefined,
+          yRange.range[0] ??
+          (yRange.includeZero
+            ? (value: { min: number }) => (value.min > 0 ? 0 : value.min)
+            : undefined),
+        max: yRange.range[1] ?? undefined,
         axisLabel: {
           formatter: (value: number) => {
             // Round tick values more aggressively for cleaner labels

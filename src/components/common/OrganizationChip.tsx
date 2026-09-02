@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 
-import type { ActionResponsiblePartyRole } from '@/common/__generated__/graphql';
+import { ActionResponsiblePartyRole } from '@/common/__generated__/graphql';
 import { OrganizationLink } from '@/common/links';
 import { slugify } from '@/common/utils';
 import type { BadgeTooltipProps } from '@/components/common/BadgeTooltip';
@@ -37,15 +37,15 @@ function OrganizationChip(props: OrganizationChipProps) {
   const t = useTranslations();
 
   let size = 'md' as BadgeTooltipProps['size'];
-  let ariaLabel;
+  let ariaLabel: string | undefined;
 
   // PRIMARY, COLLABORATOR
 
-  if (role === 'PRIMARY') {
+  if (role === ActionResponsiblePartyRole.Primary) {
     size = 'lg';
     ariaLabel = `${t('responsible-party-main')}: ${organization.abbreviation} ${organization.name}`;
   }
-  if (role === 'COLLABORATOR') {
+  if (role === ActionResponsiblePartyRole.Collaborator) {
     size = 'sm';
     ariaLabel = `${t('responsible-party-main')}: ${organization.abbreviation} ${organization.name}`;
   } else {

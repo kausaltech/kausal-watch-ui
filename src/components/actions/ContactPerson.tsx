@@ -121,6 +121,7 @@ const CollapseButton = styled(Button)`
 const GET_CONTACT_DETAILS = gql`
   query ContactDetails($id: ID!, $plan: ID!) {
     person(id: $id, plan: $plan) {
+      id
       email
       organization {
         id

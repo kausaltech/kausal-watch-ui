@@ -8,7 +8,7 @@ import { Button } from 'reactstrap';
 import {
   IndicatorColumnValueType,
   IndicatorDashboardFieldName,
-  type IndicatorListPageFragmentFragment,
+  type IndicatorListPageFragment,
   IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
@@ -462,7 +462,7 @@ const IndicatorListColumnCell = (props: IndicatorListColumnCellProps) => {
 };
 
 interface IndicatorTableCellProps {
-  column: NonNullable<IndicatorListPageFragmentFragment['listColumns']>[number];
+  column: NonNullable<IndicatorListPageFragment['listColumns']>[number];
   indicator: IndicatorListIndicator;
   openIndicatorsInModal?: (id: string) => void | null;
 }

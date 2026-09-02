@@ -59,7 +59,12 @@ const EmissionScopeIcon = (props) => {
 };
 
 EmissionScopeIcon.propTypes = {
-  category: PropTypes.shape({}).isRequired,
+  category: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    identifier: PropTypes.string.isRequired,
+    leadParagraph: PropTypes.string,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
   color: PropTypes.string.isRequired,
   size: PropTypes.string,
 };

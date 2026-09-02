@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -10,7 +10,7 @@ import { Container, Spinner } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import type { GetPledgeQuery } from '@/common/__generated__/graphql';
+import type { PledgeQuery } from '@/common/__generated__/graphql';
 import { usePrependPlanAndLocale } from '@/common/links';
 import { excludeNullish } from '@/common/utils';
 import Accordion from '@/components/common/Accordion';
@@ -28,7 +28,7 @@ import PledgeImpactComparison from './PledgeImpactComparison';
 import { ShareButton } from './ShareButton';
 import { usePublicUser } from './use-public-user';
 
-type PledgeData = NonNullable<NonNullable<GetPledgeQuery['plan']>['pledge']>;
+type PledgeData = NonNullable<NonNullable<PledgeQuery['plan']>['pledge']>;
 
 type Props = {
   pledge: PledgeData;
@@ -269,7 +269,11 @@ function PledgeBodyBlock({ block }: { block: BodyBlock }) {
 function PledgeDetail({ pledge, planIdentifier }: Props) {
   const [showConfirmDrawer, setShowConfirmDrawer] = useState(false);
   const [isUpdatingCommitment, setIsUpdatingCommitment] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  const isClient = useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false
+  );
   const t = useTranslations();
   const pledgeListLink = usePrependPlanAndLocale(PLEDGE_PATH);
   const {
@@ -285,8 +289,6 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
 
   const heroImage = pledge.image?.fullMedium?.src ?? pledge.image?.full?.src ?? '';
   const actions = pledge.actions ?? [];
-
-  useEffect(() => setIsClient(true), []);
 
   const handleCommitClick = async () => {
     if (isCommitted) {

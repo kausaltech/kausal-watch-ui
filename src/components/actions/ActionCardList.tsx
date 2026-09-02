@@ -122,7 +122,7 @@ function groupActions<T extends ActionListAction | ActionCardFragment>(
       const hideCategoryIdentifiers = 'type' in cat && cat.type.hideCategoryIdentifiers;
       group = {
         id: cat.id,
-        crumb: categoryCrumb || null,
+        crumb: categoryCrumb ?? null,
         displayIdentifier: `${identifier && !hideCategoryIdentifiers ? identifier : ''}`,
         // if cat=plan prefer shortName
         name: ('shortName' in cat && cat.shortName) || ('name' in cat ? cat.name : ''),

@@ -36,6 +36,19 @@ type Props = Omit<
   '__typename'
 >;
 
+type AreaSeries = {
+  name: string;
+  type: 'line';
+  areaStyle: { opacity: number };
+  symbol: 'circle' | 'none';
+  symbolSize?: number;
+  data: [string, number | null][];
+  itemStyle: { color: string };
+  lineStyle: { color: string };
+  emphasis: { focus: 'series' };
+  stack?: string;
+};
+
 const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
@@ -58,7 +71,7 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
   }
 
   const hasDimension = !!dimension;
-  const stackable = indicator?.dataCategoriesAreStackable;
+  const stackable = indicator?.dataCategoriesAreStackable === true;
   const dimSeries = hasDimension ? buildDimSeries(chartSeries, palette, timeResolution) : [];
 
   const totalDef = buildTotalSeries(
@@ -98,7 +111,7 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
   const dataSources = hasDimension ? dimSeries.map((d) => d.raw) : [totalRaw];
   const { xCategories } = collectAllDates(dataSources, timeResolution);
 
-  const series = hasDimension
+  const series: AreaSeries[] = hasDimension
     ? dimSeries.map((d) => {
         const dataMap = new Map(d.raw.map(([key, value]) => [key, value]));
         const data = xCategories.map(
@@ -112,7 +125,7 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
           data,
           itemStyle: { color: d.color },
           lineStyle: { color: d.color },
-          emphasis: { focus: 'series' },
+          emphasis: { focus: 'series' as const },
         };
       })
     : [
@@ -130,7 +143,7 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
           })(),
           itemStyle: { color: totalDef.color },
           lineStyle: { color: totalDef.color },
-          emphasis: { focus: 'series' },
+          emphasis: { focus: 'series' as const },
         },
       ];
 

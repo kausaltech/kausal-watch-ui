@@ -4,14 +4,14 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
-import type { GetActionListPageQuery } from '@/common/__generated__/graphql';
+import type { ActionListPageQuery } from '@/common/__generated__/graphql';
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
 import type { FilterValue, Filters } from '@/components/actions/ActionListFilters';
 import ActionList from '@/components/dashboard/ActionList';
 
 type Props = {
   actionListPage: NonNullable<
-    NonNullable<GetActionListPageQuery['plan']>['actionListPage'] & {
+    NonNullable<ActionListPageQuery['plan']>['actionListPage'] & {
       __typename: 'ActionListPage';
     }
   >;

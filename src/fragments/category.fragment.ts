@@ -23,19 +23,23 @@ export const CATEGORY_FRAGMENT = gql`
     indicators {
       id
       values {
+        id
         date
         value
       }
       goals {
+        id
         date
         value
       }
       unit {
+        id
         name
         shortName
       }
     }
     indicatorRelationships {
+      id
       indicator {
         id
       }
@@ -45,7 +49,9 @@ export const CATEGORY_FRAGMENT = gql`
     iconSvgUrl
     helpText
     iconImage {
+      id
       rendition(size: "400x400", crop: false) {
+        id
         src
       }
     }
@@ -77,6 +83,7 @@ export const CATEGORY_FRAGMENT = gql`
 export const RECURSIVE_CATEGORY_FRAGMENT = gql`
   # Support parent categories up to two levels deep
   fragment CategoryWithParents on Category {
+    id
     parent {
       ...Category
       parent {
@@ -152,7 +159,9 @@ export const CATEGORY_TAG_FRAGMENT = gql`
     iconSvgUrl
     helpText
     iconImage {
+      id
       rendition(size: "400x400", crop: false) {
+        id
         src
       }
     }
@@ -181,6 +190,7 @@ export const CATEGORY_TAG_FRAGMENT = gql`
 export const RECURSIVE_CATEGORY_TAG_FRAGMENT = gql`
   # Support parent categories up to two levels deep
   fragment CategoryTagWithParents on Category {
+    id
     parent {
       ...CategoryTag
       parent {

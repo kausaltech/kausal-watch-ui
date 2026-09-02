@@ -21,6 +21,7 @@ const CREATE_USER_FEEDBACK = gql`
   mutation CreateUserFeedback($input: UserFeedbackMutationInput!) {
     createUserFeedback(input: $input) {
       feedback {
+        id
         createdAt
       }
       errors {
@@ -68,12 +69,20 @@ export type FeedbackFormAdditionalField = {
   }[];
 };
 
+type FeedbackFormValues = {
+  id: string;
+  name: string;
+  email: string;
+  comment: string;
+  [key: string]: string | string[] | null | undefined;
+};
+
 const FeedbackForm = (props: FeedbackFormProps) => {
   const {
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm();
+  } = useForm<FeedbackFormValues>();
 
   const {
     planIdentifier,
@@ -109,13 +118,7 @@ const FeedbackForm = (props: FeedbackFormProps) => {
     CREATE_USER_FEEDBACK
   );
 
-  const onSubmit = (formData: {
-    id: string;
-    name: string;
-    email: string;
-    comment: string;
-    [key: string]: string | string[] | null | undefined;
-  }) => {
+  const onSubmit = (formData: FeedbackFormValues) => {
     const { name, email, comment, ...additionalResponse } = formData;
 
     const isCommentEmpty = !comment || comment.trim() === '';
@@ -195,7 +198,7 @@ const FeedbackForm = (props: FeedbackFormProps) => {
             defaultValue={[]}
             rules={{
               validate: (value) => {
-                if (field.fieldRequired && value.length === 0) {
+                if (field.fieldRequired && (!Array.isArray(value) || value.length === 0)) {
                   return false;
                 }
                 return true;
@@ -263,7 +266,7 @@ const FeedbackForm = (props: FeedbackFormProps) => {
       )}
       {(!sent || mutationError) && (
         <div className="mt-4">
-          <form onSubmit={handleSubmit(onSubmit)} autoComplete="true">
+          <form onSubmit={(event) => void handleSubmit(onSubmit)(event)} autoComplete="true">
             <Controller
               render={({ field }) => (
                 <TextInput {...field} id="name-field" autoComplete="name" label={t('name')} />

@@ -135,7 +135,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
 
   const groups = useMemo(
     () =>
-      getParentCategoriesOfLevel(categories, groupByLevelId) || [
+      getParentCategoriesOfLevel(categories, groupByLevelId) ?? [
         { id: 'all', name: 'All' } as CategoryFragment,
       ],
     [categories, groupByLevelId]
@@ -237,7 +237,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
             )}
             {sortedCategories
               ?.filter(
-                (cat) => (cat?.categoryPage?.live && hasParent(cat, group.id)) || group.id === 'all'
+                (cat) => (cat?.categoryPage?.live && hasParent(cat, group.id)) ?? group.id === 'all'
               )
               .map(
                 (cat) =>
@@ -260,7 +260,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
   );
 };
 
-const hasParent = (cat, parentId) => {
+const hasParent = (cat: CategoryWithParent, parentId: string) => {
   const catParents = getDeepParents(cat);
   return catParents.some((parent) => parent.id === parentId);
 };

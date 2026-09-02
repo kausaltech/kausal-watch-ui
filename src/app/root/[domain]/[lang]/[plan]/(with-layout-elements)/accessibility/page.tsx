@@ -1,7 +1,7 @@
 import { type Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
-import { type GetContentPageQuery } from '@/common/__generated__/graphql';
+import { type ContentPageQuery } from '@/common/__generated__/graphql';
 import { getContentPage } from '@/queries/get-content-page';
 import { tryRequest } from '@/utils/api.utils';
 
@@ -15,7 +15,7 @@ type Props = {
   }>;
 };
 
-const isAccessibilityPageWithBody = (planPage: GetContentPageQuery['planPage']) =>
+const isAccessibilityPageWithBody = (planPage: ContentPageQuery['planPage']) =>
   (planPage?.__typename === 'AccessibilityStatementPage' ||
     planPage?.__typename === 'StaticPage') &&
   planPage?.body?.length;

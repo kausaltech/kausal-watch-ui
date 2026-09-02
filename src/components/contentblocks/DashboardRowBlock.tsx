@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 
-import type { StreamFieldFragmentFragment } from '@/common/__generated__/graphql';
+import type { StreamFieldFragment } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';
 import IndicatorVisualizationBlock from '@/components/indicators/IndicatorVisualizationBlock';
 
@@ -30,10 +30,7 @@ const DashboardSectionHeader = styled(SectionHeader)`
 `;
 
 // Extract the DashboardRowBlock fragment type from the union
-type DashboardRowBlockFragment = Extract<
-  StreamFieldFragmentFragment,
-  { __typename: 'DashboardRowBlock' }
->;
+type DashboardRowBlockFragment = Extract<StreamFieldFragment, { __typename: 'DashboardRowBlock' }>;
 // Get the element type of the blocks array
 export type DashboardBlock = NonNullable<DashboardRowBlockFragment['blocks']>[number];
 

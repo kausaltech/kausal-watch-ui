@@ -15,7 +15,7 @@ import { getThemeStaticURL } from '@common/themes/theme';
 import { getStatusColorForAction } from '@/common/ActionStatusSummary';
 import type {
   ActionCardFragment,
-  GetActionDetailsQuery,
+  ActionDetailsQuery,
   PlanContextFragment,
 } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
@@ -288,7 +288,7 @@ const SecondaryIcons = (props: SecondaryIconsProps) => {
 
 const getDependencyTooltipId = (actionId: string) => `dependency-tooltip-${actionId}`;
 
-type Action = NonNullable<GetActionDetailsQuery['action']>;
+type Action = NonNullable<ActionDetailsQuery['action']>;
 type ActionCardData = ActionCardFragment & {
   primaryCategories?: ActionCardFragment['categories'];
   hasDependencyRelationships?: boolean | null;
@@ -352,7 +352,11 @@ function ActionCard({
       else statusText = status.name;
     }
   }
-  const getPlanUrl = (mergedWith, actionPlan, planId) => {
+  const getPlanUrl = (
+    mergedWith: ActionCardData['mergedWith'],
+    actionPlan: ActionCardData['plan'],
+    planId: string
+  ): string | null | undefined => {
     if (mergedWith && mergedWith?.plan.id !== planId) return mergedWith.plan.viewUrl;
     if (actionPlan.id !== planId) return actionPlan.viewUrl;
     return undefined;

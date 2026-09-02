@@ -161,18 +161,7 @@ const CHART_WIDTHS = {
 function useChartWidth(): number {
   const theme = useTheme();
   const { width: windowWidth } = useWindowSize(400) as { width: number };
-  const [width, setWidth] = useState(CHART_WIDTHS.md);
-
-  useEffect(() => {
-    const nextWidth =
-      windowWidth < parseInt(theme.breakpointMd) ? CHART_WIDTHS.sm : CHART_WIDTHS.md;
-
-    if (width !== nextWidth) {
-      setWidth(nextWidth);
-    }
-  }, [width, windowWidth, theme.breakpointMd]);
-
-  return width;
+  return windowWidth < parseInt(theme.breakpointMd) ? CHART_WIDTHS.sm : CHART_WIDTHS.md;
 }
 
 /*
@@ -248,6 +237,8 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const [isNormalized, setIsNormalized] = useState(normalizeByDefault);
 
   useEffect(() => {
+    // Reset user selection if a different indicator supplies a new default.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsNormalized(normalizeByDefault);
   }, [normalizeByDefault]);
 
@@ -278,9 +269,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
         : baseValue.value;
 
   const minPrecision =
-    significantDigits != null
-      ? significantDigits
-      : findPrecision([startValue, latestValue ?? 0, goalDisplayValue ?? 0]);
+    significantDigits ?? findPrecision([startValue, latestValue ?? 0, goalDisplayValue ?? 0]);
 
   const formatNumber = useNumberFormatter({ maximumFractionDigits: minPrecision });
   const roundedValues = {
@@ -295,7 +284,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const largestValue = Math.max(
     roundedValues.start,
     roundedValues.latest,
-    Number(roundedValues.goal) ?? 0
+    Number(roundedValues.goal)
   );
   const displayUnit = isNormalized ? unit.normalizedName : unit.name;
 

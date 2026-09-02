@@ -61,7 +61,7 @@ function useIframeLoadTracker(isPrint: boolean) {
       // the MutationObserver fires. Reassigning src forces the browser to
       // re-trigger the load event so we can reliably detect completion.
       if (iframe.src) {
-        iframe.src = iframe.src;
+        iframe.setAttribute('src', iframe.src);
       }
     }
 

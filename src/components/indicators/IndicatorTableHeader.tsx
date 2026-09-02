@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import type { IndicatorListPageFragmentFragment } from '@/common/__generated__/graphql';
+import type { IndicatorListPageFragment } from '@/common/__generated__/graphql';
 import {
   IndicatorColumnValueType,
   IndicatorDashboardFieldName,
@@ -39,14 +39,12 @@ const TableSortingIcon = styled(Icon, transientOptions)<{ $selected: boolean }>`
 `;
 
 interface IndicatorTableHeaderProps {
-  column: NonNullable<IndicatorListPageFragmentFragment['listColumns']>[number];
+  column: NonNullable<IndicatorListPageFragment['listColumns']>[number];
   sort?: SortState;
   onSortState?: (key: 'name' | 'level') => void;
 }
 
-const isNumericColumn = (
-  column: NonNullable<IndicatorListPageFragmentFragment['listColumns']>[number]
-) => {
+const isNumericColumn = (column: NonNullable<IndicatorListPageFragment['listColumns']>[number]) => {
   switch (column.__typename) {
     case 'IndicatorListColumn':
       if (column.sourceField === IndicatorDashboardFieldName.UpdatedAt) {
@@ -60,7 +58,7 @@ const isNumericColumn = (
 };
 
 const getColumnLabel = (
-  column: NonNullable<IndicatorListPageFragmentFragment['listColumns']>[number],
+  column: NonNullable<IndicatorListPageFragment['listColumns']>[number],
   t: TFunction
 ) => {
   if (column.columnLabel) {
@@ -126,6 +124,8 @@ const getColumnLabel = (
               {normalized}
             </>
           );
+        default:
+          return '';
       }
     }
     default:

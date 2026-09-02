@@ -22,6 +22,7 @@ export const GET_INDICATOR_LIST = gql`
             id
           }
           common @include(if: $relatedPlanIndicators) {
+            id
             type {
               identifier
               name

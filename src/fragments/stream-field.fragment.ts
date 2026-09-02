@@ -6,7 +6,7 @@ import { CATEGORY_FRAGMENT, RECURSIVE_CATEGORY_FRAGMENT } from './category.fragm
 import { DASHBOARD_INDICATOR_BLOCK_FRAGMENT } from './dashboard-indicator-block.fragment';
 
 export const STREAM_FIELD_FRAGMENT = gql`
-  fragment StreamFieldFragment on StreamFieldInterface {
+  fragment StreamField on StreamFieldInterface {
     id
     blockType
     field
@@ -34,6 +34,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
     ... on QuestionAnswerBlock {
       heading
       questions {
+        id
         ... on QuestionBlock {
           question
           answer
@@ -49,6 +50,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
     ... on IndicatorGroupBlock {
       title
       indicators {
+        id
         ... on IndicatorBlock {
           style
           indicator {
@@ -160,6 +162,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
       heading
       lead
       additionalSettings {
+        id
         backgroundColour
         fitImage
         showImageAccent
@@ -231,6 +234,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
           id
           normalizations {
             unit {
+              id
               shortName
               name
             }
@@ -243,10 +247,12 @@ export const STREAM_FIELD_FRAGMENT = gql`
         }
       }
       linkButton {
+        id
         blockType
         ... on PageLinkBlock {
           text
           page {
+            id
             url
             urlPath
             slug
@@ -258,6 +264,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
       heading
       lead
       cards {
+        id
         ... on CardBlock {
           image {
             ...CardImage
@@ -270,12 +277,14 @@ export const STREAM_FIELD_FRAGMENT = gql`
     }
     ... on ActionCategoryFilterCardsBlock {
       cards {
+        id
         ... on ActionCategoryFilterCardBlock {
           heading
           lead
           category {
             id
             type {
+              id
               identifier
             }
           }
@@ -286,12 +295,15 @@ export const STREAM_FIELD_FRAGMENT = gql`
       heading
       lead
       valueAttribute {
+        id
         identifier
         unit {
+          id
           shortName
         }
       }
       treeMapCategoryType: categoryType {
+        id
         identifier
       }
     }
@@ -318,7 +330,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
       }
     }
     ... on DashboardRowBlock {
-      ...DashboardIndicatorBlockFragment
+      ...DashboardIndicatorBlock
     }
   }
   ${images.fragments.heroImage}

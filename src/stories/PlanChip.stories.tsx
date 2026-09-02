@@ -1,12 +1,16 @@
+import type { ComponentType } from 'react';
+
+import { useTheme } from '@emotion/react';
+
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 import PlanChip from '@/components/plans/PlanChip';
 
-const ThemeableBackgrounds = (Story, context) => {
-  const theme = context.args?.activeTheme;
+const ThemeableBackgrounds = (Story: ComponentType) => {
+  const theme = useTheme();
   return (
     <div style={{ backgroundColor: theme.brandDark, padding: '20px' }}>
-      <Story {...context} />
+      <Story />
     </div>
   );
 };

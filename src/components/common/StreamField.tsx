@@ -17,10 +17,7 @@ import { showSettingsPanelVar } from '@common/apollo/paths-cache';
 import ContentLoader from '@common/components/ContentLoader';
 import { transientOptions } from '@common/themes/styles/styled';
 
-import type {
-  CardImageFragment,
-  StreamFieldFragmentFragment,
-} from '@/common/__generated__/graphql';
+import type { CardImageFragment, StreamFieldFragment } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
 import { excludeNullish } from '@/common/utils';
 import ErrorMessage from '@/components/common/ErrorMessage';
@@ -57,6 +54,10 @@ import { ImageCredit } from './ImageCredit';
 const CategoryTreeBlock = dynamic(() => import('@/components/contentblocks/CategoryTreeBlock'), {
   ssr: false,
 });
+const CartographyVisualisationBlock = dynamic(
+  () => import('@/components/contentblocks/CartographyVisualisationBlock'),
+  { ssr: false }
+);
 
 enum EmbedProvider {
   YOUTUBE = 'YouTube',
@@ -172,7 +173,7 @@ const ResponsiveStyles = styled.div`
   }
 `;
 
-function blockHasBackground(block: StreamFieldFragmentFragment, theme: Theme): boolean {
+function blockHasBackground(block: StreamFieldFragment, theme: Theme): boolean {
   switch (block.__typename) {
     case 'CardListBlock':
     case 'ActionListBlock':
@@ -224,7 +225,7 @@ function BlockWrapper({
   return <StyledBlockWrapper {...props} />;
 }
 
-function hasPathsContent(body: StreamFieldFragmentFragment[]) {
+function hasPathsContent(body: StreamFieldFragment[]) {
   return body.some(
     (block) =>
       block.blockType === 'PathsOutcomeBlock' || block.blockType === 'CategoryTypeLevelListBlock'
@@ -327,13 +328,13 @@ type StreamFieldBlockPage = {
     indicators: { id: string }[];
     changeLogMessage?: React.ComponentProps<typeof ChangeHistory>['entry'];
   } | null;
-  body: StreamFieldFragmentFragment[] | null;
+  body: StreamFieldFragment[] | null;
 };
 
 type StreamFieldBlockProps = {
   id: string;
   page: StreamFieldBlockPage;
-  block: StreamFieldFragmentFragment;
+  block: StreamFieldFragment;
   hasSidebar: boolean;
   columnProps?: ColProps;
   getSiblingBlockTypes: () => { prev: string | null; next: string | null };
@@ -446,7 +447,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       } else if (pageCategory) {
         categories = pageCategory.children;
       }
-      const fallbackImage = pageCategory?.image || plan.image;
+      const fallbackImage = pageCategory?.image ?? plan.image;
       return (
         <CategoryListBlock
           id={id}
@@ -593,7 +594,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return <CategoryTreeBlock {...block} id={id} hasSidebar={hasSidebar} />;
     }
     case 'AdaptiveEmbedBlock': {
-      const fullWidth = block.fullWidth || false;
+      const fullWidth = block.fullWidth ?? false;
       const html = block.embed?.html;
       const accessibleTitle = block.title;
       const accessibleDescription = block.description;
@@ -633,10 +634,6 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     case 'CartographyVisualisationBlock': {
       const { account, cartographyStyle, styleOverrides } = block;
       const accessToken = account?.publicAccessToken;
-      const CartographyVisualisationBlock = dynamic(
-        () => import('@/components/contentblocks/CartographyVisualisationBlock'),
-        { ssr: false }
-      );
       return (
         <CartographyVisualisationBlock
           id={id}
@@ -755,7 +752,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
 
 interface StreamFieldProps {
   page: StreamFieldBlockPage;
-  blocks: StreamFieldFragmentFragment[];
+  blocks: StreamFieldFragment[];
   hasSidebar?: boolean;
   columnProps?: ColProps;
   precedingBlockHasBackground?: boolean;

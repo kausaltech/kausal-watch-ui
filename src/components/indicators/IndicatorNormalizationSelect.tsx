@@ -13,7 +13,7 @@ const NormalizerChooser = styled.div`
 `;
 
 interface IndicatorNormalizationSelectProps {
-  handleChange(...args: unknown[]): unknown;
+  handleChange: (value: boolean) => void;
   currentValue?: boolean;
 }
 
@@ -27,7 +27,7 @@ const IndicatorNormalizationSelect = (props: IndicatorNormalizationSelectProps) 
     <NormalizerChooser>
       <Switch
         label={t('indicator-normalize-per-capita')}
-        state={currentValue || false}
+        state={currentValue ?? false}
         onChange={callback}
         id="normalize-per-capita-switch"
       />

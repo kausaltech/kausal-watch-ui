@@ -5,8 +5,9 @@ import { Col, Row } from 'reactstrap';
 
 import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';
-import { SectionHeader } from '@/components/actions/ActionContent';
+import { type ActionContentAction, SectionHeader } from '@/components/actions/ActionContent';
 import PopoverTip from '@/components/common/PopoverTip';
+import type { PlanContextType } from '@/context/plan';
 
 const RelatedActionList = styled(Row)`
   padding-left: 0;
@@ -20,7 +21,14 @@ const RelatedActionItem = styled(Col)`
   }
 `;
 
-const ActionRelatedActionsBlock = (props) => {
+type ActionRelatedActionsBlockProps = {
+  heading: string | null;
+  helpText: string | null;
+  plan: PlanContextType;
+  relatedActions: ActionContentAction['relatedActions'];
+};
+
+const ActionRelatedActionsBlock = (props: ActionRelatedActionsBlockProps) => {
   const { relatedActions, plan, heading, helpText } = props;
   const t = useTranslations();
 
@@ -33,7 +41,7 @@ const ActionRelatedActionsBlock = (props) => {
       <Row>
         <Col>
           <SectionHeader>
-            {heading || t('related-actions', getActionTermContext(plan))}
+            {heading ?? t('related-actions', getActionTermContext(plan))}
             {helpText && <PopoverTip identifier="related-actions-help" content={helpText} />}
           </SectionHeader>
           <RelatedActionList tag="ul">

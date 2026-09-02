@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { readableColor, shade } from 'polished';
 import { Badge as BaseBadge, Card as BaseCard, CardBody, CardFooter, Col, Row } from 'reactstrap';
 
-import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
+import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getIndicatorTermContext } from '@/common/i18n';
 import { ActionLink, IndicatorLink } from '@/common/links';
 import { SectionHeader } from '@/components/actions/ActionContent';
@@ -64,7 +64,7 @@ const IndicatorActionListItem = styled.li`
   display: inline-block;
 `;
 
-type RelatedIndicator = NonNullable<GetActionDetailsQuery['action']>['relatedIndicators'][number];
+type RelatedIndicator = NonNullable<ActionDetailsQuery['action']>['relatedIndicators'][number];
 
 type ActionIndicatorProps = {
   relatedIndicator: RelatedIndicator;

@@ -9,7 +9,12 @@ const LeadParagraph = styled.div`
   font-size: 110%;
 `;
 
-const ActionLeadParagraphBlock = (props) => {
+type Props = {
+  content: string;
+  fieldLabel?: string | null;
+};
+
+const ActionLeadParagraphBlock = (props: Props) => {
   const { content, fieldLabel } = props;
   const t = useTranslations();
 

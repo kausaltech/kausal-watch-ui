@@ -5,8 +5,8 @@ import { getStatusSummary } from '../common/ActionStatusSummary';
 import type { Progress } from '../components/dashboard/ActionStatusGraphs';
 import type { PlanContextType } from '../context/plan';
 import {
+  type ActionListForGraphsQuery,
   ActionStatusSummaryIdentifier,
-  type GetActionListForGraphsQuery,
   Sentiment,
 } from './__generated__/graphql';
 import type { TFunction } from './i18n';
@@ -109,7 +109,7 @@ class DonutSector {
  Process a list of actions and return an ordered list of statuses for statistics
  */
 const getStatusData = (
-  actions: NonNullable<GetActionListForGraphsQuery['planActions']>,
+  actions: NonNullable<ActionListForGraphsQuery['planActions']>,
   actionStatusSummaries: ActionStatusSummary[],
   theme: Theme,
   unknownLabelText: string = ''
@@ -163,7 +163,7 @@ const getStatusData = (
  Process a list of actions and return an ordered list of phases for statistics
  */
 const getPhaseData = (
-  actions: NonNullable<GetActionListForGraphsQuery['planActions']>,
+  actions: NonNullable<ActionListForGraphsQuery['planActions']>,
   plan: PlanContextType,
   theme: Theme,
   t: TFunction

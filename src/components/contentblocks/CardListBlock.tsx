@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 
+import type { StreamFieldFragment } from '@/common/__generated__/graphql';
 import Card from '@/components/common/Card';
 
 const CardListSection = styled.div`
@@ -73,7 +74,10 @@ const CardHeader = styled.h3`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
-const CardListBlock = (props) => {
+type CardListBlockData = Extract<StreamFieldFragment, { __typename: 'CardListBlock' }>;
+type CardListBlockProps = Pick<CardListBlockData, 'cards' | 'heading' | 'lead'> & { id?: string };
+
+const CardListBlock = (props: CardListBlockProps) => {
   const { id = '', heading, lead, cards } = props;
   const theme = useTheme();
   // TODO : Summon a key value for cards
@@ -85,9 +89,9 @@ const CardListBlock = (props) => {
         <Row tag="ul" className="justify-content-center gy-4">
           {cards?.map((card, inx) => (
             <Col tag="li" xs="12" sm="6" lg="4" className="d-flex align-items-stretch" key={inx}>
-              <a href={card.link} className="card-wrapper">
+              <a href={card.link ?? undefined} className="card-wrapper">
                 <Card
-                  imageUrl={card.image?.rendition && card.image.rendition.src}
+                  imageUrl={card.image?.rendition?.src ?? undefined}
                   imageAlign="center"
                   customBackgroundColor={theme.brandDark}
                   customColor={readableColor(

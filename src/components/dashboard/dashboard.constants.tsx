@@ -30,7 +30,12 @@ import ResponsiblePartiesCell from './cells/ResponsiblePartiesCell';
 import StatusCell from './cells/StatusCell';
 import TasksStatusCell from './cells/TasksStatusCell';
 import UpdatedAtCell from './cells/UpdatedAtCell';
-import type { ActionListAction, ActionListPlan, ColumnBlock } from './dashboard.types';
+import type {
+  ActionListAction,
+  ActionListPlan,
+  ColumnBlock,
+  ColumnConfig,
+} from './dashboard.types';
 
 const getPlanUrl = (
   mergedWith: ActionListAction['mergedWith'],
@@ -50,7 +55,7 @@ interface Column {
     t: TFunction,
     action: ActionListAction,
     plan: PlanContextFragment,
-    attribute?: any // TODO: tighter type
+    attribute?: ColumnConfig['attributeType']
   ) => ReactNode;
   headerClassName?: string;
   cellClassName?: string;
@@ -60,7 +65,7 @@ interface Column {
     action: ActionListAction,
     plan: PlanContextFragment,
     planViewUrl?: string | null,
-    attribute?: any // TODO: tighter type
+    attribute?: ColumnConfig['attributeType']
   ) => ReactNode;
 }
 
@@ -204,13 +209,14 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   FieldColumnBlock: {
     renderHeader: (t, _, label) => label,
     renderCell: (_, action, __, ___, attributeType) => {
+      if (!attributeType) return null;
       const attributeContent = action.attributes.find((a) => a.type.id === attributeType.id);
       if (!attributeContent) return null;
       return (
         <ActionAttribute
           {...({
             attribute: attributeContent,
-            attributeType,
+            attributeType: attributeContent.type,
             notitle: true,
             variant: 'minimized',
           } as Parameters<typeof ActionAttribute>[0])}
@@ -218,9 +224,15 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
       );
     },
     renderTooltipContent: (_, action, __, attributeType) => {
+      if (!attributeType) return null;
       const attributeContent = action.attributes.find((a) => a.type.id === attributeType.id);
       if (!attributeContent) return null;
-      return <AttributeTooltipContent attribute={attributeContent} attributeType={attributeType} />;
+      return (
+        <AttributeTooltipContent
+          attribute={attributeContent}
+          attributeType={attributeContent.type}
+        />
+      );
     },
   },
   PlanColumnBlock: {

@@ -173,11 +173,12 @@ export function getEchartTraces(
 
   // Simple single trace
   if (dimension === null) {
+    const dataPoints = cube as DataPoint[];
     return [
       {
         name: name,
         type: 'line',
-        data: cube.map((val) => [val.date as string, val.value as number]),
+        data: dataPoints.map((val) => [val.date, val.value]),
         showSymbol: true,
         symbol: 'circle',
         symbolSize: 6,
@@ -213,7 +214,7 @@ export const generateGoalTraces = (
   // Group goals by scenario
   const traceScenarios = new Map<string, TraceScenario>();
   const goalTraces: LineSeriesOption[] = [];
-  (indicator.goals || []).forEach((goal: IndicatorGoal) => {
+  (indicator.goals ?? []).forEach((goal: IndicatorGoal) => {
     if (!goal) return;
     const scenarioId = goal.scenario ? goal.scenario.id : '';
 

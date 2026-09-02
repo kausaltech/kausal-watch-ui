@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -34,6 +34,41 @@ const Result = styled.div`
   text-align: right;
 `;
 
+const getThemeColor = (theme: object, path: string): string => {
+  const value = path.split('.').reduce<unknown>((current, key) => {
+    if (typeof current !== 'object' || current === null) return undefined;
+    return (current as Record<string, unknown>)[key];
+  }, theme);
+  return typeof value === 'string' ? value : '#FFFFFF';
+};
+
+type ContrastScoreProps = {
+  contrastValue: number;
+  largeOnly: boolean;
+  meetsGuidelines: boolean;
+  setPassed: (passed: boolean) => void;
+};
+
+const DisplayContrastScore = ({
+  contrastValue,
+  largeOnly,
+  meetsGuidelines,
+  setPassed,
+}: ContrastScoreProps) => {
+  useEffect(() => {
+    if (!meetsGuidelines) setPassed(false);
+  }, [meetsGuidelines, setPassed]);
+
+  return (
+    <span>
+      {largeOnly ? <small>(Large)</small> : ''}
+      {meetsGuidelines ? <Badge>OK</Badge> : <Badge $bad>Fail</Badge>}
+      <br />
+      <small>{contrastValue}</small>
+    </span>
+  );
+};
+
 const TextContrast = (props: {
   foreground: string;
   background: string;
@@ -45,9 +80,9 @@ const TextContrast = (props: {
 
   // 'readable' means that we check this color combination against the theme colors.white and theme colors.black in the component
   const foregroundFromTheme =
-    foreground !== 'readable' ? foreground.split('.').reduce((a, b) => a[b], theme) : '#FFFFFF';
+    foreground !== 'readable' ? getThemeColor(theme, foreground) : '#FFFFFF';
   const backgroundFromTheme =
-    background !== 'readable' ? background.split('.').reduce((a, b) => a[b], theme) : '#FFFFFF';
+    background !== 'readable' ? getThemeColor(theme, background) : '#FFFFFF';
 
   const foregroundColor =
     foreground !== 'readable'
@@ -61,18 +96,7 @@ const TextContrast = (props: {
   const contrastScore = meetsContrastGuidelines(foregroundColor, backgroundColor);
   const contrastValue = getContrast(foregroundColor, backgroundColor);
 
-  const DisplayContrastScore = () => {
-    const meetsGuidelines = largeOnly ? contrastScore.AALarge : contrastScore.AA;
-    if (!meetsGuidelines) setPassed(false);
-    return (
-      <span>
-        {largeOnly ? <small>(Large)</small> : ''}
-        {meetsGuidelines ? <Badge>OK</Badge> : <Badge $bad>Fail</Badge>}
-        <br />
-        <small>{contrastValue}</small>
-      </span>
-    );
-  };
+  const meetsGuidelines = largeOnly ? contrastScore.AALarge : contrastScore.AA;
 
   return (
     <TextContrastOutput $foreground={foregroundColor} $background={backgroundColor}>
@@ -80,7 +104,12 @@ const TextContrast = (props: {
         {foreground} on {background}
       </TestedItems>
       <Result>
-        <DisplayContrastScore />
+        <DisplayContrastScore
+          contrastValue={contrastValue}
+          largeOnly={largeOnly}
+          meetsGuidelines={meetsGuidelines}
+          setPassed={setPassed}
+        />
       </Result>
     </TextContrastOutput>
   );

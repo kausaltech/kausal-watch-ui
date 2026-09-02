@@ -5,7 +5,7 @@ import { useTheme } from '@emotion/react';
 import { Col, Container, Row } from 'reactstrap';
 
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
-import type { GetContentPageQuery, HeroImageFragment } from '@/common/__generated__/graphql';
+import type { ContentPageQuery, HeroImageFragment } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
 import { typenameMatches } from '@/common/utils';
 import CategoryPageContent from '@/components/categories/CategoryPageContent';
@@ -28,7 +28,7 @@ export type PageWithBody =
   | CategoryPage
   | CategoryTypePage;
 
-export type GeneralPlanPage = NonNullable<GetContentPageQuery['planPage']>;
+export type GeneralPlanPage = NonNullable<ContentPageQuery['planPage']>;
 
 export type StaticPage = GeneralPlanPage & {
   __typename: 'StaticPage';
@@ -86,7 +86,7 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
         throw new Error('Category page without category configured');
       }
       const headerImage =
-        (category.image satisfies HeroImageFragment | null) ||
+        (category.image satisfies HeroImageFragment | null) ??
         ((category.parent?.image ?? null) satisfies HeroImageFragment | null);
       const iconImage = category.iconImage?.rendition?.src;
 

@@ -67,7 +67,9 @@ function createTooltipFormatter(indicator: IndicatorType | null, seriesData: Ser
   const showPercentage = showSegmentedPercentage(indicator?.unit, seriesData);
 
   return (tooltipParams: CallbackDataParams) => {
-    const nameAndValue = `${tooltipParams.name}: ${tooltipParams.value}`;
+    const rawValue = tooltipParams.value;
+    const value = typeof rawValue === 'number' || typeof rawValue === 'string' ? rawValue : '';
+    const nameAndValue = `${tooltipParams.name}: ${value}`;
 
     if (!showPercentage || !tooltipParams.percent) {
       return nameAndValue;
@@ -81,10 +83,6 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
   const theme = useTheme();
   const assertedYear = year ?? getLatestYear(chartSeries);
 
-  if (!assertedYear) {
-    return <div>No year provided</div>;
-  }
-
   const seriesData =
     chartSeries?.reduce((acc, series) => {
       if (!series?.dimensionCategory?.name) {
@@ -93,7 +91,8 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
 
       const categoryName = series.dimensionCategory.name;
       const valueForYear = series.values?.find(
-        (v): v is NonNullable<typeof v> => v?.date != null && doYearsMatch(assertedYear, v.date)
+        (v): v is NonNullable<typeof v> =>
+          v?.date != null && assertedYear != null && doYearsMatch(assertedYear, v.date)
       )?.value;
 
       const value = valueForYear ?? 0;
@@ -128,6 +127,10 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
     mediaQuery.addEventListener('change', update);
     return () => mediaQuery.removeEventListener('change', update);
   }, [theme.breakpointXl]);
+
+  if (!assertedYear) {
+    return <div>No year provided</div>;
+  }
 
   const option: ECOption & { series: PieSeriesOption[] } = {
     tooltip: {

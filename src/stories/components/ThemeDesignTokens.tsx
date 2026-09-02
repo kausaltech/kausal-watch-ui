@@ -1,4 +1,4 @@
-import { type ReactNode, type SyntheticEvent, useEffect, useState } from 'react';
+import { type ReactNode, type SyntheticEvent, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 
@@ -89,11 +89,12 @@ const ThemeDesignTokens = () => {
   const [editedTheme, setEditedTheme] = useState(() =>
     filterToBaseThemeKeys(cloneDeep(themeContext))
   );
-
-  useEffect(() => {
+  const [previousTheme, setPreviousTheme] = useState(themeContext);
+  if (previousTheme !== themeContext) {
+    setPreviousTheme(themeContext);
     setEditedTheme(filterToBaseThemeKeys(cloneDeep(themeContext)));
     console.log('Theme Changed');
-  }, [themeContext]);
+  }
 
   const handleChange = (evt: SyntheticEvent<HTMLInputElement>) => {
     const { name, value } = evt.currentTarget;
@@ -127,17 +128,10 @@ const ThemeDesignTokens = () => {
     const displayValue =
       typeof tokenValue === 'string' || typeof tokenValue === 'number' ? String(tokenValue) : '';
 
-    const [tokenState, setTokenState] = useState({
+    const tokenState = {
       isEdited: get(themeContext, tokenName) !== tokenValue,
       isDefault: get(defaultTheme, tokenName) === tokenValue,
-    });
-
-    useEffect(() => {
-      setTokenState({
-        isEdited: get(themeContext, tokenName) !== tokenValue,
-        isDefault: get(defaultTheme, tokenName) === tokenValue,
-      });
-    }, [tokenName, tokenValue]);
+    };
 
     let AppropriateInput;
 

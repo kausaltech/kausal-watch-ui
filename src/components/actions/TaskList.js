@@ -178,6 +178,27 @@ const Task = (props) => {
   );
 };
 
+const taskShape = {
+  completedAt: PropTypes.string,
+  dateFormat: PropTypes.string,
+  details: PropTypes.string,
+  dueAt: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  state: PropTypes.string.isRequired,
+};
+
+Task.propTypes = {
+  completed: PropTypes.bool.isRequired,
+  task: PropTypes.shape(taskShape).isRequired,
+  theme: PropTypes.shape({
+    graphColors: PropTypes.shape({
+      blue070: PropTypes.string.isRequired,
+      green050: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+};
+
 function TaskList(props) {
   const { tasks } = props;
   const theme = useTheme();
@@ -228,7 +249,7 @@ function TaskList(props) {
 }
 
 TaskList.propTypes = {
-  tasks: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  tasks: PropTypes.arrayOf(PropTypes.shape(taskShape)).isRequired,
 };
 
 export default TaskList;

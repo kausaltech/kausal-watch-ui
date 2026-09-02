@@ -1,6 +1,12 @@
 import { useTranslations } from 'next-intl';
 
-const ActionLinksBlock = (props) => {
+import type { ActionContentAction } from '@/components/actions/ActionContent';
+
+type ActionLinksBlockProps = {
+  links: ActionContentAction['links'];
+};
+
+const ActionLinksBlock = (props: ActionLinksBlockProps) => {
   const { links } = props;
   const t = useTranslations();
 

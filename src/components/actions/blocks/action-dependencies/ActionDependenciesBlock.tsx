@@ -11,8 +11,8 @@ import { useTranslations } from 'next-intl';
 import type {
   ActionCardFragment,
   ActionDependenciesQuery,
-  GetActionDetailsQuery,
-  GetPlanContextQuery,
+  ActionDetailsQuery,
+  PlanContextQuery,
 } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import ErrorMessage from '@/components/common/ErrorMessage';
@@ -110,11 +110,11 @@ function isActionGroupActive(actions: ActionCardFragment[], activeActionId?: str
   return actions.length === 1 && actions[0].id === activeActionId;
 }
 
-type Action = NonNullable<GetActionDetailsQuery['action']>;
+type Action = NonNullable<ActionDetailsQuery['action']>;
 
 export function mapActionToDependencyGroups(
   action: Action | ActionCardFragment | null,
-  actionDependencyRoles: NonNullable<GetPlanContextQuery['plan']>['actionDependencyRoles'],
+  actionDependencyRoles: NonNullable<PlanContextQuery['plan']>['actionDependencyRoles'],
   getFullAction?: (id: string) => Action | undefined
 ): ActionGroup[] {
   if (
@@ -159,11 +159,13 @@ export function mapActionToDependencyGroups(
 const GET_ACTION_DEPS = gql`
   query ActionDependencies($action: ID!, $workflow: WorkflowState) @workflow(state: $workflow) {
     action(id: $action) {
+      id
       dependencyRole {
         id
         name
       }
       allDependencyRelationships {
+        id
         preceding {
           id
           dependencyRole {

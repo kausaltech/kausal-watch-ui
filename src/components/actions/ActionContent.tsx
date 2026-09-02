@@ -13,10 +13,9 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { Col, Container, Row } from 'reactstrap';
 
 import {
-  type ActionAsideContentBlocksFragmentFragment,
-  type ActionMainContentBlocksFragmentFragment,
-  ActionStatusSummaryIdentifier,
-  type GetActionDetailsQuery,
+  type ActionAsideContentBlocksFragment,
+  type ActionDetailsQuery,
+  type ActionMainContentBlocksFragment,
 } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import { deploymentType } from '@/common/environment';
@@ -62,7 +61,7 @@ import { PhaseTimeline } from './PhaseTimeline';
 import RestrictedBlockWrapper from './blocks/RestrictedBlockWrapper';
 import { ActionDependenciesBlock } from './blocks/action-dependencies/ActionDependenciesBlock';
 
-export type ActionContentAction = NonNullable<GetActionDetailsQuery['action']>;
+export type ActionContentAction = NonNullable<ActionDetailsQuery['action']>;
 
 const LastUpdated = styled.div`
   margin-bottom: 1em;
@@ -193,7 +192,7 @@ function LegacyUpdatedAt({ date }: { date: string }) {
 type SectionIdentifier = 'detailsMainTop' | 'detailsMainBottom' | 'detailsAside';
 
 type ActionContentBlockProps = {
-  block: ActionMainContentBlocksFragmentFragment | ActionAsideContentBlocksFragmentFragment;
+  block: ActionMainContentBlocksFragment | ActionAsideContentBlocksFragment;
   action: ActionContentAction;
   section: SectionIdentifier;
   pageId: string | null;
@@ -226,10 +225,11 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       );
     case 'ActionOfficialNameBlock':
       return <ActionOfficialNameBlock plan={plan} block={block} action={action} />;
-    case 'ActionLinksBlock':
+    case 'ActionLinksBlock': {
       const { links } = action;
       if (!links.length) return null;
       return <ActionLinksBlock links={links} />;
+    }
     case 'ActionMergedActionsBlock':
       if (!action.mergedActions.length) return null;
       return <ActionMergedActionsBlock actions={action.mergedActions} />;
@@ -270,7 +270,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
       );
     case 'ActionScheduleBlock':
       return <ActionScheduleBlock heading={block.fieldLabel ?? ''} action={action} plan={plan} />;
-    case 'ActionContentSectionBlock':
+    case 'ActionContentSectionBlock': {
       const { heading, helpText, layout, blocks } = block;
       return (
         <ActionContentSectionBlock
@@ -283,6 +283,7 @@ function ActionContentBlock(props: ActionContentBlockProps) {
           pageId={pageId}
         />
       );
+    }
     case 'ActionContactFormBlock': {
       return (
         <ExpandableFeedbackFormBlock
@@ -429,10 +430,7 @@ function ActionContentProgressContainer({ action }: Pick<ActionContentProps, 'ac
   const plan = usePlan();
   const t = useTranslations();
   const hasReason = !!action.manualStatusReason;
-  const isBadgeVisible =
-    action.status &&
-    action.status.identifier !== ActionStatusSummaryIdentifier.Undefined &&
-    !hasReason;
+  const isBadgeVisible = action.status && action.status.identifier !== 'undefined' && !hasReason;
 
   const commonStatusBadgeProps = {
     action,
@@ -468,33 +466,46 @@ function ActionContentProgressContainer({ action }: Pick<ActionContentProps, 'ac
   );
 }
 
-function ActionContentSectionBlock(props) {
-  const { blocks, action, section, heading, helpText, layout, pageid } = props;
+type ActionContentSectionBlockProps = Pick<
+  ActionContentBlockProps,
+  'action' | 'section' | 'pageId'
+> & {
+  blocks: unknown;
+  heading: string | null;
+  helpText: string | null;
+  layout: string | null;
+};
+
+function ActionContentSectionBlock(props: ActionContentSectionBlockProps) {
+  const { blocks, action, section, heading, helpText, layout, pageId } = props;
+  const renderableBlocks = blocks as Array<ActionContentBlockProps['block'] | null> | null;
 
   return (
     <ContentGroup $vertical={layout !== 'grid'}>
       <h2>
         {heading}
-        {helpText && <PopoverTip content={helpText} identifier={section.id} />}
+        {helpText && <PopoverTip content={helpText} identifier={section} />}
       </h2>
       <Row>
-        {blocks.map((block) => (
-          <Col md={layout === 'grid' ? 4 : 12} key={block.id} className="mb-3">
-            <RestrictedBlockWrapper
-              key={block.id}
-              isRestricted={block.meta?.restricted}
-              isHidden={block.meta?.hidden}
-            >
-              <ActionContentBlock
-                key={block.id}
-                block={block}
-                action={action}
-                section={section}
-                pageId={pageid}
-              />
-            </RestrictedBlockWrapper>
-          </Col>
-        ))}
+        {renderableBlocks?.map((block) => {
+          if (!block) return null;
+          const meta = 'meta' in block ? block.meta : null;
+          return (
+            <Col md={layout === 'grid' ? 4 : 12} key={block.id} className="mb-3">
+              <RestrictedBlockWrapper
+                isRestricted={meta?.restricted ?? false}
+                isHidden={meta?.hidden ?? false}
+              >
+                <ActionContentBlock
+                  block={block}
+                  action={action}
+                  section={section}
+                  pageId={pageId}
+                />
+              </RestrictedBlockWrapper>
+            </Col>
+          );
+        })}
       </Row>
     </ContentGroup>
   );
@@ -502,7 +513,7 @@ function ActionContentSectionBlock(props) {
 
 type ActionContentProps = {
   action: ActionContentAction;
-  extraPlanData: NonNullable<GetActionDetailsQuery['plan']>;
+  extraPlanData: NonNullable<ActionDetailsQuery['plan']>;
   testId?: string;
   pdfExportConfigured?: boolean;
 };
@@ -562,7 +573,9 @@ function ActionContent(props: ActionContentProps) {
 
   // Full width IndicatorCausalChainBlock can only be rendered in the bottom of the page
   // so we do not use it in streamfield layout
-  const isIndicatorCausalChainBlock = (block) => block.__typename === 'IndicatorCausalChainBlock';
+  type DetailBlock = NonNullable<typeof actionListPage.detailsMainTop>[number];
+  const isIndicatorCausalChainBlock = (block: DetailBlock) =>
+    block?.__typename === 'IndicatorCausalChainBlock';
   const detailsCombined = (actionListPage['detailsMainTop'] ?? []).concat(
     actionListPage['detailsMainBottom'] ?? []
   );
@@ -732,7 +745,7 @@ function ActionContent(props: ActionContentProps) {
               ))}
             </ActionSection>
           ) : null}
-          {(action.supersededBy || action.supersededActions.length > 0) && (
+          {(action.supersededBy ?? action.supersededActions.length > 0) && (
             <ActionSection>
               <ActionVersionHistory action={action} />
             </ActionSection>

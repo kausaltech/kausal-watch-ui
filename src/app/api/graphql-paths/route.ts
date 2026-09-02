@@ -24,7 +24,7 @@ const PATHS_COOKIE_PREFIX = 'paths_api_';
 
 export async function POST(request: NextRequest) {
   const headersList = await headers();
-  const requestData = await request.json();
+  const requestData: unknown = await request.json();
   const backendCookieHeader = getClientCookieAsHeader(request, {
     prefix: PATHS_COOKIE_PREFIX,
   });
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     let data: object | undefined, errorMessage: string | undefined;
     try {
       if (backendResponse.headers.get('content-type') === 'application/json') {
-        data = await backendResponse.json();
+        data = (await backendResponse.json()) as object;
       }
     } catch (error) {
       captureException(error);
@@ -76,12 +76,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const data = await backendResponse.json();
+    const data: unknown = await backendResponse.json();
     await forwardSetCookie(request, backendResponse, { prefix: PATHS_COOKIE_PREFIX });
     return NextResponse.json(data, { status: 200, headers: responseHeaders });
-  } catch (error) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { errors: [{ message: `Response is invalid JSON: ${error?.message}` }] },
+      { errors: [{ message: `Response is invalid JSON: ${message}` }] },
       { status: 500, headers: responseHeaders }
     );
   }
