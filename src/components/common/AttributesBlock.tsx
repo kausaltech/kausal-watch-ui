@@ -47,7 +47,7 @@ export function attributeHasValue(attribute: Attribute) {
   const { __typename } = attribute;
 
   if (__typename === 'AttributeChoice') {
-    return !!(attribute.choice || attribute.text);
+    return attribute.choice ? true : Boolean(attribute.text);
   } else if (__typename === 'AttributeText' || __typename === 'AttributeRichText') {
     return !!attribute.value;
   } else if (__typename === 'AttributeCategoryChoice') {
@@ -59,11 +59,6 @@ export function attributeHasValue(attribute: Attribute) {
 type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment;
   attributeType: AttributesBlockAttributeTypeFragment;
-};
-
-type AttributeContentNestedTypeProps = {
-  attribute: AttributesBlockAttributeWithNestedTypeFragment;
-  attributeType: null | undefined;
 };
 
 type AttributesBlockProps = PropsWithChildren<{
@@ -91,7 +86,10 @@ function AttributesBlock(props: AttributesBlockProps) {
     return null;
   }
 
-  let typesById: Map<string, AttributeContentProps['attributeType']> | null;
+  type AttributeTypeWithMeta = AttributeContentProps['attributeType'] & {
+    meta?: { restricted?: boolean; hidden?: boolean };
+  };
+  let typesById: Map<string, AttributeTypeWithMeta> | null = null;
 
   if (types) {
     typesById = new Map(types.map((type) => [type.id, type]));
@@ -104,9 +102,7 @@ function AttributesBlock(props: AttributesBlockProps) {
       <AttributesList tag="ul">
         {attributesWithValue.map((item: (typeof attributes)[0]) => {
           const attributeType = typesById?.get(item.type.id);
-          const typeMeta = attributeType as
-            | (typeof attributeType & { meta?: { restricted?: boolean; hidden?: boolean } })
-            | undefined;
+          const typeMeta = attributeType;
           return (
             <RestrictedBlockWrapper
               key={item.id}
@@ -115,11 +111,7 @@ function AttributesBlock(props: AttributesBlockProps) {
             >
               <AttributeItem tag="li" key={item.id} md={vertical ? 12 : 6}>
                 {attributeType ? (
-                  <ActionAttribute
-                    key={item.id}
-                    attribute={item as AttributesBlockAttributeFragment}
-                    attributeType={attributeType}
-                  />
+                  <ActionAttribute key={item.id} attribute={item} attributeType={attributeType} />
                 ) : (
                   <ActionAttribute
                     key={item.id}

@@ -9,7 +9,6 @@ const MessageText = styled.p`
 `;
 
 export default function StatusMessage({ message, noindex }) {
-  const isServer = typeof window === 'undefined';
   return (
     <div className="mb-5">
       <Head>

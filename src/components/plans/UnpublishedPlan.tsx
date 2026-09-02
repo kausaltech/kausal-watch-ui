@@ -36,7 +36,7 @@ export default function UnpublishedPlan({ message, loginEnabled, testId }: Props
     if (session.status === 'authenticated') {
       router.push('/');
     }
-  }, [session]);
+  }, [router, session]);
 
   return (
     <Box sx={{ py: 8 }} data-testid={testId}>

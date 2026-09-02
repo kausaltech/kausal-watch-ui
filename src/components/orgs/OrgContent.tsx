@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
@@ -140,7 +139,6 @@ type Props = {
 function OrgContent({ org, planFromOrgQuery, testId }: Props) {
   const plan = usePlan();
   const t = useTranslations();
-  const theme = useTheme();
   const [selectedPlanIndex, setSelectedPlan] = useState(0);
 
   // Make sure host plan is first

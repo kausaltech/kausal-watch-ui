@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const INDICATOR_CHART_FRAGMENTS = gql`
-  fragment DashboardIndicatorFragment on Indicator {
+  fragment DashboardIndicator on Indicator {
     id
     name
     description
@@ -13,22 +13,25 @@ export const INDICATOR_CHART_FRAGMENTS = gql`
     ticksRounding
     timeResolution
     latestValue {
+      id
       value
       date
     }
     dataCategoriesAreStackable
     goals {
+      id
       value
       date
     }
     unit {
+      id
       name
       shortName
     }
     desiredTrend
   }
 
-  fragment ChartDimensionFragment on Dimension {
+  fragment ChartDimension on Dimension {
     id
     name
     categories {
@@ -37,7 +40,7 @@ export const INDICATOR_CHART_FRAGMENTS = gql`
     }
   }
 
-  fragment ChartSeriesFragment on DashboardIndicatorChartSeries {
+  fragment ChartSeries on DashboardIndicatorChartSeries {
     dimensionCategory {
       id
       name
@@ -52,59 +55,59 @@ export const INDICATOR_CHART_FRAGMENTS = gql`
 
   fragment BarChartVisualization on IndicatorBarChartInterface {
     indicator {
-      ...DashboardIndicatorFragment
+      ...DashboardIndicator
     }
     dimension {
-      ...ChartDimensionFragment
+      ...ChartDimension
     }
     barType
     chartSeries {
-      ...ChartSeriesFragment
+      ...ChartSeries
     }
   }
 
   fragment LineChartVisualization on IndicatorLineChartInterface {
     indicator {
-      ...DashboardIndicatorFragment
+      ...DashboardIndicator
     }
     dimension {
-      ...ChartDimensionFragment
+      ...ChartDimension
     }
     showTotalLine
     chartSeries {
-      ...ChartSeriesFragment
+      ...ChartSeries
     }
   }
 
   fragment AreaChartVisualization on IndicatorAreaChartInterface {
     indicator {
-      ...DashboardIndicatorFragment
+      ...DashboardIndicator
     }
     dimension {
-      ...ChartDimensionFragment
+      ...ChartDimension
     }
     showTotalLine
     chartSeries {
-      ...ChartSeriesFragment
+      ...ChartSeries
     }
   }
 
   fragment PieChartVisualization on IndicatorPieChartInterface {
     indicator {
-      ...DashboardIndicatorFragment
+      ...DashboardIndicator
     }
     dimension {
-      ...ChartDimensionFragment
+      ...ChartDimension
     }
     year
     chartSeries {
-      ...ChartSeriesFragment
+      ...ChartSeries
     }
   }
 
   fragment SummaryVisualization on IndicatorSummaryInterface {
     indicator {
-      ...DashboardIndicatorFragment
+      ...DashboardIndicator
     }
   }
 `;

@@ -1,5 +1,3 @@
-import { useTheme } from '@emotion/react';
-
 import { useTranslations } from 'next-intl';
 
 import { ActionSection } from '@/components/actions/ActionContent';
@@ -8,7 +6,6 @@ import RichText from '@/components/common/RichText';
 const ActionDescriptionBlock = (props) => {
   const { content, fieldLabel } = props;
   const t = useTranslations();
-  const theme = useTheme();
 
   let headerClass = '';
   let headerText = fieldLabel;

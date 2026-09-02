@@ -134,7 +134,9 @@ export const ImplementationPhaseTooltipContent = ({ action, plan }: TooltipWithP
     }
   };
 
-  const statusDisplay = <StatusLabel $color={status?.color}>{status.label}</StatusLabel>;
+  const statusDisplay = (
+    <StatusLabel $color={action.color ?? 'grey050'}>{status.label}</StatusLabel>
+  );
 
   // If action is merged, display merged status
   if (merged) {

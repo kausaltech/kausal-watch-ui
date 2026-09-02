@@ -85,12 +85,12 @@ function getSelectStyles<Option extends SelectDropdownOption>(
       maxWidth: `${multi ? '80%' : '100%'}`,
       color: `var(--bs-select${isDisabled ? '-disabled' : ''}-color)`,
     }),
-    valueContainer: (provided, state) => ({
+    valueContainer: (provided) => ({
       ...provided,
       padding:
         `calc(var(--bs-select-padding-y${suffix})) ` + `calc(var(--bs-select-padding-x${suffix}))`,
     }),
-    dropdownIndicator: (provided, state) => ({
+    dropdownIndicator: () => ({
       height: '100%',
       width: 'var(--bs-select-indicator-padding)',
       backgroundImage: 'var(--bs-select-indicator)',
@@ -98,11 +98,11 @@ function getSelectStyles<Option extends SelectDropdownOption>(
       backgroundPosition: `right var(--bs-select-padding-x) center`,
       backgroundSize: 'var(--bs-select-bg-size)',
     }),
-    input: ({ margin, paddingTop, paddingBottom, ...provided }, state) => ({
+    input: ({ margin, paddingTop, paddingBottom, ...provided }) => ({
       ...provided,
     }),
     option: (provided, state) => {
-      const { isSelected, isFocused, data } = state;
+      const { isSelected, isFocused } = state;
       const ret = {
         ...provided,
         color: isSelected
@@ -120,26 +120,26 @@ function getSelectStyles<Option extends SelectDropdownOption>(
       };
       return ret;
     },
-    menu: ({ marginTop, ...provided }, state) => ({
+    menu: ({ marginTop, ...provided }) => ({
       ...provided,
     }),
-    multiValue: (provided, state) => ({
+    multiValue: (provided) => ({
       ...provided,
       margin: `calc(var(--bs-select-padding-y${suffix})/2) calc(var(--bs-select-padding-x${suffix})/2)`,
     }),
-    clearIndicator: ({ padding, ...provided }, state) => ({
+    clearIndicator: ({ padding, ...provided }) => ({
       ...provided,
       alignItems: 'center',
       justifyContent: 'center',
       height: '100%',
       width: 'var(--bs-select-indicator-padding)',
     }),
-    multiValueLabel: ({ padding, paddingLeft, fontSize, ...provided }, state) => ({
+    multiValueLabel: ({ padding, paddingLeft, fontSize, ...provided }) => ({
       ...provided,
       padding: `0 var(--bs-select-padding-y${suffix})`,
       whiteSpace: 'normal',
     }),
-    placeholder: (provided, state) => ({
+    placeholder: (provided) => ({
       ...provided,
       color: theme.graphColors.grey070,
     }),
@@ -193,7 +193,7 @@ const MultiValue = (props: MultiValueProps<SelectDropdownOption, boolean>) => {
   const { data, ...rest } = props;
   const newData = {
     id: '__combined__',
-    label: props.getValue()[0]!.label,
+    label: props.getValue()[0].label,
     indent: Math.min(...props.getValue().map((v) => v.indent ?? 0)),
   };
   return <components.SingleValue data={newData} {...rest}></components.SingleValue>;

@@ -5,10 +5,7 @@ import { useTheme } from '@emotion/react';
 import { Col, Container, Row } from 'reactstrap';
 
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
-import type {
-  GetContentPageQuery,
-  HeroImageFragmentFragment,
-} from '@/common/__generated__/graphql';
+import type { GetContentPageQuery, HeroImageFragment } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
 import { typenameMatches } from '@/common/utils';
 import CategoryPageContent from '@/components/categories/CategoryPageContent';
@@ -89,8 +86,8 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
         throw new Error('Category page without category configured');
       }
       const headerImage =
-        (category.image satisfies HeroImageFragmentFragment | null) ||
-        ((category.parent?.image ?? null) satisfies HeroImageFragmentFragment | null);
+        (category.image satisfies HeroImageFragment | null) ||
+        ((category.parent?.image ?? null) satisfies HeroImageFragment | null);
       const iconImage = category.iconImage?.rendition?.src;
 
       return (
@@ -113,7 +110,7 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
     }
     case 'StaticPage': {
       const { headerImage } = page as {
-        headerImage: HeroImageFragmentFragment | null;
+        headerImage: HeroImageFragment | null;
       };
 
       return (

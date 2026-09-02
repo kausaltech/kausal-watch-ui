@@ -50,7 +50,7 @@ export type ImageRenditionRef = {
   width: number;
 } | null;
 
-/* The aspect-preserving rendition ladder served by HeroImageFragment */
+/* The aspect-preserving rendition ladder served by HeroImage */
 export interface HeroImageRenditions {
   fullSmall?: ImageRenditionRef;
   fullMedium?: ImageRenditionRef;
@@ -116,7 +116,7 @@ export function getActionImage<TImage>(
 const images = {
   fragments: {
     heroImage: gql`
-      fragment HeroImageFragment on Image {
+      fragment HeroImage on Image {
         id
         title
         altText
@@ -148,7 +148,7 @@ const images = {
       }
     `,
     cardImage: gql`
-      fragment CardImageFragment on Image {
+      fragment CardImage on Image {
         id
         title
         altText
@@ -174,7 +174,7 @@ const images = {
       }
     `,
     socialImage: gql`
-      fragment SocialImageFragment on Image {
+      fragment SocialImage on Image {
         id
         social: rendition(size: "1200x627") {
           id

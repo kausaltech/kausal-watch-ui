@@ -517,7 +517,7 @@ function ActionContent(props: ActionContentProps) {
 
   useEffect(() => {
     setLoading(false);
-  }, [action]);
+  }, [action, setLoading]);
 
   useEffect(() => {
     // Only report this misconfiguration on real deployments; it's noise in
@@ -601,19 +601,6 @@ function ActionContent(props: ActionContentProps) {
         'ActionContentCategoryTypeBlock',
       ];
 
-      const groupableBlockTypes = [
-        'ActionContentAttributeTypeBlock',
-        'ActionContentCategoryTypeBlock',
-        'ActionOfficialNameBlock',
-        'ActionLeadParagraphBlock',
-        'ActionDescriptionBlock',
-        'ActionLinksBlock',
-        'ActionTasksBlock',
-        'ActionMergedActionsBlock',
-        'ActionRelatedActionsBlock',
-        'ActionIndicatorsBlock',
-      ];
-
       for (const block of blocks) {
         if (previousSectionBlock && block.__typename !== previousSectionBlock.__typename) {
           emitGroupedBlocks();
@@ -622,7 +609,7 @@ function ActionContent(props: ActionContentProps) {
         // some blocks get special treatment so that they can be grouped together
         if (automaticallyGroupedBlockTypes.includes(block.__typename)) {
           previousSectionBlock = block;
-          groupedBlocks.push(block as unknown as ActionContentBlockProps['block']);
+          groupedBlocks.push(block);
         } else {
           allSections.push(
             <RestrictedBlockWrapper
@@ -723,6 +710,7 @@ function ActionContent(props: ActionContentProps) {
               <ActionStatus
                 plan={plan}
                 statusSummary={action.statusSummary}
+                color={action.color}
                 completion={action.completion}
                 showProgressBar={showCompletionProgress}
               />

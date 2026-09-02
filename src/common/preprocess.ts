@@ -134,7 +134,7 @@ const getStatusData = (
     counts.set(identifier, val);
     colors.set(identifier, color ?? null);
   }
-  actionStatusSummaries.forEach(({ identifier, label, color, sentiment }) => {
+  actionStatusSummaries.forEach(({ identifier, label, sentiment }) => {
     const statusCount = counts.get(identifier) ?? 0;
     if (statusCount > 0) {
       progress.values.push(statusCount);
@@ -144,7 +144,7 @@ const getStatusData = (
           : label || unknownLabelText
       );
       progress.colors.push(
-        theme.graphColors[(colors.get(identifier) ?? color) as keyof Theme['graphColors']]
+        theme.graphColors[(colors.get(identifier) ?? 'grey050') as keyof Theme['graphColors']]
       );
       if (
         sentiment === Sentiment.Positive ||

@@ -89,10 +89,6 @@ const XSS_CONTENT = [
  * Full combined value suitable for passing as leadContent.
  * Individual tests use the slices above to avoid DOM-nesting warnings.
  */
-const LEAD_CONTENT = [SAFE_CONTENT, LINK_CONTENT, IMAGE_CONTENT, IFRAME_CONTENT, XSS_CONTENT].join(
-  '\n'
-);
-
 describe('<RichText /> with leadContent HTML', () => {
   // ── Safe content rendering ──
 

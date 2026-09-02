@@ -55,8 +55,8 @@ const PLEDGE_FRAGMENT = gql`
     uuid
     slug
     image {
-      ...HeroImageFragment
-      ...CardImageFragment
+      ...HeroImage
+      ...CardImage
     }
     commitmentCount
     residentCount
@@ -79,7 +79,7 @@ const GET_PLEDGES = gql`
         title
         leadContent
         backgroundImage {
-          ...HeroImageFragment
+          ...HeroImage
         }
       }
     }

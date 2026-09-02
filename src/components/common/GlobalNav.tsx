@@ -607,6 +607,8 @@ function GlobalNav(props) {
       return <EmptyLogo />;
     } else if (theme.themeLogoUrl.endsWith('.png')) {
       return (
+        // Theme assets are already deployment-owned static files; Next image optimization adds no value.
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={getThemeStaticURL(theme.themeLogoUrl)}
           alt={`${ownerName}, ${siteTitle} ${t('front-page')}`}

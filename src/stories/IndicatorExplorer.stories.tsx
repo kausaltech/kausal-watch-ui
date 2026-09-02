@@ -1,6 +1,6 @@
 import {
-  type FormEvent,
   type ReactNode,
+  type SyntheticEvent,
   isValidElement,
   useEffect,
   useMemo,
@@ -47,9 +47,12 @@ interface LocalInstance {
   plans: string[];
 }
 
+type StoryTheme = { settings?: { graphs?: Record<string, unknown> } };
+
 function getLocalInstances(): LocalInstance[] {
   try {
-    return JSON.parse(process.env.LOCAL_INSTANCES ?? 'null') ?? [];
+    const parsed: unknown = JSON.parse(process.env.LOCAL_INSTANCES ?? 'null');
+    return Array.isArray(parsed) ? (parsed as LocalInstance[]) : [];
   } catch {
     return [];
   }
@@ -61,9 +64,12 @@ function toGraphqlEndpoint(apiUrl: string) {
 
 // All themes known to Storybook, keyed by theme identifier
 // (injected by .storybook/main.ts, same data the theme toolbar uses).
-function getThemes(): Record<string, Record<string, unknown>> {
+function getThemes(): Record<string, StoryTheme> {
   try {
-    return JSON.parse(process.env.THEMES ?? 'null') ?? {};
+    const parsed: unknown = JSON.parse(process.env.THEMES ?? 'null');
+    return typeof parsed === 'object' && parsed !== null
+      ? (parsed as Record<string, StoryTheme>)
+      : {};
   } catch {
     return {};
   }
@@ -77,6 +83,7 @@ const GET_PLAN_INDICATORS = gql`
       themeIdentifier
       viewUrl
       organization {
+        id
         name
       }
     }
@@ -86,10 +93,12 @@ const GET_PLAN_INDICATORS = gql`
       level(plan: $plan)
       timeResolution
       unit {
+        id
         name
         shortName
       }
       latestValue {
+        id
         date
         value
       }
@@ -119,9 +128,11 @@ const GET_PLAN_INDICATORS = gql`
       nonQuantifiedGoal
       nonQuantifiedGoalDate
       quantity {
+        id
         name
       }
       referenceValue {
+        id
         value
         date
       }
@@ -155,6 +166,7 @@ const GET_PLAN_INDICATORS = gql`
         }
       }
       dimensions {
+        id
         dimension {
           id
           name
@@ -388,7 +400,10 @@ const SettingsDetails = styled.details`
 function formatSettingValue(value: unknown): string {
   if (value == null || value === '') return '–';
   if (typeof value === 'boolean') return value ? 'true' : 'false';
-  return String(value);
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'bigint') {
+    return String(value);
+  }
+  return JSON.stringify(value);
 }
 
 /** Collapsible listing of the indicator's own visualisation-affecting
@@ -822,7 +837,10 @@ function renderGraphSettingValue(value: unknown): ReactNode {
     );
   }
   if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'bigint') {
+    return String(value);
+  }
+  return typeof value === 'symbol' ? (value.description ?? '') : '[function]';
 }
 
 /** Collapsible listing of the active theme's `settings.graphs` variables
@@ -894,7 +912,7 @@ function describeIndicator(indicator: ExplorerIndicator): string {
 }
 
 function IndicatorComparisonList({ plan }: { plan: string }) {
-  const themes = useMemo(getThemes, []);
+  const themes = useMemo(() => getThemes(), []);
   const { data, loading, error } = useQuery<ExplorerQueryData, ExplorerQueryVariables>(
     GET_PLAN_INDICATORS,
     { variables: { plan } }
@@ -1041,7 +1059,7 @@ function PlanIdentifierInput({
 }) {
   const [input, setInput] = useState(initialPlanIdentifier ?? '');
 
-  function handleSubmit(event: FormEvent) {
+  function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     onSubmit(input.trim());
   }
@@ -1072,7 +1090,7 @@ interface IndicatorExplorerProps {
 let lastSelection: { apiUrl: string; plan: string } | undefined;
 
 function IndicatorExplorer({ apiUrl, initialPlanIdentifier = '' }: IndicatorExplorerProps) {
-  const instances = useMemo(getLocalInstances, []);
+  const instances = useMemo(() => getLocalInstances(), []);
   const hasInstances = instances.length > 0;
   const [selection, setSelectionState] = useState(
     () =>

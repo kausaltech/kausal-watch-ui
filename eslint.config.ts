@@ -18,9 +18,12 @@ const storybookConfig = await getStorybookConfig([
   'src/**/*.stories.@(ts|tsx|js|jsx)',
   '.storybook/**/*.@(ts|tsx|js|jsx)',
 ]);
+const graphqlConfig = getGraphQLDocsConfig(['src']);
+graphqlConfig.rules['@graphql-eslint/selection-set-depth'] = ['error', { maxDepth: 15 }];
+
 const config: ConfigWithExtends[] = defineConfig(
   getGraphQLProcessorConfig({ jsDirs: ['src'] }),
-  getGraphQLDocsConfig(['src']),
+  graphqlConfig,
   nextConfig,
   nodeConfig,
   storybookConfig,

@@ -236,7 +236,6 @@ const getDefaultColumns = (
     isNormalized: false,
     valueType: IndicatorColumnValueType.Latest,
     defaultYear: null,
-    referenceYear: null, // @deprecated, remove when type is updated
     hideUnit: false,
     highlightGoalMet: true,
   });
@@ -251,7 +250,6 @@ const getDefaultColumns = (
       isNormalized: true,
       valueType: IndicatorColumnValueType.Latest,
       defaultYear: null,
-      referenceYear: null, // @deprecated, remove when type is updated
       hideUnit: false,
       highlightGoalMet: true,
     });

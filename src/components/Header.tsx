@@ -23,7 +23,6 @@ import { getMetaTitles } from '@/utils/metadata';
 import TopToolBar from './common/TopToolBar';
 import { useCustomComponent } from './paths/custom';
 
-type MainMenu = PlanContextFragment['mainMenu'];
 type MenuItem = NonNullable<PlanContextFragment['mainMenu']>['items'][number];
 type PageMenuItem = Extract<MenuItem, { __typename: 'PageMenuItem' }>;
 
@@ -118,7 +117,7 @@ function Header() {
       if (staticPages) links = links.concat(staticPages);
     }
     return links;
-  }, [activeBranch, plan.mainMenu]);
+  }, [locale, plan.mainMenu, plan.primaryLanguage]);
 
   setActivePages(navLinks, pathname, activeBranch);
 
@@ -147,7 +146,7 @@ function Header() {
         ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}
         navItems={navLinks}
         externalItems={externalLinks}
-        customToolbarItems={theme.settings.customNavbarTools || []}
+        customToolbarItems={theme.settings.customNavbarTools ?? []}
         sticky={theme.settings.stickyNavigation}
         logoLink={theme.navLogoLink}
       />

@@ -79,7 +79,6 @@ export const INDICATOR_LIST_PAGE_FRAGMENT = gql`
         sourceField
         isNormalized
         valueType
-        referenceYear
         defaultYear
         hideUnit
         highlightGoalMet

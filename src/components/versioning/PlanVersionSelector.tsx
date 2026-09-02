@@ -40,10 +40,6 @@ const VersionDropdownItem = styled.a<{ $isActive?: boolean }>`
   }
 `;
 
-const VersionName = styled.div`
-  font-size: ${(props) => props.theme.fontSizeSm};
-`;
-
 const VersionDate = styled.div`
   color: ${(props) => props.theme.themeColors.dark};
 `;

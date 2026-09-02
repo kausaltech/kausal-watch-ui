@@ -474,6 +474,8 @@ function SiteFooter(props: SiteFooterProps) {
   const OrgLogo = () => {
     if (theme.themeLogoWhiteUrl.endsWith('.png')) {
       return (
+        // Theme assets are already deployment-owned static files; Next image optimization adds no value.
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
           alt={`${ownerName}, ${siteTitle} ${t('front-page')}`}

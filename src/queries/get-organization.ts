@@ -91,7 +91,6 @@ const GET_ORG_DETAILS = gql`
     actionStatusSummaries {
       identifier
       label
-      color
       isCompleted
       isActive
       sentiment

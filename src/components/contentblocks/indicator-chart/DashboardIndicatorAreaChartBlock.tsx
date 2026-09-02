@@ -15,6 +15,7 @@ import { useTranslations } from 'next-intl';
 import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { AreaChartVisualizationFragment } from '@/common/__generated__/graphql';
+import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 
 import { getDefaultColors } from './indicator-chart-colors';
@@ -169,9 +170,9 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
       axisLabel: {
         color: theme.textColor.primary,
         formatter: (value: string) => {
-          if (timeResolution === 'YEAR') {
+          if (timeResolution === IndicatorTimeResolution.Year) {
             return String(value);
-          } else if (timeResolution === 'MONTH') {
+          } else if (timeResolution === IndicatorTimeResolution.Month) {
             return String(value);
           } else {
             return value;

@@ -17,9 +17,14 @@ const defaultPhases = [
   },
 ];
 
-const defaultActions: any[] = [1, 2, 5]
+type TestAction = {
+  implementationPhase: (typeof defaultPhases)[number] | null;
+  statusSummary: { identifier: string; isActive: boolean; isCompleted: boolean };
+};
+
+const defaultActions: TestAction[] = [1, 2, 5]
   .map((count, idx) =>
-    new Array(count).fill(null).map((count) => ({
+    new Array(count).fill(null).map(() => ({
       implementationPhase: defaultPhases[idx],
       statusSummary: {
         identifier: 'ON_TIME',
@@ -117,7 +122,7 @@ const defaultPlan = {
   actionImplementationPhases: defaultPhases,
 };
 
-const mockT = (x) => x;
+const mockT = (x: string) => x;
 
 const getTestPhaseData = (actions: unknown, plan: unknown) =>
   getPhaseData(

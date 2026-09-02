@@ -225,7 +225,7 @@ export const getGoalValue = (
 
   if (defaultGoalYear === null || defaultGoalYear === undefined) {
     const nextGoal = validGoals.find((goal) => dayjs(goal.date).isSameOrAfter(now));
-    return nextGoal || null;
+    return nextGoal ?? null;
   }
 
   const defaultGoalYearStart = dayjs(`${defaultGoalYear}-01-01`);

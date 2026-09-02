@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { type ReactNode, type SyntheticEvent, useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 
@@ -7,7 +7,13 @@ import defaultTheme from 'public/static/themes/default/theme.json';
 import { ChromePicker } from 'react-color';
 import { Container, Table } from 'reactstrap';
 
-const ColorPicker = (props) => {
+type ColorPickerProps = {
+  color: string;
+  handleChange: (color: string) => void;
+  isDefault: boolean;
+};
+
+const ColorPicker = (props: ColorPickerProps) => {
   const { color, handleChange, isDefault } = props;
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
 
@@ -19,7 +25,7 @@ const ColorPicker = (props) => {
     setDisplayColorPicker(false);
   };
 
-  const handlePickerChange = (newColor, evt) => {
+  const handlePickerChange = (newColor: { rgb: { r: number; g: number; b: number } }) => {
     handleChange(`rgb(${newColor.rgb.r}, ${newColor.rgb.g}, ${newColor.rgb.b})`);
   };
 
@@ -75,7 +81,7 @@ const ColorPicker = (props) => {
 // (palette scales, typography variants, component overrides, ...). Only the
 // keys of the base Kausal theme are design tokens meant to be edited here,
 // so drop everything else.
-const filterToBaseThemeKeys = (theme) =>
+const filterToBaseThemeKeys = (theme: object): Record<string, unknown> =>
   Object.fromEntries(Object.entries(theme ?? {}).filter(([key]) => key in defaultTheme));
 
 const ThemeDesignTokens = () => {
@@ -89,20 +95,20 @@ const ThemeDesignTokens = () => {
     console.log('Theme Changed');
   }, [themeContext]);
 
-  const handleChange = (evt) => {
-    const { name, value } = evt.target;
+  const handleChange = (evt: SyntheticEvent<HTMLInputElement>) => {
+    const { name, value } = evt.currentTarget;
     const changedTheme = cloneDeep(editedTheme);
     set(changedTheme, name, value);
     setEditedTheme(() => changedTheme);
   };
 
-  const handleColorChange = (val, nam) => {
+  const handleColorChange = (val: string, nam: string) => {
     const changedTheme = cloneDeep(editedTheme);
     set(changedTheme, nam, val);
     setEditedTheme(() => changedTheme);
   };
 
-  const isColor = (strColor) => {
+  const isColor = (strColor: string) => {
     // Check for valid hex color (3 or 6 digit hex)
     const hexPattern = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
     if (hexPattern.test(strColor)) {
@@ -116,8 +122,10 @@ const ThemeDesignTokens = () => {
     return s.color !== '';
   };
 
-  const TokenInput = (props) => {
+  const TokenInput = (props: { tokenName: string; tokenValue: unknown }) => {
     const { tokenName, tokenValue } = props;
+    const displayValue =
+      typeof tokenValue === 'string' || typeof tokenValue === 'number' ? String(tokenValue) : '';
 
     const [tokenState, setTokenState] = useState({
       isEdited: get(themeContext, tokenName) !== tokenValue,
@@ -129,14 +137,14 @@ const ThemeDesignTokens = () => {
         isEdited: get(themeContext, tokenName) !== tokenValue,
         isDefault: get(defaultTheme, tokenName) === tokenValue,
       });
-    }, [tokenValue]);
+    }, [tokenName, tokenValue]);
 
     let AppropriateInput;
 
-    if (isColor(tokenValue))
+    if (isColor(displayValue))
       AppropriateInput = (
         <ColorPicker
-          color={tokenValue}
+          color={displayValue}
           handleChange={(newColor) => handleColorChange(newColor, tokenName)}
           isDefault={tokenState.isDefault}
         />
@@ -146,7 +154,7 @@ const ThemeDesignTokens = () => {
         <input
           type="text"
           name={tokenName}
-          defaultValue={tokenValue}
+          defaultValue={displayValue}
           onInput={handleChange}
           style={{
             color: tokenState.isDefault && '#999999',
@@ -158,7 +166,7 @@ const ThemeDesignTokens = () => {
     return AppropriateInput;
   };
 
-  const renderTokenRows = (token, tokenPath = '') => {
+  const renderTokenRows = (token: unknown, tokenPath = ''): ReactNode => {
     if (!isObject(token)) {
       const tokenName = tokenPath;
       return (
@@ -199,7 +207,12 @@ const ThemeDesignTokens = () => {
           </tbody>
         </Table>
       </div>
-      <h3>Theme JSON: {editedTheme.name}</h3>
+      <h3>
+        Theme JSON:{' '}
+        {typeof editedTheme.name === 'string' || typeof editedTheme.name === 'number'
+          ? String(editedTheme.name)
+          : ''}
+      </h3>
       <div contentEditable="true">
         <pre className="bg-light" style={{ maxHeight: '400px', overflow: 'auto' }}>
           <code>{JSON.stringify(editedTheme, null, 2)}</code>

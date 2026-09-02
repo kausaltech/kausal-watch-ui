@@ -1,4 +1,3 @@
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
@@ -13,7 +12,6 @@ const LeadParagraph = styled.div`
 const ActionLeadParagraphBlock = (props) => {
   const { content, fieldLabel } = props;
   const t = useTranslations();
-  const theme = useTheme();
 
   let headerClass = '';
   let headerText = fieldLabel;

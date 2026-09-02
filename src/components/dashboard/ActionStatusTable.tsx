@@ -98,20 +98,6 @@ const TableSortingIcon = styled(Icon, transientOptions)<{ $selected: boolean }>`
   opacity: ${(props) => (props.$selected ? 1 : 0.3)};
 `;
 
-function isChildOrg(childOrg, parentOrg) {
-  function makeTree(org) {
-    const ids: string[] = [];
-    while (org) {
-      ids.push(org.id);
-      org = org.parent;
-    }
-    return ids;
-  }
-  const childTree = makeTree(childOrg);
-  const parentTree = [parentOrg.id];
-  return childTree.some((id) => parentTree.indexOf(id) >= 0);
-}
-
 class AttributeType {
   id: string;
   constructor(id: string) {
@@ -241,15 +227,12 @@ interface Props {
 const ActionStatusTable = (props: Props) => {
   const {
     actions,
-    orgs,
     columns,
     plan,
     enableExport = true,
     planViewUrl,
     hasRelatedPlans = false,
   } = props;
-
-  const orgMap = new Map(orgs.map((org) => [org.id, org]));
 
   const [sort, setSort] = useState<Sort>({ key: null, direction: 1 });
 

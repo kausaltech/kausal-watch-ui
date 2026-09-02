@@ -210,7 +210,7 @@ function PledgeFeedbackComponent({
           result.data.createUserFeedback.errors.flatMap((error) => error.messages)
         );
       }
-    } catch (error) {
+    } catch {
       // Error will be shown via mutationError or otherMutationErrors
     }
   };

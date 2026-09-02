@@ -5,7 +5,7 @@ import images from '@/common/images';
 /* Detailed category query for category card lists */
 
 export const CATEGORY_FRAGMENT = gql`
-  fragment CategoryFragment on Category {
+  fragment Category on Category {
     id
     identifier
     name
@@ -18,7 +18,7 @@ export const CATEGORY_FRAGMENT = gql`
       namePlural
     }
     image {
-      ...CardImageFragment
+      ...CardImage
     }
     indicators {
       id
@@ -76,21 +76,21 @@ export const CATEGORY_FRAGMENT = gql`
 
 export const RECURSIVE_CATEGORY_FRAGMENT = gql`
   # Support parent categories up to two levels deep
-  fragment CategoryWithParentsFragment on Category {
+  fragment CategoryWithParents on Category {
     parent {
-      ...CategoryFragment
+      ...Category
       parent {
-        ...CategoryFragment
+        ...Category
         parent {
-          ...CategoryFragment
+          ...Category
         }
       }
     }
   }
 
-  fragment CategoryRecursiveFragment on Category {
-    ...CategoryFragment
-    ...CategoryWithParentsFragment
+  fragment CategoryRecursive on Category {
+    ...Category
+    ...CategoryWithParents
   }
 
   ${CATEGORY_FRAGMENT}
@@ -98,33 +98,33 @@ export const RECURSIVE_CATEGORY_FRAGMENT = gql`
 
 /*
  * Hero-quality images for a category and its parents. Layer this on top of
- * CategoryRecursiveFragment in contexts where the category image can end up
+ * CategoryRecursive in contexts where the category image can end up
  * as a page hero or og image (e.g. the action details page via getActionImage).
  */
 export const CATEGORY_HERO_IMAGES_FRAGMENT = gql`
-  fragment CategoryHeroImagesFragment on Category {
+  fragment CategoryHeroImages on Category {
     id
     image {
-      ...HeroImageFragment
-      ...SocialImageFragment
+      ...HeroImage
+      ...SocialImage
     }
     parent {
       id
       image {
-        ...HeroImageFragment
-        ...SocialImageFragment
+        ...HeroImage
+        ...SocialImage
       }
       parent {
         id
         image {
-          ...HeroImageFragment
-          ...SocialImageFragment
+          ...HeroImage
+          ...SocialImage
         }
         parent {
           id
           image {
-            ...HeroImageFragment
-            ...SocialImageFragment
+            ...HeroImage
+            ...SocialImage
           }
         }
       }
@@ -138,7 +138,7 @@ export const CATEGORY_HERO_IMAGES_FRAGMENT = gql`
 /* Simplified category query for category tags */
 
 export const CATEGORY_TAG_FRAGMENT = gql`
-  fragment CategoryTagFragment on Category {
+  fragment CategoryTag on Category {
     id
     identifier
     name
@@ -180,21 +180,21 @@ export const CATEGORY_TAG_FRAGMENT = gql`
 
 export const RECURSIVE_CATEGORY_TAG_FRAGMENT = gql`
   # Support parent categories up to two levels deep
-  fragment CategoryTagWithParentsFragment on Category {
+  fragment CategoryTagWithParents on Category {
     parent {
-      ...CategoryTagFragment
+      ...CategoryTag
       parent {
-        ...CategoryTagFragment
+        ...CategoryTag
         parent {
-          ...CategoryTagFragment
+          ...CategoryTag
         }
       }
     }
   }
 
-  fragment CategoryTagRecursiveFragment on Category {
-    ...CategoryTagFragment
-    ...CategoryTagWithParentsFragment
+  fragment CategoryTagRecursive on Category {
+    ...CategoryTag
+    ...CategoryTagWithParents
   }
 
   ${CATEGORY_TAG_FRAGMENT}

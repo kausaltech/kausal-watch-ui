@@ -67,14 +67,20 @@ interface StatusBadgeProps {
   subtle?: boolean;
 }
 
-const StatusBadge = ({ action, statusName, plan, reason, subtle = false }: StatusBadgeProps) => {
+const StatusBadge = ({
+  action,
+  statusName,
+  plan: _plan,
+  reason,
+  subtle = false,
+}: StatusBadgeProps) => {
   const { statusSummary, status } = action;
   const t = useTranslations();
 
   const theme = useTheme();
   let statusColor = status?.color
     ? theme.graphColors[status.color as keyof typeof theme.graphColors]
-    : getStatusColorForAction(action, plan, theme);
+    : getStatusColorForAction(action, theme);
   let label: string | undefined;
   // Continuous actions that are "completed" get a dedicated label/color in every
   // view, regardless of the status name the caller would otherwise pass in.

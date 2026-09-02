@@ -2,8 +2,6 @@
 
 import { notFound, useSearchParams } from 'next/navigation';
 
-import { useTranslations } from 'next-intl';
-
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
 import SearchView from '@/components/common/SearchView';
 import { usePlan } from '@/context/plan';
@@ -11,7 +9,6 @@ import { usePlan } from '@/context/plan';
 function SearchPage() {
   const plan = usePlan();
   const searchParams = useSearchParams();
-  const t = useTranslations();
   const handleUpdateSearchParams = useUpdateSearchParams();
   const search = SearchView.getSearchFromQuery(
     searchParams ? Object.fromEntries(searchParams) : {}

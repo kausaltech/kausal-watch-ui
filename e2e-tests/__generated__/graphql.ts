@@ -253,6 +253,7 @@ export type AttributeTypeInput = {
   choiceOptions: InputMaybe<Array<ChoiceOptionInput>>;
   /** The format of the fields with this type */
   format: AttributeTypeFormat;
+  /** A help text shown to visitors of the site */
   helpText: InputMaybe<Scalars['String']['input']>;
   identifier: Scalars['ID']['input'];
   name: Scalars['String']['input'];

@@ -26,7 +26,10 @@ type StyleOverride = {
   };
 };
 
-const applyStyleOverrides = (style: mapboxgl.Style, overrides: StyleOverride | null) => {
+const applyStyleOverrides = (
+  style: mapboxgl.StyleSpecification,
+  overrides: StyleOverride | null
+) => {
   style.layers
     .filter((l) => 'source' in l && l.source !== undefined && l.source !== 'composite')
     .forEach((layer) => {

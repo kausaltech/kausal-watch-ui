@@ -16,7 +16,7 @@ import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layou
 import type {
   AttributesBlockAttributeFragment,
   GetCategoryAttributeTypesQuery,
-  HeroImageFragmentFragment,
+  HeroImageFragment,
 } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { getImageSrcSet } from '@/common/images';
@@ -320,7 +320,7 @@ interface Props {
   identifier: string | null | undefined;
   lead?: string;
   iconImage: string | null | undefined;
-  headerImage: HeroImageFragmentFragment | null | undefined;
+  headerImage: HeroImageFragment | null | undefined;
   imageAlign?: string;
   color?: string | null | undefined;
   attributes: AttributesBlockAttributeFragment[] | null | undefined;

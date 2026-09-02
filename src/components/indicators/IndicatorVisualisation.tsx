@@ -17,6 +17,7 @@ import type {
   IndicatorGraphDataQuery,
   IndicatorGraphDataQueryVariables,
 } from '@/common/__generated__/graphql';
+import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
 import { capitalizeFirstLetter } from '@/common/utils';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
@@ -49,6 +50,8 @@ type GraphDimension = {
   categories: Array<{ id: string; name: string; defaultColor?: string; type?: string }>;
 };
 type ProcessedValue = Pick<GraphValue, 'value' | 'categories'> & { date: string };
+type CubeLeafValue = Pick<ProcessedValue, 'date' | 'value'>;
+type DataCube = CubeLeafValue[] | DataCube[];
 type Bounds = { min: number; max: number };
 type GraphSpecification = {
   axes: Array<[string, number]>;
@@ -65,7 +68,7 @@ function generateCube(
   dimensions: GraphDimension[],
   values: ProcessedValue[],
   path: string[] = []
-): unknown[] {
+): DataCube {
   const dim = dimensions[0];
   const rest = dimensions.slice(1);
 
@@ -88,13 +91,16 @@ function generateCubeFromValues(
   indicator: GraphIndicator,
   indicatorGraphSpecification: GraphSpecification,
   combinedValues: GraphValue[]
-): unknown[] {
+): DataCube {
   const values = [...combinedValues]
     .sort((a, b) => Number(a.date) - Number(b.date))
     .map((item) => {
       const { date, value, categories } = item;
       // Make yearly value dates YYYY-1-1 so plotly places them correctly on axis
-      const newDate = indicator.timeResolution === 'YEAR' ? `${date!.split('-')[0]}-1-1` : date!;
+      const newDate =
+        indicator.timeResolution === IndicatorTimeResolution.Year
+          ? `${date!.split('-')[0]}-1-1`
+          : date!;
       return { date: newDate, value, categories };
     });
   if (indicatorGraphSpecification.dimensions.length === 0) {
@@ -106,43 +112,45 @@ function generateCubeFromValues(
     } else if (b.sort === 'last') {
       return -1;
     }
-    return a.categories.length - b.categories.length || Number(a.id) - Number(b.id);
+    const categoryCountDifference = a.categories.length - b.categories.length;
+    return categoryCountDifference !== 0 ? categoryCountDifference : Number(a.id) - Number(b.id);
   });
   return generateCube(indicatorGraphSpecification.dimensions, values);
 }
 
 function getTraces(
   dimensions: GraphDimension[],
-  cube: any[],
+  cube: DataCube,
   names: Set<string> | null,
   hasTimeDimension: boolean,
-  i18n: Translator,
-  quantityName?: string
+  i18n: Translator
 ): ChartTrace[] {
   // TODO: We could use quantity name but we can not tell if it's in the correct language
   // const name = capitalizeFirstLetter(quantityName ?? i18n.t('value'));
   const name = capitalizeFirstLetter(i18n.t('value'));
   if (dimensions.length === 0) {
+    const values = cube as CubeLeafValue[];
     return [
       {
         xType: 'time',
         name: name,
         dataType: 'total',
-        x: cube.map((val) => {
+        x: values.map((val) => {
           return val.date;
         }),
-        y: cube.map((val) => val.value),
+        y: values.map((val) => val.value),
       },
     ];
   }
   const [firstDimension, ...rest] = dimensions;
   if (dimensions.length === 1) {
+    const dimensionValues = cube as CubeLeafValue[][];
     if (hasTimeDimension) {
       return firstDimension.categories.map((cat, idx) => {
         const traceName = Array.from(new Set(names ?? undefined).add(cat.name)).join(', ');
         let x,
           y,
-          _cube = cube[idx];
+          _cube = dimensionValues[idx];
         x = _cube.map((val) => val.date);
         y = _cube.map((val) => val.value);
         return {
@@ -163,16 +171,17 @@ function getTraces(
         name: Array.from(new Set(names ?? [firstDimension.name])).join(', '),
         _parentName: names ? Array.from(names).join(', ') : null,
         x: firstDimension.categories.map((cat) => cat.name),
-        y: cube.map((c) => c[0]?.value),
+        y: dimensionValues.map((values) => values[0]?.value ?? null),
       },
     ];
   }
   let traces: ChartTrace[] = [];
+  const nestedCubes = cube as DataCube[];
 
   firstDimension.categories.forEach((cat, idx) => {
     const out = getTraces(
       rest,
-      cube[idx],
+      nestedCubes[idx],
       new Set(names ?? undefined).add(cat.name),
       hasTimeDimension,
       i18n
@@ -191,7 +200,11 @@ const generateTrendTrace = (
   i18n: Translator
 ): [GoalTrace | undefined, Bounds | null | undefined] => {
   const hasPotentialScenario = traces.find((goal) => goal.scenario?.identifier === 'potential');
-  if (indicator.timeResolution === 'YEAR' && traces[0].y.length >= 5 && !hasPotentialScenario) {
+  if (
+    indicator.timeResolution === IndicatorTimeResolution.Year &&
+    traces[0].y.length >= 5 &&
+    !hasPotentialScenario
+  ) {
     const values = [...indicator.values]
       .sort((a, b) => Number(a.date) - Number(b.date))
       .map((item) => {
@@ -248,7 +261,7 @@ const generateGoalTraces = (
   type GoalScenario = { goals: Goal[]; config: Scenario | Record<string, never>; name: string };
   const traceScenarios = new Map<string | null, GoalScenario>();
   const goalTraces: ScenarioGoalTrace[] = [];
-  (indicator.goals || []).forEach((goal) => {
+  (indicator.goals ?? []).forEach((goal) => {
     if (!goal) return;
     const scenarioId = goal.scenario ? goal.scenario.id : null;
 
@@ -277,7 +290,9 @@ const generateGoalTraces = (
       y: goals.map((item) => item.value),
       x: goals.map((item) => {
         const newDate =
-          indicator.timeResolution === 'YEAR' ? `${item.date!.split('-')[0]}-1-1` : item.date!;
+          indicator.timeResolution === IndicatorTimeResolution.Year
+            ? `${item.date!.split('-')[0]}-1-1`
+            : item.date!;
         return newDate;
       }),
       name: scenario.name,
@@ -500,7 +515,6 @@ function FactorCharts({
   showTable,
   unitLabel,
   mainXAxisRange,
-  language,
 }: FactorChartsProps) {
   const t = useTranslations();
 
@@ -525,7 +539,9 @@ function FactorCharts({
             name: capitalizeFirstLetter(t('value')),
             dataType: 'total' as const,
             x: points.map((p) =>
-              timeResolution === 'YEAR' ? `${p.date.split('-')[0]}-1-1` : p.date
+              timeResolution === IndicatorTimeResolution.Year
+                ? `${p.date.split('-')[0]}-1-1`
+                : p.date
             ),
             y: points.map((p) => p.value),
           };
@@ -535,7 +551,8 @@ function FactorCharts({
           points.forEach((p) => {
             const yearKey = p.date.split('-')[0];
             const indicatorVal = indicatorValueByYear.get(yearKey) ?? null;
-            const dateStr = timeResolution === 'YEAR' ? `${yearKey}-1-1` : p.date;
+            const dateStr =
+              timeResolution === IndicatorTimeResolution.Year ? `${yearKey}-1-1` : p.date;
             factorX.push(dateStr);
             factorY.push(
               p.value !== null && indicatorVal !== null && indicatorVal !== 0
@@ -721,8 +738,7 @@ function IndicatorVisualisation({
     cube,
     null,
     hasTimeDimension,
-    i18n,
-    undefined
+    i18n
   );
   // If all traces are "total" (no dimensions), keep them regardless of showTotalLine.
   // Otherwise, filter out the total when showTotalLine is false.

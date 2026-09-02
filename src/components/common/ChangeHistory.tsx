@@ -150,13 +150,7 @@ const ChangesLabel = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
-const ChangeHistory: React.FC<ChangeHistoryProps> = ({
-  entityType,
-  entityId,
-  entry,
-  fieldLabel,
-  fieldHelpText,
-}) => {
+const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entry, fieldLabel, fieldHelpText }) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   if (!entry) return null;

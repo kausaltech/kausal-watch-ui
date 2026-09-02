@@ -377,7 +377,7 @@ function ActionCard({
   }
 
   const identifierPosition = getidentifierPosition(showPlan, variant, plan);
-  const statusColor: string | undefined = getStatusColorForAction(action, plan, theme);
+  const statusColor: string | undefined = getStatusColorForAction(action, theme);
 
   const actionCard = (
     <ActionCardElement $isLink={isLink} $isHighlighted={isHighlighted}>

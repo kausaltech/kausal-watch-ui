@@ -54,9 +54,9 @@ const GET_PLAN_CONTEXT = gql`
       matomoAnalyticsUrl
     }
     image {
-      ...HeroImageFragment
-      ...CardImageFragment
-      ...SocialImageFragment
+      ...HeroImage
+      ...CardImage
+      ...SocialImage
       square: rendition(size: "128x128", crop: true) {
         id
         src
@@ -95,14 +95,12 @@ const GET_PLAN_CONTEXT = gql`
     actionStatusSummaries {
       identifier
       label
-      color
       isCompleted
       isActive
       sentiment
     }
     actionTimelinessClasses {
       identifier
-      label
       color
       sentiment
       comparison

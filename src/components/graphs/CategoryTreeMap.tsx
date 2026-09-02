@@ -128,9 +128,7 @@ const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeM
       layout={layout as React.ComponentProps<typeof Plot>['layout']}
       config={config}
       useResizeHandler
-      onAnimatingFrame={
-        handleSectionChange as React.ComponentProps<typeof Plot>['onAnimatingFrame']
-      }
+      onAnimatingFrame={handleSectionChange}
       style={{ width: '100%', height: '100%' }}
     />
   );

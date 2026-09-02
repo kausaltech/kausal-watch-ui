@@ -55,7 +55,7 @@ function countDirective(query: string, name: string) {
 describe('Apollo directive middleware', () => {
   it('adds locale directive only once when processing the same query twice', async () => {
     const query = gql`
-      query TestPlan {
+      query TestPlanLocale {
         plan(id: "test") {
           id
         }
@@ -69,7 +69,7 @@ describe('Apollo directive middleware', () => {
 
   it('adds instance and locale directives only once when processing the same query twice', async () => {
     const query = gql`
-      query TestPlan {
+      query TestPlanInstanceAndLocale {
         plan(id: "test") {
           id
         }

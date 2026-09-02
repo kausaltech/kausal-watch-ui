@@ -22,7 +22,7 @@ const GET_ACTION = gql`
       completion
       updatedAt
       image {
-        ...CardImageFragment
+        ...CardImage
       }
       plan {
         id
@@ -45,17 +45,17 @@ const GET_ACTION = gql`
       categories {
         id
         image {
-          ...CardImageFragment
+          ...CardImage
         }
         parent {
           id
           image {
-            ...CardImageFragment
+            ...CardImage
           }
           parent {
             id
             image {
-              ...CardImageFragment
+              ...CardImage
             }
           }
         }

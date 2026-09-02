@@ -11,10 +11,6 @@ export type TCrumb = {
   url?: string;
 };
 
-type Props = {
-  breadcrumbs: TCrumb[];
-};
-
 const StyledContainer = styled.div`
   font-size: ${(props) => props.theme.fontSizeBase};
   line-height: ${(props) => props.theme.lineHeightMd};

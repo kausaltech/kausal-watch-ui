@@ -178,9 +178,6 @@
     }
   },
   "src/app/api/revalidate/route.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/require-await": {
       "count": 1
     }
@@ -191,25 +188,7 @@
     }
   },
   "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
     "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/accessibility/page.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 3
-    }
-  },
-  "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/feedback/page.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/insight/page.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
       "count": 1
     }
   },
@@ -222,9 +201,6 @@
     }
   },
   "src/app/root/[domain]/[lang]/[plan]/UpdateApolloContext.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
     },
@@ -254,23 +230,8 @@
       "count": 1
     }
   },
-  "src/app/root/[domain]/[lang]/[plan]/layout.tsx": {
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
   "src/app/root/[domain]/[lang]/layout.tsx": {
     "react/prop-types": {
-      "count": 1
-    }
-  },
-  "src/app/root/[domain]/[lang]/not-found.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    }
-  },
-  "src/common/__tests__/links.test.ts": {
-    "@typescript-eslint/consistent-type-imports": {
       "count": 1
     }
   },
@@ -288,40 +249,11 @@
       "count": 1
     }
   },
-  "src/common/blocks.types.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/common/categories.ts": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 13
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 6
-    }
-  },
-  "src/common/cookies.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    }
-  },
   "src/common/data/actions.js": {
     "@typescript-eslint/no-unsafe-argument": {
       "count": 1
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/common/dayjs.ts": {
-    "@typescript-eslint/consistent-type-imports": {
       "count": 1
     }
   },
@@ -331,44 +263,18 @@
     }
   },
   "src/common/i18n.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    },
     "@typescript-eslint/no-unsafe-enum-comparison": {
       "count": 2
     }
   },
   "src/common/images.ts": {
-    "@graphql-eslint/naming-convention": {
-      "count": 1
-    },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
     }
   },
   "src/common/links.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 2
-    }
-  },
-  "src/common/preprocess.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unused-expressions": {
-      "count": 1
     }
   },
   "src/common/search.ts": {
@@ -377,56 +283,15 @@
     },
     "@graphql-eslint/require-selections": {
       "count": 10
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 6
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 5
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 1
     }
   },
   "src/common/utils.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 2
-    },
     "no-useless-escape": {
       "count": 3
     }
   },
   "src/components/Footer.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 6
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 3
-    },
     "react-hooks/static-components": {
-      "count": 1
-    }
-  },
-  "src/components/GoogleAnalytics.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
     }
   },
@@ -454,10 +319,10 @@
   },
   "src/components/actions/ActionCard.tsx": {
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 4
+      "count": 1
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 5
+      "count": 4
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 2
@@ -469,11 +334,8 @@
     }
   },
   "src/components/actions/ActionContent.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 2
-    },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 15
+      "count": 12
     },
     "@typescript-eslint/no-unsafe-call": {
       "count": 1
@@ -482,7 +344,7 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 10
+      "count": 8
     },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
@@ -494,55 +356,24 @@
       "count": 9
     }
   },
-  "src/components/actions/ActionHighlightsList.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
   "src/components/actions/ActionListFilters.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     },
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 14
-    },
     "@typescript-eslint/no-unsafe-argument": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
     },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 3
-    },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 13
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 3
+      "count": 1
     },
     "@typescript-eslint/restrict-template-expressions": {
       "count": 1
     },
     "react-hooks/set-state-in-effect": {
       "count": 1
-    }
-  },
-  "src/components/actions/ActionLogBanner.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
-    },
-    "react/prop-types": {
-      "count": 4
     }
   },
   "src/components/actions/ActionUpdatesList.js": {
@@ -566,11 +397,8 @@
     "@graphql-eslint/naming-convention": {
       "count": 1
     },
-    "@graphql-eslint/require-selections": {
-      "count": 4
-    },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 9
+      "count": 8
     },
     "@typescript-eslint/no-unsafe-call": {
       "count": 6
@@ -613,14 +441,8 @@
     }
   },
   "src/components/actions/PhaseTimeline.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 6
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 5
+      "count": 3
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 1
@@ -746,44 +568,9 @@
       "count": 3
     }
   },
-  "src/components/actions/blocks/ActionScheduleBlock.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/components/actions/blocks/ReportComparisonBlock.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 7
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 21
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 1
-    },
-    "react/prop-types": {
-      "count": 7
-    }
-  },
-  "src/components/actions/blocks/RestrictedBlockWrapper.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
   "src/components/actions/blocks/action-dependencies/ActionDependenciesBlock.tsx": {
     "@graphql-eslint/require-selections": {
       "count": 2
-    }
-  },
-  "src/components/actions/blocks/action-dependencies/ActionDependenciesGroup.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
     }
   },
   "src/components/common/Accordion.tsx": {
@@ -792,12 +579,6 @@
     },
     "@typescript-eslint/no-unsafe-argument": {
       "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
     },
     "@typescript-eslint/unbound-method": {
       "count": 2
@@ -820,22 +601,6 @@
       "count": 3
     }
   },
-  "src/components/common/AttributesBlock.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 6
-    }
-  },
-  "src/components/common/BadgeTooltip.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    }
-  },
   "src/components/common/Card.tsx": {
     "@typescript-eslint/no-unsafe-return": {
       "count": 1
@@ -844,33 +609,12 @@
       "count": 1
     }
   },
-  "src/components/common/CategoryCardContent.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    }
-  },
   "src/components/common/CategoryPageStreamField.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 2
-    }
-  },
-  "src/components/common/ChangeHistory.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/components/common/CheckboxInput.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
     }
   },
   "src/components/common/DropDown.tsx": {
@@ -904,11 +648,6 @@
       "count": 1
     }
   },
-  "src/components/common/FilterControl.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
   "src/components/common/GlobalNav.tsx": {
     "@typescript-eslint/no-unsafe-argument": {
       "count": 1
@@ -933,20 +672,7 @@
     }
   },
   "src/components/common/Icon.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "react/no-unknown-property": {
-      "count": 1
-    }
-  },
-  "src/components/common/Modal.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/components/common/NavBar.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
       "count": 1
     }
   },
@@ -956,11 +682,6 @@
     },
     "@typescript-eslint/no-unsafe-enum-comparison": {
       "count": 2
-    }
-  },
-  "src/components/common/PopoverTip.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
     }
   },
   "src/components/common/RichText.tsx": {
@@ -990,9 +711,6 @@
     "@typescript-eslint/no-unsafe-return": {
       "count": 1
     },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    },
     "no-unsafe-optional-chaining": {
       "count": 1
     },
@@ -1001,21 +719,6 @@
     }
   },
   "src/components/common/SelectDropdown.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 1
-    },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
     },
@@ -1026,15 +729,7 @@
       "count": 1
     }
   },
-  "src/components/common/SelectInput.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
   "src/components/common/SiteFooter.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "react-hooks/static-components": {
       "count": 2
     }
@@ -1048,15 +743,6 @@
     }
   },
   "src/components/common/StreamField.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 2
     },
@@ -1070,19 +756,6 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 4
-    }
-  },
-  "src/components/common/Tooltip.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/components/common/TopToolBar.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
     }
   },
   "src/components/contentblocks/AccessibilityStatementComplianceStatusBlock.tsx": {
@@ -1100,65 +773,6 @@
     },
     "react/prop-types": {
       "count": 1
-    }
-  },
-  "src/components/contentblocks/AccessibilityStatementContactFormBlock.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/components/contentblocks/AccessibilityStatementContactInformationBlock.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 5
-    }
-  },
-  "src/components/contentblocks/ActionCategoryFilterCardsBlock.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 5
-    }
-  },
-  "src/components/contentblocks/ActionListBlock.tsx": {
-    "@graphql-eslint/naming-convention": {
-      "count": 1
-    },
-    "@graphql-eslint/require-selections": {
-      "count": 4
-    },
-    "@graphql-eslint/unique-operation-name": {
-      "count": 1
-    },
-    "@typescript-eslint/no-redundant-type-constituents": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 5
     }
   },
   "src/components/contentblocks/ActionStatusGraphsBlock.tsx": {
@@ -1197,24 +811,13 @@
       "count": 5
     }
   },
-  "src/components/contentblocks/CartographyVisualisationBlock.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    }
-  },
   "src/components/contentblocks/CategoryListBlock.tsx": {
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 2
     }
   },
   "src/components/contentblocks/CategoryPageHeaderBlock.tsx": {
     "@graphql-eslint/naming-convention": {
-      "count": 1
-    },
-    "@typescript-eslint/consistent-type-imports": {
       "count": 1
     }
   },
@@ -1224,22 +827,14 @@
     },
     "@graphql-eslint/require-selections": {
       "count": 2
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
     }
   },
   "src/components/contentblocks/CategoryTypeListBlock.tsx": {
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 2
-    }
-  },
-  "src/components/contentblocks/DashboardIndicatorSummaryBlock.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
     }
   },
   "src/components/contentblocks/FrontPageHeroBlock.tsx": {
@@ -1256,28 +851,6 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 5
-    }
-  },
-  "src/components/contentblocks/IndicatorHighlightsBlock.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/components/contentblocks/IndicatorShowcaseBlock.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 7
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 2
     }
   },
   "src/components/contentblocks/indicator-chart/DashboardIndicatorAreaChartBlock.tsx": {
@@ -1315,11 +888,6 @@
       "count": 2
     }
   },
-  "src/components/contentblocks/indicator-chart/indicator-chart-colors.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
   "src/components/contentblocks/indicator-chart/indicator-charts-utility.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -1347,19 +915,13 @@
   },
   "src/components/dashboard/ActionList.tsx": {
     "@graphql-eslint/naming-convention": {
-      "count": 4
+      "count": 3
     },
     "@graphql-eslint/no-duplicate-fields": {
       "count": 1
     },
     "@graphql-eslint/require-selections": {
       "count": 36
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "react/prop-types": {
-      "count": 1
     }
   },
   "src/components/dashboard/ActionStatusExport.js": {
@@ -1381,94 +943,26 @@
   },
   "src/components/dashboard/ActionStatusGraphs.tsx": {
     "@typescript-eslint/no-unsafe-argument": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
       "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 5
     },
     "react-hooks/rules-of-hooks": {
-      "count": 1
-    }
-  },
-  "src/components/dashboard/ActionStatusTable.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 6
-    }
-  },
-  "src/components/dashboard/ActionTableRow.tsx": {
-    "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
     }
   },
   "src/components/dashboard/ActionTableTooltips.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 6
-    },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 4
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 3
-    },
-    "react/prop-types": {
-      "count": 2
-    }
-  },
-  "src/components/dashboard/cells/DateCell.tsx": {
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 1
-    }
-  },
-  "src/components/dashboard/cells/ImplementationPhaseCell.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    }
-  },
-  "src/components/dashboard/cells/IndicatorsCell.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
     }
   },
   "src/components/dashboard/cells/OrganizationCell.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "react-hooks/rules-of-hooks": {
       "count": 1
     }
   },
-  "src/components/dashboard/cells/ResponsiblePartiesCell.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/components/dashboard/cells/StatusCell.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    }
-  },
   "src/components/dashboard/cells/TasksStatusCell.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/no-unsafe-argument": {
       "count": 2
     },
@@ -1482,15 +976,7 @@
       "count": 3
     }
   },
-  "src/components/dashboard/cells/UpdatedAtCell.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
   "src/components/dashboard/dashboard.constants.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 3
-    },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     },
@@ -1499,14 +985,6 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 1
-    }
-  },
-  "src/components/dashboard/dashboard.types.ts": {
-    "@typescript-eslint/no-redundant-type-constituents": {
-      "count": 1
     }
   },
   "src/components/embed/ActionEmbed.tsx": {
@@ -1522,24 +1000,11 @@
       "count": 2
     }
   },
-  "src/components/graphs/CategoryTreeMap.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
-    }
-  },
-  "src/components/graphs/GraphAsTable.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 3
-    }
-  },
   "src/components/graphs/IndicatorGraph.tsx": {
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 3
     },
     "no-constant-binary-expression": {
-      "count": 1
-    },
-    "react-hooks/preserve-manual-memoization": {
       "count": 1
     }
   },
@@ -1564,9 +1029,6 @@
     }
   },
   "src/components/graphs/Plot.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/no-unsafe-argument": {
       "count": 1
     },
@@ -1601,38 +1063,12 @@
     }
   },
   "src/components/graphs/Timeline.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
-    }
-  },
-  "src/components/graphs/legacy/IndicatorGraph.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 8
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 9
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 43
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 16
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 95
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 6
     }
   },
   "src/components/indicators/Connector.tsx": {
     "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    },
-    "prefer-const": {
       "count": 1
     }
   },
@@ -1663,14 +1099,6 @@
       "count": 4
     }
   },
-  "src/components/indicators/IndicatorFactorValueSummaryBlock.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 6
-    }
-  },
   "src/components/indicators/IndicatorHero.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -1682,15 +1110,7 @@
       "count": 2
     }
   },
-  "src/components/indicators/IndicatorLinkClient.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
   "src/components/indicators/IndicatorList.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
     "react-hooks/refs": {
       "count": 1
     }
@@ -1740,99 +1160,47 @@
     }
   },
   "src/components/indicators/IndicatorValueSummary.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
     }
   },
   "src/components/indicators/IndicatorVisualisation.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 20
-    },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 89
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 53
-    },
-    "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 2
+      "count": 8
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 154
+      "count": 2
     },
     "@typescript-eslint/no-unsafe-return": {
-      "count": 35
-    },
-    "no-extra-boolean-cast": {
       "count": 1
     },
     "prefer-const": {
       "count": 3
     }
   },
-  "src/components/indicators/IndicatorsHero.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
   "src/components/indicators/Unit.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 1
-    },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 2
+      "count": 1
     },
     "@typescript-eslint/no-unsafe-call": {
       "count": 2
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
+      "count": 2
     },
     "@typescript-eslint/no-unsafe-return": {
       "count": 2
     }
   },
   "src/components/indicators/indicator-data-helpers.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
+      "count": 2
     },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 1
-    }
-  },
-  "src/components/indicators/indicatorUtils.tsx": {
-    "@typescript-eslint/no-redundant-type-constituents": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 9
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 2
     }
   },
   "src/components/insight/VisGraph.js": {
@@ -1863,18 +1231,10 @@
       "count": 2
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 10
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 1
+      "count": 9
     },
     "react/prop-types": {
       "count": 3
-    }
-  },
-  "src/components/plans/PlanLink.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
     }
   },
   "src/components/plans/UnpublishedPlan.tsx": {
@@ -1890,11 +1250,6 @@
       "count": 1
     }
   },
-  "src/components/pledge/PledgeCard.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
   "src/components/pledge/PledgeDetail.tsx": {
     "react-hooks/set-state-in-effect": {
       "count": 1
@@ -1905,17 +1260,6 @@
       "count": 1
     },
     "@graphql-eslint/unique-operation-name": {
-      "count": 1
-    }
-  },
-  "src/components/pledge/PledgeImpactComparison.tsx": {
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 2
-    },
-    "no-extra-boolean-cast": {
       "count": 1
     }
   },
@@ -1937,20 +1281,7 @@
       "count": 1
     }
   },
-  "src/components/providers/AuthProvider.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/components/providers/PlanProvider.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 2
-    }
-  },
   "src/components/versioning/ActionVersionHistory.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/no-unused-expressions": {
       "count": 1
     }
@@ -1983,11 +1314,6 @@
       "count": 13
     }
   },
-  "src/config/auth.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    }
-  },
   "src/config/i18n.ts": {
     "@typescript-eslint/no-unsafe-argument": {
       "count": 1
@@ -2007,11 +1333,6 @@
       "count": 1
     }
   },
-  "src/fragments/action-card.fragment.ts": {
-    "@graphql-eslint/require-selections": {
-      "count": 4
-    }
-  },
   "src/fragments/action-list.fragment.ts": {
     "@graphql-eslint/naming-convention": {
       "count": 1
@@ -2026,9 +1347,6 @@
     }
   },
   "src/fragments/category.fragment.ts": {
-    "@graphql-eslint/naming-convention": {
-      "count": 6
-    },
     "@graphql-eslint/require-selections": {
       "count": 66
     }
@@ -2062,29 +1380,12 @@
       "count": 18
     }
   },
-  "src/proxy.ts": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 28
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 7
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 25
-    }
-  },
   "src/queries/get-action.ts": {
     "@graphql-eslint/naming-convention": {
       "count": 3
     },
     "@graphql-eslint/require-selections": {
-      "count": 31
-    },
-    "@graphql-eslint/selection-set-depth": {
-      "count": 250
+      "count": 15
     }
   },
   "src/queries/get-actions-list-page.ts": {
@@ -2093,9 +1394,6 @@
     },
     "@graphql-eslint/require-selections": {
       "count": 3
-    },
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
     }
   },
   "src/queries/get-content-page.ts": {
@@ -2103,10 +1401,7 @@
       "count": 5
     },
     "@graphql-eslint/require-selections": {
-      "count": 44
-    },
-    "@graphql-eslint/selection-set-depth": {
-      "count": 269
+      "count": 36
     }
   },
   "src/queries/get-home-page.ts": {
@@ -2115,9 +1410,6 @@
     },
     "@graphql-eslint/require-selections": {
       "count": 4
-    },
-    "@graphql-eslint/selection-set-depth": {
-      "count": 76
     }
   },
   "src/queries/get-indicator-graph-data.ts": {
@@ -2170,74 +1462,9 @@
     },
     "@graphql-eslint/require-selections": {
       "count": 3
-    },
-    "@graphql-eslint/selection-set-depth": {
-      "count": 76
-    }
-  },
-  "src/stories/ActionAttribute.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/ActionCard.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 5
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/ActionDependenciesBlock.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 3
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/ActionHero.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/FilterControl.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/IndicatorCard.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/IndicatorModalContentBlock.stories.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
     }
   },
   "src/stories/IndicatorNumberFormatting.stories.tsx": {
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    },
     "no-loss-of-precision": {
       "count": 1
     }
@@ -2247,125 +1474,34 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 5
+      "count": 4
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 3
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/OrganizationChip.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/PhaseTimeline.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
     }
   },
   "src/stories/PlanChip.stories.tsx": {
     "@typescript-eslint/no-unsafe-assignment": {
-      "count": 3
+      "count": 2
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/RestrictedBlockWrapper.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/ThemeAccessibility.stories.tsx": {
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/ThemeDesignTokens.stories.tsx": {
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/Timeline.stories.tsx": {
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
     }
   },
   "src/stories/components/ThemeAccessibilityTest.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 6
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 6
-    },
     "@typescript-eslint/no-unsafe-return": {
       "count": 2
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
     },
     "react-hooks/static-components": {
       "count": 1
     }
   },
   "src/stories/components/ThemeDesignTokens.tsx": {
-    "@typescript-eslint/no-unsafe-argument": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 11
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 4
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    },
     "react-hooks/set-state-in-effect": {
       "count": 1
     },
     "react/prop-types": {
-      "count": 5
-    }
-  },
-  "src/stories/mocks/actions.mocks.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/stories/mocks/plan.mocks.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/prefer-nullish-coalescing": {
-      "count": 1
+      "count": 2
     }
   },
   "src/tests/common/Button.test.js": {
@@ -2379,17 +1515,11 @@
     }
   },
   "src/tests/common/ContentLoader.test.js": {
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 1
-    },
     "no-undef": {
       "count": 12
     }
   },
   "src/tests/common/ErrorMessage.test.js": {
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
     "no-undef": {
       "count": 12
     }
@@ -2399,47 +1529,9 @@
       "count": 14
     }
   },
-  "src/tests/common/RichText.test.tsx": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
-    }
-  },
   "src/tests/index.test.js": {
     "no-undef": {
       "count": 3
-    }
-  },
-  "src/tests/pledge/ConfirmPledge.test.tsx": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    }
-  },
-  "src/tests/pledge/PledgeList.test.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 9
-    },
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-assignment": {
-      "count": 9
-    },
-    "@typescript-eslint/prefer-as-const": {
-      "count": 1
-    }
-  },
-  "src/tests/preprocess.test.ts": {
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 1
     }
   },
   "src/tests/test-utils.js": {
@@ -2450,33 +1542,12 @@
       "count": 1
     }
   },
-  "src/types/next-auth.d.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/utils/__tests__/middleware.test.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
-  "src/utils/__tests__/urls.test.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    }
-  },
   "src/utils/apollo.utils.ts": {
     "@typescript-eslint/no-unsafe-assignment": {
       "count": 2
     },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 4
-    },
-    "@typescript-eslint/no-unsafe-return": {
-      "count": 3
     }
   },
   "src/utils/auth.utils.ts": {
@@ -2485,9 +1556,6 @@
     }
   },
   "src/utils/dates.utils.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/no-unsafe-enum-comparison": {
       "count": 3
     }

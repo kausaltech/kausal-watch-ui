@@ -12,11 +12,11 @@ import { transparentize } from 'polished';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
-import type {
-  IndicatorDesiredTrend,
+import type { IndicatorDesiredTrend } from '@/common/__generated__/graphql';
+import {
+  IndicatorNonQuantifiedGoal,
   IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
-import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter } from '@/common/utils';
 
 export type ChartTrace = {
@@ -387,7 +387,7 @@ function IndicatorGraph({
         return String(d);
       }
       // For YEAR resolution, ensure format is YYYY-1-1
-      if (timeResolution === 'YEAR') {
+      if (timeResolution === IndicatorTimeResolution.Year) {
         return `${dateObj.getFullYear()}-1-1`;
       }
       return d;
@@ -423,7 +423,11 @@ function IndicatorGraph({
     });
 
     // Extend to nonQuantifiedGoalDate if needed (for directional goal arrow)
-    if (nonQuantifiedGoal?.trend && nonQuantifiedGoal?.date && timeResolution === 'YEAR') {
+    if (
+      nonQuantifiedGoal?.trend &&
+      nonQuantifiedGoal?.date &&
+      timeResolution === IndicatorTimeResolution.Year
+    ) {
       // Normalize the date to YYYY-1-1 format for YEAR resolution
       const goalDateObj = new Date(nonQuantifiedGoal.date);
       if (!Number.isNaN(goalDateObj.getTime())) {
@@ -444,14 +448,7 @@ function IndicatorGraph({
     }
 
     return datesArray;
-  }, [
-    hasTimeDimension,
-    traces,
-    goalTraces,
-    timeResolution,
-    nonQuantifiedGoal?.trend,
-    nonQuantifiedGoal?.date,
-  ]);
+  }, [hasTimeDimension, traces, goalTraces, timeResolution, nonQuantifiedGoal]);
 
   // Create category labels - either from traces or from formatted time data
   const xAxisCategories = useMemo(() => {
@@ -471,9 +468,9 @@ function IndicatorGraph({
         }
 
         let formattedValue: string;
-        if (timeResolution === 'YEAR') {
+        if (timeResolution === IndicatorTimeResolution.Year) {
           formattedValue = String(date.getFullYear());
-        } else if (timeResolution === 'MONTH') {
+        } else if (timeResolution === IndicatorTimeResolution.Month) {
           formattedValue = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
         } else {
           formattedValue = date.toISOString().split('T')[0];
@@ -499,7 +496,11 @@ function IndicatorGraph({
 
   // Check if all dates are in the same year (for YEAR resolution)
   const hasSingleYear = useMemo(() => {
-    if (!hasTimeDimension || timeResolution !== 'YEAR' || allDates.length === 0) {
+    if (
+      !hasTimeDimension ||
+      timeResolution !== IndicatorTimeResolution.Year ||
+      allDates.length === 0
+    ) {
       return false;
     }
     const years = new Set<number>();
@@ -525,7 +526,7 @@ function IndicatorGraph({
       if (Number.isNaN(dateObj.getTime())) {
         return String(d);
       }
-      if (timeResolution === 'YEAR') {
+      if (timeResolution === IndicatorTimeResolution.Year) {
         return `${dateObj.getFullYear()}-1-1`;
       }
       return d;
@@ -717,7 +718,7 @@ function IndicatorGraph({
         if (Number.isNaN(dateObj.getTime())) {
           return String(d);
         }
-        if (timeResolution === 'YEAR') {
+        if (timeResolution === IndicatorTimeResolution.Year) {
           return `${dateObj.getFullYear()}-1-1`;
         }
         return d;
@@ -909,10 +910,10 @@ function IndicatorGraph({
 
               // Format the date based on timeResolution
               let formattedDate: string;
-              if (timeResolution === 'YEAR') {
+              if (timeResolution === IndicatorTimeResolution.Year) {
                 const date = new Date(axisValue);
                 formattedDate = String(date.getFullYear());
-              } else if (timeResolution === 'MONTH') {
+              } else if (timeResolution === IndicatorTimeResolution.Month) {
                 const date = new Date(axisValue);
                 formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
               } else {
@@ -962,7 +963,9 @@ function IndicatorGraph({
         ? (() => {
             // For single year case, we need to track the year range to show only middle label
             const yearRange =
-              hasSingleYear && timeResolution === 'YEAR' && allDates.length > 0
+              hasSingleYear &&
+              timeResolution === IndicatorTimeResolution.Year &&
+              allDates.length > 0
                 ? (() => {
                     const timestamps = allDates
                       .map((d) => new Date(d).getTime())
@@ -984,7 +987,7 @@ function IndicatorGraph({
                 showMaxLabel: hasSingleYear ? false : true,
                 formatter: (value: number) => {
                   const date = new Date(value);
-                  if (timeResolution === 'YEAR') {
+                  if (timeResolution === IndicatorTimeResolution.Year) {
                     // For single year case, only show label for ticks near the middle
                     if (yearRange) {
                       const timestamp = date.getTime();
@@ -996,14 +999,14 @@ function IndicatorGraph({
                       }
                     }
                     return String(date.getFullYear());
-                  } else if (timeResolution === 'MONTH') {
+                  } else if (timeResolution === IndicatorTimeResolution.Month) {
                     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
                   }
                   return date.toISOString().split('T')[0];
                 },
               },
               // Configure time axis to show appropriate intervals
-              ...(timeResolution === 'YEAR'
+              ...(timeResolution === IndicatorTimeResolution.Year
                 ? {
                     // For year resolution, show one tick per year
                     minInterval: 31536000000, // 1 year in milliseconds
@@ -1076,13 +1079,15 @@ function IndicatorGraph({
     xAxisCategories,
     title,
     theme.themeColors.dark,
-    nonQuantifiedGoal?.trend,
-    nonQuantifiedGoal?.date,
+    nonQuantifiedGoal,
     referenceValue,
     theme.graphColors.blue030,
     theme.graphColors.grey030,
     format,
     hideLegend,
+    t,
+    xAxisRange,
+    yRange.ticksCount,
   ]);
 
   useEffect(() => {

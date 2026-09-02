@@ -151,7 +151,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
             {/* Admin created layout */}
             {hasLayout &&
               layout?.detailsAside &&
-              layout.detailsAside.map((block, index) => {
+              layout.detailsAside.map((block) => {
                 return (
                   <IndicatorModalContentBlock key={block.id} block={block} indicator={indicator} />
                 );

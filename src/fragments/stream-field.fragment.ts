@@ -112,13 +112,13 @@ export const STREAM_FIELD_FRAGMENT = gql`
         id
         hideCategoryIdentifiers
         categories {
-          ...CategoryRecursiveFragment
+          ...CategoryRecursive
         }
       }
       category {
         id
         children {
-          ...CategoryFragment
+          ...Category
         }
       }
     }
@@ -139,7 +139,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
         identifier
         hideCategoryIdentifiers
         categories {
-          ...CategoryRecursiveFragment
+          ...CategoryRecursive
           indicators {
             id
             name
@@ -155,7 +155,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
     ... on FrontPageHeroBlock {
       layout
       image {
-        ...HeroImageFragment
+        ...HeroImage
       }
       heading
       lead
@@ -260,7 +260,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
       cards {
         ... on CardBlock {
           image {
-            ...CardImageFragment
+            ...CardImage
           }
           heading
           content

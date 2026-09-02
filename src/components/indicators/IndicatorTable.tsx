@@ -1,7 +1,5 @@
 import type { IndicatorGraphDataQuery } from '@/common/__generated__/graphql';
 
-type IndicatorDimension = NonNullable<IndicatorGraphDataQuery['indicator']>['dimensions'][number];
-
 const IndicatorTable = ({ indicator }: { indicator: IndicatorGraphDataQuery['indicator'] }) => {
   if (!indicator) return null;
 

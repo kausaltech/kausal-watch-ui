@@ -4,7 +4,7 @@ import type { PlanContextFragment } from '@/common/__generated__/graphql';
 
 export type PlanContextType = PlanContextFragment;
 
-// @ts-ignore as context will be populated when it is used
+// @ts-expect-error -- the context is populated before consumers render.
 const PlanContext = createContext<PlanContextType>({});
 
 export const usePlan = () => useContext(PlanContext);

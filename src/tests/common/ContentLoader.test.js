@@ -4,8 +4,6 @@ import ContentLoader from '@common/components/ContentLoader';
 
 import { render } from '../test-utils';
 
-const t = (key) => key;
-
 describe('<ContentLoader />', () => {
   beforeAll(() => {
     jest.useFakeTimers();

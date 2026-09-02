@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import NextLink from 'next/link';
 
@@ -148,7 +148,7 @@ function Counter({
       },
     });
     return () => controls.stop();
-  }, [from, to, duration, locale, precision]);
+  }, [duration, from, locale, numberFormatter, precision, to]);
 
   return <tspan ref={ref} />;
 }
@@ -363,101 +363,107 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   // Animation length relative to animated bar length
   const reductionCounterDuration = (10 * Math.abs(startBar.w - latestBar.w)) / bars.w;
 
-  const resetSequence: AnimationSequence = [
-    'reset',
-    [
-      '.latest-content text',
-      {
-        opacity: 0,
-      },
-      { duration: 0 },
+  const resetSequence: AnimationSequence = useMemo(
+    () => [
+      'reset',
+      [
+        '.latest-content text',
+        {
+          opacity: 0,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-line',
+        {
+          x1: 0,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-content > line',
+        {
+          x1: 0,
+          x2: 0,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-content > text',
+        {
+          opacity: 0,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-bar',
+        {
+          x: startBar.x,
+          width: startBar.w,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.completed-line',
+        {
+          x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
+          x2: 0,
+        },
+        { duration: 0 },
+      ],
     ],
-    [
-      '.latest-line',
-      {
-        x1: 0,
-      },
-      { duration: 0 },
-    ],
-    [
-      '.latest-content > line',
-      {
-        x1: 0,
-        x2: 0,
-      },
-      { duration: 0 },
-    ],
-    [
-      '.latest-content > text',
-      {
-        opacity: 0,
-      },
-      { duration: 0 },
-    ],
-    [
-      '.latest-bar',
-      {
-        x: startBar.x,
-        width: startBar.w,
-      },
-      { duration: 0 },
-    ],
-    [
-      '.completed-line',
-      {
-        x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
-        x2: 0,
-      },
-      { duration: 0 },
-    ],
-  ];
+    [latestBar.x, startBar.w, startBar.x]
+  );
 
-  const animateSequence: AnimationSequence = [
-    'execute',
-    [
-      '.latest-bar',
-      {
-        x: latestBar.x,
-        width: latestBar.w,
-      },
-      { duration: reductionCounterDuration },
+  const animateSequence: AnimationSequence = useMemo(
+    () => [
+      'execute',
+      [
+        '.latest-bar',
+        {
+          x: latestBar.x,
+          width: latestBar.w,
+        },
+        { duration: reductionCounterDuration },
+      ],
+      [
+        '.completed-line',
+        {
+          x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
+          x2: latestBar.x - 13,
+        },
+        { at: 0, duration: reductionCounterDuration },
+      ],
+      [
+        '.latest-line',
+        {
+          x1: latestBar.x + 1,
+        },
+        { at: 0, duration: reductionCounterDuration },
+      ],
+      [
+        '.latest-content > line',
+        {
+          x1: latestBar.x + 1,
+          x2: latestBar.x + 1,
+        },
+        { at: 0, duration: reductionCounterDuration },
+      ],
+      [
+        '.latest-content text',
+        {
+          opacity: 1,
+        },
+        { at: reductionCounterDuration, duration: 1 },
+      ],
     ],
-    [
-      '.completed-line',
-      {
-        x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
-        x2: latestBar.x - 13,
-      },
-      { at: 0, duration: reductionCounterDuration },
-    ],
-    [
-      '.latest-line',
-      {
-        x1: latestBar.x + 1,
-      },
-      { at: 0, duration: reductionCounterDuration },
-    ],
-    [
-      '.latest-content > line',
-      {
-        x1: latestBar.x + 1,
-        x2: latestBar.x + 1,
-      },
-      { at: 0, duration: reductionCounterDuration },
-    ],
-    [
-      '.latest-content text',
-      {
-        opacity: 1,
-      },
-      { at: reductionCounterDuration, duration: 1 },
-    ],
-  ];
+    [latestBar.w, latestBar.x, reductionCounterDuration]
+  );
 
   // Reset animation to initial state on component mount
   useEffect(() => {
     animate(resetSequence);
-  }, [animate, isNormalized]);
+  }, [animate, isNormalized, resetSequence]);
 
   useEffect(() => {
     if (isInView) {
@@ -466,7 +472,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
       // Reset to initial state when out of view
       animate(resetSequence);
     }
-  }, [animate, isInView, isNormalized]);
+  }, [animate, animateSequence, isInView, isNormalized, resetSequence]);
 
   const graphValues = {
     name: note ?? '',

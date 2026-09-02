@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { Button, Col, Collapse, Row } from 'reactstrap';
 
+import type { ReportComparisonBlockActionContentFragment } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import { getActionTermContext } from '@/common/i18n';
 import ActionAttribute from '@/components/common/ActionAttribute';
@@ -89,8 +90,14 @@ const ReportDate = styled.span`
   color: ${(props) => props.theme.graphColors.grey060};
 `;
 
-const ReportComparisonBlock = (props) => {
-  const { block, action } = props;
+type ReportComparisonBlockProps = {
+  block: ReportComparisonBlockActionContentFragment;
+  action: unknown;
+  plan: unknown;
+};
+
+const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
+  const { block } = props;
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
@@ -99,14 +106,17 @@ const ReportComparisonBlock = (props) => {
   const { reportField, reportsToCompare } = block;
   // Augment each report with the field we're looking for
   // TODO: Right now we're only interested in attributes. Display report field values of other types as well.
-  const reports = reportsToCompare
-    .map((report) => ({
-      ...report,
-      attribute: report.valuesForAction?.filter(
-        ({ field }) =>
-          field.id === reportField && field.__typename === 'ActionAttributeTypeReportFieldBlock'
-      )?.[0]?.attribute,
-    }))
+  const reports = (reportsToCompare ?? [])
+    .flatMap((report) => {
+      if (!report) return [];
+      const reportValue = report.valuesForAction?.find(
+        (value) =>
+          value?.field.id === reportField &&
+          value.field.__typename === 'ActionAttributeTypeReportFieldBlock'
+      );
+      const attribute = reportValue && 'attribute' in reportValue ? reportValue.attribute : null;
+      return [{ ...report, attribute }];
+    })
     .sort((a, b) => {
       if (a.endDate == null && b.endDate == null) return 0;
       if (a.endDate == null) return 1;
@@ -120,7 +130,7 @@ const ReportComparisonBlock = (props) => {
       <Row>
         <Col>
           <SectionHeader>
-            <h2>{block.reportType.name}</h2>
+            <h2>{block.reportType?.name}</h2>
             {reports && reports.length > 0 && (
               <ToggleButton color="link" onClick={toggle} className={isOpen ? 'open' : ''}>
                 {isOpen ? t('close') : t('open')}

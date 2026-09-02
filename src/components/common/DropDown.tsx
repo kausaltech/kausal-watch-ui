@@ -26,8 +26,6 @@ const CustomInput = styled(BSCustomInput)`
 
 function DropDown(props) {
   const { label, id, name, value, onChange, children, disabled } = props;
-  const [singleSelections, setSingleSelections] = useState([]);
-
   return (
     <FormGroup>
       {label && <Label for={id}>{label}</Label>}
@@ -64,7 +62,7 @@ type DropDownTypeaheadProps = {
 };
 
 export function DropDownTypeahead(props: DropDownTypeaheadProps) {
-  const { label, id, name, placeholder, selectedOption, onChange, options } = props;
+  const { label, id, placeholder, selectedOption, onChange, options } = props;
   const [selection, setSelection] = useState(selectedOption ? [selectedOption] : []);
   const typeaheadOnChange = useCallback(
     (selected: DropDownTypeaheadOption[]) => {

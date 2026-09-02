@@ -131,9 +131,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
 
   TasksColumnBlock: {
     renderHeader: (t, plan, label) => label || t('action-tasks', getActionTaskTermContext(plan)),
-    renderCell: (_, action, plan) => (
-      <TasksStatusCell action={action} plan={plan as ActionListPlan} />
-    ),
+    renderCell: (_, action, plan) => <TasksStatusCell action={action} plan={plan} />,
     renderTooltipContent: (_, action, plan) => {
       const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
       return (
@@ -163,7 +161,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     renderHeader: (t, plan, label) => label || t('indicators', getIndicatorTermContext(plan)),
     renderCell: (_, action) => <IndicatorsCell action={action} />,
     renderTooltipContent: (_, action, plan) => (
-      <IndicatorsTooltipContent action={action} plan={plan as ActionListPlan} />
+      <IndicatorsTooltipContent action={action} plan={plan} />
     ),
   },
 
@@ -239,8 +237,6 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
           size="lg"
         />
       ),
-    renderTooltipContent: (_, action, plan) => (
-      <PlanTooltipContent action={action} plan={plan as ActionListPlan} />
-    ),
+    renderTooltipContent: (_, action, plan) => <PlanTooltipContent action={action} plan={plan} />,
   },
 };

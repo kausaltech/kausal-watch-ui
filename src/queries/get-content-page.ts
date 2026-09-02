@@ -152,8 +152,8 @@ const GET_CONTENT_PAGE = gql`
           }
         }
         headerImage {
-          ...HeroImageFragment
-          ...SocialImageFragment
+          ...HeroImage
+          ...SocialImage
         }
         leadParagraph
         body {
@@ -218,9 +218,9 @@ const GET_CONTENT_PAGE = gql`
             hideCategoryIdentifiers
           }
           image {
-            ...HeroImageFragment
-            ...SocialImageFragment
-            ...CardImageFragment
+            ...HeroImage
+            ...SocialImage
+            ...CardImage
           }
           indicators {
             id
@@ -234,7 +234,7 @@ const GET_CONTENT_PAGE = gql`
             }
           }
           children {
-            ...CategoryFragment
+            ...Category
           }
           parent {
             ...CategoryParentFragment
@@ -247,9 +247,9 @@ const GET_CONTENT_PAGE = gql`
               namePlural
             }
             image {
-              ...HeroImageFragment
-              ...SocialImageFragment
-              ...CardImageFragment
+              ...HeroImage
+              ...SocialImage
+              ...CardImage
             }
             color
             iconSvgUrl

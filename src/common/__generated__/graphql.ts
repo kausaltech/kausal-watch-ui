@@ -254,6 +254,7 @@ export type AttributeTypeInput = {
   choiceOptions: InputMaybe<Array<ChoiceOptionInput>>;
   /** The format of the fields with this type */
   format: AttributeTypeFormat;
+  /** A help text shown to visitors of the site */
   helpText: InputMaybe<Scalars['String']['input']>;
   identifier: Scalars['ID']['input'];
   name: Scalars['String']['input'];
@@ -1119,7 +1120,7 @@ export enum WorkflowStateStatus {
   NeedsChanges = 'NEEDS_CHANGES'
 }
 
-export type HeroImageFragmentFragment = (
+export type HeroImageFragment = (
   { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
     { id: string, width: number, height: number, src: string }
     & { __typename: 'ImageRendition' }
@@ -1133,7 +1134,7 @@ export type HeroImageFragmentFragment = (
   & { __typename: 'Image' }
 );
 
-export type CardImageFragmentFragment = (
+export type CardImageFragment = (
   { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
     { id: string, width: number, height: number, src: string }
     & { __typename: 'ImageRendition' }
@@ -1144,7 +1145,7 @@ export type CardImageFragmentFragment = (
   & { __typename: 'Image' }
 );
 
-export type SocialImageFragmentFragment = (
+export type SocialImageFragment = (
   { id: string, social: (
     { id: string, width: number, height: number, src: string }
     & { __typename: 'ImageRendition' }
@@ -1973,7 +1974,7 @@ export type GetCategoriesForTreeMapQuery = (
   & { __typename: 'Query' }
 );
 
-export type CommonCategoryFragmentFragment = (
+export type CommonCategoryFragment = (
   { common: (
     { id: string, identifier: string, name: string, order: number }
     & { __typename: 'CommonCategory' }
@@ -2030,7 +2031,7 @@ export type ActionFragmentFragment = (
     { id: string, identifier: string, name: string, order: number }
     & { __typename: 'ActionImplementationPhase' }
   ) | null, statusSummary: (
-    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
+    { identifier: ActionStatusSummaryIdentifier, label: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
     & { __typename: 'ActionStatusSummary' }
   ), timeliness: (
     { identifier: ActionTimelinessIdentifier }
@@ -2190,7 +2191,7 @@ export type DashboardActionListQuery = (
       { id: string, identifier: string, name: string, order: number }
       & { __typename: 'ActionImplementationPhase' }
     ) | null, statusSummary: (
-      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
+      { identifier: ActionStatusSummaryIdentifier, label: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
       & { __typename: 'ActionStatusSummary' }
     ), timeliness: (
       { identifier: ActionTimelinessIdentifier }
@@ -2295,7 +2296,7 @@ export type DashboardActionListQuery = (
       { id: string, identifier: string, name: string, order: number }
       & { __typename: 'ActionImplementationPhase' }
     ) | null, statusSummary: (
-      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
+      { identifier: ActionStatusSummaryIdentifier, label: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
       & { __typename: 'ActionStatusSummary' }
     ), timeliness: (
       { identifier: ActionTimelinessIdentifier }
@@ -3547,7 +3548,7 @@ export type CategoryTypeFragmentFragment = (
   & { __typename: 'CategoryType' }
 );
 
-export type CategoryFragmentFragment = (
+export type CategoryFragment = (
   { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
@@ -3600,7 +3601,7 @@ export type CategoryFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryWithParentsFragmentFragment = (
+export type CategoryWithParentsFragment = (
   { parent: (
     { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
       { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
@@ -3758,7 +3759,7 @@ export type CategoryWithParentsFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryRecursiveFragmentFragment = (
+export type CategoryRecursiveFragment = (
   { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
@@ -3964,7 +3965,7 @@ export type CategoryRecursiveFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryHeroImagesFragmentFragment = (
+export type CategoryHeroImagesFragment = (
   { id: string, image: (
     { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
       { id: string, width: number, height: number, src: string }
@@ -4038,7 +4039,7 @@ export type CategoryHeroImagesFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryTagFragmentFragment = (
+export type CategoryTagFragment = (
   { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
@@ -4061,7 +4062,7 @@ export type CategoryTagFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryTagWithParentsFragmentFragment = (
+export type CategoryTagWithParentsFragment = (
   { parent: (
     { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
       { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
@@ -4129,7 +4130,7 @@ export type CategoryTagWithParentsFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryTagRecursiveFragmentFragment = (
+export type CategoryTagRecursiveFragment = (
   { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
@@ -4243,13 +4244,13 @@ export type DashboardIndicatorBlockFragmentFragment = (
   ) | (
     { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -4273,13 +4274,13 @@ export type DashboardIndicatorBlockFragmentFragment = (
   ) | (
     { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -4303,13 +4304,13 @@ export type DashboardIndicatorBlockFragmentFragment = (
   ) | (
     { helpText: string | null, blockType: string, year: number | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -4333,13 +4334,13 @@ export type DashboardIndicatorBlockFragmentFragment = (
   ) | (
     { id: string | null, blockType: string, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -4349,21 +4350,21 @@ export type DashboardIndicatorBlockFragmentFragment = (
   & { __typename: 'DashboardRowBlock' }
 );
 
-export type DashboardIndicatorFragmentFragment = (
+export type DashboardIndicatorFragment = (
   { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-    { value: number, date: string | null }
+    { id: string, value: number, date: string | null }
     & { __typename: 'IndicatorValue' }
   ) | null, goals: Array<(
-    { value: number, date: string | null }
+    { id: string, value: number, date: string | null }
     & { __typename: 'IndicatorGoal' }
   ) | null> | null, unit: (
-    { name: string, shortName: string | null }
+    { id: string, name: string, shortName: string | null }
     & { __typename: 'Unit' }
   ) }
   & { __typename: 'Indicator' }
 );
 
-export type ChartDimensionFragmentFragment = (
+export type ChartDimensionFragment = (
   { id: string, name: string, categories: Array<(
     { id: string, name: string }
     & { __typename: 'DimensionCategory' }
@@ -4371,7 +4372,7 @@ export type ChartDimensionFragmentFragment = (
   & { __typename: 'Dimension' }
 );
 
-export type ChartSeriesFragmentFragment = (
+export type ChartSeriesFragment = (
   { dimensionCategory: (
     { id: string, name: string, defaultColor: string }
     & { __typename: 'DimensionCategory' }
@@ -4385,13 +4386,13 @@ export type ChartSeriesFragmentFragment = (
 type BarChartVisualization_DashboardIndicatorBarChartBlock_Fragment = (
   { barType: string | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4417,13 +4418,13 @@ type BarChartVisualization_DashboardIndicatorBarChartBlock_Fragment = (
 type BarChartVisualization_IndicatorDefaultBarChart_Fragment = (
   { barType: string | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4451,13 +4452,13 @@ export type BarChartVisualizationFragment = BarChartVisualization_DashboardIndic
 type LineChartVisualization_DashboardIndicatorLineChartBlock_Fragment = (
   { showTotalLine: boolean | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4483,13 +4484,13 @@ type LineChartVisualization_DashboardIndicatorLineChartBlock_Fragment = (
 type LineChartVisualization_IndicatorDefaultLineChart_Fragment = (
   { showTotalLine: boolean | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4517,13 +4518,13 @@ export type LineChartVisualizationFragment = LineChartVisualization_DashboardInd
 type AreaChartVisualization_DashboardIndicatorAreaChartBlock_Fragment = (
   { showTotalLine: boolean | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4549,13 +4550,13 @@ type AreaChartVisualization_DashboardIndicatorAreaChartBlock_Fragment = (
 type AreaChartVisualization_IndicatorDefaultAreaChart_Fragment = (
   { showTotalLine: boolean | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4583,13 +4584,13 @@ export type AreaChartVisualizationFragment = AreaChartVisualization_DashboardInd
 type PieChartVisualization_DashboardIndicatorPieChartBlock_Fragment = (
   { year: number | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4615,13 +4616,13 @@ type PieChartVisualization_DashboardIndicatorPieChartBlock_Fragment = (
 type PieChartVisualization_IndicatorDefaultPieChart_Fragment = (
   { year: number | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4649,13 +4650,13 @@ export type PieChartVisualizationFragment = PieChartVisualization_DashboardIndic
 type SummaryVisualization_DashboardIndicatorSummaryBlock_Fragment = (
   { indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4666,13 +4667,13 @@ type SummaryVisualization_DashboardIndicatorSummaryBlock_Fragment = (
 type SummaryVisualization_IndicatorDefaultSummary_Fragment = (
   { indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4912,7 +4913,7 @@ export type IndicatorListPageFragmentFragment = (
     { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
     & { __typename: 'IndicatorListColumn' }
   ) | (
-    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, defaultYear: number | null, hideUnit: boolean, highlightGoalMet: boolean }
+    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, defaultYear: number | null, hideUnit: boolean, highlightGoalMet: boolean }
     & { __typename: 'IndicatorValueColumn' }
   )> | null, primaryFilters: Array<(
     { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -5633,13 +5634,13 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
   ) | (
     { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -5663,13 +5664,13 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
   ) | (
     { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -5693,13 +5694,13 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
   ) | (
     { helpText: string | null, blockType: string, year: number | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -5723,13 +5724,13 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
   ) | (
     { id: string | null, blockType: string, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -5934,7 +5935,7 @@ export type GetActionDetailsQuery = (
       ) | null }
       & { __typename: 'Image' }
     ) | null, statusSummary: (
-      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, sentiment: Sentiment, isCompleted: boolean, isActive: boolean }
+      { identifier: ActionStatusSummaryIdentifier, label: string, sentiment: Sentiment, isCompleted: boolean, isActive: boolean }
       & { __typename: 'ActionStatusSummary' }
     ), links: Array<(
       { id: string, order: number, url: string, title: string }
@@ -6259,13 +6260,13 @@ export type GetActionDetailsQuery = (
         )>, defaultVisualization: (
           { showTotalLine: boolean | null, indicator: (
             { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorValue' }
             ) | null, goals: Array<(
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -6289,13 +6290,13 @@ export type GetActionDetailsQuery = (
         ) | (
           { barType: string | null, indicator: (
             { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorValue' }
             ) | null, goals: Array<(
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -6319,13 +6320,13 @@ export type GetActionDetailsQuery = (
         ) | (
           { year: number | null, indicator: (
             { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorValue' }
             ) | null, goals: Array<(
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -6349,13 +6350,13 @@ export type GetActionDetailsQuery = (
         ) | (
           { indicator: (
             { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorValue' }
             ) | null, goals: Array<(
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -8249,7 +8250,16 @@ export type GetActionDetailsQuery = (
           ) | null, reportsToCompare: Array<(
             { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
               { attribute: (
-                { id: string, categories: Array<(
+                { id: string, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+                    { id: string, name: string, shortName: string | null }
+                    & { __typename: 'Unit' }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
+                  & { __typename: 'AttributeType' }
+                ), categories: Array<(
                   { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
                     { id: string, name: string, namePlural: string | null }
                     & { __typename: 'CategoryLevel' }
@@ -8453,41 +8463,44 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Category' }
                   ) | null }
                   & { __typename: 'Category' }
-                )>, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-                    { id: string, name: string, shortName: string | null }
-                    & { __typename: 'Unit' }
-                  ) | null }
-                  & { __typename: 'AttributeType' }
-                ) }
+                )> }
                 & { __typename: 'AttributeCategoryChoice' }
               ) | (
-                { text: string | null, id: string, choice: (
-                  { id: string, identifier: string, name: string }
-                  & { __typename: 'AttributeTypeChoiceOption' }
-                ) | null, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { text: string | null, id: string, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
-                ) }
+                ), choice: (
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                ) | null }
                 & { __typename: 'AttributeChoice' }
               ) | (
                 { id: string, numericValue: number, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
                 ) }
                 & { __typename: 'AttributeNumericValue' }
               ) | (
                 { value: string, id: string, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
                 ) }
                 & { __typename: 'AttributeRichText' | 'AttributeText' }
@@ -8548,7 +8561,16 @@ export type GetActionDetailsQuery = (
         ) | null, reportsToCompare: Array<(
           { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
             { attribute: (
-              { id: string, categories: Array<(
+              { id: string, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+                  { id: string, name: string, shortName: string | null }
+                  & { __typename: 'Unit' }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
+                & { __typename: 'AttributeType' }
+              ), categories: Array<(
                 { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
@@ -8752,41 +8774,44 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Category' }
                 ) | null }
                 & { __typename: 'Category' }
-              )>, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-                  { id: string, name: string, shortName: string | null }
-                  & { __typename: 'Unit' }
-                ) | null }
-                & { __typename: 'AttributeType' }
-              ) }
+              )> }
               & { __typename: 'AttributeCategoryChoice' }
             ) | (
-              { text: string | null, id: string, choice: (
-                { id: string, identifier: string, name: string }
-                & { __typename: 'AttributeTypeChoiceOption' }
-              ) | null, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+              { text: string | null, id: string, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
-              ) }
+              ), choice: (
+                { id: string, identifier: string, name: string }
+                & { __typename: 'AttributeTypeChoiceOption' }
+              ) | null }
               & { __typename: 'AttributeChoice' }
             ) | (
               { id: string, numericValue: number, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
               ) }
               & { __typename: 'AttributeNumericValue' }
             ) | (
               { value: string, id: string, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
               ) }
               & { __typename: 'AttributeRichText' | 'AttributeText' }
@@ -8909,7 +8934,16 @@ export type GetActionDetailsQuery = (
           ) | null, reportsToCompare: Array<(
             { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
               { attribute: (
-                { id: string, categories: Array<(
+                { id: string, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+                    { id: string, name: string, shortName: string | null }
+                    & { __typename: 'Unit' }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
+                  & { __typename: 'AttributeType' }
+                ), categories: Array<(
                   { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
                     { id: string, name: string, namePlural: string | null }
                     & { __typename: 'CategoryLevel' }
@@ -9113,41 +9147,44 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Category' }
                   ) | null }
                   & { __typename: 'Category' }
-                )>, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-                    { id: string, name: string, shortName: string | null }
-                    & { __typename: 'Unit' }
-                  ) | null }
-                  & { __typename: 'AttributeType' }
-                ) }
+                )> }
                 & { __typename: 'AttributeCategoryChoice' }
               ) | (
-                { text: string | null, id: string, choice: (
-                  { id: string, identifier: string, name: string }
-                  & { __typename: 'AttributeTypeChoiceOption' }
-                ) | null, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { text: string | null, id: string, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
-                ) }
+                ), choice: (
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                ) | null }
                 & { __typename: 'AttributeChoice' }
               ) | (
                 { id: string, numericValue: number, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
                 ) }
                 & { __typename: 'AttributeNumericValue' }
               ) | (
                 { value: string, id: string, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
                 ) }
                 & { __typename: 'AttributeRichText' | 'AttributeText' }
@@ -9208,7 +9245,16 @@ export type GetActionDetailsQuery = (
         ) | null, reportsToCompare: Array<(
           { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
             { attribute: (
-              { id: string, categories: Array<(
+              { id: string, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+                  { id: string, name: string, shortName: string | null }
+                  & { __typename: 'Unit' }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
+                & { __typename: 'AttributeType' }
+              ), categories: Array<(
                 { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
@@ -9412,41 +9458,44 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Category' }
                 ) | null }
                 & { __typename: 'Category' }
-              )>, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-                  { id: string, name: string, shortName: string | null }
-                  & { __typename: 'Unit' }
-                ) | null }
-                & { __typename: 'AttributeType' }
-              ) }
+              )> }
               & { __typename: 'AttributeCategoryChoice' }
             ) | (
-              { text: string | null, id: string, choice: (
-                { id: string, identifier: string, name: string }
-                & { __typename: 'AttributeTypeChoiceOption' }
-              ) | null, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+              { text: string | null, id: string, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
-              ) }
+              ), choice: (
+                { id: string, identifier: string, name: string }
+                & { __typename: 'AttributeTypeChoiceOption' }
+              ) | null }
               & { __typename: 'AttributeChoice' }
             ) | (
               { id: string, numericValue: number, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
               ) }
               & { __typename: 'AttributeNumericValue' }
             ) | (
               { value: string, id: string, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
               ) }
               & { __typename: 'AttributeRichText' | 'AttributeText' }
@@ -10188,7 +10237,16 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
     ) | null, reportsToCompare: Array<(
       { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
         { attribute: (
-          { id: string, categories: Array<(
+          { id: string, type: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+              { id: string, name: string, shortName: string | null }
+              & { __typename: 'Unit' }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
+            & { __typename: 'AttributeType' }
+          ), categories: Array<(
             { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
@@ -10392,41 +10450,44 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
               & { __typename: 'Category' }
             ) | null }
             & { __typename: 'Category' }
-          )>, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-              { id: string, name: string, shortName: string | null }
-              & { __typename: 'Unit' }
-            ) | null }
-            & { __typename: 'AttributeType' }
-          ) }
+          )> }
           & { __typename: 'AttributeCategoryChoice' }
         ) | (
-          { text: string | null, id: string, choice: (
-            { id: string, identifier: string, name: string }
-            & { __typename: 'AttributeTypeChoiceOption' }
-          ) | null, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { text: string | null, id: string, type: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
               { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
-            ) | null }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
             & { __typename: 'AttributeType' }
-          ) }
+          ), choice: (
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          ) | null }
           & { __typename: 'AttributeChoice' }
         ) | (
           { id: string, numericValue: number, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
               { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
-            ) | null }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
             & { __typename: 'AttributeType' }
           ) }
           & { __typename: 'AttributeNumericValue' }
         ) | (
           { value: string, id: string, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
               { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
-            ) | null }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
             & { __typename: 'AttributeType' }
           ) }
           & { __typename: 'AttributeRichText' | 'AttributeText' }
@@ -10501,7 +10562,16 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
   ) | null, reportsToCompare: Array<(
     { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
       { attribute: (
-        { id: string, categories: Array<(
+        { id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
+          & { __typename: 'AttributeType' }
+        ), categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
@@ -10705,41 +10775,44 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
             & { __typename: 'Category' }
           ) | null }
           & { __typename: 'Category' }
-        )>, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-            { id: string, name: string, shortName: string | null }
-            & { __typename: 'Unit' }
-          ) | null }
-          & { __typename: 'AttributeType' }
-        ) }
+        )> }
         & { __typename: 'AttributeCategoryChoice' }
       ) | (
-        { text: string | null, id: string, choice: (
-          { id: string, identifier: string, name: string }
-          & { __typename: 'AttributeTypeChoiceOption' }
-        ) | null, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+        { text: string | null, id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
-        ) }
+        ), choice: (
+          { id: string, identifier: string, name: string }
+          & { __typename: 'AttributeTypeChoiceOption' }
+        ) | null }
         & { __typename: 'AttributeChoice' }
       ) | (
         { id: string, numericValue: number, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'AttributeNumericValue' }
       ) | (
         { value: string, id: string, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'AttributeRichText' | 'AttributeText' }
@@ -10769,7 +10842,16 @@ export type ReportComparisonBlockActionContentFragment = (
   ) | null, reportsToCompare: Array<(
     { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
       { attribute: (
-        { id: string, categories: Array<(
+        { id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
+          & { __typename: 'AttributeType' }
+        ), categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
@@ -10973,41 +11055,44 @@ export type ReportComparisonBlockActionContentFragment = (
             & { __typename: 'Category' }
           ) | null }
           & { __typename: 'Category' }
-        )>, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-            { id: string, name: string, shortName: string | null }
-            & { __typename: 'Unit' }
-          ) | null }
-          & { __typename: 'AttributeType' }
-        ) }
+        )> }
         & { __typename: 'AttributeCategoryChoice' }
       ) | (
-        { text: string | null, id: string, choice: (
-          { id: string, identifier: string, name: string }
-          & { __typename: 'AttributeTypeChoiceOption' }
-        ) | null, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+        { text: string | null, id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
-        ) }
+        ), choice: (
+          { id: string, identifier: string, name: string }
+          & { __typename: 'AttributeTypeChoiceOption' }
+        ) | null }
         & { __typename: 'AttributeChoice' }
       ) | (
         { id: string, numericValue: number, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'AttributeNumericValue' }
       ) | (
         { value: string, id: string, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'AttributeRichText' | 'AttributeText' }
@@ -12376,13 +12461,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -12406,13 +12491,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -12436,13 +12521,13 @@ export type GetContentPageQuery = (
       ) | (
         { helpText: string | null, blockType: string, year: number | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -12466,13 +12551,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, blockType: string, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -12574,7 +12659,7 @@ export type GetContentPageQuery = (
       { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
       & { __typename: 'IndicatorListColumn' }
     ) | (
-      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, defaultYear: number | null, hideUnit: boolean, highlightGoalMet: boolean }
+      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, defaultYear: number | null, hideUnit: boolean, highlightGoalMet: boolean }
       & { __typename: 'IndicatorValueColumn' }
     )> | null, primaryFilters: Array<(
       { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
@@ -13192,13 +13277,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13222,13 +13307,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13252,13 +13337,13 @@ export type GetContentPageQuery = (
       ) | (
         { helpText: string | null, blockType: string, year: number | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13282,13 +13367,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, blockType: string, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13765,13 +13850,13 @@ export type GetHomePageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13795,13 +13880,13 @@ export type GetHomePageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13825,13 +13910,13 @@ export type GetHomePageQuery = (
       ) | (
         { helpText: string | null, blockType: string, year: number | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13855,13 +13940,13 @@ export type GetHomePageQuery = (
       ) | (
         { id: string | null, blockType: string, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -14625,7 +14710,7 @@ export type IndicatorDetailsQuery = (
         { id: string, identifier: string, name: string }
         & { __typename: 'ActionImplementationPhase' }
       ) | null, statusSummary: (
-        { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
+        { identifier: ActionStatusSummaryIdentifier, label: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
         & { __typename: 'ActionStatusSummary' }
       ), mergedWith: (
         { id: string, identifier: string, viewUrl: string, plan: (
@@ -14713,13 +14798,13 @@ export type IndicatorDetailsQuery = (
     ) | null, defaultVisualization: (
       { showTotalLine: boolean | null, indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14743,13 +14828,13 @@ export type IndicatorDetailsQuery = (
     ) | (
       { barType: string | null, indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14773,13 +14858,13 @@ export type IndicatorDetailsQuery = (
     ) | (
       { year: number | null, indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14803,13 +14888,13 @@ export type IndicatorDetailsQuery = (
     ) | (
       { indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14829,7 +14914,7 @@ export type ActionsTableRowFragmentFragment = (
     { id: string, identifier: string, name: string }
     & { __typename: 'ActionImplementationPhase' }
   ) | null, statusSummary: (
-    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
+    { identifier: ActionStatusSummaryIdentifier, label: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
     & { __typename: 'ActionStatusSummary' }
   ), mergedWith: (
     { id: string, identifier: string, viewUrl: string, plan: (
@@ -14903,7 +14988,7 @@ export type OrganizationDetailsQuery = (
         { id: string }
         & { __typename: 'ActionImpact' }
       )>, actionStatusSummaries: Array<(
-        { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+        { identifier: ActionStatusSummaryIdentifier, label: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
         & { __typename: 'ActionStatusSummary' }
       )>, image: (
         { rendition: (
@@ -15067,7 +15152,7 @@ export type OrganizationDetailsQuery = (
       { id: string }
       & { __typename: 'ActionImpact' }
     )>, actionStatusSummaries: Array<(
-      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+      { identifier: ActionStatusSummaryIdentifier, label: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
       & { __typename: 'ActionStatusSummary' }
     )>, image: (
       { rendition: (
@@ -15206,7 +15291,7 @@ export type OrgContentPlanFragment = (
     { id: string }
     & { __typename: 'ActionImpact' }
   )>, actionStatusSummaries: Array<(
-    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+    { identifier: ActionStatusSummaryIdentifier, label: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
     & { __typename: 'ActionStatusSummary' }
   )>, image: (
     { rendition: (
@@ -15409,10 +15494,10 @@ export type GetPlanContextQuery = (
       { id: string, identifier: string, name: string, isCompleted: boolean }
       & { __typename: 'ActionStatus' }
     )>, actionStatusSummaries: Array<(
-      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+      { identifier: ActionStatusSummaryIdentifier, label: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
       & { __typename: 'ActionStatusSummary' }
     )>, actionTimelinessClasses: Array<(
-      { identifier: ActionTimelinessIdentifier, label: string, color: string, sentiment: Sentiment, comparison: Comparison, days: number }
+      { identifier: ActionTimelinessIdentifier, color: string, sentiment: Sentiment, comparison: Comparison, days: number }
       & { __typename: 'ActionTimeliness' }
     )>, impactGroups: Array<(
       { id: string }
@@ -15611,10 +15696,10 @@ export type PlanContextFragment = (
     { id: string, identifier: string, name: string, isCompleted: boolean }
     & { __typename: 'ActionStatus' }
   )>, actionStatusSummaries: Array<(
-    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+    { identifier: ActionStatusSummaryIdentifier, label: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
     & { __typename: 'ActionStatusSummary' }
   )>, actionTimelinessClasses: Array<(
-    { identifier: ActionTimelinessIdentifier, label: string, color: string, sentiment: Sentiment, comparison: Comparison, days: number }
+    { identifier: ActionTimelinessIdentifier, color: string, sentiment: Sentiment, comparison: Comparison, days: number }
     & { __typename: 'ActionTimeliness' }
   )>, impactGroups: Array<(
     { id: string }
@@ -16764,16 +16849,16 @@ export type StorybookIndicatorExplorerQueryVariables = Exact<{
 export type StorybookIndicatorExplorerQuery = (
   { plan: (
     { id: string, name: string, themeIdentifier: string | null, viewUrl: string | null, organization: (
-      { name: string }
+      { id: string, name: string }
       & { __typename: 'Organization' }
     ) }
     & { __typename: 'Plan' }
   ) | null, planIndicators: Array<(
     { id: string, name: string, level: string | null, timeResolution: IndicatorTimeResolution, description: string | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, valueRounding: number | null, desiredTrend: IndicatorDesiredTrend | null, showTrendline: boolean, showTotalLine: boolean, dataCategoriesAreStackable: boolean, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ), latestValue: (
-      { date: string | null, value: number }
+      { id: string, date: string | null, value: number }
       & { __typename: 'IndicatorValue' }
     ) | null, values: Array<(
       { id: string, value: number, date: string | null, categories: Array<(
@@ -16785,10 +16870,10 @@ export type StorybookIndicatorExplorerQuery = (
       { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, quantity: (
-      { name: string }
+      { id: string, name: string }
       & { __typename: 'Quantity' }
     ) | null, referenceValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, defaultVisualization: (
       { dimension: (
@@ -16809,7 +16894,7 @@ export type StorybookIndicatorExplorerQuery = (
       ) | null }
       & { __typename: 'IndicatorDefaultPieChart' }
     ) | { __typename: 'IndicatorDefaultSummary' } | null, dimensions: Array<(
-      { dimension: (
+      { id: string, dimension: (
         { id: string, name: string, categories: Array<(
           { id: string, name: string, defaultColor: string }
           & { __typename: 'DimensionCategory' }
@@ -16823,10 +16908,21 @@ export type StorybookIndicatorExplorerQuery = (
   & { __typename: 'Query' }
 );
 
-export type TestPlanQueryVariables = Exact<{ [key: string]: never; }>;
+export type TestPlanLocaleQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TestPlanQuery = (
+export type TestPlanLocaleQuery = (
+  { plan: (
+    { id: string }
+    & { __typename: 'Plan' }
+  ) | null }
+  & { __typename: 'Query' }
+);
+
+export type TestPlanInstanceAndLocaleQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TestPlanInstanceAndLocaleQuery = (
   { plan: (
     { id: string }
     & { __typename: 'Plan' }
@@ -16944,25 +17040,25 @@ export type IndicatorSparklineGraphDataQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetSitemapQueryVariables = Exact<{
+export type SitemapQueryVariables = Exact<{
   id: Scalars['ID']['input'];
   hostname: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetSitemapQuery = (
+export type SitemapQuery = (
   { planIndicators: Array<(
     { id: string }
     & { __typename: 'Indicator' }
   )> | null, plan: (
-    { primaryLanguage: string, otherLanguages: Array<string>, domain: (
-      { hostname: string, basePath: string | null }
+    { id: string, primaryLanguage: string, otherLanguages: Array<string>, domain: (
+      { id: string, hostname: string, basePath: string | null }
       & { __typename: 'PlanDomain' }
     ) | null, actions: Array<(
-      { identifier: string }
+      { id: string, identifier: string }
       & { __typename: 'Action' }
     )>, pages: Array<(
-      { urlPath: string }
+      { id: string | null, urlPath: string }
       & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
     )> | null }
     & { __typename: 'Plan' }

@@ -18,7 +18,7 @@ import ContentLoader from '@common/components/ContentLoader';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type {
-  CardImageFragmentFragment,
+  CardImageFragment,
   StreamFieldFragmentFragment,
 } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
@@ -323,7 +323,7 @@ type StreamFieldBlockPage = {
     id: string;
     name: string;
     children: CategoryListBlockCategory[];
-    image?: CardImageFragmentFragment | null;
+    image?: CardImageFragment | null;
     indicators: { id: string }[];
     changeLogMessage?: React.ComponentProps<typeof ChangeHistory>['entry'];
   } | null;

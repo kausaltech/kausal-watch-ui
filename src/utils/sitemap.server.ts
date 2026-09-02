@@ -5,8 +5,8 @@ import { logOperationLink } from '@common/apollo/links';
 import type {
   GetPlansByHostnameQuery,
   GetPlansByHostnameQueryVariables,
-  GetSitemapQuery,
-  GetSitemapQueryVariables,
+  SitemapQuery,
+  SitemapQueryVariables,
 } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
 import { ACTIONS_PATH, INDICATORS_PATH, STATIC_ROUTES } from '@/constants/routes';
@@ -24,21 +24,25 @@ const apolloClient = new ApolloClient({
 });
 
 const GET_SITEMAP_CONTENTS = gql`
-  query GetSitemap($id: ID!, $hostname: String) {
+  query Sitemap($id: ID!, $hostname: String) {
     planIndicators(plan: $id) {
       id
     }
     plan(id: $id) {
+      id
       primaryLanguage
       otherLanguages
       domain(hostname: $hostname) {
+        id
         hostname
         basePath
       }
       actions {
+        id
         identifier
       }
       pages {
+        id
         urlPath
       }
     }
@@ -49,11 +53,11 @@ type PossiblePlanForHostname = NonNullable<GetPlansByHostnameQuery['plansForHost
 
 type PlanForHostname = PossiblePlanForHostname & { __typename: 'Plan' };
 
-type Indicator = NonNullable<GetSitemapQuery['planIndicators']>[0] & {
+type Indicator = NonNullable<SitemapQuery['planIndicators']>[0] & {
   __typename: 'Indicator';
 };
 
-type Page = NonNullable<NonNullable<NonNullable<GetSitemapQuery['plan']>['pages']>[0]> & {
+type Page = NonNullable<NonNullable<NonNullable<SitemapQuery['plan']>['pages']>[0]> & {
   __typename: string;
 };
 
@@ -144,7 +148,7 @@ export function getSitemapUrlVariantsForPlan(
   return [...urls];
 }
 
-function getPlanPaths(data: GetSitemapQuery): string[] {
+function getPlanPaths(data: SitemapQuery): string[] {
   return [
     '/',
 
@@ -168,8 +172,8 @@ async function getPlanUrls(
   hostname: string,
   options: SitemapUrlOptions
 ) {
-  const { data, error } = await tryRequest<GetSitemapQuery>(
-    apolloClient.query<GetSitemapQuery, GetSitemapQueryVariables>({
+  const { data, error } = await tryRequest<SitemapQuery>(
+    apolloClient.query<SitemapQuery, SitemapQueryVariables>({
       query: GET_SITEMAP_CONTENTS,
       variables: { id: plan.id, hostname },
       fetchPolicy: 'no-cache',
@@ -232,8 +236,8 @@ export async function getSitemapUrlsForPlan(
 ): Promise<string[]> {
   const url = new URL(origin);
 
-  const { data, error } = await tryRequest<GetSitemapQuery>(
-    apolloClient.query<GetSitemapQuery, GetSitemapQueryVariables>({
+  const { data, error } = await tryRequest<SitemapQuery>(
+    apolloClient.query<SitemapQuery, SitemapQueryVariables>({
       query: GET_SITEMAP_CONTENTS,
       // Resolve the plan's domain for the requesting hostname so the base-path
       // (or lack thereof) matches how the page is actually served on this host.

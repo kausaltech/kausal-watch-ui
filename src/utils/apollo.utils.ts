@@ -1,4 +1,3 @@
-import type { Operation } from '@apollo/client';
 import { ApolloLink, HttpLink } from '@apollo/client';
 import { CombinedGraphQLErrors } from '@apollo/client/errors';
 import { ErrorLink } from '@apollo/client/link/error';
@@ -29,7 +28,7 @@ declare module '@apollo/client' {
 }
 
 function logError(
-  operation: Operation,
+  operation: ApolloLink.Operation,
   message: string,
   error: unknown,
   sentryExtras: { [key: string]: unknown }

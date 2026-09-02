@@ -4,10 +4,6 @@ import styled from '@emotion/styled';
 
 import { readableColor } from 'polished';
 
-import {
-  type CategoryTagRecursiveFragmentFragment,
-  type CategoryTypeFragmentFragment,
-} from '@/common/__generated__/graphql';
 import { ActionListLink, StaticPageLink } from '@/common/links';
 import BadgeTooltip from '@/components/common/BadgeTooltip';
 import PopoverTip from '@/components/common/PopoverTip';

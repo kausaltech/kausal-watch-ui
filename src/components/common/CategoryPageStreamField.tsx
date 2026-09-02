@@ -1,6 +1,5 @@
 import type React from 'react';
 
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import * as Sentry from '@sentry/nextjs';
@@ -88,7 +87,6 @@ export default function CategoryPageStreamField({
   context = 'main',
   columnProps: customColumnProps,
 }: Props) {
-  const theme = useTheme();
   const plan = usePlan();
   const paths = usePaths();
   const columnProps = {};
@@ -193,8 +191,6 @@ export default function CategoryPageStreamField({
     case 'CategoryPageCategoryListBlock': {
       const childCategories = page.category?.children ?? [];
       const fallbackImage = page.category?.image || plan.image;
-      const color = page.category?.color || page.category?.parent?.color || theme.brandLight;
-
       if (childCategories.length) {
         return (
           <CategoryListBlock

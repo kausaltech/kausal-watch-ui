@@ -135,8 +135,8 @@ const Tab = styled.button`
   }
 `;
 
-const commonCategoryFragment = gql`
-  fragment CommonCategoryFragment on Category {
+const commonCategory = gql`
+  fragment CommonCategory on Category {
     common {
       id
       identifier
@@ -171,7 +171,7 @@ const planFragment = gql`
             id
           }
         }
-        ...CommonCategoryFragment @include(if: $relatedPlanActions)
+        ...CommonCategory @include(if: $relatedPlanActions)
 
         color
         iconSvgUrl
@@ -192,7 +192,7 @@ const planFragment = gql`
       name
     }
   }
-  ${commonCategoryFragment}
+  ${commonCategory}
 `;
 
 const actionFragment = gql`
@@ -225,7 +225,6 @@ const actionFragment = gql`
     statusSummary {
       identifier
       label
-      color
       isActive
       isCompleted
       sentiment

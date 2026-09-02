@@ -108,7 +108,7 @@ export const GET_INDICATOR_DETAILS = gql`
         }
       }
       categories {
-        ...CategoryTagRecursiveFragment
+        ...CategoryTagRecursive
       }
       common {
         id
@@ -305,7 +305,6 @@ export const GET_INDICATOR_DETAILS = gql`
     statusSummary {
       identifier
       label
-      color
       isActive
       isCompleted
       sentiment

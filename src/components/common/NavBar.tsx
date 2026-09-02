@@ -1,13 +1,11 @@
 import type React from 'react';
 
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Collapse, Nav, NavItem, Navbar } from 'reactstrap';
 
 import { NavigationLink } from '@/common/links';
-import { usePlan } from '@/context/plan';
 
 const BotNav = styled(Navbar)`
   background-color: ${(props) => props.theme.siteNavBackground};
@@ -131,10 +129,6 @@ interface NavBarProps {
 const NavBar: React.FC<NavBarProps> = ({ navItems }) => {
   // Your component logic here
   const t = useTranslations();
-  const theme = useTheme();
-  const locale = useLocale();
-  const plan = usePlan();
-
   return (
     <div>
       <BotNav expand="md" id="global-navigation-bar" aria-label={t('nav-primary')} container={true}>

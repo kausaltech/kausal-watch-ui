@@ -22,7 +22,7 @@ export const errorIcon = (
   </svg>
 );
 
-function ErrorPage({ message, type = 'page', details, testId }: Props) {
+function ErrorPage({ message, details, testId }: Props) {
   const t = useTranslations();
 
   return (

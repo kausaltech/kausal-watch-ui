@@ -15,15 +15,13 @@ describe('isAbsoluteUrl', () => {
       '//cdn.kausal.tech/foo.js',
     ];
 
-    tests.map((test) => expect(isAbsoluteUrl(test)).toBe(true));
+    tests.forEach((test) => expect(isAbsoluteUrl(test)).toBe(true));
   });
 
   it('returns false for relative URLs', () => {
     const tests = ['/foo/bar/', 'foo/bar', '/foo', 'foo'];
 
-    expect(isAbsoluteUrl('/foo/bar/')).toBe(false);
-
-    // tests.map((test) => expect(isAbsoluteUrl(test)).toBe(false));
+    tests.forEach((test) => expect(isAbsoluteUrl(test)).toBe(false));
   });
 });
 

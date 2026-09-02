@@ -16,18 +16,20 @@ export type Category = {
 
 export interface CategoryInput {
   id: string;
+  identifier?: string | null;
+  name?: string;
   parent?: {
     id: string;
-    common?: { id: string } | null;
+    common?: { id: string; identifier?: string; name?: string } | null;
   } | null;
-  common?: { id: string } | null;
+  common?: { id: string; identifier?: string; name?: string; __typename?: string } | null;
 }
 
 export interface CategoryTypeInput {
   id: string;
   identifier?: string;
   __typename?: string;
-  common?: { id?: string; identifier?: string; name?: string } | null;
+  common?: { id?: string; identifier?: string; name?: string; __typename?: string } | null;
   categories: CategoryInput[];
 }
 

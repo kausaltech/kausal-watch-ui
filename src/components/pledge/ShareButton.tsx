@@ -23,7 +23,7 @@ export function ShareButton({
 
     try {
       await navigator.share({ title, url: shareUrl });
-    } catch (error) {
+    } catch {
       // User cancelled or share failed
     }
   };

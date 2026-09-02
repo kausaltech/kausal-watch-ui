@@ -37,7 +37,7 @@ export const GET_HOME_PAGE = gql`
           name
           leadParagraph
           image {
-            ...CardImageFragment
+            ...CardImage
           }
           color
           categoryPage {

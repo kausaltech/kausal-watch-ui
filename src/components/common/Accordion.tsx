@@ -242,7 +242,7 @@ function Accordion(props: AccordionProps) {
 
   const getOpenQuestionId = () => {
     const { hash } = window.location;
-    return hash && hash.length > 2 ? hash.substr(2) : undefined;
+    return hash && hash.length > 2 ? hash.slice(2) : undefined;
   };
 
   useEffect(() => {
@@ -267,9 +267,9 @@ function Accordion(props: AccordionProps) {
         if (!React.isValidElement<AccordionItemProps>(child) || child.type !== AccordionItem) {
           return null;
         }
-        const id = child.props.id || `${index}`;
+        const id = child.props.id ?? `${index}`;
         return React.cloneElement(child, {
-          isOpen: child.props.open || openItem === id,
+          isOpen: child.props.open ? true : openItem === id,
           onClick: toggleSection(id),
           identifier: id,
         });

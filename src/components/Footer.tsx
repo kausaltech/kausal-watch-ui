@@ -44,7 +44,7 @@ function getNavChildren(navItem: NavItem) {
     return [];
   }
 
-  return (navItem.children || [])
+  return (navItem.children ?? [])
     .filter((child): child is NonNullable<typeof child> => !!child)
     .map((child) => ({
       id: child.id,
@@ -56,21 +56,21 @@ function getNavChildren(navItem: NavItem) {
 function Footer() {
   const plan = usePlan();
   const pathname = usePathname();
-  const generalContent = plan.generalContent || {};
+  const generalContent = plan.generalContent ?? {};
   const theme = useTheme();
   const FooterComponent = useCustomComponent('Footer', SiteFooter);
   const { navigationTitle: siteTitle } = getMetaTitles(plan);
   const { fundingInstruments, otherLogos, footerStatement } = theme.settings;
   const t = useTranslations();
 
-  const navLinks: FooterNavItem[] = (plan.footer?.items || [])
+  const navLinks: FooterNavItem[] = (plan.footer?.items ?? [])
     .filter(isPageNavItem)
     .map((navItem) => {
       return {
         id: navItem.id,
         name: navItem.page.title,
         slug:
-          'children' in navItem && (navItem.children || []).length > 0
+          'children' in navItem && (navItem.children ?? []).length > 0
             ? undefined
             : navItem.page.urlPath,
         children: getNavChildren(navItem),
@@ -79,7 +79,7 @@ function Footer() {
 
   // TODO: Remove this when we have a proper way to add custom links
   const additionalLinks: FooterAdditionalLink[] =
-    theme.settings?.customAdditionalLinks?.slice() || [];
+    theme.settings?.customAdditionalLinks?.slice() ?? [];
   const hasCustomAccessibilityPage = additionalLinks?.find((link) => link.id === 'accessibility');
 
   plan.additionalLinks?.items?.filter(isAdditionalPageNavItem).forEach((link) =>

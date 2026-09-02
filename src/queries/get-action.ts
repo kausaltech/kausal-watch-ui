@@ -60,14 +60,13 @@ const GET_ACTION_DETAILS = gql`
       description
       completion
       image {
-        ...HeroImageFragment
-        ...SocialImageFragment
+        ...HeroImage
+        ...SocialImage
       }
       color
       statusSummary {
         identifier
         label
-        color
         sentiment
         isCompleted
         isActive
@@ -90,8 +89,8 @@ const GET_ACTION_DETAILS = gql`
         }
       }
       categories {
-        ...CategoryRecursiveFragment
-        ...CategoryHeroImagesFragment
+        ...CategoryRecursive
+        ...CategoryHeroImages
       }
       emissionScopes: categories(categoryType: "emission_scope") {
         id
@@ -264,7 +263,7 @@ const GET_ACTION_DETAILS = gql`
         slug
         commitmentCount
         image {
-          ...CardImageFragment
+          ...CardImage
         }
         attributes {
           ...AttributesBlockAttributeWithNestedType
@@ -566,7 +565,7 @@ const GET_ACTION_DETAILS = gql`
         }
         ... on ActionAttributeReportValue {
           attribute {
-            ...AttributesBlockAttribute
+            ...AttributesBlockAttributeWithNestedType
           }
         }
       }

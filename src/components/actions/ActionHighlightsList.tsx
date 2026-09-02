@@ -36,7 +36,7 @@ export const GET_ACTION_LIST = gql`
       completion
       updatedAt
       image {
-        ...CardImageFragment
+        ...CardImage
       }
       plan {
         id
@@ -59,17 +59,17 @@ export const GET_ACTION_LIST = gql`
       categories {
         id
         image {
-          ...CardImageFragment
+          ...CardImage
         }
         parent {
           id
           image {
-            ...CardImageFragment
+            ...CardImage
           }
           parent {
             id
             image {
-              ...CardImageFragment
+              ...CardImage
             }
           }
         }

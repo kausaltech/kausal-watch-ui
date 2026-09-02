@@ -79,7 +79,6 @@ export function usePlotlyBasic({ data, layout, config, noValidate }: UsePlotlyAr
   const ref = useRef<HTMLDivElement>(null);
 
   if (!noValidate) {
-    // @ts-ignore
     const ret = Plotly.validate(data, layout);
     if (ret && ret.length) {
       console.warn('Plotly validation errors:');

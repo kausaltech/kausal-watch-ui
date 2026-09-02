@@ -7,7 +7,7 @@ import {
   InMemoryCache,
   SSRMultipartLink,
 } from '@apollo/client-integration-nextjs';
-import { setContext } from '@apollo/client/link/context';
+import { SetContextLink } from '@apollo/client/link/context';
 import { useApolloClient } from '@apollo/client/react';
 import { disableFragmentWarnings } from 'graphql-tag';
 import { signOut, useSession } from 'next-auth/react';
@@ -25,7 +25,7 @@ import {
   localeMiddleware,
 } from '../../utils/apollo.utils';
 
-const authMiddleware = setContext((_, { uri, sessionToken, headers: initialHeaders = {} }) => {
+const authMiddleware = new SetContextLink(({ uri, sessionToken, headers: initialHeaders = {} }) => {
   // Operations that override the uri target the Paths API, which uses its own
   // authentication; the Watch ID token must not be sent there.
   if (uri) {
