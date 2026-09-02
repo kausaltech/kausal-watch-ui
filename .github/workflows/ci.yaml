@@ -24,6 +24,7 @@ jobs:
             generateThemeSymlinks(path.join(process.cwd(), 'public', 'static', 'themes'), {verbose: false});
           "
       - run: pnpm test
+      - run: pnpm lint
       - run: pnpm typecheck
 
   build:
