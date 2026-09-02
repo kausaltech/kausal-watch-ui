@@ -1,12 +1,14 @@
 import { MockedProvider } from '@apollo/client/testing/react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
-import {
+import type {
   IndicatorDesiredTrend,
+  IndicatorTimeResolution,
+} from '@/common/__generated__/graphql';
+import {
   IndicatorDetailsFieldName,
   type IndicatorDetailsQuery,
   IndicatorNonQuantifiedGoal,
-  IndicatorTimeResolution,
 } from '@/common/__generated__/graphql';
 import IndicatorModalContentBlock from '@/components/indicators/IndicatorModalContentBlock';
 import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';

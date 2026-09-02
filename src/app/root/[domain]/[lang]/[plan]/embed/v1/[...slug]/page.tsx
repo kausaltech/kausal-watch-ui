@@ -1,6 +1,6 @@
 'use client';
 
-import React, { type JSX, use, useEffect, useRef } from 'react';
+import { type JSX, use, useEffect, useRef } from 'react';
 
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';

@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import { Suspense, useState } from 'react';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';

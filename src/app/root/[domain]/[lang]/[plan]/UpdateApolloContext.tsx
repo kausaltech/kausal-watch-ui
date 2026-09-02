@@ -5,7 +5,6 @@ import { type PropsWithChildren } from 'react';
 import { useApolloClient } from '@apollo/client/react';
 import { useSession } from 'next-auth/react';
 
-import { isServer } from '@/common/environment';
 import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 

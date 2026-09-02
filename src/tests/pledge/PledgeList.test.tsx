@@ -1,5 +1,5 @@
-import React from 'react';
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { fireEvent, screen } from '@testing-library/react';
 
 import PledgeList, { type Pledge } from '../../components/pledge/PledgeList';
@@ -41,6 +41,10 @@ function createMockPledge(overrides: Partial<Pledge> = {}) {
   };
 }
 
+function zeroCommitment(): 0 | -1 | 1 {
+  return 0;
+}
+
 const defaultHookReturn = {
   userUuid: null,
   userData: {},
@@ -48,7 +52,7 @@ const defaultHookReturn = {
   loading: false,
   commitToPledge: jest.fn(),
   uncommitFromPledge: jest.fn(),
-  getCommitmentCountAdjustment: jest.fn(() => 0 as 0),
+  getCommitmentCountAdjustment: jest.fn(zeroCommitment),
 };
 
 beforeEach(() => {
@@ -129,7 +133,7 @@ describe('PledgeList', () => {
     });
 
     it('does not show empty state when there are no pledges at all', () => {
-      render(<PledgeList pledges={[] as any} />);
+      render(<PledgeList pledges={[]} />);
 
       fireEvent.click(screen.getByRole('radio', { name: /my pledges/i }));
 

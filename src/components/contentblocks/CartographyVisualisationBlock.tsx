@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import styled from '@emotion/styled';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
-import LegendControl, { type MapboxMap } from 'mapboxgl-legend';
+import LegendControl from 'mapboxgl-legend';
 import 'mapboxgl-legend/dist/style.css';
 import Map, { NavigationControl, useMap } from 'react-map-gl/mapbox';
 import { Col, Container, Row } from 'reactstrap';
@@ -71,7 +71,7 @@ const LegendWithOverrides = ({ styleOverrides }: { styleOverrides: string | null
       ? (JSON.parse(styleOverrides) as StyleOverride)
       : null;
   const { current: map } = useMap();
-  const mapInstance = map?.getMap() as MapboxMap | undefined;
+  const mapInstance = map?.getMap();
   const styleLoadHandler = useCallback(() => {
     if (!map || !mapInstance) return;
     const style = mapInstance.getStyle();

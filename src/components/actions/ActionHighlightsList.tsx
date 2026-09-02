@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import type React from 'react';
+import { useContext } from 'react';
 
 import styled from '@emotion/styled';
 

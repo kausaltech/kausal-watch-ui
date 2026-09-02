@@ -1,5 +1,3 @@
-import React from 'react';
-
 import ErrorMessage from '@/components/common/ErrorMessage';
 
 import { render } from '../test-utils';

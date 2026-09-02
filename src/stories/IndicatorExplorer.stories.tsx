@@ -931,11 +931,7 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
             {themeFound ? themeKey : `${themeKey} not found locally, using toolbar theme`})
           </small>
         </h2>
-        <GraphSettingsPanel
-          defaultGraphs={
-            (themes.default?.settings?.graphs ?? {}) as unknown as Record<string, unknown>
-          }
-        />
+        <GraphSettingsPanel defaultGraphs={themes.default?.settings?.graphs ?? {}} />
       </PlanHeader>
       {indicators.length === 0 && <Message>This plan has no indicators.</Message>}
       {indicators.map((indicator) => (

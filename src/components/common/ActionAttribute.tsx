@@ -1,4 +1,4 @@
-import React, { type ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
 import styled from '@emotion/styled';
 

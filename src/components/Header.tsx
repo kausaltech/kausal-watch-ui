@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { usePathname } from 'next/navigation';
 
@@ -12,7 +12,6 @@ import { useLocale } from 'next-intl';
 import { getDeploymentType } from '@common/env';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
-import { deploymentType } from '@/common/environment';
 import { getActiveBranch } from '@/common/links';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import ApplicationStateBanner from '@/components/common/ApplicationStateBanner';

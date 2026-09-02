@@ -429,7 +429,7 @@ function buildBadges(
       options: [],
       isMulti: false,
       filterAction: () => true,
-    } as ActionListFilter);
+    });
   }
 
   return uniqueFilters
@@ -651,7 +651,7 @@ function createAttributeTypeFilter(
   config: ActionListActionAttributeTypeFilterBlock,
   t: TFunction
 ): ActionListFilter<string | undefined> {
-  const att = config.attributeType!;
+  const att = config.attributeType;
   const options = att.choiceOptions.map((choice) => ({
     id: choice.id,
     label: choice.name,
@@ -890,7 +890,7 @@ const FilterField = React.memo(function FilterField({
           id={filter.id}
           label={filter.label}
           placeholder={filter.showAllLabel}
-          onChange={onChange as FilterChangeCallback<string | undefined>}
+          onChange={onChange}
           currentValue={value as string | undefined}
           inputRef={filter.inputRef}
         />
@@ -910,7 +910,7 @@ const FilterField = React.memo(function FilterField({
           helpText={filter.helpText}
           showAllLabel={filter.showAllLabel}
           currentValue={currentValue}
-          onChange={onChange as FilterChangeCallback<string | undefined>}
+          onChange={onChange}
           options={filter.options ?? []}
         />
         {currentValue && (
@@ -984,13 +984,13 @@ const FilterField = React.memo(function FilterField({
   return (
     <FilterColumn sm={filter.sm} md={filter.md} lg={filter.lg} key={filter.id}>
       <ActionListDropdownInput
-        isMulti={(filter.isMulti ?? false) as false}
+        isMulti={filter.isMulti ?? false}
         id={filter.id}
         label={filter.label}
         helpText={filter.helpText}
         showAllLabel={filter.showAllLabel}
         currentValue={value}
-        onChange={onChange as FilterChangeCallback<FilterValue>}
+        onChange={onChange}
         options={filter.options ?? []}
       />
     </FilterColumn>
@@ -1274,7 +1274,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             createSelectFilter({
               ...phaseOpts,
               isMulti: true,
-              matchesSingle: phaseOpts.filterAction as (value: string, item: FilterItem) => boolean,
+              matchesSingle: phaseOpts.filterAction,
             })
           );
           break;
@@ -1307,10 +1307,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             createSelectFilter({
               ...statusOpts,
               isMulti: true,
-              matchesSingle: statusOpts.filterAction as (
-                value: string,
-                item: FilterItem
-              ) => boolean,
+              matchesSingle: statusOpts.filterAction,
             })
           );
           break;
@@ -1345,10 +1342,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             createSelectFilter({
               ...primaryOrgOpts,
               isMulti: true,
-              matchesSingle: primaryOrgOpts.filterAction as (
-                value: string,
-                item: FilterItem
-              ) => boolean,
+              matchesSingle: primaryOrgOpts.filterAction,
             })
           );
           break;
@@ -1381,10 +1375,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             createSelectFilter({
               ...scheduleOpts,
               isMulti: true,
-              matchesSingle: scheduleOpts.filterAction as (
-                value: string,
-                item: FilterItem
-              ) => boolean,
+              matchesSingle: scheduleOpts.filterAction,
             })
           );
           break;
@@ -1412,7 +1403,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             createSelectFilter({
               ...planOpts,
               isMulti: true,
-              matchesSingle: planOpts.filterAction as (value: string, item: FilterItem) => boolean,
+              matchesSingle: planOpts.filterAction,
             })
           );
           break;
@@ -1467,10 +1458,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                   createSelectFilter({
                     ...levelOpts,
                     isMulti: true,
-                    matchesSingle: levelOpts.filterAction as (
-                      value: string,
-                      item: FilterItem
-                    ) => boolean,
+                    matchesSingle: levelOpts.filterAction,
                   })
                 );
                 break;
@@ -1489,10 +1477,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                   createSelectFilter({
                     ...organizationOpts,
                     isMulti: true,
-                    matchesSingle: organizationOpts.filterAction as (
-                      value: string,
-                      item: FilterItem
-                    ) => boolean,
+                    matchesSingle: organizationOpts.filterAction,
                   })
                 );
                 break;
@@ -1527,7 +1512,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           createSelectFilter({
             ...opts,
             isMulti: true,
-            matchesSingle: opts.filterAction as (value: string, item: FilterItem) => boolean,
+            matchesSingle: opts.filterAction,
           })
         );
       }

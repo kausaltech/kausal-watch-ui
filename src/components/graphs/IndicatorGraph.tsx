@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';

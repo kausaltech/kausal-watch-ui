@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Alert, Box, Typography } from '@mui/material';
 
 interface Props {

@@ -1,7 +1,6 @@
-import React, { type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { type PlanContextFragment } from '@/common/__generated__/graphql';
-import dayjs from '@/common/dayjs';
 import {
   getActionTaskTermContext,
   getActionTermContext,

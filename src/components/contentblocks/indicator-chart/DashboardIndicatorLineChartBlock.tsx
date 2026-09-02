@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 
 import { LineChart, ScatterChart } from 'echarts/charts';
@@ -9,7 +7,7 @@ import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/compon
 import * as echarts from 'echarts/core';
 import { useTranslations } from 'next-intl';
 
-import { Chart, type ECOption } from '@common/components/Chart';
+import { Chart } from '@common/components/Chart';
 
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';

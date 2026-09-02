@@ -1,4 +1,6 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type React from 'react';
 
 import { screen } from '@testing-library/react';
 
@@ -171,9 +173,9 @@ describe('<RichText /> with leadContent HTML', () => {
 
   it('applies custom height from k_height query parameter', () => {
     const { container } = render(<RichText html={IFRAME_CONTENT} />);
-    const iframe = container.querySelector('iframe[src*="k_height"]') as HTMLIFrameElement | null;
+    const iframe = container.querySelector('iframe[src*="k_height"]') as HTMLIFrameElement;
     expect(iframe).not.toBeNull();
-    expect(iframe!.height).toBe('450');
+    expect(iframe.height).toBe('450');
   });
 
   // ── XSS mitigation ──
@@ -206,7 +208,7 @@ describe('<RichText /> with leadContent HTML', () => {
     const { container } = render(<RichText html={XSS_CONTENT} />);
     // React rewrites javascript: URIs — the original payload is replaced with
     // a safe throw so the link cannot execute arbitrary code.
-    const anchor = container.querySelector('a[href^="javascript:"]') as HTMLAnchorElement | null;
+    const anchor = container.querySelector('a[href^="javascript:"]');
     expect(anchor).not.toBeNull();
     expect(anchor!.getAttribute('href')).not.toContain('alert');
     expect(anchor!.getAttribute('href')).toContain(

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 
 import { ThemeProvider } from '@emotion/react';

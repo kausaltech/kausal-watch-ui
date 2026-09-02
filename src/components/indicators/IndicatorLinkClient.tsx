@@ -1,6 +1,7 @@
 'use client';
 
-import React, { type ReactNode } from 'react';
+import type React from 'react';
+import { type ReactNode } from 'react';
 
 import NextLink, { type LinkProps } from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';

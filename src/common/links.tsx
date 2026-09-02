@@ -1,4 +1,5 @@
-import React, { type PropsWithChildren, type ReactElement, type ReactNode } from 'react';
+import type React from 'react';
+import { type PropsWithChildren, type ReactNode } from 'react';
 
 import NextLink, { type LinkProps } from 'next/link';
 

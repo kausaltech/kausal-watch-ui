@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 
-import type { Theme } from '@kausal/themes/types';
 import { captureException } from '@sentry/nextjs';
 import { CardBody, Col, Container, Row } from 'reactstrap';
 

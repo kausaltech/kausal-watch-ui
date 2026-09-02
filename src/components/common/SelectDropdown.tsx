@@ -1,4 +1,4 @@
-import React, { type JSX, useEffect, useState } from 'react';
+import { type JSX, useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import type { Theme } from '@emotion/react';

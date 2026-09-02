@@ -5,7 +5,7 @@ import { type GetContentPageQuery } from '@/common/__generated__/graphql';
 import { getContentPage } from '@/queries/get-content-page';
 import { tryRequest } from '@/utils/api.utils';
 
-import Content, { type GeneralPlanPage } from '../[...slug]/ContentPage';
+import Content from '../[...slug]/ContentPage';
 import { AccessibilityPage } from './AccessibilityPage';
 
 type Props = {
@@ -36,7 +36,7 @@ export default async function ContentPage(props: Props) {
   const { data } = await tryRequest(getContentPage(plan, '/accessibility'));
 
   if (data?.planPage && isAccessibilityPageWithBody(data.planPage)) {
-    return <Content page={data.planPage as GeneralPlanPage} testId="accessibility-page" />;
+    return <Content page={data.planPage} testId="accessibility-page" />;
   }
 
   return <AccessibilityPage />;

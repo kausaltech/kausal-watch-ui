@@ -1,6 +1,6 @@
 'use client';
 
-import React, { type JSX, useCallback, useEffect, useMemo } from 'react';
+import { type JSX, useCallback, useEffect, useMemo } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -395,7 +395,7 @@ function ActionContentBlockGroup(props: ActionContentBlockGroupProps) {
     const types = new Map(
       blocks.map((block) => {
         const { categoryType } = block as ActionContentCategoryTypeBlock;
-        return [categoryType!.id, categoryType!];
+        return [categoryType.id, categoryType];
       })
     );
     const categories = (action.categories || []).filter((cat) => types.get(cat.type.id));

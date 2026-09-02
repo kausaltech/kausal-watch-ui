@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
 
 import type { Theme } from '@kausal/themes/types';

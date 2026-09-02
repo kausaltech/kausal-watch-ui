@@ -45,12 +45,12 @@ export function splitLines(text: string, lineSeparator = '<br>') {
 export const stripTrailingSlash = (path: string) => path.replace(/\/$/, '');
 
 export function excludeNullish<T>(array: T[]): NonNullable<T>[] {
-  return array.filter((item) => item !== null && item !== undefined) as NonNullable<T>[];
+  return array.filter((item) => item !== null && item !== undefined);
 }
 
 export function typenameMatches<T extends { __typename: string }, U extends T['__typename'][]>(
   item: T,
   ...typenames: U
 ): item is T & { __typename: U[number] } {
-  return typenames.includes(item.__typename as U[number]);
+  return typenames.includes(item.__typename);
 }

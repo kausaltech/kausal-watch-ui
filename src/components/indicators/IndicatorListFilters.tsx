@@ -2,7 +2,6 @@ import { useTranslations } from 'next-intl';
 
 import {
   CategoryTypeSelectWidget,
-  type IndicatorListFilterFragment,
   type IndicatorListPageFiltersFragment,
 } from '@/common/__generated__/graphql';
 import { type TFunction, getIndicatorTermContext } from '@/common/i18n';

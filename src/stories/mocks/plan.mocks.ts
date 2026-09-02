@@ -1,4 +1,4 @@
-import { PlanContextFragment } from '@/common/__generated__/graphql';
+import type { PlanContextFragment } from '@/common/__generated__/graphql';
 
 export const MOCK_PLAN: PlanContextFragment = {
   id: 'sunnydale',

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { type ReactElement, useMemo, useState } from 'react';
+import { type ReactElement, useState } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -599,7 +599,7 @@ function IndicatorVisualisation({
   let canBeNormalized = false;
   if (populationNormalizer !== undefined) {
     let values = indicator.values;
-    if (!!comparisonIndicator) {
+    if (comparisonIndicator) {
       values = values.concat(comparisonIndicator.values);
     }
     if (

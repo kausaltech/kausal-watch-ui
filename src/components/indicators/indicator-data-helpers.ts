@@ -124,7 +124,7 @@ export function generateCube(
       return isEqual(ids, catPath);
     });
     return found.map(({ date, value }) => ({ date: date ?? '', value: value ?? 0 }));
-  }) as NestedArray;
+  });
 }
 
 export function generateCubeFromValues(
@@ -251,7 +251,7 @@ export const generateGoalTraces = (
           indicator.timeResolution === IndicatorTimeResolution.Year
             ? `${item.date?.split('-')[0]}-1-1`
             : item.date;
-        return { ...item, date: newDate } as IndicatorGoal;
+        return { ...item, date: newDate };
       });
   });
 

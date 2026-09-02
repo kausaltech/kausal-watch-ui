@@ -1,9 +1,6 @@
 'use client';
 
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
-import styled from '@emotion/styled';
 
 import { Col, Container, Row } from 'reactstrap';
 
@@ -11,7 +8,6 @@ import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-e
 import type {
   GetContentPageQuery,
   HeroImageFragmentFragment,
-  IndicatorListPageFragmentFragment,
 } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
 import { typenameMatches } from '@/common/utils';
@@ -197,9 +193,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
       ) : (
         <div>
           {typenameMatches(page, 'ActionListPage') && <ActionListPage actionListPage={page} />}
-          {typenameMatches(page, 'IndicatorListPage') && (
-            <IndicatorListPage page={page as IndicatorListPageFragmentFragment} />
-          )}
+          {typenameMatches(page, 'IndicatorListPage') && <IndicatorListPage page={page} />}
           {isPageWithLeadContent && 'leadContent' in page && page.leadContent && (
             <Container className="my-5">
               <Row>

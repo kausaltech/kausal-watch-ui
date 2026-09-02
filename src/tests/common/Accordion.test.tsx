@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import Accordion from '../../components/common/Accordion';

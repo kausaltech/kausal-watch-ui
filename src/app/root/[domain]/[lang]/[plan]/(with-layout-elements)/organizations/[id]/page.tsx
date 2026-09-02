@@ -1,6 +1,3 @@
-import React from 'react';
-
-import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { getRequestOrigin } from '@common/utils/request.server';

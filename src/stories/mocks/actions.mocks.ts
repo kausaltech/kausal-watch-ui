@@ -1,4 +1,4 @@
-import { ActionCardFragment } from '@/common/__generated__/graphql';
+import type { ActionCardFragment } from '@/common/__generated__/graphql';
 
 export const MOCK_ACTIONS: ActionCardFragment[] = [
   {

@@ -1,10 +1,10 @@
-import { useTranslations } from 'next-intl';
+import type { useTranslations } from 'next-intl';
 
-import {
+import type {
   SiteGeneralContentActionTaskTerm,
   SiteGeneralContentActionTerm,
-  SiteGeneralContentIndicatorTerm,
 } from './__generated__/graphql';
+import { SiteGeneralContentIndicatorTerm } from './__generated__/graphql';
 
 export function getActionTermContext(plan: {
   generalContent?: { actionTerm?: SiteGeneralContentActionTerm };

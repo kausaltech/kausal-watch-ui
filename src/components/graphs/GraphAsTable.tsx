@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -92,7 +92,7 @@ function formatLabel(
   timeResolution: IndicatorTimeResolution
 ): string {
   if (!isTime) return String(raw);
-  const d = dayjs.utc(raw as string | number | Date);
+  const d = dayjs.utc(raw);
   if (!d.isValid()) return String(raw);
   switch (timeResolution) {
     case IndicatorTimeResolution.Year:
@@ -133,9 +133,7 @@ function GraphAsTable({
 
     // Sort rows by date if we are dealing with time series
     if (isTime) {
-      tableRows.sort((a, b) =>
-        dayjs(a as string | number | Date).diff(dayjs(b as string | number | Date))
-      );
+      tableRows.sort((a, b) => dayjs(a).diff(dayjs(b)));
     }
 
     // Create table data row by row

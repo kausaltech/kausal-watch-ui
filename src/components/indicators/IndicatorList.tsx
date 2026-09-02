@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import type { ReadonlyURLSearchParams } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
@@ -374,9 +374,9 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     (column) => column.__typename === 'IndicatorCategoryColumn'
   )?.categoryType.id;
   const mainCategoryType: CategoryType | undefined = firstCategoryColumnTypeId
-    ? (data?.plan?.categoryTypes?.find(
+    ? data?.plan?.categoryTypes?.find(
         (categoryType) => categoryType.id === firstCategoryColumnTypeId
-      ) as CategoryType)
+      )
     : getFirstUsablePlanCategoryType(data?.plan?.categoryTypes, indicators);
 
   /* If no custom columns are defined, we create default columns */

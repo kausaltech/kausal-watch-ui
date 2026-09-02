@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 
 import { gql } from '@apollo/client';

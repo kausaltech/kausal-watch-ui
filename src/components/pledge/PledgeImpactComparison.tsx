@@ -197,7 +197,7 @@ function PledgeImpactComparison({
         </StyledBubbleRow>
 
         <StyledBubbleRow>
-          {!!equivalence ? <StyledConnectorMidLeft /> : <StyledSpacer />}
+          {equivalence ? <StyledConnectorMidLeft /> : <StyledSpacer />}
           <StyledBubble $arrow="right">
             <Icon name={impactIcon} width="20px" height="20px" />
             <StyledBubbleTextWrapper dangerouslySetInnerHTML={{ __html: impactStatement }} />

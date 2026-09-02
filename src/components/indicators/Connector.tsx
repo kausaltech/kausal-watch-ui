@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
 
 const Connection = styled.div<{
@@ -71,7 +69,7 @@ function Connector({ startPoint, endPoint, color, bend, icon, faded = false }: C
   const edgeHeight = endPoint.y - startPoint.y;
   let direction = 0;
 
-  let edgeStyle = {
+  const edgeStyle = {
     width: `${Math.abs(edgeWidth) / 2 - offset}px`,
     height: `${Math.abs(edgeHeight) + 6}px`,
     borderStyle: 'solid',

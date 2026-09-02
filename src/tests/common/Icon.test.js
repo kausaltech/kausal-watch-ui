@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Icon from '../../components/common/Icon';
 import { render } from '../test-utils';
 

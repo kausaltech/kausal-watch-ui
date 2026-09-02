@@ -1,4 +1,4 @@
-import React, { type ComponentType, type PropsWithChildren } from 'react';
+import { type ComponentType, type PropsWithChildren } from 'react';
 
 import styled from '@emotion/styled';
 

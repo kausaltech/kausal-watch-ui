@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -23,8 +21,6 @@ import { getPhaseData, getStatusData } from '@/common/preprocess';
 import BarChart from '@/components/common/BarChart';
 import StatusDonut from '@/components/graphs/StatusDonut';
 import { usePlan } from '@/context/plan';
-
-import type { ActionListAction } from './ActionList';
 
 type ActionTimeliness = PlanContextFragment['actionTimelinessClasses'][number];
 

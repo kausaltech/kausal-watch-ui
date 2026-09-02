@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import type React from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 
 import Plotly from '@kausal/plotly-custom/dist/plotly-custom';
 import { useLocale } from 'next-intl';
