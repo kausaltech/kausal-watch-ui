@@ -41,8 +41,8 @@ const ActionScheduleBlock = ({ action, plan, heading }: Props) => {
           <SideHeader>{headingText}</SideHeader>
           <Timeline
             formatOptions={getDateFormat(dateFormat as ActionDateFormat | undefined)}
-            startDate={action.startDate}
-            endDate={action.endDate}
+            startDate={action.startDate ?? undefined}
+            endDate={action.endDate ?? undefined}
             continuous={action.scheduleContinuous}
           />
         </ActionSection>

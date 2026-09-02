@@ -8,10 +8,16 @@ type Props = {
   trackingId: string;
 };
 
+declare global {
+  interface Window {
+    dataLayer: unknown[][];
+  }
+}
+
 const GoogleAnalytics = ({ trackingId }: Props) => {
   useEffect(() => {
     window.dataLayer = window.dataLayer || [];
-    function gtag(...args: any[]) {
+    function gtag(...args: unknown[]) {
       window.dataLayer.push(args);
     }
     gtag('js', new Date());

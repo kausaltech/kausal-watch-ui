@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 import { gql } from '@apollo/client';
 import { type MockedResponse } from '@apollo/client/testing';
@@ -49,11 +49,7 @@ const TEST_UUID = 'test-uuid-1234';
 
 function createWrapper(mocks: MockedResponse[] = []) {
   return function Wrapper({ children }: { children: React.ReactNode }) {
-    return (
-      <MockedProvider mocks={mocks} addTypename={false}>
-        {children}
-      </MockedProvider>
-    );
+    return <MockedProvider mocks={mocks}>{children}</MockedProvider>;
   };
 }
 

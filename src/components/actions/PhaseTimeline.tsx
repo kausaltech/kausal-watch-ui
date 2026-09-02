@@ -9,13 +9,15 @@ import { useTranslations } from 'next-intl';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import { ActionImplementationPhase } from '@/common/__generated__/graphql';
+import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
 
 import type { ActionContentAction } from './ActionContent';
 
 // Used to determine the style of icon visualizing a phase, not to be confused with phase identifiers
 type PhaseType = 'done' | 'current' | 'todo';
+
+type ActionImplementationPhase = PlanContextFragment['actionImplementationPhases'][number];
 
 type PhaseTimelineProps = {
   activePhase: NonNullable<ActionContentAction['implementationPhase']>;

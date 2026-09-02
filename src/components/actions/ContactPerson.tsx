@@ -169,7 +169,10 @@ function ContactDetails({ id }: ContactDetailsProps) {
   if (person.organization && person.organization.ancestors) {
     orgAncestors = person.organization.ancestors
       .filter(
-        (org) => org.classification?.name !== 'Valtuusto' && org.classification?.name !== 'Hallitus'
+        (org): org is NonNullable<typeof org> =>
+          org !== null &&
+          org.classification?.name !== 'Valtuusto' &&
+          org.classification?.name !== 'Hallitus'
       )
       .map((org) => {
         return {

@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   const referer = req.headers.get('referer');
 
   try {
-    const resp = await forwardToSentry(await req.bytes(), sentryDsnUrl, {
+    const resp = await forwardToSentry(await req.arrayBuffer(), sentryDsnUrl, {
       clientIp,
       contentType,
       referer,

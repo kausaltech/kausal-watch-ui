@@ -1,8 +1,8 @@
 import type {
-  ActionDashboardColumnBlock,
   ActionListFilterFragment,
+  ActionTableColumnFragmentFragment,
   DashboardActionListQuery,
-  Plan,
+  PlanContextFragment,
 } from '@/common/__generated__/graphql';
 import type {
   CategoryHierarchyMember,
@@ -39,7 +39,9 @@ export type ActionListCategoryType = QueryCategoryType & CategoryTypeHierarchy<A
 
 export type ActionListPrimaryOrg = NonNullable<DashboardActionListQuery['plan']>['primaryOrgs'][0];
 
-export type ColumnBlock = NonNullable<ActionDashboardColumnBlock['__typename'] | 'PlanColumnBlock'>;
+type ActionTableColumn = NonNullable<ActionTableColumnFragmentFragment['dashboardColumns']>[number];
+
+export type ColumnBlock = ActionTableColumn['__typename'] | 'PlanColumnBlock';
 
 export interface ColumnConfig {
   __typename: ColumnBlock;
@@ -57,7 +59,7 @@ export interface ActionListPlan {
   shortName?: string;
   viewUrl: string;
   generalContent: Pick<
-    Plan['generalContent'],
+    PlanContextFragment['generalContent'],
     'actionTaskTerm' | 'organizationTerm' | 'indicatorTerm'
   >;
   image: {
@@ -70,5 +72,5 @@ export interface ActionListPlan {
       src: string;
     } | null;
   };
-  actionImplementationPhases: Plan['actionImplementationPhases'];
+  actionImplementationPhases: PlanContextFragment['actionImplementationPhases'];
 }

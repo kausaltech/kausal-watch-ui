@@ -5,6 +5,7 @@ import { ErrorLink } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
 import { type DirectiveNode, OperationTypeNode } from 'graphql';
 import { Kind } from 'graphql/language/kinds';
+import { map } from 'rxjs';
 
 import type { DefaultApolloContext } from '@common/apollo';
 import { WILDCARD_DOMAINS_HEADER } from '@common/constants/headers.mjs';
@@ -81,19 +82,21 @@ export const operationStart = new ApolloLink((operation, forward) => {
 });
 
 export const operationEnd = new ApolloLink((operation, forward) => {
-  return forward(operation).map((data) => {
-    const start = operation.getContext().start;
+  return forward(operation).pipe(
+    map((data) => {
+      const start = operation.getContext().start;
 
-    if (!start) {
+      if (!start) {
+        return data;
+      }
+
+      const time = Math.round(Date.now() - start);
+
+      console.log(`  ⚙ Operation ${operation.operationName} took ${time}ms`);
+
       return data;
-    }
-
-    const time = Math.round(Date.now() - start);
-
-    console.log(`  ⚙ Operation ${operation.operationName} took ${time}ms`);
-
-    return data;
-  });
+    })
+  );
 });
 
 /**

@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 
 import { getStatusSummary } from '@/common/ActionStatusSummary';
-import type { ActionTimeliness, PlanContextFragment } from '@/common/__generated__/graphql';
+import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import {
   ActionStatusSummaryIdentifier,
   ActionTimelinessIdentifier,
@@ -25,6 +25,8 @@ import StatusDonut from '@/components/graphs/StatusDonut';
 import { usePlan } from '@/context/plan';
 
 import type { ActionListAction } from './ActionList';
+
+type ActionTimeliness = PlanContextFragment['actionTimelinessClasses'][number];
 
 const StatusDonutsWrapper = styled.div`
   width: auto;

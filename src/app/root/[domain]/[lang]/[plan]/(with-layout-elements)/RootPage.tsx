@@ -36,7 +36,7 @@ export function RootPage({ data, testId }: Props) {
   const { planPage, plan: queriedPlan } = data;
   const categories = queriedPlan?.primaryActionClassification?.categories ?? [];
   if (!planPage) {
-    return <ErrorPage statusCode={404} message={t('page-not-found')} />;
+    return <ErrorPage message={t('page-not-found')} />;
   }
 
   return <HomePage page={planPage} categories={categories} testId={testId} />;

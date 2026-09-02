@@ -19,7 +19,7 @@ describe('ErrorMessage component', () => {
     const serverRender = () => {
       expect(() => {
         render(<ErrorMessage message={message} statusCode={statusCode} />);
-      }).toThrowError(new Error(message));
+      }).toThrow(new Error(message));
     };
 
     expect(serverRender).toThrow();

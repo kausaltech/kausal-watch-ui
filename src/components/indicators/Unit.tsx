@@ -1,6 +1,9 @@
 import { useTranslations } from 'next-intl';
 
-import { Unit as UnitType } from '@/common/__generated__/graphql';
+type UnitType = {
+  name: string;
+  shortName?: string | null;
+};
 
 type UnitProps = {
   unit: UnitType;

@@ -2,10 +2,7 @@ import styled from '@emotion/styled';
 
 import { useFormatter, useTranslations } from 'next-intl';
 
-import type {
-  IndicatorDetailsQuery,
-  IndicatorFactorValueSummaryContentBlockFragmentFragment,
-} from '@/common/__generated__/graphql';
+import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 
 import dayjs from '../../common/dayjs';
@@ -48,8 +45,17 @@ const MetricTitle = styled.h3`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
+type IndicatorDetailsPage = NonNullable<
+  NonNullable<IndicatorDetailsQuery['plan']>['indicatorListPage']
+>;
+type IndicatorDetailsBlock = NonNullable<IndicatorDetailsPage['detailsMainTop']>[number];
+type IndicatorFactorValueSummaryBlock = Extract<
+  IndicatorDetailsBlock,
+  { __typename: 'IndicatorFactorValueSummaryContentBlock' }
+>;
+
 type Props = {
-  block: IndicatorFactorValueSummaryContentBlockFragmentFragment;
+  block: IndicatorFactorValueSummaryBlock;
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
 };
 

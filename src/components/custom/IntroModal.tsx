@@ -67,7 +67,7 @@ const CheckboxLabel = styled.label`
 `;
 
 interface IntroModalProps {
-  videoUrls: { en: string; es: string };
+  videoUrls: Record<string, string>;
 }
 
 const IntroModal = ({ videoUrls }: IntroModalProps) => {

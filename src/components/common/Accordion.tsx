@@ -109,7 +109,7 @@ const AccordionContent = styled(Collapse)`
   }
 `;
 
-const LinkCopyButton = ({ identifier }: { identifier: string }) => {
+const LinkCopyButton = ({ identifier }: { identifier?: string }) => {
   const t = useTranslations();
   const pathname = usePathname();
   const [tooltipOpen, setTooltipOpen] = useState(false);
@@ -200,13 +200,15 @@ const AccordionBody = ({ children, isOpen, identifier }: AccordionBodyProps) => 
     role="region"
     id={`#collapse-${identifier}`}
     aria-labelledby={`heading-${identifier}`}
-    hidden=""
+    hidden={false}
   >
     {children}
   </AccordionContent>
 );
 
 interface AccordionItemProps {
+  id?: string;
+  open?: boolean;
   isOpen?: boolean;
   onClick?(...args: unknown[]): unknown;
   identifier?: string;
@@ -216,11 +218,11 @@ interface AccordionItemProps {
 const AccordionItem = ({ children, isOpen, onClick, identifier }: AccordionItemProps) => (
   <div id={`q${identifier}`}>
     {React.Children.map(children, (child) => {
-      if (child.type === AccordionHeader) {
+      if (React.isValidElement<AccordionHeaderProps>(child) && child.type === AccordionHeader) {
         return React.cloneElement(child, { onClick, isOpen, identifier });
       }
 
-      if (child.type === AccordionBody) {
+      if (React.isValidElement<AccordionBodyProps>(child) && child.type === AccordionBody) {
         return React.cloneElement(child, { isOpen, identifier });
       }
 
@@ -262,7 +264,9 @@ function Accordion(props: AccordionProps) {
   return (
     <div className="accordion">
       {React.Children.map(children, (child, index) => {
-        if (child.type !== AccordionItem) return null;
+        if (!React.isValidElement<AccordionItemProps>(child) || child.type !== AccordionItem) {
+          return null;
+        }
         const id = child.props.id || `${index}`;
         return React.cloneElement(child, {
           isOpen: child.props.open || openItem === id,

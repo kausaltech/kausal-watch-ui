@@ -102,9 +102,10 @@ function Header() {
   const { navigationTitle: siteTitle } = getMetaTitles(plan);
 
   const navLinks: NavItems = useMemo(() => {
-    let links = [];
+    let links: NonNullable<NavItems> = [];
 
     const mainMenu = plan.mainMenu;
+    if (!mainMenu) return links;
     const pageMenuItems = mainMenu.items
       .filter(isPageMenuItem)
       .map(createLocalizeMenuItem(locale, plan.primaryLanguage));
@@ -115,7 +116,7 @@ function Header() {
         (page) => page.parent?.page.__typename === 'PlanRootPage'
       );
       const staticPages = getMenuStructure(pageMenuItems, pageMenuItems[rootItemIndex].parent!.id);
-      links = links.concat(staticPages);
+      if (staticPages) links = links.concat(staticPages);
     }
     return links;
   }, [activeBranch, plan.mainMenu]);
@@ -123,7 +124,7 @@ function Header() {
   setActivePages(navLinks, pathname, activeBranch);
 
   const externalLinks = useMemo(() => {
-    return plan.mainMenu.items
+    return (plan.mainMenu?.items ?? [])
       .filter((item) => item.__typename == 'ExternalLinkMenuItem')
       .map((item) => ({
         name: item.linkText,

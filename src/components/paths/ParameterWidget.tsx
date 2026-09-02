@@ -10,7 +10,7 @@ import { Range, getTrackBackground } from 'react-range';
 
 import { activeScenarioVar } from '@common/apollo/paths-cache';
 
-import { ParameterInterface } from '@/common/__generated__/paths/graphql';
+import type { ActionParameterFragment } from '@/common/__generated__/paths/graphql';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import Tooltip from '@/components/common/Tooltip';
@@ -76,6 +76,12 @@ const Thumb = styled.div<{ $dragged: boolean }>`
 const StyledResetButton = styled(Button)`
   padding: 0;
 `;
+
+type BoolParameter = Extract<ActionParameterFragment, { __typename: 'BoolParameterType' }>;
+type EnableParameter = Omit<BoolParameter, '__typename'> & {
+  __typename: 'EnableParameterType';
+};
+export type Parameter = ActionParameterFragment | EnableParameter;
 
 const SET_PARAMETER = gql`
   mutation SetParameter(
@@ -154,6 +160,7 @@ const NumberWidget = (props) => {
           min={min}
           max={max}
           values={values}
+          disabled={loading}
           onChange={(vals) => setValues(vals)}
           onFinalChange={(vals) => handleSlide(vals)}
           renderTrack={({ props, children }) => (
@@ -168,7 +175,6 @@ const NumberWidget = (props) => {
               }}
             >
               <div
-                disabled={loading}
                 ref={props.ref}
                 style={{
                   height: '5px',
@@ -207,7 +213,7 @@ const NumberWidget = (props) => {
 };
 
 type BoolWidgetProps = {
-  parameter: ParameterInterface;
+  parameter: BoolParameter | EnableParameter;
   handleChange: (opts: { parameterId: string; boolValue: boolean }) => void;
   loading: boolean;
   WidgetWrapper: typeof WidgetWrapper;
@@ -253,7 +259,7 @@ export const BoolWidget = (props: BoolWidgetProps) => {
 };
 
 type ParameterWidgetProps = {
-  parameter: ParameterInterface;
+  parameter: Parameter;
   WidgetWrapper?: typeof WidgetWrapper;
 };
 
@@ -270,7 +276,9 @@ const ParameterWidget = (props: ParameterWidgetProps) => {
         headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
       },
       onCompleted: () => {
-        activeScenarioVar({ ...activeScenario });
+        if (activeScenario) {
+          activeScenarioVar({ ...activeScenario });
+        }
       },
     }
   );
