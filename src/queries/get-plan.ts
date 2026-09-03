@@ -192,6 +192,7 @@ const GET_PLAN_CONTEXT = gql`
       contactPersonsShowPicture
       contactPersonsShowOrganizationAncestors
       enableSearch
+      hideFromSearchEngines
       hasActionIdentifiers
       hasActionOfficialName
       hasActionLeadParagraph

@@ -37,6 +37,9 @@ const GET_SITEMAP_CONTENTS = gql`
         hostname
         basePath
       }
+      features {
+        hideFromSearchEngines
+      }
       actions {
         id
         identifier
@@ -180,7 +183,7 @@ async function getPlanUrls(
     })
   );
 
-  if (error || !data?.plan) {
+  if (error || !data?.plan || data.plan.features?.hideFromSearchEngines) {
     return [];
   }
 
@@ -248,7 +251,7 @@ export async function getSitemapUrlsForPlan(
     })
   );
 
-  if (error || !data?.plan) {
+  if (error || !data?.plan || data.plan.features?.hideFromSearchEngines) {
     return [];
   }
 

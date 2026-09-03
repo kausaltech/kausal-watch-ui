@@ -92,6 +92,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       ],
       apple: getThemeStaticURL(theme?.favicons?.apple),
     },
+    robots: plan.features.hideFromSearchEngines ? { index: false, follow: false } : undefined,
     other: plan.domain?.googleSiteVerificationTag
       ? {
           'google-site-verification': plan.domain.googleSiteVerificationTag,
