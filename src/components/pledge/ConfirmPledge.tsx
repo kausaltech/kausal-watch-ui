@@ -158,6 +158,8 @@ type ConfirmPledgeProps = {
 
 type Step = 'form' | 'account' | 'pin' | 'success';
 
+const DEFAULT_TERMS_URL = 'https://kausal.tech/yolo-county-kausal-watch-terms-of-use-2026-07'; // TODO: To come from the backend;
+
 function ConfirmPledge({
   isOpen,
   onClose,
@@ -171,7 +173,7 @@ function ConfirmPledge({
   userData = {},
   anonymousUserToken,
   isSignedIn = false,
-  termsUrl,
+  termsUrl = DEFAULT_TERMS_URL,
 }: ConfirmPledgeProps) {
   const t = useTranslations();
   const [step, setStep] = useState<Step>('form');

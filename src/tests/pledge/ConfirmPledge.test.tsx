@@ -120,6 +120,31 @@ describe('ConfirmPledge', () => {
 
       expect((input as HTMLInputElement).value).toBe('90210');
     });
+
+    it('hides a field when signed in and the user already provided it', () => {
+      render(
+        <ConfirmPledge
+          {...baseProps}
+          formFields={formFields}
+          isSignedIn={true}
+          userData={{ zip_code: '02134' }}
+        />
+      );
+
+      expect(screen.queryByLabelText(/your zip code/i)).not.toBeInTheDocument();
+    });
+
+    it('still shows a field when signed in if the user has not provided it yet', () => {
+      render(<ConfirmPledge {...baseProps} formFields={formFields} isSignedIn={true} />);
+
+      expect(screen.getByLabelText(/your zip code/i)).toBeInTheDocument();
+    });
+
+    it('still shows a field when not signed if the user has not provided it', () => {
+      render(<ConfirmPledge {...baseProps} formFields={formFields} isSignedIn={false} />);
+
+      expect(screen.getByLabelText(/your zip code/i)).toBeInTheDocument();
+    });
   });
 
   describe('submission', () => {
