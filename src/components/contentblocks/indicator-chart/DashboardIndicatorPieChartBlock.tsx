@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 import { useTheme } from '@emotion/react';
 
 import { PieChart } from 'echarts/charts';
@@ -7,12 +5,18 @@ import type { PieSeriesOption } from 'echarts/charts';
 import { LegendComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import type { CallbackDataParams } from 'echarts/types/dist/shared';
+import { useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { PieChartVisualizationFragment } from '@/common/__generated__/graphql';
+import {
+  buildSaveAsImageToolbox,
+  getChartDownloadFilename,
+} from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
+import type { GraphsTheme } from './indicator-charts-utility';
 
 echarts.use([PieChart, LegendComponent]);
 
@@ -28,6 +32,17 @@ interface SeriesData {
   value: number;
 }
 
+/**
+ * Read the year from an ISO-ish date string textually. Parsing through
+ * `Date` is timezone-dependent: date-only ISO values parse as UTC midnight,
+ * so local getters report the previous year for users west of UTC — a
+ * configured 2024 pie would then reject every 2024 value.
+ */
+function yearOfDate(date: string): number | undefined {
+  const match = /^(\d{4})\b/.exec(date);
+  return match ? Number(match[1]) : undefined;
+}
+
 function getLatestYear(chartSeries: Props['chartSeries']) {
   const lastDate = chartSeries?.[0]?.values?.[chartSeries?.[0]?.values.length - 1]?.date;
 
@@ -35,13 +50,11 @@ function getLatestYear(chartSeries: Props['chartSeries']) {
     return undefined;
   }
 
-  return new Date(lastDate).getFullYear();
+  return yearOfDate(lastDate);
 }
 
 function doYearsMatch(year: number, date: string) {
-  const yearFromDate = new Date(date).getFullYear();
-
-  return yearFromDate === year;
+  return yearOfDate(date) === year;
 }
 
 /**
@@ -67,8 +80,12 @@ function createTooltipFormatter(indicator: IndicatorType | null, seriesData: Ser
   const showPercentage = showSegmentedPercentage(indicator?.unit, seriesData);
 
   return (tooltipParams: CallbackDataParams) => {
-    const rawValue = tooltipParams.value;
-    const value = typeof rawValue === 'number' || typeof rawValue === 'string' ? rawValue : '';
+    // The pie data is plain numbers, but the ECharts callback type is a broad
+    // union — narrow before stringifying
+    const value =
+      typeof tooltipParams.value === 'number' || typeof tooltipParams.value === 'string'
+        ? tooltipParams.value
+        : '-';
     const nameAndValue = `${tooltipParams.name}: ${value}`;
 
     if (!showPercentage || !tooltipParams.percent) {
@@ -81,7 +98,21 @@ function createTooltipFormatter(indicator: IndicatorType | null, seriesData: Ser
 
 const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, year }: Props) => {
   const theme = useTheme();
+  const t = useTranslations();
+  // Same palette resolution as the bar/line/area chart blocks, so a
+  // category gets the same color in every chart type
+  const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
+  // Same rule as IndicatorGraph: honor the tenant-configured chart
+  // background, white when unset
+  const chartBackground = graphsTheme.customBackground || theme.themeColors.white;
+  const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const assertedYear = year ?? getLatestYear(chartSeries);
+
+  // No explicit year and none derivable from the data means there is
+  // nothing to slice
+  if (!assertedYear) {
+    return <div>{t('data-not-available')}</div>;
+  }
 
   const seriesData =
     chartSeries?.reduce((acc, series) => {
@@ -95,13 +126,17 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
           v?.date != null && assertedYear != null && doYearsMatch(assertedYear, v.date)
       )?.value;
 
-      const value = valueForYear ?? 0;
+      // A category with no value for the chosen year gets no slice — a
+      // zero-value slice would misrepresent missing data as a measured zero
+      if (valueForYear == null) {
+        return acc;
+      }
 
       return [
         ...acc,
         {
           name: categoryName,
-          value: value,
+          value: valueForYear,
           itemStyle: {
             // An unset defaultColor is returned as an empty string
             color: series.dimensionCategory.defaultColor || undefined,
@@ -110,45 +145,46 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
       ];
     }, [] as SeriesData[]) ?? [];
 
-  //hide legends on smaller screens to prevent overlapping in some cases
-  const [isCompactLayout, setIsCompactLayout] = useState(false);
+  if (!seriesData.length) {
+    return <div>{t('data-not-available')}</div>;
+  }
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const breakpoint = theme.breakpointXl;
-    const mediaQuery = window.matchMedia(`(max-width: ${breakpoint})`);
-
-    const update = (event?: MediaQueryList | MediaQueryListEvent) => {
-      setIsCompactLayout((event ?? mediaQuery).matches);
-    };
-    update();
-
-    mediaQuery.addEventListener('change', update);
-    return () => mediaQuery.removeEventListener('change', update);
-  }, [theme.breakpointXl]);
+  // With only a few categories there's room to name the slices directly, so
+  // the legend would just duplicate the labels; with more, the slice labels
+  // fall back to percent only and the legend carries the names.
+  const labelSegments = seriesData.length < 5;
 
   if (!assertedYear) {
     return <div>No year provided</div>;
   }
 
   const option: ECOption & { series: PieSeriesOption[] } = {
+    toolbox: buildSaveAsImageToolbox({
+      filename: getChartDownloadFilename(indicator?.name),
+      buttonTitle: t('download-chart-as-png'),
+      backgroundColor: chartBackground,
+    }),
+    backgroundColor: chartBackground,
     tooltip: {
       appendTo: 'body',
       trigger: 'item',
       formatter: createTooltipFormatter(indicator ?? null, seriesData),
     },
     legend: {
-      show: !isCompactLayout,
+      show: !labelSegments,
       orient: 'horizontal',
       bottom: 0,
-      left: 'center',
+      right: 0,
+      // Keep swatches left of their labels (auto flips them for a
+      // right-anchored legend)
+      align: 'left',
       type: 'plain',
       selectedMode: false,
-      itemGap: 20,
+      // Also the gap between wrapped legend rows — ECharts has no separate
+      // row-gap setting
+      itemGap: 10,
       itemWidth: 18,
       itemHeight: 12,
-      formatter: (name: string) => `${name}\u00A0\u00A0\u00A0\u00A0`,
       textStyle: {
         color: theme.textColor.primary,
       },
@@ -158,14 +194,21 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
       pageIconColor: theme.textColor.primary,
       pageIconInactiveColor: theme.textColor.tertiary,
     },
-    color: getDefaultColors(theme),
+    color: palette,
     series: [
       {
         type: 'pie',
-        center: ['50%', isCompactLayout ? '50%' : '40%'],
-        top: 0,
-        bottom: isCompactLayout ? 0 : 20,
+        // Pin the pie to the upper part of the chart with an explicit
+        // center and radius, leaving the bottom ~quarter free for the
+        // wrapping legend (up to ~4 rows) so they can't overlap. Without a
+        // legend the pie takes the full height.
+        center: ['50%', labelSegments ? '50%' : '40%'],
+        radius: '58%',
         avoidLabelOverlap: true,
+        // Sliver slices get no label; their share is still in the tooltip.
+        // When the legend is hidden the label is a category's only
+        // identification, so always attempt one.
+        minShowLabelAngle: labelSegments ? 0 : 8,
         itemStyle: {
           borderRadius: 0,
           borderColor: theme.themeColors.white,
@@ -174,13 +217,22 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
 
         label: {
           show: true,
-          formatter: (params: CallbackDataParams) =>
-            `${params.name}\n${params.percent ? `${Math.round(params.percent)}%` : ''}`,
+          fontSize: 14,
+          // Wrap long category names instead of running off the canvas
+          width: 160,
+          overflow: 'break',
+          formatter: (params: CallbackDataParams) => {
+            const percent = params.percent ? `${Math.round(params.percent)}%` : '';
+            return labelSegments ? `${params.name}\n${percent}` : percent;
+          },
         },
         labelLine: {
           show: true,
-          length: 0,
+          length: labelSegments ? 10 : 0,
           length2: 6,
+        },
+        labelLayout: {
+          hideOverlap: true,
         },
         emphasis: {
           label: {
@@ -199,7 +251,7 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
       <h5>
         {dimension?.name} ({assertedYear})
       </h5>
-      <Chart data={option} isLoading={false} height="300px" />
+      <Chart data={option} isLoading={false} height="400px" />
     </>
   );
 };

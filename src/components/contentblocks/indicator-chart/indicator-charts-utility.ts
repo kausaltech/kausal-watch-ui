@@ -1,5 +1,3 @@
-import type { CallbackDataParams } from 'echarts/types/dist/shared';
-
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
 
@@ -23,6 +21,25 @@ export interface GraphsTheme {
   trendLineColor?: string;
   goalLineColors?: string[];
   showTrendline?: boolean;
+  lineShape?: string;
+  /** Tenant-configured chart background; the canvas is white when unset. */
+  customBackground?: string;
+}
+
+/** Whether lines should be drawn smoothed, from the theme's `lineShape`
+ *  setting. Follows the same convention as IndicatorGraph: 'spline' (the
+ *  default when unset) and 'smooth' curve, anything else is linear. */
+export function shouldSmoothLines(graphsTheme: GraphsTheme): boolean {
+  const lineShape = graphsTheme.lineShape ?? 'spline';
+  return lineShape === 'spline' || lineShape === 'smooth';
+}
+
+/** Unit label matching IndicatorVisualisation's default graph: prefer the
+ *  short name, and hide the pseudo-unit 'no unit' entirely. */
+export function getUnitLabel(indicator: LineChartBlock['indicator']): string {
+  const unit = indicator?.unit;
+  if (!unit || unit.name === 'no unit') return '';
+  return unit.shortName || unit.name;
 }
 
 export type TrendSeries = {
@@ -228,11 +245,18 @@ export function buildTooltipFormatter(
   _dimension?: { name: string },
   timeResolution?: string | null
 ) {
-  return (params: CallbackDataParams | CallbackDataParams[]) => {
+  // The shape ECharts passes to axis-trigger tooltip formatters, reduced to
+  // the fields read below
+  type TooltipParam = {
+    seriesName?: string;
+    axisValue?: string | number;
+    data?: number | [string | number, number | null] | null;
+    marker?: string;
+  };
+  return (params: unknown) => {
     const processedSeries = new Set<string>();
-    const paramsArray = Array.isArray(params) ? params : [params];
-    const firstParam = paramsArray[0] as (CallbackDataParams & { axisValue?: unknown }) | undefined;
-    const timeKey = firstParam?.axisValue;
+    const paramsArray = (Array.isArray(params) ? params : [params]) as TooltipParam[];
+    const timeKey = paramsArray[0]?.axisValue;
 
     let formattedTime: string;
     if (timeResolution === 'YEAR') {
@@ -240,9 +264,7 @@ export function buildTooltipFormatter(
     } else if (timeResolution === 'MONTH') {
       formattedTime = String(timeKey);
     } else {
-      const date = new Date(
-        typeof timeKey === 'string' || typeof timeKey === 'number' ? timeKey : ''
-      );
+      const date = new Date(timeKey ?? NaN);
       formattedTime = Number.isNaN(date.getTime())
         ? String(timeKey)
         : date.toISOString().split('T')[0];
@@ -250,10 +272,9 @@ export function buildTooltipFormatter(
 
     const rows = paramsArray
       .filter((p) => {
-        const seriesName = p.seriesName ?? '';
-        if (!legendData.includes(seriesName)) return false;
-        if (processedSeries.has(seriesName)) return false;
-        processedSeries.add(seriesName);
+        if (!p.seriesName || !legendData.includes(p.seriesName)) return false;
+        if (processedSeries.has(p.seriesName)) return false;
+        processedSeries.add(p.seriesName);
         return true;
       })
       .map((p) => {
@@ -265,10 +286,7 @@ export function buildTooltipFormatter(
               ? formatValue(data)
               : '-';
 
-        const label = p.seriesName ?? '';
-        const marker = typeof p.marker === 'string' ? p.marker : '';
-
-        return `${marker} ${label}: ${value} ${unit}`;
+        return `${p.marker ?? ''} ${p.seriesName ?? ''}: ${value} ${unit}`;
       });
 
     return `<strong>${formattedTime}</strong><br/>${rows.join('<br/>')}`;
@@ -286,13 +304,14 @@ export function buildYAxisConfig(
   color?: string
 ) {
   const yAxis: {
-    axisLabel: { color?: string; formatter: (value: number) => string };
-    max?: number;
-    min?: number;
-    name: string;
-    nameTextStyle: { align: 'left'; fontSize: number; padding: number[] };
-    splitNumber?: number;
     type: 'value';
+    name: string;
+    nameTextStyle: { align: 'left' | 'center' | 'right'; padding: number[]; fontSize: number };
+    axisLabel: { color?: string; formatter: (value: number) => string };
+    min?: number;
+    max?: number;
+    scale?: boolean;
+    splitNumber?: number;
   } = {
     type: 'value',
     name: unit,
@@ -309,6 +328,12 @@ export function buildYAxisConfig(
 
   if (typeof indicator?.minValue === 'number') {
     yAxis.min = indicator.minValue;
+  } else {
+    // Without an explicit minimum, don't force zero into the range: data
+    // lying away from zero (e.g. 95–105) would otherwise be compressed
+    // into a 0-based axis. `scale` lets ECharts pick nice bounds around
+    // the data, matching the ordinary indicator view's derived range.
+    yAxis.scale = true;
   }
   if (typeof indicator?.maxValue === 'number') {
     yAxis.max = indicator.maxValue;
@@ -379,7 +404,43 @@ export function sortDates(dates: string[]): string[] {
 }
 
 /**
- * Collects and sorts all unique dates from multiple raw series arrays.
+ * Fills the gaps between the first and last date so the category x-axis
+ * represents a continuous timeline (a year without data still occupies a
+ * slot, like on a continuous time axis). Only YEAR and MONTH resolutions
+ * are filled; anything unparseable or absurdly long is returned as-is.
+ */
+function fillMissingPeriods(
+  allDates: string[],
+  timeResolution: string | null | undefined
+): string[] {
+  const resolution = String(timeResolution || 'YEAR').toUpperCase();
+  if (allDates.length < 2 || (resolution !== 'YEAR' && resolution !== 'MONTH')) {
+    return allDates;
+  }
+  const parsed = allDates.map((d) => new Date(d));
+  if (parsed.some((d) => Number.isNaN(d.getTime()))) {
+    return allDates;
+  }
+  if (resolution === 'YEAR') {
+    const years = parsed.map((d) => d.getUTCFullYear());
+    const min = Math.min(...years);
+    const max = Math.max(...years);
+    if (max - min > 500) return allDates;
+    return Array.from({ length: max - min + 1 }, (_, i) => `${min + i}-01-01`);
+  }
+  const months = parsed.map((d) => d.getUTCFullYear() * 12 + d.getUTCMonth());
+  const min = Math.min(...months);
+  const max = Math.max(...months);
+  if (max - min > 1200) return allDates;
+  return Array.from({ length: max - min + 1 }, (_, i) => {
+    const month = min + i;
+    return `${Math.floor(month / 12)}-${String((month % 12) + 1).padStart(2, '0')}-01`;
+  });
+}
+
+/**
+ * Collects and sorts all unique dates from multiple raw series arrays,
+ * filling gap periods so the axis is a continuous timeline.
  * Returns both the sorted normalized dates and the display-formatted categories.
  */
 export function collectAllDates(
@@ -397,7 +458,7 @@ export function collectAllDates(
     normalizedDateSet.add(normalizeDateForSet(date, timeResolution))
   );
 
-  const allDates = sortDates(Array.from(normalizedDateSet));
+  const allDates = fillMissingPeriods(sortDates(Array.from(normalizedDateSet)), timeResolution);
   const xCategories = allDates.map((d) => formatDateForDisplay(d, timeResolution));
 
   return { allDates, xCategories };

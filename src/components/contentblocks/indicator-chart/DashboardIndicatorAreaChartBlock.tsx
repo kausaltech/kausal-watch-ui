@@ -2,7 +2,7 @@
 
 import { useTheme } from '@emotion/react';
 
-import { LineChart } from 'echarts/charts';
+import { LineChart, type LineSeriesOption } from 'echarts/charts';
 import {
   GridComponent,
   LegendComponent,
@@ -15,8 +15,11 @@ import { useTranslations } from 'next-intl';
 import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { AreaChartVisualizationFragment } from '@/common/__generated__/graphql';
-import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
+import {
+  buildSaveAsImageToolbox,
+  getChartDownloadFilename,
+} from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
@@ -27,6 +30,8 @@ import {
   buildTrendSeries,
   buildYAxisConfig,
   collectAllDates,
+  getUnitLabel,
+  shouldSmoothLines,
 } from './indicator-charts-utility';
 
 echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -36,20 +41,12 @@ type Props = Omit<
   '__typename'
 >;
 
-type AreaSeries = {
-  name: string;
-  type: 'line';
-  areaStyle: { opacity: number };
-  symbol: 'circle' | 'none';
-  symbolSize?: number;
-  data: [string, number | null][];
-  itemStyle: { color: string };
-  lineStyle: { color: string };
-  emphasis: { focus: 'series' };
-  stack?: string;
-};
-
-const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }: Props) => {
+const DashboardIndicatorAreaChartBlock = ({
+  chartSeries,
+  indicator,
+  dimension,
+  showTotalLine,
+}: Props) => {
   const theme = useTheme();
   const t = useTranslations();
   const formatValue = useNumberFormatter({
@@ -59,7 +56,10 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
-  const unit = indicator?.unit?.name ?? '';
+  // Same rule as IndicatorGraph: honor the tenant-configured chart
+  // background, white when unset
+  const chartBackground = graphsTheme.customBackground || theme.themeColors.white;
+  const unit = getUnitLabel(indicator);
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const timeResolution = indicator?.timeResolution ?? 'YEAR';
 
@@ -81,9 +81,20 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
     timeResolution
   );
   const totalRaw = totalDef.raw;
+  // On dimensional charts the categoryless aggregate isn't among the area
+  // series; when the block enables the total, draw it as a line on top,
+  // like the line chart block does. Without a dimension the total IS the
+  // area, so no overlay is needed.
+  const showTotalOverlay = hasDimension && !!showTotalLine && totalRaw.length > 0;
 
+  // The trend regresses the categoryless aggregate. On dimensional charts
+  // that aggregate is only visible as the total overlay — without it an
+  // aggregate trend over category areas would be unattributed (the generic
+  // indicator view gates the same way). Dimensionless charts render the
+  // aggregate as the area itself, so the trend always has its anchor.
+  const trendVisible = !hasDimension || showTotalOverlay;
   const trendSeries =
-    indicator?.showTrendline && totalRaw.length >= 2
+    trendVisible && indicator?.showTrendline && totalRaw.length >= 2
       ? buildTrendSeries(
           totalRaw,
           indicator,
@@ -95,6 +106,7 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
 
   const legendLabels: string[] = [
     ...(hasDimension ? dimSeries.map((d) => d.name) : [totalLabel]),
+    ...(showTotalOverlay ? [totalLabel] : []),
     ...(trendSeries.length ? [trendLabel] : []),
   ];
 
@@ -106,12 +118,24 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
     ? [{ name: trendLabel }]
     : [];
 
-  const legendData: LegendComponentOption['data'] = [...areaLegendItems, ...trendLegendItems];
+  const totalLegendItems: LegendComponentOption['data'] = showTotalOverlay
+    ? [{ name: totalLabel }]
+    : [];
 
-  const dataSources = hasDimension ? dimSeries.map((d) => d.raw) : [totalRaw];
+  const legendData: LegendComponentOption['data'] = [
+    ...areaLegendItems,
+    ...totalLegendItems,
+    ...trendLegendItems,
+  ];
+
+  const dataSources = hasDimension
+    ? [...dimSeries.map((d) => d.raw), ...(showTotalOverlay ? [totalRaw] : [])]
+    : [totalRaw];
   const { xCategories } = collectAllDates(dataSources, timeResolution);
 
-  const series: AreaSeries[] = hasDimension
+  // Annotated so the dimensional/dimensionless branches don't form an
+  // inference-hostile union (`.map` over it degrades to `any`)
+  const series: LineSeriesOption[] = hasDimension
     ? dimSeries.map((d) => {
         const dataMap = new Map(d.raw.map(([key, value]) => [key, value]));
         const data = xCategories.map(
@@ -122,6 +146,8 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
           type: 'line' as const,
           areaStyle: { opacity: 0.9 },
           symbol: 'none' as const,
+          connectNulls: true,
+          smooth: shouldSmoothLines(graphsTheme),
           data,
           itemStyle: { color: d.color },
           lineStyle: { color: d.color },
@@ -135,6 +161,8 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
           areaStyle: { opacity: 0.9 },
           symbol: 'circle' as const,
           symbolSize: 6,
+          connectNulls: true,
+          smooth: shouldSmoothLines(graphsTheme),
           data: (() => {
             const dataMap = new Map(totalRaw.map(([key, value]) => [key, value]));
             return xCategories.map(
@@ -149,12 +177,53 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
 
   const seriesWithStack = stackable ? series.map((s) => ({ ...s, stack: 'categories' })) : series;
 
+  const totalLineColor = graphsTheme.totalLineColor ?? '#000';
+  const totalLineSeries = showTotalOverlay
+    ? [
+        (() => {
+          const dataMap = new Map(totalRaw.map(([key, value]) => [key, value]));
+          return {
+            name: totalLabel,
+            type: 'line' as const,
+            data: xCategories.map(
+              (key) => [key, dataMap.get(key) ?? null] as [string, number | null]
+            ),
+            connectNulls: true,
+            smooth: shouldSmoothLines(graphsTheme),
+            showSymbol: true,
+            symbolSize: 8,
+            lineStyle: { width: 3, color: totalLineColor },
+            itemStyle: { color: totalLineColor },
+            z: 3,
+          };
+        })(),
+      ]
+    : [];
+
   const option: ECOption = {
+    toolbox: buildSaveAsImageToolbox({
+      filename: getChartDownloadFilename(indicator?.name),
+      buttonTitle: t('download-chart-as-png'),
+      backgroundColor: chartBackground,
+    }),
+    backgroundColor: chartBackground,
+    // Same legend style as the pie chart block
     legend: {
       show: true,
+      orient: 'horizontal',
       bottom: 0,
+      right: 0,
+      // Keep swatches left of their labels (auto flips them for a
+      // right-anchored legend)
+      align: 'left',
+      type: 'plain',
       data: legendData,
-      textStyle: { color: theme.textColor.secondary },
+      // Also the gap between wrapped legend rows — ECharts has no separate
+      // row-gap setting
+      itemGap: 10,
+      itemWidth: 18,
+      itemHeight: 12,
+      textStyle: { color: theme.textColor.primary },
     },
     tooltip: {
       trigger: 'axis',
@@ -173,7 +242,9 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
       left: 20,
       right: 20,
       top: 40,
-      bottom: 60,
+      // Reserve the bottom ~quarter for the wrapping legend (up to ~4
+      // rows), like the pie chart block does
+      bottom: 100,
       containLabel: true,
     },
     xAxis: {
@@ -182,30 +253,16 @@ const DashboardIndicatorAreaChartBlock = ({ chartSeries, indicator, dimension }:
       boundaryGap: false,
       axisLabel: {
         color: theme.textColor.primary,
-        formatter: (value: string) => {
-          if (timeResolution === IndicatorTimeResolution.Year) {
-            return String(value);
-          } else if (timeResolution === IndicatorTimeResolution.Month) {
-            return String(value);
-          } else {
-            return value;
-          }
-        },
       },
     },
-    yAxis: buildYAxisConfig(
-      indicator?.unit?.name ?? '',
-      formatAxisValue,
-      indicator ?? undefined,
-      theme.textColor.primary
-    ),
-    series: [...seriesWithStack, ...trendSeries],
+    yAxis: buildYAxisConfig(unit, formatAxisValue, indicator ?? undefined, theme.textColor.primary),
+    series: [...seriesWithStack, ...totalLineSeries, ...trendSeries],
   };
 
   return (
     <>
       <h5>{dimension?.name}</h5>
-      <Chart data={option} isLoading={false} height="300px" />
+      <Chart data={option} isLoading={false} height="400px" />
     </>
   );
 };

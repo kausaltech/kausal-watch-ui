@@ -18,6 +18,7 @@ import { UPDATE_GLOBALS } from 'storybook/internal/core-events';
 import { addons } from 'storybook/preview-api';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
+import possibleTypes from '@/common/__generated__/possible_types.json';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 import IndicatorVisualizationBlock, {
   type IndicatorVisualizationBlockData,
@@ -26,12 +27,13 @@ import PlanProvider from '@/components/providers/PlanProvider';
 import { MOCK_PLAN } from '@/stories/mocks/plan.mocks';
 
 /**
- * A developer tool for comparing the legacy (Plotly) and new (ECharts)
- * IndicatorGraph components side by side with real data from any plan,
- * independent of the URL-based plan resolution used by the app. It talks
- * directly to the backend GraphQL API (which allows CORS from any origin),
- * so no Next.js proxy is needed. Each row renders the production
- * IndicatorVisualisation pipeline twice: legacy graph left, new graph right.
+ * A developer tool for inspecting indicator visualizations with real data
+ * from any plan, independent of the URL-based plan resolution used by the
+ * app. It talks directly to the backend GraphQL API (which allows CORS from
+ * any origin), so no Next.js proxy is needed. Each row renders the
+ * production IndicatorVisualisation pipeline; the "Preview as" dropdown
+ * additionally previews the indicator as any visualization block type,
+ * with synthesized chart data mirroring the backend's chartSeries logic.
  *
  * If a gitignored `.env.instances.local.json` exists at the repo root
  * (see `loadLocalInstances()` in .storybook/main.ts for the shape), the
@@ -115,6 +117,11 @@ const GET_PLAN_INDICATORS = gql`
         id
         value
         date
+      }
+      actions(plan: $plan) {
+        id
+        identifier
+        name
       }
       minValue
       maxValue
@@ -205,6 +212,7 @@ interface ExplorerQueryData {
           categories: { id: string }[];
         }[];
         goals: { id: string; value: number; date: string | null }[] | null;
+        actions: { id: string; identifier: string | null; name: string }[];
         minValue: number | null;
         maxValue: number | null;
         ticksCount: number | null;
@@ -408,7 +416,13 @@ function formatSettingValue(value: unknown): string {
 
 /** Collapsible listing of the indicator's own visualisation-affecting
  *  settings, which override theme defaults in the graph components. */
-function VisualisationSettings({ indicator }: { indicator: ExplorerIndicator }) {
+function VisualisationSettings({
+  indicator,
+  planViewUrl,
+}: {
+  indicator: ExplorerIndicator;
+  planViewUrl?: string | null;
+}) {
   const entries: [string, unknown][] = [
     ['quantity', indicator.quantity?.name],
     ['minValue', indicator.minValue],
@@ -429,6 +443,32 @@ function VisualisationSettings({ indicator }: { indicator: ExplorerIndicator }) 
       'referenceValue',
       indicator.referenceValue &&
         `${indicator.referenceValue.value} (${indicator.referenceValue.date ?? 'no date'})`,
+    ],
+    [
+      'actions',
+      indicator.actions.length ? (
+        <>
+          {indicator.actions.map((action, idx) => {
+            const label = action.identifier || action.name;
+            const actionUrl =
+              planViewUrl && action.identifier
+                ? `${planViewUrl.replace(/\/+$/, '')}/actions/${action.identifier}`
+                : null;
+            return (
+              <span key={action.id}>
+                {idx > 0 && ', '}
+                {actionUrl ? (
+                  <a href={actionUrl} target="_blank" rel="noreferrer" title={action.name}>
+                    {label}
+                  </a>
+                ) : (
+                  <span title={action.name}>{label}</span>
+                )}
+              </span>
+            );
+          })}
+        </>
+      ) : null,
     ],
     ['defaultVisualization', indicator.defaultVisualization?.__typename],
     ['groupingDimension', indicator.defaultVisualization?.dimension?.name],
@@ -479,15 +519,11 @@ function VisualisationSettings({ indicator }: { indicator: ExplorerIndicator }) 
 
 const GraphColumns = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 800px);
 
   > div {
     padding: 0.75rem;
     min-width: 0;
-
-    &:first-of-type {
-      border-right: 1px solid #e2e2e2;
-    }
 
     h4 {
       font-size: 0.8rem;
@@ -549,6 +585,19 @@ function buildChartSeries(indicator: ExplorerIndicator) {
       category ? value.categories.some((c) => c.id === category.id) : value.categories.length === 0
     ),
   }));
+  // Dimensional charts additionally carry the categoryless aggregate as a
+  // dimensionCategory: null series — buildTotalSeries in the chart blocks
+  // reads the total line from it (category series builders ignore it).
+  if (dimension) {
+    const totalValues = sortedValues.filter((value) => value.categories.length === 0);
+    if (totalValues.length) {
+      chartSeries.push({
+        __typename: 'DashboardIndicatorChartSeries' as const,
+        dimensionCategory: null,
+        values: totalValues,
+      });
+    }
+  }
   return { dimension, chartSeries };
 }
 
@@ -611,14 +660,40 @@ function synthesizeVisualization(
         showTotalLine: indicator.showTotalLine,
       } as unknown as IndicatorVisualizationBlockData;
     case 'pie': {
-      const years = chartSeries
+      // A pie slice can only represent a value that belongs to the chosen
+      // dimension's category alone. On a multi-dimensional indicator the
+      // series also contain cross-dimension combination values (tagged with
+      // a second dimension's category), and no per-category aggregation of
+      // those is meaningful in general — so leave them out, like a
+      // backend-aggregated total would.
+      const pieChartSeries = chartSeries
+        // The categoryless aggregate series would render as an unnamed slice
+        // doubling the whole pie; slices come from the categories alone.
+        .filter((series) => !dimension || series.dimensionCategory)
+        .map((series) => ({
+          ...series,
+          values: series.values.filter(
+            (value) => value.categories.length === (series.dimensionCategory ? 1 : 0)
+          ),
+        }));
+      const years = pieChartSeries
         .flatMap((series) => series.values)
-        .map((value) => (value.date ? new Date(value.date).getFullYear() : null))
-        .filter((year): year is number => year != null);
+        // Textual year: Date-parsing ISO date-only strings is timezone-
+        // dependent (previous year west of UTC)
+        .map((value) => (value.date ? parseInt(value.date, 10) : null))
+        .filter((year): year is number => year != null && !Number.isNaN(year));
+      // When the indicator's configured default visualization is a pie
+      // chart, preview with its configured (possibly historical) year;
+      // otherwise synthesize the latest year found in the data.
+      const configuredYear =
+        indicator.defaultVisualization?.__typename === 'IndicatorDefaultPieChart'
+          ? (indicator.defaultVisualization.year ?? null)
+          : null;
       return {
         __typename: 'IndicatorDefaultPieChart',
         ...common,
-        year: years.length ? Math.max(...years) : null,
+        chartSeries: pieChartSeries,
+        year: configuredYear ?? (years.length ? Math.max(...years) : null),
       } as unknown as IndicatorVisualizationBlockData;
     }
   }
@@ -722,7 +797,7 @@ function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
   return (
     <PreviewColumn $active={kind !== 'default'}>
       <ColumnHeader>
-        <h4>New (ECharts)</h4>
+        <h4>Rendered indicator</h4>
         <label>
           Preview as
           <select
@@ -754,11 +829,7 @@ function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
       {block ? (
         <IndicatorVisualizationBlock block={block} />
       ) : (
-        <IndicatorVisualisation
-          indicatorId={indicator.id}
-          useLegacyGraph={false}
-          showTable={false}
-        />
+        <IndicatorVisualisation indicatorId={indicator.id} showTable={false} />
       )}
     </PreviewColumn>
   );
@@ -786,8 +857,12 @@ function LazyRender({ children, minHeight = 500 }: { children: ReactNode; minHei
     return () => observer.disconnect();
   }, [visible]);
 
+  // Keep minHeight as a permanent floor: the children start out as short
+  // loading placeholders while their queries run, and letting the row
+  // collapse below the placeholder height while scrolling makes the page
+  // height yo-yo, which throws the scroll position back up the page.
   return (
-    <div ref={ref} style={visible ? undefined : { minHeight }}>
+    <div ref={ref} style={{ minHeight }}>
       {visible ? children : null}
     </div>
   );
@@ -902,6 +977,9 @@ function describeIndicator(indicator: ExplorerIndicator): string {
   if (indicator.goals?.length) {
     parts.push(plural(indicator.goals.length, 'goal'));
   }
+  if (indicator.actions.length) {
+    parts.push(plural(indicator.actions.length, 'action'));
+  }
   const defaultViz =
     indicator.defaultVisualization &&
     KIND_BY_DEFAULT_VISUALIZATION[indicator.defaultVisualization.__typename];
@@ -913,10 +991,19 @@ function describeIndicator(indicator: ExplorerIndicator): string {
 
 function IndicatorComparisonList({ plan }: { plan: string }) {
   const themes = useMemo(() => getThemes(), []);
-  const { data, loading, error } = useQuery<ExplorerQueryData, ExplorerQueryVariables>(
-    GET_PLAN_INDICATORS,
-    { variables: { plan } }
-  );
+  const {
+    data: currentData,
+    previousData,
+    loading,
+    error,
+  } = useQuery<ExplorerQueryData, ExplorerQueryVariables>(GET_PLAN_INDICATORS, {
+    variables: { plan },
+  });
+  // Keep rendering the previous result if the query ever reloads (e.g. a
+  // cache write from a row's own indicator query invalidating this one) —
+  // unmounting the whole list would reset the scroll position and all
+  // LazyRender states.
+  const data = currentData ?? previousData;
 
   // Resolve the plan's theme the same way the app does (layout.tsx):
   // explicit themeIdentifier, falling back to the plan identifier.
@@ -933,9 +1020,15 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
     addons.getChannel().emit(UPDATE_GLOBALS, { globals: { theme: themeKey } });
   }, [themeFound, themeKey]);
 
-  if (loading) return <Message>Loading indicators for “{plan}”…</Message>;
+  if (loading && !data) return <Message>Loading indicators for “{plan}”…</Message>;
   if (error) return <Message>Error: {error.message}</Message>;
-  if (!data?.plan) return <Message>No plan found with identifier “{plan}”.</Message>;
+  if (!data?.plan) {
+    return loading ? (
+      <Message>Loading indicators for “{plan}”…</Message>
+    ) : (
+      <Message>No plan found with identifier “{plan}”.</Message>
+    );
+  }
 
   const indicators = data.planIndicators ?? [];
 
@@ -974,18 +1067,10 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
               <LevelBadge>{indicator.level}</LevelBadge>
             )}
             <small>{describeIndicator(indicator)}</small>
-            <VisualisationSettings indicator={indicator} />
+            <VisualisationSettings indicator={indicator} planViewUrl={data.plan.viewUrl} />
           </header>
           <LazyRender>
             <GraphColumns>
-              <div>
-                <h4>Legacy (Plotly)</h4>
-                <IndicatorVisualisation
-                  indicatorId={indicator.id}
-                  useLegacyGraph
-                  showTable={false}
-                />
-              </div>
               <EChartsPreviewColumn indicator={indicator} />
             </GraphColumns>
           </LazyRender>
@@ -1070,7 +1155,7 @@ function PlanIdentifierInput({
         type="text"
         value={input}
         onChange={(event) => setInput(event.target.value)}
-        placeholder="Plan identifier, e.g. tampere-ilmasto"
+        placeholder="Plan identifier, e.g. sunnydale"
         aria-label="Plan identifier"
       />
       <button type="submit">Load</button>
@@ -1115,7 +1200,9 @@ function IndicatorExplorer({ apiUrl, initialPlanIdentifier = '' }: IndicatorExpl
     () =>
       new ApolloClient({
         link: new HttpLink({ uri: endpoint }),
-        cache: new InMemoryCache(),
+        // possibleTypes is required for fragments on unions/interfaces
+        // (e.g. defaultVisualization) to resolve from the cache
+        cache: new InMemoryCache({ possibleTypes: possibleTypes.possibleTypes }),
       }),
     [endpoint]
   );
@@ -1185,6 +1272,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     apiUrl: DEFAULT_API_URL,
-    initialPlanIdentifier: 'tampere-ilmasto',
+    initialPlanIdentifier: 'sunnydale',
   },
 };

@@ -116,7 +116,6 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
           </BlockLabel>
           <IndicatorVisualisation
             indicatorId={indicator.id}
-            useLegacyGraph={false}
             showGraph={showIndicatorGraph}
             showTable={showIndicatorTable}
             showReference={false}
@@ -424,7 +423,6 @@ const IndicatorModalContentBlock = ({
       const visualisation = (
         <IndicatorVisualisation
           indicatorId={indicator.id}
-          useLegacyGraph={false}
           showReference={false}
           {...componentProps?.['IndicatorVisualisation']}
           showFactorValues={block.showFactorValues ?? false}

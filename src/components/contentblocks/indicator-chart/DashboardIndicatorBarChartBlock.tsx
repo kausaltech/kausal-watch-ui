@@ -1,8 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-
 import { useTheme } from '@emotion/react';
 
-import type { Theme } from '@kausal/themes/types';
 import { BarChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
@@ -12,6 +9,10 @@ import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { BarChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
+import {
+  buildSaveAsImageToolbox,
+  getChartDownloadFilename,
+} from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
@@ -21,6 +22,7 @@ import {
   buildTotalSeries,
   buildYAxisConfig,
   collectAllDates,
+  getUnitLabel,
 } from './indicator-charts-utility';
 
 echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -29,27 +31,6 @@ type Props = Omit<
   Extract<BarChartVisualizationFragment, { __typename: 'DashboardIndicatorBarChartBlock' }>,
   '__typename'
 >;
-
-// FIX: Watch the card width so we can shrink the legend on small screens
-// (e.g. 3 charts per row) and keep more space for the bars—no scroll legend.
-function useElementWidth<T extends HTMLElement>() {
-  const ref = useRef<T | null>(null);
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const el = ref.current;
-    const ro = new ResizeObserver(([entry]) => {
-      setWidth(entry?.contentRect?.width ?? 0);
-    });
-
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  return { ref, width };
-}
 
 const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, barType }: Props) => {
   const theme = useTheme();
@@ -61,14 +42,14 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
-  const unit = indicator?.unit?.name ?? '';
+  // Same rule as IndicatorGraph: honor the tenant-configured chart
+  // background, white when unset
+  const chartBackground = graphsTheme.customBackground || theme.themeColors.white;
+  const unit = getUnitLabel(indicator);
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const timeResolution = indicator?.timeResolution ?? 'YEAR';
 
   const totalLabel = t('total');
-
-  const { ref: containerRef, width } = useElementWidth<HTMLDivElement>();
-  const isCompact = width > 0 && width < 520;
 
   if (!chartSeries?.length) {
     return <div>{t('data-not-available')}</div>;
@@ -98,10 +79,16 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
     seriesDataMap[name] = xCategories.map((key) => valuesByKey[key] ?? null);
   });
 
+  // An explicit block barType wins over the indicator's own
+  // dataCategoriesAreStackable default; without one, the indicator decides.
+  const stackBars = barType
+    ? barType === 'stacked'
+    : (indicator?.dataCategoriesAreStackable ?? false);
+
   const series = Object.entries(seriesDataMap).map(([name, data]) => ({
     name,
     type: 'bar' as const,
-    stack: barType === 'stacked' ? 'total' : undefined,
+    stack: stackBars ? 'total' : undefined,
     data,
     emphasis: { focus: 'series' as const },
     itemStyle: {
@@ -111,25 +98,32 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
 
   const legendData = dimSeries.map((d) => d.name);
 
-  const buildLegend = (theme: Theme): ECOption['legend'] => ({
-    show: true,
-    bottom: isCompact ? 6 : 10,
-    left: 'center',
-    orient: 'horizontal',
-    // Tighter legend layout on compact cards
-    itemGap: isCompact ? 10 : 30,
-    itemWidth: isCompact ? 12 : 18,
-    itemHeight: isCompact ? 8 : 12,
-    padding: 0,
-    textStyle: {
-      color: theme.textColor.secondary,
-      fontSize: isCompact ? 11 : 12,
-      lineHeight: isCompact ? 12 : 14,
-    },
-  });
-
   const option: ECOption = {
-    legend: buildLegend(theme),
+    toolbox: buildSaveAsImageToolbox({
+      filename: getChartDownloadFilename(indicator?.name),
+      buttonTitle: t('download-chart-as-png'),
+      backgroundColor: chartBackground,
+    }),
+    backgroundColor: chartBackground,
+    // Same legend style as the pie chart block
+    legend: {
+      show: true,
+      orient: 'horizontal',
+      bottom: 0,
+      right: 0,
+      // Keep swatches left of their labels (auto flips them for a
+      // right-anchored legend)
+      align: 'left',
+      type: 'plain',
+      // Also the gap between wrapped legend rows — ECharts has no separate
+      // row-gap setting
+      itemGap: 10,
+      itemWidth: 18,
+      itemHeight: 12,
+      textStyle: {
+        color: theme.textColor.primary,
+      },
+    },
     tooltip: {
       trigger: 'axis',
       appendTo: 'body',
@@ -147,7 +141,9 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
       left: 20,
       right: 20,
       top: 40,
-      bottom: isCompact ? 80 : 60,
+      // Reserve the bottom ~quarter for the wrapping legend (up to ~4
+      // rows), like the pie chart block does
+      bottom: 100,
       containLabel: true,
     },
     xAxis: {
@@ -155,19 +151,14 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
       data: xCategories,
       axisLabel: { color: theme.textColor.primary },
     },
-    yAxis: buildYAxisConfig(
-      indicator?.unit?.name ?? '',
-      formatAxisValue,
-      indicator ?? undefined,
-      theme.textColor.primary
-    ),
+    yAxis: buildYAxisConfig(unit, formatAxisValue, indicator ?? undefined, theme.textColor.primary),
     series,
   };
 
   return (
-    <div ref={containerRef}>
+    <div>
       <h5>{dimension?.name}</h5>
-      <Chart data={option} isLoading={false} height="300px" />
+      <Chart data={option} isLoading={false} height="400px" />
     </div>
   );
 };

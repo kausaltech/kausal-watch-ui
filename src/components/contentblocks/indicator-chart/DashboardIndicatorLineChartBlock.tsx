@@ -11,6 +11,10 @@ import { Chart } from '@common/components/Chart';
 
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
+import {
+  buildSaveAsImageToolbox,
+  getChartDownloadFilename,
+} from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
@@ -22,6 +26,8 @@ import {
   buildTrendSeries,
   buildYAxisConfig,
   collectAllDates,
+  getUnitLabel,
+  shouldSmoothLines,
 } from './indicator-charts-utility';
 
 echarts.use([LineChart, ScatterChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -46,7 +52,10 @@ const DashboardIndicatorLineChartBlock = ({
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
-  const unit = indicator?.unit?.name ?? '';
+  // Same rule as IndicatorGraph: honor the tenant-configured chart
+  // background, white when unset
+  const chartBackground = graphsTheme.customBackground || theme.themeColors.white;
+  const unit = getUnitLabel(indicator);
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const timeResolution = indicator?.timeResolution ?? 'YEAR';
   const totalLabel = t('total');
@@ -84,10 +93,12 @@ const DashboardIndicatorLineChartBlock = ({
         name,
         type: 'line' as const,
         data,
+        // Draw through gap periods without data, like the legacy time axis
+        connectNulls: true,
         showLine: true,
         showSymbol: true,
         symbolSize: 8,
-        smooth: raw.length > 1,
+        smooth: shouldSmoothLines(graphsTheme) && raw.length > 1,
         lineStyle: { width, color },
         itemStyle: { color },
       };
@@ -96,13 +107,19 @@ const DashboardIndicatorLineChartBlock = ({
 
   const seriesLines = buildLines(dimSeries);
   const seriesTotal = showTotalLine && totalRaw.length ? buildLines([totalDef], 3) : [];
-  const trendSeries = buildTrendSeries(
-    totalRaw,
-    indicator,
-    graphsTheme.trendLineColor ?? '#aaa',
-    trendLabel,
-    timeResolution
-  );
+  // The trend regresses the categoryless aggregate; when the editor hides
+  // the total line, an aggregate trend over category series would be
+  // unattributed — same gate the generic indicator view applies
+  const trendSeries =
+    showTotalLine && totalRaw.length
+      ? buildTrendSeries(
+          totalRaw,
+          indicator,
+          graphsTheme.trendLineColor ?? '#aaa',
+          trendLabel,
+          timeResolution
+        )
+      : [];
   const goalSeries = buildGoalSeries(
     indicator,
     unit,
@@ -119,12 +136,29 @@ const DashboardIndicatorLineChartBlock = ({
   ];
 
   const option = {
+    toolbox: buildSaveAsImageToolbox({
+      filename: getChartDownloadFilename(indicator?.name),
+      buttonTitle: t('download-chart-as-png'),
+      backgroundColor: chartBackground,
+    }),
+    backgroundColor: chartBackground,
+    // Same legend style as the pie chart block
     legend: {
       show: true,
-      data: legendData,
-      left: 'center',
+      orient: 'horizontal',
       bottom: 0,
-      textStyle: { color: theme.textColor.secondary },
+      right: 0,
+      // Keep swatches left of their labels (auto flips them for a
+      // right-anchored legend)
+      align: 'left',
+      type: 'plain',
+      data: legendData,
+      // Also the gap between wrapped legend rows — ECharts has no separate
+      // row-gap setting
+      itemGap: 10,
+      itemWidth: 18,
+      itemHeight: 12,
+      textStyle: { color: theme.textColor.primary },
     },
     tooltip: {
       trigger: 'axis',
@@ -143,7 +177,9 @@ const DashboardIndicatorLineChartBlock = ({
       left: 20,
       right: 20,
       top: 40,
-      bottom: 60,
+      // Reserve the bottom ~quarter for the wrapping legend (up to ~4
+      // rows), like the pie chart block does
+      bottom: 100,
       containLabel: true,
     },
     xAxis: {
@@ -152,19 +188,14 @@ const DashboardIndicatorLineChartBlock = ({
       boundaryGap: false,
       axisLabel: { color: theme.textColor.primary },
     },
-    yAxis: buildYAxisConfig(
-      indicator?.unit?.name ?? '',
-      formatAxisValue,
-      indicator ?? undefined,
-      theme.textColor.primary
-    ),
+    yAxis: buildYAxisConfig(unit, formatAxisValue, indicator ?? undefined, theme.textColor.primary),
     series: [...seriesLines, ...seriesTotal, ...goalSeries, ...trendSeries],
   };
 
   return (
     <>
       <h5>{dimension?.name}</h5>
-      <Chart data={option} isLoading={false} height="300px" />
+      <Chart data={option} isLoading={false} height="400px" />
     </>
   );
 };
