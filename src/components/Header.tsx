@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import { createElement, useMemo } from 'react';
 
 import { usePathname } from 'next/navigation';
 
@@ -12,11 +12,11 @@ import { useLocale } from 'next-intl';
 import { getDeploymentType } from '@common/env';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
-import { deploymentType } from '@/common/environment';
 import { getActiveBranch } from '@/common/links';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import ApplicationStateBanner from '@/components/common/ApplicationStateBanner';
 import GlobalNav from '@/components/common/GlobalNav';
+import type { GlobalNavProps } from '@/components/common/GlobalNav';
 import SkipToContent from '@/components/common/SkipToContent';
 import { usePlan } from '@/context/plan';
 import { getMetaTitles } from '@/utils/metadata';
@@ -24,7 +24,6 @@ import { getMetaTitles } from '@/utils/metadata';
 import TopToolBar from './common/TopToolBar';
 import { useCustomComponent } from './paths/custom';
 
-type MainMenu = PlanContextFragment['mainMenu'];
 type MenuItem = NonNullable<PlanContextFragment['mainMenu']>['items'][number];
 type PageMenuItem = Extract<MenuItem, { __typename: 'PageMenuItem' }>;
 
@@ -59,7 +58,11 @@ const getMenuStructure = (pages: PageMenuItem[], rootId: string): NavItems => {
 };
 
 // Set active page per pathname and active branch
-const setActivePages = (navLinks, pathname, activeBranch) => {
+const setActivePages = (
+  navLinks: NonNullable<NavItems>,
+  pathname: string,
+  activeBranch: string
+) => {
   let hasActivePage = false;
   navLinks.forEach((page) => {
     let childHasActivePage = false;
@@ -102,9 +105,10 @@ function Header() {
   const { navigationTitle: siteTitle } = getMetaTitles(plan);
 
   const navLinks: NavItems = useMemo(() => {
-    let links = [];
+    let links: NonNullable<NavItems> = [];
 
     const mainMenu = plan.mainMenu;
+    if (!mainMenu) return links;
     const pageMenuItems = mainMenu.items
       .filter(isPageMenuItem)
       .map(createLocalizeMenuItem(locale, plan.primaryLanguage));
@@ -115,15 +119,15 @@ function Header() {
         (page) => page.parent?.page.__typename === 'PlanRootPage'
       );
       const staticPages = getMenuStructure(pageMenuItems, pageMenuItems[rootItemIndex].parent!.id);
-      links = links.concat(staticPages);
+      if (staticPages) links = links.concat(staticPages);
     }
     return links;
-  }, [activeBranch, plan.mainMenu]);
+  }, [locale, plan.mainMenu, plan.primaryLanguage]);
 
   setActivePages(navLinks, pathname, activeBranch);
 
   const externalLinks = useMemo(() => {
-    return plan.mainMenu.items
+    return (plan.mainMenu?.items ?? [])
       .filter((item) => item.__typename == 'ExternalLinkMenuItem')
       .map((item) => ({
         name: item.linkText,
@@ -134,23 +138,26 @@ function Header() {
   const NavComponent = useCustomComponent('GlobalNav', GlobalNav);
 
   const googleAnalyticsId = theme.settings?.googleAnalyticsId;
+  const customToolbarItems = (theme.settings.customNavbarTools ??
+    []) as GlobalNavProps['customToolbarItems'];
+  const navigation = createElement(NavComponent, {
+    activeBranch,
+    activePath: pathname,
+    siteTitle,
+    ownerName: plan.generalContent ? plan.generalContent.ownerName : plan.name,
+    navItems: navLinks,
+    externalItems: externalLinks,
+    customToolbarItems,
+    sticky: theme.settings.stickyNavigation,
+    logoLink: theme.navLogoLink,
+  });
 
   return (
     <header style={{ position: 'relative' }}>
       <SkipToContent />
       <ApplicationStateBanner deploymentType={getDeploymentType()} />
       {isAuthenticated && <TopToolBar />}
-      <NavComponent
-        activeBranch={activeBranch}
-        activePath={pathname}
-        siteTitle={siteTitle}
-        ownerName={plan.generalContent ? plan.generalContent.ownerName : plan.name}
-        navItems={navLinks}
-        externalItems={externalLinks}
-        customToolbarItems={theme.settings.customNavbarTools || []}
-        sticky={theme.settings.stickyNavigation}
-        logoLink={theme.navLogoLink}
-      />
+      {navigation}
       {googleAnalyticsId && <GoogleAnalytics trackingId={googleAnalyticsId} />}
     </header>
   );

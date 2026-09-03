@@ -5,6 +5,7 @@ import Script from 'next/script';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';
 import { Collapse, Nav, NavItem, Navbar } from 'reactstrap';
@@ -14,7 +15,7 @@ import { getThemeStaticURL } from '@common/themes/theme';
 
 import { deploymentType } from '@/common/environment';
 import { NavigationLink } from '@/common/links';
-import { NavItem as NavItemType } from '@/components/Header';
+import { type NavItem as NavItemType } from '@/components/Header';
 import Icon from '@/components/common/Icon';
 
 //import NavDropdown, { type NavDropdownProps } from '@/components/common/NavDropdown';

@@ -1,11 +1,10 @@
 'use client';
 
-import { PropsWithChildren } from 'react';
+import { type PropsWithChildren } from 'react';
 
 import { useApolloClient } from '@apollo/client/react';
 import { useSession } from 'next-auth/react';
 
-import { isServer } from '@/common/environment';
 import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 
@@ -21,6 +20,7 @@ export function UpdateApolloContext({ children, domain }: Props) {
   const session = useSession();
   const { workflow } = useWorkflowSelector();
 
+  /* eslint-disable react-hooks/immutability -- Apollo intentionally exposes mutable defaults for updating link context. */
   apolloClient.defaultContext.planIdentifier = plan.identifier;
   apolloClient.defaultContext.planDomain = domain;
   apolloClient.defaultContext.sessionToken =
@@ -28,10 +28,11 @@ export function UpdateApolloContext({ children, domain }: Props) {
   apolloClient.defaultOptions.query = {
     ...(apolloClient.defaultOptions.query ?? {}),
     variables: {
-      ...(apolloClient.defaultOptions.query?.variables ?? {}),
+      ...((apolloClient.defaultOptions.query?.variables ?? {}) as Record<string, unknown>),
       workflow,
     },
   };
+  /* eslint-enable react-hooks/immutability */
 
   return children;
 }

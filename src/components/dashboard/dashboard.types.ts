@@ -1,8 +1,8 @@
 import type {
-  ActionDashboardColumnBlock,
   ActionListFilterFragment,
+  ActionTableColumnFragment,
   DashboardActionListQuery,
-  Plan,
+  PlanContextFragment,
 } from '@/common/__generated__/graphql';
 import type {
   CategoryHierarchyMember,
@@ -39,7 +39,9 @@ export type ActionListCategoryType = QueryCategoryType & CategoryTypeHierarchy<A
 
 export type ActionListPrimaryOrg = NonNullable<DashboardActionListQuery['plan']>['primaryOrgs'][0];
 
-export type ColumnBlock = NonNullable<ActionDashboardColumnBlock['__typename'] | 'PlanColumnBlock'>;
+type ActionTableColumn = NonNullable<ActionTableColumnFragment['dashboardColumns']>[number];
+
+export type ColumnBlock = ActionTableColumn['__typename'] | 'PlanColumnBlock';
 
 export interface ColumnConfig {
   __typename: ColumnBlock;
@@ -48,27 +50,29 @@ export interface ColumnConfig {
     __typename?: 'ActionAttributeType';
     id: string;
     name: string;
+    format?: string;
   };
 }
 
 export interface ActionListPlan {
   id: string;
   name: string;
-  shortName?: string;
-  viewUrl: string;
+  identifier?: string;
+  shortName?: string | null;
+  viewUrl?: string | null;
   generalContent: Pick<
-    Plan['generalContent'],
-    'actionTaskTerm' | 'organizationTerm' | 'indicatorTerm'
+    PlanContextFragment['generalContent'],
+    'actionTaskTerm' | 'actionTerm' | 'organizationTerm' | 'indicatorTerm'
   >;
-  image: {
-    rendition: {
+  image?: {
+    rendition?: {
       src: string;
-    };
+    } | null;
     /* Square-cropped rendition; only fetched for the plan context plan,
      * whose default rendition is a non-square 300x200 card image. */
     square?: {
       src: string;
     } | null;
-  };
-  actionImplementationPhases: Plan['actionImplementationPhases'];
+  } | null;
+  actionImplementationPhases: PlanContextFragment['actionImplementationPhases'];
 }

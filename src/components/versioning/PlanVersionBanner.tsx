@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import AnnouncementBanner from '@/components/common/AnnouncementBanner';
 import Icon from '@/components/common/Icon';
+import type { PlanContextType } from '@/context/plan';
 
 const VersionNote = styled.div`
   display: flex;
@@ -30,7 +32,12 @@ const LinkToLatestVersion = styled.div`
   }
 `;
 
-const PlanVersionBanner = (props) => {
+type Props = {
+  currentVersion: PlanContextType;
+  latestVersion: PlanContextType['supersedingPlans'][number];
+};
+
+const PlanVersionBanner = (props: Props) => {
   const { latestVersion, currentVersion } = props;
   const t = useTranslations();
 
@@ -47,7 +54,7 @@ const PlanVersionBanner = (props) => {
         </VersionName>
       </VersionNote>
       <LinkToLatestVersion>
-        <a href={latestVersion?.viewUrl} className="ms-2">
+        <a href={latestVersion.viewUrl ?? undefined} className="ms-2">
           {t('version-switch-to-active')}
           <br />
           <LatestVersionName>

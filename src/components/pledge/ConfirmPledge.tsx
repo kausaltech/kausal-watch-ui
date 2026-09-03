@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { type ChangeEvent, useEffect, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Container, Spinner } from 'reactstrap';
@@ -289,7 +290,9 @@ function ConfirmPledge({
                             type="text"
                             placeholder={field.placeholder}
                             value={formData[field.id] || ''}
-                            onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                              handleFieldChange(field.id, event.target.value)
+                            }
                           />
                           {field.helpText && <StyledFieldHelp>{field.helpText}</StyledFieldHelp>}
                         </div>

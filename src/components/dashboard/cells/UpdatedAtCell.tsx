@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 import dayjs from '@/common/dayjs';
 
-import { ActionListAction } from '../dashboard.types';
+import { type ActionListAction } from '../dashboard.types';
 
 interface Props {
   action: ActionListAction;

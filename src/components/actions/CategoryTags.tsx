@@ -1,13 +1,9 @@
-import React, { type ComponentType, type PropsWithChildren } from 'react';
+import { type ComponentType, type PropsWithChildren } from 'react';
 
 import styled from '@emotion/styled';
 
 import { readableColor } from 'polished';
 
-import {
-  type CategoryTagRecursiveFragmentFragment,
-  type CategoryTypeFragmentFragment,
-} from '@/common/__generated__/graphql';
 import { ActionListLink, StaticPageLink } from '@/common/links';
 import BadgeTooltip from '@/components/common/BadgeTooltip';
 import PopoverTip from '@/components/common/PopoverTip';
@@ -202,9 +198,31 @@ export const CategoryContent = (props: CategoryContentProps) => {
   );
 };
 
+type CategoryTagLike = {
+  id: string;
+  identifier: string;
+  name: string;
+  helpText: string;
+  color: string;
+  iconSvgUrl: string | null;
+  iconImage?: { rendition?: { src: string } | null } | null;
+  categoryPage?: { urlPath: string } | null;
+  level?: { name: string } | null;
+  parent?: CategoryTagLike | null;
+  type: { id: string; hideCategoryIdentifiers: boolean };
+};
+
+type CategoryTypeLike = {
+  id: string;
+  identifier: string;
+  name?: string;
+  helpText?: string;
+  levels?: Array<{ name: string }>;
+};
+
 type CategoryTagsProps = {
-  categories: CategoryTagRecursiveFragmentFragment[];
-  types: CategoryTypeFragmentFragment[];
+  categories: CategoryTagLike[];
+  types: CategoryTypeLike[];
   noLink?: boolean;
   compact?: boolean;
   ListLinkComponent?: ComponentType<ListLinkComponentProps>;
@@ -229,7 +247,7 @@ function CategoryTags(props: CategoryTagsProps) {
         as section header */
 
     const categoryTypeHeader =
-      ct.levels?.length > 0 && cats[0].level?.name ? cats[0].level.name : ct.name;
+      (ct.levels?.length ?? 0) > 0 && cats[0].level?.name ? cats[0].level.name : ct.name;
 
     return (
       <CategoryGroup key={ct.id} $compact={compact}>

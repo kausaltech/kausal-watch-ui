@@ -111,10 +111,9 @@ const IndicatorModalContent = ({
 }: IndicatorModalContentProps) => {
   const t = useTranslations();
   const plan = usePlan();
-  const hasLayout =
-    (layout.detailsMainTop && layout.detailsMainTop.length > 0) ||
-    (layout.detailsMainBottom && layout.detailsMainBottom.length > 0) ||
-    (layout.detailsAside && layout.detailsAside.length > 0);
+  const hasLayout = [layout.detailsMainTop, layout.detailsMainBottom, layout.detailsAside].some(
+    (blocks) => (blocks?.length ?? 0) > 0
+  );
 
   if (loading && !indicator)
     return (
@@ -146,7 +145,7 @@ const IndicatorModalContent = ({
           <Alert color="warning">{t('error-no-layout')}</Alert>
         )}
         <ModalContentBlocksWrapper>
-          {groupConsecutiveCategoryBlocks(layout.detailsMainTop || []).map(
+          {groupConsecutiveCategoryBlocks(layout.detailsMainTop ?? []).map(
             (groupedBlock, index) => {
               if (groupedBlock.type === 'grouped') {
                 return (
@@ -168,7 +167,7 @@ const IndicatorModalContent = ({
               );
             }
           )}
-          {groupConsecutiveCategoryBlocks(layout.detailsMainBottom || []).map(
+          {groupConsecutiveCategoryBlocks(layout.detailsMainBottom ?? []).map(
             (groupedBlock, index) => {
               if (groupedBlock.type === 'grouped') {
                 return (
@@ -190,7 +189,7 @@ const IndicatorModalContent = ({
               );
             }
           )}
-          {groupConsecutiveCategoryBlocks(layout.detailsAside || []).map((groupedBlock, index) => {
+          {groupConsecutiveCategoryBlocks(layout.detailsAside ?? []).map((groupedBlock, index) => {
             if (groupedBlock.type === 'grouped') {
               return (
                 <IndicatorGroupedCategoryBlock

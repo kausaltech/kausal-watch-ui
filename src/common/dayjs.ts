@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';

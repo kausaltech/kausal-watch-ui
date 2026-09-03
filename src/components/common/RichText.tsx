@@ -355,7 +355,7 @@ function RichTextIndicatorLink(props: PropsWithChildren<RichTextIndicatorLinkPro
           {'\u00A0'}
           {firstWord}
         </NonBreakingWrapper>
-        {rest && ` ${rest}`}
+        {rest && <> {rest}</>}
       </IndicatorLink>
     </IndicatorLinkWrapper>
   );
@@ -446,7 +446,7 @@ export default function RichText(props: RichTextProps) {
               {'\u00A0'}
               {firstWord}
             </NonBreakingWrapper>
-            {rest && ` ${rest}`}
+            {rest && <> {rest}</>}
           </a>
         );
       }

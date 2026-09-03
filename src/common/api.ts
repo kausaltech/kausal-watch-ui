@@ -1,7 +1,10 @@
 import { apiUrl } from './environment';
 
 export const aplans = {
-  get: async (path: string, { params }) => {
+  get: async <T = unknown>(
+    path: string,
+    { params }: { params: Record<string, string> }
+  ): Promise<T> => {
     const locale = params.language;
     let url = `${apiUrl}/${path}`;
 
@@ -15,7 +18,6 @@ export const aplans = {
       'Accept-Language': locale,
     };
     const resp = await fetch(url, { headers });
-    const data = resp.json();
-    return data;
+    return (await resp.json()) as T;
   },
 };

@@ -1,7 +1,6 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { Progress } from 'reactstrap';
 
 import { getStatusSummary } from '@/common/ActionStatusSummary';
@@ -41,16 +40,17 @@ interface ActionStatusProps {
   statusSummary: {
     identifier: ActionStatusSummaryIdentifier;
   };
+  color?: string | null;
   completion?: number | null;
   text?: string;
   showProgressBar?: boolean;
 }
 
 function ActionStatus(props: ActionStatusProps) {
-  const { plan, statusSummary, completion = 0, text, showProgressBar = false } = props;
+  const { plan, statusSummary, color, completion = 0, text, showProgressBar = false } = props;
   const theme = useTheme();
   const enrichedStatusSummary = getStatusSummary(plan, statusSummary);
-  const statusColor = enrichedStatusSummary.color;
+  const statusColor = color ?? 'grey050';
   const statusName = text ?? enrichedStatusSummary.label;
   const completionNumber =
     typeof completion === 'number' && Number.isFinite(completion) ? completion : null;

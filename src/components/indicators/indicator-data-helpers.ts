@@ -207,8 +207,7 @@ export const generateTrendTrace = (
     if (regData.length < 5) {
       return [undefined, undefined];
     }
-    // linearRegression lives in untyped legacy JS
-    const model = linearRegression(regData) as { m: number; b: number };
+    const model = linearRegression(regData);
     const predictedTrace: { x: number[]; y: number[]; name: string } = {
       x: regData.map((item) => item[0]),
       y: [],
@@ -460,10 +459,7 @@ export function getIndicatorGraphSpecification(
 
   if (hasTime) {
     dimensions.forEach((d) => {
-      const { categories, type } = d.dimension;
-      if (type === 'organization') {
-        return;
-      }
+      const { categories } = d.dimension;
       categories.unshift({
         id: `total`,
         type: 'aggregate',

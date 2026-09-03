@@ -1,11 +1,10 @@
-import React from 'react';
-
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 
 import { ThemeProvider } from '@emotion/react';
 
 import { render } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
+import PropTypes from 'prop-types';
 
 import { initializeMuiTheme } from '@common/themes/mui-theme/theme';
 
@@ -33,6 +32,10 @@ const AllTheProviders = ({ children }) => {
       </MUIThemeProvider>
     </NextIntlClientProvider>
   );
+};
+
+AllTheProviders.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 const customRender = (ui, options) => render(ui, { wrapper: AllTheProviders, ...options });

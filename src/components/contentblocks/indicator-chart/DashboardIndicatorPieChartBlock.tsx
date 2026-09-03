@@ -122,7 +122,8 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
 
       const categoryName = series.dimensionCategory.name;
       const valueForYear = series.values?.find(
-        (v): v is NonNullable<typeof v> => v?.date != null && doYearsMatch(assertedYear, v.date)
+        (v): v is NonNullable<typeof v> =>
+          v?.date != null && assertedYear != null && doYearsMatch(assertedYear, v.date)
       )?.value;
 
       // A category with no value for the chosen year gets no slice — a
@@ -152,6 +153,10 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
   // the legend would just duplicate the labels; with more, the slice labels
   // fall back to percent only and the legend carries the names.
   const labelSegments = seriesData.length < 5;
+
+  if (!assertedYear) {
+    return <div>No year provided</div>;
+  }
 
   const option: ECOption & { series: PieSeriesOption[] } = {
     toolbox: buildSaveAsImageToolbox({

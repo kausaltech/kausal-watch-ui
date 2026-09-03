@@ -14,8 +14,8 @@ import { getClientIP } from '@common/utils';
 import LRUCache from '@common/utils/lru-cache';
 
 import type {
-  GetPlansByHostnameQuery,
-  GetPlansByHostnameQueryVariables,
+  PlansByHostnameQuery,
+  PlansByHostnameQueryVariables,
 } from '@/common/__generated__/graphql';
 import { PublicationStatus } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
@@ -25,9 +25,9 @@ import { stripSlashes } from './urls';
 
 const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
 
-type PlanForHostname = NonNullable<GetPlansByHostnameQuery['plansForHostname']>[0];
+type PlanForHostname = NonNullable<PlansByHostnameQuery['plansForHostname']>[0];
 
-export type PlanFromPlansQuery = PlanForHostname & { __typename: 'Plan' };
+export type PlanFromPlansQuery = PlanForHostname;
 
 export function getSearchParamsString(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams.toString();
@@ -75,7 +75,8 @@ export function getParsedPlan(
 }
 
 export function getParsedLocale(localePossibilities: string[], plan: PlanFromPlansQuery) {
-  const locale = [plan.primaryLanguage, ...(plan.otherLanguages ?? [])].find((locale) =>
+  const otherLanguages = 'otherLanguages' in plan ? plan.otherLanguages : [];
+  const locale = [plan.primaryLanguage, ...otherLanguages].find((locale) =>
     localePossibilities
       .map((possibleLocale) => possibleLocale.toLowerCase())
       .includes(locale.toLowerCase())
@@ -297,14 +298,14 @@ async function queryPlansForHostname(
   const apolloClient = createApolloClient(req, logger, skipAuth);
   try {
     const { data, error } = await apolloClient.query<
-      GetPlansByHostnameQuery,
-      GetPlansByHostnameQueryVariables
+      PlansByHostnameQuery,
+      PlansByHostnameQueryVariables
     >({
       query: GET_PLANS_BY_HOSTNAME,
       variables: { hostname },
       fetchPolicy: 'no-cache',
     });
-    return { plans: error ? null : data?.plansForHostname || [], error };
+    return { plans: error ? null : (data?.plansForHostname ?? []), error };
   } catch (error) {
     Sentry.captureException(error);
     return { plans: null, error: error as Error };

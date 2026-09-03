@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
@@ -140,15 +139,11 @@ type Props = {
 function OrgContent({ org, planFromOrgQuery, testId }: Props) {
   const plan = usePlan();
   const t = useTranslations();
-  const theme = useTheme();
   const [selectedPlanIndex, setSelectedPlan] = useState(0);
 
   // Make sure host plan is first
   const allPlans = [planFromOrgQuery, ...org.plansWithActionResponsibilities];
   const selectedPlan = allPlans[selectedPlanIndex];
-
-  // add plan.feature.showActionUpdateStatus to backend
-  const showUpdateStatus = theme.settings.dashboard?.showActionUpdateStatus;
 
   return (
     <div className="mb-5" data-testid={testId}>
@@ -241,10 +236,13 @@ function OrgContent({ org, planFromOrgQuery, testId }: Props) {
               }
               enableExport={false}
               planViewUrl={selectedPlan.viewUrl}
-              plan={selectedPlan}
-              actions={selectedPlan.actions}
+              plan={selectedPlan as unknown as Parameters<typeof ActionStatusTable>[0]['plan']}
+              actions={
+                selectedPlan.actions as unknown as Parameters<
+                  typeof ActionStatusTable
+                >[0]['actions']
+              }
               orgs={[]}
-              showUpdateStatus={showUpdateStatus}
             />
           </ActionTableContainer>
         </Container>

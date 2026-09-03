@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 
-import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { type PlanContextFragment } from '@/common/__generated__/graphql';
 import { PhaseTimeline } from '@/components/actions/PhaseTimeline';
 
-import { ActionListAction } from '../dashboard.types';
+import { type ActionListAction } from '../dashboard.types';
 
 interface Props {
   action: ActionListAction;

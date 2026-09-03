@@ -12,7 +12,7 @@ import { activeGoalVar } from '@common/apollo/paths-cache';
 
 import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
 //import type { InstanceGoal } from 'common/instance';
-import { DimensionalMetric, type SliceConfig } from '@/utils/paths/metric';
+import { DimensionalMetric, type InstanceGoal, type SliceConfig } from '@/utils/paths/metric';
 
 const Plot = dynamic(() => import('@/components/graphs/Plot'), { ssr: false });
 
@@ -36,17 +36,17 @@ function getDefaultSliceConfig(cube: DimensionalMetric, activeGoal: InstanceGoal
 
   const cubeDefault = cube.getChoicesForGoal(activeGoal);
   if (!cubeDefault) return defaultConfig;
-  defaultConfig.categories = cubeDefault;
+  let dimensionId = defaultConfig.dimensionId;
   /**
    * Check if our default dimension to slice by is affected by the
    * goal-based default filters. If so, we should choose another
    * dimension.
    */
-  if (defaultConfig.dimensionId && cubeDefault.hasOwnProperty(defaultConfig.dimensionId)) {
+  if (dimensionId && cubeDefault.hasOwnProperty(dimensionId)) {
     const firstPossible = cube.dimensions.find((dim) => !cubeDefault.hasOwnProperty(dim.id));
-    defaultConfig.dimensionId = firstPossible?.id;
+    dimensionId = firstPossible?.id;
   }
-  return defaultConfig;
+  return { dimensionId, categories: cubeDefault };
 }
 
 type DimensionalBarGraphProps = {
@@ -75,9 +75,11 @@ const DimensionalBarGraph = ({ metric, endYear }: DimensionalBarGraphProps) => {
     setSliceConfig(newDefault);
   }, [activeGoal, cube]);
 
-  const yearData = cube.getSingleYear(endYear, sliceConfig.categories);
+  const yearData = cube.getSingleYear(endYear, sliceConfig.categories)!;
 
-  const plotData: Partial<Plotly.PlotData>[] = [];
+  const plotData: Array<
+    Partial<Plotly.PlotData> & { meta?: Plotly.Datum[]; base?: Plotly.Datum | Plotly.Datum[] }
+  > = [];
 
   let longUnit = metric.unit.htmlShort;
   // FIXME: Nasty hack to show 'CO2e' where it might be applicable until
@@ -93,21 +95,21 @@ const DimensionalBarGraph = ({ metric, endYear }: DimensionalBarGraphProps) => {
   let maxTotal = 0;
   yearData.categoryTypes[1].options.forEach((colId, cIdx) => {
     const colTotals = yearData.rows.reduce((acc, row) => {
-      return row[cIdx] + acc;
+      return (row[cIdx] ?? 0) + acc;
     }, 0);
     // Remember the largest total for scaling the y-axis
     if (Math.abs(colTotals) > maxTotal) {
       maxTotal = Math.abs(colTotals);
     }
     yearData.categoryTypes[0].options.forEach((rowId, rIdx) => {
-      const datum = yearData.rows[rIdx][cIdx];
+      const datum = yearData.rows[rIdx][cIdx] ?? 0;
       const portion = datum / colTotals;
       const displayPortions = portion >= 0.01 ? Math.round((datum / colTotals) * 100) : '<1';
       const textTemplate = portion && portion !== 1 && portion !== 0 ? '%{meta[0]}%' : '';
       const dimDetails = yearData.allLabels.find((l) => l.id === rowId);
       plotData.push({
         type: 'bar',
-        x: [yearData.allLabels.find((l) => l.id === colId)?.label],
+        x: [yearData.allLabels.find((l) => l.id === colId)?.label ?? ''],
         y: [datum],
         meta: [displayPortions],
         textposition: 'outside',

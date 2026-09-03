@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 
 import { gql } from '@apollo/client';
@@ -10,8 +8,8 @@ import { Col, Container, Row } from 'reactstrap';
 import ContentLoader from '@common/components/ContentLoader';
 
 import type {
-  GetActionListForGraphsQuery,
-  GetActionListForGraphsQueryVariables,
+  ActionListForGraphsQuery,
+  ActionListForGraphsQueryVariables,
 } from '@/common/__generated__/graphql';
 import type { CommonContentBlockProps } from '@/common/blocks.types';
 import ErrorMessage from '@/components/common/ErrorMessage';
@@ -20,8 +18,9 @@ import ActionStatusGraphs from '@/components/dashboard/ActionStatusGraphs';
 import { usePlan } from '@/context/plan';
 
 const GET_ACTION_LIST_FOR_GRAPHS = gql`
-  query GetActionListForGraphs($plan: ID!, $categoryId: ID) {
+  query ActionListForGraphs($plan: ID!, $categoryId: ID) {
     planActions(plan: $plan, category: $categoryId) {
+      id
       color
       scheduleContinuous
       statusSummary {
@@ -31,6 +30,7 @@ const GET_ACTION_LIST_FOR_GRAPHS = gql`
         identifier
       }
       implementationPhase {
+        id
         identifier
         name
       }
@@ -55,8 +55,8 @@ const ActionStatusGraphsBlock = (props: Props) => {
     theme.settings.dashboard?.showActionUpdateStatus === false ? false : true;
 
   const { loading, error, data } = useQuery<
-    GetActionListForGraphsQuery,
-    GetActionListForGraphsQueryVariables
+    ActionListForGraphsQuery,
+    ActionListForGraphsQueryVariables
   >(GET_ACTION_LIST_FOR_GRAPHS, {
     variables: {
       plan: plan.identifier,

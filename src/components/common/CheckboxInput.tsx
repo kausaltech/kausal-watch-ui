@@ -8,7 +8,7 @@ import {
   Label as BSLabel,
   FormFeedback,
   FormGroup,
-  InputProps,
+  type InputProps,
 } from 'reactstrap';
 
 const GroupLabel = styled.div`
@@ -45,7 +45,7 @@ type CheckboxInputProps = Omit<InputProps, 'type'> & {
 
 const CheckboxInput = React.forwardRef<HTMLInputElement, CheckboxInputProps>(function CheckboxInput(
   props: CheckboxInputProps,
-  ref
+  _ref
 ) {
   const { heading, options, id, formFeedback, value = [], onChange, ...rest } = props;
 

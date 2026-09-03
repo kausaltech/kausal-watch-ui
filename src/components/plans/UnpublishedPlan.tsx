@@ -36,7 +36,7 @@ export default function UnpublishedPlan({ message, loginEnabled, testId }: Props
     if (session.status === 'authenticated') {
       router.push('/');
     }
-  }, [session]);
+  }, [router, session]);
 
   return (
     <Box sx={{ py: 8 }} data-testid={testId}>
@@ -48,7 +48,7 @@ export default function UnpublishedPlan({ message, loginEnabled, testId }: Props
               {message}
             </Typography>
             {loginEnabled && (
-              <Button variant="contained" onClick={() => signIn('watch-oidc-provider')}>
+              <Button variant="contained" onClick={() => void signIn('watch-oidc-provider')}>
                 {t('ui-sign-in')}
               </Button>
             )}

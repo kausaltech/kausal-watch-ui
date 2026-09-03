@@ -1,5 +1,3 @@
-import React from 'react';
-
 import ErrorMessage from '@/components/common/ErrorMessage';
 
 import { render } from '../test-utils';
@@ -19,7 +17,7 @@ describe('ErrorMessage component', () => {
     const serverRender = () => {
       expect(() => {
         render(<ErrorMessage message={message} statusCode={statusCode} />);
-      }).toThrowError(new Error(message));
+      }).toThrow(new Error(message));
     };
 
     expect(serverRender).toThrow();

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -51,6 +49,7 @@ const UpdateDate = styled.div`
 const GET_ACTION_UPDATES = gql`
   query ActionUpdates($plan: ID!, $id: ID!) {
     action(plan: $plan, id: $id) {
+      id
       statusUpdates {
         id
         title
@@ -108,7 +107,7 @@ function ActionUpdatesList({ id }) {
 
   if (loading) return <span>{t('loading')}</span>;
   if (error) return <span>{error.message}</span>;
-  const { action } = data;
+  const { action } = /** @type {{ action: any }} */ (/** @type {unknown} */ (data));
 
   return (
     <Row>

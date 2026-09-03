@@ -1,7 +1,9 @@
 import React from 'react';
 
-import { ThemeProvider } from '@emotion/react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
+
+import { ThemeProvider } from '@emotion/react';
+
 import { DecoratorHelpers } from '@storybook/addon-themes';
 import type { Decorator } from '@storybook/nextjs-vite';
 import { SessionProvider } from 'next-auth/react';

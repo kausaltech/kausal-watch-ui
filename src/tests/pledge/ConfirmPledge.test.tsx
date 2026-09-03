@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import ConfirmPledge from '../../components/pledge/ConfirmPledge';
@@ -86,6 +84,7 @@ describe('ConfirmPledge', () => {
         <ConfirmPledge {...baseProps} formFields={formFields} userData={{ zip_code: '02134' }} />
       );
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const input = screen.getByLabelText(/your zip code/i) as HTMLInputElement;
       expect(input.value).toBe('02134');
     });

@@ -1,8 +1,7 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 
 import { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
@@ -18,7 +17,7 @@ import Icon from '@/components/common/Icon';
 import PlanChip from '@/components/plans/PlanChip';
 
 import { getTaskCounts } from './cells/TasksStatusCell';
-import { ActionListAction, ActionListPlan } from './dashboard.types';
+import { type ActionListAction, type ActionListPlan } from './dashboard.types';
 
 const TooltipTitle = styled.p`
   font-weight: ${(props) => props.theme.fontWeightBold};
@@ -35,7 +34,7 @@ const ResponsibleTooltipListItem = styled.li``;
 
 const TaskTooltip = styled.div``;
 
-const StatusLabel = styled.div<{ $color: string }>`
+const StatusLabel = styled.div<{ $color: keyof Theme['graphColors'] }>`
   &:before {
     content: '';
     display: inline-block;
@@ -55,6 +54,11 @@ interface TooltipProps {
 
 interface TooltipWithPlanProps extends TooltipProps {
   plan: ActionListPlan;
+}
+
+interface AttributeTooltipProps {
+  attribute: ActionListAction['attributes'][number];
+  attributeType: ActionListAction['attributes'][number]['type'];
 }
 
 export const OrganizationTooltipContent = ({ action }: TooltipProps) => {
@@ -123,7 +127,10 @@ export const ImplementationPhaseTooltipContent = ({ action, plan }: TooltipWithP
     return null;
   }
 
-  const getMergedName = (mergedWith, planId) => {
+  const getMergedName = (
+    mergedWith: NonNullable<ActionListAction['mergedWith']>,
+    planId: string
+  ) => {
     if (mergedWith.plan.id !== planId) {
       return `${mergedWith.plan.shortName} ${mergedWith.identifier}`;
     } else {
@@ -131,7 +138,11 @@ export const ImplementationPhaseTooltipContent = ({ action, plan }: TooltipWithP
     }
   };
 
-  const statusDisplay = <StatusLabel $color={status?.color}>{status.label}</StatusLabel>;
+  const statusDisplay = (
+    <StatusLabel $color={(action.color ?? 'grey050') as keyof Theme['graphColors']}>
+      {status.label}
+    </StatusLabel>
+  );
 
   // If action is merged, display merged status
   if (merged) {
@@ -289,6 +300,10 @@ export const PlanTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
   );
 };
 
-export const AttributeTooltipContent = ({ attribute, attributeType }: TooltipProps) => {
-  return <ActionAttribute attribute={attribute} attributeType={attributeType} notitle />;
+export const AttributeTooltipContent = ({ attribute, attributeType }: AttributeTooltipProps) => {
+  return (
+    <ActionAttribute
+      {...({ attribute, attributeType, notitle: true } as Parameters<typeof ActionAttribute>[0])}
+    />
+  );
 };

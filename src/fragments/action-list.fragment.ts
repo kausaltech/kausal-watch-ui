@@ -6,7 +6,6 @@ const ACTION_LIST_FILTER = gql`
   fragment ActionListFilter on StreamFieldInterface {
     __typename
     field
-    id
     ... on ResponsiblePartyFilterBlock {
       fieldLabel
       fieldHelpText
@@ -89,6 +88,7 @@ const ACTION_LIST_FILTER = gql`
 
 export const ALL_ACTION_LIST_FILTERS = gql`
   fragment ActionListPageFilters on ActionListPage {
+    id
     primaryFilters {
       ...ActionListFilter
     }
@@ -104,7 +104,8 @@ export const ALL_ACTION_LIST_FILTERS = gql`
 `;
 
 export const ACTION_TABLE_COLUMN_FRAGMENT = gql`
-  fragment ActionTableColumnFragment on ActionListPage {
+  fragment ActionTableColumn on ActionListPage {
+    id
     dashboardColumns {
       __typename
       ... on IdentifierColumnBlock {

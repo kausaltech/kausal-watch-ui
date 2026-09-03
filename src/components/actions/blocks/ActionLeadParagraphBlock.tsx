@@ -1,5 +1,5 @@
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import { ActionSection } from '@/components/actions/ActionContent';
@@ -9,10 +9,14 @@ const LeadParagraph = styled.div`
   font-size: 110%;
 `;
 
-const ActionLeadParagraphBlock = (props) => {
+type Props = {
+  content: string;
+  fieldLabel?: string | null;
+};
+
+const ActionLeadParagraphBlock = (props: Props) => {
   const { content, fieldLabel } = props;
   const t = useTranslations();
-  const theme = useTheme();
 
   let headerClass = '';
   let headerText = fieldLabel;

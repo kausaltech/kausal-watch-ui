@@ -1,10 +1,10 @@
-import type { Operation } from '@apollo/client';
 import { ApolloLink, HttpLink } from '@apollo/client';
 import { CombinedGraphQLErrors } from '@apollo/client/errors';
 import { ErrorLink } from '@apollo/client/link/error';
 import { captureException } from '@sentry/nextjs';
 import { type DirectiveNode, OperationTypeNode } from 'graphql';
 import { Kind } from 'graphql/language/kinds';
+import { map } from 'rxjs';
 
 import type { DefaultApolloContext } from '@common/apollo';
 import { WILDCARD_DOMAINS_HEADER } from '@common/constants/headers.mjs';
@@ -28,7 +28,7 @@ declare module '@apollo/client' {
 }
 
 function logError(
-  operation: Operation,
+  operation: ApolloLink.Operation,
   message: string,
   error: unknown,
   sentryExtras: { [key: string]: unknown }
@@ -37,6 +37,7 @@ function logError(
     console.error(`An error occurred while querying ${operation.operationName}: ${message}`, error);
   }
 
+  const { hostname } = operation.variables as Record<string, unknown>;
   captureException(message, {
     extra: {
       query: operation.query,
@@ -45,7 +46,7 @@ function logError(
       ...sentryExtras,
     },
     tags: {
-      hostname: operation?.variables?.hostname,
+      hostname: typeof hostname === 'string' ? hostname : undefined,
     },
   });
 }
@@ -81,19 +82,21 @@ export const operationStart = new ApolloLink((operation, forward) => {
 });
 
 export const operationEnd = new ApolloLink((operation, forward) => {
-  return forward(operation).map((data) => {
-    const start = operation.getContext().start;
+  return forward(operation).pipe(
+    map((data) => {
+      const start = operation.getContext().start;
 
-    if (!start) {
+      if (!start) {
+        return data;
+      }
+
+      const time = Math.round(Date.now() - start);
+
+      console.log(`  ⚙ Operation ${operation.operationName} took ${time}ms`);
+
       return data;
-    }
-
-    const time = Math.round(Date.now() - start);
-
-    console.log(`  ⚙ Operation ${operation.operationName} took ${time}ms`);
-
-    return data;
-  });
+    })
+  );
 });
 
 /**
@@ -101,15 +104,19 @@ export const operationEnd = new ApolloLink((operation, forward) => {
  * purposes and enabled by setting the LOG_GRAPHQL_QUERIES env variable.
  */
 function fetchWithLogging(input: URL | RequestInfo, init: RequestInit = {}): Promise<Response> {
-  const body = typeof init.body === 'string' ? JSON.parse(init.body) : init.body;
+  const parsedBody: unknown = typeof init.body === 'string' ? JSON.parse(init.body) : init.body;
+  const body =
+    typeof parsedBody === 'object' && parsedBody !== null
+      ? (parsedBody as Record<string, unknown>)
+      : null;
 
   if (body) {
     console.log(
-      `📡 ${new Date().toISOString().slice(-13)} 📡 Sending query ${
+      `📡 ${new Date().toISOString().slice(-13)} 📡 Sending query ${String(
         body.operationName
-      } with variables:\n${JSON.stringify(body.variables, null, 2)}\n\n${
+      )} with variables:\n${JSON.stringify(body.variables, null, 2)}\n\n${String(
         body.query
-      }\n🎬 End of query ${body.operationName}\n`
+      )}\n🎬 End of query ${String(body.operationName)}\n`
     );
   }
 

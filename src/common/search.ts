@@ -13,12 +13,12 @@ import { trackSearch } from '@/components/MatomoAnalytics';
 
 import type {
   PlanContextFragment,
-  SearchQueryQuery,
-  SearchQueryQueryVariables,
+  SearchQuery,
+  SearchQueryVariables,
 } from './__generated__/graphql';
 
 export const SEARCH_QUERY = gql`
-  query SearchQuery($plan: ID!, $query: String!, $onlyOtherPlans: Boolean, $clientUrl: String) {
+  query Search($plan: ID!, $query: String!, $onlyOtherPlans: Boolean, $clientUrl: String) {
     search(plan: $plan, query: $query, includeRelatedPlans: true, onlyOtherPlans: $onlyOtherPlans) {
       hits {
         id
@@ -26,15 +26,19 @@ export const SEARCH_QUERY = gql`
         url(clientUrl: $clientUrl)
         highlight
         plan {
+          id
           identifier
           image {
+            id
             rendition(size: "128x128", crop: true) {
+              id
               src
             }
           }
           name
           shortName
           organization {
+            id
             name
           }
         }
@@ -43,9 +47,12 @@ export const SEARCH_QUERY = gql`
           ... on Action {
             identifier
             primaryOrg {
+              id
               name
               logo {
+                id
                 rendition(size: "128x128", crop: true) {
+                  id
                   src
                 }
               }
@@ -56,10 +63,13 @@ export const SEARCH_QUERY = gql`
           }
         }
         page {
+          id
           title
           ... on CategoryPage {
             category {
+              id
               level {
+                id
                 name
               }
             }
@@ -70,19 +80,13 @@ export const SEARCH_QUERY = gql`
   }
 `;
 
-export type SearchHit = SearchQueryQuery['search']['hits'][number];
+export type SearchHit = SearchQuery['search']['hits'][number];
 
 class WatchSearchAPIConnector implements APIConnector {
-  apolloClient: ApolloClient<unknown>;
+  apolloClient: ApolloClient;
   plan: PlanContextFragment;
 
-  constructor({
-    apolloClient,
-    plan,
-  }: {
-    apolloClient: ApolloClient<unknown>;
-    plan: PlanContextFragment;
-  }) {
+  constructor({ apolloClient, plan }: { apolloClient: ApolloClient; plan: PlanContextFragment }) {
     this.apolloClient = apolloClient;
     this.plan = plan;
   }
@@ -120,7 +124,7 @@ class WatchSearchAPIConnector implements APIConnector {
     if (!searchTerm) {
       return responseBase;
     }
-    const res = await this.apolloClient.query<SearchQueryQuery, SearchQueryQueryVariables>({
+    const res = await this.apolloClient.query<SearchQuery, SearchQueryVariables>({
       query: SEARCH_QUERY,
       variables: {
         plan: this.plan.identifier,

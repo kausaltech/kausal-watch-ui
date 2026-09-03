@@ -1,4 +1,5 @@
-import React, { type PropsWithChildren, type ReactElement, type ReactNode } from 'react';
+import type React from 'react';
+import { type PropsWithChildren, type ReactNode } from 'react';
 
 import NextLink, { type LinkProps } from 'next/link';
 
@@ -203,7 +204,7 @@ ActionListLink.getLinkProps = (opts: ActionListLinkProps, rest?: OtherLinkProps)
   const href = {
     query,
   };
-  return { ...other, ...(rest || {}), href };
+  return { ...other, ...(rest ?? {}), href };
 };
 
 function getIndicatorListLinkProps(opts: IndicatorListLinkProps, rest?: OtherLinkProps) {
@@ -225,7 +226,7 @@ function getIndicatorListLinkProps(opts: IndicatorListLinkProps, rest?: OtherLin
   }
 
   const href = { query };
-  return { ...other, ...(rest || {}), href };
+  return { ...other, ...(rest ?? {}), href };
 }
 
 export function IndicatorListLink(

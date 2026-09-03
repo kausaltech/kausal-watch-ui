@@ -3,10 +3,11 @@
 import React, { Suspense } from 'react';
 
 import styled from '@emotion/styled';
+
 import { Col, Container, Row } from 'reactstrap';
 
-import { CategoryFragmentFragment } from '@/common/__generated__/graphql';
-import { CommonContentBlockProps } from '@/common/blocks.types';
+import { type CategoryFragment } from '@/common/__generated__/graphql';
+import { type CommonContentBlockProps } from '@/common/blocks.types';
 import { useFallbackCategories } from '@/context/categories';
 import { usePaths } from '@/context/paths/paths';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
@@ -45,11 +46,11 @@ const CategoryList = ({ categories, pathsInstance, group }) => (
 );
 
 interface CategoryListBlockProps extends CommonContentBlockProps {
-  categories?: Array<CategoryFragmentFragment>;
+  categories?: Array<CategoryFragment>;
   heading?: string;
   lead?: string | null;
   style?: 'treemap' | 'cards';
-  group?: CategoryFragmentFragment;
+  group?: CategoryFragment;
 }
 
 const CategoryListBlock = (props: CategoryListBlockProps) => {

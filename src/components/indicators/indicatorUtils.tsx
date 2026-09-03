@@ -194,7 +194,7 @@ export const groupIndicatorsByCommonCategory = (
   return grouped;
 };
 
-type IndicatorGoalValue = IndicatorListIndicator['goals'][number];
+type IndicatorGoalValue = NonNullable<NonNullable<IndicatorListIndicator['goals']>[number]>;
 
 type IndicatorDataValue =
   | IndicatorListIndicator['latestValue']
@@ -225,7 +225,7 @@ export const getGoalValue = (
 
   if (defaultGoalYear === null || defaultGoalYear === undefined) {
     const nextGoal = validGoals.find((goal) => dayjs(goal.date).isSameOrAfter(now));
-    return nextGoal || null;
+    return nextGoal ?? null;
   }
 
   const defaultGoalYearStart = dayjs(`${defaultGoalYear}-01-01`);

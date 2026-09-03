@@ -1,4 +1,4 @@
-import { ActionCardFragment } from '@/common/__generated__/graphql';
+import type { ActionCardFragment } from '@/common/__generated__/graphql';
 
 export const MOCK_ACTIONS: ActionCardFragment[] = [
   {
@@ -54,7 +54,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -130,7 +130,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -179,7 +179,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -237,7 +237,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -304,7 +304,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -371,7 +371,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -429,7 +429,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -487,7 +487,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -554,7 +554,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -612,7 +612,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -670,7 +670,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -728,7 +728,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -786,7 +786,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -862,7 +862,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -920,7 +920,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -978,7 +978,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1027,7 +1027,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1085,7 +1085,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1134,7 +1134,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1192,7 +1192,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1259,7 +1259,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1317,7 +1317,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1375,7 +1375,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1433,7 +1433,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1491,7 +1491,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1549,7 +1549,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1607,7 +1607,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1674,7 +1674,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },
@@ -1732,7 +1732,7 @@ export const MOCK_ACTIONS: ActionCardFragment[] = [
       publishedAt: '2023-01-12T20:31:54.248974+00:00',
       image: {
         rendition: {
-          src: 'https://watch-media.staging.kausal.tech/images/alex-vasey-3lxrM5yvkcI-unsplas.2e16d0ba.fill-128x128-c50_UEee12Z.jpg',
+          src: 'https://placehold.co/128x128/2e7d32/fff/jpeg',
         },
       },
     },

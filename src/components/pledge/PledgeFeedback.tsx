@@ -18,9 +18,10 @@ import type { TFunction } from '@/common/i18n';
 import Button from '@/components/common/Button';
 
 const CREATE_USER_FEEDBACK = gql`
-  mutation CreateUserFeedback($input: UserFeedbackMutationInput!) {
+  mutation CreatePledgeFeedback($input: UserFeedbackMutationInput!) {
     createUserFeedback(input: $input) {
       feedback {
+        id
         createdAt
       }
       errors {
@@ -210,7 +211,7 @@ function PledgeFeedbackComponent({
           result.data.createUserFeedback.errors.flatMap((error) => error.messages)
         );
       }
-    } catch (error) {
+    } catch {
       // Error will be shown via mutationError or otherMutationErrors
     }
   };

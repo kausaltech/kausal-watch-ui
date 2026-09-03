@@ -1,7 +1,8 @@
-import React, { type PropsWithChildren } from 'react';
+import { type PropsWithChildren } from 'react';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { Col, Row } from 'reactstrap';
 
 import type {
@@ -40,11 +41,13 @@ const AttributeItem = styled(Col)`
   display: block;
 `;
 
-export function attributeHasValue(attribute: AttributesBlockProps['attributes'][0]) {
+type Attribute = AttributesBlockAttributeFragment | AttributesBlockAttributeWithNestedTypeFragment;
+
+export function attributeHasValue(attribute: Attribute) {
   const { __typename } = attribute;
 
   if (__typename === 'AttributeChoice') {
-    return !!(attribute.choice || attribute.text);
+    return attribute.choice ? true : Boolean(attribute.text);
   } else if (__typename === 'AttributeText' || __typename === 'AttributeRichText') {
     return !!attribute.value;
   } else if (__typename === 'AttributeCategoryChoice') {
@@ -58,25 +61,11 @@ type AttributeContentProps = {
   attributeType: AttributesBlockAttributeTypeFragment;
 };
 
-type AttributeContentNestedTypeProps = {
-  attribute: AttributesBlockAttributeWithNestedTypeFragment;
-  attributeType: null | undefined;
-};
-
-type AttributesBlockProps = PropsWithChildren<
-  {
-    vertical?: boolean;
-  } & (
-    | {
-        attributes?: AttributeContentProps['attribute'][];
-        types?: AttributeContentProps['attributeType'][];
-      }
-    | {
-        attributes?: AttributeContentNestedTypeProps['attribute'][];
-        types?: undefined;
-      }
-  )
->;
+type AttributesBlockProps = PropsWithChildren<{
+  vertical?: boolean;
+  attributes?: Attribute[];
+  types?: AttributeContentProps['attributeType'][];
+}>;
 
 function AttributesBlock(props: AttributesBlockProps) {
   const {
@@ -97,7 +86,10 @@ function AttributesBlock(props: AttributesBlockProps) {
     return null;
   }
 
-  let typesById: Map<string, AttributeContentProps['attributeType']> | null;
+  type AttributeTypeWithMeta = AttributeContentProps['attributeType'] & {
+    meta?: { restricted?: boolean; hidden?: boolean };
+  };
+  let typesById: Map<string, AttributeTypeWithMeta> | null = null;
 
   if (types) {
     typesById = new Map(types.map((type) => [type.id, type]));
@@ -109,18 +101,24 @@ function AttributesBlock(props: AttributesBlockProps) {
     <Attributes $vertical={vertical ?? false}>
       <AttributesList tag="ul">
         {attributesWithValue.map((item: (typeof attributes)[0]) => {
+          const attributeType = typesById?.get(item.type.id);
+          const typeMeta = attributeType;
           return (
             <RestrictedBlockWrapper
               key={item.id}
-              isRestricted={(typesById && typesById.get(item.type.id)?.meta?.restricted) ?? false}
-              isHidden={(typesById && typesById.get(item.type.id)?.meta?.hidden) ?? false}
+              isRestricted={typeMeta?.meta?.restricted ?? false}
+              isHidden={typeMeta?.meta?.hidden ?? false}
             >
               <AttributeItem tag="li" key={item.id} md={vertical ? 12 : 6}>
-                <ActionAttribute
-                  key={item.id}
-                  attribute={item}
-                  attributeType={typesById && typesById.get(item.type.id)}
-                />
+                {attributeType ? (
+                  <ActionAttribute key={item.id} attribute={item} attributeType={attributeType} />
+                ) : (
+                  <ActionAttribute
+                    key={item.id}
+                    attribute={item as AttributesBlockAttributeWithNestedTypeFragment}
+                    attributeType={undefined}
+                  />
+                )}
               </AttributeItem>
             </RestrictedBlockWrapper>
           );

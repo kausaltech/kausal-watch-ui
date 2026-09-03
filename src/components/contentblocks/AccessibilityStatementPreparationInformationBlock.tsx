@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useLocale, useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 

@@ -1,10 +1,9 @@
 'use client';
 
-import React from 'react';
-
 import Link from 'next/link';
 
 import { Box, Button, Card, CardContent, Container, Grid, Typography } from '@mui/material';
+
 import { useTranslations } from 'next-intl';
 
 type Props = {
@@ -23,7 +22,7 @@ export const errorIcon = (
   </svg>
 );
 
-function ErrorPage({ message, type = 'page', details, testId }: Props) {
+function ErrorPage({ message, details, testId }: Props) {
   const t = useTranslations();
 
   return (

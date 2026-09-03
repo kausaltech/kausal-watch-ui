@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -121,6 +121,7 @@ const CollapseButton = styled(Button)`
 const GET_CONTACT_DETAILS = gql`
   query ContactDetails($id: ID!, $plan: ID!) {
     person(id: $id, plan: $plan) {
+      id
       email
       organization {
         id
@@ -169,7 +170,10 @@ function ContactDetails({ id }: ContactDetailsProps) {
   if (person.organization && person.organization.ancestors) {
     orgAncestors = person.organization.ancestors
       .filter(
-        (org) => org.classification?.name !== 'Valtuusto' && org.classification?.name !== 'Hallitus'
+        (org): org is NonNullable<typeof org> =>
+          org !== null &&
+          org.classification?.name !== 'Valtuusto' &&
+          org.classification?.name !== 'Hallitus'
       )
       .map((org) => {
         return {

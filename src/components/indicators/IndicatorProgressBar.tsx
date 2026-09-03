@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import NextLink from 'next/link';
 
@@ -101,7 +101,7 @@ interface ValueGroupProps {
   value: string;
   unit: string;
   transform?: string;
-  textAnchor?: string;
+  textAnchor?: React.SVGProps<SVGTextElement>['textAnchor'];
   startDate?: string;
   date?: string;
   locale?: string;
@@ -148,7 +148,7 @@ function Counter({
       },
     });
     return () => controls.stop();
-  }, [from, to, duration, locale, precision]);
+  }, [duration, from, locale, numberFormatter, precision, to]);
 
   return <tspan ref={ref} />;
 }
@@ -161,18 +161,7 @@ const CHART_WIDTHS = {
 function useChartWidth(): number {
   const theme = useTheme();
   const { width: windowWidth } = useWindowSize(400) as { width: number };
-  const [width, setWidth] = useState(CHART_WIDTHS.md);
-
-  useEffect(() => {
-    const nextWidth =
-      windowWidth < parseInt(theme.breakpointMd) ? CHART_WIDTHS.sm : CHART_WIDTHS.md;
-
-    if (width !== nextWidth) {
-      setWidth(nextWidth);
-    }
-  }, [width, windowWidth, theme.breakpointMd]);
-
-  return width;
+  return windowWidth < parseInt(theme.breakpointMd) ? CHART_WIDTHS.sm : CHART_WIDTHS.md;
 }
 
 /*
@@ -248,6 +237,8 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const [isNormalized, setIsNormalized] = useState(normalizeByDefault);
 
   useEffect(() => {
+    // Reset user selection if a different indicator supplies a new default.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsNormalized(normalizeByDefault);
   }, [normalizeByDefault]);
 
@@ -278,9 +269,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
         : baseValue.value;
 
   const minPrecision =
-    significantDigits != null
-      ? significantDigits
-      : findPrecision([startValue, latestValue ?? 0, goalDisplayValue ?? 0]);
+    significantDigits ?? findPrecision([startValue, latestValue ?? 0, goalDisplayValue ?? 0]);
 
   const formatNumber = useNumberFormatter({ maximumFractionDigits: minPrecision });
   const roundedValues = {
@@ -295,7 +284,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   const largestValue = Math.max(
     roundedValues.start,
     roundedValues.latest,
-    Number(roundedValues.goal) ?? 0
+    Number(roundedValues.goal)
   );
   const displayUnit = isNormalized ? unit.normalizedName : unit.name;
 
@@ -363,101 +352,107 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
   // Animation length relative to animated bar length
   const reductionCounterDuration = (10 * Math.abs(startBar.w - latestBar.w)) / bars.w;
 
-  const resetSequence: AnimationSequence = [
-    'reset',
-    [
-      '.latest-content text',
-      {
-        opacity: 0,
-      },
-      { duration: 0 },
+  const resetSequence: AnimationSequence = useMemo(
+    () => [
+      'reset',
+      [
+        '.latest-content text',
+        {
+          opacity: 0,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-line',
+        {
+          x1: 0,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-content > line',
+        {
+          x1: 0,
+          x2: 0,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-content > text',
+        {
+          opacity: 0,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.latest-bar',
+        {
+          x: startBar.x,
+          width: startBar.w,
+        },
+        { duration: 0 },
+      ],
+      [
+        '.completed-line',
+        {
+          x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
+          x2: 0,
+        },
+        { duration: 0 },
+      ],
     ],
-    [
-      '.latest-line',
-      {
-        x1: 0,
-      },
-      { duration: 0 },
-    ],
-    [
-      '.latest-content > line',
-      {
-        x1: 0,
-        x2: 0,
-      },
-      { duration: 0 },
-    ],
-    [
-      '.latest-content > text',
-      {
-        opacity: 0,
-      },
-      { duration: 0 },
-    ],
-    [
-      '.latest-bar',
-      {
-        x: startBar.x,
-        width: startBar.w,
-      },
-      { duration: 0 },
-    ],
-    [
-      '.completed-line',
-      {
-        x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
-        x2: 0,
-      },
-      { duration: 0 },
-    ],
-  ];
+    [latestBar.x, startBar.w, startBar.x]
+  );
 
-  const animateSequence: AnimationSequence = [
-    'execute',
-    [
-      '.latest-bar',
-      {
-        x: latestBar.x,
-        width: latestBar.w,
-      },
-      { duration: reductionCounterDuration },
+  const animateSequence: AnimationSequence = useMemo(
+    () => [
+      'execute',
+      [
+        '.latest-bar',
+        {
+          x: latestBar.x,
+          width: latestBar.w,
+        },
+        { duration: reductionCounterDuration },
+      ],
+      [
+        '.completed-line',
+        {
+          x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
+          x2: latestBar.x - 13,
+        },
+        { at: 0, duration: reductionCounterDuration },
+      ],
+      [
+        '.latest-line',
+        {
+          x1: latestBar.x + 1,
+        },
+        { at: 0, duration: reductionCounterDuration },
+      ],
+      [
+        '.latest-content > line',
+        {
+          x1: latestBar.x + 1,
+          x2: latestBar.x + 1,
+        },
+        { at: 0, duration: reductionCounterDuration },
+      ],
+      [
+        '.latest-content text',
+        {
+          opacity: 1,
+        },
+        { at: reductionCounterDuration, duration: 1 },
+      ],
     ],
-    [
-      '.completed-line',
-      {
-        x1: latestBar.x > 14 ? 0 : latestBar.x - 14,
-        x2: latestBar.x - 13,
-      },
-      { at: 0, duration: reductionCounterDuration },
-    ],
-    [
-      '.latest-line',
-      {
-        x1: latestBar.x + 1,
-      },
-      { at: 0, duration: reductionCounterDuration },
-    ],
-    [
-      '.latest-content > line',
-      {
-        x1: latestBar.x + 1,
-        x2: latestBar.x + 1,
-      },
-      { at: 0, duration: reductionCounterDuration },
-    ],
-    [
-      '.latest-content text',
-      {
-        opacity: 1,
-      },
-      { at: reductionCounterDuration, duration: 1 },
-    ],
-  ];
+    [latestBar.w, latestBar.x, reductionCounterDuration]
+  );
 
   // Reset animation to initial state on component mount
   useEffect(() => {
     animate(resetSequence);
-  }, [animate, isNormalized]);
+  }, [animate, isNormalized, resetSequence]);
 
   useEffect(() => {
     if (isInView) {
@@ -466,7 +461,7 @@ function IndicatorProgressBar(props: IndicatorProgressBarProps) {
       // Reset to initial state when out of view
       animate(resetSequence);
     }
-  }, [animate, isInView, isNormalized]);
+  }, [animate, animateSequence, isInView, isNormalized, resetSequence]);
 
   const graphValues = {
     name: note ?? '',

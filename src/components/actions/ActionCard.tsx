@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import { Suspense, useState } from 'react';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -15,7 +15,7 @@ import { getThemeStaticURL } from '@common/themes/theme';
 import { getStatusColorForAction } from '@/common/ActionStatusSummary';
 import type {
   ActionCardFragment,
-  GetActionDetailsQuery,
+  ActionDetailsQuery,
   PlanContextFragment,
 } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
@@ -246,7 +246,7 @@ const StyledActionDependencyIconWrapper = styled.span`
 `;
 
 type PrimaryIconProps = {
-  category: ActionCardFragment['categories'][number];
+  category: ActionCardFragment['categories'][number] | null;
 };
 
 const PrimaryIcon = (props: PrimaryIconProps) => {
@@ -288,15 +288,20 @@ const SecondaryIcons = (props: SecondaryIconsProps) => {
 
 const getDependencyTooltipId = (actionId: string) => `dependency-tooltip-${actionId}`;
 
-type Action = NonNullable<GetActionDetailsQuery['action']>;
+type Action = NonNullable<ActionDetailsQuery['action']>;
+type ActionCardData = ActionCardFragment & {
+  primaryCategories?: ActionCardFragment['categories'];
+  hasDependencyRelationships?: boolean | null;
+};
 
 type ActionCardProps = {
-  action: ActionCardFragment;
+  action: ActionCardData;
   showPlan?: boolean;
   variant?: 'primary' | 'mini' | 'text-only';
+  size?: string;
   isLink?: boolean;
   isHighlighted?: boolean;
-  getFullAction?: (id: string) => Action;
+  getFullAction?: (id: string) => unknown;
 };
 
 function ActionCard({
@@ -331,7 +336,10 @@ function ActionCard({
   if (actionName.length > 120) actionName = `${action.name.substring(0, 120)}…`;
 
   const { mergedWith, implementationPhase, primaryOrg, scheduleContinuous } = action;
-  const status = cleanActionStatus(action, plan.actionStatuses);
+  const status = cleanActionStatus(
+    action as Parameters<typeof cleanActionStatus>[0],
+    plan.actionStatuses
+  );
   let statusText = status.name || null;
 
   // if Action is set in one of the phases, create message accordingly
@@ -344,7 +352,11 @@ function ActionCard({
       else statusText = status.name;
     }
   }
-  const getPlanUrl = (mergedWith, actionPlan, planId) => {
+  const getPlanUrl = (
+    mergedWith: ActionCardData['mergedWith'],
+    actionPlan: ActionCardData['plan'],
+    planId: string
+  ): string | null | undefined => {
     if (mergedWith && mergedWith?.plan.id !== planId) return mergedWith.plan.viewUrl;
     if (actionPlan.id !== planId) return actionPlan.viewUrl;
     return undefined;
@@ -369,7 +381,7 @@ function ActionCard({
   }
 
   const identifierPosition = getidentifierPosition(showPlan, variant, plan);
-  const statusColor: string | undefined = getStatusColorForAction(action, plan, theme);
+  const statusColor: string | undefined = getStatusColorForAction(action, theme);
 
   const actionCard = (
     <ActionCardElement $isLink={isLink} $isHighlighted={isHighlighted}>
@@ -449,10 +461,10 @@ function ActionCard({
           >
             <Suspense fallback={<ActionDependenciesBlock loading={true} />}>
               <ActionDependenciesBlock
-                action={action}
+                action={action as unknown as Action}
                 size="small"
                 activeActionId={action.id}
-                getFullAction={getFullAction}
+                getFullAction={getFullAction as ((id: string) => Action | undefined) | undefined}
                 showTitle
               />
             </Suspense>

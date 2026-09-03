@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+
 import { DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
 import Icon from '@/components/common/Icon';
@@ -21,7 +22,7 @@ const OrgTitle = styled.div`
   margin: 0 0.5rem 0 1rem;
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
-  font-weight: ${(props) => props.theme[props.weight]};
+  font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
 const DropdownContent = styled.div`
@@ -58,7 +59,19 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 `;
 
-const OrgSelector = (props) => {
+export type OrganizationOption = {
+  active: boolean;
+  id: string;
+  image: string | null | undefined;
+  orgUrl: string;
+  shortName: string | null;
+};
+
+type OrgSelectorProps = {
+  orgs: OrganizationOption[];
+};
+
+const OrgSelector = (props: OrgSelectorProps) => {
   const { orgs } = props;
   const activeOrg = orgs.find((org) => org.active === true);
   if (!activeOrg) {
@@ -69,7 +82,7 @@ const OrgSelector = (props) => {
       <OrgDivider />
       <UncontrolledDropdown>
         <StyledDropdownToggle data-toggle="dropdown" tag="button">
-          <OrgAvatar src={activeOrg.image} alt="" />
+          <OrgAvatar src={activeOrg.image ?? ''} alt="" />
           <OrgTitle>{activeOrg.shortName}</OrgTitle>
           <Icon.AngleDown />
         </StyledDropdownToggle>
@@ -77,7 +90,7 @@ const OrgSelector = (props) => {
           <DropdownContent>
             {orgs.map((org) => (
               <OrgDropdownItem href={org.orgUrl} key={org.id} role="menuitem">
-                <OrgChip image={org.image} name={org.shortName} size="md" />
+                <OrgChip image={org.image ?? ''} name={org.shortName ?? ''} size="md" />
               </OrgDropdownItem>
             ))}
           </DropdownContent>

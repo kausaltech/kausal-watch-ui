@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { Button, type ButtonProps } from 'reactstrap';
 
@@ -22,13 +23,19 @@ export function ShareButton({
 
     try {
       await navigator.share({ title, url: shareUrl });
-    } catch (error) {
+    } catch {
       // User cancelled or share failed
     }
   };
 
   return (
-    <StyledShareButton color="primary" outline size="sm" onClick={handleShare} {...buttonProps}>
+    <StyledShareButton
+      color="primary"
+      outline
+      size="sm"
+      onClick={() => void handleShare()}
+      {...buttonProps}
+    >
       <Icon name="arrow-up-right-from-square" width="16px" height="16px" />
       {t('share')}
     </StyledShareButton>

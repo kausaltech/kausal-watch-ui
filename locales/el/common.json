@@ -4,7 +4,7 @@
     "actions-plural": "{context, select, CASE_STUDY {Μελέτες περιπτώσεων} STRATEGY {Στρατηγικές} other {Actions}}",
     "actions-as-list": "Ως κατάλογος",
     "active-filters": "Ενεργά φίλτρα",
-    "admin-login": "Σύνδεση διαχειριστή",
+    "admin-login": "Διαχειριστής",
     "back-to-top": "Επιστροφή στην κορυφή",
     "bar-goal": "Στόχος",
     "close": "Κλείστε το",

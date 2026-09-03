@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
@@ -59,10 +57,10 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
   const t = useTranslations();
 
   const hasLayout =
-    layout &&
-    ((layout.detailsMainTop && layout.detailsMainTop.length > 0) ||
-      (layout.detailsMainBottom && layout.detailsMainBottom.length > 0) ||
-      (layout.detailsAside && layout.detailsAside.length > 0));
+    layout != null &&
+    [layout.detailsMainTop, layout.detailsMainBottom, layout.detailsAside].some(
+      (blocks) => (blocks?.length ?? 0) > 0
+    );
 
   const hasImpacts = indicator.relatedCauses.length > 0 || indicator.relatedEffects.length > 0;
   const mainGoals = indicator.goals?.filter((goal) => !goal?.scenario) ?? [];
@@ -86,7 +84,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
   indicator.common?.indicators.forEach((common) => {
     /* Make sure organization is included in this plan or is the organization of the active indicator */
     const orgInThisPlan =
-      plan.primaryOrgs.find((org) => org.id === common.organization.id) ||
+      plan.primaryOrgs.find((org) => org.id === common.organization.id) ??
       indicator.organization.id === common.organization.id;
     if (orgInThisPlan)
       allOrgs.push({
@@ -153,7 +151,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
             {/* Admin created layout */}
             {hasLayout &&
               layout?.detailsAside &&
-              layout.detailsAside.map((block, index) => {
+              layout.detailsAside.map((block) => {
                 return (
                   <IndicatorModalContentBlock key={block.id} block={block} indicator={indicator} />
                 );
@@ -192,7 +190,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
           {/* Legacy support */}
           {!hasLayout && (
             <div>
-              {(indicator.latestGraph || (indicator.values && indicator.values.length > 0)) &&
+              {(indicator.latestGraph ?? (indicator.values && indicator.values.length > 0)) &&
                 showGraphOrTable && (
                   <Row>
                     <Col className="mb-4">

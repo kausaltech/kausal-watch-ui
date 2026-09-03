@@ -1,6 +1,5 @@
-import React from 'react';
+import type React from 'react';
 
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import * as Sentry from '@sentry/nextjs';
@@ -21,7 +20,7 @@ import { usePlan } from '@/context/plan';
 import PathsNodeSummary from '../paths/PathsNodeSummary';
 import ChangeHistory from './ChangeHistory';
 
-type OmitUnion<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+type OmitUnion<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 
 type OmitFields<T> = OmitUnion<T, 'blockType' | 'field' | 'rawValue'>;
 
@@ -88,7 +87,6 @@ export default function CategoryPageStreamField({
   context = 'main',
   columnProps: customColumnProps,
 }: Props) {
-  const theme = useTheme();
   const plan = usePlan();
   const paths = usePaths();
   const columnProps = {};
@@ -122,8 +120,11 @@ export default function CategoryPageStreamField({
               feedbackVisible={block.feedbackVisible ?? undefined}
               feedbackRequired={block.feedbackRequired ?? undefined}
               categoryId={page.category?.id || undefined}
-              fields={block.fields ?? []}
-              id={block.id}
+              fields={
+                (block.fields ?? []) as NonNullable<
+                  React.ComponentProps<typeof ExpandableFeedbackFormBlock>['fields']
+                >
+              }
               pageId={page.id}
             />
           </Col>
@@ -189,13 +190,11 @@ export default function CategoryPageStreamField({
 
     case 'CategoryPageCategoryListBlock': {
       const childCategories = page.category?.children ?? [];
-      const fallbackImage = page.category?.image || plan.image;
-      const color = page.category?.color || page.category?.parent?.color || theme.brandLight;
-
+      const fallbackImage = page.category?.image ?? plan.image;
       if (childCategories.length) {
         return (
           <CategoryListBlock
-            fallbackImage={fallbackImage || undefined}
+            fallbackImage={fallbackImage ?? undefined}
             categories={childCategories}
           />
         );

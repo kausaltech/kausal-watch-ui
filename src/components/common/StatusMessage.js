@@ -1,8 +1,7 @@
-import React from 'react';
-
 import Head from 'next/head';
 
 import styled from '@emotion/styled';
+
 import PropTypes from 'prop-types';
 
 const MessageText = styled.p`
@@ -10,7 +9,6 @@ const MessageText = styled.p`
 `;
 
 export default function StatusMessage({ message, noindex }) {
-  const isServer = typeof window === 'undefined';
   return (
     <div className="mb-5">
       <Head>

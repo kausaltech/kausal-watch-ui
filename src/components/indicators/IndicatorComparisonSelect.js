@@ -1,6 +1,5 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
 
@@ -69,5 +68,13 @@ export default IndicatorComparisonSelect;
 IndicatorComparisonSelect.propTypes = {
   handleChange: PropTypes.func.isRequired,
   currentValue: PropTypes.string,
-  options: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  defaultOrg: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+  }).isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };

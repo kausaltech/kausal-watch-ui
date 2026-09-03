@@ -1,9 +1,9 @@
-import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { type PlanContextFragment } from '@/common/__generated__/graphql';
 import _mockPlan from '@/tests/__mocks__/mock-plan-context.json';
 
 import { isAbsoluteUrl, stripLocaleAndPlan, stripSlashes } from '../urls';
 
-const mockPlan = _mockPlan as PlanContextFragment;
+const mockPlan = _mockPlan as unknown as PlanContextFragment;
 
 describe('isAbsoluteUrl', () => {
   it('returns true for absolute URLs', () => {
@@ -15,15 +15,13 @@ describe('isAbsoluteUrl', () => {
       '//cdn.kausal.tech/foo.js',
     ];
 
-    tests.map((test) => expect(isAbsoluteUrl(test)).toBe(true));
+    tests.forEach((test) => expect(isAbsoluteUrl(test)).toBe(true));
   });
 
   it('returns false for relative URLs', () => {
     const tests = ['/foo/bar/', 'foo/bar', '/foo', 'foo'];
 
-    expect(isAbsoluteUrl('/foo/bar/')).toBe(false);
-
-    // tests.map((test) => expect(isAbsoluteUrl(test)).toBe(false));
+    tests.forEach((test) => expect(isAbsoluteUrl(test)).toBe(false));
   });
 });
 

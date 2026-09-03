@@ -1,38 +1,51 @@
-import React from 'react';
-
 import dynamic from 'next/dynamic';
 
 import { useTheme } from '@emotion/react';
+
 import { useTranslations } from 'next-intl';
 import type { PlotParams } from 'react-plotly.js';
 
 const Plot = dynamic(() => import('./Plot'), { ssr: false });
 
-const ScheduleTimeline = ({ schedules, allSchedules }) => {
+type Schedule = {
+  beginsAt: string;
+  endsAt: string | null;
+};
+
+type ScheduleTimelineProps = {
+  schedules: Schedule[];
+  allSchedules: Schedule[];
+};
+
+const ScheduleTimeline = ({ schedules, allSchedules }: ScheduleTimelineProps) => {
   const t = useTranslations();
   const theme = useTheme();
 
-  let minDate;
-  let maxDate;
+  let minDate: string | undefined;
+  let maxDate: string | undefined;
   allSchedules.forEach((sch) => {
+    const endsAt = sch.endsAt ?? sch.beginsAt;
     if (!minDate || sch.beginsAt < minDate) {
       minDate = sch.beginsAt;
     }
-    if (!maxDate || sch.endsAt > maxDate) {
-      maxDate = sch.endsAt;
+    if (!maxDate || endsAt > maxDate) {
+      maxDate = endsAt;
     }
   });
 
-  let actStartDate;
-  let actEndDate;
+  let actStartDate: string | undefined;
+  let actEndDate: string | undefined;
   schedules.forEach((sch) => {
+    const endsAt = sch.endsAt ?? sch.beginsAt;
     if (!actStartDate || sch.beginsAt < actStartDate) {
       actStartDate = sch.beginsAt;
     }
-    if (!actEndDate || sch.endsAt > actEndDate) {
-      actEndDate = sch.endsAt;
+    if (!actEndDate || endsAt > actEndDate) {
+      actEndDate = endsAt;
     }
   });
+
+  if (!minDate || !maxDate || !actStartDate || !actEndDate) return null;
 
   const yearrange = `${parseInt(actStartDate.split('-')[0], 10)} - ${parseInt(
     actEndDate.split('-')[0],
@@ -43,10 +56,7 @@ const ScheduleTimeline = ({ schedules, allSchedules }) => {
   const startYear = parseInt(minDate.split('-')[0], 10);
   const endYear = parseInt(maxDate.split('-')[0], 10);
   const nrYears = endYear - startYear;
-  let dtick;
-
-  if (nrYears > 10) dtick = 'M36';
-  else dtick = 'M12';
+  const dtick = nrYears > 10 ? 'M36' : 'M12';
 
   const data: PlotParams['data'] = [
     {

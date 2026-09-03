@@ -1,8 +1,8 @@
 import { cookies, headers as getHeaders } from 'next/headers';
 
-import { ApolloClient, InMemoryCache, from } from '@apollo/client';
+import { ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client';
 import { registerApolloClient } from '@apollo/client-integration-nextjs';
-import { setContext } from '@apollo/client/link/context';
+import { SetContextLink } from '@apollo/client/link/context';
 
 import { createSentryLink, logOperationLink } from '@common/apollo/links';
 import { getWatchGraphQLUrl } from '@common/env';
@@ -22,7 +22,7 @@ const rscErrorLink = createErrorLink(() => {
   );
 });
 
-const authMiddleware = setContext(async (_, { uri, headers: initialHeaders = {} }) => {
+const authMiddleware = new SetContextLink(async ({ uri, headers: initialHeaders = {} }) => {
   // Operations that override the uri target the Paths API, which uses its own
   // authentication; the Watch ID token must not be sent there.
   if (uri) {
@@ -64,7 +64,7 @@ export const { getClient } = registerApolloClient(async () => {
       // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
       possibleTypes: possibleTypes.possibleTypes,
     }),
-    link: from([
+    link: ApolloLink.from([
       rscErrorLink,
       createSentryLink(getWatchGraphQLUrl()),
       logOperationLink,

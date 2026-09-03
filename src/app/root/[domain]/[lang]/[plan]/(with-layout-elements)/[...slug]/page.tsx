@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 
 import type { Metadata, ResolvingMetadata } from 'next';
 
-import type { GetContentPageQuery } from '@/common/__generated__/graphql';
+import type { ContentPageQuery } from '@/common/__generated__/graphql';
 import { getContentPage } from '@/queries/get-content-page';
 import { tryRequest } from '@/utils/api.utils';
 import { getMetaDescription, getMetaImage } from '@/utils/metadata';
@@ -20,7 +20,7 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
   const { slug, plan } = params;
   const path = getPath(slug);
 
-  const { data } = await tryRequest<GetContentPageQuery>(getContentPage(plan, path));
+  const { data } = await tryRequest<ContentPageQuery>(getContentPage(plan, path));
 
   if (!data?.planPage) {
     return {};
@@ -47,7 +47,7 @@ export default async function SlugPage(props: Props) {
   const { slug, plan } = params;
   const path = getPath(slug);
 
-  const { data } = await tryRequest<GetContentPageQuery>(getContentPage(plan, path));
+  const { data } = await tryRequest<ContentPageQuery>(getContentPage(plan, path));
 
   if (!data?.planPage) {
     return notFound();

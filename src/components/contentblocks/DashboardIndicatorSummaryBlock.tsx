@@ -1,9 +1,7 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 import type { SummaryVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
@@ -131,7 +129,7 @@ const DashboardIndicatorSummaryBlock = ({ indicator }: DashboardIndicatorSummary
 
   const validGoals = (goals ?? [])
     .filter((g) => g?.value != null && g?.date != null && dayjs(g.date).isValid())
-    .map((g) => ({ ...g, __d: dayjs(g!.date!) }))
+    .map((g) => ({ ...g, __d: dayjs(g!.date) }))
     .sort((a, b) => a.__d.valueOf() - b.__d.valueOf());
 
   const nextGoal = validGoals.find((g) => g.__d.isSameOrAfter(now, 'day'));

@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react';
+import { useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { Button, Collapse } from 'reactstrap';
 
@@ -8,7 +9,7 @@ import { deploymentType } from '@/common/environment';
 import { ActionLink } from '@/common/links';
 import Icon from '@/components/common/Icon';
 
-import { ActionContentAction } from '../actions/ActionContent';
+import { type ActionContentAction } from '../actions/ActionContent';
 
 const VersionHistory = styled.div`
   color: ${(props) => props.theme.textColor.secondary};
@@ -73,9 +74,9 @@ const ActionVersionHistory = ({ action }: Props) => {
   versions.push(action);
 
   if (action?.supersededBy) {
-    !isProduction
-      ? versions.push(action.supersededBy)
-      : action.supersededBy.plan.publishedAt && versions.push(action.supersededBy);
+    if (!isProduction || action.supersededBy.plan.publishedAt) {
+      versions.push(action.supersededBy);
+    }
   }
   if (versions.length < 2) return null;
 

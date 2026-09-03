@@ -231,7 +231,7 @@ function OutcomeNodeContent({
   const lastMeasuredYear =
     node?.metric?.historicalValues[node.metric.historicalValues.length - 1]?.year;
   const firstForecastYear = node?.metric?.forecastValues[0]?.year;
-  const isForecast = endYear > lastMeasuredYear;
+  const isForecast = lastMeasuredYear !== undefined && endYear > lastMeasuredYear;
   const outcomeChange = getMetricChange(nodesBase, nodesTotal);
   const unit = node.metric?.unit?.htmlLong || node.metric?.unit?.htmlShort;
   const showNodeDetails =
@@ -249,7 +249,7 @@ function OutcomeNodeContent({
             )}
             {!hideForecast && (
               <CardSetDescriptionDetails>
-                {startYear < lastMeasuredYear && (
+                {lastMeasuredYear !== undefined && startYear < lastMeasuredYear && (
                   <ScenarioBadge startYear={startYear} endYear={lastMeasuredYear}>
                     {t('table-historical')}
                   </ScenarioBadge>
@@ -380,11 +380,9 @@ function OutcomeNodeContent({
           {activeTabId === 'table' && node.metricDim && (
             <ContentWrapper tabIndex={0}>
               <DataTable
-                metric={node.metricDim}
-                goalName={activeGoal?.label}
+                metric={node.metricDim as Parameters<typeof DataTable>[0]['metric']}
+                goalName={activeGoal?.label ?? undefined}
                 separateYears={separateYears}
-                subNodes={subNodes}
-                color={color}
                 startYear={startYear}
                 endYear={endYear}
                 disclaimer={disclaimer}

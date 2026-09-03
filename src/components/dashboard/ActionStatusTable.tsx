@@ -1,4 +1,5 @@
-import React, { ReactNode, useState } from 'react';
+import type React from 'react';
+import { type ReactNode, useState } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -7,20 +8,23 @@ import { Button, Table } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { type PlanContextFragment } from '@/common/__generated__/graphql';
 import { actionStatusOrder } from '@/common/data/actions';
 import Icon from '@/components/common/Icon';
+import {
+  STICKY_TABLE_NAME_COLUMN_CLASS,
+  mobileScrollableTableWrapperStyles,
+  mobileStickyTableStyles,
+} from '@/components/common/stickyTableStyles';
 import ActionTableRow from '@/components/dashboard/ActionTableRow';
 
 import ActionStatusExport from './ActionStatusExport';
 import { COLUMN_CONFIG } from './dashboard.constants';
 import {
-  mobileScrollableTableWrapperStyles,
-  mobileStickyTableStyles,
-  STICKY_TABLE_NAME_COLUMN_CLASS,
-} from '@/components/common/stickyTableStyles';
-import { ActionListAction, ActionListOrganization, ColumnConfig } from './dashboard.types';
-
+  type ActionListAction,
+  type ActionListOrganization,
+  type ColumnConfig,
+} from './dashboard.types';
 
 const TableWrapper = styled.div`
   width: 100%;
@@ -94,20 +98,6 @@ const TableSortingIcon = styled(Icon, transientOptions)<{ $selected: boolean }>`
   opacity: ${(props) => (props.$selected ? 1 : 0.3)};
 `;
 
-function isChildOrg(childOrg, parentOrg) {
-  function makeTree(org) {
-    const ids: string[] = [];
-    while (org) {
-      ids.push(org.id);
-      org = org.parent;
-    }
-    return ids;
-  }
-  const childTree = makeTree(childOrg);
-  const parentTree = [parentOrg.id];
-  return childTree.some((id) => parentTree.indexOf(id) >= 0);
-}
-
 class AttributeType {
   id: string;
   constructor(id: string) {
@@ -165,7 +155,7 @@ const getAttributeComparableValue = (action: ActionListAction, attributeTypeId: 
   const attr = action.attributes?.find(
     (a) => a.type?.id === attributeTypeId && a.__typename === 'AttributeNumericValue'
   );
-  if (!attr) return null;
+  if (!attr || !('numericValue' in attr)) return null;
 
   const n = attr.numericValue;
   if (typeof n === 'number') return n;
@@ -237,15 +227,12 @@ interface Props {
 const ActionStatusTable = (props: Props) => {
   const {
     actions,
-    orgs,
     columns,
     plan,
     enableExport = true,
     planViewUrl,
     hasRelatedPlans = false,
   } = props;
-
-  const orgMap = new Map(orgs.map((org) => [org.id, org]));
 
   const [sort, setSort] = useState<Sort>({ key: null, direction: 1 });
 
@@ -285,7 +272,7 @@ const ActionStatusTable = (props: Props) => {
 
     const [v1, v2] = preprocessForSorting(sort.key, [g1, g2], hasImplementationPhases);
 
-    const val = v1 == v2 ? 0 : v1 == null || v2 > v1 ? -1 : 1;
+    const val = v1 == v2 ? 0 : v1 == null || v2 == null || v2 > v1 ? -1 : 1;
 
     return sort.direction === 1 ? val : -val;
   };

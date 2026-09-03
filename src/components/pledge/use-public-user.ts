@@ -17,7 +17,7 @@ import type {
 
 const PUBLIC_USER_UUID_KEY = 'pledge-user-uuid';
 
-const REGISTER_PUBLIC_USER = gql`
+export const REGISTER_PUBLIC_USER = gql`
   mutation RegisterPublicUser {
     pledge {
       registerUser {
@@ -27,7 +27,7 @@ const REGISTER_PUBLIC_USER = gql`
   }
 `;
 
-const COMMIT_TO_PLEDGE = gql`
+export const COMMIT_TO_PLEDGE = gql`
   mutation CommitToPledge($user: UUID!, $pledge: ID!, $committed: Boolean!) {
     pledge {
       commitToPledge(committed: $committed, pledgeId: $pledge, userUuid: $user) {
@@ -47,7 +47,7 @@ const SET_USER_DATA = gql`
   }
 `;
 
-const GET_PUBLIC_USER = gql`
+export const GET_PUBLIC_USER = gql`
   query PublicUser($user: UUID!) {
     publicUser(uuid: $user) {
       id
@@ -82,7 +82,16 @@ function parseUserData(
 
   if (typeof raw === 'string') {
     try {
-      return JSON.parse(raw);
+      const parsed: unknown = JSON.parse(raw);
+      if (
+        typeof parsed === 'object' &&
+        parsed !== null &&
+        !Array.isArray(parsed) &&
+        Object.values(parsed).every((value) => typeof value === 'string')
+      ) {
+        return parsed as Record<string, string>;
+      }
+      return {};
     } catch {
       return {};
     }
@@ -121,7 +130,7 @@ export function usePublicUser() {
         return;
       }
 
-      fetchUser({ variables: { user: userUuid } });
+      void fetchUser({ variables: { user: userUuid } });
     }
   }, [userUuid, fetchUser]);
 
@@ -144,9 +153,11 @@ export function usePublicUser() {
   // a count adjustment without needing to refetch the pledge list query.
   const initialCommittedSlugs = useRef<Set<string> | null>(null);
 
-  if (initialCommittedSlugs.current === null && queryData?.publicUser) {
-    initialCommittedSlugs.current = new Set(committedSlugs);
-  }
+  useEffect(() => {
+    if (initialCommittedSlugs.current === null && queryData?.publicUser) {
+      initialCommittedSlugs.current = new Set(committedSlugs);
+    }
+  }, [committedSlugs, queryData?.publicUser]);
 
   const getCommitmentCountAdjustment = useCallback(
     (slug: string) => {

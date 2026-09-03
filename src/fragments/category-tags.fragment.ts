@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const CATEGORY_TYPE_FRAGMENT = gql`
-  fragment CategoryTypeFragment on CategoryType {
+  fragment CategoryType on CategoryType {
     id
     name
     identifier

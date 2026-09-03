@@ -1,16 +1,16 @@
 import _mockPlan from '@/tests/__mocks__/mock-plan-context.json';
 
-import { PlanContextFragment } from '../__generated__/graphql';
+import { type PlanContextFragment } from '../__generated__/graphql';
 import { prependPlanAndLocale } from '../links';
 
-const mockPlan = _mockPlan as PlanContextFragment;
+const mockPlan = _mockPlan as unknown as PlanContextFragment;
 
 const BASE_PATH = 'base';
 
 const mockPlanWithBase = {
   ...mockPlan,
   domain: { ...mockPlan.domain, basePath: BASE_PATH, id: 'domain' },
-};
+} as unknown as PlanContextFragment;
 
 describe('prependPlanAndLocale', () => {
   it('prepends non-primary locales', () => {

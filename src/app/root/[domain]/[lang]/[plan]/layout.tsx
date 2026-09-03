@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-import type { ApolloQueryResult } from '@apollo/client';
 import { captureException } from '@sentry/nextjs';
 import * as Sentry from '@sentry/nextjs';
 import type { Metadata } from 'next';
@@ -108,18 +107,11 @@ async function getPathsData(pathsInstance: string) {
       pathsInstance,
       context: 'getPathsData',
     });
-    if ('error' in result && result.error) {
+    if (!('dataState' in result) || result.dataState !== 'complete') {
       return undefined;
     }
-    const { data: pathsData, errors } = result as ApolloQueryResult<GetInstanceContextQuery>;
-    if (errors?.length) {
-      captureException(new Error(`Paths instance query returned errors for ${pathsInstance}`), {
-        extra: { errors, pathsInstance, context: 'getPathsData' },
-      });
-      return undefined;
-    }
-    if (pathsData?.instance) {
-      return pathsData;
+    if (result.data?.instance) {
+      return result.data;
     }
   }
   return undefined;

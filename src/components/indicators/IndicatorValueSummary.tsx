@@ -1,7 +1,8 @@
-import React from 'react';
+import type React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useFormatter, useTranslations } from 'next-intl';
 
 import {
@@ -72,7 +73,7 @@ const getGoalValue = (goals: Indicator['goals'], defaultGoalYear: number | null)
   // If defaultGoalYear is not defined, return next goal from current date
   if (defaultGoalYear === null || defaultGoalYear === undefined) {
     const nextGoal = validGoals.find((goal) => dayjs(goal.date).isSameOrAfter(now));
-    return nextGoal || null;
+    return nextGoal ?? null;
   }
 
   // If defaultGoalYear is defined, get first goal from goals that is on defaultGoalYear

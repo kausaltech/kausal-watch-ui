@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { Spinner } from 'reactstrap';
 
+import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 
@@ -32,17 +34,32 @@ const DraftBannerDate = styled.div`
   text-align: right;
 `;
 
-const ActionLogBanner = (props) => {
+type ActionWorkflowStatus = NonNullable<
+  NonNullable<ActionDetailsQuery['action']>['workflowStatus']
+>;
+
+type Props = {
+  matchingVersion: ActionWorkflowStatus['matchingVersion'] | null;
+  updatedAt: string;
+};
+
+const ActionLogBanner = (props: Props) => {
   const t = useTranslations();
   const { matchingVersion, updatedAt } = props;
   const { workflow: selectedWorkflowID, workflowStates, loading } = useWorkflowSelector();
   let info: string | null = null;
-  const selectedWorkflow = workflowStates.find((state) => state.id === selectedWorkflowID);
+  const selectedWorkflow = workflowStates?.find((state) => state?.id === selectedWorkflowID);
+
+  // The plan has no workflow configured, so there is no version state to report
+  if (!selectedWorkflow) {
+    return null;
+  }
+
   if (loading) {
     info = `${selectedWorkflow.description}: ${t('loading')}`;
   } else if (selectedWorkflowID !== matchingVersion?.id) {
     info = t('no-action-version-available', {
-      versionType: selectedWorkflow.description,
+      versionType: selectedWorkflow.description || '',
     });
   }
 

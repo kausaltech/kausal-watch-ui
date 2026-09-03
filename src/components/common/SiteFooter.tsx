@@ -1,10 +1,10 @@
-import React from 'react';
-
-import { css, useTheme } from '@emotion/react';
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
+import { BoxArrowRight } from 'react-bootstrap-icons';
 import SVG from 'react-inlinesvg';
 import { Container, Spinner } from 'reactstrap';
 
@@ -408,27 +408,27 @@ export type UtilityLink = {
 export type FooterNavItem = {
   id: string;
   name: string;
-  slug: string;
+  slug?: string;
   children?: FooterNavItem[];
 };
 
 export type FooterAdditionalLink = {
   id: string;
   name: string;
-  slug: string;
+  slug?: string;
   url?: string;
   viewUrl?: string;
   crossPlanLink?: boolean;
 };
 
 type SiteFooterProps = {
-  siteTitle: string;
+  siteTitle?: string;
   ownerUrl: string;
   ownerName: string;
   creativeCommonsLicense: string;
   copyrightText: string;
-  footerStatement: string;
-  ownerLinks: { id: string; title: string; url: string }[];
+  footerStatement?: string;
+  ownerLinks?: { title: string; url: string }[];
   navItems: FooterNavItem[];
   utilityLinks: UtilityLink[];
   additionalLinks: FooterAdditionalLink[];
@@ -471,9 +471,11 @@ function SiteFooter(props: SiteFooterProps) {
   const isAuthLoading = session.status === 'loading';
   const isAuthenticated = session.status === 'authenticated';
 
-  const OrgLogo = () => {
+  const orgLogo = (() => {
     if (theme.themeLogoWhiteUrl.endsWith('.png')) {
       return (
+        // Theme assets are already deployment-owned static files; Next image optimization adds no value.
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={getThemeStaticURL(theme.themeLogoWhiteUrl)}
           alt={`${ownerName}, ${siteTitle} ${t('front-page')}`}
@@ -492,7 +494,7 @@ function SiteFooter(props: SiteFooterProps) {
         />
       );
     }
-  };
+  })();
 
   function scrollToTop(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
@@ -527,10 +529,10 @@ function SiteFooter(props: SiteFooterProps) {
                     href={theme.footerLogoLink}
                     aria-label={`${ownerName}, ${siteTitle} ${t('front-page')}`}
                   >
-                    <OrgLogo />
+                    {orgLogo}
                   </FooterLogoLink>
                 ) : (
-                  <OrgLogo />
+                  orgLogo
                 )}
               </Logo>
             )}
@@ -567,7 +569,7 @@ function SiteFooter(props: SiteFooterProps) {
                       <FooterSubnav aria-labelledby={`footer-nav-heading-${page.id}`}>
                         {page.children.map((childPage) => (
                           <FooterNavSubItem key={childPage.slug}>
-                            <NavigationLink slug={childPage.slug}>
+                            <NavigationLink slug={childPage.slug ?? ''}>
                               <>
                                 {theme?.navLinkIcons && (
                                   <Icon.AngleRight
@@ -610,7 +612,7 @@ function SiteFooter(props: SiteFooterProps) {
             </UtilityItem>
             {ownerLinks &&
               ownerLinks.map((page) => (
-                <UtilityItem key={page.id}>
+                <UtilityItem key={page.url}>
                   <NavigationLink slug={page.url}>
                     {theme?.navLinkIcons && (
                       <Icon.AngleRight
@@ -652,6 +654,8 @@ function SiteFooter(props: SiteFooterProps) {
                 >
                   {isAuthLoading ? (
                     <Spinner size="sm" color="light" />
+                  ) : isAuthenticated ? (
+                    <BoxArrowRight color={theme.footerColor} aria-hidden="true" className="me-1" />
                   ) : (
                     <Icon.Lock color={theme.footerColor} aria-hidden="true" className="me-1" />
                   )}
@@ -696,7 +700,9 @@ function SiteFooter(props: SiteFooterProps) {
                 } else {
                   return (
                     <BaseLink key={page.slug}>
-                      <NavigationLink slug={page.slug}>{page.name}</NavigationLink>
+                      <NavigationLink slug={page.slug ?? page.url ?? ''}>
+                        {page.name}
+                      </NavigationLink>
                     </BaseLink>
                   );
                 }

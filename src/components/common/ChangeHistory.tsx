@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -9,7 +10,7 @@ import { useTranslations } from 'next-intl';
 import dayjs from '@/common/dayjs';
 import Icon from '@/components/common/Icon';
 
-export type EntityType = 'action' | 'indicator' | 'page';
+export type EntityType = 'action' | 'category' | 'indicator' | 'page';
 
 export type ChangeHistoryEntry = {
   updatedAt: string | null;
@@ -149,13 +150,7 @@ const ChangesLabel = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s050};
 `;
 
-const ChangeHistory: React.FC<ChangeHistoryProps> = ({
-  entityType,
-  entityId,
-  entry,
-  fieldLabel,
-  fieldHelpText,
-}) => {
+const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entry, fieldLabel, fieldHelpText }) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   if (!entry) return null;

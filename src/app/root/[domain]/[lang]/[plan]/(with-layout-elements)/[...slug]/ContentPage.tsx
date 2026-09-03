@@ -1,18 +1,11 @@
 'use client';
 
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
-import styled from '@emotion/styled';
 
 import { Col, Container, Row } from 'reactstrap';
 
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
-import type {
-  GetContentPageQuery,
-  HeroImageFragmentFragment,
-  IndicatorListPageFragmentFragment,
-} from '@/common/__generated__/graphql';
+import type { ContentPageQuery, HeroImageFragment } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
 import { typenameMatches } from '@/common/utils';
 import CategoryPageContent from '@/components/categories/CategoryPageContent';
@@ -35,7 +28,7 @@ export type PageWithBody =
   | CategoryPage
   | CategoryTypePage;
 
-export type GeneralPlanPage = NonNullable<GetContentPageQuery['planPage']>;
+export type GeneralPlanPage = NonNullable<ContentPageQuery['planPage']>;
 
 export type StaticPage = GeneralPlanPage & {
   __typename: 'StaticPage';
@@ -93,8 +86,8 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
         throw new Error('Category page without category configured');
       }
       const headerImage =
-        (category.image satisfies HeroImageFragmentFragment | null) ||
-        ((category.parent?.image ?? null) satisfies HeroImageFragmentFragment | null);
+        (category.image satisfies HeroImageFragment | null) ??
+        ((category.parent?.image ?? null) satisfies HeroImageFragment | null);
       const iconImage = category.iconImage?.rendition?.src;
 
       return (
@@ -117,7 +110,7 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
     }
     case 'StaticPage': {
       const { headerImage } = page as {
-        headerImage: HeroImageFragmentFragment | null;
+        headerImage: HeroImageFragment | null;
       };
 
       return (
@@ -197,9 +190,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
       ) : (
         <div>
           {typenameMatches(page, 'ActionListPage') && <ActionListPage actionListPage={page} />}
-          {typenameMatches(page, 'IndicatorListPage') && (
-            <IndicatorListPage page={page as IndicatorListPageFragmentFragment} />
-          )}
+          {typenameMatches(page, 'IndicatorListPage') && <IndicatorListPage page={page} />}
           {isPageWithLeadContent && 'leadContent' in page && page.leadContent && (
             <Container className="my-5">
               <Row>
@@ -221,7 +212,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
 
           {isPageWithBody && page.body && pageBodyHasBlocks && (
             <StreamField
-              page={page}
+              page={page as Parameters<typeof StreamField>[0]['page']}
               blocks={page.body}
               hasSidebar={siblings.length > 1}
               precedingBlockHasBackground={hasPageHeader}

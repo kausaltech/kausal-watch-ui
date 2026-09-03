@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import { createContext, useContext } from 'react';
 
-import type { GetPlanContextQuery, WorkflowState } from '@/common/__generated__/graphql';
+import type { PlanContextQuery, WorkflowState } from '@/common/__generated__/graphql';
 import { useCookie } from '@/common/hooks/use-cookie';
 import { SELECTED_WORKFLOW_COOKIE_KEY, WORKFLOW_DEFAULT } from '@/constants/workflow';
 
 interface WorkflowSelectorValue {
   workflow: WorkflowState | null;
   setWorkflow: React.Dispatch<React.SetStateAction<WorkflowState | null>>;
-  workflowStates: GetPlanContextQuery['workflowStates'];
+  workflowStates: PlanContextQuery['workflowStates'];
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -19,7 +19,7 @@ const WorkflowSelectorContext = createContext<WorkflowSelectorValue | undefined>
 
 type Props = {
   initialWorkflow?: WorkflowState;
-  workflowStates: GetPlanContextQuery['workflowStates'];
+  workflowStates: PlanContextQuery['workflowStates'];
 } & React.PropsWithChildren;
 
 export function WorkflowProvider({

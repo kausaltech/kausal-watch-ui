@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import Script from 'next/script';
 
@@ -10,13 +10,13 @@ type Props = {
 
 declare global {
   interface Window {
-    _monsido: any;
+    _monsido?: Record<string, unknown>;
   }
 }
 
 const MonsidoAccessibility = ({ token }: Props) => {
   useEffect(() => {
-    window._monsido = window._monsido || {
+    window._monsido ??= {
       token: token,
       statistics: {
         enabled: true,

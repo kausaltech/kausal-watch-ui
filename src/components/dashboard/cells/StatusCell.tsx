@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
-import { PlanContextFragment } from '@/common/__generated__/graphql';
+import { type PlanContextFragment } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import StatusBadge from '@/components/common/StatusBadge';
 
-import { ActionListAction } from '../dashboard.types';
+import { type ActionListAction } from '../dashboard.types';
 
 interface Props {
   action: ActionListAction;

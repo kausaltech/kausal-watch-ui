@@ -1,6 +1,16 @@
-import React, { useCallback, useEffect } from 'react';
+import { type MouseEvent, useCallback, useEffect, useState } from 'react';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
+import {
+  Button,
+  CircularProgress,
+  Divider,
+  ListItemIcon,
+  ListSubheader,
+  Menu,
+  MenuItem,
+} from '@mui/material';
 
 import styled from '@emotion/styled';
 
@@ -8,30 +18,47 @@ import { useApolloClient } from '@apollo/client/react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import {
-  Container,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Spinner,
-} from 'reactstrap';
+  type Icon as BootstrapIcon,
+  BoxArrowRight,
+  ChevronDown,
+  FileEarmarkCheck,
+  FileEarmarkLock2,
+  FileEarmarkMedical,
+  Lock,
+  Pencil,
+  Person,
+} from 'react-bootstrap-icons';
 
-import { WorkflowState, WorkflowStateDescription } from '@/common/__generated__/graphql';
+import { type PlanContextQuery, WorkflowState } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
-import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 import { useHandleSignOut } from '@/utils/auth.utils';
 import { hasSessionExpired } from '@/utils/session.utils';
 
-type StrictWorkflowStateDescription = {
-  id: NonNullable<WorkflowStateDescription['id']>;
-  description: NonNullable<WorkflowStateDescription['description']>;
+type WorkflowStateDescription = NonNullable<
+  NonNullable<PlanContextQuery['workflowStates']>[number]
+>;
+
+/* The workflow id is sent back as a GraphQL variable of the WorkflowState
+ * enum type, so only ids matching the enum are usable */
+type StrictWorkflowStateDescription = WorkflowStateDescription & {
+  id: WorkflowState;
+  description: string;
 };
 
-const ToolbarContainer = styled(Container)`
+const VALID_WORKFLOW_IDS: string[] = Object.values(WorkflowState);
+
+/* Exhaustive by construction: adding a WorkflowState member without an icon
+ * fails to type-check */
+const WORKFLOW_STATE_ICONS: Record<WorkflowState, BootstrapIcon> = {
+  [WorkflowState.Draft]: FileEarmarkMedical,
+  [WorkflowState.Approved]: FileEarmarkCheck,
+  [WorkflowState.Published]: FileEarmarkLock2,
+};
+
+const ToolbarContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   margin: 0 auto;
   padding: ${(props) => props.theme.spaces.s100};
   background-color: ${(props) => props.theme.themeColors.black};
@@ -42,60 +69,42 @@ const ToolbarContainer = styled(Container)`
   }
 `;
 
-const StyledDropdown = styled(Dropdown)`
-  margin: ${(props) => props.theme.spaces.s050} 0;
-`;
-
-const StyledDropdownToggle = styled(DropdownToggle)`
+const ToolbarButton = styled(Button)`
+  margin: ${(props) => props.theme.spaces.s025} 0;
+  padding: 4px 10px;
   background-color: ${(props) => props.theme.themeColors.black};
   color: ${(props) => props.theme.themeColors.light};
-  border-color: ${(props) => props.theme.themeColors.light};
-  padding: 8px 15px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  text-transform: none;
 
-  &:after {
-    margin-left: 30px;
+  .MuiButton-endIcon {
+    margin-left: 12px;
   }
 
   &:hover,
   &:focus {
     background-color: ${(props) => props.theme.themeColors.dark};
     color: ${(props) => props.theme.themeColors.light};
-    border-color: ${(props) => props.theme.themeColors.light};
+  }
+
+  &.Mui-disabled {
+    color: ${(props) => props.theme.themeColors.light};
   }
 `;
 
-const StyledIcon = styled(Icon)`
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
-`;
-
-const StyledDropdownMenu = styled(DropdownMenu)`
-  padding: 8px 10px;
-  color: ${(props) => props.theme.headingsColor};
-  font-weight: ${(props) => props.theme.headingsFontWeight};
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-family: Inter, system-ui, sans-serif;
-`;
-
-const DropdownHeader = styled.h6`
-  border-bottom: 1px solid ${(props) => props.theme.headingsColor};
-  margin: 0 auto;
-  text-align: center;
-`;
-
-const DropdownItemText = styled.div`
-  display: block;
+/* Keeps the user menu at the right edge regardless of which other
+ * toolbar items are rendered */
+const UserMenuContainer = styled.div`
+  margin-left: auto;
 `;
 
 export const TopToolBar = () => {
   const session = useSession();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [versionsDropdownOpen, setVersionsDropdownOpen] = React.useState(false);
-  const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
-  const versionsToggle = () => setVersionsDropdownOpen((prevState) => !prevState);
-  const userToggle = () => setUserDropdownOpen((prevState) => !prevState);
+  const [versionsAnchorEl, setVersionsAnchorEl] = useState<HTMLElement | null>(null);
+  const [userAnchorEl, setUserAnchorEl] = useState<HTMLElement | null>(null);
   const t = useTranslations();
   const plan = usePlan();
   const {
@@ -110,7 +119,7 @@ export const TopToolBar = () => {
 
   const workflows = workflowStates?.filter(
     (workflow): workflow is StrictWorkflowStateDescription =>
-      !!(workflow?.id && workflow?.description)
+      workflow != null && VALID_WORKFLOW_IDS.includes(workflow.id) && workflow.description != null
   );
 
   const selectedWorkflow = workflows?.find((workflow) => workflow?.id === selectedWorkflowId);
@@ -126,8 +135,9 @@ export const TopToolBar = () => {
   const apolloClient = useApolloClient();
 
   const handleSelectWorkflow = useCallback(
-    (workflow: string) => {
-      apolloClient.clearStore();
+    (workflow: WorkflowState) => {
+      setVersionsAnchorEl(null);
+      void apolloClient.clearStore();
       setWorkflow(workflow);
       router.refresh();
       setLoading(true);
@@ -148,48 +158,90 @@ export const TopToolBar = () => {
     return null;
   }
 
+  const openVersionsMenu = (event: MouseEvent<HTMLElement>) =>
+    setVersionsAnchorEl(event.currentTarget);
+  const openUserMenu = (event: MouseEvent<HTMLElement>) => setUserAnchorEl(event.currentTarget);
+
+  const SelectedWorkflowIcon = selectedWorkflow
+    ? WORKFLOW_STATE_ICONS[selectedWorkflow.id]
+    : Pencil;
+
   return (
-    <ToolbarContainer fluid>
+    <ToolbarContainer>
       {selectedWorkflow && !!workflows?.length && (
-        <StyledDropdown isOpen={versionsDropdownOpen} toggle={versionsToggle}>
-          <StyledDropdownToggle disabled={loading} caret aria-label="action-versions">
-            {loading && <Spinner size="sm" className="me-3" />}
-            {!loading && (
-              <StyledIcon name="pencil" className="icon" aria-label="actions-versions" />
-            )}
+        <div>
+          <ToolbarButton
+            size="small"
+            disabled={loading}
+            onClick={openVersionsMenu}
+            aria-label="action-versions"
+            startIcon={
+              loading ? (
+                <CircularProgress size={14} color="inherit" />
+              ) : (
+                <SelectedWorkflowIcon size={16} />
+              )
+            }
+            endIcon={<ChevronDown />}
+          >
             {selectedWorkflow.description}
-          </StyledDropdownToggle>
-          <StyledDropdownMenu>
-            <DropdownHeader>{t('action-versions', getActionTermContext(plan))}</DropdownHeader>
-            {workflows.map((workflow) => (
-              <DropdownItem key={workflow.id} onClick={() => handleSelectWorkflow(workflow.id)}>
-                <DropdownItemText>
-                  <StyledIcon name="file" className="icon" aria-label={workflow.description} />
+          </ToolbarButton>
+          <Menu
+            anchorEl={versionsAnchorEl}
+            open={Boolean(versionsAnchorEl)}
+            onClose={() => setVersionsAnchorEl(null)}
+          >
+            <ListSubheader disableSticky>
+              {t('action-versions', getActionTermContext(plan))}
+            </ListSubheader>
+            <Divider />
+            {workflows.map((workflow) => {
+              const StateIcon = WORKFLOW_STATE_ICONS[workflow.id];
+              return (
+                <MenuItem key={workflow.id} onClick={() => handleSelectWorkflow(workflow.id)}>
+                  <ListItemIcon>
+                    <StateIcon size={18} />
+                  </ListItemIcon>
                   {workflow.description}
-                </DropdownItemText>
-              </DropdownItem>
-            ))}
-          </StyledDropdownMenu>
-        </StyledDropdown>
+                </MenuItem>
+              );
+            })}
+          </Menu>
+        </div>
       )}
-      <StyledDropdown isOpen={userDropdownOpen} toggle={userToggle}>
-        <StyledDropdownToggle caret aria-label="user-name-icon">
-          <StyledIcon name="user" className="icon" aria-label="user-icon" />
+      <UserMenuContainer>
+        <ToolbarButton
+          size="small"
+          onClick={openUserMenu}
+          aria-label="user-name-icon"
+          startIcon={<Person size={16} />}
+          endIcon={<ChevronDown />}
+        >
           {session.data.user?.name}
-        </StyledDropdownToggle>
-        <DropdownMenu end>
+        </ToolbarButton>
+        <Menu
+          anchorEl={userAnchorEl}
+          open={Boolean(userAnchorEl)}
+          onClose={() => setUserAnchorEl(null)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
           {plan.adminUrl && (
-            <DropdownItem as="a" href={plan.adminUrl} target="_blank" rel="noopener noreferrer">
-              <StyledIcon name="lock" className="icon" aria-label="link-to-the-admin-site" />
+            <MenuItem component="a" href={plan.adminUrl} target="_blank" rel="noopener noreferrer">
+              <ListItemIcon>
+                <Lock size={18} />
+              </ListItemIcon>
               {t('admin-login')}
-            </DropdownItem>
+            </MenuItem>
           )}
-          <DropdownItem onClick={() => handleSignOut()}>
-            <StyledIcon name="arrow-right" className="icon" aria-label="sign-out" />
+          <MenuItem onClick={() => handleSignOut()}>
+            <ListItemIcon>
+              <BoxArrowRight size={18} />
+            </ListItemIcon>
             {t('ui-sign-out')}
-          </DropdownItem>
-        </DropdownMenu>
-      </StyledDropdown>
+          </MenuItem>
+        </Menu>
+      </UserMenuContainer>
     </ToolbarContainer>
   );
 };

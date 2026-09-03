@@ -18,7 +18,7 @@ export const ACTION_CARD_FRAGMENT = gql`
     }
     completion
     categories {
-      ...CategoryRecursiveFragment
+      ...CategoryRecursive
     }
     statusSummary {
       identifier

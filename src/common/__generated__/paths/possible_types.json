@@ -46,7 +46,15 @@
       "DataSource",
       "OperationInfo"
     ],
+    "CreateDatasetPayload": [
+      "Dataset",
+      "OperationInfo"
+    ],
     "CreateDimensionCategoriesPayload": [
+      "InstanceDimension",
+      "OperationInfo"
+    ],
+    "CreateDimensionPayload": [
       "InstanceDimension",
       "OperationInfo"
     ],
@@ -57,6 +65,10 @@
     ],
     "CreateInstancePayload": [
       "CreateInstanceResult",
+      "OperationInfo"
+    ],
+    "CreateMetricPayload": [
+      "DatasetMetric",
       "OperationInfo"
     ],
     "CreateNodePayload": [
@@ -77,6 +89,14 @@
       "OperationInfo"
     ],
     "DeleteDataSourcePayload": [
+      "ModelDeletePayload",
+      "OperationInfo"
+    ],
+    "DeleteDatasetPayload": [
+      "ModelDeletePayload",
+      "OperationInfo"
+    ],
+    "DeleteDimensionPayload": [
       "ModelDeletePayload",
       "OperationInfo"
     ],
@@ -251,6 +271,10 @@
       "DatasetPortType",
       "OperationInfo"
     ],
+    "UpdateDatasetPayload": [
+      "Dataset",
+      "OperationInfo"
+    ],
     "UpdateDimensionCategoriesPayload": [
       "InstanceDimension",
       "OperationInfo"
@@ -264,6 +288,14 @@
       "NodeEdgeType",
       "OperationInfo"
     ],
+    "UpdateInputPortPayload": [
+      "OperationInfo",
+      "UpdateInputPortResult"
+    ],
+    "UpdateMetricPayload": [
+      "DatasetMetric",
+      "OperationInfo"
+    ],
     "UpdateNodeLayoutsPayload": [
       "OperationInfo",
       "UpdateNodeLayoutsResult"
@@ -272,6 +304,10 @@
       "ActionNode",
       "Node",
       "OperationInfo"
+    ],
+    "UpdateOutputPortPayload": [
+      "OperationInfo",
+      "UpdateOutputPortResult"
     ],
     "UpdatePayload": [
       "ActionNode",

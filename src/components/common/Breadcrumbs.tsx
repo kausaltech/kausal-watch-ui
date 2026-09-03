@@ -1,6 +1,5 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
+
 import { UncontrolledTooltip } from 'reactstrap';
 
 import { MAX_CRUMB_LENGTH } from '@/common/categories';
@@ -10,10 +9,6 @@ export type TCrumb = {
   name: string;
   id: string;
   url?: string;
-};
-
-type Props = {
-  breadcrumbs: TCrumb[];
 };
 
 const StyledContainer = styled.div`

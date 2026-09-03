@@ -1,5 +1,10 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
+
+import type { ActionMainContentBlocksFragment } from '@/common/__generated__/graphql';
+import type { ActionContentAction } from '@/components/actions/ActionContent';
+import type { PlanContextType } from '@/context/plan';
 
 const OfficialText = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s300};
@@ -15,15 +20,21 @@ const OfficialText = styled.div`
   }
 `;
 
-const ActionOfficialNameBlock = (props) => {
+type ActionOfficialNameBlockProps = {
+  action: ActionContentAction;
+  block: Extract<ActionMainContentBlocksFragment, { __typename: 'ActionOfficialNameBlock' }>;
+  plan: PlanContextType;
+};
+
+const ActionOfficialNameBlock = (props: ActionOfficialNameBlockProps) => {
   const { plan, block, action } = props;
   const t = useTranslations();
 
-  const generalContent = plan.generalContent || {};
-  const cleanOfficialText = action.officialName?.replace(/(?:\r\n|\r|\n)/g, '<br>') || '';
+  const generalContent = plan.generalContent ?? {};
+  const cleanOfficialText = action.officialName?.replace(/(?:\r\n|\r|\n)/g, '<br>') ?? '';
   if (!cleanOfficialText) return null;
-  const caption = block.caption || generalContent.officialNameDescription;
-  const fieldLabel = block.fieldLabel || t('action-description-official');
+  const caption = block.caption ?? generalContent.officialNameDescription;
+  const fieldLabel = block.fieldLabel ?? t('action-description-official');
 
   return (
     <OfficialText>

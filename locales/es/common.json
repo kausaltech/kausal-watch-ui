@@ -4,7 +4,7 @@
     "actions-plural": "{context, select, STRATEGY {Estrategias} other {Acciones}}",
     "actions-as-list": "Como una lista",
     "active-filters": "Filtros activos",
-    "admin-login": "Inicio de sesión de administrador",
+    "admin-login": "Administrador",
     "back-to-top": "Volver arriba",
     "bar-goal": "Objetivo",
     "close": "Cerrar",

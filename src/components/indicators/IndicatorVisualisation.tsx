@@ -90,7 +90,7 @@ function IndicatorVisualisation({
     t,
     language: locale,
   };
-  const [compareTo, setCompareTo] = useState(undefined);
+  const [compareTo, setCompareTo] = useState<string | undefined>(undefined);
   const [preferNormalizeByPopulation, setPreferNormalizeByPopulation] = useState(NORMALIZE_DEFAULT);
 
   const { loading, error, data } = useQuery<
@@ -188,8 +188,7 @@ function IndicatorVisualisation({
     cube,
     null,
     hasTimeDimension,
-    i18n,
-    undefined
+    i18n
   );
   // If all traces are "total" (no dimensions), keep them regardless of showTotalLine.
   // Otherwise, filter out the total when showTotalLine is false.
@@ -362,7 +361,7 @@ function IndicatorVisualisation({
           timeResolution={timeResolution}
           traces={traces}
           goalTraces={goalTraces}
-          trendTrace={trendTrace}
+          trendTrace={trendTrace ?? null}
           title={null}
           downloadFilename={plotTitle}
           desiredTrend={indicator.desiredTrend}

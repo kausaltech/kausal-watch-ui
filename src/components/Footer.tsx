@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import { createElement } from 'react';
 
 import { usePathname } from 'next/navigation';
 
@@ -24,6 +24,13 @@ import SiteFooter, {
 import { useCustomComponent } from './paths/custom';
 
 type NavItem = NonNullable<PlanContextFragment['footer']>['items'][0];
+type PageNavItem = Extract<NavItem, { __typename: 'PageMenuItem' }>;
+type AdditionalNavItem = NonNullable<PlanContextFragment['additionalLinks']>['items'][number];
+type AdditionalPageNavItem = Extract<AdditionalNavItem, { __typename: 'PageMenuItem' }>;
+
+const isPageNavItem = (item: NavItem): item is PageNavItem => item.__typename === 'PageMenuItem';
+const isAdditionalPageNavItem = (item: AdditionalNavItem): item is AdditionalPageNavItem =>
+  item.__typename === 'PageMenuItem';
 
 const getFeedbackUrl = (currentURL: string) => {
   const feedbackPageUrlBase = '/feedback';
@@ -39,7 +46,7 @@ function getNavChildren(navItem: NavItem) {
     return [];
   }
 
-  return (navItem.children || [])
+  return (navItem.children ?? [])
     .filter((child): child is NonNullable<typeof child> => !!child)
     .map((child) => ({
       id: child.id,
@@ -51,25 +58,21 @@ function getNavChildren(navItem: NavItem) {
 function Footer() {
   const plan = usePlan();
   const pathname = usePathname();
-  const generalContent = plan.generalContent || {};
+  const generalContent = plan.generalContent ?? {};
   const theme = useTheme();
   const FooterComponent = useCustomComponent('Footer', SiteFooter);
   const { navigationTitle: siteTitle } = getMetaTitles(plan);
   const { fundingInstruments, otherLogos, footerStatement } = theme.settings;
   const t = useTranslations();
 
-  const navLinks: FooterNavItem[] = (plan.footer?.items || [])
-    .filter((navItem): navItem is NonNullable<typeof navItem> => !!navItem)
+  const navLinks: FooterNavItem[] = (plan.footer?.items ?? [])
+    .filter(isPageNavItem)
     .map((navItem) => {
-      if (!navItem || !('id' in navItem)) {
-        return null;
-      }
-
       return {
         id: navItem.id,
         name: navItem.page.title,
         slug:
-          'children' in navItem && (navItem.children || []).length > 0
+          'children' in navItem && (navItem.children ?? []).length > 0
             ? undefined
             : navItem.page.urlPath,
         children: getNavChildren(navItem),
@@ -78,17 +81,17 @@ function Footer() {
 
   // TODO: Remove this when we have a proper way to add custom links
   const additionalLinks: FooterAdditionalLink[] =
-    theme.settings?.customAdditionalLinks?.slice() || [];
+    theme.settings?.customAdditionalLinks?.slice() ?? [];
   const hasCustomAccessibilityPage = additionalLinks?.find((link) => link.id === 'accessibility');
 
-  plan.additionalLinks?.items?.map((link) =>
+  plan.additionalLinks?.items?.filter(isAdditionalPageNavItem).forEach((link) =>
     additionalLinks.push({
       id: link.id,
       name: link.page.title,
       slug: link.page.urlPath,
-      url: link.page.url,
-      crossPlanLink: link.crossPlanLink,
-      viewUrl: link.viewUrl,
+      url: link.page.url ?? undefined,
+      crossPlanLink: link.crossPlanLink ?? undefined,
+      viewUrl: link.viewUrl ?? undefined,
     } satisfies FooterAdditionalLink)
   );
 
@@ -143,23 +146,24 @@ function Footer() {
   }
 
   const monsidoToken = theme.settings?.monsidoToken;
+  const footer = createElement(FooterComponent, {
+    siteTitle,
+    ownerName: generalContent.ownerName,
+    ownerUrl: generalContent.ownerUrl,
+    creativeCommonsLicense: generalContent.creativeCommonsLicense,
+    copyrightText: generalContent.copyrightText,
+    utilityLinks,
+    additionalLinks,
+    navItems: navLinks,
+    fundingInstruments,
+    otherLogos,
+    footerStatement,
+    ownerLinks,
+  });
 
   return (
     <>
-      <FooterComponent
-        siteTitle={siteTitle}
-        ownerName={generalContent.ownerName}
-        ownerUrl={generalContent.ownerUrl}
-        creativeCommonsLicense={generalContent.creativeCommonsLicense}
-        copyrightText={generalContent.copyrightText}
-        utilityLinks={utilityLinks}
-        additionalLinks={additionalLinks}
-        navItems={navLinks}
-        fundingInstruments={fundingInstruments}
-        otherLogos={otherLogos}
-        footerStatement={footerStatement}
-        ownerLinks={ownerLinks}
-      />
+      {footer}
       <ApplicationStateBanner deploymentType={getDeploymentType()} />
       {monsidoToken && <MonsidoAccessibility token={monsidoToken} />}
     </>

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import { readableColor, shade, transparentize } from 'polished';
 import { Button as BSButton, type ButtonProps as BSButtonProps } from 'reactstrap';
 
@@ -183,7 +184,7 @@ type ButtonProps = BSButtonProps & {
   children: React.ReactNode;
 };
 
-const Button = React.forwardRef<typeof StyledButton, ButtonProps>((props, ref) => {
+const Button = React.forwardRef<typeof StyledButton, ButtonProps>((props, _ref) => {
   const { children } = props;
 
   // TODO: Do we need a ref here?

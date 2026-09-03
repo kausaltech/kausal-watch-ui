@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -8,7 +8,6 @@ import { useScrollPosition } from '@n8tb1t/use-scroll-position';
 import debounce from 'lodash-es/debounce';
 import { useLocale, useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
-import PropTypes from 'prop-types';
 import SVG from 'react-inlinesvg';
 import {
   Collapse,
@@ -30,6 +29,7 @@ import PlanSelector from '@/components/plans/PlanSelector';
 import PlanVersionSelector from '@/components/versioning/PlanVersionSelector';
 import { usePlan } from '@/context/plan';
 
+import type { NavItem as AppNavItem, NavItems } from '../Header';
 import Icon, { type ValidIconName } from './Icon';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
@@ -461,10 +461,17 @@ const CustomToolbar = (props: CustomToolbarProps) => {
   );
 };
 
-function DropdownList(props) {
+type DropdownListProps = {
+  active?: boolean;
+  items: AppNavItem[];
+  onClickLink: () => void;
+  parentName: string;
+};
+
+function DropdownList(props: DropdownListProps) {
   const { parentName, items, active = false, onClickLink } = props;
   return (
-    <StyledDropdown nav inNavbar className={active && 'active'}>
+    <StyledDropdown nav inNavbar className={active ? 'active' : undefined}>
       <StyledDropdownToggle nav caret role="button">
         <NavHighlighter className={`highlighter ${active && 'active'}`}>
           {parentName}
@@ -472,35 +479,20 @@ function DropdownList(props) {
       </StyledDropdownToggle>
       <DropdownMenuWrapper>
         <StyledDropdownMenu>
-          {items &&
-            items.map((child) => (
-              <DropdownItem key={child.id}>
-                <NavLink>
-                  <NavigationLink slug={child.urlPath} onClick={onClickLink}>
-                    <NavHighlighter className="highlighter">{child.name}</NavHighlighter>
-                  </NavigationLink>
-                </NavLink>
-              </DropdownItem>
-            ))}
+          {items.map((child) => (
+            <DropdownItem key={child.id}>
+              <NavLink>
+                <NavigationLink slug={child.urlPath} onClick={onClickLink}>
+                  <NavHighlighter className="highlighter">{child.name}</NavHighlighter>
+                </NavigationLink>
+              </NavLink>
+            </DropdownItem>
+          ))}
         </StyledDropdownMenu>
       </DropdownMenuWrapper>
     </StyledDropdown>
   );
 }
-
-DropdownList.propTypes = {
-  onClickLink: PropTypes.func.isRequired,
-  parentName: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      slug: PropTypes.string,
-      children: PropTypes.node,
-    })
-  ).isRequired,
-  active: PropTypes.bool,
-};
 
 const NavSpacer = styled.div<{ $height?: number }>`
   display: block;
@@ -534,7 +526,7 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
     const handleSetNavHeight = (width: number) => {
       const navRef = getIsPrimaryNavSticky(theme, width) ? primaryNavRef : secondaryNavRef;
 
-      setNavHeight((height) => navRef.current?.clientHeight || height);
+      setNavHeight((height) => navRef.current?.clientHeight ?? height);
     };
 
     const handleResize = debounce(() => {
@@ -571,7 +563,30 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
     isPrimaryNavSticky,
   };
 };
-function GlobalNav(props) {
+type ExternalItem = {
+  icon?: ValidIconName;
+  name: string;
+  newTab?: boolean;
+  url: string;
+};
+
+export type GlobalNavProps = {
+  activeBranch: string;
+  activePath?: string;
+  customToolbarItems: CustomToolbarProps['items'];
+  externalItems?: ExternalItem[];
+  fullwidth?: boolean;
+  hidePlanSelector?: boolean;
+  hideSearch?: boolean;
+  hideVersionSelector?: boolean;
+  logoLink?: string | null;
+  navItems: NavItems;
+  ownerName?: string;
+  siteTitle: string;
+  sticky?: boolean;
+};
+
+function GlobalNav(props: GlobalNavProps) {
   const t = useTranslations();
   const theme = useTheme();
   const locale = useLocale();
@@ -602,11 +617,13 @@ function GlobalNav(props) {
     isPrimaryNavSticky,
   } = useStickyNavigation(sticky);
 
-  const OrgLogo = () => {
+  const orgLogo = (() => {
     if (theme.navLogoVisible === false) {
       return <EmptyLogo />;
     } else if (theme.themeLogoUrl.endsWith('.png')) {
       return (
+        // Theme assets are already deployment-owned static files; Next image optimization adds no value.
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={getThemeStaticURL(theme.themeLogoUrl)}
           alt={`${ownerName}, ${siteTitle} ${t('front-page')}`}
@@ -623,16 +640,16 @@ function GlobalNav(props) {
         />
       );
     }
-  };
+  })();
 
   const handleClose = () => setIsOpen(false);
 
-  const homeLink = theme.settings.homeLink || false;
+  const homeLink = theme.settings.homeLink ?? false;
 
   const siblings = plan.allRelatedPlans.filter((pl) => pl?.id !== plan.parent?.id);
   const hideLogoOnMobile = !!(theme.navTitleVisible && siblings.length);
 
-  const logoLink = theme?.footerLogoLink || rootLink;
+  const logoLink = theme.footerLogoLink || rootLink;
 
   return (
     <div>
@@ -646,7 +663,7 @@ function GlobalNav(props) {
         >
           <Site>
             <HomeLink $hideLogoOnMobile={hideLogoOnMobile} href={logoLink}>
-              <OrgLogo />
+              {orgLogo}
               <span className="visually-hidden">
                 + {`${ownerName}, ${siteTitle} ${t('front-page')}`}+{' '}
               </span>
@@ -788,36 +805,5 @@ function GlobalNav(props) {
     </div>
   );
 }
-
-GlobalNav.propTypes = {
-  activeBranch: PropTypes.string.isRequired,
-  siteTitle: PropTypes.string.isRequired,
-  ownerName: PropTypes.string,
-  navItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      slug: PropTypes.string,
-      urlPath: PropTypes.string,
-      active: PropTypes.bool,
-      children: PropTypes.arrayOf(PropTypes.shape),
-    })
-  ).isRequired,
-  fullwidth: PropTypes.bool,
-  sticky: PropTypes.bool,
-  externalItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      url: PropTypes.string,
-      newTab: PropTypes.bool,
-      icon: PropTypes.string,
-    })
-  ),
-  // Props for minimal/pledge mode
-  logoLink: PropTypes.string,
-  hidePlanSelector: PropTypes.bool,
-  hideSearch: PropTypes.bool,
-  hideVersionSelector: PropTypes.bool,
-};
 
 export default GlobalNav;

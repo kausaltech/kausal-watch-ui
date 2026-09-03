@@ -2,6 +2,16 @@ import React from 'react';
 
 import styled from '@emotion/styled';
 
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'stzh-footer': React.HTMLAttributes<HTMLElement> & Record<string, unknown>;
+      'stzh-link': React.HTMLAttributes<HTMLElement> & Record<string, unknown>;
+      'slot-fb': React.HTMLAttributes<HTMLElement> & Record<string, unknown>;
+    }
+  }
+}
+
 const StyledFooter = styled.div`
   margin-bottom: 12px; // Allow space for Paths settings panel
   padding-top: 120px !important;

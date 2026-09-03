@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/nextjs';
 import { getRequestConfig } from 'next-intl/server';
 
-const FALLBACKS = {
+const FALLBACKS: Record<string, string> & { default: string } = {
   'en-AU': 'en',
   'en-GB': 'en',
   'de-CH': 'de',
@@ -11,12 +11,15 @@ const FALLBACKS = {
 };
 
 type LocaleFiles = 'common' | 'actions' | 'paths' | 'a11y';
+type Messages = Record<string, unknown>;
 
-async function importLocale(locale: string, file: LocaleFiles) {
+async function importLocale(locale: string, file: LocaleFiles): Promise<Messages> {
   try {
-    const translations = (await import(`../../locales/${locale}/${file}.json`)).default;
+    const localeModule = (await import(`../../locales/${locale}/${file}.json`)) as {
+      default: Messages;
+    };
 
-    return translations;
+    return localeModule.default;
   } catch (error) {
     console.warn(`kausal-watch-ui > Failed to load ${file} translations for ${locale}`);
     Sentry.captureException(error);
@@ -24,7 +27,7 @@ async function importLocale(locale: string, file: LocaleFiles) {
   }
 }
 
-async function importLocales(locale: string) {
+async function importLocales(locale: string): Promise<Messages> {
   const translations = {
     ...(await importLocale(locale, 'common')),
     ...(await importLocale(locale, 'actions')),
@@ -36,9 +39,10 @@ async function importLocales(locale: string) {
    * Include fallback translations to avoid needing to add all translations for country
    * specific language variants. E.g. "en" will be imported as the base for "en-GB".
    */
-  if (FALLBACKS[locale]) {
+  const fallback = FALLBACKS[locale];
+  if (fallback) {
     return {
-      ...(await importLocales(FALLBACKS[locale])),
+      ...(await importLocales(fallback)),
       ...translations,
     };
   }

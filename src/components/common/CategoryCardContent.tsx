@@ -1,9 +1,8 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
-import type { GetCategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
+import type { CategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
 import { Link } from '@/common/links';
 import Icon from '@/components/common/Icon';
 
@@ -31,7 +30,7 @@ const formatEmissionSharePercent = (share: number, total: number) => {
 };
 
 type CategoryCardContentProps = {
-  category: NonNullable<GetCategoriesForTreeMapQuery['planCategories']>[0];
+  category: NonNullable<CategoriesForTreeMapQuery['planCategories']>[0];
   isRoot: boolean;
   sumValues: number;
 };
@@ -42,8 +41,8 @@ const CategoryCardContent = (props: CategoryCardContentProps) => {
 
   const textcontent = category?.leadParagraph;
   const catImageSrc = category?.image?.rendition?.src;
-  const categoryEmissions = category?.attributes?.[0]?.value;
-  const emissionShare = formatEmissionSharePercent(categoryEmissions, sumValues);
+  const categoryEmissions = (category?.attributes?.[0] as { value?: number } | undefined)?.value;
+  const emissionShare = formatEmissionSharePercent(categoryEmissions ?? 0, sumValues);
   const ofAllLabel = t('common-of-all-emissions');
 
   return (

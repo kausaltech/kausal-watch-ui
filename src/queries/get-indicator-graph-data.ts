@@ -62,6 +62,7 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
         }
       }
       dimensions {
+        id
         dimension {
           id
           name
@@ -139,6 +140,7 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
         name
         normalizations {
           unit {
+            id
             shortName
           }
           normalizer {
@@ -174,6 +176,7 @@ export const GET_INDICATOR_GRAPH_DATA = gql`
             }
           }
           dimensions {
+            id
             dimension {
               id
               name

@@ -327,7 +327,7 @@ function ActionListDropdownInput<Value extends FilterValue>(props: ActionListDro
   }
 
   return (
-    <SelectDropdown<SelectDropdownOption, Value extends MultipleFilterValue ? true : false>
+    <SelectDropdown<SelectDropdownOption>
       label={label}
       id={`${id}-field`}
       name={id}
@@ -405,7 +405,8 @@ function buildBadges(
 
   const seenFilterKeyValues = new Set<string>();
   const uniqueFilters = enabled.filter((item) => {
-    const uniqueKey = `${item.id}-${activeFilters[item.id]}`;
+    const activeValue = activeFilters[item.id];
+    const uniqueKey = `${item.id}-${Array.isArray(activeValue) ? activeValue.join(',') : (activeValue ?? '')}`;
     if (seenFilterKeyValues.has(uniqueKey)) return false;
     seenFilterKeyValues.add(uniqueKey);
     return true;
@@ -429,7 +430,7 @@ function buildBadges(
       options: [],
       isMulti: false,
       filterAction: () => true,
-    } as ActionListFilter);
+    });
   }
 
   return uniqueFilters
@@ -640,8 +641,9 @@ function createContinuousActionFilter(opts: {
     showAllLabel,
     filterAction: (value, action) => {
       if (!value) return true;
-      if (value === 'continuous') return action.scheduleContinuous === true;
-      if (value === 'non_continuous') return action.scheduleContinuous === false;
+      const actionItem = action as ActionListAction;
+      if (value === 'continuous') return actionItem.scheduleContinuous === true;
+      if (value === 'non_continuous') return actionItem.scheduleContinuous === false;
       return true;
     },
   };
@@ -651,7 +653,7 @@ function createAttributeTypeFilter(
   config: ActionListActionAttributeTypeFilterBlock,
   t: TFunction
 ): ActionListFilter<string | undefined> {
-  const att = config.attributeType!;
+  const att = config.attributeType;
   const options = att.choiceOptions.map((choice) => ({
     id: choice.id,
     label: choice.name,
@@ -672,7 +674,7 @@ function createAttributeTypeFilter(
     filterAction: (value, action) => {
       if (!value) return true;
 
-      return action.attributes.some((actAtt) => {
+      return (action as ActionListAction).attributes.some((actAtt) => {
         if (actAtt.__typename !== 'AttributeChoice') return false;
         return actAtt.choice?.id === value;
       });
@@ -725,9 +727,8 @@ function createCategoryFilter(
     if (!categoryId) return true;
 
     return action.categories.some((actCat) => {
-      const actCatKey = filterByCommonCategory
-        ? ((actCat as any).common?.id ?? actCat.id)
-        : actCat.id;
+      const actCatKey =
+        filterByCommonCategory && 'common' in actCat ? (actCat.common?.id ?? actCat.id) : actCat.id;
       let cat = actCatKey ? catById.get(actCatKey) : undefined;
 
       while (cat) {
@@ -813,9 +814,10 @@ function createResponsiblePartyFilter(
     showAllLabel,
     filterAction: (value, action) => {
       if (!value) return true;
-      if (action.primaryOrg?.id === value) return true;
+      const actionItem = action as ActionListAction;
+      if (actionItem.primaryOrg?.id === value) return true;
 
-      return action.responsibleParties.some((rp) => {
+      return actionItem.responsibleParties.some((rp) => {
         let org: ActionListOrganization | null = rp.organization as ActionListOrganization;
         while (org) {
           if (org.id === value) return true;
@@ -842,10 +844,11 @@ function createPrimaryResponsiblePartyFilter(t: TFunction): ActionListFilter<str
     showAllLabel: '',
     filterAction: (value, action) => {
       if (!value) return true;
+      const actionItem = action as ActionListAction;
 
       return (
-        action.primaryOrg?.id === value ||
-        action.responsibleParties.some(
+        actionItem.primaryOrg?.id === value ||
+        actionItem.responsibleParties.some(
           (rp) => rp.role === ActionResponsiblePartyRole.Primary && rp.organization.id === value
         )
       );
@@ -890,7 +893,7 @@ const FilterField = React.memo(function FilterField({
           id={filter.id}
           label={filter.label}
           placeholder={filter.showAllLabel}
-          onChange={onChange as FilterChangeCallback<string | undefined>}
+          onChange={onChange}
           currentValue={value as string | undefined}
           inputRef={filter.inputRef}
         />
@@ -910,7 +913,7 @@ const FilterField = React.memo(function FilterField({
           helpText={filter.helpText}
           showAllLabel={filter.showAllLabel}
           currentValue={currentValue}
-          onChange={onChange as FilterChangeCallback<string | undefined>}
+          onChange={onChange}
           options={filter.options ?? []}
         />
         {currentValue && (
@@ -945,7 +948,7 @@ const FilterField = React.memo(function FilterField({
         <MainCategory>
           <MainCategoryLabel id={`label-${filter.id}`}>
             {filter.label}
-            {filter.helpText && <PopoverTip header="Main Category" content={filter.helpText} />}
+            {filter.helpText && <PopoverTip identifier={filter.id} content={filter.helpText} />}
           </MainCategoryLabel>
           <ButtonGroup role="radiogroup" aria-labelledby={`label-${filter.id}`}>
             <RButton
@@ -984,13 +987,13 @@ const FilterField = React.memo(function FilterField({
   return (
     <FilterColumn sm={filter.sm} md={filter.md} lg={filter.lg} key={filter.id}>
       <ActionListDropdownInput
-        isMulti={(filter.isMulti ?? false) as false}
+        isMulti={filter.isMulti ?? false}
         id={filter.id}
         label={filter.label}
         helpText={filter.helpText}
         showAllLabel={filter.showAllLabel}
         currentValue={value}
-        onChange={onChange as FilterChangeCallback<FilterValue>}
+        onChange={onChange}
         options={filter.options ?? []}
       />
     </FilterColumn>
@@ -1013,6 +1016,8 @@ function useFilterState(
   const [filterState, setFilterState] = useState(activeFilters);
 
   useEffect(() => {
+    // Keep the editable, debounced filter state aligned with external navigation changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFilterState(activeFilters);
   }, [activeFilters]);
 
@@ -1235,6 +1240,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           filters.push(createCategoryFilter(block, filterByCommonCategory, plan, t));
           break;
         case 'ActionAttributeTypeFilterBlock': {
+          if (!('attributeType' in block)) break;
           const allowedFormats = ['ORDERED_CHOICE', 'UNORDERED_CHOICE', 'OPTIONAL_CHOICE'];
           if (!allowedFormats.includes(block.attributeType.format)) {
             console.error(
@@ -1274,7 +1280,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             createSelectFilter({
               ...phaseOpts,
               isMulti: true,
-              matchesSingle: phaseOpts.filterAction as (value: string, item: FilterItem) => boolean,
+              matchesSingle: phaseOpts.filterAction,
             })
           );
           break;
@@ -1307,10 +1313,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             createSelectFilter({
               ...statusOpts,
               isMulti: true,
-              matchesSingle: statusOpts.filterAction as (
-                value: string,
-                item: FilterItem
-              ) => boolean,
+              matchesSingle: statusOpts.filterAction,
             })
           );
           break;
@@ -1345,10 +1348,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             createSelectFilter({
               ...primaryOrgOpts,
               isMulti: true,
-              matchesSingle: primaryOrgOpts.filterAction as (
-                value: string,
-                item: FilterItem
-              ) => boolean,
+              matchesSingle: primaryOrgOpts.filterAction,
             })
           );
           break;
@@ -1381,10 +1381,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             createSelectFilter({
               ...scheduleOpts,
               isMulti: true,
-              matchesSingle: scheduleOpts.filterAction as (
-                value: string,
-                item: FilterItem
-              ) => boolean,
+              matchesSingle: scheduleOpts.filterAction,
             })
           );
           break;
@@ -1412,7 +1409,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
             createSelectFilter({
               ...planOpts,
               isMulti: true,
-              matchesSingle: planOpts.filterAction as (value: string, item: FilterItem) => boolean,
+              matchesSingle: planOpts.filterAction,
             })
           );
           break;
@@ -1467,10 +1464,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                   createSelectFilter({
                     ...levelOpts,
                     isMulti: true,
-                    matchesSingle: levelOpts.filterAction as (
-                      value: string,
-                      item: FilterItem
-                    ) => boolean,
+                    matchesSingle: levelOpts.filterAction,
                   })
                 );
                 break;
@@ -1489,10 +1483,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
                   createSelectFilter({
                     ...organizationOpts,
                     isMulti: true,
-                    matchesSingle: organizationOpts.filterAction as (
-                      value: string,
-                      item: FilterItem
-                    ) => boolean,
+                    matchesSingle: organizationOpts.filterAction,
                   })
                 );
                 break;
@@ -1527,7 +1518,7 @@ ActionListFilters.constructFilters = (opts: ConstructFiltersOpts) => {
           createSelectFilter({
             ...opts,
             isMulti: true,
-            matchesSingle: opts.filterAction as (value: string, item: FilterItem) => boolean,
+            matchesSingle: opts.filterAction,
           })
         );
       }

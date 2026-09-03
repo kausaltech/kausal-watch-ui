@@ -2,9 +2,10 @@
 import { gql } from '@apollo/client';
 
 export const GET_PLANS_BY_HOSTNAME = gql`
-  query GetPlansByHostname($hostname: String) {
+  query PlansByHostname($hostname: String) {
     plansForHostname(hostname: $hostname) {
       domain {
+        id
         hostname
         redirectToHostname
         basePath
@@ -12,6 +13,7 @@ export const GET_PLANS_BY_HOSTNAME = gql`
         statusMessage
       }
       domains {
+        id
         hostname
         redirectToHostname
         basePath

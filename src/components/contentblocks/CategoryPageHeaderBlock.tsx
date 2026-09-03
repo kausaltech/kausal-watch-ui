@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -15,8 +15,8 @@ import { transientOptions } from '@common/themes/styles/styled';
 import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import type {
   AttributesBlockAttributeFragment,
-  GetCategoryAttributeTypesQuery,
-  HeroImageFragmentFragment,
+  CategoryAttributeTypesQuery,
+  HeroImageFragment,
 } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
 import { getImageSrcSet } from '@/common/images';
@@ -33,7 +33,7 @@ import { ImageCredit } from '../common/ImageCredit';
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
 
 export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
-  query GetCategoryAttributeTypes($plan: ID!) {
+  query CategoryAttributeTypes($plan: ID!) {
     plan(id: $plan) {
       id
       categoryTypes {
@@ -203,7 +203,7 @@ const CategoryLevelName = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s100};
 `;
 
-type CategoryTypes = NonNullable<GetCategoryAttributeTypesQuery['plan']>['categoryTypes'];
+type CategoryTypes = NonNullable<CategoryAttributeTypesQuery['plan']>['categoryTypes'];
 
 interface CategoryHeaderAttributesProps extends Pick<Props, 'page'> {
   layout: CategoryPageMainTopBlock[];
@@ -320,7 +320,7 @@ interface Props {
   identifier: string | null | undefined;
   lead?: string;
   iconImage: string | null | undefined;
-  headerImage: HeroImageFragmentFragment | null | undefined;
+  headerImage: HeroImageFragment | null | undefined;
   imageAlign?: string;
   color?: string | null | undefined;
   attributes: AttributesBlockAttributeFragment[] | null | undefined;
@@ -355,7 +355,7 @@ export default function CategoryPageHeaderBlock(props: Props) {
   //const contentAlignment = theme.settings.layout.leftAlignCategoryPages ? 'left' : 'center';
   const showIdentifiers = !plan.primaryActionClassification?.hideCategoryIdentifiers;
 
-  const { data } = useQuery<GetCategoryAttributeTypesQuery>(GET_CATEGORY_ATTRIBUTE_TYPES, {
+  const { data } = useQuery<CategoryAttributeTypesQuery>(GET_CATEGORY_ATTRIBUTE_TYPES, {
     variables: {
       plan: plan.identifier,
     },

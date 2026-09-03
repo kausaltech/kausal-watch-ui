@@ -112,6 +112,27 @@ export type CreateDataSourceInput = {
   url: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CreateDatasetInput = {
+  /** UUIDs of instance dimensions the data points are categorized by, in column order. */
+  dimensions: Array<Scalars['UUID']['input']>;
+  /** Optional UUID for the new dataset. */
+  id: InputMaybe<Scalars['UUID']['input']>;
+  /** Optional identifier, unique within the instance. */
+  identifier: InputMaybe<Scalars['String']['input']>;
+  /** Metrics (value columns) of the dataset; at least one is required. */
+  metrics: Array<CreateDatasetMetricInput>;
+  name: Scalars['String']['input'];
+};
+
+export type CreateDatasetMetricInput = {
+  /** Optional UUID for the new metric. */
+  id: InputMaybe<Scalars['UUID']['input']>;
+  label: Scalars['String']['input'];
+  /** Quantity-kind identifier of what the metric measures. Null means any quantity. */
+  quantity: InputMaybe<Scalars['ID']['input']>;
+  unit: Scalars['String']['input'];
+};
+
 export type CreateDatasetSourceReferenceInput = {
   dataPointId: InputMaybe<Scalars['UUID']['input']>;
   dataSourceId: Scalars['UUID']['input'];
@@ -125,6 +146,14 @@ export type CreateDimensionCategoryInput = {
   label: Scalars['String']['input'];
   nextSibling: InputMaybe<Scalars['ID']['input']>;
   previousSibling: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type CreateDimensionInput = {
+  categories: Array<DimensionCategoryItemInput>;
+  /** Optional UUID for the new dimension. */
+  id: InputMaybe<Scalars['UUID']['input']>;
+  identifier: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type CreateEdgeInput = {
@@ -223,6 +252,12 @@ export enum DesiredOutcome {
   Increasing = 'increasing'
 }
 
+export type DimensionCategoryItemInput = {
+  id: InputMaybe<Scalars['UUID']['input']>;
+  identifier: InputMaybe<Scalars['String']['input']>;
+  label: Scalars['String']['input'];
+};
+
 export enum DimensionKind {
   Common = 'COMMON',
   Node = 'NODE',
@@ -311,11 +346,14 @@ export enum FrameworksMeasureTemplatePriorityChoices {
 export type InputPortInput = {
   id: InputMaybe<Scalars['UUID']['input']>;
   identifier: InputMaybe<Scalars['String']['input']>;
+  /** Null keeps the existing value when `id` names an existing port; defaults to true for new ports. */
+  isEditable: InputMaybe<Scalars['Boolean']['input']>;
+  /** Written into the active request locale; translations in other languages are preserved when `id` names an existing port. */
   label: InputMaybe<Scalars['String']['input']>;
   multi: Scalars['Boolean']['input'];
   quantity: InputMaybe<Scalars['String']['input']>;
   requiredDimensions: InputMaybe<Array<Scalars['String']['input']>>;
-  /** Semantic role from the node class's input port declarations. */
+  /** Semantic role from the node class's input port declarations. Null keeps the existing role when `id` names an existing port. */
   role: InputMaybe<Scalars['String']['input']>;
   unit: InputMaybe<Scalars['String']['input']>;
 };
@@ -435,9 +473,13 @@ export type OutputPortInput = {
   dimensions: InputMaybe<Array<Scalars['String']['input']>>;
   id: InputMaybe<Scalars['UUID']['input']>;
   identifier: InputMaybe<Scalars['String']['input']>;
-  isEditable: Scalars['Boolean']['input'];
+  /** Null keeps the existing value when `id` names an existing port; defaults to true for new ports. */
+  isEditable: InputMaybe<Scalars['Boolean']['input']>;
+  /** Written into the active request locale; translations in other languages are preserved when `id` names an existing port. */
   label: InputMaybe<Scalars['String']['input']>;
   quantity: InputMaybe<Scalars['String']['input']>;
+  /** Semantic role from the node class's output port declarations. Null keeps the existing role when `id` names an existing port. */
+  role: InputMaybe<Scalars['String']['input']>;
   unit: Scalars['String']['input'];
 };
 
@@ -574,6 +616,19 @@ export type UpdateDatasetBindingInput = {
   transformations: InputMaybe<Array<DatasetTransformationInput>>;
 };
 
+export type UpdateDatasetInput = {
+  datasetId: Scalars['UUID']['input'];
+  identifier: InputMaybe<Scalars['String']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateDatasetMetricInput = {
+  label: InputMaybe<Scalars['String']['input']>;
+  /** Quantity-kind identifier of what the metric measures. Set to null to clear. */
+  quantity: InputMaybe<Scalars['ID']['input']>;
+  unit: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateDimensionCategoryInput = {
   categoryId: Scalars['UUID']['input'];
   identifier: InputMaybe<Scalars['String']['input']>;
@@ -592,6 +647,19 @@ export type UpdateEdgeBindingInput = {
   tags: InputMaybe<Array<Scalars['String']['input']>>;
   /** Replaces the whole list; order is execution order. */
   transformations: InputMaybe<Array<EdgeTransformationInput>>;
+};
+
+/** Partial update of one input port. Unset fields are left untouched. */
+export type UpdateInputPortInput = {
+  identifier: InputMaybe<Scalars['String']['input']>;
+  isEditable: InputMaybe<Scalars['Boolean']['input']>;
+  /** Written into the active request locale; translations in other languages are preserved. */
+  label: InputMaybe<Scalars['String']['input']>;
+  multi: InputMaybe<Scalars['Boolean']['input']>;
+  quantity: InputMaybe<Scalars['String']['input']>;
+  requiredDimensions: InputMaybe<Array<Scalars['String']['input']>>;
+  role: InputMaybe<Scalars['String']['input']>;
+  unit: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateNodeInput = {
@@ -623,6 +691,19 @@ export type UpdateNodeLayoutInput = {
   source: NodeLayoutSource;
   x: Scalars['Float']['input'];
   y: Scalars['Float']['input'];
+};
+
+/** Partial update of one output port. Unset fields are left untouched. */
+export type UpdateOutputPortInput = {
+  columnId: InputMaybe<Scalars['String']['input']>;
+  dimensions: InputMaybe<Array<Scalars['String']['input']>>;
+  identifier: InputMaybe<Scalars['String']['input']>;
+  isEditable: InputMaybe<Scalars['Boolean']['input']>;
+  /** Written into the active request locale; translations in other languages are preserved. */
+  label: InputMaybe<Scalars['String']['input']>;
+  quantity: InputMaybe<Scalars['String']['input']>;
+  role: InputMaybe<Scalars['String']['input']>;
+  unit: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateScenarioInput = {

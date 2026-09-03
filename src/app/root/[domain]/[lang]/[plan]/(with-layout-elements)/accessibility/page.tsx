@@ -1,11 +1,11 @@
-import { Metadata } from 'next';
+import { type Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
-import { GetContentPageQuery } from '@/common/__generated__/graphql';
+import { type ContentPageQuery } from '@/common/__generated__/graphql';
 import { getContentPage } from '@/queries/get-content-page';
 import { tryRequest } from '@/utils/api.utils';
 
-import Content, { GeneralPlanPage } from '../[...slug]/ContentPage';
+import Content from '../[...slug]/ContentPage';
 import { AccessibilityPage } from './AccessibilityPage';
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
   }>;
 };
 
-const isAccessibilityPageWithBody = (planPage: GetContentPageQuery['planPage']) =>
+const isAccessibilityPageWithBody = (planPage: ContentPageQuery['planPage']) =>
   (planPage?.__typename === 'AccessibilityStatementPage' ||
     planPage?.__typename === 'StaticPage') &&
   planPage?.body?.length;
@@ -36,7 +36,7 @@ export default async function ContentPage(props: Props) {
   const { data } = await tryRequest(getContentPage(plan, '/accessibility'));
 
   if (data?.planPage && isAccessibilityPageWithBody(data.planPage)) {
-    return <Content page={data.planPage as GeneralPlanPage} testId="accessibility-page" />;
+    return <Content page={data.planPage} testId="accessibility-page" />;
   }
 
   return <AccessibilityPage />;

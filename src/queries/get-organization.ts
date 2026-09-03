@@ -4,6 +4,7 @@ import {
   type OrganizationDetailsQuery,
   type OrganizationDetailsQueryVariables,
 } from '@/common/__generated__/graphql';
+import { ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT } from '@/fragments/action-attribute.fragment';
 
 import { ACTION_TABLE_COLUMN_FRAGMENT } from '../fragments/action-list.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
@@ -65,7 +66,8 @@ const GET_ORG_DETAILS = gql`
       ...OrgContentPlan
 
       actionListPage {
-        ...ActionTableColumnFragment
+        id
+        ...ActionTableColumn
       }
     }
   }
@@ -91,12 +93,12 @@ const GET_ORG_DETAILS = gql`
     actionStatusSummaries {
       identifier
       label
-      color
       isCompleted
       isActive
       sentiment
     }
     image {
+      id
       rendition(size: "128x128", crop: true) {
         id
         src
@@ -132,35 +134,7 @@ const GET_ORG_DETAILS = gql`
       endDate
       order
       attributes {
-        __typename
-        id
-        type {
-          id
-          identifier
-          name
-          unit {
-            id
-            name
-            shortName
-          }
-          format
-        }
-        ... on AttributeChoice {
-          choice {
-            id
-            name
-          }
-          text
-        }
-        ... on AttributeText {
-          value
-        }
-        ... on AttributeRichText {
-          value
-        }
-        ... on AttributeNumericValue {
-          numericValue: value
-        }
+        ...AttributesBlockAttributeWithNestedType
       }
       plan {
         id
@@ -204,7 +178,9 @@ const GET_ORG_DETAILS = gql`
         abbreviation
         name
         logo {
+          id
           rendition(size: "128x128", crop: true) {
+            id
             src
           }
         }
@@ -242,9 +218,11 @@ const GET_ORG_DETAILS = gql`
       }
     }
     generalContent {
+      id
       organizationTerm
     }
   }
 
   ${ACTION_TABLE_COLUMN_FRAGMENT}
+  ${ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT}
 `;

@@ -31,8 +31,8 @@ const getCacheKey = (plan: PlanContextType, statusSummary: MinimalActionStatusSu
 
 export const getStatusSummary = memoize(_getStatusSummary, getCacheKey);
 
-export const getThemeColor = (color: keyof Theme['graphColors'], theme: Theme) => {
-  return theme.graphColors[color];
+export const getThemeColor = (color: string, theme: Theme) => {
+  return theme.graphColors[color as keyof Theme['graphColors']];
 };
 
 export interface ActionWithStatusSummary {
@@ -40,7 +40,6 @@ export interface ActionWithStatusSummary {
     color?: string;
   } | null;
   statusSummary?: {
-    color?: string;
     identifier?: ActionStatusSummaryIdentifier;
     label?: string;
   } | null;
@@ -50,11 +49,7 @@ export interface ActionWithStatusSummary {
 
 const DEFAULT_COLOR = 'grey050';
 
-export const getStatusColorForAction = (
-  action: ActionWithStatusSummary,
-  plan: PlanContextType,
-  theme: Theme
-) => {
+export const getStatusColorForAction = (action: ActionWithStatusSummary, theme: Theme) => {
   const { color, statusSummary, scheduleContinuous } = action;
 
   // Override for continuous actions. TODO: move logic to backend
@@ -64,12 +59,5 @@ export const getStatusColorForAction = (
   if (color != null) {
     return getThemeColor(color, theme);
   }
-  if (statusSummary == null || (statusSummary.color == null && statusSummary.identifier == null)) {
-    return getThemeColor(DEFAULT_COLOR, theme);
-  }
-  if (statusSummary.color != null) {
-    return getThemeColor(statusSummary.color, theme);
-  }
-  const statusSummaryWithColor = getStatusSummary(plan, statusSummary);
-  return getThemeColor(statusSummaryWithColor.color, theme);
+  return getThemeColor(DEFAULT_COLOR, theme);
 };

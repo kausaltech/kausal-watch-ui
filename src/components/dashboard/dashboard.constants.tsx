@@ -1,13 +1,12 @@
-import React, { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { PlanContextFragment } from '@/common/__generated__/graphql';
-import dayjs from '@/common/dayjs';
+import { type PlanContextFragment } from '@/common/__generated__/graphql';
 import {
   getActionTaskTermContext,
   getActionTermContext,
   getIndicatorTermContext,
 } from '@/common/i18n';
-import { TFunction } from '@/common/i18n';
+import { type TFunction } from '@/common/i18n';
 import { ActionLink } from '@/common/links';
 import ActionAttribute from '@/components/common/ActionAttribute';
 import Icon from '@/components/common/Icon';
@@ -31,7 +30,12 @@ import ResponsiblePartiesCell from './cells/ResponsiblePartiesCell';
 import StatusCell from './cells/StatusCell';
 import TasksStatusCell from './cells/TasksStatusCell';
 import UpdatedAtCell from './cells/UpdatedAtCell';
-import type { ActionListAction, ActionListPlan, ColumnBlock } from './dashboard.types';
+import type {
+  ActionListAction,
+  ActionListPlan,
+  ColumnBlock,
+  ColumnConfig,
+} from './dashboard.types';
 
 const getPlanUrl = (
   mergedWith: ActionListAction['mergedWith'],
@@ -39,7 +43,7 @@ const getPlanUrl = (
   planId: string
 ) => {
   if (mergedWith && mergedWith?.plan.id !== planId) return mergedWith.plan.viewUrl;
-  if (actionPlan.id !== planId) return actionPlan.viewUrl;
+  if (actionPlan && actionPlan.id !== planId) return actionPlan.viewUrl;
   return undefined;
 };
 
@@ -51,7 +55,7 @@ interface Column {
     t: TFunction,
     action: ActionListAction,
     plan: PlanContextFragment,
-    attribute?: any // TODO: tighter type
+    attribute?: ColumnConfig['attributeType']
   ) => ReactNode;
   headerClassName?: string;
   cellClassName?: string;
@@ -61,7 +65,7 @@ interface Column {
     action: ActionListAction,
     plan: PlanContextFragment,
     planViewUrl?: string | null,
-    attribute?: any // TODO: tighter type
+    attribute?: ColumnConfig['attributeType']
   ) => ReactNode;
 }
 
@@ -205,28 +209,37 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   FieldColumnBlock: {
     renderHeader: (t, _, label) => label,
     renderCell: (_, action, __, ___, attributeType) => {
+      if (!attributeType) return null;
       const attributeContent = action.attributes.find((a) => a.type.id === attributeType.id);
       if (!attributeContent) return null;
       return (
         <ActionAttribute
-          attribute={attributeContent}
-          attributeType={attributeType}
-          notitle
-          variant="minimized"
+          {...({
+            attribute: attributeContent,
+            attributeType: attributeContent.type,
+            notitle: true,
+            variant: 'minimized',
+          } as Parameters<typeof ActionAttribute>[0])}
         />
       );
     },
     renderTooltipContent: (_, action, __, attributeType) => {
+      if (!attributeType) return null;
       const attributeContent = action.attributes.find((a) => a.type.id === attributeType.id);
       if (!attributeContent) return null;
-      return <AttributeTooltipContent attribute={attributeContent} attributeType={attributeType} />;
+      return (
+        <AttributeTooltipContent
+          attribute={attributeContent}
+          attributeType={attributeContent.type}
+        />
+      );
     },
   },
   PlanColumnBlock: {
     renderHeader: (t, _, label) => label || t('filter-plan'),
     renderCell: (_, action, plan) =>
       action.plan?.shortIdentifier ||
-      plan?.shortIdentifier || (
+      plan?.identifier || (
         <PlanChip
           planImage={
             action.plan?.image?.rendition?.src ||

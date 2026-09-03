@@ -1,4 +1,4 @@
-import { ColProps } from 'reactstrap';
+import { type ColProps } from 'reactstrap';
 
 export interface CommonContentBlockProps {
   id?: string;

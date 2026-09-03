@@ -1,4 +1,4 @@
-import React from 'react';
+import type { CSSProperties } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -66,12 +66,12 @@ interface ConnectorProps {
 }
 
 function Connector({ startPoint, endPoint, color, bend, icon, faded = false }: ConnectorProps) {
-  const offset = bend ? bend : 0;
+  const offset = bend ?? 0;
   const edgeWidth = endPoint.x - startPoint.x;
   const edgeHeight = endPoint.y - startPoint.y;
   let direction = 0;
 
-  let edgeStyle = {
+  const edgeStyle: CSSProperties = {
     width: `${Math.abs(edgeWidth) / 2 - offset}px`,
     height: `${Math.abs(edgeHeight) + 6}px`,
     borderStyle: 'solid',

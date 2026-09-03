@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useLocale, useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 
@@ -66,7 +67,7 @@ const CheckboxLabel = styled.label`
 `;
 
 interface IntroModalProps {
-  videoUrls: { en: string; es: string };
+  videoUrls: Record<string, string>;
 }
 
 const IntroModal = ({ videoUrls }: IntroModalProps) => {
@@ -79,11 +80,13 @@ const IntroModal = ({ videoUrls }: IntroModalProps) => {
 
   useEffect(() => {
     const show = localStorage.getItem('show-intro-modal');
+    /* eslint-disable react-hooks/set-state-in-effect -- localStorage is only available after hydration. */
     if (show === null || JSON.parse(show) === true) {
       setEnabled(true);
     } else {
       setEnabled(false);
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   const handleClose = () => {

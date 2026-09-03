@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 
-import type { Theme } from '@kausal/themes/types';
 import { captureException } from '@sentry/nextjs';
 import { CardBody, Col, Container, Row } from 'reactstrap';
 
@@ -25,8 +24,8 @@ export default function GlobalError({ error }: Props) {
                 <h1>Something went wrong</h1>
 
                 <h4>
-                  We're sorry — an unexpected error occurred on our end. The issue has been reported
-                  and our team will investigate it.
+                  We&apos;re sorry — an unexpected error occurred on our end. The issue has been
+                  reported and our team will investigate it.
                 </h4>
               </CardBody>
             </Col>

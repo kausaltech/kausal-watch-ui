@@ -4,7 +4,6 @@ const INDICATOR_LIST_FILTER = gql`
   fragment IndicatorListFilter on StreamFieldInterface {
     __typename
     field
-    id
     ... on IndicatorFilterBlock {
       fieldLabel
       fieldHelpText
@@ -42,6 +41,7 @@ const INDICATOR_LIST_FILTER = gql`
 
 export const ALL_INDICATOR_LIST_FILTERS = gql`
   fragment IndicatorListPageFilters on IndicatorListPage {
+    id
     primaryFilters {
       ...IndicatorListFilter
     }
@@ -56,7 +56,7 @@ export const ALL_INDICATOR_LIST_FILTERS = gql`
 `;
 
 export const INDICATOR_LIST_PAGE_FRAGMENT = gql`
-  fragment IndicatorListPageFragment on IndicatorListPage {
+  fragment IndicatorListPage on IndicatorListPage {
     id
     slug
     title
@@ -79,7 +79,6 @@ export const INDICATOR_LIST_PAGE_FRAGMENT = gql`
         sourceField
         isNormalized
         valueType
-        referenceYear
         defaultYear
         hideUnit
         highlightGoalMet

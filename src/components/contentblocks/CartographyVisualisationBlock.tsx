@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import styled from '@emotion/styled';
+
 import 'mapbox-gl/dist/mapbox-gl.css';
-import LegendControl, { type MapboxMap } from 'mapboxgl-legend';
+import LegendControl from 'mapboxgl-legend';
 import 'mapboxgl-legend/dist/style.css';
 import Map, { NavigationControl, useMap } from 'react-map-gl/mapbox';
 import { Col, Container, Row } from 'reactstrap';
@@ -25,7 +26,10 @@ type StyleOverride = {
   };
 };
 
-const applyStyleOverrides = (style: mapboxgl.Style, overrides: StyleOverride | null) => {
+const applyStyleOverrides = (
+  style: mapboxgl.StyleSpecification,
+  overrides: StyleOverride | null
+) => {
   style.layers
     .filter((l) => 'source' in l && l.source !== undefined && l.source !== 'composite')
     .forEach((layer) => {
@@ -60,7 +64,7 @@ const applyStyleOverrides = (style: mapboxgl.Style, overrides: StyleOverride | n
       };
     });
 
-  style.layers = style.layers.filter((l) => (overrides.selections.layers[l.id] ?? true) !== false);
+  style.layers = style.layers.filter((l) => (overrides?.selections.layers[l.id] ?? true) !== false);
   return style;
 };
 
@@ -70,7 +74,7 @@ const LegendWithOverrides = ({ styleOverrides }: { styleOverrides: string | null
       ? (JSON.parse(styleOverrides) as StyleOverride)
       : null;
   const { current: map } = useMap();
-  const mapInstance = map?.getMap() as MapboxMap | undefined;
+  const mapInstance = map?.getMap();
   const styleLoadHandler = useCallback(() => {
     if (!map || !mapInstance) return;
     const style = mapInstance.getStyle();
@@ -93,7 +97,9 @@ const LegendWithOverrides = ({ styleOverrides }: { styleOverrides: string | null
 
     const legend = new LegendControl({ layers: layersToAdd });
     mapInstance.addControl(legend, 'top-left');
-    mapInstance.setStyle(style, { diff: false });
+    mapInstance.setStyle(style, {
+      diff: false,
+    } as Parameters<typeof mapInstance.setStyle>[1]);
   }, [map, mapInstance, overrides]);
   useEffect(() => {
     if (!mapInstance) return;

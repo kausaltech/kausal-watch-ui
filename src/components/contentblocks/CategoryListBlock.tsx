@@ -1,12 +1,10 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
 
 import type { Theme } from '@kausal/themes/types';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 
-import type { CardImageFragmentFragment } from '@/common/__generated__/graphql';
+import type { CardImageFragment } from '@/common/__generated__/graphql';
 import type { CommonContentBlockProps } from '@/common/blocks.types';
 import { getBgImageAlignment } from '@/common/images';
 import { Link } from '@/common/links';
@@ -94,7 +92,7 @@ const Identifier = styled.span`
 
 export type CategoryListBlockCategory = {
   id: string;
-  image?: CardImageFragmentFragment | null;
+  image?: CardImageFragment | null;
   color?: string | null;
   iconSvgUrl?: string | null;
   iconImage?: {
@@ -117,7 +115,7 @@ export type CategoryListBlockCategory = {
 
 interface CategoryListBlockProps extends CommonContentBlockProps {
   categories?: Array<CategoryListBlockCategory> | null;
-  fallbackImage?: CardImageFragmentFragment | null;
+  fallbackImage?: CardImageFragment | null;
   heading?: string;
   lead?: string | null;
   style?: 'treemap' | 'cards';
@@ -126,7 +124,7 @@ interface CategoryListBlockProps extends CommonContentBlockProps {
 export default function CategoryListBlock(props: CategoryListBlockProps) {
   const fallbackCategories = useFallbackCategories();
   const { id = '', fallbackImage, heading, lead, categories: providedCategories } = props;
-  const categories = providedCategories ?? fallbackCategories;
+  const categories: CategoryListBlockCategory[] = providedCategories ?? fallbackCategories;
 
   /*
     Determine what image to use on category card
@@ -153,7 +151,7 @@ export default function CategoryListBlock(props: CategoryListBlockProps) {
       return {
         type: 'image',
         src: categryImageSrc || fallbackImage?.small?.src,
-        alignment: getBgImageAlignment(category.image || fallbackImage || null),
+        alignment: getBgImageAlignment(category.image ?? fallbackImage ?? null),
       };
   };
 

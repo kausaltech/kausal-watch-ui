@@ -10,7 +10,7 @@ export function useHandleSignOut() {
   const router = useRouter();
 
   return useCallback(() => {
-    signOut({ redirect: true });
+    void signOut({ redirect: true });
     return;
     // TODO: Make this use RP-initiated logout when KW backend supports it.
     // See reference implementation in nzc-data-studio

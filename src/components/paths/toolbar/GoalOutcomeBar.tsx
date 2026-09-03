@@ -218,7 +218,6 @@ function outcomeAsText(
       nearestGoalYear: nearestGoalYear,
       nearestGoalValue: nearestGoalValue,
       strong: (chunks) => `<b>${chunks}</b>`,
-      interpolation: { escapeValue: false },
     });
   return t.markup('outcome-bar-summary-historical', {
     goalType: goalType,
@@ -227,7 +226,6 @@ function outcomeAsText(
     nearestGoalYear: nearestGoalYear,
     nearestGoalValue: nearestGoalValue,
     strong: (chunks) => `<b>${chunks}</b>`,
-    interpolation: { escapeValue: false },
   });
 }
 
@@ -272,7 +270,7 @@ function GoalOutcomeBar(props: GoalOutcomeBarProps) {
   });
 
   const refetching = networkStatus === NetworkStatus.refetch;
-  if (!activeGoal?.id) return null;
+  if (!activeGoal?.id || !activeScenario) return null;
 
   if (loading && !refetching) return <OutcomeBarLoader />;
   if (error) return <div>error!</div>;

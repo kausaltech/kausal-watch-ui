@@ -1,9 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
+
+import { Popover } from '@mui/material';
 
 import styled from '@emotion/styled';
-import { Popover } from '@mui/material';
+
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Filter } from 'react-bootstrap-icons';

@@ -2,7 +2,6 @@ import { useTranslations } from 'next-intl';
 
 import {
   CategoryTypeSelectWidget,
-  type IndicatorListFilterFragment,
   type IndicatorListPageFiltersFragment,
 } from '@/common/__generated__/graphql';
 import { type TFunction, getIndicatorTermContext } from '@/common/i18n';
@@ -105,6 +104,7 @@ const getFilterConfig = (
 
     // if (!filter.showAllLabel) filter.showAllLabel = t('filter-all-categories');
     return {
+      id: null,
       mainFilters: indicatorFiltersToActionListFilters(filterLayout.mainFilters, t) as NonNullable<
         IndicatorListPageFiltersFragment['mainFilters']
       >,
@@ -124,6 +124,7 @@ const getFilterConfig = (
   if (!commonCategories && !categoryType) {
     // console.log('-----------------> Using empty default filters');
     return {
+      id: null,
       mainFilters: [],
       primaryFilters: [],
       advancedFilters: [],
@@ -195,6 +196,7 @@ const getFilterConfig = (
     : [];
 
   return {
+    id: null,
     mainFilters: [
       ...(commonCategories ? commonCategoryFilters : mainTypeFilter ? [mainTypeFilter] : []),
     ],
@@ -258,12 +260,16 @@ const IndicatorListFilters = (props: IndicatorListFiltersProps) => {
     .filter(([key]) => !configuredFilterIds.has(key))
     .map(([key, value]) => {
       const typeIdentifier = getCategoryTypeIdentifierFromFilterKey(key);
-      const badgeData = getCategoryBadgeDataByTypeAndId(indicators, typeIdentifier, value);
+      const badgeData = getCategoryBadgeDataByTypeAndId(
+        indicators,
+        typeIdentifier,
+        value as string
+      );
       if (!badgeData) return null;
       const fallbackLabel = `${badgeData.typeName}: ${badgeData.categoryName}`;
 
       return {
-        key: `${key}-${value}`,
+        key: `${key}-${String(value)}`,
         id: key,
         value,
         label:

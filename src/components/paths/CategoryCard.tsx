@@ -1,10 +1,11 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import { readableColor, transparentize } from 'polished';
 
 import {
-  type CategoryFragmentFragment,
+  type CategoryFragment,
   IndicatorCategoryRelationshipType,
 } from '@/common/__generated__/graphql';
 import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
@@ -62,8 +63,8 @@ const Identifier = styled.span`
 `;
 
 type CategoryCardProps = {
-  category: CategoryFragmentFragment;
-  group?: CategoryFragmentFragment;
+  category: CategoryFragment;
+  group?: CategoryFragment;
   pathsInstance?: GetInstanceContextQuery['instance'];
   onLoaded: (id: string, impact: number) => void;
   targetNodeId?: string | null;
@@ -104,7 +105,6 @@ const CategoryCard = (props: CategoryCardProps) => {
               <PathsNodeSummary
                 categoryId={category.id}
                 node={category.kausalPathsNodeUuid}
-                pathsInstance={pathsInstance}
                 onLoaded={onLoaded}
                 targetNodeId={targetNodeId}
               />

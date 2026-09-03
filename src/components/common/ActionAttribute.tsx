@@ -1,4 +1,4 @@
-import React, { type ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -11,6 +11,7 @@ import type {
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
 } from '@/common/__generated__/graphql';
+import { AttributeTypeFormat } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 import { CategoryContent } from '@/components/actions/CategoryTags';
 import Icon from '@/components/common/Icon';
@@ -23,6 +24,7 @@ import {
 } from '@/fragments/action-attribute.fragment';
 
 type Variant = 'default' | 'minimized' | 'chip';
+type FontSize = 'fontSizeBase' | 'fontSizeSm';
 
 const ScaleIcon = styled(Icon, transientOptions)<{ $active?: boolean }>`
   font-size: 1.5rem;
@@ -31,7 +33,7 @@ const ScaleIcon = styled(Icon, transientOptions)<{ $active?: boolean }>`
 `;
 
 const AttributeContainer = styled.div<{
-  $fontSize?: string;
+  $fontSize?: FontSize;
   $noMargins?: boolean;
 }>`
   margin-bottom: ${(props) => (props?.$noMargins ? 0 : props.theme.spaces.s200)};
@@ -108,11 +110,12 @@ export function getAttributeValueText(
     case 'AttributeRichText':
       // Strip angle brackets to prevent any residual HTML tags or fragments
       return attribute.value?.replace(/[<>]/g, '').trim() || null;
-    case 'AttributeNumericValue':
+    case 'AttributeNumericValue': {
       const unit = attribute.type.unit?.shortName ?? attribute.type.unit?.name ?? '';
       return attribute.numericValue != null
         ? `${formatNumber(attribute.numericValue)}${unit ? ` ${unit}` : ''}`
         : null;
+    }
     case 'AttributeCategoryChoice':
       return attribute.categories.map((cat) => cat.name).join(', ') || null;
     default:
@@ -123,7 +126,7 @@ export function getAttributeValueText(
 type AttributeContentProps = {
   attribute: AttributesBlockAttributeFragment;
   attributeType: AttributesBlockAttributeTypeFragment;
-  fontSize?: string;
+  fontSize?: FontSize;
   notitle?: boolean;
   variant?: Variant;
 };
@@ -131,7 +134,7 @@ type AttributeContentProps = {
 type AttributeContentNestedTypeProps = {
   attribute: AttributesBlockAttributeWithNestedTypeFragment;
   attributeType: null | undefined;
-  fontSize?: string;
+  fontSize?: FontSize;
   notitle?: boolean;
   variant?: Variant;
 };
@@ -157,17 +160,17 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
     );
   }
 
-  let dataElement: ReactElement<any>;
+  let dataElement: ReactElement;
 
   switch (attribute.__typename) {
-    case 'AttributeChoice':
+    case 'AttributeChoice': {
       const valueIndex = type.choiceOptions.findIndex(
         (option) => option.id === attribute.choice?.id
       );
       // const choiceCount = contentType.choiceOptions.length;
       dataElement = (
         <div>
-          {type.format === 'ORDERED_CHOICE' && (
+          {type.format === AttributeTypeFormat.OrderedChoice && (
             <AttributeScaleContainer>
               {type.choiceOptions.map(
                 (choice, idx) =>
@@ -184,7 +187,8 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
           {type.showChoiceNames && (
             <AttributeChoiceLabel
               className={
-                type.format === 'OPTIONAL_CHOICE' || type.format === 'UNORDERED_CHOICE'
+                type.format === AttributeTypeFormat.OptionalChoice ||
+                type.format === AttributeTypeFormat.UnorderedChoice
                   ? 'highlighted'
                   : ''
               }
@@ -196,6 +200,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
         </div>
       );
       break;
+    }
     case 'AttributeText':
       // FIXME: attribute.value is not HTML
       dataElement = (
@@ -213,7 +218,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
         />
       );
       break;
-    case 'AttributeNumericValue':
+    case 'AttributeNumericValue': {
       const formattedValue = formatNumber(attribute.numericValue);
 
       dataElement = (
@@ -223,6 +228,7 @@ const ActionAttribute = (props: AttributeContentProps | AttributeContentNestedTy
         </div>
       );
       break;
+    }
     case 'AttributeCategoryChoice':
       dataElement = (
         <CategoryContent

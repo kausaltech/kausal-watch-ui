@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { transparentize } from 'polished';
 import { Badge, Card, CardBody, CardTitle } from 'reactstrap';
 
@@ -124,7 +125,7 @@ export default function ActionHighlightCard(props: ActionHighlightCardProps) {
   const theme = useTheme();
   const actionStatus = cleanActionStatus(action, plan.actionStatuses);
   let statusText = actionStatus.name || null;
-  const statusColor = getStatusColorForAction(action, plan, theme);
+  const statusColor = getStatusColorForAction(action, theme);
 
   // if Action is set in one of the phases, create message accordingly
   const { implementationPhase } = action;

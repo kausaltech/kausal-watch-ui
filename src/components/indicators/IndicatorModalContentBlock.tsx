@@ -4,11 +4,11 @@ import { upperFirst } from 'lodash-es';
 import { useFormatter, useTranslations } from 'next-intl';
 
 import {
-  type IndicatorCategoryContentBlockFragmentFragment,
-  type IndicatorContentBlockFragmentFragment,
+  type IndicatorCategoryContentBlockFragment,
+  type IndicatorContentBlockFragment,
   IndicatorDetailsFieldName,
   type IndicatorDetailsQuery,
-  type IndicatorValueSummaryContentBlockFragmentFragment,
+  type IndicatorValueSummaryContentBlockFragment,
 } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
@@ -63,7 +63,7 @@ const GroupedCategoryContainer = styled.div`
 const CategoryColumn = styled.div``;
 
 interface IndicatorContentBlockProps {
-  block: IndicatorContentBlockFragmentFragment;
+  block: IndicatorContentBlockFragment;
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
   hideLegacyLastUpdated?: boolean;
 }
@@ -222,7 +222,7 @@ const IndicatorContentBlock = (props: IndicatorContentBlockProps) => {
 };
 
 interface IndicatorCategoryBlockProps {
-  block: IndicatorCategoryContentBlockFragmentFragment;
+  block: IndicatorCategoryContentBlockFragment;
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
   context?: 'grouped' | 'single';
 }
@@ -284,7 +284,7 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
 };
 
 interface IndicatorValueSummaryBlockProps {
-  block: IndicatorValueSummaryContentBlockFragmentFragment;
+  block: IndicatorValueSummaryContentBlockFragment;
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
 }
 
@@ -325,7 +325,7 @@ const IndicatorValueSummaryBlock = (props: IndicatorValueSummaryBlockProps) => {
       <IndicatorValueSummary
         timeResolution={indicator.timeResolution || ''}
         values={indicator.values || []}
-        goals={indicator.goals || []}
+        goals={indicator.goals ?? []}
         unit={indicator.unit || {}}
         desiredTrend={indicator.desiredTrend || undefined}
         options={options}
@@ -344,7 +344,7 @@ type IndicatorModalContentBlock =
   | NonNullable<IndicatorListPage['detailsMainBottom']>[number];
 
 interface IndicatorGroupedCategoryBlockProps {
-  blocks: IndicatorCategoryContentBlockFragmentFragment[];
+  blocks: IndicatorCategoryContentBlockFragment[];
   indicator: NonNullable<IndicatorDetailsQuery['indicator']>;
   hideLegacyLastUpdated?: boolean;
 }
@@ -454,13 +454,13 @@ const IndicatorModalContentBlock = ({
 // Group consecutive IndicatorCategoryContentBlock blocks together
 export type GroupedBlock =
   | { type: 'single'; block: IndicatorModalContentBlock }
-  | { type: 'grouped'; blocks: IndicatorCategoryContentBlockFragmentFragment[] };
+  | { type: 'grouped'; blocks: IndicatorCategoryContentBlockFragment[] };
 
 export function groupConsecutiveCategoryBlocks(
   blocks: (IndicatorModalContentBlock | null)[]
 ): GroupedBlock[] {
   const result: GroupedBlock[] = [];
-  let currentGroup: IndicatorCategoryContentBlockFragmentFragment[] | null = null;
+  let currentGroup: IndicatorCategoryContentBlockFragment[] | null = null;
 
   for (const block of blocks) {
     if (!block) continue;

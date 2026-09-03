@@ -38,7 +38,7 @@ export const ATTRIBUTE_FRAGMENT = gql`
     }
     ... on AttributeCategoryChoice {
       categories {
-        ...CategoryRecursiveFragment
+        ...CategoryRecursive
       }
     }
   }

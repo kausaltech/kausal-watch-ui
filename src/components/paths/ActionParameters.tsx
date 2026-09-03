@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
-import { ParameterInterface } from '@/common/__generated__/paths/graphql';
+import type { ActionParameterFragment } from '@/common/__generated__/paths/graphql';
 
 //import { ActionParameterFragment } from 'common/__generated__/graphql';
-import ParameterWidget from './ParameterWidget';
+import ParameterWidget, { type Parameter } from './ParameterWidget';
 
 const Parameters = styled.div`
   display: flex;
@@ -16,7 +17,7 @@ const Parameters = styled.div`
   }
 `;
 
-const ActionParameters = (props: { parameters: ParameterInterface[] }) => {
+const ActionParameters = (props: { parameters: ActionParameterFragment[] }) => {
   const { parameters } = props;
   const t = useTranslations();
   if (!parameters) {
@@ -34,11 +35,14 @@ const ActionParameters = (props: { parameters: ParameterInterface[] }) => {
         ? actionParameterSwitchParameter?.description
         : t('action-enabled-description'),
     __typename: 'EnableParameterType',
-  } as ParameterInterface;
+  } as Parameter;
   const actionOtherParameters = parameters.filter(
     (param) => param.id !== actionParameterSwitch?.id
   );
-  const actionEnabled = actionParameterSwitch?.boolValue;
+  const actionEnabled =
+    actionParameterSwitchParameter?.__typename === 'BoolParameterType'
+      ? actionParameterSwitchParameter.boolValue
+      : undefined;
 
   return (
     <Parameters>

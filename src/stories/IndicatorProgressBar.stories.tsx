@@ -1,3 +1,4 @@
+import type { Theme } from '@kausal/themes/types';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 //import { themes } from '@/../.storybook/preview';
@@ -15,8 +16,9 @@ const meta = {
   decorators: [
     (Story, context) => {
       console.log('context in story', context);
-      const themes = context.loaded?.themes as Record<string, any>;
-      const themeId = context.globals.theme || 'default';
+      const themes = context.loaded?.themes as unknown as Record<string, Theme>;
+      const selectedTheme: unknown = context.globals.theme;
+      const themeId = typeof selectedTheme === 'string' ? selectedTheme : 'default';
       const theme = themes[themeId];
       return (
         <div

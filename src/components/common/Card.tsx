@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { Card as BSCard, CardBody } from 'reactstrap';
@@ -46,7 +47,7 @@ const StyledCard = styled(BSCard, transientOptions)<{
   &.negative {
     color: ${(props) => props.theme.themeColors.white};
     background-color: ${(props) =>
-      props.customcolor ? props.customcolor : props.theme.themeColors.black};
+      props.$customColor ? props.$customColor : props.theme.themeColors.black};
 
     h1,
     h2,
@@ -124,7 +125,7 @@ const Card = (props: CardProps) => {
   /*
     Support icon or image as cards main image
   */
-  const ImageComponent = () => {
+  const imageComponent = (() => {
     if (imageType === 'icon') {
       return (
         <ImgArea $colorEffect={colorEffect} data-testid="card-icon">
@@ -146,7 +147,7 @@ const Card = (props: CardProps) => {
       );
     }
     return null;
-  };
+  })();
 
   return (
     <StyledCard
@@ -155,7 +156,7 @@ const Card = (props: CardProps) => {
       $customBackgroundColor={customBackgroundColor}
       data-testid="card"
     >
-      <ImageComponent />
+      {imageComponent}
       <CardBody>{children}</CardBody>
     </StyledCard>
   );

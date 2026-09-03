@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useLocale, useTranslations } from 'next-intl';
 import { PropTypes } from 'prop-types';
 import {
@@ -140,7 +141,7 @@ const Task = (props) => {
   const toggle = () => setIsOpen(!isOpen);
   const plan = usePlan();
 
-  const dateFormat = task.dateFormat || plan.actionListPage.taskDateFormat;
+  const dateFormat = task.dateFormat || plan.actionListPage?.taskDateFormat;
   const formattedDueAt = new Date(task.dueAt).toLocaleDateString(locale, getDateFormat(dateFormat));
 
   return (
@@ -175,6 +176,27 @@ const Task = (props) => {
       </TaskContent>
     </TaskWrapper>
   );
+};
+
+const taskShape = {
+  completedAt: PropTypes.string,
+  dateFormat: PropTypes.string,
+  details: PropTypes.string,
+  dueAt: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  state: PropTypes.string.isRequired,
+};
+
+Task.propTypes = {
+  completed: PropTypes.bool.isRequired,
+  task: PropTypes.shape(taskShape).isRequired,
+  theme: PropTypes.shape({
+    graphColors: PropTypes.shape({
+      blue070: PropTypes.string.isRequired,
+      green050: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 function TaskList(props) {
@@ -227,7 +249,7 @@ function TaskList(props) {
 }
 
 TaskList.propTypes = {
-  tasks: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  tasks: PropTypes.arrayOf(PropTypes.shape(taskShape)).isRequired,
 };
 
 export default TaskList;

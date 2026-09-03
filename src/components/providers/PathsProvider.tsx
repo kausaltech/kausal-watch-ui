@@ -23,7 +23,6 @@ type AugmentedInstanceType = Omit<GetInstanceContextQuery['instance'], 'goals'> 
     goal: string;
     disclaimer: string;
   }[];
-  colorAdjust: Record<string, number>;
   showOutcomeNodeDetails: boolean;
 };
 
@@ -32,7 +31,7 @@ export type PathsInstanceType = GetInstanceContextQuery & {
 };
 
 type PathsProviderProps = {
-  instance: PathsInstanceType | undefined;
+  instance: GetInstanceContextQuery | undefined;
   children: ReactNode;
 };
 

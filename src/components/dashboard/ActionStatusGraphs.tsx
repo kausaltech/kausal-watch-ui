@@ -1,18 +1,17 @@
-import React from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 
 import { getStatusSummary } from '@/common/ActionStatusSummary';
-import type { ActionTimeliness, PlanContextFragment } from '@/common/__generated__/graphql';
+import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import {
+  type ActionListForGraphsQuery,
   ActionStatusSummaryIdentifier,
   ActionTimelinessIdentifier,
   Comparison,
-  type GetActionListForGraphsQuery,
   Sentiment,
 } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
@@ -23,7 +22,7 @@ import BarChart from '@/components/common/BarChart';
 import StatusDonut from '@/components/graphs/StatusDonut';
 import { usePlan } from '@/context/plan';
 
-import type { ActionListAction } from './ActionList';
+type ActionTimeliness = PlanContextFragment['actionTimelinessClasses'][number];
 
 const StatusDonutsWrapper = styled.div`
   width: auto;
@@ -89,7 +88,7 @@ function getTimelinessLabel(days: number, comparison: Comparison, t: TFunction) 
 }
 
 const getTimelinessData = (
-  actions: NonNullable<GetActionListForGraphsQuery['planActions']>,
+  actions: NonNullable<ActionListForGraphsQuery['planActions']>,
   plan: PlanContextFragment,
   theme: Theme,
   t: TFunction
@@ -147,7 +146,10 @@ const getTimelinessData = (
     }
     aggregates.values.push(counts.get(identifier) ?? 0);
     aggregates.labels.push(getTimelinessLabel(timeliness.days, timeliness.comparison, t));
-    aggregates.colors.push(theme.graphColors[timeliness.color]);
+    const color: unknown = timeliness.color;
+    if (typeof color === 'string' && color in theme.graphColors) {
+      aggregates.colors.push(theme.graphColors[color as keyof typeof theme.graphColors]);
+    }
   }
 
   aggregates.total = `${Math.round((good / total) * 100)}%`;
@@ -173,9 +175,7 @@ const DEFAULT_DATASETS: DatasetConfig = {
 
 const DAYS_IN_MONTH = 30.437;
 
-function getTimelinessHelpText(days: number, t: TFunction) {
-  const plan = usePlan();
-
+function getTimelinessHelpText(days: number, t: TFunction, plan: PlanContextFragment) {
   if (days < 30) {
     return t('actions-updated-help-days', {
       count: days,
@@ -190,7 +190,7 @@ function getTimelinessHelpText(days: number, t: TFunction) {
 }
 
 export interface ActionsStatusGraphsProps {
-  actions: NonNullable<GetActionListForGraphsQuery['planActions']>;
+  actions: NonNullable<ActionListForGraphsQuery['planActions']>;
   chart?: ChartType;
   shownDatasets?: DatasetConfig;
 }
@@ -272,7 +272,7 @@ const ActionsStatusGraphs = ({
           currentValue={showTotals ? timelinessData.total : undefined}
           colors={timelinessData.colors.length > 0 ? timelinessData.colors : []}
           header={t('actions-updated', getActionTermContext(plan))}
-          helpText={getTimelinessHelpText(daysVisible, t)}
+          helpText={getTimelinessHelpText(daysVisible, t, plan)}
         />
       )}
     </StatusDonutsWrapper>

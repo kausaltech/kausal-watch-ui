@@ -1,7 +1,6 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
-import { Dayjs } from 'dayjs';
+
+import type { Dayjs } from 'dayjs';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Badge } from 'reactstrap';
@@ -70,7 +69,7 @@ const Timeline = ({
     <StatusTitle>
       {startDate && `${format(startDate)} \u2192 `}
       {continuous && <Badge color="">{`${t('action-continuous')}`}</Badge>}
-      {((!startDate && endDate) || (continuous && endDate)) && ' \u2192 '}
+      {((!startDate && endDate) ?? (continuous && endDate)) && ' \u2192 '}
       {endDate && `${format(endDate)}`}
     </StatusTitle>
   );

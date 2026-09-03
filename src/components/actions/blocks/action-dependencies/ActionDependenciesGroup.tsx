@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
-import { ActionCardFragment } from '@/common/__generated__/graphql';
+import { type ActionCardFragment } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { usePlan } from '@/context/plan';
 

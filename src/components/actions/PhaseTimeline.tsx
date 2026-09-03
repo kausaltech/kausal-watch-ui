@@ -2,19 +2,22 @@ import { type RefObject, useEffect, useRef, useState } from 'react';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import type { Theme } from '@kausal/themes/types';
-import { debounce, get } from 'lodash-es';
+import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import { ActionImplementationPhase } from '@/common/__generated__/graphql';
+import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import Icon from '@/components/common/Icon';
 
 import type { ActionContentAction } from './ActionContent';
 
 // Used to determine the style of icon visualizing a phase, not to be confused with phase identifiers
 type PhaseType = 'done' | 'current' | 'todo';
+
+type ActionImplementationPhase = PlanContextFragment['actionImplementationPhases'][number];
 
 type PhaseTimelineProps = {
   activePhase: NonNullable<ActionContentAction['implementationPhase']>;
@@ -148,8 +151,8 @@ const StyledPhaseLine = styled.div<{
 const PHASE_CONFIG: {
   [key in PhaseType]: {
     icon: 'circle-full' | 'circle-half' | 'circle-outline';
-    colorKey: string;
-    textColorKey: string;
+    colorKey: 'phaseTimelineColor' | 'graphColors.grey040';
+    textColorKey: 'textColor.primary' | 'textColor.secondary';
   };
 } = {
   done: {
@@ -194,8 +197,10 @@ function getColorFromType(
   key: 'colorKey' | 'textColorKey' = 'colorKey'
 ) {
   const colorKey = PHASE_CONFIG[type][key];
-
-  return get(theme, colorKey);
+  if (colorKey === 'phaseTimelineColor') return theme.phaseTimelineColor;
+  if (colorKey === 'graphColors.grey040') return theme.graphColors.grey040;
+  if (colorKey === 'textColor.primary') return theme.textColor.primary;
+  return theme.textColor.secondary;
 }
 
 function getPhaseType(phaseIndex: number, activePhaseIndex: number): PhaseType {

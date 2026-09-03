@@ -41,7 +41,7 @@ const nextAuth = NextAuth({
       if ('token' in params && typeof params.token.idToken === 'string') {
         session.idToken = params.token.idToken;
         if (params.token.expires != null) {
-          session.expires = params.token.expires;
+          session.expires = params.token.expires as typeof session.expires;
         }
       }
       return session;

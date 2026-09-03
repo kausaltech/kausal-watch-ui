@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
-import { ActionListAction } from '../dashboard.types';
+import { type ActionListAction } from '../dashboard.types';
 
 interface Props {
   action: ActionListAction;
@@ -16,10 +16,10 @@ const OrgLogo = styled.img`
 `;
 
 const OrganizationCell = ({ action }: Props) => {
+  const theme = useTheme();
   if (!action.primaryOrg) {
     return null;
   }
-  const theme = useTheme();
 
   return (
     <OrgLogo

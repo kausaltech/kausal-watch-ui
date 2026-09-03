@@ -10,15 +10,16 @@ export const GET_INDICATOR_DETAILS = gql`
       id
       identifier
       indicatorListPage {
+        id
         detailsMainTop {
           ... on IndicatorContentBlock {
-            ...IndicatorContentBlockFragment
+            ...IndicatorContentBlock
           }
           ... on IndicatorCategoryContentBlock {
-            ...IndicatorCategoryContentBlockFragment
+            ...IndicatorCategoryContentBlock
           }
           ... on IndicatorValueSummaryContentBlock {
-            ...IndicatorValueSummaryContentBlockFragment
+            ...IndicatorValueSummaryContentBlock
           }
           ... on IndicatorFactorValueSummaryContentBlock {
             id
@@ -35,13 +36,13 @@ export const GET_INDICATOR_DETAILS = gql`
         }
         detailsMainBottom {
           ... on IndicatorContentBlock {
-            ...IndicatorContentBlockFragment
+            ...IndicatorContentBlock
           }
           ... on IndicatorCategoryContentBlock {
-            ...IndicatorCategoryContentBlockFragment
+            ...IndicatorCategoryContentBlock
           }
           ... on IndicatorValueSummaryContentBlock {
-            ...IndicatorValueSummaryContentBlockFragment
+            ...IndicatorValueSummaryContentBlock
           }
           ... on IndicatorFactorValueSummaryContentBlock {
             id
@@ -58,13 +59,13 @@ export const GET_INDICATOR_DETAILS = gql`
         }
         detailsAside {
           ... on IndicatorContentBlock {
-            ...IndicatorContentBlockFragment
+            ...IndicatorContentBlock
           }
           ... on IndicatorCategoryContentBlock {
-            ...IndicatorCategoryContentBlockFragment
+            ...IndicatorCategoryContentBlock
           }
           ... on IndicatorValueSummaryContentBlock {
-            ...IndicatorValueSummaryContentBlockFragment
+            ...IndicatorValueSummaryContentBlock
           }
         }
       }
@@ -103,12 +104,13 @@ export const GET_INDICATOR_DETAILS = gql`
         logo {
           id
           rendition(size: "128x128", crop: true) {
+            id
             src
           }
         }
       }
       categories {
-        ...CategoryTagRecursiveFragment
+        ...CategoryTagRecursive
       }
       common {
         id
@@ -126,6 +128,7 @@ export const GET_INDICATOR_DETAILS = gql`
             logo {
               id
               rendition(size: "128x128", crop: true) {
+                id
                 src
               }
             }
@@ -179,7 +182,7 @@ export const GET_INDICATOR_DETAILS = gql`
       nonQuantifiedGoalDate
       actions(plan: $plan) {
         id
-        ...ActionsTableRowFragment
+        ...ActionsTableRow
       }
       relatedCauses {
         id
@@ -189,9 +192,11 @@ export const GET_INDICATOR_DETAILS = gql`
           id
           name
           plans {
+            id
             identifier
             viewUrl
             parent {
+              id
               identifier
             }
           }
@@ -206,9 +211,11 @@ export const GET_INDICATOR_DETAILS = gql`
           id
           name
           plans {
+            id
             identifier
             viewUrl
             parent {
+              id
               identifier
             }
           }
@@ -253,6 +260,7 @@ export const GET_INDICATOR_DETAILS = gql`
       changeLogMessage {
         content
         createdBy {
+          id
           firstName
           lastName
           avatarUrl
@@ -284,7 +292,7 @@ export const GET_INDICATOR_DETAILS = gql`
     }
   }
 
-  fragment ActionsTableRowFragment on Action {
+  fragment ActionsTableRow on Action {
     id
     identifier
     name
@@ -305,7 +313,6 @@ export const GET_INDICATOR_DETAILS = gql`
     statusSummary {
       identifier
       label
-      color
       isActive
       isCompleted
       sentiment
@@ -330,6 +337,7 @@ export const GET_INDICATOR_DETAILS = gql`
       identifier
       name
       image {
+        id
         rendition {
           id
           src
@@ -343,18 +351,18 @@ export const GET_INDICATOR_DETAILS = gql`
     }
   }
 
-  fragment IndicatorCategoryContentBlockFragment on IndicatorCategoryContentBlock {
+  fragment IndicatorCategoryContentBlock on IndicatorCategoryContentBlock {
     id
     blockType
     fieldLabel
     fieldHelpText
     field
     categoryType {
-      ...CategoryTypeFragment
+      ...CategoryType
     }
   }
 
-  fragment IndicatorContentBlockFragment on IndicatorContentBlock {
+  fragment IndicatorContentBlock on IndicatorContentBlock {
     id
     blockType
     fieldLabel
@@ -363,7 +371,7 @@ export const GET_INDICATOR_DETAILS = gql`
     sourceField
   }
 
-  fragment IndicatorValueSummaryContentBlockFragment on IndicatorValueSummaryContentBlock {
+  fragment IndicatorValueSummaryContentBlock on IndicatorValueSummaryContentBlock {
     id
     blockType
     fieldLabel

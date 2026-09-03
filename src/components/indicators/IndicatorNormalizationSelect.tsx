@@ -1,6 +1,5 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
 import Switch from '@/components/common/Switch';
@@ -14,7 +13,7 @@ const NormalizerChooser = styled.div`
 `;
 
 interface IndicatorNormalizationSelectProps {
-  handleChange(...args: unknown[]): unknown;
+  handleChange: (value: boolean) => void;
   currentValue?: boolean;
 }
 
@@ -28,7 +27,7 @@ const IndicatorNormalizationSelect = (props: IndicatorNormalizationSelectProps) 
     <NormalizerChooser>
       <Switch
         label={t('indicator-normalize-per-capita')}
-        state={currentValue || false}
+        state={currentValue ?? false}
         onChange={callback}
         id="normalize-per-capita-switch"
       />

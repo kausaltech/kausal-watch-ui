@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { Collapse } from 'reactstrap';
 

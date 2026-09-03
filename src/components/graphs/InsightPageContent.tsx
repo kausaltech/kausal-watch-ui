@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 
@@ -8,19 +8,20 @@ import ContentLoader from '@common/components/ContentLoader';
 
 import { aplans } from '@/common/api';
 import IndicatorsHero from '@/components/indicators/IndicatorsHero';
+import type {
+  CytoGraphOwnProps,
+  InsightEdge,
+  InsightFilters,
+  InsightNode,
+} from '@/components/insight/CytoGraph';
 
-const CytoGraph = dynamic<{
-  edges: any[];
-  nodes: any[];
-  filters: any;
-  onFilterChange: (filters: any) => void;
-}>(() => import('@/components/insight/CytoGraph'));
+const CytoGraph = dynamic<CytoGraphOwnProps>(() => import('@/components/insight/CytoGraph'));
 
 type InsightPageContentProps = {
   planId: string;
   locale: string;
-  filters: any;
-  router: any;
+  filters: InsightFilters;
+  router: { replace: (href: string) => void };
   testId?: string;
 };
 
@@ -32,8 +33,8 @@ const InsightPageContent = ({
   testId,
 }: InsightPageContentProps) => {
   const [loading, setLoading] = useState(true);
-  const [edges, setEdges] = useState([]);
-  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState<InsightEdge[]>([]);
+  const [nodes, setNodes] = useState<InsightNode[]>([]);
   const t = useTranslations();
 
   useEffect(() => {
@@ -42,7 +43,9 @@ const InsightPageContent = ({
         language: locale,
         plan: planId,
       };
-      const resp = await aplans.get('insight', { params });
+      const resp = await aplans.get<{ edges: InsightEdge[]; nodes: InsightNode[] }>('insight', {
+        params,
+      });
       const { edges, nodes } = resp;
 
       setEdges(edges);
@@ -50,10 +53,10 @@ const InsightPageContent = ({
       setLoading(false);
     };
 
-    fetchData();
+    void fetchData();
   }, [locale, planId]);
 
-  const handleFilterChange = (filters) => {
+  const handleFilterChange = (filters: InsightFilters) => {
     const { indicator } = filters;
 
     let queryParams = '';

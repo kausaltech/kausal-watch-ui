@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { notFound } from 'next/navigation';
 
 import { captureException } from '@sentry/nextjs';
@@ -68,7 +66,7 @@ export default async function IndicatorPage(props: Props) {
   return (
     <IndicatorContent
       indicator={data.indicator}
-      layout={data.plan?.indicatorListPage}
+      layout={data.plan?.indicatorListPage as Parameters<typeof IndicatorContent>[0]['layout']}
       testId="indicator-page"
     />
   );

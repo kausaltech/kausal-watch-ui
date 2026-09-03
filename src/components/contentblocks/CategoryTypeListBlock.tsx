@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
 
-import type { CategoryFragmentFragment } from '@/common/__generated__/graphql';
+import type { CategoryFragment } from '@/common/__generated__/graphql';
 import { getDeepParents } from '@/common/categories';
 import type { TFunction } from '@/common/i18n';
 import { usePaths } from '@/context/paths/paths';
@@ -112,7 +112,7 @@ const CategoryListSection = styled.div`
 
 interface CategoryTypeListBlockProps {
   id?: string;
-  categories: CategoryFragmentFragment[];
+  categories: CategoryFragment[];
   groupByLevelId?: string;
   heading?: string;
   lead?: string | null;
@@ -135,8 +135,8 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
 
   const groups = useMemo(
     () =>
-      getParentCategoriesOfLevel(categories, groupByLevelId) || [
-        { id: 'all', name: 'All' } as CategoryFragmentFragment,
+      getParentCategoriesOfLevel(categories, groupByLevelId) ?? [
+        { id: 'all', name: 'All' } as CategoryFragment,
       ],
     [categories, groupByLevelId]
   );
@@ -167,7 +167,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
     setSortBy(selectedSorter);
   };
 
-  const sortedCategories: CategoryFragmentFragment[] = useMemo(
+  const sortedCategories: CategoryFragment[] = useMemo(
     () =>
       [...categories].sort((a, b) => {
         if (sortBy.key === 'IMPACT') {
@@ -237,7 +237,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
             )}
             {sortedCategories
               ?.filter(
-                (cat) => (cat?.categoryPage?.live && hasParent(cat, group.id)) || group.id === 'all'
+                (cat) => (cat?.categoryPage?.live && hasParent(cat, group.id)) ?? group.id === 'all'
               )
               .map(
                 (cat) =>
@@ -260,27 +260,24 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
   );
 };
 
-const hasParent = (cat, parentId) => {
+const hasParent = (cat: CategoryWithParent, parentId: string) => {
   const catParents = getDeepParents(cat);
   return catParents.some((parent) => parent.id === parentId);
 };
 
-type CategoryWithParent = CategoryFragmentFragment & {
+type CategoryWithParent = CategoryFragment & {
   parent?: CategoryWithParent | null;
 };
 
-const getParentCategoryOfLevel = (
-  cat: CategoryWithParent,
-  levelId: string
-): CategoryFragmentFragment => {
+const getParentCategoryOfLevel = (cat: CategoryWithParent, levelId: string): CategoryFragment => {
   const catParents = getDeepParents(cat);
-  return catParents.find((parent) => parent.level?.id === levelId) as CategoryFragmentFragment;
+  return catParents.find((parent) => parent.level?.id === levelId) as CategoryFragment;
 };
 
 const getParentCategoriesOfLevel = (
-  cats: CategoryFragmentFragment[],
+  cats: CategoryFragment[],
   levelId: string | undefined
-): CategoryFragmentFragment[] | undefined => {
+): CategoryFragment[] | undefined => {
   if (!levelId) {
     return undefined;
   }

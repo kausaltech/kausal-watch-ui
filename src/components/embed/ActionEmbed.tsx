@@ -3,17 +3,14 @@ import styled from '@emotion/styled';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 
-import type {
-  GetEmbedActionQuery,
-  GetEmbedActionQueryVariables,
-} from '@/common/__generated__/graphql';
+import type { EmbedActionQuery, EmbedActionQueryVariables } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 import ActionHighlightCard from '@/components/actions/ActionHighlightCard';
 import { InvalidEmbedAddressError } from '@/context/embed';
 import { usePlan } from '@/context/plan';
 
 const GET_ACTION = gql`
-  query GetEmbedAction($plan: ID!, $identifier: ID!) {
+  query EmbedAction($plan: ID!, $identifier: ID!) {
     action(plan: $plan, identifier: $identifier) {
       id
       identifier
@@ -22,7 +19,7 @@ const GET_ACTION = gql`
       completion
       updatedAt
       image {
-        ...CardImageFragment
+        ...CardImage
       }
       plan {
         id
@@ -45,17 +42,17 @@ const GET_ACTION = gql`
       categories {
         id
         image {
-          ...CardImageFragment
+          ...CardImage
         }
         parent {
           id
           image {
-            ...CardImageFragment
+            ...CardImage
           }
           parent {
             id
             image {
-              ...CardImageFragment
+              ...CardImage
             }
           }
         }
@@ -88,7 +85,7 @@ const ActionEmbed = ({ path, maxWidth }: ActionEmbedPropsType) => {
   if (path.length < 1) {
     throw new InvalidEmbedAddressError('Could not retrieve action data');
   }
-  const { loading, error, data } = useQuery<GetEmbedActionQuery, GetEmbedActionQueryVariables>(
+  const { loading, error, data } = useQuery<EmbedActionQuery, EmbedActionQueryVariables>(
     GET_ACTION,
     {
       variables: {

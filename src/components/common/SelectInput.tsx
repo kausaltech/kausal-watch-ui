@@ -1,12 +1,13 @@
 import React from 'react';
 
 import styled from '@emotion/styled';
+
 import {
   Input as BSInput,
   Label as BSLabel,
   FormFeedback,
   FormGroup,
-  InputProps,
+  type InputProps,
 } from 'reactstrap';
 
 const Label = styled(BSLabel)`
@@ -46,7 +47,12 @@ const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(functi
   return (
     <FormGroup>
       {label && <Label htmlFor={id}>{label}</Label>}
-      <Select id={id} type="select" {...rest} innerRef={ref}>
+      <Select
+        id={id}
+        type="select"
+        {...rest}
+        innerRef={ref as React.Ref<HTMLInputElement | HTMLTextAreaElement>}
+      >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

@@ -157,7 +157,6 @@ describe('timestamp labels match ECharts date parsing', () => {
   // calendar boundaries, and formatDateLabel must read them back with local
   // getters: UTC getters would report the previous period east of UTC.
   // Run under several TZ values (see the TZ-matrix runs) to verify.
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { time } = require('echarts') as { time: { parse: (v: string) => Date } };
 
   it('labels an ECharts-parsed date-only value as its own period in any timezone', () => {

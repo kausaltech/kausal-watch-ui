@@ -1,8 +1,9 @@
 'use client';
 
-import React, { type JSX } from 'react';
+import { type JSX } from 'react';
 
 import { useTheme } from '@emotion/react';
+
 import { captureMessage } from '@sentry/nextjs';
 import SVG from 'react-inlinesvg';
 
@@ -149,7 +150,6 @@ const IconComponent = ({
   return (
     <svg
       className={`icon ${className}`}
-      onError={() => console.error(`Failed to load icon ${name}`)}
       key={`${theme.name}-${name}`}
       style={{ width, height }}
       aria-hidden={alt ? 'false' : 'true'}

@@ -254,6 +254,7 @@ export type AttributeTypeInput = {
   choiceOptions: InputMaybe<Array<ChoiceOptionInput>>;
   /** The format of the fields with this type */
   format: AttributeTypeFormat;
+  /** A help text shown to visitors of the site */
   helpText: InputMaybe<Scalars['String']['input']>;
   identifier: Scalars['ID']['input'];
   name: Scalars['String']['input'];
@@ -1119,7 +1120,7 @@ export enum WorkflowStateStatus {
   NeedsChanges = 'NEEDS_CHANGES'
 }
 
-export type HeroImageFragmentFragment = (
+export type HeroImageFragment = (
   { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
     { id: string, width: number, height: number, src: string }
     & { __typename: 'ImageRendition' }
@@ -1133,7 +1134,7 @@ export type HeroImageFragmentFragment = (
   & { __typename: 'Image' }
 );
 
-export type CardImageFragmentFragment = (
+export type CardImageFragment = (
   { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
     { id: string, width: number, height: number, src: string }
     & { __typename: 'ImageRendition' }
@@ -1144,7 +1145,7 @@ export type CardImageFragmentFragment = (
   & { __typename: 'Image' }
 );
 
-export type SocialImageFragmentFragment = (
+export type SocialImageFragment = (
   { id: string, social: (
     { id: string, width: number, height: number, src: string }
     & { __typename: 'ImageRendition' }
@@ -1152,7 +1153,7 @@ export type SocialImageFragmentFragment = (
   & { __typename: 'Image' }
 );
 
-export type SearchQueryQueryVariables = Exact<{
+export type SearchQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   query: Scalars['String']['input'];
   onlyOtherPlans: InputMaybe<Scalars['Boolean']['input']>;
@@ -1160,26 +1161,26 @@ export type SearchQueryQueryVariables = Exact<{
 }>;
 
 
-export type SearchQueryQuery = (
+export type SearchQuery = (
   { search: (
     { hits: Array<(
       { id: string, title: string, url: string | null, highlight: string | null, plan: (
-        { identifier: string, name: string, shortName: string | null, image: (
-          { rendition: (
-            { src: string }
+        { id: string, identifier: string, name: string, shortName: string | null, image: (
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
         ) | null, organization: (
-          { name: string }
+          { id: string, name: string }
           & { __typename: 'Organization' }
         ) }
         & { __typename: 'Plan' }
       ), object: (
         { identifier: string, primaryOrg: (
-          { name: string, logo: (
-            { rendition: (
-              { src: string }
+          { id: string, name: string, logo: (
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -1191,12 +1192,12 @@ export type SearchQueryQuery = (
         { id: string }
         & { __typename: 'Indicator' }
       ) | null, page: (
-        { title: string }
+        { id: string | null, title: string }
         & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
       ) | (
-        { title: string, category: (
-          { level: (
-            { name: string }
+        { id: string | null, title: string, category: (
+          { id: string, level: (
+            { id: string, name: string }
             & { __typename: 'CategoryLevel' }
           ) | null }
           & { __typename: 'Category' }
@@ -1290,7 +1291,7 @@ export type ActionUpdatesQueryVariables = Exact<{
 
 export type ActionUpdatesQuery = (
   { action: (
-    { statusUpdates: Array<(
+    { id: string, statusUpdates: Array<(
       { id: string, title: string, date: string, content: string, author: (
         { id: string, firstName: string, lastName: string, avatarUrl: string | null }
         & { __typename: 'Person' }
@@ -1302,13 +1303,13 @@ export type ActionUpdatesQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetActionListQueryVariables = Exact<{
+export type ActionListQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   clientUrl: Scalars['String']['input'];
 }>;
 
 
-export type GetActionListQuery = (
+export type ActionListQuery = (
   { planActions: Array<(
     { hasDependencyRelationships: boolean | null, id: string, identifier: string, name: string, viewUrl: string, color: string | null, scheduleContinuous: boolean, completion: number | null, image: (
       { id: string, rendition: (
@@ -1334,25 +1335,25 @@ export type GetActionListQuery = (
         & { __typename: 'Image' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -1385,25 +1386,25 @@ export type GetActionListQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -1435,25 +1436,25 @@ export type GetActionListQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -1485,25 +1486,25 @@ export type GetActionListQuery = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -1567,7 +1568,7 @@ export type ContactDetailsQueryVariables = Exact<{
 
 export type ContactDetailsQuery = (
   { person: (
-    { email: string, organization: (
+    { id: string, email: string, organization: (
       { id: string, name: string, ancestors: Array<(
         { id: string, name: string, classification: (
           { id: string, name: string }
@@ -1590,11 +1591,11 @@ export type ActionDependenciesQueryVariables = Exact<{
 
 export type ActionDependenciesQuery = (
   { action: (
-    { dependencyRole: (
+    { id: string, dependencyRole: (
       { id: string, name: string }
       & { __typename: 'ActionDependencyRole' }
     ) | null, allDependencyRelationships: Array<(
-      { preceding: (
+      { id: string, preceding: (
         { id: string, dependencyRole: (
           { id: string }
           & { __typename: 'ActionDependencyRole' }
@@ -1622,7 +1623,7 @@ export type CreateUserFeedbackMutationVariables = Exact<{
 export type CreateUserFeedbackMutation = (
   { createUserFeedback: (
     { feedback: (
-      { createdAt: string }
+      { id: string, createdAt: string }
       & { __typename: 'UserFeedbackNode' }
     ) | null, errors: Array<(
       { field: string, messages: Array<string> }
@@ -1661,25 +1662,25 @@ export type ActionListForBlockQuery = (
         & { __typename: 'Image' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -1712,25 +1713,25 @@ export type ActionListForBlockQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -1762,25 +1763,25 @@ export type ActionListForBlockQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -1812,25 +1813,25 @@ export type ActionListForBlockQuery = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -1886,22 +1887,22 @@ export type ActionListForBlockQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetActionListForGraphsQueryVariables = Exact<{
+export type ActionListForGraphsQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   categoryId: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
-export type GetActionListForGraphsQuery = (
+export type ActionListForGraphsQuery = (
   { planActions: Array<(
-    { color: string | null, scheduleContinuous: boolean, statusSummary: (
+    { id: string, color: string | null, scheduleContinuous: boolean, statusSummary: (
       { identifier: ActionStatusSummaryIdentifier }
       & { __typename: 'ActionStatusSummary' }
     ), timeliness: (
       { identifier: ActionTimelinessIdentifier }
       & { __typename: 'ActionTimeliness' }
     ), implementationPhase: (
-      { identifier: string, name: string }
+      { id: string, identifier: string, name: string }
       & { __typename: 'ActionImplementationPhase' }
     ) | null }
     & { __typename: 'Action' }
@@ -1909,12 +1910,12 @@ export type GetActionListForGraphsQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetCategoryAttributeTypesQueryVariables = Exact<{
+export type CategoryAttributeTypesQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
 }>;
 
 
-export type GetCategoryAttributeTypesQuery = (
+export type CategoryAttributeTypesQuery = (
   { plan: (
     { id: string, categoryTypes: Array<(
       { id: string, name: string, attributeTypes: Array<(
@@ -1934,14 +1935,14 @@ export type GetCategoryAttributeTypesQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetCategoriesForTreeMapQueryVariables = Exact<{
+export type CategoriesForTreeMapQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   categoryType: Scalars['ID']['input'];
   attributeType: Scalars['ID']['input'];
 }>;
 
 
-export type GetCategoriesForTreeMapQuery = (
+export type CategoriesForTreeMapQuery = (
   { planCategories: Array<(
     { id: string, name: string, leadParagraph: string, color: string, image: (
       { id: string, title: string, imageCredit: string, altText: string, rendition: (
@@ -1964,8 +1965,11 @@ export type GetCategoriesForTreeMapQuery = (
     ) | null, type: (
       { id: string, hideCategoryIdentifiers: boolean }
       & { __typename: 'CategoryType' }
-    ), attributes: Array<{ __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeRichText' | 'AttributeText' } | (
-      { value: number }
+    ), attributes: Array<(
+      { id: string }
+      & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeRichText' | 'AttributeText' }
+    ) | (
+      { value: number, id: string }
       & { __typename: 'AttributeNumericValue' }
     )> }
     & { __typename: 'Category' }
@@ -1973,15 +1977,15 @@ export type GetCategoriesForTreeMapQuery = (
   & { __typename: 'Query' }
 );
 
-export type CommonCategoryFragmentFragment = (
-  { common: (
+export type CommonCategoryFragment = (
+  { id: string, common: (
     { id: string, identifier: string, name: string, order: number }
     & { __typename: 'CommonCategory' }
   ) | null }
   & { __typename: 'Category' }
 );
 
-export type PlanFragmentFragment = (
+export type PlanFragment = (
   { id: string, categoryTypes: Array<(
     { id: string, identifier: string, name: string, usableForActions: boolean, hideCategoryIdentifiers: boolean, common: (
       { identifier: string, name: string, hideCategoryIdentifiers: boolean }
@@ -1994,8 +1998,8 @@ export type PlanFragmentFragment = (
         ) | null }
         & { __typename: 'Category' }
       ) | null, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -2016,7 +2020,24 @@ export type PlanFragmentFragment = (
   & { __typename: 'Plan' }
 );
 
-export type ActionFragmentFragment = (
+export type RelatedPlanFragment = (
+  { id: string, shortName: string | null, name: string, shortIdentifier: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
+    { id: string, rendition: (
+      { id: string, src: string }
+      & { __typename: 'ImageRendition' }
+    ) | null }
+    & { __typename: 'Image' }
+  ) | null, generalContent: (
+    { id: string, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
+    & { __typename: 'SiteGeneralContent' }
+  ), actionImplementationPhases: Array<(
+    { id: string, identifier: string, name: string, order: number, color: string }
+    & { __typename: 'ActionImplementationPhase' }
+  )> }
+  & { __typename: 'Plan' }
+);
+
+export type ActionFragment = (
   { id: string, identifier: string, name: string, viewUrl?: string, color: string | null, hasDependencyRelationships: boolean | null, manualStatusReason: string | null, completion: number | null, officialName: string | null, updatedAt: string, scheduleContinuous: boolean, startDate: string | null, endDate: string | null, order: number, indicatorsCount: number | null, hasIndicatorsWithGoals: boolean | null, status: (
     { id: string, identifier: string, name: string, color: string }
     & { __typename: 'ActionStatus' }
@@ -2030,20 +2051,20 @@ export type ActionFragmentFragment = (
     { id: string, identifier: string, name: string, order: number }
     & { __typename: 'ActionImplementationPhase' }
   ) | null, statusSummary: (
-    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
+    { identifier: ActionStatusSummaryIdentifier, label: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
     & { __typename: 'ActionStatusSummary' }
   ), timeliness: (
     { identifier: ActionTimelinessIdentifier }
     & { __typename: 'ActionTimeliness' }
-  ), plan?: (
+  ), plan: (
     { id: string, shortName: string | null, name: string, shortIdentifier: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
     ) | null, generalContent: (
-      { actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
+      { id: string, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
       & { __typename: 'SiteGeneralContent' }
     ), actionImplementationPhases: Array<(
       { id: string, identifier: string, name: string, order: number, color: string }
@@ -2103,8 +2124,8 @@ export type ActionFragmentFragment = (
     & { __typename: 'ActionResponsibleParty' }
   )>, primaryOrg: (
     { id: string, abbreviation: string | null, name: string, logo: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -2123,9 +2144,9 @@ export type ActionFragmentFragment = (
   & { __typename: 'Action' }
 );
 
-export type OrganizationFragmentFragment = (
+export type OrganizationFragment = (
   { id: string, abbreviation: string | null, name: string, contactPersonCount: number, actionCount: number, classification: (
-    { name: string }
+    { id: string, name: string }
     & { __typename: 'OrganizationClass' }
   ) | null, parent: (
     { id: string }
@@ -2156,8 +2177,8 @@ export type DashboardActionListQuery = (
           ) | null }
           & { __typename: 'Category' }
         ) | null, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -2190,20 +2211,20 @@ export type DashboardActionListQuery = (
       { id: string, identifier: string, name: string, order: number }
       & { __typename: 'ActionImplementationPhase' }
     ) | null, statusSummary: (
-      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
+      { identifier: ActionStatusSummaryIdentifier, label: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
       & { __typename: 'ActionStatusSummary' }
     ), timeliness: (
       { identifier: ActionTimelinessIdentifier }
       & { __typename: 'ActionTimeliness' }
-    ), plan?: (
+    ), plan: (
       { id: string, shortName: string | null, name: string, shortIdentifier: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
       ) | null, generalContent: (
-        { actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
+        { id: string, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
         & { __typename: 'SiteGeneralContent' }
       ), actionImplementationPhases: Array<(
         { id: string, identifier: string, name: string, order: number, color: string }
@@ -2263,8 +2284,8 @@ export type DashboardActionListQuery = (
       & { __typename: 'ActionResponsibleParty' }
     )>, primaryOrg: (
       { id: string, abbreviation: string | null, name: string, logo: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -2295,20 +2316,20 @@ export type DashboardActionListQuery = (
       { id: string, identifier: string, name: string, order: number }
       & { __typename: 'ActionImplementationPhase' }
     ) | null, statusSummary: (
-      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
+      { identifier: ActionStatusSummaryIdentifier, label: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
       & { __typename: 'ActionStatusSummary' }
     ), timeliness: (
       { identifier: ActionTimelinessIdentifier }
       & { __typename: 'ActionTimeliness' }
-    ), plan?: (
+    ), plan: (
       { id: string, shortName: string | null, name: string, shortIdentifier: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, publishedAt: string | null, image: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
       ) | null, generalContent: (
-        { actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
+        { id: string, actionTaskTerm: SiteGeneralContentActionTaskTerm, organizationTerm: SiteGeneralContentOrganizationTerm }
         & { __typename: 'SiteGeneralContent' }
       ), actionImplementationPhases: Array<(
         { id: string, identifier: string, name: string, order: number, color: string }
@@ -2368,8 +2389,8 @@ export type DashboardActionListQuery = (
       & { __typename: 'ActionResponsibleParty' }
     )>, primaryOrg: (
       { id: string, abbreviation: string | null, name: string, logo: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -2386,8 +2407,11 @@ export type DashboardActionListQuery = (
       & { __typename: 'Action' }
     ) | null }
     & { __typename: 'Action' }
-  )> | null, planPage: { __typename: 'AccessibilityStatementPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' } | (
-    { dashboardColumns: Array<(
+  )> | null, planPage: (
+    { id: string | null }
+    & { __typename: 'AccessibilityStatementPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+  ) | (
+    { id: string | null, dashboardColumns: Array<(
       { columnLabel: string | null }
       & { __typename: 'EndDateColumnBlock' | 'IdentifierColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorsColumnBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'ResponsiblePartiesColumnBlock' | 'ScheduleContinuousColumnBlock' | 'StartDateColumnBlock' | 'StatusColumnBlock' | 'TasksColumnBlock' | 'UpdatedAtColumnBlock' }
     ) | (
@@ -2406,7 +2430,7 @@ export type DashboardActionListQuery = (
     & { __typename: 'ActionListPage' }
   ) | null, planOrganizations: Array<(
     { id: string, abbreviation: string | null, name: string, contactPersonCount: number, actionCount: number, classification: (
-      { name: string }
+      { id: string, name: string }
       & { __typename: 'OrganizationClass' }
     ) | null, parent: (
       { id: string }
@@ -2417,13 +2441,13 @@ export type DashboardActionListQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetEmbedActionQueryVariables = Exact<{
+export type EmbedActionQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   identifier: Scalars['ID']['input'];
 }>;
 
 
-export type GetEmbedActionQuery = (
+export type EmbedActionQuery = (
   { action: (
     { id: string, identifier: string, name: string, officialName: string | null, completion: number | null, updatedAt: string, color: string | null, image: (
       { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
@@ -2507,6 +2531,25 @@ export type IndicatorHightlightListQuery = (
     & { __typename: 'Indicator' }
   )> | null }
   & { __typename: 'Query' }
+);
+
+export type CreatePledgeFeedbackMutationVariables = Exact<{
+  input: UserFeedbackMutationInput;
+}>;
+
+
+export type CreatePledgeFeedbackMutation = (
+  { createUserFeedback: (
+    { feedback: (
+      { id: string, createdAt: string }
+      & { __typename: 'UserFeedbackNode' }
+    ) | null, errors: Array<(
+      { field: string, messages: Array<string> }
+      & { __typename: 'ErrorType' }
+    )> }
+    & { __typename: 'UserFeedbackMutationPayload' }
+  ) | null }
+  & { __typename: 'Mutation' }
 );
 
 export type RegisterPublicUserMutationVariables = Exact<{ [key: string]: never; }>;
@@ -2594,25 +2637,25 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
       & { __typename: 'Image' }
     ) | null, indicators: Array<(
       { id: string, values: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorValue' }
       )>, goals: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
     )>, indicatorRelationships: Array<(
-      { type: IndicatorCategoryRelationshipType, indicator: (
+      { id: string, type: IndicatorCategoryRelationshipType, indicator: (
         { id: string }
         & { __typename: 'Indicator' }
       ) }
       & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -2645,25 +2688,25 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -2695,25 +2738,25 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -2745,25 +2788,25 @@ type AttributesBlockAttribute_AttributeCategoryChoice_Fragment = (
         & { __typename: 'Image' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -2867,25 +2910,25 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
       & { __typename: 'Image' }
     ) | null, indicators: Array<(
       { id: string, values: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorValue' }
       )>, goals: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
     )>, indicatorRelationships: Array<(
-      { type: IndicatorCategoryRelationshipType, indicator: (
+      { id: string, type: IndicatorCategoryRelationshipType, indicator: (
         { id: string }
         & { __typename: 'Indicator' }
       ) }
       & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -2918,25 +2961,25 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -2968,25 +3011,25 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -3018,25 +3061,25 @@ type AttributesBlockAttributeWithNestedType_AttributeCategoryChoice_Fragment = (
         & { __typename: 'Image' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -3126,25 +3169,25 @@ export type ActionCardFragment = (
       & { __typename: 'Image' }
     ) | null, indicators: Array<(
       { id: string, values: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorValue' }
       )>, goals: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
     )>, indicatorRelationships: Array<(
-      { type: IndicatorCategoryRelationshipType, indicator: (
+      { id: string, type: IndicatorCategoryRelationshipType, indicator: (
         { id: string }
         & { __typename: 'Indicator' }
       ) }
       & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -3177,25 +3220,25 @@ export type ActionCardFragment = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -3227,25 +3270,25 @@ export type ActionCardFragment = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -3277,25 +3320,25 @@ export type ActionCardFragment = (
         & { __typename: 'Image' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -3350,42 +3393,42 @@ export type ActionCardFragment = (
 );
 
 type ActionListFilter_NamQpVmUnryKDl1H2D8m2IPcp07He5lrrp0r8isOaA_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
 );
 
 type ActionListFilter_TyqpX0xFn20cOuzLf6jqgPfDwyKoIUmXbP0Vvf0Gy_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' }
 );
 
 type ActionListFilter_M6gSc5pqzc1a0g6FeXv2Rtn6g7YvjGh6niEypHrkxY_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' }
 );
 
 type ActionListFilter_It2JyYls4Dd8vcP2pLfG3hgEjPhyfUziBquN2Ho6k_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' }
 );
 
 type ActionListFilter_Jh2vQfKUeIcYrzyBfY3tTanYlu2k1R3Sgia12JtaP10_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' }
 );
 
 type ActionListFilter_JbuLsm3AgmB9ArmgV66if9UTtXwiW57il5x6XNsc_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' }
 );
 
 type ActionListFilter_V2aeCntk28Sdu3p0ZUflYw6N6iIqB4ZRyT2m1kGs_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
 );
 
 type ActionListFilter_ActionAttributeTypeFilterBlock_Fragment = (
-  { showAllLabel: string | null, field: string, id: string | null, attributeType: (
+  { showAllLabel: string | null, field: string, attributeType: (
     { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
       { id: string, identifier: string, name: string }
       & { __typename: 'AttributeTypeChoiceOption' }
@@ -3396,12 +3439,12 @@ type ActionListFilter_ActionAttributeTypeFilterBlock_Fragment = (
 );
 
 type ActionListFilter_EUodn7sVqbvwUxEYoY8u9Gp8Ybfq3ZviRhOxRp9a94_Fragment = (
-  { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+  { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
   & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
 );
 
 type ActionListFilter_CategoryTypeFilterBlock_Fragment = (
-  { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+  { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
     { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
       { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
         { id: string }
@@ -3425,8 +3468,8 @@ type ActionListFilter_ContinuousActionFilterBlock_Fragment = (
 export type ActionListFilterFragment = ActionListFilter_NamQpVmUnryKDl1H2D8m2IPcp07He5lrrp0r8isOaA_Fragment | ActionListFilter_TyqpX0xFn20cOuzLf6jqgPfDwyKoIUmXbP0Vvf0Gy_Fragment | ActionListFilter_M6gSc5pqzc1a0g6FeXv2Rtn6g7YvjGh6niEypHrkxY_Fragment | ActionListFilter_It2JyYls4Dd8vcP2pLfG3hgEjPhyfUziBquN2Ho6k_Fragment | ActionListFilter_Jh2vQfKUeIcYrzyBfY3tTanYlu2k1R3Sgia12JtaP10_Fragment | ActionListFilter_JbuLsm3AgmB9ArmgV66if9UTtXwiW57il5x6XNsc_Fragment | ActionListFilter_V2aeCntk28Sdu3p0ZUflYw6N6iIqB4ZRyT2m1kGs_Fragment | ActionListFilter_ActionAttributeTypeFilterBlock_Fragment | ActionListFilter_EUodn7sVqbvwUxEYoY8u9Gp8Ybfq3ZviRhOxRp9a94_Fragment | ActionListFilter_CategoryTypeFilterBlock_Fragment | ActionListFilter_ContinuousActionFilterBlock_Fragment;
 
 export type ActionListPageFiltersFragment = (
-  { primaryFilters: Array<(
-    { showAllLabel: string | null, field: string, id: string | null, attributeType: (
+  { id: string | null, primaryFilters: Array<(
+    { showAllLabel: string | null, field: string, attributeType: (
       { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
         { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
@@ -3435,10 +3478,10 @@ export type ActionListPageFiltersFragment = (
     ) }
     & { __typename: 'ActionAttributeTypeFilterBlock' }
   ) | (
-    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
     & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
   ) | (
-    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
           { id: string }
@@ -3456,7 +3499,7 @@ export type ActionListPageFiltersFragment = (
     { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
     & { __typename: 'ContinuousActionFilterBlock' }
   )> | null, mainFilters: Array<(
-    { showAllLabel: string | null, field: string, id: string | null, attributeType: (
+    { showAllLabel: string | null, field: string, attributeType: (
       { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
         { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
@@ -3465,10 +3508,10 @@ export type ActionListPageFiltersFragment = (
     ) }
     & { __typename: 'ActionAttributeTypeFilterBlock' }
   ) | (
-    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
     & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
   ) | (
-    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
           { id: string }
@@ -3486,7 +3529,7 @@ export type ActionListPageFiltersFragment = (
     { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
     & { __typename: 'ContinuousActionFilterBlock' }
   )> | null, advancedFilters: Array<(
-    { showAllLabel: string | null, field: string, id: string | null, attributeType: (
+    { showAllLabel: string | null, field: string, attributeType: (
       { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
         { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
@@ -3495,10 +3538,10 @@ export type ActionListPageFiltersFragment = (
     ) }
     & { __typename: 'ActionAttributeTypeFilterBlock' }
   ) | (
-    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
     & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
   ) | (
-    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
           { id: string }
@@ -3519,8 +3562,8 @@ export type ActionListPageFiltersFragment = (
   & { __typename: 'ActionListPage' }
 );
 
-export type ActionTableColumnFragmentFragment = (
-  { dashboardColumns: Array<(
+export type ActionTableColumnFragment = (
+  { id: string | null, dashboardColumns: Array<(
     { columnLabel: string | null }
     & { __typename: 'EndDateColumnBlock' | 'IdentifierColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorsColumnBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'ResponsiblePartiesColumnBlock' | 'ScheduleContinuousColumnBlock' | 'StartDateColumnBlock' | 'StatusColumnBlock' | 'TasksColumnBlock' | 'UpdatedAtColumnBlock' }
   ) | (
@@ -3539,7 +3582,7 @@ export type ActionTableColumnFragmentFragment = (
   & { __typename: 'ActionListPage' }
 );
 
-export type CategoryTypeFragmentFragment = (
+export type CategoryTypeFragment = (
   { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
     { id: string, order: number, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
@@ -3547,7 +3590,7 @@ export type CategoryTypeFragmentFragment = (
   & { __typename: 'CategoryType' }
 );
 
-export type CategoryFragmentFragment = (
+export type CategoryFragment = (
   { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
@@ -3562,25 +3605,25 @@ export type CategoryFragmentFragment = (
     & { __typename: 'Image' }
   ) | null, indicators: Array<(
     { id: string, values: Array<(
-      { date: string | null, value: number }
+      { id: string, date: string | null, value: number }
       & { __typename: 'IndicatorValue' }
     )>, goals: Array<(
-      { date: string | null, value: number }
+      { id: string, date: string | null, value: number }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
   )>, indicatorRelationships: Array<(
-    { type: IndicatorCategoryRelationshipType, indicator: (
+    { id: string, type: IndicatorCategoryRelationshipType, indicator: (
       { id: string }
       & { __typename: 'Indicator' }
     ) }
     & { __typename: 'IndicatorCategoryRelationship' }
   )>, iconImage: (
-    { rendition: (
-      { src: string }
+    { id: string, rendition: (
+      { id: string, src: string }
       & { __typename: 'ImageRendition' }
     ) | null }
     & { __typename: 'Image' }
@@ -3600,8 +3643,8 @@ export type CategoryFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryWithParentsFragmentFragment = (
-  { parent: (
+export type CategoryWithParentsFragment = (
+  { id: string, parent: (
     { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
       { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
         { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
@@ -3618,25 +3661,25 @@ export type CategoryWithParentsFragmentFragment = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -3668,25 +3711,25 @@ export type CategoryWithParentsFragmentFragment = (
         & { __typename: 'Image' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -3718,25 +3761,25 @@ export type CategoryWithParentsFragmentFragment = (
       & { __typename: 'Image' }
     ) | null, indicators: Array<(
       { id: string, values: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorValue' }
       )>, goals: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
     )>, indicatorRelationships: Array<(
-      { type: IndicatorCategoryRelationshipType, indicator: (
+      { id: string, type: IndicatorCategoryRelationshipType, indicator: (
         { id: string }
         & { __typename: 'Indicator' }
       ) }
       & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -3758,7 +3801,7 @@ export type CategoryWithParentsFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryRecursiveFragmentFragment = (
+export type CategoryRecursiveFragment = (
   { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
@@ -3773,25 +3816,25 @@ export type CategoryRecursiveFragmentFragment = (
     & { __typename: 'Image' }
   ) | null, indicators: Array<(
     { id: string, values: Array<(
-      { date: string | null, value: number }
+      { id: string, date: string | null, value: number }
       & { __typename: 'IndicatorValue' }
     )>, goals: Array<(
-      { date: string | null, value: number }
+      { id: string, date: string | null, value: number }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
   )>, indicatorRelationships: Array<(
-    { type: IndicatorCategoryRelationshipType, indicator: (
+    { id: string, type: IndicatorCategoryRelationshipType, indicator: (
       { id: string }
       & { __typename: 'Indicator' }
     ) }
     & { __typename: 'IndicatorCategoryRelationship' }
   )>, iconImage: (
-    { rendition: (
-      { src: string }
+    { id: string, rendition: (
+      { id: string, src: string }
       & { __typename: 'ImageRendition' }
     ) | null }
     & { __typename: 'Image' }
@@ -3824,25 +3867,25 @@ export type CategoryRecursiveFragmentFragment = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -3874,25 +3917,25 @@ export type CategoryRecursiveFragmentFragment = (
         & { __typename: 'Image' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -3924,25 +3967,25 @@ export type CategoryRecursiveFragmentFragment = (
       & { __typename: 'Image' }
     ) | null, indicators: Array<(
       { id: string, values: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorValue' }
       )>, goals: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
     )>, indicatorRelationships: Array<(
-      { type: IndicatorCategoryRelationshipType, indicator: (
+      { id: string, type: IndicatorCategoryRelationshipType, indicator: (
         { id: string }
         & { __typename: 'Indicator' }
       ) }
       & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -3964,7 +4007,7 @@ export type CategoryRecursiveFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryHeroImagesFragmentFragment = (
+export type CategoryHeroImagesFragment = (
   { id: string, image: (
     { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
       { id: string, width: number, height: number, src: string }
@@ -4038,13 +4081,13 @@ export type CategoryHeroImagesFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryTagFragmentFragment = (
+export type CategoryTagFragment = (
   { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
   ) | null, iconImage: (
-    { rendition: (
-      { src: string }
+    { id: string, rendition: (
+      { id: string, src: string }
       & { __typename: 'ImageRendition' }
     ) | null }
     & { __typename: 'Image' }
@@ -4061,16 +4104,16 @@ export type CategoryTagFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryTagWithParentsFragmentFragment = (
-  { parent: (
+export type CategoryTagWithParentsFragment = (
+  { id: string, parent: (
     { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
       { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, parent: (
         { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -4089,8 +4132,8 @@ export type CategoryTagWithParentsFragmentFragment = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -4109,8 +4152,8 @@ export type CategoryTagWithParentsFragmentFragment = (
       { id: string, name: string, namePlural: string | null }
       & { __typename: 'CategoryLevel' }
     ) | null, iconImage: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -4129,13 +4172,13 @@ export type CategoryTagWithParentsFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type CategoryTagRecursiveFragmentFragment = (
+export type CategoryTagRecursiveFragment = (
   { id: string, identifier: string, name: string, order: number, color: string, iconSvgUrl: string | null, helpText: string, level: (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
   ) | null, iconImage: (
-    { rendition: (
-      { src: string }
+    { id: string, rendition: (
+      { id: string, src: string }
       & { __typename: 'ImageRendition' }
     ) | null }
     & { __typename: 'Image' }
@@ -4155,8 +4198,8 @@ export type CategoryTagRecursiveFragmentFragment = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -4175,8 +4218,8 @@ export type CategoryTagRecursiveFragmentFragment = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -4195,8 +4238,8 @@ export type CategoryTagRecursiveFragmentFragment = (
       { id: string, name: string, namePlural: string | null }
       & { __typename: 'CategoryLevel' }
     ) | null, iconImage: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -4215,8 +4258,8 @@ export type CategoryTagRecursiveFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type DashboardIndicatorBlockFragmentFragment = (
-  { blockType: string, blocks: Array<(
+export type DashboardIndicatorBlockFragment = (
+  { id: string | null, blockType: string, blocks: Array<(
     { blockType: string }
     & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
   ) | (
@@ -4243,13 +4286,13 @@ export type DashboardIndicatorBlockFragmentFragment = (
   ) | (
     { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -4273,13 +4316,13 @@ export type DashboardIndicatorBlockFragmentFragment = (
   ) | (
     { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -4303,13 +4346,13 @@ export type DashboardIndicatorBlockFragmentFragment = (
   ) | (
     { helpText: string | null, blockType: string, year: number | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -4333,13 +4376,13 @@ export type DashboardIndicatorBlockFragmentFragment = (
   ) | (
     { id: string | null, blockType: string, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -4349,21 +4392,21 @@ export type DashboardIndicatorBlockFragmentFragment = (
   & { __typename: 'DashboardRowBlock' }
 );
 
-export type DashboardIndicatorFragmentFragment = (
+export type DashboardIndicatorFragment = (
   { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-    { value: number, date: string | null }
+    { id: string, value: number, date: string | null }
     & { __typename: 'IndicatorValue' }
   ) | null, goals: Array<(
-    { value: number, date: string | null }
+    { id: string, value: number, date: string | null }
     & { __typename: 'IndicatorGoal' }
   ) | null> | null, unit: (
-    { name: string, shortName: string | null }
+    { id: string, name: string, shortName: string | null }
     & { __typename: 'Unit' }
   ) }
   & { __typename: 'Indicator' }
 );
 
-export type ChartDimensionFragmentFragment = (
+export type ChartDimensionFragment = (
   { id: string, name: string, categories: Array<(
     { id: string, name: string }
     & { __typename: 'DimensionCategory' }
@@ -4371,7 +4414,7 @@ export type ChartDimensionFragmentFragment = (
   & { __typename: 'Dimension' }
 );
 
-export type ChartSeriesFragmentFragment = (
+export type ChartSeriesFragment = (
   { dimensionCategory: (
     { id: string, name: string, defaultColor: string }
     & { __typename: 'DimensionCategory' }
@@ -4385,13 +4428,13 @@ export type ChartSeriesFragmentFragment = (
 type BarChartVisualization_DashboardIndicatorBarChartBlock_Fragment = (
   { barType: string | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4417,13 +4460,13 @@ type BarChartVisualization_DashboardIndicatorBarChartBlock_Fragment = (
 type BarChartVisualization_IndicatorDefaultBarChart_Fragment = (
   { barType: string | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4451,13 +4494,13 @@ export type BarChartVisualizationFragment = BarChartVisualization_DashboardIndic
 type LineChartVisualization_DashboardIndicatorLineChartBlock_Fragment = (
   { showTotalLine: boolean | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4483,13 +4526,13 @@ type LineChartVisualization_DashboardIndicatorLineChartBlock_Fragment = (
 type LineChartVisualization_IndicatorDefaultLineChart_Fragment = (
   { showTotalLine: boolean | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4517,13 +4560,13 @@ export type LineChartVisualizationFragment = LineChartVisualization_DashboardInd
 type AreaChartVisualization_DashboardIndicatorAreaChartBlock_Fragment = (
   { showTotalLine: boolean | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4549,13 +4592,13 @@ type AreaChartVisualization_DashboardIndicatorAreaChartBlock_Fragment = (
 type AreaChartVisualization_IndicatorDefaultAreaChart_Fragment = (
   { showTotalLine: boolean | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4583,13 +4626,13 @@ export type AreaChartVisualizationFragment = AreaChartVisualization_DashboardInd
 type PieChartVisualization_DashboardIndicatorPieChartBlock_Fragment = (
   { year: number | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4615,13 +4658,13 @@ type PieChartVisualization_DashboardIndicatorPieChartBlock_Fragment = (
 type PieChartVisualization_IndicatorDefaultPieChart_Fragment = (
   { year: number | null, indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4649,13 +4692,13 @@ export type PieChartVisualizationFragment = PieChartVisualization_DashboardIndic
 type SummaryVisualization_DashboardIndicatorSummaryBlock_Fragment = (
   { indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4666,13 +4709,13 @@ type SummaryVisualization_DashboardIndicatorSummaryBlock_Fragment = (
 type SummaryVisualization_IndicatorDefaultSummary_Fragment = (
   { indicator: (
     { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, goals: Array<(
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) }
     & { __typename: 'Indicator' }
@@ -4689,7 +4732,7 @@ export type IndicatorListIndicatorFragment = (
   ), common: (
     { id: string, name: string, normalizations: Array<(
       { unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ), normalizer: (
         { name: string, id: string, identifier: string | null }
@@ -4744,7 +4787,7 @@ export type IndicatorListIndicatorFragment = (
     )> }
     & { __typename: 'IndicatorValue' }
   ) | null, dimensions: Array<(
-    { dimension: (
+    { id: string, dimension: (
       { id: string, name: string, categories: Array<(
         { id: string, name: string }
         & { __typename: 'DimensionCategory' }
@@ -4771,7 +4814,7 @@ export type IndicatorListIndicatorFragment = (
     ) | null }
     & { __typename: 'IndicatorGoal' }
   ) | null> | null, unit: (
-    { name: string, shortName: string | null }
+    { id: string, name: string, shortName: string | null }
     & { __typename: 'Unit' }
   ), plans: Array<(
     { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
@@ -4781,42 +4824,42 @@ export type IndicatorListIndicatorFragment = (
 );
 
 type IndicatorListFilter_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
 );
 
 type IndicatorListFilter_Lrr2Fl8Se3u5PeLKw5dI21X2VgwGptdIrN1YaLxh00_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' }
 );
 
 type IndicatorListFilter_RW7qjqgUIhmn6IyoKftiuvtxd9SMsIrTrngnYOa6Y_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' }
 );
 
 type IndicatorListFilter_2OJsJfLwOzefNptu26gJHjIoFrdZxvZ2Sxs1WXlVaa_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroAdditionalSettingsBlock' }
 );
 
 type IndicatorListFilter_DqRgBrgljvJbl3WFgdZ90H5aeFhIgHmxQr6ZkJuRfi_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' }
 );
 
 type IndicatorListFilter_GY48SSoofm1rvXj9jyzBpf76xfYsiVivx7tfisBtsq_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
 );
 
 type IndicatorListFilter_Lrouw9qstEv7at2T03PhLjf0F2pTzY6NfuTZsZyZGs_Fragment = (
-  { field: string, id: string | null }
+  { field: string }
   & { __typename: 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
 );
 
 type IndicatorListFilter_CategoryTypeFilterBlock_Fragment = (
-  { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+  { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
     { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
       { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
         { id: string }
@@ -4833,15 +4876,15 @@ type IndicatorListFilter_CategoryTypeFilterBlock_Fragment = (
 );
 
 type IndicatorListFilter_IndicatorFilterBlock_Fragment = (
-  { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+  { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string }
   & { __typename: 'IndicatorFilterBlock' }
 );
 
 export type IndicatorListFilterFragment = IndicatorListFilter_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment | IndicatorListFilter_Lrr2Fl8Se3u5PeLKw5dI21X2VgwGptdIrN1YaLxh00_Fragment | IndicatorListFilter_RW7qjqgUIhmn6IyoKftiuvtxd9SMsIrTrngnYOa6Y_Fragment | IndicatorListFilter_2OJsJfLwOzefNptu26gJHjIoFrdZxvZ2Sxs1WXlVaa_Fragment | IndicatorListFilter_DqRgBrgljvJbl3WFgdZ90H5aeFhIgHmxQr6ZkJuRfi_Fragment | IndicatorListFilter_GY48SSoofm1rvXj9jyzBpf76xfYsiVivx7tfisBtsq_Fragment | IndicatorListFilter_Lrouw9qstEv7at2T03PhLjf0F2pTzY6NfuTZsZyZGs_Fragment | IndicatorListFilter_CategoryTypeFilterBlock_Fragment | IndicatorListFilter_IndicatorFilterBlock_Fragment;
 
 export type IndicatorListPageFiltersFragment = (
-  { primaryFilters: Array<(
-    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+  { id: string | null, primaryFilters: Array<(
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
           { id: string }
@@ -4856,10 +4899,10 @@ export type IndicatorListPageFiltersFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null, mainFilters: Array<(
-    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
           { id: string }
@@ -4874,10 +4917,10 @@ export type IndicatorListPageFiltersFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null, advancedFilters: Array<(
-    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
           { id: string }
@@ -4892,13 +4935,13 @@ export type IndicatorListPageFiltersFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null }
   & { __typename: 'IndicatorListPage' }
 );
 
-export type IndicatorListPageFragmentFragment = (
+export type IndicatorListPageFragment = (
   { id: string | null, slug: string, title: string, leadContent: string | null, displayInsights: boolean | null, displayLevel: boolean | null, includeRelatedPlans: boolean | null, listColumns: Array<(
     { id: string | null, columnLabel: string | null, columnHelpText: string | null, categoryType: (
       { id: string, name: string }
@@ -4912,10 +4955,10 @@ export type IndicatorListPageFragmentFragment = (
     { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
     & { __typename: 'IndicatorListColumn' }
   ) | (
-    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, defaultYear: number | null, hideUnit: boolean, highlightGoalMet: boolean }
+    { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, defaultYear: number | null, hideUnit: boolean, highlightGoalMet: boolean }
     & { __typename: 'IndicatorValueColumn' }
   )> | null, primaryFilters: Array<(
-    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
           { id: string }
@@ -4930,10 +4973,10 @@ export type IndicatorListPageFragmentFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null, mainFilters: Array<(
-    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
           { id: string }
@@ -4948,10 +4991,10 @@ export type IndicatorListPageFragmentFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null, advancedFilters: Array<(
-    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+    { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
       { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
         { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
           { id: string }
@@ -4966,76 +5009,81 @@ export type IndicatorListPageFragmentFragment = (
     ) | null }
     & { __typename: 'CategoryTypeFilterBlock' }
   ) | (
-    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+    { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string }
     & { __typename: 'IndicatorFilterBlock' }
   )> | null }
   & { __typename: 'IndicatorListPage' }
 );
 
-type StreamFieldFragment_CsWpOaD0dUEdhV96j5U9TnlDssZTxlWikakK8ZjePw_Fragment = (
+type StreamField_AccessibilityStatementComplianceStatusBlock_AccessibilityStatementPreparationInformationBlock_Fragment = (
   { id: string | null, blockType: string, field: string }
-  & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' }
+  & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementPreparationInformationBlock' }
 );
 
-type StreamFieldFragment_R09yqk4psU42m1Xyl5uzMj8ASeDltROxoT0mwLuSlc_Fragment = (
-  { id: string | null, blockType: string, field: string }
-  & { __typename: 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' | 'BlockQuoteBlock' | 'BooleanBlock' }
+type StreamField_BkrAtuMbvIgq8dFh0NeSzC2YsDsdjMosGqoHq9EGlA_Fragment = (
+  { blockType: string, field: string }
+  & { __typename: 'AccessibilityStatementContactFormBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' }
 );
 
-type StreamFieldFragment_OVWpOvqViBr7pviLj3iLFobjZcWpuNlFBt5QfC4_Fragment = (
-  { id: string | null, blockType: string, field: string }
-  & { __typename: 'CardBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' }
+type StreamField_Vx03wi0C1NuklaSMsHEefPBtA1oAwEm4G51Wzvm1Yu_Fragment = (
+  { blockType: string, field: string }
+  & { __typename: 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CategoryPageAttributeTypeBlock' }
 );
 
-type StreamFieldFragment_W2zOgck3SpPtZi5A5saJLpenH2ogwhIsYhGosbJ8c_Fragment = (
-  { id: string | null, blockType: string, field: string }
-  & { __typename: 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroAdditionalSettingsBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' }
+type StreamField_FlMeoehsE4WDxxEsX1cUwyUxGzRevfkr04gZGeio_Fragment = (
+  { blockType: string, field: string }
+  & { __typename: 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' }
 );
 
-type StreamFieldFragment_KTz1TgIjno5h7oJvKjoqnZxozYxzJxRk5jUApXzq_Fragment = (
-  { id: string | null, blockType: string, field: string }
-  & { __typename: 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' }
+type StreamField_AMec2wFjjsCmRIytRxHyitKs1KGqEcNcStNpc4xRg_Fragment = (
+  { blockType: string, field: string }
+  & { __typename: 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroAdditionalSettingsBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' }
 );
 
-type StreamFieldFragment_ROQtCmpbhpHtWju3UmvLJiPdRdNespIkDrUlcLsw8s_Fragment = (
-  { id: string | null, blockType: string, field: string }
-  & { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+type StreamField_M46Iqnp9o1poJczs1cJsLbePua9ZimVdkqWzZpmU_Fragment = (
+  { blockType: string, field: string }
+  & { __typename: 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
 );
 
-type StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment = (
+type StreamField_QYht5Q7TkrtFeXGhsFxUhmAbiHZruXkDn4xlKEeRu_Fragment = (
+  { blockType: string, field: string }
+  & { __typename: 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
+);
+
+type StreamField_AccessibilityStatementContactInformationBlock_Fragment = (
   { id: string | null, blockType: string, field: string, blocks: Array<(
-    { id: string | null, field: string }
+    { field: string }
     & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
   ) | (
-    { id: string | null, field: string }
+    { field: string }
     & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' }
   ) | (
-    { id: string | null, field: string }
+    { field: string }
     & { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' }
   ) | (
-    { id: string | null, field: string }
+    { field: string }
     & { __typename: 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroAdditionalSettingsBlock' }
   ) | (
-    { id: string | null, field: string }
+    { field: string }
     & { __typename: 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' }
   ) | (
-    { id: string | null, field: string }
+    { field: string }
     & { __typename: 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' }
   ) | (
-    { id: string | null, field: string }
+    { field: string }
     & { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
   ) | (
-    { value: string, id: string | null, field: string }
+    { value: string, field: string }
     & { __typename: 'CharBlock' }
   )> }
   & { __typename: 'AccessibilityStatementContactInformationBlock' }
 );
 
-type StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment = (
-  { id: string | null, blockType: string, field: string, cards: Array<(
+type StreamField_ActionCategoryFilterCardsBlock_Fragment = (
+  { blockType: string, field: string, cards: Array<(
     { heading: string | null, lead: string | null, category: (
       { id: string, type: (
-        { identifier: string }
+        { id: string, identifier: string }
         & { __typename: 'CategoryType' }
       ) }
       & { __typename: 'Category' }
@@ -5045,7 +5093,7 @@ type StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment = (
   & { __typename: 'ActionCategoryFilterCardsBlock' }
 );
 
-type StreamFieldFragment_ActionListBlock_Fragment = (
+type StreamField_ActionListBlock_Fragment = (
   { id: string | null, heading: string | null, helpText: string | null, blockType: string, field: string, categoryFilter: (
     { id: string }
     & { __typename: 'Category' }
@@ -5056,16 +5104,16 @@ type StreamFieldFragment_ActionListBlock_Fragment = (
   & { __typename: 'ActionListBlock' }
 );
 
-type StreamFieldFragment_AdaptiveEmbedBlock_Fragment = (
-  { title: string | null, description: string | null, fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
+type StreamField_AdaptiveEmbedBlock_Fragment = (
+  { title: string | null, description: string | null, fullWidth: boolean | null, blockType: string, field: string, embed: (
     { html: string | null }
     & { __typename: 'EmbedHTMLValue' }
   ) | null }
   & { __typename: 'AdaptiveEmbedBlock' }
 );
 
-type StreamFieldFragment_CardListBlock_Fragment = (
-  { heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, cards: Array<(
+type StreamField_CardListBlock_Fragment = (
+  { heading: string | null, lead: string | null, blockType: string, field: string, cards: Array<(
     { heading: string | null, content: string | null, link: string | null, image: (
       { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
         { id: string, width: number, height: number, src: string }
@@ -5081,16 +5129,16 @@ type StreamFieldFragment_CardListBlock_Fragment = (
   & { __typename: 'CardListBlock' }
 );
 
-type StreamFieldFragment_CartographyVisualisationBlock_Fragment = (
-  { styleOverrides: string | null, id: string | null, blockType: string, field: string, cartographyStyle: string | null, account: (
+type StreamField_CartographyVisualisationBlock_Fragment = (
+  { styleOverrides: string | null, blockType: string, field: string, cartographyStyle: string | null, account: (
     { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
     & { __typename: 'CartographyProviderCredentials' }
   ) }
   & { __typename: 'CartographyVisualisationBlock' }
 );
 
-type StreamFieldFragment_CategoryListBlock_Fragment = (
-  { style: string | null, heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, categoryType: (
+type StreamField_CategoryListBlock_Fragment = (
+  { style: string | null, heading: string | null, lead: string | null, blockType: string, field: string, categoryType: (
     { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
       { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
         { id: string, name: string, namePlural: string | null }
@@ -5106,25 +5154,25 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
         & { __typename: 'Image' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -5157,25 +5205,25 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -5207,25 +5255,25 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -5257,25 +5305,25 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -5313,25 +5361,25 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
         & { __typename: 'Image' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -5355,22 +5403,22 @@ type StreamFieldFragment_CategoryListBlock_Fragment = (
   & { __typename: 'CategoryListBlock' }
 );
 
-type StreamFieldFragment_CategoryTreeMapBlock_Fragment = (
-  { heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, valueAttribute: (
-    { identifier: string, unit: (
-      { shortName: string | null }
+type StreamField_CategoryTreeMapBlock_Fragment = (
+  { heading: string | null, lead: string | null, blockType: string, field: string, valueAttribute: (
+    { id: string, identifier: string, unit: (
+      { id: string, shortName: string | null }
       & { __typename: 'Unit' }
     ) | null }
     & { __typename: 'AttributeType' }
   ), treeMapCategoryType: (
-    { identifier: string }
+    { id: string, identifier: string }
     & { __typename: 'CategoryType' }
   ) }
   & { __typename: 'CategoryTreeMapBlock' }
 );
 
-type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
-  { heading: string | null, helpText: string | null, pathsTargetNodeId: string | null, id: string | null, blockType: string, field: string, categoryLevel: (
+type StreamField_CategoryTypeLevelListBlock_Fragment = (
+  { heading: string | null, helpText: string | null, pathsTargetNodeId: string | null, blockType: string, field: string, categoryLevel: (
     { id: string, name: string, namePlural: string | null }
     & { __typename: 'CategoryLevel' }
   ), groupByCategoryLevel: (
@@ -5380,13 +5428,13 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
     { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
       { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, indicators: Array<(
         { id: string, name: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -5403,14 +5451,14 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
         ) | null }
         & { __typename: 'Image' }
       ) | null, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -5443,25 +5491,25 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -5493,25 +5541,25 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -5543,25 +5591,25 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -5587,26 +5635,26 @@ type StreamFieldFragment_CategoryTypeLevelListBlock_Fragment = (
   & { __typename: 'CategoryTypeLevelListBlock' }
 );
 
-type StreamFieldFragment_ChangeLogMessageBlock_Fragment = (
-  { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, blockType: string, field: string }
+type StreamField_ChangeLogMessageBlock_Fragment = (
+  { fieldLabel: string | null, fieldHelpText: string | null, blockType: string, field: string }
   & { __typename: 'ChangeLogMessageBlock' }
 );
 
-type StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment = (
-  { value: string, id: string | null, blockType: string, field: string }
+type StreamField_CharBlock_RichTextBlock_TextBlock_Fragment = (
+  { value: string, blockType: string, field: string }
   & { __typename: 'CharBlock' | 'RichTextBlock' | 'TextBlock' }
 );
 
-type StreamFieldFragment_ChoiceBlock_Fragment = (
-  { value: string, id: string | null, blockType: string, field: string, choices: Array<(
+type StreamField_ChoiceBlock_Fragment = (
+  { value: string, blockType: string, field: string, choices: Array<(
     { key: string, value: string }
     & { __typename: 'ChoiceOption' }
   )> }
   & { __typename: 'ChoiceBlock' }
 );
 
-type StreamFieldFragment_DashboardRowBlock_Fragment = (
-  { id: string | null, blockType: string, field: string, blocks: Array<(
+type StreamField_DashboardRowBlock_Fragment = (
+  { blockType: string, field: string, id: string | null, blocks: Array<(
     { blockType: string }
     & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
   ) | (
@@ -5633,13 +5681,13 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
   ) | (
     { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -5663,13 +5711,13 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
   ) | (
     { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -5693,13 +5741,13 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
   ) | (
     { helpText: string | null, blockType: string, year: number | null, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -5723,13 +5771,13 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
   ) | (
     { id: string | null, blockType: string, indicator: (
       { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorValue' }
       ) | null, goals: Array<(
-        { value: number, date: string | null }
+        { id: string, value: number, date: string | null }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
@@ -5739,8 +5787,8 @@ type StreamFieldFragment_DashboardRowBlock_Fragment = (
   & { __typename: 'DashboardRowBlock' }
 );
 
-type StreamFieldFragment_FrontPageHeroBlock_Fragment = (
-  { layout: string, heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, image: (
+type StreamField_FrontPageHeroBlock_Fragment = (
+  { layout: string, heading: string | null, lead: string | null, blockType: string, field: string, image: (
     { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
       { id: string, width: number, height: number, src: string }
       & { __typename: 'ImageRendition' }
@@ -5759,16 +5807,16 @@ type StreamFieldFragment_FrontPageHeroBlock_Fragment = (
   & { __typename: 'FrontPageHeroBlock' }
 );
 
-type StreamFieldFragment_IndicatorBlock_Fragment = (
-  { style: string | null, id: string | null, blockType: string, field: string, indicator: (
+type StreamField_IndicatorBlock_Fragment = (
+  { style: string | null, blockType: string, field: string, indicator: (
     { id: string }
     & { __typename: 'Indicator' }
   ) | null }
   & { __typename: 'IndicatorBlock' }
 );
 
-type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
-  { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' } | { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' } | { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' } | { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' } | { __typename: 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' } | { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+type StreamField_IndicatorGroupBlock_Fragment = (
+  { title: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' } | { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' } | { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' } | { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' } | { __typename: 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' } | { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
     { style: string | null, indicator: (
       { id: string, identifier: string | null, name: string, description: string | null, timeResolution: IndicatorTimeResolution, level: string | null, unit: (
         { id: string, name: string }
@@ -5787,29 +5835,8 @@ type StreamFieldFragment_IndicatorGroupBlock_Fragment = (
   & { __typename: 'IndicatorGroupBlock' }
 );
 
-type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
-  { title: string | null, body: string | null, significantDigits: number | null, indicatorIsNormalized: boolean | null, id: string | null, blockType: string, field: string, blocks: Array<(
-    { id: string | null }
-    & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
-  ) | (
-    { id: string | null }
-    & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' }
-  ) | (
-    { id: string | null }
-    & { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' }
-  ) | (
-    { id: string | null }
-    & { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' }
-  ) | (
-    { id: string | null }
-    & { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' }
-  ) | (
-    { id: string | null }
-    & { __typename: 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' }
-  ) | (
-    { id: string | null }
-    & { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-  )>, indicator: (
+type StreamField_IndicatorShowcaseBlock_Fragment = (
+  { title: string | null, body: string | null, significantDigits: number | null, indicatorIsNormalized: boolean | null, blockType: string, field: string, blocks: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' } | { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' } | { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' } | { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' } | { __typename: 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' } | { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }>, indicator: (
     { id: string, identifier: string | null, name: string, minValue: number | null, maxValue: number | null, unit: (
       { id: string, shortName: string | null, name: string }
       & { __typename: 'Unit' }
@@ -5834,7 +5861,7 @@ type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
     ) | null> | null, common: (
       { id: string, normalizations: Array<(
         { unit: (
-          { shortName: string | null, name: string }
+          { id: string, shortName: string | null, name: string }
           & { __typename: 'Unit' }
         ), normalizer: (
           { name: string, id: string, identifier: string | null }
@@ -5868,7 +5895,7 @@ type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
     & { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
   ) | (
     { text: string | null, blockType: string, page: (
-      { url: string | null, urlPath: string, slug: string }
+      { id: string | null, url: string | null, urlPath: string, slug: string }
       & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
     ) | null }
     & { __typename: 'PageLinkBlock' }
@@ -5876,8 +5903,8 @@ type StreamFieldFragment_IndicatorShowcaseBlock_Fragment = (
   & { __typename: 'IndicatorShowcaseBlock' }
 );
 
-type StreamFieldFragment_LargeImageBlock_Fragment = (
-  { width: string | null, id: string | null, blockType: string, field: string, image: (
+type StreamField_LargeImageBlock_Fragment = (
+  { width: string | null, blockType: string, field: string, image: (
     { id: string, title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
       { id: string, src: string }
       & { __typename: 'ImageRendition' }
@@ -5887,22 +5914,22 @@ type StreamFieldFragment_LargeImageBlock_Fragment = (
   & { __typename: 'LargeImageBlock' }
 );
 
-type StreamFieldFragment_PathsOutcomeBlock_Fragment = (
-  { heading: string | null, helpText: string | null, outcomeNodeId: string | null, id: string | null, blockType: string, field: string }
+type StreamField_PathsOutcomeBlock_Fragment = (
+  { heading: string | null, helpText: string | null, outcomeNodeId: string | null, blockType: string, field: string }
   & { __typename: 'PathsOutcomeBlock' }
 );
 
-type StreamFieldFragment_QuestionAnswerBlock_Fragment = (
-  { heading: string | null, id: string | null, blockType: string, field: string, questions: Array<(
+type StreamField_QuestionAnswerBlock_Fragment = (
+  { heading: string | null, blockType: string, field: string, questions: Array<(
     { question: string, answer: string }
     & { __typename: 'QuestionBlock' }
   )> | null }
   & { __typename: 'QuestionAnswerBlock' }
 );
 
-export type StreamFieldFragmentFragment = StreamFieldFragment_CsWpOaD0dUEdhV96j5U9TnlDssZTxlWikakK8ZjePw_Fragment | StreamFieldFragment_R09yqk4psU42m1Xyl5uzMj8ASeDltROxoT0mwLuSlc_Fragment | StreamFieldFragment_OVWpOvqViBr7pviLj3iLFobjZcWpuNlFBt5QfC4_Fragment | StreamFieldFragment_W2zOgck3SpPtZi5A5saJLpenH2ogwhIsYhGosbJ8c_Fragment | StreamFieldFragment_KTz1TgIjno5h7oJvKjoqnZxozYxzJxRk5jUApXzq_Fragment | StreamFieldFragment_ROQtCmpbhpHtWju3UmvLJiPdRdNespIkDrUlcLsw8s_Fragment | StreamFieldFragment_AccessibilityStatementContactInformationBlock_Fragment | StreamFieldFragment_ActionCategoryFilterCardsBlock_Fragment | StreamFieldFragment_ActionListBlock_Fragment | StreamFieldFragment_AdaptiveEmbedBlock_Fragment | StreamFieldFragment_CardListBlock_Fragment | StreamFieldFragment_CartographyVisualisationBlock_Fragment | StreamFieldFragment_CategoryListBlock_Fragment | StreamFieldFragment_CategoryTreeMapBlock_Fragment | StreamFieldFragment_CategoryTypeLevelListBlock_Fragment | StreamFieldFragment_ChangeLogMessageBlock_Fragment | StreamFieldFragment_CharBlock_RichTextBlock_TextBlock_Fragment | StreamFieldFragment_ChoiceBlock_Fragment | StreamFieldFragment_DashboardRowBlock_Fragment | StreamFieldFragment_FrontPageHeroBlock_Fragment | StreamFieldFragment_IndicatorBlock_Fragment | StreamFieldFragment_IndicatorGroupBlock_Fragment | StreamFieldFragment_IndicatorShowcaseBlock_Fragment | StreamFieldFragment_LargeImageBlock_Fragment | StreamFieldFragment_PathsOutcomeBlock_Fragment | StreamFieldFragment_QuestionAnswerBlock_Fragment;
+export type StreamFieldFragment = StreamField_AccessibilityStatementComplianceStatusBlock_AccessibilityStatementPreparationInformationBlock_Fragment | StreamField_BkrAtuMbvIgq8dFh0NeSzC2YsDsdjMosGqoHq9EGlA_Fragment | StreamField_Vx03wi0C1NuklaSMsHEefPBtA1oAwEm4G51Wzvm1Yu_Fragment | StreamField_FlMeoehsE4WDxxEsX1cUwyUxGzRevfkr04gZGeio_Fragment | StreamField_AMec2wFjjsCmRIytRxHyitKs1KGqEcNcStNpc4xRg_Fragment | StreamField_M46Iqnp9o1poJczs1cJsLbePua9ZimVdkqWzZpmU_Fragment | StreamField_QYht5Q7TkrtFeXGhsFxUhmAbiHZruXkDn4xlKEeRu_Fragment | StreamField_AccessibilityStatementContactInformationBlock_Fragment | StreamField_ActionCategoryFilterCardsBlock_Fragment | StreamField_ActionListBlock_Fragment | StreamField_AdaptiveEmbedBlock_Fragment | StreamField_CardListBlock_Fragment | StreamField_CartographyVisualisationBlock_Fragment | StreamField_CategoryListBlock_Fragment | StreamField_CategoryTreeMapBlock_Fragment | StreamField_CategoryTypeLevelListBlock_Fragment | StreamField_ChangeLogMessageBlock_Fragment | StreamField_CharBlock_RichTextBlock_TextBlock_Fragment | StreamField_ChoiceBlock_Fragment | StreamField_DashboardRowBlock_Fragment | StreamField_FrontPageHeroBlock_Fragment | StreamField_IndicatorBlock_Fragment | StreamField_IndicatorGroupBlock_Fragment | StreamField_IndicatorShowcaseBlock_Fragment | StreamField_LargeImageBlock_Fragment | StreamField_PathsOutcomeBlock_Fragment | StreamField_QuestionAnswerBlock_Fragment;
 
-export type GetActionDetailsQueryVariables = Exact<{
+export type ActionDetailsQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   id: Scalars['ID']['input'];
   clientUrl: Scalars['String']['input'];
@@ -5910,7 +5937,7 @@ export type GetActionDetailsQueryVariables = Exact<{
 }>;
 
 
-export type GetActionDetailsQuery = (
+export type ActionDetailsQuery = (
   { action: (
     { id: string, identifier: string, name: string, officialName: string | null, leadParagraph: string, description: string | null, completion: number | null, color: string | null, updatedAt: string, manualStatusReason: string | null, scheduleContinuous: boolean, startDate: string | null, endDate: string | null, dateFormat: ActionDateFormat | null, workflowStatus: (
       { matchingVersion: (
@@ -5934,7 +5961,7 @@ export type GetActionDetailsQuery = (
       ) | null }
       & { __typename: 'Image' }
     ) | null, statusSummary: (
-      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, sentiment: Sentiment, isCompleted: boolean, isActive: boolean }
+      { identifier: ActionStatusSummaryIdentifier, label: string, sentiment: Sentiment, isCompleted: boolean, isActive: boolean }
       & { __typename: 'ActionStatusSummary' }
     ), links: Array<(
       { id: string, order: number, url: string, title: string }
@@ -6038,25 +6065,25 @@ export type GetActionDetailsQuery = (
               & { __typename: 'CategoryLevel' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -6079,25 +6106,25 @@ export type GetActionDetailsQuery = (
             & { __typename: 'CategoryLevel' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -6120,25 +6147,25 @@ export type GetActionDetailsQuery = (
           & { __typename: 'CategoryLevel' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -6161,25 +6188,25 @@ export type GetActionDetailsQuery = (
         & { __typename: 'CategoryLevel' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -6203,7 +6230,7 @@ export type GetActionDetailsQuery = (
     )>, contactPersons: Array<(
       { id: string, person: (
         { id: string, firstName: string, lastName: string, avatarUrl: string | null, title: string | null, organization: (
-          { name: string }
+          { id: string, name: string }
           & { __typename: 'Organization' }
         ) }
         & { __typename: 'Person' }
@@ -6211,8 +6238,8 @@ export type GetActionDetailsQuery = (
       & { __typename: 'ActionContactPerson' }
     )>, primaryOrg: (
       { id: string, abbreviation: string | null, name: string, logo: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -6259,13 +6286,13 @@ export type GetActionDetailsQuery = (
         )>, defaultVisualization: (
           { showTotalLine: boolean | null, indicator: (
             { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorValue' }
             ) | null, goals: Array<(
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -6289,13 +6316,13 @@ export type GetActionDetailsQuery = (
         ) | (
           { barType: string | null, indicator: (
             { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorValue' }
             ) | null, goals: Array<(
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -6319,13 +6346,13 @@ export type GetActionDetailsQuery = (
         ) | (
           { year: number | null, indicator: (
             { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorValue' }
             ) | null, goals: Array<(
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -6349,13 +6376,13 @@ export type GetActionDetailsQuery = (
         ) | (
           { indicator: (
             { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorValue' }
             ) | null, goals: Array<(
-              { value: number, date: string | null }
+              { id: string, value: number, date: string | null }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -6384,25 +6411,25 @@ export type GetActionDetailsQuery = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -6435,25 +6462,25 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -6485,25 +6512,25 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -6535,25 +6562,25 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -6630,25 +6657,25 @@ export type GetActionDetailsQuery = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -6681,25 +6708,25 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -6731,25 +6758,25 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -6781,25 +6808,25 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -6870,25 +6897,25 @@ export type GetActionDetailsQuery = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -6921,25 +6948,25 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -6971,25 +6998,25 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -7021,25 +7048,25 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -7113,25 +7140,25 @@ export type GetActionDetailsQuery = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -7164,25 +7191,25 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -7214,25 +7241,25 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -7264,25 +7291,25 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -7342,7 +7369,7 @@ export type GetActionDetailsQuery = (
       & { __typename: 'AttributeRichText' | 'AttributeText' }
     )>, changeLogMessage: (
       { content: string | null, updatedAt: string | null, createdBy: (
-        { firstName: string, lastName: string, avatarUrl: string | null }
+        { id: string, firstName: string, lastName: string, avatarUrl: string | null }
         & { __typename: 'Person' }
       ) | null }
       & { __typename: 'ActionChangeLogMessage' | 'CategoryChangeLogMessage' | 'IndicatorChangeLogMessage' | 'PageChangeLogMessage' }
@@ -7381,25 +7408,25 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -7432,25 +7459,25 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -7482,25 +7509,25 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -7532,25 +7559,25 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -7642,8 +7669,8 @@ export type GetActionDetailsQuery = (
       & { __typename: 'Dataset' }
     )>, plan: (
       { id: string, shortName: string | null, versionName: string, viewUrl: string | null, hideActionIdentifiers: boolean, image: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -7653,7 +7680,7 @@ export type GetActionDetailsQuery = (
       { id: string, name: string }
       & { __typename: 'ActionDependencyRole' }
     ) | null, allDependencyRelationships: Array<(
-      { preceding: (
+      { id: string, preceding: (
         { id: string, identifier: string, name: string, viewUrl: string, color: string | null, scheduleContinuous: boolean, completion: number | null, dependencyRole: (
           { id: string, name: string }
           & { __typename: 'ActionDependencyRole' }
@@ -7675,25 +7702,25 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -7726,25 +7753,25 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -7776,25 +7803,25 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -7826,25 +7853,25 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -7918,25 +7945,25 @@ export type GetActionDetailsQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -7969,25 +7996,25 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -8019,25 +8046,25 @@ export type GetActionDetailsQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -8069,25 +8096,25 @@ export type GetActionDetailsQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -8144,9 +8171,9 @@ export type GetActionDetailsQuery = (
     )> }
     & { __typename: 'Action' }
   ) | null, plan: (
-    { actionListPage: (
+    { id: string, actionListPage: (
       { id: string | null, actionDateFormat: string | null, taskDateFormat: string | null, detailsMainTop: Array<(
-        { id: string | null, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, meta: (
+        { field: string, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null, fields: Array<(
@@ -8158,7 +8185,7 @@ export type GetActionDetailsQuery = (
         )> }
         & { __typename: 'ActionContactFormBlock' }
       ) | (
-        { id: string | null, meta: (
+        { field: string, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null, attributeType: (
@@ -8173,7 +8200,7 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'ActionContentAttributeTypeBlock' }
       ) | (
-        { id: string | null, meta: (
+        { field: string, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null, categoryType: (
@@ -8185,29 +8212,29 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'ActionContentCategoryTypeBlock' }
       ) | (
-        { id: string | null, heading: string | null, helpText: string | null, layout: string | null, blocks: Array<(
-          { id: string | null }
+        { field: string, id: string | null, heading: string | null, helpText: string | null, layout: string | null, blocks: Array<(
+          { field: string }
           & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
         ) | (
-          { id: string | null, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, fields: Array<(
+          { field: string, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, fields: Array<(
             { id: string | null, fieldLabel: string | null, fieldType: string | null, fieldRequired: boolean | null, choices: Array<(
               { choiceLabel: string | null, choiceValue: string | null }
               & { __typename: 'FormChoiceBlock' }
@@ -8216,7 +8243,7 @@ export type GetActionDetailsQuery = (
           )> }
           & { __typename: 'ActionContactFormBlock' }
         ) | (
-          { id: string | null, attributeType: (
+          { field: string, attributeType: (
             { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
               { id: string, identifier: string, name: string }
               & { __typename: 'AttributeTypeChoiceOption' }
@@ -8228,7 +8255,7 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename: 'ActionContentAttributeTypeBlock' }
         ) | (
-          { id: string | null, categoryType: (
+          { field: string, categoryType: (
             { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
               { id: string, order: number, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
@@ -8237,19 +8264,28 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename: 'ActionContentCategoryTypeBlock' }
         ) | (
-          { id: string | null, fieldLabel: string | null, caption: string | null }
+          { field: string, fieldLabel: string | null, caption: string | null }
           & { __typename: 'ActionOfficialNameBlock' }
         ) | (
-          { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
+          { field: string, fieldLabel: string | null, fieldHelpText: string | null }
           & { __typename: 'ActionRelatedActionsBlock' | 'ActionTasksBlock' | 'ChangeLogMessageBlock' }
         ) | (
-          { id: string | null, reportField: string | null, reportType: (
-            { name: string }
+          { field: string, reportField: string | null, reportType: (
+            { id: string, name: string }
             & { __typename: 'ReportType' }
           ) | null, reportsToCompare: Array<(
             { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
               { attribute: (
-                { id: string, categories: Array<(
+                { id: string, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+                    { id: string, name: string, shortName: string | null }
+                    & { __typename: 'Unit' }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
+                  & { __typename: 'AttributeType' }
+                ), categories: Array<(
                   { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
                     { id: string, name: string, namePlural: string | null }
                     & { __typename: 'CategoryLevel' }
@@ -8264,25 +8300,25 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Image' }
                   ) | null, indicators: Array<(
                     { id: string, values: Array<(
-                      { date: string | null, value: number }
+                      { id: string, date: string | null, value: number }
                       & { __typename: 'IndicatorValue' }
                     )>, goals: Array<(
-                      { date: string | null, value: number }
+                      { id: string, date: string | null, value: number }
                       & { __typename: 'IndicatorGoal' }
                     ) | null> | null, unit: (
-                      { name: string, shortName: string | null }
+                      { id: string, name: string, shortName: string | null }
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
                   )>, indicatorRelationships: Array<(
-                    { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                       { id: string }
                       & { __typename: 'Indicator' }
                     ) }
                     & { __typename: 'IndicatorCategoryRelationship' }
                   )>, iconImage: (
-                    { rendition: (
-                      { src: string }
+                    { id: string, rendition: (
+                      { id: string, src: string }
                       & { __typename: 'ImageRendition' }
                     ) | null }
                     & { __typename: 'Image' }
@@ -8315,25 +8351,25 @@ export type GetActionDetailsQuery = (
                           & { __typename: 'Image' }
                         ) | null, indicators: Array<(
                           { id: string, values: Array<(
-                            { date: string | null, value: number }
+                            { id: string, date: string | null, value: number }
                             & { __typename: 'IndicatorValue' }
                           )>, goals: Array<(
-                            { date: string | null, value: number }
+                            { id: string, date: string | null, value: number }
                             & { __typename: 'IndicatorGoal' }
                           ) | null> | null, unit: (
-                            { name: string, shortName: string | null }
+                            { id: string, name: string, shortName: string | null }
                             & { __typename: 'Unit' }
                           ) }
                           & { __typename: 'Indicator' }
                         )>, indicatorRelationships: Array<(
-                          { type: IndicatorCategoryRelationshipType, indicator: (
+                          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                             { id: string }
                             & { __typename: 'Indicator' }
                           ) }
                           & { __typename: 'IndicatorCategoryRelationship' }
                         )>, iconImage: (
-                          { rendition: (
-                            { src: string }
+                          { id: string, rendition: (
+                            { id: string, src: string }
                             & { __typename: 'ImageRendition' }
                           ) | null }
                           & { __typename: 'Image' }
@@ -8365,25 +8401,25 @@ export type GetActionDetailsQuery = (
                         & { __typename: 'Image' }
                       ) | null, indicators: Array<(
                         { id: string, values: Array<(
-                          { date: string | null, value: number }
+                          { id: string, date: string | null, value: number }
                           & { __typename: 'IndicatorValue' }
                         )>, goals: Array<(
-                          { date: string | null, value: number }
+                          { id: string, date: string | null, value: number }
                           & { __typename: 'IndicatorGoal' }
                         ) | null> | null, unit: (
-                          { name: string, shortName: string | null }
+                          { id: string, name: string, shortName: string | null }
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
                       )>, indicatorRelationships: Array<(
-                        { type: IndicatorCategoryRelationshipType, indicator: (
+                        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                           { id: string }
                           & { __typename: 'Indicator' }
                         ) }
                         & { __typename: 'IndicatorCategoryRelationship' }
                       )>, iconImage: (
-                        { rendition: (
-                          { src: string }
+                        { id: string, rendition: (
+                          { id: string, src: string }
                           & { __typename: 'ImageRendition' }
                         ) | null }
                         & { __typename: 'Image' }
@@ -8415,25 +8451,25 @@ export type GetActionDetailsQuery = (
                       & { __typename: 'Image' }
                     ) | null, indicators: Array<(
                       { id: string, values: Array<(
-                        { date: string | null, value: number }
+                        { id: string, date: string | null, value: number }
                         & { __typename: 'IndicatorValue' }
                       )>, goals: Array<(
-                        { date: string | null, value: number }
+                        { id: string, date: string | null, value: number }
                         & { __typename: 'IndicatorGoal' }
                       ) | null> | null, unit: (
-                        { name: string, shortName: string | null }
+                        { id: string, name: string, shortName: string | null }
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
                     )>, indicatorRelationships: Array<(
-                      { type: IndicatorCategoryRelationshipType, indicator: (
+                      { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                         { id: string }
                         & { __typename: 'Indicator' }
                       ) }
                       & { __typename: 'IndicatorCategoryRelationship' }
                     )>, iconImage: (
-                      { rendition: (
-                        { src: string }
+                      { id: string, rendition: (
+                        { id: string, src: string }
                         & { __typename: 'ImageRendition' }
                       ) | null }
                       & { __typename: 'Image' }
@@ -8453,52 +8489,55 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Category' }
                   ) | null }
                   & { __typename: 'Category' }
-                )>, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-                    { id: string, name: string, shortName: string | null }
-                    & { __typename: 'Unit' }
-                  ) | null }
-                  & { __typename: 'AttributeType' }
-                ) }
+                )> }
                 & { __typename: 'AttributeCategoryChoice' }
               ) | (
-                { text: string | null, id: string, choice: (
-                  { id: string, identifier: string, name: string }
-                  & { __typename: 'AttributeTypeChoiceOption' }
-                ) | null, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { text: string | null, id: string, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
-                ) }
+                ), choice: (
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                ) | null }
                 & { __typename: 'AttributeChoice' }
               ) | (
                 { id: string, numericValue: number, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
                 ) }
                 & { __typename: 'AttributeNumericValue' }
               ) | (
                 { value: string, id: string, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
                 ) }
                 & { __typename: 'AttributeRichText' | 'AttributeText' }
               ) | null, field: (
-                { id: string | null }
+                { field: string }
                 & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
               ) }
               & { __typename: 'ActionAttributeReportValue' }
             ) | (
               { field: (
-                { id: string | null }
+                { field: string }
                 & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
               ) }
               & { __typename: 'ActionCategoryReportValue' | 'ActionDateFieldReportValue' | 'ActionDateTimeFieldReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReportValue' | 'ActionSimpleFieldReportValue' | 'ActionSingleRelatedModelFieldReportValue' | 'ActionStatusReportValue' | 'ActionTasksReportValue' }
@@ -8509,46 +8548,55 @@ export type GetActionDetailsQuery = (
         ) | null> | null }
         & { __typename: 'ActionContentSectionBlock' }
       ) | (
-        { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, meta: (
+        { field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionPledgesBlock' | 'ActionRelatedActionsBlock' | 'ActionTasksBlock' }
       ) | (
-        { id: string | null, meta: (
+        { field: string, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' }
       ) | (
-        { id: string | null, fieldLabel: string | null, caption: string | null, meta: (
+        { field: string, fieldLabel: string | null, caption: string | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'ActionOfficialNameBlock' }
       ) | (
-        { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
+        { field: string, fieldLabel: string | null, fieldHelpText: string | null }
         & { __typename: 'ChangeLogMessageBlock' }
       ) | (
-        { id: string | null, field: string, meta: (
+        { field: string, id: string | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'IndicatorCausalChainBlock' }
       ) | (
-        { id: string | null, heading: string | null, helpText: string | null, datasetSchema: (
+        { field: string, id: string | null, heading: string | null, helpText: string | null, datasetSchema: (
           { uuid: string }
           & { __typename: 'DatasetSchema' }
         ) }
         & { __typename: 'PlanDatasetsBlock' }
       ) | (
-        { id: string | null, reportField: string | null, reportType: (
-          { name: string }
+        { field: string, reportField: string | null, reportType: (
+          { id: string, name: string }
           & { __typename: 'ReportType' }
         ) | null, reportsToCompare: Array<(
           { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
             { attribute: (
-              { id: string, categories: Array<(
+              { id: string, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+                  { id: string, name: string, shortName: string | null }
+                  & { __typename: 'Unit' }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
+                & { __typename: 'AttributeType' }
+              ), categories: Array<(
                 { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
@@ -8563,25 +8611,25 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -8614,25 +8662,25 @@ export type GetActionDetailsQuery = (
                         & { __typename: 'Image' }
                       ) | null, indicators: Array<(
                         { id: string, values: Array<(
-                          { date: string | null, value: number }
+                          { id: string, date: string | null, value: number }
                           & { __typename: 'IndicatorValue' }
                         )>, goals: Array<(
-                          { date: string | null, value: number }
+                          { id: string, date: string | null, value: number }
                           & { __typename: 'IndicatorGoal' }
                         ) | null> | null, unit: (
-                          { name: string, shortName: string | null }
+                          { id: string, name: string, shortName: string | null }
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
                       )>, indicatorRelationships: Array<(
-                        { type: IndicatorCategoryRelationshipType, indicator: (
+                        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                           { id: string }
                           & { __typename: 'Indicator' }
                         ) }
                         & { __typename: 'IndicatorCategoryRelationship' }
                       )>, iconImage: (
-                        { rendition: (
-                          { src: string }
+                        { id: string, rendition: (
+                          { id: string, src: string }
                           & { __typename: 'ImageRendition' }
                         ) | null }
                         & { __typename: 'Image' }
@@ -8664,25 +8712,25 @@ export type GetActionDetailsQuery = (
                       & { __typename: 'Image' }
                     ) | null, indicators: Array<(
                       { id: string, values: Array<(
-                        { date: string | null, value: number }
+                        { id: string, date: string | null, value: number }
                         & { __typename: 'IndicatorValue' }
                       )>, goals: Array<(
-                        { date: string | null, value: number }
+                        { id: string, date: string | null, value: number }
                         & { __typename: 'IndicatorGoal' }
                       ) | null> | null, unit: (
-                        { name: string, shortName: string | null }
+                        { id: string, name: string, shortName: string | null }
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
                     )>, indicatorRelationships: Array<(
-                      { type: IndicatorCategoryRelationshipType, indicator: (
+                      { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                         { id: string }
                         & { __typename: 'Indicator' }
                       ) }
                       & { __typename: 'IndicatorCategoryRelationship' }
                     )>, iconImage: (
-                      { rendition: (
-                        { src: string }
+                      { id: string, rendition: (
+                        { id: string, src: string }
                         & { __typename: 'ImageRendition' }
                       ) | null }
                       & { __typename: 'Image' }
@@ -8714,25 +8762,25 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Image' }
                   ) | null, indicators: Array<(
                     { id: string, values: Array<(
-                      { date: string | null, value: number }
+                      { id: string, date: string | null, value: number }
                       & { __typename: 'IndicatorValue' }
                     )>, goals: Array<(
-                      { date: string | null, value: number }
+                      { id: string, date: string | null, value: number }
                       & { __typename: 'IndicatorGoal' }
                     ) | null> | null, unit: (
-                      { name: string, shortName: string | null }
+                      { id: string, name: string, shortName: string | null }
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
                   )>, indicatorRelationships: Array<(
-                    { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                       { id: string }
                       & { __typename: 'Indicator' }
                     ) }
                     & { __typename: 'IndicatorCategoryRelationship' }
                   )>, iconImage: (
-                    { rendition: (
-                      { src: string }
+                    { id: string, rendition: (
+                      { id: string, src: string }
                       & { __typename: 'ImageRendition' }
                     ) | null }
                     & { __typename: 'Image' }
@@ -8752,52 +8800,55 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Category' }
                 ) | null }
                 & { __typename: 'Category' }
-              )>, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-                  { id: string, name: string, shortName: string | null }
-                  & { __typename: 'Unit' }
-                ) | null }
-                & { __typename: 'AttributeType' }
-              ) }
+              )> }
               & { __typename: 'AttributeCategoryChoice' }
             ) | (
-              { text: string | null, id: string, choice: (
-                { id: string, identifier: string, name: string }
-                & { __typename: 'AttributeTypeChoiceOption' }
-              ) | null, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+              { text: string | null, id: string, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
-              ) }
+              ), choice: (
+                { id: string, identifier: string, name: string }
+                & { __typename: 'AttributeTypeChoiceOption' }
+              ) | null }
               & { __typename: 'AttributeChoice' }
             ) | (
               { id: string, numericValue: number, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
               ) }
               & { __typename: 'AttributeNumericValue' }
             ) | (
               { value: string, id: string, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
               ) }
               & { __typename: 'AttributeRichText' | 'AttributeText' }
             ) | null, field: (
-              { id: string | null }
+              { field: string }
               & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
             ) }
             & { __typename: 'ActionAttributeReportValue' }
           ) | (
             { field: (
-              { id: string | null }
+              { field: string }
               & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
             ) }
             & { __typename: 'ActionCategoryReportValue' | 'ActionDateFieldReportValue' | 'ActionDateTimeFieldReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReportValue' | 'ActionSimpleFieldReportValue' | 'ActionSingleRelatedModelFieldReportValue' | 'ActionStatusReportValue' | 'ActionTasksReportValue' }
@@ -8806,7 +8857,7 @@ export type GetActionDetailsQuery = (
         ) | null> | null }
         & { __typename: 'ReportComparisonBlock' }
       )> | null, detailsMainBottom: Array<(
-        { id: string | null, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, meta: (
+        { field: string, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null, fields: Array<(
@@ -8818,7 +8869,7 @@ export type GetActionDetailsQuery = (
         )> }
         & { __typename: 'ActionContactFormBlock' }
       ) | (
-        { id: string | null, meta: (
+        { field: string, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null, attributeType: (
@@ -8833,7 +8884,7 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'ActionContentAttributeTypeBlock' }
       ) | (
-        { id: string | null, meta: (
+        { field: string, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null, categoryType: (
@@ -8845,29 +8896,29 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'ActionContentCategoryTypeBlock' }
       ) | (
-        { id: string | null, heading: string | null, helpText: string | null, layout: string | null, blocks: Array<(
-          { id: string | null }
+        { field: string, id: string | null, heading: string | null, helpText: string | null, layout: string | null, blocks: Array<(
+          { field: string }
           & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' }
         ) | (
-          { id: string | null }
+          { field: string }
           & { __typename: 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
         ) | (
-          { id: string | null, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, fields: Array<(
+          { field: string, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, fields: Array<(
             { id: string | null, fieldLabel: string | null, fieldType: string | null, fieldRequired: boolean | null, choices: Array<(
               { choiceLabel: string | null, choiceValue: string | null }
               & { __typename: 'FormChoiceBlock' }
@@ -8876,7 +8927,7 @@ export type GetActionDetailsQuery = (
           )> }
           & { __typename: 'ActionContactFormBlock' }
         ) | (
-          { id: string | null, attributeType: (
+          { field: string, attributeType: (
             { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
               { id: string, identifier: string, name: string }
               & { __typename: 'AttributeTypeChoiceOption' }
@@ -8888,7 +8939,7 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename: 'ActionContentAttributeTypeBlock' }
         ) | (
-          { id: string | null, categoryType: (
+          { field: string, categoryType: (
             { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
               { id: string, order: number, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
@@ -8897,19 +8948,28 @@ export type GetActionDetailsQuery = (
           ) }
           & { __typename: 'ActionContentCategoryTypeBlock' }
         ) | (
-          { id: string | null, fieldLabel: string | null, caption: string | null }
+          { field: string, fieldLabel: string | null, caption: string | null }
           & { __typename: 'ActionOfficialNameBlock' }
         ) | (
-          { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
+          { field: string, fieldLabel: string | null, fieldHelpText: string | null }
           & { __typename: 'ActionRelatedActionsBlock' | 'ActionTasksBlock' | 'ChangeLogMessageBlock' }
         ) | (
-          { id: string | null, reportField: string | null, reportType: (
-            { name: string }
+          { field: string, reportField: string | null, reportType: (
+            { id: string, name: string }
             & { __typename: 'ReportType' }
           ) | null, reportsToCompare: Array<(
             { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
               { attribute: (
-                { id: string, categories: Array<(
+                { id: string, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+                    { id: string, name: string, shortName: string | null }
+                    & { __typename: 'Unit' }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
+                  & { __typename: 'AttributeType' }
+                ), categories: Array<(
                   { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
                     { id: string, name: string, namePlural: string | null }
                     & { __typename: 'CategoryLevel' }
@@ -8924,25 +8984,25 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Image' }
                   ) | null, indicators: Array<(
                     { id: string, values: Array<(
-                      { date: string | null, value: number }
+                      { id: string, date: string | null, value: number }
                       & { __typename: 'IndicatorValue' }
                     )>, goals: Array<(
-                      { date: string | null, value: number }
+                      { id: string, date: string | null, value: number }
                       & { __typename: 'IndicatorGoal' }
                     ) | null> | null, unit: (
-                      { name: string, shortName: string | null }
+                      { id: string, name: string, shortName: string | null }
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
                   )>, indicatorRelationships: Array<(
-                    { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                       { id: string }
                       & { __typename: 'Indicator' }
                     ) }
                     & { __typename: 'IndicatorCategoryRelationship' }
                   )>, iconImage: (
-                    { rendition: (
-                      { src: string }
+                    { id: string, rendition: (
+                      { id: string, src: string }
                       & { __typename: 'ImageRendition' }
                     ) | null }
                     & { __typename: 'Image' }
@@ -8975,25 +9035,25 @@ export type GetActionDetailsQuery = (
                           & { __typename: 'Image' }
                         ) | null, indicators: Array<(
                           { id: string, values: Array<(
-                            { date: string | null, value: number }
+                            { id: string, date: string | null, value: number }
                             & { __typename: 'IndicatorValue' }
                           )>, goals: Array<(
-                            { date: string | null, value: number }
+                            { id: string, date: string | null, value: number }
                             & { __typename: 'IndicatorGoal' }
                           ) | null> | null, unit: (
-                            { name: string, shortName: string | null }
+                            { id: string, name: string, shortName: string | null }
                             & { __typename: 'Unit' }
                           ) }
                           & { __typename: 'Indicator' }
                         )>, indicatorRelationships: Array<(
-                          { type: IndicatorCategoryRelationshipType, indicator: (
+                          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                             { id: string }
                             & { __typename: 'Indicator' }
                           ) }
                           & { __typename: 'IndicatorCategoryRelationship' }
                         )>, iconImage: (
-                          { rendition: (
-                            { src: string }
+                          { id: string, rendition: (
+                            { id: string, src: string }
                             & { __typename: 'ImageRendition' }
                           ) | null }
                           & { __typename: 'Image' }
@@ -9025,25 +9085,25 @@ export type GetActionDetailsQuery = (
                         & { __typename: 'Image' }
                       ) | null, indicators: Array<(
                         { id: string, values: Array<(
-                          { date: string | null, value: number }
+                          { id: string, date: string | null, value: number }
                           & { __typename: 'IndicatorValue' }
                         )>, goals: Array<(
-                          { date: string | null, value: number }
+                          { id: string, date: string | null, value: number }
                           & { __typename: 'IndicatorGoal' }
                         ) | null> | null, unit: (
-                          { name: string, shortName: string | null }
+                          { id: string, name: string, shortName: string | null }
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
                       )>, indicatorRelationships: Array<(
-                        { type: IndicatorCategoryRelationshipType, indicator: (
+                        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                           { id: string }
                           & { __typename: 'Indicator' }
                         ) }
                         & { __typename: 'IndicatorCategoryRelationship' }
                       )>, iconImage: (
-                        { rendition: (
-                          { src: string }
+                        { id: string, rendition: (
+                          { id: string, src: string }
                           & { __typename: 'ImageRendition' }
                         ) | null }
                         & { __typename: 'Image' }
@@ -9075,25 +9135,25 @@ export type GetActionDetailsQuery = (
                       & { __typename: 'Image' }
                     ) | null, indicators: Array<(
                       { id: string, values: Array<(
-                        { date: string | null, value: number }
+                        { id: string, date: string | null, value: number }
                         & { __typename: 'IndicatorValue' }
                       )>, goals: Array<(
-                        { date: string | null, value: number }
+                        { id: string, date: string | null, value: number }
                         & { __typename: 'IndicatorGoal' }
                       ) | null> | null, unit: (
-                        { name: string, shortName: string | null }
+                        { id: string, name: string, shortName: string | null }
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
                     )>, indicatorRelationships: Array<(
-                      { type: IndicatorCategoryRelationshipType, indicator: (
+                      { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                         { id: string }
                         & { __typename: 'Indicator' }
                       ) }
                       & { __typename: 'IndicatorCategoryRelationship' }
                     )>, iconImage: (
-                      { rendition: (
-                        { src: string }
+                      { id: string, rendition: (
+                        { id: string, src: string }
                         & { __typename: 'ImageRendition' }
                       ) | null }
                       & { __typename: 'Image' }
@@ -9113,52 +9173,55 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Category' }
                   ) | null }
                   & { __typename: 'Category' }
-                )>, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-                    { id: string, name: string, shortName: string | null }
-                    & { __typename: 'Unit' }
-                  ) | null }
-                  & { __typename: 'AttributeType' }
-                ) }
+                )> }
                 & { __typename: 'AttributeCategoryChoice' }
               ) | (
-                { text: string | null, id: string, choice: (
-                  { id: string, identifier: string, name: string }
-                  & { __typename: 'AttributeTypeChoiceOption' }
-                ) | null, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { text: string | null, id: string, type: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
-                ) }
+                ), choice: (
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                ) | null }
                 & { __typename: 'AttributeChoice' }
               ) | (
                 { id: string, numericValue: number, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
                 ) }
                 & { __typename: 'AttributeNumericValue' }
               ) | (
                 { value: string, id: string, type: (
-                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                  { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                     { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
-                  ) | null }
+                  ) | null, choiceOptions: Array<(
+                    { id: string, identifier: string, name: string }
+                    & { __typename: 'AttributeTypeChoiceOption' }
+                  )> }
                   & { __typename: 'AttributeType' }
                 ) }
                 & { __typename: 'AttributeRichText' | 'AttributeText' }
               ) | null, field: (
-                { id: string | null }
+                { field: string }
                 & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
               ) }
               & { __typename: 'ActionAttributeReportValue' }
             ) | (
               { field: (
-                { id: string | null }
+                { field: string }
                 & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
               ) }
               & { __typename: 'ActionCategoryReportValue' | 'ActionDateFieldReportValue' | 'ActionDateTimeFieldReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReportValue' | 'ActionSimpleFieldReportValue' | 'ActionSingleRelatedModelFieldReportValue' | 'ActionStatusReportValue' | 'ActionTasksReportValue' }
@@ -9169,46 +9232,55 @@ export type GetActionDetailsQuery = (
         ) | null> | null }
         & { __typename: 'ActionContentSectionBlock' }
       ) | (
-        { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, meta: (
+        { field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionPledgesBlock' | 'ActionRelatedActionsBlock' | 'ActionTasksBlock' }
       ) | (
-        { id: string | null, meta: (
+        { field: string, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' }
       ) | (
-        { id: string | null, fieldLabel: string | null, caption: string | null, meta: (
+        { field: string, fieldLabel: string | null, caption: string | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'ActionOfficialNameBlock' }
       ) | (
-        { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
+        { field: string, fieldLabel: string | null, fieldHelpText: string | null }
         & { __typename: 'ChangeLogMessageBlock' }
       ) | (
-        { id: string | null, field: string, meta: (
+        { field: string, id: string | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'IndicatorCausalChainBlock' }
       ) | (
-        { id: string | null, heading: string | null, helpText: string | null, datasetSchema: (
+        { field: string, id: string | null, heading: string | null, helpText: string | null, datasetSchema: (
           { uuid: string }
           & { __typename: 'DatasetSchema' }
         ) }
         & { __typename: 'PlanDatasetsBlock' }
       ) | (
-        { id: string | null, reportField: string | null, reportType: (
-          { name: string }
+        { field: string, reportField: string | null, reportType: (
+          { id: string, name: string }
           & { __typename: 'ReportType' }
         ) | null, reportsToCompare: Array<(
           { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
             { attribute: (
-              { id: string, categories: Array<(
+              { id: string, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+                  { id: string, name: string, shortName: string | null }
+                  & { __typename: 'Unit' }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
+                & { __typename: 'AttributeType' }
+              ), categories: Array<(
                 { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
                   { id: string, name: string, namePlural: string | null }
                   & { __typename: 'CategoryLevel' }
@@ -9223,25 +9295,25 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -9274,25 +9346,25 @@ export type GetActionDetailsQuery = (
                         & { __typename: 'Image' }
                       ) | null, indicators: Array<(
                         { id: string, values: Array<(
-                          { date: string | null, value: number }
+                          { id: string, date: string | null, value: number }
                           & { __typename: 'IndicatorValue' }
                         )>, goals: Array<(
-                          { date: string | null, value: number }
+                          { id: string, date: string | null, value: number }
                           & { __typename: 'IndicatorGoal' }
                         ) | null> | null, unit: (
-                          { name: string, shortName: string | null }
+                          { id: string, name: string, shortName: string | null }
                           & { __typename: 'Unit' }
                         ) }
                         & { __typename: 'Indicator' }
                       )>, indicatorRelationships: Array<(
-                        { type: IndicatorCategoryRelationshipType, indicator: (
+                        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                           { id: string }
                           & { __typename: 'Indicator' }
                         ) }
                         & { __typename: 'IndicatorCategoryRelationship' }
                       )>, iconImage: (
-                        { rendition: (
-                          { src: string }
+                        { id: string, rendition: (
+                          { id: string, src: string }
                           & { __typename: 'ImageRendition' }
                         ) | null }
                         & { __typename: 'Image' }
@@ -9324,25 +9396,25 @@ export type GetActionDetailsQuery = (
                       & { __typename: 'Image' }
                     ) | null, indicators: Array<(
                       { id: string, values: Array<(
-                        { date: string | null, value: number }
+                        { id: string, date: string | null, value: number }
                         & { __typename: 'IndicatorValue' }
                       )>, goals: Array<(
-                        { date: string | null, value: number }
+                        { id: string, date: string | null, value: number }
                         & { __typename: 'IndicatorGoal' }
                       ) | null> | null, unit: (
-                        { name: string, shortName: string | null }
+                        { id: string, name: string, shortName: string | null }
                         & { __typename: 'Unit' }
                       ) }
                       & { __typename: 'Indicator' }
                     )>, indicatorRelationships: Array<(
-                      { type: IndicatorCategoryRelationshipType, indicator: (
+                      { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                         { id: string }
                         & { __typename: 'Indicator' }
                       ) }
                       & { __typename: 'IndicatorCategoryRelationship' }
                     )>, iconImage: (
-                      { rendition: (
-                        { src: string }
+                      { id: string, rendition: (
+                        { id: string, src: string }
                         & { __typename: 'ImageRendition' }
                       ) | null }
                       & { __typename: 'Image' }
@@ -9374,25 +9446,25 @@ export type GetActionDetailsQuery = (
                     & { __typename: 'Image' }
                   ) | null, indicators: Array<(
                     { id: string, values: Array<(
-                      { date: string | null, value: number }
+                      { id: string, date: string | null, value: number }
                       & { __typename: 'IndicatorValue' }
                     )>, goals: Array<(
-                      { date: string | null, value: number }
+                      { id: string, date: string | null, value: number }
                       & { __typename: 'IndicatorGoal' }
                     ) | null> | null, unit: (
-                      { name: string, shortName: string | null }
+                      { id: string, name: string, shortName: string | null }
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
                   )>, indicatorRelationships: Array<(
-                    { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                       { id: string }
                       & { __typename: 'Indicator' }
                     ) }
                     & { __typename: 'IndicatorCategoryRelationship' }
                   )>, iconImage: (
-                    { rendition: (
-                      { src: string }
+                    { id: string, rendition: (
+                      { id: string, src: string }
                       & { __typename: 'ImageRendition' }
                     ) | null }
                     & { __typename: 'Image' }
@@ -9412,52 +9484,55 @@ export type GetActionDetailsQuery = (
                   & { __typename: 'Category' }
                 ) | null }
                 & { __typename: 'Category' }
-              )>, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-                  { id: string, name: string, shortName: string | null }
-                  & { __typename: 'Unit' }
-                ) | null }
-                & { __typename: 'AttributeType' }
-              ) }
+              )> }
               & { __typename: 'AttributeCategoryChoice' }
             ) | (
-              { text: string | null, id: string, choice: (
-                { id: string, identifier: string, name: string }
-                & { __typename: 'AttributeTypeChoiceOption' }
-              ) | null, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+              { text: string | null, id: string, type: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
-              ) }
+              ), choice: (
+                { id: string, identifier: string, name: string }
+                & { __typename: 'AttributeTypeChoiceOption' }
+              ) | null }
               & { __typename: 'AttributeChoice' }
             ) | (
               { id: string, numericValue: number, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
               ) }
               & { __typename: 'AttributeNumericValue' }
             ) | (
               { value: string, id: string, type: (
-                { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+                { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
                   { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
-                ) | null }
+                ) | null, choiceOptions: Array<(
+                  { id: string, identifier: string, name: string }
+                  & { __typename: 'AttributeTypeChoiceOption' }
+                )> }
                 & { __typename: 'AttributeType' }
               ) }
               & { __typename: 'AttributeRichText' | 'AttributeText' }
             ) | null, field: (
-              { id: string | null }
+              { field: string }
               & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
             ) }
             & { __typename: 'ActionAttributeReportValue' }
           ) | (
             { field: (
-              { id: string | null }
+              { field: string }
               & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
             ) }
             & { __typename: 'ActionCategoryReportValue' | 'ActionDateFieldReportValue' | 'ActionDateTimeFieldReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReportValue' | 'ActionSimpleFieldReportValue' | 'ActionSingleRelatedModelFieldReportValue' | 'ActionStatusReportValue' | 'ActionTasksReportValue' }
@@ -9466,13 +9541,13 @@ export type GetActionDetailsQuery = (
         ) | null> | null }
         & { __typename: 'ReportComparisonBlock' }
       )> | null, detailsAside: Array<(
-        { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, meta: (
+        { fieldLabel: string | null, fieldHelpText: string | null, field: string, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'ActionContactPersonsBlock' | 'ActionScheduleBlock' }
       ) | (
-        { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, meta: (
+        { fieldLabel: string | null, fieldHelpText: string | null, field: string, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null, attributeType: (
@@ -9487,7 +9562,7 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'ActionContentAttributeTypeBlock' }
       ) | (
-        { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, meta: (
+        { fieldLabel: string | null, fieldHelpText: string | null, field: string, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null, categoryType: (
@@ -9499,13 +9574,13 @@ export type GetActionDetailsQuery = (
         ) }
         & { __typename: 'ActionContentCategoryTypeBlock' }
       ) | (
-        { fieldLabel: string | null, fieldHelpText: string | null, heading: string | null, id: string | null, meta: (
+        { fieldLabel: string | null, fieldHelpText: string | null, field: string, heading: string | null, meta: (
           { restricted: boolean | null, hidden: boolean | null }
           & { __typename: 'FieldBlockMetaData' }
         ) | null }
         & { __typename: 'ActionResponsiblePartiesBlock' }
       ) | (
-        { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
+        { field: string, fieldLabel: string | null, fieldHelpText: string | null }
         & { __typename: 'ChangeLogMessageBlock' }
       )> | null }
       & { __typename: 'ActionListPage' }
@@ -9519,7 +9594,7 @@ export type GetActionDetailsQuery = (
       ) | null }
       & { __typename: 'AttributeType' }
     )>, generalContent: (
-      { actionTerm: SiteGeneralContentActionTerm }
+      { id: string, actionTerm: SiteGeneralContentActionTerm }
       & { __typename: 'SiteGeneralContent' }
     ) }
     & { __typename: 'Plan' }
@@ -9528,11 +9603,11 @@ export type GetActionDetailsQuery = (
 );
 
 export type ActionDependenciesFragment = (
-  { dependencyRole: (
+  { id: string, dependencyRole: (
     { id: string, name: string }
     & { __typename: 'ActionDependencyRole' }
   ) | null, allDependencyRelationships: Array<(
-    { preceding: (
+    { id: string, preceding: (
       { id: string, identifier: string, name: string, viewUrl: string, color: string | null, scheduleContinuous: boolean, completion: number | null, dependencyRole: (
         { id: string, name: string }
         & { __typename: 'ActionDependencyRole' }
@@ -9554,25 +9629,25 @@ export type ActionDependenciesFragment = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -9605,25 +9680,25 @@ export type ActionDependenciesFragment = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -9655,25 +9730,25 @@ export type ActionDependenciesFragment = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -9705,25 +9780,25 @@ export type ActionDependenciesFragment = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -9797,25 +9872,25 @@ export type ActionDependenciesFragment = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -9848,25 +9923,25 @@ export type ActionDependenciesFragment = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -9898,25 +9973,25 @@ export type ActionDependenciesFragment = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -9948,25 +10023,25 @@ export type ActionDependenciesFragment = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -10024,16 +10099,16 @@ export type ActionDependenciesFragment = (
   & { __typename: 'Action' }
 );
 
-type ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment = (
-  { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, meta: (
+type ActionAsideContentBlocks_ActionContactPersonsBlock_ActionScheduleBlock_Fragment = (
+  { fieldLabel: string | null, fieldHelpText: string | null, field: string, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null }
   & { __typename: 'ActionContactPersonsBlock' | 'ActionScheduleBlock' }
 );
 
-type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
-  { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, meta: (
+type ActionAsideContentBlocks_ActionContentAttributeTypeBlock_Fragment = (
+  { fieldLabel: string | null, fieldHelpText: string | null, field: string, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null, attributeType: (
@@ -10049,8 +10124,8 @@ type ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment =
   & { __typename: 'ActionContentAttributeTypeBlock' }
 );
 
-type ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
-  { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, meta: (
+type ActionAsideContentBlocks_ActionContentCategoryTypeBlock_Fragment = (
+  { fieldLabel: string | null, fieldHelpText: string | null, field: string, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null, categoryType: (
@@ -10063,23 +10138,23 @@ type ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = 
   & { __typename: 'ActionContentCategoryTypeBlock' }
 );
 
-type ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment = (
-  { fieldLabel: string | null, fieldHelpText: string | null, heading: string | null, id: string | null, meta: (
+type ActionAsideContentBlocks_ActionResponsiblePartiesBlock_Fragment = (
+  { fieldLabel: string | null, fieldHelpText: string | null, field: string, heading: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null }
   & { __typename: 'ActionResponsiblePartiesBlock' }
 );
 
-type ActionAsideContentBlocksFragment_ChangeLogMessageBlock_Fragment = (
-  { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
+type ActionAsideContentBlocks_ChangeLogMessageBlock_Fragment = (
+  { field: string, fieldLabel: string | null, fieldHelpText: string | null }
   & { __typename: 'ChangeLogMessageBlock' }
 );
 
-export type ActionAsideContentBlocksFragmentFragment = ActionAsideContentBlocksFragment_ActionContactPersonsBlock_ActionScheduleBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionAsideContentBlocksFragment_ActionResponsiblePartiesBlock_Fragment | ActionAsideContentBlocksFragment_ChangeLogMessageBlock_Fragment;
+export type ActionAsideContentBlocksFragment = ActionAsideContentBlocks_ActionContactPersonsBlock_ActionScheduleBlock_Fragment | ActionAsideContentBlocks_ActionContentAttributeTypeBlock_Fragment | ActionAsideContentBlocks_ActionContentCategoryTypeBlock_Fragment | ActionAsideContentBlocks_ActionResponsiblePartiesBlock_Fragment | ActionAsideContentBlocks_ChangeLogMessageBlock_Fragment;
 
-type ActionMainContentBlocksFragment_ActionContactFormBlock_Fragment = (
-  { id: string | null, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, meta: (
+type ActionMainContentBlocks_ActionContactFormBlock_Fragment = (
+  { field: string, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null, fields: Array<(
@@ -10092,8 +10167,8 @@ type ActionMainContentBlocksFragment_ActionContactFormBlock_Fragment = (
   & { __typename: 'ActionContactFormBlock' }
 );
 
-type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = (
-  { id: string | null, meta: (
+type ActionMainContentBlocks_ActionContentAttributeTypeBlock_Fragment = (
+  { field: string, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null, attributeType: (
@@ -10109,8 +10184,8 @@ type ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment = 
   & { __typename: 'ActionContentAttributeTypeBlock' }
 );
 
-type ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
-  { id: string | null, meta: (
+type ActionMainContentBlocks_ActionContentCategoryTypeBlock_Fragment = (
+  { field: string, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null, categoryType: (
@@ -10123,30 +10198,30 @@ type ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment = (
   & { __typename: 'ActionContentCategoryTypeBlock' }
 );
 
-type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
-  { id: string | null, heading: string | null, helpText: string | null, layout: string | null, blocks: Array<(
-    { id: string | null }
+type ActionMainContentBlocks_ActionContentSectionBlock_Fragment = (
+  { field: string, id: string | null, heading: string | null, helpText: string | null, layout: string | null, blocks: Array<(
+    { field: string }
     & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactPersonsBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' }
   ) | (
-    { id: string | null }
+    { field: string }
     & { __typename: 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' }
   ) | (
-    { id: string | null }
+    { field: string }
     & { __typename: 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'CharBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' }
   ) | (
-    { id: string | null }
+    { field: string }
     & { __typename: 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' }
   ) | (
-    { id: string | null }
+    { field: string }
     & { __typename: 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' }
   ) | (
-    { id: string | null }
+    { field: string }
     & { __typename: 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' }
   ) | (
-    { id: string | null }
+    { field: string }
     & { __typename: 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
   ) | (
-    { id: string | null, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, fields: Array<(
+    { field: string, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, fields: Array<(
       { id: string | null, fieldLabel: string | null, fieldType: string | null, fieldRequired: boolean | null, choices: Array<(
         { choiceLabel: string | null, choiceValue: string | null }
         & { __typename: 'FormChoiceBlock' }
@@ -10155,7 +10230,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
     )> }
     & { __typename: 'ActionContactFormBlock' }
   ) | (
-    { id: string | null, attributeType: (
+    { field: string, attributeType: (
       { id: string, format: AttributeTypeFormat, name: string, identifier: string, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, choiceOptions: Array<(
         { id: string, identifier: string, name: string }
         & { __typename: 'AttributeTypeChoiceOption' }
@@ -10167,7 +10242,7 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
     ) }
     & { __typename: 'ActionContentAttributeTypeBlock' }
   ) | (
-    { id: string | null, categoryType: (
+    { field: string, categoryType: (
       { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
         { id: string, order: number, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
@@ -10176,19 +10251,28 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
     ) }
     & { __typename: 'ActionContentCategoryTypeBlock' }
   ) | (
-    { id: string | null, fieldLabel: string | null, caption: string | null }
+    { field: string, fieldLabel: string | null, caption: string | null }
     & { __typename: 'ActionOfficialNameBlock' }
   ) | (
-    { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
+    { field: string, fieldLabel: string | null, fieldHelpText: string | null }
     & { __typename: 'ActionRelatedActionsBlock' | 'ActionTasksBlock' | 'ChangeLogMessageBlock' }
   ) | (
-    { id: string | null, reportField: string | null, reportType: (
-      { name: string }
+    { field: string, reportField: string | null, reportType: (
+      { id: string, name: string }
       & { __typename: 'ReportType' }
     ) | null, reportsToCompare: Array<(
       { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
         { attribute: (
-          { id: string, categories: Array<(
+          { id: string, type: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+              { id: string, name: string, shortName: string | null }
+              & { __typename: 'Unit' }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
+            & { __typename: 'AttributeType' }
+          ), categories: Array<(
             { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
@@ -10203,25 +10287,25 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -10254,25 +10338,25 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                     & { __typename: 'Image' }
                   ) | null, indicators: Array<(
                     { id: string, values: Array<(
-                      { date: string | null, value: number }
+                      { id: string, date: string | null, value: number }
                       & { __typename: 'IndicatorValue' }
                     )>, goals: Array<(
-                      { date: string | null, value: number }
+                      { id: string, date: string | null, value: number }
                       & { __typename: 'IndicatorGoal' }
                     ) | null> | null, unit: (
-                      { name: string, shortName: string | null }
+                      { id: string, name: string, shortName: string | null }
                       & { __typename: 'Unit' }
                     ) }
                     & { __typename: 'Indicator' }
                   )>, indicatorRelationships: Array<(
-                    { type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                       { id: string }
                       & { __typename: 'Indicator' }
                     ) }
                     & { __typename: 'IndicatorCategoryRelationship' }
                   )>, iconImage: (
-                    { rendition: (
-                      { src: string }
+                    { id: string, rendition: (
+                      { id: string, src: string }
                       & { __typename: 'ImageRendition' }
                     ) | null }
                     & { __typename: 'Image' }
@@ -10304,25 +10388,25 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -10354,25 +10438,25 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -10392,52 +10476,55 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
               & { __typename: 'Category' }
             ) | null }
             & { __typename: 'Category' }
-          )>, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-              { id: string, name: string, shortName: string | null }
-              & { __typename: 'Unit' }
-            ) | null }
-            & { __typename: 'AttributeType' }
-          ) }
+          )> }
           & { __typename: 'AttributeCategoryChoice' }
         ) | (
-          { text: string | null, id: string, choice: (
-            { id: string, identifier: string, name: string }
-            & { __typename: 'AttributeTypeChoiceOption' }
-          ) | null, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { text: string | null, id: string, type: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
               { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
-            ) | null }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
             & { __typename: 'AttributeType' }
-          ) }
+          ), choice: (
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          ) | null }
           & { __typename: 'AttributeChoice' }
         ) | (
           { id: string, numericValue: number, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
               { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
-            ) | null }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
             & { __typename: 'AttributeType' }
           ) }
           & { __typename: 'AttributeNumericValue' }
         ) | (
           { value: string, id: string, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
               { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
-            ) | null }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
             & { __typename: 'AttributeType' }
           ) }
           & { __typename: 'AttributeRichText' | 'AttributeText' }
         ) | null, field: (
-          { id: string | null }
+          { field: string }
           & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
         ) }
         & { __typename: 'ActionAttributeReportValue' }
       ) | (
         { field: (
-          { id: string | null }
+          { field: string }
           & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
         ) }
         & { __typename: 'ActionCategoryReportValue' | 'ActionDateFieldReportValue' | 'ActionDateTimeFieldReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReportValue' | 'ActionSimpleFieldReportValue' | 'ActionSingleRelatedModelFieldReportValue' | 'ActionStatusReportValue' | 'ActionTasksReportValue' }
@@ -10449,59 +10536,68 @@ type ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment = (
   & { __typename: 'ActionContentSectionBlock' }
 );
 
-type ActionMainContentBlocksFragment_Pm7qvkEswOj3HalNkYhsetHyZj7fjuxRq5zDrUiKNw_Fragment = (
-  { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, meta: (
+type ActionMainContentBlocks_Pm7qvkEswOj3HalNkYhsetHyZj7fjuxRq5zDrUiKNw_Fragment = (
+  { field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null }
   & { __typename: 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionLeadParagraphBlock' | 'ActionPledgesBlock' | 'ActionRelatedActionsBlock' | 'ActionTasksBlock' }
 );
 
-type ActionMainContentBlocksFragment_ActionLinksBlock_ActionMergedActionsBlock_ActionRelatedIndicatorsBlock_Fragment = (
-  { id: string | null, meta: (
+type ActionMainContentBlocks_ActionLinksBlock_ActionMergedActionsBlock_ActionRelatedIndicatorsBlock_Fragment = (
+  { field: string, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null }
   & { __typename: 'ActionLinksBlock' | 'ActionMergedActionsBlock' | 'ActionRelatedIndicatorsBlock' }
 );
 
-type ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment = (
-  { id: string | null, fieldLabel: string | null, caption: string | null, meta: (
+type ActionMainContentBlocks_ActionOfficialNameBlock_Fragment = (
+  { field: string, fieldLabel: string | null, caption: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null }
   & { __typename: 'ActionOfficialNameBlock' }
 );
 
-type ActionMainContentBlocksFragment_ChangeLogMessageBlock_Fragment = (
-  { id: string | null, fieldLabel: string | null, fieldHelpText: string | null }
+type ActionMainContentBlocks_ChangeLogMessageBlock_Fragment = (
+  { field: string, fieldLabel: string | null, fieldHelpText: string | null }
   & { __typename: 'ChangeLogMessageBlock' }
 );
 
-type ActionMainContentBlocksFragment_IndicatorCausalChainBlock_Fragment = (
-  { id: string | null, field: string, meta: (
+type ActionMainContentBlocks_IndicatorCausalChainBlock_Fragment = (
+  { field: string, id: string | null, meta: (
     { restricted: boolean | null, hidden: boolean | null }
     & { __typename: 'FieldBlockMetaData' }
   ) | null }
   & { __typename: 'IndicatorCausalChainBlock' }
 );
 
-type ActionMainContentBlocksFragment_PlanDatasetsBlock_Fragment = (
-  { id: string | null, heading: string | null, helpText: string | null, datasetSchema: (
+type ActionMainContentBlocks_PlanDatasetsBlock_Fragment = (
+  { field: string, id: string | null, heading: string | null, helpText: string | null, datasetSchema: (
     { uuid: string }
     & { __typename: 'DatasetSchema' }
   ) }
   & { __typename: 'PlanDatasetsBlock' }
 );
 
-type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
-  { id: string | null, reportField: string | null, reportType: (
-    { name: string }
+type ActionMainContentBlocks_ReportComparisonBlock_Fragment = (
+  { field: string, reportField: string | null, reportType: (
+    { id: string, name: string }
     & { __typename: 'ReportType' }
   ) | null, reportsToCompare: Array<(
     { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
       { attribute: (
-        { id: string, categories: Array<(
+        { id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
+          & { __typename: 'AttributeType' }
+        ), categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
@@ -10516,25 +10612,25 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -10567,25 +10663,25 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -10617,25 +10713,25 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -10667,25 +10763,25 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -10705,52 +10801,55 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
             & { __typename: 'Category' }
           ) | null }
           & { __typename: 'Category' }
-        )>, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-            { id: string, name: string, shortName: string | null }
-            & { __typename: 'Unit' }
-          ) | null }
-          & { __typename: 'AttributeType' }
-        ) }
+        )> }
         & { __typename: 'AttributeCategoryChoice' }
       ) | (
-        { text: string | null, id: string, choice: (
-          { id: string, identifier: string, name: string }
-          & { __typename: 'AttributeTypeChoiceOption' }
-        ) | null, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+        { text: string | null, id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
-        ) }
+        ), choice: (
+          { id: string, identifier: string, name: string }
+          & { __typename: 'AttributeTypeChoiceOption' }
+        ) | null }
         & { __typename: 'AttributeChoice' }
       ) | (
         { id: string, numericValue: number, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'AttributeNumericValue' }
       ) | (
         { value: string, id: string, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'AttributeRichText' | 'AttributeText' }
       ) | null, field: (
-        { id: string | null }
+        { field: string }
         & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
       ) }
       & { __typename: 'ActionAttributeReportValue' }
     ) | (
       { field: (
-        { id: string | null }
+        { field: string }
         & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
       ) }
       & { __typename: 'ActionCategoryReportValue' | 'ActionDateFieldReportValue' | 'ActionDateTimeFieldReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReportValue' | 'ActionSimpleFieldReportValue' | 'ActionSingleRelatedModelFieldReportValue' | 'ActionStatusReportValue' | 'ActionTasksReportValue' }
@@ -10760,16 +10859,25 @@ type ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment = (
   & { __typename: 'ReportComparisonBlock' }
 );
 
-export type ActionMainContentBlocksFragmentFragment = ActionMainContentBlocksFragment_ActionContactFormBlock_Fragment | ActionMainContentBlocksFragment_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocksFragment_ActionContentSectionBlock_Fragment | ActionMainContentBlocksFragment_Pm7qvkEswOj3HalNkYhsetHyZj7fjuxRq5zDrUiKNw_Fragment | ActionMainContentBlocksFragment_ActionLinksBlock_ActionMergedActionsBlock_ActionRelatedIndicatorsBlock_Fragment | ActionMainContentBlocksFragment_ActionOfficialNameBlock_Fragment | ActionMainContentBlocksFragment_ChangeLogMessageBlock_Fragment | ActionMainContentBlocksFragment_IndicatorCausalChainBlock_Fragment | ActionMainContentBlocksFragment_PlanDatasetsBlock_Fragment | ActionMainContentBlocksFragment_ReportComparisonBlock_Fragment;
+export type ActionMainContentBlocksFragment = ActionMainContentBlocks_ActionContactFormBlock_Fragment | ActionMainContentBlocks_ActionContentAttributeTypeBlock_Fragment | ActionMainContentBlocks_ActionContentCategoryTypeBlock_Fragment | ActionMainContentBlocks_ActionContentSectionBlock_Fragment | ActionMainContentBlocks_Pm7qvkEswOj3HalNkYhsetHyZj7fjuxRq5zDrUiKNw_Fragment | ActionMainContentBlocks_ActionLinksBlock_ActionMergedActionsBlock_ActionRelatedIndicatorsBlock_Fragment | ActionMainContentBlocks_ActionOfficialNameBlock_Fragment | ActionMainContentBlocks_ChangeLogMessageBlock_Fragment | ActionMainContentBlocks_IndicatorCausalChainBlock_Fragment | ActionMainContentBlocks_PlanDatasetsBlock_Fragment | ActionMainContentBlocks_ReportComparisonBlock_Fragment;
 
 export type ReportComparisonBlockActionContentFragment = (
   { reportField: string | null, reportType: (
-    { name: string }
+    { id: string, name: string }
     & { __typename: 'ReportType' }
   ) | null, reportsToCompare: Array<(
     { identifier: string, name: string, startDate: string, endDate: string, valuesForAction: Array<(
       { attribute: (
-        { id: string, categories: Array<(
+        { id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
+          & { __typename: 'AttributeType' }
+        ), categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
@@ -10784,25 +10892,25 @@ export type ReportComparisonBlockActionContentFragment = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -10835,25 +10943,25 @@ export type ReportComparisonBlockActionContentFragment = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -10885,25 +10993,25 @@ export type ReportComparisonBlockActionContentFragment = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -10935,25 +11043,25 @@ export type ReportComparisonBlockActionContentFragment = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -10973,52 +11081,55 @@ export type ReportComparisonBlockActionContentFragment = (
             & { __typename: 'Category' }
           ) | null }
           & { __typename: 'Category' }
-        )>, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
-            { id: string, name: string, shortName: string | null }
-            & { __typename: 'Unit' }
-          ) | null }
-          & { __typename: 'AttributeType' }
-        ) }
+        )> }
         & { __typename: 'AttributeCategoryChoice' }
       ) | (
-        { text: string | null, id: string, choice: (
-          { id: string, identifier: string, name: string }
-          & { __typename: 'AttributeTypeChoiceOption' }
-        ) | null, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+        { text: string | null, id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
-        ) }
+        ), choice: (
+          { id: string, identifier: string, name: string }
+          & { __typename: 'AttributeTypeChoiceOption' }
+        ) | null }
         & { __typename: 'AttributeChoice' }
       ) | (
         { id: string, numericValue: number, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'AttributeNumericValue' }
       ) | (
         { value: string, id: string, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'AttributeRichText' | 'AttributeText' }
       ) | null, field: (
-        { id: string | null }
+        { field: string }
         & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
       ) }
       & { __typename: 'ActionAttributeReportValue' }
     ) | (
       { field: (
-        { id: string | null }
+        { field: string }
         & { __typename: 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryReportFieldBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionImplementationPhaseReportFieldBlock' | 'ActionManualStatusReasonBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleContinuousBlock' | 'ActionStartDateBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' | 'ActionUpdatedAtBlock' }
       ) }
       & { __typename: 'ActionCategoryReportValue' | 'ActionDateFieldReportValue' | 'ActionDateTimeFieldReportValue' | 'ActionImplementationPhaseReportValue' | 'ActionResponsiblePartyReportValue' | 'ActionSimpleFieldReportValue' | 'ActionSingleRelatedModelFieldReportValue' | 'ActionStatusReportValue' | 'ActionTasksReportValue' }
@@ -11050,25 +11161,25 @@ export type ActionCardWithDependencyRoleFragment = (
       & { __typename: 'Image' }
     ) | null, indicators: Array<(
       { id: string, values: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorValue' }
       )>, goals: Array<(
-        { date: string | null, value: number }
+        { id: string, date: string | null, value: number }
         & { __typename: 'IndicatorGoal' }
       ) | null> | null, unit: (
-        { name: string, shortName: string | null }
+        { id: string, name: string, shortName: string | null }
         & { __typename: 'Unit' }
       ) }
       & { __typename: 'Indicator' }
     )>, indicatorRelationships: Array<(
-      { type: IndicatorCategoryRelationshipType, indicator: (
+      { id: string, type: IndicatorCategoryRelationshipType, indicator: (
         { id: string }
         & { __typename: 'Indicator' }
       ) }
       & { __typename: 'IndicatorCategoryRelationship' }
     )>, iconImage: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
@@ -11101,25 +11212,25 @@ export type ActionCardWithDependencyRoleFragment = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -11151,25 +11262,25 @@ export type ActionCardWithDependencyRoleFragment = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -11201,25 +11312,25 @@ export type ActionCardWithDependencyRoleFragment = (
         & { __typename: 'Image' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -11273,15 +11384,15 @@ export type ActionCardWithDependencyRoleFragment = (
   & { __typename: 'Action' }
 );
 
-export type GetActionListPageIncludeRelatedQueryVariables = Exact<{
+export type ActionListPageIncludeRelatedQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
 }>;
 
 
-export type GetActionListPageIncludeRelatedQuery = (
+export type ActionListPageIncludeRelatedQuery = (
   { plan: (
-    { actionListPage: (
-      { includeRelatedPlans: boolean | null }
+    { id: string, actionListPage: (
+      { id: string | null, includeRelatedPlans: boolean | null }
       & { __typename: 'ActionListPage' }
     ) | null }
     & { __typename: 'Plan' }
@@ -11289,17 +11400,17 @@ export type GetActionListPageIncludeRelatedQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetActionListPageQueryVariables = Exact<{
+export type ActionListPageQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   onlyWithActions: Scalars['Boolean']['input'];
 }>;
 
 
-export type GetActionListPageQuery = (
+export type ActionListPageQuery = (
   { plan: (
-    { actionListPage: (
+    { id: string, actionListPage: (
       { leadContent: string | null, defaultView: ActionListPageView, headingHierarchyDepth: number, includeRelatedPlans: boolean | null, id: string | null, slug: string, title: string, lastPublishedAt: string | null, primaryFilters: Array<(
-        { showAllLabel: string | null, field: string, id: string | null, attributeType: (
+        { showAllLabel: string | null, field: string, attributeType: (
           { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
             { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
@@ -11308,10 +11419,10 @@ export type GetActionListPageQuery = (
         ) }
         & { __typename: 'ActionAttributeTypeFilterBlock' }
       ) | (
-        { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+        { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
         & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
       ) | (
-        { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+        { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
           { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
             { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
               { id: string }
@@ -11329,7 +11440,7 @@ export type GetActionListPageQuery = (
         { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
         & { __typename: 'ContinuousActionFilterBlock' }
       )> | null, mainFilters: Array<(
-        { showAllLabel: string | null, field: string, id: string | null, attributeType: (
+        { showAllLabel: string | null, field: string, attributeType: (
           { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
             { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
@@ -11338,10 +11449,10 @@ export type GetActionListPageQuery = (
         ) }
         & { __typename: 'ActionAttributeTypeFilterBlock' }
       ) | (
-        { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+        { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
         & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
       ) | (
-        { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+        { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
           { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
             { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
               { id: string }
@@ -11359,7 +11470,7 @@ export type GetActionListPageQuery = (
         { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
         & { __typename: 'ContinuousActionFilterBlock' }
       )> | null, advancedFilters: Array<(
-        { showAllLabel: string | null, field: string, id: string | null, attributeType: (
+        { showAllLabel: string | null, field: string, attributeType: (
           { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
             { id: string, identifier: string, name: string }
             & { __typename: 'AttributeTypeChoiceOption' }
@@ -11368,10 +11479,10 @@ export type GetActionListPageQuery = (
         ) }
         & { __typename: 'ActionAttributeTypeFilterBlock' }
       ) | (
-        { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+        { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
         & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
       ) | (
-        { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+        { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
           { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
             { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
               { id: string }
@@ -11396,11 +11507,11 @@ export type GetActionListPageQuery = (
   & { __typename: 'Query' }
 );
 
-export type TemplatedCategoryPageFragmentFragment = (
-  { layout: (
-    { iconSize: string | null, layoutMainTop: Array<(
+export type TemplatedCategoryPageFragment = (
+  { id: string | null, layout: (
+    { id: string | null, iconSize: string | null, layoutMainTop: Array<(
       { attributeType: (
-        { identifier: string }
+        { id: string, identifier: string }
         & { __typename: 'AttributeType' }
       ) }
       & { __typename: 'CategoryPageAttributeTypeBlock' }
@@ -11415,7 +11526,7 @@ export type TemplatedCategoryPageFragmentFragment = (
       & { __typename: 'PathsNodeSummaryBlock' }
     )> | null, layoutMainBottom: Array<(
       { attributeType: (
-        { identifier: string }
+        { id: string, identifier: string }
         & { __typename: 'AttributeType' }
       ) }
       & { __typename: 'CategoryPageAttributeTypeBlock' }
@@ -11443,7 +11554,7 @@ export type TemplatedCategoryPageFragmentFragment = (
   & { __typename: 'CategoryPage' }
 );
 
-export type PlanDatasetsBlockFragmentFragment = (
+export type PlanDatasetsBlockFragment = (
   { uuid: string, schema: (
     { uuid: string, name: string, timeResolution: string, metrics: Array<(
       { unit: string }
@@ -11472,53 +11583,56 @@ export type PlanDatasetsBlockFragmentFragment = (
   & { __typename: 'Dataset' }
 );
 
-export type GetContentPageQueryVariables = Exact<{
+export type ContentPageQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   path: Scalars['String']['input'];
   onlyWithActions?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
-export type GetContentPageQuery = (
+export type ContentPageQuery = (
   { planPage: (
     { id: string | null, slug: string, title: string, lastPublishedAt: string | null, body: Array<(
       { id: string | null, blockType: string, field: string }
-      & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' }
+      & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementPreparationInformationBlock' }
+    ) | (
+      { blockType: string, field: string }
+      & { __typename: 'AccessibilityStatementContactFormBlock' }
     ) | (
       { id: string | null, blockType: string, field: string, blocks: Array<(
-        { id: string | null, field: string }
+        { field: string }
         & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
       ) | (
-        { id: string | null, field: string }
+        { field: string }
         & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' }
       ) | (
-        { id: string | null, field: string }
+        { field: string }
         & { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'ChoiceBlock' | 'ContinuousActionFilterBlock' }
       ) | (
-        { id: string | null, field: string }
+        { field: string }
         & { __typename: 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' | 'FrontPageHeroAdditionalSettingsBlock' }
       ) | (
-        { id: string | null, field: string }
+        { field: string }
         & { __typename: 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' }
       ) | (
-        { id: string | null, field: string }
+        { field: string }
         & { __typename: 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' }
       ) | (
-        { id: string | null, field: string }
+        { field: string }
         & { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
       ) | (
-        { value: string, id: string | null, field: string }
+        { value: string, field: string }
         & { __typename: 'CharBlock' }
       )> }
       & { __typename: 'AccessibilityStatementContactInformationBlock' }
     ) | (
-      { value: string, id: string | null, blockType: string, field: string }
+      { value: string, blockType: string, field: string }
       & { __typename: 'RichTextBlock' }
     )> | null }
     & { __typename: 'AccessibilityStatementPage' }
   ) | (
     { leadContent: string | null, defaultView: ActionListPageView, headingHierarchyDepth: number, includeRelatedPlans: boolean | null, id: string | null, slug: string, title: string, lastPublishedAt: string | null, primaryFilters: Array<(
-      { showAllLabel: string | null, field: string, id: string | null, attributeType: (
+      { showAllLabel: string | null, field: string, attributeType: (
         { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
           { id: string, identifier: string, name: string }
           & { __typename: 'AttributeTypeChoiceOption' }
@@ -11527,10 +11641,10 @@ export type GetContentPageQuery = (
       ) }
       & { __typename: 'ActionAttributeTypeFilterBlock' }
     ) | (
-      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
       & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
     ) | (
-      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
             { id: string }
@@ -11548,7 +11662,7 @@ export type GetContentPageQuery = (
       { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
       & { __typename: 'ContinuousActionFilterBlock' }
     )> | null, mainFilters: Array<(
-      { showAllLabel: string | null, field: string, id: string | null, attributeType: (
+      { showAllLabel: string | null, field: string, attributeType: (
         { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
           { id: string, identifier: string, name: string }
           & { __typename: 'AttributeTypeChoiceOption' }
@@ -11557,10 +11671,10 @@ export type GetContentPageQuery = (
       ) }
       & { __typename: 'ActionAttributeTypeFilterBlock' }
     ) | (
-      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
       & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
     ) | (
-      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
             { id: string }
@@ -11578,7 +11692,7 @@ export type GetContentPageQuery = (
       { id: string | null, fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
       & { __typename: 'ContinuousActionFilterBlock' }
     )> | null, advancedFilters: Array<(
-      { showAllLabel: string | null, field: string, id: string | null, attributeType: (
+      { showAllLabel: string | null, field: string, attributeType: (
         { id: string, identifier: string, format: AttributeTypeFormat, name: string, helpText: string, choiceOptions: Array<(
           { id: string, identifier: string, name: string }
           & { __typename: 'AttributeTypeChoiceOption' }
@@ -11587,10 +11701,10 @@ export type GetContentPageQuery = (
       ) }
       & { __typename: 'ActionAttributeTypeFilterBlock' }
     ) | (
-      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string, id: string | null }
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, field: string }
       & { __typename: 'ActionImplementationPhaseFilterBlock' | 'ActionScheduleFilterBlock' | 'ActionStatusFilterBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'ResponsiblePartyFilterBlock' }
     ) | (
-      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
             { id: string }
@@ -11645,8 +11759,8 @@ export type GetContentPageQuery = (
         { id: string }
         & { __typename: 'Indicator' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -11665,25 +11779,25 @@ export type GetContentPageQuery = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -11703,7 +11817,7 @@ export type GetContentPageQuery = (
         & { __typename: 'Category' }
       )>, parent: (
         { id: string, identifier: string, name: string, color: string, iconSvgUrl: string | null, level: (
-          { name: string, namePlural: string | null }
+          { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, image: (
           { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
@@ -11727,8 +11841,8 @@ export type GetContentPageQuery = (
           ) | null }
           & { __typename: 'Image' }
         ) | null, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -11740,7 +11854,7 @@ export type GetContentPageQuery = (
           & { __typename: 'CategoryType' }
         ), parent: (
           { id: string, identifier: string, name: string, categoryPage: (
-            { urlPath: string }
+            { id: string | null, urlPath: string }
             & { __typename: 'CategoryPage' }
           ) | null, type: (
             { id: string, hideCategoryIdentifiers: boolean }
@@ -11748,14 +11862,14 @@ export type GetContentPageQuery = (
           ), parent: (
             { id: string, identifier: string, name: string, parent: (
               { id: string, identifier: string, name: string, categoryPage: (
-                { urlPath: string }
+                { id: string | null, urlPath: string }
                 & { __typename: 'CategoryPage' }
               ) | null, type: (
                 { id: string, hideCategoryIdentifiers: boolean }
                 & { __typename: 'CategoryType' }
               ), parent: (
                 { id: string, identifier: string, name: string, categoryPage: (
-                  { urlPath: string }
+                  { id: string | null, urlPath: string }
                   & { __typename: 'CategoryPage' }
                 ) | null, type: (
                   { id: string, hideCategoryIdentifiers: boolean }
@@ -11765,7 +11879,7 @@ export type GetContentPageQuery = (
               ) | null }
               & { __typename: 'Category' }
             ) | null, categoryPage: (
-              { urlPath: string }
+              { id: string | null, urlPath: string }
               & { __typename: 'CategoryPage' }
             ) | null, type: (
               { id: string, hideCategoryIdentifiers: boolean }
@@ -11801,25 +11915,25 @@ export type GetContentPageQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -11852,25 +11966,25 @@ export type GetContentPageQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -11902,25 +12016,25 @@ export type GetContentPageQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -11952,25 +12066,25 @@ export type GetContentPageQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -12060,7 +12174,7 @@ export type GetContentPageQuery = (
         & { __typename: 'Dataset' }
       )>, changeLogMessage: (
         { content: string | null, updatedAt: string | null, createdBy: (
-          { firstName: string, lastName: string, avatarUrl: string | null }
+          { id: string, firstName: string, lastName: string, avatarUrl: string | null }
           & { __typename: 'Person' }
         ) | null }
         & { __typename: 'ActionChangeLogMessage' | 'CategoryChangeLogMessage' | 'IndicatorChangeLogMessage' | 'PageChangeLogMessage' }
@@ -12076,13 +12190,13 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'ActionListBlock' }
     ) | (
-      { title: string | null, description: string | null, fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
+      { title: string | null, description: string | null, fullWidth: boolean | null, blockType: string, field: string, embed: (
         { html: string | null }
         & { __typename: 'EmbedHTMLValue' }
       ) | null }
       & { __typename: 'AdaptiveEmbedBlock' }
     ) | (
-      { style: string | null, heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, categoryType: (
+      { style: string | null, heading: string | null, lead: string | null, blockType: string, field: string, categoryType: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
             { id: string, name: string, namePlural: string | null }
@@ -12098,25 +12212,25 @@ export type GetContentPageQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -12149,25 +12263,25 @@ export type GetContentPageQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -12199,25 +12313,25 @@ export type GetContentPageQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -12249,25 +12363,25 @@ export type GetContentPageQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -12305,25 +12419,25 @@ export type GetContentPageQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -12346,10 +12460,10 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'CategoryListBlock' }
     ) | (
-      { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, blockType: string, field: string }
+      { fieldLabel: string | null, fieldHelpText: string | null, blockType: string, field: string }
       & { __typename: 'ChangeLogMessageBlock' }
     ) | (
-      { id: string | null, blockType: string, field: string, blocks: Array<(
+      { blockType: string, field: string, id: string | null, blocks: Array<(
         { blockType: string }
         & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
       ) | (
@@ -12376,13 +12490,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -12406,13 +12520,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -12436,13 +12550,13 @@ export type GetContentPageQuery = (
       ) | (
         { helpText: string | null, blockType: string, year: number | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -12466,13 +12580,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, blockType: string, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -12481,7 +12595,7 @@ export type GetContentPageQuery = (
       )> }
       & { __typename: 'DashboardRowBlock' }
     ) | (
-      { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' } | { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' } | { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' } | { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' } | { __typename: 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' } | { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+      { title: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' } | { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' } | { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' } | { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' } | { __typename: 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' } | { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
         { style: string | null, indicator: (
           { id: string, identifier: string | null, name: string, description: string | null, timeResolution: IndicatorTimeResolution, level: string | null, unit: (
             { id: string, name: string }
@@ -12499,21 +12613,21 @@ export type GetContentPageQuery = (
       ) | null> | null }
       & { __typename: 'IndicatorGroupBlock' }
     ) | (
-      { heading: string | null, id: string | null, blockType: string, field: string, questions: Array<(
+      { heading: string | null, blockType: string, field: string, questions: Array<(
         { question: string, answer: string }
         & { __typename: 'QuestionBlock' }
       )> | null }
       & { __typename: 'QuestionAnswerBlock' }
     ) | (
-      { id: string | null, blockType: string, field: string }
+      { blockType: string, field: string }
       & { __typename: 'RelatedIndicatorsBlock' }
     ) | (
-      { value: string, id: string | null, blockType: string, field: string }
+      { value: string, blockType: string, field: string }
       & { __typename: 'RichTextBlock' }
     )> | null, layout: (
-      { iconSize: string | null, layoutMainTop: Array<(
+      { id: string | null, iconSize: string | null, layoutMainTop: Array<(
         { attributeType: (
-          { identifier: string }
+          { id: string, identifier: string }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'CategoryPageAttributeTypeBlock' }
@@ -12528,7 +12642,7 @@ export type GetContentPageQuery = (
         & { __typename: 'PathsNodeSummaryBlock' }
       )> | null, layoutMainBottom: Array<(
         { attributeType: (
-          { identifier: string }
+          { id: string, identifier: string }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'CategoryPageAttributeTypeBlock' }
@@ -12574,10 +12688,10 @@ export type GetContentPageQuery = (
       { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null }
       & { __typename: 'IndicatorListColumn' }
     ) | (
-      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, referenceYear: number | null, defaultYear: number | null, hideUnit: boolean, highlightGoalMet: boolean }
+      { id: string | null, columnLabel: string | null, columnHelpText: string | null, sourceField: IndicatorDashboardFieldName | null, isNormalized: boolean, valueType: IndicatorColumnValueType, defaultYear: number | null, hideUnit: boolean, highlightGoalMet: boolean }
       & { __typename: 'IndicatorValueColumn' }
     )> | null, primaryFilters: Array<(
-      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
             { id: string }
@@ -12592,10 +12706,10 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'CategoryTypeFilterBlock' }
     ) | (
-      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string }
       & { __typename: 'IndicatorFilterBlock' }
     )> | null, mainFilters: Array<(
-      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
             { id: string }
@@ -12610,10 +12724,10 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'CategoryTypeFilterBlock' }
     ) | (
-      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string }
       & { __typename: 'IndicatorFilterBlock' }
     )> | null, advancedFilters: Array<(
-      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, id: string | null, categoryType: (
+      { style: string | null, showAllLabel: string | null, depth: number | null, field: string, categoryType: (
         { id: string, identifier: string, name: string, hideCategoryIdentifiers: boolean, selectionType: CategoryTypeSelectWidget, helpText: string, categories: Array<(
           { id: string, identifier: string, name: string, order: number, helpText: string, parent: (
             { id: string }
@@ -12628,7 +12742,7 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'CategoryTypeFilterBlock' }
     ) | (
-      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string, id: string | null }
+      { fieldLabel: string | null, fieldHelpText: string | null, showAllLabel: string | null, sourceField: IndicatorList_FiltersFieldName | null, field: string }
       & { __typename: 'IndicatorFilterBlock' }
     )> | null }
     & { __typename: 'IndicatorListPage' }
@@ -12637,8 +12751,8 @@ export type GetContentPageQuery = (
     & { __typename: 'PrivacyPolicyPage' }
   ) | (
     { leadParagraph: string | null, id: string | null, slug: string, title: string, lastPublishedAt: string | null, changeLogMessage: (
-      { content: string | null, createdAt: string | null, createdBy: (
-        { firstName: string, lastName: string, avatarUrl: string | null }
+      { id: string, content: string | null, createdAt: string | null, createdBy: (
+        { id: string, firstName: string, lastName: string, avatarUrl: string | null }
         & { __typename: 'Person' }
       ) | null }
       & { __typename: 'PageChangeLogMessage' }
@@ -12658,19 +12772,19 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'Image' }
     ) | null, body: Array<(
-      { title: string | null, description: string | null, fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
+      { title: string | null, description: string | null, fullWidth: boolean | null, blockType: string, field: string, embed: (
         { html: string | null }
         & { __typename: 'EmbedHTMLValue' }
       ) | null }
       & { __typename: 'AdaptiveEmbedBlock' }
     ) | (
-      { styleOverrides: string | null, id: string | null, blockType: string, field: string, cartographyStyle: string | null, account: (
+      { styleOverrides: string | null, blockType: string, field: string, cartographyStyle: string | null, account: (
         { provider: CartographyProviderCredentialsProvider, account: string, publicAccessToken: string }
         & { __typename: 'CartographyProviderCredentials' }
       ) }
       & { __typename: 'CartographyVisualisationBlock' }
     ) | (
-      { style: string | null, heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, categoryType: (
+      { style: string | null, heading: string | null, lead: string | null, blockType: string, field: string, categoryType: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
             { id: string, name: string, namePlural: string | null }
@@ -12686,25 +12800,25 @@ export type GetContentPageQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -12737,25 +12851,25 @@ export type GetContentPageQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -12787,25 +12901,25 @@ export type GetContentPageQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -12837,25 +12951,25 @@ export type GetContentPageQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -12893,25 +13007,25 @@ export type GetContentPageQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -12934,19 +13048,19 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'CategoryListBlock' }
     ) | (
-      { heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, valueAttribute: (
-        { identifier: string, unit: (
-          { shortName: string | null }
+      { heading: string | null, lead: string | null, blockType: string, field: string, valueAttribute: (
+        { id: string, identifier: string, unit: (
+          { id: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) | null }
         & { __typename: 'AttributeType' }
       ), treeMapCategoryType: (
-        { identifier: string }
+        { id: string, identifier: string }
         & { __typename: 'CategoryType' }
       ) }
       & { __typename: 'CategoryTreeMapBlock' }
     ) | (
-      { heading: string | null, helpText: string | null, pathsTargetNodeId: string | null, id: string | null, blockType: string, field: string, categoryLevel: (
+      { heading: string | null, helpText: string | null, pathsTargetNodeId: string | null, blockType: string, field: string, categoryLevel: (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ), groupByCategoryLevel: (
@@ -12956,13 +13070,13 @@ export type GetContentPageQuery = (
         { id: string, identifier: string, hideCategoryIdentifiers: boolean, categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, indicators: Array<(
             { id: string, name: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
@@ -12979,14 +13093,14 @@ export type GetContentPageQuery = (
             ) | null }
             & { __typename: 'Image' }
           ) | null, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -13019,25 +13133,25 @@ export type GetContentPageQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -13069,25 +13183,25 @@ export type GetContentPageQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -13119,25 +13233,25 @@ export type GetContentPageQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -13162,10 +13276,10 @@ export type GetContentPageQuery = (
       ) }
       & { __typename: 'CategoryTypeLevelListBlock' }
     ) | (
-      { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, blockType: string, field: string }
+      { fieldLabel: string | null, fieldHelpText: string | null, blockType: string, field: string }
       & { __typename: 'ChangeLogMessageBlock' }
     ) | (
-      { id: string | null, blockType: string, field: string, blocks: Array<(
+      { blockType: string, field: string, id: string | null, blocks: Array<(
         { blockType: string }
         & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
       ) | (
@@ -13192,13 +13306,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13222,13 +13336,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13252,13 +13366,13 @@ export type GetContentPageQuery = (
       ) | (
         { helpText: string | null, blockType: string, year: number | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13282,13 +13396,13 @@ export type GetContentPageQuery = (
       ) | (
         { id: string | null, blockType: string, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13297,7 +13411,7 @@ export type GetContentPageQuery = (
       )> }
       & { __typename: 'DashboardRowBlock' }
     ) | (
-      { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' } | { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' } | { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' } | { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' } | { __typename: 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' } | { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+      { title: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' } | { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' } | { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' } | { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' } | { __typename: 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' } | { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
         { style: string | null, indicator: (
           { id: string, identifier: string | null, name: string, description: string | null, timeResolution: IndicatorTimeResolution, level: string | null, unit: (
             { id: string, name: string }
@@ -13315,7 +13429,7 @@ export type GetContentPageQuery = (
       ) | null> | null }
       & { __typename: 'IndicatorGroupBlock' }
     ) | (
-      { width: string | null, id: string | null, blockType: string, field: string, image: (
+      { width: string | null, blockType: string, field: string, image: (
         { id: string, title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
           { id: string, src: string }
           & { __typename: 'ImageRendition' }
@@ -13324,16 +13438,16 @@ export type GetContentPageQuery = (
       ) | null }
       & { __typename: 'LargeImageBlock' }
     ) | (
-      { heading: string | null, helpText: string | null, outcomeNodeId: string | null, id: string | null, blockType: string, field: string }
+      { heading: string | null, helpText: string | null, outcomeNodeId: string | null, blockType: string, field: string }
       & { __typename: 'PathsOutcomeBlock' }
     ) | (
-      { heading: string | null, id: string | null, blockType: string, field: string, questions: Array<(
+      { heading: string | null, blockType: string, field: string, questions: Array<(
         { question: string, answer: string }
         & { __typename: 'QuestionBlock' }
       )> | null }
       & { __typename: 'QuestionAnswerBlock' }
     ) | (
-      { value: string, id: string | null, blockType: string, field: string }
+      { value: string, blockType: string, field: string }
       & { __typename: 'RichTextBlock' }
     )> | null, siblings: Array<(
       { id: string | null, title: string, slug: string, live: boolean, urlPath: string }
@@ -13356,10 +13470,10 @@ export type GetContentPageQuery = (
   & { __typename: 'Query' }
 );
 
-export type CategoryParentFragmentFragment = (
-  { parent: (
+export type CategoryParentFragment = (
+  { id: string, parent: (
     { id: string, identifier: string, name: string, categoryPage: (
-      { urlPath: string }
+      { id: string | null, urlPath: string }
       & { __typename: 'CategoryPage' }
     ) | null, type: (
       { id: string, hideCategoryIdentifiers: boolean }
@@ -13370,19 +13484,19 @@ export type CategoryParentFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type RecursiveCategoryParentFragmentFragment = (
-  { parent: (
-    { parent: (
+export type RecursiveCategoryParentFragment = (
+  { id: string, parent: (
+    { id: string, parent: (
       { id: string, identifier: string, name: string, parent: (
         { id: string, identifier: string, name: string, categoryPage: (
-          { urlPath: string }
+          { id: string | null, urlPath: string }
           & { __typename: 'CategoryPage' }
         ) | null, type: (
           { id: string, hideCategoryIdentifiers: boolean }
           & { __typename: 'CategoryType' }
         ), parent: (
           { id: string, identifier: string, name: string, categoryPage: (
-            { urlPath: string }
+            { id: string | null, urlPath: string }
             & { __typename: 'CategoryPage' }
           ) | null, type: (
             { id: string, hideCategoryIdentifiers: boolean }
@@ -13392,7 +13506,7 @@ export type RecursiveCategoryParentFragmentFragment = (
         ) | null }
         & { __typename: 'Category' }
       ) | null, categoryPage: (
-        { urlPath: string }
+        { id: string | null, urlPath: string }
         & { __typename: 'CategoryPage' }
       ) | null, type: (
         { id: string, hideCategoryIdentifiers: boolean }
@@ -13405,28 +13519,28 @@ export type RecursiveCategoryParentFragmentFragment = (
   & { __typename: 'Category' }
 );
 
-export type GetHomePageQueryVariables = Exact<{
+export type HomePageQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   path: Scalars['String']['input'];
 }>;
 
 
-export type GetHomePageQuery = (
+export type HomePageQuery = (
   { planPage: (
     { id: string | null, slug: string, lastPublishedAt: string | null }
     & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
   ) | (
     { id: string | null, slug: string, lastPublishedAt: string | null, changeLogMessage: (
-      { content: string | null, createdAt: string | null, createdBy: (
-        { firstName: string, lastName: string, avatarUrl: string | null }
+      { id: string, content: string | null, createdAt: string | null, createdBy: (
+        { id: string, firstName: string, lastName: string, avatarUrl: string | null }
         & { __typename: 'Person' }
       ) | null }
       & { __typename: 'PageChangeLogMessage' }
     ) | null, body: Array<(
-      { id: string | null, blockType: string, field: string, cards: Array<(
+      { blockType: string, field: string, cards: Array<(
         { heading: string | null, lead: string | null, category: (
           { id: string, type: (
-            { identifier: string }
+            { id: string, identifier: string }
             & { __typename: 'CategoryType' }
           ) }
           & { __typename: 'Category' }
@@ -13435,16 +13549,16 @@ export type GetHomePageQuery = (
       )> | null }
       & { __typename: 'ActionCategoryFilterCardsBlock' }
     ) | (
-      { id: string | null, blockType: string, field: string }
+      { blockType: string, field: string }
       & { __typename: 'ActionHighlightsBlock' | 'ActionStatusGraphsBlock' | 'IndicatorHighlightsBlock' | 'RelatedPlanListBlock' }
     ) | (
-      { title: string | null, description: string | null, fullWidth: boolean | null, id: string | null, blockType: string, field: string, embed: (
+      { title: string | null, description: string | null, fullWidth: boolean | null, blockType: string, field: string, embed: (
         { html: string | null }
         & { __typename: 'EmbedHTMLValue' }
       ) | null }
       & { __typename: 'AdaptiveEmbedBlock' }
     ) | (
-      { heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, cards: Array<(
+      { heading: string | null, lead: string | null, blockType: string, field: string, cards: Array<(
         { heading: string | null, content: string | null, link: string | null, image: (
           { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
             { id: string, width: number, height: number, src: string }
@@ -13459,7 +13573,7 @@ export type GetHomePageQuery = (
       )> | null }
       & { __typename: 'CardListBlock' }
     ) | (
-      { style: string | null, heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, categoryType: (
+      { style: string | null, heading: string | null, lead: string | null, blockType: string, field: string, categoryType: (
         { id: string, hideCategoryIdentifiers: boolean, categories: Array<(
           { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
             { id: string, name: string, namePlural: string | null }
@@ -13475,25 +13589,25 @@ export type GetHomePageQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -13526,25 +13640,25 @@ export type GetHomePageQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -13576,25 +13690,25 @@ export type GetHomePageQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -13626,25 +13740,25 @@ export type GetHomePageQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -13682,25 +13796,25 @@ export type GetHomePageQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -13723,22 +13837,22 @@ export type GetHomePageQuery = (
       ) | null }
       & { __typename: 'CategoryListBlock' }
     ) | (
-      { heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, valueAttribute: (
-        { identifier: string, unit: (
-          { shortName: string | null }
+      { heading: string | null, lead: string | null, blockType: string, field: string, valueAttribute: (
+        { id: string, identifier: string, unit: (
+          { id: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) | null }
         & { __typename: 'AttributeType' }
       ), treeMapCategoryType: (
-        { identifier: string }
+        { id: string, identifier: string }
         & { __typename: 'CategoryType' }
       ) }
       & { __typename: 'CategoryTreeMapBlock' }
     ) | (
-      { fieldLabel: string | null, fieldHelpText: string | null, id: string | null, blockType: string, field: string }
+      { fieldLabel: string | null, fieldHelpText: string | null, blockType: string, field: string }
       & { __typename: 'ChangeLogMessageBlock' }
     ) | (
-      { id: string | null, blockType: string, field: string, blocks: Array<(
+      { blockType: string, field: string, id: string | null, blocks: Array<(
         { blockType: string }
         & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
       ) | (
@@ -13765,13 +13879,13 @@ export type GetHomePageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, showTotalLine: boolean | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13795,13 +13909,13 @@ export type GetHomePageQuery = (
       ) | (
         { id: string | null, helpText: string | null, blockType: string, barType: string | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13825,13 +13939,13 @@ export type GetHomePageQuery = (
       ) | (
         { helpText: string | null, blockType: string, year: number | null, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13855,13 +13969,13 @@ export type GetHomePageQuery = (
       ) | (
         { id: string | null, blockType: string, indicator: (
           { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorValue' }
           ) | null, goals: Array<(
-            { value: number, date: string | null }
+            { id: string, value: number, date: string | null }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
@@ -13870,7 +13984,7 @@ export type GetHomePageQuery = (
       )> }
       & { __typename: 'DashboardRowBlock' }
     ) | (
-      { layout: string, heading: string | null, lead: string | null, id: string | null, blockType: string, field: string, image: (
+      { layout: string, heading: string | null, lead: string | null, blockType: string, field: string, image: (
         { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
           { id: string, width: number, height: number, src: string }
           & { __typename: 'ImageRendition' }
@@ -13888,7 +14002,7 @@ export type GetHomePageQuery = (
       ) | null }
       & { __typename: 'FrontPageHeroBlock' }
     ) | (
-      { title: string | null, id: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' } | { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' } | { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' } | { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' } | { __typename: 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' } | { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
+      { title: string | null, blockType: string, field: string, indicators: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' } | { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' } | { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' } | { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' | 'IndicatorsColumnBlock' } | { __typename: 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' } | { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' } | (
         { style: string | null, indicator: (
           { id: string, identifier: string | null, name: string, description: string | null, timeResolution: IndicatorTimeResolution, level: string | null, unit: (
             { id: string, name: string }
@@ -13906,28 +14020,7 @@ export type GetHomePageQuery = (
       ) | null> | null }
       & { __typename: 'IndicatorGroupBlock' }
     ) | (
-      { title: string | null, body: string | null, significantDigits: number | null, indicatorIsNormalized: boolean | null, id: string | null, blockType: string, field: string, blocks: Array<(
-        { id: string | null }
-        & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
-      ) | (
-        { id: string | null }
-        & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' }
-      ) | (
-        { id: string | null }
-        & { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' }
-      ) | (
-        { id: string | null }
-        & { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' }
-      ) | (
-        { id: string | null }
-        & { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' }
-      ) | (
-        { id: string | null }
-        & { __typename: 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' }
-      ) | (
-        { id: string | null }
-        & { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
-      )>, indicator: (
+      { title: string | null, body: string | null, significantDigits: number | null, indicatorIsNormalized: boolean | null, blockType: string, field: string, blocks: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' } | { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' } | { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' } | { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' } | { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' } | { __typename: 'IndicatorsColumnBlock' | 'IntegerBlock' | 'LargeImageBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionAnswerBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' } | { __typename: 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }>, indicator: (
         { id: string, identifier: string | null, name: string, minValue: number | null, maxValue: number | null, unit: (
           { id: string, shortName: string | null, name: string }
           & { __typename: 'Unit' }
@@ -13952,7 +14045,7 @@ export type GetHomePageQuery = (
         ) | null> | null, common: (
           { id: string, normalizations: Array<(
             { unit: (
-              { shortName: string | null, name: string }
+              { id: string, shortName: string | null, name: string }
               & { __typename: 'Unit' }
             ), normalizer: (
               { name: string, id: string, identifier: string | null }
@@ -13986,14 +14079,14 @@ export type GetHomePageQuery = (
         & { __typename: 'ResponsiblePartyFilterBlock' | 'RichTextBlock' | 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
       ) | (
         { text: string | null, blockType: string, page: (
-          { url: string | null, urlPath: string, slug: string }
+          { id: string | null, url: string | null, urlPath: string, slug: string }
           & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
         ) | null }
         & { __typename: 'PageLinkBlock' }
       ) | null }
       & { __typename: 'IndicatorShowcaseBlock' }
     ) | (
-      { width: string | null, id: string | null, blockType: string, field: string, image: (
+      { width: string | null, blockType: string, field: string, image: (
         { id: string, title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
           { id: string, src: string }
           & { __typename: 'ImageRendition' }
@@ -14002,16 +14095,16 @@ export type GetHomePageQuery = (
       ) | null }
       & { __typename: 'LargeImageBlock' }
     ) | (
-      { heading: string | null, helpText: string | null, outcomeNodeId: string | null, id: string | null, blockType: string, field: string }
+      { heading: string | null, helpText: string | null, outcomeNodeId: string | null, blockType: string, field: string }
       & { __typename: 'PathsOutcomeBlock' }
     ) | (
-      { value: string, id: string | null, blockType: string, field: string }
+      { value: string, blockType: string, field: string }
       & { __typename: 'RichTextBlock' }
     )> }
     & { __typename: 'PlanRootPage' }
   ) | null, plan: (
     { id: string, primaryActionClassification: (
-      { categories: Array<(
+      { id: string, categories: Array<(
         { id: string, identifier: string, name: string, leadParagraph: string, color: string, image: (
           { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
             { id: string, width: number, height: number, src: string }
@@ -14025,7 +14118,7 @@ export type GetHomePageQuery = (
           { live: boolean, id: string | null, title: string, urlPath: string }
           & { __typename: 'CategoryPage' }
         ) | null, level: (
-          { name: string, namePlural: string | null }
+          { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, parent: (
           { id: string }
@@ -14079,7 +14172,7 @@ export type IndicatorGraphDataQuery = (
       )> }
       & { __typename: 'IndicatorValue' }
     ) | null, dimensions: Array<(
-      { dimension: (
+      { id: string, dimension: (
         { id: string, name: string, categories: Array<(
           { id: string, name: string, defaultColor: string }
           & { __typename: 'DimensionCategory' }
@@ -14099,13 +14192,13 @@ export type IndicatorGraphDataQuery = (
     ) | null> | null, defaultVisualization: (
       { showTotalLine: boolean | null, indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14129,13 +14222,13 @@ export type IndicatorGraphDataQuery = (
     ) | (
       { barType: string | null, indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14159,13 +14252,13 @@ export type IndicatorGraphDataQuery = (
     ) | (
       { year: number | null, indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14189,13 +14282,13 @@ export type IndicatorGraphDataQuery = (
     ) | (
       { indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14222,7 +14315,7 @@ export type IndicatorGraphDataQuery = (
     ), common: (
       { id: string, name: string, normalizations: Array<(
         { unit: (
-          { shortName: string | null }
+          { id: string, shortName: string | null }
           & { __typename: 'Unit' }
         ), normalizer: (
           { name: string, id: string, identifier: string | null }
@@ -14246,7 +14339,7 @@ export type IndicatorGraphDataQuery = (
           )> }
           & { __typename: 'IndicatorValue' }
         )>, dimensions: Array<(
-          { dimension: (
+          { id: string, dimension: (
             { id: string, name: string, categories: Array<(
               { id: string, name: string, defaultColor: string }
               & { __typename: 'DimensionCategory' }
@@ -14293,7 +14386,7 @@ export type IndicatorListQuery = (
           { id: string }
           & { __typename: 'Category' }
         ) | null, common?: (
-          { type: (
+          { id: string, type: (
             { identifier: string, name: string }
             & { __typename: 'CommonCategoryType' }
           ) }
@@ -14311,7 +14404,7 @@ export type IndicatorListQuery = (
     ), common: (
       { id: string, name: string, normalizations: Array<(
         { unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ), normalizer: (
           { name: string, id: string, identifier: string | null }
@@ -14366,7 +14459,7 @@ export type IndicatorListQuery = (
       )> }
       & { __typename: 'IndicatorValue' }
     ) | null, dimensions: Array<(
-      { dimension: (
+      { id: string, dimension: (
         { id: string, name: string, categories: Array<(
           { id: string, name: string }
           & { __typename: 'DimensionCategory' }
@@ -14393,7 +14486,7 @@ export type IndicatorListQuery = (
       ) | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ), plans: Array<(
       { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
@@ -14407,7 +14500,7 @@ export type IndicatorListQuery = (
     ), common: (
       { id: string, name: string, normalizations: Array<(
         { unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ), normalizer: (
           { name: string, id: string, identifier: string | null }
@@ -14462,7 +14555,7 @@ export type IndicatorListQuery = (
       )> }
       & { __typename: 'IndicatorValue' }
     ) | null, dimensions: Array<(
-      { dimension: (
+      { id: string, dimension: (
         { id: string, name: string, categories: Array<(
           { id: string, name: string }
           & { __typename: 'DimensionCategory' }
@@ -14489,7 +14582,7 @@ export type IndicatorListQuery = (
       ) | null }
       & { __typename: 'IndicatorGoal' }
     ) | null> | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ), plans: Array<(
       { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null }
@@ -14510,7 +14603,7 @@ export type IndicatorDetailsQueryVariables = Exact<{
 export type IndicatorDetailsQuery = (
   { plan: (
     { id: string, identifier: string, indicatorListPage: (
-      { detailsMainTop: Array<(
+      { id: string | null, detailsMainTop: Array<(
         { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, categoryType: (
           { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
             { id: string, order: number, name: string, namePlural: string | null }
@@ -14584,7 +14677,7 @@ export type IndicatorDetailsQuery = (
         & { __typename: 'OrganizationClass' }
       ) | null, logo: (
         { id: string, rendition: (
-          { src: string }
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -14595,8 +14688,8 @@ export type IndicatorDetailsQuery = (
         { id: string, name: string, namePlural: string | null }
         & { __typename: 'CategoryLevel' }
       ) | null, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -14616,8 +14709,8 @@ export type IndicatorDetailsQuery = (
               { id: string, name: string, namePlural: string | null }
               & { __typename: 'CategoryLevel' }
             ) | null, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -14636,8 +14729,8 @@ export type IndicatorDetailsQuery = (
             { id: string, name: string, namePlural: string | null }
             & { __typename: 'CategoryLevel' }
           ) | null, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -14656,8 +14749,8 @@ export type IndicatorDetailsQuery = (
           { id: string, name: string, namePlural: string | null }
           & { __typename: 'CategoryLevel' }
         ) | null, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -14682,7 +14775,7 @@ export type IndicatorDetailsQuery = (
             & { __typename: 'OrganizationClass' }
           ) | null, logo: (
             { id: string, rendition: (
-              { src: string }
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -14730,7 +14823,7 @@ export type IndicatorDetailsQuery = (
         { id: string, identifier: string, name: string }
         & { __typename: 'ActionImplementationPhase' }
       ) | null, statusSummary: (
-        { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
+        { identifier: ActionStatusSummaryIdentifier, label: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
         & { __typename: 'ActionStatusSummary' }
       ), mergedWith: (
         { id: string, identifier: string, viewUrl: string, plan: (
@@ -14743,7 +14836,7 @@ export type IndicatorDetailsQuery = (
         & { __typename: 'Plan' }
       ), categories: Array<(
         { id: string, identifier: string, name: string, image: (
-          { rendition: (
+          { id: string, rendition: (
             { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
@@ -14758,8 +14851,8 @@ export type IndicatorDetailsQuery = (
     )>, relatedCauses: Array<(
       { id: string, effectType: RelatedIndicatorEffectType, confidenceLevel: RelatedIndicatorConfidenceLevel, causalIndicator: (
         { id: string, name: string, level: string | null, plans: Array<(
-          { identifier: string, viewUrl: string | null, parent: (
-            { identifier: string }
+          { id: string, identifier: string, viewUrl: string | null, parent: (
+            { id: string, identifier: string }
             & { __typename: 'Plan' }
           ) | null }
           & { __typename: 'Plan' }
@@ -14770,8 +14863,8 @@ export type IndicatorDetailsQuery = (
     )>, relatedEffects: Array<(
       { id: string, effectType: RelatedIndicatorEffectType, confidenceLevel: RelatedIndicatorConfidenceLevel, effectIndicator: (
         { id: string, name: string, level: string | null, plans: Array<(
-          { identifier: string, viewUrl: string | null, parent: (
-            { identifier: string }
+          { id: string, identifier: string, viewUrl: string | null, parent: (
+            { id: string, identifier: string }
             & { __typename: 'Plan' }
           ) | null }
           & { __typename: 'Plan' }
@@ -14811,20 +14904,20 @@ export type IndicatorDetailsQuery = (
       & { __typename: 'Plan' }
     )>, changeLogMessage: (
       { content: string | null, updatedAt: string | null, createdBy: (
-        { firstName: string, lastName: string, avatarUrl: string | null }
+        { id: string, firstName: string, lastName: string, avatarUrl: string | null }
         & { __typename: 'Person' }
       ) | null }
       & { __typename: 'ActionChangeLogMessage' | 'CategoryChangeLogMessage' | 'IndicatorChangeLogMessage' | 'PageChangeLogMessage' }
     ) | null, defaultVisualization: (
       { showTotalLine: boolean | null, indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14848,13 +14941,13 @@ export type IndicatorDetailsQuery = (
     ) | (
       { barType: string | null, indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14878,13 +14971,13 @@ export type IndicatorDetailsQuery = (
     ) | (
       { year: number | null, indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14908,13 +15001,13 @@ export type IndicatorDetailsQuery = (
     ) | (
       { indicator: (
         { id: string, name: string, description: string | null, showTrendline: boolean, valueRounding: number | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, timeResolution: IndicatorTimeResolution, dataCategoriesAreStackable: boolean, desiredTrend: IndicatorDesiredTrend | null, latestValue: (
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorValue' }
         ) | null, goals: Array<(
-          { value: number, date: string | null }
+          { id: string, value: number, date: string | null }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
@@ -14926,7 +15019,7 @@ export type IndicatorDetailsQuery = (
   & { __typename: 'Query' }
 );
 
-export type ActionsTableRowFragmentFragment = (
+export type ActionsTableRowFragment = (
   { id: string, identifier: string, name: string, color: string | null, viewUrl: string, scheduleContinuous: boolean, completion: number | null, status: (
     { id: string, identifier: string, name: string, color: string }
     & { __typename: 'ActionStatus' }
@@ -14934,7 +15027,7 @@ export type ActionsTableRowFragmentFragment = (
     { id: string, identifier: string, name: string }
     & { __typename: 'ActionImplementationPhase' }
   ) | null, statusSummary: (
-    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
+    { identifier: ActionStatusSummaryIdentifier, label: string, isActive: boolean, isCompleted: boolean, sentiment: Sentiment }
     & { __typename: 'ActionStatusSummary' }
   ), mergedWith: (
     { id: string, identifier: string, viewUrl: string, plan: (
@@ -14947,7 +15040,7 @@ export type ActionsTableRowFragmentFragment = (
     & { __typename: 'Plan' }
   ), categories: Array<(
     { id: string, identifier: string, name: string, image: (
-      { rendition: (
+      { id: string, rendition: (
         { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
@@ -14961,7 +15054,7 @@ export type ActionsTableRowFragmentFragment = (
   & { __typename: 'Action' }
 );
 
-export type IndicatorCategoryContentBlockFragmentFragment = (
+export type IndicatorCategoryContentBlockFragment = (
   { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, categoryType: (
     { id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<(
       { id: string, order: number, name: string, namePlural: string | null }
@@ -14972,12 +15065,12 @@ export type IndicatorCategoryContentBlockFragmentFragment = (
   & { __typename: 'IndicatorCategoryContentBlock' }
 );
 
-export type IndicatorContentBlockFragmentFragment = (
+export type IndicatorContentBlockFragment = (
   { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, sourceField: IndicatorDetailsFieldName | null }
   & { __typename: 'IndicatorContentBlock' }
 );
 
-export type IndicatorValueSummaryContentBlockFragmentFragment = (
+export type IndicatorValueSummaryContentBlockFragment = (
   { id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, showReferenceValue: boolean | null, referenceYear: number | null, defaultGoalYear: number | null, showCurrentValue: boolean | null, showGoalValue: boolean | null, showGoalGap: boolean | null }
   & { __typename: 'IndicatorValueSummaryContentBlock' }
 );
@@ -15008,10 +15101,10 @@ export type OrganizationDetailsQuery = (
         { id: string }
         & { __typename: 'ActionImpact' }
       )>, actionStatusSummaries: Array<(
-        { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+        { identifier: ActionStatusSummaryIdentifier, label: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
         & { __typename: 'ActionStatusSummary' }
       )>, image: (
-        { rendition: (
+        { id: string, rendition: (
           { id: string, src: string, alt: string }
           & { __typename: 'ImageRendition' }
         ) | null }
@@ -15028,40 +15121,256 @@ export type OrganizationDetailsQuery = (
       ), actions: Array<(
         { id: string, identifier: string, name: string, officialName: string | null, completion: number | null, updatedAt: string, scheduleContinuous: boolean, startDate: string | null, endDate: string | null, order: number, attributes: Array<(
           { id: string, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
               { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
-            ) | null }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
             & { __typename: 'AttributeType' }
-          ) }
+          ), categories: Array<(
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+              { id: string, name: string, namePlural: string | null }
+              & { __typename: 'CategoryLevel' }
+            ) | null, image: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, rendition: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, indicators: Array<(
+              { id: string, values: Array<(
+                { id: string, date: string | null, value: number }
+                & { __typename: 'IndicatorValue' }
+              )>, goals: Array<(
+                { id: string, date: string | null, value: number }
+                & { __typename: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { id: string, name: string, shortName: string | null }
+                & { __typename: 'Unit' }
+              ) }
+              & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
+            )>, iconImage: (
+              { id: string, rendition: (
+                { id: string, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, categoryPage: (
+              { id: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename: 'CategoryType' }
+            ), attributes: Array<(
+              { id: string, key: string }
+              & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+            ) | (
+              { value: string, id: string, key: string }
+              & { __typename: 'AttributeRichText' | 'AttributeText' }
+            )>, parent: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+                  { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+                    { id: string, name: string, namePlural: string | null }
+                    & { __typename: 'CategoryLevel' }
+                  ) | null, image: (
+                    { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename: 'ImageRendition' }
+                    ) | null, rendition: (
+                      { id: string, width: number, height: number, src: string }
+                      & { __typename: 'ImageRendition' }
+                    ) | null }
+                    & { __typename: 'Image' }
+                  ) | null, indicators: Array<(
+                    { id: string, values: Array<(
+                      { id: string, date: string | null, value: number }
+                      & { __typename: 'IndicatorValue' }
+                    )>, goals: Array<(
+                      { id: string, date: string | null, value: number }
+                      & { __typename: 'IndicatorGoal' }
+                    ) | null> | null, unit: (
+                      { id: string, name: string, shortName: string | null }
+                      & { __typename: 'Unit' }
+                    ) }
+                    & { __typename: 'Indicator' }
+                  )>, indicatorRelationships: Array<(
+                    { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+                      { id: string }
+                      & { __typename: 'Indicator' }
+                    ) }
+                    & { __typename: 'IndicatorCategoryRelationship' }
+                  )>, iconImage: (
+                    { id: string, rendition: (
+                      { id: string, src: string }
+                      & { __typename: 'ImageRendition' }
+                    ) | null }
+                    & { __typename: 'Image' }
+                  ) | null, categoryPage: (
+                    { id: string | null, title: string, urlPath: string, live: boolean }
+                    & { __typename: 'CategoryPage' }
+                  ) | null, type: (
+                    { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                    & { __typename: 'CategoryType' }
+                  ), attributes: Array<(
+                    { id: string, key: string }
+                    & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+                  ) | (
+                    { value: string, id: string, key: string }
+                    & { __typename: 'AttributeRichText' | 'AttributeText' }
+                  )> }
+                  & { __typename: 'Category' }
+                ) | null, level: (
+                  { id: string, name: string, namePlural: string | null }
+                  & { __typename: 'CategoryLevel' }
+                ) | null, image: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null, rendition: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null }
+                  & { __typename: 'Image' }
+                ) | null, indicators: Array<(
+                  { id: string, values: Array<(
+                    { id: string, date: string | null, value: number }
+                    & { __typename: 'IndicatorValue' }
+                  )>, goals: Array<(
+                    { id: string, date: string | null, value: number }
+                    & { __typename: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { id: string, name: string, shortName: string | null }
+                    & { __typename: 'Unit' }
+                  ) }
+                  & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
+                )>, iconImage: (
+                  { id: string, rendition: (
+                    { id: string, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null }
+                  & { __typename: 'Image' }
+                ) | null, categoryPage: (
+                  { id: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename: 'CategoryType' }
+                ), attributes: Array<(
+                  { id: string, key: string }
+                  & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+                ) | (
+                  { value: string, id: string, key: string }
+                  & { __typename: 'AttributeRichText' | 'AttributeText' }
+                )> }
+                & { __typename: 'Category' }
+              ) | null, level: (
+                { id: string, name: string, namePlural: string | null }
+                & { __typename: 'CategoryLevel' }
+              ) | null, image: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null, rendition: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null }
+                & { __typename: 'Image' }
+              ) | null, indicators: Array<(
+                { id: string, values: Array<(
+                  { id: string, date: string | null, value: number }
+                  & { __typename: 'IndicatorValue' }
+                )>, goals: Array<(
+                  { id: string, date: string | null, value: number }
+                  & { __typename: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { id: string, name: string, shortName: string | null }
+                  & { __typename: 'Unit' }
+                ) }
+                & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
+              )>, iconImage: (
+                { id: string, rendition: (
+                  { id: string, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null }
+                & { __typename: 'Image' }
+              ) | null, categoryPage: (
+                { id: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename: 'CategoryType' }
+              ), attributes: Array<(
+                { id: string, key: string }
+                & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+              ) | (
+                { value: string, id: string, key: string }
+                & { __typename: 'AttributeRichText' | 'AttributeText' }
+              )> }
+              & { __typename: 'Category' }
+            ) | null }
+            & { __typename: 'Category' }
+          )> }
           & { __typename: 'AttributeCategoryChoice' }
         ) | (
-          { text: string | null, id: string, choice: (
-            { id: string, name: string }
-            & { __typename: 'AttributeTypeChoiceOption' }
-          ) | null, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { text: string | null, id: string, type: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
               { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
-            ) | null }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
             & { __typename: 'AttributeType' }
-          ) }
+          ), choice: (
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          ) | null }
           & { __typename: 'AttributeChoice' }
         ) | (
           { id: string, numericValue: number, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
               { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
-            ) | null }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
             & { __typename: 'AttributeType' }
           ) }
           & { __typename: 'AttributeNumericValue' }
         ) | (
           { value: string, id: string, type: (
-            { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+            { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
               { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
-            ) | null }
+            ) | null, choiceOptions: Array<(
+              { id: string, identifier: string, name: string }
+              & { __typename: 'AttributeTypeChoiceOption' }
+            )> }
             & { __typename: 'AttributeType' }
           ) }
           & { __typename: 'AttributeRichText' | 'AttributeText' }
@@ -15094,8 +15403,8 @@ export type OrganizationDetailsQuery = (
           & { __typename: 'ActionResponsibleParty' }
         )>, primaryOrg: (
           { id: string, abbreviation: string | null, name: string, logo: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -15128,7 +15437,7 @@ export type OrganizationDetailsQuery = (
         )> }
         & { __typename: 'Action' }
       )>, generalContent: (
-        { organizationTerm: SiteGeneralContentOrganizationTerm }
+        { id: string, organizationTerm: SiteGeneralContentOrganizationTerm }
         & { __typename: 'SiteGeneralContent' }
       ) }
       & { __typename: 'Plan' }
@@ -15145,7 +15454,7 @@ export type OrganizationDetailsQuery = (
     & { __typename: 'Organization' }
   ) | null, plan: (
     { id: string, name: string, shortName: string | null, versionName: string, viewUrl: string | null, actionListPage: (
-      { dashboardColumns: Array<(
+      { id: string | null, dashboardColumns: Array<(
         { columnLabel: string | null }
         & { __typename: 'EndDateColumnBlock' | 'IdentifierColumnBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorsColumnBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'ResponsiblePartiesColumnBlock' | 'ScheduleContinuousColumnBlock' | 'StartDateColumnBlock' | 'StatusColumnBlock' | 'TasksColumnBlock' | 'UpdatedAtColumnBlock' }
       ) | (
@@ -15172,10 +15481,10 @@ export type OrganizationDetailsQuery = (
       { id: string }
       & { __typename: 'ActionImpact' }
     )>, actionStatusSummaries: Array<(
-      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+      { identifier: ActionStatusSummaryIdentifier, label: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
       & { __typename: 'ActionStatusSummary' }
     )>, image: (
-      { rendition: (
+      { id: string, rendition: (
         { id: string, src: string, alt: string }
         & { __typename: 'ImageRendition' }
       ) | null }
@@ -15192,40 +15501,256 @@ export type OrganizationDetailsQuery = (
     ), actions: Array<(
       { id: string, identifier: string, name: string, officialName: string | null, completion: number | null, updatedAt: string, scheduleContinuous: boolean, startDate: string | null, endDate: string | null, order: number, attributes: Array<(
         { id: string, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
-        ) }
+        ), categories: Array<(
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+            { id: string, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          ) | null, image: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, rendition: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, indicators: Array<(
+            { id: string, values: Array<(
+              { id: string, date: string | null, value: number }
+              & { __typename: 'IndicatorValue' }
+            )>, goals: Array<(
+              { id: string, date: string | null, value: number }
+              & { __typename: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { id: string, name: string, shortName: string | null }
+              & { __typename: 'Unit' }
+            ) }
+            & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
+          )>, iconImage: (
+            { id: string, rendition: (
+              { id: string, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, categoryPage: (
+            { id: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename: 'CategoryType' }
+          ), attributes: Array<(
+            { id: string, key: string }
+            & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+          ) | (
+            { value: string, id: string, key: string }
+            & { __typename: 'AttributeRichText' | 'AttributeText' }
+          )>, parent: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+                { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+                  { id: string, name: string, namePlural: string | null }
+                  & { __typename: 'CategoryLevel' }
+                ) | null, image: (
+                  { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null, rendition: (
+                    { id: string, width: number, height: number, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null }
+                  & { __typename: 'Image' }
+                ) | null, indicators: Array<(
+                  { id: string, values: Array<(
+                    { id: string, date: string | null, value: number }
+                    & { __typename: 'IndicatorValue' }
+                  )>, goals: Array<(
+                    { id: string, date: string | null, value: number }
+                    & { __typename: 'IndicatorGoal' }
+                  ) | null> | null, unit: (
+                    { id: string, name: string, shortName: string | null }
+                    & { __typename: 'Unit' }
+                  ) }
+                  & { __typename: 'Indicator' }
+                )>, indicatorRelationships: Array<(
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+                    { id: string }
+                    & { __typename: 'Indicator' }
+                  ) }
+                  & { __typename: 'IndicatorCategoryRelationship' }
+                )>, iconImage: (
+                  { id: string, rendition: (
+                    { id: string, src: string }
+                    & { __typename: 'ImageRendition' }
+                  ) | null }
+                  & { __typename: 'Image' }
+                ) | null, categoryPage: (
+                  { id: string | null, title: string, urlPath: string, live: boolean }
+                  & { __typename: 'CategoryPage' }
+                ) | null, type: (
+                  { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                  & { __typename: 'CategoryType' }
+                ), attributes: Array<(
+                  { id: string, key: string }
+                  & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+                ) | (
+                  { value: string, id: string, key: string }
+                  & { __typename: 'AttributeRichText' | 'AttributeText' }
+                )> }
+                & { __typename: 'Category' }
+              ) | null, level: (
+                { id: string, name: string, namePlural: string | null }
+                & { __typename: 'CategoryLevel' }
+              ) | null, image: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null, rendition: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null }
+                & { __typename: 'Image' }
+              ) | null, indicators: Array<(
+                { id: string, values: Array<(
+                  { id: string, date: string | null, value: number }
+                  & { __typename: 'IndicatorValue' }
+                )>, goals: Array<(
+                  { id: string, date: string | null, value: number }
+                  & { __typename: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { id: string, name: string, shortName: string | null }
+                  & { __typename: 'Unit' }
+                ) }
+                & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
+              )>, iconImage: (
+                { id: string, rendition: (
+                  { id: string, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null }
+                & { __typename: 'Image' }
+              ) | null, categoryPage: (
+                { id: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename: 'CategoryType' }
+              ), attributes: Array<(
+                { id: string, key: string }
+                & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+              ) | (
+                { value: string, id: string, key: string }
+                & { __typename: 'AttributeRichText' | 'AttributeText' }
+              )> }
+              & { __typename: 'Category' }
+            ) | null, level: (
+              { id: string, name: string, namePlural: string | null }
+              & { __typename: 'CategoryLevel' }
+            ) | null, image: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, rendition: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, indicators: Array<(
+              { id: string, values: Array<(
+                { id: string, date: string | null, value: number }
+                & { __typename: 'IndicatorValue' }
+              )>, goals: Array<(
+                { id: string, date: string | null, value: number }
+                & { __typename: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { id: string, name: string, shortName: string | null }
+                & { __typename: 'Unit' }
+              ) }
+              & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
+            )>, iconImage: (
+              { id: string, rendition: (
+                { id: string, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, categoryPage: (
+              { id: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename: 'CategoryType' }
+            ), attributes: Array<(
+              { id: string, key: string }
+              & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+            ) | (
+              { value: string, id: string, key: string }
+              & { __typename: 'AttributeRichText' | 'AttributeText' }
+            )> }
+            & { __typename: 'Category' }
+          ) | null }
+          & { __typename: 'Category' }
+        )> }
         & { __typename: 'AttributeCategoryChoice' }
       ) | (
-        { text: string | null, id: string, choice: (
-          { id: string, name: string }
-          & { __typename: 'AttributeTypeChoiceOption' }
-        ) | null, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+        { text: string | null, id: string, type: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
-        ) }
+        ), choice: (
+          { id: string, identifier: string, name: string }
+          & { __typename: 'AttributeTypeChoiceOption' }
+        ) | null }
         & { __typename: 'AttributeChoice' }
       ) | (
         { id: string, numericValue: number, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'AttributeNumericValue' }
       ) | (
         { value: string, id: string, type: (
-          { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+          { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
             { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
-          ) | null }
+          ) | null, choiceOptions: Array<(
+            { id: string, identifier: string, name: string }
+            & { __typename: 'AttributeTypeChoiceOption' }
+          )> }
           & { __typename: 'AttributeType' }
         ) }
         & { __typename: 'AttributeRichText' | 'AttributeText' }
@@ -15258,8 +15783,8 @@ export type OrganizationDetailsQuery = (
         & { __typename: 'ActionResponsibleParty' }
       )>, primaryOrg: (
         { id: string, abbreviation: string | null, name: string, logo: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -15292,7 +15817,7 @@ export type OrganizationDetailsQuery = (
       )> }
       & { __typename: 'Action' }
     )>, generalContent: (
-      { organizationTerm: SiteGeneralContentOrganizationTerm }
+      { id: string, organizationTerm: SiteGeneralContentOrganizationTerm }
       & { __typename: 'SiteGeneralContent' }
     ) }
     & { __typename: 'Plan' }
@@ -15311,10 +15836,10 @@ export type OrgContentPlanFragment = (
     { id: string }
     & { __typename: 'ActionImpact' }
   )>, actionStatusSummaries: Array<(
-    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+    { identifier: ActionStatusSummaryIdentifier, label: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
     & { __typename: 'ActionStatusSummary' }
   )>, image: (
-    { rendition: (
+    { id: string, rendition: (
       { id: string, src: string, alt: string }
       & { __typename: 'ImageRendition' }
     ) | null }
@@ -15331,40 +15856,256 @@ export type OrgContentPlanFragment = (
   ), actions: Array<(
     { id: string, identifier: string, name: string, officialName: string | null, completion: number | null, updatedAt: string, scheduleContinuous: boolean, startDate: string | null, endDate: string | null, order: number, attributes: Array<(
       { id: string, type: (
-        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
           { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
-        ) | null }
+        ) | null, choiceOptions: Array<(
+          { id: string, identifier: string, name: string }
+          & { __typename: 'AttributeTypeChoiceOption' }
+        )> }
         & { __typename: 'AttributeType' }
-      ) }
+      ), categories: Array<(
+        { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+          { id: string, name: string, namePlural: string | null }
+          & { __typename: 'CategoryLevel' }
+        ) | null, image: (
+          { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null, rendition: (
+            { id: string, width: number, height: number, src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null }
+          & { __typename: 'Image' }
+        ) | null, indicators: Array<(
+          { id: string, values: Array<(
+            { id: string, date: string | null, value: number }
+            & { __typename: 'IndicatorValue' }
+          )>, goals: Array<(
+            { id: string, date: string | null, value: number }
+            & { __typename: 'IndicatorGoal' }
+          ) | null> | null, unit: (
+            { id: string, name: string, shortName: string | null }
+            & { __typename: 'Unit' }
+          ) }
+          & { __typename: 'Indicator' }
+        )>, indicatorRelationships: Array<(
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string }
+            & { __typename: 'Indicator' }
+          ) }
+          & { __typename: 'IndicatorCategoryRelationship' }
+        )>, iconImage: (
+          { id: string, rendition: (
+            { id: string, src: string }
+            & { __typename: 'ImageRendition' }
+          ) | null }
+          & { __typename: 'Image' }
+        ) | null, categoryPage: (
+          { id: string | null, title: string, urlPath: string, live: boolean }
+          & { __typename: 'CategoryPage' }
+        ) | null, type: (
+          { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+          & { __typename: 'CategoryType' }
+        ), attributes: Array<(
+          { id: string, key: string }
+          & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+        ) | (
+          { value: string, id: string, key: string }
+          & { __typename: 'AttributeRichText' | 'AttributeText' }
+        )>, parent: (
+          { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+            { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, parent: (
+              { id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: (
+                { id: string, name: string, namePlural: string | null }
+                & { __typename: 'CategoryLevel' }
+              ) | null, image: (
+                { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null, rendition: (
+                  { id: string, width: number, height: number, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null }
+                & { __typename: 'Image' }
+              ) | null, indicators: Array<(
+                { id: string, values: Array<(
+                  { id: string, date: string | null, value: number }
+                  & { __typename: 'IndicatorValue' }
+                )>, goals: Array<(
+                  { id: string, date: string | null, value: number }
+                  & { __typename: 'IndicatorGoal' }
+                ) | null> | null, unit: (
+                  { id: string, name: string, shortName: string | null }
+                  & { __typename: 'Unit' }
+                ) }
+                & { __typename: 'Indicator' }
+              )>, indicatorRelationships: Array<(
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string }
+                  & { __typename: 'Indicator' }
+                ) }
+                & { __typename: 'IndicatorCategoryRelationship' }
+              )>, iconImage: (
+                { id: string, rendition: (
+                  { id: string, src: string }
+                  & { __typename: 'ImageRendition' }
+                ) | null }
+                & { __typename: 'Image' }
+              ) | null, categoryPage: (
+                { id: string | null, title: string, urlPath: string, live: boolean }
+                & { __typename: 'CategoryPage' }
+              ) | null, type: (
+                { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+                & { __typename: 'CategoryType' }
+              ), attributes: Array<(
+                { id: string, key: string }
+                & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+              ) | (
+                { value: string, id: string, key: string }
+                & { __typename: 'AttributeRichText' | 'AttributeText' }
+              )> }
+              & { __typename: 'Category' }
+            ) | null, level: (
+              { id: string, name: string, namePlural: string | null }
+              & { __typename: 'CategoryLevel' }
+            ) | null, image: (
+              { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null, rendition: (
+                { id: string, width: number, height: number, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, indicators: Array<(
+              { id: string, values: Array<(
+                { id: string, date: string | null, value: number }
+                & { __typename: 'IndicatorValue' }
+              )>, goals: Array<(
+                { id: string, date: string | null, value: number }
+                & { __typename: 'IndicatorGoal' }
+              ) | null> | null, unit: (
+                { id: string, name: string, shortName: string | null }
+                & { __typename: 'Unit' }
+              ) }
+              & { __typename: 'Indicator' }
+            )>, indicatorRelationships: Array<(
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string }
+                & { __typename: 'Indicator' }
+              ) }
+              & { __typename: 'IndicatorCategoryRelationship' }
+            )>, iconImage: (
+              { id: string, rendition: (
+                { id: string, src: string }
+                & { __typename: 'ImageRendition' }
+              ) | null }
+              & { __typename: 'Image' }
+            ) | null, categoryPage: (
+              { id: string | null, title: string, urlPath: string, live: boolean }
+              & { __typename: 'CategoryPage' }
+            ) | null, type: (
+              { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+              & { __typename: 'CategoryType' }
+            ), attributes: Array<(
+              { id: string, key: string }
+              & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+            ) | (
+              { value: string, id: string, key: string }
+              & { __typename: 'AttributeRichText' | 'AttributeText' }
+            )> }
+            & { __typename: 'Category' }
+          ) | null, level: (
+            { id: string, name: string, namePlural: string | null }
+            & { __typename: 'CategoryLevel' }
+          ) | null, image: (
+            { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null, rendition: (
+              { id: string, width: number, height: number, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, indicators: Array<(
+            { id: string, values: Array<(
+              { id: string, date: string | null, value: number }
+              & { __typename: 'IndicatorValue' }
+            )>, goals: Array<(
+              { id: string, date: string | null, value: number }
+              & { __typename: 'IndicatorGoal' }
+            ) | null> | null, unit: (
+              { id: string, name: string, shortName: string | null }
+              & { __typename: 'Unit' }
+            ) }
+            & { __typename: 'Indicator' }
+          )>, indicatorRelationships: Array<(
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string }
+              & { __typename: 'Indicator' }
+            ) }
+            & { __typename: 'IndicatorCategoryRelationship' }
+          )>, iconImage: (
+            { id: string, rendition: (
+              { id: string, src: string }
+              & { __typename: 'ImageRendition' }
+            ) | null }
+            & { __typename: 'Image' }
+          ) | null, categoryPage: (
+            { id: string | null, title: string, urlPath: string, live: boolean }
+            & { __typename: 'CategoryPage' }
+          ) | null, type: (
+            { id: string, identifier: string, hideCategoryIdentifiers: boolean }
+            & { __typename: 'CategoryType' }
+          ), attributes: Array<(
+            { id: string, key: string }
+            & { __typename: 'AttributeCategoryChoice' | 'AttributeChoice' | 'AttributeNumericValue' }
+          ) | (
+            { value: string, id: string, key: string }
+            & { __typename: 'AttributeRichText' | 'AttributeText' }
+          )> }
+          & { __typename: 'Category' }
+        ) | null }
+        & { __typename: 'Category' }
+      )> }
       & { __typename: 'AttributeCategoryChoice' }
     ) | (
-      { text: string | null, id: string, choice: (
-        { id: string, name: string }
-        & { __typename: 'AttributeTypeChoiceOption' }
-      ) | null, type: (
-        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+      { text: string | null, id: string, type: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
           { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
-        ) | null }
+        ) | null, choiceOptions: Array<(
+          { id: string, identifier: string, name: string }
+          & { __typename: 'AttributeTypeChoiceOption' }
+        )> }
         & { __typename: 'AttributeType' }
-      ) }
+      ), choice: (
+        { id: string, identifier: string, name: string }
+        & { __typename: 'AttributeTypeChoiceOption' }
+      ) | null }
       & { __typename: 'AttributeChoice' }
     ) | (
       { id: string, numericValue: number, type: (
-        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
           { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
-        ) | null }
+        ) | null, choiceOptions: Array<(
+          { id: string, identifier: string, name: string }
+          & { __typename: 'AttributeTypeChoiceOption' }
+        )> }
         & { __typename: 'AttributeType' }
       ) }
       & { __typename: 'AttributeNumericValue' }
     ) | (
       { value: string, id: string, type: (
-        { id: string, identifier: string, name: string, format: AttributeTypeFormat, unit: (
+        { id: string, identifier: string, name: string, format: AttributeTypeFormat, helpText: string, showChoiceNames: boolean, hasZeroOption: boolean, unit: (
           { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
-        ) | null }
+        ) | null, choiceOptions: Array<(
+          { id: string, identifier: string, name: string }
+          & { __typename: 'AttributeTypeChoiceOption' }
+        )> }
         & { __typename: 'AttributeType' }
       ) }
       & { __typename: 'AttributeRichText' | 'AttributeText' }
@@ -15397,8 +16138,8 @@ export type OrgContentPlanFragment = (
       & { __typename: 'ActionResponsibleParty' }
     )>, primaryOrg: (
       { id: string, abbreviation: string | null, name: string, logo: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -15431,18 +16172,18 @@ export type OrgContentPlanFragment = (
     )> }
     & { __typename: 'Action' }
   )>, generalContent: (
-    { organizationTerm: SiteGeneralContentOrganizationTerm }
+    { id: string, organizationTerm: SiteGeneralContentOrganizationTerm }
     & { __typename: 'SiteGeneralContent' }
   ) }
   & { __typename: 'Plan' }
 );
 
-export type GetPlanCategoryTypesQueryVariables = Exact<{
+export type PlanCategoryTypesQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
 }>;
 
 
-export type GetPlanCategoryTypesQuery = (
+export type PlanCategoryTypesQuery = (
   { plan: (
     { id: string, categoryTypes: Array<(
       { id: string, name: string, identifier: string }
@@ -15453,14 +16194,14 @@ export type GetPlanCategoryTypesQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetPlanContextQueryVariables = Exact<{
+export type PlanContextQueryVariables = Exact<{
   identifier: InputMaybe<Scalars['ID']['input']>;
   hostname: InputMaybe<Scalars['String']['input']>;
   clientUrl: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetPlanContextQuery = (
+export type PlanContextQuery = (
   { plan: (
     { id: string, identifier: string, name: string, shortName: string | null, versionName: string, themeIdentifier: string | null, timezone: string, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers: boolean, publishedAt: string | null, kausalPathsInstanceUuid: string, viewUrl: string | null, actionReportExportViewUrl: string | null, serveFileBaseUrl: string, adminUrl: string | null, accessibilityStatementUrl: string | null, externalFeedbackUrl: string | null, primaryActionClassification: (
       { id: string, identifier: string, hideCategoryIdentifiers: boolean, common: (
@@ -15514,10 +16255,10 @@ export type GetPlanContextQuery = (
       { id: string, identifier: string, name: string, isCompleted: boolean }
       & { __typename: 'ActionStatus' }
     )>, actionStatusSummaries: Array<(
-      { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+      { identifier: ActionStatusSummaryIdentifier, label: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
       & { __typename: 'ActionStatusSummary' }
     )>, actionTimelinessClasses: Array<(
-      { identifier: ActionTimelinessIdentifier, label: string, color: string, sentiment: Sentiment, comparison: Comparison, days: number }
+      { identifier: ActionTimelinessIdentifier, color: string, sentiment: Sentiment, comparison: Comparison, days: number }
       & { __typename: 'ActionTimeliness' }
     )>, impactGroups: Array<(
       { id: string }
@@ -15534,10 +16275,13 @@ export type GetPlanContextQuery = (
         & { __typename: 'ExternalLinkMenuItem' }
       ) | (
         { id: string, page: (
-          { title: string, urlPath: string, slug: string }
+          { id: string | null, title: string, urlPath: string, slug: string }
           & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
         ), parent: (
-          { id: string, page: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' } }
+          { id: string, page: (
+            { id: string | null }
+            & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+          ) }
           & { __typename: 'PageMenuItem' }
         ) | null }
         & { __typename: 'PageMenuItem' }
@@ -15546,14 +16290,17 @@ export type GetPlanContextQuery = (
     ) | null, footer: (
       { items: Array<{ __typename: 'ExternalLinkMenuItem' } | (
         { id: string, page: (
-          { title: string, urlPath: string, slug: string }
+          { id: string | null, title: string, urlPath: string, slug: string }
           & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
         ), parent: (
-          { id: string, page: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' } }
+          { id: string, page: (
+            { id: string | null }
+            & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+          ) }
           & { __typename: 'PageMenuItem' }
         ) | null, children: Array<(
           { id: string, page: (
-            { title: string, urlPath: string, slug: string }
+            { id: string | null, title: string, urlPath: string, slug: string }
             & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
           ) }
           & { __typename: 'PageMenuItem' }
@@ -15566,34 +16313,34 @@ export type GetPlanContextQuery = (
       & { __typename: 'PlanFeatures' }
     ), allRelatedPlans: Array<(
       { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null, image: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
       ) | null, organization: (
-        { name: string }
+        { id: string, name: string }
         & { __typename: 'Organization' }
       ) }
       & { __typename: 'Plan' }
     )>, supersededBy: (
-      { name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
+      { id: string, name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
       & { __typename: 'Plan' }
     ) | null, supersededPlans: Array<(
-      { name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
+      { id: string, name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
       & { __typename: 'Plan' }
     )>, supersedingPlans: Array<(
-      { name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
+      { id: string, name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
       & { __typename: 'Plan' }
     )>, children: Array<(
       { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null, image: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
       ) | null, organization: (
-        { name: string }
+        { id: string, name: string }
         & { __typename: 'Organization' }
       ) }
       & { __typename: 'Plan' }
@@ -15602,20 +16349,20 @@ export type GetPlanContextQuery = (
         { id: string, siteTitle: string }
         & { __typename: 'SiteGeneralContent' }
       ), image: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
       ) | null, organization: (
-        { name: string }
+        { id: string, name: string }
         & { __typename: 'Organization' }
       ) }
       & { __typename: 'Plan' }
     ) | null, additionalLinks: (
       { items: Array<{ __typename: 'ExternalLinkMenuItem' } | (
         { id: string, crossPlanLink: boolean | null, viewUrl: string | null, page: (
-          { title: string, url: string | null, urlPath: string, slug: string, body: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'RichTextBlock' } | (
+          { id: string | null, title: string, url: string | null, urlPath: string, slug: string, body: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'RichTextBlock' } | (
             { blocks: Array<(
               { field: string }
               & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
@@ -15645,14 +16392,14 @@ export type GetPlanContextQuery = (
           )> | null }
           & { __typename: 'AccessibilityStatementPage' }
         ) | (
-          { title: string, url: string | null, urlPath: string, slug: string }
+          { id: string | null, title: string, url: string | null, urlPath: string, slug: string }
           & { __typename: 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
         ) }
         & { __typename: 'PageMenuItem' }
       )> }
       & { __typename: 'AdditionalLinks' }
     ) | null, actionListPage: (
-      { includeRelatedPlans: boolean | null, actionDateFormat: string | null, taskDateFormat: string | null }
+      { id: string | null, includeRelatedPlans: boolean | null, actionDateFormat: string | null, taskDateFormat: string | null }
       & { __typename: 'ActionListPage' }
     ) | null }
     & { __typename: 'Plan' }
@@ -15716,10 +16463,10 @@ export type PlanContextFragment = (
     { id: string, identifier: string, name: string, isCompleted: boolean }
     & { __typename: 'ActionStatus' }
   )>, actionStatusSummaries: Array<(
-    { identifier: ActionStatusSummaryIdentifier, label: string, color: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
+    { identifier: ActionStatusSummaryIdentifier, label: string, isCompleted: boolean, isActive: boolean, sentiment: Sentiment }
     & { __typename: 'ActionStatusSummary' }
   )>, actionTimelinessClasses: Array<(
-    { identifier: ActionTimelinessIdentifier, label: string, color: string, sentiment: Sentiment, comparison: Comparison, days: number }
+    { identifier: ActionTimelinessIdentifier, color: string, sentiment: Sentiment, comparison: Comparison, days: number }
     & { __typename: 'ActionTimeliness' }
   )>, impactGroups: Array<(
     { id: string }
@@ -15736,10 +16483,13 @@ export type PlanContextFragment = (
       & { __typename: 'ExternalLinkMenuItem' }
     ) | (
       { id: string, page: (
-        { title: string, urlPath: string, slug: string }
+        { id: string | null, title: string, urlPath: string, slug: string }
         & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
       ), parent: (
-        { id: string, page: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' } }
+        { id: string, page: (
+          { id: string | null }
+          & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+        ) }
         & { __typename: 'PageMenuItem' }
       ) | null }
       & { __typename: 'PageMenuItem' }
@@ -15748,14 +16498,17 @@ export type PlanContextFragment = (
   ) | null, footer: (
     { items: Array<{ __typename: 'ExternalLinkMenuItem' } | (
       { id: string, page: (
-        { title: string, urlPath: string, slug: string }
+        { id: string | null, title: string, urlPath: string, slug: string }
         & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
       ), parent: (
-        { id: string, page: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' } }
+        { id: string, page: (
+          { id: string | null }
+          & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
+        ) }
         & { __typename: 'PageMenuItem' }
       ) | null, children: Array<(
         { id: string, page: (
-          { title: string, urlPath: string, slug: string }
+          { id: string | null, title: string, urlPath: string, slug: string }
           & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
         ) }
         & { __typename: 'PageMenuItem' }
@@ -15768,34 +16521,34 @@ export type PlanContextFragment = (
     & { __typename: 'PlanFeatures' }
   ), allRelatedPlans: Array<(
     { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null, image: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
     ) | null, organization: (
-      { name: string }
+      { id: string, name: string }
       & { __typename: 'Organization' }
     ) }
     & { __typename: 'Plan' }
   )>, supersededBy: (
-    { name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
+    { id: string, name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
     & { __typename: 'Plan' }
   ) | null, supersededPlans: Array<(
-    { name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
+    { id: string, name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
     & { __typename: 'Plan' }
   )>, supersedingPlans: Array<(
-    { name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
+    { id: string, name: string, shortName: string | null, versionName: string, identifier: string, viewUrl: string | null, publishedAt: string | null }
     & { __typename: 'Plan' }
   )>, children: Array<(
     { id: string, identifier: string, name: string, shortName: string | null, viewUrl: string | null, image: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
     ) | null, organization: (
-      { name: string }
+      { id: string, name: string }
       & { __typename: 'Organization' }
     ) }
     & { __typename: 'Plan' }
@@ -15804,20 +16557,20 @@ export type PlanContextFragment = (
       { id: string, siteTitle: string }
       & { __typename: 'SiteGeneralContent' }
     ), image: (
-      { rendition: (
-        { src: string }
+      { id: string, rendition: (
+        { id: string, src: string }
         & { __typename: 'ImageRendition' }
       ) | null }
       & { __typename: 'Image' }
     ) | null, organization: (
-      { name: string }
+      { id: string, name: string }
       & { __typename: 'Organization' }
     ) }
     & { __typename: 'Plan' }
   ) | null, additionalLinks: (
     { items: Array<{ __typename: 'ExternalLinkMenuItem' } | (
       { id: string, crossPlanLink: boolean | null, viewUrl: string | null, page: (
-        { title: string, url: string | null, urlPath: string, slug: string, body: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'RichTextBlock' } | (
+        { id: string | null, title: string, url: string | null, urlPath: string, slug: string, body: Array<{ __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'RichTextBlock' } | (
           { blocks: Array<(
             { field: string }
             & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
@@ -15847,40 +16600,40 @@ export type PlanContextFragment = (
         )> | null }
         & { __typename: 'AccessibilityStatementPage' }
       ) | (
-        { title: string, url: string | null, urlPath: string, slug: string }
+        { id: string | null, title: string, url: string | null, urlPath: string, slug: string }
         & { __typename: 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
       ) }
       & { __typename: 'PageMenuItem' }
     )> }
     & { __typename: 'AdditionalLinks' }
   ) | null, actionListPage: (
-    { includeRelatedPlans: boolean | null, actionDateFormat: string | null, taskDateFormat: string | null }
+    { id: string | null, includeRelatedPlans: boolean | null, actionDateFormat: string | null, taskDateFormat: string | null }
     & { __typename: 'ActionListPage' }
   ) | null }
   & { __typename: 'Plan' }
 );
 
-export type GetPlansByHostnameQueryVariables = Exact<{
+export type PlansByHostnameQueryVariables = Exact<{
   hostname: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetPlansByHostnameQuery = (
+export type PlansByHostnameQuery = (
   { plansForHostname: Array<(
     { id: string, identifier: string, otherLanguages: Array<string>, primaryLanguage: string, statusMessage: string | null, loginEnabled: boolean | null, domain: (
-      { hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null }
+      { id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null }
       & { __typename: 'PlanDomain' }
     ) | null, domains: Array<(
-      { hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null }
+      { id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null }
       & { __typename: 'PlanDomain' }
     ) | null> | null }
     & { __typename: 'Plan' }
   ) | (
     { primaryLanguage: string, statusMessage: string | null, loginEnabled: boolean | null, domain: (
-      { hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null }
+      { id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null }
       & { __typename: 'PlanDomain' }
     ) | null, domains: Array<(
-      { hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null }
+      { id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null }
       & { __typename: 'PlanDomain' }
     ) | null> | null }
     & { __typename: 'RestrictedPlanNode' }
@@ -15888,7 +16641,7 @@ export type GetPlansByHostnameQuery = (
   & { __typename: 'Query' }
 );
 
-export type PledgeFragmentFragment = (
+export type PledgeFragment = (
   { id: string, name: string, description: string, uuid: string, slug: string, commitmentCount: number, residentCount: number | null, impactStatement: string, localEquivalency: string, image: (
     { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
       { id: string, width: number, height: number, src: string }
@@ -15932,25 +16685,25 @@ export type PledgeFragmentFragment = (
         & { __typename: 'Image' }
       ) | null, indicators: Array<(
         { id: string, values: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorValue' }
         )>, goals: Array<(
-          { date: string | null, value: number }
+          { id: string, date: string | null, value: number }
           & { __typename: 'IndicatorGoal' }
         ) | null> | null, unit: (
-          { name: string, shortName: string | null }
+          { id: string, name: string, shortName: string | null }
           & { __typename: 'Unit' }
         ) }
         & { __typename: 'Indicator' }
       )>, indicatorRelationships: Array<(
-        { type: IndicatorCategoryRelationshipType, indicator: (
+        { id: string, type: IndicatorCategoryRelationshipType, indicator: (
           { id: string }
           & { __typename: 'Indicator' }
         ) }
         & { __typename: 'IndicatorCategoryRelationship' }
       )>, iconImage: (
-        { rendition: (
-          { src: string }
+        { id: string, rendition: (
+          { id: string, src: string }
           & { __typename: 'ImageRendition' }
         ) | null }
         & { __typename: 'Image' }
@@ -15983,25 +16736,25 @@ export type PledgeFragmentFragment = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -16033,25 +16786,25 @@ export type PledgeFragmentFragment = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -16083,25 +16836,25 @@ export type PledgeFragmentFragment = (
           & { __typename: 'Image' }
         ) | null, indicators: Array<(
           { id: string, values: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorValue' }
           )>, goals: Array<(
-            { date: string | null, value: number }
+            { id: string, date: string | null, value: number }
             & { __typename: 'IndicatorGoal' }
           ) | null> | null, unit: (
-            { name: string, shortName: string | null }
+            { id: string, name: string, shortName: string | null }
             & { __typename: 'Unit' }
           ) }
           & { __typename: 'Indicator' }
         )>, indicatorRelationships: Array<(
-          { type: IndicatorCategoryRelationshipType, indicator: (
+          { id: string, type: IndicatorCategoryRelationshipType, indicator: (
             { id: string }
             & { __typename: 'Indicator' }
           ) }
           & { __typename: 'IndicatorCategoryRelationship' }
         )>, iconImage: (
-          { rendition: (
-            { src: string }
+          { id: string, rendition: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
@@ -16166,12 +16919,12 @@ export type PledgeFragmentFragment = (
   & { __typename: 'Pledge' }
 );
 
-export type GetPledgesQueryVariables = Exact<{
+export type PledgesQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
 }>;
 
 
-export type GetPledgesQuery = (
+export type PledgesQuery = (
   { planPage: { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PrivacyPolicyPage' | 'StaticPage' } | (
     { id: string | null, title: string, leadContent: string | null, backgroundImage: (
       { id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: (
@@ -16235,25 +16988,25 @@ export type GetPledgesQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -16286,25 +17039,25 @@ export type GetPledgesQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -16336,25 +17089,25 @@ export type GetPledgesQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -16386,25 +17139,25 @@ export type GetPledgesQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -16473,45 +17226,45 @@ export type GetPledgesQuery = (
   & { __typename: 'Query' }
 );
 
-type PledgeBodyFragment_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment = (
-  { id: string | null, blockType: string }
+type PledgeBody_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment = (
+  { blockType: string, field: string }
   & { __typename: 'AccessibilityStatementComplianceStatusBlock' | 'AccessibilityStatementContactFormBlock' | 'AccessibilityStatementContactInformationBlock' | 'AccessibilityStatementPreparationInformationBlock' | 'ActionAttributeTypeFilterBlock' | 'ActionAttributeTypeReportFieldBlock' | 'ActionCategoryFilterCardBlock' | 'ActionCategoryFilterCardsBlock' | 'ActionCategoryReportFieldBlock' | 'ActionContactFormBlock' | 'ActionContactPersonsBlock' | 'ActionContentAttributeTypeBlock' | 'ActionContentCategoryTypeBlock' | 'ActionContentSectionBlock' | 'ActionDependenciesBlock' | 'ActionDescriptionBlock' | 'ActionEndDateBlock' | 'ActionHighlightsBlock' | 'ActionImplementationPhaseFilterBlock' | 'ActionImplementationPhaseReportFieldBlock' }
 );
 
-type PledgeBodyFragment_Lrr2Fl8Se3u5PeLKw5dI21X2VgwGptdIrN1YaLxh00_Fragment = (
-  { id: string | null, blockType: string }
+type PledgeBody_Lrr2Fl8Se3u5PeLKw5dI21X2VgwGptdIrN1YaLxh00_Fragment = (
+  { blockType: string, field: string }
   & { __typename: 'ActionLeadParagraphBlock' | 'ActionLinksBlock' | 'ActionListBlock' | 'ActionManualStatusReasonBlock' | 'ActionMergedActionsBlock' | 'ActionOfficialNameBlock' | 'ActionPledgesBlock' | 'ActionPrimaryOrgBlock' | 'ActionRelatedActionsBlock' | 'ActionRelatedIndicatorsBlock' | 'ActionResponsiblePartiesBlock' | 'ActionResponsiblePartyReportFieldBlock' | 'ActionScheduleBlock' | 'ActionScheduleContinuousBlock' | 'ActionScheduleFilterBlock' | 'ActionStartDateBlock' | 'ActionStatusFilterBlock' | 'ActionStatusGraphsBlock' | 'ActionStatusReportFieldBlock' | 'ActionTasksBlock' }
 );
 
-type PledgeBodyFragment_DCiMtWTjVHcMJlWmTrxLDb0m3cl5Ha0YuNph9nWt8E_Fragment = (
-  { id: string | null, blockType: string }
+type PledgeBody_DCiMtWTjVHcMJlWmTrxLDb0m3cl5Ha0YuNph9nWt8E_Fragment = (
+  { blockType: string, field: string }
   & { __typename: 'ActionUpdatedAtBlock' | 'AdaptiveEmbedBlock' | 'BlockQuoteBlock' | 'BooleanBlock' | 'CardBlock' | 'CardListBlock' | 'CartographyVisualisationBlock' | 'CategoryListBlock' | 'CategoryPageAttributeTypeBlock' | 'CategoryPageBodyBlock' | 'CategoryPageCategoryListBlock' | 'CategoryPageContactFormBlock' | 'CategoryPageProgressBlock' | 'CategoryTreeMapBlock' | 'CategoryTypeDatasetsBlock' | 'CategoryTypeFilterBlock' | 'CategoryTypeLevelListBlock' | 'ChangeLogMessageBlock' | 'CharBlock' | 'ChoiceBlock' }
 );
 
-type PledgeBodyFragment_O6yiIaiIXrBAuCqj4Usrc0eUxTgDeFjRkKlJwjRwna_Fragment = (
-  { id: string | null, blockType: string }
+type PledgeBody_O6yiIaiIXrBAuCqj4Usrc0eUxTgDeFjRkKlJwjRwna_Fragment = (
+  { blockType: string, field: string }
   & { __typename: 'ContinuousActionFilterBlock' | 'DashboardHeaderBlock' | 'DashboardIndicatorAreaChartBlock' | 'DashboardIndicatorBarChartBlock' | 'DashboardIndicatorLineChartBlock' | 'DashboardIndicatorPieChartBlock' | 'DashboardIndicatorSummaryBlock' | 'DashboardParagraphBlock' | 'DashboardRowBlock' | 'DateBlock' | 'DateTimeBlock' | 'DecimalBlock' | 'DocumentChooserBlock' | 'EmailBlock' | 'EmbedBlock' | 'EndDateColumnBlock' | 'FieldColumnBlock' | 'FloatBlock' | 'FormChoiceBlock' | 'FormFieldBlock' }
 );
 
-type PledgeBodyFragment_KZmexPyDcZFmxLkcenFpyeXmtVp7H1eJxNPg02xKLs_Fragment = (
-  { id: string | null, blockType: string }
+type PledgeBody_KZmexPyDcZFmxLkcenFpyeXmtVp7H1eJxNPg02xKLs_Fragment = (
+  { blockType: string, field: string }
   & { __typename: 'FrontPageHeroAdditionalSettingsBlock' | 'FrontPageHeroBlock' | 'IdentifierColumnBlock' | 'ImageBlock' | 'ImageChooserBlock' | 'ImplementationPhaseColumnBlock' | 'IndicatorBlock' | 'IndicatorCategoryColumn' | 'IndicatorCategoryContentBlock' | 'IndicatorCausalChainBlock' | 'IndicatorContentBlock' | 'IndicatorFactorValueSummaryContentBlock' | 'IndicatorFilterBlock' | 'IndicatorGroupBlock' | 'IndicatorHighlightsBlock' | 'IndicatorListColumn' | 'IndicatorShowcaseBlock' | 'IndicatorValueColumn' | 'IndicatorValueSummaryContentBlock' | 'IndicatorVisualizationContentBlock' }
 );
 
-type PledgeBodyFragment_CNtvxS0zAxTpijnH9ZeSlUeWtdDj51HzvpQ4bUg_Fragment = (
-  { id: string | null, blockType: string }
+type PledgeBody_CNtvxS0zAxTpijnH9ZeSlUeWtdDj51HzvpQ4bUg_Fragment = (
+  { blockType: string, field: string }
   & { __typename: 'IndicatorsColumnBlock' | 'IntegerBlock' | 'NameColumnBlock' | 'OrganizationColumnBlock' | 'PageChooserBlock' | 'PageLinkBlock' | 'PathsNodeSummaryBlock' | 'PathsOutcomeBlock' | 'PlanDatasetsBlock' | 'PlanFilterBlock' | 'PrimaryOrganizationFilterBlock' | 'QuestionBlock' | 'RawHTMLBlock' | 'RegexBlock' | 'RelatedIndicatorsBlock' | 'RelatedPlanListBlock' | 'ReportComparisonBlock' | 'ReportTypeFieldChooserBlock' | 'ResponsiblePartiesColumnBlock' | 'ResponsiblePartyFilterBlock' }
 );
 
-type PledgeBodyFragment_8vtSixVuMrtoI07nft7JyY3uvOn1ds6gUIeEfxgMy_Fragment = (
-  { id: string | null, blockType: string }
+type PledgeBody_8vtSixVuMrtoI07nft7JyY3uvOn1ds6gUIeEfxgMy_Fragment = (
+  { blockType: string, field: string }
   & { __typename: 'ScheduleContinuousColumnBlock' | 'SnippetChooserBlock' | 'StartDateColumnBlock' | 'StaticBlock' | 'StatusColumnBlock' | 'StreamBlock' | 'StreamFieldBlock' | 'StructBlock' | 'TasksColumnBlock' | 'TextBlock' | 'TimeBlock' | 'URLBlock' | 'UpdatedAtColumnBlock' }
 );
 
-type PledgeBodyFragment_LargeImageBlock_Fragment = (
-  { width: string | null, id: string | null, blockType: string, image: (
-    { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
-      { src: string }
+type PledgeBody_LargeImageBlock_Fragment = (
+  { width: string | null, blockType: string, field: string, image: (
+    { id: string, title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
+      { id: string, src: string }
       & { __typename: 'ImageRendition' }
     ) | null }
     & { __typename: 'Image' }
@@ -16519,47 +17272,47 @@ type PledgeBodyFragment_LargeImageBlock_Fragment = (
   & { __typename: 'LargeImageBlock' }
 );
 
-type PledgeBodyFragment_QuestionAnswerBlock_Fragment = (
-  { heading: string | null, id: string | null, blockType: string, questions: Array<(
+type PledgeBody_QuestionAnswerBlock_Fragment = (
+  { heading: string | null, blockType: string, field: string, questions: Array<(
     { question: string, answer: string }
     & { __typename: 'QuestionBlock' }
   )> | null }
   & { __typename: 'QuestionAnswerBlock' }
 );
 
-type PledgeBodyFragment_RichTextBlock_Fragment = (
-  { value: string, id: string | null, blockType: string }
+type PledgeBody_RichTextBlock_Fragment = (
+  { value: string, blockType: string, field: string }
   & { __typename: 'RichTextBlock' }
 );
 
-export type PledgeBodyFragmentFragment = PledgeBodyFragment_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment | PledgeBodyFragment_Lrr2Fl8Se3u5PeLKw5dI21X2VgwGptdIrN1YaLxh00_Fragment | PledgeBodyFragment_DCiMtWTjVHcMJlWmTrxLDb0m3cl5Ha0YuNph9nWt8E_Fragment | PledgeBodyFragment_O6yiIaiIXrBAuCqj4Usrc0eUxTgDeFjRkKlJwjRwna_Fragment | PledgeBodyFragment_KZmexPyDcZFmxLkcenFpyeXmtVp7H1eJxNPg02xKLs_Fragment | PledgeBodyFragment_CNtvxS0zAxTpijnH9ZeSlUeWtdDj51HzvpQ4bUg_Fragment | PledgeBodyFragment_8vtSixVuMrtoI07nft7JyY3uvOn1ds6gUIeEfxgMy_Fragment | PledgeBodyFragment_LargeImageBlock_Fragment | PledgeBodyFragment_QuestionAnswerBlock_Fragment | PledgeBodyFragment_RichTextBlock_Fragment;
+export type PledgeBodyFragment = PledgeBody_GxIqRAgfSioH07e0TsixWfsi2QkOwIkCdae4INdPti_Fragment | PledgeBody_Lrr2Fl8Se3u5PeLKw5dI21X2VgwGptdIrN1YaLxh00_Fragment | PledgeBody_DCiMtWTjVHcMJlWmTrxLDb0m3cl5Ha0YuNph9nWt8E_Fragment | PledgeBody_O6yiIaiIXrBAuCqj4Usrc0eUxTgDeFjRkKlJwjRwna_Fragment | PledgeBody_KZmexPyDcZFmxLkcenFpyeXmtVp7H1eJxNPg02xKLs_Fragment | PledgeBody_CNtvxS0zAxTpijnH9ZeSlUeWtdDj51HzvpQ4bUg_Fragment | PledgeBody_8vtSixVuMrtoI07nft7JyY3uvOn1ds6gUIeEfxgMy_Fragment | PledgeBody_LargeImageBlock_Fragment | PledgeBody_QuestionAnswerBlock_Fragment | PledgeBody_RichTextBlock_Fragment;
 
-export type GetPledgeQueryVariables = Exact<{
+export type PledgeQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   slug: Scalars['String']['input'];
 }>;
 
 
-export type GetPledgeQuery = (
+export type PledgeQuery = (
   { plan: (
     { id: string, pledge: (
       { id: string, name: string, description: string, uuid: string, slug: string, commitmentCount: number, residentCount: number | null, impactStatement: string, localEquivalency: string, body: Array<(
-        { width: string | null, id: string | null, blockType: string, image: (
-          { title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
-            { src: string }
+        { width: string | null, blockType: string, field: string, image: (
+          { id: string, title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: (
+            { id: string, src: string }
             & { __typename: 'ImageRendition' }
           ) | null }
           & { __typename: 'Image' }
         ) | null }
         & { __typename: 'LargeImageBlock' }
       ) | (
-        { heading: string | null, id: string | null, blockType: string, questions: Array<(
+        { heading: string | null, blockType: string, field: string, questions: Array<(
           { question: string, answer: string }
           & { __typename: 'QuestionBlock' }
         )> | null }
         & { __typename: 'QuestionAnswerBlock' }
       ) | (
-        { value: string, id: string | null, blockType: string }
+        { value: string, blockType: string, field: string }
         & { __typename: 'RichTextBlock' }
       )> | null, actions: Array<(
         { id: string, identifier: string, name: string, viewUrl: string }
@@ -16607,25 +17360,25 @@ export type GetPledgeQuery = (
             & { __typename: 'Image' }
           ) | null, indicators: Array<(
             { id: string, values: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorValue' }
             )>, goals: Array<(
-              { date: string | null, value: number }
+              { id: string, date: string | null, value: number }
               & { __typename: 'IndicatorGoal' }
             ) | null> | null, unit: (
-              { name: string, shortName: string | null }
+              { id: string, name: string, shortName: string | null }
               & { __typename: 'Unit' }
             ) }
             & { __typename: 'Indicator' }
           )>, indicatorRelationships: Array<(
-            { type: IndicatorCategoryRelationshipType, indicator: (
+            { id: string, type: IndicatorCategoryRelationshipType, indicator: (
               { id: string }
               & { __typename: 'Indicator' }
             ) }
             & { __typename: 'IndicatorCategoryRelationship' }
           )>, iconImage: (
-            { rendition: (
-              { src: string }
+            { id: string, rendition: (
+              { id: string, src: string }
               & { __typename: 'ImageRendition' }
             ) | null }
             & { __typename: 'Image' }
@@ -16658,25 +17411,25 @@ export type GetPledgeQuery = (
                   & { __typename: 'Image' }
                 ) | null, indicators: Array<(
                   { id: string, values: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorValue' }
                   )>, goals: Array<(
-                    { date: string | null, value: number }
+                    { id: string, date: string | null, value: number }
                     & { __typename: 'IndicatorGoal' }
                   ) | null> | null, unit: (
-                    { name: string, shortName: string | null }
+                    { id: string, name: string, shortName: string | null }
                     & { __typename: 'Unit' }
                   ) }
                   & { __typename: 'Indicator' }
                 )>, indicatorRelationships: Array<(
-                  { type: IndicatorCategoryRelationshipType, indicator: (
+                  { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                     { id: string }
                     & { __typename: 'Indicator' }
                   ) }
                   & { __typename: 'IndicatorCategoryRelationship' }
                 )>, iconImage: (
-                  { rendition: (
-                    { src: string }
+                  { id: string, rendition: (
+                    { id: string, src: string }
                     & { __typename: 'ImageRendition' }
                   ) | null }
                   & { __typename: 'Image' }
@@ -16708,25 +17461,25 @@ export type GetPledgeQuery = (
                 & { __typename: 'Image' }
               ) | null, indicators: Array<(
                 { id: string, values: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorValue' }
                 )>, goals: Array<(
-                  { date: string | null, value: number }
+                  { id: string, date: string | null, value: number }
                   & { __typename: 'IndicatorGoal' }
                 ) | null> | null, unit: (
-                  { name: string, shortName: string | null }
+                  { id: string, name: string, shortName: string | null }
                   & { __typename: 'Unit' }
                 ) }
                 & { __typename: 'Indicator' }
               )>, indicatorRelationships: Array<(
-                { type: IndicatorCategoryRelationshipType, indicator: (
+                { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                   { id: string }
                   & { __typename: 'Indicator' }
                 ) }
                 & { __typename: 'IndicatorCategoryRelationship' }
               )>, iconImage: (
-                { rendition: (
-                  { src: string }
+                { id: string, rendition: (
+                  { id: string, src: string }
                   & { __typename: 'ImageRendition' }
                 ) | null }
                 & { __typename: 'Image' }
@@ -16758,25 +17511,25 @@ export type GetPledgeQuery = (
               & { __typename: 'Image' }
             ) | null, indicators: Array<(
               { id: string, values: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorValue' }
               )>, goals: Array<(
-                { date: string | null, value: number }
+                { id: string, date: string | null, value: number }
                 & { __typename: 'IndicatorGoal' }
               ) | null> | null, unit: (
-                { name: string, shortName: string | null }
+                { id: string, name: string, shortName: string | null }
                 & { __typename: 'Unit' }
               ) }
               & { __typename: 'Indicator' }
             )>, indicatorRelationships: Array<(
-              { type: IndicatorCategoryRelationshipType, indicator: (
+              { id: string, type: IndicatorCategoryRelationshipType, indicator: (
                 { id: string }
                 & { __typename: 'Indicator' }
               ) }
               & { __typename: 'IndicatorCategoryRelationship' }
             )>, iconImage: (
-              { rendition: (
-                { src: string }
+              { id: string, rendition: (
+                { id: string, src: string }
                 & { __typename: 'ImageRendition' }
               ) | null }
               & { __typename: 'Image' }
@@ -16845,12 +17598,12 @@ export type GetPledgeQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetPledgeFeatureEnabledQueryVariables = Exact<{
+export type PledgeFeatureEnabledQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
 }>;
 
 
-export type GetPledgeFeatureEnabledQuery = (
+export type PledgeFeatureEnabledQuery = (
   { plan: (
     { id: string, features: (
       { enableCommunityEngagement: boolean }
@@ -16869,16 +17622,16 @@ export type StorybookIndicatorExplorerQueryVariables = Exact<{
 export type StorybookIndicatorExplorerQuery = (
   { plan: (
     { id: string, name: string, themeIdentifier: string | null, viewUrl: string | null, organization: (
-      { name: string }
+      { id: string, name: string }
       & { __typename: 'Organization' }
     ) }
     & { __typename: 'Plan' }
   ) | null, planIndicators: Array<(
     { id: string, name: string, level: string | null, timeResolution: IndicatorTimeResolution, description: string | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, valueRounding: number | null, desiredTrend: IndicatorDesiredTrend | null, showTrendline: boolean, showTotalLine: boolean, dataCategoriesAreStackable: boolean, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, unit: (
-      { name: string, shortName: string | null }
+      { id: string, name: string, shortName: string | null }
       & { __typename: 'Unit' }
     ), latestValue: (
-      { date: string | null, value: number }
+      { id: string, date: string | null, value: number }
       & { __typename: 'IndicatorValue' }
     ) | null, values: Array<(
       { id: string, value: number, date: string | null, categories: Array<(
@@ -16893,10 +17646,10 @@ export type StorybookIndicatorExplorerQuery = (
       { id: string, identifier: string, name: string }
       & { __typename: 'Action' }
     )>, quantity: (
-      { name: string }
+      { id: string, name: string }
       & { __typename: 'Quantity' }
     ) | null, referenceValue: (
-      { value: number, date: string | null }
+      { id: string, value: number, date: string | null }
       & { __typename: 'IndicatorValue' }
     ) | null, defaultVisualization: (
       { dimension: (
@@ -16917,7 +17670,7 @@ export type StorybookIndicatorExplorerQuery = (
       ) | null }
       & { __typename: 'IndicatorDefaultPieChart' }
     ) | { __typename: 'IndicatorDefaultSummary' } | null, dimensions: Array<(
-      { dimension: (
+      { id: string, dimension: (
         { id: string, name: string, categories: Array<(
           { id: string, name: string, defaultColor: string }
           & { __typename: 'DimensionCategory' }
@@ -16931,10 +17684,21 @@ export type StorybookIndicatorExplorerQuery = (
   & { __typename: 'Query' }
 );
 
-export type TestPlanQueryVariables = Exact<{ [key: string]: never; }>;
+export type TestPlanLocaleQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TestPlanQuery = (
+export type TestPlanLocaleQuery = (
+  { plan: (
+    { id: string }
+    & { __typename: 'Plan' }
+  ) | null }
+  & { __typename: 'Query' }
+);
+
+export type TestPlanInstanceAndLocaleQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TestPlanInstanceAndLocaleQuery = (
   { plan: (
     { id: string }
     & { __typename: 'Plan' }
@@ -16950,7 +17714,7 @@ export type IndicatorSparklineGraphDataQueryVariables = Exact<{
 
 export type IndicatorSparklineGraphDataQuery = (
   { plan: (
-    { scenarios: Array<(
+    { id: string, scenarios: Array<(
       { id: string, identifier: string, name: string }
       & { __typename: 'Scenario' }
     )> }
@@ -16975,7 +17739,7 @@ export type IndicatorSparklineGraphDataQuery = (
       )> }
       & { __typename: 'IndicatorValue' }
     )>, dimensions: Array<(
-      { dimension: (
+      { id: string, dimension: (
         { id: string, name: string, categories: Array<(
           { id: string, name: string }
           & { __typename: 'DimensionCategory' }
@@ -16998,7 +17762,7 @@ export type IndicatorSparklineGraphDataQuery = (
     ), common: (
       { id: string, name: string, normalizations: Array<(
         { unit: (
-          { shortName: string | null }
+          { id: string, shortName: string | null }
           & { __typename: 'Unit' }
         ), normalizer: (
           { name: string, id: string, identifier: string | null }
@@ -17022,7 +17786,7 @@ export type IndicatorSparklineGraphDataQuery = (
           )> }
           & { __typename: 'IndicatorValue' }
         )>, dimensions: Array<(
-          { dimension: (
+          { id: string, dimension: (
             { id: string, name: string, categories: Array<(
               { id: string, name: string }
               & { __typename: 'DimensionCategory' }
@@ -17052,25 +17816,25 @@ export type IndicatorSparklineGraphDataQuery = (
   & { __typename: 'Query' }
 );
 
-export type GetSitemapQueryVariables = Exact<{
+export type SitemapQueryVariables = Exact<{
   id: Scalars['ID']['input'];
   hostname: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetSitemapQuery = (
+export type SitemapQuery = (
   { planIndicators: Array<(
     { id: string }
     & { __typename: 'Indicator' }
   )> | null, plan: (
-    { primaryLanguage: string, otherLanguages: Array<string>, domain: (
-      { hostname: string, basePath: string | null }
+    { id: string, primaryLanguage: string, otherLanguages: Array<string>, domain: (
+      { id: string, hostname: string, basePath: string | null }
       & { __typename: 'PlanDomain' }
     ) | null, actions: Array<(
-      { identifier: string }
+      { id: string, identifier: string }
       & { __typename: 'Action' }
     )>, pages: Array<(
-      { urlPath: string }
+      { id: string | null, urlPath: string }
       & { __typename: 'AccessibilityStatementPage' | 'ActionListPage' | 'CategoryPage' | 'CategoryTypePage' | 'EmptyPage' | 'ImpactGroupPage' | 'IndicatorListPage' | 'Page' | 'PlanRootPage' | 'PledgeListPage' | 'PrivacyPolicyPage' | 'StaticPage' }
     )> | null }
     & { __typename: 'Plan' }

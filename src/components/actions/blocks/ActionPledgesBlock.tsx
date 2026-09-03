@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 
-import type { GetActionDetailsQuery } from '@/common/__generated__/graphql';
+import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getAttributeValueText } from '@/components/common/ActionAttribute';
 import ConfirmPledge from '@/components/pledge/ConfirmPledge';
 import PledgeCard, { type PledgeCategory } from '@/components/pledge/PledgeCard';
@@ -15,7 +15,7 @@ import { getDefaultFormFields } from '@/utils/pledge.utils';
 
 import { ActionSection } from '../ActionContent';
 
-type ActionPledge = NonNullable<GetActionDetailsQuery['action']>['pledges'][number];
+type ActionPledge = NonNullable<ActionDetailsQuery['action']>['pledges'][number];
 
 type Props = {
   pledges: ActionPledge[];
@@ -44,7 +44,7 @@ export default function ActionPledgesBlock({ pledges, heading }: Props) {
 
   const handleCommitClick = (pledge: ActionPledge, isCurrentlyCommitted: boolean) => {
     if (isCurrentlyCommitted) {
-      uncommitFromPledge(pledge.id);
+      void uncommitFromPledge(pledge.id);
     } else {
       setSelectedPledge(pledge);
       setShowConfirmDrawer(true);

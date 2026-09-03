@@ -42,11 +42,23 @@ export function getUnitLabel(indicator: LineChartBlock['indicator']): string {
   return unit.shortName || unit.name;
 }
 
+export type TrendSeries = {
+  name: string;
+  type: 'line';
+  symbol: 'none';
+  showSymbol: boolean;
+  smooth: boolean;
+  data: [string, number][];
+  lineStyle: { type: 'dashed'; width: number; color: string };
+  itemStyle: { color: string };
+  tooltip: { show: boolean };
+};
+
 function formatDateKey(date: string, timeResolution?: string | null): string {
   const d = new Date(date);
   if (Number.isNaN(d.getTime())) return date;
 
-  const resolution = String(timeResolution || 'YEAR').toUpperCase();
+  const resolution = String(timeResolution ?? 'YEAR').toUpperCase();
   if (resolution === 'YEAR') {
     return String(d.getUTCFullYear());
   } else if (resolution === 'MONTH') {
@@ -173,7 +185,7 @@ export function buildTrendSeries(
   trendLineColor: string,
   label = 'Trend',
   timeResolution?: string | null
-) {
+): TrendSeries[] {
   const regData = totalRaw.slice(-Math.min(totalRaw.length, 10));
   const predictedTimes = regData.map(([key]) => getTimeKeyForSorting(key, timeResolution));
 
@@ -193,7 +205,7 @@ export function buildTrendSeries(
   const numericData = regData.map(
     ([key, value]) => [getTimeKeyForSorting(key, timeResolution), value] as [number, number]
   );
-  const model = linearRegression(numericData) as { m: number; b: number };
+  const model = linearRegression(numericData);
   const predictedValues = predictedTimes.map((timeKey) => model.m * timeKey + model.b);
 
   const predictedKeys = predictedTimes.map((timeKey) => {
@@ -213,7 +225,7 @@ export function buildTrendSeries(
         {
           name: label,
           type: 'line' as const,
-          symbol: 'none',
+          symbol: 'none' as const,
           showSymbol: false,
           smooth: false,
           data: predictedKeys.map((key, i) => [key, predictedValues[i]] as [string, number]),
@@ -230,7 +242,7 @@ export function buildTooltipFormatter(
   legendData: string[],
   t: TFunction,
   formatValue: (value: number) => string,
-  dimension?: { name: string },
+  _dimension?: { name: string },
   timeResolution?: string | null
 ) {
   // The shape ECharts passes to axis-trigger tooltip formatters, reduced to
@@ -266,11 +278,12 @@ export function buildTooltipFormatter(
         return true;
       })
       .map((p) => {
+        const data: unknown = p.data;
         const value =
-          Array.isArray(p.data) && typeof p.data[1] === 'number'
-            ? formatValue(p.data[1])
-            : typeof p.data === 'number'
-              ? formatValue(p.data)
+          Array.isArray(data) && typeof data[1] === 'number'
+            ? formatValue(data[1])
+            : typeof data === 'number'
+              ? formatValue(data)
               : '-';
 
         return `${p.marker ?? ''} ${p.seriesName ?? ''}: ${value} ${unit}`;

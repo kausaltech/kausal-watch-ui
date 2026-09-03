@@ -1,13 +1,10 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'reactstrap';
 
-import { IndicatorLink, Link } from '@/common/links';
+import { IndicatorLink } from '@/common/links';
 import Icon from '@/components/common/Icon';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 

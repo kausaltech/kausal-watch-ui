@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 
 import NextLink from 'next/link';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
 

@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 const backendUrl = process.env.PATHS_BACKEND_URL || 'https://api.paths.kausal.dev';

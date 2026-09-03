@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
+
 import { useTranslations } from 'next-intl';
 
-import {
+import type {
   ActionDateFormat,
-  GetActionDetailsQuery,
+  ActionDetailsQuery,
   PlanContextFragment,
 } from '@/common/__generated__/graphql';
 import { ActionSection } from '@/components/actions/ActionContent';
@@ -16,7 +17,7 @@ const SideHeader = styled.h3`
 `;
 
 type Props = {
-  action: NonNullable<GetActionDetailsQuery['action']>;
+  action: NonNullable<ActionDetailsQuery['action']>;
   plan: PlanContextFragment;
   heading: string;
 };
@@ -40,8 +41,8 @@ const ActionScheduleBlock = ({ action, plan, heading }: Props) => {
           <SideHeader>{headingText}</SideHeader>
           <Timeline
             formatOptions={getDateFormat(dateFormat as ActionDateFormat | undefined)}
-            startDate={action.startDate}
-            endDate={action.endDate}
+            startDate={action.startDate ?? undefined}
+            endDate={action.endDate ?? undefined}
             continuous={action.scheduleContinuous}
           />
         </ActionSection>
