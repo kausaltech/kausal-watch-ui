@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 
 import type {
   ActionDetailsQuery,
@@ -30,7 +30,7 @@ export const getActionDetails = async (
 ) =>
   await (
     await getClient()
-  ).query<ActionDetailsQuery, ActionDetailsQueryVariables>({
+  ).query({
     query: GET_ACTION_DETAILS,
     variables: {
       plan,
@@ -41,7 +41,7 @@ export const getActionDetails = async (
     fetchPolicy: 'no-cache',
   });
 
-const GET_ACTION_DETAILS = gql`
+const GET_ACTION_DETAILS: TypedDocumentNode<ActionDetailsQuery, ActionDetailsQueryVariables> = gql`
   query ActionDetails($plan: ID!, $id: ID!, $clientUrl: String!, $workflow: WorkflowState)
   @workflow(state: $workflow) {
     action(plan: $plan, identifier: $id) {

@@ -4,20 +4,23 @@ import { useState } from 'react';
 
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useMutation } from '@apollo/client/react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Alert, Spinner } from 'reactstrap';
 
 import type {
-  CreateUserFeedbackMutation,
-  CreateUserFeedbackMutationVariables,
+  CreatePledgeFeedbackMutation,
+  CreatePledgeFeedbackMutationVariables,
 } from '@/common/__generated__/graphql';
 import type { TFunction } from '@/common/i18n';
 import Button from '@/components/common/Button';
 
-const CREATE_USER_FEEDBACK = gql`
+const CREATE_USER_FEEDBACK: TypedDocumentNode<
+  CreatePledgeFeedbackMutation,
+  CreatePledgeFeedbackMutationVariables
+> = gql`
   mutation CreatePledgeFeedback($input: UserFeedbackMutationInput!) {
     createUserFeedback(input: $input) {
       feedback {
@@ -171,10 +174,8 @@ function PledgeFeedbackComponent({
   // The mutation may just return the error in the response, if it does make sure we display that error too
   const [otherMutationErrors, setOtherMutationErrors] = useState<string[]>([]);
 
-  const [createUserFeedback, { loading: mutationLoading, error: mutationError }] = useMutation<
-    CreateUserFeedbackMutation,
-    CreateUserFeedbackMutationVariables
-  >(CREATE_USER_FEEDBACK);
+  const [createUserFeedback, { loading: mutationLoading, error: mutationError }] =
+    useMutation(CREATE_USER_FEEDBACK);
 
   const handleEmojiSelect = (emoji: Emoji) => {
     setSelectedEmoji(emoji);

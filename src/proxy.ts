@@ -55,6 +55,19 @@ function getMiddlewareLogger(request: NextAuthRequest, host: string, pathname: s
     spanBindings[LOGGER_SPAN_ID] = span.spanContext().spanId;
     spanBindings['sampled'] = span.isRecording();
   }
+  if (request.auth) {
+    const user = request.auth.user;
+    Sentry.setUser({
+      id: user.id,
+      email: user.email ?? undefined,
+    });
+    if (user.id) {
+      spanBindings['user.id'] = user.id;
+    }
+    if (user.email) {
+      spanBindings['user.email'] = user.email;
+    }
+  }
   const logger = getLogger({
     name: 'middleware',
     bindings: {
@@ -86,6 +99,8 @@ const proxy = auth(async (request: NextAuthRequest) => {
   const protocol = request.headers.get('x-forwarded-proto');
   const hostUrl = new URL(`${protocol}://${host}`);
 
+  const requestScope = Sentry.getIsolationScope();
+
   if (request.nextUrl.pathname === HEALTH_CHECK_PUBLIC_PATH) {
     return NextResponse.json({ status: 'OK' });
   }
@@ -111,6 +126,8 @@ const proxy = auth(async (request: NextAuthRequest) => {
     return NextResponse.redirect(new URL(`http://sunnydale.${host}`));
   }
 
+  requestScope.setTag('plan.hostname', hostname);
+
   if (pathname === '/_invalidate-middleware-cache') {
     clearHostnameCache();
     return NextResponse.json({
@@ -124,8 +141,6 @@ const proxy = auth(async (request: NextAuthRequest) => {
     return NextResponse.rewrite(url);
   }
 
-  const requestScope = Sentry.getIsolationScope();
-  requestScope.setTag('plan.hostname', hostname);
   // Normally the JWT callback strips expired tokens before this point, so
   // UNAUTHENTICATED errors should be rare here (only a tight race condition).
   // Session clearing primarily happens client-side via TopToolBar.
@@ -141,17 +156,20 @@ const proxy = auth(async (request: NextAuthRequest) => {
     }
   }
   if (!plans || plans.length === 0) {
+    logger.info('No plans for hostname');
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
   const { parsedLocale, parsedPlan, isLocaleCaseInvalid } = getLocaleAndPlan(pathname, plans);
 
   if (!parsedPlan) {
+    logger.info(`Plan not found for path ${pathname} (${plans.length} possible plans)`);
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
   const planIdentifier = 'identifier' in parsedPlan ? parsedPlan.identifier : 'restricted';
   const otherLanguages = 'otherLanguages' in parsedPlan ? parsedPlan.otherLanguages : [];
+
   requestScope.setTag('plan.identifier', planIdentifier);
   requestScope.setTag('locale', parsedLocale);
 
@@ -178,6 +196,7 @@ const proxy = auth(async (request: NextAuthRequest) => {
     const url = new URL(request.url);
     url.hostname = parsedPlan.domain.redirectToHostname;
     url.port = '';
+    logger.info(`Redirecting to hostname: ${parsedPlan.domain.redirectToHostname}`);
     return NextResponse.redirect(url, { status: 301 });
   }
 

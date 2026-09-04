@@ -1,6 +1,14 @@
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 
-export const GET_INDICATOR_GRAPH_DATA = gql`
+import type {
+  IndicatorGraphDataQuery,
+  IndicatorGraphDataQueryVariables,
+} from '@/common/__generated__/graphql';
+
+export const GET_INDICATOR_GRAPH_DATA: TypedDocumentNode<
+  IndicatorGraphDataQuery,
+  IndicatorGraphDataQueryVariables
+> = gql`
   query IndicatorGraphData($id: ID, $plan: ID) {
     plan(id: $plan) {
       id

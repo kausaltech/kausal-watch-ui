@@ -3,7 +3,7 @@ import React from 'react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { skipToken, useSuspenseQuery } from '@apollo/client/react';
 import { filter, groupBy, map, sortBy, uniqBy } from 'lodash-es';
 import { useTranslations } from 'next-intl';
@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 import type {
   ActionCardFragment,
   ActionDependenciesQuery,
+  ActionDependenciesQueryVariables,
   ActionDetailsQuery,
   PlanContextQuery,
 } from '@/common/__generated__/graphql';
@@ -156,7 +157,10 @@ export function mapActionToDependencyGroups(
   return sortedGroupedActions;
 }
 
-const GET_ACTION_DEPS = gql`
+const GET_ACTION_DEPS: TypedDocumentNode<
+  ActionDependenciesQuery,
+  ActionDependenciesQueryVariables
+> = gql`
   query ActionDependencies($action: ID!, $workflow: WorkflowState) @workflow(state: $workflow) {
     action(id: $action) {
       id
@@ -197,17 +201,17 @@ export function ActionDependenciesBlock({
   const plan = usePlan();
   const skipFetchingDependencies =
     loading === true ||
+    activeActionId == null ||
     (action?.dependencyRole != null && action?.allDependencyRelationships != null);
 
   const { workflow } = useWorkflowSelector();
 
-  const { error, data } = useSuspenseQuery<ActionDependenciesQuery>(
+  const { error, data } = useSuspenseQuery(
     GET_ACTION_DEPS,
     skipFetchingDependencies
       ? skipToken
       : {
           variables: {
-            plan: plan.identifier,
             action: activeActionId,
             workflow,
           },

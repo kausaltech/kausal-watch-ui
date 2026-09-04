@@ -6,10 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { useQuery } from '@apollo/client/react';
 
-import type {
-  IndicatorDetailsQuery,
-  IndicatorDetailsQueryVariables,
-} from '@/common/__generated__/graphql';
+import type { IndicatorDetailsQuery, PlanCategoryTypesQuery } from '@/common/__generated__/graphql';
 import { usePlan } from '@/context/plan';
 import { GET_INDICATOR_DETAILS } from '@/queries/get-indicator';
 import { GET_PLAN_CATEGORY_TYPES } from '@/queries/get-plan-category-types';
@@ -44,20 +41,14 @@ const GlobalIndicatorModal = () => {
   const indicatorId = searchParams.get('indicator');
 
   // Fetch category types for the modal
-  type CategoryTypesQuery = {
-    plan?: {
-      id: string;
-      categoryTypes?: Array<{ id: string; name: string; identifier: string }>;
-    } | null;
-  };
-  const { data: categoryTypesData } = useQuery<CategoryTypesQuery>(GET_PLAN_CATEGORY_TYPES, {
+  const { data: categoryTypesData } = useQuery(GET_PLAN_CATEGORY_TYPES, {
     variables: {
       plan: plan.identifier,
     },
     skip: !indicatorId, // Only fetch when modal is open
   });
 
-  const usableCategoryTypes: Array<{ id: string; name: string; identifier: string }> =
+  const usableCategoryTypes: NonNullable<PlanCategoryTypesQuery['plan']>['categoryTypes'] =
     categoryTypesData?.plan?.categoryTypes ?? [];
 
   // Determine indicator plan identifier - we'll update this after fetching indicator
@@ -66,10 +57,7 @@ const GlobalIndicatorModal = () => {
   );
 
   // Fetch indicator details
-  const { loading, error, data, previousData } = useQuery<
-    IndicatorDetailsQuery,
-    IndicatorDetailsQueryVariables
-  >(GET_INDICATOR_DETAILS, {
+  const { loading, error, data, previousData } = useQuery(GET_INDICATOR_DETAILS, {
     variables: {
       plan: indicatorPlanIdentifier,
       sitePlan: plan.identifier,

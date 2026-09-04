@@ -1,7 +1,15 @@
 /* istanbul ignore file */
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 
-export const GET_PLANS_BY_HOSTNAME = gql`
+import type {
+  PlansByHostnameQuery,
+  PlansByHostnameQueryVariables,
+} from '@/common/__generated__/graphql';
+
+export const GET_PLANS_BY_HOSTNAME: TypedDocumentNode<
+  PlansByHostnameQuery,
+  PlansByHostnameQueryVariables
+> = gql`
   query PlansByHostname($hostname: String) {
     plansForHostname(hostname: $hostname) {
       domain {

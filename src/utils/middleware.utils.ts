@@ -13,10 +13,7 @@ import { getWatchGraphQLUrl, getWildcardDomains } from '@common/env';
 import { getClientIP } from '@common/utils';
 import LRUCache from '@common/utils/lru-cache';
 
-import type {
-  PlansByHostnameQuery,
-  PlansByHostnameQueryVariables,
-} from '@/common/__generated__/graphql';
+import type { PlansByHostnameQuery } from '@/common/__generated__/graphql';
 import { PublicationStatus } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
@@ -297,10 +294,7 @@ async function queryPlansForHostname(
 ) {
   const apolloClient = createApolloClient(req, logger, skipAuth);
   try {
-    const { data, error } = await apolloClient.query<
-      PlansByHostnameQuery,
-      PlansByHostnameQueryVariables
-    >({
+    const { data, error } = await apolloClient.query({
       query: GET_PLANS_BY_HOSTNAME,
       variables: { hostname },
       fetchPolicy: 'no-cache',

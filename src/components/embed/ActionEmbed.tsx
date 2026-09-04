@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 
 import type { EmbedActionQuery, EmbedActionQueryVariables } from '@/common/__generated__/graphql';
@@ -9,7 +9,7 @@ import ActionHighlightCard from '@/components/actions/ActionHighlightCard';
 import { InvalidEmbedAddressError } from '@/context/embed';
 import { usePlan } from '@/context/plan';
 
-const GET_ACTION = gql`
+const GET_ACTION: TypedDocumentNode<EmbedActionQuery, EmbedActionQueryVariables> = gql`
   query EmbedAction($plan: ID!, $identifier: ID!) {
     action(plan: $plan, identifier: $identifier) {
       id
@@ -85,15 +85,12 @@ const ActionEmbed = ({ path, maxWidth }: ActionEmbedPropsType) => {
   if (path.length < 1) {
     throw new InvalidEmbedAddressError('Could not retrieve action data');
   }
-  const { loading, error, data } = useQuery<EmbedActionQuery, EmbedActionQueryVariables>(
-    GET_ACTION,
-    {
-      variables: {
-        plan: plan.identifier,
-        identifier: path[0],
-      },
-    }
-  );
+  const { loading, error, data } = useQuery(GET_ACTION, {
+    variables: {
+      plan: plan.identifier,
+      identifier: path[0],
+    },
+  });
   if (loading) return null;
   if (error || data == null || data.action == null) {
     throw new InvalidEmbedAddressError('Could not retrieve action data');

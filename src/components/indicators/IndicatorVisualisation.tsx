@@ -15,7 +15,6 @@ import ContentLoader from '@common/components/ContentLoader';
 import type {
   IndicatorDetailsQuery,
   IndicatorGraphDataQuery,
-  IndicatorGraphDataQueryVariables,
 } from '@/common/__generated__/graphql';
 import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
@@ -645,10 +644,7 @@ function IndicatorVisualisation({
   const [compareTo, setCompareTo] = useState<string | undefined>(undefined);
   const [preferNormalizeByPopulation, setPreferNormalizeByPopulation] = useState(NORMALIZE_DEFAULT);
 
-  const { loading, error, data } = useQuery<
-    IndicatorGraphDataQuery,
-    IndicatorGraphDataQueryVariables
-  >(GET_INDICATOR_GRAPH_DATA, {
+  const { loading, error, data } = useQuery(GET_INDICATOR_GRAPH_DATA, {
     variables: {
       id: indicatorId,
       plan: plan.identifier,

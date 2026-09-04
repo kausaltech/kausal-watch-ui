@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
@@ -17,7 +17,10 @@ import type { ActionsStatusGraphsProps } from '@/components/dashboard/ActionStat
 import ActionStatusGraphs from '@/components/dashboard/ActionStatusGraphs';
 import { usePlan } from '@/context/plan';
 
-const GET_ACTION_LIST_FOR_GRAPHS = gql`
+const GET_ACTION_LIST_FOR_GRAPHS: TypedDocumentNode<
+  ActionListForGraphsQuery,
+  ActionListForGraphsQueryVariables
+> = gql`
   query ActionListForGraphs($plan: ID!, $categoryId: ID) {
     planActions(plan: $plan, category: $categoryId) {
       id
@@ -54,10 +57,7 @@ const ActionStatusGraphsBlock = (props: Props) => {
   const showUpdateStatus =
     theme.settings.dashboard?.showActionUpdateStatus === false ? false : true;
 
-  const { loading, error, data } = useQuery<
-    ActionListForGraphsQuery,
-    ActionListForGraphsQueryVariables
-  >(GET_ACTION_LIST_FOR_GRAPHS, {
+  const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_GRAPHS, {
     variables: {
       plan: plan.identifier,
       categoryId: categoryId ?? null,

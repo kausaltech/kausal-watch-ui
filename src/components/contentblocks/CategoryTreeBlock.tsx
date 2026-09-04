@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/client/react';
 import * as Sentry from '@sentry/nextjs';
 import { concat } from 'lodash-es';
@@ -10,7 +10,10 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 
-import type { CategoriesForTreeMapQuery } from '@/common/__generated__/graphql';
+import type {
+  CategoriesForTreeMapQuery,
+  CategoriesForTreeMapQueryVariables,
+} from '@/common/__generated__/graphql';
 import type { CommonContentBlockProps } from '@/common/blocks.types';
 import CategoryActionList from '@/components/actions/CategoryActionList';
 import CategoryCardContent from '@/components/common/CategoryCardContent';
@@ -117,7 +120,10 @@ const CategoryVizColumn = styled.div`
 
 // TODO: clean out unecessary fields. Fetching a lot for now
 
-const GET_CATEGORIES_FOR_TREEMAP = gql`
+const GET_CATEGORIES_FOR_TREEMAP: TypedDocumentNode<
+  CategoriesForTreeMapQuery,
+  CategoriesForTreeMapQueryVariables
+> = gql`
   query CategoriesForTreeMap($plan: ID!, $categoryType: ID!, $attributeType: ID!) {
     planCategories(plan: $plan, categoryType: $categoryType) {
       id
@@ -311,7 +317,7 @@ function CategoryTreeBlock(props: CategoryTreeBlockProps) {
   const { treeMapCategoryType, valueAttribute, hasSidebar } = props;
   const t = useTranslations();
   const plan = usePlan();
-  const { data, error } = useSuspenseQuery<CategoriesForTreeMapQuery>(GET_CATEGORIES_FOR_TREEMAP, {
+  const { data, error } = useSuspenseQuery(GET_CATEGORIES_FOR_TREEMAP, {
     variables: {
       plan: plan.identifier,
       categoryType: treeMapCategoryType.identifier,

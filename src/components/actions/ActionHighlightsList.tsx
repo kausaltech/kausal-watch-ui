@@ -3,7 +3,7 @@ import { useContext } from 'react';
 
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Col, type ColProps, Row } from 'reactstrap';
@@ -26,7 +26,10 @@ import EmbedContext from '@/context/embed';
 import Icon from '../common/Icon';
 import ActionHighlightCard from './ActionHighlightCard';
 
-export const GET_ACTION_LIST = gql`
+export const GET_ACTION_LIST: TypedDocumentNode<
+  ActionHightlightListQuery,
+  ActionHightlightListQueryVariables
+> = gql`
   query ActionHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
     planActions(plan: $plan, first: $first, orderBy: $orderBy) {
       id
@@ -189,10 +192,7 @@ function ActionHighlightsList(props: ActionHighlightsListProps) {
     orderBy: '-updatedAt',
   };
 
-  const { data, error } = useSuspenseQuery<
-    ActionHightlightListQuery,
-    ActionHightlightListQueryVariables
-  >(GET_ACTION_LIST, {
+  const { data, error } = useSuspenseQuery(GET_ACTION_LIST, {
     variables: queryParams,
   });
 

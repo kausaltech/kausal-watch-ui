@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 
-import type { PlanContextQuery } from '@/common/__generated__/graphql';
+import type { PlanContextQuery, PlanContextQueryVariables } from '@/common/__generated__/graphql';
 import images from '@/common/images';
 
 import { getClient } from '../utils/apollo-rsc-client';
@@ -9,7 +9,7 @@ export type ActionStatusSummary = NonNullable<
   NonNullable<PlanContextQuery['plan']>['actionStatusSummaries']
 >[number];
 
-const GET_PLAN_CONTEXT = gql`
+const GET_PLAN_CONTEXT: TypedDocumentNode<PlanContextQuery, PlanContextQueryVariables> = gql`
   query PlanContext($identifier: ID, $hostname: String, $clientUrl: String) {
     plan(id: $identifier) {
       ...PlanContext
@@ -334,7 +334,7 @@ const GET_PLAN_CONTEXT = gql`
 export const getPlan = async (hostname: string, planIdentifier: string, clientUrl: string) =>
   await (
     await getClient()
-  ).query<PlanContextQuery>({
+  ).query({
     query: GET_PLAN_CONTEXT,
     variables: {
       identifier: planIdentifier,

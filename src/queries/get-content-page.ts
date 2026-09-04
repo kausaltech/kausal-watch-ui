@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 
 import type { ContentPageQuery, ContentPageQueryVariables } from '@/common/__generated__/graphql';
 import images from '@/common/images';
@@ -13,7 +13,7 @@ import { getClient } from '../utils/apollo-rsc-client';
 export const getContentPage = async (plan: string, path: string) =>
   await (
     await getClient()
-  ).query<ContentPageQuery, ContentPageQueryVariables>({
+  ).query({
     query: GET_CONTENT_PAGE,
     variables: {
       plan,
@@ -135,7 +135,7 @@ export const PlanDatasetsBlockFragment = gql`
   }
 `;
 
-const GET_CONTENT_PAGE = gql`
+const GET_CONTENT_PAGE: TypedDocumentNode<ContentPageQuery, ContentPageQueryVariables> = gql`
   query ContentPage($plan: ID!, $path: String!, $onlyWithActions: Boolean = true) {
     planPage(plan: $plan, path: $path) {
       __typename

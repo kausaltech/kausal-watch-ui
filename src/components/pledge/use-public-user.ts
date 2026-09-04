@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 
 import type {
@@ -13,11 +13,15 @@ import type {
   PublicUserQuery,
   PublicUserQueryVariables,
   RegisterPublicUserMutation,
+  RegisterPublicUserMutationVariables,
 } from '@/common/__generated__/graphql';
 
 const PUBLIC_USER_UUID_KEY = 'pledge-user-uuid';
 
-export const REGISTER_PUBLIC_USER = gql`
+export const REGISTER_PUBLIC_USER: TypedDocumentNode<
+  RegisterPublicUserMutation,
+  RegisterPublicUserMutationVariables
+> = gql`
   mutation RegisterPublicUser {
     pledge {
       registerUser {
@@ -27,7 +31,10 @@ export const REGISTER_PUBLIC_USER = gql`
   }
 `;
 
-export const COMMIT_TO_PLEDGE = gql`
+export const COMMIT_TO_PLEDGE: TypedDocumentNode<
+  CommitToPledgeMutation,
+  CommitToPledgeMutationVariables
+> = gql`
   mutation CommitToPledge($user: UUID!, $pledge: ID!, $committed: Boolean!) {
     pledge {
       commitToPledge(committed: $committed, pledgeId: $pledge, userUuid: $user) {
@@ -37,17 +44,18 @@ export const COMMIT_TO_PLEDGE = gql`
   }
 `;
 
-const SET_USER_DATA = gql`
-  mutation PublicUserData($user: UUID!, $key: String!, $value: String!) {
-    pledge {
-      setUserData(key: $key, value: $value, userUuid: $user) {
-        uuid
+const SET_USER_DATA: TypedDocumentNode<PublicUserDataMutation, PublicUserDataMutationVariables> =
+  gql`
+    mutation PublicUserData($user: UUID!, $key: String!, $value: String!) {
+      pledge {
+        setUserData(key: $key, value: $value, userUuid: $user) {
+          uuid
+        }
       }
     }
-  }
-`;
+  `;
 
-export const GET_PUBLIC_USER = gql`
+export const GET_PUBLIC_USER: TypedDocumentNode<PublicUserQuery, PublicUserQueryVariables> = gql`
   query PublicUser($user: UUID!) {
     publicUser(uuid: $user) {
       id
@@ -103,20 +111,14 @@ function parseUserData(
 export function usePublicUser() {
   const [userUuid, setUserUuid] = useState<string | null>(() => getStoredUuid());
 
-  const [registerUser] = useMutation<RegisterPublicUserMutation>(REGISTER_PUBLIC_USER);
-  const [commitMutation] = useMutation<CommitToPledgeMutation, CommitToPledgeMutationVariables>(
-    COMMIT_TO_PLEDGE
-  );
+  const [registerUser] = useMutation(REGISTER_PUBLIC_USER);
+  const [commitMutation] = useMutation(COMMIT_TO_PLEDGE);
 
-  const [setUserDataMutation] = useMutation<
-    PublicUserDataMutation,
-    PublicUserDataMutationVariables
-  >(SET_USER_DATA);
+  const [setUserDataMutation] = useMutation(SET_USER_DATA);
 
-  const [fetchUser, { data: queryData, loading }] = useLazyQuery<
-    PublicUserQuery,
-    PublicUserQueryVariables
-  >(GET_PUBLIC_USER, { fetchPolicy: 'network-only' });
+  const [fetchUser, { data: queryData, loading }] = useLazyQuery(GET_PUBLIC_USER, {
+    fetchPolicy: 'network-only',
+  });
 
   // When ensureUser registers a new user it sets this flag so the effect
   // doesn't fire a duplicate fetch — commitToPledge calls fetchUser explicitly.

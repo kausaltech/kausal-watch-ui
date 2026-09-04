@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
@@ -15,6 +15,7 @@ import {
   type ActionListPageFiltersFragment,
   ActionListPageView,
   type DashboardActionListQuery,
+  type DashboardActionListQueryVariables,
 } from '@/common/__generated__/graphql';
 import { constructCatHierarchy, getCategoryString, mapActionCategories } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
@@ -373,7 +374,10 @@ const organizationFragment = gql`
   }
 `;
 
-export const GET_ACTION_LIST = gql`
+export const GET_ACTION_LIST: TypedDocumentNode<
+  DashboardActionListQuery,
+  DashboardActionListQueryVariables
+> = gql`
   query DashboardActionList(
     $plan: ID!
     $relatedPlanActions: Boolean!
@@ -703,7 +707,7 @@ function ActionListLoader(props: StatusboardProps) {
   const t = useTranslations();
   const { workflow, setLoading } = useWorkflowSelector();
   useEffect(() => setLoading(false));
-  const { error, data } = useSuspenseQuery<DashboardActionListQuery>(GET_ACTION_LIST, {
+  const { error, data } = useSuspenseQuery(GET_ACTION_LIST, {
     variables: {
       plan: plan.identifier,
       relatedPlanActions: includeRelatedPlans,

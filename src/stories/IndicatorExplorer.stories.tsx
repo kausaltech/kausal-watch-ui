@@ -11,7 +11,7 @@ import {
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { ApolloClient, HttpLink, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, type TypedDocumentNode, gql } from '@apollo/client';
 import { ApolloProvider, useQuery } from '@apollo/client/react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { UPDATE_GLOBALS } from 'storybook/internal/core-events';
@@ -75,7 +75,7 @@ function getThemes(): Record<string, StoryTheme> {
   }
 }
 
-const GET_PLAN_INDICATORS = gql`
+const GET_PLAN_INDICATORS: TypedDocumentNode<ExplorerQueryData, ExplorerQueryVariables> = gql`
   query StorybookIndicatorExplorer($plan: ID!) {
     plan(id: $plan) {
       id
@@ -913,10 +913,7 @@ function describeIndicator(indicator: ExplorerIndicator): string {
 
 function IndicatorComparisonList({ plan }: { plan: string }) {
   const themes = useMemo(() => getThemes(), []);
-  const { data, loading, error } = useQuery<ExplorerQueryData, ExplorerQueryVariables>(
-    GET_PLAN_INDICATORS,
-    { variables: { plan } }
-  );
+  const { data, loading, error } = useQuery(GET_PLAN_INDICATORS, { variables: { plan } });
 
   // Resolve the plan's theme the same way the app does (layout.tsx):
   // explicit themeIdentifier, falling back to the plan identifier.

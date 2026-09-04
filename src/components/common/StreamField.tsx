@@ -312,11 +312,7 @@ function InjectHTMLAccessibly({ html, title, description }: InjectHTMLAccessibly
 
 type StreamFieldBlockPage = {
   __typename:
-    | 'CategoryPage'
-    | 'ContentPage'
-    | 'AccessibilityStatementPage'
-    | 'StaticPage'
-    | 'PlanRootPage';
+    'CategoryPage' | 'ContentPage' | 'AccessibilityStatementPage' | 'StaticPage' | 'PlanRootPage';
   slug: string;
   id?: string | null;
   changeLogMessage?: React.ComponentProps<typeof ChangeHistory>['entry'];

@@ -73,15 +73,17 @@ const StyledBubble = styled.div<{ $arrow?: 'left' | 'right' }>`
             height: 14px;
 
             // Translate the arrow the width (14px) plus the border width
-            ${$arrow === 'left'
-              ? css`
-                  left: 0;
-                  transform: translate(-16px, -50%) rotate(135deg);
-                `
-              : css`
-                  right: 0;
-                  transform: translate(16px, -50%) rotate(-45deg);
-                `};
+            ${
+              $arrow === 'left'
+                ? css`
+                    left: 0;
+                    transform: translate(-16px, -50%) rotate(135deg);
+                  `
+                : css`
+                    right: 0;
+                    transform: translate(16px, -50%) rotate(-45deg);
+                  `
+            };
           }
         `}
 `;

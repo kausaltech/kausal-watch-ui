@@ -17,7 +17,6 @@ import {
   type IndicatorListIndicatorFragment,
   type IndicatorListPageFragment,
   type IndicatorListQuery,
-  type IndicatorListQueryVariables,
 } from '@/common/__generated__/graphql';
 import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
 import { getIndicatorTermContext } from '@/common/i18n';
@@ -305,15 +304,12 @@ const IndicatorListPage = (props: IndicatorListPageProps) => {
     });
   };
 
-  const { loading, error, data } = useQuery<IndicatorListQuery, IndicatorListQueryVariables>(
-    GET_INDICATOR_LIST,
-    {
-      variables: {
-        plan: plan.identifier,
-        relatedPlanIndicators: includeRelatedPlans ?? false,
-      },
-    }
-  );
+  const { loading, error, data } = useQuery(GET_INDICATOR_LIST, {
+    variables: {
+      plan: plan.identifier,
+      relatedPlanIndicators: includeRelatedPlans ?? false,
+    },
+  });
 
   const handleFilterChange = (id: string, val: FilterValue) => {
     setFilters((state) => {

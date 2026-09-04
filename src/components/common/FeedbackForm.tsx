@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { usePathname, useSearchParams } from 'next/navigation';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useMutation } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Controller, useForm } from 'react-hook-form';
@@ -17,7 +17,10 @@ import CheckboxInput from '@/components/common/CheckboxInput';
 import SelectInput from '@/components/common/SelectInput';
 import TextInput from '@/components/common/TextInput';
 
-const CREATE_USER_FEEDBACK = gql`
+const CREATE_USER_FEEDBACK: TypedDocumentNode<
+  CreateUserFeedbackMutation,
+  CreateUserFeedbackMutationVariables
+> = gql`
   mutation CreateUserFeedback($input: UserFeedbackMutationInput!) {
     createUserFeedback(input: $input) {
       feedback {
@@ -114,9 +117,7 @@ const FeedbackForm = (props: FeedbackFormProps) => {
   const [
     createUserFeedback,
     { loading: mutationLoading, error: mutationError, data: mutationData },
-  ] = useMutation<CreateUserFeedbackMutation, CreateUserFeedbackMutationVariables>(
-    CREATE_USER_FEEDBACK
-  );
+  ] = useMutation(CREATE_USER_FEEDBACK);
 
   const onSubmit = (formData: FeedbackFormValues) => {
     const { name, email, comment, ...additionalResponse } = formData;

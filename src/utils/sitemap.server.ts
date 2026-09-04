@@ -1,10 +1,15 @@
-import { ApolloClient, ApolloLink, InMemoryCache, gql } from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloLink,
+  InMemoryCache,
+  type TypedDocumentNode,
+  gql,
+} from '@apollo/client';
 
 import { logOperationLink } from '@common/apollo/links';
 
 import type {
   PlansByHostnameQuery,
-  PlansByHostnameQueryVariables,
   SitemapQuery,
   SitemapQueryVariables,
 } from '@/common/__generated__/graphql';
@@ -23,7 +28,7 @@ const apolloClient = new ApolloClient({
   link: ApolloLink.from([logOperationLink, getHttpLink()]),
 });
 
-const GET_SITEMAP_CONTENTS = gql`
+const GET_SITEMAP_CONTENTS: TypedDocumentNode<SitemapQuery, SitemapQueryVariables> = gql`
   query Sitemap($id: ID!, $hostname: String) {
     planIndicators(plan: $id) {
       id
@@ -190,7 +195,7 @@ async function getPlanUrls(
   options: SitemapUrlOptions
 ) {
   const { data, error } = await tryRequest<SitemapQuery>(
-    apolloClient.query<SitemapQuery, SitemapQueryVariables>({
+    apolloClient.query({
       query: GET_SITEMAP_CONTENTS,
       variables: { id: plan.id, hostname },
       fetchPolicy: 'no-cache',
@@ -217,7 +222,7 @@ export async function getSitemapUrlsForOrigin(
   const url = new URL(origin);
 
   const { data: plansData, error: plansError } = await tryRequest(
-    apolloClient.query<PlansByHostnameQuery, PlansByHostnameQueryVariables>({
+    apolloClient.query({
       query: GET_PLANS_BY_HOSTNAME,
       variables: { hostname: url.hostname },
       fetchPolicy: 'no-cache',
@@ -254,7 +259,7 @@ export async function getSitemapUrlsForPlan(
   const url = new URL(origin);
 
   const { data, error } = await tryRequest<SitemapQuery>(
-    apolloClient.query<SitemapQuery, SitemapQueryVariables>({
+    apolloClient.query({
       query: GET_SITEMAP_CONTENTS,
       // Resolve the plan's domain for the requesting hostname so the base-path
       // (or lack thereof) matches how the page is actually served on this host.

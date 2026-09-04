@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 
 import {
   type OrganizationDetailsQuery,
@@ -16,7 +16,7 @@ export const getOrganizationDetails = async (
 ) =>
   await (
     await getClient()
-  ).query<OrganizationDetailsQuery, OrganizationDetailsQueryVariables>({
+  ).query({
     query: GET_ORG_DETAILS,
     variables: {
       plan,
@@ -26,7 +26,10 @@ export const getOrganizationDetails = async (
     fetchPolicy: 'no-cache',
   });
 
-const GET_ORG_DETAILS = gql`
+const GET_ORG_DETAILS: TypedDocumentNode<
+  OrganizationDetailsQuery,
+  OrganizationDetailsQueryVariables
+> = gql`
   query OrganizationDetails($id: ID!, $plan: ID!, $clientUrl: String!) {
     organization(id: $id, plan: $plan) {
       id
