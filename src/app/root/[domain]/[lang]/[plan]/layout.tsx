@@ -13,7 +13,6 @@ import { loadTheme } from '@common/themes/theme-init.server';
 import { getRequestOrigin } from '@common/utils/request.server';
 
 import type { WorkflowState } from '@/common/__generated__/graphql';
-import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { SharedIcons } from '@/components/common/Icon';
 import IntroModal from '@/components/custom/IntroModal';
@@ -25,9 +24,9 @@ import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { PrintProvider } from '@/context/print';
 import { WorkflowProvider } from '@/context/workflow-selector';
 import { getPlan } from '@/queries/get-plan';
-import { getPathsInstance } from '@/queries/paths/get-paths-instance';
 import { tryRequest } from '@/utils/api.utils';
 import { getMetaTitles, getRobotsMetadata, getSiteVerificationMetadata } from '@/utils/metadata';
+import { getPathsData } from '@/utils/paths/get-paths-data';
 
 type Props = {
   params: Promise<{ plan: string; domain: string; lang: string }>;
@@ -95,23 +94,6 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     ...getRobotsMetadata(plan.features.hideFromSearchEngines),
     ...getSiteVerificationMetadata(plan.domain?.googleSiteVerificationTag),
   };
-}
-
-async function getPathsData(pathsInstance: string) {
-  if (pathsInstance) {
-    // Errors thrown by the query are captured to Sentry by tryRequest
-    const result = await tryRequest<GetInstanceContextQuery>(getPathsInstance(pathsInstance), {
-      pathsInstance,
-      context: 'getPathsData',
-    });
-    if (!('dataState' in result) || result.dataState !== 'complete') {
-      return undefined;
-    }
-    if (result.data?.instance) {
-      return result.data;
-    }
-  }
-  return undefined;
 }
 
 export default async function PlanLayout(props: Props) {

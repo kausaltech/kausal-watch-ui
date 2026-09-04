@@ -104,8 +104,9 @@ const ScenarioSelector = ({ disabled = false }: { disabled?: boolean }) => {
   const activeScenario = scenarios.find((scen) => scen.isActive);
 
   useEffect(() => {
+    if (!data) return;
     activeScenarioVar(activeScenario ?? null);
-  }, [activeScenario]);
+  }, [activeScenario, data]);
 
   // Convert scenarios to SelectDropdownOption format
   const options: SelectDropdownOption[] = useMemo(

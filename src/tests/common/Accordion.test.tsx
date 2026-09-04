@@ -34,18 +34,22 @@ describe('<Accordion />', () => {
     );
 
     const content = screen.getByText('Test Content 1');
+    const region = content.closest('[role="region"]');
     expect(content).toHaveClass('collapse');
+    expect(region).toHaveAttribute('hidden');
 
     const header = screen.getByText('Test Header 1');
 
     fireEvent.click(header);
     await waitFor(() => {
       expect(content).not.toHaveClass('collapse');
+      expect(region).not.toHaveAttribute('hidden');
     });
 
     fireEvent.click(header);
     await waitFor(() => {
       expect(content).toHaveClass('collapse');
+      expect(region).toHaveAttribute('hidden');
     });
   });
 });
