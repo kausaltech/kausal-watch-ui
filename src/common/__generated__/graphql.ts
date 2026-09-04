@@ -13519,6 +13519,22 @@ export type RecursiveCategoryParentFragment = (
   & { __typename: 'Category' }
 );
 
+export type DomainSiteVerificationQueryVariables = Exact<{
+  hostname: Scalars['String']['input'];
+}>;
+
+
+export type DomainSiteVerificationQuery = (
+  { plansForHostname: Array<(
+    { domain: (
+      { id: string, googleSiteVerificationTag: string | null }
+      & { __typename: 'PlanDomain' }
+    ) | null }
+    & { __typename: 'Plan' | 'RestrictedPlanNode' }
+  )> | null }
+  & { __typename: 'Query' }
+);
+
 export type HomePageQueryVariables = Exact<{
   plan: Scalars['ID']['input'];
   path: Scalars['String']['input'];
