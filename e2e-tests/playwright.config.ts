@@ -90,6 +90,7 @@ export default defineConfig({
         reuseExistingServer: true,
         env: {
           WILDCARD_DOMAINS: 'localhost',
+          KUBERNETES_LOGGING: '1',
         },
       },
 });
