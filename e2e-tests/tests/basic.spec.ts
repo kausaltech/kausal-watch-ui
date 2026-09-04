@@ -275,7 +275,8 @@ const testPlan = (planId: string) => {
       const searchButton = page.getByTestId('nav-search-btn');
       await expect(searchButton).toBeVisible();
 
-      const searchInput = page.getByRole('combobox');
+      const searchForm = page.locator('form').filter({ has: searchButton });
+      const searchInput = searchForm.getByRole('combobox');
       await expect(searchInput).toBeHidden();
       await searchButton.click();
       await expect(searchInput).toBeVisible();
