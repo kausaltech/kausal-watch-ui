@@ -86,6 +86,13 @@ function getDefaultPlanId(plans: NonNullable<PlansByHostnameQuery['plansForHostn
 type SitemapUrlOptions = {
   includeAllPlans?: boolean;
   includeLocaleAndBasePathVariants?: boolean;
+  /**
+   * Leave out plans whose `hideFromSearchEngines` feature is enabled. Only for
+   * callers that advertise urls to crawlers: other callers, such as the PDF
+   * export, use these urls to decide which pages may be rendered at all, and
+   * that must not depend on whether a plan is indexed.
+   */
+  excludeHiddenFromSearchEngines?: boolean;
 };
 
 type DomainLike = { hostname: string; basePath: string | null } | null;
@@ -151,6 +158,13 @@ export function getSitemapUrlVariantsForPlan(
   return [...urls];
 }
 
+function isHiddenFromSitemap(
+  plan: NonNullable<SitemapQuery['plan']>,
+  options: SitemapUrlOptions
+): boolean {
+  return !!options.excludeHiddenFromSearchEngines && plan.features.hideFromSearchEngines;
+}
+
 function getPlanPaths(data: SitemapQuery): string[] {
   return [
     '/',
@@ -183,7 +197,7 @@ async function getPlanUrls(
     })
   );
 
-  if (error || !data?.plan || data.plan.features?.hideFromSearchEngines) {
+  if (error || !data?.plan || isHiddenFromSitemap(data.plan, options)) {
     return [];
   }
 
@@ -251,7 +265,7 @@ export async function getSitemapUrlsForPlan(
     })
   );
 
-  if (error || !data?.plan || data.plan.features?.hideFromSearchEngines) {
+  if (error || !data?.plan || isHiddenFromSitemap(data.plan, options)) {
     return [];
   }
 

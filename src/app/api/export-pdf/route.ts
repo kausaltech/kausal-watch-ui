@@ -138,6 +138,9 @@ export async function POST(request: NextRequest) {
 
     const origin = `${forwardedProto}://${host}`;
     const requestedUrl = new URL(path, origin);
+    // The sitemap urls act as an allowlist of exportable pages here, so plans
+    // hidden from search engines are deliberately not excluded: opting out of
+    // indexing should not disable the PDF export.
     const sitemapOptions = {
       includeLocaleAndBasePathVariants: true,
     };
