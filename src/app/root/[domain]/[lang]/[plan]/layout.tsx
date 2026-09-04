@@ -27,7 +27,7 @@ import { WorkflowProvider } from '@/context/workflow-selector';
 import { getPlan } from '@/queries/get-plan';
 import { getPathsInstance } from '@/queries/paths/get-paths-instance';
 import { tryRequest } from '@/utils/api.utils';
-import { getMetaTitles } from '@/utils/metadata';
+import { getMetaTitles, getRobotsMetadata } from '@/utils/metadata';
 
 type Props = {
   params: Promise<{ plan: string; domain: string; lang: string }>;
@@ -92,7 +92,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       ],
       apple: getThemeStaticURL(theme?.favicons?.apple),
     },
-    robots: plan.features.hideFromSearchEngines ? { index: false, follow: false } : undefined,
+    ...getRobotsMetadata(plan.features.hideFromSearchEngines),
     other: plan.domain?.googleSiteVerificationTag
       ? {
           'google-site-verification': plan.domain.googleSiteVerificationTag,
