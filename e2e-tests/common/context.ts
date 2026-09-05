@@ -1,6 +1,6 @@
 import * as apolloModule from '@apollo/client';
 import { AxeBuilder } from '@axe-core/playwright';
-import { type ConsoleMessage, type Page, expect } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 
 import type {
   PlaywrightGetPlanBasicsQuery,
@@ -116,17 +116,8 @@ type PlanOrganizations = NonNullable<PlaywrightGetPlanInfoQuery['planOrganizatio
 type RelatedPlanActions = NonNullable<PlaywrightGetPlanInfoQuery['relatedPlanActions']>;
 type ActionInfo = PlanInfo['actions'][0];
 
-export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][0] & {
-  parent: {
-    id: string;
-    page: {
-      __typename: string;
-    };
-  };
-};
-export type PageMenuItem = MainMenuItem & {
-  __typename: 'PageMenuItem';
-};
+export type MainMenuItem = NonNullable<PlanInfo['mainMenu']>['items'][number];
+export type PageMenuItem = Extract<MainMenuItem, { __typename: 'PageMenuItem' }>;
 export type ActionListMenuItem = PageMenuItem & {
   page: {
     __typename: 'ActionListPage';
@@ -209,7 +200,7 @@ export class PlanContext {
         return;
       }
       this.failedAssetRequests.push(
-        `${resourceType} returned HTTP ${response.status()}: ${request.url()}`
+        `${resourceType} returned HTTP ${String(status)}: ${request.url()}`
       );
     });
 
@@ -237,21 +228,17 @@ export class PlanContext {
       )
         return;
       console.log(`Console message (${msg.type()}):\n`, msg);
-      if (false) {
-        // todo: enable this later
-        throw new Error('Test produced console output');
-      }
     });
   }
 
   getActionListMenuItem(): ActionListMenuItem | null {
     function isActionList(item: MainMenuItem): item is ActionListMenuItem {
-      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'ActionListPage') return false;
       if (!item.page.showInMenus) return false;
       return true;
     }
-    const item = (this.plan.mainMenu?.items ?? []).find(isActionList) || null;
+    const item = (this.plan.mainMenu?.items ?? []).find(isActionList) ?? null;
     return item;
   }
 
@@ -261,11 +248,11 @@ export class PlanContext {
 
   getCategoryTypeMenuItem(): CategoryTypeMenuItem | null {
     function isCategoryType(item: MainMenuItem): item is CategoryTypeMenuItem {
-      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'CategoryTypePage') return false;
       return true;
     }
-    const item = (this.plan.mainMenu?.items ?? []).find(isCategoryType) || null;
+    const item = (this.plan.mainMenu?.items ?? []).find(isCategoryType) ?? null;
     return item;
   }
 
@@ -273,45 +260,45 @@ export class PlanContext {
     if (!parentId) return [];
 
     function isCategoryItem(item: MainMenuItem): item is CategoryMenuItem {
-      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'CategoryPage') return false;
-      if (item.parent.id !== parentId) return false;
+      if (item.parent?.id !== parentId) return false;
       return true;
     }
-    const items = (this.plan.mainMenu?.items ?? []).filter(isCategoryItem) || [];
+    const items = (this.plan.mainMenu?.items ?? []).filter(isCategoryItem);
     return items;
   }
 
   getEmptyPageMenuItem(): EmptyPageMenuItem | null {
     function isEmptyPageType(item: MainMenuItem): item is EmptyPageMenuItem {
-      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'EmptyPage') return false;
       return true;
     }
-    const item = (this.plan.mainMenu?.items ?? []).find(isEmptyPageType) || null;
+    const item = (this.plan.mainMenu?.items ?? []).find(isEmptyPageType) ?? null;
     return item;
   }
 
   getEmptyPageChildrenItems(
     parentId: string | null | undefined
-  ): Array<CategoryMenuItem | StaticPageMenuItem> {
+  ): (CategoryMenuItem | StaticPageMenuItem)[] {
     if (!parentId) return [];
 
     function isEmptyPageChildItem(
       item: MainMenuItem
     ): item is CategoryMenuItem | StaticPageMenuItem {
-      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.__typename !== 'PageMenuItem') return false;
       if (item.parent?.id !== parentId) return false;
       return item.page.__typename === 'CategoryPage' || item.page.__typename === 'StaticPage';
     }
 
-    const items = (this.plan.mainMenu?.items ?? []).filter(isEmptyPageChildItem) || [];
+    const items = (this.plan.mainMenu?.items ?? []).filter(isEmptyPageChildItem);
     return items;
   }
 
   getStaticPageMenuItems(): StaticPageMenuItem[] {
     function isStaticPageItem(item: MainMenuItem): item is StaticPageMenuItem {
-      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'StaticPage') return false;
       if (item.children?.length) return false;
       if (!item.page.showInMenus || !item.page.live) return false;
@@ -320,17 +307,17 @@ export class PlanContext {
       //if (item.parent.page.__typename !== 'PlanRootPage') return false;
       return true;
     }
-    const items = (this.plan.mainMenu?.items ?? []).filter(isStaticPageItem) || [];
+    const items = (this.plan.mainMenu?.items ?? []).filter(isStaticPageItem);
     return items;
   }
 
   getIndicatorListMenuItem(): IndicatorListMenuItem | null {
     function isIndicatorList(item: MainMenuItem): item is IndicatorListMenuItem {
-      if (item?.__typename !== 'PageMenuItem') return false;
+      if (item.__typename !== 'PageMenuItem') return false;
       if (item.page.__typename !== 'IndicatorListPage') return false;
       return true;
     }
-    const item = (this.plan.mainMenu?.items ?? []).find(isIndicatorList) || null;
+    const item = (this.plan.mainMenu?.items ?? []).find(isIndicatorList) ?? null;
     return item;
   }
 
@@ -342,7 +329,7 @@ export class PlanContext {
     const siteName = page.locator('meta[property="og:site_name"]');
     await expect(siteName).toBeAttached();
     if (this.plan.parent?.name) {
-      await expect(siteName).toHaveAttribute('content', this.plan.parent?.name);
+      await expect(siteName).toHaveAttribute('content', this.plan.parent.name);
     } else {
       const expected = this.plan.generalContent.siteTitle || this.plan.name;
       await expect(siteName).toHaveAttribute('content', expected);

@@ -2,7 +2,7 @@ import { type FullConfig } from '@playwright/test';
 
 import { displayConfiguration } from './common/context.ts';
 
-async function globalSetup(config: FullConfig) {
+function globalSetup(_config: FullConfig) {
   displayConfiguration();
 }
 

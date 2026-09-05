@@ -14,7 +14,7 @@ import {
 const SOURCE_DIRS = ['src', 'kausal_common/src'];
 
 const nodeConfig = getNodeConfig({
-  dirs: ['kausal_common/configs'],
+  dirs: ['kausal_common/configs', 'e2e-tests'],
   files: ['*.ts', '*.js'],
 });
 const nextConfig = await getNextEslintConfig(SOURCE_DIRS);

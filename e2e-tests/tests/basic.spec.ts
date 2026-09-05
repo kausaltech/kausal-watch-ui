@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { type Page, expect } from '@playwright/test';
 
 import { PlanContext, getIdentifiersToTest } from '../common/context.ts';
@@ -33,6 +32,8 @@ const testPlan = (planId: string) => {
     test.describe.configure({ mode: 'serial' });
 
     test.use({
+      // Playwright fixture definitions require an object pattern here.
+      // eslint-disable-next-line no-empty-pattern
       ctx: async ({}, use) => {
         const planInfo = await PlanContext.fromPlanId(planId);
         await use(planInfo);
@@ -51,23 +52,20 @@ const testPlan = (planId: string) => {
       }
     });
 
-    test('homepage', async ({ page, ctx }) => {
+    test('homepage', async ({ page }) => {
       const navBar = page.locator('nav#global-navigation-bar');
       await expect(navBar).toBeVisible();
       await expect(page.getByTestId('root-layout')).toBeVisible();
     });
 
     test('action list page', async ({ page, ctx }) => {
-      const listItem = ctx.getActionListMenuItem()!;
+      const listItem = ctx.getActionListMenuItem();
       test.skip(!listItem, 'No action list page for plan');
+      if (!listItem) return;
 
       const nav = page.locator('nav#global-navigation-bar');
       const parentPage = listItem.parent?.page;
-      if (
-        parentPage != null &&
-        parentPage.showInMenus === true &&
-        parentPage.__typename !== 'PlanRootPage'
-      ) {
+      if (parentPage?.showInMenus && parentPage.__typename !== 'PlanRootPage') {
         // The action list page link is inside a collapsiple submenu,
         // click to open the submenu first.
         const parentLink = nav.getByRole('button', {
@@ -111,7 +109,8 @@ const testPlan = (planId: string) => {
       const firstActionLink = page.locator('a[href*="/actions/"]').first();
       await firstActionLink.waitFor({ state: 'visible' });
       const href = await firstActionLink.getAttribute('href');
-      await page.goto(href!.startsWith('http') ? href! : `${ctx.baseURL}${href}`);
+      if (href === null) throw new Error('First action link has no href');
+      await page.goto(href.startsWith('http') ? href : `${ctx.baseURL}${href}`);
       await ctx.waitForLoadingFinished(page);
 
       await expect(page.locator('main#main')).toBeVisible();
@@ -120,13 +119,14 @@ const testPlan = (planId: string) => {
     test('category page', async ({ page, ctx }) => {
       const categoryTypeItem = ctx.getCategoryTypeMenuItem();
       test.skip(!categoryTypeItem, 'No category type for plan');
+      if (!categoryTypeItem) return;
 
-      const items = ctx.getCategoryMenuItems(categoryTypeItem?.page.id);
-      test.skip(!items || items.length === 0, 'No category pages for plan');
+      const items = ctx.getCategoryMenuItems(categoryTypeItem.page.id);
+      test.skip(items.length === 0, 'No category pages for plan');
 
       const nav = page.locator('nav#global-navigation-bar');
       const categoryTypeLink = nav.getByRole('button', {
-        name: categoryTypeItem?.page.title,
+        name: categoryTypeItem.page.title,
         exact: true,
       });
       await categoryTypeLink.click();
@@ -142,12 +142,13 @@ const testPlan = (planId: string) => {
     test('empty page', async ({ page, ctx }) => {
       const EmptyPageMenuItem = ctx.getEmptyPageMenuItem();
       test.skip(!EmptyPageMenuItem, 'No empty pages for plan');
+      if (!EmptyPageMenuItem) return;
 
-      const items = ctx.getEmptyPageChildrenItems(EmptyPageMenuItem?.page.id);
-      test.skip(!items || items.length === 0, 'No children category or content pages for plan');
+      const items = ctx.getEmptyPageChildrenItems(EmptyPageMenuItem.page.id);
+      test.skip(items.length === 0, 'No children category or content pages for plan');
       const nav = page.locator('nav#global-navigation-bar');
       const emptyPageMenuLink = nav.getByRole('button', {
-        name: EmptyPageMenuItem?.page.title,
+        name: EmptyPageMenuItem.page.title,
         exact: true,
       });
       await emptyPageMenuLink.click();
@@ -167,14 +168,14 @@ const testPlan = (planId: string) => {
     test('static pages', async ({ page, ctx }) => {
       const staticPageItems = ctx.getStaticPageMenuItems();
 
-      test.skip(!staticPageItems, 'No static pages for plan');
+      test.skip(staticPageItems.length === 0, 'No static pages for plan');
       for (const staticPageItem of staticPageItems) {
         const nav = page.locator('nav#global-navigation-bar');
 
         console.log('testing static page', staticPageItem);
 
         const parent = staticPageItem.parent;
-        if (parent?.page.__typename !== 'PlanRootPage') {
+        if (parent && parent.page.__typename !== 'PlanRootPage') {
           const parentButton = nav.getByRole('button', {
             name: parent.page.title,
             exact: true,
@@ -183,7 +184,7 @@ const testPlan = (planId: string) => {
         }
 
         const staticPageLink = nav.getByRole('link', {
-          name: staticPageItem?.page.title,
+          name: staticPageItem.page.title,
           exact: true,
         });
 
@@ -194,8 +195,9 @@ const testPlan = (planId: string) => {
     });
 
     test('indicator list page', async ({ page, ctx }) => {
-      const IndicatorListItem = ctx.getIndicatorListMenuItem()!;
+      const IndicatorListItem = ctx.getIndicatorListMenuItem();
       test.skip(!IndicatorListItem, 'No indicator list for plan');
+      if (!IndicatorListItem) return;
 
       const nav = page.locator('nav#global-navigation-bar');
       const indicatorListLink = nav.getByRole('link', {
@@ -209,8 +211,9 @@ const testPlan = (planId: string) => {
     });
 
     test('indicator page', async ({ page, ctx }) => {
-      const indicatorListItem = ctx.getIndicatorListMenuItem()!;
+      const indicatorListItem = ctx.getIndicatorListMenuItem();
       test.skip(!indicatorListItem, 'No indicator list for plan');
+      if (!indicatorListItem) return;
       const nav = page.locator('nav#global-navigation-bar');
       await nav.getByRole('link', { name: indicatorListItem.page.title, exact: true }).click();
       await page.waitForURL(/.*\/indicators/);
@@ -292,4 +295,6 @@ const testPlan = (planId: string) => {
   });
 };
 
-getIdentifiersToTest().forEach((plan) => testPlan(plan));
+getIdentifiersToTest().forEach((plan) => {
+  testPlan(plan);
+});
