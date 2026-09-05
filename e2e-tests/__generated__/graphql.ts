@@ -157,7 +157,9 @@ export type PlaywrightGetPlanInfoQuery_plan = { __typename: 'Plan', id: string, 
 
 export type PlaywrightGetPlanInfoQuery_planIndicators = { __typename: 'Indicator', id: string, name: string };
 
-export type PlaywrightGetPlanInfoQuery_relatedPlanActions = { __typename: 'Action', identifier: string, viewUrl: string };
+export type PlaywrightGetPlanInfoQuery_relatedPlanActions_mergedWith = { __typename: 'Action', viewUrl: string };
+
+export type PlaywrightGetPlanInfoQuery_relatedPlanActions = { __typename: 'Action', identifier: string, viewUrl: string, mergedWith: PlaywrightGetPlanInfoQuery_relatedPlanActions_mergedWith | null };
 
 export type PlaywrightGetPlanInfoQuery = { __typename: 'Query', planOrganizations: Array<PlaywrightGetPlanInfoQuery_planOrganizations> | null, plan: PlaywrightGetPlanInfoQuery_plan | null, planIndicators: Array<PlaywrightGetPlanInfoQuery_planIndicators> | null, relatedPlanActions: Array<PlaywrightGetPlanInfoQuery_relatedPlanActions> | null };
 

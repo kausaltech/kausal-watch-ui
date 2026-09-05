@@ -106,6 +106,9 @@ const GET_PLAN_INFO = gql`
     relatedPlanActions(plan: $plan, first: 5) {
       identifier
       viewUrl(clientUrl: $clientURL)
+      mergedWith {
+        viewUrl(clientUrl: $clientURL)
+      }
     }
   }
 `;

@@ -92,6 +92,34 @@ const testPlan = (planId: string) => {
       await expect(page.getByRole('tabpanel').first()).toBeVisible({ timeout: 20000 });
     });
 
+    test('umbrella action links use URLs customized for the current environment', async ({
+      page,
+      ctx,
+    }) => {
+      const listItem = ctx.getActionListMenuItem();
+      test.skip(!listItem, 'No action list page for plan');
+      test.skip(
+        !ctx.plan.actionListPage?.includeRelatedPlans,
+        'Action list does not include related plans'
+      );
+      test.skip(ctx.relatedPlanActions.length === 0, 'No related plan actions defined for plan');
+      if (!listItem) return;
+
+      await page.goto(`${ctx.baseURL}${listItem.page.urlPath}`, {
+        waitUntil: 'domcontentloaded',
+      });
+      await ctx.waitForLoadingFinished(page);
+
+      const actionHrefs = await page
+        .locator('main#main a[href*="/actions/"]')
+        .evaluateAll((links) => links.map((link) => (link as HTMLAnchorElement).href));
+      const expectedHrefs = ctx.relatedPlanActions.map(
+        (action) => action.mergedWith?.viewUrl ?? action.viewUrl
+      );
+
+      expect(actionHrefs).toEqual(expect.arrayContaining(expectedHrefs));
+    });
+
     test('action details page', async ({ page, ctx }) => {
       const listItem = ctx.getActionListMenuItem();
       test.skip(!listItem, 'No action list page for plan');

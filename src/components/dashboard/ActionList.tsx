@@ -206,7 +206,7 @@ const actionFragment = gql`
       name
       shortIdentifier
       versionName
-      viewUrl
+      viewUrl(clientUrl: $clientUrl)
       hideActionIdentifiers
       publishedAt
       image {
@@ -235,7 +235,7 @@ const actionFragment = gql`
     id
     identifier
     name(hyphenated: true)
-    viewUrl @include(if: $relatedPlanActions)
+    viewUrl(clientUrl: $clientUrl) @include(if: $relatedPlanActions)
     color
     hasDependencyRelationships
     manualStatusReason
@@ -345,11 +345,11 @@ const actionFragment = gql`
     mergedWith {
       id
       identifier
-      viewUrl
+      viewUrl(clientUrl: $clientUrl)
       plan {
         id
         shortName
-        viewUrl
+        viewUrl(clientUrl: $clientUrl)
       }
     }
     indicatorsCount
@@ -382,6 +382,7 @@ export const GET_ACTION_LIST: TypedDocumentNode<
     $plan: ID!
     $relatedPlanActions: Boolean!
     $path: String!
+    $clientUrl: String
     $workflow: WorkflowState
   ) @workflow(state: $workflow) {
     plan(id: $plan) {
@@ -712,6 +713,7 @@ function ActionListLoader(props: StatusboardProps) {
       plan: plan.identifier,
       relatedPlanActions: includeRelatedPlans,
       path: '/actions',
+      clientUrl: plan.viewUrl,
       workflow,
     },
   });

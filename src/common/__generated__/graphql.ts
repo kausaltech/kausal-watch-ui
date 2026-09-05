@@ -898,6 +898,7 @@ export type DashboardActionListQueryVariables = Exact<{
   plan: string | number;
   relatedPlanActions: boolean;
   path: string;
+  clientUrl: string | null | undefined;
   workflow: WorkflowState | null | undefined;
 }>;
 
