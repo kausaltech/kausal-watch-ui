@@ -207,7 +207,13 @@ const ThemeDesignTokens = () => {
           ? String(editedTheme.name)
           : ''}
       </h3>
-      <div contentEditable="true">
+      {/*
+       * Not `contentEditable`: nothing read edits back out of it, and the
+       * `<pre>` re-renders from `editedTheme`, so typing here was silently
+       * discarded while React warned about owning the children. It is a
+       * read-only preview -- edit tokens through the table above.
+       */}
+      <div>
         <pre className="bg-light" style={{ maxHeight: '400px', overflow: 'auto' }}>
           <code>{JSON.stringify(editedTheme, null, 2)}</code>
         </pre>

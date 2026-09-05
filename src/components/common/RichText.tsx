@@ -97,6 +97,20 @@ const StyledRichText = styled.div`
     height: 100%;
   }
 
+  /*
+   * Emotion logs an SSR warning for ":first-child" here. Do not take its
+   * suggestion: ":first-of-type" is not equivalent, because this div holds
+   * parsed rich text of mixed element types, so it would also strip the top
+   * margin from the first <p>, the first <ul> and so on, collapsing each onto
+   * whatever precedes it.
+   *
+   * The warning guards against Emotion inserting a <style> element as the first
+   * child during SSR, which does not happen here -- AppRouterCacheProvider
+   * flushes styles into <head> via useServerInsertedHTML. Emotion's
+   * "emotion-disable-server-rendering-unsafe-selector-warning..." comment flag
+   * does not help either: the SWC emotion transform (compiler.emotion) minifies
+   * this template and strips the comment before Emotion can see it.
+   */
   > *:first-child {
     margin-top: 0;
   }
