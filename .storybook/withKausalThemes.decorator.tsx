@@ -50,7 +50,15 @@ export const withKausalThemes = ({ themes, defaultTheme }: WithKausalThemesOptio
     return (
       <>
         <link rel="stylesheet" type="text/css" href={`/static/themes/${cssFile}`} />
-        <SessionProvider>
+        {/*
+         * An explicit `session` is what stops SessionProvider from fetching
+         * `/api/auth/session` on mount. There is no such endpoint in Storybook
+         * or under the Vitest browser runner, so the fetch returns an empty
+         * body and next-auth logs a ClientFetchError for every story. Passing
+         * `null` (rather than leaving it undefined) seeds the provider as
+         * unauthenticated and skips the request.
+         */}
+        <SessionProvider session={null}>
           <WorkflowProvider
             initialWorkflow={undefined}
             workflowStates={[
