@@ -125,8 +125,9 @@ function groupActions<T extends ActionListAction | ActionCardFragment>(
         crumb: categoryCrumb ?? null,
         displayIdentifier: `${identifier && !hideCategoryIdentifiers ? identifier : ''}`,
         // if cat=plan prefer shortName
-        name: ('shortName' in cat && cat.shortName) || ('name' in cat ? cat.name : ''),
-        identifier: ('identifier' in cat && cat.identifier) || ('name' in cat ? cat.name : ''),
+        name: ('shortName' in cat && cat.shortName) || ('name' in cat ? cat.name : '') || '',
+        identifier:
+          ('identifier' in cat && cat.identifier) || ('name' in cat ? cat.name : '') || '',
         order: ('order' in cat && cat.order) || 0,
         elements: [],
       };

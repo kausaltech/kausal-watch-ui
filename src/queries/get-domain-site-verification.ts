@@ -1,7 +1,10 @@
 /* istanbul ignore file */
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 
-import type { DomainSiteVerificationQuery } from '@/common/__generated__/graphql';
+import type {
+  DomainSiteVerificationQuery,
+  DomainSiteVerificationQueryVariables,
+} from '@/common/__generated__/graphql';
 
 import { getClient } from '../utils/apollo-rsc-client';
 
@@ -10,7 +13,10 @@ import { getClient } from '../utils/apollo-rsc-client';
  * published, so pages served in place of an unpublished plan can still prove
  * ownership of the domain to search engines.
  */
-const GET_DOMAIN_SITE_VERIFICATION = gql`
+const GET_DOMAIN_SITE_VERIFICATION: TypedDocumentNode<
+  DomainSiteVerificationQuery,
+  DomainSiteVerificationQueryVariables
+> = gql`
   query DomainSiteVerification($hostname: String!) {
     plansForHostname(hostname: $hostname) {
       domain(hostname: $hostname) {
@@ -24,7 +30,7 @@ const GET_DOMAIN_SITE_VERIFICATION = gql`
 export const getDomainSiteVerification = async (hostname: string) =>
   await (
     await getClient()
-  ).query<DomainSiteVerificationQuery>({
+  ).query({
     query: GET_DOMAIN_SITE_VERIFICATION,
     variables: { hostname },
     fetchPolicy: 'no-cache',

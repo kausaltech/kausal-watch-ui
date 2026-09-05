@@ -139,7 +139,7 @@ const Tab = styled.button`
 const commonCategory = gql`
   fragment CommonCategory on Category {
     id
-    common {
+    common @include(if: $relatedPlanActions) {
       id
       identifier
       name
@@ -163,7 +163,6 @@ const planFragment = gql`
         hideCategoryIdentifiers
       }
       categories {
-        id
         identifier
         order
         name
@@ -173,7 +172,7 @@ const planFragment = gql`
             id
           }
         }
-        ...CommonCategory @include(if: $relatedPlanActions)
+        ...CommonCategory
 
         color
         iconSvgUrl
@@ -202,31 +201,33 @@ const planFragment = gql`
 const actionFragment = gql`
   fragment RelatedPlan on Plan {
     id
-    shortName
-    name
-    shortIdentifier
-    versionName
-    viewUrl
-    hideActionIdentifiers
-    publishedAt
-    image {
-      id
-      rendition(size: "128x128", crop: true) {
-        id
-        src
-      }
-    }
-    generalContent {
-      id
-      actionTaskTerm
-      organizationTerm
-    }
-    actionImplementationPhases {
-      id
-      identifier
+    ... on Plan @include(if: $relatedPlanActions) {
+      shortName
       name
-      order
-      color
+      shortIdentifier
+      versionName
+      viewUrl
+      hideActionIdentifiers
+      publishedAt
+      image {
+        id
+        rendition(size: "128x128", crop: true) {
+          id
+          src
+        }
+      }
+      generalContent {
+        id
+        actionTaskTerm
+        organizationTerm
+      }
+      actionImplementationPhases {
+        id
+        identifier
+        name
+        order
+        color
+      }
     }
   }
 
@@ -274,8 +275,7 @@ const actionFragment = gql`
     endDate
     order
     plan {
-      id
-      ...RelatedPlan @include(if: $relatedPlanActions)
+      ...RelatedPlan
     }
     schedule {
       id
