@@ -187,9 +187,28 @@ describe('<RichText /> with leadContent HTML', () => {
   });
 
   it('does not render onmouseover handlers', () => {
-    render(<RichText html={XSS_CONTENT} />);
-    const el = screen.getByText('Hover me');
-    expect(el.getAttribute('onmouseover')).toBeNull();
+    /*
+     * The mitigation here is React itself: `html-react-parser` turns the
+     * attribute into an `onmouseover` prop, and React refuses to attach a
+     * string as an event handler, dropping the prop and warning instead. Assert
+     * that warning so the mechanism is pinned down rather than leaking into the
+     * test output.
+     */
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    try {
+      render(<RichText html={XSS_CONTENT} />);
+
+      const el = screen.getByText('Hover me');
+      expect(el.getAttribute('onmouseover')).toBeNull();
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining('Invalid event handler property'),
+        'onmouseover',
+        'onMouseOver'
+      );
+    } finally {
+      consoleError.mockRestore();
+    }
   });
 
   it('does not render onclick handlers on links', () => {
