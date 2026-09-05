@@ -27,6 +27,42 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
 
+  storybook-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+      - uses: pnpm/setup@v2
+        with:
+          runtime: node
+          cache: true
+
+      # The story decorators load themes from public/static, same as the unit tests.
+      - name: Generate theme symlinks
+        run: |
+          mkdir -p public/static
+          node -e "
+            const path = require('path');
+            const {createRequire} = require('module');
+            const req = createRequire(path.join(process.cwd(), 'package.json'));
+            const {generateThemeSymlinks} = req('@kausal/themes/setup.cjs');
+            generateThemeSymlinks(path.join(process.cwd(), 'public', 'static', 'themes'), {verbose: false});
+          "
+
+      # Stories run in real Chromium via @vitest/browser-playwright.
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-playwright-
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm test:storybook
+
   build:
     uses: kausaltech/github-actions/.github/workflows/build.yaml@main
     with:
