@@ -200,8 +200,6 @@ const testPlan = (planId: string) => {
       for (const staticPageItem of staticPageItems) {
         const nav = page.locator('nav#global-navigation-bar');
 
-        console.log('testing static page', staticPageItem);
-
         const parent = staticPageItem.parent;
         if (parent && parent.page.__typename !== 'PlanRootPage') {
           const parentButton = nav.getByRole('button', {
