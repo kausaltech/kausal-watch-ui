@@ -44,8 +44,6 @@ export type GoalTrace = {
 
 export type YRange = {
   unit: string;
-  minDigits: number;
-  maxDigits: number;
   ticksCount: number | undefined;
   ticksRounding: number | undefined;
   valueRounding: number | undefined;

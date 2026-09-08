@@ -95,8 +95,6 @@ function FactorCharts({
           const paddedBounds = padAndRoundBounds(factorBounds, 2);
           const factorYRange = {
             unit: metric.unit,
-            minDigits: 0,
-            maxDigits: 0,
             ticksCount: 2,
             ticksRounding: undefined,
             valueRounding: valueRounding ?? undefined,
