@@ -3,7 +3,7 @@ import { describe, expect, it } from '@jest/globals';
 import { type DocumentNode, print } from 'graphql';
 import { Observable } from 'rxjs';
 
-import { localeMiddleware } from '@/utils/apollo.utils';
+import { headersMiddleware, localeMiddleware } from '@/utils/apollo.utils';
 import { makeInstanceMiddleware } from '@/utils/paths/paths.utils';
 
 async function executeAndCaptureQuery(
@@ -81,5 +81,72 @@ describe('Apollo directive middleware', () => {
 
     expect(countDirective(printedQuery, 'instance')).toBe(1);
     expect(countDirective(printedQuery, 'locale')).toBe(1);
+  });
+});
+
+async function executeAndCaptureHeaders(link: ApolloLink, context: Record<string, unknown>) {
+  const query = gql`
+    query TestCacheHeaders {
+      plan(id: "test") {
+        id
+      }
+    }
+  `;
+
+  let capturedHeaders: Record<string, unknown> | undefined;
+  const captureLink = new ApolloLink((operation) => {
+    capturedHeaders = operation.getContext().headers;
+    return new Observable<ApolloLink.Result>((observer) => {
+      observer.next({ data: {} });
+      observer.complete();
+    });
+  });
+
+  await new Promise<void>((resolve, reject) => {
+    ApolloLink.execute(
+      ApolloLink.from([link, captureLink]),
+      { query, context },
+      { client: {} as never }
+    ).subscribe({
+      complete: resolve,
+      error: reject,
+    });
+  });
+
+  return capturedHeaders ?? {};
+}
+
+describe('headersMiddleware', () => {
+  it('forwards the plan cache headers when the context has a plan', async () => {
+    const headers = await executeAndCaptureHeaders(headersMiddleware, {
+      planIdentifier: 'test-plan',
+      planDomain: 'plan.example.com',
+    });
+
+    expect(headers).toMatchObject({
+      'x-cache-plan-identifier': 'test-plan',
+      'x-cache-plan-domain': 'plan.example.com',
+    });
+  });
+
+  /*
+   * Pages served in place of a restricted plan have no plan identifier, and the
+   * backend rejects a request that carries the header with an empty or
+   * placeholder value. The header has to be left out entirely instead.
+   */
+  it('omits the plan cache headers when the context has no plan', async () => {
+    const headers = await executeAndCaptureHeaders(headersMiddleware, {});
+
+    expect(headers).not.toHaveProperty('x-cache-plan-identifier');
+    expect(headers).not.toHaveProperty('x-cache-plan-domain');
+  });
+
+  it('keeps unrelated headers set further up the chain', async () => {
+    const headers = await executeAndCaptureHeaders(headersMiddleware, {
+      headers: { 'x-custom': 'kept' },
+    });
+
+    expect(headers).toMatchObject({ 'x-custom': 'kept' });
+    expect(headers).not.toHaveProperty('x-cache-plan-identifier');
   });
 });

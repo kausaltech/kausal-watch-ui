@@ -167,10 +167,13 @@ const proxy = auth(async (request: NextAuthRequest) => {
     return NextResponse.rewrite(new URL('/404', request.url));
   }
 
-  const planIdentifier = 'identifier' in parsedPlan ? parsedPlan.identifier : 'restricted';
+  // A restricted plan exposes no identifier. Nothing downstream may substitute
+  // a placeholder for it, because the RSC Apollo client turns the identifier
+  // into a cache header that the backend rejects unless it names a real plan.
+  const planIdentifier = 'identifier' in parsedPlan ? parsedPlan.identifier : undefined;
   const otherLanguages = 'otherLanguages' in parsedPlan ? parsedPlan.otherLanguages : [];
 
-  requestScope.setTag('plan.identifier', planIdentifier);
+  requestScope.setTag('plan.identifier', planIdentifier ?? 'restricted');
   requestScope.setTag('locale', parsedLocale);
 
   if (isLegacyPathStructure(pathname, parsedLocale, parsedPlan)) {

@@ -151,6 +151,12 @@ export function getHttpLink(noProxy?: boolean) {
   });
 }
 
+/**
+ * Add the cache headers the backend uses to scope its response cache. Pages
+ * served in place of a restricted plan resolve no plan identifier, and the
+ * backend rejects a request that carries the header with an empty or
+ * placeholder value, so a header without a value is left out entirely.
+ */
 export const headersMiddleware = new ApolloLink((operation, forward) => {
   const context = operation.getContext();
 
@@ -158,8 +164,8 @@ export const headersMiddleware = new ApolloLink((operation, forward) => {
     return {
       headers: {
         ...headers,
-        'x-cache-plan-domain': context.planDomain,
-        'x-cache-plan-identifier': context.planIdentifier,
+        ...(context.planDomain ? { 'x-cache-plan-domain': context.planDomain } : {}),
+        ...(context.planIdentifier ? { 'x-cache-plan-identifier': context.planIdentifier } : {}),
       },
     };
   });

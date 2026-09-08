@@ -1,4 +1,6 @@
-import { type PlanFromPlansQuery, getParsedLocale } from '../middleware.utils';
+import type { NextRequest, NextResponse } from 'next/server';
+
+import { type PlanFromPlansQuery, getParsedLocale, rewriteUrl } from '../middleware.utils';
 
 const primaryLanguage = 'en-US';
 const otherLanguages = ['es-US', 'DOTHRAKI'];
@@ -56,5 +58,37 @@ describe('getParsedLocale', () => {
       parsedLocale: 'DOTHRAKI',
       isCaseInvalid: true,
     });
+  });
+});
+
+describe('rewriteUrl', () => {
+  const hostUrl = new URL('https://plan.example.com');
+  const rewrittenUrl = new URL('https://plan.example.com/root/plan.example.com/en/unpublished');
+
+  function callRewriteUrl(planIdentifier: string | undefined) {
+    const request = { nextUrl: { pathname: '/some/path' } } as unknown as NextRequest;
+    const response = { headers: new Headers() } as unknown as NextResponse;
+
+    return rewriteUrl(request, response, hostUrl, rewrittenUrl, planIdentifier).headers;
+  }
+
+  it('passes the resolved plan identifier and domain on to the RSC Apollo client', () => {
+    const headers = callRewriteUrl('test-plan');
+
+    expect(headers.get('x-plan-identifier')).toBe('test-plan');
+    expect(headers.get('x-plan-domain')).toBe('plan.example.com');
+    expect(headers.get('x-url')).toBe('https://plan.example.com/some/path');
+  });
+
+  /*
+   * A restricted plan resolves no identifier. Stamping a placeholder would make
+   * the RSC Apollo client send it as a cache header, which the backend rejects,
+   * so the header is left out and downstream consumers treat it as absent.
+   */
+  it('leaves out the plan identifier header when no plan identifier was resolved', () => {
+    const headers = callRewriteUrl(undefined);
+
+    expect(headers.has('x-plan-identifier')).toBe(false);
+    expect(headers.get('x-plan-domain')).toBe('plan.example.com');
   });
 });

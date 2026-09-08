@@ -1,32 +1,17 @@
-import {
-  ApolloClient,
-  ApolloLink,
-  InMemoryCache,
-  type TypedDocumentNode,
-  gql,
-} from '@apollo/client';
-
-import { logOperationLink } from '@common/apollo/links';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 
 import type {
   PlansByHostnameQuery,
   SitemapQuery,
   SitemapQueryVariables,
 } from '@/common/__generated__/graphql';
-import possibleTypes from '@/common/__generated__/possible_types.json';
 import { ACTIONS_PATH, INDICATORS_PATH, STATIC_ROUTES } from '@/constants/routes';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 import { tryRequest } from '@/utils/api.utils';
-import { getHttpLink } from '@/utils/apollo.utils';
+import { createPlanAgnosticApolloClient } from '@/utils/apollo-public-client';
 import { stripSlashes } from '@/utils/urls';
 
-const apolloClient = new ApolloClient({
-  cache: new InMemoryCache({
-    // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
-    possibleTypes: possibleTypes.possibleTypes,
-  }),
-  link: ApolloLink.from([logOperationLink, getHttpLink()]),
-});
+const apolloClient = createPlanAgnosticApolloClient();
 
 const GET_SITEMAP_CONTENTS: TypedDocumentNode<SitemapQuery, SitemapQueryVariables> = gql`
   query Sitemap($id: ID!, $hostname: String) {

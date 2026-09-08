@@ -43,7 +43,8 @@ export default function LangLayout(props: Props) {
 
   const messages = useMessages();
   const incomingHeaders = use(headers());
-  const planIdentifier = incomingHeaders.get('x-plan-identifier')!;
+  // Pages served in place of a restricted plan resolve no plan identifier.
+  const planIdentifier = incomingHeaders.get('x-plan-identifier') ?? undefined;
   const planDomain = incomingHeaders.get('x-plan-domain')!;
 
   return (

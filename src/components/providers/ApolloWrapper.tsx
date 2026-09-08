@@ -43,7 +43,7 @@ const authMiddleware = new SetContextLink(({ uri, sessionToken, headers: initial
 function makeClient(config: {
   initialLocale: string;
   sessionToken?: string;
-  planIdentifier: string;
+  planIdentifier?: string;
   planDomain: string;
   noProxy?: boolean;
 }) {
@@ -96,7 +96,8 @@ function UpdateLocale({ children }: React.PropsWithChildren) {
 
 type Props = {
   initialLocale: string;
-  planIdentifier: string;
+  /** Absent on pages served in place of a restricted plan. */
+  planIdentifier?: string;
   planDomain: string;
 } & React.PropsWithChildren;
 

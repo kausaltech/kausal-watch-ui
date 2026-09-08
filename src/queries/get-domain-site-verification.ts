@@ -1,12 +1,18 @@
-/* istanbul ignore file */
 import { type TypedDocumentNode, gql } from '@apollo/client';
 
 import type {
   DomainSiteVerificationQuery,
   DomainSiteVerificationQueryVariables,
 } from '@/common/__generated__/graphql';
+import { createPlanAgnosticApolloClient } from '@/utils/apollo-public-client';
 
-import { getClient } from '../utils/apollo-rsc-client';
+/*
+ * This query is scoped to a hostname, so it needs neither the plan identifier
+ * nor the authentication that the RSC client adds. Pages served in place of a
+ * restricted plan also resolve no plan identifier at all, which rules the RSC
+ * client out entirely.
+ */
+const apolloClient = createPlanAgnosticApolloClient();
 
 /*
  * Unlike the plan context query, this resolves for plans that are not
@@ -28,9 +34,7 @@ const GET_DOMAIN_SITE_VERIFICATION: TypedDocumentNode<
 `;
 
 export const getDomainSiteVerification = async (hostname: string) =>
-  await (
-    await getClient()
-  ).query({
+  await apolloClient.query({
     query: GET_DOMAIN_SITE_VERIFICATION,
     variables: { hostname },
     fetchPolicy: 'no-cache',
