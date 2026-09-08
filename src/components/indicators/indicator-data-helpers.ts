@@ -451,8 +451,9 @@ export function getIndicatorGraphSpecification(
   const allValues = indicators
     .map((i) => i.values.map((x) => getNormalizedValue(x, normalizerId)))
     .flat();
-  // Callers guarantee the indicator has values, so bounds are never null
-  const bounds = calculateBounds(allValues)!;
+  // Values are schema-nullable, so an indicator can have entries without a
+  // single number; fall back to a zero extent instead of crashing downstream
+  const bounds = calculateBounds(allValues) ?? { min: 0, max: 0 };
 
   const times = new Set(indicators.map((i) => i.values.map((x) => x.date)).flat());
   const hasTime = times.size > 1;
@@ -550,13 +551,26 @@ export function getNormalizeByPopulation(
   return preferNormalizeByPopulation === NORMALIZE_PREFER_ENABLED;
 }
 
+/**
+ * Whether every value carries a normalized entry for `normalizerId` and at
+ * least one of those entries holds a number. Entries with `value: null` are
+ * schema-permitted; a normalization made only of them would leave the chart
+ * with no y-axis extent.
+ */
+export function canNormalizeValues(values: PipelineValue[], normalizerId: string): boolean {
+  const entries = values.map((v) =>
+    v.normalizedValues?.find((nv) => nv?.normalizerId === normalizerId)
+  );
+  return entries.every((nv) => nv !== undefined) && entries.some((nv) => nv?.value != null);
+}
+
 function getNormalizedValue(
   valueObject: PipelineValue,
   normalizerId: string | null
 ): number | null {
   if (normalizerId != null) {
     // Callers only pass a normalizer id after checking every value has a
-    // matching normalized entry (see canBeNormalized)
+    // matching normalized entry (see canNormalizeValues)
     return valueObject.normalizedValues!.find((nv) => nv?.normalizerId === normalizerId)!.value;
   }
   return valueObject.value;

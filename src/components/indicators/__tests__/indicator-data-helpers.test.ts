@@ -1,7 +1,9 @@
 import {
   calculateBounds,
+  canNormalizeValues,
   generateCubeFromValues,
   generateGoalTraces,
+  getIndicatorGraphSpecification,
   padAndRoundBounds,
 } from '../indicator-data-helpers';
 
@@ -101,5 +103,51 @@ describe('generateCubeFromValues', () => {
     const dates = cube.map((v) => v.date);
     expect(dates).toContain('2023-1-1');
     expect(dates).toContain(null);
+  });
+});
+
+describe('canNormalizeValues', () => {
+  const value = (normalized: number | null, normalizerId = 'pop') => ({
+    date: '2020-01-01',
+    value: 10,
+    categories: [],
+    normalizedValues: [{ normalizerId, value: normalized }],
+  });
+
+  it('accepts values that all carry a numeric normalized entry', () => {
+    expect(canNormalizeValues([value(1), value(2)], 'pop')).toBe(true);
+  });
+
+  it('rejects a value without a matching normalized entry', () => {
+    expect(canNormalizeValues([value(1), value(2, 'other')], 'pop')).toBe(false);
+    expect(canNormalizeValues([value(1), { date: null, value: 3, categories: [] }], 'pop')).toBe(
+      false
+    );
+  });
+
+  it('rejects normalizations whose entries are all null', () => {
+    expect(canNormalizeValues([value(null), value(null)], 'pop')).toBe(false);
+  });
+
+  it('accepts a normalization with some null entries', () => {
+    expect(canNormalizeValues([value(null), value(2)], 'pop')).toBe(true);
+  });
+});
+
+describe('getIndicatorGraphSpecification', () => {
+  it('falls back to a zero extent when no value holds a number', () => {
+    const spec = getIndicatorGraphSpecification(
+      {
+        id: '1',
+        name: 'Test',
+        organization: { id: 'org', name: 'Org' },
+        values: [{ date: '2020-01-01', value: null, categories: [] }],
+        dimensions: [],
+      },
+      null,
+      (key) => key,
+      null
+    );
+    expect(spec.bounds).toEqual({ min: 0, max: 0 });
   });
 });

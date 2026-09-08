@@ -24,6 +24,7 @@ import {
   NORMALIZE_DEFAULT,
   type PipelineDimension,
   calculateBounds,
+  canNormalizeValues,
   combineValues,
   generateCubeFromValues,
   generateGoalTraces,
@@ -127,18 +128,7 @@ function IndicatorVisualisation({
     if (comparisonIndicator) {
       values = values.concat(comparisonIndicator.values);
     }
-    if (
-      values.find(
-        // There must be no values which cannot be normalized
-        // pre capita
-        (v) =>
-          v.normalizedValues?.find(
-            (nv) => nv?.normalizerId === populationNormalizer.normalizer.id
-          ) === undefined
-      ) === undefined
-    ) {
-      canBeNormalized = true;
-    }
+    canBeNormalized = canNormalizeValues(values, populationNormalizer.normalizer.id);
   }
 
   const setNormalizeByPopulation = normalizeByPopulationSetter(setPreferNormalizeByPopulation);
