@@ -1,6 +1,7 @@
 import {
   calculateBounds,
   canNormalizeValues,
+  formatUnitLabel,
   generateCubeFromValues,
   generateGoalTraces,
   getIndicatorGraphSpecification,
@@ -238,5 +239,22 @@ describe('getTraceTimeRange', () => {
   it('is undefined without any dates', () => {
     expect(getTraceTimeRange([{ x: ['Housing', 'Transport'] }])).toBeUndefined();
     expect(getTraceTimeRange([])).toBeUndefined();
+  });
+});
+
+describe('formatUnitLabel', () => {
+  it('prefers the short name and falls back to the name', () => {
+    expect(formatUnitLabel({ name: 'kilotonnes', shortName: 'kt' })).toBe('kt');
+    expect(formatUnitLabel({ name: 'kilotonnes', shortName: '' })).toBe('kilotonnes');
+  });
+
+  it('hides the pseudo-unit and missing units', () => {
+    expect(formatUnitLabel({ name: 'no unit', shortName: '' })).toBe('');
+    expect(formatUnitLabel(null)).toBe('');
+  });
+
+  it('accepts the reduced normalization unit shape without a name', () => {
+    expect(formatUnitLabel({ shortName: 'per capita' })).toBe('per capita');
+    expect(formatUnitLabel({ shortName: null })).toBe('');
   });
 });
