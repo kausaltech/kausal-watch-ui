@@ -3,7 +3,7 @@
 import { type ReactElement, useEffect, useState } from 'react';
 
 import { useQuery } from '@apollo/client/react';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Alert } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
@@ -20,22 +20,8 @@ import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
 import RichText from '../common/RichText';
 import FactorCharts from './FactorCharts';
 import IndicatorVisualizationBlock from './IndicatorVisualizationBlock';
-import {
-  NORMALIZE_DEFAULT,
-  canNormalizeValues,
-  combineValues,
-  formatUnitLabel,
-  generateCubeFromValues,
-  generateGoalTraces,
-  generateTrendTrace,
-  getIndicatorGraphSpecification,
-  getNormalizeByPopulation,
-  getTraceTimeRange,
-  getTraces,
-  normalizeByPopulationSetter,
-  normalizeValuesByNormalizer,
-  resolveYAxisRange,
-} from './indicator-data-helpers';
+import { NORMALIZE_DEFAULT, normalizeByPopulationSetter } from './indicator-data-helpers';
+import { deriveIndicatorGraphModel } from './indicator-graph-model';
 
 type IndicatorDetailsIndicator = NonNullable<IndicatorDetailsQuery['indicator']>;
 type DefaultVisualization = IndicatorDetailsIndicator['defaultVisualization'];
@@ -81,12 +67,6 @@ function IndicatorVisualisation({
   const plan = usePlan();
   const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
   const t = useTranslations();
-  const locale = useLocale();
-  // Legacy support for old code referencing i18n from next-i18next
-  const i18n = {
-    t,
-    language: locale,
-  };
   const [compareTo, setCompareTo] = useState<string | undefined>(undefined);
   const [preferNormalizeByPopulation, setPreferNormalizeByPopulation] = useState(NORMALIZE_DEFAULT);
 
@@ -105,9 +85,6 @@ function IndicatorVisualisation({
     indicator,
     plan: { scenarios },
   } = data;
-  // The generated enum's values are exactly the literal strings the chart
-  // layer's TimeResolution uses
-  const timeResolution = indicator?.timeResolution as `${IndicatorTimeResolution}` | undefined;
 
   if (!indicator) return <Alert color="danger">{t('indicator-not-found')}</Alert>;
 
@@ -115,122 +92,38 @@ function IndicatorVisualisation({
     return null;
   }
 
-  const comparisonIndicator = indicator.common?.indicators.find(
-    (indicator) => indicator.organization.id === compareTo
-  );
-  const populationNormalizer = indicator.common?.normalizations.find(
-    (normalization) => normalization.normalizer.identifier === 'population'
-  );
+  // The generated enum's values are exactly the literal strings the chart
+  // layer's TimeResolution uses
+  const timeResolution = indicator.timeResolution as `${IndicatorTimeResolution}`;
 
-  const shownValues = comparisonIndicator
-    ? indicator.values.concat(comparisonIndicator.values)
-    : indicator.values;
-  const canBeNormalized =
-    populationNormalizer != null &&
-    canNormalizeValues(shownValues, populationNormalizer.normalizer.id);
-
-  const setNormalizeByPopulation = normalizeByPopulationSetter(setPreferNormalizeByPopulation);
-  // The normalizer in effect: only when normalization is possible and chosen
-  const activeNormalizer =
-    populationNormalizer != null &&
-    canBeNormalized &&
-    getNormalizeByPopulation(preferNormalizeByPopulation, comparisonIndicator)
-      ? populationNormalizer
-      : null;
-  const normalizeByPopulation = activeNormalizer != null;
-
-  const indicatorGraphSpecification = getIndicatorGraphSpecification(
+  const {
+    comparisonOrgs,
+    canBeNormalized,
+    normalizeByPopulation,
+    unitLabel,
+    specification,
+    traces,
+    goalTraces,
+    trendTrace,
+    yRange,
+    mainXAxisRange,
+    referenceValue,
+  } = deriveIndicatorGraphModel({
     indicator,
+    scenarios,
     compareTo,
+    preferNormalizeByPopulation,
     t,
-    activeNormalizer?.normalizer.id ?? null
-  );
-
-  const unitLabel = formatUnitLabel((activeNormalizer ?? indicator).unit);
+  });
+  const setNormalizeByPopulation = normalizeByPopulationSetter(setPreferNormalizeByPopulation);
 
   const plotTitle = indicator.name;
-
-  let combinedValues = combineValues(indicator, comparisonIndicator, indicatorGraphSpecification);
-  if (activeNormalizer) {
-    combinedValues = normalizeValuesByNormalizer(combinedValues, activeNormalizer.normalizer.id);
-  }
-  /// Process data for data traces
-  const cube = generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues);
-  const { hasTimeDimension } = indicatorGraphSpecification;
-  const showTotalLine = indicator.showTotalLine;
-  const allTraces = getTraces(
-    indicatorGraphSpecification.dimensions,
-    cube,
-    null,
-    hasTimeDimension,
-    i18n
-  );
-  // If all traces are "total" (no dimensions), keep them regardless of showTotalLine.
-  // Otherwise, filter out the total when showTotalLine is false.
-  const hasOnlyTotalTraces = allTraces.every((trace) => trace.dataType === 'total');
-  const traces = hasOnlyTotalTraces
-    ? allTraces
-    : allTraces.filter((t) => t.dataType !== 'total' || showTotalLine);
-
-  // Goal and trend overlays derive solely from the primary indicator, so in
-  // comparison mode they would show over both organizations' series without
-  // attribution — suppress them like the legacy renderer did. Suppressing at
-  // the source also keeps them out of the table and the y-axis bounds.
-  const suppressOverlays = normalizeByPopulation || compareTo != null;
-
-  const [goalTraces, goalBounds] = suppressOverlays
-    ? [[], null]
-    : generateGoalTraces(indicator, scenarios, i18n);
-
-  // The factor charts share the main chart's x-axis range so charts stacked
-  // on top of each other stay aligned; a category axis has no such range
-  const mainXAxisRange = hasTimeDimension ? getTraceTimeRange(traces) : undefined;
-
-  const [rawTrendTrace, trendBounds] =
-    suppressOverlays || !hasTimeDimension || !indicator.showTrendline || !indicator.showTotalLine
-      ? [null, null]
-      : generateTrendTrace(indicator, traces, goalTraces, i18n);
-  const trendTrace = rawTrendTrace ?? null;
-
-  const yRange = {
-    unit: unitLabel,
-    minDigits: 0,
-    maxDigits: 0,
-    ticksCount: indicator.ticksCount ?? undefined,
-    ticksRounding: indicator.ticksRounding ?? undefined,
-    valueRounding: indicator.valueRounding ?? undefined,
-    // Always set explicitly so ECharts doesn't auto-range (and pull in zero)
-    range: resolveYAxisRange(indicator, indicatorGraphSpecification.dataBounds, [
-      goalBounds,
-      trendBounds,
-    ]),
-  };
-
-  const comparisonOrgs = indicator.common?.indicators
-    .map((common) => common.organization)
-    .filter((org) => org.id !== indicator.organization.id);
 
   // Callers that fetch the indicator's default visualization themselves can
   // pass it as a prop; otherwise fall back to the one from this component's
   // own graph-data query, so callers that only know the indicator id (e.g.
   // IndicatorBlock) still honor the configured default visualization.
   const effectiveDefaultVisualization = defaultVisualization ?? indicator.defaultVisualization;
-
-  // Reference markers must use the same units as the traces: with population
-  // normalization active, substitute the reference value's matching per-capita
-  // entry, and suppress the marker entirely when none exists — the raw value
-  // would land outside (or misplaced within) the per-capita axis.
-  const graphReferenceValue = (() => {
-    const ref = indicator.referenceValue;
-    if (!ref || ref.value == null) return null;
-    if (!activeNormalizer) {
-      return { date: ref.date, value: ref.value };
-    }
-    const normalized = ref.normalizedValues?.find(
-      (nv) => nv?.normalizerId === activeNormalizer.normalizer.id
-    );
-    return normalized?.value != null ? { date: ref.date, value: normalized.value } : null;
-  })();
 
   let graphComponent: ReactElement;
   if (effectiveDefaultVisualization && !compareTo && !normalizeByPopulation) {
@@ -262,16 +155,16 @@ function IndicatorVisualisation({
       // TODO: Show title depending on context
       <div aria-hidden={showTable}>
         <IndicatorGraph
-          specification={indicatorGraphSpecification}
+          specification={specification}
           yRange={yRange}
           timeResolution={timeResolution}
           traces={traces}
           goalTraces={goalTraces}
-          trendTrace={trendTrace ?? null}
+          trendTrace={trendTrace}
           title={null}
           downloadFilename={plotTitle}
           desiredTrend={indicator.desiredTrend}
-          referenceValue={graphReferenceValue}
+          referenceValue={referenceValue}
           nonQuantifiedGoal={{
             trend: indicator.nonQuantifiedGoal,
             date: indicator.nonQuantifiedGoalDate,
@@ -290,7 +183,7 @@ function IndicatorVisualisation({
       ) : (
         showTitle && <h2>{plotTitle}</h2>
       )}
-      {enableIndicatorComparison && comparisonOrgs && comparisonOrgs.length > 0 && (
+      {enableIndicatorComparison && comparisonOrgs.length > 0 && (
         <IndicatorComparisonSelect
           handleChange={setCompareTo}
           currentValue={compareTo}

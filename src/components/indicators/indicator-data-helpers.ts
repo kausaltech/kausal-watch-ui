@@ -18,7 +18,7 @@ import { linearRegression } from '@/common/math';
 import { capitalizeFirstLetter } from '@/common/utils';
 import { type ChartTrace, niceTickInterval } from '@/components/graphs/indicator-graph.utils';
 
-export type I18n = { t: (key: string) => string; language?: string };
+export type I18n = { t: (key: string) => string };
 
 export type PipelineValue = {
   date: string | null;
@@ -591,8 +591,8 @@ export function combineValues(
 }
 
 export const NORMALIZE_DEFAULT = 'default';
-const NORMALIZE_PREFER_ENABLED = 'enabled';
-const NORMALIZE_PREFER_DISABLED = 'disabled';
+export const NORMALIZE_PREFER_ENABLED = 'enabled';
+export const NORMALIZE_PREFER_DISABLED = 'disabled';
 
 /**
  * Axis/tooltip label for a unit: prefer the short name, and hide the
