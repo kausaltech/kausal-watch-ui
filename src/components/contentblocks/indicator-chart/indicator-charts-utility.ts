@@ -1,5 +1,6 @@
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
+import { formatUnitLabel } from '@/components/indicators/indicator-data-helpers';
 
 type LineChartBlock = Omit<
   Extract<LineChartVisualizationFragment, { __typename: 'DashboardIndicatorLineChartBlock' }>,
@@ -34,12 +35,9 @@ export function shouldSmoothLines(graphsTheme: GraphsTheme): boolean {
   return lineShape === 'spline' || lineShape === 'smooth';
 }
 
-/** Unit label matching IndicatorVisualisation's default graph: prefer the
- *  short name, and hide the pseudo-unit 'no unit' entirely. */
+/** Unit label matching IndicatorVisualisation's default graph. */
 export function getUnitLabel(indicator: LineChartBlock['indicator']): string {
-  const unit = indicator?.unit;
-  if (!unit || unit.name === 'no unit') return '';
-  return unit.shortName || unit.name;
+  return formatUnitLabel(indicator?.unit);
 }
 
 export type TrendSeries = {

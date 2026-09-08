@@ -24,6 +24,7 @@ import {
   NORMALIZE_DEFAULT,
   canNormalizeValues,
   combineValues,
+  formatUnitLabel,
   generateCubeFromValues,
   generateGoalTraces,
   generateTrendTrace,
@@ -121,41 +122,37 @@ function IndicatorVisualisation({
     (normalization) => normalization.normalizer.identifier === 'population'
   );
 
-  let canBeNormalized = false;
-  if (populationNormalizer !== undefined) {
-    let values = indicator.values;
-    if (comparisonIndicator) {
-      values = values.concat(comparisonIndicator.values);
-    }
-    canBeNormalized = canNormalizeValues(values, populationNormalizer.normalizer.id);
-  }
+  const shownValues = comparisonIndicator
+    ? indicator.values.concat(comparisonIndicator.values)
+    : indicator.values;
+  const canBeNormalized =
+    populationNormalizer != null &&
+    canNormalizeValues(shownValues, populationNormalizer.normalizer.id);
 
   const setNormalizeByPopulation = normalizeByPopulationSetter(setPreferNormalizeByPopulation);
-  const normalizeByPopulation = canBeNormalized
-    ? getNormalizeByPopulation(preferNormalizeByPopulation, comparisonIndicator)
-    : false;
+  // The normalizer in effect: only when normalization is possible and chosen
+  const activeNormalizer =
+    populationNormalizer != null &&
+    canBeNormalized &&
+    getNormalizeByPopulation(preferNormalizeByPopulation, comparisonIndicator)
+      ? populationNormalizer
+      : null;
+  const normalizeByPopulation = activeNormalizer != null;
 
   const indicatorGraphSpecification = getIndicatorGraphSpecification(
     indicator,
     compareTo,
     t,
-    normalizeByPopulation ? populationNormalizer!.normalizer.id : null
+    activeNormalizer?.normalizer.id ?? null
   );
 
-  /// Determine Indicator unit label and y-axis range
-  const { unit } = normalizeByPopulation ? populationNormalizer! : indicator;
-  const unitHasName = 'name' in unit;
-  const unitLabel =
-    unitHasName && unit.name === 'no unit' ? '' : unit.shortName || (unitHasName ? unit.name : '');
+  const unitLabel = formatUnitLabel((activeNormalizer ?? indicator).unit);
 
   const plotTitle = indicator.name;
 
   let combinedValues = combineValues(indicator, comparisonIndicator, indicatorGraphSpecification);
-  if (normalizeByPopulation) {
-    combinedValues = normalizeValuesByNormalizer(
-      combinedValues,
-      populationNormalizer!.normalizer.id
-    );
+  if (activeNormalizer) {
+    combinedValues = normalizeValuesByNormalizer(combinedValues, activeNormalizer.normalizer.id);
   }
   /// Process data for data traces
   const cube = generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues);
@@ -226,11 +223,11 @@ function IndicatorVisualisation({
   const graphReferenceValue = (() => {
     const ref = indicator.referenceValue;
     if (!ref || ref.value == null) return null;
-    if (!normalizeByPopulation) {
+    if (!activeNormalizer) {
       return { date: ref.date, value: ref.value };
     }
     const normalized = ref.normalizedValues?.find(
-      (nv) => nv?.normalizerId === populationNormalizer!.normalizer.id
+      (nv) => nv?.normalizerId === activeNormalizer.normalizer.id
     );
     return normalized?.value != null ? { date: ref.date, value: normalized.value } : null;
   })();

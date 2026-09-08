@@ -594,6 +594,18 @@ export const NORMALIZE_DEFAULT = 'default';
 const NORMALIZE_PREFER_ENABLED = 'enabled';
 const NORMALIZE_PREFER_DISABLED = 'disabled';
 
+/**
+ * Axis/tooltip label for a unit: prefer the short name, and hide the
+ * backend's pseudo-unit 'no unit' entirely. Accepts the reduced unit shape of
+ * normalizations, which carry no long name.
+ */
+export function formatUnitLabel(
+  unit: { name?: string | null; shortName?: string | null } | null | undefined
+): string {
+  if (!unit || unit.name === 'no unit') return '';
+  return unit.shortName || unit.name || '';
+}
+
 export function normalizeByPopulationSetter(callback: (value: string) => void) {
   return (value: boolean) => {
     callback(value ? NORMALIZE_PREFER_ENABLED : NORMALIZE_PREFER_DISABLED);
