@@ -125,13 +125,14 @@ const DashboardIndicatorLineChartBlock = ({
     unit,
     graphsTheme.goalLineColors ?? [],
     goalLabel,
-    timeResolution
+    timeResolution,
+    formatValue
   );
 
   const legendData = [
     ...dimSeries.map((d) => d.name),
     ...(showTotalLine && totalRaw.length ? [totalLabel] : []),
-    ...(goalSeries.length ? [goalLabel] : []),
+    ...goalSeries.map((g) => g.name),
     ...(trendSeries.length ? [trendLabel] : []),
   ];
 
