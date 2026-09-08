@@ -31,6 +31,7 @@ import {
   generateTrendTrace,
   getIndicatorGraphSpecification,
   getNormalizeByPopulation,
+  getTraceTimeRange,
   getTraces,
   normalizeByPopulationSetter,
   normalizeValuesByNormalizer,
@@ -190,16 +191,9 @@ function IndicatorVisualisation({
     ? [[], []]
     : generateGoalTraces(indicator, scenarios, i18n);
 
-  // Get the x-axis date range from the main chart for use by factor charts
-  // This keeps axes consistent for charts displayed on top of each other
-  const timestamps = traces
-    .flatMap((trace) => new Date(String(trace.x)).getTime())
-    .filter((trace) => !isNaN(trace));
-
-  const mainXAxisRange =
-    timestamps.length === 0
-      ? undefined
-      : { min: Math.min(...timestamps), max: Math.max(...timestamps) };
+  // The factor charts share the main chart's x-axis range so charts stacked
+  // on top of each other stay aligned; a category axis has no such range
+  const mainXAxisRange = hasTimeDimension ? getTraceTimeRange(traces) : undefined;
 
   const [rawTrendTrace, trendBounds] =
     suppressOverlays || !hasTimeDimension || !indicator.showTrendline || !indicator.showTotalLine

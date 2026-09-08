@@ -327,6 +327,25 @@ export const generateGoalTraces = (
   return [goalTraces, bounds];
 };
 
+/**
+ * Time extent of the traces' x values, for aligning secondary charts (the
+ * factor charts) with the main chart's axis. Only date strings count; category
+ * names and null dates carry no time information.
+ */
+export function getTraceTimeRange(
+  traces: Array<{ x: Array<string | number | null> }>
+): { min: number; max: number } | undefined {
+  const timestamps = traces
+    .flatMap((trace) => trace.x)
+    .filter((x): x is string => typeof x === 'string')
+    .map((x) => new Date(x).getTime())
+    .filter((ts) => !Number.isNaN(ts));
+  if (timestamps.length === 0) {
+    return undefined;
+  }
+  return { min: Math.min(...timestamps), max: Math.max(...timestamps) };
+}
+
 export function calculateBounds(values: Array<number | null | undefined>): Bounds {
   // Nulls carry no extent information; Math.min/max would coerce them to 0
   // and silently drag the bounds to zero
