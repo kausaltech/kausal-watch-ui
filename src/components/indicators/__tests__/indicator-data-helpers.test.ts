@@ -6,6 +6,7 @@ import {
   getIndicatorGraphSpecification,
   getTraceTimeRange,
   padAndRoundBounds,
+  resolveYAxisRange,
 } from '../indicator-data-helpers';
 
 describe('calculateBounds', () => {
@@ -149,7 +150,72 @@ describe('getIndicatorGraphSpecification', () => {
       (key) => key,
       null
     );
-    expect(spec.bounds).toEqual({ min: 0, max: 0 });
+    expect(spec.dataBounds).toEqual({ min: 0, max: 0 });
+  });
+
+  it('unwraps and sorts dimensions, prepending a total when there is a time axis', () => {
+    const dim = (name: string, ids: string[], sort: string | null = null) => ({
+      dimension: { name, sort, categories: ids.map((id) => ({ id, name: id })) },
+    });
+    const spec = getIndicatorGraphSpecification(
+      {
+        id: '1',
+        name: 'Test',
+        organization: { id: 'org', name: 'Org' },
+        values: [
+          { date: '2020-01-01', value: 1, categories: [{ id: 'a' }, { id: 'x' }] },
+          { date: '2021-01-01', value: 2, categories: [{ id: 'a' }, { id: 'x' }] },
+        ],
+        dimensions: [dim('Wide', ['a', 'b', 'c']), dim('Narrow', ['x', 'y'])],
+      },
+      null,
+      (key) => key,
+      null
+    );
+    expect(spec.hasTimeDimension).toBe(true);
+    expect(spec.axes).toEqual([
+      ['categories', 2],
+      ['time', 1],
+    ]);
+    expect(spec.dimensions.map((d) => d.name)).toEqual(['Narrow', 'Wide']);
+    expect(spec.dimensions[0].categories.map((c) => c.id)).toEqual(['total', 'x', 'y']);
+    expect(spec.dataBounds).toEqual({ min: 1, max: 2 });
+  });
+});
+
+describe('resolveYAxisRange', () => {
+  const data = { min: 3, max: 92 };
+
+  it('uses explicit bounds verbatim without padding', () => {
+    expect(resolveYAxisRange({ minValue: 10, maxValue: 50 }, data, [])).toEqual([10, 50]);
+  });
+
+  it('pads and snaps derived bounds', () => {
+    const padded = padAndRoundBounds(data, 5);
+    expect(resolveYAxisRange({}, data, [])).toEqual([padded.min, padded.max]);
+  });
+
+  it('derives only the side the editor left unset', () => {
+    const padded = padAndRoundBounds({ min: 0, max: 92 }, 5);
+    expect(resolveYAxisRange({ minValue: 0 }, data, [])).toEqual([0, padded.max]);
+  });
+
+  it('widens the extent to cover goal and trend overlays, ignoring NaN', () => {
+    const padded = padAndRoundBounds({ min: 3, max: 150 }, 5);
+    expect(
+      resolveYAxisRange({}, data, [{ min: 120, max: 150 }, null, { min: NaN, max: NaN }])
+    ).toEqual([padded.min, padded.max]);
+  });
+
+  it('forces zero into emission charts without an explicit minimum', () => {
+    const [min] = resolveYAxisRange({ quantity: { name: 'päästöt' } }, data, []);
+    expect(min).toBe(0);
+    const [explicitMin] = resolveYAxisRange(
+      { quantity: { name: 'päästöt' }, minValue: 5 },
+      data,
+      []
+    );
+    expect(explicitMin).toBe(5);
   });
 });
 

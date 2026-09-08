@@ -75,7 +75,7 @@ export function generateCube(
 
 export function generateCubeFromValues(
   indicator: { timeResolution?: string | null },
-  indicatorGraphSpecification: Pick<IndicatorGraphSpecification, 'dimensions'>,
+  indicatorGraphSpecification: { dimensions: PipelineDimension[] },
   combinedValues: PipelineValue[]
 ): Cube {
   const values = [...combinedValues]
@@ -92,20 +92,7 @@ export function generateCubeFromValues(
   if (indicatorGraphSpecification.dimensions.length === 0) {
     return values;
   }
-  // The specification holds {dimension} wrappers until the cube is built;
-  // this unwraps and sorts them in place (getTraces consumes the result)
-  const sortedDimensions = (indicatorGraphSpecification.dimensions as DimensionWrapper[])
-    .map((d) => d.dimension)
-    .sort((a, b) => {
-      if (a.sort === 'last') {
-        return 1;
-      } else if (b.sort === 'last') {
-        return -1;
-      }
-      return a.categories.length - b.categories.length;
-    });
-  indicatorGraphSpecification.dimensions = sortedDimensions;
-  return generateCube(sortedDimensions, values);
+  return generateCube(indicatorGraphSpecification.dimensions, values);
 }
 
 export function getTraces(
@@ -404,16 +391,13 @@ export function padAndRoundBounds(
 }
 
 export type IndicatorGraphSpecification = {
-  bounds: { min: number; max: number };
+  /** Extent of the plotted values alone; see resolveYAxisRange for the axis. */
+  dataBounds: { min: number; max: number };
   axes: [string, number][];
-  /**
-   * Starts as {dimension} wrappers; generateCubeFromValues unwraps and sorts
-   * them in place, after which the array holds bare dimensions (the shape
-   * getTraces consumes).
-   */
-  dimensions: DimensionWrapper[] | PipelineDimension[];
+  /** Nesting order of the cube: fewest categories first, 'sort: last' dimensions at the end. */
+  dimensions: PipelineDimension[];
+  hasTimeDimension: boolean;
   name: string;
-  cube?: Cube;
 };
 
 export type SpecificationIndicator = {
@@ -472,7 +456,7 @@ export function getIndicatorGraphSpecification(
     .flat();
   // Values are schema-nullable, so an indicator can have entries without a
   // single number; fall back to a zero extent instead of crashing downstream
-  const bounds = calculateBounds(allValues) ?? { min: 0, max: 0 };
+  const dataBounds = calculateBounds(allValues) ?? { min: 0, max: 0 };
 
   const times = new Set(indicators.map((i) => i.values.map((x) => x.date)).flat());
   const hasTime = times.size > 1;
@@ -499,12 +483,68 @@ export function getIndicatorGraphSpecification(
     axes.push(['time', 1]);
   }
 
+  const sortedDimensions = dimensions
+    .map((d) => d.dimension)
+    .sort((a, b) => {
+      if (a.sort === 'last') {
+        return 1;
+      } else if (b.sort === 'last') {
+        return -1;
+      }
+      return a.categories.length - b.categories.length;
+    });
+
   return {
-    bounds,
+    dataBounds,
     axes,
-    dimensions,
+    dimensions: sortedDimensions,
+    hasTimeDimension: hasTime,
     name: indicator.name,
   };
+}
+
+/**
+ * Y-axis range for the chart: the data extent widened to cover goal and trend
+ * overlays, then padded and snapped to round ticks on each side the editor
+ * left unset. Explicit minValue/maxValue are used verbatim.
+ */
+export function resolveYAxisRange(
+  indicator: {
+    minValue?: number | null;
+    maxValue?: number | null;
+    ticksCount?: number | null;
+    quantity?: { name: string } | null;
+  },
+  dataBounds: { min: number; max: number },
+  overlayBounds: Array<Bounds | undefined>
+): [number, number] {
+  const overlayValues = overlayBounds
+    .flatMap((b) => (b ? [b.min, b.max] : []))
+    .filter((v) => !Number.isNaN(v));
+  const extent = {
+    min: Math.min(dataBounds.min, ...overlayValues),
+    max: Math.max(dataBounds.max, ...overlayValues),
+  };
+
+  // With a single explicit bound the other side is still derived — without
+  // snapping it, the axis boundary tick would show the raw data/trend
+  // extreme (e.g. "22,567.568").
+  const hasExplicitBounds = indicator.minValue != null && indicator.maxValue != null;
+  const padded = hasExplicitBounds
+    ? extent
+    : padAndRoundBounds(
+        { min: indicator.minValue ?? extent.min, max: indicator.maxValue ?? extent.max },
+        indicator.ticksCount ?? 5
+      );
+
+  let min = indicator.minValue ?? padded.min;
+  const max = indicator.maxValue ?? padded.max;
+  // Legacy rule: emissions charts ('päästöt') always show zero unless the
+  // editor set a minimum
+  if (indicator.minValue == null && indicator.quantity?.name === 'päästöt' && min > 0) {
+    min = 0;
+  }
+  return [min, max];
 }
 
 function addOrganizationCategory(value: PipelineValue, orgId: string): PipelineValue {

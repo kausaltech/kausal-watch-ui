@@ -22,8 +22,6 @@ import FactorCharts from './FactorCharts';
 import IndicatorVisualizationBlock from './IndicatorVisualizationBlock';
 import {
   NORMALIZE_DEFAULT,
-  type PipelineDimension,
-  calculateBounds,
   canNormalizeValues,
   combineValues,
   generateCubeFromValues,
@@ -35,7 +33,7 @@ import {
   getTraces,
   normalizeByPopulationSetter,
   normalizeValuesByNormalizer,
-  padAndRoundBounds,
+  resolveYAxisRange,
 } from './indicator-data-helpers';
 
 type IndicatorDetailsIndicator = NonNullable<IndicatorDetailsQuery['indicator']>;
@@ -161,14 +159,10 @@ function IndicatorVisualisation({
   }
   /// Process data for data traces
   const cube = generateCubeFromValues(indicator, indicatorGraphSpecification, combinedValues);
-
-  indicatorGraphSpecification.cube = cube;
-  const hasTimeDimension =
-    indicatorGraphSpecification.axes.filter((a) => a[0] === 'time').length > 0;
+  const { hasTimeDimension } = indicatorGraphSpecification;
   const showTotalLine = indicator.showTotalLine;
   const allTraces = getTraces(
-    // generateCubeFromValues has unwrapped the {dimension} wrappers in place
-    indicatorGraphSpecification.dimensions as PipelineDimension[],
+    indicatorGraphSpecification.dimensions,
     cube,
     null,
     hasTimeDimension,
@@ -188,7 +182,7 @@ function IndicatorVisualisation({
   const suppressOverlays = normalizeByPopulation || compareTo != null;
 
   const [goalTraces, goalBounds] = suppressOverlays
-    ? [[], []]
+    ? [[], null]
     : generateGoalTraces(indicator, scenarios, i18n);
 
   // The factor charts share the main chart's x-axis range so charts stacked
@@ -201,37 +195,6 @@ function IndicatorVisualisation({
       : generateTrendTrace(indicator, traces, goalTraces, i18n);
   const trendTrace = rawTrendTrace ?? null;
 
-  // Include trend and goal bounds in the calculation
-  let bounds = indicatorGraphSpecification.bounds;
-  for (const addBounds of [goalBounds, trendBounds]) {
-    if (addBounds) {
-      // The input always contains the current bounds, so the result is non-null
-      bounds = calculateBounds([
-        ...Object.values(bounds),
-        ...Object.values(addBounds).filter((b) => b != null && !isNaN(b)),
-      ])!;
-    }
-  }
-
-  // Pad and snap only derived bounds; an explicit minValue/maxValue is used
-  // exactly as provided. With a single explicit bound the other side is
-  // still derived — without snapping it, the axis boundary tick would show
-  // the raw data/trend extreme (e.g. "22,567.568").
-  if (indicator.minValue == null || indicator.maxValue == null) {
-    const padded = padAndRoundBounds(
-      {
-        min: indicator.minValue ?? bounds.min,
-        max: indicator.maxValue ?? bounds.max,
-      },
-      indicator.ticksCount ?? 5
-    );
-    bounds = {
-      min: indicator.minValue ?? padded.min,
-      max: indicator.maxValue ?? padded.max,
-    };
-  }
-  indicatorGraphSpecification.bounds = bounds;
-
   const yRange = {
     unit: unitLabel,
     minDigits: 0,
@@ -239,43 +202,12 @@ function IndicatorVisualisation({
     ticksCount: indicator.ticksCount ?? undefined,
     ticksRounding: indicator.ticksRounding ?? undefined,
     valueRounding: indicator.valueRounding ?? undefined,
-    range: [] as number[],
+    // Always set explicitly so ECharts doesn't auto-range (and pull in zero)
+    range: resolveYAxisRange(indicator, indicatorGraphSpecification.dataBounds, [
+      goalBounds,
+      trendBounds,
+    ]),
   };
-
-  // If explicit minValue/maxValue are set, use them directly without any modification
-  // Otherwise, use calculated bounds (but don't force 0 unless explicitly requested)
-  let minValue: number;
-  let maxValue: number;
-  if (indicator.minValue != null) {
-    // Use explicit minValue exactly as provided
-    minValue = indicator.minValue;
-  } else {
-    minValue = indicatorGraphSpecification.bounds.min;
-    // Legacy support: for 'päästöt' quantity, include 0 if no explicit minValue is set
-    if (indicator?.quantity?.name === 'päästöt' && minValue > 0) {
-      minValue = 0;
-    }
-  }
-
-  if (indicator.maxValue != null) {
-    // Use explicit maxValue exactly as provided
-    maxValue = indicator.maxValue;
-  } else {
-    maxValue = indicatorGraphSpecification.bounds.max;
-  }
-
-  // Always set range to prevent ECharts from auto-ranging and including 0
-  // When explicit minValue/maxValue are provided, use them exactly without padding
-  yRange.range = [minValue, maxValue];
-
-  // Update bounds to match the range when explicit values are set
-  // This ensures bounds reflect the actual range being used
-  if (indicator.minValue != null || indicator.maxValue != null) {
-    indicatorGraphSpecification.bounds = {
-      min: minValue,
-      max: maxValue,
-    };
-  }
 
   const comparisonOrgs = indicator.common?.indicators
     .map((common) => common.organization)
