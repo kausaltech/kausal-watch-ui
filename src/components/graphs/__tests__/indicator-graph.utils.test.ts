@@ -1,5 +1,6 @@
 import {
   collectChartDates,
+  detectTimeDimension,
   formatDateLabel,
   niceTickInterval,
   normalizeDate,
@@ -171,5 +172,27 @@ describe('normalizeDate with null dates', () => {
   it('passes null through as a string instead of the 1970 epoch', () => {
     expect(normalizeDate(null, 'YEAR')).toBe('null');
     expect(normalizeDate(undefined, 'YEAR')).toBe('undefined');
+  });
+});
+
+describe('detectTimeDimension', () => {
+  const noTimeSpec = { axes: [['categories', 0]] as Array<[string, number]> };
+
+  it('honors an explicit category axis even when category names look like dates', () => {
+    const traces = [{ name: 'Sector', xType: 'category' as const, x: ['2020', '2021'], y: [1, 2] }];
+    expect(detectTimeDimension(noTimeSpec, traces, [])).toBe(false);
+  });
+
+  it('uses the time axis when a trace declares it', () => {
+    const traces = [{ name: 'Value', xType: 'time' as const, x: ['2020-01-01'], y: [1] }];
+    expect(detectTimeDimension(noTimeSpec, traces, [])).toBe(true);
+  });
+
+  it('infers dates only for traces without a declared axis type', () => {
+    const traces = [{ name: 'Value', x: ['2020-01-01'], y: [1] }];
+    expect(detectTimeDimension(noTimeSpec, traces, [])).toBe(true);
+    expect(detectTimeDimension(noTimeSpec, [{ name: 'Value', x: ['Housing'], y: [1] }], [])).toBe(
+      false
+    );
   });
 });

@@ -384,7 +384,12 @@ export function detectTimeDimension(
   if (goalTraces.length > 0 && goalTraces.some((goal) => goal.x.length > 0)) {
     return true;
   }
-  // If we have traces with dates, use time dimension (even for single datapoint)
+  // An explicit category axis wins over inference: category names such as
+  // "2020" would otherwise parse as dates and turn a bar chart into a time series
+  if (traces.some((trace) => trace.xType === 'category')) {
+    return false;
+  }
+  // Traces without a declared axis type: infer from date-like x values (even for single datapoint)
   if (traces.length > 0 && traces[0].x.length > 0) {
     const firstX = traces[0].x[0];
     if (typeof firstX === 'string' && !Number.isNaN(new Date(firstX).getTime())) {
