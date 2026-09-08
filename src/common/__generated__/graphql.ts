@@ -1631,7 +1631,9 @@ export type CategoryTagRecursiveFragment = { __typename: 'Category', id: string,
 
 export type DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_latestValue = { __typename: 'IndicatorValue', id: string, value: number, date: string | null };
 
-export type DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_goals = { __typename: 'IndicatorGoal', id: string, value: number, date: string | null };
+export type DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_goals_scenario = { __typename: 'Scenario', id: string, name: string };
+
+export type DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_goals = { __typename: 'IndicatorGoal', id: string, value: number, date: string | null, scenario: DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_goals_scenario | null };
 
 export type DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_unit = { __typename: 'Unit', id: string, name: string, shortName: string | null };
 

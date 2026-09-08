@@ -10,13 +10,14 @@ import { useTranslations } from 'next-intl';
 import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { PieChartVisualizationFragment } from '@/common/__generated__/graphql';
+import useNumberFormatter from '@/common/numbers';
 import {
   buildSaveAsImageToolbox,
   getChartDownloadFilename,
 } from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
-import type { GraphsTheme } from './indicator-charts-utility';
+import { type GraphsTheme, getUnitLabel } from './indicator-charts-utility';
 
 echarts.use([PieChart, LegendComponent]);
 
@@ -27,7 +28,7 @@ type Props = Omit<
 type IndicatorType = NonNullable<Props['indicator']>;
 type UnitType = IndicatorType['unit'];
 
-interface SeriesData {
+export interface SeriesData {
   name: string;
   value: number;
 }
@@ -76,17 +77,24 @@ function showSegmentedPercentage(unit: UnitType | undefined, values: SeriesData[
   return true;
 }
 
-function createTooltipFormatter(indicator: IndicatorType | null, seriesData: SeriesData[]) {
+/**
+ * Tooltip text for a slice: the value rounded and localized like every other
+ * chart type, followed by the indicator's unit and, unless the indicator is
+ * itself a percentage summing to 100, the slice's share.
+ */
+export function createTooltipFormatter(
+  indicator: IndicatorType | null,
+  seriesData: SeriesData[],
+  formatValue: (value: number) => string,
+  unit: string
+) {
   const showPercentage = showSegmentedPercentage(indicator?.unit, seriesData);
 
   return (tooltipParams: CallbackDataParams) => {
     // The pie data is plain numbers, but the ECharts callback type is a broad
-    // union — narrow before stringifying
-    const value =
-      typeof tooltipParams.value === 'number' || typeof tooltipParams.value === 'string'
-        ? tooltipParams.value
-        : '-';
-    const nameAndValue = `${tooltipParams.name}: ${value}`;
+    // union — narrow before formatting
+    const value = typeof tooltipParams.value === 'number' ? formatValue(tooltipParams.value) : '-';
+    const nameAndValue = `${tooltipParams.name}: ${value} ${unit}`.trim();
 
     if (!showPercentage || !tooltipParams.percent) {
       return nameAndValue;
@@ -99,6 +107,10 @@ function createTooltipFormatter(indicator: IndicatorType | null, seriesData: Ser
 const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, year }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
+  const formatValue = useNumberFormatter({
+    maximumSignificantDigits: indicator?.valueRounding ?? undefined,
+  });
+  const unit = getUnitLabel(indicator);
   // Same palette resolution as the bar/line/area chart blocks, so a
   // category gets the same color in every chart type
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
@@ -168,7 +180,7 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
     tooltip: {
       appendTo: 'body',
       trigger: 'item',
-      formatter: createTooltipFormatter(indicator ?? null, seriesData),
+      formatter: createTooltipFormatter(indicator ?? null, seriesData, formatValue, unit),
     },
     legend: {
       show: !labelSegments,

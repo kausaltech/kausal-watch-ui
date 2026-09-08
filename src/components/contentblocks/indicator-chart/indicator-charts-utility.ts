@@ -154,29 +154,53 @@ export function buildTotalSeries(
   };
 }
 
+/**
+ * Goal markers, one scatter series per scenario so that targets from
+ * different scenarios keep their own name and color, like the generic
+ * indicator graph. Goals without a scenario fall back to the plain label.
+ */
 export function buildGoalSeries(
   indicator: LineChartBlock['indicator'],
   unit: string,
   goalLineColors: string[],
   label = 'Goal',
-  timeResolution?: string | null
+  timeResolution?: string | null,
+  formatValue: (value: number) => string = String
 ) {
-  return (
-    indicator?.goals
-      ?.filter((g) => g?.date != null)
-      .map((g) => {
-        const key = formatDateKey(g!.date!, timeResolution);
-        return {
-          name: label,
-          type: 'scatter' as const,
-          symbol: X_SYMBOL,
-          symbolSize: 10,
-          data: [[key, g!.value]],
-          itemStyle: { color: goalLineColors?.[0] ?? '#3E9C88' },
-          tooltip: { formatter: `Goal: ${g!.value} ${unit}` },
-        };
-      }) ?? []
-  );
+  type Goal = NonNullable<NonNullable<LineChartBlock['indicator']>['goals']>[number];
+  const byScenario = new Map<string | null, { name: string; goals: Array<NonNullable<Goal>> }>();
+  indicator?.goals?.forEach((goal) => {
+    if (goal?.date == null) return;
+    const scenarioId = goal.scenario?.id ?? null;
+    const group = byScenario.get(scenarioId) ?? {
+      name: goal.scenario?.name || label,
+      goals: [],
+    };
+    group.goals.push(goal);
+    byScenario.set(scenarioId, group);
+  });
+
+  return Array.from(byScenario.values(), ({ name, goals }, idx) => {
+    const color = goalLineColors[idx % goalLineColors.length] ?? '#3E9C88';
+    return {
+      name,
+      type: 'scatter' as const,
+      symbol: X_SYMBOL,
+      symbolSize: 10,
+      data: goals
+        .sort((a, b) => a.date!.localeCompare(b.date!))
+        .map((g) => [formatDateKey(g.date!, timeResolution), g.value] as [string, number]),
+      itemStyle: { color },
+      tooltip: {
+        formatter: (params: { value?: unknown }) => {
+          const value: unknown = Array.isArray(params.value)
+            ? (params.value as unknown[])[1]
+            : params.value;
+          return `${name}: ${typeof value === 'number' ? formatValue(value) : '-'} ${unit}`.trim();
+        },
+      },
+    };
+  });
 }
 
 export function buildTrendSeries(
