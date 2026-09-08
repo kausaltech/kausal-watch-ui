@@ -4,6 +4,7 @@ import {
   generateCubeFromValues,
   generateGoalTraces,
   getIndicatorGraphSpecification,
+  getTraceTimeRange,
   padAndRoundBounds,
 } from '../indicator-data-helpers';
 
@@ -149,5 +150,27 @@ describe('getIndicatorGraphSpecification', () => {
       null
     );
     expect(spec.bounds).toEqual({ min: 0, max: 0 });
+  });
+});
+
+describe('getTraceTimeRange', () => {
+  it('spans the earliest and latest dates across all traces and points', () => {
+    const range = getTraceTimeRange([{ x: ['2021-01-01', '2019-01-01'] }, { x: ['2023-06-01'] }]);
+    expect(range).toEqual({
+      min: new Date('2019-01-01').getTime(),
+      max: new Date('2023-06-01').getTime(),
+    });
+  });
+
+  it('ignores null dates and non-date values', () => {
+    expect(getTraceTimeRange([{ x: [null, 'Housing', '2020-01-01', 2020] }])).toEqual({
+      min: new Date('2020-01-01').getTime(),
+      max: new Date('2020-01-01').getTime(),
+    });
+  });
+
+  it('is undefined without any dates', () => {
+    expect(getTraceTimeRange([{ x: ['Housing', 'Transport'] }])).toBeUndefined();
+    expect(getTraceTimeRange([])).toBeUndefined();
   });
 });
