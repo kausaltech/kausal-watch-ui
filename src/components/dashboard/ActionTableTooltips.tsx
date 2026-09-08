@@ -17,7 +17,7 @@ import Icon from '@/components/common/Icon';
 import PlanChip from '@/components/plans/PlanChip';
 
 import { getTaskCounts } from './cells/TasksStatusCell';
-import { type ActionListAction, type ActionListPlan } from './dashboard.types';
+import { type ActionListAction, type ActionListPlan, type ColumnConfig } from './dashboard.types';
 
 const TooltipTitle = styled.p`
   font-weight: ${(props) => props.theme.fontWeightBold};
@@ -58,7 +58,7 @@ interface TooltipWithPlanProps extends TooltipProps {
 
 interface AttributeTooltipProps {
   attribute: ActionListAction['attributes'][number];
-  attributeType: ActionListAction['attributes'][number]['type'];
+  attributeType: NonNullable<ColumnConfig['attributeType']>;
 }
 
 export const OrganizationTooltipContent = ({ action }: TooltipProps) => {

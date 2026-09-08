@@ -1,6 +1,7 @@
 import type {
   ActionListFilterFragment,
   ActionTableColumnFragment,
+  AttributesBlockAttributeTypeFragment,
   DashboardActionListQuery,
   PlanContextFragment,
 } from '@/common/__generated__/graphql';
@@ -46,12 +47,11 @@ export type ColumnBlock = ActionTableColumn['__typename'] | 'PlanColumnBlock';
 export interface ColumnConfig {
   __typename: ColumnBlock;
   columnLabel?: string | null;
-  attributeType?: {
-    __typename?: 'ActionAttributeType';
-    id: string;
-    name: string;
-    format?: string;
-  };
+  /*
+   * Carries the full attribute type of a FieldColumnBlock, including the
+   * choice metadata that the per-action attribute selection leaves out.
+   */
+  attributeType?: AttributesBlockAttributeTypeFragment;
 }
 
 export interface ActionListPlan {
