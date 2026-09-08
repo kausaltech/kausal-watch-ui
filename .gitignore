@@ -43,3 +43,4 @@ build-storybook.log
 .claude/.credentials.json
 /.pnpm-store
 /schema.graphql
+/.nyc_output

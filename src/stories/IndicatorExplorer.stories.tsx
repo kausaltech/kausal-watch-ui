@@ -11,7 +11,7 @@ import {
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { ApolloClient, HttpLink, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, type TypedDocumentNode, gql } from '@apollo/client';
 import { ApolloProvider, useQuery } from '@apollo/client/react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { UPDATE_GLOBALS } from 'storybook/internal/core-events';
@@ -77,7 +77,7 @@ function getThemes(): Record<string, StoryTheme> {
   }
 }
 
-const GET_PLAN_INDICATORS = gql`
+const GET_PLAN_INDICATORS: TypedDocumentNode<ExplorerQueryData, ExplorerQueryVariables> = gql`
   query StorybookIndicatorExplorer($plan: ID!) {
     plan(id: $plan) {
       id
@@ -996,7 +996,7 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
     previousData,
     loading,
     error,
-  } = useQuery<ExplorerQueryData, ExplorerQueryVariables>(GET_PLAN_INDICATORS, {
+  } = useQuery(GET_PLAN_INDICATORS, {
     variables: { plan },
   });
   // Keep rendering the previous result if the query ever reloads (e.g. a

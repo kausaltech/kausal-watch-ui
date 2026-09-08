@@ -15,7 +15,6 @@ const meta = {
   },
   decorators: [
     (Story, context) => {
-      console.log('context in story', context);
       const themes = context.loaded?.themes as unknown as Record<string, Theme>;
       const selectedTheme: unknown = context.globals.theme;
       const themeId = typeof selectedTheme === 'string' ? selectedTheme : 'default';

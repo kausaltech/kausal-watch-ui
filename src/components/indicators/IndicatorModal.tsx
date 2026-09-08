@@ -1,10 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 
-import type {
-  IndicatorDetailsQuery,
-  IndicatorDetailsQueryVariables,
-  IndicatorListQuery,
-} from '@/common/__generated__/graphql';
+import type { IndicatorListQuery } from '@/common/__generated__/graphql';
 import { GET_INDICATOR_DETAILS } from '@/queries/get-indicator';
 
 import { IndicatorModalBase } from './IndicatorModalBase';
@@ -30,10 +26,7 @@ const IndicatorModal = (props: IndicatorModalProps) => {
     usableCategoryTypes,
   } = props;
 
-  const { loading, error, data, previousData } = useQuery<
-    IndicatorDetailsQuery,
-    IndicatorDetailsQueryVariables
-  >(GET_INDICATOR_DETAILS, {
+  const { loading, error, data, previousData } = useQuery(GET_INDICATOR_DETAILS, {
     variables: {
       plan: indicatorPlanIdentifier,
       sitePlan: sitePlanIdentifier,

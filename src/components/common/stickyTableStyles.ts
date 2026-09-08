@@ -56,15 +56,17 @@ export const mobileStickyTableStyles = (
       padding-right: ${props.theme.spaces.s050};
     }
 
-    ${scrollableColumnWidth &&
-    css`
-      th:not(.${STICKY_TABLE_NAME_COLUMN_CLASS}),
-      td:not(.${STICKY_TABLE_NAME_COLUMN_CLASS}) {
-        width: ${scrollableColumnWidth};
-        min-width: ${scrollableColumnWidth};
-        max-width: ${scrollableColumnWidth};
-      }
-    `}
+    ${
+      scrollableColumnWidth &&
+      css`
+        th:not(.${STICKY_TABLE_NAME_COLUMN_CLASS}),
+        td:not(.${STICKY_TABLE_NAME_COLUMN_CLASS}) {
+          width: ${scrollableColumnWidth};
+          min-width: ${scrollableColumnWidth};
+          max-width: ${scrollableColumnWidth};
+        }
+      `
+    }
 
     tbody td:not(.${STICKY_TABLE_NAME_COLUMN_CLASS}) {
       position: static !important;
@@ -82,29 +84,33 @@ export const mobileStickyTableStyles = (
       overflow-wrap: normal;
       word-break: normal;
 
-      ${containScrollableCellContent &&
-      css`
-        hyphens: none;
-        overflow: hidden;
-      `}
+      ${
+        containScrollableCellContent &&
+        css`
+          hyphens: none;
+          overflow: hidden;
+        `
+      }
     }
 
-    ${containScrollableCellContent &&
-    css`
-      td:not(.${STICKY_TABLE_NAME_COLUMN_CLASS}) > * {
-        max-width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
-      }
+    ${
+      containScrollableCellContent &&
+      css`
+        td:not(.${STICKY_TABLE_NAME_COLUMN_CLASS}) > * {
+          max-width: 100%;
+          min-width: 0;
+          box-sizing: border-box;
+        }
 
-      td:not(.${STICKY_TABLE_NAME_COLUMN_CLASS}) * {
-        max-width: 100%;
-        white-space: normal;
-        overflow-wrap: break-word;
-        word-break: normal;
-        hyphens: none;
-      }
-    `}
+        td:not(.${STICKY_TABLE_NAME_COLUMN_CLASS}) * {
+          max-width: 100%;
+          white-space: normal;
+          overflow-wrap: break-word;
+          word-break: normal;
+          hyphens: none;
+        }
+      `
+    }
 
     thead th {
       position: sticky !important;

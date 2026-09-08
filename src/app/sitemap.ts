@@ -19,7 +19,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const origin = await getRequestOrigin();
-  const urls = await getSitemapUrlsForOrigin(origin);
+  // Plans that opt out of search engine indexing are not advertised here; the
+  // pages themselves also carry a `noindex` directive.
+  const urls = await getSitemapUrlsForOrigin(origin, {
+    excludeHiddenFromSearchEngines: true,
+  });
 
   return urls.map((url) => ({ url }));
 }

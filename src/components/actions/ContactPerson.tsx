@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Button, Collapse } from 'reactstrap';
@@ -118,26 +118,27 @@ const CollapseButton = styled(Button)`
   }
 `;
 
-const GET_CONTACT_DETAILS = gql`
-  query ContactDetails($id: ID!, $plan: ID!) {
-    person(id: $id, plan: $plan) {
-      id
-      email
-      organization {
+const GET_CONTACT_DETAILS: TypedDocumentNode<ContactDetailsQuery, ContactDetailsQueryVariables> =
+  gql`
+    query ContactDetails($id: ID!, $plan: ID!) {
+      person(id: $id, plan: $plan) {
         id
-        name
-        ancestors {
+        email
+        organization {
           id
           name
-          classification {
+          ancestors {
             id
             name
+            classification {
+              id
+              name
+            }
           }
         }
       }
     }
-  }
-`;
+  `;
 
 interface ContactDetailsProps {
   id: string;
@@ -153,12 +154,9 @@ function ContactDetails({ id }: ContactDetailsProps) {
   const plan = usePlan();
   const t = useTranslations();
   const planIdentifier = plan.identifier;
-  const { loading, error, data } = useQuery<ContactDetailsQuery, ContactDetailsQueryVariables>(
-    GET_CONTACT_DETAILS,
-    {
-      variables: { id, plan: planIdentifier },
-    }
-  );
+  const { loading, error, data } = useQuery(GET_CONTACT_DETAILS, {
+    variables: { id, plan: planIdentifier },
+  });
 
   if (error) return <span>{error.message}</span>;
   if (loading || !data) return <span>{t('loading')}</span>;

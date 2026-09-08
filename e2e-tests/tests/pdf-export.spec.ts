@@ -33,13 +33,15 @@ test.describe('pdf-export', { annotation: annotations }, () => {
   let actionPageUrl: string;
 
   test.use({
+    // Playwright fixture definitions require an object pattern here.
+    // eslint-disable-next-line no-empty-pattern
     ctx: async ({}, use) => {
       const planInfo = await PlanContext.fromPlanId(PLAN_ID);
       await use(planInfo);
     },
   });
 
-  test.beforeEach(async ({ page, ctx }) => {
+  test.beforeEach(({ page, ctx }) => {
     ctx.beforeEach(page);
   });
 
@@ -61,7 +63,8 @@ test.describe('pdf-export', { annotation: annotations }, () => {
     const firstActionLink = page.locator('a[href*="/actions/"]').first();
     await firstActionLink.waitFor({ state: 'visible' });
     const href = await firstActionLink.getAttribute('href');
-    actionPageUrl = href!.startsWith('http') ? href! : `${ctx.baseURL}${href}`;
+    if (href === null) throw new Error('First action link has no href');
+    actionPageUrl = href.startsWith('http') ? href : `${ctx.baseURL}${href}`;
 
     await page.goto(actionPageUrl);
     await ctx.waitForLoadingFinished(page);
@@ -86,7 +89,11 @@ test.describe('pdf-export', { annotation: annotations }, () => {
     // Mock the export-pdf endpoint to return a fake PDF
     await page.route('**/api/export-pdf', async (route) => {
       const request = route.request();
-      const postData = JSON.parse(request.postData()!);
+      const postData = JSON.parse(request.postData()!) as {
+        path: string;
+        locale: unknown;
+        plan: string;
+      };
 
       // Verify the request payload
       expect(postData.path).toContain('/actions/');
@@ -200,7 +207,7 @@ test.describe('pdf-export', { annotation: annotations }, () => {
     }
 
     expect(res.status()).toBe(403);
-    const body = await res.json();
+    const body = (await res.json()) as { error: string };
     expect(body.error).toContain('public sitemap pages');
   });
 
@@ -218,7 +225,7 @@ test.describe('pdf-export', { annotation: annotations }, () => {
     }
 
     expect(res.status()).toBe(403);
-    const body = await res.json();
+    const body = (await res.json()) as { error: string };
     expect(body.error).toContain('public sitemap pages');
   });
 });

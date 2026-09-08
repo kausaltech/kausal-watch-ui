@@ -200,7 +200,7 @@ const AccordionBody = ({ children, isOpen, identifier }: AccordionBodyProps) => 
     role="region"
     id={`#collapse-${identifier}`}
     aria-labelledby={`heading-${identifier}`}
-    hidden={false}
+    hidden={!isOpen}
   >
     {children}
   </AccordionContent>

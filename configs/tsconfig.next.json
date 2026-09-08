@@ -20,6 +20,12 @@
     "strict": false,
     "strictNullChecks": true
   },
-  "include": ["../.next/types/**/*.ts", "../next-env.d.ts", "../src", ".next/types/**/*.ts"],
-  "exclude": ["../src/embed", "../src/stories", "../kausal_common"]
+  "include": [
+    "../.next/types/**/*.ts",
+    "../next-env.d.ts",
+    "../src",
+    "../kausal_common/src",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["../src/embed", "../src/stories"]
 }

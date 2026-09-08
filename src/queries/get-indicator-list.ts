@@ -1,8 +1,15 @@
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 
+import type {
+  IndicatorListQuery,
+  IndicatorListQueryVariables,
+} from '@/common/__generated__/graphql';
 import { INDICATOR_LIST_INDICATOR_FRAGMENT } from '@/fragments/indicator-list-indicator.fragment';
 
-export const GET_INDICATOR_LIST = gql`
+export const GET_INDICATOR_LIST: TypedDocumentNode<
+  IndicatorListQuery,
+  IndicatorListQueryVariables
+> = gql`
   query IndicatorList($plan: ID!, $relatedPlanIndicators: Boolean!) {
     plan(id: $plan) {
       id

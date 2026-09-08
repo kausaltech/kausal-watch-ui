@@ -216,7 +216,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
         <ActionAttribute
           {...({
             attribute: attributeContent,
-            attributeType: attributeContent.type,
+            attributeType,
             notitle: true,
             variant: 'minimized',
           } as Parameters<typeof ActionAttribute>[0])}
@@ -227,12 +227,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
       if (!attributeType) return null;
       const attributeContent = action.attributes.find((a) => a.type.id === attributeType.id);
       if (!attributeContent) return null;
-      return (
-        <AttributeTooltipContent
-          attribute={attributeContent}
-          attributeType={attributeContent.type}
-        />
-      );
+      return <AttributeTooltipContent attribute={attributeContent} attributeType={attributeType} />;
     },
   },
   PlanColumnBlock: {

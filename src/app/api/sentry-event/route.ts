@@ -1,12 +1,13 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { FORWARDED_FOR_HEADER } from '@common/constants/headers.mjs';
-import { getSentryDsn } from '@common/env/runtime';
+import { getSentryDsn, getSpotlightUrl } from '@common/env/runtime';
 import { getLogger } from '@common/logging';
 import { forwardToSentry } from '@common/sentry/tunnel';
 
 const sentryDsn = getSentryDsn();
 const sentryDsnUrl = sentryDsn ? new URL(sentryDsn) : null;
+const spotlightEnabled = getSpotlightUrl();
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -14,11 +15,11 @@ export const fetchCache = 'default-no-store';
 
 export async function POST(req: NextRequest) {
   const logger = getLogger('sentry-proxy');
-  if (!sentryDsnUrl) {
-    return NextResponse.json({ error: 'Sentry disabled' }, { status: 500 });
+  if (!sentryDsnUrl && !spotlightEnabled) {
+    return NextResponse.json({ error: 'Sentry disabled' }, { status: 403 });
   }
   if (!req.body) {
-    return NextResponse.json({ error: 'No request body' }, { status: 500 });
+    return NextResponse.json({ error: 'No request body' }, { status: 400 });
   }
   const clientIp = req.headers.get(FORWARDED_FOR_HEADER)!;
   const contentType = req.headers.get('content-type');
@@ -43,6 +44,11 @@ export async function POST(req: NextRequest) {
       const data = (await resp.json()) as Record<string, unknown>;
       return NextResponse.json(data, { status: resp.status });
     } catch (err) {
+      if (!sentryDsnUrl) {
+        // If we're forwarding to spotlight, an empty response is fine.
+        return new NextResponse();
+      }
+
       logger.error(err);
       return NextResponse.json({ error: 'Unable to parse Sentry response' }, { status: 500 });
     }

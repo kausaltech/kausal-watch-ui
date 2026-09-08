@@ -164,15 +164,7 @@ type ButtonProps = BSButtonProps & {
    * What background color to use
    */
   color?:
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'danger'
-    | 'warning'
-    | 'info'
-    | 'light'
-    | 'dark'
-    | 'link';
+    'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'link';
   /**
    * How large should the button be?
    */

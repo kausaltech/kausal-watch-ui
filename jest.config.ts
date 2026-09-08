@@ -1,44 +1,51 @@
-/**
- * Replicate the essential config from next/jest without loading next.config.ts,
- * which currently crashes due to kausal_common ESM imports in .js files.
- *
- * Uses Next.js's SWC jest transformer directly.
- */
+import * as nextJestModule from 'next/jest.js';
 
-/** @type {import('jest').Config} */
-module.exports = {
+import type { Config } from 'jest';
+
+/*
+ * `next/jest` wires up the SWC transformer, the CSS/image/font/`server-only`
+ * mocks, `.env` loading and the `node_modules`/`.next` ignore patterns for us.
+ *
+ * Note this file is loaded by Node's native type stripping (as ESM, since the
+ * package is `"type": "module"`), so it must stay erasable TypeScript and must
+ * not use `require`.
+ *
+ * `next/jest.js` is CommonJS with no `exports` map, hence the `.js` suffix. Its
+ * `module.exports` is the factory itself, but the shipped declarations describe
+ * it as an ES default export, so TypeScript resolves the import to the module
+ * namespace rather than to something callable. Next ships no ESM-friendly type
+ * for this, so describe the small slice of the signature we use.
+ */
+type NextJest = (options: { dir?: string }) => (config: Config) => () => Promise<Config>;
+
+const nextJest = nextJestModule.default as unknown as NextJest;
+
+const withNextConfig = nextJest({ dir: './' })({
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jest-environment-jsdom',
+  testEnvironment: 'jsdom',
   testMatch: ['**/tests/**/*.test.[jt]s?(x)', '**/__tests__/**/*.test.[jt]s?(x)'],
   moduleNameMapper: {
-    // Next.js built-in mocks for CSS, images, fonts
-    '^.+\\.module\\.(css|sass|scss)$': require.resolve('next/dist/build/jest/object-proxy.js'),
-    '^.+\\.(css|sass|scss)$': require.resolve('next/dist/build/jest/__mocks__/styleMock.js'),
-    '^.+\\.(png|jpg|jpeg|gif|webp|avif|ico|bmp)$':
-      require.resolve('next/dist/build/jest/__mocks__/fileMock.js'),
-    '^.+\\.(svg)$': require.resolve('next/dist/build/jest/__mocks__/fileMock.js'),
-    '@next/font/(.*)': require.resolve('next/dist/build/jest/__mocks__/nextFontMock.js'),
-    'next/font/(.*)': require.resolve('next/dist/build/jest/__mocks__/nextFontMock.js'),
-    '^server-only$': require.resolve('next/dist/build/jest/__mocks__/empty.js'),
-
     // Path aliases from tsconfig.json (specific before general)
     '^@/public/(.*)$': '<rootDir>/public/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@common/(.*)$': '<rootDir>/kausal_common/src/$1',
   },
-  testPathIgnorePatterns: ['/node_modules/', '/.next/'],
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx|mjs)$': [
-      require.resolve('next/dist/build/swc/jest-transformer'),
-      {
-        isEsmProject: false,
-        serverComponents: true,
-      },
-    ],
-  },
-  transformIgnorePatterns: [
-    // Many dependencies ship ESM; let SWC transform everything.
-    // Only ignore CSS modules (handled by moduleNameMapper above).
-    '^.+\\.module\\.(css|sass|scss)$',
-  ],
+});
+
+export default async (): Promise<Config> => {
+  const config = await withNextConfig();
+
+  return {
+    ...config,
+    /*
+     * `next/jest` mirrors the Next.js build by leaving `node_modules`
+     * untransformed. That doesn't work under Jest: several of our dependencies
+     * (next-intl, lodash-es, ...) are ESM-only and Jest's CommonJS module
+     * registry can't load them. Custom `transformIgnorePatterns` are appended
+     * to the defaults and the patterns are OR'd, so appending can only ever
+     * exclude more -- replace the list instead and let SWC transform
+     * everything.
+     */
+    transformIgnorePatterns: ['^.+\\.module\\.(css|sass|scss)$'],
+  };
 };

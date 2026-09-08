@@ -17,6 +17,7 @@ import { deploymentType } from '@/common/environment';
 import { NavigationLink } from '@/common/links';
 import { type NavItem as NavItemType } from '@/components/Header';
 import Icon from '@/components/common/Icon';
+import NavbarSearch from '@/components/common/NavbarSearch';
 
 //import NavDropdown, { type NavDropdownProps } from '@/components/common/NavDropdown';
 //import type { GlobalNavProps } from '@/components/common/GlobalNav';
@@ -244,7 +245,11 @@ function GlobalNav(props: GlobalNavProps) {
       <div className="header header--has-appnav">
         <div className="header__inner">
           <StyledHeaderMain className="header__main">
-            <div className="header__logobar" id="branding-navigation-bar">
+            <nav
+              className="header__logobar"
+              id="branding-navigation-bar"
+              aria-label={t('nav-tools')}
+            >
               <div className="header__logobar-logo">
                 <NavigationLink slug="/" onClick={() => setSubNavState(null)}>
                   <HomeLink className="header__logo-link">{orgLogo}</HomeLink>
@@ -263,7 +268,7 @@ function GlobalNav(props: GlobalNavProps) {
                   <Icon.Bars color={theme.themeColors.white} />
                 )}
               </NavbarToggler>
-            </div>
+            </nav>
           </StyledHeaderMain>
 
           <SecondaryNavWrapper>
@@ -325,6 +330,7 @@ function GlobalNav(props: GlobalNavProps) {
                         </NavItem>
                       )
                     )}
+                  <NavbarSearch />
                 </Nav>
               </StyledCollapse>
               <SiteTitle>{siteTitle}</SiteTitle>

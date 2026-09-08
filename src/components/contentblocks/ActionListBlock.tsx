@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Container } from 'reactstrap';
@@ -23,7 +23,10 @@ import { useWorkflowSelector } from '@/context/workflow-selector';
 
 import { getReadableThemeTextColor } from './colorUtils';
 
-const GET_ACTION_LIST_FOR_BLOCK = gql`
+const GET_ACTION_LIST_FOR_BLOCK: TypedDocumentNode<
+  ActionListForBlockQuery,
+  ActionListForBlockQueryVariables
+> = gql`
   query ActionListForBlock($plan: ID!, $category: ID, $clientUrl: String, $workflow: WorkflowState)
   @workflow(state: $workflow) {
     planActions(plan: $plan, category: $category) {
@@ -215,10 +218,7 @@ const ActionListBlock = (props: ActionListBlockProps) => {
 
   const plan = usePlan();
   const { workflow, setLoading } = useWorkflowSelector();
-  const { loading, error, data } = useQuery<
-    ActionListForBlockQuery,
-    ActionListForBlockQueryVariables
-  >(GET_ACTION_LIST_FOR_BLOCK, {
+  const { loading, error, data } = useQuery(GET_ACTION_LIST_FOR_BLOCK, {
     variables: {
       plan: plan.identifier,
       category: categoryId,

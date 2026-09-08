@@ -11,6 +11,7 @@ import { initializeMuiTheme } from '@common/themes/mui-theme/theme';
 import a11yMessages from '../../locales/en/a11y.json';
 import actionsMessages from '../../locales/en/actions.json';
 import commonMessages from '../../locales/en/common.json';
+import pathsMessages from '../../locales/en/paths.json';
 import themeJson from '../../public/static/themes/default/theme.json';
 
 /*
@@ -21,7 +22,7 @@ const theme = /** @type {import('@kausal/themes/types').Theme} */ (
   /** @type {unknown} */ (themeJson)
 );
 
-const messages = { ...a11yMessages, ...actionsMessages, ...commonMessages };
+const messages = { ...a11yMessages, ...actionsMessages, ...commonMessages, ...pathsMessages };
 const muiTheme = initializeMuiTheme(theme);
 
 const AllTheProviders = ({ children }) => {

@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 
 import dotenv from 'dotenv';
+import type { IGraphQLProject } from 'graphql-config';
 
 dotenv.config({ quiet: true });
 
@@ -21,11 +22,12 @@ export function getSchema() {
   return getLocalSchema() ?? getRemoteSchema();
 }
 const JS = '*.{js,jsx,ts,tsx,mjs}';
+const documentDirs = ['src', 'e2e-tests', 'kausal_common/src'];
 
 const config = {
   schema: getSchema(),
-  documents: [`./src/**/${JS}`, `./e2e-tests/**/${JS}`, `./kausal_common/src/**/${JS}`],
-  exclude: [`./src/*/paths/**/${JS}`],
-};
+  documents: [...documentDirs.map((dir) => `./${dir}/**/${JS}`), './e2e-tests/*.ts'],
+  exclude: [`./src/*/paths/**/${JS}`, '**/node_modules/**', '**/__generated__/**'],
+} satisfies IGraphQLProject;
 
 export default config;

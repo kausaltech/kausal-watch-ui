@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
@@ -15,6 +15,7 @@ import {
   type ActionListPageFiltersFragment,
   ActionListPageView,
   type DashboardActionListQuery,
+  type DashboardActionListQueryVariables,
 } from '@/common/__generated__/graphql';
 import { constructCatHierarchy, getCategoryString, mapActionCategories } from '@/common/categories';
 import { getActionTermContext } from '@/common/i18n';
@@ -138,7 +139,7 @@ const Tab = styled.button`
 const commonCategory = gql`
   fragment CommonCategory on Category {
     id
-    common {
+    common @include(if: $relatedPlanActions) {
       id
       identifier
       name
@@ -162,7 +163,6 @@ const planFragment = gql`
         hideCategoryIdentifiers
       }
       categories {
-        id
         identifier
         order
         name
@@ -172,7 +172,7 @@ const planFragment = gql`
             id
           }
         }
-        ...CommonCategory @include(if: $relatedPlanActions)
+        ...CommonCategory
 
         color
         iconSvgUrl
@@ -201,31 +201,33 @@ const planFragment = gql`
 const actionFragment = gql`
   fragment RelatedPlan on Plan {
     id
-    shortName
-    name
-    shortIdentifier
-    versionName
-    viewUrl
-    hideActionIdentifiers
-    publishedAt
-    image {
-      id
-      rendition(size: "128x128", crop: true) {
-        id
-        src
-      }
-    }
-    generalContent {
-      id
-      actionTaskTerm
-      organizationTerm
-    }
-    actionImplementationPhases {
-      id
-      identifier
+    ... on Plan @include(if: $relatedPlanActions) {
+      shortName
       name
-      order
-      color
+      shortIdentifier
+      versionName
+      viewUrl(clientUrl: $clientUrl)
+      hideActionIdentifiers
+      publishedAt
+      image {
+        id
+        rendition(size: "128x128", crop: true) {
+          id
+          src
+        }
+      }
+      generalContent {
+        id
+        actionTaskTerm
+        organizationTerm
+      }
+      actionImplementationPhases {
+        id
+        identifier
+        name
+        order
+        color
+      }
     }
   }
 
@@ -233,7 +235,7 @@ const actionFragment = gql`
     id
     identifier
     name(hyphenated: true)
-    viewUrl @include(if: $relatedPlanActions)
+    viewUrl(clientUrl: $clientUrl) @include(if: $relatedPlanActions)
     color
     hasDependencyRelationships
     manualStatusReason
@@ -273,8 +275,7 @@ const actionFragment = gql`
     endDate
     order
     plan {
-      id
-      ...RelatedPlan @include(if: $relatedPlanActions)
+      ...RelatedPlan
     }
     schedule {
       id
@@ -344,11 +345,11 @@ const actionFragment = gql`
     mergedWith {
       id
       identifier
-      viewUrl
+      viewUrl(clientUrl: $clientUrl)
       plan {
         id
         shortName
-        viewUrl
+        viewUrl(clientUrl: $clientUrl)
       }
     }
     indicatorsCount
@@ -373,11 +374,15 @@ const organizationFragment = gql`
   }
 `;
 
-export const GET_ACTION_LIST = gql`
+export const GET_ACTION_LIST: TypedDocumentNode<
+  DashboardActionListQuery,
+  DashboardActionListQueryVariables
+> = gql`
   query DashboardActionList(
     $plan: ID!
     $relatedPlanActions: Boolean!
     $path: String!
+    $clientUrl: String
     $workflow: WorkflowState
   ) @workflow(state: $workflow) {
     plan(id: $plan) {
@@ -703,11 +708,12 @@ function ActionListLoader(props: StatusboardProps) {
   const t = useTranslations();
   const { workflow, setLoading } = useWorkflowSelector();
   useEffect(() => setLoading(false));
-  const { error, data } = useSuspenseQuery<DashboardActionListQuery>(GET_ACTION_LIST, {
+  const { error, data } = useSuspenseQuery(GET_ACTION_LIST, {
     variables: {
       plan: plan.identifier,
       relatedPlanActions: includeRelatedPlans,
       path: '/actions',
+      clientUrl: plan.viewUrl,
       workflow,
     },
   });

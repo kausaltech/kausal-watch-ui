@@ -23,10 +23,7 @@ export type PageWithLeadContent =
   | IndicatorListPage
   | PrivacyPolicyPage;
 export type PageWithBody =
-  | AccessibilityStatementPage
-  | StaticPage
-  | CategoryPage
-  | CategoryTypePage;
+  AccessibilityStatementPage | StaticPage | CategoryPage | CategoryTypePage;
 
 export type GeneralPlanPage = NonNullable<ContentPageQuery['planPage']>;
 

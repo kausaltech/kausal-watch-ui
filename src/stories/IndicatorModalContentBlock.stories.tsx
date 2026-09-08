@@ -280,6 +280,10 @@ const MOCK_GRAPH_DATA_QUERY = {
     data: {
       plan: {
         __typename: 'Plan',
+        // The query selects `plan { id }`, and without it the cache cannot
+        // normalise the entity: the write leaves a missing field, so Apollo
+        // discards the cache result and hands back the raw network result.
+        id: MOCK_PLAN.id,
         scenarios: [],
       },
       indicator: {

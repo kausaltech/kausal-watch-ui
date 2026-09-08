@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 
 import type {
   PledgeFeatureEnabledQuery,
@@ -16,7 +16,7 @@ import { getClient } from '../utils/apollo-rsc-client';
 export const getPledgeFeatureEnabled = async (plan: string) =>
   await (
     await getClient()
-  ).query<PledgeFeatureEnabledQuery, PledgeFeatureEnabledQueryVariables>({
+  ).query({
     query: GET_PLEDGE_FEATURE_ENABLED,
     variables: {
       plan,
@@ -27,7 +27,7 @@ export const getPledgeFeatureEnabled = async (plan: string) =>
 export const getPledges = async (plan: string) =>
   await (
     await getClient()
-  ).query<PledgesQuery, PledgesQueryVariables>({
+  ).query({
     query: GET_PLEDGES,
     variables: {
       plan,
@@ -38,7 +38,7 @@ export const getPledges = async (plan: string) =>
 export const getPledge = async (plan: string, slug: string) =>
   await (
     await getClient()
-  ).query<PledgeQuery, PledgeQueryVariables>({
+  ).query({
     query: GET_PLEDGE,
     variables: {
       plan,
@@ -71,7 +71,7 @@ const PLEDGE_FRAGMENT = gql`
   ${ATTRIBUTE_WITH_NESTED_TYPE_FRAGMENT}
 `;
 
-const GET_PLEDGES = gql`
+const GET_PLEDGES: TypedDocumentNode<PledgesQuery, PledgesQueryVariables> = gql`
   query Pledges($plan: ID!) {
     planPage(plan: $plan, path: "/pledges") {
       ... on PledgeListPage {
@@ -133,7 +133,7 @@ const PLEDGE_BODY_FRAGMENT = gql`
   }
 `;
 
-const GET_PLEDGE = gql`
+const GET_PLEDGE: TypedDocumentNode<PledgeQuery, PledgeQueryVariables> = gql`
   query Pledge($plan: ID!, $slug: String!) {
     plan(id: $plan) {
       id
@@ -155,7 +155,10 @@ const GET_PLEDGE = gql`
   ${PLEDGE_BODY_FRAGMENT}
 `;
 
-const GET_PLEDGE_FEATURE_ENABLED = gql`
+const GET_PLEDGE_FEATURE_ENABLED: TypedDocumentNode<
+  PledgeFeatureEnabledQuery,
+  PledgeFeatureEnabledQueryVariables
+> = gql`
   query PledgeFeatureEnabled($plan: ID!) {
     plan(id: $plan) {
       id

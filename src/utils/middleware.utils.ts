@@ -13,10 +13,7 @@ import { getWatchGraphQLUrl, getWildcardDomains } from '@common/env';
 import { getClientIP } from '@common/utils';
 import LRUCache from '@common/utils/lru-cache';
 
-import type {
-  PlansByHostnameQuery,
-  PlansByHostnameQueryVariables,
-} from '@/common/__generated__/graphql';
+import type { PlansByHostnameQuery } from '@/common/__generated__/graphql';
 import { PublicationStatus } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
@@ -210,7 +207,7 @@ export function rewriteUrl(
   response: NextResponse,
   hostUrl: URL,
   rewrittenUrl: URL,
-  plan: string
+  plan: string | undefined
 ) {
   // The user facing URL, provided via the x-url header to be used in metadata
   const url = new URL(request.nextUrl.pathname, hostUrl).toString();
@@ -221,9 +218,16 @@ export function rewriteUrl(
   /**
    * Support reading plan details from headers while creating the RSC Apollo client. This
    * allows us to add cache headers to GraphQL requests from RSC queries.
+   *
+   * A restricted plan resolves no identifier. The header is then left out
+   * rather than filled with a placeholder, because the RSC client would pass
+   * the placeholder on as a cache header, which the backend rejects.
    */
   response.headers.set('x-plan-domain', hostUrl.hostname);
-  response.headers.set('x-plan-identifier', plan);
+
+  if (plan) {
+    response.headers.set('x-plan-identifier', plan);
+  }
 
   return response;
 }
@@ -297,10 +301,7 @@ async function queryPlansForHostname(
 ) {
   const apolloClient = createApolloClient(req, logger, skipAuth);
   try {
-    const { data, error } = await apolloClient.query<
-      PlansByHostnameQuery,
-      PlansByHostnameQueryVariables
-    >({
+    const { data, error } = await apolloClient.query({
       query: GET_PLANS_BY_HOSTNAME,
       variables: { hostname },
       fetchPolicy: 'no-cache',

@@ -1,5 +1,5 @@
 import type { ApolloClient } from '@apollo/client';
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import type {
   APIConnector,
   AutocompleteQueryConfig,
@@ -17,7 +17,7 @@ import type {
   SearchQueryVariables,
 } from './__generated__/graphql';
 
-export const SEARCH_QUERY = gql`
+export const SEARCH_QUERY: TypedDocumentNode<SearchQuery, SearchQueryVariables> = gql`
   query Search($plan: ID!, $query: String!, $onlyOtherPlans: Boolean, $clientUrl: String) {
     search(plan: $plan, query: $query, includeRelatedPlans: true, onlyOtherPlans: $onlyOtherPlans) {
       hits {
@@ -124,7 +124,7 @@ class WatchSearchAPIConnector implements APIConnector {
     if (!searchTerm) {
       return responseBase;
     }
-    const res = await this.apolloClient.query<SearchQuery, SearchQueryVariables>({
+    const res = await this.apolloClient.query({
       query: SEARCH_QUERY,
       variables: {
         plan: this.plan.identifier,

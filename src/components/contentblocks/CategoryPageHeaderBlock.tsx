@@ -3,7 +3,7 @@ import type React from 'react';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
@@ -16,6 +16,7 @@ import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layou
 import type {
   AttributesBlockAttributeFragment,
   CategoryAttributeTypesQuery,
+  CategoryAttributeTypesQueryVariables,
   HeroImageFragment,
 } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
@@ -32,7 +33,10 @@ import { ATTRIBUTE_TYPE_FRAGMENT } from '@/fragments/action-attribute.fragment';
 import { ImageCredit } from '../common/ImageCredit';
 import ActionStatusGraphsBlock from './ActionStatusGraphsBlock';
 
-export const GET_CATEGORY_ATTRIBUTE_TYPES = gql`
+export const GET_CATEGORY_ATTRIBUTE_TYPES: TypedDocumentNode<
+  CategoryAttributeTypesQuery,
+  CategoryAttributeTypesQueryVariables
+> = gql`
   query CategoryAttributeTypes($plan: ID!) {
     plan(id: $plan) {
       id
@@ -355,7 +359,7 @@ export default function CategoryPageHeaderBlock(props: Props) {
   //const contentAlignment = theme.settings.layout.leftAlignCategoryPages ? 'left' : 'center';
   const showIdentifiers = !plan.primaryActionClassification?.hideCategoryIdentifiers;
 
-  const { data } = useQuery<CategoryAttributeTypesQuery>(GET_CATEGORY_ATTRIBUTE_TYPES, {
+  const { data } = useQuery(GET_CATEGORY_ATTRIBUTE_TYPES, {
     variables: {
       plan: plan.identifier,
     },

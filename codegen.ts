@@ -3,28 +3,41 @@ import type { TypeScriptPluginConfig } from '@graphql-codegen/typescript';
 import type { TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations';
 
 import pathsApolloConfig from './apollo-paths.config.cjs';
-import apolloConfig from './apollo.config.cjs';
+import graphqlConfig from './graphql.config.ts';
 
-const tsoConfig: TypeScriptDocumentsPluginConfig & TypeScriptPluginConfig = {
-  arrayInputCoercion: false,
-  mergeFragmentTypes: true,
-  onlyOperationTypes: true,
-  preResolveTypes: true,
-  avoidOptionals: true,
-  nonOptionalTypename: true,
-  scalars: {
-    UUID: 'string',
-    RichText: 'string',
-    PositiveInt: 'number',
-    DateTime: 'string',
-    JSONString: 'string',
-    Date: 'string',
-  },
+const scalars = {
+  UUID: 'string',
+  RichText: 'string',
+  PositiveInt: 'number',
+  DateTime: 'string',
+  JSONString: 'string',
+  JSON: 'Record<string, unknown> | unknown[]',
+  Date: 'string',
+  PointScalar: 'Record<string, unknown>',
+  _Any: 'unknown',
 };
 
+const schemaTypesConfig = {
+  onlyOperationTypes: true,
+  strictScalars: true,
+  scalars,
+} satisfies TypeScriptPluginConfig;
+
+const tsoConfig = {
+  arrayInputCoercion: false,
+  avoidOptionals: true,
+  enumType: 'native',
+  immutableTypes: false,
+  mergeFragmentTypes: false,
+  nonOptionalTypename: true,
+  strictScalars: true,
+  extractAllFieldsToTypesCompact: true,
+  scalars,
+} satisfies TypeScriptDocumentsPluginConfig;
+
 const watchConfigDocs = [
-  ...apolloConfig.client.includes.filter((include) => !include.includes('e2e-tests')),
-  ...apolloConfig.client.excludes.map((exclude) => `!${exclude}`),
+  ...graphqlConfig.documents.filter((include) => !include.includes('e2e-tests')),
+  ...graphqlConfig.exclude.map((exclude) => `!${exclude}`),
 ];
 
 const pathsConfigDocs = [
@@ -38,16 +51,16 @@ const pathsConfigDocs = [
  * our graphql-js version cannot parse.
  */
 const schemaLoader = './kausal_common/configs/codegen-schema-loader.cjs';
-const watchSchema = {
-  [apolloConfig.client.service.url]: { loader: schemaLoader },
-};
+const watchSchema = graphqlConfig.schema.startsWith('http')
+  ? {
+      [graphqlConfig.schema]: { loader: schemaLoader },
+    }
+  : graphqlConfig.schema;
 const pathsSchema = {
   [pathsApolloConfig.client.service.url]: { loader: schemaLoader },
 };
 
 const config: CodegenConfig = {
-  overwrite: true,
-
   generates: {
     'src/common/__generated__/possible_types.json': {
       schema: watchSchema,
@@ -62,13 +75,12 @@ const config: CodegenConfig = {
       documents: watchConfigDocs,
       plugins: [
         { add: { content: '/* istanbul ignore file */' } },
-        'typescript',
         'typescript-operations',
         {
           add: {
             placement: 'append',
             content:
-              "export type { DimensionalNodeMetricFragment } from './paths/graphql';\nexport { ScenarioKind } from './paths/graphql';",
+              "export type { DimensionalNodeMetricFragment } from './paths/graphql';\nexport { ScenarioKind } from './paths/schema';",
           },
         },
       ],
@@ -85,18 +97,32 @@ const config: CodegenConfig = {
     'src/common/__generated__/paths/graphql.ts': {
       schema: pathsSchema,
       documents: pathsConfigDocs,
-      plugins: ['typescript', 'typescript-operations'],
-      config: tsoConfig,
+      plugins: [
+        'typescript-operations',
+        {
+          add: {
+            placement: 'append',
+            content: "export { ScenarioKind } from './schema';",
+          },
+        },
+      ],
+      config: {
+        ...tsoConfig,
+        importSchemaTypesFrom: './schema',
+      } satisfies TypeScriptDocumentsPluginConfig,
+    },
+    'src/common/__generated__/paths/schema.ts': {
+      schema: pathsSchema,
+      plugins: ['typescript'],
+      config: schemaTypesConfig,
     },
     'e2e-tests/__generated__/graphql.ts': {
       schema: watchSchema,
-      plugins: ['typescript', 'typescript-operations'],
+      plugins: ['typescript-operations'],
       config: {
         ...tsoConfig,
-        onlyOperationTypes: true,
-        useTypeImports: true,
       } satisfies TypeScriptDocumentsPluginConfig,
-      documents: ['./e2e-tests/**/*.ts'],
+      documents: ['./e2e-tests/**/*.ts', '!**/node_modules/**', '!**/__generated__/**'],
     },
   },
 };

@@ -1,29 +1,19 @@
-import { ApolloClient, ApolloLink, InMemoryCache, gql } from '@apollo/client';
-
-import { logOperationLink } from '@common/apollo/links';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 
 import type {
   PlansByHostnameQuery,
-  PlansByHostnameQueryVariables,
   SitemapQuery,
   SitemapQueryVariables,
 } from '@/common/__generated__/graphql';
-import possibleTypes from '@/common/__generated__/possible_types.json';
 import { ACTIONS_PATH, INDICATORS_PATH, STATIC_ROUTES } from '@/constants/routes';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 import { tryRequest } from '@/utils/api.utils';
-import { getHttpLink } from '@/utils/apollo.utils';
+import { createPlanAgnosticApolloClient } from '@/utils/apollo-public-client';
 import { stripSlashes } from '@/utils/urls';
 
-const apolloClient = new ApolloClient({
-  cache: new InMemoryCache({
-    // https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually
-    possibleTypes: possibleTypes.possibleTypes,
-  }),
-  link: ApolloLink.from([logOperationLink, getHttpLink()]),
-});
+const apolloClient = createPlanAgnosticApolloClient();
 
-const GET_SITEMAP_CONTENTS = gql`
+const GET_SITEMAP_CONTENTS: TypedDocumentNode<SitemapQuery, SitemapQueryVariables> = gql`
   query Sitemap($id: ID!, $hostname: String) {
     planIndicators(plan: $id) {
       id
@@ -36,6 +26,9 @@ const GET_SITEMAP_CONTENTS = gql`
         id
         hostname
         basePath
+      }
+      features {
+        hideFromSearchEngines
       }
       actions {
         id
@@ -83,6 +76,13 @@ function getDefaultPlanId(plans: NonNullable<PlansByHostnameQuery['plansForHostn
 type SitemapUrlOptions = {
   includeAllPlans?: boolean;
   includeLocaleAndBasePathVariants?: boolean;
+  /**
+   * Leave out plans whose `hideFromSearchEngines` feature is enabled. Only for
+   * callers that advertise urls to crawlers: other callers, such as the PDF
+   * export, use these urls to decide which pages may be rendered at all, and
+   * that must not depend on whether a plan is indexed.
+   */
+  excludeHiddenFromSearchEngines?: boolean;
 };
 
 type DomainLike = { hostname: string; basePath: string | null } | null;
@@ -148,6 +148,13 @@ export function getSitemapUrlVariantsForPlan(
   return [...urls];
 }
 
+function isHiddenFromSitemap(
+  plan: NonNullable<SitemapQuery['plan']>,
+  options: SitemapUrlOptions
+): boolean {
+  return !!options.excludeHiddenFromSearchEngines && plan.features.hideFromSearchEngines;
+}
+
 function getPlanPaths(data: SitemapQuery): string[] {
   return [
     '/',
@@ -173,14 +180,14 @@ async function getPlanUrls(
   options: SitemapUrlOptions
 ) {
   const { data, error } = await tryRequest<SitemapQuery>(
-    apolloClient.query<SitemapQuery, SitemapQueryVariables>({
+    apolloClient.query({
       query: GET_SITEMAP_CONTENTS,
       variables: { id: plan.id, hostname },
       fetchPolicy: 'no-cache',
     })
   );
 
-  if (error || !data?.plan) {
+  if (error || !data?.plan || isHiddenFromSitemap(data.plan, options)) {
     return [];
   }
 
@@ -200,7 +207,7 @@ export async function getSitemapUrlsForOrigin(
   const url = new URL(origin);
 
   const { data: plansData, error: plansError } = await tryRequest(
-    apolloClient.query<PlansByHostnameQuery, PlansByHostnameQueryVariables>({
+    apolloClient.query({
       query: GET_PLANS_BY_HOSTNAME,
       variables: { hostname: url.hostname },
       fetchPolicy: 'no-cache',
@@ -237,7 +244,7 @@ export async function getSitemapUrlsForPlan(
   const url = new URL(origin);
 
   const { data, error } = await tryRequest<SitemapQuery>(
-    apolloClient.query<SitemapQuery, SitemapQueryVariables>({
+    apolloClient.query({
       query: GET_SITEMAP_CONTENTS,
       // Resolve the plan's domain for the requesting hostname so the base-path
       // (or lack thereof) matches how the page is actually served on this host.
@@ -248,7 +255,7 @@ export async function getSitemapUrlsForPlan(
     })
   );
 
-  if (error || !data?.plan) {
+  if (error || !data?.plan || isHiddenFromSitemap(data.plan, options)) {
     return [];
   }
 

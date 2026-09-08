@@ -8,11 +8,7 @@ import { Alert } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
-import type {
-  IndicatorDetailsQuery,
-  IndicatorGraphDataQuery,
-  IndicatorGraphDataQueryVariables,
-} from '@/common/__generated__/graphql';
+import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import type { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
@@ -93,10 +89,7 @@ function IndicatorVisualisation({
   const [compareTo, setCompareTo] = useState<string | undefined>(undefined);
   const [preferNormalizeByPopulation, setPreferNormalizeByPopulation] = useState(NORMALIZE_DEFAULT);
 
-  const { loading, error, data } = useQuery<
-    IndicatorGraphDataQuery,
-    IndicatorGraphDataQueryVariables
-  >(GET_INDICATOR_GRAPH_DATA, {
+  const { loading, error, data } = useQuery(GET_INDICATOR_GRAPH_DATA, {
     variables: {
       id: indicatorId,
       plan: plan.identifier,

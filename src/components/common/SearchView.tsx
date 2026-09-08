@@ -9,7 +9,7 @@ import { Alert, Col, Container, FormGroup, Input, Label, Row } from 'reactstrap'
 
 import ContentLoader from '@common/components/ContentLoader';
 
-import type { SearchQuery, SearchQueryVariables } from '@/common/__generated__/graphql';
+import type { SearchQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { Link } from '@/common/links';
 import { SEARCH_QUERY } from '@/common/search';
@@ -183,7 +183,7 @@ type SearchResultsProps = {
 function SearchResults({ search }: SearchResultsProps) {
   const plan = usePlan();
   const t = useTranslations();
-  const { error, loading, data } = useQuery<SearchQuery, SearchQueryVariables>(SEARCH_QUERY, {
+  const { error, loading, data } = useQuery(SEARCH_QUERY, {
     variables: {
       plan: plan.identifier,
       query: search.q,

@@ -1,10 +1,18 @@
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
+
+import type {
+  IndicatorDetailsQuery,
+  IndicatorDetailsQueryVariables,
+} from '@/common/__generated__/graphql';
 
 import { CATEGORY_TYPE_FRAGMENT } from '../fragments/category-tags.fragment';
 import { RECURSIVE_CATEGORY_TAG_FRAGMENT } from '../fragments/category.fragment';
 import { INDICATOR_CHART_FRAGMENTS } from '../fragments/indicator-chart.fragment';
 
-export const GET_INDICATOR_DETAILS = gql`
+export const GET_INDICATOR_DETAILS: TypedDocumentNode<
+  IndicatorDetailsQuery,
+  IndicatorDetailsQueryVariables
+> = gql`
   query IndicatorDetails($id: ID, $plan: ID, $sitePlan: ID) {
     plan(id: $sitePlan) {
       id
