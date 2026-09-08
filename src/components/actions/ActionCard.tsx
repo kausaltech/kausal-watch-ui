@@ -483,6 +483,7 @@ function ActionCard({
 
   return (
     <StyledActionLink
+      className="action-card-link"
       action={action}
       viewUrl={action.mergedWith?.viewUrl ?? action.viewUrl}
       planUrl={getPlanUrl(mergedWith, action.plan, plan.id)}

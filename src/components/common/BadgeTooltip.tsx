@@ -65,11 +65,21 @@ const StyledBadge = styled.span<{
   }
 `;
 
-const TruncatedContent = styled.span<{ $maxLines: number }>`
+// Tall enough that overflow: hidden doesn't clip ascenders/descenders.
+const CLAMP_LINE_HEIGHT = 1.3;
+
+const TruncatedContent = styled.span<{
+  $maxLines: number;
+  $baseLineHeight: 'lineHeightSm' | 'lineHeightMd';
+}>`
   display: -webkit-box;
   -webkit-line-clamp: ${({ $maxLines }) => $maxLines};
   -webkit-box-orient: vertical;
   overflow: hidden;
+  line-height: ${CLAMP_LINE_HEIGHT};
+  margin: ${({ theme, $baseLineHeight }) =>
+    `calc((${theme[$baseLineHeight]} - ${CLAMP_LINE_HEIGHT}) * 0.5em)`}
+    0;
 `;
 
 const IconBadge = styled.div<{ $themeColor: ThemeColorOption; $isLink: boolean }>`
@@ -163,7 +173,12 @@ const BadgeContent = (props: BadgeContentProps) => {
   } = props;
   const hasNoIcon = iconSvg == null && iconImage == null;
   const renderContent = maxLines ? (
-    <TruncatedContent $maxLines={maxLines}>{content}</TruncatedContent>
+    <TruncatedContent
+      $maxLines={maxLines}
+      $baseLineHeight={hasNoIcon ? 'lineHeightSm' : 'lineHeightMd'}
+    >
+      {content}
+    </TruncatedContent>
   ) : (
     content
   );
