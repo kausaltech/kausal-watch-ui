@@ -1025,22 +1025,43 @@ export function buildTimeTooltipFormatter({
   };
 }
 
+type AriaPoint = { x: string | number; label: string; value: number };
+
 /** Points of a trace with a value, as (label, value) pairs in axis order. */
 function tracePoints(
   trace: { x: Array<string | number | null>; y: Array<number | null> },
   hasTimeDimension: boolean,
   timeResolution: TimeResolution
-): Array<{ label: string; value: number }> {
-  const points: Array<{ label: string; value: number }> = [];
+): AriaPoint[] {
+  const points: AriaPoint[] = [];
   trace.x.forEach((x, i) => {
     const value = trace.y[i];
     if (x == null || value == null || Number.isNaN(value)) return;
     points.push({
+      x,
       label: hasTimeDimension ? formatDateLabel(x, timeResolution) : String(x),
       value,
     });
   });
   return points;
+}
+
+/**
+ * The earliest and latest points across all series by date (not by array
+ * position: series are concatenated, so the first series' start and the last
+ * series' end need not be the extremes).
+ */
+function timeSpan(points: AriaPoint[], timeResolution: TimeResolution): [AriaPoint, AriaPoint] {
+  const dated = points.flatMap((point) => {
+    const ts = new Date(normalizeDate(point.x, timeResolution)).getTime();
+    return Number.isNaN(ts) ? [] : [{ point, ts }];
+  });
+  if (dated.length === 0) {
+    return [points[0], points[points.length - 1]];
+  }
+  const earliest = dated.reduce((a, b) => (b.ts < a.ts ? b : a));
+  const latest = dated.reduce((a, b) => (b.ts > a.ts ? b : a));
+  return [earliest.point, latest.point];
 }
 
 /** Above this many points a series is summarized (range and latest) instead of listed. */
@@ -1137,10 +1158,13 @@ export function buildAriaDescription({
 
   const chartTitle = title || series[0].name;
   const allPoints = series.flatMap((entry) => entry.points);
-  const start = allPoints[0].label;
-  const end = allPoints[allPoints.length - 1].label;
+  const [earliest, latest] = hasTimeDimension
+    ? timeSpan(allPoints, timeResolution)
+    : [allPoints[0], allPoints[allPoints.length - 1]];
+  const start = earliest.label;
+  const end = latest.label;
   // "from 2020 to 2020" reads oddly when all values share one date
-  const singleDate = hasTimeDimension && start === end;
+  const singleDate = hasTimeDimension && new Set(allPoints.map((point) => point.label)).size === 1;
   const sentences: string[] = [];
 
   if (series.length === 1 && kind === 'pie' && periodLabel) {

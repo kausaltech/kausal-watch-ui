@@ -331,6 +331,38 @@ describe('buildAriaDescription', () => {
     );
   });
 
+  it('spans the earliest and latest dates across all series, not the first and last series', () => {
+    const text = buildAriaDescription({
+      ...base,
+      title: 'Emissions',
+      traces: [
+        {
+          name: 'A',
+          x: ['2020-01-01', '2021-01-01', '2022-01-01', '2023-01-01', '2024-01-01'],
+          y: [1, 2, 3, 4, 5],
+        },
+        // Ends before the first series does
+        { name: 'B', x: ['2021-01-01', '2022-01-01'], y: [1, 2] },
+      ],
+    });
+    expect(text).toContain('"start":"2020","end":"2024"');
+  });
+
+  it('does not treat a chart as single-dated when an inner series has other dates', () => {
+    const text = buildAriaDescription({
+      ...base,
+      title: 'Emissions',
+      traces: [
+        { name: 'A', x: ['2020-01-01'], y: [1] },
+        { name: 'B', x: ['2020-01-01', '2021-01-01'], y: [1, 2] },
+        { name: 'C', x: ['2020-01-01'], y: [1] },
+      ],
+    });
+    expect(text).toContain('chart-aria-time-multi {');
+    expect(text).not.toContain('single-date');
+    expect(text).toContain('"start":"2020","end":"2021"');
+  });
+
   it('lists each category series by name and skips null padding', () => {
     const text = buildAriaDescription({
       ...base,
