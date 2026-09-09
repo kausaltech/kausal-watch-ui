@@ -20,21 +20,23 @@ import useNumberFormatter from '@/common/numbers';
 import {
   type AriaDetail,
   buildSaveAsImageToolbox,
+  buildTimeTooltipFormatter,
   getChartDownloadFilename,
 } from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   type GraphsTheme,
+  blockYRange,
   buildBlockAriaDescription,
   buildDimSeries,
-  buildTooltipFormatter,
   buildTotalSeries,
   buildTrendSeries,
   buildYAxisConfig,
   collectAllDates,
   getUnitLabel,
   shouldSmoothLines,
+  toChartTimeResolution,
 } from './indicator-charts-utility';
 
 echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -58,9 +60,6 @@ const DashboardIndicatorAreaChartBlock = ({
   const t = useTranslations();
   const format = useFormatter();
   const locale = useLocale();
-  const formatValue = useNumberFormatter({
-    maximumSignificantDigits: indicator?.valueRounding ?? undefined,
-  });
   const formatAxisValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
@@ -112,12 +111,6 @@ const DashboardIndicatorAreaChartBlock = ({
           timeResolution
         )
       : [];
-
-  const legendLabels: string[] = [
-    ...(hasDimension ? dimSeries.map((d) => d.name) : [totalLabel]),
-    ...(showTotalOverlay ? [totalLabel] : []),
-    ...(trendSeries.length ? [trendLabel] : []),
-  ];
 
   const areaLegendItems: LegendComponentOption['data'] = hasDimension
     ? dimSeries.map((d) => ({ name: d.name, icon: 'roundRect' as const }))
@@ -257,14 +250,14 @@ const DashboardIndicatorAreaChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'line' },
-      formatter: buildTooltipFormatter(
-        unit,
-        legendLabels,
-        t,
-        formatValue,
-        dimension ?? undefined,
-        timeResolution
-      ),
+      // Same formatter as the generic IndicatorGraph: one row per series
+      // with a value at the hovered date, hidden when there is none
+      formatter: buildTimeTooltipFormatter({
+        timeResolution: toChartTimeResolution(timeResolution),
+        trendName: trendLabel,
+        yRange: blockYRange(unit, indicator?.valueRounding),
+        format,
+      }),
     },
     grid: {
       left: 20,

@@ -985,7 +985,7 @@ export function buildTimeTooltipFormatter({
     const axisValue = firstParam.axisValue;
     if (axisValue == null) return '';
 
-    let result = `${escapeHtml(formatDateLabel(axisValue, timeResolution))}<br/>`;
+    const rows: string[] = [];
     params.forEach((param: unknown) => {
       const typedParam = param as {
         seriesName?: string;
@@ -1013,10 +1013,15 @@ export function buildTimeTooltipFormatter({
           format,
           yRange.valueRounding ? { maximumSignificantDigits: yRange.valueRounding } : undefined
         );
-        result += `${typedParam.marker || ''} ${escapeHtml(typedParam.seriesName)}: ${formattedValue} ${escapeHtml(yRange.unit)}<br/>`;
+        rows.push(
+          `${typedParam.marker || ''} ${escapeHtml(typedParam.seriesName)}: ${formattedValue} ${escapeHtml(yRange.unit)}<br/>`
+        );
       }
     });
-    return result;
+    // An empty string makes ECharts hide the tooltip (e.g. at dates only
+    // the skipped trend line occupies)
+    if (rows.length === 0) return '';
+    return `${escapeHtml(formatDateLabel(axisValue, timeResolution))}<br/>${rows.join('')}`;
   };
 }
 

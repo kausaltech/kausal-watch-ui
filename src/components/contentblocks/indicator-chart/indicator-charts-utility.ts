@@ -6,6 +6,7 @@ import {
   type AriaLocalePack,
   type Formatter,
   type TimeResolution,
+  type YRange,
   buildAriaDescription,
 } from '@/components/graphs/indicator-graph.utils';
 import { formatUnitLabel } from '@/components/indicators/indicator-data-helpers';
@@ -14,8 +15,6 @@ type LineChartBlock = Omit<
   Extract<LineChartVisualizationFragment, { __typename: 'DashboardIndicatorLineChartBlock' }>,
   '__typename'
 >;
-
-type TFunction = (key: string) => string;
 
 export const X_SYMBOL =
   'path://M0.979266 20.7782C-0.192306 21.9497 -0.192307 23.8492 0.979266 25.0208C2.15084 26.1924 4.05033 26.1924 5.22191 ' +
@@ -269,68 +268,26 @@ export function buildTrendSeries(
     : [];
 }
 
-/**
- * Axis-trigger tooltip listing every legend series at the hovered date.
- * ECharts renders the result as HTML: names, units and the axis label are
- * escaped, while the marker is ECharts' own trusted markup.
- */
-export function buildTooltipFormatter(
-  unit: string,
-  legendData: string[],
-  t: TFunction,
-  formatValue: (value: number) => string,
-  _dimension?: { name: string },
-  timeResolution?: string | null
-) {
-  // The shape ECharts passes to axis-trigger tooltip formatters, reduced to
-  // the fields read below
-  type TooltipParam = {
-    seriesName?: string;
-    axisValue?: string | number;
-    data?: number | [string | number, number | null] | null;
-    marker?: string;
-  };
-  return (params: unknown) => {
-    const processedSeries = new Set<string>();
-    const paramsArray = (Array.isArray(params) ? params : [params]) as TooltipParam[];
-    const timeKey = paramsArray[0]?.axisValue;
+type KeyedPoints = [string, number][];
 
-    let formattedTime: string;
-    if (timeResolution === 'YEAR') {
-      formattedTime = String(timeKey);
-    } else if (timeResolution === 'MONTH') {
-      formattedTime = String(timeKey);
-    } else {
-      const date = new Date(timeKey ?? NaN);
-      formattedTime = Number.isNaN(date.getTime())
-        ? String(timeKey)
-        : date.toISOString().split('T')[0];
-    }
-
-    const rows = paramsArray
-      .filter((p) => {
-        if (!p.seriesName || !legendData.includes(p.seriesName)) return false;
-        if (processedSeries.has(p.seriesName)) return false;
-        processedSeries.add(p.seriesName);
-        return true;
-      })
-      .map((p) => {
-        const data: unknown = p.data;
-        const value =
-          Array.isArray(data) && typeof data[1] === 'number'
-            ? formatValue(data[1])
-            : typeof data === 'number'
-              ? formatValue(data)
-              : '-';
-
-        return `${p.marker ?? ''} ${escapeHtml(p.seriesName)}: ${value} ${escapeHtml(unit)}`;
-      });
-
-    return `<strong>${escapeHtml(formattedTime)}</strong><br/>${rows.join('<br/>')}`;
-  };
+/** The blocks' resolution strings ('YEAR', 'year', ...) as the chart layer's type. */
+export function toChartTimeResolution(timeResolution: string | null | undefined): TimeResolution {
+  const resolution = String(timeResolution ?? 'YEAR').toUpperCase();
+  return resolution === 'YEAR' || resolution === 'MONTH' || resolution === 'DAY'
+    ? resolution
+    : undefined;
 }
 
-type KeyedPoints = [string, number][];
+/** The y-axis facts the chart layer's tooltip and aria builders read; blocks let ECharts scale the axis. */
+export function blockYRange(unit: string, valueRounding: number | null | undefined): YRange {
+  return {
+    unit,
+    ticksCount: undefined,
+    ticksRounding: undefined,
+    valueRounding: valueRounding ?? undefined,
+    range: [],
+  };
+}
 
 const toTrace = (name: string, points: KeyedPoints) => ({
   name,
@@ -372,25 +329,14 @@ export function buildBlockAriaDescription({
   chartKind?: 'line' | 'bar';
   detail?: AriaDetail;
 }): string {
-  const resolution = String(timeResolution ?? 'YEAR').toUpperCase();
-  const chartResolution: TimeResolution =
-    resolution === 'YEAR' || resolution === 'MONTH' || resolution === 'DAY'
-      ? resolution
-      : undefined;
   return buildAriaDescription({
     title,
     traces: series.map((entry) => toTrace(entry.name, entry.raw)),
     goalTraces: goals.map((goal) => toTrace(goal.name, goal.data)),
     trendTrace: trend ? toTrace(trend.name, trend.data) : null,
     hasTimeDimension: true,
-    timeResolution: chartResolution,
-    yRange: {
-      unit,
-      ticksCount: undefined,
-      ticksRounding: undefined,
-      valueRounding: valueRounding ?? undefined,
-      range: [],
-    },
+    timeResolution: toChartTimeResolution(timeResolution),
+    yRange: blockYRange(unit, valueRounding),
     valueRounding: valueRounding ?? undefined,
     format,
     t,
@@ -439,13 +385,7 @@ export function buildPieAriaDescription({
     trendTrace: null,
     hasTimeDimension: false,
     timeResolution: undefined,
-    yRange: {
-      unit,
-      ticksCount: undefined,
-      ticksRounding: undefined,
-      valueRounding: valueRounding ?? undefined,
-      range: [],
-    },
+    yRange: blockYRange(unit, valueRounding),
     valueRounding: valueRounding ?? undefined,
     format,
     t,
