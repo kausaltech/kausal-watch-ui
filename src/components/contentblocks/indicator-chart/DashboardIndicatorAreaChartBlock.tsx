@@ -133,7 +133,10 @@ const DashboardIndicatorAreaChartBlock = ({
   const dataSources = hasDimension
     ? [...dimSeries.map((d) => d.raw), ...(showTotalOverlay ? [totalRaw] : [])]
     : [totalRaw];
-  const { xCategories } = collectAllDates(dataSources, timeResolution);
+  // The trend projects to the highest goal year, beyond the last
+  // observation; the axis must reach it or the projection is clipped
+  const trendDates = trendSeries.flatMap((series) => series.data.map(([key]) => key));
+  const { xCategories } = collectAllDates(dataSources, timeResolution, trendDates);
 
   // Annotated so the dimensional/dimensionless branches don't form an
   // inference-hostile union (`.map` over it degrades to `any`)
