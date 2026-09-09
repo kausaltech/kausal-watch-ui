@@ -7,7 +7,7 @@ import {
   InMemoryCache,
   SSRMultipartLink,
 } from '@apollo/client-integration-nextjs';
-import { SetContextLink } from '@apollo/client/link/context';
+import { SetContextLink, setContext } from '@apollo/client/link/context';
 import { useApolloClient } from '@apollo/client/react';
 import { disableFragmentWarnings } from 'graphql-tag';
 import { signOut, useSession } from 'next-auth/react';
@@ -24,6 +24,7 @@ import {
   headersMiddleware,
   localeMiddleware,
 } from '../../utils/apollo.utils';
+import { clearPledgeAuth } from '../pledge/use-pledge-auth';
 
 const authMiddleware = new SetContextLink(({ uri, sessionToken, headers: initialHeaders = {} }) => {
   // Operations that override the uri target the Paths API, which uses its own
@@ -40,6 +41,22 @@ const authMiddleware = new SetContextLink(({ uri, sessionToken, headers: initial
   };
 });
 
+// Injects the pledge bearer token for authenticated public users.
+const pledgeAuthMiddleware = setContext((_, context) => {
+  if (isServer || context.sessionToken) return {};
+
+  const pledgeToken = localStorage.getItem('pledge-auth-token');
+
+  if (!pledgeToken) return {};
+
+  return {
+    headers: {
+      ...(context.headers ?? {}),
+      'X-Public-User-Token': pledgeToken,
+    },
+  };
+});
+
 function makeClient(config: {
   initialLocale: string;
   sessionToken?: string;
@@ -48,7 +65,16 @@ function makeClient(config: {
   noProxy?: boolean;
 }) {
   const { initialLocale, sessionToken, planIdentifier, planDomain, noProxy } = config;
-  const unauthErrorLink = createErrorLink(() => {
+  const unauthErrorLink = createErrorLink((errors) => {
+    // Backend returns UNAUTHENTICATED with an `invalid_token:` message for
+    // expired/invalid pledge bearer tokens. Clear the pledge token locally
+    // rather than triggering a full next-auth sign-out redirect, which would
+    // loop because the token persists in localStorage across the redirect.
+    const hasPledgeTokenError = errors.some((e) => e.message.startsWith('invalid_token'));
+    if (hasPledgeTokenError) {
+      clearPledgeAuth();
+      return;
+    }
     void signOut({ redirect: true });
   });
   return new ApolloClient({
@@ -65,6 +91,7 @@ function makeClient(config: {
       createSentryLink(getWatchGraphQLUrl()),
       localeMiddleware,
       authMiddleware,
+      pledgeAuthMiddleware,
       headersMiddleware,
       ...(isServer
         ? [

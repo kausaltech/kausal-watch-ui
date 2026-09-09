@@ -102,6 +102,7 @@ function Header() {
 
   const { status } = useSession();
   const isAuthenticated = status === 'authenticated';
+  const isPledgeEnabled = !!plan.features?.enableCommunityEngagement;
   const { navigationTitle: siteTitle } = getMetaTitles(plan);
 
   const navLinks: NavItems = useMemo(() => {
@@ -113,7 +114,7 @@ function Header() {
       .filter(isPageMenuItem)
       .map(createLocalizeMenuItem(locale, plan.primaryLanguage));
 
-    if (pageMenuItems.length > 0) {
+    if (!!pageMenuItems && pageMenuItems.length > 0) {
       // find one menu item with root as parent to access the id of the rootPage
       const rootItemIndex = pageMenuItems.findIndex(
         (page) => page.parent?.page.__typename === 'PlanRootPage'
@@ -150,6 +151,7 @@ function Header() {
     customToolbarItems,
     sticky: theme.settings.stickyNavigation,
     logoLink: theme.navLogoLink,
+    showPledgeUser: isPledgeEnabled,
   });
 
   return (

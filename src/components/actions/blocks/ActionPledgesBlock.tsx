@@ -10,6 +10,7 @@ import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getAttributeValueText } from '@/components/common/ActionAttribute';
 import ConfirmPledge from '@/components/pledge/ConfirmPledge';
 import PledgeCard, { type PledgeCategory } from '@/components/pledge/PledgeCard';
+import { usePledgeNavUser } from '@/components/pledge/use-pledge-auth';
 import { usePublicUser } from '@/components/pledge/use-public-user';
 import { getDefaultFormFields } from '@/utils/pledge.utils';
 
@@ -31,6 +32,7 @@ const StyledPledgeGrid = styled.div`
 
 export default function ActionPledgesBlock({ pledges, heading }: Props) {
   const t = useTranslations();
+  const { isAuthenticated } = usePledgeNavUser();
   const {
     userData,
     committedSlugs,
@@ -98,6 +100,7 @@ export default function ActionPledgesBlock({ pledges, heading }: Props) {
           commitmentCount={selectedPledge.commitmentCount}
           formFields={getDefaultFormFields(t)}
           userData={userData}
+          isSignedIn={isAuthenticated}
         />
       )}
     </ActionSection>

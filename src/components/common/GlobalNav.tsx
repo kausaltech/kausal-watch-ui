@@ -30,9 +30,16 @@ import PlanVersionSelector from '@/components/versioning/PlanVersionSelector';
 import { usePlan } from '@/context/plan';
 
 import type { NavItem as AppNavItem, NavItems } from '../Header';
+import PledgeNavUser from '../pledge/PledgeNavUser';
 import Icon, { type ValidIconName } from './Icon';
 import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
+
+const MobileOnlyPledgeNavUser = styled(PledgeNavUser)`
+  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+    display: none;
+  }
+`;
 
 const getRootLink = (
   plan: { parent?: { viewUrl?: string | null } | null },
@@ -581,6 +588,7 @@ export type GlobalNavProps = {
   logoLink?: string | null;
   navItems: NavItems;
   ownerName?: string;
+  showPledgeUser?: boolean;
   siteTitle: string;
   sticky?: boolean;
 };
@@ -603,6 +611,7 @@ function GlobalNav(props: GlobalNavProps) {
     logoLink: logoLinkOverride,
     hidePlanSelector = false,
     hideVersionSelector = false,
+    showPledgeUser = false,
   } = props;
   const rootLink = logoLinkOverride ?? defaultRootLink;
   const {
@@ -678,6 +687,7 @@ function GlobalNav(props: GlobalNavProps) {
             {customToolbarItems.length > 0 && <CustomToolbar items={customToolbarItems} />}
             {plan.features.enableSearch && <NavbarSearch />}
             <LanguageSelector mobile={false} />
+            {showPledgeUser && <PledgeNavUser />}
           </Nav>
           <NavbarToggler
             onClick={() => setIsOpen(!isOpen)}
@@ -760,6 +770,7 @@ function GlobalNav(props: GlobalNavProps) {
               )}
               <LanguageSelector mobile />
               {customToolbarItems.length > 0 && <CustomToolbar items={customToolbarItems} mobile />}
+              {showPledgeUser && <MobileOnlyPledgeNavUser />}
             </Nav>
             <Nav navbar className="ms-md-5">
               {!hideVersionSelector && (
