@@ -1,6 +1,7 @@
 import {
   buildBlockAriaDescription,
   buildGoalSeries,
+  buildPieAriaDescription,
   buildTooltipFormatter,
 } from '../indicator-charts-utility';
 
@@ -184,5 +185,34 @@ describe('buildBlockAriaDescription', () => {
       chartKind: 'bar',
     });
     expect(text).toBe('[chart-aria-time-single Bar chart] Data: 2020: 100; 2021: 95.');
+  });
+});
+
+describe('buildPieAriaDescription', () => {
+  it('names the pie by the locale pack, states the year, and lists the slices', () => {
+    const text = buildPieAriaDescription({
+      title: 'Modal split',
+      year: 2024,
+      slices: [
+        { name: 'Car', value: 70.26 },
+        { name: 'Bike', value: 29.74 },
+      ],
+      unit: '%',
+      valueRounding: 3,
+      format: {
+        number: (v: number, options?: { maximumSignificantDigits?: number }) =>
+          v.toLocaleString('en', options),
+      } as unknown as Parameters<typeof buildPieAriaDescription>[0]['format'],
+      t: (key, values) => `[${key}${values ? ' ' + JSON.stringify(values) : ''}]`,
+      localePack: {
+        aria: { data: { allData: 'Data: ', separator: { middle: ', ', end: '. ' } } },
+        series: { typeNames: { line: 'Line chart', bar: 'Bar chart', pie: 'Pie chart' } },
+      },
+    });
+    expect(text).toBe(
+      '[chart-aria-pie {"title":"Modal split","chartType":"Pie chart","count":2,"date":"2024"}] ' +
+        '[chart-aria-unit {"unit":"%"}] ' +
+        'Data: Car: 70.3; Bike: 29.7.'
+    );
   });
 });

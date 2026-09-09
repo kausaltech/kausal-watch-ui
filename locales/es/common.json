@@ -10,6 +10,7 @@
     "chart-aria-category-multi": "{title}: {chartType} con {count, plural, one {# serie} other {# series}} en {categories, plural, one {# categoría} other {# categorías}}: {names}.",
     "chart-aria-category-single": "{title}: {chartType} de {count, plural, one {# categoría} other {# categorías}}.",
     "chart-aria-latest": "Último valor {value} ({date}).",
+    "chart-aria-pie": "{title}: {chartType} de {count, plural, one {# categoría} other {# categorías}} en {date}.",
     "chart-aria-range": "Mínimo {min} ({minDate}), máximo {max} ({maxDate}).",
     "chart-aria-series-values": "{name}: {values}.",
     "chart-aria-time-multi": "{title}: {chartType} con {count, plural, one {# serie} other {# series}} de {start} a {end}: {names}.",

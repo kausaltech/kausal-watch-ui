@@ -1042,6 +1042,16 @@ function tracePoints(
 const ARIA_MAX_LISTED_POINTS = 24;
 
 /**
+ * The ECharts locale-pack fields the description reads. The shared
+ * EChartsLocalePack type only names line and bar series; the packs also
+ * carry a pie name, which the pie chart block needs.
+ */
+export type AriaLocalePack = {
+  aria?: EChartsLocalePack['aria'];
+  series?: { typeNames?: { line?: string; bar?: string; pie?: string } };
+};
+
+/**
  * A readable description of the chart for its `aria-label`, replacing
  * ECharts' generated one (which recites series indices and unrounded raw
  * values, including NaN padding). Names the indicator, the unit and the time
@@ -1066,6 +1076,7 @@ export function buildAriaDescription({
   t,
   localePack,
   chartKind,
+  periodLabel,
 }: {
   title: string | null | undefined;
   traces: ChartTrace[];
@@ -1077,14 +1088,20 @@ export function buildAriaDescription({
   valueRounding: number | undefined;
   format: Formatter;
   t: Translator;
-  localePack: EChartsLocalePack;
+  localePack: AriaLocalePack;
   /** Marks drawn; defaults to lines on a time axis and bars on a category axis */
-  chartKind?: 'line' | 'bar';
+  chartKind?: 'line' | 'bar' | 'pie';
+  /** For pies: the period the slices represent, e.g. the configured year */
+  periodLabel?: string;
 }): string {
   const typeNames = localePack.series?.typeNames;
   const kind = chartKind ?? (hasTimeDimension ? 'line' : 'bar');
   const chartType =
-    kind === 'line' ? (typeNames?.line ?? 'Line chart') : (typeNames?.bar ?? 'Bar chart');
+    kind === 'line'
+      ? (typeNames?.line ?? 'Line chart')
+      : kind === 'bar'
+        ? (typeNames?.bar ?? 'Bar chart')
+        : (typeNames?.pie ?? 'Pie chart');
   const dataLead = localePack.aria?.data?.allData ?? 'The data is as follows: ';
   const sentenceEnd = (localePack.aria?.data?.separator?.end ?? '. ').trim();
   const num = (value: number) =>
@@ -1111,7 +1128,16 @@ export function buildAriaDescription({
   const singleDate = hasTimeDimension && start === end;
   const sentences: string[] = [];
 
-  if (series.length === 1) {
+  if (series.length === 1 && kind === 'pie' && periodLabel) {
+    sentences.push(
+      t('chart-aria-pie', {
+        title: chartTitle,
+        chartType,
+        count: allPoints.length,
+        date: periodLabel,
+      })
+    );
+  } else if (series.length === 1) {
     sentences.push(
       singleDate
         ? t('chart-aria-time-single-date', { title: chartTitle, chartType, date: start })
