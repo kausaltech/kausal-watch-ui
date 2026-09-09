@@ -203,6 +203,7 @@ const GET_PLAN_CONTEXT: TypedDocumentNode<PlanContextQuery, PlanContextQueryVari
       minimalStatuses
       enableChangeLog
       enableActionPdfExportInPublicUi
+      showParentPlanInPlanSwitcher
     }
     allRelatedPlans {
       id

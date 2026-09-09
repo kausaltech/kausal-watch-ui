@@ -7490,7 +7490,7 @@ export type PlanContextQuery_plan_footer_items =
 
 export type PlanContextQuery_plan_footer = { __typename: 'Footer', items: Array<PlanContextQuery_plan_footer_items> };
 
-export type PlanContextQuery_plan_features = { __typename: 'PlanFeatures', allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hideFromSearchEngines: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean };
+export type PlanContextQuery_plan_features = { __typename: 'PlanFeatures', allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hideFromSearchEngines: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean, showParentPlanInPlanSwitcher: boolean };
 
 export type PlanContextQuery_plan_allRelatedPlans_image_rendition = { __typename: 'ImageRendition', id: string, src: string };
 
@@ -8642,6 +8642,38 @@ export type TestPlanInstanceAndLocaleQuery = { __typename: 'Query', plan: TestPl
 
 
 export type TestPlanInstanceAndLocaleQueryVariables = Exact<{ [key: string]: never; }>;
+
+export type TestCacheHeadersQuery_plan = { __typename: 'Plan', id: string };
+
+export type TestCacheHeadersQuery = { __typename: 'Query', plan: TestCacheHeadersQuery_plan | null };
+
+
+export type TestCacheHeadersQueryVariables = Exact<{ [key: string]: never; }>;
+
+export type TestPlanAgnosticQuery_plansForHostname_Plan = { __typename: 'Plan' };
+
+export type TestPlanAgnosticQuery_plansForHostname_RestrictedPlanNode = { __typename: 'RestrictedPlanNode' };
+
+export type TestPlanAgnosticQuery_plansForHostname =
+  | TestPlanAgnosticQuery_plansForHostname_Plan
+  | TestPlanAgnosticQuery_plansForHostname_RestrictedPlanNode
+;
+
+export type TestPlanAgnosticQuery = { __typename: 'Query', plansForHostname: Array<TestPlanAgnosticQuery_plansForHostname> | null };
+
+
+export type TestPlanAgnosticQueryVariables = Exact<{
+  hostname: string;
+}>;
+
+export type TestRscCacheHeadersQuery_plan = { __typename: 'Plan', id: string };
+
+export type TestRscCacheHeadersQuery = { __typename: 'Query', plan: TestRscCacheHeadersQuery_plan | null };
+
+
+export type TestRscCacheHeadersQueryVariables = Exact<{
+  id: string | number;
+}>;
 
 export type IndicatorSparklineGraphDataQuery_plan_scenarios = { __typename: 'Scenario', id: string, identifier: string, name: string };
 
