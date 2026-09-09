@@ -54,14 +54,23 @@ function yearOfDate(date: string): number | undefined {
   return match ? Number(match[1]) : undefined;
 }
 
+/**
+ * The most recent year with a value in any series. Series may end at
+ * different years (a stale or empty first category must not hide newer
+ * observations elsewhere), so every dated value is considered.
+ */
 function getLatestYear(chartSeries: Props['chartSeries']) {
-  const lastDate = chartSeries?.[0]?.values?.[chartSeries?.[0]?.values.length - 1]?.date;
-
-  if (!lastDate) {
-    return undefined;
-  }
-
-  return yearOfDate(lastDate);
+  let latest: number | undefined;
+  chartSeries?.forEach((series) => {
+    series?.values?.forEach((value) => {
+      if (value?.date == null || value.value == null) return;
+      const year = yearOfDate(value.date);
+      if (year != null && (latest == null || year > latest)) {
+        latest = year;
+      }
+    });
+  });
+  return latest;
 }
 
 function doYearsMatch(year: number, date: string) {

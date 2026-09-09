@@ -1,5 +1,6 @@
 import {
   createTooltipFormatter,
+  selectPieSlices,
   showSegmentedPercentage,
 } from '../DashboardIndicatorPieChartBlock';
 
@@ -72,5 +73,44 @@ describe('showSegmentedPercentage', () => {
     const formatter = createTooltipFormatter(indicator, slices, String, '%');
     const params = { name: 'A', value: 60, percent: 60 } as Parameters<typeof formatter>[0];
     expect(formatter(params)).toBe('A: 60 %');
+  });
+});
+
+describe('selectPieSlices fallback year', () => {
+  type ChartSeries = Parameters<typeof selectPieSlices>[0];
+  const category = (id: string, name: string) => ({ id, name, defaultColor: '' });
+  const chartSeries = [
+    // Stale first category: its last observation is older than the others'
+    {
+      dimensionCategory: category('a', 'Stale'),
+      values: [{ id: '1', date: '2019-01-01', value: 5 }],
+    },
+    {
+      dimensionCategory: category('b', 'Fresh'),
+      values: [
+        { id: '2', date: '2019-01-01', value: 7 },
+        { id: '3', date: '2024-01-01', value: 9 },
+      ],
+    },
+    { dimensionCategory: category('c', 'Empty'), values: [] },
+  ] as unknown as ChartSeries;
+
+  it('uses the most recent year found in any series', () => {
+    const { year, slices } = selectPieSlices(chartSeries, null);
+    expect(year).toBe(2024);
+    expect(slices).toEqual([{ name: 'Fresh', value: 9, itemStyle: { color: undefined } }]);
+  });
+
+  it('still honors an explicitly configured year', () => {
+    const { year, slices } = selectPieSlices(chartSeries, 2019);
+    expect(year).toBe(2019);
+    expect(slices.map((slice) => slice.name)).toEqual(['Stale', 'Fresh']);
+  });
+
+  it('reports no year when nothing is dated', () => {
+    const undated = [
+      { dimensionCategory: category('a', 'A'), values: [{ id: '1', date: null, value: 5 }] },
+    ] as unknown as ChartSeries;
+    expect(selectPieSlices(undated, null)).toEqual({ year: undefined, slices: [] });
   });
 });
