@@ -1,4 +1,5 @@
 import {
+  buildTimeTooltipFormatter,
   collectChartDates,
   detectTimeDimension,
   formatDateLabel,
@@ -194,5 +195,53 @@ describe('detectTimeDimension', () => {
     expect(detectTimeDimension(noTimeSpec, [{ name: 'Value', x: ['Housing'], y: [1] }], [])).toBe(
       false
     );
+  });
+});
+
+describe('buildTimeTooltipFormatter', () => {
+  const format = { number: (v: number) => String(v) } as unknown as Parameters<
+    typeof buildTimeTooltipFormatter
+  >[0]['format'];
+  const yRange = {
+    unit: '<u>kt</u>',
+    ticksCount: undefined,
+    ticksRounding: undefined,
+    valueRounding: undefined,
+    range: [0, 10],
+  };
+  const marker = '<span style="background-color:#111"></span>';
+
+  it('escapes series names and units but keeps the ECharts marker', () => {
+    const formatter = buildTimeTooltipFormatter({
+      timeResolution: 'YEAR',
+      trendName: null,
+      yRange,
+      format,
+    });
+    const text = formatter([
+      {
+        seriesName: '<img src=x onerror=alert(1)>',
+        axisValue: '2020-01-01',
+        value: ['2020-01-01', 5],
+        marker,
+      },
+    ]);
+    expect(text).toBe(
+      `2020<br/>${marker} &lt;img src=x onerror=alert(1)&gt;: 5 &lt;u&gt;kt&lt;/u&gt;<br/>`
+    );
+  });
+
+  it('skips the trend series', () => {
+    const formatter = buildTimeTooltipFormatter({
+      timeResolution: 'YEAR',
+      trendName: 'Trend',
+      yRange: { ...yRange, unit: 'kt' },
+      format,
+    });
+    const text = formatter([
+      { seriesName: 'Trend', axisValue: '2020-01-01', value: ['2020-01-01', 5], marker },
+      { seriesName: 'Value', axisValue: '2020-01-01', value: ['2020-01-01', 7], marker },
+    ]);
+    expect(text).toBe(`2020<br/>${marker} Value: 7 kt<br/>`);
   });
 });

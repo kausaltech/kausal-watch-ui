@@ -1,5 +1,6 @@
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
+import { escapeHtml } from '@/common/utils';
 import { formatUnitLabel } from '@/components/indicators/indicator-data-helpers';
 
 type LineChartBlock = Omit<
@@ -194,7 +195,8 @@ export function buildGoalSeries(
           const value: unknown = Array.isArray(params.value)
             ? (params.value as unknown[])[1]
             : params.value;
-          return `${name}: ${typeof value === 'number' ? formatValue(value) : '-'} ${unit}`.trim();
+          const formatted = typeof value === 'number' ? formatValue(value) : '-';
+          return `${escapeHtml(name)}: ${formatted} ${escapeHtml(unit)}`.trim();
         },
       },
     };
@@ -259,6 +261,11 @@ export function buildTrendSeries(
     : [];
 }
 
+/**
+ * Axis-trigger tooltip listing every legend series at the hovered date.
+ * ECharts renders the result as HTML: names, units and the axis label are
+ * escaped, while the marker is ECharts' own trusted markup.
+ */
 export function buildTooltipFormatter(
   unit: string,
   legendData: string[],
@@ -308,10 +315,10 @@ export function buildTooltipFormatter(
               ? formatValue(data)
               : '-';
 
-        return `${p.marker ?? ''} ${p.seriesName ?? ''}: ${value} ${unit}`;
+        return `${p.marker ?? ''} ${escapeHtml(p.seriesName)}: ${value} ${escapeHtml(unit)}`;
       });
 
-    return `<strong>${formattedTime}</strong><br/>${rows.join('<br/>')}`;
+    return `<strong>${escapeHtml(formattedTime)}</strong><br/>${rows.join('<br/>')}`;
   };
 }
 
