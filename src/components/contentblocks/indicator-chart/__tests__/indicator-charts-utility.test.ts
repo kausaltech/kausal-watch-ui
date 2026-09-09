@@ -1,7 +1,10 @@
 import {
   buildBlockAriaDescription,
+  buildCategoryValues,
   buildGoalSeries,
   buildPieAriaDescription,
+  buildUndatedTotal,
+  hasDatedValues,
 } from '../indicator-charts-utility';
 
 type Indicator = Parameters<typeof buildGoalSeries>[0];
@@ -188,5 +191,45 @@ describe('buildPieAriaDescription', () => {
         '[chart-aria-unit {"unit":"%"}] ' +
         'Data: Car: 70.3; Bike: 29.7.'
     );
+  });
+});
+
+describe('undated (category-only) values', () => {
+  type Series = Parameters<typeof hasDatedValues>[0];
+  const category = (id: string, name: string, color = '') => ({ id, name, defaultColor: color });
+  const undatedSeries = [
+    {
+      dimensionCategory: category('h', 'Housing', '#abc'),
+      values: [{ id: '1', date: null, value: 60 }],
+    },
+    {
+      dimensionCategory: category('t', 'Transport'),
+      values: [
+        { id: '2', date: null, value: 30 },
+        { id: '3', date: null, value: 10 },
+      ],
+    },
+    { dimensionCategory: null, values: [{ id: '4', date: null, value: 100 }] },
+  ] as unknown as Series;
+
+  it('detects whether any value is dated', () => {
+    expect(hasDatedValues(undatedSeries)).toBe(false);
+    expect(
+      hasDatedValues([
+        { dimensionCategory: null, values: [{ id: '1', date: '2020-01-01', value: 1 }] },
+      ] as unknown as Series)
+    ).toBe(true);
+  });
+
+  it('builds one value per category, summing undated values and coloring from the palette', () => {
+    expect(buildCategoryValues(undatedSeries, ['#111', '#222'])).toEqual([
+      { name: 'Housing', color: '#abc', value: 60 },
+      { name: 'Transport', color: '#222', value: 40 },
+    ]);
+  });
+
+  it('reads the undated total', () => {
+    expect(buildUndatedTotal(undatedSeries)).toBe(100);
+    expect(buildUndatedTotal([])).toBeNull();
   });
 });

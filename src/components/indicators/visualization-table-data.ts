@@ -10,10 +10,13 @@
 import type { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { selectPieSlices } from '@/components/contentblocks/indicator-chart/DashboardIndicatorPieChartBlock';
 import {
+  buildCategoryValues,
   buildDimSeries,
   buildTotalSeries,
+  buildUndatedTotal,
   formatDateKey,
   getUnitLabel,
+  hasDatedValues,
 } from '@/components/contentblocks/indicator-chart/indicator-charts-utility';
 
 import type { IndicatorVisualizationBlockData } from './IndicatorVisualizationBlock';
@@ -114,6 +117,26 @@ export function buildVisualizationTableData(
     }
     case 'DashboardIndicatorBarChartBlock':
     case 'IndicatorDefaultBarChart': {
+      if (!hasDatedValues(chartSeries)) {
+        // Category-only indicator: the block draws one bar per category
+        const undatedTotal = buildUndatedTotal(chartSeries);
+        const bars: Array<{ name: string; value: number }> = dimension
+          ? buildCategoryValues(chartSeries, NO_PALETTE)
+          : undatedTotal != null
+            ? [{ name: totalLabel, value: undatedTotal }]
+            : [];
+        traces = bars.length
+          ? [
+              {
+                name: dimension?.name ?? totalLabel,
+                xType: 'category',
+                x: bars.map((bar) => bar.name),
+                y: bars.map((bar) => bar.value),
+              },
+            ]
+          : [];
+        break;
+      }
       const series = dimension
         ? buildDimSeries(chartSeries, NO_PALETTE, timeResolution)
         : [buildTotalSeries(chartSeries, '', totalLabel, timeResolution)];
