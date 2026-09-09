@@ -321,10 +321,19 @@ export function usePledgeNavUser() {
   }, [apolloClient]);
 
   // cache-first because we query the public user in a few places for their email
-  const { data } = useQuery<PublicUserNavQuery>(GET_PUBLIC_USER_NAV, {
+  const { data, loading } = useQuery<PublicUserNavQuery>(GET_PUBLIC_USER_NAV, {
     fetchPolicy: 'cache-first',
     skip: !isAuthenticated,
   });
+
+  // A stored token that no longer resolves to a user (e.g. deleted)
+  // resolves publicUser to null rather than erroring — treat that as a stale
+  // session and resolve by signing out
+  useEffect(() => {
+    if (isAuthenticated && !loading && data && data.publicUser === null) {
+      clearPledgeAuth();
+    }
+  }, [isAuthenticated, loading, data]);
 
   const signOut = useCallback(() => {
     clearPledgeAuth();

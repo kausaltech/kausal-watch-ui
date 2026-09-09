@@ -201,6 +201,11 @@ function ConfirmPledge({
     prevIsOpen.current = isOpen;
   }, [isOpen, formFields, userData]);
 
+  // Signed-in users have already provided their data, so only prompt for fields they haven't.
+  const visibleFormFields = isSignedIn
+    ? formFields.filter((field) => !userData[field.id])
+    : formFields;
+
   const handleClose = () => {
     setStep('form');
     setFormData({});
@@ -275,10 +280,10 @@ function ConfirmPledge({
                 <>
                   <StyledDescription>{t('pledge-confirm-description')}</StyledDescription>
 
-                  {formFields.length > 0 && (
+                  {visibleFormFields.length > 0 && (
                     <StyledFormSection>
                       <StyledFormHeader>{t('pledge-confirm-form-heading')}</StyledFormHeader>
-                      {formFields.map((field) => (
+                      {visibleFormFields.map((field) => (
                         <TextField
                           key={field.id}
                           id={field.id}
