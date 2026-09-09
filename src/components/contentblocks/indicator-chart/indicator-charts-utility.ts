@@ -2,6 +2,7 @@ import type { LineChartVisualizationFragment } from '@/common/__generated__/grap
 import { linearRegression } from '@/common/math';
 import { escapeHtml } from '@/common/utils';
 import {
+  type AriaDetail,
   type AriaLocalePack,
   type Formatter,
   type TimeResolution,
@@ -356,6 +357,7 @@ export function buildBlockAriaDescription({
   t,
   localePack,
   chartKind = 'line',
+  detail,
 }: {
   title: string | null | undefined;
   series: Array<{ name: string; raw: KeyedPoints }>;
@@ -368,6 +370,7 @@ export function buildBlockAriaDescription({
   t: (key: string, values?: Record<string, string | number>) => string;
   localePack: AriaLocalePack;
   chartKind?: 'line' | 'bar';
+  detail?: AriaDetail;
 }): string {
   const resolution = String(timeResolution ?? 'YEAR').toUpperCase();
   const chartResolution: TimeResolution =
@@ -393,6 +396,7 @@ export function buildBlockAriaDescription({
     t,
     localePack,
     chartKind,
+    detail,
   });
 }
 
@@ -409,6 +413,7 @@ export function buildPieAriaDescription({
   format,
   t,
   localePack,
+  detail,
 }: {
   title: string | null | undefined;
   year: number | undefined;
@@ -418,6 +423,7 @@ export function buildPieAriaDescription({
   format: Formatter;
   t: (key: string, values?: Record<string, string | number>) => string;
   localePack: AriaLocalePack;
+  detail?: AriaDetail;
 }): string {
   return buildAriaDescription({
     title,
@@ -446,6 +452,7 @@ export function buildPieAriaDescription({
     localePack,
     chartKind: 'pie',
     periodLabel: year != null ? String(year) : undefined,
+    detail,
   });
 }
 

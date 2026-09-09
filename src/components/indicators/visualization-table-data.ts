@@ -1,11 +1,11 @@
 /**
  * Accessible-table data for a configured indicator visualization.
  *
- * The chart canvas is hidden from assistive technology on the premise that
- * the data table beside it is equivalent, so the table must be built from the
- * same backend `chartSeries` the block renders — with the same grouping
- * dimension, the same total/goal series, and for pies the same year — rather
- * than from the generic cube pipeline.
+ * The chart's aria description summarizes the data; the table beside it is
+ * the navigable long description, so it must be built from the same backend
+ * `chartSeries` the block renders — with the same grouping dimension, the
+ * same total/goal series, and for pies the same year — rather than from the
+ * generic cube pipeline.
  */
 import type { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { selectPieSlices } from '@/components/contentblocks/indicator-chart/DashboardIndicatorPieChartBlock';

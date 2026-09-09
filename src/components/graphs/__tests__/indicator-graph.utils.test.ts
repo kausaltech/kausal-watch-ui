@@ -381,6 +381,73 @@ describe('buildAriaDescription', () => {
   });
 });
 
+describe('buildAriaDescription summary detail', () => {
+  const t = (key: string, values?: Record<string, string | number>) =>
+    `[${key}${values ? ' ' + JSON.stringify(values) : ''}]`;
+  const format = {
+    number: (v: number) => String(v),
+  } as unknown as Parameters<typeof buildAriaDescription>[0]['format'];
+  const common = {
+    goalTraces: [],
+    trendTrace: null,
+    timeResolution: 'YEAR' as const,
+    yRange: {
+      unit: '',
+      ticksCount: undefined,
+      ticksRounding: undefined,
+      valueRounding: undefined,
+      range: [],
+    },
+    valueRounding: undefined,
+    format,
+    t,
+    localePack: {
+      aria: { data: { allData: 'Data: ', separator: { middle: ', ', end: '. ' } } },
+      series: { typeNames: { line: 'Line chart', bar: 'Bar chart' } },
+    },
+    detail: 'summary' as const,
+  };
+
+  it('gives extremes and latest instead of listing values for time series', () => {
+    const text = buildAriaDescription({
+      ...common,
+      title: 'Emissions',
+      hasTimeDimension: true,
+      traces: [
+        { name: 'Housing', x: ['2020-01-01', '2021-01-01', '2022-01-01'], y: [60, 40, 50] },
+        { name: 'Transport', x: ['2022-01-01'], y: [7] },
+      ],
+    });
+    expect(text).not.toContain('Data:');
+    expect(text).toContain(
+      'Housing: [chart-aria-range {"min":"40","minDate":"2021","max":"60","maxDate":"2020"}] [chart-aria-latest {"value":"50","date":"2022"}]'
+    );
+    // A single point has no range, only its value
+    expect(text).toContain('Transport: [chart-aria-latest {"value":"7","date":"2022"}]');
+  });
+
+  it('gives only the extremes for category charts, listing a lone category', () => {
+    const text = buildAriaDescription({
+      ...common,
+      title: 'Split',
+      hasTimeDimension: false,
+      traces: [{ name: 'Sector', xType: 'category', x: ['Car', 'Bike'], y: [70, 30] }],
+    });
+    expect(text).toContain(
+      '[chart-aria-range {"min":"30","minDate":"Bike","max":"70","maxDate":"Car"}]'
+    );
+    expect(text).not.toContain('chart-aria-latest');
+
+    const lone = buildAriaDescription({
+      ...common,
+      title: 'Split',
+      hasTimeDimension: false,
+      traces: [{ name: 'Sector', xType: 'category', x: ['Car'], y: [70] }],
+    });
+    expect(lone).toContain('Data: Car: 70.');
+  });
+});
+
 describe('buildAriaDescription locale pack', () => {
   it('takes the chart-type name and data lead-in from the ECharts locale pack', () => {
     const text = buildAriaDescription({
