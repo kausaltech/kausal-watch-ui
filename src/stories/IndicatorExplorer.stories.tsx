@@ -1,6 +1,6 @@
 import {
-  type FormEvent,
   type ReactNode,
+  type SyntheticEvent,
   isValidElement,
   useEffect,
   useMemo,
@@ -11,18 +11,21 @@ import {
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { ApolloClient, HttpLink, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, type TypedDocumentNode, gql } from '@apollo/client';
 import { ApolloProvider, useQuery } from '@apollo/client/react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { useTranslations } from 'next-intl';
 import { UPDATE_GLOBALS } from 'storybook/internal/core-events';
 import { addons } from 'storybook/preview-api';
 
-import type { PlanContextFragment } from '@/common/__generated__/graphql';
+import type { IndicatorTimeResolution, PlanContextFragment } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
+import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 import IndicatorVisualizationBlock, {
   type IndicatorVisualizationBlockData,
 } from '@/components/indicators/IndicatorVisualizationBlock';
+import { buildVisualizationTableData } from '@/components/indicators/visualization-table-data';
 import PlanProvider from '@/components/providers/PlanProvider';
 import { MOCK_PLAN } from '@/stories/mocks/plan.mocks';
 
@@ -49,9 +52,12 @@ interface LocalInstance {
   plans: string[];
 }
 
+type StoryTheme = { settings?: { graphs?: Record<string, unknown> } };
+
 function getLocalInstances(): LocalInstance[] {
   try {
-    return JSON.parse(process.env.LOCAL_INSTANCES ?? 'null') ?? [];
+    const parsed: unknown = JSON.parse(process.env.LOCAL_INSTANCES ?? 'null');
+    return Array.isArray(parsed) ? (parsed as LocalInstance[]) : [];
   } catch {
     return [];
   }
@@ -63,15 +69,18 @@ function toGraphqlEndpoint(apiUrl: string) {
 
 // All themes known to Storybook, keyed by theme identifier
 // (injected by .storybook/main.ts, same data the theme toolbar uses).
-function getThemes(): Record<string, Record<string, unknown>> {
+function getThemes(): Record<string, StoryTheme> {
   try {
-    return JSON.parse(process.env.THEMES ?? 'null') ?? {};
+    const parsed: unknown = JSON.parse(process.env.THEMES ?? 'null');
+    return typeof parsed === 'object' && parsed !== null
+      ? (parsed as Record<string, StoryTheme>)
+      : {};
   } catch {
     return {};
   }
 }
 
-const GET_PLAN_INDICATORS = gql`
+const GET_PLAN_INDICATORS: TypedDocumentNode<ExplorerQueryData, ExplorerQueryVariables> = gql`
   query StorybookIndicatorExplorer($plan: ID!) {
     plan(id: $plan) {
       id
@@ -79,6 +88,7 @@ const GET_PLAN_INDICATORS = gql`
       themeIdentifier
       viewUrl
       organization {
+        id
         name
       }
     }
@@ -88,10 +98,12 @@ const GET_PLAN_INDICATORS = gql`
       level(plan: $plan)
       timeResolution
       unit {
+        id
         name
         shortName
       }
       latestValue {
+        id
         date
         value
       }
@@ -126,9 +138,11 @@ const GET_PLAN_INDICATORS = gql`
       nonQuantifiedGoal
       nonQuantifiedGoalDate
       quantity {
+        id
         name
       }
       referenceValue {
+        id
         value
         date
       }
@@ -162,6 +176,7 @@ const GET_PLAN_INDICATORS = gql`
         }
       }
       dimensions {
+        id
         dimension {
           id
           name
@@ -396,7 +411,10 @@ const SettingsDetails = styled.details`
 function formatSettingValue(value: unknown): string {
   if (value == null || value === '') return '–';
   if (typeof value === 'boolean') return value ? 'true' : 'false';
-  return String(value);
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'bigint') {
+    return String(value);
+  }
+  return JSON.stringify(value);
 }
 
 /** Collapsible listing of the indicator's own visualisation-affecting
@@ -701,6 +719,15 @@ const PreviewColumn = styled.div<{ $active: boolean }>`
   background: ${({ $active, theme }) => ($active ? theme.graphColors.blue010 : 'transparent')};
 `;
 
+const ToggleLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: #666;
+  cursor: pointer;
+`;
+
 const BlockSettingsRow = styled.div`
   font-size: 0.75rem;
   color: #555;
@@ -767,7 +794,15 @@ function getBlockOverrideWarnings(block: IndicatorVisualizationBlockData): strin
   return warnings;
 }
 
-function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
+function EChartsPreviewColumn({
+  indicator,
+  showTable,
+}: {
+  indicator: ExplorerIndicator;
+  /** Render the accessible data table under the chart, for debugging. */
+  showTable: boolean;
+}) {
+  const t = useTranslations();
   const [kind, setKind] = useState<VisualizationKind>(
     () =>
       (indicator.defaultVisualization &&
@@ -778,6 +813,11 @@ function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
     () => (kind === 'default' ? null : synthesizeVisualization(indicator, kind)),
     [indicator, kind]
   );
+  // Same table the production view shows beside a configured block
+  const blockTable =
+    block && showTable
+      ? buildVisualizationTableData(block, indicator.timeResolution as IndicatorTimeResolution, t)
+      : null;
 
   return (
     <PreviewColumn $active={kind !== 'default'}>
@@ -812,9 +852,24 @@ function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
           <OverrideAlert key={warning}>⚠️ {warning}</OverrideAlert>
         ))}
       {block ? (
-        <IndicatorVisualizationBlock block={block} />
+        <>
+          <IndicatorVisualizationBlock block={block} />
+          {showTable &&
+            (blockTable ? (
+              <GraphAsTable
+                specification={blockTable.specification}
+                timeResolution={blockTable.timeResolution}
+                data={blockTable.traces}
+                goalTraces={blockTable.goalTraces}
+                title={indicator.name}
+                openByDefault
+              />
+            ) : (
+              <Message>No table data for this block.</Message>
+            ))}
+        </>
       ) : (
-        <IndicatorVisualisation indicatorId={indicator.id} showTable={false} />
+        <IndicatorVisualisation indicatorId={indicator.id} showTable={showTable} />
       )}
     </PreviewColumn>
   );
@@ -897,7 +952,10 @@ function renderGraphSettingValue(value: unknown): ReactNode {
     );
   }
   if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'bigint') {
+    return String(value);
+  }
+  return typeof value === 'symbol' ? (value.description ?? '') : '[function]';
 }
 
 /** Collapsible listing of the active theme's `settings.graphs` variables
@@ -972,13 +1030,14 @@ function describeIndicator(indicator: ExplorerIndicator): string {
 }
 
 function IndicatorComparisonList({ plan }: { plan: string }) {
-  const themes = useMemo(getThemes, []);
+  const themes = useMemo(() => getThemes(), []);
+  const [showTables, setShowTables] = useState(false);
   const {
     data: currentData,
     previousData,
     loading,
     error,
-  } = useQuery<ExplorerQueryData, ExplorerQueryVariables>(GET_PLAN_INDICATORS, {
+  } = useQuery(GET_PLAN_INDICATORS, {
     variables: { plan },
   });
   // Keep rendering the previous result if the query ever reloads (e.g. a
@@ -1024,11 +1083,15 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
             {themeFound ? themeKey : `${themeKey} not found locally, using toolbar theme`})
           </small>
         </h2>
-        <GraphSettingsPanel
-          defaultGraphs={
-            (themes.default?.settings?.graphs ?? {}) as unknown as Record<string, unknown>
-          }
-        />
+        <GraphSettingsPanel defaultGraphs={themes.default?.settings?.graphs ?? {}} />
+        <ToggleLabel>
+          <input
+            type="checkbox"
+            checked={showTables}
+            onChange={(event) => setShowTables(event.target.checked)}
+          />
+          Data tables under charts
+        </ToggleLabel>
       </PlanHeader>
       {indicators.length === 0 && <Message>This plan has no indicators.</Message>}
       {indicators.map((indicator) => (
@@ -1057,7 +1120,7 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
           </header>
           <LazyRender>
             <GraphColumns>
-              <EChartsPreviewColumn indicator={indicator} />
+              <EChartsPreviewColumn indicator={indicator} showTable={showTables} />
             </GraphColumns>
           </LazyRender>
         </ComparisonRow>
@@ -1130,7 +1193,7 @@ function PlanIdentifierInput({
 }) {
   const [input, setInput] = useState(initialPlanIdentifier ?? '');
 
-  function handleSubmit(event: FormEvent) {
+  function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     onSubmit(input.trim());
   }
@@ -1161,7 +1224,7 @@ interface IndicatorExplorerProps {
 let lastSelection: { apiUrl: string; plan: string } | undefined;
 
 function IndicatorExplorer({ apiUrl, initialPlanIdentifier = '' }: IndicatorExplorerProps) {
-  const instances = useMemo(getLocalInstances, []);
+  const instances = useMemo(() => getLocalInstances(), []);
   const hasInstances = instances.length > 0;
   const [selection, setSelectionState] = useState(
     () =>
