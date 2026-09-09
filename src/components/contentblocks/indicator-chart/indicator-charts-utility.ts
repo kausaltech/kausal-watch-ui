@@ -129,6 +129,50 @@ export function buildDimSeries(
   });
 }
 
+/**
+ * Whether any value carries a date. Category-only indicators (a value per
+ * category, no time axis) have none; the schema permits null dates.
+ */
+export function hasDatedValues(chartSeries: LineChartBlock['chartSeries']): boolean {
+  return (chartSeries ?? []).some((s) => s?.values.some((v) => v?.date != null));
+}
+
+/**
+ * Undated values per dimension category, for category-only indicators drawn
+ * as one bar per category. Categories without an undated value are left out.
+ */
+export function buildCategoryValues(
+  chartSeries: LineChartBlock['chartSeries'],
+  palette: string[]
+): Array<{ name: string; color: string; value: number }> {
+  const out: Array<{ name: string; color: string; value: number }> = [];
+  (chartSeries ?? []).forEach((s) => {
+    if (!s?.dimensionCategory) return;
+    const undated = s.values.filter(
+      (v): v is NonNullable<typeof v> => v != null && v.date == null && v.value != null
+    );
+    if (undated.length === 0) return;
+    const rawColor = s.dimensionCategory.defaultColor;
+    out.push({
+      name: s.dimensionCategory.name,
+      color: rawColor && rawColor.trim() !== '' ? rawColor : palette[out.length % palette.length],
+      value: undated.reduce((sum, v) => sum + v.value, 0),
+    });
+  });
+  return out;
+}
+
+/** The undated categoryless value, i.e. a total without a time axis. */
+export function buildUndatedTotal(chartSeries: LineChartBlock['chartSeries']): number | null {
+  const undated =
+    (chartSeries ?? [])
+      .find((s) => s != null && !s.dimensionCategory)
+      ?.values.filter(
+        (v): v is NonNullable<typeof v> => v != null && v.date == null && v.value != null
+      ) ?? [];
+  return undated.length ? undated.reduce((sum, v) => sum + v.value, 0) : null;
+}
+
 export function buildTotalSeries(
   chartSeries: LineChartBlock['chartSeries'],
   totalLineColor: string,
@@ -347,10 +391,11 @@ export function buildBlockAriaDescription({
 }
 
 /**
- * The aria-label for a pie chart block: the slices of the selected year as a
- * single category series, named by the indicator.
+ * The aria-label for a category chart block — a pie's slices for the selected
+ * year, or a category-only indicator's bars — as a single category series
+ * named by the indicator.
  */
-export function buildPieAriaDescription({
+export function buildCategoryAriaDescription({
   title,
   year,
   slices,
@@ -360,9 +405,10 @@ export function buildPieAriaDescription({
   t,
   localePack,
   detail,
+  chartKind = 'pie',
 }: {
   title: string | null | undefined;
-  year: number | undefined;
+  year?: number | undefined;
   slices: Array<{ name: string; value: number }>;
   unit: string;
   valueRounding: number | null | undefined;
@@ -370,6 +416,7 @@ export function buildPieAriaDescription({
   t: (key: string, values?: Record<string, string | number>) => string;
   localePack: AriaLocalePack;
   detail?: AriaDetail;
+  chartKind?: 'pie' | 'bar';
 }): string {
   return buildAriaDescription({
     title,
@@ -390,11 +437,13 @@ export function buildPieAriaDescription({
     format,
     t,
     localePack,
-    chartKind: 'pie',
+    chartKind,
     periodLabel: year != null ? String(year) : undefined,
     detail,
   });
 }
+
+export const buildPieAriaDescription = buildCategoryAriaDescription;
 
 export function buildYAxisConfig(
   unit: string,

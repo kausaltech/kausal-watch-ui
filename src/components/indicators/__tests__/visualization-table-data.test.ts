@@ -115,6 +115,21 @@ describe('buildVisualizationTableData', () => {
     expect(table?.goalTraces).toEqual([]);
   });
 
+  it('tabulates a category-only bar chart with categories as rows', () => {
+    const undated = [
+      series(housing, [[null as unknown as string, 60]]),
+      series(transport, [[null as unknown as string, 40]]),
+    ];
+    const table = buildVisualizationTableData(
+      block({ __typename: 'IndicatorDefaultBarChart', barType: null, chartSeries: undated }),
+      IndicatorTimeResolution.Year,
+      t
+    );
+    expect(table?.traces).toEqual([
+      { name: 'Sector', xType: 'category', x: ['Housing', 'Transport'], y: [60, 40] },
+    ]);
+  });
+
   it('adds the total overlay to a dimensional area chart only when enabled', () => {
     const withTotal = buildVisualizationTableData(
       block({ __typename: 'IndicatorDefaultAreaChart', showTotalLine: true }),

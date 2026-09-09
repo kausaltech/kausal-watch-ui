@@ -22,11 +22,15 @@ import {
   type GraphsTheme,
   blockYRange,
   buildBlockAriaDescription,
+  buildCategoryAriaDescription,
+  buildCategoryValues,
   buildDimSeries,
   buildTotalSeries,
+  buildUndatedTotal,
   buildYAxisConfig,
   collectAllDates,
   getUnitLabel,
+  hasDatedValues,
   toChartTimeResolution,
 } from './indicator-charts-utility';
 
@@ -68,61 +72,89 @@ const DashboardIndicatorBarChartBlock = ({
     return <div>{t('data-not-available')}</div>;
   }
 
-  const dimSeries = dimension
-    ? buildDimSeries(chartSeries, palette, timeResolution)
-    : [
-        buildTotalSeries(
-          chartSeries,
-          graphsTheme.totalLineColor ?? palette[0],
-          totalLabel,
-          timeResolution
-        ),
-      ];
-
-  const { xCategories } = collectAllDates(
-    dimSeries.map((d) => d.raw),
-    timeResolution
-  );
-
-  const seriesDataMap: Record<string, (number | null)[]> = {};
-  dimSeries.forEach(({ name, raw }) => {
-    const valuesByKey: Record<string, number> = Object.fromEntries(
-      raw.map(([key, value]) => [key, value])
-    );
-    seriesDataMap[name] = xCategories.map((key) => valuesByKey[key] ?? null);
-  });
-
-  // An explicit block barType wins over the indicator's own
-  // dataCategoriesAreStackable default; without one, the indicator decides.
-  const stackBars = barType
-    ? barType === 'stacked'
-    : (indicator?.dataCategoriesAreStackable ?? false);
-
-  const series = Object.entries(seriesDataMap).map(([name, data]) => ({
-    name,
-    type: 'bar' as const,
-    stack: stackBars ? 'total' : undefined,
-    data,
-    emphasis: { focus: 'series' as const },
-    itemStyle: {
-      color: dimSeries.find((d) => d.name === name)?.color,
-    },
-  }));
-
-  // ECharts sets this as the canvas' aria-label; same wording as the
-  // generic IndicatorGraph so screen-reader users hear one style of chart
-  const ariaDescription = buildBlockAriaDescription({
+  const totalColor = graphsTheme.totalLineColor ?? palette[0];
+  const ariaCommon = {
     title: indicator?.name,
-    series: dimSeries,
-    timeResolution,
     unit,
     valueRounding: indicator?.valueRounding,
     format,
     t,
     localePack: getEChartsLocaleStrings(locale),
     detail: ariaDetail,
-    chartKind: 'bar',
-  });
+  };
+
+  // Category-only indicators carry undated values (the schema permits null
+  // dates): one bar per category on a category axis, like the generic graph
+  // draws them, instead of a time axis with nothing on it.
+  const categoryOnly = !hasDatedValues(chartSeries);
+  let xCategories: string[];
+  let series: ECOption['series'];
+  let showLegend: boolean;
+  let ariaDescription: string;
+
+  if (categoryOnly) {
+    const undatedTotal = buildUndatedTotal(chartSeries);
+    const bars = dimension
+      ? buildCategoryValues(chartSeries, palette)
+      : undatedTotal != null
+        ? [{ name: totalLabel, color: totalColor, value: undatedTotal }]
+        : [];
+    if (bars.length === 0) {
+      return <div>{t('data-not-available')}</div>;
+    }
+    xCategories = bars.map((bar) => bar.name);
+    series = [
+      {
+        name: dimension?.name ?? totalLabel,
+        type: 'bar' as const,
+        data: bars.map((bar) => ({ value: bar.value, itemStyle: { color: bar.color } })),
+        emphasis: { focus: 'series' as const },
+      },
+    ];
+    // The categories are on the axis; a legend would only repeat them
+    showLegend = false;
+    ariaDescription = buildCategoryAriaDescription({
+      ...ariaCommon,
+      slices: bars,
+      chartKind: 'bar',
+    });
+  } else {
+    const dimSeries = dimension
+      ? buildDimSeries(chartSeries, palette, timeResolution)
+      : [buildTotalSeries(chartSeries, totalColor, totalLabel, timeResolution)];
+
+    xCategories = collectAllDates(
+      dimSeries.map((d) => d.raw),
+      timeResolution
+    ).xCategories;
+
+    // An explicit block barType wins over the indicator's own
+    // dataCategoriesAreStackable default; without one, the indicator decides.
+    const stackBars = barType
+      ? barType === 'stacked'
+      : (indicator?.dataCategoriesAreStackable ?? false);
+
+    series = dimSeries.map(({ name, raw, color }) => {
+      const valuesByKey: Record<string, number> = Object.fromEntries(raw);
+      return {
+        name,
+        type: 'bar' as const,
+        stack: stackBars ? 'total' : undefined,
+        data: xCategories.map((key) => valuesByKey[key] ?? null),
+        emphasis: { focus: 'series' as const },
+        itemStyle: { color },
+      };
+    });
+    showLegend = true;
+    // ECharts sets this as the canvas' aria-label; same wording as the
+    // generic IndicatorGraph so screen-reader users hear one style of chart
+    ariaDescription = buildBlockAriaDescription({
+      ...ariaCommon,
+      series: dimSeries,
+      timeResolution,
+      chartKind: 'bar',
+    });
+  }
 
   const option: ECOption = {
     aria: {
@@ -137,7 +169,7 @@ const DashboardIndicatorBarChartBlock = ({
     backgroundColor: chartBackground,
     // Same legend style as the pie chart block
     legend: {
-      show: true,
+      show: showLegend,
       orient: 'horizontal',
       bottom: 0,
       right: 0,
