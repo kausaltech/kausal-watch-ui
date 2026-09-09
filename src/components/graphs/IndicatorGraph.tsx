@@ -8,6 +8,7 @@ import styled from '@emotion/styled';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
+import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
 
 import type { IndicatorDesiredTrend } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter } from '@/common/utils';
@@ -21,6 +22,7 @@ import {
   type YRange,
   alignTracesToDates,
   applyGoalMarkers,
+  buildAriaDescription,
   buildGoalSeries,
   buildSaveAsImageToolbox,
   buildSeriesFromTraces,
@@ -195,15 +197,27 @@ function IndicatorGraph({
         ? niceTickInterval(rangeMax - rangeMin, yRange.ticksCount ?? 5)
         : null;
 
+    // ECharts sets the description as the chart's aria-label. Callers that
+    // render their own heading pass title=null, so fall back to the download
+    // basename, which is the indicator (or factor metric) name in practice.
+    const ariaDescription = buildAriaDescription({
+      title: title ?? downloadFilename,
+      traces,
+      goalTraces,
+      trendTrace,
+      hasTimeDimension,
+      timeResolution,
+      yRange,
+      valueRounding: graphSettings.roundIndicatorValue === false ? undefined : yRange.valueRounding,
+      format,
+      t,
+      localePack: getEChartsLocaleStrings(locale),
+    });
+
     return {
-      // Have ECharts generate an aria-label describing the chart contents
-      // (localized via the locale registered in the Chart wrapper). Time-axis
-      // data items are [epoch-ms, value] pairs and the generated description
-      // would recite the raw millisecond timestamps, so exclude dimension 0
-      // there; category charts hold the plain value in dimension 0.
       aria: {
         enabled: true,
-        label: hasTimeDimension ? { data: { excludeDimensionId: [0] } } : {},
+        label: { description: ariaDescription },
       },
       // The legacy renderer used the tenant-configured custom background as
       // its plot background; keep honoring it, white when unset
@@ -334,6 +348,7 @@ function IndicatorGraph({
     title,
     downloadFilename,
     theme,
+    locale,
     nonQuantifiedGoal,
     referenceValue,
     format,
