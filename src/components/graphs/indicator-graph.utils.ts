@@ -15,6 +15,7 @@ import type { useFormatter } from 'next-intl';
 import { transparentize } from 'polished';
 
 import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
+import { escapeHtml } from '@/common/utils';
 import { getDefaultColors } from '@/components/contentblocks/indicator-chart/indicator-chart-colors';
 
 export type Formatter = ReturnType<typeof useFormatter>;
@@ -961,6 +962,9 @@ export function applyGoalMarkers({
 /**
  * Tooltip formatter for time charts: formats the axis date per resolution,
  * lists each series value with unit, and skips the trend series.
+ *
+ * ECharts renders the returned string as HTML. Series names and units are
+ * editor-controlled, so they are escaped; the marker is ECharts' own markup.
  */
 export function buildTimeTooltipFormatter({
   timeResolution,
@@ -979,7 +983,7 @@ export function buildTimeTooltipFormatter({
     const axisValue = firstParam.axisValue;
     if (axisValue == null) return '';
 
-    let result = `${formatDateLabel(axisValue, timeResolution)}<br/>`;
+    let result = `${escapeHtml(formatDateLabel(axisValue, timeResolution))}<br/>`;
     params.forEach((param: unknown) => {
       const typedParam = param as {
         seriesName?: string;
@@ -1007,7 +1011,7 @@ export function buildTimeTooltipFormatter({
           format,
           yRange.valueRounding ? { maximumSignificantDigits: yRange.valueRounding } : undefined
         );
-        result += `${typedParam.marker || ''} ${typedParam.seriesName}: ${formattedValue} ${yRange.unit}<br/>`;
+        result += `${typedParam.marker || ''} ${escapeHtml(typedParam.seriesName)}: ${formattedValue} ${escapeHtml(yRange.unit)}<br/>`;
       }
     });
     return result;

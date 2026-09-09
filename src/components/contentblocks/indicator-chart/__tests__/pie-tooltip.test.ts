@@ -20,4 +20,11 @@ describe('createTooltipFormatter', () => {
     const text = formatter({ name: 'Transport', value: 50, percent: 28.8 } as Params);
     expect(text).toBe('Transport: 50 (29%)');
   });
+
+  it('escapes editor-controlled names and units', () => {
+    const formatter = createTooltipFormatter(null, seriesData, format, '<b>kt</b>');
+    const text = formatter({ name: '<img src=x onerror=alert(1)>', value: 50 } as Params);
+    expect(text).not.toContain('<');
+    expect(text).toBe('&lt;img src=x onerror=alert(1)&gt;: 50 &lt;b&gt;kt&lt;/b&gt;');
+  });
 });

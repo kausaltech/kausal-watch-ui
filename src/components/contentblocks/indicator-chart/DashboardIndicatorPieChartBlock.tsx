@@ -11,6 +11,7 @@ import { Chart, type ECOption } from '@common/components/Chart';
 
 import type { PieChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
+import { escapeHtml } from '@/common/utils';
 import {
   buildSaveAsImageToolbox,
   getChartDownloadFilename,
@@ -94,7 +95,8 @@ export function createTooltipFormatter(
     // The pie data is plain numbers, but the ECharts callback type is a broad
     // union — narrow before formatting
     const value = typeof tooltipParams.value === 'number' ? formatValue(tooltipParams.value) : '-';
-    const nameAndValue = `${tooltipParams.name}: ${value} ${unit}`.trim();
+    // Rendered as HTML by ECharts: the category name and unit are editor input
+    const nameAndValue = `${escapeHtml(tooltipParams.name)}: ${value} ${escapeHtml(unit)}`.trim();
 
     if (!showPercentage || !tooltipParams.percent) {
       return nameAndValue;
