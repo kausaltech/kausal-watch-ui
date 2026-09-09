@@ -84,14 +84,20 @@ interface PlanSelectorProps {
 export default function PlanSelector(props: PlanSelectorProps) {
   const { color } = props;
   const plan = usePlan();
-  const { allRelatedPlans } = plan;
   const theme = useTheme();
 
-  if (!allRelatedPlans.length) return null;
+  /*
+   * The parent plan is reachable via the site logo, so by default it is left out of the
+   * dropdown. Plans can opt into listing it there as well.
+   */
+  const hideParentPlan = !plan.features.showParentPlanInPlanSwitcher;
+  const selectablePlans = plan.allRelatedPlans.filter(
+    (pl) =>
+      !!pl && !!pl.viewUrl && pl.id !== plan.id && !(hideParentPlan && pl.id === plan.parent?.id)
+  );
 
-  const selectablePlans = [
-    ...plan.allRelatedPlans.filter((pl) => pl?.id !== plan.id && pl?.id !== plan.parent?.id),
-  ];
+  if (!selectablePlans.length) return null;
+
   return (
     <PlanSelect>
       <PlanDivider $color={color} />
@@ -105,7 +111,9 @@ export default function PlanSelector(props: PlanSelectorProps) {
           <Icon.AngleDown />
         </StyledDropdownToggle>
         <DropdownMenu>
-          {selectablePlans.map((plan) => !!plan && <PlanLink key={plan?.id} plan={plan} />)}
+          {selectablePlans.map((plan) => (
+            <PlanLink key={plan.id} plan={plan} />
+          ))}
         </DropdownMenu>
       </UncontrolledDropdown>
     </PlanSelect>
