@@ -5,9 +5,10 @@ import { useTheme } from '@emotion/react';
 import { LineChart, ScatterChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useLocale, useTranslations } from 'next-intl';
 
 import { Chart } from '@common/components/Chart';
+import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
 
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
@@ -19,6 +20,7 @@ import {
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   type GraphsTheme,
+  buildBlockAriaDescription,
   buildDimSeries,
   buildGoalSeries,
   buildTooltipFormatter,
@@ -45,6 +47,8 @@ const DashboardIndicatorLineChartBlock = ({
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
+  const format = useFormatter();
+  const locale = useLocale();
   const formatValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.valueRounding ?? undefined,
   });
@@ -136,7 +140,26 @@ const DashboardIndicatorLineChartBlock = ({
     ...(trendSeries.length ? [trendLabel] : []),
   ];
 
+  // ECharts sets this as the canvas' aria-label; same wording as the
+  // generic IndicatorGraph so screen-reader users hear one style of chart
+  const ariaDescription = buildBlockAriaDescription({
+    title: indicator?.name,
+    series: [...dimSeries, ...(showTotalLine && totalRaw.length ? [totalDef] : [])],
+    goals: goalSeries,
+    trend: trendSeries[0] ?? null,
+    timeResolution,
+    unit,
+    valueRounding: indicator?.valueRounding,
+    format,
+    t,
+    localePack: getEChartsLocaleStrings(locale),
+  });
+
   const option = {
+    aria: {
+      enabled: true,
+      label: { description: ariaDescription },
+    },
     toolbox: buildSaveAsImageToolbox({
       filename: getChartDownloadFilename(indicator?.name),
       buttonTitle: t('download-chart-as-png'),

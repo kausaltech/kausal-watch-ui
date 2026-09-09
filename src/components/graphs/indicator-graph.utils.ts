@@ -1065,6 +1065,7 @@ export function buildAriaDescription({
   format,
   t,
   localePack,
+  chartKind,
 }: {
   title: string | null | undefined;
   traces: ChartTrace[];
@@ -1077,11 +1078,13 @@ export function buildAriaDescription({
   format: Formatter;
   t: Translator;
   localePack: EChartsLocalePack;
+  /** Marks drawn; defaults to lines on a time axis and bars on a category axis */
+  chartKind?: 'line' | 'bar';
 }): string {
   const typeNames = localePack.series?.typeNames;
-  const chartType = hasTimeDimension
-    ? (typeNames?.line ?? 'Line chart')
-    : (typeNames?.bar ?? 'Bar chart');
+  const kind = chartKind ?? (hasTimeDimension ? 'line' : 'bar');
+  const chartType =
+    kind === 'line' ? (typeNames?.line ?? 'Line chart') : (typeNames?.bar ?? 'Bar chart');
   const dataLead = localePack.aria?.data?.allData ?? 'The data is as follows: ';
   const sentenceEnd = (localePack.aria?.data?.separator?.end ?? '. ').trim();
   const num = (value: number) =>
