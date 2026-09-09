@@ -356,10 +356,11 @@ describe('buildAriaDescription', () => {
       ...base,
       title: 'Emissions',
       traces: [{ name: 'Value', x: ['2020-01-01'], y: [100] }],
-      goalTraces: [{ name: 'Ambitious', x: ['2030-01-01'], y: [40] }],
+      goalTraces: [{ name: 'goal', x: ['2030-01-01'], y: [40] }],
       trendTrace: { name: 'trend', x: ['2020-01-01', '2030-01-01'], y: [100, 61.23456] },
     });
-    expect(text).toContain('[chart-aria-series-values {"name":"Ambitious","values":"2030: 40"}]');
+    // Sentence-leading names are capitalized even when the catalog label is lowercase
+    expect(text).toContain('[chart-aria-series-values {"name":"Goal","values":"2030: 40"}]');
     expect(text).toContain(
       '[chart-aria-trend {"startValue":"100","startDate":"2020","endValue":"61.23","endDate":"2030"}]'
     );

@@ -17,7 +17,7 @@ import { transparentize } from 'polished';
 import type { EChartsLocalePack } from '@common/components/chart-aria';
 
 import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
-import { escapeHtml } from '@/common/utils';
+import { capitalizeFirstLetter, escapeHtml } from '@/common/utils';
 import { getDefaultColors } from '@/components/contentblocks/indicator-chart/indicator-chart-colors';
 
 export type Formatter = ReturnType<typeof useFormatter>;
@@ -1157,7 +1157,12 @@ export function buildAriaDescription({
       sentences.push(
         single
           ? `${dataLead}${listValues(points)}${sentenceEnd}`
-          : t('chart-aria-series-values', { name: entry.name, values: listValues(points) })
+          : t('chart-aria-series-values', {
+              // Series names open their sentence, so read them capitalized
+              // even when the catalog label is lowercase (e.g. "goal")
+              name: capitalizeFirstLetter(entry.name),
+              values: listValues(points),
+            })
       );
       return;
     }
@@ -1174,14 +1179,17 @@ export function buildAriaDescription({
       }),
       t('chart-aria-latest', { value: num(latest.value), date: latest.label }),
     ].join(' ');
-    sentences.push(single ? summary : `${entry.name}: ${summary}`);
+    sentences.push(single ? summary : `${capitalizeFirstLetter(entry.name)}: ${summary}`);
   });
 
   goalTraces.forEach((goal) => {
     const points = tracePoints(goal, hasTimeDimension, timeResolution);
     if (points.length > 0) {
       sentences.push(
-        t('chart-aria-series-values', { name: goal.name, values: listValues(points) })
+        t('chart-aria-series-values', {
+          name: capitalizeFirstLetter(goal.name),
+          values: listValues(points),
+        })
       );
     }
   });
