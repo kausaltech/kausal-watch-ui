@@ -14,12 +14,14 @@ import type { MarkLineOption } from 'echarts/types/dist/shared';
 import type { useFormatter } from 'next-intl';
 import { transparentize } from 'polished';
 
+import type { EChartsLocalePack } from '@common/components/chart-aria';
+
 import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
 import { escapeHtml } from '@/common/utils';
 import { getDefaultColors } from '@/components/contentblocks/indicator-chart/indicator-chart-colors';
 
 export type Formatter = ReturnType<typeof useFormatter>;
-type Translator = (key: string) => string;
+type Translator = (key: string, values?: Record<string, string | number>) => string;
 
 export type TimeResolution = 'YEAR' | 'MONTH' | 'DAY' | undefined;
 
@@ -1016,6 +1018,168 @@ export function buildTimeTooltipFormatter({
     });
     return result;
   };
+}
+
+/** Points of a trace with a value, as (label, value) pairs in axis order. */
+function tracePoints(
+  trace: { x: Array<string | number | null>; y: Array<number | null> },
+  hasTimeDimension: boolean,
+  timeResolution: TimeResolution
+): Array<{ label: string; value: number }> {
+  const points: Array<{ label: string; value: number }> = [];
+  trace.x.forEach((x, i) => {
+    const value = trace.y[i];
+    if (x == null || value == null || Number.isNaN(value)) return;
+    points.push({
+      label: hasTimeDimension ? formatDateLabel(x, timeResolution) : String(x),
+      value,
+    });
+  });
+  return points;
+}
+
+/** Above this many points a series is summarized (range and latest) instead of listed. */
+const ARIA_MAX_LISTED_POINTS = 24;
+
+/**
+ * A readable description of the chart for its `aria-label`, replacing
+ * ECharts' generated one (which recites series indices and unrounded raw
+ * values, including NaN padding). Names the indicator, the unit and the time
+ * span, then lists each series' values rounded like the chart itself, or
+ * summarizes long series by their range and latest value. Goals are listed
+ * per scenario; the trend line by its end point.
+ *
+ * The chart-type name and the "data is as follows" lead-in come from ECharts'
+ * own locale pack (translated for every registered chart locale); the rest
+ * is app translations.
+ */
+export function buildAriaDescription({
+  title,
+  traces,
+  goalTraces,
+  trendTrace,
+  hasTimeDimension,
+  timeResolution,
+  yRange,
+  valueRounding,
+  format,
+  t,
+  localePack,
+}: {
+  title: string | null | undefined;
+  traces: ChartTrace[];
+  goalTraces: GoalTrace[];
+  trendTrace: GoalTrace | null;
+  hasTimeDimension: boolean;
+  timeResolution: TimeResolution;
+  yRange: YRange;
+  valueRounding: number | undefined;
+  format: Formatter;
+  t: Translator;
+  localePack: EChartsLocalePack;
+}): string {
+  const typeNames = localePack.series?.typeNames;
+  const chartType = hasTimeDimension
+    ? (typeNames?.line ?? 'Line chart')
+    : (typeNames?.bar ?? 'Bar chart');
+  const dataLead = localePack.aria?.data?.allData ?? 'The data is as follows: ';
+  const sentenceEnd = (localePack.aria?.data?.separator?.end ?? '. ').trim();
+  const num = (value: number) =>
+    formatNumber(
+      value,
+      format,
+      valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
+    );
+  const series = traces
+    .map((trace) => ({
+      name: trace.name,
+      points: tracePoints(trace, hasTimeDimension, timeResolution),
+    }))
+    .filter((entry) => entry.points.length > 0);
+  if (series.length === 0) {
+    return title ?? '';
+  }
+
+  const chartTitle = title || series[0].name;
+  const allPoints = series.flatMap((entry) => entry.points);
+  const sentences: string[] = [];
+
+  if (series.length === 1) {
+    sentences.push(
+      t(hasTimeDimension ? 'chart-aria-time-single' : 'chart-aria-category-single', {
+        title: chartTitle,
+        chartType,
+        count: allPoints.length,
+        start: allPoints[0].label,
+        end: allPoints[allPoints.length - 1].label,
+      })
+    );
+  } else {
+    const categories = new Set(allPoints.map((point) => point.label));
+    sentences.push(
+      t(hasTimeDimension ? 'chart-aria-time-multi' : 'chart-aria-category-multi', {
+        title: chartTitle,
+        chartType,
+        count: series.length,
+        categories: categories.size,
+        names: series.map((entry) => entry.name).join(', '),
+        start: allPoints[0].label,
+        end: allPoints[allPoints.length - 1].label,
+      })
+    );
+  }
+  if (yRange.unit) {
+    sentences.push(t('chart-aria-unit', { unit: yRange.unit }));
+  }
+
+  const listValues = (points: Array<{ label: string; value: number }>) =>
+    points.map((point) => `${point.label}: ${num(point.value)}`).join('; ');
+
+  series.forEach((entry) => {
+    const { points } = entry;
+    const single = series.length === 1;
+    if (points.length <= ARIA_MAX_LISTED_POINTS) {
+      sentences.push(
+        single
+          ? `${dataLead}${listValues(points)}${sentenceEnd}`
+          : t('chart-aria-series-values', { name: entry.name, values: listValues(points) })
+      );
+      return;
+    }
+    // Long series: range and latest value instead of every point
+    const lowest = points.reduce((a, b) => (b.value < a.value ? b : a));
+    const highest = points.reduce((a, b) => (b.value > a.value ? b : a));
+    const latest = points[points.length - 1];
+    const summary = [
+      t('chart-aria-range', {
+        min: num(lowest.value),
+        minDate: lowest.label,
+        max: num(highest.value),
+        maxDate: highest.label,
+      }),
+      t('chart-aria-latest', { value: num(latest.value), date: latest.label }),
+    ].join(' ');
+    sentences.push(single ? summary : `${entry.name}: ${summary}`);
+  });
+
+  goalTraces.forEach((goal) => {
+    const points = tracePoints(goal, hasTimeDimension, timeResolution);
+    if (points.length > 0) {
+      sentences.push(
+        t('chart-aria-series-values', { name: goal.name, values: listValues(points) })
+      );
+    }
+  });
+
+  if (trendTrace) {
+    const points = tracePoints(trendTrace, hasTimeDimension, timeResolution);
+    const end = points[points.length - 1];
+    if (end) {
+      sentences.push(t('chart-aria-trend', { value: num(end.value), date: end.label }));
+    }
+  }
+
+  return sentences.join(' ');
 }
 
 /**

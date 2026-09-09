@@ -797,10 +797,13 @@ function getBlockOverrideWarnings(block: IndicatorVisualizationBlockData): strin
 function EChartsPreviewColumn({
   indicator,
   showTable,
+  showAriaLabels,
 }: {
   indicator: ExplorerIndicator;
   /** Render the accessible data table under the chart, for debugging. */
   showTable: boolean;
+  /** Show the aria-label ECharts generated for the chart, for debugging. */
+  showAriaLabels: boolean;
 }) {
   const t = useTranslations();
   const [kind, setKind] = useState<VisualizationKind>(
@@ -851,27 +854,128 @@ function EChartsPreviewColumn({
         getBlockOverrideWarnings(block).map((warning) => (
           <OverrideAlert key={warning}>⚠️ {warning}</OverrideAlert>
         ))}
-      {block ? (
-        <>
+      <AriaLabelInspector enabled={showAriaLabels}>
+        {block ? (
           <IndicatorVisualizationBlock block={block} />
-          {showTable &&
-            (blockTable ? (
-              <GraphAsTable
-                specification={blockTable.specification}
-                timeResolution={blockTable.timeResolution}
-                data={blockTable.traces}
-                goalTraces={blockTable.goalTraces}
-                title={indicator.name}
-                openByDefault
-              />
-            ) : (
-              <Message>No table data for this block.</Message>
-            ))}
-        </>
-      ) : (
-        <IndicatorVisualisation indicatorId={indicator.id} showTable={showTable} />
-      )}
+        ) : (
+          <IndicatorVisualisation indicatorId={indicator.id} showTable={showTable} />
+        )}
+      </AriaLabelInspector>
+      {block &&
+        showTable &&
+        (blockTable ? (
+          <GraphAsTable
+            specification={blockTable.specification}
+            timeResolution={blockTable.timeResolution}
+            data={blockTable.traces}
+            goalTraces={blockTable.goalTraces}
+            title={indicator.name}
+            openByDefault
+          />
+        ) : (
+          <Message>No table data for this block.</Message>
+        ))}
     </PreviewColumn>
+  );
+}
+
+const AriaPanel = styled.div`
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  border: 1px dashed #bbb;
+  border-radius: 4px;
+  padding: 0.35rem 0.5rem;
+  background: #fafafa;
+  color: #444;
+
+  h5 {
+    margin: 0 0 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.7rem;
+    max-height: 12rem;
+    overflow: auto;
+  }
+`;
+
+type GeneratedAriaLabel = { text: string; hiddenFromAT: boolean };
+
+/**
+ * Reads back the `aria-label` ECharts' aria component writes onto the chart's
+ * zrender root (a `role="img"` div) after every render, and shows it under
+ * the chart. Observes the DOM because the shared Chart wrapper doesn't expose
+ * the ECharts instance. Only IndicatorGraph enables `aria`; the dashboard
+ * chart blocks don't, so their previews report no label.
+ */
+function AriaLabelInspector({ children, enabled }: { children: ReactNode; enabled: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [labels, setLabels] = useState<GeneratedAriaLabel[]>([]);
+
+  useEffect(() => {
+    const root = ref.current;
+    if (!enabled || !root) return;
+    const read = () => {
+      const found = Array.from(root.querySelectorAll('[role="img"][aria-label]')).map(
+        (element) => ({
+          text: element.getAttribute('aria-label') ?? '',
+          hiddenFromAT: element.closest('[aria-hidden="true"]') != null,
+        })
+      );
+      // Keep the previous array when nothing changed so the state update
+      // doesn't re-render (and re-trigger this observer) needlessly
+      setLabels((previous) =>
+        previous.length === found.length &&
+        previous.every(
+          (label, i) => label.text === found[i].text && label.hiddenFromAT === found[i].hiddenFromAT
+        )
+          ? previous
+          : found
+      );
+    };
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(root, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['aria-label', 'role', 'aria-hidden'],
+    });
+    return () => observer.disconnect();
+  }, [enabled]);
+
+  return (
+    <div ref={ref}>
+      {children}
+      {enabled && (
+        <AriaPanel>
+          <h5>ECharts aria-label</h5>
+          {labels.length === 0 ? (
+            <p>
+              None generated. Only IndicatorGraph enables ECharts&apos; aria component; the
+              dashboard chart blocks (and configured default visualizations) don&apos;t.
+            </p>
+          ) : (
+            labels.map((label, i) => (
+              <div key={i}>
+                {label.hiddenFromAT && (
+                  <p>
+                    ⚠️ The chart is inside an <code>aria-hidden</code> container (the data table is
+                    the alternative), so assistive technology never reads this label.
+                  </p>
+                )}
+                <pre>{label.text}</pre>
+              </div>
+            ))
+          )}
+        </AriaPanel>
+      )}
+    </div>
   );
 }
 
@@ -1032,6 +1136,7 @@ function describeIndicator(indicator: ExplorerIndicator): string {
 function IndicatorComparisonList({ plan }: { plan: string }) {
   const themes = useMemo(() => getThemes(), []);
   const [showTables, setShowTables] = useState(false);
+  const [showAriaLabels, setShowAriaLabels] = useState(false);
   const {
     data: currentData,
     previousData,
@@ -1092,6 +1197,14 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
           />
           Data tables under charts
         </ToggleLabel>
+        <ToggleLabel>
+          <input
+            type="checkbox"
+            checked={showAriaLabels}
+            onChange={(event) => setShowAriaLabels(event.target.checked)}
+          />
+          Aria labels
+        </ToggleLabel>
       </PlanHeader>
       {indicators.length === 0 && <Message>This plan has no indicators.</Message>}
       {indicators.map((indicator) => (
@@ -1120,7 +1233,11 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
           </header>
           <LazyRender>
             <GraphColumns>
-              <EChartsPreviewColumn indicator={indicator} showTable={showTables} />
+              <EChartsPreviewColumn
+                indicator={indicator}
+                showTable={showTables}
+                showAriaLabels={showAriaLabels}
+              />
             </GraphColumns>
           </LazyRender>
         </ComparisonRow>

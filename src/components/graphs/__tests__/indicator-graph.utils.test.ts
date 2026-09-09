@@ -1,4 +1,5 @@
 import {
+  buildAriaDescription,
   buildTimeTooltipFormatter,
   collectChartDates,
   detectTimeDimension,
@@ -243,5 +244,144 @@ describe('buildTimeTooltipFormatter', () => {
       { seriesName: 'Value', axisValue: '2020-01-01', value: ['2020-01-01', 7], marker },
     ]);
     expect(text).toBe(`2020<br/>${marker} Value: 7 kt<br/>`);
+  });
+});
+
+describe('buildAriaDescription', () => {
+  // Renders a key with its values so tests can assert on what was passed
+  const t = (key: string, values?: Record<string, string | number>) =>
+    `[${key}${values ? ' ' + JSON.stringify(values) : ''}]`;
+  const format = {
+    number: (v: number, options?: { maximumSignificantDigits?: number }) =>
+      v.toLocaleString('en', options),
+  } as unknown as Parameters<typeof buildAriaDescription>[0]['format'];
+  const yRange = {
+    unit: 'GWh/a',
+    ticksCount: undefined,
+    ticksRounding: undefined,
+    valueRounding: undefined,
+    range: [0, 2000],
+  };
+  const localePack = {
+    aria: { data: { allData: 'The data is as follows: ', separator: { middle: ', ', end: '. ' } } },
+    series: { typeNames: { line: 'Line chart', bar: 'Bar chart' } },
+  };
+  const base = {
+    goalTraces: [],
+    trendTrace: null,
+    hasTimeDimension: true,
+    timeResolution: 'YEAR' as const,
+    yRange,
+    valueRounding: 4,
+    format,
+    t,
+    localePack,
+  };
+
+  it('names the indicator, unit and span and lists rounded yearly values', () => {
+    const text = buildAriaDescription({
+      ...base,
+      title: 'Other electricity consumption',
+      traces: [
+        { name: 'Value', dataType: 'total', x: ['2010-01-01', '2011-01-01'], y: [1221.3, 1195.34] },
+      ],
+    });
+    expect(text).toBe(
+      '[chart-aria-time-single {"title":"Other electricity consumption","chartType":"Line chart","count":2,"start":"2010","end":"2011"}] ' +
+        '[chart-aria-unit {"unit":"GWh/a"}] ' +
+        'The data is as follows: 2010: 1,221; 2011: 1,195.'
+    );
+  });
+
+  it('lists each category series by name and skips null padding', () => {
+    const text = buildAriaDescription({
+      ...base,
+      title: 'Emissions',
+      traces: [
+        { name: 'Housing', x: ['2020-01-01', '2021-01-01'], y: [60, null] },
+        { name: 'Transport', x: ['2020-01-01', '2021-01-01'], y: [40, 45] },
+      ],
+    });
+    expect(text).toContain(
+      '[chart-aria-time-multi {"title":"Emissions","chartType":"Line chart","count":2,"categories":2,"names":"Housing, Transport","start":"2020","end":"2021"}]'
+    );
+    expect(text).toContain('[chart-aria-series-values {"name":"Housing","values":"2020: 60"}]');
+    expect(text).toContain(
+      '[chart-aria-series-values {"name":"Transport","values":"2020: 40; 2021: 45"}]'
+    );
+  });
+
+  it('summarizes long series by range and latest value', () => {
+    const x = Array.from({ length: 30 }, (_, i) => `${1995 + i}-01-01`);
+    const y = x.map((_, i) => 100 + i);
+    y[3] = 5;
+    const text = buildAriaDescription({
+      ...base,
+      title: 'Long',
+      traces: [{ name: 'Value', x, y }],
+    });
+    expect(text).not.toContain('The data is as follows');
+    expect(text).toContain(
+      '[chart-aria-range {"min":"5","minDate":"1998","max":"129","maxDate":"2024"}]'
+    );
+    expect(text).toContain('[chart-aria-latest {"value":"129","date":"2024"}]');
+  });
+
+  it('describes goals per scenario and the trend by its end point', () => {
+    const text = buildAriaDescription({
+      ...base,
+      title: 'Emissions',
+      traces: [{ name: 'Value', x: ['2020-01-01'], y: [100] }],
+      goalTraces: [{ name: 'Ambitious', x: ['2030-01-01'], y: [40] }],
+      trendTrace: { name: 'trend', x: ['2020-01-01', '2030-01-01'], y: [100, 61.23456] },
+    });
+    expect(text).toContain('[chart-aria-series-values {"name":"Ambitious","values":"2030: 40"}]');
+    expect(text).toContain('[chart-aria-trend {"value":"61.23","date":"2030"}]');
+  });
+
+  it('describes category bar charts with category labels', () => {
+    const text = buildAriaDescription({
+      ...base,
+      hasTimeDimension: false,
+      title: 'Modal split',
+      traces: [{ name: 'Sector', xType: 'category', x: ['Car', 'Bike'], y: [70, 30] }],
+    });
+    expect(text).toBe(
+      '[chart-aria-category-single {"title":"Modal split","chartType":"Bar chart","count":2,"start":"Car","end":"Bike"}] ' +
+        '[chart-aria-unit {"unit":"GWh/a"}] ' +
+        'The data is as follows: Car: 70; Bike: 30.'
+    );
+  });
+});
+
+describe('buildAriaDescription locale pack', () => {
+  it('takes the chart-type name and data lead-in from the ECharts locale pack', () => {
+    const text = buildAriaDescription({
+      title: 'Sähkönkulutus',
+      traces: [{ name: 'Value', x: ['2020-01-01'], y: [1] }],
+      goalTraces: [],
+      trendTrace: null,
+      hasTimeDimension: true,
+      timeResolution: 'YEAR',
+      yRange: {
+        unit: '',
+        ticksCount: undefined,
+        ticksRounding: undefined,
+        valueRounding: undefined,
+        range: [],
+      },
+      valueRounding: undefined,
+      format: { number: (v: number) => String(v) } as unknown as Parameters<
+        typeof buildAriaDescription
+      >[0]['format'],
+      t: (key, values) => `[${key} ${values?.chartType}]`,
+      localePack: {
+        aria: {
+          data: { allData: 'Tiedot ovat seuraavat: ', separator: { middle: ', ', end: '. ' } },
+        },
+        series: { typeNames: { line: 'Viivakaavio', bar: 'Pylväsdiagrammi' } },
+      },
+    });
+    expect(text).toBe('[chart-aria-time-single Viivakaavio] Tiedot ovat seuraavat: 2020: 1.');
   });
 });
