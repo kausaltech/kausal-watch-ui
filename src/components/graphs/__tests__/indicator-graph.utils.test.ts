@@ -293,6 +293,30 @@ describe('buildAriaDescription', () => {
     );
   });
 
+  it('describes charts whose values share one date without a span', () => {
+    const single = buildAriaDescription({
+      ...base,
+      title: 'Purchased electricity',
+      traces: [{ name: 'Value', x: ['2020-01-01'], y: [1.4] }],
+    });
+    expect(single).toContain(
+      '[chart-aria-time-single-date {"title":"Purchased electricity","chartType":"Line chart","date":"2020"}]'
+    );
+    expect(single).not.toContain('chart-aria-time-single {');
+
+    const multi = buildAriaDescription({
+      ...base,
+      title: 'Emissions',
+      traces: [
+        { name: 'Housing', x: ['2020-01-01'], y: [60] },
+        { name: 'Transport', x: ['2020-01-01'], y: [40] },
+      ],
+    });
+    expect(multi).toContain(
+      '[chart-aria-time-multi-single-date {"title":"Emissions","chartType":"Line chart","count":2,"date":"2020","names":"Housing, Transport"}]'
+    );
+  });
+
   it('lists each category series by name and skips null padding', () => {
     const text = buildAriaDescription({
       ...base,
@@ -327,7 +351,7 @@ describe('buildAriaDescription', () => {
     expect(text).toContain('[chart-aria-latest {"value":"129","date":"2024"}]');
   });
 
-  it('describes goals per scenario and the trend by its end point', () => {
+  it('describes goals per scenario and the trend by its start and end points', () => {
     const text = buildAriaDescription({
       ...base,
       title: 'Emissions',
@@ -336,7 +360,9 @@ describe('buildAriaDescription', () => {
       trendTrace: { name: 'trend', x: ['2020-01-01', '2030-01-01'], y: [100, 61.23456] },
     });
     expect(text).toContain('[chart-aria-series-values {"name":"Ambitious","values":"2030: 40"}]');
-    expect(text).toContain('[chart-aria-trend {"value":"61.23","date":"2030"}]');
+    expect(text).toContain(
+      '[chart-aria-trend {"startValue":"100","startDate":"2020","endValue":"61.23","endDate":"2030"}]'
+    );
   });
 
   it('describes category bar charts with category labels', () => {
@@ -382,6 +408,6 @@ describe('buildAriaDescription locale pack', () => {
         series: { typeNames: { line: 'Viivakaavio', bar: 'Pylväsdiagrammi' } },
       },
     });
-    expect(text).toBe('[chart-aria-time-single Viivakaavio] Tiedot ovat seuraavat: 2020: 1.');
+    expect(text).toBe('[chart-aria-time-single-date Viivakaavio] Tiedot ovat seuraavat: 2020: 1.');
   });
 });
