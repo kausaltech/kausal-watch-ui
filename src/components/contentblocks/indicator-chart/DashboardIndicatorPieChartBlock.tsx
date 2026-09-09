@@ -5,9 +5,10 @@ import type { PieSeriesOption } from 'echarts/charts';
 import { LegendComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import type { CallbackDataParams } from 'echarts/types/dist/shared';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useLocale, useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
+import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
 
 import type { PieChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
@@ -18,7 +19,11 @@ import {
 } from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
-import { type GraphsTheme, getUnitLabel } from './indicator-charts-utility';
+import {
+  type GraphsTheme,
+  buildPieAriaDescription,
+  getUnitLabel,
+} from './indicator-charts-utility';
 
 echarts.use([PieChart, LegendComponent]);
 
@@ -27,7 +32,6 @@ type Props = Omit<
   '__typename'
 >;
 type IndicatorType = NonNullable<Props['indicator']>;
-type UnitType = IndicatorType['unit'];
 
 export interface SeriesData {
   name: string;
@@ -107,22 +111,29 @@ export function selectPieSlices(
 }
 
 /**
- * Determine if we should show the segmented percentage in addition to the value.
- * If the indicator is already a percentage that sums to 100, we don't want to show the segmented percentage.
+ * Slices whose sum lands this close to 100 are taken to be shares of a whole
+ * (rounding each of up to a dozen slices to one decimal can drift by ~1).
  */
-function showSegmentedPercentage(unit: UnitType | undefined, values: SeriesData[]) {
+const PERCENT_SUM_TOLERANCE = 2;
+
+/**
+ * Whether to append each slice's share of the pie to its value. When the
+ * indicator is itself a percentage whose categories add up to (about) 100,
+ * the share would just restate the value ("14.3 % (14%)"), so it is omitted.
+ */
+export function showSegmentedPercentage(
+  unit: { name?: string | null; shortName?: string | null } | null | undefined,
+  values: SeriesData[]
+) {
   if (!unit) {
     return true;
   }
 
-  const isPercentage = unit.name === '%';
-  const valuesSumTo100 = values.reduce((acc, curr) => acc + curr.value, 0) === 100;
+  const isPercentage = unit.name === '%' || unit.shortName === '%';
+  const sum = values.reduce((acc, curr) => acc + curr.value, 0);
+  const valuesSumTo100 = Math.abs(sum - 100) <= PERCENT_SUM_TOLERANCE;
 
-  if (isPercentage && valuesSumTo100) {
-    return false;
-  }
-
-  return true;
+  return !(isPercentage && valuesSumTo100);
 }
 
 /**
@@ -156,6 +167,8 @@ export function createTooltipFormatter(
 const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, year }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
+  const format = useFormatter();
+  const locale = useLocale();
   const formatValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.valueRounding ?? undefined,
   });
@@ -184,7 +197,24 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
     return <div>No year provided</div>;
   }
 
+  // ECharts sets this as the canvas' aria-label; same wording as the
+  // generic IndicatorGraph so screen-reader users hear one style of chart
+  const ariaDescription = buildPieAriaDescription({
+    title: indicator?.name,
+    year: assertedYear,
+    slices: seriesData,
+    unit,
+    valueRounding: indicator?.valueRounding,
+    format,
+    t,
+    localePack: getEChartsLocaleStrings(locale),
+  });
+
   const option: ECOption & { series: PieSeriesOption[] } = {
+    aria: {
+      enabled: true,
+      label: { description: ariaDescription },
+    },
     toolbox: buildSaveAsImageToolbox({
       filename: getChartDownloadFilename(indicator?.name),
       buttonTitle: t('download-chart-as-png'),

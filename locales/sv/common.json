@@ -10,6 +10,7 @@
     "chart-aria-category-multi": "{title}: {chartType} med {count, plural, one {# serie} other {# serier}} över {categories, plural, one {# kategori} other {# kategorier}}: {names}.",
     "chart-aria-category-single": "{title}: {chartType} med {count, plural, one {# kategori} other {# kategorier}}.",
     "chart-aria-latest": "Senaste värde {value} ({date}).",
+    "chart-aria-pie": "{title}: {chartType} med {count, plural, one {# kategori} other {# kategorier}} för {date}.",
     "chart-aria-range": "Lägsta {min} ({minDate}), högsta {max} ({maxDate}).",
     "chart-aria-series-values": "{name}: {values}.",
     "chart-aria-time-multi": "{title}: {chartType} med {count, plural, one {# serie} other {# serier}} från {start} till {end}: {names}.",

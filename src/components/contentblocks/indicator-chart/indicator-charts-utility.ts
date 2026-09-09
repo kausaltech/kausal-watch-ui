@@ -1,9 +1,8 @@
-import type { EChartsLocalePack } from '@common/components/chart-aria';
-
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
 import { escapeHtml } from '@/common/utils';
 import {
+  type AriaLocalePack,
   type Formatter,
   type TimeResolution,
   buildAriaDescription,
@@ -367,7 +366,7 @@ export function buildBlockAriaDescription({
   valueRounding: number | null | undefined;
   format: Formatter;
   t: (key: string, values?: Record<string, string | number>) => string;
-  localePack: EChartsLocalePack;
+  localePack: AriaLocalePack;
   chartKind?: 'line' | 'bar';
 }): string {
   const resolution = String(timeResolution ?? 'YEAR').toUpperCase();
@@ -394,6 +393,59 @@ export function buildBlockAriaDescription({
     t,
     localePack,
     chartKind,
+  });
+}
+
+/**
+ * The aria-label for a pie chart block: the slices of the selected year as a
+ * single category series, named by the indicator.
+ */
+export function buildPieAriaDescription({
+  title,
+  year,
+  slices,
+  unit,
+  valueRounding,
+  format,
+  t,
+  localePack,
+}: {
+  title: string | null | undefined;
+  year: number | undefined;
+  slices: Array<{ name: string; value: number }>;
+  unit: string;
+  valueRounding: number | null | undefined;
+  format: Formatter;
+  t: (key: string, values?: Record<string, string | number>) => string;
+  localePack: AriaLocalePack;
+}): string {
+  return buildAriaDescription({
+    title,
+    traces: [
+      {
+        name: title ?? '',
+        xType: 'category',
+        x: slices.map((slice) => slice.name),
+        y: slices.map((slice) => slice.value),
+      },
+    ],
+    goalTraces: [],
+    trendTrace: null,
+    hasTimeDimension: false,
+    timeResolution: undefined,
+    yRange: {
+      unit,
+      ticksCount: undefined,
+      ticksRounding: undefined,
+      valueRounding: valueRounding ?? undefined,
+      range: [],
+    },
+    valueRounding: valueRounding ?? undefined,
+    format,
+    t,
+    localePack,
+    chartKind: 'pie',
+    periodLabel: year != null ? String(year) : undefined,
   });
 }
 

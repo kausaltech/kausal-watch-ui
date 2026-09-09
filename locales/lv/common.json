@@ -4,6 +4,7 @@
     "chart-aria-category-multi": "{title}: {chartType} ar {count, plural, zero {# sērijām} one {# sēriju} other {# sērijām}} {categories, plural, zero {# kategorijās} one {# kategorijā} other {# kategorijās}}: {names}.",
     "chart-aria-category-single": "{title}: {chartType} ar {count, plural, zero {# kategorijām} one {# kategoriju} other {# kategorijām}}.",
     "chart-aria-latest": "Jaunākā vērtība {value} ({date}).",
+    "chart-aria-pie": "{title}: {chartType} ar {count, plural, zero {# kategorijām} one {# kategoriju} other {# kategorijām}} par {date}.",
     "chart-aria-range": "Zemākā {min} ({minDate}), augstākā {max} ({maxDate}).",
     "chart-aria-series-values": "{name}: {values}.",
     "chart-aria-time-multi": "{title}: {chartType} ar {count, plural, zero {# sērijām} one {# sēriju} other {# sērijām}} no {start} līdz {end}: {names}.",
