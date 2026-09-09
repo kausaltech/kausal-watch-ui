@@ -106,8 +106,9 @@ function FactorCharts({
             <div key={`${dataset.uuid}-${metric.label}`}>
               <FactorChartTitle>{metric.label}</FactorChartTitle>
               {showGraph && (
-                <div aria-hidden="true">
+                <div>
                   <IndicatorGraph
+                    ariaDetail={showTable ? 'summary' : 'full'}
                     specification={factorSpec}
                     yRange={factorYRange}
                     timeResolution={timeResolution}

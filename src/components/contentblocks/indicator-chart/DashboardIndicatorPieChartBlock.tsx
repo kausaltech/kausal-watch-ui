@@ -14,6 +14,7 @@ import type { PieChartVisualizationFragment } from '@/common/__generated__/graph
 import useNumberFormatter from '@/common/numbers';
 import { escapeHtml } from '@/common/utils';
 import {
+  type AriaDetail,
   buildSaveAsImageToolbox,
   getChartDownloadFilename,
 } from '@/components/graphs/indicator-graph.utils';
@@ -30,7 +31,10 @@ echarts.use([PieChart, LegendComponent]);
 type Props = Omit<
   Extract<PieChartVisualizationFragment, { __typename: 'DashboardIndicatorPieChartBlock' }>,
   '__typename'
->;
+> & {
+  /** Detail of the generated aria description; 'summary' when a data table accompanies the chart */
+  ariaDetail?: AriaDetail;
+};
 type IndicatorType = NonNullable<Props['indicator']>;
 
 export interface SeriesData {
@@ -164,7 +168,13 @@ export function createTooltipFormatter(
   };
 }
 
-const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, year }: Props) => {
+const DashboardIndicatorPieChartBlock = ({
+  chartSeries,
+  dimension,
+  indicator,
+  year,
+  ariaDetail,
+}: Props) => {
   const theme = useTheme();
   const t = useTranslations();
   const format = useFormatter();
@@ -208,6 +218,7 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
     format,
     t,
     localePack: getEChartsLocaleStrings(locale),
+    detail: ariaDetail,
   });
 
   const option: ECOption & { series: PieSeriesOption[] } = {

@@ -14,6 +14,7 @@ import type { IndicatorDesiredTrend } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter } from '@/common/utils';
 
 import {
+  type AriaDetail,
   type ChartTrace,
   type GoalTrace,
   type NonQuantifiedGoalProp,
@@ -59,6 +60,8 @@ type IndicatorGraphProps = {
   referenceValue: ReferenceValueProp;
   height?: number;
   xAxisRange?: { min: number; max: number };
+  /** 'summary' when a data table is rendered beside the chart */
+  ariaDetail?: AriaDetail;
 };
 
 const CATEGORY_XAXIS_LABEL_EXTRA_MARGIN = 200;
@@ -82,6 +85,7 @@ function IndicatorGraph({
   referenceValue,
   height = 450,
   xAxisRange,
+  ariaDetail = 'full',
 }: IndicatorGraphProps) {
   const theme = useTheme();
   const t = useTranslations();
@@ -212,6 +216,7 @@ function IndicatorGraph({
       format,
       t,
       localePack: getEChartsLocaleStrings(locale),
+      detail: ariaDetail,
     });
 
     return {
@@ -349,6 +354,7 @@ function IndicatorGraph({
     downloadFilename,
     theme,
     locale,
+    ariaDetail,
     nonQuantifiedGoal,
     referenceValue,
     format,

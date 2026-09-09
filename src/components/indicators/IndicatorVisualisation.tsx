@@ -131,7 +131,8 @@ function IndicatorVisualisation({
       : null;
   // The table must show what the block draws (its own series, grouping and,
   // for pies, year) — the generic cube traces may differ. Null when the block
-  // is a summary (meaningful text, no table equivalent) or has no data.
+  // is a summary (meaningful text, no table equivalent) or has no data. With
+  // a table beside it the chart's aria description is kept to a summary.
   const blockTable = configuredBlock
     ? buildVisualizationTableData(configuredBlock, indicator.timeResolution, t)
     : null;
@@ -150,10 +151,12 @@ function IndicatorVisualisation({
        Also, IndicatorVisualizationBlock now only supports the simplified
        one-dimensioned data received straight from the backend.
      */
-    // Hide the chart canvas from AT only when an equivalent table is shown
     graphComponent = (
-      <div aria-hidden={showTable && blockTable != null}>
-        <IndicatorVisualizationBlock block={configuredBlock} />
+      <div>
+        <IndicatorVisualizationBlock
+          block={configuredBlock}
+          ariaDetail={showTable && blockTable ? 'summary' : 'full'}
+        />
         <VisualizationReadySignal />
       </div>
     );
@@ -161,8 +164,9 @@ function IndicatorVisualisation({
     /* TODO: Generalize graphComponent to be the basis of all graphs. */
     graphComponent = (
       // TODO: Show title depending on context
-      <div aria-hidden={showTable}>
+      <div>
         <IndicatorGraph
+          ariaDetail={showTable ? 'summary' : 'full'}
           specification={specification}
           yRange={yRange}
           timeResolution={timeResolution}

@@ -18,6 +18,7 @@ import { getEChartsLocaleStrings } from '@common/components/register-echarts-loc
 import type { AreaChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 import {
+  type AriaDetail,
   buildSaveAsImageToolbox,
   getChartDownloadFilename,
 } from '@/components/graphs/indicator-graph.utils';
@@ -41,13 +42,17 @@ echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent]);
 type Props = Omit<
   Extract<AreaChartVisualizationFragment, { __typename: 'DashboardIndicatorAreaChartBlock' }>,
   '__typename'
->;
+> & {
+  /** Detail of the generated aria description; 'summary' when a data table accompanies the chart */
+  ariaDetail?: AriaDetail;
+};
 
 const DashboardIndicatorAreaChartBlock = ({
   chartSeries,
   indicator,
   dimension,
   showTotalLine,
+  ariaDetail,
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
@@ -216,6 +221,7 @@ const DashboardIndicatorAreaChartBlock = ({
     format,
     t,
     localePack: getEChartsLocaleStrings(locale),
+    detail: ariaDetail,
   });
 
   const option: ECOption = {

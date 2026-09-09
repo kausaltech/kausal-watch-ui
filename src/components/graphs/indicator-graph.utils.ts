@@ -1042,6 +1042,14 @@ function tracePoints(
 const ARIA_MAX_LISTED_POINTS = 24;
 
 /**
+ * How much of the data the aria description recites. 'full' lists every
+ * value and is for charts that stand alone; 'summary' gives the extremes and
+ * the latest value only, for charts with a data table beside them — the
+ * table is navigable cell by cell, an aria-label is read in one breath.
+ */
+export type AriaDetail = 'full' | 'summary';
+
+/**
  * The ECharts locale-pack fields the description reads. The shared
  * EChartsLocalePack type only names line and bar series; the packs also
  * carry a pie name, which the pie chart block needs.
@@ -1077,6 +1085,7 @@ export function buildAriaDescription({
   localePack,
   chartKind,
   periodLabel,
+  detail = 'full',
 }: {
   title: string | null | undefined;
   traces: ChartTrace[];
@@ -1093,6 +1102,7 @@ export function buildAriaDescription({
   chartKind?: 'line' | 'bar' | 'pie';
   /** For pies: the period the slices represent, e.g. the configured year */
   periodLabel?: string;
+  detail?: AriaDetail;
 }): string {
   const typeNames = localePack.series?.typeNames;
   const kind = chartKind ?? (hasTimeDimension ? 'line' : 'bar');
@@ -1182,33 +1192,37 @@ export function buildAriaDescription({
   series.forEach((entry) => {
     const { points } = entry;
     const single = series.length === 1;
-    if (points.length <= ARIA_MAX_LISTED_POINTS) {
+    // Series names open their sentence, so read them capitalized even when
+    // the catalog label is lowercase (e.g. "goal")
+    const name = capitalizeFirstLetter(entry.name);
+    const listed = `${dataLead}${listValues(points)}${sentenceEnd}`;
+    if (detail === 'full' && points.length <= ARIA_MAX_LISTED_POINTS) {
       sentences.push(
-        single
-          ? `${dataLead}${listValues(points)}${sentenceEnd}`
-          : t('chart-aria-series-values', {
-              // Series names open their sentence, so read them capitalized
-              // even when the catalog label is lowercase (e.g. "goal")
-              name: capitalizeFirstLetter(entry.name),
-              values: listValues(points),
-            })
+        single ? listed : t('chart-aria-series-values', { name, values: listValues(points) })
       );
       return;
     }
-    // Long series: range and latest value instead of every point
-    const lowest = points.reduce((a, b) => (b.value < a.value ? b : a));
-    const highest = points.reduce((a, b) => (b.value > a.value ? b : a));
-    const latest = points[points.length - 1];
-    const summary = [
-      t('chart-aria-range', {
-        min: num(lowest.value),
-        minDate: lowest.label,
-        max: num(highest.value),
-        maxDate: highest.label,
-      }),
-      t('chart-aria-latest', { value: num(latest.value), date: latest.label }),
-    ].join(' ');
-    sentences.push(single ? summary : `${capitalizeFirstLetter(entry.name)}: ${summary}`);
+    // Summary, or a series too long to list: the extremes and the latest
+    // value. Categories have no "latest"; a lone category point is listed.
+    const parts: string[] = [];
+    if (points.length > 1) {
+      const lowest = points.reduce((a, b) => (b.value < a.value ? b : a));
+      const highest = points.reduce((a, b) => (b.value > a.value ? b : a));
+      parts.push(
+        t('chart-aria-range', {
+          min: num(lowest.value),
+          minDate: lowest.label,
+          max: num(highest.value),
+          maxDate: highest.label,
+        })
+      );
+    }
+    if (hasTimeDimension) {
+      const latest = points[points.length - 1];
+      parts.push(t('chart-aria-latest', { value: num(latest.value), date: latest.label }));
+    }
+    const summary = parts.length > 0 ? parts.join(' ') : listed;
+    sentences.push(single ? summary : `${name}: ${summary}`);
   });
 
   goalTraces.forEach((goal) => {

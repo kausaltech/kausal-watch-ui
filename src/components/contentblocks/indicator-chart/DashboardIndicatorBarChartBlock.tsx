@@ -11,6 +11,7 @@ import { getEChartsLocaleStrings } from '@common/components/register-echarts-loc
 import type { BarChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 import {
+  type AriaDetail,
   buildSaveAsImageToolbox,
   getChartDownloadFilename,
 } from '@/components/graphs/indicator-graph.utils';
@@ -32,9 +33,18 @@ echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
 type Props = Omit<
   Extract<BarChartVisualizationFragment, { __typename: 'DashboardIndicatorBarChartBlock' }>,
   '__typename'
->;
+> & {
+  /** Detail of the generated aria description; 'summary' when a data table accompanies the chart */
+  ariaDetail?: AriaDetail;
+};
 
-const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, barType }: Props) => {
+const DashboardIndicatorBarChartBlock = ({
+  chartSeries,
+  indicator,
+  dimension,
+  barType,
+  ariaDetail,
+}: Props) => {
   const theme = useTheme();
   const t = useTranslations();
   const format = useFormatter();
@@ -113,6 +123,7 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
     format,
     t,
     localePack: getEChartsLocaleStrings(locale),
+    detail: ariaDetail,
     chartKind: 'bar',
   });
 

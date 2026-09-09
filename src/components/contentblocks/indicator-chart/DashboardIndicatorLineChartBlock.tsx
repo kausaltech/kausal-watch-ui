@@ -13,6 +13,7 @@ import { getEChartsLocaleStrings } from '@common/components/register-echarts-loc
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 import {
+  type AriaDetail,
   buildSaveAsImageToolbox,
   getChartDownloadFilename,
 } from '@/components/graphs/indicator-graph.utils';
@@ -37,13 +38,17 @@ echarts.use([LineChart, ScatterChart, GridComponent, TooltipComponent, LegendCom
 type Props = Omit<
   Extract<LineChartVisualizationFragment, { __typename: 'DashboardIndicatorLineChartBlock' }>,
   '__typename'
->;
+> & {
+  /** Detail of the generated aria description; 'summary' when a data table accompanies the chart */
+  ariaDetail?: AriaDetail;
+};
 
 const DashboardIndicatorLineChartBlock = ({
   chartSeries,
   indicator,
   dimension,
   showTotalLine,
+  ariaDetail,
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
@@ -153,6 +158,7 @@ const DashboardIndicatorLineChartBlock = ({
     format,
     t,
     localePack: getEChartsLocaleStrings(locale),
+    detail: ariaDetail,
   });
 
   const option = {
