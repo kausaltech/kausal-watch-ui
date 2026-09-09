@@ -22,6 +22,7 @@ import FactorCharts from './FactorCharts';
 import IndicatorVisualizationBlock from './IndicatorVisualizationBlock';
 import { NORMALIZE_DEFAULT, normalizeByPopulationSetter } from './indicator-data-helpers';
 import { deriveIndicatorGraphModel } from './indicator-graph-model';
+import { buildVisualizationTableData } from './visualization-table-data';
 
 type IndicatorDetailsIndicator = NonNullable<IndicatorDetailsQuery['indicator']>;
 type DefaultVisualization = IndicatorDetailsIndicator['defaultVisualization'];
@@ -124,9 +125,19 @@ function IndicatorVisualisation({
   // own graph-data query, so callers that only know the indicator id (e.g.
   // IndicatorBlock) still honor the configured default visualization.
   const effectiveDefaultVisualization = defaultVisualization ?? indicator.defaultVisualization;
+  const configuredBlock =
+    effectiveDefaultVisualization && !compareTo && !normalizeByPopulation
+      ? effectiveDefaultVisualization
+      : null;
+  // The table must show what the block draws (its own series, grouping and,
+  // for pies, year) — the generic cube traces may differ. Null when the block
+  // is a summary (meaningful text, no table equivalent) or has no data.
+  const blockTable = configuredBlock
+    ? buildVisualizationTableData(configuredBlock, indicator.timeResolution, t)
+    : null;
 
   let graphComponent: ReactElement;
-  if (effectiveDefaultVisualization && !compareTo && !normalizeByPopulation) {
+  if (configuredBlock) {
     /* TODO: A generalized IndicatorGraph component
        will be the internal implementation of the
        graph component that IndicatorVisualizationBlock
@@ -139,13 +150,10 @@ function IndicatorVisualisation({
        Also, IndicatorVisualizationBlock now only supports the simplified
        one-dimensioned data received straight from the backend.
      */
-    // The data table below is an accessible alternative for chart canvases
-    // only; a summary block is meaningful text (description, latest value,
-    // goal) with no table equivalent, so it must stay visible to AT.
-    const isSummaryBlock = effectiveDefaultVisualization.__typename === 'IndicatorDefaultSummary';
+    // Hide the chart canvas from AT only when an equivalent table is shown
     graphComponent = (
-      <div aria-hidden={showTable && !isSummaryBlock}>
-        <IndicatorVisualizationBlock block={effectiveDefaultVisualization} />
+      <div aria-hidden={showTable && blockTable != null}>
+        <IndicatorVisualizationBlock block={configuredBlock} />
         <VisualizationReadySignal />
       </div>
     );
@@ -198,7 +206,17 @@ function IndicatorVisualisation({
         />
       )}
       {showGraph && graphComponent}
-      {showTable && (
+      {showTable && blockTable && (
+        <GraphAsTable
+          specification={blockTable.specification}
+          timeResolution={blockTable.timeResolution}
+          data={blockTable.traces}
+          goalTraces={blockTable.goalTraces}
+          title={plotTitle}
+          openByDefault={!showGraph}
+        />
+      )}
+      {showTable && !blockTable && (
         <GraphAsTable
           specification={yRange}
           timeResolution={indicator.timeResolution}

@@ -14,15 +14,18 @@ import styled from '@emotion/styled';
 import { ApolloClient, HttpLink, InMemoryCache, type TypedDocumentNode, gql } from '@apollo/client';
 import { ApolloProvider, useQuery } from '@apollo/client/react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { useTranslations } from 'next-intl';
 import { UPDATE_GLOBALS } from 'storybook/internal/core-events';
 import { addons } from 'storybook/preview-api';
 
-import type { PlanContextFragment } from '@/common/__generated__/graphql';
+import type { IndicatorTimeResolution, PlanContextFragment } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
+import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 import IndicatorVisualizationBlock, {
   type IndicatorVisualizationBlockData,
 } from '@/components/indicators/IndicatorVisualizationBlock';
+import { buildVisualizationTableData } from '@/components/indicators/visualization-table-data';
 import PlanProvider from '@/components/providers/PlanProvider';
 import { MOCK_PLAN } from '@/stories/mocks/plan.mocks';
 
@@ -716,6 +719,15 @@ const PreviewColumn = styled.div<{ $active: boolean }>`
   background: ${({ $active, theme }) => ($active ? theme.graphColors.blue010 : 'transparent')};
 `;
 
+const ToggleLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: #666;
+  cursor: pointer;
+`;
+
 const BlockSettingsRow = styled.div`
   font-size: 0.75rem;
   color: #555;
@@ -782,7 +794,15 @@ function getBlockOverrideWarnings(block: IndicatorVisualizationBlockData): strin
   return warnings;
 }
 
-function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
+function EChartsPreviewColumn({
+  indicator,
+  showTable,
+}: {
+  indicator: ExplorerIndicator;
+  /** Render the accessible data table under the chart, for debugging. */
+  showTable: boolean;
+}) {
+  const t = useTranslations();
   const [kind, setKind] = useState<VisualizationKind>(
     () =>
       (indicator.defaultVisualization &&
@@ -793,6 +813,11 @@ function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
     () => (kind === 'default' ? null : synthesizeVisualization(indicator, kind)),
     [indicator, kind]
   );
+  // Same table the production view shows beside a configured block
+  const blockTable =
+    block && showTable
+      ? buildVisualizationTableData(block, indicator.timeResolution as IndicatorTimeResolution, t)
+      : null;
 
   return (
     <PreviewColumn $active={kind !== 'default'}>
@@ -827,9 +852,24 @@ function EChartsPreviewColumn({ indicator }: { indicator: ExplorerIndicator }) {
           <OverrideAlert key={warning}>⚠️ {warning}</OverrideAlert>
         ))}
       {block ? (
-        <IndicatorVisualizationBlock block={block} />
+        <>
+          <IndicatorVisualizationBlock block={block} />
+          {showTable &&
+            (blockTable ? (
+              <GraphAsTable
+                specification={blockTable.specification}
+                timeResolution={blockTable.timeResolution}
+                data={blockTable.traces}
+                goalTraces={blockTable.goalTraces}
+                title={indicator.name}
+                openByDefault
+              />
+            ) : (
+              <Message>No table data for this block.</Message>
+            ))}
+        </>
       ) : (
-        <IndicatorVisualisation indicatorId={indicator.id} showTable={false} />
+        <IndicatorVisualisation indicatorId={indicator.id} showTable={showTable} />
       )}
     </PreviewColumn>
   );
@@ -991,6 +1031,7 @@ function describeIndicator(indicator: ExplorerIndicator): string {
 
 function IndicatorComparisonList({ plan }: { plan: string }) {
   const themes = useMemo(() => getThemes(), []);
+  const [showTables, setShowTables] = useState(false);
   const {
     data: currentData,
     previousData,
@@ -1043,6 +1084,14 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
           </small>
         </h2>
         <GraphSettingsPanel defaultGraphs={themes.default?.settings?.graphs ?? {}} />
+        <ToggleLabel>
+          <input
+            type="checkbox"
+            checked={showTables}
+            onChange={(event) => setShowTables(event.target.checked)}
+          />
+          Data tables under charts
+        </ToggleLabel>
       </PlanHeader>
       {indicators.length === 0 && <Message>This plan has no indicators.</Message>}
       {indicators.map((indicator) => (
@@ -1071,7 +1120,7 @@ function IndicatorComparisonList({ plan }: { plan: string }) {
           </header>
           <LazyRender>
             <GraphColumns>
-              <EChartsPreviewColumn indicator={indicator} />
+              <EChartsPreviewColumn indicator={indicator} showTable={showTables} />
             </GraphColumns>
           </LazyRender>
         </ComparisonRow>

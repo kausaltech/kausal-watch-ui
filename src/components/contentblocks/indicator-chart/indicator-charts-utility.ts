@@ -53,7 +53,8 @@ export type TrendSeries = {
   tooltip: { show: boolean };
 };
 
-function formatDateKey(date: string, timeResolution?: string | null): string {
+/** Date key at the chart's resolution: '2020', '2020-03' or '2020-03-15'. */
+export function formatDateKey(date: string, timeResolution?: string | null): string {
   const d = new Date(date);
   if (Number.isNaN(d.getTime())) return date;
 

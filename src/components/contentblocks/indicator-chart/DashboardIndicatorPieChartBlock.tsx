@@ -32,6 +32,7 @@ type UnitType = IndicatorType['unit'];
 export interface SeriesData {
   name: string;
   value: number;
+  itemStyle?: { color?: string };
 }
 
 /**
@@ -57,6 +58,52 @@ function getLatestYear(chartSeries: Props['chartSeries']) {
 
 function doYearsMatch(year: number, date: string) {
   return yearOfDate(date) === year;
+}
+
+/**
+ * The slices of the pie: one per dimension category, holding that category's
+ * value for the configured year (or the latest year in the data when none is
+ * configured). Shared with the accessible data table so both show the same
+ * year and categories.
+ */
+export function selectPieSlices(
+  chartSeries: Props['chartSeries'],
+  year: number | null | undefined
+): { year: number | undefined; slices: SeriesData[] } {
+  const assertedYear = year ?? getLatestYear(chartSeries);
+  if (!assertedYear) {
+    return { year: undefined, slices: [] };
+  }
+  const slices =
+    chartSeries?.reduce((acc, series) => {
+      if (!series?.dimensionCategory?.name) {
+        return acc;
+      }
+
+      const categoryName = series.dimensionCategory.name;
+      const valueForYear = series.values?.find(
+        (v): v is NonNullable<typeof v> => v?.date != null && doYearsMatch(assertedYear, v.date)
+      )?.value;
+
+      // A category with no value for the chosen year gets no slice — a
+      // zero-value slice would misrepresent missing data as a measured zero
+      if (valueForYear == null) {
+        return acc;
+      }
+
+      return [
+        ...acc,
+        {
+          name: categoryName,
+          value: valueForYear,
+          itemStyle: {
+            // An unset defaultColor is returned as an empty string
+            color: series.dimensionCategory.defaultColor || undefined,
+          },
+        },
+      ];
+    }, [] as SeriesData[]) ?? [];
+  return { year: assertedYear, slices };
 }
 
 /**
@@ -120,46 +167,11 @@ const DashboardIndicatorPieChartBlock = ({ chartSeries, dimension, indicator, ye
   // background, white when unset
   const chartBackground = graphsTheme.customBackground || theme.themeColors.white;
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
-  const assertedYear = year ?? getLatestYear(chartSeries);
+  const { year: assertedYear, slices: seriesData } = selectPieSlices(chartSeries, year);
 
   // No explicit year and none derivable from the data means there is
   // nothing to slice
-  if (!assertedYear) {
-    return <div>{t('data-not-available')}</div>;
-  }
-
-  const seriesData =
-    chartSeries?.reduce((acc, series) => {
-      if (!series?.dimensionCategory?.name) {
-        return acc;
-      }
-
-      const categoryName = series.dimensionCategory.name;
-      const valueForYear = series.values?.find(
-        (v): v is NonNullable<typeof v> =>
-          v?.date != null && assertedYear != null && doYearsMatch(assertedYear, v.date)
-      )?.value;
-
-      // A category with no value for the chosen year gets no slice — a
-      // zero-value slice would misrepresent missing data as a measured zero
-      if (valueForYear == null) {
-        return acc;
-      }
-
-      return [
-        ...acc,
-        {
-          name: categoryName,
-          value: valueForYear,
-          itemStyle: {
-            // An unset defaultColor is returned as an empty string
-            color: series.dimensionCategory.defaultColor || undefined,
-          },
-        },
-      ];
-    }, [] as SeriesData[]) ?? [];
-
-  if (!seriesData.length) {
+  if (!assertedYear || !seriesData.length) {
     return <div>{t('data-not-available')}</div>;
   }
 
