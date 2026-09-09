@@ -10,9 +10,10 @@ import {
   TooltipComponent,
 } from 'echarts/components';
 import * as echarts from 'echarts/core';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useLocale, useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
+import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
 
 import type { AreaChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
@@ -24,6 +25,7 @@ import {
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   type GraphsTheme,
+  buildBlockAriaDescription,
   buildDimSeries,
   buildTooltipFormatter,
   buildTotalSeries,
@@ -49,6 +51,8 @@ const DashboardIndicatorAreaChartBlock = ({
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
+  const format = useFormatter();
+  const locale = useLocale();
   const formatValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.valueRounding ?? undefined,
   });
@@ -200,7 +204,25 @@ const DashboardIndicatorAreaChartBlock = ({
       ]
     : [];
 
+  // ECharts sets this as the canvas' aria-label; same wording as the
+  // generic IndicatorGraph so screen-reader users hear one style of chart
+  const ariaDescription = buildBlockAriaDescription({
+    title: indicator?.name,
+    series: hasDimension ? [...dimSeries, ...(showTotalOverlay ? [totalDef] : [])] : [totalDef],
+    trend: trendSeries[0] ?? null,
+    timeResolution,
+    unit,
+    valueRounding: indicator?.valueRounding,
+    format,
+    t,
+    localePack: getEChartsLocaleStrings(locale),
+  });
+
   const option: ECOption = {
+    aria: {
+      enabled: true,
+      label: { description: ariaDescription },
+    },
     toolbox: buildSaveAsImageToolbox({
       filename: getChartDownloadFilename(indicator?.name),
       buttonTitle: t('download-chart-as-png'),

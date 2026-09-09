@@ -1,4 +1,8 @@
-import { buildGoalSeries, buildTooltipFormatter } from '../indicator-charts-utility';
+import {
+  buildBlockAriaDescription,
+  buildGoalSeries,
+  buildTooltipFormatter,
+} from '../indicator-charts-utility';
 
 type Indicator = Parameters<typeof buildGoalSeries>[0];
 
@@ -103,5 +107,82 @@ describe('tooltip HTML escaping', () => {
     expect(text).toBe(
       `<strong>2020&lt;i&gt;</strong><br/>${marker} &lt;img src=x onerror=alert(1)&gt;: 5 &lt;u&gt;kt&lt;/u&gt;`
     );
+  });
+});
+
+describe('buildBlockAriaDescription', () => {
+  it('describes the block series, goals and trend like the generic graph', () => {
+    const text = buildBlockAriaDescription({
+      title: 'Emissions',
+      series: [
+        {
+          name: 'Housing',
+          raw: [
+            ['2020', 60],
+            ['2021', 50],
+          ],
+        },
+        {
+          name: 'total',
+          raw: [
+            ['2020', 100],
+            ['2021', 95],
+          ],
+        },
+      ],
+      goals: [{ name: 'goal', data: [['2030', 40]] }],
+      trend: {
+        name: 'trend',
+        data: [
+          ['2020', 100],
+          ['2030', 61.234],
+        ],
+      },
+      timeResolution: 'year',
+      unit: 'kt',
+      valueRounding: 3,
+      format: {
+        number: (v: number, options?: { maximumSignificantDigits?: number }) =>
+          v.toLocaleString('en', options),
+      } as unknown as Parameters<typeof buildBlockAriaDescription>[0]['format'],
+      t: (key, values) => `[${key}${values ? ' ' + JSON.stringify(values) : ''}]`,
+      localePack: { series: { typeNames: { line: 'Line chart', bar: 'Bar chart' } } },
+    });
+    expect(text).toBe(
+      '[chart-aria-time-multi {"title":"Emissions","chartType":"Line chart","count":2,"categories":2,"names":"Housing, total","start":"2020","end":"2021"}] ' +
+        '[chart-aria-unit {"unit":"kt"}] ' +
+        '[chart-aria-series-values {"name":"Housing","values":"2020: 60; 2021: 50"}] ' +
+        '[chart-aria-series-values {"name":"Total","values":"2020: 100; 2021: 95"}] ' +
+        '[chart-aria-series-values {"name":"Goal","values":"2030: 40"}] ' +
+        '[chart-aria-trend {"startValue":"100","startDate":"2020","endValue":"61.2","endDate":"2030"}]'
+    );
+  });
+
+  it('names bar blocks with the locale pack bar type even on a time axis', () => {
+    const text = buildBlockAriaDescription({
+      title: 'Emissions',
+      series: [
+        {
+          name: 'total',
+          raw: [
+            ['2020', 100],
+            ['2021', 95],
+          ],
+        },
+      ],
+      timeResolution: 'YEAR',
+      unit: '',
+      valueRounding: null,
+      format: { number: (v: number) => String(v) } as unknown as Parameters<
+        typeof buildBlockAriaDescription
+      >[0]['format'],
+      t: (key, values) => `[${key} ${values?.chartType}]`,
+      localePack: {
+        aria: { data: { allData: 'Data: ', separator: { middle: ', ', end: '. ' } } },
+        series: { typeNames: { line: 'Line chart', bar: 'Bar chart' } },
+      },
+      chartKind: 'bar',
+    });
+    expect(text).toBe('[chart-aria-time-single Bar chart] Data: 2020: 100; 2021: 95.');
   });
 });

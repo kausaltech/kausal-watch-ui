@@ -1,6 +1,13 @@
+import type { EChartsLocalePack } from '@common/components/chart-aria';
+
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import { linearRegression } from '@/common/math';
 import { escapeHtml } from '@/common/utils';
+import {
+  type Formatter,
+  type TimeResolution,
+  buildAriaDescription,
+} from '@/components/graphs/indicator-graph.utils';
 import { formatUnitLabel } from '@/components/indicators/indicator-data-helpers';
 
 type LineChartBlock = Omit<
@@ -321,6 +328,73 @@ export function buildTooltipFormatter(
 
     return `<strong>${escapeHtml(formattedTime)}</strong><br/>${rows.join('<br/>')}`;
   };
+}
+
+type KeyedPoints = [string, number][];
+
+const toTrace = (name: string, points: KeyedPoints) => ({
+  name,
+  x: points.map(([key]) => key),
+  y: points.map(([, value]) => value),
+});
+
+/**
+ * The chart's aria-label for a dashboard chart block, built from the same
+ * series the block draws (category/total lines, per-scenario goals, trend)
+ * with IndicatorGraph's description builder, so both chart kinds describe
+ * themselves alike. Blocks key their points by formatted date ('2020',
+ * '2020-03'), which the builder's date formatter reads back as-is.
+ */
+export function buildBlockAriaDescription({
+  title,
+  series,
+  goals = [],
+  trend = null,
+  timeResolution,
+  unit,
+  valueRounding,
+  format,
+  t,
+  localePack,
+  chartKind = 'line',
+}: {
+  title: string | null | undefined;
+  series: Array<{ name: string; raw: KeyedPoints }>;
+  goals?: Array<{ name: string; data: KeyedPoints }>;
+  trend?: { name: string; data: KeyedPoints } | null;
+  timeResolution: string | null | undefined;
+  unit: string;
+  valueRounding: number | null | undefined;
+  format: Formatter;
+  t: (key: string, values?: Record<string, string | number>) => string;
+  localePack: EChartsLocalePack;
+  chartKind?: 'line' | 'bar';
+}): string {
+  const resolution = String(timeResolution ?? 'YEAR').toUpperCase();
+  const chartResolution: TimeResolution =
+    resolution === 'YEAR' || resolution === 'MONTH' || resolution === 'DAY'
+      ? resolution
+      : undefined;
+  return buildAriaDescription({
+    title,
+    traces: series.map((entry) => toTrace(entry.name, entry.raw)),
+    goalTraces: goals.map((goal) => toTrace(goal.name, goal.data)),
+    trendTrace: trend ? toTrace(trend.name, trend.data) : null,
+    hasTimeDimension: true,
+    timeResolution: chartResolution,
+    yRange: {
+      unit,
+      ticksCount: undefined,
+      ticksRounding: undefined,
+      valueRounding: valueRounding ?? undefined,
+      range: [],
+    },
+    valueRounding: valueRounding ?? undefined,
+    format,
+    t,
+    localePack,
+    chartKind,
+  });
 }
 
 export function buildYAxisConfig(
