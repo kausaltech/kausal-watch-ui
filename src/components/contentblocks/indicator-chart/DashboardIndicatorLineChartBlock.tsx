@@ -15,22 +15,24 @@ import useNumberFormatter from '@/common/numbers';
 import {
   type AriaDetail,
   buildSaveAsImageToolbox,
+  buildTimeTooltipFormatter,
   getChartDownloadFilename,
 } from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   type GraphsTheme,
+  blockYRange,
   buildBlockAriaDescription,
   buildDimSeries,
   buildGoalSeries,
-  buildTooltipFormatter,
   buildTotalSeries,
   buildTrendSeries,
   buildYAxisConfig,
   collectAllDates,
   getUnitLabel,
   shouldSmoothLines,
+  toChartTimeResolution,
 } from './indicator-charts-utility';
 
 echarts.use([LineChart, ScatterChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -194,14 +196,14 @@ const DashboardIndicatorLineChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'line' },
-      formatter: buildTooltipFormatter(
-        unit,
-        legendData,
-        t,
-        formatValue,
-        dimension ?? undefined,
-        timeResolution
-      ),
+      // Same formatter as the generic IndicatorGraph: one row per series
+      // with a value at the hovered date, hidden when there is none
+      formatter: buildTimeTooltipFormatter({
+        timeResolution: toChartTimeResolution(timeResolution),
+        trendName: trendLabel,
+        yRange: blockYRange(unit, indicator?.valueRounding),
+        format,
+      }),
     },
     grid: {
       left: 20,

@@ -13,19 +13,21 @@ import useNumberFormatter from '@/common/numbers';
 import {
   type AriaDetail,
   buildSaveAsImageToolbox,
+  buildTimeTooltipFormatter,
   getChartDownloadFilename,
 } from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   type GraphsTheme,
+  blockYRange,
   buildBlockAriaDescription,
   buildDimSeries,
-  buildTooltipFormatter,
   buildTotalSeries,
   buildYAxisConfig,
   collectAllDates,
   getUnitLabel,
+  toChartTimeResolution,
 } from './indicator-charts-utility';
 
 echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
@@ -49,9 +51,6 @@ const DashboardIndicatorBarChartBlock = ({
   const t = useTranslations();
   const format = useFormatter();
   const locale = useLocale();
-  const formatValue = useNumberFormatter({
-    maximumSignificantDigits: indicator?.valueRounding ?? undefined,
-  });
   const formatAxisValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
@@ -110,8 +109,6 @@ const DashboardIndicatorBarChartBlock = ({
     },
   }));
 
-  const legendData = dimSeries.map((d) => d.name);
-
   // ECharts sets this as the canvas' aria-label; same wording as the
   // generic IndicatorGraph so screen-reader users hear one style of chart
   const ariaDescription = buildBlockAriaDescription({
@@ -161,14 +158,14 @@ const DashboardIndicatorBarChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'shadow' },
-      formatter: buildTooltipFormatter(
-        unit,
-        legendData,
-        t,
-        formatValue,
-        dimension ?? undefined,
-        timeResolution
-      ),
+      // Same formatter as the generic IndicatorGraph: one row per series
+      // with a value at the hovered date, hidden when there is none
+      formatter: buildTimeTooltipFormatter({
+        timeResolution: toChartTimeResolution(timeResolution),
+        trendName: null,
+        yRange: blockYRange(unit, indicator?.valueRounding),
+        format,
+      }),
     },
     grid: {
       left: 20,

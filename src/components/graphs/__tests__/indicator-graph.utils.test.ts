@@ -245,6 +245,20 @@ describe('buildTimeTooltipFormatter', () => {
     ]);
     expect(text).toBe(`2020<br/>${marker} Value: 7 kt<br/>`);
   });
+
+  it('returns an empty string when only the trend or valueless series are hovered', () => {
+    const formatter = buildTimeTooltipFormatter({
+      timeResolution: 'YEAR',
+      trendName: 'Trend',
+      yRange: { ...yRange, unit: 'kt' },
+      format,
+    });
+    const text = formatter([
+      { seriesName: 'Trend', axisValue: '2033-01-01', value: ['2033-01-01', 61], marker },
+      { seriesName: 'Value', axisValue: '2033-01-01', value: ['2033-01-01', null], marker },
+    ]);
+    expect(text).toBe('');
+  });
 });
 
 describe('buildAriaDescription', () => {

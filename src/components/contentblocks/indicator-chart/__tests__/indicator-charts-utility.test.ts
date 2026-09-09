@@ -2,7 +2,6 @@ import {
   buildBlockAriaDescription,
   buildGoalSeries,
   buildPieAriaDescription,
-  buildTooltipFormatter,
 } from '../indicator-charts-utility';
 
 type Indicator = Parameters<typeof buildGoalSeries>[0];
@@ -75,8 +74,6 @@ describe('buildGoalSeries', () => {
 });
 
 describe('tooltip HTML escaping', () => {
-  const marker = '<span style="background-color:#111"></span>';
-
   it('escapes scenario names and units in goal tooltips', () => {
     const [series] = buildGoalSeries(
       indicator([goal('1', '2030-01-01', 10, { id: 'a', name: '<img src=x onerror=alert(1)>' })]),
@@ -85,29 +82,6 @@ describe('tooltip HTML escaping', () => {
     );
     const text = series.tooltip.formatter({ value: ['2030', 10] });
     expect(text).toBe('&lt;img src=x onerror=alert(1)&gt;: 10 &lt;u&gt;kt&lt;/u&gt;');
-  });
-
-  it('escapes series names, units and the axis label but keeps the ECharts marker', () => {
-    const formatter = buildTooltipFormatter(
-      '<u>kt</u>',
-      ['<img src=x onerror=alert(1)>'],
-      (k) => k,
-      String,
-      undefined,
-      'YEAR'
-    );
-    const text = formatter([
-      {
-        seriesName: '<img src=x onerror=alert(1)>',
-        axisValue: '2020<i>',
-        data: ['2020', 5],
-        marker,
-      },
-    ]);
-    expect(text).toContain(marker);
-    expect(text).toBe(
-      `<strong>2020&lt;i&gt;</strong><br/>${marker} &lt;img src=x onerror=alert(1)&gt;: 5 &lt;u&gt;kt&lt;/u&gt;`
-    );
   });
 });
 
