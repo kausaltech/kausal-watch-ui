@@ -4,6 +4,7 @@ import {
   buildGoalSeries,
   buildPieAriaDescription,
   buildUndatedTotal,
+  collectAllDates,
   hasDatedValues,
 } from '../indicator-charts-utility';
 
@@ -231,5 +232,21 @@ describe('undated (category-only) values', () => {
   it('reads the undated total', () => {
     expect(buildUndatedTotal(undatedSeries)).toBe(100);
     expect(buildUndatedTotal([])).toBeNull();
+  });
+});
+
+describe('collectAllDates', () => {
+  it('extends the axis to additional dates given as year keys and fills the gaps', () => {
+    const { xCategories } = collectAllDates(
+      [
+        [
+          ['2020', 1],
+          ['2022', 3],
+        ],
+      ],
+      'YEAR',
+      ['2025']
+    );
+    expect(xCategories).toEqual(['2020', '2021', '2022', '2023', '2024', '2025']);
   });
 });
