@@ -1102,30 +1102,45 @@ export function buildAriaDescription({
 
   const chartTitle = title || series[0].name;
   const allPoints = series.flatMap((entry) => entry.points);
+  const start = allPoints[0].label;
+  const end = allPoints[allPoints.length - 1].label;
+  // "from 2020 to 2020" reads oddly when all values share one date
+  const singleDate = hasTimeDimension && start === end;
   const sentences: string[] = [];
 
   if (series.length === 1) {
     sentences.push(
-      t(hasTimeDimension ? 'chart-aria-time-single' : 'chart-aria-category-single', {
-        title: chartTitle,
-        chartType,
-        count: allPoints.length,
-        start: allPoints[0].label,
-        end: allPoints[allPoints.length - 1].label,
-      })
+      singleDate
+        ? t('chart-aria-time-single-date', { title: chartTitle, chartType, date: start })
+        : t(hasTimeDimension ? 'chart-aria-time-single' : 'chart-aria-category-single', {
+            title: chartTitle,
+            chartType,
+            count: allPoints.length,
+            start,
+            end,
+          })
     );
   } else {
     const categories = new Set(allPoints.map((point) => point.label));
+    const names = series.map((entry) => entry.name).join(', ');
     sentences.push(
-      t(hasTimeDimension ? 'chart-aria-time-multi' : 'chart-aria-category-multi', {
-        title: chartTitle,
-        chartType,
-        count: series.length,
-        categories: categories.size,
-        names: series.map((entry) => entry.name).join(', '),
-        start: allPoints[0].label,
-        end: allPoints[allPoints.length - 1].label,
-      })
+      singleDate
+        ? t('chart-aria-time-multi-single-date', {
+            title: chartTitle,
+            chartType,
+            count: series.length,
+            date: start,
+            names,
+          })
+        : t(hasTimeDimension ? 'chart-aria-time-multi' : 'chart-aria-category-multi', {
+            title: chartTitle,
+            chartType,
+            count: series.length,
+            categories: categories.size,
+            names,
+            start,
+            end,
+          })
     );
   }
   if (yRange.unit) {
@@ -1173,9 +1188,17 @@ export function buildAriaDescription({
 
   if (trendTrace) {
     const points = tracePoints(trendTrace, hasTimeDimension, timeResolution);
+    const start = points[0];
     const end = points[points.length - 1];
-    if (end) {
-      sentences.push(t('chart-aria-trend', { value: num(end.value), date: end.label }));
+    if (start && end) {
+      sentences.push(
+        t('chart-aria-trend', {
+          startValue: num(start.value),
+          startDate: start.label,
+          endValue: num(end.value),
+          endDate: end.label,
+        })
+      );
     }
   }
 
