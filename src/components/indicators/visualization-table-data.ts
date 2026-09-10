@@ -158,9 +158,10 @@ export function buildVisualizationTableData(
     case 'DashboardIndicatorLineChartBlock':
     case 'IndicatorDefaultLineChart': {
       const total = buildTotalSeries(chartSeries, '', totalLabel, timeResolution);
+      // Same rule as the block: without a dimension the total is the data itself
       const series = [
         ...buildDimSeries(chartSeries, NO_PALETTE, timeResolution),
-        ...(block.showTotalLine && total.raw.length ? [total] : []),
+        ...((!dimension || block.showTotalLine) && total.raw.length ? [total] : []),
       ];
       traces = series.map(toTimeTrace);
       goals = goalTraces(indicator, timeResolution, t);

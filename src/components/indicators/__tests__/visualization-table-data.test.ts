@@ -81,6 +81,22 @@ describe('buildVisualizationTableData', () => {
     expect(table?.traces.map((trace) => trace.name)).toEqual(['Housing', 'Transport']);
   });
 
+  it('keeps the total for a dimensionless line chart even when the block hides it', () => {
+    const table = buildVisualizationTableData(
+      block({
+        __typename: 'DashboardIndicatorLineChartBlock',
+        dimension: null,
+        showTotalLine: false,
+        chartSeries: [chartSeries[2]],
+      }),
+      IndicatorTimeResolution.Year,
+      t
+    );
+    expect(table?.traces).toEqual([
+      { name: 'total', xType: 'time', x: ['2020', '2021'], y: [100, 95] },
+    ]);
+  });
+
   it('mirrors a pie chart: one column for the configured year, categories as rows', () => {
     const table = buildVisualizationTableData(
       block({ __typename: 'IndicatorDefaultPieChart', year: 2020 }),
