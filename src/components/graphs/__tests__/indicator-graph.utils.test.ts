@@ -1,4 +1,7 @@
+import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
+
 import {
+  applyGoalMarkers,
   buildAriaDescription,
   buildTimeTooltipFormatter,
   collectChartDates,
@@ -523,5 +526,51 @@ describe('buildAriaDescription locale pack', () => {
       },
     });
     expect(text).toBe('[chart-aria-time-single-date Viivakaavio] Tiedot ovat seuraavat: 2020: 1.');
+  });
+});
+
+describe('applyGoalMarkers', () => {
+  const yRange = {
+    unit: 'kt',
+    ticksCount: undefined,
+    ticksRounding: undefined,
+    valueRounding: undefined,
+    range: [-5, 20],
+  };
+  const theme = { graphColors: { blue030: '#00f', grey030: '#999' } } as unknown as Parameters<
+    typeof applyGoalMarkers
+  >[0]['theme'];
+  const t = ((key: string) => key) as Parameters<typeof applyGoalMarkers>[0]['t'];
+
+  function goalArrow(referenceValue: Parameters<typeof applyGoalMarkers>[0]['referenceValue']) {
+    const baseSeries: Parameters<typeof applyGoalMarkers>[0]['baseSeries'] = [
+      { type: 'line', data: [] },
+    ];
+    applyGoalMarkers({
+      baseSeries,
+      referenceValue,
+      nonQuantifiedGoal: { trend: IndicatorNonQuantifiedGoal.Increase, date: '2030-01-01' },
+      hasTimeDimension: true,
+      timeResolution: 'YEAR',
+      xAxisCategories: [],
+      yRange,
+      theme,
+      t,
+    });
+    const data = baseSeries[0].markLine?.data ?? [];
+    const arrow = data.find((item) => Array.isArray(item)) as
+      [{ yAxis?: unknown }, { yAxis?: unknown }] | undefined;
+    return arrow;
+  }
+
+  it('starts the goal arrow at a zero-valued reference value', () => {
+    const arrow = goalArrow({ date: '2020-01-01', value: 0 });
+    expect(arrow?.[0].yAxis).toBe(0);
+    expect(arrow?.[1].yAxis).toBe(20);
+  });
+
+  it('falls back to the axis end only when there is no reference value', () => {
+    const arrow = goalArrow(null);
+    expect(arrow?.[0].yAxis).toBe(-5);
   });
 });
