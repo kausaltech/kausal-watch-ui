@@ -916,13 +916,11 @@ export function applyGoalMarkers({
   if (nonQuantifiedGoal?.date && hasTimeDimension) {
     const nonQuantifiedGoalDate = normalizeDate(nonQuantifiedGoal.date, timeResolution);
     const goalDirection = nonQuantifiedGoal.trend ? nonQuantifiedGoal.trend.toString() : '';
-    // Not `??`: a reference value of 0 intentionally falls back to the axis end
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    const goalStartValue = referenceValue?.value
-      ? referenceValue.value
-      : nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
+    const goalStartValue =
+      referenceValue?.value ??
+      (nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
         ? yRange.range[0]
-        : yRange.range[1];
+        : yRange.range[1]);
     const goalEndValue =
       nonQuantifiedGoal.trend === IndicatorNonQuantifiedGoal.Increase
         ? yRange.range[1]
