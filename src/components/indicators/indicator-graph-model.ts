@@ -95,10 +95,12 @@ export function deriveIndicatorGraphModel({
   // comparison mode they would show over both organizations' series without
   // attribution — suppress them like the legacy renderer did. Suppressing at
   // the source also keeps them out of the table and the y-axis bounds.
+  // Goals are always dated, so they have no place on a category axis either.
   const suppressOverlays = normalizeByPopulation || compareTo != null;
-  const [goalTraces, goalBounds] = suppressOverlays
-    ? [[], null]
-    : generateGoalTraces(indicator, scenarios, i18n);
+  const [goalTraces, goalBounds] =
+    suppressOverlays || !hasTimeDimension
+      ? [[], null]
+      : generateGoalTraces(indicator, scenarios, i18n);
   const [trendTrace, trendBounds] =
     suppressOverlays || !hasTimeDimension || !indicator.showTrendline || !indicator.showTotalLine
       ? [null, null]

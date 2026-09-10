@@ -97,6 +97,37 @@ describe('deriveIndicatorGraphModel', () => {
     });
   });
 
+  it('drops dated goals when the data has no time dimension', () => {
+    const catValue = (categoryId: string, raw: number) => ({
+      date: '2021-01-01',
+      value: raw,
+      categories: [{ id: categoryId }],
+      normalizedValues: [],
+    });
+    const model = deriveIndicatorGraphModel({
+      ...base,
+      indicator: makeIndicator({
+        dimensions: [
+          {
+            dimension: {
+              id: 'sector',
+              name: 'Sector',
+              categories: [
+                { id: 'housing', name: 'Housing' },
+                { id: 'transport', name: 'Transport' },
+              ],
+            },
+          },
+        ],
+        values: [catValue('housing', 60), catValue('transport', 40)],
+      }),
+    });
+    expect(model.hasTimeDimension).toBe(false);
+    expect(model.traces).toHaveLength(1);
+    expect(model.traces[0].xType).toBe('category');
+    expect(model.goalTraces).toEqual([]);
+  });
+
   it('normalizes and suppresses overlays when a comparison is selected', () => {
     const model = deriveIndicatorGraphModel({
       ...base,

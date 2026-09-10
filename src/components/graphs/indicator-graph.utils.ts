@@ -382,13 +382,14 @@ export function detectTimeDimension(
   if (traces.some((trace) => trace.xType === 'time')) {
     return true;
   }
-  if (goalTraces.length > 0 && goalTraces.some((goal) => goal.x.length > 0)) {
-    return true;
-  }
-  // An explicit category axis wins over inference: category names such as
-  // "2020" would otherwise parse as dates and turn a bar chart into a time series
+  // An explicit category axis wins over inference and over dated goals:
+  // category names such as "2020" would otherwise parse as dates, and goals
+  // always carry a date even when the indicator's data is undated
   if (traces.some((trace) => trace.xType === 'category')) {
     return false;
+  }
+  if (goalTraces.length > 0 && goalTraces.some((goal) => goal.x.length > 0)) {
+    return true;
   }
   // Traces without a declared axis type: infer from date-like x values (even for single datapoint)
   if (traces.length > 0 && traces[0].x.length > 0) {
