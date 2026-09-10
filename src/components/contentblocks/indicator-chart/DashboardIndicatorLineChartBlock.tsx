@@ -85,6 +85,9 @@ const DashboardIndicatorLineChartBlock = ({
     timeResolution
   );
   const totalRaw = totalDef.raw;
+  // Without a dimension the aggregate is the only measurement series, so it
+  // is drawn regardless of showTotalLine; with one it is an optional overlay
+  const includeTotal = (!dimension || showTotalLine) && totalRaw.length > 0;
 
   const goalDates = indicator?.goals?.map((g) => g?.date).filter((d) => d != null) ?? [];
   const { xCategories } = collectAllDates(
@@ -117,7 +120,7 @@ const DashboardIndicatorLineChartBlock = ({
   }
 
   const seriesLines = buildLines(dimSeries);
-  const seriesTotal = showTotalLine && totalRaw.length ? buildLines([totalDef], 3) : [];
+  const seriesTotal = includeTotal ? buildLines([totalDef], 3) : [];
   // The trend regresses the categoryless aggregate; when the editor hides
   // the total line, an aggregate trend over category series would be
   // unattributed — same gate the generic indicator view applies
@@ -142,7 +145,7 @@ const DashboardIndicatorLineChartBlock = ({
 
   const legendData = [
     ...dimSeries.map((d) => d.name),
-    ...(showTotalLine && totalRaw.length ? [totalLabel] : []),
+    ...(includeTotal ? [totalLabel] : []),
     ...goalSeries.map((g) => g.name),
     ...(trendSeries.length ? [trendLabel] : []),
   ];
@@ -151,7 +154,7 @@ const DashboardIndicatorLineChartBlock = ({
   // generic IndicatorGraph so screen-reader users hear one style of chart
   const ariaDescription = buildBlockAriaDescription({
     title: indicator?.name,
-    series: [...dimSeries, ...(showTotalLine && totalRaw.length ? [totalDef] : [])],
+    series: [...dimSeries, ...(includeTotal ? [totalDef] : [])],
     goals: goalSeries,
     trend: trendSeries[0] ?? null,
     timeResolution,
