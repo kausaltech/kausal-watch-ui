@@ -141,6 +141,7 @@ export function buildVisualizationTableData(
         ? buildDimSeries(chartSeries, NO_PALETTE, timeResolution)
         : [buildTotalSeries(chartSeries, '', totalLabel, timeResolution)];
       traces = series.map(toTimeTrace);
+      goals = goalTraces(indicator, timeResolution, t);
       break;
     }
     case 'DashboardIndicatorAreaChartBlock':
@@ -153,6 +154,7 @@ export function buildVisualizationTableData(
           ]
         : [total];
       traces = series.map(toTimeTrace);
+      goals = goalTraces(indicator, timeResolution, t);
       break;
     }
     case 'DashboardIndicatorLineChartBlock':

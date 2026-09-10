@@ -128,7 +128,8 @@ describe('buildVisualizationTableData', () => {
     expect(table?.traces).toEqual([
       { name: 'total', xType: 'time', x: ['2020', '2021'], y: [100, 95] },
     ]);
-    expect(table?.goalTraces).toEqual([]);
+    // Dated bar charts draw the goals like the line chart does
+    expect(table?.goalTraces.map((goal) => goal.name)).toEqual(['Ambitious', 'goal']);
   });
 
   it('tabulates a category-only bar chart with categories as rows', () => {
@@ -144,6 +145,8 @@ describe('buildVisualizationTableData', () => {
     expect(table?.traces).toEqual([
       { name: 'Sector', xType: 'category', x: ['Housing', 'Transport'], y: [60, 40] },
     ]);
+    // No time axis to place dated goals on
+    expect(table?.goalTraces).toEqual([]);
   });
 
   it('adds the total overlay to a dimensional area chart only when enabled', () => {
@@ -159,6 +162,18 @@ describe('buildVisualizationTableData', () => {
     );
     expect(withTotal?.traces.map((trace) => trace.name)).toEqual(['Housing', 'Transport', 'total']);
     expect(withoutTotal?.traces.map((trace) => trace.name)).toEqual(['Housing', 'Transport']);
+  });
+
+  it('mirrors the goals an area chart draws', () => {
+    const table = buildVisualizationTableData(
+      block({ __typename: 'DashboardIndicatorAreaChartBlock', showTotalLine: false }),
+      IndicatorTimeResolution.Year,
+      t
+    );
+    expect(table?.goalTraces).toEqual([
+      { name: 'Ambitious', xType: 'time', x: ['2030'], y: [10] },
+      { name: 'goal', xType: 'time', x: ['2025'], y: [30] },
+    ]);
   });
 
   it('returns null for summaries and for charts with nothing to draw', () => {
