@@ -188,6 +188,12 @@ describe('detectTimeDimension', () => {
     expect(detectTimeDimension(noTimeSpec, traces, [])).toBe(false);
   });
 
+  it('keeps an explicit category axis even when dated goals are present', () => {
+    const traces = [{ name: 'Sector', xType: 'category' as const, x: ['Housing'], y: [1] }];
+    const goals = [{ name: 'Goal', x: ['2030-01-01'], y: [2] }];
+    expect(detectTimeDimension(noTimeSpec, traces, goals)).toBe(false);
+  });
+
   it('uses the time axis when a trace declares it', () => {
     const traces = [{ name: 'Value', xType: 'time' as const, x: ['2020-01-01'], y: [1] }];
     expect(detectTimeDimension(noTimeSpec, traces, [])).toBe(true);
