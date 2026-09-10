@@ -2,7 +2,7 @@
 
 import { useTheme } from '@emotion/react';
 
-import { LineChart, type LineSeriesOption } from 'echarts/charts';
+import { LineChart, type LineSeriesOption, ScatterChart } from 'echarts/charts';
 import {
   GridComponent,
   LegendComponent,
@@ -30,6 +30,7 @@ import {
   blockYRange,
   buildBlockAriaDescription,
   buildDimSeries,
+  buildGoalSeries,
   buildTotalSeries,
   buildTrendSeries,
   buildYAxisConfig,
@@ -39,7 +40,7 @@ import {
   toChartTimeResolution,
 } from './indicator-charts-utility';
 
-echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent]);
+echarts.use([LineChart, ScatterChart, GridComponent, TooltipComponent, LegendComponent]);
 
 type Props = Omit<
   Extract<AreaChartVisualizationFragment, { __typename: 'DashboardIndicatorAreaChartBlock' }>,
@@ -60,6 +61,9 @@ const DashboardIndicatorAreaChartBlock = ({
   const t = useTranslations();
   const format = useFormatter();
   const locale = useLocale();
+  const formatValue = useNumberFormatter({
+    maximumSignificantDigits: indicator?.valueRounding ?? undefined,
+  });
   const formatAxisValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
@@ -72,6 +76,7 @@ const DashboardIndicatorAreaChartBlock = ({
   const timeResolution = indicator?.timeResolution ?? 'YEAR';
 
   const totalLabel = t('total');
+  const goalLabel = t('goal');
   const trendLabel = t('current-trend');
 
   if (!chartSeries?.length) {
@@ -112,6 +117,17 @@ const DashboardIndicatorAreaChartBlock = ({
         )
       : [];
 
+  // Quantified goals are drawn as markers like the line block and the
+  // generic graph do, so switching the default kind to area keeps the targets
+  const goalSeries = buildGoalSeries(
+    indicator,
+    unit,
+    graphsTheme.goalLineColors ?? [],
+    goalLabel,
+    timeResolution,
+    formatValue
+  );
+
   const areaLegendItems: LegendComponentOption['data'] = hasDimension
     ? dimSeries.map((d) => ({ name: d.name, icon: 'roundRect' as const }))
     : [{ name: totalLabel, icon: 'roundRect' as const }];
@@ -124,19 +140,26 @@ const DashboardIndicatorAreaChartBlock = ({
     ? [{ name: totalLabel }]
     : [];
 
+  const goalLegendItems: LegendComponentOption['data'] = goalSeries.map((g) => ({ name: g.name }));
+
   const legendData: LegendComponentOption['data'] = [
     ...areaLegendItems,
     ...totalLegendItems,
+    ...goalLegendItems,
     ...trendLegendItems,
   ];
 
   const dataSources = hasDimension
     ? [...dimSeries.map((d) => d.raw), ...(showTotalOverlay ? [totalRaw] : [])]
     : [totalRaw];
-  // The trend projects to the highest goal year, beyond the last
-  // observation; the axis must reach it or the projection is clipped
+  // Goals and the trend projection lie beyond the last observation; the
+  // axis must reach them or they are clipped
+  const goalDates = goalSeries.flatMap((series) => series.data.map(([key]) => key));
   const trendDates = trendSeries.flatMap((series) => series.data.map(([key]) => key));
-  const { xCategories } = collectAllDates(dataSources, timeResolution, trendDates);
+  const { xCategories } = collectAllDates(dataSources, timeResolution, [
+    ...goalDates,
+    ...trendDates,
+  ]);
 
   // Annotated so the dimensional/dimensionless branches don't form an
   // inference-hostile union (`.map` over it degrades to `any`)
@@ -210,6 +233,7 @@ const DashboardIndicatorAreaChartBlock = ({
   const ariaDescription = buildBlockAriaDescription({
     title: indicator?.name,
     series: hasDimension ? [...dimSeries, ...(showTotalOverlay ? [totalDef] : [])] : [totalDef],
+    goals: goalSeries,
     trend: trendSeries[0] ?? null,
     timeResolution,
     unit,
@@ -280,7 +304,7 @@ const DashboardIndicatorAreaChartBlock = ({
       },
     },
     yAxis: buildYAxisConfig(unit, formatAxisValue, indicator ?? undefined, theme.textColor.primary),
-    series: [...seriesWithStack, ...totalLineSeries, ...trendSeries],
+    series: [...seriesWithStack, ...totalLineSeries, ...goalSeries, ...trendSeries],
   };
 
   return (

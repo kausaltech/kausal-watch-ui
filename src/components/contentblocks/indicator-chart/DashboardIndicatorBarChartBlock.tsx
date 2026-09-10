@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react';
 
-import { BarChart } from 'echarts/charts';
+import { BarChart, ScatterChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
@@ -25,6 +25,7 @@ import {
   buildCategoryAriaDescription,
   buildCategoryValues,
   buildDimSeries,
+  buildGoalSeries,
   buildTotalSeries,
   buildUndatedTotal,
   buildYAxisConfig,
@@ -34,7 +35,7 @@ import {
   toChartTimeResolution,
 } from './indicator-charts-utility';
 
-echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
+echarts.use([BarChart, ScatterChart, GridComponent, TooltipComponent, LegendComponent]);
 
 type Props = Omit<
   Extract<BarChartVisualizationFragment, { __typename: 'DashboardIndicatorBarChartBlock' }>,
@@ -55,6 +56,9 @@ const DashboardIndicatorBarChartBlock = ({
   const t = useTranslations();
   const format = useFormatter();
   const locale = useLocale();
+  const formatValue = useNumberFormatter({
+    maximumSignificantDigits: indicator?.valueRounding ?? undefined,
+  });
   const formatAxisValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
@@ -67,6 +71,7 @@ const DashboardIndicatorBarChartBlock = ({
   const timeResolution = indicator?.timeResolution ?? 'YEAR';
 
   const totalLabel = t('total');
+  const goalLabel = t('goal');
 
   if (!chartSeries?.length) {
     return <div>{t('data-not-available')}</div>;
@@ -123,9 +128,24 @@ const DashboardIndicatorBarChartBlock = ({
       ? buildDimSeries(chartSeries, palette, timeResolution)
       : [buildTotalSeries(chartSeries, totalColor, totalLabel, timeResolution)];
 
+    // Quantified goals are drawn as markers like the line block and the
+    // generic graph do, so switching the default kind to bar keeps the
+    // targets. Category-only charts have no time axis to place them on.
+    const goalSeries = buildGoalSeries(
+      indicator,
+      unit,
+      graphsTheme.goalLineColors ?? [],
+      goalLabel,
+      timeResolution,
+      formatValue
+    );
+    // Goals lie beyond the last observation; the axis must reach them
+    const goalDates = goalSeries.flatMap((series) => series.data.map(([key]) => key));
+
     xCategories = collectAllDates(
       dimSeries.map((d) => d.raw),
-      timeResolution
+      timeResolution,
+      goalDates
     ).xCategories;
 
     // An explicit block barType wins over the indicator's own
@@ -134,7 +154,7 @@ const DashboardIndicatorBarChartBlock = ({
       ? barType === 'stacked'
       : (indicator?.dataCategoriesAreStackable ?? false);
 
-    series = dimSeries.map(({ name, raw, color }) => {
+    const barSeries = dimSeries.map(({ name, raw, color }) => {
       const valuesByKey: Record<string, number> = Object.fromEntries(raw);
       return {
         name,
@@ -145,12 +165,14 @@ const DashboardIndicatorBarChartBlock = ({
         itemStyle: { color },
       };
     });
+    series = [...barSeries, ...goalSeries];
     showLegend = true;
     // ECharts sets this as the canvas' aria-label; same wording as the
     // generic IndicatorGraph so screen-reader users hear one style of chart
     ariaDescription = buildBlockAriaDescription({
       ...ariaCommon,
       series: dimSeries,
+      goals: goalSeries,
       timeResolution,
       chartKind: 'bar',
     });
