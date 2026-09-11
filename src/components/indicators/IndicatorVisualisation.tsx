@@ -8,7 +8,6 @@ import { Alert } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
-import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import type { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
@@ -24,9 +23,6 @@ import { NORMALIZE_DEFAULT, normalizeByPopulationSetter } from './indicator-data
 import { deriveIndicatorGraphModel } from './indicator-graph-model';
 import { buildVisualizationTableData } from './visualization-table-data';
 
-type IndicatorDetailsIndicator = NonNullable<IndicatorDetailsQuery['indicator']>;
-type DefaultVisualization = IndicatorDetailsIndicator['defaultVisualization'];
-
 export type IndicatorVisualisationProps = {
   indicatorId: string;
   indicatorLink?: string;
@@ -37,7 +33,6 @@ export type IndicatorVisualisationProps = {
   showGraph?: boolean;
   showTable?: boolean;
   showFactorValues?: boolean;
-  defaultVisualization?: DefaultVisualization;
 };
 
 /**
@@ -63,7 +58,6 @@ function IndicatorVisualisation({
   showGraph = true,
   showTable = true,
   showFactorValues = false,
-  defaultVisualization,
 }: IndicatorVisualisationProps) {
   const plan = usePlan();
   const enableIndicatorComparison = plan.features.enableIndicatorComparison === true;
@@ -120,15 +114,11 @@ function IndicatorVisualisation({
 
   const plotTitle = indicator.name;
 
-  // Callers that fetch the indicator's default visualization themselves can
-  // pass it as a prop; otherwise fall back to the one from this component's
-  // own graph-data query, so callers that only know the indicator id (e.g.
-  // IndicatorBlock) still honor the configured default visualization.
-  const effectiveDefaultVisualization = defaultVisualization ?? indicator.defaultVisualization;
+  // The configured default visualization comes from this component's own
+  // graph-data query, so every caller sees the same, current configuration.
+  const { defaultVisualization } = indicator;
   const configuredBlock =
-    effectiveDefaultVisualization && !compareTo && !normalizeByPopulation
-      ? effectiveDefaultVisualization
-      : null;
+    defaultVisualization && !compareTo && !normalizeByPopulation ? defaultVisualization : null;
   // The table must show what the block draws (its own series, grouping and,
   // for pies, year) — the generic cube traces may differ. Null when the block
   // is a summary (meaningful text, no table equivalent) or has no data. With
@@ -175,7 +165,6 @@ function IndicatorVisualisation({
           trendTrace={trendTrace}
           title={null}
           downloadFilename={plotTitle}
-          desiredTrend={indicator.desiredTrend}
           referenceValue={referenceValue}
           nonQuantifiedGoal={{
             trend: indicator.nonQuantifiedGoal,

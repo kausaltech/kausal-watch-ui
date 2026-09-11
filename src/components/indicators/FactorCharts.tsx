@@ -117,7 +117,6 @@ function FactorCharts({
                     trendTrace={null}
                     title={null}
                     downloadFilename={metric.label}
-                    desiredTrend={null}
                     referenceValue={null}
                     nonQuantifiedGoal={{ trend: null, date: null }}
                     height={225}

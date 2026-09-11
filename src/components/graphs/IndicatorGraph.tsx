@@ -10,7 +10,6 @@ import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { Chart, type ECOption } from '@common/components/Chart';
 import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
 
-import type { IndicatorDesiredTrend } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter } from '@/common/utils';
 
 import {
@@ -55,7 +54,6 @@ type IndicatorGraphProps = {
   title: string | null;
   /** Basename for the save-as-PNG download; the indicator name in practice */
   downloadFilename?: string | null;
-  desiredTrend?: IndicatorDesiredTrend | null;
   nonQuantifiedGoal?: NonQuantifiedGoalProp;
   referenceValue: ReferenceValueProp;
   height?: number;
