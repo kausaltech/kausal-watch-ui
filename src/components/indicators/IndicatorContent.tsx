@@ -202,7 +202,6 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
                           showReference={true}
                           showGraph={showIndicatorGraph}
                           showTable={showIndicatorTable}
-                          defaultVisualization={indicator.defaultVisualization}
                         />
                       </GraphContainer>
                     </Col>

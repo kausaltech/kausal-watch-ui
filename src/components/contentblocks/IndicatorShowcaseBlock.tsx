@@ -90,7 +90,7 @@ const IndicatorShowcaseBlock = (props: IndicatorShowcaseBlockProps) => {
           </Alert>
         )}
         <Paper>
-          <IndicatorVisualisation indicatorId={indicator.id} useLegacyGraph={false} />
+          <IndicatorVisualisation indicatorId={indicator.id} />
         </Paper>
       </>
     );

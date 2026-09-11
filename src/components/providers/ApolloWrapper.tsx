@@ -16,6 +16,7 @@ import { useLocale } from 'next-intl';
 import { createSentryLink, logOperationLink } from '@common/apollo/links';
 import { getWatchGraphQLUrl } from '@common/env';
 
+import possibleTypes from '@/common/__generated__/possible_types.json';
 import { isServer } from '@/common/environment';
 
 import {
@@ -58,7 +59,10 @@ function makeClient(config: {
       planIdentifier,
       planDomain,
     },
-    cache: new InMemoryCache(),
+    // possibleTypes is required for fragments on unions/interfaces (e.g.
+    // Indicator.defaultVisualization) to resolve when reading from the cache;
+    // without it their fields are silently dropped from query results.
+    cache: new InMemoryCache({ possibleTypes: possibleTypes.possibleTypes }),
     link: ApolloLink.from([
       unauthErrorLink,
       logOperationLink,

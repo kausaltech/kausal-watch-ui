@@ -1631,7 +1631,9 @@ export type CategoryTagRecursiveFragment = { __typename: 'Category', id: string,
 
 export type DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_latestValue = { __typename: 'IndicatorValue', id: string, value: number, date: string | null };
 
-export type DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_goals = { __typename: 'IndicatorGoal', id: string, value: number, date: string | null };
+export type DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_goals_scenario = { __typename: 'Scenario', id: string, name: string };
+
+export type DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_goals = { __typename: 'IndicatorGoal', id: string, value: number, date: string | null, scenario: DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_goals_scenario | null };
 
 export type DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator_unit = { __typename: 'Unit', id: string, name: string, shortName: string | null };
 
@@ -6821,6 +6823,24 @@ export type IndicatorGraphDataQuery_indicator_goals_scenario = { __typename: 'Sc
 
 export type IndicatorGraphDataQuery_indicator_goals = { __typename: 'IndicatorGoal', id: string, date: string | null, value: number, normalizedValues: Array<IndicatorGraphDataQuery_indicator_goals_normalizedValues>, scenario: IndicatorGraphDataQuery_indicator_goals_scenario | null };
 
+export type IndicatorGraphDataQuery_indicator_defaultVisualization_IndicatorDefaultAreaChart = { __typename: 'IndicatorDefaultAreaChart', showTotalLine: boolean | null, indicator: DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_indicator, dimension: DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_dimension | null, chartSeries: Array<DashboardIndicatorBlockFragment_blocks_DashboardIndicatorAreaChartBlock_chartSeries> };
+
+export type IndicatorGraphDataQuery_indicator_defaultVisualization_IndicatorDefaultBarChart = { __typename: 'IndicatorDefaultBarChart', barType: string | null, indicator: DashboardIndicatorBlockFragment_blocks_DashboardIndicatorBarChartBlock_indicator, dimension: DashboardIndicatorBlockFragment_blocks_DashboardIndicatorBarChartBlock_dimension | null, chartSeries: Array<DashboardIndicatorBlockFragment_blocks_DashboardIndicatorBarChartBlock_chartSeries> };
+
+export type IndicatorGraphDataQuery_indicator_defaultVisualization_IndicatorDefaultLineChart = { __typename: 'IndicatorDefaultLineChart', showTotalLine: boolean | null, indicator: DashboardIndicatorBlockFragment_blocks_DashboardIndicatorLineChartBlock_indicator, dimension: DashboardIndicatorBlockFragment_blocks_DashboardIndicatorLineChartBlock_dimension | null, chartSeries: Array<DashboardIndicatorBlockFragment_blocks_DashboardIndicatorLineChartBlock_chartSeries> };
+
+export type IndicatorGraphDataQuery_indicator_defaultVisualization_IndicatorDefaultPieChart = { __typename: 'IndicatorDefaultPieChart', year: number | null, indicator: DashboardIndicatorBlockFragment_blocks_DashboardIndicatorPieChartBlock_indicator, dimension: DashboardIndicatorBlockFragment_blocks_DashboardIndicatorPieChartBlock_dimension | null, chartSeries: Array<DashboardIndicatorBlockFragment_blocks_DashboardIndicatorPieChartBlock_chartSeries> };
+
+export type IndicatorGraphDataQuery_indicator_defaultVisualization_IndicatorDefaultSummary = { __typename: 'IndicatorDefaultSummary', indicator: DashboardIndicatorBlockFragment_blocks_DashboardIndicatorSummaryBlock_indicator };
+
+export type IndicatorGraphDataQuery_indicator_defaultVisualization =
+  | IndicatorGraphDataQuery_indicator_defaultVisualization_IndicatorDefaultAreaChart
+  | IndicatorGraphDataQuery_indicator_defaultVisualization_IndicatorDefaultBarChart
+  | IndicatorGraphDataQuery_indicator_defaultVisualization_IndicatorDefaultLineChart
+  | IndicatorGraphDataQuery_indicator_defaultVisualization_IndicatorDefaultPieChart
+  | IndicatorGraphDataQuery_indicator_defaultVisualization_IndicatorDefaultSummary
+;
+
 export type IndicatorGraphDataQuery_indicator_datasets_schema_metrics = { __typename: 'DatasetMetricNode', label: string, unit: string, isComputed: boolean };
 
 export type IndicatorGraphDataQuery_indicator_datasets_schema = { __typename: 'DatasetSchema', uuid: string, metrics: Array<IndicatorGraphDataQuery_indicator_datasets_schema_metrics> };
@@ -6867,7 +6887,7 @@ export type IndicatorGraphDataQuery_indicator_common_indicators = { __typename: 
 
 export type IndicatorGraphDataQuery_indicator_common = { __typename: 'CommonIndicator', id: string, name: string, normalizations: Array<IndicatorGraphDataQuery_indicator_common_normalizations>, indicators: Array<IndicatorGraphDataQuery_indicator_common_indicators> };
 
-export type IndicatorGraphDataQuery_indicator = { __typename: 'Indicator', id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, showTotalLine: boolean, desiredTrend: IndicatorDesiredTrend | null, reference: string | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, valueRounding: number | null, dataCategoriesAreStackable: boolean, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: IndicatorGraphDataQuery_indicator_organization, quantity: IndicatorGraphDataQuery_indicator_quantity | null, values: Array<IndicatorGraphDataQuery_indicator_values>, referenceValue: IndicatorGraphDataQuery_indicator_referenceValue | null, dimensions: Array<IndicatorGraphDataQuery_indicator_dimensions>, goals: Array<IndicatorGraphDataQuery_indicator_goals | null> | null, datasets: Array<IndicatorGraphDataQuery_indicator_datasets>, unit: IndicatorGraphDataQuery_indicator_unit, common: IndicatorGraphDataQuery_indicator_common | null };
+export type IndicatorGraphDataQuery_indicator = { __typename: 'Indicator', id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, showTotalLine: boolean, desiredTrend: IndicatorDesiredTrend | null, reference: string | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, valueRounding: number | null, dataCategoriesAreStackable: boolean, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, organization: IndicatorGraphDataQuery_indicator_organization, quantity: IndicatorGraphDataQuery_indicator_quantity | null, values: Array<IndicatorGraphDataQuery_indicator_values>, referenceValue: IndicatorGraphDataQuery_indicator_referenceValue | null, dimensions: Array<IndicatorGraphDataQuery_indicator_dimensions>, goals: Array<IndicatorGraphDataQuery_indicator_goals | null> | null, defaultVisualization: IndicatorGraphDataQuery_indicator_defaultVisualization | null, datasets: Array<IndicatorGraphDataQuery_indicator_datasets>, unit: IndicatorGraphDataQuery_indicator_unit, common: IndicatorGraphDataQuery_indicator_common | null };
 
 export type IndicatorGraphDataQuery = { __typename: 'Query', plan: IndicatorGraphDataQuery_plan | null, indicator: IndicatorGraphDataQuery_indicator | null };
 
@@ -8584,6 +8604,8 @@ export type StorybookIndicatorExplorerQuery_planIndicators_values = { __typename
 
 export type StorybookIndicatorExplorerQuery_planIndicators_goals = { __typename: 'IndicatorGoal', id: string, value: number, date: string | null };
 
+export type StorybookIndicatorExplorerQuery_planIndicators_actions = { __typename: 'Action', id: string, identifier: string, name: string };
+
 export type StorybookIndicatorExplorerQuery_planIndicators_quantity = { __typename: 'Quantity', id: string, name: string };
 
 export type StorybookIndicatorExplorerQuery_planIndicators_referenceValue = { __typename: 'IndicatorValue', id: string, value: number, date: string | null };
@@ -8620,7 +8642,7 @@ export type StorybookIndicatorExplorerQuery_planIndicators_dimensions_dimension 
 
 export type StorybookIndicatorExplorerQuery_planIndicators_dimensions = { __typename: 'IndicatorDimension', id: string, dimension: StorybookIndicatorExplorerQuery_planIndicators_dimensions_dimension };
 
-export type StorybookIndicatorExplorerQuery_planIndicators = { __typename: 'Indicator', id: string, name: string, level: string | null, timeResolution: IndicatorTimeResolution, description: string | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, valueRounding: number | null, desiredTrend: IndicatorDesiredTrend | null, showTrendline: boolean, showTotalLine: boolean, dataCategoriesAreStackable: boolean, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, unit: StorybookIndicatorExplorerQuery_planIndicators_unit, latestValue: StorybookIndicatorExplorerQuery_planIndicators_latestValue | null, values: Array<StorybookIndicatorExplorerQuery_planIndicators_values>, goals: Array<StorybookIndicatorExplorerQuery_planIndicators_goals | null> | null, quantity: StorybookIndicatorExplorerQuery_planIndicators_quantity | null, referenceValue: StorybookIndicatorExplorerQuery_planIndicators_referenceValue | null, defaultVisualization: StorybookIndicatorExplorerQuery_planIndicators_defaultVisualization | null, dimensions: Array<StorybookIndicatorExplorerQuery_planIndicators_dimensions> };
+export type StorybookIndicatorExplorerQuery_planIndicators = { __typename: 'Indicator', id: string, name: string, level: string | null, timeResolution: IndicatorTimeResolution, description: string | null, minValue: number | null, maxValue: number | null, ticksCount: number | null, ticksRounding: number | null, valueRounding: number | null, desiredTrend: IndicatorDesiredTrend | null, showTrendline: boolean, showTotalLine: boolean, dataCategoriesAreStackable: boolean, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, unit: StorybookIndicatorExplorerQuery_planIndicators_unit, latestValue: StorybookIndicatorExplorerQuery_planIndicators_latestValue | null, values: Array<StorybookIndicatorExplorerQuery_planIndicators_values>, goals: Array<StorybookIndicatorExplorerQuery_planIndicators_goals | null> | null, actions: Array<StorybookIndicatorExplorerQuery_planIndicators_actions>, quantity: StorybookIndicatorExplorerQuery_planIndicators_quantity | null, referenceValue: StorybookIndicatorExplorerQuery_planIndicators_referenceValue | null, defaultVisualization: StorybookIndicatorExplorerQuery_planIndicators_defaultVisualization | null, dimensions: Array<StorybookIndicatorExplorerQuery_planIndicators_dimensions> };
 
 export type StorybookIndicatorExplorerQuery = { __typename: 'Query', plan: StorybookIndicatorExplorerQuery_plan | null, planIndicators: Array<StorybookIndicatorExplorerQuery_planIndicators> | null };
 

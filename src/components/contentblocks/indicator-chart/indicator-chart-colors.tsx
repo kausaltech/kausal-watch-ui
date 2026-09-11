@@ -1,4 +1,4 @@
-import { type Theme } from '@kausal/themes/types';
+import type { Theme } from '@kausal/themes/types';
 
 export function getDefaultColors(theme: Theme) {
   return [

@@ -5,12 +5,19 @@ import type {
   IndicatorGraphDataQueryVariables,
 } from '@/common/__generated__/graphql';
 
+import { INDICATOR_CHART_FRAGMENTS } from '../fragments/indicator-chart.fragment';
+
 export const GET_INDICATOR_GRAPH_DATA: TypedDocumentNode<
   IndicatorGraphDataQuery,
   IndicatorGraphDataQueryVariables
 > = gql`
+  ${INDICATOR_CHART_FRAGMENTS}
+
   query IndicatorGraphData($id: ID, $plan: ID) {
     plan(id: $plan) {
+      # Select id so the result is normalized and merged into the cached
+      # Plan entity — an unidentifiable plan object would *replace* the
+      # cached plan(id:) reference and wipe other queries' plan fields
       id
       scenarios {
         id
@@ -88,6 +95,28 @@ export const GET_INDICATOR_GRAPH_DATA: TypedDocumentNode<
       }
       nonQuantifiedGoal
       nonQuantifiedGoalDate
+      defaultVisualization {
+        ... on IndicatorDefaultBarChart {
+          __typename
+          ...BarChartVisualization
+        }
+        ... on IndicatorDefaultLineChart {
+          __typename
+          ...LineChartVisualization
+        }
+        ... on IndicatorDefaultAreaChart {
+          __typename
+          ...AreaChartVisualization
+        }
+        ... on IndicatorDefaultPieChart {
+          __typename
+          ...PieChartVisualization
+        }
+        ... on IndicatorDefaultSummary {
+          __typename
+          ...SummaryVisualization
+        }
+      }
       datasets {
         uuid
         schema {
