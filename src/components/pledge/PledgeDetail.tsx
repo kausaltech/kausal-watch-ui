@@ -26,6 +26,7 @@ import ConfirmPledge from './ConfirmPledge';
 import PledgeFeedback from './PledgeFeedback';
 import PledgeImpactComparison from './PledgeImpactComparison';
 import { ShareButton } from './ShareButton';
+import { usePledgeNavUser } from './use-pledge-auth';
 import { usePublicUser } from './use-public-user';
 
 type PledgeData = NonNullable<NonNullable<PledgeQuery['plan']>['pledge']>;
@@ -276,6 +277,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
   );
   const t = useTranslations();
   const pledgeListLink = usePrependPlanAndLocale(PLEDGE_PATH);
+  const { isAuthenticated } = usePledgeNavUser();
   const {
     userData,
     committedSlugs,
@@ -418,6 +420,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
         commitmentCount={pledge.commitmentCount}
         formFields={getDefaultFormFields(t)}
         userData={userData}
+        isSignedIn={isAuthenticated}
       />
     </>
   );

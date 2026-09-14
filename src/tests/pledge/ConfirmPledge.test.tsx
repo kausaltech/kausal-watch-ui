@@ -11,6 +11,29 @@ jest.mock('../../components/pledge/ShareButton', () => ({
   ShareButton: () => <button>Share</button>,
 }));
 
+jest.mock('../../components/pledge/use-pledge-auth', () => ({
+  usePledgeSignIn: () => ({
+    step: 'email',
+    pendingEmail: '',
+    loading: false,
+    error: null,
+    signUp: jest.fn(),
+    signIn: jest.fn(),
+    verifyPin: jest.fn(),
+    resendCode: jest.fn(),
+    editEmail: jest.fn(),
+    reset: jest.fn(),
+  }),
+  usePledgeNavUser: () => ({
+    userEmail: null,
+    isAuthenticated: false,
+    signOut: jest.fn(),
+  }),
+  PLEDGE_AUTH_CHANGED_EVENT: 'pledge-auth-changed',
+  clearPledgeAuth: jest.fn(),
+  getPledgeAuthToken: () => null,
+}));
+
 const baseProps = {
   isOpen: true,
   onClose: jest.fn(),
@@ -97,6 +120,31 @@ describe('ConfirmPledge', () => {
 
       expect((input as HTMLInputElement).value).toBe('90210');
     });
+
+    it('hides a field when signed in and the user already provided it', () => {
+      render(
+        <ConfirmPledge
+          {...baseProps}
+          formFields={formFields}
+          isSignedIn={true}
+          userData={{ zip_code: '02134' }}
+        />
+      );
+
+      expect(screen.queryByLabelText(/your zip code/i)).not.toBeInTheDocument();
+    });
+
+    it('still shows a field when signed in if the user has not provided it yet', () => {
+      render(<ConfirmPledge {...baseProps} formFields={formFields} isSignedIn={true} />);
+
+      expect(screen.getByLabelText(/your zip code/i)).toBeInTheDocument();
+    });
+
+    it('still shows a field when not signed if the user has not provided it', () => {
+      render(<ConfirmPledge {...baseProps} formFields={formFields} isSignedIn={false} />);
+
+      expect(screen.getByLabelText(/your zip code/i)).toBeInTheDocument();
+    });
   });
 
   describe('submission', () => {
@@ -122,10 +170,10 @@ describe('ConfirmPledge', () => {
       });
     });
 
-    it('shows success state after successful submission', async () => {
+    it('shows success state after successful submission when already signed in', async () => {
       const onConfirm = jest.fn().mockResolvedValue(undefined);
 
-      render(<ConfirmPledge {...baseProps} onConfirm={onConfirm} />);
+      render(<ConfirmPledge {...baseProps} onConfirm={onConfirm} isSignedIn={true} />);
 
       fireEvent.click(screen.getByRole('button', { name: /confirm commitment/i }));
 
@@ -134,15 +182,47 @@ describe('ConfirmPledge', () => {
       });
     });
 
-    it('shows success title after submission', async () => {
+    it('shows success title after submission when already signed in', async () => {
       const onConfirm = jest.fn().mockResolvedValue(undefined);
 
-      render(<ConfirmPledge {...baseProps} onConfirm={onConfirm} />);
+      render(<ConfirmPledge {...baseProps} onConfirm={onConfirm} isSignedIn={true} />);
 
       fireEvent.click(screen.getByRole('button', { name: /confirm commitment/i }));
 
       await waitFor(() => {
-        expect(screen.getByText(/you're in/i)).toBeInTheDocument();
+        expect(screen.getByText(/you're in! want to invite/i)).toBeInTheDocument();
+      });
+    });
+
+    describe('isSignedIn prop', () => {
+      it('skips sign-in flow and shows success directly when isSignedIn is true', async () => {
+        const onConfirm = jest.fn().mockResolvedValue(undefined);
+
+        render(<ConfirmPledge {...baseProps} onConfirm={onConfirm} isSignedIn={true} />);
+
+        fireEvent.click(screen.getByRole('button', { name: /confirm commitment/i }));
+
+        await waitFor(() => {
+          // Success title is unique to the success step
+          expect(screen.getByText(/want to invite others/i)).toBeInTheDocument();
+          // No sign-in email input
+          expect(screen.queryByLabelText(/your email/i)).not.toBeInTheDocument();
+        });
+      });
+
+      it('shows sign-in flow after submission for anonymous users', async () => {
+        const onConfirm = jest.fn().mockResolvedValue(undefined);
+
+        render(<ConfirmPledge {...baseProps} onConfirm={onConfirm} isSignedIn={false} />);
+
+        fireEvent.click(screen.getByRole('button', { name: /confirm commitment/i }));
+
+        await waitFor(() => {
+          // Email input from PledgeSignInFlow is present
+          expect(screen.getByLabelText(/your email/i)).toBeInTheDocument();
+          // Success title is absent
+          expect(screen.queryByText(/want to invite others/i)).not.toBeInTheDocument();
+        });
       });
     });
 
