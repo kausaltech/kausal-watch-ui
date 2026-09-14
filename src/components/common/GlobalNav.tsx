@@ -584,7 +584,6 @@ export type GlobalNavProps = {
   externalItems?: ExternalItem[];
   fullwidth?: boolean;
   hidePlanSelector?: boolean;
-  hideSearch?: boolean;
   hideVersionSelector?: boolean;
   logoLink?: string | null;
   navItems: NavItems;
@@ -611,7 +610,6 @@ function GlobalNav(props: GlobalNavProps) {
     customToolbarItems,
     logoLink: logoLinkOverride,
     hidePlanSelector = false,
-    hideSearch = false,
     hideVersionSelector = false,
     showPledgeUser = false,
   } = props;
@@ -687,7 +685,7 @@ function GlobalNav(props: GlobalNavProps) {
 
           <Nav navbar className="ml-auto d-none d-md-flex">
             {customToolbarItems.length > 0 && <CustomToolbar items={customToolbarItems} />}
-            {!hideSearch && <NavbarSearch />}
+            {plan.features.enableSearch && <NavbarSearch />}
             <LanguageSelector mobile={false} />
             {showPledgeUser && <PledgeNavUser />}
           </Nav>
@@ -758,7 +756,7 @@ function GlobalNav(props: GlobalNavProps) {
                     </NavItem>
                   )
                 )}
-              {!hideSearch && plan.features.enableSearch && (
+              {plan.features.enableSearch && (
                 <NavItem className="d-md-none mb-2">
                   <NavLink>
                     <NavigationLink slug="/search" onClick={handleClose}>

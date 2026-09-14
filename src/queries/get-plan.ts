@@ -204,6 +204,7 @@ const GET_PLAN_CONTEXT: TypedDocumentNode<PlanContextQuery, PlanContextQueryVari
       enableChangeLog
       enableActionPdfExportInPublicUi
       enableCommunityEngagement
+      showParentPlanInPlanSwitcher
     }
     allRelatedPlans {
       id
