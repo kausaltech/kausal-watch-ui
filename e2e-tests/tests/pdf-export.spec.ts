@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 
-import { PlanContext } from '../common/context.ts';
+import { PlanContext, getIdentifiersToTest } from '../common/context.ts';
 import { test as coverageTest } from '../common/coverage.ts';
 
 declare global {
@@ -27,7 +27,11 @@ const annotations = [
   { type: 'url', description: PlanContext.getBaseURL(PLAN_ID) },
 ];
 
-test.describe('pdf-export', { annotation: annotations }, () => {
+const describeFn = getIdentifiersToTest().includes(PLAN_ID)
+  ? test.describe
+  : test.describe.skip;
+
+describeFn('pdf-export', { annotation: annotations }, () => {
   test.describe.configure({ mode: 'serial' });
 
   let actionPageUrl: string;
