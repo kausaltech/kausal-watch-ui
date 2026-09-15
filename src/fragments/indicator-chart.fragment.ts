@@ -22,6 +22,10 @@ export const INDICATOR_CHART_FRAGMENTS = gql`
       id
       value
       date
+      scenario {
+        id
+        name
+      }
     }
     unit {
       id

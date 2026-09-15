@@ -27,6 +27,9 @@ const DashboardSectionHeader = styled(SectionHeader)`
       theme.headingsColor,
       theme.themeColors.white
     )};
+  padding-top: var(--block-header-margin-bottom);
+  padding-bottom: var(--block-header-margin-bottom);
+  margin-bottom: 0;
 `;
 
 // Extract the DashboardRowBlock fragment type from the union
@@ -137,11 +140,28 @@ const DashboardCardContents = ({ block }: { block: DashboardBlock }) => {
   );
 };
 
+/* Cards stack on narrow screens, go two per row on medium screens and only
+ * split into the full number of columns once there's room for them. */
+function getColumnProps(cardCount: number) {
+  switch (cardCount) {
+    case 1:
+      return {};
+    case 2:
+      return { md: 6 };
+    case 3:
+      return { md: 6, lg: 4 };
+    case 4:
+      return { md: 6, xl: 3 };
+    default:
+      return { md: 6, lg: Math.max(Math.floor(12 / cardCount), 3) };
+  }
+}
+
 const DashboardRowBlock = ({ id, blocks, isFirst, isLast }: DashboardRowBlockProps) => {
   const t = useTranslations();
   const headerBlock = blocks.find(isDashboardHeaderBlock);
   const cardBlocks = blocks.filter(isDashboardCardBlock);
-  const columnWidth = cardBlocks.length > 0 ? 12 / cardBlocks.length : 12;
+  const columnProps = getColumnProps(cardBlocks.length);
   const chartTypes = [
     'DashboardIndicatorPieChartBlock',
     'DashboardIndicatorLineChartBlock',
@@ -165,7 +185,7 @@ const DashboardRowBlock = ({ id, blocks, isFirst, isLast }: DashboardRowBlockPro
 
               const blockId = 'id' in block && block.id ? block.id : `${block.blockType}-${index}`;
               return (
-                <Col key={blockId} md={columnWidth}>
+                <Col key={blockId} {...columnProps}>
                   <StyledCard outline>
                     <DashboardCardContents block={block} />
                     {isChart && indicatorId && (

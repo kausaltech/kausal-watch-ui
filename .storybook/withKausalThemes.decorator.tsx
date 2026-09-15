@@ -12,17 +12,15 @@ import { NextIntlClientProvider } from 'next-intl';
 import ThemedGlobalStyles from '@common/themes/ThemedGlobalStyles';
 import { initializeMuiTheme } from '@common/themes/mui-theme/theme';
 
-import a11yMessages from '@/../locales/en/a11y.json';
-import actionsMessages from '@/../locales/en/actions.json';
-import commonMessages from '@/../locales/en/common.json';
+import { DayjsLocaleProvider } from '@/common/dayjs';
 import { SharedIcons } from '@/components/common/Icon';
 import PlanProvider from '@/components/providers/PlanProvider';
 import { WorkflowProvider } from '@/context/workflow-selector';
 import { MOCK_PLAN } from '@/stories/mocks/plan.mocks';
 
-const { initializeThemeState, pluckThemeFromContext } = DecoratorHelpers;
+import { getStorybookMessages } from './locales';
 
-const messages = { ...a11yMessages, ...actionsMessages, ...commonMessages };
+const { initializeThemeState, pluckThemeFromContext } = DecoratorHelpers;
 interface WithKausalThemesOptions {
   themes: Record<string, any>;
   defaultTheme: string;
@@ -38,6 +36,9 @@ export const withKausalThemes = ({ themes, defaultTheme }: WithKausalThemesOptio
 
     const selected = themeOverride || selectedTheme || defaultTheme;
     const theme = themes[selected];
+    // From the locale toolbar (see globalTypes in preview.ts)
+    const locale = (context.globals.locale as string | undefined) ?? 'en';
+    const messages = getStorybookMessages(locale);
     const muiTheme = initializeMuiTheme(theme);
 
     // Add full theme object to args for use in story
@@ -71,12 +72,14 @@ export const withKausalThemes = ({ themes, defaultTheme }: WithKausalThemesOptio
           >
             <MuiThemeProvider theme={muiTheme}>
               <ThemeProvider theme={theme}>
-                <NextIntlClientProvider locale={'en'} messages={messages}>
-                  <PlanProvider plan={MOCK_PLAN}>
-                    <ThemedGlobalStyles />
-                    <SharedIcons />
-                    {story(context)}
-                  </PlanProvider>
+                <NextIntlClientProvider locale={locale} messages={messages}>
+                  <DayjsLocaleProvider locale={locale}>
+                    <PlanProvider plan={MOCK_PLAN}>
+                      <ThemedGlobalStyles />
+                      <SharedIcons />
+                      {story(context)}
+                    </PlanProvider>
+                  </DayjsLocaleProvider>
                 </NextIntlClientProvider>
               </ThemeProvider>
             </MuiThemeProvider>

@@ -1,9 +1,29 @@
 import type { Preview } from '@storybook/nextjs-vite';
 
+import { STORYBOOK_LOCALES, getLocaleLabel } from './locales';
 import { withKausalThemes } from './withKausalThemes.decorator';
 
 // Global loader to make themes available via context.loaded.themes
 const preview: Preview = {
+  // A locale switcher in the toolbar, next to the theme picker. The decorator
+  // feeds the choice to next-intl and dayjs, so translations, number and date
+  // formatting, chart locale packs and aria descriptions all follow it.
+  globalTypes: {
+    locale: {
+      description: 'Locale',
+      toolbar: {
+        icon: 'globe',
+        items: STORYBOOK_LOCALES.map((locale) => ({
+          value: locale,
+          title: getLocaleLabel(locale),
+        })),
+        dynamicTitle: true,
+      },
+    },
+  },
+  initialGlobals: {
+    locale: 'en',
+  },
   parameters: {
     controls: {
       matchers: {

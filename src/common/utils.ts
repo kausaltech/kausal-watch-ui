@@ -15,6 +15,20 @@ export function capitalizeFirstLetter(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+/**
+ * Escape text for interpolation into HTML strings, e.g. ECharts tooltip
+ * formatters, which render their return value as HTML. Editor-controlled
+ * names and units must never reach the DOM unescaped.
+ */
+export function escapeHtml(value: string | number | null | undefined): string {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 const MAX_WORDS_PER_LINE = 2;
 const MIN_CHARACTERS_PER_WORD = 4;
 

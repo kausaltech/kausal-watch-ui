@@ -1,59 +1,61 @@
-import { useEffect, useRef, useState } from 'react';
-
 import { useTheme } from '@emotion/react';
 
-import type { Theme } from '@kausal/themes/types';
-import { BarChart } from 'echarts/charts';
+import { BarChart, ScatterChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useLocale, useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
+import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
 
 import type { BarChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
+import {
+  type AriaDetail,
+  buildSaveAsImageToolbox,
+  buildTimeTooltipFormatter,
+  getChartDownloadFilename,
+} from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
   type GraphsTheme,
+  blockYRange,
+  buildBlockAriaDescription,
+  buildCategoryAriaDescription,
+  buildCategoryValues,
   buildDimSeries,
-  buildTooltipFormatter,
+  buildGoalSeries,
   buildTotalSeries,
+  buildUndatedTotal,
   buildYAxisConfig,
   collectAllDates,
+  getUnitLabel,
+  hasDatedValues,
+  toChartTimeResolution,
 } from './indicator-charts-utility';
 
-echarts.use([BarChart, GridComponent, TooltipComponent, LegendComponent]);
+echarts.use([BarChart, ScatterChart, GridComponent, TooltipComponent, LegendComponent]);
 
 type Props = Omit<
   Extract<BarChartVisualizationFragment, { __typename: 'DashboardIndicatorBarChartBlock' }>,
   '__typename'
->;
+> & {
+  /** Detail of the generated aria description; 'summary' when a data table accompanies the chart */
+  ariaDetail?: AriaDetail;
+};
 
-// FIX: Watch the card width so we can shrink the legend on small screens
-// (e.g. 3 charts per row) and keep more space for the bars—no scroll legend.
-function useElementWidth<T extends HTMLElement>() {
-  const ref = useRef<T | null>(null);
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const el = ref.current;
-    const ro = new ResizeObserver(([entry]) => {
-      setWidth(entry?.contentRect?.width ?? 0);
-    });
-
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  return { ref, width };
-}
-
-const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, barType }: Props) => {
+const DashboardIndicatorBarChartBlock = ({
+  chartSeries,
+  indicator,
+  dimension,
+  barType,
+  ariaDetail,
+}: Props) => {
   const theme = useTheme();
   const t = useTranslations();
+  const format = useFormatter();
+  const locale = useLocale();
   const formatValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.valueRounding ?? undefined,
   });
@@ -61,93 +63,171 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
-  const unit = indicator?.unit?.name ?? '';
+  // Same rule as IndicatorGraph: honor the tenant-configured chart
+  // background, white when unset
+  const chartBackground = graphsTheme.customBackground || theme.themeColors.white;
+  const unit = getUnitLabel(indicator);
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const timeResolution = indicator?.timeResolution ?? 'YEAR';
 
   const totalLabel = t('total');
-
-  const { ref: containerRef, width } = useElementWidth<HTMLDivElement>();
-  const isCompact = width > 0 && width < 520;
+  const goalLabel = t('goal');
 
   if (!chartSeries?.length) {
     return <div>{t('data-not-available')}</div>;
   }
 
-  const dimSeries = dimension
-    ? buildDimSeries(chartSeries, palette, timeResolution)
-    : [
-        buildTotalSeries(
-          chartSeries,
-          graphsTheme.totalLineColor ?? palette[0],
-          totalLabel,
-          timeResolution
-        ),
-      ];
+  const totalColor = graphsTheme.totalLineColor ?? palette[0];
+  const ariaCommon = {
+    title: indicator?.name,
+    unit,
+    valueRounding: indicator?.valueRounding,
+    format,
+    t,
+    localePack: getEChartsLocaleStrings(locale),
+    detail: ariaDetail,
+  };
 
-  const { xCategories } = collectAllDates(
-    dimSeries.map((d) => d.raw),
-    timeResolution
-  );
+  // Category-only indicators carry undated values (the schema permits null
+  // dates): one bar per category on a category axis, like the generic graph
+  // draws them, instead of a time axis with nothing on it.
+  const categoryOnly = !hasDatedValues(chartSeries);
+  let xCategories: string[];
+  let series: ECOption['series'];
+  let showLegend: boolean;
+  let ariaDescription: string;
 
-  const seriesDataMap: Record<string, (number | null)[]> = {};
-  dimSeries.forEach(({ name, raw }) => {
-    const valuesByKey: Record<string, number> = Object.fromEntries(
-      raw.map(([key, value]) => [key, value])
+  if (categoryOnly) {
+    const undatedTotal = buildUndatedTotal(chartSeries);
+    const bars = dimension
+      ? buildCategoryValues(chartSeries, palette)
+      : undatedTotal != null
+        ? [{ name: totalLabel, color: totalColor, value: undatedTotal }]
+        : [];
+    if (bars.length === 0) {
+      return <div>{t('data-not-available')}</div>;
+    }
+    xCategories = bars.map((bar) => bar.name);
+    series = [
+      {
+        name: dimension?.name ?? totalLabel,
+        type: 'bar' as const,
+        data: bars.map((bar) => ({ value: bar.value, itemStyle: { color: bar.color } })),
+        emphasis: { focus: 'series' as const },
+      },
+    ];
+    // The categories are on the axis; a legend would only repeat them
+    showLegend = false;
+    ariaDescription = buildCategoryAriaDescription({
+      ...ariaCommon,
+      slices: bars,
+      chartKind: 'bar',
+    });
+  } else {
+    const dimSeries = dimension
+      ? buildDimSeries(chartSeries, palette, timeResolution)
+      : [buildTotalSeries(chartSeries, totalColor, totalLabel, timeResolution)];
+
+    // Quantified goals are drawn as markers like the line block and the
+    // generic graph do, so switching the default kind to bar keeps the
+    // targets. Category-only charts have no time axis to place them on.
+    const goalSeries = buildGoalSeries(
+      indicator,
+      unit,
+      graphsTheme.goalLineColors ?? [],
+      goalLabel,
+      timeResolution,
+      formatValue
     );
-    seriesDataMap[name] = xCategories.map((key) => valuesByKey[key] ?? null);
-  });
+    // Goals lie beyond the last observation; the axis must reach them
+    const goalDates = goalSeries.flatMap((series) => series.data.map(([key]) => key));
 
-  const series = Object.entries(seriesDataMap).map(([name, data]) => ({
-    name,
-    type: 'bar' as const,
-    stack: barType === 'stacked' ? 'total' : undefined,
-    data,
-    emphasis: { focus: 'series' as const },
-    itemStyle: {
-      color: dimSeries.find((d) => d.name === name)?.color,
-    },
-  }));
+    xCategories = collectAllDates(
+      dimSeries.map((d) => d.raw),
+      timeResolution,
+      goalDates
+    ).xCategories;
 
-  const legendData = dimSeries.map((d) => d.name);
+    // An explicit block barType wins over the indicator's own
+    // dataCategoriesAreStackable default; without one, the indicator decides.
+    const stackBars = barType
+      ? barType === 'stacked'
+      : (indicator?.dataCategoriesAreStackable ?? false);
 
-  const buildLegend = (theme: Theme): ECOption['legend'] => ({
-    show: true,
-    bottom: isCompact ? 6 : 10,
-    left: 'center',
-    orient: 'horizontal',
-    // Tighter legend layout on compact cards
-    itemGap: isCompact ? 10 : 30,
-    itemWidth: isCompact ? 12 : 18,
-    itemHeight: isCompact ? 8 : 12,
-    padding: 0,
-    textStyle: {
-      color: theme.textColor.secondary,
-      fontSize: isCompact ? 11 : 12,
-      lineHeight: isCompact ? 12 : 14,
-    },
-  });
+    const barSeries = dimSeries.map(({ name, raw, color }) => {
+      const valuesByKey: Record<string, number> = Object.fromEntries(raw);
+      return {
+        name,
+        type: 'bar' as const,
+        stack: stackBars ? 'total' : undefined,
+        data: xCategories.map((key) => valuesByKey[key] ?? null),
+        emphasis: { focus: 'series' as const },
+        itemStyle: { color },
+      };
+    });
+    series = [...barSeries, ...goalSeries];
+    showLegend = true;
+    // ECharts sets this as the canvas' aria-label; same wording as the
+    // generic IndicatorGraph so screen-reader users hear one style of chart
+    ariaDescription = buildBlockAriaDescription({
+      ...ariaCommon,
+      series: dimSeries,
+      goals: goalSeries,
+      timeResolution,
+      chartKind: 'bar',
+    });
+  }
 
   const option: ECOption = {
-    legend: buildLegend(theme),
+    aria: {
+      enabled: true,
+      label: { description: ariaDescription },
+    },
+    toolbox: buildSaveAsImageToolbox({
+      filename: getChartDownloadFilename(indicator?.name),
+      buttonTitle: t('download-chart-as-png'),
+      backgroundColor: chartBackground,
+    }),
+    backgroundColor: chartBackground,
+    // Same legend style as the pie chart block
+    legend: {
+      show: showLegend,
+      orient: 'horizontal',
+      bottom: 0,
+      right: 0,
+      // Keep swatches left of their labels (auto flips them for a
+      // right-anchored legend)
+      align: 'left',
+      type: 'plain',
+      // Also the gap between wrapped legend rows — ECharts has no separate
+      // row-gap setting
+      itemGap: 10,
+      itemWidth: 18,
+      itemHeight: 12,
+      textStyle: {
+        color: theme.textColor.primary,
+      },
+    },
     tooltip: {
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'shadow' },
-      formatter: buildTooltipFormatter(
-        unit,
-        legendData,
-        t,
-        formatValue,
-        dimension ?? undefined,
-        timeResolution
-      ),
+      // Same formatter as the generic IndicatorGraph: one row per series
+      // with a value at the hovered date, hidden when there is none
+      formatter: buildTimeTooltipFormatter({
+        timeResolution: toChartTimeResolution(timeResolution),
+        trendName: null,
+        yRange: blockYRange(unit, indicator?.valueRounding),
+        format,
+      }),
     },
     grid: {
       left: 20,
       right: 20,
       top: 40,
-      bottom: isCompact ? 80 : 60,
+      // Reserve the bottom ~quarter for the wrapping legend (up to ~4
+      // rows), like the pie chart block does
+      bottom: 100,
       containLabel: true,
     },
     xAxis: {
@@ -155,19 +235,14 @@ const DashboardIndicatorBarChartBlock = ({ chartSeries, indicator, dimension, ba
       data: xCategories,
       axisLabel: { color: theme.textColor.primary },
     },
-    yAxis: buildYAxisConfig(
-      indicator?.unit?.name ?? '',
-      formatAxisValue,
-      indicator ?? undefined,
-      theme.textColor.primary
-    ),
+    yAxis: buildYAxisConfig(unit, formatAxisValue, indicator ?? undefined, theme.textColor.primary),
     series,
   };
 
   return (
-    <div ref={containerRef}>
+    <div>
       <h5>{dimension?.name}</h5>
-      <Chart data={option} isLoading={false} height="300px" />
+      <Chart data={option} isLoading={false} height="400px" />
     </div>
   );
 };
