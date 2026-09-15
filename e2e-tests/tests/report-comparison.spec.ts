@@ -19,6 +19,30 @@ type ActionWithData = {
   contentSnippet: string;
 };
 
+type StreamNode = {
+  __typename: string;
+  reportField?: string;
+  reportType?: { name: string };
+  reportsToCompare?: readonly ReportNode[] | null;
+};
+type ReportNode = {
+  name: string;
+  valuesForAction?: readonly ValueNode[] | null;
+};
+type ValueNode = {
+  __typename: string;
+  field?: { __typename: string; id?: string | null };
+  attribute?: { __typename: string; value?: string | null };
+};
+type ValuesQueryResult = {
+  plan: {
+    actionListPage: {
+      detailsMainTop?: readonly StreamNode[] | null;
+      detailsMainBottom?: readonly StreamNode[] | null;
+    } | null;
+  } | null;
+};
+
 const VALUES_QUERY = gql`
   query PlaywrightReportComparisonValues($plan: ID!, $action: ID!) {
     plan(id: $plan) {
@@ -85,17 +109,21 @@ const VALUES_QUERY = gql`
 `;
 
 function findReportComparisonBlock(ctx: PlanContext): ReportComparisonBlockInfo | null {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const alp = ctx.plan.actionListPage as any;
-  const streams = [...(alp?.detailsMainTop ?? []), ...(alp?.detailsMainBottom ?? [])];
+  const alp = ctx.plan.actionListPage as unknown as {
+    detailsMainTop?: readonly StreamNode[] | null;
+    detailsMainBottom?: readonly StreamNode[] | null;
+  } | null;
+  const streams: readonly StreamNode[] = [
+    ...(alp?.detailsMainTop ?? []),
+    ...(alp?.detailsMainBottom ?? []),
+  ];
   const block = streams.find(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (b: any) =>
-      b?.__typename === 'ReportComparisonBlock' &&
+    (b) =>
+      b.__typename === 'ReportComparisonBlock' &&
       typeof b.reportField === 'string' &&
-      b.reportType?.name
+      !!b.reportType?.name
   );
-  if (!block) return null;
+  if (!block?.reportField || !block.reportType) return null;
   return { reportField: block.reportField, reportTypeName: block.reportType.name };
 }
 
@@ -112,19 +140,21 @@ async function findActionWithReportData(
   block: ReportComparisonBlockInfo
 ): Promise<ActionWithData | null> {
   for (const action of ctx.plan.actions) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const res = await apolloClient.query<any>({
+    const res = await apolloClient.query<ValuesQueryResult>({
       query: VALUES_QUERY,
       variables: { plan: ctx.plan.identifier, action: action.identifier },
       fetchPolicy: 'no-cache',
     });
-    const alp = res.data?.plan?.actionListPage;
-    const streams = [...(alp?.detailsMainTop ?? []), ...(alp?.detailsMainBottom ?? [])];
+    const alp = res.data.plan?.actionListPage;
+    const streams: readonly StreamNode[] = [
+      ...(alp?.detailsMainTop ?? []),
+      ...(alp?.detailsMainBottom ?? []),
+    ];
     for (const b of streams) {
-      if (b?.reportField !== block.reportField) continue;
+      if (b.reportField !== block.reportField) continue;
       for (const report of b.reportsToCompare ?? []) {
         for (const value of report.valuesForAction ?? []) {
-          if (value?.__typename !== 'ActionAttributeReportValue') continue;
+          if (value.__typename !== 'ActionAttributeReportValue') continue;
           if (value.field?.id !== block.reportField) continue;
           const raw = value.attribute?.value;
           if (typeof raw !== 'string') continue;
