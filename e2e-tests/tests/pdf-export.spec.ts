@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 
-import { PlanContext } from '../common/context.ts';
+import { PlanContext, getIdentifiersToTest } from '../common/context.ts';
 import { test as coverageTest } from '../common/coverage.ts';
 
 declare global {
@@ -29,6 +29,8 @@ const annotations = [
 
 test.describe('pdf-export', { annotation: annotations }, () => {
   test.describe.configure({ mode: 'serial' });
+
+  test.skip(!getIdentifiersToTest().includes(PLAN_ID), `${PLAN_ID} not in TEST_PLAN_IDENTIFIERS`);
 
   let actionPageUrl: string;
 

@@ -568,7 +568,7 @@ const GET_ACTION_DETAILS: TypedDocumentNode<ActionDetailsQuery, ActionDetailsQue
         field {
           __typename
           ... on StreamFieldInterface {
-            field
+            id
           }
         }
         ... on ActionAttributeReportValue {
