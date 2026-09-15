@@ -17,7 +17,7 @@ const GRAPHQL_API_URL = process.env.WATCH_BACKEND_URL
   : 'https://api.watch.kausal.tech/v1/graphql/';
 const BASE_URL = process.env.TEST_PAGE_BASE_URL || `http://{planId}.localhost:3000`;
 
-const apolloClient = new ApolloClient({
+export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({ uri: GRAPHQL_API_URL }),
 });
@@ -59,8 +59,26 @@ const GET_PLAN_INFO = gql`
       actionListPage {
         urlPath
         includeRelatedPlans
+        detailsMainTop {
+          __typename
+          ... on ReportComparisonBlock {
+            reportField
+            reportType {
+              name
+            }
+          }
+        }
+        detailsMainBottom {
+          __typename
+          ... on ReportComparisonBlock {
+            reportField
+            reportType {
+              name
+            }
+          }
+        }
       }
-      actions(first: 5) {
+      actions(first: 30) {
         identifier
         viewUrl(clientUrl: $clientURL)
       }

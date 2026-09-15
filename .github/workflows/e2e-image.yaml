@@ -33,6 +33,11 @@ on:
         required: false
         type: number
         default: 2
+      report_suffix:
+        description: 'Optional suffix appended to the S3 report path to disambiguate parallel jobs'
+        required: false
+        type: string
+        default: ''
 
     secrets:
       AWS_ACCESS_KEY_ID:
@@ -93,7 +98,8 @@ jobs:
         id: upload
         if: always()
         run: |
-          s3_path=${{ inputs.s3_bucket }}/${{ inputs.build_id }}/${{ github.run_id }}
+          suffix="${{ inputs.report_suffix }}"
+          s3_path=${{ inputs.s3_bucket }}/${{ inputs.build_id }}/${{ github.run_id }}${suffix:+/$suffix}
           s3cmd --no-mime-magic --guess-mime-type \
             --host ${{ inputs.s3_endpoint }} --host-bucket ${{ inputs.s3_endpoint }} \
             put --recursive playwright-report s3://${s3_path}/
