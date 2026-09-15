@@ -27,12 +27,10 @@ const annotations = [
   { type: 'url', description: PlanContext.getBaseURL(PLAN_ID) },
 ];
 
-const describeFn = getIdentifiersToTest().includes(PLAN_ID)
-  ? test.describe
-  : test.describe.skip;
-
-describeFn('pdf-export', { annotation: annotations }, () => {
+test.describe('pdf-export', { annotation: annotations }, () => {
   test.describe.configure({ mode: 'serial' });
+
+  test.skip(!getIdentifiersToTest().includes(PLAN_ID), `${PLAN_ID} not in TEST_PLAN_IDENTIFIERS`);
 
   let actionPageUrl: string;
 
