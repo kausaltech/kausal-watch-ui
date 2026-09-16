@@ -84,8 +84,20 @@ export function selectRelatedPlanCards<TRelated extends RelatedPlanLike>(
   return [self, ...related];
 }
 
-/** The heading of the related plans block, and what it links to. */
-export function getRelatedPlansHeading(plan: PlanLike): { text: string; href: string | undefined } {
+/**
+ * The heading of the related plans block, and what it links to.
+ *
+ * `blockHeading` is what the editor typed into the block, and wins when set.
+ * It is a heading of the editor's own choosing rather than a plan's name, so
+ * it links nowhere.
+ */
+export function getRelatedPlansHeading(
+  plan: PlanLike,
+  blockHeading?: string | null
+): { text: string; href: string | undefined } {
+  if (blockHeading) {
+    return { text: blockHeading, href: undefined };
+  }
   const parent = plan.parent;
   if (parent && !plan.features.showParentPlanAsSibling) {
     return { text: parent.name, href: parent.viewUrl ?? undefined };

@@ -55,6 +55,8 @@ const PlanRow = styled.div`
 
 interface Props {
   id?: string;
+  /** Heading set on the block by an editor; falls back to the plan names. */
+  heading?: string | null;
 }
 
 const MAX_CARDS_PER_ROW = 4;
@@ -77,12 +79,12 @@ function balanceRows<T>(items: T[], maxPerRow: number): T[][] {
   return rows;
 }
 
-const RelatedPlanListBlock = ({ id }: Props) => {
+const RelatedPlanListBlock = ({ id, heading: blockHeading }: Props) => {
   const plan = usePlan();
   const theme = useTheme();
   if (!plan.allRelatedPlans) return null;
   const cards = selectRelatedPlanCards(plan);
-  const heading = getRelatedPlansHeading(plan);
+  const heading = getRelatedPlansHeading(plan, blockHeading);
 
   const negativeChips = theme.section?.relatedPlans?.background
     ? readableColor(theme.section?.relatedPlans?.background) === '#fff'

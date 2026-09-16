@@ -159,6 +159,22 @@ describe('getRelatedPlansHeading', () => {
     expect(getRelatedPlansHeading(testPlan())).toEqual({ text: 'Self', href: undefined });
   });
 
+  it('prefers a heading set on the block itself, unlinked', () => {
+    const plan = testPlan({ parent: PARENT, allRelatedPlans: [relatedPlan('parent')] });
+    expect(getRelatedPlansHeading(plan, 'Liittyvät ohjelmat')).toEqual({
+      text: 'Liittyvät ohjelmat',
+      href: undefined,
+    });
+  });
+
+  it('ignores an empty heading set on the block', () => {
+    const plan = testPlan({ parent: PARENT, allRelatedPlans: [relatedPlan('parent')] });
+    expect(getRelatedPlansHeading(plan, '')).toEqual({
+      text: 'Parent Plan',
+      href: 'https://parent.example.org',
+    });
+  });
+
   it('falls back to the long name when the plan has no short name', () => {
     expect(getRelatedPlansHeading(testPlan({ shortName: null }))).toEqual({
       text: 'Plan self',

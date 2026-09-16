@@ -580,7 +580,8 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return <RelatedIndicatorsBlock id={id} indicators={indicators} />;
     }
     case 'RelatedPlanListBlock': {
-      return <RelatedPlanListBlock id={id} />;
+      const { heading } = block;
+      return <RelatedPlanListBlock id={id} heading={heading} />;
     }
     case 'ActionCategoryFilterCardsBlock': {
       const { cards } = block;

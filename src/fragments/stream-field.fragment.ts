@@ -254,6 +254,9 @@ export const STREAM_FIELD_FRAGMENT = gql`
         }
       }
     }
+    ... on RelatedPlanListBlock {
+      heading
+    }
     ... on CardListBlock {
       heading
       lead

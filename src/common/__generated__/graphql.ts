@@ -4712,7 +4712,7 @@ type StreamField_RegexBlock_Fragment = { __typename: 'RegexBlock', blockType: st
 
 type StreamField_RelatedIndicatorsBlock_Fragment = { __typename: 'RelatedIndicatorsBlock', blockType: string, field: string };
 
-type StreamField_RelatedPlanListBlock_Fragment = { __typename: 'RelatedPlanListBlock', blockType: string, field: string };
+type StreamField_RelatedPlanListBlock_Fragment = { __typename: 'RelatedPlanListBlock', heading: string | null, blockType: string, field: string };
 
 type StreamField_ReportComparisonBlock_Fragment = { __typename: 'ReportComparisonBlock', blockType: string, field: string };
 
@@ -6750,7 +6750,7 @@ export type HomePageQuery_planPage_PlanRootPage_body_LargeImageBlock = { __typen
 
 export type HomePageQuery_planPage_PlanRootPage_body_PathsOutcomeBlock = { __typename: 'PathsOutcomeBlock', heading: string | null, helpText: string | null, outcomeNodeId: string | null, blockType: string, field: string };
 
-export type HomePageQuery_planPage_PlanRootPage_body_RelatedPlanListBlock = { __typename: 'RelatedPlanListBlock', blockType: string, field: string };
+export type HomePageQuery_planPage_PlanRootPage_body_RelatedPlanListBlock = { __typename: 'RelatedPlanListBlock', heading: string | null, blockType: string, field: string };
 
 export type HomePageQuery_planPage_PlanRootPage_body_RichTextBlock = { __typename: 'RichTextBlock', value: string, blockType: string, field: string };
 
