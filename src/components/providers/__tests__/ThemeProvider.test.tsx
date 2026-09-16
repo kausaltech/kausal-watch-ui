@@ -1,19 +1,27 @@
 import { useTheme } from '@mui/material/styles';
 
+import defaultThemeJson from '@kausal/themes/dist/themes/default/theme.json';
 import type { Theme } from '@kausal/themes/types';
 import { render, screen } from '@testing-library/react';
 
 import ThemeProvider from '@/components/providers/ThemeProvider';
 
-import themeAJson from '../../../../public/static/themes/default/theme.json';
-import themeBJson from '../../../../public/static/themes/ch-kloten/theme.json';
-
 /*
  * Importing JSON widens literal values to plain strings, which no longer
  * satisfies Theme's literal-union properties (e.g. headingsTextTransform).
  */
-const themeA = themeAJson as unknown as Theme;
-const themeB = themeBJson as unknown as Theme;
+const themeA = defaultThemeJson as unknown as Theme;
+
+/*
+ * The second theme is derived from the first rather than loaded from another
+ * theme directory: only the default theme ships with the public themes
+ * package, and the test only needs two themes that differ visibly.
+ */
+const themeB: Theme = {
+  ...themeA,
+  name: 'Second plan',
+  brandDark: '#abcdef',
+};
 
 function ThemeProbe() {
   const theme = useTheme();
