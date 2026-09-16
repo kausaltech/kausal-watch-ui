@@ -181,47 +181,47 @@ const PER_INSTANCE_SETTINGS: Record<
       'net_emissions/emission_scope:direct+negative': 'area',
     },
     separateYears: {
-      'net_emissions/emission_scope:indirect': [1990, 2010, 2015, 2020, 2022, 2023, 2024],
+      'net_emissions/emission_scope:indirect': [1990, 2010, 2015, 2020, 2022, 2023, 2024, 2025],
       'net_emissions/emission_scope:direct+negative': null,
     },
     outcomeDisclaimers: [
       {
-        year: 2024,
+        year: 2025,
         node: 'net_emissions',
         goal: 'net_emissions/emission_scope:indirect',
         disclaimer:
           'Für die indirekten Emissionen in den Bereichen Ernährung und Konsum sowie teilweise im Bereich Mobilität (ca. 25%) im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
       },
       {
-        year: 2024,
+        year: 2025,
         node: 'food_consumption_emissions',
         goal: 'net_emissions/emission_scope:indirect',
         disclaimer:
           'Für die indirekten Emissionen der Ernährung im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
       },
       {
-        year: 2024,
+        year: 2025,
         node: 'other_consumption_emissions',
         goal: 'net_emissions/emission_scope:indirect',
         disclaimer:
           'Für die indirekten Emissionen des Konsums im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
       },
       {
-        year: 2024,
+        year: 2025,
         node: 'transportation_emissions',
         goal: 'net_emissions/emission_scope:indirect',
         disclaimer:
           'Für die indirekten Emissionen der Mobilität der Stadtbevölkerung ausserhalb des Stadtgebiets (exkl. Flugzeug) und der Neufahrzeuge im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
       },
       {
-        year: 2024,
+        year: 2025,
         node: 'transportation_emissions_outside_city',
         goal: 'net_emissions/emission_scope:indirect',
         disclaimer:
           'Für die indirekten Emissionen der Mobilität der Stadtbevölkerung ausserhalb des Stadtgebiets (exkl. Flugzeug) im Jahr 2024 wurden die Vorjahreswerte übernommen, da keine neuen Daten verfügbar waren.',
       },
       {
-        year: 2024,
+        year: 2025,
         node: 'new_vehicle_emissions',
         goal: 'net_emissions/emission_scope:indirect',
         disclaimer:
