@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { type ReactNode, useMemo } from 'react';
 
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 
@@ -14,6 +14,10 @@ type Props = {
 };
 
 export default function ThemeProvider({ theme, children }: Props) {
-  const muiTheme = initializeMuiTheme(theme);
+  // Rebuilt whenever the plan's theme changes, including across a client-side
+  // navigation between two plans that share a hostname and differ only by
+  // basePath. `initializeMuiTheme` must not cache across themes itself.
+  const muiTheme = useMemo(() => initializeMuiTheme(theme), [theme]);
+
   return <MUIThemeProvider theme={muiTheme}>{children}</MUIThemeProvider>;
 }
