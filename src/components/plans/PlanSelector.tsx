@@ -13,6 +13,7 @@ import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
 import PlanLink from './PlanLink';
+import { selectSwitcherPlans } from './relatedPlans';
 
 const PlanSelect = styled.div`
   display: flex;
@@ -86,15 +87,7 @@ export default function PlanSelector(props: PlanSelectorProps) {
   const plan = usePlan();
   const theme = useTheme();
 
-  /*
-   * The parent plan is reachable via the site logo, so by default it is left out of the
-   * dropdown. Plans can opt into listing it there as well.
-   */
-  const hideParentPlan = !plan.features.showParentPlanInPlanSwitcher;
-  const selectablePlans = plan.allRelatedPlans.filter(
-    (pl) =>
-      !!pl && !!pl.viewUrl && pl.id !== plan.id && !(hideParentPlan && pl.id === plan.parent?.id)
-  );
+  const selectablePlans = selectSwitcherPlans(plan);
 
   if (!selectablePlans.length) return null;
 
