@@ -129,9 +129,9 @@ Debug server side GraphQL queries by setting the `LOG_GRAPHQL_QUERIES=true` envi
 
 To run the app in production mode:
 
-    npm ci
-    npm run build
-    npm start
+    pnpm ci
+    pnpm build
+    pnpm start
 
 ## Maintainers
 
