@@ -18,6 +18,7 @@ import PlanChip from '@/components/plans/PlanChip';
 
 import { getTaskCounts } from './cells/TasksStatusCell';
 import { type ActionListAction, type ActionListPlan, type ColumnConfig } from './dashboard.types';
+import { getActionPlanImage } from './dashboard.utils';
 
 const TooltipTitle = styled.p`
   font-weight: ${(props) => props.theme.fontWeightBold};
@@ -289,11 +290,7 @@ export const PlanTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
     <div>
       <PlanChip
         planShortName={action.plan?.shortName || action.plan?.name}
-        planImage={
-          action.plan?.image?.rendition?.src ||
-          plan?.image?.square?.src ||
-          plan?.image?.rendition?.src
-        }
+        planImage={getActionPlanImage(action.plan, plan)}
         size="md"
       />
     </div>

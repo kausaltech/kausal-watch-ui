@@ -36,6 +36,7 @@ import type {
   ColumnBlock,
   ColumnConfig,
 } from './dashboard.types';
+import { getActionPlanImage, getActionPlanName, isFromOtherPlan } from './dashboard.utils';
 
 const getPlanUrl = (
   mergedWith: ActionListAction['mergedWith'],
@@ -232,18 +233,23 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
   },
   PlanColumnBlock: {
     renderHeader: (t, _, label) => label || t('filter-plan'),
-    renderCell: (_, action, plan) =>
-      action.plan?.shortIdentifier ||
-      plan?.identifier || (
-        <PlanChip
-          planImage={
-            action.plan?.image?.rendition?.src ||
-            plan?.image?.square?.src ||
-            plan?.image?.rendition?.src
-          }
-          size="lg"
-        />
-      ),
+    renderCell: (_, action, plan) => {
+      /* Only the plan the action belongs to may identify the row; the viewed
+       * plan's short identifier would be misleading for a related action. */
+      const shortIdentifier = isFromOtherPlan(action.plan, plan)
+        ? action.plan?.shortIdentifier
+        : plan?.shortIdentifier;
+
+      return (
+        shortIdentifier || (
+          <PlanChip
+            planImage={getActionPlanImage(action.plan, plan)}
+            imageAlt={getActionPlanName(action.plan, plan)}
+            size="lg"
+          />
+        )
+      );
+    },
     renderTooltipContent: (_, action, plan) => <PlanTooltipContent action={action} plan={plan} />,
   },
 };

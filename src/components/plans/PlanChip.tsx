@@ -76,6 +76,12 @@ interface PlanChipProps {
    */
   planShortName?: string;
   /**
+   * Alternative text for the plan image. Only needed when the chip renders as
+   * an avatar without a visible name, which would otherwise leave no
+   * accessible text.
+   */
+  imageAlt?: string;
+  /**
    * Organization name
    */
   organization?: string;
@@ -118,6 +124,7 @@ const PlanChip = React.forwardRef<HTMLDivElement, PlanChipProps>((props, ref) =>
   const {
     planImage,
     planShortName,
+    imageAlt = '',
     organization,
     size = 'md',
     negative = false,
@@ -135,7 +142,7 @@ const PlanChip = React.forwardRef<HTMLDivElement, PlanChipProps>((props, ref) =>
       <PlanAvatar
         src={planImage ?? getThemeStaticURL(theme.defaultAvatarOrgImage)}
         size={IMAGE_SIZES[size]}
-        alt=""
+        alt={avatarOnly ? imageAlt : ''}
       />
       {!avatarOnly ? (
         <PlanName $negative={negative}>
