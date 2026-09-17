@@ -54,9 +54,10 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 
   const { plan } = data;
-  const parentPlanTitle = plan.parent
-    ? `${plan.parent.name} / ${plan.shortName || plan.name}`
-    : null;
+  const parentPlanTitle =
+    plan.parent && !plan.features.presentPlanHierarchyAsPeers
+      ? `${plan.parent.name} / ${plan.shortName || plan.name}`
+      : null;
   const title = parentPlanTitle || plan.generalContent.siteTitle || plan.name;
   const description = plan.generalContent.siteDescription;
   const ogImage = plan.image?.social?.src || plan.image?.rendition?.src;

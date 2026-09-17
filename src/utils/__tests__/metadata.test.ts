@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import {
   getGoogleSiteVerificationTag,
+  getMetaTitles,
   getRobotsMetadata,
   getSiteVerificationMetadata,
 } from '../metadata';
@@ -97,5 +98,41 @@ describe('getGoogleSiteVerificationTag', () => {
     ['the query returned null', null],
   ])('returns null when %s', (_case, plans) => {
     expect(getGoogleSiteVerificationTag(plans)).toBeNull();
+  });
+});
+
+describe('getMetaTitles', () => {
+  // The helper reads a handful of fields off the plan context query; the cast
+  // keeps the fixtures to those rather than a whole plan.
+  const makePlan = (overrides: object) =>
+    ({
+      name: 'Child',
+      generalContent: { siteTitle: 'Child site' },
+      features: { presentPlanHierarchyAsPeers: false },
+      ...overrides,
+    }) as unknown as Parameters<typeof getMetaTitles>[0];
+
+  const parent = { name: 'Parent', generalContent: { siteTitle: 'Parent site' } };
+
+  it('takes the names from the parent plan when the plan belongs to it', () => {
+    expect(getMetaTitles(makePlan({ parent }))).toEqual({
+      title: 'Parent',
+      navigationTitle: 'Parent site',
+    });
+  });
+
+  it('keeps its own names when the plan presents its hierarchy as peers', () => {
+    // A peer is not the plan this one belongs to, so it names neither the site
+    // nor the navigation.
+    const plan = makePlan({ parent, features: { presentPlanHierarchyAsPeers: true } });
+    expect(getMetaTitles(plan)).toEqual({
+      title: 'Child site',
+      navigationTitle: 'Child site',
+    });
+  });
+
+  it('falls back to the plan name when there is no site title', () => {
+    const plan = makePlan({ generalContent: { siteTitle: null } });
+    expect(getMetaTitles(plan)).toEqual({ title: 'Child', navigationTitle: 'Child' });
   });
 });

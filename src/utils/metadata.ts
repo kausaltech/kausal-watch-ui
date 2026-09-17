@@ -82,7 +82,9 @@ export function getMetaDescription(page: ContentPageQuery['planPage']) {
 }
 
 export function getMetaTitles(plan: NonNullable<PlanContextQuery['plan']>) {
-  if (plan.parent) {
+  // A plan that presents its hierarchy as peers does not belong to its parent,
+  // so the parent names neither this site nor its navigation.
+  if (plan.parent && !plan.features.presentPlanHierarchyAsPeers) {
     return {
       title: plan.parent.name,
       navigationTitle: plan.parent.generalContent.siteTitle || plan.parent.name,

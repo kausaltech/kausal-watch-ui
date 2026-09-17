@@ -26,6 +26,7 @@ import { getThemeStaticURL } from '@common/themes/theme';
 import { isServer } from '@/common/environment';
 import { Link, NavigationLink } from '@/common/links';
 import PlanSelector from '@/components/plans/PlanSelector';
+import { selectSwitcherPlans } from '@/components/plans/relatedPlans';
 import PlanVersionSelector from '@/components/versioning/PlanVersionSelector';
 import { usePlan } from '@/context/plan';
 
@@ -42,10 +43,18 @@ const MobileOnlyPledgeNavUser = styled(PledgeNavUser)`
 `;
 
 const getRootLink = (
-  plan: { parent?: { viewUrl?: string | null } | null },
+  plan: {
+    parent?: { viewUrl?: string | null } | null;
+    features: { presentPlanHierarchyAsPeers: boolean };
+  },
   locale: string,
   primaryLanguage: string
 ) => {
+  // A peer parent is already reachable from the plan switcher and the related
+  // plans block, so the logo leads home rather than up.
+  if (plan.features.presentPlanHierarchyAsPeers) {
+    return '/';
+  }
   if (plan.parent && plan.parent.viewUrl) {
     const shouldAppendLocale =
       locale !== primaryLanguage && !plan.parent.viewUrl.includes(`/${locale}`);
@@ -653,7 +662,7 @@ function GlobalNav(props: GlobalNavProps) {
 
   const homeLink = theme.settings.homeLink ?? false;
 
-  const siblings = plan.allRelatedPlans.filter((pl) => pl?.id !== plan.parent?.id);
+  const siblings = selectSwitcherPlans(plan);
   const hideLogoOnMobile = !!(theme.navTitleVisible && siblings.length);
 
   const logoLink = theme.footerLogoLink || rootLink;
