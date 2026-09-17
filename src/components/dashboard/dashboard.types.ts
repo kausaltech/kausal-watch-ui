@@ -60,10 +60,13 @@ export interface ActionListPlan {
   identifier?: string;
   shortName?: string | null;
   viewUrl?: string | null;
+  /* A plan may be either the plan context plan or a related plan; the latter
+   * only fetches the task and organization terms. */
   generalContent: Pick<
     PlanContextFragment['generalContent'],
-    'actionTaskTerm' | 'actionTerm' | 'organizationTerm' | 'indicatorTerm'
-  >;
+    'actionTaskTerm' | 'organizationTerm'
+  > &
+    Partial<Pick<PlanContextFragment['generalContent'], 'actionTerm' | 'indicatorTerm'>>;
   image?: {
     rendition?: {
       src: string;

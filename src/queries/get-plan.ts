@@ -23,6 +23,7 @@ const GET_PLAN_CONTEXT: TypedDocumentNode<PlanContextQuery, PlanContextQueryVari
   fragment PlanContext on Plan {
     id
     identifier
+    shortIdentifier
     name
     shortName
     versionName
