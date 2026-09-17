@@ -30,14 +30,14 @@ function testPlan({
   parent = null,
   children = [],
   allRelatedPlans = [],
-  showParentPlanAsSibling = false,
+  presentPlanHierarchyAsPeers = false,
   shortName = 'Self',
 }: {
   id?: string;
   parent?: { id: string; name: string; viewUrl: string | null } | null;
   children?: { id: string }[];
   allRelatedPlans?: TestRelatedPlan[];
-  showParentPlanAsSibling?: boolean;
+  presentPlanHierarchyAsPeers?: boolean;
   shortName?: string | null;
 } = {}) {
   return {
@@ -50,7 +50,7 @@ function testPlan({
     parent,
     children,
     allRelatedPlans,
-    features: { showParentPlanAsSibling },
+    features: { presentPlanHierarchyAsPeers },
   };
 }
 
@@ -65,11 +65,11 @@ describe('selectSwitcherPlans', () => {
     expect(selectSwitcherPlans(plan).map((pl) => pl.id)).toEqual(['sibling']);
   });
 
-  it('lists the parent plan when the plan shows it as a sibling', () => {
+  it('lists the parent plan when the plan presents its hierarchy as peers', () => {
     const plan = testPlan({
       parent: PARENT,
       allRelatedPlans: [relatedPlan('parent'), relatedPlan('sibling')],
-      showParentPlanAsSibling: true,
+      presentPlanHierarchyAsPeers: true,
     });
     expect(selectSwitcherPlans(plan).map((pl) => pl.id)).toEqual(['parent', 'sibling']);
   });
@@ -95,11 +95,11 @@ describe('selectRelatedPlanCards', () => {
     expect(selectRelatedPlanCards(plan).map((pl) => pl.id)).toEqual(['self', 'sibling']);
   });
 
-  it('shows the parent as one more card when the plan shows it as a sibling', () => {
+  it('shows the parent as one more card when the plan presents its hierarchy as peers', () => {
     const plan = testPlan({
       parent: PARENT,
       allRelatedPlans: [relatedPlan('parent'), relatedPlan('sibling')],
-      showParentPlanAsSibling: true,
+      presentPlanHierarchyAsPeers: true,
     });
     expect(selectRelatedPlanCards(plan).map((pl) => pl.id)).toEqual(['self', 'parent', 'sibling']);
   });
@@ -112,11 +112,11 @@ describe('selectRelatedPlanCards', () => {
     expect(selectRelatedPlanCards(plan).map((pl) => pl.id)).toEqual(['child']);
   });
 
-  it('adds a parent plan itself to its children when it shows the parent as a sibling', () => {
+  it('adds a parent plan itself to its children when it presents its hierarchy as peers', () => {
     const plan = testPlan({
       children: [{ id: 'child' }],
       allRelatedPlans: [relatedPlan('child')],
-      showParentPlanAsSibling: true,
+      presentPlanHierarchyAsPeers: true,
     });
     expect(selectRelatedPlanCards(plan).map((pl) => pl.id)).toEqual(['self', 'child']);
   });
@@ -146,11 +146,11 @@ describe('getRelatedPlansHeading', () => {
     });
   });
 
-  it('names the plan itself when the parent is shown as a sibling', () => {
+  it('names the plan itself when the plan presents its hierarchy as peers', () => {
     const plan = testPlan({
       parent: PARENT,
       allRelatedPlans: [relatedPlan('parent')],
-      showParentPlanAsSibling: true,
+      presentPlanHierarchyAsPeers: true,
     });
     expect(getRelatedPlansHeading(plan)).toEqual({ text: 'Self', href: undefined });
   });

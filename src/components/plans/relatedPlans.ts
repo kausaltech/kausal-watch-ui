@@ -2,12 +2,14 @@
  * Which plans the public UI presents next to the current one, in the plan
  * switcher and in the related plans block.
  *
- * A plan with a parent is normally presented as belonging to it: the parent is
- * reachable via the site logo rather than the switcher, and the related plans
- * block uses the parent's name as its heading. Plans whose parent is really a
- * peer rather than an umbrella can opt out of that with the
- * `showParentPlanAsSibling` feature, which lists the parent alongside the
- * siblings in both places.
+ * A parent/child link is normally presented as a hierarchy: a plan with a
+ * parent belongs to it, so the parent is reachable via the site logo rather
+ * than the switcher and gives the block its heading, and a plan with children
+ * heads them, so the block lists the children without it. A plan whose
+ * hierarchy is really a peer group opts out of both with the
+ * `presentPlanHierarchyAsPeers` feature: its parent joins the switcher and the
+ * block, it takes a card among its own children, and the site logo, page title
+ * and site name stop deriving from the parent.
  */
 
 /** The fields both the switcher and the block read off a related plan. */
@@ -30,7 +32,7 @@ export interface PlanLike<TRelated extends RelatedPlanLike = RelatedPlanLike> {
   parent?: { id: string; name: string; viewUrl?: string | null } | null;
   children: { id: string }[];
   allRelatedPlans: TRelated[];
-  features: { showParentPlanAsSibling: boolean };
+  features: { presentPlanHierarchyAsPeers: boolean };
 }
 
 function isDisplayable(plan: RelatedPlanLike | null | undefined): plan is RelatedPlanLike {
@@ -42,7 +44,7 @@ function isDisplayable(plan: RelatedPlanLike | null | undefined): plan is Relate
 function relatedPlansToShow<TRelated extends RelatedPlanLike>(
   plan: PlanLike<TRelated>
 ): TRelated[] {
-  const hideParent = !plan.features.showParentPlanAsSibling && !!plan.parent;
+  const hideParent = !plan.features.presentPlanHierarchyAsPeers && !!plan.parent;
   return plan.allRelatedPlans.filter(
     (pl) => isDisplayable(pl) && pl.id !== plan.id && !(hideParent && pl.id === plan.parent?.id)
   );
@@ -60,14 +62,14 @@ export function selectSwitcherPlans<TRelated extends RelatedPlanLike>(
  *
  * A plan presented as belonging to a parent lists itself among its siblings,
  * since the parent is already named in the heading. A parent plan normally
- * lists its children only, for the same reason -- unless it presents its own
- * children as peers, in which case it belongs in the row as well.
+ * lists its children only, for the same reason -- unless it presents its
+ * hierarchy as peers, in which case it belongs in the row as well.
  */
 export function selectRelatedPlanCards<TRelated extends RelatedPlanLike>(
   plan: PlanLike<TRelated>
 ): RelatedPlanLike[] {
   const related = relatedPlansToShow(plan);
-  const isUmbrellaHeading = plan.children.length > 0 && !plan.features.showParentPlanAsSibling;
+  const isUmbrellaHeading = plan.children.length > 0 && !plan.features.presentPlanHierarchyAsPeers;
   if (isUmbrellaHeading) {
     return related;
   }
@@ -99,7 +101,7 @@ export function getRelatedPlansHeading(
     return { text: blockHeading, href: undefined };
   }
   const parent = plan.parent;
-  if (parent && !plan.features.showParentPlanAsSibling) {
+  if (parent && !plan.features.presentPlanHierarchyAsPeers) {
     return { text: parent.name, href: parent.viewUrl ?? undefined };
   }
   return { text: plan.shortName || plan.name, href: undefined };
