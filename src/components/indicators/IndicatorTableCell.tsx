@@ -401,16 +401,26 @@ const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
   );
 };
 
+/*
+ * An indicator value's date is a date-only calendar value ("2024-12-31") that
+ * `new Date()` parses as midnight UTC, so it has no time zone of its own.
+ * Formatting it in the plan's zone would re-read that instant locally and move
+ * the date a day earlier for any plan west of UTC -- a yearly value dated the
+ * 1st of January would then be labelled with the previous year. Formatting in
+ * UTC returns the calendar date that was stored, whatever the plan's zone.
+ */
+const CALENDAR_DATE_ZONE = 'UTC';
+
 const dateFormatFromResolution = (resolution: IndicatorTimeResolution): DateTimeFormatOptions => {
   switch (resolution) {
     case IndicatorTimeResolution.Day:
-      return { day: 'numeric', month: 'numeric', year: 'numeric' };
+      return { day: 'numeric', month: 'numeric', year: 'numeric', timeZone: CALENDAR_DATE_ZONE };
     case IndicatorTimeResolution.Month:
-      return { month: 'numeric', year: 'numeric' };
+      return { month: 'numeric', year: 'numeric', timeZone: CALENDAR_DATE_ZONE };
     case IndicatorTimeResolution.Year:
-      return { year: 'numeric' };
+      return { year: 'numeric', timeZone: CALENDAR_DATE_ZONE };
     default:
-      return { day: 'numeric', month: 'numeric', year: 'numeric' };
+      return { day: 'numeric', month: 'numeric', year: 'numeric', timeZone: CALENDAR_DATE_ZONE };
   }
 };
 interface IndicatorListColumnCellProps {
