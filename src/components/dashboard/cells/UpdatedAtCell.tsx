@@ -1,6 +1,6 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { Fragment, useSyncExternalStore } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -37,29 +37,42 @@ const getClockTick = () => Math.floor(Date.now() / REFRESH_INTERVAL_MS);
 const getServerClockTick = () => 0;
 
 /**
- * Re-renders the caller once directly after hydration, and then once per
- * refresh interval.
- *
- * The post-hydration render is the point: React renders with the server
- * snapshot while hydrating and afterwards compares it against the client
- * snapshot. Those two never match here, so the re-render is guaranteed.
+ * Re-renders the caller directly after hydration, and then once per refresh
+ * interval. Returns 0 while rendering on the server and during the hydration
+ * render, and a non-zero tick from the first client render onwards.
  */
 const useClockTick = () => useSyncExternalStore(subscribeToClock, getClockTick, getServerClockTick);
 
 const UpdatedAtCell = ({ action }: Props) => {
-  // `fromNow()` is relative to the current time, so the value rendered during
-  // SSR differs from the one rendered at hydration whenever the two straddle a
-  // rounding boundary. `suppressHydrationWarning` tells React to accept the
-  // server text instead of reporting a hydration error, which also means the
-  // DOM keeps that text until this component re-renders. Recomputing from an
-  // effect is not enough to cause one: the recomputed string is normally the
-  // string the hydration render already produced, so the state does not change
-  // and React bails out without touching the DOM, leaving the server value on
-  // screen until the relative label happens to move on — which for a timestamp
-  // a day or more old can take hours. `useClockTick` forces the render.
-  useClockTick();
+  const tick = useClockTick();
 
-  return <Wrapper suppressHydrationWarning>{dayjs(action.updatedAt).fromNow(false)}</Wrapper>;
+  /*
+   * `fromNow()` is relative to the current time, so the string rendered during
+   * SSR differs from the one rendered at hydration whenever the two straddle a
+   * rounding boundary -- "a minute ago" against "2 minutes ago", say.
+   * `suppressHydrationWarning` tells React to accept the server text rather
+   * than report a hydration error, and the DOM therefore keeps it.
+   *
+   * Getting that text replaced takes more than a re-render. React records the
+   * string the hydration render produced as the text node's props while the
+   * node itself still holds the server string, so the two have already
+   * diverged; a later render that produces the same string again diffs equal
+   * against those props and React never touches the DOM. The server text would
+   * then survive until `fromNow()` itself moved on, which for a timestamp
+   * around the 21-hours/a-day boundary is some fourteen hours.
+   *
+   * So key the text on whether this is the hydration render. The key changes
+   * exactly once, immediately after hydration, which makes React drop the text
+   * node and mount a fresh one from the client's clock. From then on the props
+   * and the DOM agree again and the interval's re-renders diff normally.
+   */
+  return (
+    <Wrapper suppressHydrationWarning>
+      <Fragment key={tick === 0 ? 'hydrating' : 'hydrated'}>
+        {dayjs(action.updatedAt).fromNow(false)}
+      </Fragment>
+    </Wrapper>
+  );
 };
 
 export default UpdatedAtCell;
