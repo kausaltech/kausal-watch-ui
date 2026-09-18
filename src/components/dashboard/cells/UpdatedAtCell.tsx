@@ -24,10 +24,33 @@ const Wrapper = styled.div`
 // Keep the relative timestamp reasonably current without a per-second timer.
 const REFRESH_INTERVAL_MS = 60 * 1000;
 
-const subscribeToClock = (onStoreChange: () => void) => {
-  const id = setInterval(onStoreChange, REFRESH_INTERVAL_MS);
+/*
+ * One timer for every cell on the page rather than one per cell. The action
+ * dashboard renders each filtered action without pagination, so a large plan
+ * would otherwise wake hundreds of independently phased intervals a minute.
+ * Sharing one also means the whole column refreshes together.
+ */
+const listeners = new Set<() => void>();
+let intervalId: ReturnType<typeof setInterval> | undefined;
 
-  return () => clearInterval(id);
+const subscribeToClock = (onStoreChange: () => void) => {
+  listeners.add(onStoreChange);
+
+  intervalId ??= setInterval(() => {
+    // Copied because a listener may unsubscribe in response to the tick.
+    for (const listener of Array.from(listeners)) {
+      listener();
+    }
+  }, REFRESH_INTERVAL_MS);
+
+  return () => {
+    listeners.delete(onStoreChange);
+
+    if (listeners.size === 0 && intervalId !== undefined) {
+      clearInterval(intervalId);
+      intervalId = undefined;
+    }
+  };
 };
 
 // Bucketed so that the snapshot is stable between ticks rather than changing on
