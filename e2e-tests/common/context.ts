@@ -33,7 +33,20 @@ const GET_PLAN_BASICS = gql`
   }
 `;
 
+// Declared on the concrete type, not on StreamFieldInterface. This query reads through
+// the cache, and the client has no possibleTypes, so Apollo cannot tell which concrete
+// types implement the interface and silently drops fields from interface fragments.
+const REPORT_COMPARISON_PROBE_FRAGMENT = gql`
+  fragment ReportComparisonProbe on ReportComparisonBlock {
+    reportField
+    reportType {
+      name
+    }
+  }
+`;
+
 const GET_PLAN_INFO = gql`
+  ${REPORT_COMPARISON_PROBE_FRAGMENT}
   query PlaywrightGetPlanInfo($plan: ID!, $locale: String!, $clientURL: String!)
   @locale(lang: $locale) {
     planOrganizations(plan: $plan, forResponsibleParties: true, forContactPersons: true) {
@@ -61,19 +74,21 @@ const GET_PLAN_INFO = gql`
         includeRelatedPlans
         detailsMainTop {
           __typename
-          ... on ReportComparisonBlock {
-            reportField
-            reportType {
-              name
+          ...ReportComparisonProbe
+          ... on ActionContentSectionBlock {
+            blocks {
+              __typename
+              ...ReportComparisonProbe
             }
           }
         }
         detailsMainBottom {
           __typename
-          ... on ReportComparisonBlock {
-            reportField
-            reportType {
-              name
+          ...ReportComparisonProbe
+          ... on ActionContentSectionBlock {
+            blocks {
+              __typename
+              ...ReportComparisonProbe
             }
           }
         }

@@ -7,6 +7,11 @@ import {
   getIdentifiersToTest,
   getPageBaseUrlToTest,
 } from '../common/context.ts';
+import type {
+  PlaywrightReportComparisonValuesQuery,
+  ReportComparisonProbeFragment,
+  ReportComparisonValuesFragment,
+} from '../__generated__/graphql.ts';
 import { test as coverageTest } from '../common/coverage.ts';
 
 const { gql } =
@@ -16,90 +21,52 @@ type ReportComparisonBlockInfo = { reportField: string; reportTypeName: string }
 type ActionWithData = {
   actionIdentifier: string;
   reportName: string;
+  /** Exactly the text asserted on, derived in the browser during discovery. */
   contentSnippet: string;
 };
 
-type StreamNode = {
-  __typename: string;
-  reportField?: string;
-  reportType?: { name: string };
-  reportsToCompare?: readonly ReportNode[] | null;
-};
-type ReportNode = {
-  name: string;
-  valuesForAction?: readonly ValueNode[] | null;
-};
-type ValueNode = {
-  __typename: string;
-  field?: { __typename: string; id?: string | null };
-  attribute?: { __typename: string; value?: string | null };
-};
-type ValuesQueryResult = {
-  plan: {
-    actionListPage: {
-      detailsMainTop?: readonly StreamNode[] | null;
-      detailsMainBottom?: readonly StreamNode[] | null;
-    } | null;
-  } | null;
-};
+/**
+ * Discovery and the assertion must agree on what counts as enough text, and must
+ * measure it the same way. A whole-value character count disagrees with the rendered
+ * line on content split into short paragraphs or list items, and counts entities like
+ * `&nbsp;` that the browser renders away.
+ */
+const MIN_SNIPPET_LENGTH = 12;
+const SNIPPET_LENGTH = 40;
 
-const VALUES_QUERY = gql`
-  query PlaywrightReportComparisonValues($plan: ID!, $action: ID!) {
-    plan(id: $plan) {
-      actionListPage {
-        detailsMainTop {
-          ... on ReportComparisonBlock {
-            reportField
-            reportsToCompare {
-              name
-              valuesForAction(actionIdentifier: $action) {
-                __typename
-                ... on ActionAttributeReportValue {
-                  field {
-                    __typename
-                    ... on StreamFieldInterface {
-                      id
-                    }
-                  }
-                  attribute {
-                    __typename
-                    ... on AttributeRichText {
-                      value
-                    }
-                    ... on AttributeText {
-                      value
-                    }
-                  }
-                }
-              }
+/**
+ * The two queries select different fields from ReportComparisonBlock, so the traversal is
+ * generic over whichever generated fragment the caller asked for. Everything it walks past
+ * is irrelevant here (18 union members at the root, 136 when nested), so those stay
+ * structural; the blocks it yields are typed by codegen, and a fragment change breaks the
+ * consumers instead of drifting silently.
+ */
+type AnyBlock = { __typename: string };
+type SectionOf<F> = AnyBlock & { blocks?: readonly (F | AnyBlock | null)[] | null };
+type StreamNodeOf<F> = F | SectionOf<F> | AnyBlock;
+type ValuesQueryResult = PlaywrightReportComparisonValuesQuery;
+
+const REPORT_COMPARISON_VALUES_FRAGMENT = gql`
+  fragment ReportComparisonValues on ReportComparisonBlock {
+    reportField
+    reportsToCompare {
+      name
+      valuesForAction(actionIdentifier: $action) {
+        __typename
+        ... on ActionAttributeReportValue {
+          field {
+            __typename
+            ... on StreamFieldInterface {
+              id
             }
           }
-        }
-        detailsMainBottom {
-          ... on ReportComparisonBlock {
-            reportField
-            reportsToCompare {
-              name
-              valuesForAction(actionIdentifier: $action) {
-                __typename
-                ... on ActionAttributeReportValue {
-                  field {
-                    __typename
-                    ... on StreamFieldInterface {
-                      id
-                    }
-                  }
-                  attribute {
-                    __typename
-                    ... on AttributeRichText {
-                      value
-                    }
-                    ... on AttributeText {
-                      value
-                    }
-                  }
-                }
-              }
+          attribute {
+            __typename
+            ... on AttributeRichText {
+              value
+            }
+            ... on AttributeText {
+              value
             }
           }
         }
@@ -108,34 +75,89 @@ const VALUES_QUERY = gql`
   }
 `;
 
+// Mirrors the production layouts in src/queries/get-action.ts: the block may sit at the
+// top level of the stream or nested inside an ActionContentSectionBlock.
+const VALUES_QUERY = gql`
+  ${REPORT_COMPARISON_VALUES_FRAGMENT}
+  query PlaywrightReportComparisonValues($plan: ID!, $action: ID!) {
+    plan(id: $plan) {
+      actionListPage {
+        detailsMainTop {
+          __typename
+          ...ReportComparisonValues
+          ... on ActionContentSectionBlock {
+            blocks {
+              __typename
+              ...ReportComparisonValues
+            }
+          }
+        }
+        detailsMainBottom {
+          __typename
+          ...ReportComparisonValues
+          ... on ActionContentSectionBlock {
+            blocks {
+              __typename
+              ...ReportComparisonValues
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+type ActionListPageStreams<F> = {
+  detailsMainTop?: readonly (StreamNodeOf<F> | null)[] | null;
+  detailsMainBottom?: readonly (StreamNodeOf<F> | null)[] | null;
+} | null;
+
+/** Every ReportComparisonBlock in the stream, including ones nested inside content sections. */
+function collectReportComparisonBlocks<F extends AnyBlock>(
+  alp: ActionListPageStreams<F> | undefined
+): F[] {
+  const roots = [...(alp?.detailsMainTop ?? []), ...(alp?.detailsMainBottom ?? [])];
+  return roots.flatMap((node) => {
+    if (node === null) return [];
+    if (node.__typename === 'ReportComparisonBlock') return [node as F];
+    // Only section blocks carry `blocks`; reading it structurally keeps the traversal
+    // independent of which of the 136 nested union members we are looking at.
+    const nested = (node as SectionOf<F>).blocks ?? [];
+    return nested.filter((child): child is F => child?.__typename === 'ReportComparisonBlock');
+  });
+}
+
 function findReportComparisonBlock(ctx: PlanContext): ReportComparisonBlockInfo | null {
-  const alp = ctx.plan.actionListPage as unknown as {
-    detailsMainTop?: readonly StreamNode[] | null;
-    detailsMainBottom?: readonly StreamNode[] | null;
-  } | null;
-  const streams: readonly StreamNode[] = [
-    ...(alp?.detailsMainTop ?? []),
-    ...(alp?.detailsMainBottom ?? []),
-  ];
-  const block = streams.find(
-    (b) =>
-      b.__typename === 'ReportComparisonBlock' &&
-      typeof b.reportField === 'string' &&
-      !!b.reportType?.name
+  const alp: ActionListPageStreams<ReportComparisonProbeFragment> = ctx.plan.actionListPage;
+  const block = collectReportComparisonBlocks(alp).find(
+    (b) => typeof b.reportField === 'string' && !!b.reportType?.name
   );
   if (!block?.reportField || !block.reportType) return null;
   return { reportField: block.reportField, reportTypeName: block.reportType.name };
 }
 
-function toPlainText(html: string): string {
-  return html
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+/**
+ * Longest single rendered line of a rich-text value, using the browser as the oracle.
+ *
+ * Two reasons not to do this with regex in node. Entities: an `&amp;` left encoded
+ * would never match the `&` the browser exposes. Block boundaries: `getByText` matches
+ * within one element, so a snippet spanning two paragraphs matches nothing. `innerText`
+ * separates blocks with newlines, so taking one line keeps the snippet inside one block.
+ */
+async function longestRenderedLine(page: Page, html: string): Promise<string> {
+  return page.evaluate((raw) => {
+    const el = document.createElement('div');
+    el.innerHTML = raw;
+    document.body.appendChild(el);
+    const text = el.innerText;
+    el.remove();
+    const lines = text.split('\n').map((line) => line.replace(/\s+/g, ' ').trim());
+    return lines.reduce((longest, line) => (line.length > longest.length ? line : longest), '');
+  }, html);
 }
 
 async function findActionWithReportData(
+  page: Page,
   ctx: PlanContext,
   block: ReportComparisonBlockInfo
 ): Promise<ActionWithData | null> {
@@ -145,31 +167,42 @@ async function findActionWithReportData(
       variables: { plan: ctx.plan.identifier, action: action.identifier },
       fetchPolicy: 'no-cache',
     });
-    const alp = res.data.plan?.actionListPage;
-    const streams: readonly StreamNode[] = [
-      ...(alp?.detailsMainTop ?? []),
-      ...(alp?.detailsMainBottom ?? []),
-    ];
-    for (const b of streams) {
+    const streams: ActionListPageStreams<ReportComparisonValuesFragment> | undefined =
+      res.data.plan?.actionListPage;
+    for (const b of collectReportComparisonBlocks(streams)) {
       if (b.reportField !== block.reportField) continue;
       for (const report of b.reportsToCompare ?? []) {
+        if (report === null) continue;
         for (const value of report.valuesForAction ?? []) {
           if (value.__typename !== 'ActionAttributeReportValue') continue;
-          if (value.field?.id !== block.reportField) continue;
-          const raw = value.attribute?.value;
+          if (value.field.id !== block.reportField) continue;
+          // Only the text-bearing attribute types carry `value`; the union also covers
+          // choice and category attributes, which have no rich text to assert on.
+          const attribute = value.attribute;
+          const raw =
+            attribute?.__typename === 'AttributeRichText' || attribute?.__typename === 'AttributeText'
+              ? attribute.value
+              : null;
           if (typeof raw !== 'string') continue;
-          const stripped = toPlainText(raw);
-          if (stripped.length < 12) continue;
+          const snippet = (await longestRenderedLine(page, raw)).slice(0, SNIPPET_LENGTH);
+          // Too little rendered text to assert on distinctly; try the next report or action
+          // rather than returning a match the assertion would then fail on.
+          if (snippet.length < MIN_SNIPPET_LENGTH) continue;
           return {
             actionIdentifier: action.identifier,
             reportName: report.name,
-            contentSnippet: stripped.slice(0, 40),
+            contentSnippet: snippet,
           };
         }
       }
     }
   }
   return null;
+}
+
+/** Regex matching the whole trimmed text of an element, so one name cannot match a longer one. */
+function exactly(text: string): RegExp {
+  return new RegExp(`^\\s*${text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
 }
 
 async function dismissIntroModal(page: Page): Promise<void> {
@@ -193,8 +226,12 @@ getIdentifiersToTest().forEach((planId) => {
       test.skip(block === null, 'Plan has no ReportComparisonBlock configured');
       if (block === null) return;
 
-      const match = await findActionWithReportData(ctx, block);
-      test.skip(match === null, `No action carries data for report field ${block.reportField}`);
+      // Discovery runs before navigation, deriving its snippet while the page is blank.
+      const match = await findActionWithReportData(page, ctx, block);
+      test.skip(
+        match === null,
+        `No action renders at least ${String(MIN_SNIPPET_LENGTH)} characters for report field ${block.reportField}`
+      );
       if (match === null) return;
 
       const baseURL = getPageBaseUrlToTest(planId);
@@ -226,11 +263,22 @@ getIdentifiersToTest().forEach((planId) => {
       const openCollapse = page.locator('.collapse.show').first();
       await expect(openCollapse).toBeVisible({ timeout: 5000 });
 
-      const reportField = openCollapse
-        .locator('[class*="ReportComparisonBlock-ReportField"]')
-        .first();
-      await expect(reportField.getByText(match.reportName)).toBeVisible();
-      await expect(reportField.getByText(match.contentSnippet)).toBeVisible();
+      // Identify the card by its report-name element, matched exactly. The probed report
+      // need not render first: the backend orders reportsToCompare by start date, the
+      // component re-sorts by end date, and reports with no data still render a card.
+      // A substring `hasText` over the whole card would also match a card whose name
+      // merely extends this one, or whose body happens to quote it.
+      const exactReportName = page
+        .locator('[class*="ReportComparisonBlock-ReportName"]')
+        .filter({ hasText: exactly(match.reportName) });
+      // The wrapper is excluded by name: ReportFieldComparison contains ReportField.
+      const reportCard = openCollapse
+        .locator(
+          '[class*="ReportComparisonBlock-ReportField"]:not([class*="ReportFieldComparison"])'
+        )
+        .filter({ has: exactReportName });
+      await expect(reportCard).toHaveCount(1);
+      await expect(reportCard.getByText(match.contentSnippet)).toBeVisible();
     });
   });
 });
