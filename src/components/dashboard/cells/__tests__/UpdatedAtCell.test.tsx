@@ -106,6 +106,26 @@ describe('UpdatedAtCell', () => {
     expect(consoleError).not.toHaveBeenCalled();
   });
 
+  it('shares one refresh timer across every cell', () => {
+    const rows = (
+      <ThemeProvider theme={theme}>
+        <UpdatedAtCell action={action} />
+        <UpdatedAtCell action={action} />
+        <UpdatedAtCell action={action} />
+      </ThemeProvider>
+    );
+
+    jest.setSystemTime(CLIENT_NOW);
+    const { unmount } = render(rows);
+
+    expect(jest.getTimerCount()).toBe(1);
+
+    // And the shared timer goes away with the last cell.
+    unmount();
+
+    expect(jest.getTimerCount()).toBe(0);
+  });
+
   it('keeps refreshing on the interval after hydration', () => {
     const { container } = hydrateServerMarkup();
     const hydratedTextNode = textNodeOf(container);
