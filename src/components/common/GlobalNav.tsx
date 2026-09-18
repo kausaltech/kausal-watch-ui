@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -515,6 +515,29 @@ const NavSpacer = styled.div<{ $height?: number }>`
   height: ${({ $height = 0 }) => $height}px;
 `;
 
+const RESIZE_DEBOUNCE_MS = 200;
+
+// The viewport width is a browser-only value, so it is read through
+// `useSyncExternalStore`: the hydration render uses the server snapshot, which
+// keeps the first client render identical to the SSR output, and React then
+// re-renders with the real width. Reading `window.innerWidth` from a `useState`
+// initializer would instead diverge between server and client and cause a
+// hydration mismatch, and assigning it from an effect would be a cascading
+// render.
+const subscribeToViewportWidth = (onStoreChange: () => void) => {
+  const handleResize = debounce(onStoreChange, RESIZE_DEBOUNCE_MS);
+
+  window.addEventListener('resize', handleResize);
+
+  return () => {
+    handleResize.cancel();
+    window.removeEventListener('resize', handleResize);
+  };
+};
+
+const getViewportWidth = () => window.innerWidth;
+const getServerViewportWidth = () => 0;
+
 const getIsPrimaryNavSticky = (theme: Theme, width: number) => width < parseInt(theme.breakpointMd);
 
 /**
@@ -525,11 +548,11 @@ const getIsPrimaryNavSticky = (theme: Theme, width: number) => width < parseInt(
 const useStickyNavigation = (isStickyEnabled: boolean = false) => {
   const primaryNavRef = useRef<HTMLDivElement>(null);
   const secondaryNavRef = useRef<HTMLDivElement>(null);
-  // Start at 0 on both server and client to keep the first client render
-  // identical to the SSR output; the real width is set in the effect below
-  // after mount. Reading `window.innerWidth` in the initializer would diverge
-  // between server and client and cause a hydration mismatch.
-  const [width, setWidth] = useState(0);
+  const width = useSyncExternalStore(
+    subscribeToViewportWidth,
+    getViewportWidth,
+    getServerViewportWidth
+  );
   const [isNavFixed, setIsNavFixed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [navHeight, setNavHeight] = useState<number>();
@@ -538,9 +561,6 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
   const isPrimaryNavSticky = getIsPrimaryNavSticky(theme, width);
 
   useEffect(() => {
-    // Capture the real viewport width after mount (see the `width` initializer).
-    setWidth(window.innerWidth);
-
     if (!isStickyEnabled) {
       return;
     }
@@ -553,14 +573,19 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
 
     const handleResize = debounce(() => {
       handleSetNavHeight(window.innerWidth);
-      setWidth(window.innerWidth);
       setIsOpen(false);
-    }, 200);
+    }, RESIZE_DEBOUNCE_MS);
 
     handleSetNavHeight(window.innerWidth);
     window.addEventListener('resize', handleResize);
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      // Cancelling matters as much as unsubscribing: a debounced call that is
+      // already pending would otherwise still run against this effect's stale
+      // closure, e.g. closing a menu that was reopened after a theme change.
+      handleResize.cancel();
+      window.removeEventListener('resize', handleResize);
+    };
   }, [isStickyEnabled, theme]);
 
   useScrollPosition(
