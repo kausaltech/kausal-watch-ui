@@ -237,7 +237,11 @@ const SECURITY_HEADERS: Record<string, string> = {
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
 };
 
-export function applySecurityHeaders<R extends NextResponse>(response: R): R {
+export function applySecurityHeaders<R>(response: R): R {
+  if (!(response instanceof Response)) {
+    return response;
+  }
+
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
     response.headers.set(name, value);
   }

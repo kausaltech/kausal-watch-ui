@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 import type { NextRequest, NextResponse } from 'next/server';
 
 import {
@@ -102,17 +105,21 @@ describe('applySecurityHeaders', () => {
   const hostUrl = new URL('https://plan.example.com');
   const rewrittenUrl = new URL('https://plan.example.com/root/plan.example.com/en/unpublished');
 
-  function makeResponse() {
-    return { headers: new Headers() } as unknown as NextResponse;
-  }
-
-  it('sets the constant security headers', () => {
-    const { headers } = applySecurityHeaders(makeResponse());
+  /*
+   * The Auth.js wrapper rebuilds the middleware result with `new Response(body, response)`
+   * before returning it, so what reaches the proxy is a native Response, never a NextResponse.
+   */
+  it('sets the constant security headers on a native Response', () => {
+    const { headers } = applySecurityHeaders(new Response(null));
 
     expect(headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
     expect(headers.get('permissions-policy')).toBe(
       'camera=(), microphone=(), geolocation=(), payment=(), usb=()'
     );
+  });
+
+  it('passes through a handler result that is not a response', () => {
+    expect(applySecurityHeaders(undefined)).toBeUndefined();
   });
 
   /*
@@ -122,7 +129,13 @@ describe('applySecurityHeaders', () => {
    */
   it('leaves the plan headers the rewritten request is resolved from intact', () => {
     const request = { nextUrl: { pathname: '/some/path' } } as unknown as NextRequest;
-    const response = rewriteUrl(request, makeResponse(), hostUrl, rewrittenUrl, 'test-plan');
+    const response = rewriteUrl(
+      request,
+      new Response(null) as unknown as NextResponse,
+      hostUrl,
+      rewrittenUrl,
+      'test-plan'
+    );
 
     const { headers } = applySecurityHeaders(response);
 

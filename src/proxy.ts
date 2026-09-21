@@ -239,9 +239,7 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
 });
 
 async function proxy(...args: Parameters<typeof handleRequest>) {
-  const response = await handleRequest(...args);
-
-  return response instanceof NextResponse ? applySecurityHeaders(response) : response;
+  return applySecurityHeaders(await handleRequest(...args));
 }
 
 export default proxy;
