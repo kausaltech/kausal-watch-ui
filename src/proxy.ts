@@ -15,6 +15,7 @@ import { auth } from './config/auth';
 import { UNPUBLISHED_PATH } from './constants/routes';
 import { hasUnauthenticatedErrors } from './utils/auth-errors';
 import {
+  applySecurityHeaders,
   clearHostnameCache,
   convertPathnameFromInvalidLocaleCasing,
   convertPathnameFromLegacy,
@@ -89,7 +90,7 @@ function getMiddlewareLogger(request: NextAuthRequest, host: string, pathname: s
   return logger;
 }
 
-const proxy = auth(async (request: NextAuthRequest) => {
+const handleRequest = auth(async (request: NextAuthRequest) => {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
 
@@ -236,5 +237,11 @@ const proxy = auth(async (request: NextAuthRequest) => {
 
   return rewriteUrl(request, response, hostUrl, rewrittenUrl, planIdentifier);
 });
+
+async function proxy(...args: Parameters<typeof handleRequest>) {
+  const response = await handleRequest(...args);
+
+  return response instanceof NextResponse ? applySecurityHeaders(response) : response;
+}
 
 export default proxy;

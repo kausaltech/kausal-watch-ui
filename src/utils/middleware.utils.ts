@@ -232,6 +232,19 @@ export function rewriteUrl(
   return response;
 }
 
+const SECURITY_HEADERS: Record<string, string> = {
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+};
+
+export function applySecurityHeaders<R extends NextResponse>(response: R): R {
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
+    response.headers.set(name, value);
+  }
+
+  return response;
+}
+
 function createApolloClient(req: NextAuthRequest, logger: Logger, skipAuth = false) {
   const uri = getWatchGraphQLUrl();
   const httpLink = new HttpLink({

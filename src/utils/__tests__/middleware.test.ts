@@ -1,6 +1,11 @@
 import type { NextRequest, NextResponse } from 'next/server';
 
-import { type PlanFromPlansQuery, getParsedLocale, rewriteUrl } from '../middleware.utils';
+import {
+  type PlanFromPlansQuery,
+  applySecurityHeaders,
+  getParsedLocale,
+  rewriteUrl,
+} from '../middleware.utils';
 
 const primaryLanguage = 'en-US';
 const otherLanguages = ['es-US', 'DOTHRAKI'];
@@ -90,5 +95,39 @@ describe('rewriteUrl', () => {
 
     expect(headers.has('x-plan-identifier')).toBe(false);
     expect(headers.get('x-plan-domain')).toBe('plan.example.com');
+  });
+});
+
+describe('applySecurityHeaders', () => {
+  const hostUrl = new URL('https://plan.example.com');
+  const rewrittenUrl = new URL('https://plan.example.com/root/plan.example.com/en/unpublished');
+
+  function makeResponse() {
+    return { headers: new Headers() } as unknown as NextResponse;
+  }
+
+  it('sets the constant security headers', () => {
+    const { headers } = applySecurityHeaders(makeResponse());
+
+    expect(headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
+    expect(headers.get('permissions-policy')).toBe(
+      'camera=(), microphone=(), geolocation=(), payment=(), usb=()'
+    );
+  });
+
+  /*
+   * Next propagates middleware response headers onto the rewritten request, which is how
+   * the RSC layouts read the resolved plan back. Stripping them here would break plan
+   * resolution.
+   */
+  it('leaves the plan headers the rewritten request is resolved from intact', () => {
+    const request = { nextUrl: { pathname: '/some/path' } } as unknown as NextRequest;
+    const response = rewriteUrl(request, makeResponse(), hostUrl, rewrittenUrl, 'test-plan');
+
+    const { headers } = applySecurityHeaders(response);
+
+    expect(headers.get('x-plan-identifier')).toBe('test-plan');
+    expect(headers.get('x-plan-domain')).toBe('plan.example.com');
+    expect(headers.get('x-url')).toBe('https://plan.example.com/some/path');
   });
 });
