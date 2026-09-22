@@ -7,7 +7,7 @@ import { Col, type ColProps, Container, Row } from 'reactstrap';
 
 import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import ActionAttribute from '@/components/common/ActionAttribute';
-import { attributeHasValue } from '@/components/common/AttributesBlock';
+import { Attributes, attributeHasValue } from '@/components/common/AttributesBlock';
 import StreamField from '@/components/common/StreamField';
 import ActionStatusGraphsBlock from '@/components/contentblocks/ActionStatusGraphsBlock';
 import CategoryListBlock from '@/components/contentblocks/CategoryListBlock';
@@ -65,6 +65,12 @@ interface Props {
   /** Passed down to reactstrap Col components */
   columnProps?: ColProps;
   block: OmitFields<CategoryPageMainTopBlock> | OmitFields<CategoryPageMainBottomBlock>;
+  /**
+   * Wrap CategoryPageAttributeTypeBlock in its own bordered/padded `Attributes`
+   * section. Only needed in places (e.g. layoutMainBottom) that don't already
+   * provide that wrapper themselves
+   */
+  wrapAttributeBlock?: boolean;
 }
 
 const findAttributeByType = (attributeTypeIdentifier: string, page: CategoryPage) =>
@@ -86,6 +92,7 @@ export default function CategoryPageStreamField({
   page,
   context = 'main',
   columnProps: customColumnProps,
+  wrapAttributeBlock = false,
 }: Props) {
   const plan = usePlan();
   const paths = usePaths();
@@ -96,10 +103,13 @@ export default function CategoryPageStreamField({
       const attribute = findAttributeByType(block.attributeType.identifier, page);
 
       if (attribute && attributeHasValue(attribute)) {
+        const attributeElement = (
+          <ActionAttribute attribute={attribute} attributeType={undefined} />
+        );
         return (
           <Wrapper withContainer={withContainer}>
             <Col {...(withContainer ? columnProps : { md: 6 })} {...customColumnProps}>
-              <ActionAttribute attribute={attribute} attributeType={undefined} />
+              {wrapAttributeBlock ? <Attributes>{attributeElement}</Attributes> : attributeElement}
             </Col>
           </Wrapper>
         );
