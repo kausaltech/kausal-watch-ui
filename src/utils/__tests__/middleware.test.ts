@@ -110,7 +110,7 @@ describe('applySecurityHeaders', () => {
    * before returning it, so what reaches the proxy is a native Response, never a NextResponse.
    */
   it('sets the constant security headers on a native Response', () => {
-    const { headers } = applySecurityHeaders(new Response(null));
+    const { headers } = applySecurityHeaders(new Response(null), '/actions');
 
     expect(headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
     expect(headers.get('permissions-policy')).toBe(
@@ -119,7 +119,32 @@ describe('applySecurityHeaders', () => {
   });
 
   it('passes through a handler result that is not a response', () => {
-    expect(applySecurityHeaders(undefined)).toBeUndefined();
+    expect(applySecurityHeaders(undefined, '/actions')).toBeUndefined();
+  });
+
+  it('denies framing on a normal page', () => {
+    const { headers } = applySecurityHeaders(new Response(null), '/actions/1');
+
+    expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
+    expect(headers.get('content-security-policy')).toBe("frame-ancestors 'self'");
+  });
+
+  /*
+   * Embed views exist to be framed by third-party sites. They are reachable under a plan's
+   * base path and with a locale segment, so the embed segment is not always the first one.
+   */
+  it.each([
+    '/embed/v1/actions-recent',
+    '/en/embed/v1/actions-recent',
+    '/2022/embed/v1/actions-recent',
+    '/2022/en/embed/v1/actions-recent',
+    '/en/2022/embed/v1/actions-recent',
+  ])('leaves framing unrestricted for the embed view at %s', (pathname) => {
+    const { headers } = applySecurityHeaders(new Response(null), pathname);
+
+    expect(headers.has('x-frame-options')).toBe(false);
+    expect(headers.has('content-security-policy')).toBe(false);
+    expect(headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
   });
 
   /*
@@ -137,7 +162,7 @@ describe('applySecurityHeaders', () => {
       'test-plan'
     );
 
-    const { headers } = applySecurityHeaders(response);
+    const { headers } = applySecurityHeaders(response, '/some/path');
 
     expect(headers.get('x-plan-identifier')).toBe('test-plan');
     expect(headers.get('x-plan-domain')).toBe('plan.example.com');

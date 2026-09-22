@@ -237,13 +237,21 @@ const SECURITY_HEADERS: Record<string, string> = {
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
 };
 
-export function applySecurityHeaders<R>(response: R): R {
+/* Embed views are reachable under a plan's base path, so the segment is not always first. */
+const isEmbedPath = (pathname: string) => pathname.split('/').includes('embed');
+
+export function applySecurityHeaders<R>(response: R, pathname: string): R {
   if (!(response instanceof Response)) {
     return response;
   }
 
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
     response.headers.set(name, value);
+  }
+
+  if (!isEmbedPath(pathname)) {
+    response.headers.set('X-Frame-Options', 'SAMEORIGIN');
+    response.headers.set('Content-Security-Policy', "frame-ancestors 'self'");
   }
 
   return response;
