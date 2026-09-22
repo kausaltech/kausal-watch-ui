@@ -200,6 +200,17 @@ describe('buildReportOnlyPolicy', () => {
     expect(/connect-src [^;]*https:\/\/sentry\.example\.com/.test(policy)).toBe(true);
   });
 
+  /* A self-hosted Sentry can live under a path prefix: the project id is the last segment. */
+  it('keeps a path prefix out of the project id', () => {
+    const policy = buildReportOnlyPolicy({
+      ...options,
+      dsn: 'https://publickey@example.com/sentry/42',
+    })!;
+    const reportUri = new URL(/report-uri ([^;]+)/.exec(policy)![1]);
+
+    expect(reportUri.pathname).toBe('/sentry/api/42/security/');
+  });
+
   it('is left out when no DSN is configured', () => {
     expect(buildReportOnlyPolicy({ ...options, dsn: undefined })).toBeUndefined();
   });

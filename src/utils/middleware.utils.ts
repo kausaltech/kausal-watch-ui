@@ -247,7 +247,9 @@ const SECURITY_HEADERS: Record<string, string> = {
 
 function securityReportUri(dsn: string, environment: string, release: string) {
   const { origin, username, pathname } = new URL(dsn);
-  const projectId = pathname.replace(/^\//, '');
+  const segments = pathname.split('/').filter(Boolean);
+  const projectId = segments.pop();
+  const prefix = segments.length ? `/${segments.join('/')}` : '';
 
   if (!username || !projectId) {
     return undefined;
@@ -259,7 +261,7 @@ function securityReportUri(dsn: string, environment: string, release: string) {
     sentry_release: release,
   });
 
-  return `${origin}/api/${projectId}/security/?${params.toString()}`;
+  return `${origin}${prefix}/api/${projectId}/security/?${params.toString()}`;
 }
 
 type ReportOnlyOptions = {
