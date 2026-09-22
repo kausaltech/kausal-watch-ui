@@ -6,7 +6,7 @@ import { Col, Container, Row } from 'reactstrap';
 
 import type { CardImageFragment } from '@/common/__generated__/graphql';
 import type { CommonContentBlockProps } from '@/common/blocks.types';
-import { getBgImageAlignment } from '@/common/images';
+import { CARD_GRID_IMAGE_SIZES, getBgImageAlignment, getImageSrcSet } from '@/common/images';
 import { Link } from '@/common/links';
 import Card from '@/components/common/Card';
 import RichText from '@/components/common/RichText';
@@ -136,23 +136,25 @@ export default function CategoryListBlock(props: CategoryListBlockProps) {
   type CardImageType = (category: CategoryListBlockCategory) => {
     type: 'image' | 'icon';
     src: string | undefined;
+    srcSet?: string;
     alignment: string;
   };
 
   const getCardImage: CardImageType = (category) => {
-    const categryImageSrc = category.image?.small?.src;
-    if (!categryImageSrc && category.iconImage) {
+    if (!category.image?.small && category.iconImage) {
       return {
         type: 'icon',
         src: category.iconImage?.rendition?.src,
         alignment: 'center',
       };
-    } else
-      return {
-        type: 'image',
-        src: categryImageSrc || fallbackImage?.small?.src,
-        alignment: getBgImageAlignment(category.image ?? fallbackImage ?? null),
-      };
+    }
+    const image = category.image ?? fallbackImage;
+    return {
+      type: 'image',
+      src: (image?.large ?? image?.small)?.src,
+      srcSet: getImageSrcSet([image?.small, image?.large]),
+      alignment: getBgImageAlignment(image ?? null),
+    };
   };
 
   return (
@@ -177,6 +179,8 @@ export default function CategoryListBlock(props: CategoryListBlockProps) {
                     <Link href={cat.categoryPage.urlPath} className="card-wrapper">
                       <Card
                         imageUrl={getCardImage(cat).src}
+                        imageSrcSet={getCardImage(cat).srcSet}
+                        imageSizes={CARD_GRID_IMAGE_SIZES}
                         imageAlign={getCardImage(cat).alignment}
                         imageType={getCardImage(cat).type}
                         colorEffect={cat.color ?? undefined}

@@ -5,6 +5,7 @@ import { readableColor } from 'polished';
 import { Col, Container, Row } from 'reactstrap';
 
 import type { StreamFieldFragment } from '@/common/__generated__/graphql';
+import { CARD_GRID_IMAGE_SIZES, getBgImageAlignment, getImageSrcSet } from '@/common/images';
 import Card from '@/components/common/Card';
 
 const CardListSection = styled.div`
@@ -91,8 +92,11 @@ const CardListBlock = (props: CardListBlockProps) => {
             <Col tag="li" xs="12" sm="6" lg="4" className="d-flex align-items-stretch" key={inx}>
               <a href={card.link ?? undefined} className="card-wrapper">
                 <Card
-                  imageUrl={card.image?.rendition?.src ?? undefined}
-                  imageAlign="center"
+                  imageUrl={(card.image?.large ?? card.image?.small)?.src}
+                  imageSrcSet={getImageSrcSet([card.image?.small, card.image?.large])}
+                  imageSizes={CARD_GRID_IMAGE_SIZES}
+                  imageAlign={getBgImageAlignment(card.image ?? null)}
+                  altText={card.image?.altText}
                   customBackgroundColor={theme.brandDark}
                   customColor={readableColor(
                     theme.brandDark,

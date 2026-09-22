@@ -24,8 +24,26 @@ describe('Card Component', () => {
       </Card>
     );
 
-    const image = screen.getByTestId('image-bg');
-    expect(image).toBeInTheDocument();
+    const image = screen.getByTestId('card-image');
+    expect(image).toHaveAttribute('src', imageUrl);
+    expect(image).not.toHaveAttribute('srcset');
+  });
+
+  it('renders a responsive srcset when imageSrcSet is provided', () => {
+    render(
+      <Card
+        imageUrl="large.jpg"
+        imageSrcSet="small.jpg 600w, large.jpg 1200w"
+        imageSizes="100vw"
+        altText="A city"
+      >
+        <div>Test Content</div>
+      </Card>
+    );
+
+    const image = screen.getByRole('img', { name: 'A city' });
+    expect(image).toHaveAttribute('srcset', 'small.jpg 600w, large.jpg 1200w');
+    expect(image).toHaveAttribute('sizes', '100vw');
   });
 
   it('renders with a bitmap icon when imageType === bitmapIcon', () => {
