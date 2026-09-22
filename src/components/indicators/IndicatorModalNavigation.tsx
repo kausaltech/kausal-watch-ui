@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
-import { Button } from 'reactstrap';
 
 import { getIndicatorTermContext } from '@/common/i18n';
+import Button from '@/components/common/Button';
 import { usePlan } from '@/context/plan';
 
 import { IndicatorCounter, ModalNavigation } from './IndicatorModal.styles';
@@ -30,6 +30,8 @@ export function IndicatorModalNavigation({
   return (
     <ModalNavigation>
       <Button
+        color="primary"
+        outline
         onClick={onPrevious}
         disabled={!prevIndicatorId || loading}
         style={{ visibility: prevIndicatorId ? 'visible' : 'hidden' }}
@@ -40,6 +42,8 @@ export function IndicatorModalNavigation({
         {currentIndicatorNumber}/{indicatorCount}
       </IndicatorCounter>
       <Button
+        color="primary"
+        outline
         onClick={onNext}
         disabled={!nextIndicatorId || loading}
         style={{ visibility: nextIndicatorId ? 'visible' : 'hidden' }}
