@@ -9,7 +9,7 @@ import type { Logger } from 'pino';
 import type { ApolloClientType } from '@common/apollo';
 import { createSentryLink, logOperationLink } from '@common/apollo/links';
 import { FORWARDED_HEADER, WILDCARD_DOMAINS_HEADER } from '@common/constants/headers.mjs';
-import { getWatchGraphQLUrl, getWildcardDomains } from '@common/env';
+import { getWatchGraphQLUrl, getWildcardDomains, isLocalDev } from '@common/env';
 import { getClientIP } from '@common/utils';
 import LRUCache from '@common/utils/lru-cache';
 
@@ -249,9 +249,15 @@ export function applySecurityHeaders<R>(response: R, pathname: string): R {
     response.headers.set(name, value);
   }
 
+  const directives = isLocalDev ? [] : ['upgrade-insecure-requests'];
+
   if (!isEmbedPath(pathname)) {
     response.headers.set('X-Frame-Options', 'SAMEORIGIN');
-    response.headers.set('Content-Security-Policy', "frame-ancestors 'self'");
+    directives.unshift("frame-ancestors 'self'");
+  }
+
+  if (directives.length) {
+    response.headers.set('Content-Security-Policy', directives.join('; '));
   }
 
   return response;

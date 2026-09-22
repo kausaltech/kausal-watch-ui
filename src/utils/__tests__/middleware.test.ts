@@ -126,7 +126,9 @@ describe('applySecurityHeaders', () => {
     const { headers } = applySecurityHeaders(new Response(null), '/actions/1');
 
     expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
-    expect(headers.get('content-security-policy')).toBe("frame-ancestors 'self'");
+    expect(headers.get('content-security-policy')).toBe(
+      "frame-ancestors 'self'; upgrade-insecure-requests"
+    );
   });
 
   /*
@@ -143,7 +145,7 @@ describe('applySecurityHeaders', () => {
     const { headers } = applySecurityHeaders(new Response(null), pathname);
 
     expect(headers.has('x-frame-options')).toBe(false);
-    expect(headers.has('content-security-policy')).toBe(false);
+    expect(headers.get('content-security-policy')).toBe('upgrade-insecure-requests');
     expect(headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
   });
 

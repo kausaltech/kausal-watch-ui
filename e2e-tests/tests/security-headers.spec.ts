@@ -6,7 +6,7 @@ const PAGE_HEADERS = {
   'referrer-policy': 'strict-origin-when-cross-origin',
   'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
   'x-frame-options': 'SAMEORIGIN',
-  'content-security-policy': "frame-ancestors 'self'",
+  'content-security-policy': "frame-ancestors 'self'; upgrade-insecure-requests",
 };
 
 const testPlan = (planId: string) => {
@@ -31,7 +31,7 @@ const testPlan = (planId: string) => {
       const headers = (await request.get(url)).headers();
 
       expect(headers['x-frame-options'], `x-frame-options on ${url}`).toBeUndefined();
-      expect(headers['content-security-policy'], `csp on ${url}`).toBeUndefined();
+      expect(headers['content-security-policy'], `csp on ${url}`).toBe('upgrade-insecure-requests');
       expect(headers['referrer-policy']).toBe(PAGE_HEADERS['referrer-policy']);
     });
   });
