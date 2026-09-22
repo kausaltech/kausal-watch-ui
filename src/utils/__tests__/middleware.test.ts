@@ -6,6 +6,7 @@ import type { NextRequest, NextResponse } from 'next/server';
 import {
   type PlanFromPlansQuery,
   applySecurityHeaders,
+  buildReportOnlyPolicy,
   getParsedLocale,
   rewriteUrl,
 } from '../middleware.utils';
@@ -169,5 +170,37 @@ describe('applySecurityHeaders', () => {
     expect(headers.get('x-plan-identifier')).toBe('test-plan');
     expect(headers.get('x-plan-domain')).toBe('plan.example.com');
     expect(headers.get('x-url')).toBe('https://plan.example.com/some/path');
+  });
+});
+
+describe('buildReportOnlyPolicy', () => {
+  const options = {
+    dsn: 'https://publickey@sentry.example.com/42',
+    assetPrefix: 'https://cdn.example.com',
+    environment: 'production',
+    release: 'build-1',
+  };
+
+  it('reports to the security endpoint derived from the Sentry DSN', () => {
+    const policy = buildReportOnlyPolicy(options)!;
+    const reportUri = new URL(/report-uri ([^;]+)/.exec(policy)![1]);
+
+    expect(reportUri.origin).toBe('https://sentry.example.com');
+    expect(reportUri.pathname).toBe('/api/42/security/');
+    expect(reportUri.searchParams.get('sentry_key')).toBe('publickey');
+    expect(reportUri.searchParams.get('sentry_environment')).toBe('production');
+    expect(reportUri.searchParams.get('sentry_release')).toBe('build-1');
+  });
+
+  /* Reports are posted to Sentry, so its origin has to survive the policy it reports against. */
+  it('allows the asset host and the Sentry origin', () => {
+    const policy = buildReportOnlyPolicy(options)!;
+
+    expect(/script-src [^;]*https:\/\/cdn\.example\.com/.test(policy)).toBe(true);
+    expect(/connect-src [^;]*https:\/\/sentry\.example\.com/.test(policy)).toBe(true);
+  });
+
+  it('is left out when no DSN is configured', () => {
+    expect(buildReportOnlyPolicy({ ...options, dsn: undefined })).toBeUndefined();
   });
 });
