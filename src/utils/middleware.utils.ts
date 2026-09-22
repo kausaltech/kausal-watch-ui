@@ -298,6 +298,7 @@ export function buildReportOnlyPolicy({
     `style-src ${withCdn("'self'", "'unsafe-inline'")}`,
     `font-src ${withCdn("'self'", 'data:')}`,
     "img-src 'self' data: blob: https:",
+    "worker-src 'self' blob:",
     `connect-src ${withCdn("'self'", sentryOrigin)}`,
     'frame-src https:',
     `report-uri ${reportUri}`,

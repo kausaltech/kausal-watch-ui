@@ -211,6 +211,11 @@ describe('buildReportOnlyPolicy', () => {
     expect(reportUri.pathname).toBe('/sentry/api/42/security/');
   });
 
+  /* Mapbox GL starts its worker from a blob: URL, which would otherwise report on every map. */
+  it('allows blob workers', () => {
+    expect(buildReportOnlyPolicy(options)).toContain("worker-src 'self' blob:");
+  });
+
   it('is left out when no DSN is configured', () => {
     expect(buildReportOnlyPolicy({ ...options, dsn: undefined })).toBeUndefined();
   });
