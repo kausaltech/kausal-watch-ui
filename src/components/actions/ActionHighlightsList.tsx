@@ -124,6 +124,10 @@ const StyledCardContainer = styled(ReactStrapCol, transientOptions)<{
   }
 `;
 
+/* Rendered card width in the xs=12, md=6, lg=4 highlight grid */
+const HIGHLIGHT_GRID_IMAGE_SIZES =
+  '(min-width: 1400px) 416px, (min-width: 992px) 33vw, (min-width: 768px) 50vw, 100vw';
+
 export type ActionHighlightListAction = NonNullable<
   NonNullable<ActionHightlightListQuery['planActions']>[number]
 >;
@@ -158,7 +162,8 @@ function ActionHighlightsCardList(props: ActionHighlightsCardListProps) {
         >
           <ActionHighlightCard
             action={item}
-            imageUrl={getActionImage(plan, item)?.small?.src}
+            image={getActionImage(plan, item)}
+            imageSizes={HIGHLIGHT_GRID_IMAGE_SIZES}
             hideIdentifier={plan.hideActionIdentifiers || false}
           />
         </StyledCardContainer>

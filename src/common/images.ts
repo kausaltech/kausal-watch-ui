@@ -64,6 +64,12 @@ export interface HeroImageRenditions {
 export const CARD_GRID_IMAGE_SIZES =
   '(min-width: 1400px) 416px, (min-width: 992px) 33vw, (min-width: 576px) 50vw, 100vw';
 
+/*
+ * Rendered width of a card in the pledge grid, an auto-fill grid of at least
+ * 300px wide columns. An upper-bound approximation for the sizes attribute.
+ */
+export const PLEDGE_GRID_IMAGE_SIZES = '(min-width: 992px) 33vw, (min-width: 768px) 50vw, 100vw';
+
 /* Build an <img> srcSet string out of image renditions of different sizes */
 export const getImageSrcSet = (renditions: (ImageRenditionRef | undefined)[]) =>
   renditions

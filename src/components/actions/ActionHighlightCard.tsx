@@ -7,6 +7,8 @@ import { transparentize } from 'polished';
 import { Badge, Card, CardBody, CardTitle } from 'reactstrap';
 
 import { getStatusColorForAction } from '@/common/ActionStatusSummary';
+import type { CardImageFragment } from '@/common/__generated__/graphql';
+import { getBgImageAlignment, getImageSrcSet } from '@/common/images';
 import { ActionLink } from '@/common/links';
 import { cleanActionStatus } from '@/common/preprocess';
 import ActionStatus from '@/components/actions/ActionStatus';
@@ -79,11 +81,12 @@ const ImgArea = styled.div<{ $bgcolor?: string }>`
   background-color: ${(props) => props.$bgcolor || props.theme.themeColors.light};
 `;
 
-const ImgBg = styled.div<{ $background: string }>`
+const CardImage = styled.img<{ $imageAlign: string }>`
+  display: block;
+  width: 100%;
   height: 9rem;
-  background-image: url(${(props) => props.$background});
-  background-position: center;
-  background-size: cover;
+  object-fit: cover;
+  object-position: ${(props) => props.$imageAlign};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     height: 8rem;
@@ -112,14 +115,16 @@ const ActionNumber = styled.div`
 
 type ActionHighlightCardProps = {
   action: ActionHighlightListAction;
-  imageUrl?: string;
+  image?: CardImageFragment | null;
+  /* The <img> sizes attribute describing the card's rendered width */
+  imageSizes: string;
   hideIdentifier?: boolean;
 };
 
 // TODO: FIX typechecking
 
 export default function ActionHighlightCard(props: ActionHighlightCardProps) {
-  const { action, imageUrl, hideIdentifier } = props;
+  const { action, image, imageSizes, hideIdentifier } = props;
   const plan = usePlan();
   const embed = useContext(EmbedContext);
   const theme = useTheme();
@@ -142,7 +147,17 @@ export default function ActionHighlightCard(props: ActionHighlightCardProps) {
     <StyledActionCardLink action={action} target={embed.active ? '_blank' : undefined}>
       <StyledCard>
         {!hideIdentifier && <ActionNumber>{action.identifier}</ActionNumber>}
-        <ImgArea $bgcolor={statusColor}>{imageUrl && <ImgBg $background={imageUrl} />}</ImgArea>
+        <ImgArea $bgcolor={statusColor}>
+          {image?.small && (
+            <CardImage
+              src={(image.large ?? image.small).src}
+              srcSet={getImageSrcSet([image.small, image.large])}
+              sizes={imageSizes}
+              alt={image.altText}
+              $imageAlign={getBgImageAlignment(image)}
+            />
+          )}
+        </ImgArea>
         {statusText && (
           <StyledActionStatus
             statusSummary={action.statusSummary}

@@ -31,6 +31,10 @@ type BaseProps = {
   committedCount?: number;
   categories?: PledgeCategory[];
   image?: string;
+  /* Responsive candidates for the image, see getImageSrcSet */
+  imageSrcSet?: string;
+  /* The <img> sizes attribute for the default layout; fixed-width layouts set their own */
+  imageSizes?: string;
   imageAlt?: string;
 };
 
@@ -242,7 +246,14 @@ const StyledCopyButton = styled(Button)`
   gap: ${({ theme }) => theme.spaces.s050};
 `;
 
-function SharePledgeCard({ title, committedCount, image, imageAlt, shareUrl }: ShareProps) {
+function SharePledgeCard({
+  title,
+  committedCount,
+  image,
+  imageSrcSet,
+  imageAlt,
+  shareUrl,
+}: ShareProps) {
   const t = useTranslations();
   const [copied, setCopied] = useState(false);
 
@@ -258,7 +269,13 @@ function SharePledgeCard({ title, committedCount, image, imageAlt, shareUrl }: S
 
   return (
     <StyledCardWrapper $layout="share">
-      <PledgeImage layout="share" image={image} imageAlt={imageAlt} title={title} />
+      <PledgeImage
+        layout="share"
+        image={image}
+        imageSrcSet={imageSrcSet}
+        imageAlt={imageAlt}
+        title={title}
+      />
       <StyledCardContent $layout="share">
         <PledgeAttributes committedCount={committedCount} />
         <StyledCardTitle $layout="share">{title}</StyledCardTitle>
@@ -284,6 +301,8 @@ function InteractivePledgeCard({
   committedCount,
   categories,
   image,
+  imageSrcSet,
+  imageSizes,
   imageAlt,
   isCommitted,
   onCommitClick,
@@ -302,7 +321,14 @@ function InteractivePledgeCard({
   return (
     <StyledCardLink href={pledgeLink}>
       <StyledCardWrapper $layout={layout}>
-        <PledgeImage layout={layout} image={image} imageAlt={imageAlt} title={title} />
+        <PledgeImage
+          layout={layout}
+          image={image}
+          imageSrcSet={imageSrcSet}
+          imageSizes={imageSizes}
+          imageAlt={imageAlt}
+          title={title}
+        />
 
         {isMostCommitted && (
           <StyledMostCommittedTag>
@@ -344,21 +370,37 @@ function InteractivePledgeCard({
   );
 }
 
+/* Rendered image width per layout; the default layout fills the card */
+const IMAGE_SIZES: Record<Exclude<CardLayout, 'default'>, string> = {
+  mini: '120px',
+  share: '80px',
+};
+
 function PledgeImage({
   layout,
   image,
+  imageSrcSet,
+  imageSizes = '100vw',
   imageAlt,
   title,
 }: {
   layout: CardLayout;
   image?: string;
+  imageSrcSet?: string;
+  imageSizes?: string;
   imageAlt?: string;
   title: string;
 }) {
+  const sizes = layout === 'default' ? imageSizes : IMAGE_SIZES[layout];
   return (
     <StyledImageContainer $layout={layout}>
       {image ? (
-        <StyledCardImage src={image} alt={imageAlt || title} />
+        <StyledCardImage
+          src={image}
+          srcSet={imageSrcSet}
+          sizes={imageSrcSet ? sizes : undefined}
+          alt={imageAlt || title}
+        />
       ) : (
         <StyledImagePlaceholder>
           <Icon name="heart" width="2rem" height="2rem" />
