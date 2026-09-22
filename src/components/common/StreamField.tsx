@@ -18,7 +18,7 @@ import ContentLoader from '@common/components/ContentLoader';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type { CardImageFragment, StreamFieldFragment } from '@/common/__generated__/graphql';
-import { getBgImageAlignment } from '@/common/images';
+import { getBgImageAlignment, getImageSrcSet } from '@/common/images';
 import { excludeNullish } from '@/common/utils';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import RichText from '@/components/common/RichText';
@@ -509,6 +509,17 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         }
       };
 
+      // Rendered width of the image at each Bootstrap container breakpoint,
+      // derived from the container widths (1320/1140/960/720) and the column
+      // fractions above, so the browser picks the smallest sufficient rendition.
+      const sizes =
+        block.width === 'maximum'
+          ? '(min-width: 1400px) 1320px, (min-width: 1200px) 1140px, (min-width: 992px) 960px, (min-width: 768px) 720px, 100vw'
+          : hasSidebar
+            ? '(min-width: 1400px) 770px, (min-width: 1200px) 665px, (min-width: 992px) 640px, (min-width: 768px) 600px, 100vw'
+            : '(min-width: 1400px) 660px, (min-width: 1200px) 570px, (min-width: 992px) 640px, (min-width: 768px) 600px, 100vw';
+      const image = block.image;
+
       return (
         <Container id={id}>
           <Row>
@@ -527,16 +538,18 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
                 }}
               >
                 <img
-                  src={block.image?.renditionUncropped?.src}
-                  alt={block.image?.altText}
+                  src={image?.fullMedium?.src ?? image?.full?.src}
+                  srcSet={getImageSrcSet([image?.fullSmall, image?.fullMedium, image?.full])}
+                  sizes={sizes}
+                  alt={image?.altText}
                   style={{
                     display: 'block',
                     width: '100%',
                     marginBottom: theme.spaces.s600,
                   }}
                 />
-                {block.image?.imageCredit && (
-                  <ImageCredit>{`${t('image-credit')}: ${block.image.imageCredit}`}</ImageCredit>
+                {image?.imageCredit && (
+                  <ImageCredit>{`${t('image-credit')}: ${image.imageCredit}`}</ImageCredit>
                 )}
               </div>
             </Col>

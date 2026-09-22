@@ -167,16 +167,7 @@ export const STREAM_FIELD_FRAGMENT = gql`
     }
     ... on LargeImageBlock {
       image {
-        id
-        title
-        altText
-        width
-        height
-        renditionUncropped: rendition(size: "1320x1320", crop: false) {
-          id
-          src
-        }
-        imageCredit
+        ...HeroImage
       }
       width
     }

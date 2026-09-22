@@ -4472,9 +4472,7 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton =
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_UpdatedAtColumnBlock
 ;
 
-export type StreamFieldFragment_LargeImageBlock_image_renditionUncropped = { __typename: 'ImageRendition', id: string, src: string };
-
-export type StreamFieldFragment_LargeImageBlock_image = { __typename: 'Image', id: string, title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: StreamFieldFragment_LargeImageBlock_image_renditionUncropped | null };
+export type StreamFieldFragment_LargeImageBlock_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null };
 
 export type StreamFieldFragment_QuestionAnswerBlock_questions = { __typename: 'QuestionBlock', question: string, answer: string };
 
