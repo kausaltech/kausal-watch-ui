@@ -13,8 +13,8 @@ import { SectionHeader } from './ActionListBlock';
 import { getReadableThemeTextColor } from './colorUtils';
 
 const DashboardRowSection = styled.div<{ $isFirst: boolean; $isLast: boolean }>`
-  background-color: ${(props) => props.theme.themeColors.light};
-  color: ${(props) => props.theme.neutralDark};
+  background-color: ${(props) => props.theme.section.dashboardRowBlock.background};
+  color: ${(props) => props.theme.section.dashboardRowBlock.color};
   position: relative;
   padding-top: ${({ $isFirst }) => ($isFirst ? 'var(--block-padding-top)' : 0)};
   padding-bottom: ${({ $isLast }) => ($isLast ? 'var(--block-padding-bottom)' : 0)};
@@ -23,7 +23,7 @@ const DashboardRowSection = styled.div<{ $isFirst: boolean; $isLast: boolean }>`
 const DashboardSectionHeader = styled(SectionHeader)`
   color: ${({ theme }) =>
     getReadableThemeTextColor(
-      theme.themeColors.light,
+      theme.section.dashboardRowBlock.background,
       theme.headingsColor,
       theme.themeColors.white
     )};

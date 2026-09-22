@@ -238,6 +238,12 @@ const RichTextSection = styled.div`
   background-color: ${({ theme }) => theme.section.richText.sectionBackground};
 `;
 
+const LargeImageSection = styled.div`
+  padding-top: calc(var(--block-padding-top) / 2);
+  padding-bottom: calc(var(--block-padding-bottom) / 2);
+  background-color: ${({ theme }) => theme.section.largeImageBlock.background};
+`;
+
 const RichTextContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -521,40 +527,41 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       const image = block.image;
 
       return (
-        <Container id={id}>
-          <Row>
-            <Col
-              xl={getColSize('xl')}
-              lg={getColSize('lg')}
-              md={getColSize('md')}
-              style={{
-                position: 'relative',
-              }}
-            >
-              <div
+        <LargeImageSection>
+          <Container id={id}>
+            <Row>
+              <Col
+                xl={getColSize('xl')}
+                lg={getColSize('lg')}
+                md={getColSize('md')}
                 style={{
                   position: 'relative',
-                  display: 'inline-block',
                 }}
               >
-                <img
-                  src={image?.fullMedium?.src ?? image?.full?.src}
-                  srcSet={getImageSrcSet([image?.fullSmall, image?.fullMedium, image?.full])}
-                  sizes={sizes}
-                  alt={image?.altText}
+                <div
                   style={{
-                    display: 'block',
-                    width: '100%',
-                    marginBottom: theme.spaces.s600,
+                    position: 'relative',
+                    display: 'inline-block',
                   }}
-                />
-                {image?.imageCredit && (
-                  <ImageCredit>{`${t('image-credit')}: ${image.imageCredit}`}</ImageCredit>
-                )}
-              </div>
-            </Col>
-          </Row>
-        </Container>
+                >
+                  <img
+                    src={image?.fullMedium?.src ?? image?.full?.src}
+                    srcSet={getImageSrcSet([image?.fullSmall, image?.fullMedium, image?.full])}
+                    sizes={sizes}
+                    alt={image?.altText}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                    }}
+                  />
+                  {image?.imageCredit && (
+                    <ImageCredit>{`${t('image-credit')}: ${image.imageCredit}`}</ImageCredit>
+                  )}
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </LargeImageSection>
       );
     }
     case 'IndicatorShowcaseBlock': {
