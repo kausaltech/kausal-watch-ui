@@ -146,7 +146,8 @@ const IconName = styled.div`
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
 
-type ThemeColorOption = 'badgeColor' | 'brandDark' | 'brandLight' | 'neutralDark' | 'neutralLight';
+type ThemeColorOption =
+  'badgeColor' | 'brandDark' | 'brandLight' | 'neutralDark' | 'neutralLight' | 'badgeColorNeutral';
 interface BadgeContentProps {
   content: string | React.ReactNode;
   size?: 'lg' | 'md' | 'sm';

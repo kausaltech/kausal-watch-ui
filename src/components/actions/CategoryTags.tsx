@@ -185,7 +185,7 @@ export const CategoryContent = (props: CategoryContentProps) => {
               iconImage={item.iconImage?.rendition?.src || item.parent?.iconImage?.rendition?.src}
               iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl || undefined}
               size={compact ? 'sm' : 'md'}
-              themeColor="neutralLight"
+              themeColor="badgeColorNeutral"
               color={item.color || item.parent?.color || undefined}
               isLink={!noLink}
               maxLines={item.name.length > 50 ? 2 : 4}
