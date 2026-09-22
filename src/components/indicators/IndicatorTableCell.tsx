@@ -377,8 +377,15 @@ const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
     }
   });
 
-  // Make sure catetgories are unique (same parent category is only shown once)
-  const uniqueCategories = categories.filter((item, index) => categories.indexOf(item) === index);
+  // Make sure categories are unique (same parent category is only shown once).
+  // Compare by id: each child carries its own copy of the parent object, so
+  // reference equality would let the same parent through once per child.
+  const seenIds = new Set<string>();
+  const uniqueCategories = categories.filter((item) => {
+    if (seenIds.has(item.id)) return false;
+    seenIds.add(item.id);
+    return true;
+  });
   return (
     <CellContent>
       <CategoryBadges>
@@ -391,7 +398,7 @@ const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
               tooltip=""
               content={cat.name}
               size="sm"
-              themeColor="neutralLight"
+              themeColor="badgeColorNeutral"
               color={getCategoryColor(cat)}
               isLink={false}
             />
