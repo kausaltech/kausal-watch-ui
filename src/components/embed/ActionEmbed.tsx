@@ -1,3 +1,4 @@
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { type TypedDocumentNode, gql } from '@apollo/client';
@@ -82,6 +83,7 @@ const ActionCardWrapper = styled.div<ActionCardWrapperProps>`
 
 const ActionEmbed = ({ path, maxWidth }: ActionEmbedPropsType) => {
   const plan = usePlan();
+  const theme = useTheme();
   if (path.length < 1) {
     throw new InvalidEmbedAddressError('Could not retrieve action data');
   }
@@ -95,11 +97,13 @@ const ActionEmbed = ({ path, maxWidth }: ActionEmbedPropsType) => {
   if (error || data == null || data.action == null) {
     throw new InvalidEmbedAddressError('Could not retrieve action data');
   }
+  const cardMaxWidth = maxWidth ?? DEFAULT_MAX_WIDTH;
   return (
-    <ActionCardWrapper maxWidth={maxWidth ?? DEFAULT_MAX_WIDTH}>
+    <ActionCardWrapper maxWidth={cardMaxWidth}>
       <ActionHighlightCard
         action={data.action}
-        imageUrl={data.action?.image?.small?.src || undefined}
+        image={data.action.image}
+        imageSizes={`(min-width: ${theme.breakpointMd}) ${cardMaxWidth}px, 100vw`}
         hideIdentifier={plan.hideActionIdentifiers}
       />
     </ActionCardWrapper>

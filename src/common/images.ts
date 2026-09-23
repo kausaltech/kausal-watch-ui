@@ -57,6 +57,19 @@ export interface HeroImageRenditions {
   full?: ImageRenditionRef;
 }
 
+/*
+ * Rendered width of a card in the three-column card grid (xs=12, sm=6, lg=4
+ * columns inside a Bootstrap container), for the <img> sizes attribute.
+ */
+export const CARD_GRID_IMAGE_SIZES =
+  '(min-width: 1400px) 416px, (min-width: 992px) 33vw, (min-width: 576px) 50vw, 100vw';
+
+/*
+ * Rendered width of a card in the pledge grid, an auto-fill grid of at least
+ * 300px wide columns. An upper-bound approximation for the sizes attribute.
+ */
+export const PLEDGE_GRID_IMAGE_SIZES = '(min-width: 992px) 33vw, (min-width: 768px) 50vw, 100vw';
+
 /* Build an <img> srcSet string out of image renditions of different sizes */
 export const getImageSrcSet = (renditions: (ImageRenditionRef | undefined)[]) =>
   renditions
@@ -108,7 +121,9 @@ export function getActionImage<TImage>(
  * - heroImage: full-width or hero images rendered with a responsive srcSet.
  *   Aspect-preserving renditions, so focal-point based `object-position`
  *   percentages stay exact; CSS `object-fit: cover` does any cropping.
- * - cardImage: card and thumbnail images.
+ * - cardImage: card and thumbnail images. `small` and `large` form an
+ *   aspect-preserving srcSet ladder for card images; `rendition` is a small
+ *   cropped thumbnail.
  * - socialImage: og/social sharing metadata only.
  */
 const images = {
@@ -157,7 +172,13 @@ const images = {
         focalPointY
         focalPointWidth
         focalPointHeight
-        small: rendition(size: "600x300") {
+        small: rendition(size: "600x600", crop: false) {
+          id
+          width
+          height
+          src
+        }
+        large: rendition(size: "1200x1200", crop: false) {
           id
           width
           height

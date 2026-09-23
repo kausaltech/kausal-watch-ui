@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 
 import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
+import { PLEDGE_GRID_IMAGE_SIZES, getImageSrcSet } from '@/common/images';
 import { getAttributeValueText } from '@/components/common/ActionAttribute';
 import ConfirmPledge from '@/components/pledge/ConfirmPledge';
 import PledgeCard, { type PledgeCategory } from '@/components/pledge/PledgeCard';
@@ -79,7 +80,9 @@ export default function ActionPledgesBlock({ pledges, heading }: Props) {
               }))
               .filter((category): category is PledgeCategory => !!category.label)}
             slug={pledge.slug}
-            image={pledge.image?.small?.src}
+            image={(pledge.image?.large ?? pledge.image?.small)?.src}
+            imageSrcSet={getImageSrcSet([pledge.image?.small, pledge.image?.large])}
+            imageSizes={PLEDGE_GRID_IMAGE_SIZES}
             imageAlt={pledge.image?.altText ?? pledge.name}
             isCommitted={committedSlugs.has(pledge.slug)}
             committedCount={pledge.commitmentCount + getCommitmentCountAdjustment(pledge.slug)}

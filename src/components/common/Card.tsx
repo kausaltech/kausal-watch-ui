@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 
-import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { Card as BSCard, CardBody } from 'reactstrap';
 
@@ -75,12 +74,13 @@ const ImgArea = styled.div<{ $colorEffect?: string }>`
   }
 `;
 
-const ImgBg = styled.div<{ $background: string; $imageAlign: string }>`
+const CardImage = styled.img<{ $imageAlign: string }>`
+  display: block;
+  width: 100%;
   height: 9rem;
   flex: 1 1 100%;
-  background-image: url(${(props) => props.$background});
-  background-position: ${(props) => props.$imageAlign};
-  background-size: cover;
+  object-fit: cover;
+  object-position: ${(props) => props.$imageAlign};
 
   @media (min-width: ${(props) => props.theme.breakpointMd}) {
     height: 8rem;
@@ -95,6 +95,9 @@ const CategoryIcon = styled.div<{ $imageSrc: string }>`
 `;
 interface CardProps {
   imageUrl?: string;
+  /* Responsive candidates for the card image, see getImageSrcSet */
+  imageSrcSet?: string;
+  imageSizes?: string;
   imageAlign?: string;
   imageType?: 'icon' | 'image';
   colorEffect?: string;
@@ -110,6 +113,8 @@ interface CardProps {
 const Card = (props: CardProps) => {
   const {
     imageUrl,
+    imageSrcSet,
+    imageSizes,
     colorEffect,
     imageAlign = 'center center',
     imageType = 'image',
@@ -120,7 +125,6 @@ const Card = (props: CardProps) => {
     outline,
     className = '',
   } = props;
-  const t = useTranslations();
 
   /*
     Support icon or image as cards main image
@@ -136,12 +140,13 @@ const Card = (props: CardProps) => {
     if (imageType === 'image' && imageUrl) {
       return (
         <ImgArea $colorEffect={colorEffect}>
-          <ImgBg
-            $background={imageUrl}
+          <CardImage
+            src={imageUrl}
+            srcSet={imageSrcSet}
+            sizes={imageSrcSet ? imageSizes : undefined}
+            alt={altText ?? ''}
             $imageAlign={imageAlign}
-            data-testid="image-bg"
-            role="img"
-            aria-label={altText ? altText : t('image-credit')}
+            data-testid="card-image"
           />
         </ImgArea>
       );
