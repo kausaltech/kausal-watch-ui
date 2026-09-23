@@ -15,6 +15,7 @@ import {
   buildSaveAsImageToolbox,
   buildTimeTooltipFormatter,
   getChartDownloadFilename,
+  goalSymbol,
 } from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
@@ -136,7 +137,8 @@ const DashboardIndicatorBarChartBlock = ({
       graphsTheme.goalLineColors ?? [],
       goalLabel,
       timeResolution,
-      formatValue
+      formatValue,
+      goalSymbol(graphsTheme.goalSymbol)
     );
     // Goals lie beyond the last observation; the axis must reach them
     const goalDates = goalSeries.flatMap((series) => series.data.map(([key]) => key));

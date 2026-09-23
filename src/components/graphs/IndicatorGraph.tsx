@@ -36,6 +36,7 @@ import {
   detectTimeDimension,
   formatNumber,
   getChartDownloadFilename,
+  goalSymbol,
   niceTickInterval,
   parseGraphSettings,
   resolveGraphColors,
@@ -153,7 +154,7 @@ function IndicatorGraph({
       hasTimeDimension,
       useAreaGraph,
       lineShape,
-      categorySymbols: graphSettings.categorySymbols ?? ['circle'],
+      categorySymbols: graphSettings.categorySymbols,
       colors: {
         totalLine: colors.totalLineColor,
         categoryColors: colors.categoryColors,
@@ -178,7 +179,7 @@ function IndicatorGraph({
       allDates,
       timeResolution,
       goalColors: colors.goalColors,
-      goalSymbol: graphSettings.goalSymbol ?? 'emptyCircle',
+      goalSymbol: goalSymbol(graphSettings.goalSymbol),
       drawGoalLine: graphSettings.drawGoalLine,
       formatValue,
     });

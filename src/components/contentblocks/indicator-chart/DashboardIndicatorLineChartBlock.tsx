@@ -16,7 +16,10 @@ import {
   type AriaDetail,
   buildSaveAsImageToolbox,
   buildTimeTooltipFormatter,
+  categorySymbol,
   getChartDownloadFilename,
+  goalSymbol,
+  markerItemStyle,
 } from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
@@ -95,8 +98,14 @@ const DashboardIndicatorLineChartBlock = ({
     goalDates
   );
 
-  function buildLines(arr: { name: string; color: string; raw: [string, number][] }[], width = 2) {
-    return arr.map(({ name, color, raw }) => {
+  function buildLines(
+    arr: { name: string; color: string; raw: [string, number][] }[],
+    width = 2,
+    // Markers cycle the theme's categorySymbols by series position, like the
+    // generic indicator graph
+    symbolOffset = 0
+  ) {
+    return arr.map(({ name, color, raw }, idx) => {
       const dataMap = new Map(raw.map(([key, value]) => [key, value]));
       const data = xCategories.map(
         (key) => [key, dataMap.get(key) ?? null] as [string, number | null]
@@ -110,16 +119,17 @@ const DashboardIndicatorLineChartBlock = ({
         connectNulls: true,
         showLine: true,
         showSymbol: true,
+        symbol: categorySymbol(graphsTheme.categorySymbols, symbolOffset + idx),
         symbolSize: 8,
         smooth: shouldSmoothLines(graphsTheme) && raw.length > 1,
         lineStyle: { width, color },
-        itemStyle: { color },
+        itemStyle: markerItemStyle(color),
       };
     });
   }
 
   const seriesLines = buildLines(dimSeries);
-  const seriesTotal = includeTotal ? buildLines([totalDef], 3) : [];
+  const seriesTotal = includeTotal ? buildLines([totalDef], 3, dimSeries.length) : [];
   // The trend regresses the categoryless aggregate; when the editor hides
   // the total line, an aggregate trend over category series would be
   // unattributed — same gate the generic indicator view applies
@@ -139,7 +149,8 @@ const DashboardIndicatorLineChartBlock = ({
     graphsTheme.goalLineColors ?? [],
     goalLabel,
     timeResolution,
-    formatValue
+    formatValue,
+    goalSymbol(graphsTheme.goalSymbol)
   );
 
   const legendData = [

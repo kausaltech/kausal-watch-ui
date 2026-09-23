@@ -26,6 +26,26 @@ const indicator = (goals: ReturnType<typeof goal>[]) =>
   }) as unknown as Indicator;
 
 describe('buildGoalSeries', () => {
+  it('draws the given goal symbol, defaulting to a hollow circle', () => {
+    const [byDefault] = buildGoalSeries(indicator([goal('1', '2030-01-01', 10)]), 'kt', colors);
+    expect(byDefault.symbol).toBe('emptyCircle');
+    expect(byDefault.itemStyle).toEqual({
+      color: colors[0],
+      borderColor: colors[0],
+      borderWidth: 2,
+    });
+    const [withSymbol] = buildGoalSeries(
+      indicator([goal('1', '2030-01-01', 10)]),
+      'kt',
+      colors,
+      'Goal',
+      'YEAR',
+      String,
+      'emptyRect'
+    );
+    expect(withSymbol.symbol).toBe('emptyRect');
+  });
+
   const colors = ['#111', '#222'];
 
   it('groups goals by scenario with the scenario name and its own color', () => {

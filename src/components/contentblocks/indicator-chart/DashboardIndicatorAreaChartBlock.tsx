@@ -21,7 +21,10 @@ import {
   type AriaDetail,
   buildSaveAsImageToolbox,
   buildTimeTooltipFormatter,
+  categorySymbol,
   getChartDownloadFilename,
+  goalSymbol,
+  markerItemStyle,
 } from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';
@@ -124,7 +127,8 @@ const DashboardIndicatorAreaChartBlock = ({
     graphsTheme.goalLineColors ?? [],
     goalLabel,
     timeResolution,
-    formatValue
+    formatValue,
+    goalSymbol(graphsTheme.goalSymbol)
   );
 
   const areaLegendItems: LegendComponentOption['data'] = hasDimension
@@ -186,7 +190,7 @@ const DashboardIndicatorAreaChartBlock = ({
           name: totalDef.name,
           type: 'line' as const,
           areaStyle: { opacity: 0.9 },
-          symbol: 'circle' as const,
+          symbol: categorySymbol(graphsTheme.categorySymbols, 0),
           symbolSize: 6,
           connectNulls: true,
           smooth: shouldSmoothLines(graphsTheme),
@@ -196,7 +200,7 @@ const DashboardIndicatorAreaChartBlock = ({
               (key) => [key, dataMap.get(key) ?? null] as [string, number | null]
             );
           })(),
-          itemStyle: { color: totalDef.color },
+          itemStyle: markerItemStyle(totalDef.color),
           lineStyle: { color: totalDef.color },
           emphasis: { focus: 'series' as const },
         },
@@ -218,9 +222,10 @@ const DashboardIndicatorAreaChartBlock = ({
             connectNulls: true,
             smooth: shouldSmoothLines(graphsTheme),
             showSymbol: true,
+            symbol: categorySymbol(graphsTheme.categorySymbols, dimSeries.length),
             symbolSize: 8,
             lineStyle: { width: 3, color: totalLineColor },
-            itemStyle: { color: totalLineColor },
+            itemStyle: markerItemStyle(totalLineColor),
             z: 3,
           };
         })(),

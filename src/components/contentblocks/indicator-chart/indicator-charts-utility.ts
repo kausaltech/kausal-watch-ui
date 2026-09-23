@@ -4,10 +4,12 @@ import { escapeHtml } from '@/common/utils';
 import {
   type AriaDetail,
   type AriaLocalePack,
+  DEFAULT_GOAL_SYMBOL,
   type FormatValue,
   type TimeResolution,
   type YRange,
   buildAriaDescription,
+  markerItemStyle,
   resolveValueRounding,
 } from '@/components/graphs/indicator-graph.utils';
 import { formatUnitLabel } from '@/components/indicators/indicator-data-helpers';
@@ -17,13 +19,6 @@ type LineChartBlock = Omit<
   '__typename'
 >;
 
-export const X_SYMBOL =
-  'path://M0.979266 20.7782C-0.192306 21.9497 -0.192307 23.8492 0.979266 25.0208C2.15084 26.1924 4.05033 26.1924 5.22191 ' +
-  '25.0208L13.0001 17.2426L20.7783 25.0208C21.9498 26.1924 23.8493 26.1924 25.0209 25.0208C26.1925 23.8492 26.1925 21.9497 ' +
-  '25.0209 20.7782L17.2427 13L25.0209 5.22181C26.1925 4.05024 26.1925 2.15075 25.0209 0.979174C23.8493 -0.192399 21.9498 ' +
-  '-0.192399 20.7783 0.979174L13.0001 8.75735L5.22191 0.979175C4.05033 -0.192398 2.15084 -0.192398 0.979266 0.979175C-0.192307 ' +
-  '2.15075 -0.192307 4.05024 0.979266 5.22182L8.75744 13L0.979266 20.7782Z';
-
 export interface GraphsTheme {
   categoryColors?: string[];
   totalLineColor?: string;
@@ -31,6 +26,10 @@ export interface GraphsTheme {
   goalLineColors?: string[];
   showTrendline?: boolean;
   lineShape?: string;
+  /** Marker symbols cycled per series; ECharts names, legacy Plotly names accepted */
+  categorySymbols?: string[];
+  /** Goal marker symbol; ECharts name, legacy Plotly name accepted */
+  goalSymbol?: string;
   /** Tenant-configured chart background; the canvas is white when unset. */
   customBackground?: string;
 }
@@ -216,7 +215,9 @@ export function buildGoalSeries(
   goalLineColors: string[],
   label = 'Goal',
   timeResolution?: string | null,
-  formatValue: (value: number) => string = String
+  formatValue: (value: number) => string = String,
+  /** Resolved ECharts symbol (see goalSymbol() in indicator-graph.utils) */
+  symbol: string = DEFAULT_GOAL_SYMBOL
 ) {
   type Goal = NonNullable<NonNullable<LineChartBlock['indicator']>['goals']>[number];
   const byScenario = new Map<string | null, { name: string; goals: Array<NonNullable<Goal>> }>();
@@ -236,12 +237,12 @@ export function buildGoalSeries(
     return {
       name,
       type: 'scatter' as const,
-      symbol: X_SYMBOL,
-      symbolSize: 10,
+      symbol,
+      symbolSize: 12,
       data: goals
         .sort((a, b) => a.date!.localeCompare(b.date!))
         .map((g) => [formatDateKey(g.date!, timeResolution), g.value] as [string, number]),
-      itemStyle: { color },
+      itemStyle: markerItemStyle(color),
       tooltip: {
         formatter: (params: { value?: unknown }) => {
           const value: unknown = Array.isArray(params.value)

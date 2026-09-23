@@ -463,6 +463,29 @@ export function resolveMarkerSymbol(name: string): string {
   return LEGACY_BUILTIN_SYMBOLS[name] ?? LEGACY_PATH_SYMBOLS[name] ?? 'circle';
 }
 
+export const DEFAULT_GOAL_SYMBOL = 'emptyCircle';
+export const DEFAULT_CATEGORY_SYMBOLS = ['circle'];
+
+/** The marker symbol for the idx-th series, cycling the theme's categorySymbols. */
+export function categorySymbol(categorySymbols: string[] | undefined, idx: number): string {
+  const symbols = categorySymbols?.length ? categorySymbols : DEFAULT_CATEGORY_SYMBOLS;
+  return resolveMarkerSymbol(symbols[idx % symbols.length]);
+}
+
+/** The theme's goalSymbol as an ECharts symbol. */
+export const goalSymbol = (themeGoalSymbol: string | undefined): string =>
+  resolveMarkerSymbol(themeGoalSymbol ?? DEFAULT_GOAL_SYMBOL);
+
+/**
+ * Item style for a marker: the fill color, plus a rim of the same color so
+ * hollow (`empty*`) symbols get a visible outline.
+ */
+export const markerItemStyle = (color: string, borderWidth = 2) => ({
+  color,
+  borderColor: color,
+  borderWidth,
+});
+
 // Same rule as buildDimSeries in the dashboard chart blocks: an editor-chosen
 // category color from the backend wins; blank/missing falls back to the palette.
 export const resolveCategoryColor = (
@@ -542,7 +565,7 @@ export const buildSeriesFromTraces = ({
   hasTimeDimension: boolean;
   useAreaGraph: boolean;
   lineShape: string;
-  categorySymbols: string[];
+  categorySymbols: string[] | undefined;
   formatValue: FormatValue;
 }): Array<LineSeriesOption | BarSeriesOption> => {
   const traceCount = traces.length;
@@ -562,10 +585,7 @@ export const buildSeriesFromTraces = ({
     // Use line chart for time dimension
     if (hasTimeDimension) {
       // 8px symbols cycled per trace from the theme's categorySymbols.
-      const symbolName = categorySymbols.length
-        ? categorySymbols[idx % categorySymbols.length]
-        : 'circle';
-      const symbol = resolveMarkerSymbol(symbolName);
+      const symbol = categorySymbol(categorySymbols, idx);
       // Dense traces get smaller markers instead of hiding them like the
       // legacy graph did; on very dense traces (e.g. daily values) even
       // small markers fuse into a solid band, so hide them entirely there.
@@ -592,11 +612,7 @@ export const buildSeriesFromTraces = ({
           width: trace.dataType === 'total' ? 3 : 2,
           color,
         },
-        itemStyle: {
-          color,
-          borderColor: color,
-          borderWidth: denseMarkers ? 1 : 2,
-        },
+        itemStyle: markerItemStyle(color, denseMarkers ? 1 : 2),
         z: 2,
         emphasis: {
           focus: 'series',
@@ -661,6 +677,7 @@ export function buildGoalSeries({
   allDates: Array<string | number | null>;
   timeResolution: TimeResolution;
   goalColors: string[];
+  /** Resolved ECharts symbol, see goalSymbol() */
   goalSymbol: string;
   drawGoalLine: boolean | undefined;
   formatValue: FormatValue;
@@ -677,8 +694,6 @@ export function buildGoalSeries({
       return [dateStr, goalMap.get(dateStr) ?? null];
     });
 
-    const symbol = resolveMarkerSymbol(goalSymbol);
-    const hollow = symbol.startsWith('empty');
     const color = goalColors[idx % goalColors.length];
 
     return {
@@ -686,17 +701,14 @@ export function buildGoalSeries({
       name: goalTrace.name,
       data: goalData,
       showSymbol: true,
-      symbol,
+      symbol: goalSymbol,
       symbolSize: 12,
       lineStyle: {
         width: drawGoalLine ? 2 : 0,
         type: drawGoalLine ? 'dashed' : 'dotted',
         color,
       },
-      itemStyle: {
-        color,
-        ...(hollow ? { borderColor: color, borderWidth: 2 } : {}),
-      },
+      itemStyle: markerItemStyle(color),
       connectNulls: true,
       z: 1,
       tooltip: {
