@@ -17,9 +17,16 @@ const GRAPHQL_API_URL = process.env.WATCH_BACKEND_URL
   : 'https://api.watch.kausal.tech/v1/graphql/';
 const BASE_URL = process.env.TEST_PAGE_BASE_URL || `http://{planId}.localhost:3000`;
 
+const WILDCARD_DOMAINS = process.env.WILDCARD_DOMAINS || '';
+
 export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
-  link: new HttpLink({ uri: GRAPHQL_API_URL }),
+  link: new HttpLink({
+    uri: GRAPHQL_API_URL,
+    headers: {
+      'x-wildcard-domains': WILDCARD_DOMAINS,
+    },
+  }),
 });
 
 const GET_PLAN_BASICS = gql`
