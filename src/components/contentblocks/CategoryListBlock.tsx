@@ -140,15 +140,21 @@ export default function CategoryListBlock(props: CategoryListBlockProps) {
     alignment: string;
   };
 
+  // An image object can exist while both of its renditions failed to generate.
+  // Treat such an image as missing so the icon or fallback image is used instead.
+  const hasRendition = (image: CardImageFragment | null | undefined) =>
+    image?.small != null || image?.large != null;
+
   const getCardImage: CardImageType = (category) => {
-    if (!category.image?.small && category.iconImage) {
+    const categoryImage = hasRendition(category.image) ? category.image : null;
+    if (!categoryImage && category.iconImage) {
       return {
         type: 'icon',
         src: category.iconImage?.rendition?.src,
         alignment: 'center',
       };
     }
-    const image = category.image ?? fallbackImage;
+    const image = categoryImage ?? fallbackImage;
     return {
       type: 'image',
       src: (image?.large ?? image?.small)?.src,
