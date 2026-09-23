@@ -131,6 +131,8 @@ export default function ActionHighlightCard(props: ActionHighlightCardProps) {
   const actionStatus = cleanActionStatus(action, plan.actionStatuses);
   let statusText = actionStatus.name || null;
   const statusColor = getStatusColorForAction(action, theme);
+  // Either rendition may be missing independently; prefer large and fall back to small.
+  const imageSrc = (image?.large ?? image?.small)?.src;
 
   // if Action is set in one of the phases, create message accordingly
   const { implementationPhase } = action;
@@ -148,9 +150,9 @@ export default function ActionHighlightCard(props: ActionHighlightCardProps) {
       <StyledCard>
         {!hideIdentifier && <ActionNumber>{action.identifier}</ActionNumber>}
         <ImgArea $bgcolor={statusColor}>
-          {image?.small && (
+          {image && imageSrc && (
             <CardImage
-              src={(image.large ?? image.small).src}
+              src={imageSrc}
               srcSet={getImageSrcSet([image.small, image.large])}
               sizes={imageSizes}
               alt={image.altText}
