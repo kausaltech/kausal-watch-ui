@@ -63,6 +63,7 @@ jobs:
       TEST_PLAN_IDENTIFIERS: ${{ inputs.instance_identifiers }}
       WATCH_BACKEND_URL: ${{ inputs.backend_base_url }}
       TEST_PAGE_BASE_URL: 'http://{planId}.localhost:3000'
+      WILDCARD_DOMAINS: localhost
       CI: 1
     services:
       app:

@@ -99,7 +99,7 @@ jobs:
     with:
       image: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.image_tag }}
       backend_base_url: https://admin.watch.de.kausal.tech
-      instance_identifiers: klima-mainz
+      instance_identifiers: klimaschutz-in-mainz
       build_id: ${{ needs.build.outputs.build_id }}
       s3_endpoint: ${{ vars.BUILD_S3_ENDPOINT }}
       s3_bucket: ${{ vars.BUILD_S3_BUCKET }}

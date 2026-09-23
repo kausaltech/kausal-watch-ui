@@ -70,7 +70,7 @@ export default function CategoryPageContent({
       <MainContent>
         {hasMainContentTemplate
           ? page.layout?.layoutMainBottom?.map((block, i) => (
-              <CategoryPageStreamField key={i} page={page} block={block} />
+              <CategoryPageStreamField key={i} page={page} block={block} wrapAttributeBlock />
             ))
           : page.body && (
               <StreamField
