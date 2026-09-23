@@ -12,21 +12,22 @@ import IndicatorVisualizationBlock from '@/components/indicators/IndicatorVisual
 import Card from '../common/Card';
 import RichText from '../common/RichText';
 import { SectionHeader } from './ActionListBlock';
-import { getReadableThemeTextColor } from './colorUtils';
+import { getReadableThemeTextColor, hasLowContrast } from './colorUtils';
 
 const DashboardRowSection = styled.div<{ $isFirst: boolean; $isLast: boolean }>`
-  background-color: ${(props) => props.theme.themeColors.light};
-  color: ${(props) => props.theme.neutralDark};
+  background-color: ${(props) => props.theme.section.dashboardRowBlock.background};
+  color: ${(props) => props.theme.section.dashboardRowBlock.color};
   position: relative;
   padding-top: ${({ $isFirst }) => ($isFirst ? 'var(--block-padding-top)' : 0)};
   padding-bottom: ${({ $isLast }) => ($isLast ? 'var(--block-padding-bottom)' : 0)};
 `;
 
 const DashboardSectionHeader = styled(SectionHeader, transientOptions)<{ $isFirst: boolean }>`
+  /* Default colors in theme are derived from other variables so we still need to check for contrast */
   color: ${({ theme }) =>
     getReadableThemeTextColor(
-      theme.themeColors.light,
-      theme.headingsColor,
+      theme.section.dashboardRowBlock.background,
+      theme.section.dashboardRowBlock.color,
       theme.themeColors.white
     )};
   padding-top: ${({ $isFirst }) => ($isFirst ? 0 : 'calc(var(--block-header-margin-bottom) * 1.5)')};
@@ -93,9 +94,9 @@ const StyledCard = styled(Card)`
 
   &.outline {
     ${({ theme }) =>
-      theme.themeColors.light === '#fefefe' &&
+      hasLowContrast(theme.section.dashboardRowBlock.background, theme.themeColors.white) &&
       `
-        /* Improve white card contrast when dashboard section is also near-white. */
+        /* Improve card contrast when the dashboard background is nearly the same as the card. */
         border-width: 1px;
         border-color: ${theme.neutralLight};
       `}
