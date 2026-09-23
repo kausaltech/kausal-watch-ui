@@ -190,6 +190,8 @@ function blockHasBackground(block: StreamFieldFragment, theme: Theme): boolean {
       return true;
     case 'RichTextBlock':
       return theme.section.richText.sectionBackground !== theme.themeColors.white;
+    case 'LargeImageBlock':
+      return theme.section.largeImageBlock.background !== theme.themeColors.white;
     default:
       return false;
   }
