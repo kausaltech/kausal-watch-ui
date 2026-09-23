@@ -39,8 +39,8 @@ importers:
         specifier: ^2.32.0
         version: 2.35.2(mapbox-gl@3.29.0)(supports-color@8.1.1)(webpack@5.110.3(@swc/core@1.16.1(@swc/helpers@0.5.23))(csso@4.2.0)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26))
       '@kausal/themes':
-        specifier: ^0.8.24
-        version: 0.8.24
+        specifier: 0.8.25-beta.0
+        version: 0.8.25-beta.0
       '@mui/material':
         specifier: ^7.3.7
         version: 7.3.11(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5)(supports-color@8.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5)(supports-color@8.1.1))(@types/react@19.2.14)(react@19.2.5)(supports-color@8.1.1))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -524,8 +524,8 @@ importers:
         version: 5.110.3(@swc/core@1.16.1(@swc/helpers@0.5.23))(csso@4.2.0)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)
     optionalDependencies:
       '@kausal-private/themes-private':
-        specifier: ^0.5.124
-        version: 0.5.124
+        specifier: 0.5.125-beta.0
+        version: 0.5.125-beta.0
 
   kausal_common:
     dependencies:
@@ -2626,8 +2626,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@kausal-private/themes-private@0.5.124':
-    resolution: {integrity: sha512-mFToSZbOmtJdu0YSPfx1wLV8CDkhiVUdBTxw8o+RuO1LO4Llwgv6I68xwUyzQ8riAlcWsPpOiqfIXhx+neIsIw==}
+  '@kausal-private/themes-private@0.5.125-beta.0':
+    resolution: {integrity: sha512-43yWkYDjnojivu4IrL0vxjZH8X5C6v8MpAqbdo1IdIelplbluk9qOz1qCHB744XqlYZewPt/xD8azsPEX+Ky6Q==}
 
   '@kausal/mapboxgl-legend@1.7.2':
     resolution: {integrity: sha512-qmjchiPrcer3gCLkln7z2e0o8i5XK2BNRbMMdr6/KHMxDTSeOOaN1PvRjXzrTAtewOyxztHxnyYH9KaoC5LJdQ==}
@@ -2637,6 +2637,9 @@ packages:
 
   '@kausal/themes@0.8.24':
     resolution: {integrity: sha512-mPEh4m2uORcOCrzQfaDvqHEzcovNquM9/LOPdxkVoNtUo8F2Um18OQPivn45ozuXMlDOsL0Ttx6FMS4rbLr1lA==}
+
+  '@kausal/themes@0.8.25-beta.0':
+    resolution: {integrity: sha512-CX/LokOlfDAfiNblgDk/rs2bRuiXz9HsS/An+gJqoFoTJfRVuiKnjeM/txiPz5IGadRjh16N4gAEoUUz8P0Spg==}
 
   '@mapbox/geojson-rewind@0.5.2':
     resolution: {integrity: sha512-tJaT+RbYGJYStt7wI3cq4Nl4SXxG8W7JDG5DMJu97V25RnbNg3QtQtf+KD+VLjNpWKYsRvXDNmNrBgEETr1ifA==}
@@ -12937,7 +12940,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@kausal-private/themes-private@0.5.124':
+  '@kausal-private/themes-private@0.5.125-beta.0':
     optional: true
 
   '@kausal/mapboxgl-legend@1.7.2': {}
@@ -13003,6 +13006,8 @@ snapshots:
       - webpack
 
   '@kausal/themes@0.8.24': {}
+
+  '@kausal/themes@0.8.25-beta.0': {}
 
   '@mapbox/geojson-rewind@0.5.2':
     dependencies:
