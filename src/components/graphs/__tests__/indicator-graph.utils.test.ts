@@ -136,34 +136,21 @@ describe('parseGraphSettings', () => {
 });
 
 describe('resolveMarkerSymbol', () => {
-  it('passes ECharts names through, ignoring the hollow flag', () => {
-    expect(resolveMarkerSymbol('circle', true)).toEqual({ symbol: 'circle', manualHollow: false });
-    expect(resolveMarkerSymbol('emptyRoundRect', false)).toEqual({
-      symbol: 'emptyRoundRect',
-      manualHollow: false,
-    });
-    expect(resolveMarkerSymbol('path://M0,0L1,1Z', true)).toEqual({
-      symbol: 'path://M0,0L1,1Z',
-      manualHollow: false,
-    });
+  it('passes ECharts names through', () => {
+    expect(resolveMarkerSymbol('circle')).toBe('circle');
+    expect(resolveMarkerSymbol('emptyRoundRect')).toBe('emptyRoundRect');
+    expect(resolveMarkerSymbol('path://M0,0L1,1Z')).toBe('path://M0,0L1,1Z');
   });
 
-  it('maps legacy Plotly built-ins and applies the hollow flag', () => {
-    expect(resolveMarkerSymbol('square', false).symbol).toBe('rect');
-    expect(resolveMarkerSymbol('square', true).symbol).toBe('emptyRect');
-    expect(resolveMarkerSymbol('triangle-up', true).symbol).toBe('emptyTriangle');
-  });
-
-  it('draws legacy Plotly shapes as paths, hollowed manually', () => {
-    const x = resolveMarkerSymbol('x', true);
-    expect(x.symbol.startsWith('path://')).toBe(true);
-    expect(x.manualHollow).toBe(true);
-    expect(resolveMarkerSymbol('pentagon', false).manualHollow).toBe(false);
+  it('maps legacy Plotly names', () => {
+    expect(resolveMarkerSymbol('square')).toBe('rect');
+    expect(resolveMarkerSymbol('triangle-up')).toBe('triangle');
+    expect(resolveMarkerSymbol('x').startsWith('path://')).toBe(true);
   });
 
   it('falls back to a circle for unknown names', () => {
-    expect(resolveMarkerSymbol('bogus', false).symbol).toBe('circle');
-    expect(resolveMarkerSymbol('bogus', true).symbol).toBe('emptyCircle');
+    expect(resolveMarkerSymbol('bogus')).toBe('circle');
+    expect(resolveMarkerSymbol('empty')).toBe('circle');
   });
 });
 

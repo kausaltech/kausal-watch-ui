@@ -73,7 +73,6 @@ export type GraphSettings = {
   drawGoalLine?: boolean;
   roundIndicatorValue?: boolean;
   categorySymbols?: string[];
-  fillMarkers?: boolean;
   goalSymbol?: string;
   /** Tenant-configured chart background; the canvas is white when unset. */
   customBackground?: string;
@@ -104,7 +103,6 @@ export function parseGraphSettings(rawGraphSettings: unknown): GraphSettings {
     drawGoalLine: bool(raw.drawGoalLine),
     roundIndicatorValue: bool(raw.roundIndicatorValue),
     categorySymbols: strArray(raw.categorySymbols),
-    fillMarkers: bool(raw.fillMarkers),
     goalSymbol: str(raw.goalSymbol),
     customBackground: str(raw.customBackground),
   };
@@ -408,9 +406,9 @@ export function detectTimeDimension(
 /**
  * Themes name marker symbols with ECharts names (`circle`, `emptyRect`,
  * `path://...`), which pass through as-is. Legacy Plotly names are still
- * accepted: built-in shapes get their `empty*` variant when hollow, the rest
- * are drawn as `path://` shapes (unit coordinates; ECharts scales the
- * bounding box to symbolSize) and made hollow by swapping fill/border styles.
+ * accepted and drawn filled: built-in shapes map to their ECharts name, the
+ * rest are drawn as `path://` shapes (unit coordinates; ECharts scales the
+ * bounding box to symbolSize).
  */
 const ECHARTS_SYMBOLS = new Set([
   'circle',
@@ -452,29 +450,11 @@ const isEchartsSymbol = (name: string) =>
   name.startsWith('path://') ||
   name.startsWith('image://');
 
-/**
- * ECharts names pass through unchanged; `hollow` only applies to legacy
- * Plotly names, where the theme can't express it in the name itself.
- */
-export function resolveMarkerSymbol(
-  name: string,
-  hollow: boolean
-): { symbol: string; manualHollow: boolean } {
+export function resolveMarkerSymbol(name: string): string {
   if (isEchartsSymbol(name)) {
-    return { symbol: name, manualHollow: false };
+    return name;
   }
-  const builtin = LEGACY_BUILTIN_SYMBOLS[name];
-  if (builtin) {
-    return {
-      symbol: hollow ? `empty${builtin[0].toUpperCase()}${builtin.slice(1)}` : builtin,
-      manualHollow: false,
-    };
-  }
-  const path = LEGACY_PATH_SYMBOLS[name];
-  if (path) {
-    return { symbol: path, manualHollow: hollow };
-  }
-  return { symbol: hollow ? 'emptyCircle' : 'circle', manualHollow: false };
+  return LEGACY_BUILTIN_SYMBOLS[name] ?? LEGACY_PATH_SYMBOLS[name] ?? 'circle';
 }
 
 // Same rule as buildDimSeries in the dashboard chart blocks: an editor-chosen
@@ -546,7 +526,6 @@ export const buildSeriesFromTraces = ({
   useAreaGraph,
   lineShape,
   categorySymbols,
-  fillMarkers,
   valueRounding,
   format,
 }: {
@@ -559,7 +538,6 @@ export const buildSeriesFromTraces = ({
   useAreaGraph: boolean;
   lineShape: string;
   categorySymbols: string[];
-  fillMarkers: boolean;
   valueRounding?: number;
   format: Formatter;
 }): Array<LineSeriesOption | BarSeriesOption> => {
@@ -579,13 +557,11 @@ export const buildSeriesFromTraces = ({
 
     // Use line chart for time dimension
     if (hasTimeDimension) {
-      // Markers follow the legacy graph: 8px symbols cycled per trace from
-      // the theme's categorySymbols, hollow with a 2px rim in the trace
-      // color unless the theme sets fillMarkers.
+      // 8px symbols cycled per trace from the theme's categorySymbols.
       const symbolName = categorySymbols.length
         ? categorySymbols[idx % categorySymbols.length]
         : 'circle';
-      const { symbol, manualHollow } = resolveMarkerSymbol(symbolName, !fillMarkers);
+      const symbol = resolveMarkerSymbol(symbolName);
       // Dense traces get smaller markers instead of hiding them like the
       // legacy graph did; on very dense traces (e.g. daily values) even
       // small markers fuse into a solid band, so hide them entirely there.
@@ -611,17 +587,11 @@ export const buildSeriesFromTraces = ({
           width: trace.dataType === 'total' ? 3 : 2,
           color,
         },
-        itemStyle: manualHollow
-          ? {
-              color: '#ffffff',
-              borderColor: color,
-              borderWidth: denseMarkers ? 1 : 2,
-            }
-          : {
-              color,
-              borderColor: color,
-              borderWidth: denseMarkers ? 1 : 2,
-            },
+        itemStyle: {
+          color,
+          borderColor: color,
+          borderWidth: denseMarkers ? 1 : 2,
+        },
         z: 2,
         emphasis: {
           focus: 'series',
@@ -714,7 +684,7 @@ export function buildGoalSeries({
       return [dateStr, goalMap.get(dateStr) ?? null];
     });
 
-    const { symbol, manualHollow } = resolveMarkerSymbol(goalSymbol, false);
+    const symbol = resolveMarkerSymbol(goalSymbol);
     const hollow = symbol.startsWith('empty');
     const color = goalColors[idx % goalColors.length];
 
@@ -730,9 +700,10 @@ export function buildGoalSeries({
         type: drawGoalLine ? 'dashed' : 'dotted',
         color,
       },
-      itemStyle: manualHollow
-        ? { color: '#ffffff', borderColor: color, borderWidth: 2 }
-        : { color, ...(hollow ? { borderColor: color, borderWidth: 2 } : {}) },
+      itemStyle: {
+        color,
+        ...(hollow ? { borderColor: color, borderWidth: 2 } : {}),
+      },
       connectNulls: true,
       z: 1,
       tooltip: {
@@ -779,7 +750,9 @@ export function buildTrendSeries({
   const lineStyle = {
     width: 3,
     color: trendColor,
-    type: 'dashed' as const,
+    // ECharts' 'dashed' scales with line width (12px dashes at width 3);
+    // use a tighter fixed pattern.
+    type: [6, 4],
   };
 
   if (!hasTimeDimension) {

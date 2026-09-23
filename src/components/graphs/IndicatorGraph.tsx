@@ -145,7 +145,6 @@ function IndicatorGraph({
       useAreaGraph,
       lineShape,
       categorySymbols: graphSettings.categorySymbols ?? ['circle'],
-      fillMarkers: graphSettings.fillMarkers === true,
       colors: {
         totalLine: colors.totalLineColor,
         categoryColors: colors.categoryColors,
@@ -340,7 +339,6 @@ function IndicatorGraph({
     graphSettings.drawGoalLine,
     graphSettings.roundIndicatorValue,
     graphSettings.categorySymbols,
-    graphSettings.fillMarkers,
     graphSettings.goalSymbol,
     graphSettings.customBackground,
     timeResolution,
