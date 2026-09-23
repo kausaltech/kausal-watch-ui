@@ -109,7 +109,7 @@ function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
 const Identifier = styled.span`
   color: ${(props) =>
     readableColor(
-      props.theme.neutralLight,
+      props.theme.badgeColorNeutral,
       props.theme.graphColors.grey070,
       props.theme.graphColors.grey020
     )};
