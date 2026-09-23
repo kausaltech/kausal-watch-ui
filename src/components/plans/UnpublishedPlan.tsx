@@ -55,7 +55,11 @@ export default function UnpublishedPlan({ message, signInRequired, testId }: Pro
               </Typography>
             )}
             {signInRequired && (
-              <Button variant="contained" onClick={() => void signIn('watch-oidc-provider')}>
+              <Button
+                variant="contained"
+                data-testid="unpublished-sign-in"
+                onClick={() => void signIn('watch-oidc-provider')}
+              >
                 {t('ui-sign-in')}
               </Button>
             )}
