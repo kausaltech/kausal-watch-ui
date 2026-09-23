@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { PlanDomainStatus } from '@/common/__generated__/graphql';
 import UnpublishedPlan from '@/components/plans/UnpublishedPlan';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import defaultTheme from '@/public/static/themes/default/theme.json';
@@ -13,8 +14,8 @@ type Props = {
     lang: string;
   }>;
   searchParams: Promise<{
-    message: string;
-    loginEnabled: string;
+    message?: string;
+    status?: string;
   }>;
 };
 
@@ -34,11 +35,15 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function UnpublishedPage(props: Props) {
   const searchParams = await props.searchParams;
-  const loginEnabled = searchParams.loginEnabled === 'true';
-  const message = searchParams.message;
+  const signInRequired = searchParams.status === PlanDomainStatus.SignInRequired;
+
   return (
     <ThemeProvider theme={defaultTheme}>
-      <UnpublishedPlan message={message} loginEnabled={loginEnabled} testId="unpublished-page" />
+      <UnpublishedPlan
+        message={searchParams.message}
+        signInRequired={signInRequired}
+        testId="unpublished-page"
+      />
     </ThemeProvider>
   );
 }

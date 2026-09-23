@@ -20,7 +20,7 @@ function mockDomains(domains: Array<{ googleSiteVerificationTag: string | null }
 
 const props = {
   params: Promise.resolve({ domain: hostname, lang: 'en' }),
-  searchParams: Promise.resolve({ message: '', loginEnabled: 'false' }),
+  searchParams: Promise.resolve({ status: 'UNAVAILABLE' }),
 };
 
 describe('unpublished page metadata', () => {

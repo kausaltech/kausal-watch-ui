@@ -3,11 +3,15 @@
  */
 import type { NextRequest, NextResponse } from 'next/server';
 
+import { PlanDomainStatus } from '@/common/__generated__/graphql';
+
 import {
   type PlanFromPlansQuery,
   applySecurityHeaders,
   buildReportOnlyPolicy,
+  getDomainStatus,
   getParsedLocale,
+  isPlanAvailable,
   rewriteUrl,
 } from '../middleware.utils';
 
@@ -303,5 +307,27 @@ describe('applySecurityHeaders over plain HTTP', () => {
     expect(headers.get('content-security-policy')).toBe(
       "frame-ancestors 'self'; upgrade-insecure-requests"
     );
+  });
+});
+
+describe('domain status', () => {
+  const planWithStatus = (status: PlanDomainStatus | null) =>
+    ({ ...MOCK_PLAN, domain: { status } }) as PlanFromPlansQuery;
+
+  it.each([
+    [PlanDomainStatus.Available, true],
+    [PlanDomainStatus.Unavailable, false],
+    [PlanDomainStatus.SignInRequired, false],
+  ])('serves the site only when the backend says %s', (status, expected) => {
+    expect(isPlanAvailable(planWithStatus(status))).toBe(expected);
+  });
+
+  it('treats a missing status as available', () => {
+    // The field is nullable in the schema, and a plan reached without a hostname has no domain.
+    // Falling back to unavailable would blank out those pages instead of rendering them.
+    expect(getDomainStatus({ ...MOCK_PLAN } as PlanFromPlansQuery)).toBe(
+      PlanDomainStatus.Available
+    );
+    expect(isPlanAvailable(planWithStatus(null))).toBe(true);
   });
 });

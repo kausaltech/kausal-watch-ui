@@ -187,7 +187,7 @@ const GET_PLAN_CONTEXT: TypedDocumentNode<PlanContextQuery, PlanContextQueryVari
     accessibilityStatementUrl
     externalFeedbackUrl
     features {
-      allowPublicSiteLogin
+      showLoginLinkInPublicUi
       hasActionContactPersonRoles
       contactPersonsPublicData
       contactPersonsShowPicture

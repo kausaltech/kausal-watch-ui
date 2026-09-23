@@ -21,7 +21,7 @@ import { getClientIP } from '@common/utils';
 import LRUCache from '@common/utils/lru-cache';
 
 import type { PlansByHostnameQuery } from '@/common/__generated__/graphql';
-import { PublicationStatus } from '@/common/__generated__/graphql';
+import { PlanDomainStatus } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 
@@ -32,6 +32,7 @@ const BASIC_AUTH_ENV_VARIABLE = 'BASIC_AUTH_FOR_HOSTNAMES';
 type PlanForHostname = NonNullable<PlansByHostnameQuery['plansForHostname']>[0];
 
 export type PlanFromPlansQuery = PlanForHostname;
+type AvailablePlan = Extract<PlanForHostname, { __typename: 'Plan' }>;
 
 export function getSearchParamsString(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams.toString();
@@ -44,9 +45,28 @@ export const isRestrictedPlan = (plan: PlanForHostname) =>
 
 const isPlan = (plan: PlanForHostname) => plan?.__typename === 'Plan' || isRestrictedPlan(plan);
 
-export const isPlanPublished = (plan: PlanFromPlansQuery) =>
-  !plan.domain?.status || // No status indicates the plan is published
-  plan.domain.status === PublicationStatus.Published;
+/**
+ * What the backend says this hostname serves the current viewer.
+ *
+ * The backend folds the plan's visibility, the viewer's access, whether the site has launched
+ * and whether the hostname is a production or preview surface into this one answer, and derives
+ * the plan's `__typename` from the same value. Gating on anything else here is how a production
+ * domain once served a plan nobody had published.
+ */
+export const getDomainStatus = (plan: PlanFromPlansQuery) =>
+  plan.domain?.status ?? PlanDomainStatus.Available;
+
+/**
+ * Whether this viewer is served the plan's site at this hostname.
+ *
+ * Narrowing to the full `Plan` here relies on a backend guarantee rather than on the response
+ * shape: `PlanInterface.resolve_type` returns `PlanNode` exactly when the status is `AVAILABLE`,
+ * both derived from one call, and `test_graphql_domain_status.py` asserts the two agree across
+ * the whole matrix. Checking `__typename` here as well would put the frontend back in the
+ * business of combining two signals, which is how an unpublished plan once reached production.
+ */
+export const isPlanAvailable = (plan: PlanFromPlansQuery): plan is AvailablePlan =>
+  getDomainStatus(plan) === PlanDomainStatus.Available;
 
 export function getParsedPlan(
   possiblePlans: string[],

@@ -19,12 +19,13 @@ import {
   clearHostnameCache,
   convertPathnameFromInvalidLocaleCasing,
   convertPathnameFromLegacy,
+  getDomainStatus,
   getLocaleAndPlan,
   getPlansForHostname,
   getSearchParamsString,
   isAuthenticated,
   isLegacyPathStructure,
-  isRestrictedPlan,
+  isPlanAvailable,
   rewriteUrl,
 } from './utils/middleware.utils';
 import { stripLocaleAndPlan } from './utils/urls';
@@ -210,18 +211,17 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
     clearSessionCookies(response);
   }
 
-  if (isRestrictedPlan(parsedPlan)) {
-    // Pass the status message to the unpublished page as search params
+  if (!isPlanAvailable(parsedPlan)) {
+    // The backend names the page to render; the message is optional and usually absent.
+    const params = new URLSearchParams({ status: getDomainStatus(parsedPlan) });
     const message = parsedPlan.domain?.statusMessage ?? parsedPlan.statusMessage;
-    const loginEnabled = parsedPlan.loginEnabled ?? false;
-    const queryParams = message
-      ? `?${new URLSearchParams({
-          message,
-          loginEnabled: String(loginEnabled),
-        }).toString()}`
-      : '';
+
+    if (message) {
+      params.set('message', message);
+    }
+
     const rewrittenUrl = new URL(
-      `/root/${hostname}/${parsedLocale}${UNPUBLISHED_PATH}${queryParams}`,
+      `/root/${hostname}/${parsedLocale}${UNPUBLISHED_PATH}?${params.toString()}`,
       request.url
     );
 

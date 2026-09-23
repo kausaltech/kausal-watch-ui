@@ -190,6 +190,21 @@ export enum IndicatorTimeResolution {
   Year = 'YEAR'
 }
 
+/**
+ *
+ * What a hostname serves a particular viewer, as the public UI needs to know it.
+ *
+ * This is deliberately not the publication vocabulary above: on a preview hostname the answer
+ * has nothing to do with whether the plan has been published, so saying "published" there would
+ * be a lie. `PublicationStatus` stays as the manual per-domain override's choices.
+ *
+ */
+export enum PlanDomainStatus {
+  Available = 'AVAILABLE',
+  SignInRequired = 'SIGN_IN_REQUIRED',
+  Unavailable = 'UNAVAILABLE'
+}
+
 /** An enumeration. */
 export enum PlanFeaturesContactPersonsPublicData {
   /** Show all information */
@@ -200,13 +215,6 @@ export enum PlanFeaturesContactPersonsPublicData {
   Name = 'NAME',
   /** Do not show contact persons publicly */
   None = 'NONE'
-}
-
-/** An enumeration. */
-export enum PublicationStatus {
-  Published = 'PUBLISHED',
-  Scheduled = 'SCHEDULED',
-  Unpublished = 'UNPUBLISHED'
 }
 
 /** An enumeration. */
@@ -7556,7 +7564,7 @@ export type PlanContextQuery_plan_footer_items =
 
 export type PlanContextQuery_plan_footer = { __typename: 'Footer', items: Array<PlanContextQuery_plan_footer_items> };
 
-export type PlanContextQuery_plan_features = { __typename: 'PlanFeatures', allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hideFromSearchEngines: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean, enableCommunityEngagement: boolean, presentPlanHierarchyAsPeers: boolean };
+export type PlanContextQuery_plan_features = { __typename: 'PlanFeatures', showLoginLinkInPublicUi: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hideFromSearchEngines: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean, enableCommunityEngagement: boolean, presentPlanHierarchyAsPeers: boolean };
 
 export type PlanContextQuery_plan_allRelatedPlans_image_rendition = { __typename: 'ImageRendition', id: string, src: string };
 
@@ -8086,13 +8094,13 @@ export type PlanContextQueryVariables = Exact<{
 
 export type PlanContextFragment = { __typename: 'Plan', id: string, identifier: string, shortIdentifier: string | null, name: string, shortName: string | null, versionName: string, themeIdentifier: string | null, timezone: string, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers: boolean, publishedAt: string | null, kausalPathsInstanceUuid: string, viewUrl: string | null, actionReportExportViewUrl: string | null, serveFileBaseUrl: string, adminUrl: string | null, accessibilityStatementUrl: string | null, externalFeedbackUrl: string | null, primaryActionClassification: PlanContextQuery_plan_primaryActionClassification | null, secondaryActionClassification: PlanContextQuery_plan_secondaryActionClassification | null, domain: PlanContextQuery_plan_domain | null, image: PlanContextQuery_plan_image | null, actionSchedules: Array<PlanContextQuery_plan_actionSchedules>, actionImplementationPhases: Array<PlanContextQuery_plan_actionImplementationPhases>, actionDependencyRoles: Array<PlanContextQuery_plan_actionDependencyRoles>, actionImpacts: Array<PlanContextQuery_plan_actionImpacts>, actionStatuses: Array<PlanContextQuery_plan_actionStatuses>, actionStatusSummaries: Array<PlanContextQuery_plan_actionStatusSummaries>, actionTimelinessClasses: Array<PlanContextQuery_plan_actionTimelinessClasses>, impactGroups: Array<PlanContextQuery_plan_impactGroups>, primaryOrgs: Array<PlanContextQuery_plan_primaryOrgs>, generalContent: PlanContextQuery_plan_generalContent, mainMenu: PlanContextQuery_plan_mainMenu | null, footer: PlanContextQuery_plan_footer | null, features: PlanContextQuery_plan_features, allRelatedPlans: Array<PlanContextQuery_plan_allRelatedPlans>, supersededBy: PlanContextQuery_plan_supersededBy | null, supersededPlans: Array<PlanContextQuery_plan_supersededPlans>, supersedingPlans: Array<PlanContextQuery_plan_supersedingPlans>, children: Array<PlanContextQuery_plan_children>, parent: PlanContextQuery_plan_parent | null, additionalLinks: PlanContextQuery_plan_additionalLinks | null, actionListPage: PlanContextQuery_plan_actionListPage | null };
 
-export type PlansByHostnameQuery_plansForHostname_domain = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null };
+export type PlansByHostnameQuery_plansForHostname_domain = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, status: PlanDomainStatus | null, statusMessage: string | null };
 
-export type PlansByHostnameQuery_plansForHostname_domains = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null };
+export type PlansByHostnameQuery_plansForHostname_domains = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, status: PlanDomainStatus | null, statusMessage: string | null };
 
-export type PlansByHostnameQuery_plansForHostname_Plan = { __typename: 'Plan', id: string, identifier: string, otherLanguages: Array<string>, primaryLanguage: string, statusMessage: string | null, loginEnabled: boolean | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
+export type PlansByHostnameQuery_plansForHostname_Plan = { __typename: 'Plan', id: string, identifier: string, otherLanguages: Array<string>, primaryLanguage: string, statusMessage: string | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
 
-export type PlansByHostnameQuery_plansForHostname_RestrictedPlanNode = { __typename: 'RestrictedPlanNode', primaryLanguage: string, statusMessage: string | null, loginEnabled: boolean | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
+export type PlansByHostnameQuery_plansForHostname_RestrictedPlanNode = { __typename: 'RestrictedPlanNode', primaryLanguage: string, statusMessage: string | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
 
 export type PlansByHostnameQuery_plansForHostname =
   | PlansByHostnameQuery_plansForHostname_Plan

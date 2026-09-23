@@ -10,8 +10,9 @@ import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
 type Props = {
-  message: string;
-  loginEnabled: boolean;
+  /** Optional: nothing produces one today, but an authored message can be added without a release. */
+  message?: string;
+  signInRequired: boolean;
   testId?: string;
 };
 
@@ -28,7 +29,7 @@ const kausalLogo = (
   </svg>
 );
 
-export default function UnpublishedPlan({ message, loginEnabled, testId }: Props) {
+export default function UnpublishedPlan({ message, signInRequired, testId }: Props) {
   const session = useSession();
   const router = useRouter();
   const t = useTranslations();
@@ -43,11 +44,17 @@ export default function UnpublishedPlan({ message, loginEnabled, testId }: Props
       <Container maxWidth="sm">
         <Card sx={{ boxShadow: 4 }}>
           <CardContent sx={{ textAlign: 'center', p: 4 }}>
-            <Box sx={{ mb: 3 }}>{kausalLogo}</Box>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: loginEnabled ? 3 : 0 }}>
-              {message}
-            </Typography>
-            {loginEnabled && (
+            <Box sx={{ mb: message || signInRequired ? 3 : 0 }}>{kausalLogo}</Box>
+            {message && (
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                sx={{ mb: signInRequired ? 3 : 0 }}
+              >
+                {message}
+              </Typography>
+            )}
+            {signInRequired && (
               <Button variant="contained" onClick={() => void signIn('watch-oidc-provider')}>
                 {t('ui-sign-in')}
               </Button>

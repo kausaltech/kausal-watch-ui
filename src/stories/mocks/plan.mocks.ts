@@ -695,7 +695,7 @@ export const MOCK_PLAN: PlanContextFragment = {
   accessibilityStatementUrl: null,
   externalFeedbackUrl: null,
   features: {
-    allowPublicSiteLogin: false,
+    showLoginLinkInPublicUi: false,
     hasActionContactPersonRoles: false,
     contactPersonsPublicData: 'ALL',
     enableSearch: true,

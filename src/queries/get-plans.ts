@@ -30,7 +30,6 @@ export const GET_PLANS_BY_HOSTNAME: TypedDocumentNode<
       }
       primaryLanguage
       statusMessage
-      loginEnabled
       ... on Plan {
         id
         identifier
