@@ -21,10 +21,11 @@ const DashboardRowSection = styled.div<{ $isFirst: boolean; $isLast: boolean }>`
 `;
 
 const DashboardSectionHeader = styled(SectionHeader)`
+  /* Default colors in theme are derived from other variables so we still need to check for contrast */
   color: ${({ theme }) =>
     getReadableThemeTextColor(
       theme.section.dashboardRowBlock.background,
-      theme.headingsColor,
+      theme.section.dashboardRowBlock.color,
       theme.themeColors.white
     )};
 `;
