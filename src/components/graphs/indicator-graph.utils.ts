@@ -580,7 +580,8 @@ export const buildSeriesFromTraces = ({
         connectNulls: true,
         showSymbol: !hideMarkers,
         symbol,
-        symbolSize: denseMarkers ? 5 : 8,
+        // A lone series marker is smaller
+        symbolSize: denseMarkers ? 5 : traceCount === 1 ? 6 : 8,
         sampling: 'lttb',
         smooth: lineShape === 'spline' || lineShape === 'smooth',
         lineStyle: {
