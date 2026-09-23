@@ -45,6 +45,8 @@ export const isRestrictedPlan = (plan: PlanForHostname) =>
 
 const isPlan = (plan: PlanForHostname) => plan?.__typename === 'Plan' || isRestrictedPlan(plan);
 
+const KNOWN_STATUSES: string[] = Object.values(PlanDomainStatus);
+
 /**
  * What the backend says this hostname serves the current viewer.
  *
@@ -52,9 +54,28 @@ const isPlan = (plan: PlanForHostname) => plan?.__typename === 'Plan' || isRestr
  * and whether the hostname is a production or preview surface into this one answer, and derives
  * the plan's `__typename` from the same value. Gating on anything else here is how a production
  * domain once served a plan nobody had published.
+ *
+ * A backend that predates this vocabulary answers with the old publication statuses instead
+ * (PUBLISHED, UNPUBLISHED, SCHEDULED). Treating an unrecognised value as authoritative would send
+ * every site to the placeholder, so we fall back to `__typename`, which is what this proxy gated
+ * on before and means the two repositories can be deployed in either order. Remove the fallback
+ * once no deployed backend answers with the old values.
  */
-export const getDomainStatus = (plan: PlanFromPlansQuery) =>
-  plan.domain?.status ?? PlanDomainStatus.Available;
+export const getDomainStatus = (plan: PlanFromPlansQuery): PlanDomainStatus => {
+  const status = plan.domain?.status;
+
+  if (status && KNOWN_STATUSES.includes(status)) {
+    return status;
+  }
+
+  if (plan.__typename === 'Plan') {
+    return PlanDomainStatus.Available;
+  }
+
+  // Restricted, and an older backend cannot tell us whether signing in would help. It offered a
+  // sign-in link here by default, so keep offering one rather than stranding someone who has access.
+  return PlanDomainStatus.SignInRequired;
+};
 
 /**
  * Whether this viewer is served the plan's site at this hostname.

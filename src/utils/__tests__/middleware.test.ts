@@ -322,12 +322,36 @@ describe('domain status', () => {
     expect(isPlanAvailable(planWithStatus(status))).toBe(expected);
   });
 
-  it('treats a missing status as available', () => {
-    // The field is nullable in the schema, and a plan reached without a hostname has no domain.
-    // Falling back to unavailable would blank out those pages instead of rendering them.
-    expect(getDomainStatus({ ...MOCK_PLAN } as PlanFromPlansQuery)).toBe(
-      PlanDomainStatus.Available
+  describe('a backend that predates the surface-status vocabulary', () => {
+    // Deploying the UI before the backend must not darken every site. The old values come from
+    // the PublicationStatus enum the field used to carry.
+    const legacy = (status: string, typename: 'Plan' | 'RestrictedPlanNode') =>
+      ({ ...MOCK_PLAN, __typename: typename, domain: { status } }) as unknown as PlanFromPlansQuery;
+
+    it.each(['PUBLISHED', 'UNPUBLISHED', 'SCHEDULED'])(
+      'falls back to __typename when the status is %s',
+      (status) => {
+        expect(isPlanAvailable(legacy(status, 'Plan'))).toBe(true);
+        expect(isPlanAvailable(legacy(status, 'RestrictedPlanNode'))).toBe(false);
+      }
     );
-    expect(isPlanAvailable(planWithStatus(null))).toBe(true);
+
+    it('still offers a way in for a restricted plan', () => {
+      // The old backend cannot say whether signing in would help, and it offered a link by
+      // default, so stranding someone who has access would be the worse guess.
+      expect(getDomainStatus(legacy('UNPUBLISHED', 'RestrictedPlanNode'))).toBe(
+        PlanDomainStatus.SignInRequired
+      );
+    });
+  });
+
+  it('treats a missing status as whatever __typename says', () => {
+    // The field is nullable in the schema, and a plan reached without a hostname has no domain.
+    // Every plan from this query carries a __typename, so that is what decides.
+    const served = { ...MOCK_PLAN, __typename: 'Plan' } as PlanFromPlansQuery;
+    expect(getDomainStatus(served)).toBe(PlanDomainStatus.Available);
+    expect(isPlanAvailable({ ...served, domain: { status: null } } as PlanFromPlansQuery)).toBe(
+      true
+    );
   });
 });
