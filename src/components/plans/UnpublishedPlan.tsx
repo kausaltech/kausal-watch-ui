@@ -34,10 +34,13 @@ export default function UnpublishedPlan({ message, signInRequired, testId }: Pro
   const router = useRouter();
   const t = useTranslations();
   useEffect(() => {
-    if (session.status === 'authenticated') {
+    // Only a sign-in this page asked for can change what the hostname serves. A
+    // viewer who is already signed in is told the plan is unavailable instead,
+    // and sending them back to the site would only bring them straight back here.
+    if (signInRequired && session.status === 'authenticated') {
       router.push('/');
     }
-  }, [router, session]);
+  }, [router, session.status, signInRequired]);
 
   return (
     <Box sx={{ py: 8 }} data-testid={testId}>
