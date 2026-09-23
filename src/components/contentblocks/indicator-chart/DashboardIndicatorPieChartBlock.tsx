@@ -5,7 +5,7 @@ import type { PieSeriesOption } from 'echarts/charts';
 import { LegendComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
 import type { CallbackDataParams } from 'echarts/types/dist/shared';
-import { useFormatter, useLocale, useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
@@ -186,7 +186,6 @@ const DashboardIndicatorPieChartBlock = ({
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
-  const format = useFormatter();
   const locale = useLocale();
   const formatValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.valueRounding ?? undefined,
@@ -224,7 +223,7 @@ const DashboardIndicatorPieChartBlock = ({
     slices: seriesData,
     unit,
     valueRounding: indicator?.valueRounding,
-    format,
+    formatValue,
     t,
     localePack: getEChartsLocaleStrings(locale),
     detail: ariaDetail,

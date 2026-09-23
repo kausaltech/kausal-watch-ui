@@ -4,7 +4,7 @@
  * pipeline is testable without React.
  */
 import type { IndicatorGraphDataQuery } from '@/common/__generated__/graphql';
-import type { YRange } from '@/components/graphs/indicator-graph.utils';
+import { type YRange, resolveValueRounding } from '@/components/graphs/indicator-graph.utils';
 
 import {
   type I18n,
@@ -111,7 +111,7 @@ export function deriveIndicatorGraphModel({
     unit: unitLabel,
     ticksCount: indicator.ticksCount ?? undefined,
     ticksRounding: indicator.ticksRounding ?? undefined,
-    valueRounding: indicator.valueRounding ?? undefined,
+    valueRounding: resolveValueRounding(indicator.valueRounding),
     // Always set explicitly so ECharts doesn't auto-range (and pull in zero)
     range: resolveYAxisRange(indicator, specification.dataBounds, [goalBounds, trendBounds]),
   };

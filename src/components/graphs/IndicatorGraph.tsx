@@ -1,15 +1,16 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { useFormatter, useLocale, useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
 
+import useNumberFormatter from '@/common/numbers';
 import { capitalizeFirstLetter } from '@/common/utils';
 
 import {
@@ -87,7 +88,15 @@ function IndicatorGraph({
 }: IndicatorGraphProps) {
   const theme = useTheme();
   const t = useTranslations();
-  const format = useFormatter();
+  // One formatter for every value the chart shows or describes, so tooltips,
+  // the aria text and the table under the chart agree on rounding.
+  const formatNumberWithDigits = useNumberFormatter({
+    maximumSignificantDigits: yRange.valueRounding,
+  });
+  const formatValue = useCallback(
+    (value: number) => formatNumberWithDigits(value),
+    [formatNumberWithDigits]
+  );
   const locale = useLocale();
 
   const graphSettings = parseGraphSettings(theme.settings?.graphs);
@@ -149,8 +158,7 @@ function IndicatorGraph({
         totalLine: colors.totalLineColor,
         categoryColors: colors.categoryColors,
       },
-      valueRounding: graphSettings.roundIndicatorValue === false ? undefined : yRange.valueRounding,
-      format,
+      formatValue,
     });
 
     applyGoalMarkers({
@@ -172,8 +180,7 @@ function IndicatorGraph({
       goalColors: colors.goalColors,
       goalSymbol: graphSettings.goalSymbol ?? 'emptyCircle',
       drawGoalLine: graphSettings.drawGoalLine,
-      valueRounding: yRange.valueRounding,
-      format,
+      formatValue,
     });
 
     const trendSeries = buildTrendSeries({
@@ -182,8 +189,7 @@ function IndicatorGraph({
       allDates,
       timeResolution,
       trendColor: colors.trendColor,
-      valueRounding: yRange.valueRounding,
-      format,
+      formatValue,
     });
 
     const wrappedTitle = title ? wrapTitle(title, TITLE_WIDTH) : null;
@@ -209,8 +215,7 @@ function IndicatorGraph({
       hasTimeDimension,
       timeResolution,
       yRange,
-      valueRounding: graphSettings.roundIndicatorValue === false ? undefined : yRange.valueRounding,
-      format,
+      formatValue,
       t,
       localePack: getEChartsLocaleStrings(locale),
       detail: ariaDetail,
@@ -271,18 +276,13 @@ function IndicatorGraph({
         axisPointer: {
           type: hasTimeDimension ? 'line' : 'shadow',
         },
-        valueFormatter: (value: number | null) =>
-          formatNumber(
-            value,
-            format,
-            yRange.valueRounding ? { maximumSignificantDigits: yRange.valueRounding } : undefined
-          ),
+        valueFormatter: (value: number | null) => formatNumber(value, formatValue),
         formatter: hasTimeDimension
           ? buildTimeTooltipFormatter({
               timeResolution,
               trendName: trendTrace?.name ?? null,
               yRange,
-              format,
+              formatValue,
             })
           : undefined,
       },
@@ -308,18 +308,15 @@ function IndicatorGraph({
         min: yRange.range[0] ?? undefined,
         max: yRange.range[1] ?? undefined,
         axisLabel: {
-          formatter: (value: number) => {
-            const rounding = yRange.ticksRounding ?? yRange.valueRounding;
-            return formatNumber(
+          formatter: (value: number) =>
+            formatNumberWithDigits(
               value,
-              format,
-              rounding
-                ? {
-                    maximumSignificantDigits: tickSignificantDigits(value, rounding, yTickInterval),
-                  }
-                : undefined
-            );
-          },
+              tickSignificantDigits(
+                value,
+                yRange.ticksRounding ?? yRange.valueRounding,
+                yTickInterval
+              )
+            ),
         },
       },
       series: [...baseSeries, ...trendSeries, ...goalSeries],
@@ -337,7 +334,6 @@ function IndicatorGraph({
     colors.trendColor,
     goalTraces,
     graphSettings.drawGoalLine,
-    graphSettings.roundIndicatorValue,
     graphSettings.categorySymbols,
     graphSettings.goalSymbol,
     graphSettings.customBackground,
@@ -353,7 +349,8 @@ function IndicatorGraph({
     ariaDetail,
     nonQuantifiedGoal,
     referenceValue,
-    format,
+    formatValue,
+    formatNumberWithDigits,
     hideLegend,
     t,
   ]);

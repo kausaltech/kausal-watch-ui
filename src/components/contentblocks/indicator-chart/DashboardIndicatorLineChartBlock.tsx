@@ -5,7 +5,7 @@ import { useTheme } from '@emotion/react';
 import { LineChart, ScatterChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
-import { useFormatter, useLocale, useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { Chart } from '@common/components/Chart';
 import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
@@ -54,7 +54,6 @@ const DashboardIndicatorLineChartBlock = ({
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
-  const format = useFormatter();
   const locale = useLocale();
   const formatValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.valueRounding ?? undefined,
@@ -160,7 +159,7 @@ const DashboardIndicatorLineChartBlock = ({
     timeResolution,
     unit,
     valueRounding: indicator?.valueRounding,
-    format,
+    formatValue,
     t,
     localePack: getEChartsLocaleStrings(locale),
     detail: ariaDetail,
@@ -205,7 +204,7 @@ const DashboardIndicatorLineChartBlock = ({
         timeResolution: toChartTimeResolution(timeResolution),
         trendName: trendLabel,
         yRange: blockYRange(unit, indicator?.valueRounding),
-        format,
+        formatValue,
       }),
     },
     grid: {

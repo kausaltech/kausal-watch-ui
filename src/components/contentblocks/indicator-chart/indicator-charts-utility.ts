@@ -4,10 +4,11 @@ import { escapeHtml } from '@/common/utils';
 import {
   type AriaDetail,
   type AriaLocalePack,
-  type Formatter,
+  type FormatValue,
   type TimeResolution,
   type YRange,
   buildAriaDescription,
+  resolveValueRounding,
 } from '@/components/graphs/indicator-graph.utils';
 import { formatUnitLabel } from '@/components/indicators/indicator-data-helpers';
 
@@ -328,7 +329,7 @@ export function blockYRange(unit: string, valueRounding: number | null | undefin
     unit,
     ticksCount: undefined,
     ticksRounding: undefined,
-    valueRounding: valueRounding ?? undefined,
+    valueRounding: resolveValueRounding(valueRounding),
     range: [],
   };
 }
@@ -354,7 +355,7 @@ export function buildBlockAriaDescription({
   timeResolution,
   unit,
   valueRounding,
-  format,
+  formatValue,
   t,
   localePack,
   chartKind = 'line',
@@ -367,7 +368,7 @@ export function buildBlockAriaDescription({
   timeResolution: string | null | undefined;
   unit: string;
   valueRounding: number | null | undefined;
-  format: Formatter;
+  formatValue: FormatValue;
   t: (key: string, values?: Record<string, string | number>) => string;
   localePack: AriaLocalePack;
   chartKind?: 'line' | 'bar';
@@ -381,8 +382,7 @@ export function buildBlockAriaDescription({
     hasTimeDimension: true,
     timeResolution: toChartTimeResolution(timeResolution),
     yRange: blockYRange(unit, valueRounding),
-    valueRounding: valueRounding ?? undefined,
-    format,
+    formatValue,
     t,
     localePack,
     chartKind,
@@ -401,7 +401,7 @@ export function buildCategoryAriaDescription({
   slices,
   unit,
   valueRounding,
-  format,
+  formatValue,
   t,
   localePack,
   detail,
@@ -412,7 +412,7 @@ export function buildCategoryAriaDescription({
   slices: Array<{ name: string; value: number }>;
   unit: string;
   valueRounding: number | null | undefined;
-  format: Formatter;
+  formatValue: FormatValue;
   t: (key: string, values?: Record<string, string | number>) => string;
   localePack: AriaLocalePack;
   detail?: AriaDetail;
@@ -433,8 +433,7 @@ export function buildCategoryAriaDescription({
     hasTimeDimension: false,
     timeResolution: undefined,
     yRange: blockYRange(unit, valueRounding),
-    valueRounding: valueRounding ?? undefined,
-    format,
+    formatValue,
     t,
     localePack,
     chartKind,

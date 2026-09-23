@@ -18,6 +18,7 @@ import {
   getUnitLabel,
   hasDatedValues,
 } from '@/components/contentblocks/indicator-chart/indicator-charts-utility';
+import { resolveValueRounding } from '@/components/graphs/indicator-graph.utils';
 
 import type { IndicatorVisualizationBlockData } from './IndicatorVisualizationBlock';
 
@@ -32,7 +33,7 @@ export type VisualizationTableData = {
   traces: TableTrace[];
   goalTraces: TableTrace[];
   timeResolution: IndicatorTimeResolution;
-  specification: { unit: string; valueRounding: number | null };
+  specification: { unit: string; valueRounding: number };
 };
 
 // The table needs no colors; buildDimSeries only reads the palette for them
@@ -93,7 +94,7 @@ export function buildVisualizationTableData(
   const timeResolution = indicator?.timeResolution ?? fallbackTimeResolution;
   const specification = {
     unit: getUnitLabel(indicator),
-    valueRounding: indicator?.valueRounding ?? null,
+    valueRounding: resolveValueRounding(indicator?.valueRounding),
   };
   const totalLabel = t('total');
   let traces: TableTrace[] = [];

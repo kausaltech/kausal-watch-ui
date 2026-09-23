@@ -10,7 +10,7 @@ import {
   TooltipComponent,
 } from 'echarts/components';
 import * as echarts from 'echarts/core';
-import { useFormatter, useLocale, useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
@@ -59,7 +59,6 @@ const DashboardIndicatorAreaChartBlock = ({
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
-  const format = useFormatter();
   const locale = useLocale();
   const formatValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.valueRounding ?? undefined,
@@ -238,7 +237,7 @@ const DashboardIndicatorAreaChartBlock = ({
     timeResolution,
     unit,
     valueRounding: indicator?.valueRounding,
-    format,
+    formatValue,
     t,
     localePack: getEChartsLocaleStrings(locale),
     detail: ariaDetail,
@@ -283,7 +282,7 @@ const DashboardIndicatorAreaChartBlock = ({
         timeResolution: toChartTimeResolution(timeResolution),
         trendName: trendLabel,
         yRange: blockYRange(unit, indicator?.valueRounding),
-        format,
+        formatValue,
       }),
     },
     grid: {

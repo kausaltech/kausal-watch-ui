@@ -9,6 +9,7 @@ import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter } from '@/common/utils';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
+import { resolveValueRounding } from '@/components/graphs/indicator-graph.utils';
 
 import { calculateBounds, padAndRoundBounds } from './indicator-data-helpers';
 
@@ -97,7 +98,7 @@ function FactorCharts({
             unit: metric.unit,
             ticksCount: 2,
             ticksRounding: undefined,
-            valueRounding: valueRounding ?? undefined,
+            valueRounding: resolveValueRounding(valueRounding),
             range: [paddedBounds.min, paddedBounds.max],
           };
           const factorSpec = { axes: [['time', 1]] as [string, number][] };

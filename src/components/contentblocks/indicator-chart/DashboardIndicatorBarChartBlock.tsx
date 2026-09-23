@@ -3,7 +3,7 @@ import { useTheme } from '@emotion/react';
 import { BarChart, ScatterChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import * as echarts from 'echarts/core';
-import { useFormatter, useLocale, useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { Chart, type ECOption } from '@common/components/Chart';
 import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
@@ -54,7 +54,6 @@ const DashboardIndicatorBarChartBlock = ({
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
-  const format = useFormatter();
   const locale = useLocale();
   const formatValue = useNumberFormatter({
     maximumSignificantDigits: indicator?.valueRounding ?? undefined,
@@ -82,7 +81,7 @@ const DashboardIndicatorBarChartBlock = ({
     title: indicator?.name,
     unit,
     valueRounding: indicator?.valueRounding,
-    format,
+    formatValue,
     t,
     localePack: getEChartsLocaleStrings(locale),
     detail: ariaDetail,
@@ -218,7 +217,7 @@ const DashboardIndicatorBarChartBlock = ({
         timeResolution: toChartTimeResolution(timeResolution),
         trendName: null,
         yRange: blockYRange(unit, indicator?.valueRounding),
-        format,
+        formatValue,
       }),
     },
     grid: {

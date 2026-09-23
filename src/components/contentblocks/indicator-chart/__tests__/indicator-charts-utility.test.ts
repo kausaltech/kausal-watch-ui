@@ -120,10 +120,7 @@ describe('buildBlockAriaDescription', () => {
       timeResolution: 'year',
       unit: 'kt',
       valueRounding: 3,
-      format: {
-        number: (v: number, options?: { maximumSignificantDigits?: number }) =>
-          v.toLocaleString('en', options),
-      } as unknown as Parameters<typeof buildBlockAriaDescription>[0]['format'],
+      formatValue: (v: number) => v.toLocaleString('en', { maximumSignificantDigits: 3 }),
       t: (key, values) => `[${key}${values ? ' ' + JSON.stringify(values) : ''}]`,
       localePack: { series: { typeNames: { line: 'Line chart', bar: 'Bar chart' } } },
     });
@@ -152,9 +149,7 @@ describe('buildBlockAriaDescription', () => {
       timeResolution: 'YEAR',
       unit: '',
       valueRounding: null,
-      format: { number: (v: number) => String(v) } as unknown as Parameters<
-        typeof buildBlockAriaDescription
-      >[0]['format'],
+      formatValue: (v: number) => String(v),
       t: (key, values) => `[${key} ${values?.chartType}]`,
       localePack: {
         aria: { data: { allData: 'Data: ', separator: { middle: ', ', end: '. ' } } },
@@ -177,10 +172,7 @@ describe('buildPieAriaDescription', () => {
       ],
       unit: '%',
       valueRounding: 3,
-      format: {
-        number: (v: number, options?: { maximumSignificantDigits?: number }) =>
-          v.toLocaleString('en', options),
-      } as unknown as Parameters<typeof buildPieAriaDescription>[0]['format'],
+      formatValue: (v: number) => v.toLocaleString('en', { maximumSignificantDigits: 3 }),
       t: (key, values) => `[${key}${values ? ' ' + JSON.stringify(values) : ''}]`,
       localePack: {
         aria: { data: { allData: 'Data: ', separator: { middle: ', ', end: '. ' } } },

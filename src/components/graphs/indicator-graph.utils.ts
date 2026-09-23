@@ -11,16 +11,17 @@
 import type { Theme } from '@kausal/themes/types';
 import type { BarSeriesOption, LineSeriesOption } from 'echarts/charts';
 import type { MarkLineOption } from 'echarts/types/dist/shared';
-import type { useFormatter } from 'next-intl';
 import { transparentize } from 'polished';
 
 import type { EChartsLocalePack } from '@common/components/chart-aria';
+import { DEFAULT_SIGNIFICANT_DIGITS } from '@common/utils/format';
 
 import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter, escapeHtml } from '@/common/utils';
 import { getDefaultColors } from '@/components/contentblocks/indicator-chart/indicator-chart-colors';
 
-export type Formatter = ReturnType<typeof useFormatter>;
+/** Formats a value with the indicator's rounding and the active locale. */
+export type FormatValue = (value: number) => string;
 type Translator = (key: string, values?: Record<string, string | number>) => string;
 
 export type TimeResolution = 'YEAR' | 'MONTH' | 'DAY' | undefined;
@@ -49,7 +50,7 @@ export type YRange = {
   unit: string;
   ticksCount: number | undefined;
   ticksRounding: number | undefined;
-  valueRounding: number | undefined;
+  valueRounding: number;
   range: number[];
 };
 
@@ -71,7 +72,6 @@ export type GraphSettings = {
   areaGraphs?: boolean;
   lineShape?: string;
   drawGoalLine?: boolean;
-  roundIndicatorValue?: boolean;
   categorySymbols?: string[];
   goalSymbol?: string;
   /** Tenant-configured chart background; the canvas is white when unset. */
@@ -101,7 +101,6 @@ export function parseGraphSettings(rawGraphSettings: unknown): GraphSettings {
     areaGraphs: bool(raw.areaGraphs),
     lineShape: str(raw.lineShape),
     drawGoalLine: bool(raw.drawGoalLine),
-    roundIndicatorValue: bool(raw.roundIndicatorValue),
     categorySymbols: strArray(raw.categorySymbols),
     goalSymbol: str(raw.goalSymbol),
     customBackground: str(raw.customBackground),
@@ -162,16 +161,23 @@ export const wrapTitle = (title: string, maxWidth: number): string => {
 };
 
 /**
+ * The significant digits an indicator's values are shown with everywhere
+ * (graph, tooltip, aria text, table): the editor-set valueRounding, else
+ * the shared default.
+ */
+export const resolveValueRounding = (valueRounding: number | null | undefined): number =>
+  valueRounding ?? DEFAULT_SIGNIFICANT_DIGITS;
+
+/**
  * Safely format a number with null/NaN checks.
  * ECharts valueFormatters can receive null values from missing data points.
  */
 export const formatNumber = (
   value: number | null | undefined,
-  format: Formatter,
-  options?: { maximumSignificantDigits?: number }
+  formatValue: FormatValue
 ): string => {
   if (value == null || Number.isNaN(value)) return '';
-  return format.number(value, options);
+  return formatValue(value);
 };
 
 /**
@@ -526,8 +532,7 @@ export const buildSeriesFromTraces = ({
   useAreaGraph,
   lineShape,
   categorySymbols,
-  valueRounding,
-  format,
+  formatValue,
 }: {
   traces: ChartTrace[];
   colors: {
@@ -538,8 +543,7 @@ export const buildSeriesFromTraces = ({
   useAreaGraph: boolean;
   lineShape: string;
   categorySymbols: string[];
-  valueRounding?: number;
-  format: Formatter;
+  formatValue: FormatValue;
 }): Array<LineSeriesOption | BarSeriesOption> => {
   const traceCount = traces.length;
   // Count palette slots per category, skipping total traces, so a category
@@ -598,12 +602,7 @@ export const buildSeriesFromTraces = ({
           focus: 'series',
         },
         tooltip: {
-          valueFormatter: (val: number | null) =>
-            formatNumber(
-              val,
-              format,
-              valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
-            ),
+          valueFormatter: (val: number | null) => formatNumber(val, formatValue),
         },
       };
 
@@ -641,12 +640,7 @@ export const buildSeriesFromTraces = ({
         focus: 'series',
       },
       tooltip: {
-        valueFormatter: (val: number | null) =>
-          formatNumber(
-            val,
-            format,
-            valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
-          ),
+        valueFormatter: (val: number | null) => formatNumber(val, formatValue),
       },
     };
     return series;
@@ -661,8 +655,7 @@ export function buildGoalSeries({
   goalColors,
   goalSymbol,
   drawGoalLine,
-  valueRounding,
-  format,
+  formatValue,
 }: {
   goalTraces: GoalTrace[];
   allDates: Array<string | number | null>;
@@ -670,8 +663,7 @@ export function buildGoalSeries({
   goalColors: string[];
   goalSymbol: string;
   drawGoalLine: boolean | undefined;
-  valueRounding: number | undefined;
-  format: Formatter;
+  formatValue: FormatValue;
 }): LineSeriesOption[] {
   return goalTraces.map((goalTrace, idx) => {
     const goalMap = new Map<string, number | null>();
@@ -708,12 +700,7 @@ export function buildGoalSeries({
       connectNulls: true,
       z: 1,
       tooltip: {
-        valueFormatter: (val: number | null) =>
-          formatNumber(
-            val,
-            format,
-            valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
-          ),
+        valueFormatter: (val: number | null) => formatNumber(val, formatValue),
       },
     };
   });
@@ -726,27 +713,20 @@ export function buildTrendSeries({
   allDates,
   timeResolution,
   trendColor,
-  valueRounding,
-  format,
+  formatValue,
 }: {
   trendTrace: GoalTrace | null;
   hasTimeDimension: boolean;
   allDates: Array<string | number | null>;
   timeResolution: TimeResolution;
   trendColor: string;
-  valueRounding: number | undefined;
-  format: Formatter;
+  formatValue: FormatValue;
 }): LineSeriesOption[] {
   if (!trendTrace) {
     return [];
   }
   const tooltip = {
-    valueFormatter: (val: number | null) =>
-      formatNumber(
-        val,
-        format,
-        valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
-      ),
+    valueFormatter: (val: number | null) => formatNumber(val, formatValue),
   };
   const lineStyle = {
     width: 3,
@@ -970,12 +950,12 @@ export function buildTimeTooltipFormatter({
   timeResolution,
   trendName,
   yRange,
-  format,
+  formatValue,
 }: {
   timeResolution: TimeResolution;
   trendName: string | null;
   yRange: YRange;
-  format: Formatter;
+  formatValue: FormatValue;
 }): (params: unknown) => string {
   return (params: unknown) => {
     if (!Array.isArray(params) || params.length === 0) return '';
@@ -1006,11 +986,7 @@ export function buildTimeTooltipFormatter({
       }
 
       if (value !== null && value !== undefined && !Number.isNaN(value)) {
-        const formattedValue = formatNumber(
-          value,
-          format,
-          yRange.valueRounding ? { maximumSignificantDigits: yRange.valueRounding } : undefined
-        );
+        const formattedValue = formatNumber(value, formatValue);
         rows.push(
           `${typedParam.marker || ''} ${escapeHtml(typedParam.seriesName)}: ${formattedValue} ${escapeHtml(yRange.unit)}<br/>`
         );
@@ -1103,8 +1079,7 @@ export function buildAriaDescription({
   hasTimeDimension,
   timeResolution,
   yRange,
-  valueRounding,
-  format,
+  formatValue,
   t,
   localePack,
   chartKind,
@@ -1118,8 +1093,7 @@ export function buildAriaDescription({
   hasTimeDimension: boolean;
   timeResolution: TimeResolution;
   yRange: YRange;
-  valueRounding: number | undefined;
-  format: Formatter;
+  formatValue: FormatValue;
   t: Translator;
   localePack: AriaLocalePack;
   /** Marks drawn; defaults to lines on a time axis and bars on a category axis */
@@ -1138,12 +1112,7 @@ export function buildAriaDescription({
         : (typeNames?.pie ?? 'Pie chart');
   const dataLead = localePack.aria?.data?.allData ?? 'The data is as follows: ';
   const sentenceEnd = (localePack.aria?.data?.separator?.end ?? '. ').trim();
-  const num = (value: number) =>
-    formatNumber(
-      value,
-      format,
-      valueRounding ? { maximumSignificantDigits: valueRounding } : undefined
-    );
+  const num = (value: number) => formatNumber(value, formatValue);
   const series = traces
     .map((trace) => ({
       name: trace.name,

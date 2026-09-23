@@ -229,14 +229,12 @@ describe('detectTimeDimension', () => {
 });
 
 describe('buildTimeTooltipFormatter', () => {
-  const format = { number: (v: number) => String(v) } as unknown as Parameters<
-    typeof buildTimeTooltipFormatter
-  >[0]['format'];
+  const formatValue = (v: number) => String(v);
   const yRange = {
     unit: '<u>kt</u>',
     ticksCount: undefined,
     ticksRounding: undefined,
-    valueRounding: undefined,
+    valueRounding: 2,
     range: [0, 10],
   };
   const marker = '<span style="background-color:#111"></span>';
@@ -246,7 +244,7 @@ describe('buildTimeTooltipFormatter', () => {
       timeResolution: 'YEAR',
       trendName: null,
       yRange,
-      format,
+      formatValue,
     });
     const text = formatter([
       {
@@ -266,7 +264,7 @@ describe('buildTimeTooltipFormatter', () => {
       timeResolution: 'YEAR',
       trendName: 'Trend',
       yRange: { ...yRange, unit: 'kt' },
-      format,
+      formatValue,
     });
     const text = formatter([
       { seriesName: 'Trend', axisValue: '2020-01-01', value: ['2020-01-01', 5], marker },
@@ -280,7 +278,7 @@ describe('buildTimeTooltipFormatter', () => {
       timeResolution: 'YEAR',
       trendName: 'Trend',
       yRange: { ...yRange, unit: 'kt' },
-      format,
+      formatValue,
     });
     const text = formatter([
       { seriesName: 'Trend', axisValue: '2033-01-01', value: ['2033-01-01', 61], marker },
@@ -294,15 +292,12 @@ describe('buildAriaDescription', () => {
   // Renders a key with its values so tests can assert on what was passed
   const t = (key: string, values?: Record<string, string | number>) =>
     `[${key}${values ? ' ' + JSON.stringify(values) : ''}]`;
-  const format = {
-    number: (v: number, options?: { maximumSignificantDigits?: number }) =>
-      v.toLocaleString('en', options),
-  } as unknown as Parameters<typeof buildAriaDescription>[0]['format'];
+  const formatValue = (v: number) => v.toLocaleString('en', { maximumSignificantDigits: 4 });
   const yRange = {
     unit: 'GWh/a',
     ticksCount: undefined,
     ticksRounding: undefined,
-    valueRounding: undefined,
+    valueRounding: 2,
     range: [0, 2000],
   };
   const localePack = {
@@ -315,8 +310,7 @@ describe('buildAriaDescription', () => {
     hasTimeDimension: true,
     timeResolution: 'YEAR' as const,
     yRange,
-    valueRounding: 4,
-    format,
+    formatValue,
     t,
     localePack,
   };
@@ -459,9 +453,7 @@ describe('buildAriaDescription', () => {
 describe('buildAriaDescription summary detail', () => {
   const t = (key: string, values?: Record<string, string | number>) =>
     `[${key}${values ? ' ' + JSON.stringify(values) : ''}]`;
-  const format = {
-    number: (v: number) => String(v),
-  } as unknown as Parameters<typeof buildAriaDescription>[0]['format'];
+  const formatValue = (v: number) => String(v);
   const common = {
     goalTraces: [],
     trendTrace: null,
@@ -470,11 +462,10 @@ describe('buildAriaDescription summary detail', () => {
       unit: '',
       ticksCount: undefined,
       ticksRounding: undefined,
-      valueRounding: undefined,
+      valueRounding: 2,
       range: [],
     },
-    valueRounding: undefined,
-    format,
+    formatValue,
     t,
     localePack: {
       aria: { data: { allData: 'Data: ', separator: { middle: ', ', end: '. ' } } },
@@ -536,13 +527,10 @@ describe('buildAriaDescription locale pack', () => {
         unit: '',
         ticksCount: undefined,
         ticksRounding: undefined,
-        valueRounding: undefined,
+        valueRounding: 2,
         range: [],
       },
-      valueRounding: undefined,
-      format: { number: (v: number) => String(v) } as unknown as Parameters<
-        typeof buildAriaDescription
-      >[0]['format'],
+      formatValue: (v: number) => String(v),
       t: (key, values) => `[${key} ${values?.chartType}]`,
       localePack: {
         aria: {
@@ -560,7 +548,7 @@ describe('applyGoalMarkers', () => {
     unit: 'kt',
     ticksCount: undefined,
     ticksRounding: undefined,
-    valueRounding: undefined,
+    valueRounding: 2,
     range: [-5, 20],
   };
   const theme = { graphColors: { blue030: '#00f', grey030: '#999' } } as unknown as Parameters<
