@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { type PropsWithChildren, Suspense, useEffect, useId, useRef } from 'react';
 
 import dynamic from 'next/dynamic';
@@ -18,7 +17,7 @@ import ContentLoader from '@common/components/ContentLoader';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type { CardImageFragment, StreamFieldFragment } from '@/common/__generated__/graphql';
-import { getBgImageAlignment, getImageSrcSet } from '@/common/images';
+import { getBgImageAlignment } from '@/common/images';
 import { excludeNullish } from '@/common/utils';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import RichText from '@/components/common/RichText';
@@ -39,6 +38,7 @@ import FrontPageHeroBlock from '@/components/contentblocks/FrontPageHeroBlock';
 import IndicatorGroupBlock from '@/components/contentblocks/IndicatorGroupBlock';
 import IndicatorHighlightsBlock from '@/components/contentblocks/IndicatorHighlightsBlock';
 import IndicatorShowcaseBlock from '@/components/contentblocks/IndicatorShowcaseBlock';
+import LargeImageBlock from '@/components/contentblocks/LargeImageBlock';
 import QuestionAnswerBlock from '@/components/contentblocks/QuestionAnswerBlock';
 import RelatedIndicatorsBlock from '@/components/contentblocks/RelatedIndicatorsBlock';
 import RelatedPlanListBlock from '@/components/contentblocks/RelatedPlanListBlock';
@@ -49,7 +49,6 @@ import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
 import ChangeHistory from './ChangeHistory';
 import { ErrorBoundary } from './ErrorBoundary';
-import { ImageCredit } from './ImageCredit';
 
 const CategoryTreeBlock = dynamic(() => import('@/components/contentblocks/CategoryTreeBlock'), {
   ssr: false,
@@ -238,12 +237,6 @@ const RichTextSection = styled.div`
   background-color: ${({ theme }) => theme.section.richText.sectionBackground};
 `;
 
-const LargeImageSection = styled.div`
-  padding-top: calc(var(--block-padding-top) / 2);
-  padding-bottom: calc(var(--block-padding-bottom) / 2);
-  background-color: ${({ theme }) => theme.section.largeImageBlock.background};
-`;
-
 const RichTextContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -347,7 +340,6 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
   const { __typename } = block;
   const plan = usePlan();
   const theme = useTheme();
-  const t = useTranslations();
   const logContext = {
     'page-type': page.__typename,
     'block-type': __typename,
@@ -495,73 +487,8 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       );
     }
     case 'LargeImageBlock': {
-      /*
-       * LargeImageBlock can have two widths:
-       * maximum: image is full container size
-       * fit_to_column: image is limited to text block width
-       * Image keeps it original ratio and doesn't crop
-       */
-
-      const getColSize = (breakpoint) => {
-        if (block.width === 'maximum') return {};
-        switch (breakpoint) {
-          case 'xl':
-            return { size: hasSidebar ? 7 : 6, offset: hasSidebar ? 4 : 3 };
-          case 'lg':
-            return { size: 8, offset: hasSidebar ? 4 : 2 };
-          case 'md':
-          default:
-            return { size: 10, offset: 1 };
-        }
-      };
-
-      // Rendered width of the image at each Bootstrap container breakpoint,
-      // derived from the container widths (1320/1140/960/720) and the column
-      // fractions above, so the browser picks the smallest sufficient rendition.
-      const sizes =
-        block.width === 'maximum'
-          ? '(min-width: 1400px) 1320px, (min-width: 1200px) 1140px, (min-width: 992px) 960px, (min-width: 768px) 720px, 100vw'
-          : hasSidebar
-            ? '(min-width: 1400px) 770px, (min-width: 1200px) 665px, (min-width: 992px) 640px, (min-width: 768px) 600px, 100vw'
-            : '(min-width: 1400px) 660px, (min-width: 1200px) 570px, (min-width: 992px) 640px, (min-width: 768px) 600px, 100vw';
-      const image = block.image;
-
       return (
-        <LargeImageSection>
-          <Container id={id}>
-            <Row>
-              <Col
-                xl={getColSize('xl')}
-                lg={getColSize('lg')}
-                md={getColSize('md')}
-                style={{
-                  position: 'relative',
-                }}
-              >
-                <div
-                  style={{
-                    position: 'relative',
-                    display: 'inline-block',
-                  }}
-                >
-                  <img
-                    src={image?.fullMedium?.src ?? image?.full?.src}
-                    srcSet={getImageSrcSet([image?.fullSmall, image?.fullMedium, image?.full])}
-                    sizes={sizes}
-                    alt={image?.altText}
-                    style={{
-                      display: 'block',
-                      width: '100%',
-                    }}
-                  />
-                  {image?.imageCredit && (
-                    <ImageCredit>{`${t('image-credit')}: ${image.imageCredit}`}</ImageCredit>
-                  )}
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </LargeImageSection>
+        <LargeImageBlock id={id} image={block.image} width={block.width} hasSidebar={hasSidebar} />
       );
     }
     case 'IndicatorShowcaseBlock': {
