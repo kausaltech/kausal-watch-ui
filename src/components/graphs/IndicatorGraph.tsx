@@ -171,7 +171,7 @@ function IndicatorGraph({
       allDates,
       timeResolution,
       goalColors: colors.goalColors,
-      goalSymbol: graphSettings.goalSymbol ?? 'circle',
+      goalSymbol: graphSettings.goalSymbol ?? 'emptyCircle',
       drawGoalLine: graphSettings.drawGoalLine,
       valueRounding: yRange.valueRounding,
       format,

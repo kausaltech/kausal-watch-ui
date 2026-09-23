@@ -406,19 +406,32 @@ export function detectTimeDimension(
 }
 
 /**
- * Themes define marker symbols with Plotly symbol names. Map them to ECharts
- * equivalents: built-in symbols have `empty*` hollow variants, the rest are
- * drawn as `path://` shapes (unit coordinates; ECharts scales the bounding
- * box to symbolSize) and made hollow by swapping fill/border styles.
+ * Themes name marker symbols with ECharts names (`circle`, `emptyRect`,
+ * `path://...`), which pass through as-is. Legacy Plotly names are still
+ * accepted: built-in shapes get their `empty*` variant when hollow, the rest
+ * are drawn as `path://` shapes (unit coordinates; ECharts scales the
+ * bounding box to symbolSize) and made hollow by swapping fill/border styles.
  */
-const BUILTIN_SYMBOLS: Record<string, string> = {
-  circle: 'circle',
+const ECHARTS_SYMBOLS = new Set([
+  'circle',
+  'rect',
+  'roundRect',
+  'triangle',
+  'diamond',
+  'pin',
+  'arrow',
+  'none',
+]);
+
+const LEGACY_BUILTIN_SYMBOLS: Record<string, string> = {
   square: 'rect',
-  diamond: 'diamond',
   'triangle-up': 'triangle',
 };
 
-const PATH_SYMBOLS: Record<string, string> = {
+const X_PATH =
+  'path://M0,-0.4L0.6,-1L1,-0.6L0.4,0L1,0.6L0.6,1L0,0.4L-0.6,1L-1,0.6L-0.4,0L-1,-0.6L-0.6,-1Z';
+
+const LEGACY_PATH_SYMBOLS: Record<string, string> = {
   pentagon: 'path://M0,-1L0.951,-0.309L0.588,0.809L-0.588,0.809L-0.951,-0.309Z',
   hexagram:
     'path://M0,-1L-0.289,-0.5L-0.866,-0.5L-0.577,0L-0.866,0.5L-0.289,0.5L0,1L0.289,0.5L0.866,0.5L0.577,0L0.866,-0.5L0.289,-0.5Z',
@@ -426,23 +439,38 @@ const PATH_SYMBOLS: Record<string, string> = {
   hash: 'path://M-0.6,-1L-0.2,-1L-0.2,1L-0.6,1ZM0.2,-1L0.6,-1L0.6,1L0.2,1ZM-1,-0.6L1,-0.6L1,-0.2L-1,-0.2ZM-1,0.2L1,0.2L1,0.6L-1,0.6Z',
   'y-down':
     'path://M-0.15,0L0.15,0L0.15,1L-0.15,1ZM0.075,-0.13L-0.075,0.13L-0.941,-0.37L-0.791,-0.63ZM-0.075,-0.13L0.075,0.13L0.941,-0.37L0.791,-0.63Z',
-  x: 'path://M0,-0.4L0.6,-1L1,-0.6L0.4,0L1,0.6L0.6,1L0,0.4L-0.6,1L-1,0.6L-0.4,0L-1,-0.6L-0.6,-1Z',
+  x: X_PATH,
   cross:
     'path://M-0.2,-1L0.2,-1L0.2,-0.2L1,-0.2L1,0.2L0.2,0.2L0.2,1L-0.2,1L-0.2,0.2L-1,0.2L-1,-0.2L-0.2,-0.2Z',
 };
 
+const isEchartsSymbol = (name: string) =>
+  ECHARTS_SYMBOLS.has(name) ||
+  (name.length > 5 &&
+    name.startsWith('empty') &&
+    ECHARTS_SYMBOLS.has(name[5].toLowerCase() + name.slice(6))) ||
+  name.startsWith('path://') ||
+  name.startsWith('image://');
+
+/**
+ * ECharts names pass through unchanged; `hollow` only applies to legacy
+ * Plotly names, where the theme can't express it in the name itself.
+ */
 export function resolveMarkerSymbol(
   name: string,
   hollow: boolean
 ): { symbol: string; manualHollow: boolean } {
-  const builtin = BUILTIN_SYMBOLS[name];
+  if (isEchartsSymbol(name)) {
+    return { symbol: name, manualHollow: false };
+  }
+  const builtin = LEGACY_BUILTIN_SYMBOLS[name];
   if (builtin) {
     return {
       symbol: hollow ? `empty${builtin[0].toUpperCase()}${builtin.slice(1)}` : builtin,
       manualHollow: false,
     };
   }
-  const path = PATH_SYMBOLS[name];
+  const path = LEGACY_PATH_SYMBOLS[name];
   if (path) {
     return { symbol: path, manualHollow: hollow };
   }
@@ -686,28 +714,25 @@ export function buildGoalSeries({
       return [dateStr, goalMap.get(dateStr) ?? null];
     });
 
+    const { symbol, manualHollow } = resolveMarkerSymbol(goalSymbol, false);
+    const hollow = symbol.startsWith('empty');
+    const color = goalColors[idx % goalColors.length];
+
     return {
       type: 'line',
       name: goalTrace.name,
       data: goalData,
       showSymbol: true,
-      // Goal markers follow the legacy graph: the theme's goalSymbol
-      // ('x' in most themes) at size 12, filled in the goal color,
-      // drawn translucent.
-      symbol: resolveMarkerSymbol(goalSymbol, false).symbol,
+      symbol,
       symbolSize: 12,
       lineStyle: {
         width: drawGoalLine ? 2 : 0,
         type: drawGoalLine ? 'dashed' : 'dotted',
-        color: goalColors[idx % goalColors.length],
-        opacity: 0.5,
+        color,
       },
-      itemStyle: {
-        color: goalColors[idx % goalColors.length],
-        // Goal markers are translucent in the legacy graph; ECharts ignores
-        // series-level opacity for line series, so set it on the styles.
-        opacity: 0.5,
-      },
+      itemStyle: manualHollow
+        ? { color: '#ffffff', borderColor: color, borderWidth: 2 }
+        : { color, ...(hollow ? { borderColor: color, borderWidth: 2 } : {}) },
       connectNulls: true,
       z: 1,
       tooltip: {
