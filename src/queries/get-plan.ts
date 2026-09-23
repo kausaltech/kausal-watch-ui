@@ -187,7 +187,10 @@ const GET_PLAN_CONTEXT: TypedDocumentNode<PlanContextQuery, PlanContextQueryVari
     accessibilityStatementUrl
     externalFeedbackUrl
     features {
-      showLoginLinkInPublicUi
+      # Renamed to showLoginLinkInPublicUi in the backend, which still answers this name.
+      # Switch once every deployed backend has the new one: asking for a field the schema lacks
+      # fails the whole query.
+      allowPublicSiteLogin
       hasActionContactPersonRoles
       contactPersonsPublicData
       contactPersonsShowPicture

@@ -467,7 +467,7 @@ function SiteFooter(props: SiteFooterProps) {
     ownerLinks = [],
   } = props;
 
-  const showUiLogin = plan.features.showLoginLinkInPublicUi;
+  const showUiLogin = plan.features.allowPublicSiteLogin;
   const isAuthLoading = session.status === 'loading';
   const isAuthenticated = session.status === 'authenticated';
 
