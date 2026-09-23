@@ -10,7 +10,7 @@ import IndicatorVisualizationBlock from '@/components/indicators/IndicatorVisual
 import Card from '../common/Card';
 import RichText from '../common/RichText';
 import { SectionHeader } from './ActionListBlock';
-import { getReadableThemeTextColor } from './colorUtils';
+import { getReadableThemeTextColor, hasLowContrast } from './colorUtils';
 
 const DashboardRowSection = styled.div<{ $isFirst: boolean; $isLast: boolean }>`
   background-color: ${(props) => props.theme.section.dashboardRowBlock.background};
@@ -74,9 +74,9 @@ const StyledCard = styled(Card)`
 
   &.outline {
     ${({ theme }) =>
-      theme.themeColors.light === '#fefefe' &&
+      hasLowContrast(theme.section.dashboardRowBlock.background, theme.themeColors.white) &&
       `
-        /* Improve white card contrast when dashboard section is also near-white. */
+        /* Improve card contrast when the dashboard background is nearly the same as the card. */
         border-width: 1px;
         border-color: ${theme.neutralLight};
       `}
