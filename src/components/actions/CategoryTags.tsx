@@ -1,13 +1,9 @@
-import React, { type ComponentType, type PropsWithChildren } from 'react';
+import { type ComponentType, type PropsWithChildren } from 'react';
 
 import styled from '@emotion/styled';
 
 import { readableColor } from 'polished';
 
-import {
-  type CategoryTagRecursiveFragmentFragment,
-  type CategoryTypeFragmentFragment,
-} from '@/common/__generated__/graphql';
 import { ActionListLink, StaticPageLink } from '@/common/links';
 import BadgeTooltip from '@/components/common/BadgeTooltip';
 import PopoverTip from '@/components/common/PopoverTip';
@@ -113,7 +109,7 @@ function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
 const Identifier = styled.span`
   color: ${(props) =>
     readableColor(
-      props.theme.neutralLight,
+      props.theme.badgeColorNeutral,
       props.theme.graphColors.grey070,
       props.theme.graphColors.grey020
     )};
@@ -190,7 +186,7 @@ export const CategoryContent = (props: CategoryContentProps) => {
               }
               iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl || undefined}
               size={compact ? 'sm' : 'md'}
-              themeColor="neutralLight"
+              themeColor="badgeColorNeutral"
               color={item.color || item.parent?.color || undefined}
               isLink={!noLink}
               maxLines={item.name.length > 50 ? 2 : 4}
@@ -202,9 +198,31 @@ export const CategoryContent = (props: CategoryContentProps) => {
   );
 };
 
+type CategoryTagLike = {
+  id: string;
+  identifier: string;
+  name: string;
+  helpText: string;
+  color: string;
+  iconSvgUrl: string | null;
+  iconImage?: { rendition?: { src: string } | null } | null;
+  categoryPage?: { urlPath: string } | null;
+  level?: { name: string } | null;
+  parent?: CategoryTagLike | null;
+  type: { id: string; hideCategoryIdentifiers: boolean };
+};
+
+type CategoryTypeLike = {
+  id: string;
+  identifier: string;
+  name?: string;
+  helpText?: string;
+  levels?: Array<{ name: string }>;
+};
+
 type CategoryTagsProps = {
-  categories: CategoryTagRecursiveFragmentFragment[];
-  types: CategoryTypeFragmentFragment[];
+  categories: CategoryTagLike[];
+  types: CategoryTypeLike[];
   noLink?: boolean;
   compact?: boolean;
   ListLinkComponent?: ComponentType<ListLinkComponentProps>;
@@ -229,7 +247,7 @@ function CategoryTags(props: CategoryTagsProps) {
         as section header */
 
     const categoryTypeHeader =
-      ct.levels?.length > 0 && cats[0].level?.name ? cats[0].level.name : ct.name;
+      (ct.levels?.length ?? 0) > 0 && cats[0].level?.name ? cats[0].level.name : ct.name;
 
     return (
       <CategoryGroup key={ct.id} $compact={compact}>

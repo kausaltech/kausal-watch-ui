@@ -84,7 +84,7 @@ const DashboardIndicatorAreaChartBlock = ({
   }
 
   const hasDimension = !!dimension;
-  const stackable = indicator?.dataCategoriesAreStackable;
+  const stackable = indicator?.dataCategoriesAreStackable === true;
   const dimSeries = hasDimension ? buildDimSeries(chartSeries, palette, timeResolution) : [];
 
   const totalDef = buildTotalSeries(
@@ -179,7 +179,7 @@ const DashboardIndicatorAreaChartBlock = ({
           data,
           itemStyle: { color: d.color },
           lineStyle: { color: d.color },
-          emphasis: { focus: 'series' },
+          emphasis: { focus: 'series' as const },
         };
       })
     : [
@@ -199,7 +199,7 @@ const DashboardIndicatorAreaChartBlock = ({
           })(),
           itemStyle: { color: totalDef.color },
           lineStyle: { color: totalDef.color },
-          emphasis: { focus: 'series' },
+          emphasis: { focus: 'series' as const },
         },
       ];
 

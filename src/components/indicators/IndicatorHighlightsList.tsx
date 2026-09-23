@@ -1,13 +1,16 @@
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Col, Row } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
-import type { IndicatorHightlightListQuery } from '@/common/__generated__/graphql';
+import type {
+  IndicatorHightlightListQuery,
+  IndicatorHightlightListQueryVariables,
+} from '@/common/__generated__/graphql';
 import { SiteGeneralContentIndicatorTerm } from '@/common/__generated__/graphql';
 import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
@@ -17,7 +20,10 @@ import { usePlan } from '@/context/plan';
 
 import IndicatorHighlightCard from './IndicatorHighlightCard';
 
-export const GET_INDICATOR_HIGHLIGHTS = gql`
+export const GET_INDICATOR_HIGHLIGHTS: TypedDocumentNode<
+  IndicatorHightlightListQuery,
+  IndicatorHightlightListQueryVariables
+> = gql`
   query IndicatorHightlightList($plan: ID!, $first: Int!, $orderBy: String!) {
     planIndicators(plan: $plan, first: $first, orderBy: $orderBy, hasData: true, hasGoals: true) {
       id
@@ -131,12 +137,9 @@ function IndicatorHighlightsList(props: IndicatorHighlightsListProps) {
     orderBy: '-updatedAt',
   };
 
-  const { loading, error, data } = useQuery<IndicatorHightlightListQuery>(
-    GET_INDICATOR_HIGHLIGHTS,
-    {
-      variables: queryParams,
-    }
-  );
+  const { loading, error, data } = useQuery(GET_INDICATOR_HIGHLIGHTS, {
+    variables: queryParams,
+  });
 
   if (loading) return <ContentLoader message={t('loading')} />;
   if (error) return <p>{t('error-loading-indicators')}</p>;

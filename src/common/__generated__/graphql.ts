@@ -312,9 +312,11 @@ export type HeroImageFragment = { __typename: 'Image', id: string, title: string
 
 export type CardImageFragment_small = { __typename: 'ImageRendition', id: string, width: number, height: number, src: string };
 
+export type CardImageFragment_large = { __typename: 'ImageRendition', id: string, width: number, height: number, src: string };
+
 export type CardImageFragment_rendition = { __typename: 'ImageRendition', id: string, width: number, height: number, src: string };
 
-export type CardImageFragment = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type CardImageFragment = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type SocialImageFragment_social = { __typename: 'ImageRendition', id: string, width: number, height: number, src: string };
 
@@ -400,7 +402,7 @@ export type SearchQueryVariables = Exact<{
   clientUrl: string | null | undefined;
 }>;
 
-export type ActionHightlightListQuery_planActions_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type ActionHightlightListQuery_planActions_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type ActionHightlightListQuery_planActions_plan = { __typename: 'Plan', id: string };
 
@@ -410,11 +412,11 @@ export type ActionHightlightListQuery_planActions_statusSummary = { __typename: 
 
 export type ActionHightlightListQuery_planActions_implementationPhase = { __typename: 'ActionImplementationPhase', id: string, name: string, identifier: string };
 
-export type ActionHightlightListQuery_planActions_categories_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type ActionHightlightListQuery_planActions_categories_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
-export type ActionHightlightListQuery_planActions_categories_parent_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type ActionHightlightListQuery_planActions_categories_parent_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
-export type ActionHightlightListQuery_planActions_categories_parent_parent_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type ActionHightlightListQuery_planActions_categories_parent_parent_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type ActionHightlightListQuery_planActions_categories_parent_parent = { __typename: 'Category', id: string, image: ActionHightlightListQuery_planActions_categories_parent_parent_image | null };
 
@@ -455,7 +457,7 @@ export type ActionListQuery_planActions_status = { __typename: 'ActionStatus', i
 
 export type ActionListQuery_planActions_categories_level = { __typename: 'CategoryLevel', id: string, name: string, namePlural: string | null };
 
-export type ActionListQuery_planActions_categories_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type ActionListQuery_planActions_categories_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type ActionListQuery_planActions_categories_indicators_values = { __typename: 'IndicatorValue', id: string, date: string | null, value: number };
 
@@ -902,7 +904,7 @@ export type DashboardActionListQueryVariables = Exact<{
   workflow: WorkflowState | null | undefined;
 }>;
 
-export type EmbedActionQuery_action_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type EmbedActionQuery_action_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type EmbedActionQuery_action_plan = { __typename: 'Plan', id: string };
 
@@ -912,11 +914,11 @@ export type EmbedActionQuery_action_status = { __typename: 'ActionStatus', id: s
 
 export type EmbedActionQuery_action_implementationPhase = { __typename: 'ActionImplementationPhase', id: string, name: string, identifier: string };
 
-export type EmbedActionQuery_action_categories_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type EmbedActionQuery_action_categories_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
-export type EmbedActionQuery_action_categories_parent_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type EmbedActionQuery_action_categories_parent_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
-export type EmbedActionQuery_action_categories_parent_parent_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type EmbedActionQuery_action_categories_parent_parent_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type EmbedActionQuery_action_categories_parent_parent = { __typename: 'Category', id: string, image: EmbedActionQuery_action_categories_parent_parent_image | null };
 
@@ -962,6 +964,52 @@ export type CreatePledgeFeedbackMutationVariables = Exact<{
   input: UserFeedbackMutationInput;
 }>;
 
+export type PledgeSignUpMutation_pledge_signUp = { __typename: 'SignUpPayload', sent: boolean };
+
+export type PledgeSignUpMutation_pledge = { __typename: 'PledgeMutations', signUp: PledgeSignUpMutation_pledge_signUp | null };
+
+export type PledgeSignUpMutation = { __typename: 'Mutation', pledge: PledgeSignUpMutation_pledge };
+
+
+export type PledgeSignUpMutationVariables = Exact<{
+  email: string;
+  termsAccepted: boolean;
+  marketingAccepted: boolean;
+  anonUuid: string | null | undefined;
+}>;
+
+export type PledgeSignInMutation_pledge_signIn = { __typename: 'SignInPayload', sent: boolean };
+
+export type PledgeSignInMutation_pledge = { __typename: 'PledgeMutations', signIn: PledgeSignInMutation_pledge_signIn | null };
+
+export type PledgeSignInMutation = { __typename: 'Mutation', pledge: PledgeSignInMutation_pledge };
+
+
+export type PledgeSignInMutationVariables = Exact<{
+  email: string;
+  anonUuid: string | null | undefined;
+}>;
+
+export type PledgeVerifyPinMutation_pledge_verifyPin = { __typename: 'VerifyPinPayload', userToken: string, pledgeIds: Array<string> };
+
+export type PledgeVerifyPinMutation_pledge = { __typename: 'PledgeMutations', verifyPin: PledgeVerifyPinMutation_pledge_verifyPin | null };
+
+export type PledgeVerifyPinMutation = { __typename: 'Mutation', pledge: PledgeVerifyPinMutation_pledge };
+
+
+export type PledgeVerifyPinMutationVariables = Exact<{
+  email: string;
+  pin: string;
+  anonUuid: string | null | undefined;
+}>;
+
+export type PublicUserForNavQuery_publicUser = { __typename: 'PublicUser', id: string, email: string | null };
+
+export type PublicUserForNavQuery = { __typename: 'Query', publicUser: PublicUserForNavQuery_publicUser | null };
+
+
+export type PublicUserForNavQueryVariables = Exact<{ [key: string]: never; }>;
+
 export type RegisterPublicUserMutation_pledge_registerUser = { __typename: 'RegisterPublicUserPayload', uuid: string };
 
 export type RegisterPublicUserMutation_pledge = { __typename: 'PledgeMutations', registerUser: RegisterPublicUserMutation_pledge_registerUser | null };
@@ -979,7 +1027,7 @@ export type CommitToPledgeMutation = { __typename: 'Mutation', pledge: CommitToP
 
 
 export type CommitToPledgeMutationVariables = Exact<{
-  user: string;
+  user: string | null | undefined;
   pledge: string | number;
   committed: boolean;
 }>;
@@ -992,7 +1040,7 @@ export type PublicUserDataMutation = { __typename: 'Mutation', pledge: PublicUse
 
 
 export type PublicUserDataMutationVariables = Exact<{
-  user: string;
+  user: string | null | undefined;
   key: string;
   value: string;
 }>;
@@ -1001,13 +1049,13 @@ export type PublicUserQuery_publicUser_commitments_pledge = { __typename: 'Pledg
 
 export type PublicUserQuery_publicUser_commitments = { __typename: 'PledgeCommitment', id: string, pledge: PublicUserQuery_publicUser_commitments_pledge | null };
 
-export type PublicUserQuery_publicUser = { __typename: 'PublicUser', id: string, uuid: string, userData: string, commitments: Array<PublicUserQuery_publicUser_commitments> | null };
+export type PublicUserQuery_publicUser = { __typename: 'PublicUser', id: string, uuid: string, email: string | null, userData: string, commitments: Array<PublicUserQuery_publicUser_commitments> | null };
 
 export type PublicUserQuery = { __typename: 'Query', publicUser: PublicUserQuery_publicUser | null };
 
 
 export type PublicUserQueryVariables = Exact<{
-  user: string;
+  user: string | null | undefined;
 }>;
 
 export type AttributesBlockAttributeFragment_categories = { __typename: 'Category', id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, level: ActionListQuery_planActions_categories_level | null, image: ActionListQuery_planActions_categories_image | null, indicators: Array<ActionListQuery_planActions_categories_indicators>, indicatorRelationships: Array<ActionListQuery_planActions_categories_indicatorRelationships>, iconImage: ActionListQuery_planActions_categories_iconImage | null, categoryPage: ActionListQuery_planActions_categories_categoryPage | null, type: ActionListQuery_planActions_categories_type, attributes: Array<ActionListQuery_planActions_categories_attributes>, parent: ActionListQuery_planActions_categories_parent | null };
@@ -3086,7 +3134,7 @@ export type StreamFieldFragment_ActionListBlock_groupByCategoryLevel = { __typen
 
 export type StreamFieldFragment_AdaptiveEmbedBlock_embed = { __typename: 'EmbedHTMLValue', html: string | null };
 
-export type StreamFieldFragment_CardListBlock_cards_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type StreamFieldFragment_CardListBlock_cards_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type StreamFieldFragment_CardListBlock_cards = { __typename: 'CardBlock', heading: string | null, content: string | null, link: string | null, image: StreamFieldFragment_CardListBlock_cards_image | null };
 
@@ -4428,9 +4476,7 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton =
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_UpdatedAtColumnBlock
 ;
 
-export type StreamFieldFragment_LargeImageBlock_image_renditionUncropped = { __typename: 'ImageRendition', id: string, src: string };
-
-export type StreamFieldFragment_LargeImageBlock_image = { __typename: 'Image', id: string, title: string, altText: string, width: number, height: number, imageCredit: string, renditionUncropped: StreamFieldFragment_LargeImageBlock_image_renditionUncropped | null };
+export type StreamFieldFragment_LargeImageBlock_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null };
 
 export type StreamFieldFragment_QuestionAnswerBlock_questions = { __typename: 'QuestionBlock', question: string, answer: string };
 
@@ -4668,7 +4714,7 @@ type StreamField_RegexBlock_Fragment = { __typename: 'RegexBlock', blockType: st
 
 type StreamField_RelatedIndicatorsBlock_Fragment = { __typename: 'RelatedIndicatorsBlock', blockType: string, field: string };
 
-type StreamField_RelatedPlanListBlock_Fragment = { __typename: 'RelatedPlanListBlock', blockType: string, field: string };
+type StreamField_RelatedPlanListBlock_Fragment = { __typename: 'RelatedPlanListBlock', heading: string | null, blockType: string, field: string };
 
 type StreamField_ReportComparisonBlock_Fragment = { __typename: 'ReportComparisonBlock', blockType: string, field: string };
 
@@ -4859,7 +4905,7 @@ export type ActionDetailsQuery_action_mergedActions_plan = { __typename: 'Plan',
 
 export type ActionDetailsQuery_action_mergedActions = { __typename: 'Action', id: string, identifier: string, name: string, officialName: string | null, plan: ActionDetailsQuery_action_mergedActions_plan };
 
-export type ActionDetailsQuery_action_categories_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null, social: SocialImageFragment_social | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type ActionDetailsQuery_action_categories_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null, social: SocialImageFragment_social | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type ActionDetailsQuery_action_categories_parent_parent_parent = { __typename: 'Category', id: string, identifier: string, name: string, leadParagraph: string, order: number, kausalPathsNodeUuid: string, color: string, iconSvgUrl: string | null, helpText: string, image: ActionDetailsQuery_action_categories_image | null, level: ActionListQuery_planActions_categories_level | null, indicators: Array<ActionListQuery_planActions_categories_indicators>, indicatorRelationships: Array<ActionListQuery_planActions_categories_indicatorRelationships>, iconImage: ActionListQuery_planActions_categories_iconImage | null, categoryPage: ActionListQuery_planActions_categories_categoryPage | null, type: ActionListQuery_planActions_categories_type, attributes: Array<ActionListQuery_planActions_categories_attributes> };
 
@@ -4978,7 +5024,7 @@ export type ActionDetailsQuery_action_changeLogMessage =
   | ActionDetailsQuery_action_changeLogMessage_PageChangeLogMessage
 ;
 
-export type ActionDetailsQuery_action_pledges_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type ActionDetailsQuery_action_pledges_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type ActionDetailsQuery_action_pledges_attributes_AttributeCategoryChoice = { __typename: 'AttributeCategoryChoice', id: string, type: AttributesBlockAttributeWithNestedTypeFragment_type, categories: Array<AttributesBlockAttributeFragment_categories> };
 
@@ -5074,33 +5120,33 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_attribute_AttributeText
 ;
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionAttributeTypeReportFieldBlock = { __typename: 'ActionAttributeTypeReportFieldBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionAttributeTypeReportFieldBlock = { __typename: 'ActionAttributeTypeReportFieldBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionCategoryReportFieldBlock = { __typename: 'ActionCategoryReportFieldBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionCategoryReportFieldBlock = { __typename: 'ActionCategoryReportFieldBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionDescriptionBlock = { __typename: 'ActionDescriptionBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionDescriptionBlock = { __typename: 'ActionDescriptionBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionEndDateBlock = { __typename: 'ActionEndDateBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionEndDateBlock = { __typename: 'ActionEndDateBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionManualStatusReasonBlock = { __typename: 'ActionManualStatusReasonBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionManualStatusReasonBlock = { __typename: 'ActionManualStatusReasonBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionPrimaryOrgBlock = { __typename: 'ActionPrimaryOrgBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionPrimaryOrgBlock = { __typename: 'ActionPrimaryOrgBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionRelatedIndicatorsBlock = { __typename: 'ActionRelatedIndicatorsBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionRelatedIndicatorsBlock = { __typename: 'ActionRelatedIndicatorsBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionResponsiblePartyReportFieldBlock = { __typename: 'ActionResponsiblePartyReportFieldBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionResponsiblePartyReportFieldBlock = { __typename: 'ActionResponsiblePartyReportFieldBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionScheduleContinuousBlock = { __typename: 'ActionScheduleContinuousBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionScheduleContinuousBlock = { __typename: 'ActionScheduleContinuousBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionStartDateBlock = { __typename: 'ActionStartDateBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionStartDateBlock = { __typename: 'ActionStartDateBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionTasksBlock = { __typename: 'ActionTasksBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock', field: string };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock', id: string | null };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field =
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionAttributeTypeReportFieldBlock
@@ -6333,7 +6379,7 @@ export type ContentPageQuery_planPage_CategoryPage_category_level = { __typename
 
 export type ContentPageQuery_planPage_CategoryPage_category_type = { __typename: 'CategoryType', id: string, hideCategoryIdentifiers: boolean };
 
-export type ContentPageQuery_planPage_CategoryPage_category_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null, social: SocialImageFragment_social | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type ContentPageQuery_planPage_CategoryPage_category_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null, social: SocialImageFragment_social | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type ContentPageQuery_planPage_CategoryPage_category_indicators = { __typename: 'Indicator', id: string };
 
@@ -6345,7 +6391,7 @@ export type ContentPageQuery_planPage_CategoryPage_category_children = { __typen
 
 export type ContentPageQuery_planPage_CategoryPage_category_parent_level = { __typename: 'CategoryLevel', id: string, name: string, namePlural: string | null };
 
-export type ContentPageQuery_planPage_CategoryPage_category_parent_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null, social: SocialImageFragment_social | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type ContentPageQuery_planPage_CategoryPage_category_parent_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null, social: SocialImageFragment_social | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type ContentPageQuery_planPage_CategoryPage_category_parent_iconImage_rendition = { __typename: 'ImageRendition', id: string, src: string };
 
@@ -6706,7 +6752,7 @@ export type HomePageQuery_planPage_PlanRootPage_body_LargeImageBlock = { __typen
 
 export type HomePageQuery_planPage_PlanRootPage_body_PathsOutcomeBlock = { __typename: 'PathsOutcomeBlock', heading: string | null, helpText: string | null, outcomeNodeId: string | null, blockType: string, field: string };
 
-export type HomePageQuery_planPage_PlanRootPage_body_RelatedPlanListBlock = { __typename: 'RelatedPlanListBlock', blockType: string, field: string };
+export type HomePageQuery_planPage_PlanRootPage_body_RelatedPlanListBlock = { __typename: 'RelatedPlanListBlock', heading: string | null, blockType: string, field: string };
 
 export type HomePageQuery_planPage_PlanRootPage_body_RichTextBlock = { __typename: 'RichTextBlock', value: string, blockType: string, field: string };
 
@@ -6769,7 +6815,7 @@ export type HomePageQuery_planPage =
   | HomePageQuery_planPage_StaticPage
 ;
 
-export type HomePageQuery_plan_primaryActionClassification_categories_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type HomePageQuery_plan_primaryActionClassification_categories_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type HomePageQuery_plan_primaryActionClassification_categories_categoryPage = { __typename: 'CategoryPage', live: boolean, id: string | null, title: string, urlPath: string };
 
@@ -7265,7 +7311,7 @@ export type PlanContextQuery_plan_domain = { __typename: 'PlanDomain', id: strin
 
 export type PlanContextQuery_plan_image_square = { __typename: 'ImageRendition', id: string, src: string };
 
-export type PlanContextQuery_plan_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, square: PlanContextQuery_plan_image_square | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null, social: SocialImageFragment_social | null };
+export type PlanContextQuery_plan_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, square: PlanContextQuery_plan_image_square | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null, social: SocialImageFragment_social | null };
 
 export type PlanContextQuery_plan_actionSchedules = { __typename: 'ActionSchedule', id: string, name: string, beginsAt: string, endsAt: string | null };
 
@@ -7510,7 +7556,7 @@ export type PlanContextQuery_plan_footer_items =
 
 export type PlanContextQuery_plan_footer = { __typename: 'Footer', items: Array<PlanContextQuery_plan_footer_items> };
 
-export type PlanContextQuery_plan_features = { __typename: 'PlanFeatures', allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hideFromSearchEngines: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean };
+export type PlanContextQuery_plan_features = { __typename: 'PlanFeatures', allowPublicSiteLogin: boolean, hasActionContactPersonRoles: boolean, contactPersonsPublicData: PlanFeaturesContactPersonsPublicData, contactPersonsShowPicture: boolean, contactPersonsShowOrganizationAncestors: boolean, enableSearch: boolean, hideFromSearchEngines: boolean, hasActionIdentifiers: boolean, hasActionOfficialName: boolean, hasActionLeadParagraph: boolean, hasActionPrimaryOrgs: boolean, indicatorsOpenInModal: boolean, showAdminLink: boolean, enableIndicatorComparison: boolean, minimalStatuses: boolean, enableChangeLog: boolean, enableActionPdfExportInPublicUi: boolean, enableCommunityEngagement: boolean, presentPlanHierarchyAsPeers: boolean };
 
 export type PlanContextQuery_plan_allRelatedPlans_image_rendition = { __typename: 'ImageRendition', id: string, src: string };
 
@@ -8025,7 +8071,7 @@ export type PlanContextQuery_plan_additionalLinks = { __typename: 'AdditionalLin
 
 export type PlanContextQuery_plan_actionListPage = { __typename: 'ActionListPage', id: string | null, includeRelatedPlans: boolean | null, actionDateFormat: string | null, taskDateFormat: string | null };
 
-export type PlanContextQuery_plan = { __typename: 'Plan', id: string, identifier: string, name: string, shortName: string | null, versionName: string, themeIdentifier: string | null, timezone: string, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers: boolean, publishedAt: string | null, kausalPathsInstanceUuid: string, viewUrl: string | null, actionReportExportViewUrl: string | null, serveFileBaseUrl: string, adminUrl: string | null, accessibilityStatementUrl: string | null, externalFeedbackUrl: string | null, primaryActionClassification: PlanContextQuery_plan_primaryActionClassification | null, secondaryActionClassification: PlanContextQuery_plan_secondaryActionClassification | null, domain: PlanContextQuery_plan_domain | null, image: PlanContextQuery_plan_image | null, actionSchedules: Array<PlanContextQuery_plan_actionSchedules>, actionImplementationPhases: Array<PlanContextQuery_plan_actionImplementationPhases>, actionDependencyRoles: Array<PlanContextQuery_plan_actionDependencyRoles>, actionImpacts: Array<PlanContextQuery_plan_actionImpacts>, actionStatuses: Array<PlanContextQuery_plan_actionStatuses>, actionStatusSummaries: Array<PlanContextQuery_plan_actionStatusSummaries>, actionTimelinessClasses: Array<PlanContextQuery_plan_actionTimelinessClasses>, impactGroups: Array<PlanContextQuery_plan_impactGroups>, primaryOrgs: Array<PlanContextQuery_plan_primaryOrgs>, generalContent: PlanContextQuery_plan_generalContent, mainMenu: PlanContextQuery_plan_mainMenu | null, footer: PlanContextQuery_plan_footer | null, features: PlanContextQuery_plan_features, allRelatedPlans: Array<PlanContextQuery_plan_allRelatedPlans>, supersededBy: PlanContextQuery_plan_supersededBy | null, supersededPlans: Array<PlanContextQuery_plan_supersededPlans>, supersedingPlans: Array<PlanContextQuery_plan_supersedingPlans>, children: Array<PlanContextQuery_plan_children>, parent: PlanContextQuery_plan_parent | null, additionalLinks: PlanContextQuery_plan_additionalLinks | null, actionListPage: PlanContextQuery_plan_actionListPage | null };
+export type PlanContextQuery_plan = { __typename: 'Plan', id: string, identifier: string, shortIdentifier: string | null, name: string, shortName: string | null, versionName: string, themeIdentifier: string | null, timezone: string, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers: boolean, publishedAt: string | null, kausalPathsInstanceUuid: string, viewUrl: string | null, actionReportExportViewUrl: string | null, serveFileBaseUrl: string, adminUrl: string | null, accessibilityStatementUrl: string | null, externalFeedbackUrl: string | null, primaryActionClassification: PlanContextQuery_plan_primaryActionClassification | null, secondaryActionClassification: PlanContextQuery_plan_secondaryActionClassification | null, domain: PlanContextQuery_plan_domain | null, image: PlanContextQuery_plan_image | null, actionSchedules: Array<PlanContextQuery_plan_actionSchedules>, actionImplementationPhases: Array<PlanContextQuery_plan_actionImplementationPhases>, actionDependencyRoles: Array<PlanContextQuery_plan_actionDependencyRoles>, actionImpacts: Array<PlanContextQuery_plan_actionImpacts>, actionStatuses: Array<PlanContextQuery_plan_actionStatuses>, actionStatusSummaries: Array<PlanContextQuery_plan_actionStatusSummaries>, actionTimelinessClasses: Array<PlanContextQuery_plan_actionTimelinessClasses>, impactGroups: Array<PlanContextQuery_plan_impactGroups>, primaryOrgs: Array<PlanContextQuery_plan_primaryOrgs>, generalContent: PlanContextQuery_plan_generalContent, mainMenu: PlanContextQuery_plan_mainMenu | null, footer: PlanContextQuery_plan_footer | null, features: PlanContextQuery_plan_features, allRelatedPlans: Array<PlanContextQuery_plan_allRelatedPlans>, supersededBy: PlanContextQuery_plan_supersededBy | null, supersededPlans: Array<PlanContextQuery_plan_supersededPlans>, supersedingPlans: Array<PlanContextQuery_plan_supersedingPlans>, children: Array<PlanContextQuery_plan_children>, parent: PlanContextQuery_plan_parent | null, additionalLinks: PlanContextQuery_plan_additionalLinks | null, actionListPage: PlanContextQuery_plan_actionListPage | null };
 
 export type PlanContextQuery_workflowStates = { __typename: 'WorkflowStateDescription', id: string, description: string | null };
 
@@ -8038,7 +8084,7 @@ export type PlanContextQueryVariables = Exact<{
   clientUrl: string | null | undefined;
 }>;
 
-export type PlanContextFragment = { __typename: 'Plan', id: string, identifier: string, name: string, shortName: string | null, versionName: string, themeIdentifier: string | null, timezone: string, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers: boolean, publishedAt: string | null, kausalPathsInstanceUuid: string, viewUrl: string | null, actionReportExportViewUrl: string | null, serveFileBaseUrl: string, adminUrl: string | null, accessibilityStatementUrl: string | null, externalFeedbackUrl: string | null, primaryActionClassification: PlanContextQuery_plan_primaryActionClassification | null, secondaryActionClassification: PlanContextQuery_plan_secondaryActionClassification | null, domain: PlanContextQuery_plan_domain | null, image: PlanContextQuery_plan_image | null, actionSchedules: Array<PlanContextQuery_plan_actionSchedules>, actionImplementationPhases: Array<PlanContextQuery_plan_actionImplementationPhases>, actionDependencyRoles: Array<PlanContextQuery_plan_actionDependencyRoles>, actionImpacts: Array<PlanContextQuery_plan_actionImpacts>, actionStatuses: Array<PlanContextQuery_plan_actionStatuses>, actionStatusSummaries: Array<PlanContextQuery_plan_actionStatusSummaries>, actionTimelinessClasses: Array<PlanContextQuery_plan_actionTimelinessClasses>, impactGroups: Array<PlanContextQuery_plan_impactGroups>, primaryOrgs: Array<PlanContextQuery_plan_primaryOrgs>, generalContent: PlanContextQuery_plan_generalContent, mainMenu: PlanContextQuery_plan_mainMenu | null, footer: PlanContextQuery_plan_footer | null, features: PlanContextQuery_plan_features, allRelatedPlans: Array<PlanContextQuery_plan_allRelatedPlans>, supersededBy: PlanContextQuery_plan_supersededBy | null, supersededPlans: Array<PlanContextQuery_plan_supersededPlans>, supersedingPlans: Array<PlanContextQuery_plan_supersedingPlans>, children: Array<PlanContextQuery_plan_children>, parent: PlanContextQuery_plan_parent | null, additionalLinks: PlanContextQuery_plan_additionalLinks | null, actionListPage: PlanContextQuery_plan_actionListPage | null };
+export type PlanContextFragment = { __typename: 'Plan', id: string, identifier: string, shortIdentifier: string | null, name: string, shortName: string | null, versionName: string, themeIdentifier: string | null, timezone: string, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers: boolean, publishedAt: string | null, kausalPathsInstanceUuid: string, viewUrl: string | null, actionReportExportViewUrl: string | null, serveFileBaseUrl: string, adminUrl: string | null, accessibilityStatementUrl: string | null, externalFeedbackUrl: string | null, primaryActionClassification: PlanContextQuery_plan_primaryActionClassification | null, secondaryActionClassification: PlanContextQuery_plan_secondaryActionClassification | null, domain: PlanContextQuery_plan_domain | null, image: PlanContextQuery_plan_image | null, actionSchedules: Array<PlanContextQuery_plan_actionSchedules>, actionImplementationPhases: Array<PlanContextQuery_plan_actionImplementationPhases>, actionDependencyRoles: Array<PlanContextQuery_plan_actionDependencyRoles>, actionImpacts: Array<PlanContextQuery_plan_actionImpacts>, actionStatuses: Array<PlanContextQuery_plan_actionStatuses>, actionStatusSummaries: Array<PlanContextQuery_plan_actionStatusSummaries>, actionTimelinessClasses: Array<PlanContextQuery_plan_actionTimelinessClasses>, impactGroups: Array<PlanContextQuery_plan_impactGroups>, primaryOrgs: Array<PlanContextQuery_plan_primaryOrgs>, generalContent: PlanContextQuery_plan_generalContent, mainMenu: PlanContextQuery_plan_mainMenu | null, footer: PlanContextQuery_plan_footer | null, features: PlanContextQuery_plan_features, allRelatedPlans: Array<PlanContextQuery_plan_allRelatedPlans>, supersededBy: PlanContextQuery_plan_supersededBy | null, supersededPlans: Array<PlanContextQuery_plan_supersededPlans>, supersedingPlans: Array<PlanContextQuery_plan_supersedingPlans>, children: Array<PlanContextQuery_plan_children>, parent: PlanContextQuery_plan_parent | null, additionalLinks: PlanContextQuery_plan_additionalLinks | null, actionListPage: PlanContextQuery_plan_actionListPage | null };
 
 export type PlansByHostnameQuery_plansForHostname_domain = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, status: PublicationStatus | null, statusMessage: string | null };
 
@@ -8060,7 +8106,7 @@ export type PlansByHostnameQueryVariables = Exact<{
   hostname: string | null | undefined;
 }>;
 
-export type PledgeFragment_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null, small: CardImageFragment_small | null, rendition: CardImageFragment_rendition | null };
+export type PledgeFragment_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
 export type PledgeFragment_attributes_AttributeCategoryChoice = { __typename: 'AttributeCategoryChoice', id: string, type: AttributesBlockAttributeWithNestedTypeFragment_type, categories: Array<AttributesBlockAttributeFragment_categories> };
 
