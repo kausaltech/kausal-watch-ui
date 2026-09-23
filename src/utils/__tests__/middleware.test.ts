@@ -136,6 +136,17 @@ describe('applySecurityHeaders', () => {
    * Embed views exist to be framed by third-party sites. They are reachable under a plan's
    * base path and with a locale segment, so the embed segment is not always the first one.
    */
+  /* Content pages come from a catch-all route, so 'embed' can appear in an ordinary path. */
+  it.each(['/resources/embed/guidance', '/embed/guidance', '/embed'])(
+    'still denies framing for the content page at %s',
+    (pathname) => {
+      const { headers } = applySecurityHeaders(new Response(null), pathname);
+
+      expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
+      expect(headers.get('content-security-policy')).toContain("frame-ancestors 'self'");
+    }
+  );
+
   it.each([
     '/embed/v1/actions-recent',
     '/en/embed/v1/actions-recent',

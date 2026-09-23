@@ -312,8 +312,15 @@ const REPORT_ONLY_POLICY = buildReportOnlyPolicy({
   release: getSentryRelease(),
 });
 
-/* Embed views are reachable under a plan's base path, so the segment is not always first. */
-const isEmbedPath = (pathname: string) => pathname.split('/').includes('embed');
+/*
+ * Embed views are reachable under a plan's base path, so the segment is not always first.
+ * The version segment after it keeps an ordinary content page named 'embed' from matching.
+ */
+const isEmbedPath = (pathname: string) => {
+  const segments = pathname.split('/');
+
+  return segments.some((segment, i) => segment === 'embed' && /^v\d+$/.test(segments[i + 1] ?? ''));
+};
 
 export function applySecurityHeaders<R>(response: R, pathname: string): R {
   if (!(response instanceof Response)) {
