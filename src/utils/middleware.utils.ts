@@ -313,16 +313,23 @@ const REPORT_ONLY_POLICY = buildReportOnlyPolicy({
 });
 
 /*
- * Embed views are reachable under a plan's base path, so the segment is not always first.
- * The version segment after it keeps an ordinary content page named 'embed' from matching.
+ * Decided from the rewritten path (`/root/<host>/<locale>/<plan>/<app path>`), because only
+ * there have the plan's base path and the locale been stripped. An incoming path cannot tell
+ * an embed view from a content page slugged `embed`: both go through the catch-all route.
  */
-const isEmbedPath = (pathname: string) => {
-  const segments = pathname.split('/');
+const isEmbedResponse = (response: Response) => {
+  const rewrite = response.headers.get('x-middleware-rewrite');
 
-  return segments.some((segment, i) => segment === 'embed' && /^v\d+$/.test(segments[i + 1] ?? ''));
+  if (!rewrite) {
+    return false;
+  }
+
+  const segments = new URL(rewrite, 'http://n').pathname.split('/').slice(5);
+
+  return segments[0] === 'embed' && /^v\d+$/.test(segments[1] ?? '');
 };
 
-export function applySecurityHeaders<R>(response: R, pathname: string): R {
+export function applySecurityHeaders<R>(response: R): R {
   if (!(response instanceof Response)) {
     return response;
   }
@@ -333,7 +340,7 @@ export function applySecurityHeaders<R>(response: R, pathname: string): R {
 
   const directives = isLocalDev ? [] : ['upgrade-insecure-requests'];
 
-  if (!isEmbedPath(pathname)) {
+  if (!isEmbedResponse(response)) {
     response.headers.set('X-Frame-Options', 'SAMEORIGIN');
     directives.unshift("frame-ancestors 'self'");
   }

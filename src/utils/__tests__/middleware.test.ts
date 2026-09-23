@@ -110,8 +110,19 @@ describe('applySecurityHeaders', () => {
    * The Auth.js wrapper rebuilds the middleware result with `new Response(body, response)`
    * before returning it, so what reaches the proxy is a native Response, never a NextResponse.
    */
+  const rewrittenTo = (path: string) => {
+    const response = new Response(null);
+    response.headers.set('x-middleware-rewrite', path);
+
+    return response;
+  };
+
+  /*
+   * The Auth.js wrapper rebuilds the middleware result with `new Response(body, response)`
+   * before returning it, so what reaches the proxy is a native Response, never a NextResponse.
+   */
   it('sets the constant security headers on a native Response', () => {
-    const { headers } = applySecurityHeaders(new Response(null), '/actions');
+    const { headers } = applySecurityHeaders(new Response(null));
 
     expect(headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
     expect(headers.get('permissions-policy')).toBe(
@@ -120,45 +131,45 @@ describe('applySecurityHeaders', () => {
   });
 
   it('passes through a handler result that is not a response', () => {
-    expect(applySecurityHeaders(undefined, '/actions')).toBeUndefined();
-  });
-
-  it('denies framing on a normal page', () => {
-    const { headers } = applySecurityHeaders(new Response(null), '/actions/1');
-
-    expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
-    expect(headers.get('content-security-policy')).toBe(
-      "frame-ancestors 'self'; upgrade-insecure-requests"
-    );
+    expect(applySecurityHeaders(undefined)).toBeUndefined();
   });
 
   /*
-   * Embed views exist to be framed by third-party sites. They are reachable under a plan's
-   * base path and with a locale segment, so the embed segment is not always the first one.
+   * The exemption is decided from the rewritten path, because only there have the plan's base
+   * path and the locale been stripped. An incoming path cannot distinguish an embed view from
+   * a content page whose slug happens to be `embed`, since both go through a catch-all route.
    */
-  /* Content pages come from a catch-all route, so 'embed' can appear in an ordinary path. */
-  it.each(['/resources/embed/guidance', '/embed/guidance', '/embed'])(
-    'still denies framing for the content page at %s',
-    (pathname) => {
-      const { headers } = applySecurityHeaders(new Response(null), pathname);
-
-      expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
-      expect(headers.get('content-security-policy')).toContain("frame-ancestors 'self'");
-    }
-  );
-
   it.each([
-    '/embed/v1/actions-recent',
-    '/en/embed/v1/actions-recent',
-    '/2022/embed/v1/actions-recent',
-    '/2022/en/embed/v1/actions-recent',
-    '/en/2022/embed/v1/actions-recent',
-  ])('leaves framing unrestricted for the embed view at %s', (pathname) => {
-    const { headers } = applySecurityHeaders(new Response(null), pathname);
+    ['/root/plan.example.com/fi/plan/embed/v1/actions-recent', 'an embed view'],
+    ['/root/plan.example.com/fi/plan/embed/v2/actions-recent', 'a future embed version'],
+  ])('leaves framing unrestricted for %s (%s)', (rewrite) => {
+    const { headers } = applySecurityHeaders(rewrittenTo(rewrite));
 
     expect(headers.has('x-frame-options')).toBe(false);
     expect(headers.get('content-security-policy')).toBe('upgrade-insecure-requests');
     expect(headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
+  });
+
+  it.each([
+    ['/root/plan.example.com/fi/plan/actions/1', 'a normal page'],
+    [
+      '/root/plan.example.com/fi/plan/resources/embed/v1/guidance',
+      'a content page nested under embed',
+    ],
+    ['/root/plan.example.com/fi/plan/v1/foo', 'content on a tenant whose base path is embed'],
+    ['/root/plan.example.com/fi/plan/en/embed/v1/x', 'an unsupported locale position'],
+    ['/404', 'a rewrite with no plan path'],
+  ])('denies framing for %s (%s)', (rewrite) => {
+    const { headers } = applySecurityHeaders(rewrittenTo(rewrite));
+
+    expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
+    expect(headers.get('content-security-policy')).toContain("frame-ancestors 'self'");
+  });
+
+  it('denies framing when nothing was rewritten', () => {
+    const { headers } = applySecurityHeaders(new Response(null));
+
+    expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
   });
 
   /*
@@ -176,7 +187,7 @@ describe('applySecurityHeaders', () => {
       'test-plan'
     );
 
-    const { headers } = applySecurityHeaders(response, '/some/path');
+    const { headers } = applySecurityHeaders(response);
 
     expect(headers.get('x-plan-identifier')).toBe('test-plan');
     expect(headers.get('x-plan-domain')).toBe('plan.example.com');
