@@ -9,7 +9,14 @@ import type { Logger } from 'pino';
 import type { ApolloClientType } from '@common/apollo';
 import { createSentryLink, logOperationLink } from '@common/apollo/links';
 import { FORWARDED_HEADER, WILDCARD_DOMAINS_HEADER } from '@common/constants/headers.mjs';
-import { getWatchGraphQLUrl, getWildcardDomains } from '@common/env';
+import {
+  getAssetPrefix,
+  getDeploymentType,
+  getSentryDsn,
+  getSentryRelease,
+  getWatchGraphQLUrl,
+  getWildcardDomains,
+} from '@common/env';
 import { getClientIP } from '@common/utils';
 import LRUCache from '@common/utils/lru-cache';
 
@@ -227,6 +234,130 @@ export function rewriteUrl(
 
   if (plan) {
     response.headers.set('x-plan-identifier', plan);
+  }
+
+  return response;
+}
+
+const SECURITY_HEADERS: Record<string, string> = {
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+};
+
+function securityReportUri(dsn: string, environment: string, release: string) {
+  const { origin, username, pathname } = new URL(dsn);
+  const segments = pathname.split('/').filter(Boolean);
+  const projectId = segments.pop();
+  const prefix = segments.length ? `/${segments.join('/')}` : '';
+
+  if (!username || !projectId) {
+    return undefined;
+  }
+
+  const params = new URLSearchParams({
+    sentry_key: username,
+    sentry_environment: environment,
+    sentry_release: release,
+  });
+
+  return `${origin}${prefix}/api/${projectId}/security/?${params.toString()}`;
+}
+
+type ReportOnlyOptions = {
+  dsn: string | undefined;
+  assetPrefix: string;
+  environment: string;
+  release: string;
+};
+
+/*
+ * Deliberately permissive on inline scripts and styles: without per-request nonces every
+ * framework-emitted inline block would report, burying the thing worth learning, which is
+ * which external hosts plans actually load from.
+ */
+export function buildReportOnlyPolicy({
+  dsn,
+  assetPrefix,
+  environment,
+  release,
+}: ReportOnlyOptions) {
+  const reportUri =
+    dsn && environment !== 'ci' ? securityReportUri(dsn, environment, release) : undefined;
+
+  if (!reportUri) {
+    return undefined;
+  }
+
+  const sentryOrigin = new URL(reportUri).origin;
+  const cdn = assetPrefix ? new URL(assetPrefix).origin : undefined;
+  const withCdn = (...sources: string[]) => [...sources, cdn].filter(Boolean).join(' ');
+
+  return [
+    "default-src 'self'",
+    `script-src ${withCdn("'self'", "'unsafe-inline'", "'unsafe-eval'")}`,
+    `style-src ${withCdn("'self'", "'unsafe-inline'")}`,
+    `font-src ${withCdn("'self'", 'data:')}`,
+    "img-src 'self' data: blob: https:",
+    "worker-src 'self' blob:",
+    `connect-src ${withCdn("'self'", sentryOrigin)}`,
+    'frame-src https:',
+    `report-uri ${reportUri}`,
+  ].join('; ');
+}
+
+const REPORT_ONLY_POLICY = buildReportOnlyPolicy({
+  dsn: getSentryDsn(),
+  assetPrefix: getAssetPrefix(),
+  environment: getDeploymentType(),
+  release: getSentryRelease(),
+});
+
+/*
+ * Decided from the rewritten path (`/root/<host>/<locale>/<plan>/<app path>`), because only
+ * there have the plan's base path and the locale been stripped. An incoming path cannot tell
+ * an embed view from a content page slugged `embed`: both go through the catch-all route.
+ */
+const isEmbedResponse = (response: Response) => {
+  const rewrite = response.headers.get('x-middleware-rewrite');
+
+  if (!rewrite) {
+    return false;
+  }
+
+  const segments = new URL(rewrite, 'http://n').pathname.split('/').slice(5);
+
+  return segments[0] === 'embed' && /^v\d+$/.test(segments[1] ?? '');
+};
+
+/*
+ * Keyed on how the request arrived, not on the build: the production image is also served
+ * over plain HTTP (the e2e workflow), where asking browsers to upgrade would break assets.
+ */
+const isSecureRequest = (request: NextRequest) =>
+  request.headers.get('x-forwarded-proto') === 'https' || request.nextUrl.protocol === 'https:';
+
+export function applySecurityHeaders<R>(response: R, request: NextRequest): R {
+  if (!(response instanceof Response)) {
+    return response;
+  }
+
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
+    response.headers.set(name, value);
+  }
+
+  const directives = isSecureRequest(request) ? ['upgrade-insecure-requests'] : [];
+
+  if (!isEmbedResponse(response)) {
+    response.headers.set('X-Frame-Options', 'SAMEORIGIN');
+    directives.unshift("frame-ancestors 'self'");
+  }
+
+  if (directives.length) {
+    response.headers.set('Content-Security-Policy', directives.join('; '));
+  }
+
+  if (REPORT_ONLY_POLICY) {
+    response.headers.set('Content-Security-Policy-Report-Only', REPORT_ONLY_POLICY);
   }
 
   return response;
