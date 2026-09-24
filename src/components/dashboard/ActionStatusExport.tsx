@@ -23,13 +23,19 @@ export default function ActionStatusExport({ actions }: Props) {
     <UncontrolledDropdown>
       <DropdownToggle caret>{t('export')}</DropdownToggle>
       <DropdownMenu>
-        {isAuthenticated && <DropdownItem header>{t('export-current-view')}</DropdownItem>}
+        <DropdownItem header>{t('export-action-count', { count: actions.length })}</DropdownItem>
+        {isAuthenticated && (
+          <>
+            <DropdownItem divider />
+            <DropdownItem header>{t('export-visible-columns')}</DropdownItem>
+          </>
+        )}
         <DropdownItem href={exportUrl('xlsx')}>Excel</DropdownItem>
         <DropdownItem href={exportUrl('csv')}>CSV</DropdownItem>
         {isAuthenticated && (
           <>
             <DropdownItem divider />
-            <DropdownItem header>{t('export-all-action-data')}</DropdownItem>
+            <DropdownItem header>{t('export-all-columns')}</DropdownItem>
             <DropdownItem href={exportUrl('xlsx', true)}>Excel</DropdownItem>
             <DropdownItem href={exportUrl('csv', true)}>CSV</DropdownItem>
           </>
