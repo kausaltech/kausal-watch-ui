@@ -2,6 +2,9 @@ import { expect, test } from '@playwright/test';
 
 import { PlanContext, getIdentifiersToTest } from '../common/context.ts';
 
+/* A cold route can take a while to answer; these assertions are about headers, not latency. */
+const REQUEST_TIMEOUT = 30_000;
+
 const CONSTANT_HEADERS = {
   'referrer-policy': 'strict-origin-when-cross-origin',
   'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
@@ -25,7 +28,7 @@ const testPlan = (planId: string) => {
 
   test.describe(planId, { annotation: [{ type: 'url', description: baseURL }] }, () => {
     test('page responses carry the security headers', async ({ request }) => {
-      const headers = (await request.get(baseURL)).headers();
+      const headers = (await request.get(baseURL, { timeout: REQUEST_TIMEOUT })).headers();
 
       for (const [name, value] of Object.entries(CONSTANT_HEADERS)) {
         expect(headers[name], `${name} on ${baseURL}`).toBe(value);
@@ -44,7 +47,7 @@ const testPlan = (planId: string) => {
      */
     test('embed views stay framable', async ({ request }) => {
       const url = `${baseURL}/embed/v1/actions-recent`;
-      const headers = (await request.get(url)).headers();
+      const headers = (await request.get(url, { timeout: REQUEST_TIMEOUT })).headers();
 
       expect(headers['x-frame-options'], `x-frame-options on ${url}`).toBeUndefined();
       expect(headers['content-security-policy'], `csp on ${url}`).toBe(
