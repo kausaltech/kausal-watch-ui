@@ -27,7 +27,7 @@ import {
   normalizeDate,
   parseChartDate,
 } from './chart-dates';
-import { categorySymbol, markerItemStyle } from './chart-symbols';
+import { categorySymbol, lineMarkerSizing, markerItemStyle } from './chart-symbols';
 
 /** Formats a value with the indicator's rounding and the active locale. */
 export type FormatValue = (value: number) => string;
@@ -426,15 +426,12 @@ export const buildSeriesFromTraces = ({
     if (hasTimeDimension) {
       // 8px symbols cycled per trace from the theme's categorySymbols.
       const symbol = categorySymbol(categorySymbols, idx);
-      // Dense traces get smaller markers instead of hiding them like the
-      // legacy graph did; on very dense traces (e.g. daily values) even
-      // small markers fuse into a solid band, so hide them entirely there.
       // Count actual data points — the trace may be aligned to the full
-      // axis-date range with null padding (e.g. for goal years), which
-      // must not count towards density.
-      const dataPointCount = trace.y.filter((value) => value != null).length;
-      const denseMarkers = dataPointCount > 30;
-      const hideMarkers = dataPointCount > 100;
+      // axis-date range with null padding (e.g. for goal years)
+      const { showSymbol, symbolSize, borderWidth } = lineMarkerSizing(
+        trace.y.filter((value) => value != null).length,
+        traceCount
+      );
       // Map x and y values together for time axis
       const data = trace.x.map((xVal, idx) => [xVal, trace.y[idx] ?? null]);
       const series: LineSeriesOption = {
@@ -442,17 +439,16 @@ export const buildSeriesFromTraces = ({
         name: trace.name,
         data: data,
         connectNulls: true,
-        showSymbol: !hideMarkers,
+        showSymbol,
         symbol,
-        // A lone series marker is smaller
-        symbolSize: denseMarkers ? 5 : traceCount === 1 ? 6 : 8,
+        symbolSize,
         sampling: 'lttb',
         smooth: lineShape === 'spline' || lineShape === 'smooth',
         lineStyle: {
           width: trace.dataType === 'total' ? 3 : 2,
           color,
         },
-        itemStyle: markerItemStyle(color, denseMarkers ? 1 : 2),
+        itemStyle: markerItemStyle(color, borderWidth),
         z: 2,
         emphasis: {
           focus: 'series',
@@ -923,7 +919,7 @@ export function buildSaveAsImageToolbox({
     show: true,
     right: 0,
     top: 0,
-    itemSize: 18,
+    itemSize: 14,
     feature: {
       saveAsImage: {
         show: true,

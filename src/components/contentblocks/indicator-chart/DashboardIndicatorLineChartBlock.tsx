@@ -12,7 +12,12 @@ import { getEChartsLocaleStrings } from '@common/components/register-echarts-loc
 
 import type { LineChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
-import { categorySymbol, goalSymbol, markerItemStyle } from '@/components/graphs/chart-symbols';
+import {
+  categorySymbol,
+  goalSymbol,
+  lineMarkerSizing,
+  markerItemStyle,
+} from '@/components/graphs/chart-symbols';
 import type { AriaDetail } from '@/components/graphs/indicator-graph-aria';
 import {
   buildSaveAsImageToolbox,
@@ -94,6 +99,8 @@ const DashboardIndicatorLineChartBlock = ({
     goalDates
   );
 
+  const seriesCount = dimSeries.length + (includeTotal ? 1 : 0);
+
   function buildLines(
     arr: { name: string; color: string; raw: [string, number][] }[],
     width = 2,
@@ -105,6 +112,8 @@ const DashboardIndicatorLineChartBlock = ({
       const data = xCategories.map(
         (key) => [key, dataMap.get(key) ?? null] as [string, number | null]
       );
+      // Same marker sizing as IndicatorGraph
+      const { showSymbol, symbolSize, borderWidth } = lineMarkerSizing(raw.length, seriesCount);
 
       return {
         name,
@@ -113,12 +122,12 @@ const DashboardIndicatorLineChartBlock = ({
         // Draw through periods without data
         connectNulls: true,
         showLine: true,
-        showSymbol: true,
+        showSymbol,
         symbol: categorySymbol(graphsTheme.categorySymbols, symbolOffset + idx),
-        symbolSize: 8,
+        symbolSize,
         smooth: shouldSmoothLines(graphsTheme) && raw.length > 1,
         lineStyle: { width, color },
-        itemStyle: markerItemStyle(color),
+        itemStyle: markerItemStyle(color, borderWidth),
       };
     });
   }

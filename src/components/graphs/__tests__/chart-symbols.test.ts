@@ -1,4 +1,9 @@
-import { categorySymbol, goalSymbol, resolveMarkerSymbol } from '../chart-symbols';
+import {
+  categorySymbol,
+  goalSymbol,
+  lineMarkerSizing,
+  resolveMarkerSymbol,
+} from '../chart-symbols';
 
 describe('resolveMarkerSymbol', () => {
   it('passes ECharts names through', () => {
@@ -32,5 +37,17 @@ describe('categorySymbol / goalSymbol', () => {
     expect(goalSymbol(undefined)).toBe('emptyCircle');
     expect(goalSymbol('path://M0,0L1,1Z')).toBe('path://M0,0L1,1Z');
     expect(goalSymbol('emptyRect')).toBe('emptyRect');
+  });
+});
+
+describe('lineMarkerSizing', () => {
+  it('shrinks a lone series marker', () => {
+    expect(lineMarkerSizing(5, 1)).toEqual({ showSymbol: true, symbolSize: 6, borderWidth: 2 });
+    expect(lineMarkerSizing(5, 2)).toEqual({ showSymbol: true, symbolSize: 8, borderWidth: 2 });
+  });
+
+  it('shrinks dense and hides very dense markers', () => {
+    expect(lineMarkerSizing(31, 1)).toEqual({ showSymbol: true, symbolSize: 5, borderWidth: 1 });
+    expect(lineMarkerSizing(101, 2).showSymbol).toBe(false);
   });
 });

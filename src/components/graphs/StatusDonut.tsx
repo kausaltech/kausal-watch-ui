@@ -464,7 +464,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         show: true,
         right: 0,
         top: 0,
-        itemSize: 18,
+        itemSize: 14,
         feature: {
           saveAsImage: {
             show: true,

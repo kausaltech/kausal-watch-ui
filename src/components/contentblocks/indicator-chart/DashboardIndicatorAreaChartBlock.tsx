@@ -17,7 +17,12 @@ import { getEChartsLocaleStrings } from '@common/components/register-echarts-loc
 
 import type { AreaChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
-import { categorySymbol, goalSymbol, markerItemStyle } from '@/components/graphs/chart-symbols';
+import {
+  categorySymbol,
+  goalSymbol,
+  lineMarkerSizing,
+  markerItemStyle,
+} from '@/components/graphs/chart-symbols';
 import type { AriaDetail } from '@/components/graphs/indicator-graph-aria';
 import {
   buildSaveAsImageToolbox,
@@ -162,6 +167,13 @@ const DashboardIndicatorAreaChartBlock = ({
     ...trendDates,
   ]);
 
+  // Markers only where one series carries the data (they tell observed
+  // periods from connected gaps); stacked category areas go without, since
+  // a marker would sit on the stack top rather than the category's value.
+  // Same sizing as the line block
+  const areaMarkers = lineMarkerSizing(totalRaw.length, 1);
+  const overlayMarkers = lineMarkerSizing(totalRaw.length, dimSeries.length + 1);
+
   // Annotated so the dimensional/dimensionless branches don't form an
   // inference-hostile union (`.map` over it degrades to `any`)
   const series: LineSeriesOption[] = hasDimension
@@ -188,8 +200,9 @@ const DashboardIndicatorAreaChartBlock = ({
           name: totalDef.name,
           type: 'line' as const,
           areaStyle: { opacity: 0.9 },
+          showSymbol: areaMarkers.showSymbol,
           symbol: categorySymbol(graphsTheme.categorySymbols, 0),
-          symbolSize: 6,
+          symbolSize: areaMarkers.symbolSize,
           connectNulls: true,
           smooth: shouldSmoothLines(graphsTheme),
           data: (() => {
@@ -198,7 +211,7 @@ const DashboardIndicatorAreaChartBlock = ({
               (key) => [key, dataMap.get(key) ?? null] as [string, number | null]
             );
           })(),
-          itemStyle: markerItemStyle(totalDef.color),
+          itemStyle: markerItemStyle(totalDef.color, areaMarkers.borderWidth),
           lineStyle: { color: totalDef.color },
           emphasis: { focus: 'series' as const },
         },
@@ -219,11 +232,11 @@ const DashboardIndicatorAreaChartBlock = ({
             ),
             connectNulls: true,
             smooth: shouldSmoothLines(graphsTheme),
-            showSymbol: true,
+            showSymbol: overlayMarkers.showSymbol,
             symbol: categorySymbol(graphsTheme.categorySymbols, dimSeries.length),
-            symbolSize: 8,
+            symbolSize: overlayMarkers.symbolSize,
             lineStyle: { width: 3, color: totalLineColor },
-            itemStyle: markerItemStyle(totalLineColor),
+            itemStyle: markerItemStyle(totalLineColor, overlayMarkers.borderWidth),
             z: 3,
           };
         })(),

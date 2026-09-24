@@ -47,3 +47,18 @@ export const markerItemStyle = (color: string, borderWidth = 2) => ({
   borderColor: color,
   borderWidth,
 });
+
+/**
+ * Marker visibility and size for a line series. Dense series get smaller
+ * markers; on very dense ones (e.g. daily values) even small markers fuse
+ * into a solid band, so they are hidden. A lone series marker is smaller.
+ * `dataPointCount` counts actual values, not null padding.
+ */
+export function lineMarkerSizing(dataPointCount: number, seriesCount: number) {
+  const dense = dataPointCount > 30;
+  return {
+    showSymbol: dataPointCount <= 100,
+    symbolSize: dense ? 5 : seriesCount === 1 ? 6 : 8,
+    borderWidth: dense ? 1 : 2,
+  };
+}
