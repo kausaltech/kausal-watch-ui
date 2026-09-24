@@ -7,14 +7,15 @@ import {
   formatDateLabel,
   normalizeDate,
 } from '@/components/graphs/chart-dates';
+import { DEFAULT_GOAL_SYMBOL, markerItemStyle } from '@/components/graphs/chart-symbols';
 import {
   type AriaDetail,
   type AriaLocalePack,
-  DEFAULT_GOAL_SYMBOL,
+  buildAriaDescription,
+} from '@/components/graphs/indicator-graph-aria';
+import {
   type FormatValue,
   type YRange,
-  buildAriaDescription,
-  markerItemStyle,
   resolveValueRounding,
 } from '@/components/graphs/indicator-graph.utils';
 import { formatUnitLabel } from '@/components/indicators/indicator-data-helpers';
@@ -31,9 +32,9 @@ export interface GraphsTheme {
   goalLineColors?: string[];
   showTrendline?: boolean;
   lineShape?: string;
-  /** Marker symbols cycled per series; ECharts names, legacy Plotly names accepted */
+  /** Marker symbols cycled per series, as ECharts names */
   categorySymbols?: string[];
-  /** Goal marker symbol; ECharts name, legacy Plotly name accepted */
+  /** Goal marker symbol, as an ECharts name */
   goalSymbol?: string;
   /** Tenant-configured chart background; the canvas is white when unset. */
   customBackground?: string;

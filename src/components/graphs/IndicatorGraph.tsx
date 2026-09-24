@@ -14,8 +14,9 @@ import useNumberFormatter from '@/common/numbers';
 import { capitalizeFirstLetter } from '@/common/utils';
 
 import { type TimeResolution, datesSpanSingleYear } from './chart-dates';
+import { goalSymbol } from './chart-symbols';
+import { type AriaDetail, buildAriaDescription } from './indicator-graph-aria';
 import {
-  type AriaDetail,
   type ChartTrace,
   type GoalTrace,
   type NonQuantifiedGoalProp,
@@ -23,7 +24,6 @@ import {
   type YRange,
   alignTracesToDates,
   applyGoalMarkers,
-  buildAriaDescription,
   buildGoalSeries,
   buildSaveAsImageToolbox,
   buildSeriesFromTraces,
@@ -35,7 +35,6 @@ import {
   detectTimeDimension,
   formatNumber,
   getChartDownloadFilename,
-  goalSymbol,
   niceTickInterval,
   parseGraphSettings,
   resolveGraphColors,

@@ -17,14 +17,12 @@ import { getEChartsLocaleStrings } from '@common/components/register-echarts-loc
 
 import type { AreaChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
+import { categorySymbol, goalSymbol, markerItemStyle } from '@/components/graphs/chart-symbols';
+import type { AriaDetail } from '@/components/graphs/indicator-graph-aria';
 import {
-  type AriaDetail,
   buildSaveAsImageToolbox,
   buildTimeTooltipFormatter,
-  categorySymbol,
   getChartDownloadFilename,
-  goalSymbol,
-  markerItemStyle,
 } from '@/components/graphs/indicator-graph.utils';
 
 import { getDefaultColors } from './indicator-chart-colors';

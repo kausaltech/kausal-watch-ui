@@ -10,7 +10,7 @@ import DashboardIndicatorAreaChartBlock from '@/components/contentblocks/indicat
 import DashboardIndicatorBarChartBlock from '@/components/contentblocks/indicator-chart/DashboardIndicatorBarChartBlock';
 import DashboardIndicatorLineChartBlock from '@/components/contentblocks/indicator-chart/DashboardIndicatorLineChartBlock';
 import DashboardIndicatorPieChartBlock from '@/components/contentblocks/indicator-chart/DashboardIndicatorPieChartBlock';
-import type { AriaDetail } from '@/components/graphs/indicator-graph.utils';
+import type { AriaDetail } from '@/components/graphs/indicator-graph-aria';
 
 export type IndicatorVisualizationBlockData =
   | BarChartVisualizationFragment

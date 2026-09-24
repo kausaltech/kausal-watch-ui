@@ -13,8 +13,8 @@ import { getEChartsLocaleStrings } from '@common/components/register-echarts-loc
 import type { PieChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 import { escapeHtml } from '@/common/utils';
+import type { AriaDetail } from '@/components/graphs/indicator-graph-aria';
 import {
-  type AriaDetail,
   buildSaveAsImageToolbox,
   getChartDownloadFilename,
 } from '@/components/graphs/indicator-graph.utils';
