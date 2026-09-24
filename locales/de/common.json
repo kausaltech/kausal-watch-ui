@@ -31,6 +31,8 @@
     "error-no-outcome-node": "Ergebnis-Knoten [{outcomeNodeId}] nicht gefunden.",
     "error-no-goals": "Indikator [{indicatorName}] hat keine definierten Ziele, daher kann der Fortschrittsbalken des Indikators nicht angezeigt werden.",
     "export": "Exportieren",
+    "export-all-action-data": "Alle Maßnahmendaten",
+    "export-current-view": "Aktuelle Ansicht",
     "feedback": "Feedback",
     "feedback-description": "Haben Sie etwas entdeckt, das nicht funktioniert? Oder haben Sie Ideen, was wir verbessern können?",
     "feedback-error-content": "Etwas ist schief gelaufen und Ihr Feedback wurde nicht erhalten. Bitte versuchen Sie es gleich noch einmal.",

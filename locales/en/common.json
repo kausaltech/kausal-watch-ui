@@ -32,6 +32,8 @@
     "error-no-outcome-node": "Outcome node [{outcomeNodeId}] not found.",
     "error-no-goals": "Indicator [{indicatorName}] has no goals defined, so indicator progress bar can not be displayed.",
     "export": "Export",
+    "export-all-action-data": "All action data",
+    "export-current-view": "Current view",
     "feedback": "Feedback",
     "feedback-description": "Did you discover something that does not work? Or do you have ideas on something we can improve?",
     "feedback-error-content": "Something went wrong and your feedback was not received. Please try again in a moment.",
