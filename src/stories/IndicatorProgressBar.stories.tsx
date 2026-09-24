@@ -1,8 +1,15 @@
-import type { Theme } from '@kausal/themes/types';
+import styled from '@emotion/styled';
+
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
-//import { themes } from '@/../.storybook/preview';
 import IndicatorProgressBar from '@/components/indicators/IndicatorProgressBar';
+
+const ShowcaseBackground = styled.div`
+  padding: 3em;
+  background-color: ${({ theme }) => theme.section.indicatorShowcase.background};
+  color: ${({ theme }) => theme.section.indicatorShowcase.color};
+  text-align: center;
+`;
 
 const meta = {
   title: 'Indicators/IndicatorProgressBar',
@@ -14,24 +21,13 @@ const meta = {
     },
   },
   decorators: [
-    (Story, context) => {
-      const themes = context.loaded?.themes as unknown as Record<string, Theme>;
-      const selectedTheme: unknown = context.globals.theme;
-      const themeId = typeof selectedTheme === 'string' ? selectedTheme : 'default';
-      const theme = themes[themeId];
-      return (
-        <div
-          style={{
-            padding: '3em',
-            backgroundColor: theme.section.indicatorShowcase.background,
-            color: theme.section.indicatorShowcase.color,
-            textAlign: 'center',
-          }}
-        >
-          <Story />
-        </div>
-      );
-    },
+    // The global decorator has already resolved the selected theme into the
+    // emotion ThemeProvider, so read it from there instead of from globals.
+    (Story) => (
+      <ShowcaseBackground>
+        <Story />
+      </ShowcaseBackground>
+    ),
   ],
   tags: ['autodocs'],
   argTypes: {},
