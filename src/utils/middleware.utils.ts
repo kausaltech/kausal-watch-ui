@@ -281,7 +281,8 @@ export function buildReportOnlyPolicy({
   environment,
   release,
 }: ReportOnlyOptions) {
-  const reportUri = dsn ? securityReportUri(dsn, environment, release) : undefined;
+  const reportUri =
+    dsn && environment !== 'ci' ? securityReportUri(dsn, environment, release) : undefined;
 
   if (!reportUri) {
     return undefined;

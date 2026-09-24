@@ -248,6 +248,14 @@ describe('buildReportOnlyPolicy', () => {
     expect(buildReportOnlyPolicy(options)).toContain("worker-src 'self' blob:");
   });
 
+  /*
+   * CI drives synthetic traffic over seeded data, so its violations say nothing about real
+   * sites, and reporting them would bury the traffic we actually want to learn from.
+   */
+  it('is left out in CI', () => {
+    expect(buildReportOnlyPolicy({ ...options, environment: 'ci' })).toBeUndefined();
+  });
+
   it('is left out when no DSN is configured', () => {
     expect(buildReportOnlyPolicy({ ...options, dsn: undefined })).toBeUndefined();
   });
