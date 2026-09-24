@@ -110,6 +110,16 @@ describe('applySecurityHeaders', () => {
    * The Auth.js wrapper rebuilds the middleware result with `new Response(body, response)`
    * before returning it, so what reaches the proxy is a native Response, never a NextResponse.
    */
+  const secureRequest = {
+    headers: new Headers({ 'x-forwarded-proto': 'https' }),
+    nextUrl: { protocol: 'http:' },
+  } as unknown as NextRequest;
+
+  const insecureRequest = {
+    headers: new Headers(),
+    nextUrl: { protocol: 'http:' },
+  } as unknown as NextRequest;
+
   const rewrittenTo = (path: string) => {
     const response = new Response(null);
     response.headers.set('x-middleware-rewrite', path);
@@ -122,7 +132,7 @@ describe('applySecurityHeaders', () => {
    * before returning it, so what reaches the proxy is a native Response, never a NextResponse.
    */
   it('sets the constant security headers on a native Response', () => {
-    const { headers } = applySecurityHeaders(new Response(null));
+    const { headers } = applySecurityHeaders(new Response(null), secureRequest);
 
     expect(headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
     expect(headers.get('permissions-policy')).toBe(
@@ -131,7 +141,7 @@ describe('applySecurityHeaders', () => {
   });
 
   it('passes through a handler result that is not a response', () => {
-    expect(applySecurityHeaders(undefined)).toBeUndefined();
+    expect(applySecurityHeaders(undefined, secureRequest)).toBeUndefined();
   });
 
   /*
@@ -143,7 +153,7 @@ describe('applySecurityHeaders', () => {
     ['/root/plan.example.com/fi/plan/embed/v1/actions-recent', 'an embed view'],
     ['/root/plan.example.com/fi/plan/embed/v2/actions-recent', 'a future embed version'],
   ])('leaves framing unrestricted for %s (%s)', (rewrite) => {
-    const { headers } = applySecurityHeaders(rewrittenTo(rewrite));
+    const { headers } = applySecurityHeaders(rewrittenTo(rewrite), secureRequest);
 
     expect(headers.has('x-frame-options')).toBe(false);
     expect(headers.get('content-security-policy')).toBe('upgrade-insecure-requests');
@@ -160,14 +170,14 @@ describe('applySecurityHeaders', () => {
     ['/root/plan.example.com/fi/plan/en/embed/v1/x', 'an unsupported locale position'],
     ['/404', 'a rewrite with no plan path'],
   ])('denies framing for %s (%s)', (rewrite) => {
-    const { headers } = applySecurityHeaders(rewrittenTo(rewrite));
+    const { headers } = applySecurityHeaders(rewrittenTo(rewrite), secureRequest);
 
     expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
     expect(headers.get('content-security-policy')).toContain("frame-ancestors 'self'");
   });
 
   it('denies framing when nothing was rewritten', () => {
-    const { headers } = applySecurityHeaders(new Response(null));
+    const { headers } = applySecurityHeaders(new Response(null), secureRequest);
 
     expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
   });
@@ -187,7 +197,7 @@ describe('applySecurityHeaders', () => {
       'test-plan'
     );
 
-    const { headers } = applySecurityHeaders(response);
+    const { headers } = applySecurityHeaders(response, secureRequest);
 
     expect(headers.get('x-plan-identifier')).toBe('test-plan');
     expect(headers.get('x-plan-domain')).toBe('plan.example.com');
@@ -240,5 +250,34 @@ describe('buildReportOnlyPolicy', () => {
 
   it('is left out when no DSN is configured', () => {
     expect(buildReportOnlyPolicy({ ...options, dsn: undefined })).toBeUndefined();
+  });
+});
+
+describe('applySecurityHeaders over plain HTTP', () => {
+  /*
+   * The production image is served over HTTP in the e2e workflow, so the upgrade has to key
+   * on how the request arrived rather than on how the bundle was built.
+   */
+  const insecureRequest = {
+    headers: new Headers(),
+    nextUrl: { protocol: 'http:' },
+  } as unknown as NextRequest;
+
+  it('does not ask the browser to upgrade subresources', () => {
+    const { headers } = applySecurityHeaders(new Response(null), insecureRequest);
+
+    expect(headers.get('content-security-policy')).toBe("frame-ancestors 'self'");
+  });
+
+  it('still upgrades when the edge terminated TLS', () => {
+    const secureRequest = {
+      headers: new Headers({ 'x-forwarded-proto': 'https' }),
+      nextUrl: { protocol: 'http:' },
+    } as unknown as NextRequest;
+    const { headers } = applySecurityHeaders(new Response(null), secureRequest);
+
+    expect(headers.get('content-security-policy')).toBe(
+      "frame-ancestors 'self'; upgrade-insecure-requests"
+    );
   });
 });

@@ -16,7 +16,6 @@ import {
   getSentryRelease,
   getWatchGraphQLUrl,
   getWildcardDomains,
-  isLocalDev,
 } from '@common/env';
 import { getClientIP } from '@common/utils';
 import LRUCache from '@common/utils/lru-cache';
@@ -329,7 +328,14 @@ const isEmbedResponse = (response: Response) => {
   return segments[0] === 'embed' && /^v\d+$/.test(segments[1] ?? '');
 };
 
-export function applySecurityHeaders<R>(response: R): R {
+/*
+ * Keyed on how the request arrived, not on the build: the production image is also served
+ * over plain HTTP (the e2e workflow), where asking browsers to upgrade would break assets.
+ */
+const isSecureRequest = (request: NextRequest) =>
+  request.headers.get('x-forwarded-proto') === 'https' || request.nextUrl.protocol === 'https:';
+
+export function applySecurityHeaders<R>(response: R, request: NextRequest): R {
   if (!(response instanceof Response)) {
     return response;
   }
@@ -338,7 +344,7 @@ export function applySecurityHeaders<R>(response: R): R {
     response.headers.set(name, value);
   }
 
-  const directives = isLocalDev ? [] : ['upgrade-insecure-requests'];
+  const directives = isSecureRequest(request) ? ['upgrade-insecure-requests'] : [];
 
   if (!isEmbedResponse(response)) {
     response.headers.set('X-Frame-Options', 'SAMEORIGIN');
