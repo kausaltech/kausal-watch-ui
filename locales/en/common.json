@@ -74,6 +74,8 @@
     "export-action-count": "Exporting {count, plural, one {# action} other {# actions}}",
     "export-all-columns": "All columns",
     "export-visible-columns": "Visible columns",
+    "export-all-action-data": "All action data",
+    "export-current-view": "Current view",
     "feedback": "Feedback",
     "feedback-description": "Did you discover something that does not work? Or do you have ideas on something we can improve?",
     "feedback-error-content": "Something went wrong and your feedback was not received. Please try again in a moment.",

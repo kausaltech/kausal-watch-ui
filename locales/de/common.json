@@ -73,6 +73,8 @@
     "export-action-count": "{count, plural, one {# Maßnahme} other {# Maßnahmen}} exportieren",
     "export-all-columns": "Alle Spalten",
     "export-visible-columns": "Sichtbare Spalten",
+    "export-all-action-data": "Alle Maßnahmendaten",
+    "export-current-view": "Aktuelle Ansicht",
     "feedback": "Feedback",
     "feedback-description": "Haben Sie etwas entdeckt, das nicht funktioniert? Oder haben Sie Ideen, was wir verbessern können?",
     "feedback-error-content": "Etwas ist schief gelaufen und Ihr Feedback wurde nicht erhalten. Bitte versuchen Sie es gleich noch einmal.",
