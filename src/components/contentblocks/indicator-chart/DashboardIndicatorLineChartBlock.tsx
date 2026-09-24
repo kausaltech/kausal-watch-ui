@@ -44,7 +44,7 @@ type Props = Omit<
   Extract<LineChartVisualizationFragment, { __typename: 'DashboardIndicatorLineChartBlock' }>,
   '__typename'
 > & {
-  /** Detail of the generated aria description; 'summary' when a data table accompanies the chart */
+  /** Aria description detail; 'summary' when a data table accompanies the chart */
   ariaDetail?: AriaDetail;
 };
 
@@ -65,8 +65,7 @@ const DashboardIndicatorLineChartBlock = ({
     maximumSignificantDigits: indicator?.ticksRounding ?? 100,
   });
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
-  // Same rule as IndicatorGraph: honor the tenant-configured chart
-  // background, white when unset
+  // Tenant chart background, white when unset (as in IndicatorGraph)
   const chartBackground = graphsTheme.customBackground || theme.themeColors.white;
   const unit = getUnitLabel(indicator);
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
@@ -87,8 +86,7 @@ const DashboardIndicatorLineChartBlock = ({
     timeResolution
   );
   const totalRaw = totalDef.raw;
-  // Without a dimension the aggregate is the only measurement series, so it
-  // is drawn regardless of showTotalLine; with one it is an optional overlay
+  // Without a dimension the aggregate is the only series, so always draw it
   const includeTotal = (!dimension || showTotalLine) && totalRaw.length > 0;
 
   const goalDates = indicator?.goals?.map((g) => g?.date).filter((d) => d != null) ?? [];
@@ -101,8 +99,7 @@ const DashboardIndicatorLineChartBlock = ({
   function buildLines(
     arr: { name: string; color: string; raw: [string, number][] }[],
     width = 2,
-    // Markers cycle the theme's categorySymbols by series position, like the
-    // generic indicator graph
+    // Markers cycle the theme's categorySymbols by series position
     symbolOffset = 0
   ) {
     return arr.map(({ name, color, raw }, idx) => {
@@ -115,7 +112,7 @@ const DashboardIndicatorLineChartBlock = ({
         name,
         type: 'line' as const,
         data,
-        // Draw through gap periods without data, like the legacy time axis
+        // Draw through periods without data
         connectNulls: true,
         showLine: true,
         showSymbol: true,
@@ -130,19 +127,16 @@ const DashboardIndicatorLineChartBlock = ({
 
   const seriesLines = buildLines(dimSeries);
   const seriesTotal = includeTotal ? buildLines([totalDef], 3, dimSeries.length) : [];
-  // The trend regresses the categoryless aggregate; when the editor hides
-  // the total line, an aggregate trend over category series would be
-  // unattributed — same gate the generic indicator view applies
-  const trendSeries =
-    showTotalLine && totalRaw.length
-      ? buildTrendSeries(
-          totalRaw,
-          indicator,
-          graphsTheme.trendLineColor ?? '#aaa',
-          trendLabel,
-          timeResolution
-        )
-      : [];
+  // The trend regresses the aggregate, so show it only with the aggregate line
+  const trendSeries = includeTotal
+    ? buildTrendSeries(
+        totalRaw,
+        indicator,
+        graphsTheme.trendLineColor ?? '#aaa',
+        trendLabel,
+        timeResolution
+      )
+    : [];
   const goalSeries = buildGoalSeries(
     indicator,
     unit,
@@ -160,8 +154,7 @@ const DashboardIndicatorLineChartBlock = ({
     ...(trendSeries.length ? [trendLabel] : []),
   ];
 
-  // ECharts sets this as the canvas' aria-label; same wording as the
-  // generic IndicatorGraph so screen-reader users hear one style of chart
+  // Canvas aria-label, worded like IndicatorGraph's
   const ariaDescription = buildBlockAriaDescription({
     title: indicator?.name,
     series: [...dimSeries, ...(includeTotal ? [totalDef] : [])],
@@ -193,13 +186,11 @@ const DashboardIndicatorLineChartBlock = ({
       orient: 'horizontal',
       bottom: 0,
       right: 0,
-      // Keep swatches left of their labels (auto flips them for a
-      // right-anchored legend)
+      // Keep swatches left of labels in a right-anchored legend
       align: 'left',
       type: 'plain',
       data: legendData,
-      // Also the gap between wrapped legend rows — ECharts has no separate
-      // row-gap setting
+      // Also sets the gap between wrapped rows
       itemGap: 10,
       itemWidth: 18,
       itemHeight: 12,
@@ -209,8 +200,7 @@ const DashboardIndicatorLineChartBlock = ({
       trigger: 'axis',
       appendTo: 'body',
       axisPointer: { type: 'line' },
-      // Same formatter as the generic IndicatorGraph: one row per series
-      // with a value at the hovered date, hidden when there is none
+      // Same formatter as IndicatorGraph
       formatter: buildTimeTooltipFormatter({
         timeResolution: toChartTimeResolution(timeResolution),
         trendName: trendLabel,
@@ -222,8 +212,7 @@ const DashboardIndicatorLineChartBlock = ({
       left: 20,
       right: 20,
       top: 40,
-      // Reserve the bottom ~quarter for the wrapping legend (up to ~4
-      // rows), like the pie chart block does
+      // Room for up to ~4 legend rows, as in the pie chart block
       bottom: 100,
       containLabel: true,
     },
