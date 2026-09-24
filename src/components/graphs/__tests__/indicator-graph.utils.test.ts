@@ -4,6 +4,7 @@ import {
   applyGoalMarkers,
   buildAriaDescription,
   buildTimeTooltipFormatter,
+  buildTimeXAxis,
   categorySymbol,
   collectChartDates,
   detectTimeDimension,
@@ -70,6 +71,21 @@ describe('parseChartDate', () => {
 
   it('passes timestamps through', () => {
     expect(parseChartDate(1577836800000)).toBe(1577836800000);
+  });
+});
+
+describe('buildTimeXAxis', () => {
+  it('labels the tick of a lone yearly point', () => {
+    const { axisLabel } = buildTimeXAxis({
+      timeResolution: 'YEAR',
+      allDates: ['2020-01-01'],
+      hasSingleYear: true,
+    });
+    const point = new Date(2020, 0, 1).getTime();
+    const day = 24 * 60 * 60 * 1000;
+    expect(axisLabel.formatter(point)).toBe('2020');
+    expect(axisLabel.formatter(point - day)).toBe('');
+    expect(axisLabel.formatter(point + day)).toBe('');
   });
 });
 

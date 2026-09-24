@@ -1316,9 +1316,17 @@ export function buildTimeXAxis({
           // For single year case, only show label for ticks in the middle
           // 40% of the range (30% to 70%)
           const range = yearRange.max - yearRange.min;
-          const position = (value - yearRange.min) / range;
-          if (position < 0.3 || position > 0.7) {
-            return '';
+          if (range === 0) {
+            // A lone point: label only its own tick, not the neighboring
+            // day ticks ECharts pads the axis with
+            if (value !== yearRange.min) {
+              return '';
+            }
+          } else {
+            const position = (value - yearRange.min) / range;
+            if (position < 0.3 || position > 0.7) {
+              return '';
+            }
           }
         }
         return formatDateLabel(value, timeResolution);
