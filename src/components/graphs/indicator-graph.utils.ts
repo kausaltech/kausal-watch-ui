@@ -190,7 +190,7 @@ export const formatNumber = (
  * format tick TIMESTAMPS with local getters, matching how ECharts placed
  * them.
  */
-const DATE_PARTS_RE = /^(\d{4})-(\d{1,2})(?:-(\d{1,2}))?$/;
+const DATE_PARTS_RE = /^(\d{4})(?:-(\d{1,2})(?:-(\d{1,2}))?)?$/;
 
 export function normalizeDate(
   d: string | number | null | undefined,
@@ -241,10 +241,11 @@ export function formatDateLabel(
       if (timeResolution === 'YEAR') {
         return parts[1];
       }
+      const month = (parts[2] ?? '1').padStart(2, '0');
       if (timeResolution === 'MONTH') {
-        return `${parts[1]}-${parts[2].padStart(2, '0')}`;
+        return `${parts[1]}-${month}`;
       }
-      return `${parts[1]}-${parts[2].padStart(2, '0')}-${(parts[3] ?? '1').padStart(2, '0')}`;
+      return `${parts[1]}-${month}-${(parts[3] ?? '1').padStart(2, '0')}`;
     }
   }
   const date = value instanceof Date ? value : new Date(value);

@@ -32,6 +32,13 @@ const withNextConfig = nextJest({ dir: './' })({
   },
 });
 
+/*
+ * Run tests west of UTC so date code that mixes UTC parsing with local
+ * getters fails here too. Set before Jest spawns its workers; tests only see
+ * a sandboxed copy of `process.env`.
+ */
+process.env.TZ = 'America/New_York';
+
 export default async (): Promise<Config> => {
   const config = await withNextConfig();
 

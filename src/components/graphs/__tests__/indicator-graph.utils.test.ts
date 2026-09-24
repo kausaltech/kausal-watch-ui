@@ -48,6 +48,13 @@ describe('formatDateLabel', () => {
     expect(formatDateLabel(new Date('2023-05-15').getTime(), 'YEAR')).toBe('2023');
   });
 
+  it('reads year-only strings as text', () => {
+    // new Date('2020') is UTC midnight, which is still 2019 in the test
+    // timezone (see jest.config.ts)
+    expect(formatDateLabel('2020', 'YEAR')).toBe('2020');
+    expect(formatDateLabel('2020', 'MONTH')).toBe('2020-01');
+  });
+
   it('passes unparseable values through', () => {
     expect(formatDateLabel('n/a', 'YEAR')).toBe('n/a');
   });
