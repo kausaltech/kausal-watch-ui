@@ -264,6 +264,15 @@ export function formatDateLabel(
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
+/** Timestamp of a date as ECharts places it (local midnight for date strings). */
+export function parseChartDate(value: string | number): number {
+  const parts = typeof value === 'string' ? DATE_PARTS_RE.exec(value) : null;
+  if (parts) {
+    return new Date(+parts[1], +(parts[2] ?? 1) - 1, +(parts[3] ?? 1)).getTime();
+  }
+  return new Date(value).getTime();
+}
+
 const compareDateStrings = (a: string | number, b: string | number): number => {
   const dateA = new Date(a).getTime();
   const dateB = new Date(b).getTime();
@@ -1286,7 +1295,7 @@ export function buildTimeXAxis({
       ? (() => {
           const timestamps = allDates
             .filter((d): d is string | number => d != null)
-            .map((d) => new Date(d).getTime())
+            .map(parseChartDate)
             .filter((ts) => !Number.isNaN(ts));
           return {
             min: Math.min(...timestamps),

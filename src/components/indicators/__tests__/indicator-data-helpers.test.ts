@@ -221,18 +221,19 @@ describe('resolveYAxisRange', () => {
 });
 
 describe('getTraceTimeRange', () => {
+  // Local midnight, where ECharts draws the points, not UTC midnight
   it('spans the earliest and latest dates across all traces and points', () => {
     const range = getTraceTimeRange([{ x: ['2021-01-01', '2019-01-01'] }, { x: ['2023-06-01'] }]);
     expect(range).toEqual({
-      min: new Date('2019-01-01').getTime(),
-      max: new Date('2023-06-01').getTime(),
+      min: new Date(2019, 0, 1).getTime(),
+      max: new Date(2023, 5, 1).getTime(),
     });
   });
 
   it('ignores null dates and non-date values', () => {
     expect(getTraceTimeRange([{ x: [null, 'Housing', '2020-01-01', 2020] }])).toEqual({
-      min: new Date('2020-01-01').getTime(),
-      max: new Date('2020-01-01').getTime(),
+      min: new Date(2020, 0, 1).getTime(),
+      max: new Date(2020, 0, 1).getTime(),
     });
   });
 

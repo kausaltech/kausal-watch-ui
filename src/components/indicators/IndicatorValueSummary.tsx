@@ -282,7 +282,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
     if (displayOptions.referenceValue.defaultReferenceValue) {
       referenceValue = {
         date: new Date(displayOptions.referenceValue.defaultReferenceValue.date ?? '')
-          .getFullYear()
+          .getUTCFullYear()
           .toString(),
         value: displayOptions.referenceValue.defaultReferenceValue.value,
       };
@@ -290,7 +290,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
       // Find value for the specified year
       const valueForYear = values.find((val) => {
         if (!val.date) return false;
-        const valYear = new Date(val.date).getFullYear();
+        const valYear = new Date(val.date).getUTCFullYear();
         return valYear === displayOptions.referenceValue.year;
       });
       if (valueForYear && valueForYear.date) {

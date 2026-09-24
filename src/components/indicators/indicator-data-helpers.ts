@@ -16,7 +16,11 @@ import { isEqual } from 'lodash-es';
 
 import { linearRegression } from '@/common/math';
 import { capitalizeFirstLetter } from '@/common/utils';
-import { type ChartTrace, niceTickInterval } from '@/components/graphs/indicator-graph.utils';
+import {
+  type ChartTrace,
+  niceTickInterval,
+  parseChartDate,
+} from '@/components/graphs/indicator-graph.utils';
 
 export type I18n = { t: (key: string) => string };
 
@@ -325,7 +329,7 @@ export function getTraceTimeRange(
   const timestamps = traces
     .flatMap((trace) => trace.x)
     .filter((x): x is string => typeof x === 'string')
-    .map((x) => new Date(x).getTime())
+    .map(parseChartDate)
     .filter((ts) => !Number.isNaN(ts));
   if (timestamps.length === 0) {
     return undefined;

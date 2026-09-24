@@ -11,6 +11,7 @@ import {
   goalSymbol,
   niceTickInterval,
   normalizeDate,
+  parseChartDate,
   parseGraphSettings,
   resolveMarkerSymbol,
   tickSignificantDigits,
@@ -57,6 +58,18 @@ describe('formatDateLabel', () => {
 
   it('passes unparseable values through', () => {
     expect(formatDateLabel('n/a', 'YEAR')).toBe('n/a');
+  });
+});
+
+describe('parseChartDate', () => {
+  it('reads date strings as local midnight, like ECharts', () => {
+    expect(parseChartDate('2020-01-01')).toBe(new Date(2020, 0, 1).getTime());
+    expect(parseChartDate('2020-1-1')).toBe(new Date(2020, 0, 1).getTime());
+    expect(parseChartDate('2020')).toBe(new Date(2020, 0, 1).getTime());
+  });
+
+  it('passes timestamps through', () => {
+    expect(parseChartDate(1577836800000)).toBe(1577836800000);
   });
 });
 
