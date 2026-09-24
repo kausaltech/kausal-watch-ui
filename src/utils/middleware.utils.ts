@@ -58,8 +58,8 @@ const KNOWN_STATUSES: string[] = Object.values(PlanDomainStatus);
  * A backend that predates this vocabulary answers with the old publication statuses instead
  * (PUBLISHED, UNPUBLISHED, SCHEDULED). Treating an unrecognised value as authoritative would send
  * every site to the placeholder, so we fall back to `__typename`, which is what this proxy gated
- * on before and means the two repositories can be deployed in either order. Remove the fallback
- * once no deployed backend answers with the old values.
+ * on before. That keeps a backend rollback safe, but it is a degraded answer, so the backend ships
+ * first. Remove the fallback once no deployed backend answers with the old values.
  */
 export const getDomainStatus = (plan: PlanFromPlansQuery): PlanDomainStatus => {
   const status = plan.domain?.status;
@@ -72,8 +72,9 @@ export const getDomainStatus = (plan: PlanFromPlansQuery): PlanDomainStatus => {
     return PlanDomainStatus.Available;
   }
 
-  // Restricted, and an older backend cannot tell us whether signing in would help. It offered a
-  // sign-in link here by default, so keep offering one rather than stranding someone who has access.
+  // Restricted, and an older backend cannot tell us whether signing in would help. Offering it
+  // where it cannot help is a dead end; withholding it where it could strands someone who has
+  // access, so offer it.
   return PlanDomainStatus.SignInRequired;
 };
 
