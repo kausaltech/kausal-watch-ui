@@ -20,11 +20,18 @@ import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter, escapeHtml } from '@/common/utils';
 import { getDefaultColors } from '@/components/contentblocks/indicator-chart/indicator-chart-colors';
 
+import {
+  type TimeResolution,
+  compareDates,
+  formatDateLabel,
+  isCalendarDate,
+  normalizeDate,
+  parseChartDate,
+} from './chart-dates';
+
 /** Formats a value with the indicator's rounding and the active locale. */
 export type FormatValue = (value: number) => string;
 type Translator = (key: string, values?: Record<string, string | number>) => string;
-
-export type TimeResolution = 'YEAR' | 'MONTH' | 'DAY' | undefined;
 
 export type ChartTrace = {
   name: string;
@@ -181,108 +188,6 @@ export const formatNumber = (
 };
 
 /**
- * Date-string handling must be timezone-proof. ECharts parses timezone-less
- * date strings as LOCAL time with its own parser (unlike native `Date`,
- * which treats ISO date-only strings as UTC midnight) — so tick timestamps
- * and hovered data points sit on local calendar boundaries. Format date
- * STRINGS by extracting their calendar parts textually (never through
- * `Date`, whose UTC/local behavior depends on the string format), and
- * format tick TIMESTAMPS with local getters, matching how ECharts placed
- * them.
- */
-const DATE_PARTS_RE = /^(\d{4})(?:-(\d{1,2})(?:-(\d{1,2}))?)?$/;
-
-export function normalizeDate(
-  d: string | number | null | undefined,
-  timeResolution: TimeResolution
-): string {
-  // Normalized dates use the ISO-padded YYYY-01-01 form; ECharts parses it
-  // as local time like every other timezone-less date string it receives.
-  // Null dates (schema-permitted) must not fall into Date parsing, where
-  // new Date(null) would silently become the 1970 epoch.
-  if (d == null) {
-    return String(d);
-  }
-  if (typeof d === 'number') {
-    // If it's a number (likely a year), treat it as one
-    if (d > 1900 && d < 2100) {
-      return `${d}-01-01`;
-    }
-    return String(d);
-  }
-  const parts = DATE_PARTS_RE.exec(d);
-  if (parts) {
-    if (timeResolution === 'YEAR') {
-      return `${parts[1]}-01-01`;
-    }
-    return d;
-  }
-  const dateObj = new Date(d);
-  if (Number.isNaN(dateObj.getTime())) {
-    return String(d);
-  }
-  if (timeResolution === 'YEAR') {
-    return `${dateObj.getUTCFullYear()}-01-01`;
-  }
-  return d;
-}
-
-/** Format a date (string, timestamp or Date) as an axis/tooltip label. */
-export function formatDateLabel(
-  value: string | number | Date | null | undefined,
-  timeResolution: TimeResolution
-): string {
-  if (value == null) {
-    return String(value);
-  }
-  if (typeof value === 'string') {
-    const parts = DATE_PARTS_RE.exec(value);
-    if (parts) {
-      if (timeResolution === 'YEAR') {
-        return parts[1];
-      }
-      const month = (parts[2] ?? '1').padStart(2, '0');
-      if (timeResolution === 'MONTH') {
-        return `${parts[1]}-${month}`;
-      }
-      return `${parts[1]}-${month}-${(parts[3] ?? '1').padStart(2, '0')}`;
-    }
-  }
-  const date = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return String(value);
-  }
-  // Timestamps come from ECharts' local-calendar tick placement — read them
-  // back with local getters (toISOString would shift the period near
-  // midnight boundaries in non-UTC timezones)
-  if (timeResolution === 'YEAR') {
-    return String(date.getFullYear());
-  }
-  if (timeResolution === 'MONTH') {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-  }
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-}
-
-/** Timestamp of a date as ECharts places it (local midnight for date strings). */
-export function parseChartDate(value: string | number): number {
-  const parts = typeof value === 'string' ? DATE_PARTS_RE.exec(value) : null;
-  if (parts) {
-    return new Date(+parts[1], +(parts[2] ?? 1) - 1, +(parts[3] ?? 1)).getTime();
-  }
-  return new Date(value).getTime();
-}
-
-const compareDateStrings = (a: string | number, b: string | number): number => {
-  const dateA = new Date(a).getTime();
-  const dateB = new Date(b).getTime();
-  if (Number.isNaN(dateA) || Number.isNaN(dateB)) {
-    return String(a).localeCompare(String(b));
-  }
-  return dateA - dateB;
-};
-
-/**
  * Collect the sorted unique dates of all value and goal traces (normalized
  * per `normalizeDate`), extended to the non-quantified goal date when a
  * directional goal arrow needs to reach it. For category-axis data, returns
@@ -316,14 +221,14 @@ export function collectChartDates({
   });
 
   const datesArray = Array.from(dateSet);
-  datesArray.sort(compareDateStrings);
+  datesArray.sort(compareDates);
 
   // Extend to nonQuantifiedGoalDate if needed (for directional goal arrow)
   if (nonQuantifiedGoal?.trend && nonQuantifiedGoal?.date && timeResolution === 'YEAR') {
     const planEndDate = normalizeDate(nonQuantifiedGoal.date, 'YEAR');
-    if (DATE_PARTS_RE.test(planEndDate) && !datesArray.includes(planEndDate)) {
+    if (isCalendarDate(planEndDate) && !datesArray.includes(planEndDate)) {
       datesArray.push(planEndDate);
-      datesArray.sort(compareDateStrings);
+      datesArray.sort(compareDates);
     }
   }
 
@@ -367,18 +272,6 @@ export function buildXAxisCategories({
   }
 
   return [];
-}
-
-/** Whether all (time) dates fall within one calendar year. */
-export function datesSpanSingleYear(allDates: Array<string | number | null>): boolean {
-  const years = new Set<string>();
-  allDates.forEach((date) => {
-    const year = formatDateLabel(date, 'YEAR');
-    if (/^\d{4}$/.test(year)) {
-      years.add(year);
-    }
-  });
-  return years.size === 1;
 }
 
 /**
@@ -535,6 +428,27 @@ export function tickSignificantDigits(
   return Math.min(Math.max(rounding, needed), 21);
 }
 
+/**
+ * A trace's values at each axis date (nulls where it has none), keyed by the
+ * trace's dates normalized to match the already-normalized axis dates.
+ */
+function alignToDates(
+  trace: { x: Array<string | number | null>; y: Array<number | null> },
+  allDates: Array<string | number | null>,
+  timeResolution: TimeResolution
+): Array<[string, number | null]> {
+  const valueByDate = new Map<string, number | null>();
+  trace.x.forEach((date, i) => {
+    valueByDate.set(normalizeDate(date, timeResolution), trace.y[i] ?? null);
+  });
+  return allDates.map((date) => [String(date), valueByDate.get(String(date)) ?? null]);
+}
+
+/** Series tooltip showing values with the indicator's rounding. */
+const valueTooltip = (formatValue: FormatValue) => ({
+  valueFormatter: (val: number | null) => formatNumber(val, formatValue),
+});
+
 /** Align time traces to the full axis-date range, padding gaps with nulls. */
 export function alignTracesToDates(
   traces: ChartTrace[],
@@ -542,18 +456,11 @@ export function alignTracesToDates(
   timeResolution: TimeResolution
 ): ChartTrace[] {
   return traces.map((trace) => {
-    const traceMap = new Map<string, number | null>();
-    trace.x.forEach((date, i) => {
-      traceMap.set(normalizeDate(date, timeResolution), trace.y[i] ?? null);
-    });
-
-    // allDates already contains normalized dates (as strings), so we can match directly
-    const alignedY = allDates.map((date) => traceMap.get(String(date)) ?? null);
-
+    const aligned = alignToDates(trace, allDates, timeResolution);
     return {
       ...trace,
-      x: allDates.map((d) => String(d)),
-      y: alignedY,
+      x: aligned.map(([date]) => date),
+      y: aligned.map(([, value]) => value),
     };
   });
 }
@@ -627,9 +534,7 @@ export const buildSeriesFromTraces = ({
         emphasis: {
           focus: 'series',
         },
-        tooltip: {
-          valueFormatter: (val: number | null) => formatNumber(val, formatValue),
-        },
+        tooltip: valueTooltip(formatValue),
       };
 
       if (traceCount === 1 && useAreaGraph) {
@@ -665,9 +570,7 @@ export const buildSeriesFromTraces = ({
       emphasis: {
         focus: 'series',
       },
-      tooltip: {
-        valueFormatter: (val: number | null) => formatNumber(val, formatValue),
-      },
+      tooltip: valueTooltip(formatValue),
     };
     return series;
   });
@@ -693,17 +596,7 @@ export function buildGoalSeries({
   formatValue: FormatValue;
 }): LineSeriesOption[] {
   return goalTraces.map((goalTrace, idx) => {
-    const goalMap = new Map<string, number | null>();
-    goalTrace.x.forEach((date, i) => {
-      goalMap.set(normalizeDate(date, timeResolution), goalTrace.y[i] ?? null);
-    });
-
-    // allDates already contains normalized dates (as strings), so we can match directly
-    const goalData = allDates.map((date) => {
-      const dateStr = String(date);
-      return [dateStr, goalMap.get(dateStr) ?? null];
-    });
-
+    const goalData = alignToDates(goalTrace, allDates, timeResolution);
     const color = goalColors[idx % goalColors.length];
 
     return {
@@ -721,9 +614,7 @@ export function buildGoalSeries({
       itemStyle: markerItemStyle(color),
       connectNulls: true,
       z: 1,
-      tooltip: {
-        valueFormatter: (val: number | null) => formatNumber(val, formatValue),
-      },
+      tooltip: valueTooltip(formatValue),
     };
   });
 }
@@ -747,9 +638,7 @@ export function buildTrendSeries({
   if (!trendTrace) {
     return [];
   }
-  const tooltip = {
-    valueFormatter: (val: number | null) => formatNumber(val, formatValue),
-  };
+  const tooltip = valueTooltip(formatValue);
   const lineStyle = {
     width: 3,
     color: trendColor,
@@ -775,16 +664,7 @@ export function buildTrendSeries({
     ];
   }
 
-  const trendMap = new Map<string, number | null>();
-  trendTrace.x.forEach((date, i) => {
-    trendMap.set(normalizeDate(date, timeResolution), trendTrace.y[i] ?? null);
-  });
-
-  // allDates already contains normalized dates (as strings), so we can match directly
-  const trendData = allDates.map((date) => {
-    const dateStr = String(date);
-    return [dateStr, trendMap.get(dateStr) ?? null];
-  });
+  const trendData = alignToDates(trendTrace, allDates, timeResolution);
 
   return [
     {
@@ -1049,7 +929,7 @@ function tracePoints(
  */
 function timeSpan(points: AriaPoint[], timeResolution: TimeResolution): [AriaPoint, AriaPoint] {
   const dated = points.flatMap((point) => {
-    const ts = new Date(normalizeDate(point.x, timeResolution)).getTime();
+    const ts = parseChartDate(normalizeDate(point.x, timeResolution));
     return Number.isNaN(ts) ? [] : [{ point, ts }];
   });
   if (dated.length === 0) {

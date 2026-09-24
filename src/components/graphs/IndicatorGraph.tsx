@@ -13,13 +13,13 @@ import { getEChartsLocaleStrings } from '@common/components/register-echarts-loc
 import useNumberFormatter from '@/common/numbers';
 import { capitalizeFirstLetter } from '@/common/utils';
 
+import { type TimeResolution, datesSpanSingleYear } from './chart-dates';
 import {
   type AriaDetail,
   type ChartTrace,
   type GoalTrace,
   type NonQuantifiedGoalProp,
   type ReferenceValueProp,
-  type TimeResolution,
   type YRange,
   alignTracesToDates,
   applyGoalMarkers,
@@ -32,7 +32,6 @@ import {
   buildTrendSeries,
   buildXAxisCategories,
   collectChartDates,
-  datesSpanSingleYear,
   detectTimeDimension,
   formatNumber,
   getChartDownloadFilename,

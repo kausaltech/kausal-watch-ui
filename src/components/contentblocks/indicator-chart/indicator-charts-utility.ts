@@ -2,11 +2,16 @@ import type { LineChartVisualizationFragment } from '@/common/__generated__/grap
 import { linearRegression } from '@/common/math';
 import { escapeHtml } from '@/common/utils';
 import {
+  type TimeResolution,
+  compareDates,
+  formatDateLabel,
+  normalizeDate,
+} from '@/components/graphs/chart-dates';
+import {
   type AriaDetail,
   type AriaLocalePack,
   DEFAULT_GOAL_SYMBOL,
   type FormatValue,
-  type TimeResolution,
   type YRange,
   buildAriaDescription,
   markerItemStyle,
@@ -61,17 +66,7 @@ export type TrendSeries = {
 
 /** Date key at the chart's resolution: '2020', '2020-03' or '2020-03-15'. */
 export function formatDateKey(date: string, timeResolution?: string | null): string {
-  const d = new Date(date);
-  if (Number.isNaN(d.getTime())) return date;
-
-  const resolution = String(timeResolution ?? 'YEAR').toUpperCase();
-  if (resolution === 'YEAR') {
-    return String(d.getUTCFullYear());
-  } else if (resolution === 'MONTH') {
-    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
-  } else {
-    return d.toISOString().split('T')[0];
-  }
+  return formatDateLabel(date, toChartTimeResolution(timeResolution));
 }
 
 function getTimeKeyForSorting(key: string, timeResolution?: string | null): number {
@@ -498,64 +493,6 @@ export function buildYAxisConfig(
 }
 
 /**
- * Normalizes a date key to a consistent format for use in Sets/Maps.
- * Converts numbers (years) and date strings to a normalized format.
- */
-export function normalizeDateForSet(
-  key: string | number,
-  timeResolution: string | null | undefined
-): string {
-  if (typeof key === 'number') {
-    if (key > 1900 && key < 2100) {
-      return `${key}-01-01`;
-    }
-    return String(key);
-  }
-  const dateObj = new Date(key);
-  if (Number.isNaN(dateObj.getTime())) {
-    return String(key);
-  }
-  if (timeResolution === 'YEAR') {
-    return `${dateObj.getUTCFullYear()}-01-01`;
-  }
-  return key;
-}
-
-/**
- * Formats a normalized date string for display based on time resolution.
- */
-export function formatDateForDisplay(
-  normalizedDate: string,
-  timeResolution: string | null | undefined
-): string {
-  const date = new Date(normalizedDate);
-  if (Number.isNaN(date.getTime())) {
-    return normalizedDate;
-  }
-  if (timeResolution === 'YEAR') {
-    return String(date.getUTCFullYear());
-  } else if (timeResolution === 'MONTH') {
-    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
-  } else {
-    return date.toISOString().split('T')[0];
-  }
-}
-
-/**
- * Sorts an array of normalized date strings chronologically.
- */
-export function sortDates(dates: string[]): string[] {
-  return [...dates].sort((a, b) => {
-    const dateA = new Date(a).getTime();
-    const dateB = new Date(b).getTime();
-    if (Number.isNaN(dateA) || Number.isNaN(dateB)) {
-      return String(a).localeCompare(String(b));
-    }
-    return dateA - dateB;
-  });
-}
-
-/**
  * Fills the gaps between the first and last date so the category x-axis
  * represents a continuous timeline (a year without data still occupies a
  * slot, like on a continuous time axis). Only YEAR and MONTH resolutions
@@ -602,16 +539,17 @@ export function collectAllDates(
 ): { allDates: string[]; xCategories: string[] } {
   const normalizedDateSet = new Set<string>();
 
+  const resolution = toChartTimeResolution(timeResolution);
+
   sources.forEach((raw) =>
-    raw.forEach(([key]) => normalizedDateSet.add(normalizeDateForSet(key, timeResolution)))
+    raw.forEach(([key]) => normalizedDateSet.add(normalizeDate(key, resolution)))
   );
 
-  additionalDates?.forEach((date) =>
-    normalizedDateSet.add(normalizeDateForSet(date, timeResolution))
-  );
+  additionalDates?.forEach((date) => normalizedDateSet.add(normalizeDate(date, resolution)));
 
-  const allDates = fillMissingPeriods(sortDates(Array.from(normalizedDateSet)), timeResolution);
-  const xCategories = allDates.map((d) => formatDateForDisplay(d, timeResolution));
+  const sortedDates = Array.from(normalizedDateSet).sort(compareDates);
+  const allDates = fillMissingPeriods(sortedDates, timeResolution);
+  const xCategories = allDates.map((d) => formatDateLabel(d, resolution));
 
   return { allDates, xCategories };
 }

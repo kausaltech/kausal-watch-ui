@@ -16,11 +16,8 @@ import { isEqual } from 'lodash-es';
 
 import { linearRegression } from '@/common/math';
 import { capitalizeFirstLetter } from '@/common/utils';
-import {
-  type ChartTrace,
-  niceTickInterval,
-  parseChartDate,
-} from '@/components/graphs/indicator-graph.utils';
+import { parseChartDate } from '@/components/graphs/chart-dates';
+import { type ChartTrace, niceTickInterval } from '@/components/graphs/indicator-graph.utils';
 
 export type I18n = { t: (key: string) => string };
 
