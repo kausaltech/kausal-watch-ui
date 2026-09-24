@@ -290,7 +290,6 @@ function IndicatorGraph({
         : {
             type: 'category',
             data: xAxisCategories,
-            boundaryGap: undefined,
             axisLabel: {
               interval: 0,
               rotate: xAxisCategories.length > 6 ? 45 : 0,
