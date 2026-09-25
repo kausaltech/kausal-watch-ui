@@ -6,10 +6,11 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Collapse, UncontrolledTooltip } from 'reactstrap';
+import { Collapse } from 'reactstrap';
 
 import { isServer } from '@/common/environment';
 import Icon from '@/components/common/Icon';
+import Tooltip from '@/components/common/Tooltip';
 
 import { replaceHashWithoutScrolling } from '../../common/links';
 
@@ -117,9 +118,9 @@ const LinkCopyButton = ({ identifier }: { identifier?: string }) => {
 
   const origin = !isServer && window.location.origin ? window.location.origin : '';
 
-  const toggle = () => {
-    setTooltipOpen(!tooltipOpen);
-    if (!tooltipOpen) setCopyText(t('copy-to-clipboard'));
+  const openTooltip = () => {
+    setTooltipOpen(true);
+    setCopyText(t('copy-to-clipboard'));
   };
 
   const onCopy = () => {
@@ -127,34 +128,25 @@ const LinkCopyButton = ({ identifier }: { identifier?: string }) => {
   };
 
   return (
-    <>
-      <UncontrolledTooltip
-        key={copyText} // Force rerender on tooltip content change for content positioning
-        placement="top"
-        isOpen={tooltipOpen}
-        target={`tooltip-${identifier}`}
-        id={`tt-content-${identifier}`}
-        role="tooltip"
-        toggle={toggle}
-      >
-        <span>{copyText}</span>
-      </UncontrolledTooltip>
-      <CopyToClipboard
-        text={`${origin}${pathname}#q${identifier}`}
-        id={`tooltip-${identifier}`}
-        onCopy={onCopy}
-        aria-describedby={tooltipOpen ? `tt-content-${identifier}` : undefined}
+    <CopyToClipboard text={`${origin}${pathname}#q${identifier}`} onCopy={onCopy}>
+      <Tooltip
+        title={copyText}
+        open={tooltipOpen}
+        onOpen={openTooltip}
+        onClose={() => setTooltipOpen(false)}
+        describeChild
       >
         <CopyLink
           as="button"
+          id={`tooltip-${identifier}`}
           data-testid="link-copy-btn"
           aria-label={t('copy-to-clipboard')}
           className="copy-link"
         >
           <Icon.Link />
         </CopyLink>
-      </CopyToClipboard>
-    </>
+      </Tooltip>
+    </CopyToClipboard>
   );
 };
 

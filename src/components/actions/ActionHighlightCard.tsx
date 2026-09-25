@@ -4,7 +4,7 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { transparentize } from 'polished';
-import { Badge, Card, CardBody, CardTitle } from 'reactstrap';
+import { Card, CardBody, CardTitle } from 'reactstrap';
 
 import { getStatusColorForAction } from '@/common/ActionStatusSummary';
 import type { CardImageFragment } from '@/common/__generated__/graphql';
@@ -12,6 +12,7 @@ import { getBgImageAlignment, getImageSrcSet } from '@/common/images';
 import { ActionLink } from '@/common/links';
 import { cleanActionStatus } from '@/common/preprocess';
 import ActionStatus from '@/components/actions/ActionStatus';
+import Badge from '@/components/common/Badge';
 import Icon from '@/components/common/Icon';
 import EmbedContext from '@/context/embed';
 import { usePlan } from '@/context/plan';
@@ -60,7 +61,7 @@ const ReadyBadge = styled(Badge)`
   position: absolute;
   top: 1em;
   left: 1em;
-  background-color: ${(props) => props.theme.graphColors.green070} !important;
+  background-color: ${(props) => props.theme.graphColors.green070};
 `;
 
 const StyledCardTitle = styled(CardTitle)`
@@ -170,7 +171,7 @@ export default function ActionHighlightCard(props: ActionHighlightCardProps) {
         )}
         <CardBody>
           {actionStatus && actionStatus.identifier === 'completed' && (
-            <ReadyBadge pill>
+            <ReadyBadge $pill>
               <Icon.Check color="#ffffff" width="2em" height="2em" />
             </ReadyBadge>
           )}

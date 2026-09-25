@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo } from 'react';
 
 import dynamic from 'next/dynamic';
 
+import Alert from '@mui/material/Alert';
+
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -9,7 +11,7 @@ import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Alert, Col, Container, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 
 import {
   type ActionListPageFiltersFragment,
@@ -652,7 +654,7 @@ const ActionList = (props: ActionListProps) => {
               />
             </>
           ) : (
-            <Alert color="primary">{t('search-no-results')}</Alert>
+            <Alert severity="info">{t('search-no-results')}</Alert>
           )}
         </div>
       </Container>
@@ -672,7 +674,7 @@ const ActionList = (props: ActionListProps) => {
               headingHierarchyDepth={headingHierarchyDepth}
             />
           ) : (
-            <Alert color="primary">{t('search-no-results')}</Alert>
+            <Alert severity="info">{t('search-no-results')}</Alert>
           )}
         </div>
       </Container>

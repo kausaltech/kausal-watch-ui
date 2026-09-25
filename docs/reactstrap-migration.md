@@ -119,9 +119,26 @@ Results against the baseline:
 - **390px:** unchanged.
 - **820, 1100 and 1440px:** changed. They now fall on the other side of md and lg, and 1440px gets the 1140px container, where it had 1320px from 1400px up.
 
-### 2. Simple one-to-one swaps (~20 files)
+### 2. Simple one-to-one swaps
 
-`Spinner`, `Progress`, `Badge`, `Alert`/`UncontrolledAlert`, `Tooltip`/`UncontrolledTooltip`, `CloseButton`, `ListGroup`, `Media`.
+Status: done on `feat/bye-reactstrap`. 25 files changed, and files importing reactstrap went from 124 to 112.
+
+- **`Spinner` → `CircularProgress`:** `color="inherit"`, because Bootstrap spinners took the text colour. `1rem` for `size="sm"`, `2rem` otherwise.
+- **`Progress` → `LinearProgress`** with `variant="determinate"`.
+- **`Alert` → MUI `Alert`:** `primary` → `info`, `danger` → `error`, `warning` → `warning`. MUI shows an icon, and Bootstrap's 1rem bottom margin is gone. Dismissible alerts render only while open, with `onClose` and `closeText`.
+- **`Tooltip` / `UncontrolledTooltip` → MUI `Tooltip`**, wrapping the trigger instead of pointing at it by id:
+  - short text tooltips use the themed `@/components/common/Tooltip`;
+  - the action card's dependency popover keeps its white card style.
+  - Where the tooltip describes an element that has its own name, `describeChild` sets `aria-describedby`.
+- **`Badge` → `@/components/common/Badge`,** a styled `span` using the theme's badge tokens, not MUI `Chip`. `Chip` has a fixed height and doesn't wrap long action names.
+  - reactstrap's `Badge` added Bootstrap's `bg-secondary`. That class's `!important` background overrode the components' own colours, with the default theme's colour on every plan.
+  - Two badges now show the colours their styles always asked for: the completed-action check is green, and related-action badges use the plan's `brandLight`.
+- **`CloseButton` → `IconButton` with `Icon.Times`.**
+- **`ListGroup` → styled `ul`/`li`** matching Bootstrap's list-group borders.
+- **`Media` → plain `div`s.** Bootstrap 5 has no `.media` styles, so the layout is unchanged.
+- **`AttentionBannerBlock` deleted.** Nothing imported it.
+
+Results against the step 1 screenshots: 60 of 72 unchanged. The 12 that changed are the two badges above.
 
 ### 3. Buttons and collapses (~25 files)
 

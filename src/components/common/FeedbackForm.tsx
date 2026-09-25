@@ -2,11 +2,13 @@ import { useState } from 'react';
 
 import { usePathname, useSearchParams } from 'next/navigation';
 
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useMutation } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Controller, useForm } from 'react-hook-form';
-import { Alert, Spinner } from 'reactstrap';
 
 import type {
   CreateUserFeedbackMutation,
@@ -259,8 +261,8 @@ const FeedbackForm = (props: FeedbackFormProps) => {
       <h2 className="mb-4">{heading ?? t('give-feedback')}</h2>
       <p>{description ?? t('feedback-description')}</p>
       <p>{prompt ?? t('feedback-prompt')}</p>
-      {mutationData && !mutationLoading && !mutationError && (
-        <Alert color="primary" isOpen={sent} toggle={onDismiss} closeAriaLabel={t('close')}>
+      {mutationData && !mutationLoading && !mutationError && sent && (
+        <Alert severity="info" onClose={onDismiss} closeText={t('close')}>
           <h3>{t('feedback-thankyou-header')}</h3>
           <p>{t('feedback-thankyou-content')}</p>
         </Alert>
@@ -320,20 +322,14 @@ const FeedbackForm = (props: FeedbackFormProps) => {
                 defaultValue=""
               />
             )}
-            {mutationError && (
-              <Alert
-                color="danger"
-                className="mt-4"
-                isOpen={sent}
-                toggle={onDismiss}
-                closeAriaLabel={t('close')}
-              >
+            {mutationError && sent && (
+              <Alert severity="error" className="mt-4" onClose={onDismiss} closeText={t('close')}>
                 <h3>{t('feedback-error-header')}</h3>
                 <p>{t('feedback-error-content')}</p>
               </Alert>
             )}
             {formEmptyError && (
-              <Alert color="danger" className="mt-3" isOpen={formEmptyError} toggle={onDismiss}>
+              <Alert severity="error" className="mt-3" onClose={onDismiss} closeText={t('close')}>
                 {t('form-effectively-empty-error')}
               </Alert>
             )}
@@ -341,7 +337,7 @@ const FeedbackForm = (props: FeedbackFormProps) => {
               {!mutationLoading && t('send')}
               {mutationLoading && (
                 <span>
-                  <Spinner size="sm" color="light" className="me-3" />
+                  <CircularProgress size="1rem" color="inherit" className="me-3" />
                   {t('loading')}
                   ...
                 </span>

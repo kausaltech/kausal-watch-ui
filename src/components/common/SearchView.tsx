@@ -1,12 +1,14 @@
 import { type ChangeEvent, type SyntheticEvent, useEffect, useState } from 'react';
 
+import Alert from '@mui/material/Alert';
+
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Alert, Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
+import { Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
@@ -205,7 +207,7 @@ function SearchResults({ search }: SearchResultsProps) {
   if (error) {
     return (
       <ResultsHeader>
-        <Alert color="warning">
+        <Alert severity="warning">
           <h2>{t('error-with-code')}</h2>
           {error.message}
         </Alert>
@@ -327,7 +329,7 @@ function SearchViewContent(props: SearchViewProps) {
           <SearchResults search={search} />
         ) : (
           <Col sm="12" md={{ offset: 2, size: 8 }} className="mt-5">
-            <Alert color="primary">
+            <Alert severity="info">
               <ResultsHeader>{t('search-no-results')}</ResultsHeader>
             </Alert>
           </Col>

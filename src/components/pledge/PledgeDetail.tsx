@@ -2,11 +2,13 @@
 
 import { useState, useSyncExternalStore } from 'react';
 
+import CircularProgress from '@mui/material/CircularProgress';
+
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Container, Spinner } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -331,7 +333,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
                 aria-pressed={isCommitted}
               >
                 {isUpdatingCommitment ? (
-                  <Spinner size="sm" />
+                  <CircularProgress size="1rem" color="inherit" />
                 ) : (
                   <Icon name="award" width="18px" height="18px" />
                 )}
