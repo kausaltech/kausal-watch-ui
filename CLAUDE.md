@@ -22,6 +22,7 @@ Detailed docs live in docs/. Read the relevant one before making changes in that
 
 - docs/types.md - Conventions for type annotations
 - docs/indicator-graph-unification.md - Feasibility and plan for rendering the default indicator graph and the chart blocks with one component
+- docs/reactstrap-migration.md - Plan for replacing reactstrap with MUI and moving to MUI breakpoints
 
 ## Tech Stack
 
