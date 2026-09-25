@@ -23,6 +23,7 @@ import {
   getLocaleAndPlan,
   getPlansForHostname,
   getSearchParamsString,
+  getStatusMessage,
   isAuthenticated,
   isLegacyPathStructure,
   isPlanAvailable,
@@ -214,7 +215,7 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
   if (!isPlanAvailable(parsedPlan)) {
     // The backend names the page to render; the message is optional and usually absent.
     const params = new URLSearchParams({ status: getDomainStatus(parsedPlan) });
-    const message = parsedPlan.domain?.statusMessage ?? parsedPlan.statusMessage;
+    const message = getStatusMessage(parsedPlan);
 
     if (message) {
       params.set('message', message);

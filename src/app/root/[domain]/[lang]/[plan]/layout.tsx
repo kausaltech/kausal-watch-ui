@@ -12,21 +12,30 @@ import { getThemeStaticURL } from '@common/themes/theme';
 import { loadTheme } from '@common/themes/theme-init.server';
 import { getRequestOrigin } from '@common/utils/request.server';
 
-import type { WorkflowState } from '@/common/__generated__/graphql';
+import { PlanDomainStatus, type WorkflowState } from '@/common/__generated__/graphql';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { SharedIcons } from '@/components/common/Icon';
 import IntroModal from '@/components/custom/IntroModal';
 import GlobalIndicatorModalWrapper from '@/components/indicators/GlobalIndicatorModalWrapper';
+import UnpublishedPlan from '@/components/plans/UnpublishedPlan';
 import PathsProvider from '@/components/providers/PathsProvider';
 import PlanProvider from '@/components/providers/PlanProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import TimeZoneProvider from '@/components/providers/TimeZoneProvider';
+import { auth } from '@/config/auth';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 import { PrintProvider } from '@/context/print';
 import { WorkflowProvider } from '@/context/workflow-selector';
+import defaultTheme from '@/public/static/themes/default/theme.json';
 import { getPlan } from '@/queries/get-plan';
+import { getPlansForHostnameUncached } from '@/queries/get-plans-for-hostname';
 import { tryRequest } from '@/utils/api.utils';
 import { getMetaTitles, getRobotsMetadata, getSiteVerificationMetadata } from '@/utils/metadata';
+import {
+  type StalePlanResolution,
+  evictHostnamePlans,
+  resolveStalePlan,
+} from '@/utils/middleware.utils';
 import { getPathsData } from '@/utils/paths/get-paths-data';
 
 type Props = {
@@ -98,6 +107,34 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
+/**
+ * Recheck the hostname when the proxy routed an anonymous visitor to a plan the backend then
+ * would not serve.
+ *
+ * The proxy caches anonymous hostname lookups for a few minutes, so a plan made internal keeps
+ * being routed to its pages until the entry expires, and every such page would 404. This asks
+ * again past the cache, drops the stale entry so the proxy's next lookup is fresh, and says what
+ * the proxy would have done had it known. Signed-in lookups are never cached, so for a signed-in
+ * viewer there is nothing to recheck.
+ */
+async function resolveStaleRouting(domain: string): Promise<StalePlanResolution | null> {
+  const session = await auth();
+  if (session?.idToken) {
+    return null;
+  }
+  const urlHeader = (await headers()).get('x-url');
+  if (!urlHeader) {
+    return null;
+  }
+  const { data } = await tryRequest(getPlansForHostnameUncached(domain));
+  const plans = data?.plansForHostname;
+  if (!plans) {
+    return null;
+  }
+  evictHostnamePlans(domain);
+  return resolveStalePlan(new URL(urlHeader).pathname, plans);
+}
+
 export default async function PlanLayout(props: Props) {
   const params = await props.params;
 
@@ -111,10 +148,26 @@ export default async function PlanLayout(props: Props) {
   const planData = planResult.data;
 
   if (!planData?.plan) {
-    // The middleware resolved this plan for the hostname moments ago, so a
-    // missing plan here is a backend inconsistency rather than a bad URL.
-    // Query errors are already captured to Sentry by tryRequest.
-    if (!('error' in planResult) || !planResult.error) {
+    const staleResolution = await resolveStaleRouting(domain);
+
+    if (staleResolution?.kind === 'unavailable') {
+      return (
+        <ThemeProvider theme={defaultTheme}>
+          <UnpublishedPlan
+            message={staleResolution.message}
+            signInRequired={staleResolution.status === PlanDomainStatus.SignInRequired}
+            testId="unpublished-page"
+          />
+        </ThemeProvider>
+      );
+    }
+    // A hostname that no longer resolves a plan at all is a plain 404. Any
+    // other missing plan is a backend inconsistency rather than a bad URL: the
+    // viewer is signed in, whose lookups are never cached, or a fresh lookup
+    // still says the site is available. Query errors are already captured to
+    // Sentry by tryRequest.
+    const planWasRemoved = staleResolution?.kind === 'not-found';
+    if (!planWasRemoved && (!('error' in planResult) || !planResult.error)) {
       captureException(new Error(`GetPlanContext returned no plan before 404`), {
         extra: { domain, plan, context: 'PlanLayout' },
       });

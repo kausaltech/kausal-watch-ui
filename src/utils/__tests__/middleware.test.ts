@@ -5,6 +5,7 @@ import type { NextRequest, NextResponse } from 'next/server';
 
 import { PlanDomainStatus } from '@/common/__generated__/graphql';
 
+import type * as MiddlewareUtilsModule from '../middleware.utils';
 import {
   type PlanFromPlansQuery,
   applySecurityHeaders,
@@ -12,6 +13,7 @@ import {
   getDomainStatus,
   getParsedLocale,
   isPlanAvailable,
+  resolveStalePlan,
   rewriteUrl,
 } from '../middleware.utils';
 
@@ -353,5 +355,71 @@ describe('domain status', () => {
     expect(isPlanAvailable({ ...served, domain: { status: null } } as PlanFromPlansQuery)).toBe(
       true
     );
+  });
+});
+
+describe('resolveStalePlan', () => {
+  const restricted = (status: PlanDomainStatus, statusMessage: string | null = null) =>
+    ({
+      __typename: 'RestrictedPlanNode',
+      primaryLanguage,
+      statusMessage: null,
+      domain: { status, statusMessage, basePath: null },
+      domains: [{ basePath: null }],
+    }) as unknown as PlanFromPlansQuery;
+
+  it('names the placeholder the proxy would have rewritten to', () => {
+    expect(resolveStalePlan('/', [restricted(PlanDomainStatus.SignInRequired, 'Soon')])).toEqual({
+      kind: 'unavailable',
+      status: PlanDomainStatus.SignInRequired,
+      message: 'Soon',
+    });
+  });
+
+  it('leaves no message when the backend gives none', () => {
+    expect(resolveStalePlan('/', [restricted(PlanDomainStatus.Unavailable)])).toEqual({
+      kind: 'unavailable',
+      status: PlanDomainStatus.Unavailable,
+      message: undefined,
+    });
+  });
+
+  it('reports a hostname that no longer resolves a plan', () => {
+    expect(resolveStalePlan('/', [])).toEqual({ kind: 'not-found' });
+  });
+
+  it('reports a plan the backend still serves, which a fresh lookup cannot explain', () => {
+    const available = {
+      ...MOCK_PLAN,
+      __typename: 'Plan',
+      domain: { status: PlanDomainStatus.Available, basePath: null },
+      domains: [{ basePath: null }],
+    } as unknown as PlanFromPlansQuery;
+
+    expect(resolveStalePlan('/', [available])).toEqual({ kind: 'available' });
+  });
+});
+
+describe('hostname plan cache', () => {
+  /*
+   * The proxy and the pages are bundled separately, so each gets its own copy of this module.
+   * A page evicting a stale entry only helps if both copies hold the same cache.
+   */
+  it('is shared between separately loaded copies of the module', () => {
+    let proxyCopy: typeof MiddlewareUtilsModule | undefined;
+    let pageCopy: typeof MiddlewareUtilsModule | undefined;
+
+    jest.isolateModules(() => {
+      proxyCopy = jest.requireActual<typeof MiddlewareUtilsModule>('../middleware.utils');
+    });
+    jest.isolateModules(() => {
+      pageCopy = jest.requireActual<typeof MiddlewareUtilsModule>('../middleware.utils');
+    });
+
+    proxyCopy!.cacheHostnamePlans('shared.example.com', [MOCK_PLAN]);
+    expect(pageCopy!.getCachedHostnamePlans('shared.example.com')).toEqual([MOCK_PLAN]);
+
+    pageCopy!.evictHostnamePlans('shared.example.com');
+    expect(proxyCopy!.getCachedHostnamePlans('shared.example.com')).toBeUndefined();
   });
 });

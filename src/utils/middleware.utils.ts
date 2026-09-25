@@ -90,6 +90,43 @@ export const getDomainStatus = (plan: PlanFromPlansQuery): PlanDomainStatus => {
 export const isPlanAvailable = (plan: PlanFromPlansQuery): plan is AvailablePlan =>
   getDomainStatus(plan) === PlanDomainStatus.Available;
 
+/** The optional message the backend attaches to a hostname that is not serving its site. */
+export const getStatusMessage = (plan: PlanFromPlansQuery): string | undefined =>
+  plan.domain?.statusMessage ?? plan.statusMessage ?? undefined;
+
+export type StalePlanResolution =
+  | { kind: 'unavailable'; status: PlanDomainStatus; message: string | undefined }
+  | { kind: 'not-found' }
+  | { kind: 'available' };
+
+/**
+ * What a hostname serves, according to a lookup made after the proxy's answer turned out stale.
+ *
+ * The proxy caches anonymous lookups, so a plan that stops being served — made internal, or its
+ * site taken down — keeps being routed to its pages for the rest of the cache lifetime, and those
+ * pages then find no plan. Given a fresh lookup, this names what the proxy would have done
+ * instead: rewrite to a placeholder, or 404 a hostname that no longer resolves a plan. A fresh
+ * lookup that still says the site is available cannot explain the missing plan.
+ */
+export function resolveStalePlan(
+  pathname: string,
+  plans: PlanFromPlansQuery[]
+): StalePlanResolution {
+  const { parsedPlan } = getLocaleAndPlan(pathname, plans);
+
+  if (!parsedPlan) {
+    return { kind: 'not-found' };
+  }
+  if (isPlanAvailable(parsedPlan)) {
+    return { kind: 'available' };
+  }
+  return {
+    kind: 'unavailable',
+    status: getDomainStatus(parsedPlan),
+    message: getStatusMessage(parsedPlan),
+  };
+}
+
 export function getParsedPlan(
   possiblePlans: string[],
   plans: PlanFromPlansQuery[]
@@ -498,7 +535,39 @@ async function queryPlansForHostname(
 
 const DEFAULT_TTL = 5 * 60 * 1000;
 
-const hostnamePlanCache = new LRUCache<string, PlanForHostname[]>();
+/*
+ * The proxy and the pages are bundled separately, so each loads its own copy of this module. The
+ * cache is anchored on `globalThis` so that both copies hold the same one, which is what lets a
+ * page evict an entry it has found to be stale.
+ */
+const HOSTNAME_PLAN_CACHE_KEY = Symbol.for('kausal-watch-ui.hostnamePlanCache');
+type GlobalWithHostnameCache = typeof globalThis & {
+  [HOSTNAME_PLAN_CACHE_KEY]?: LRUCache<string, PlanForHostname[]>;
+};
+const cacheHolder = globalThis as GlobalWithHostnameCache;
+const hostnamePlanCache = (cacheHolder[HOSTNAME_PLAN_CACHE_KEY] ??= new LRUCache<
+  string,
+  PlanForHostname[]
+>());
+
+export function getCachedHostnamePlans(hostname: string): PlanForHostname[] | undefined {
+  const cacheEntry = hostnamePlanCache.getMetadata(hostname);
+  if (!cacheEntry) {
+    return undefined;
+  }
+  if (Date.now() - cacheEntry.createdAt >= cacheEntry.ttl) {
+    return undefined;
+  }
+  return cacheEntry.value as PlanForHostname[];
+}
+
+export function cacheHostnamePlans(hostname: string, plans: PlanForHostname[]) {
+  hostnamePlanCache.set(hostname, plans, undefined, DEFAULT_TTL);
+}
+
+export function evictHostnamePlans(hostname: string) {
+  hostnamePlanCache.delete(hostname);
+}
 
 export async function getPlansForHostname(
   req: NextAuthRequest,
@@ -509,19 +578,15 @@ export async function getPlansForHostname(
   const isUnauthenticatedRequest = !req.auth || skipAuth;
 
   if (isUnauthenticatedRequest) {
-    const cacheEntry = hostnamePlanCache.getMetadata(hostname);
-    if (cacheEntry) {
-      const now = Date.now();
-      const age = now - cacheEntry.createdAt;
-      if (age < cacheEntry.ttl) {
-        return { plans: cacheEntry.value as PlanForHostname[], error: null };
-      }
+    const cachedPlans = getCachedHostnamePlans(hostname);
+    if (cachedPlans) {
+      return { plans: cachedPlans, error: null };
     }
   }
   const { plans, error } = await queryPlansForHostname(req, logger, hostname, skipAuth);
   if (plans) {
     if (isUnauthenticatedRequest) {
-      hostnamePlanCache.set(hostname, plans, undefined, DEFAULT_TTL);
+      cacheHostnamePlans(hostname, plans);
     }
     return { plans, error: null };
   }
