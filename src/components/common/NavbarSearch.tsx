@@ -1,6 +1,12 @@
 'use client';
 
-import React, { type MouseEventHandler, useEffect, useRef, useState } from 'react';
+import React, {
+  type MouseEventHandler,
+  type SubmitEventHandler,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -333,6 +339,10 @@ const NavbarSearch = React.memo(function NavbarSearch() {
       config={{
         apiConnector: connector,
         debug: false,
+        // We manage navigation ourselves via next. elastic's
+        // own url manager conflicts with the next router and
+        // can overwrite the address bar with a stale path.
+        trackUrlState: false,
         hasA11yNotifications: true,
         a11yNotificationMessages: {
           searchResults: ({ totalResults, searchTerm }) =>
@@ -417,22 +427,32 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
     ],
   });
 
-  const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
+
+    if (searchInput.current?.value) {
+      const href = `${searchPath}${searchTerm}`;
+
+      router.push(href);
+    }
+
+    closeSearch();
+  };
+
+  const handleButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
     if (!searchOpen) {
+      event.preventDefault();
       searchInput.current?.focus();
       setSearchOpen(true);
-    } else if (searchInput.current?.value) {
-      const href = `${searchPath}${searchTerm}`;
-      router.push(href);
-      closeSearch();
-    } else closeSearch();
+    }
+
+    // Otherwise let the click submit the form natively, handled by handleSubmit.
   };
 
   return (
     <NavBarSearchListItem className="nav-item" ref={searchElement}>
       <SearchControls ref={setReferenceElement}>
-        <form autoComplete="off" aria-label={t('search')}>
+        <form autoComplete="off" aria-label={t('search')} onSubmit={handleSubmit}>
           <StyledInputGroup>
             <TextInput
               type="search"
@@ -459,7 +479,7 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
             <SearchButton
               $isActive={searchOpen}
               type="submit"
-              onClick={handleSubmit}
+              onClick={handleButtonClick}
               aria-label={t('search')}
               data-testid="nav-search-btn"
             >
