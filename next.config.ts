@@ -63,7 +63,17 @@ let nextConfig: NextConfig = {
 };
 
 if (isLocalDev) {
-  nextConfig.allowedDevOrigins = getWildcardDomains().map((domain) => `*.${domain}`);
+  // EXTRA_ALLOWED_DEV_ORIGINS: comma-separated hostnames or patterns (e.g. `**.fi`) routed to
+  // the dev server from outside the wildcard domains, such as real plan domains pointed at it
+  // through a local proxy.
+  const extraOrigins = (process.env.EXTRA_ALLOWED_DEV_ORIGINS ?? '')
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  nextConfig.allowedDevOrigins = [
+    ...getWildcardDomains().map((domain) => `*.${domain}`),
+    ...extraOrigins,
+  ];
 }
 
 nextConfig = wrapWithSentryConfig(nextConfig);
