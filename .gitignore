@@ -44,3 +44,6 @@ build-storybook.log
 /.pnpm-store
 /schema.graphql
 /.nyc_output
+
+# Local, uncommitted mise overrides
+/mise.local.toml
