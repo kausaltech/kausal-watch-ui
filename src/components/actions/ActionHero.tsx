@@ -88,7 +88,7 @@ const HeroCardBg = styled.div`
 const CardContent = styled.div`
   padding: ${(props) => props.theme.spaces.s150};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     padding: ${(props) => props.theme.spaces.s200};
   }
 `;
@@ -111,7 +111,7 @@ const ActionsNav = styled.nav`
   margin-bottom: ${(props) => props.theme.spaces.s100};
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeBase};
     font-family: ${(props) => `${props.theme.fontFamily}, ${props.theme.fontFamilyFallback}`};
   }
@@ -146,7 +146,7 @@ const ActionHeadline = styled.h1`
     hyphens: manual;
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;

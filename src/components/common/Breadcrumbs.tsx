@@ -16,7 +16,7 @@ const StyledContainer = styled.div`
   line-height: ${(props) => props.theme.lineHeightMd};
   margin-bottom: ${(props) => props.theme.spaces.s100};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeMd};
   }
 `;

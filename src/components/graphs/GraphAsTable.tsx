@@ -68,7 +68,7 @@ const TableContainer = styled.div`
       text-align: right;
     }
 
-    @media (max-width: ${(p) => p.theme.breakpointMd}) {
+    ${(p) => p.theme.breakpoints.down('md')} {
       width: 100%;
       min-width: 0;
 

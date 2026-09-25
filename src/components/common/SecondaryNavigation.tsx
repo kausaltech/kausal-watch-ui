@@ -8,7 +8,7 @@ import { type StaticPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-
 import { Link } from '@/common/links';
 
 const NavigationContainer = styled(Container, transientOptions)<{ $pageHasContent: boolean }>`
-  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+  ${(props) => props.theme.breakpoints.up('lg')} {
     // When there is no body content, render the navigation as
     // relative to ensure it's not clipped by the footer
     position: ${(props) => (props.$pageHasContent ? 'absolute' : 'relative')};

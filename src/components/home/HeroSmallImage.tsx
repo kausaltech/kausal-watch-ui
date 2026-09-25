@@ -39,7 +39,7 @@ const StyledContainer = styled(Container, transientOptions)<{
     z-index: -1;
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointSm}) {
+  ${(props) => props.theme.breakpoints.up('sm')} {
     --image-top-padding: ${({ theme }) => theme.spaces.s300};
     --accent-bar-height: ${({ $showImageAccent, theme }) =>
       $showImageAccent ? theme.spaces.s150 : '0px'};

@@ -92,7 +92,7 @@ const CardSetHeader = styled.div`
     color: ${(props) => props.theme.themeColors.dark};
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     flex-direction: row;
   }
 `;

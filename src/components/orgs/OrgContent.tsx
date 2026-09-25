@@ -83,7 +83,7 @@ const OrgHeader = styled.div`
     }
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     h1 {
       font-size: ${(props) => props.theme.fontSizeXxl};
     }
@@ -100,7 +100,7 @@ const OrgLogo = styled.img`
   margin-bottom: ${(props) => props.theme.spaces.s200};
   max-width: ${(props) => props.theme.spaces.s800};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     width: 100%;
     max-width: 100%;
   }

@@ -47,7 +47,7 @@ const StyledHeading = styled.h3`
   font-weight: ${({ theme }) => theme.fontWeightBold};
   margin-bottom: ${({ theme }) => theme.spaces.s200};
 
-  @media (max-width: ${({ theme }) => theme.breakpointSm}) {
+  ${({ theme }) => theme.breakpoints.down('sm')} {
     text-align: center;
   }
 `;
@@ -56,7 +56,7 @@ const StyledEmojiGrid = styled.div`
   display: flex;
   gap: 1px;
 
-  @media (max-width: ${({ theme }) => theme.breakpointSm}) {
+  ${({ theme }) => theme.breakpoints.down('sm')} {
     justify-content: center;
   }
 `;

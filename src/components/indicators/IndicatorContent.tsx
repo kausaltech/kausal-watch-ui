@@ -36,7 +36,7 @@ const CausalNavigationSection = styled(Section)`
 const GraphContainer = styled.div`
   padding: ${(props) => props.theme.spaces.s100};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     padding: ${(props) => props.theme.spaces.s200};
   }
 

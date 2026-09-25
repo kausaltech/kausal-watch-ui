@@ -61,7 +61,7 @@ const StyledHeroContentContainer = styled(Container)`
   z-index: 1;
   padding-top: ${({ theme }) => theme.spaces.s200};
 
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     padding-top: ${({ theme }) => theme.spaces.s300};
   }
 `;
@@ -73,7 +73,7 @@ const StyledHeroCard = styled.div`
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   max-width: 700px;
 
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     padding: ${({ theme }) => theme.spaces.s300};
   }
 `;
@@ -89,7 +89,7 @@ const StyledTitle = styled.h1`
   margin-bottom: ${({ theme }) => theme.spaces.s150};
   line-height: ${({ theme }) => theme.lineHeightMd};
 
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     font-size: ${({ theme }) => theme.fontSizeXl};
   }
 `;
@@ -100,7 +100,7 @@ const StyledLead = styled.p`
   line-height: ${({ theme }) => theme.lineHeightBase};
   margin-bottom: ${({ theme }) => theme.spaces.s200};
 
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     font-size: ${({ theme }) => theme.fontSizeMd};
   }
 `;

@@ -22,7 +22,7 @@ export const Attributes = styled.div<AttributeProps>`
   ${(props) =>
     props.$vertical &&
     css`
-      max-width: ${props.theme.breakpointSm};
+      max-width: 576px;
     `}
   margin: ${(props) => props.theme.spaces.s100} auto;
   padding: ${(props) => props.theme.spaces.s200} 0 0;

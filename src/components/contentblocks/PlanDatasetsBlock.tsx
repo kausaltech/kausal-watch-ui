@@ -15,7 +15,7 @@ import PopoverTip from '@/components/common/PopoverTip';
 import { getDateFormat } from '@/utils/dates.utils';
 
 const TableContainer = styled.div`
-  max-width: ${(props) => props.theme.breakpointSm};
+  max-width: 576px;
   background-color: ${({ theme }) => theme.themeColors.white};
   margin-bottom: ${(props) => props.theme.spaces.s600};
   padding: ${(props) => props.theme.spaces.s200} 0 0;

@@ -54,7 +54,7 @@ export const SectionHeader = styled.h2`
   margin-bottom: var(--block-header-margin-bottom);
   font-size: ${(props) => props.theme.fontSizeLg};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;

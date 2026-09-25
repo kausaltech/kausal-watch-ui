@@ -76,7 +76,7 @@ const DEFAULT_MAX_WIDTH = 600;
 
 const ActionCardWrapper = styled.div<ActionCardWrapperProps>`
   max-width: ${(props) => props.maxWidth}px;
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.down('md')} {
     max-width: 100%;
   }
 `;
@@ -103,7 +103,7 @@ const ActionEmbed = ({ path, maxWidth }: ActionEmbedPropsType) => {
       <ActionHighlightCard
         action={data.action}
         image={data.action.image}
-        imageSizes={`(min-width: ${theme.breakpointMd}) ${cardMaxWidth}px, 100vw`}
+        imageSizes={`(min-width: ${theme.breakpoints.values.md}px) ${cardMaxWidth}px, 100vw`}
         hideIdentifier={plan.hideActionIdentifiers}
       />
     </ActionCardWrapper>

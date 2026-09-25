@@ -57,7 +57,7 @@ const StyledTitle = styled.h1`
   font-size: ${(props) => props.theme.fontSizeLg};
   color: inherit;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;
@@ -102,7 +102,7 @@ const CategoryListSection = styled.div`
     margin-bottom: ${(props) => props.theme.spaces.s300};
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     .lead-text {
       font-size: ${(props) => props.theme.fontSizeMd};
       line-height: ${(props) => props.theme.lineHeightBase};

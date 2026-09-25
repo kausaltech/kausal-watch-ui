@@ -42,7 +42,7 @@ const IndicatorsJumbo = styled.div`
         props.theme.themeColors.white
       )};
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       font-size: ${(props) => props.theme.fontSizeXxl};
     }
   }

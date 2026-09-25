@@ -60,7 +60,7 @@ const SecondaryNav = styled(Navbar, transientOptions)<{ $dark?: boolean }>`
     }
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     .navbar-nav {
       padding: 0;
     }
@@ -93,13 +93,13 @@ const HomeLink = styled.div`
       ${(props) => props.theme.spaces.s050} 0;
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     svg {
       width: 180px;
     }
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointXl}) {
+  ${(props) => props.theme.breakpoints.up('xl')} {
     svg {
       width: 242px;
     }
@@ -121,7 +121,7 @@ const NavLink = styled.div`
       }
     }
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       align-self: flex-end;
       margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
     }
@@ -138,7 +138,7 @@ const NavHighlighter = styled.span`
 `;
 
 const StyledCollapse = styled(Collapse, transientOptions)<{ $dark?: boolean }>`
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     display: flex;
     background-color: ${(props) =>
       props.$dark ? 'var(--stzh-color-zueriblue)' : 'var(--stzh-color-white)'};
@@ -150,7 +150,7 @@ const StyledCollapse = styled(Collapse, transientOptions)<{ $dark?: boolean }>`
 `;
 
 const SiteTitle = styled.span`
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.down('md')} {
     display: none;
   }
 `;
@@ -184,7 +184,7 @@ const NavbarToggler = styled.button`
   border-radius: 0;
   -webkit-appearance: none;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     display: none;
   }
 `;

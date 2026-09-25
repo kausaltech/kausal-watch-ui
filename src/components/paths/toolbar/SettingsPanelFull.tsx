@@ -50,7 +50,7 @@ const FixedPanel = styled.aside`
   &.panel-md {
     height: 7.5rem;
 
-    @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.down('md')} {
       height: 6rem;
     }
   }

@@ -89,7 +89,7 @@ const StyledWrapper = styled.div<{ $isVertical: boolean; $isSmall: boolean }>`
           }
         `
       : css`
-          @media (max-width: ${theme.breakpointMd}) {
+          ${theme.breakpoints.down('md')} {
             flex-direction: column;
 
             ${StyledIcon} {
@@ -97,7 +97,7 @@ const StyledWrapper = styled.div<{ $isVertical: boolean; $isSmall: boolean }>`
             }
           }
 
-          @container ${ACTION_CONTENT_MAIN_BOTTOM} (max-width: ${theme.breakpointSm}) {
+          @container ${ACTION_CONTENT_MAIN_BOTTOM} (max-width: ${theme.breakpoints.values.sm}px) {
             flex-direction: column;
 
             ${StyledIcon} {

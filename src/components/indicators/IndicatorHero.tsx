@@ -41,7 +41,7 @@ const HeroCardBg = styled.div`
 const CardContent = styled.div`
   padding: ${(props) => props.theme.spaces.s150};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     padding: ${(props) => props.theme.spaces.s200};
   }
 `;
@@ -63,7 +63,7 @@ const IndicatorHeadline = styled.h1`
   font-size: ${(props) => props.theme.fontSizeXl};
   color: ${(props) => props.theme.themeColors.black} !important;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     display: flex;
     font-size: ${(props) => props.theme.fontSizeXl};
   }

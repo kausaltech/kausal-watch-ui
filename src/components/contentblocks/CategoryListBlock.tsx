@@ -28,7 +28,7 @@ const CategoryListSection = styled.div`
   padding: var(--block-padding-top) 0 var(--block-padding-bottom) 0;
   color: ${({ theme }) => getColor(theme)};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     h2 {
       font-size: ${(props) => props.theme.fontSizeXl};
     }
@@ -63,7 +63,7 @@ const CategoryListSection = styled.div`
     margin-bottom: ${(props) => props.theme.spaces.s300};
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     .lead-text {
       font-size: ${(props) => props.theme.fontSizeMd};
       line-height: ${(props) => props.theme.lineHeightBase};

@@ -53,7 +53,7 @@ const StyledDrawerHeader = styled.div`
   padding: ${({ theme }) => theme.spaces.s100} ${({ theme }) => theme.spaces.s150};
   border-bottom: 1px solid ${({ theme }) => theme.graphColors.grey020};
 
-  @media (max-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     padding: ${({ theme }) => theme.spaces.s100};
   }
 `;
@@ -87,7 +87,7 @@ const StyledCloseButton = styled.button`
 const StyledDrawerContent = styled.div`
   padding: ${({ theme }) => theme.spaces.s200};
 
-  @media (max-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     padding: ${({ theme }) => theme.spaces.s100};
   }
 `;
@@ -116,7 +116,7 @@ const StyledDrawerFooter = styled.div`
   padding: ${({ theme }) => theme.spaces.s200};
   border-top: 1px solid ${({ theme }) => theme.graphColors.grey020};
 
-  @media (max-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     padding: ${({ theme }) => theme.spaces.s100};
   }
 `;
@@ -128,7 +128,7 @@ const StyledButton = styled(Button)`
   justify-content: center;
   gap: ${({ theme }) => theme.spaces.s050};
 
-  @media (max-width: ${({ theme }) => theme.breakpointLg}) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     width: 100%;
   }
 `;
