@@ -22,7 +22,8 @@ declare module '@apollo/client' {
     locale?: string;
     planIdentifier?: string;
     planDomain?: string;
-    sessionToken?: string;
+    /** Whether the user has an OAuth access token, which the GraphQL proxy adds. */
+    hasAccessToken?: boolean;
     start?: number;
   }
 }

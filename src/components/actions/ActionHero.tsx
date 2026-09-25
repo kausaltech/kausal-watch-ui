@@ -1,10 +1,10 @@
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Col, Container, Row } from 'reactstrap';
 
+import { useAuthSession } from '@common/auth/session-context';
 import { getThemeStaticURL } from '@common/themes/theme';
 
 import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
@@ -260,7 +260,7 @@ function ActionHero(props: ActionHeroProps) {
   const theme = useTheme();
   const t = useTranslations();
   const plan = usePlan();
-  const { status } = useSession();
+  const { status } = useAuthSession();
   const isAuthenticated = status === 'authenticated';
 
   // Theme overlay color as fallback

@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation';
 
 import { useTheme } from '@emotion/react';
 
-import { useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 
+import { useAuthSession } from '@common/auth/session-context';
 import { getDeploymentType } from '@common/env';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
@@ -100,7 +100,7 @@ function Header() {
   const theme = useTheme();
   const activeBranch = getActiveBranch(pathname, locale);
 
-  const { status } = useSession();
+  const { status } = useAuthSession();
   const isAuthenticated = status === 'authenticated';
   const isPledgeEnabled = !!plan.features?.enableCommunityEngagement;
   const { navigationTitle: siteTitle } = getMetaTitles(plan);

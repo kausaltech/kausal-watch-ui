@@ -6,9 +6,9 @@ import { ThemeProvider } from '@emotion/react';
 
 import { DecoratorHelpers } from '@storybook/addon-themes';
 import type { Decorator } from '@storybook/nextjs-vite';
-import { SessionProvider } from 'next-auth/react';
 import { NextIntlClientProvider } from 'next-intl';
 
+import { AuthSessionProvider } from '@common/auth/session-context';
 import ThemedGlobalStyles from '@common/themes/ThemedGlobalStyles';
 import { initializeMuiTheme } from '@common/themes/mui-theme/theme';
 
@@ -50,15 +50,8 @@ export const withKausalThemes = ({ themes, defaultTheme }: WithKausalThemesOptio
     return (
       <>
         <link rel="stylesheet" type="text/css" href={`/static/themes/${cssFile}`} />
-        {/*
-         * An explicit `session` is what stops SessionProvider from fetching
-         * `/api/auth/session` on mount. There is no such endpoint in Storybook
-         * or under the Vitest browser runner, so the fetch returns an empty
-         * body and next-auth logs a ClientFetchError for every story. Passing
-         * `null` (rather than leaving it undefined) seeds the provider as
-         * unauthenticated and skips the request.
-         */}
-        <SessionProvider session={null}>
+        {/* Stories render as a signed-out visitor. */}
+        <AuthSessionProvider session={null}>
           <WorkflowProvider
             initialWorkflow={undefined}
             workflowStates={[
@@ -81,7 +74,7 @@ export const withKausalThemes = ({ themes, defaultTheme }: WithKausalThemesOptio
               </ThemeProvider>
             </MuiThemeProvider>
           </WorkflowProvider>
-        </SessionProvider>
+        </AuthSessionProvider>
       </>
     );
   };

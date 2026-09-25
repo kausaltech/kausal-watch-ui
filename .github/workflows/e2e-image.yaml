@@ -75,7 +75,6 @@ jobs:
           SENTRY_ENVIRONMENT: ci
           WATCH_BACKEND_URL: ${{ inputs.backend_base_url }}
           AUTH_SECRET: abcd
-          AUTH_TRUST_HOST: true
           HOSTNAME: 0.0.0.0
     outputs:
       test_report_url: ${{ steps.upload.outputs.test_report_url }}

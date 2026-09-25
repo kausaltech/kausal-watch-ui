@@ -3,7 +3,6 @@ import type { NextRequest, NextResponse } from 'next/server';
 
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client';
 import * as Sentry from '@sentry/nextjs';
-import type { NextAuthRequest } from 'next-auth';
 import type { Logger } from 'pino';
 
 import type { ApolloClientType } from '@common/apollo';
@@ -363,7 +362,7 @@ export function applySecurityHeaders<R>(response: R, request: NextRequest): R {
   return response;
 }
 
-function createApolloClient(req: NextAuthRequest, logger: Logger, skipAuth = false) {
+function createApolloClient(req: NextRequest, logger: Logger, accessToken: string | null) {
   const uri = getWatchGraphQLUrl();
   const httpLink = new HttpLink({
     uri,
@@ -389,8 +388,8 @@ function createApolloClient(req: NextAuthRequest, logger: Logger, skipAuth = fal
           if (wildcardDomains.length > 0) {
             ctxHeaders[WILDCARD_DOMAINS_HEADER] = wildcardDomains.join(',');
           }
-          if (!skipAuth && req.auth?.idToken) {
-            ctxHeaders['Authorization'] = `Bearer ${req.auth.idToken}`;
+          if (accessToken) {
+            ctxHeaders['Authorization'] = `Bearer ${accessToken}`;
           }
           const newHeaders = {
             ...headers,
@@ -425,12 +424,12 @@ function createApolloClient(req: NextAuthRequest, logger: Logger, skipAuth = fal
 }
 
 async function queryPlansForHostname(
-  req: NextAuthRequest,
+  req: NextRequest,
   logger: Logger,
   hostname: string,
-  skipAuth = false
+  accessToken: string | null
 ) {
-  const apolloClient = createApolloClient(req, logger, skipAuth);
+  const apolloClient = createApolloClient(req, logger, accessToken);
   try {
     const { data, error } = await apolloClient.query({
       query: GET_PLANS_BY_HOSTNAME,
@@ -448,13 +447,17 @@ const DEFAULT_TTL = 5 * 60 * 1000;
 
 const hostnamePlanCache = new LRUCache<string, PlanForHostname[]>();
 
+/**
+ * Plans are resolved with the user's access token, so that users with access
+ * also get unpublished plans. Only anonymous results are cached.
+ */
 export async function getPlansForHostname(
-  req: NextAuthRequest,
+  req: NextRequest,
   logger: Logger,
   hostname: string,
-  skipAuth = false
+  accessToken: string | null
 ) {
-  const isUnauthenticatedRequest = !req.auth || skipAuth;
+  const isUnauthenticatedRequest = !accessToken;
 
   if (isUnauthenticatedRequest) {
     const cacheEntry = hostnamePlanCache.getMetadata(hostname);
@@ -466,7 +469,7 @@ export async function getPlansForHostname(
       }
     }
   }
-  const { plans, error } = await queryPlansForHostname(req, logger, hostname, skipAuth);
+  const { plans, error } = await queryPlansForHostname(req, logger, hostname, accessToken);
   if (plans) {
     if (isUnauthenticatedRequest) {
       hostnamePlanCache.set(hostname, plans, undefined, DEFAULT_TTL);

@@ -15,7 +15,6 @@ import {
 import styled from '@emotion/styled';
 
 import { useApolloClient } from '@apollo/client/react';
-import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import {
   type Icon as BootstrapIcon,
@@ -29,12 +28,14 @@ import {
   Person,
 } from 'react-bootstrap-icons';
 
+import { hasSessionExpired } from '@common/auth/session';
+import { useAuthSession } from '@common/auth/session-context';
+
 import { type PlanContextQuery, WorkflowState } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 import { useHandleSignOut } from '@/utils/auth.utils';
-import { hasSessionExpired } from '@/utils/session.utils';
 
 type WorkflowStateDescription = NonNullable<
   NonNullable<PlanContextQuery['workflowStates']>[number]
@@ -100,7 +101,7 @@ const UserMenuContainer = styled.div`
 `;
 
 export const TopToolBar = () => {
-  const session = useSession();
+  const session = useAuthSession();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [versionsAnchorEl, setVersionsAnchorEl] = useState<HTMLElement | null>(null);
@@ -146,7 +147,7 @@ export const TopToolBar = () => {
   );
 
   useEffect(() => {
-    if (session.status === 'authenticated' && !session.data.idToken) {
+    if (session.status === 'authenticated' && !session.data.hasAccessToken) {
       handleSignOut();
     }
     if (session?.data != null && hasSessionExpired(session.data)) {

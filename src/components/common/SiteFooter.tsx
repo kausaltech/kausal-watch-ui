@@ -1,17 +1,20 @@
+import { useState } from 'react';
+
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { BoxArrowRight } from 'react-bootstrap-icons';
 import SVG from 'react-inlinesvg';
 import { Container, Spinner } from 'reactstrap';
 
+import { useAuthSession } from '@common/auth/session-context';
 import { getThemeStaticURL } from '@common/themes/theme';
 
 import { Link, NavigationLink } from '@/common/links';
 import PlanSelector from '@/components/plans/PlanSelector';
+import { signInWithKausal } from '@/config/auth-client';
 import { usePlan } from '@/context/plan';
 import { useHandleSignOut } from '@/utils/auth.utils';
 
@@ -450,7 +453,7 @@ function SiteFooter(props: SiteFooterProps) {
   const t = useTranslations();
   const theme = useTheme();
   const plan = usePlan();
-  const session = useSession();
+  const session = useAuthSession();
   const handleSignOut = useHandleSignOut();
   const {
     siteTitle,
@@ -468,8 +471,9 @@ function SiteFooter(props: SiteFooterProps) {
   } = props;
 
   const showUiLogin = plan.features.allowPublicSiteLogin;
-  const isAuthLoading = session.status === 'loading';
   const isAuthenticated = session.status === 'authenticated';
+  // Signing in and out both end in a full page navigation.
+  const [isAuthLoading, setIsAuthLoading] = useState(false);
 
   const orgLogo = (() => {
     if (theme.themeLogoWhiteUrl.endsWith('.png')) {
@@ -648,9 +652,11 @@ function SiteFooter(props: SiteFooterProps) {
                 <StyledButton
                   disabled={isAuthLoading}
                   color="link"
-                  onClick={() =>
-                    isAuthenticated ? handleSignOut() : void signIn('watch-oidc-provider')
-                  }
+                  onClick={() => {
+                    setIsAuthLoading(true);
+                    if (isAuthenticated) handleSignOut();
+                    else void signInWithKausal();
+                  }}
                 >
                   {isAuthLoading ? (
                     <Spinner size="sm" color="light" />

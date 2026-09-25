@@ -46,7 +46,7 @@ jest.mock('next/headers', () => ({
 }));
 
 jest.mock('@/config/auth', () => ({
-  auth: () => Promise.resolve(null),
+  getAccessToken: () => Promise.resolve(null),
 }));
 
 const TEST_QUERY = gql`

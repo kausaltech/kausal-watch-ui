@@ -1,17 +1,23 @@
 /* istanbul ignore file */
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import * as Sentry from '@sentry/nextjs';
-import type { NextAuthRequest } from 'next-auth';
 import createIntlMiddleware from 'next-intl/middleware';
 
+import { LEGACY_AUTHJS_SESSION_COOKIES } from '@common/auth/constants';
+import { mergeRequestCookies, removeAuthRequestCookies } from '@common/auth/cookies';
+import type { KausalSession } from '@common/auth/server';
 import { HEALTH_CHECK_PUBLIC_PATH } from '@common/constants/routes.mjs';
 import { getSpotlightUrl, isLocalDev } from '@common/env';
 import { generateCorrelationID, getLogger } from '@common/logging';
 import { LOGGER_SPAN_ID, LOGGER_TRACE_ID } from '@common/logging/init';
 import { LOGGER_CORRELATION_ID } from '@common/logging/logger';
 
-import { auth } from './config/auth';
+import {
+  getSessionWithCookies,
+  refreshAccessTokenIfNeeded,
+  signOutFromHeaders,
+} from './config/auth';
 import { UNPUBLISHED_PATH } from './constants/routes';
 import { hasUnauthenticatedErrors } from './utils/auth-errors';
 import {
@@ -42,12 +48,74 @@ export const config = {
   ],
 };
 
-function clearSessionCookies(response: NextResponse) {
-  response.cookies.delete('authjs.session-token');
-  response.cookies.delete('__Secure-authjs.session-token');
+/**
+ * The auth state of a proxied request. `request` carries the auth cookies as
+ * the RSC render should see them, and `setCookies` the cookie updates to send
+ * to the browser.
+ */
+type ProxyAuth = {
+  request: NextRequest;
+  session: KausalSession | null;
+  setCookies: string[];
+};
+
+function withRequestHeaders(request: NextRequest, headers: Headers) {
+  // Only the headers matter downstream: next-intl forwards them to the RSC
+  // render, and Next.js forwards the original request body.
+  return new NextRequest(request.url, { headers, method: request.method });
 }
 
-function getMiddlewareLogger(request: NextAuthRequest, host: string, pathname: string) {
+/**
+ * Refresh the access token if it has expired, before the RSC render runs, and
+ * resolve the session from the refreshed cookies.
+ */
+async function resolveProxyAuth(request: NextRequest): Promise<ProxyAuth> {
+  const reqHeaders = new Headers(request.headers);
+  const setCookies = (await refreshAccessTokenIfNeeded(request, reqHeaders)) ?? [];
+  const { session, setCookies: sessionCookies } = await getSessionWithCookies(reqHeaders);
+  if (sessionCookies.length) {
+    mergeRequestCookies(reqHeaders, sessionCookies);
+    setCookies.push(...sessionCookies);
+  }
+  return {
+    request: setCookies.length ? withRequestHeaders(request, reqHeaders) : request,
+    session,
+    setCookies,
+  };
+}
+
+/**
+ * Sign out after the backend rejected the access token: expire the auth
+ * cookies in the browser, and remove them from the request so that the RSC
+ * render runs anonymously.
+ */
+async function clearProxyAuth(authState: ProxyAuth) {
+  const reqHeaders = new Headers(authState.request.headers);
+  const signOutCookies = await signOutFromHeaders(reqHeaders);
+  removeAuthRequestCookies(reqHeaders);
+  authState.request = withRequestHeaders(authState.request, reqHeaders);
+  authState.session = null;
+  authState.setCookies = signOutCookies;
+}
+
+function applyAuthCookies(response: Response, request: NextRequest, authState: ProxyAuth) {
+  for (const line of authState.setCookies) {
+    response.headers.append('set-cookie', line);
+  }
+  // Clear the session cookie of next-auth, which Watch used before better-auth.
+  if (response instanceof NextResponse) {
+    for (const name of LEGACY_AUTHJS_SESSION_COOKIES) {
+      if (request.cookies.has(name)) response.cookies.delete(name);
+    }
+  }
+}
+
+function getMiddlewareLogger(
+  request: NextRequest,
+  session: KausalSession | null,
+  host: string,
+  pathname: string
+) {
   const reqId = request.headers.get('X-Correlation-ID') || generateCorrelationID();
   const span = Sentry.getActiveSpan();
   const spanBindings = {};
@@ -56,8 +124,8 @@ function getMiddlewareLogger(request: NextAuthRequest, host: string, pathname: s
     spanBindings[LOGGER_SPAN_ID] = span.spanContext().spanId;
     spanBindings['sampled'] = span.isRecording();
   }
-  if (request.auth) {
-    const user = request.auth.user;
+  if (session) {
+    const user = session.user;
     Sentry.setUser({
       id: user.id,
       email: user.email ?? undefined,
@@ -90,7 +158,7 @@ function getMiddlewareLogger(request: NextAuthRequest, host: string, pathname: s
   return logger;
 }
 
-const handleRequest = auth(async (request: NextAuthRequest) => {
+async function handleRequest(request: NextRequest, authState: ProxyAuth) {
   const url = request.nextUrl;
   const { pathname } = request.nextUrl;
 
@@ -112,7 +180,7 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
     return NextResponse.next();
   }
 
-  const logger = getMiddlewareLogger(request, host, pathname);
+  const logger = getMiddlewareLogger(request, authState.session, host, pathname);
   logger.info({ method: request.method }, `${request.method} ${request.nextUrl.pathname}`);
 
   if (isLocalDev && pathname === '/.well-known/appspecific/com.chrome.devtools.json') {
@@ -142,18 +210,17 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
     return NextResponse.rewrite(url);
   }
 
-  // Normally the JWT callback strips expired tokens before this point, so
-  // UNAUTHENTICATED errors should be rare here (only a tight race condition).
-  // Session clearing primarily happens client-side via TopToolBar.
-  let shouldClearSession = false;
-  let { plans, error } = await getPlansForHostname(request, logger, hostname);
+  // Expired tokens are refreshed or left out of the session before this point,
+  // so UNAUTHENTICATED errors should be rare here (e.g. a revoked token).
+  const accessToken = authState.session?.accessToken ?? null;
+  let { plans, error } = await getPlansForHostname(request, logger, hostname, accessToken);
   if (error) {
-    if (hasUnauthenticatedErrors(error)) {
+    if (accessToken && hasUnauthenticatedErrors(error)) {
       logger.warn('Token expired or invalid, retrying without auth');
-      const retryResult = await getPlansForHostname(request, logger, hostname, true);
+      const retryResult = await getPlansForHostname(request, logger, hostname, null);
       plans = retryResult.plans;
       error = retryResult.error;
-      shouldClearSession = true;
+      await clearProxyAuth(authState);
     }
   }
   if (!plans || plans.length === 0) {
@@ -204,11 +271,8 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
     return NextResponse.redirect(url, { status: 301 });
   }
 
-  const response = handleI18nRouting(request);
-
-  if (shouldClearSession) {
-    clearSessionCookies(response);
-  }
+  // Route with the auth cookies as the RSC render should see them.
+  const response = handleI18nRouting(authState.request);
 
   if (isRestrictedPlan(parsedPlan)) {
     // Pass the status message to the unpublished page as search params
@@ -236,10 +300,13 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
   );
 
   return rewriteUrl(request, response, hostUrl, rewrittenUrl, planIdentifier);
-});
+}
 
-async function proxy(...args: Parameters<typeof handleRequest>) {
-  return applySecurityHeaders(await handleRequest(...args), args[0]);
+async function proxy(request: NextRequest) {
+  const authState = await resolveProxyAuth(request);
+  const response = await handleRequest(request, authState);
+  applyAuthCookies(response, request, authState);
+  return applySecurityHeaders(response, request);
 }
 
 export default proxy;

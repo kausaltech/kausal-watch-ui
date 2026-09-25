@@ -29,7 +29,7 @@ Detailed docs live in docs/. Read the relevant one before making changes in that
 - **Styling:** Emotion (styled), MUI, Bootstrap 5, reactstrap
 - **Data:** Apollo Client 3, GraphQL with code generation
 - **i18n:** next-intl
-- **Auth:** next-auth 5 (beta)
+- **Auth:** better-auth, stateless, with the Watch backend as OIDC provider (see `docs/authentication.md`)
 - **Testing:** Jest, @testing-library/react, Playwright (e2e)
 - **Observability:** Sentry, OpenTelemetry, Pino logging
 
@@ -143,7 +143,7 @@ import { ... } from '@/public/...'          // → public/
 Key environment variables (see `.env` for full list):
 
 - `WATCH_BACKEND_URL` - GraphQL API backend URL
-- `NEXTAUTH_URL`, `NEXTAUTH_SECRET` - Authentication config
+- `AUTH_SECRET`, `AUTH_CLIENT_ID`, `AUTH_CLIENT_SECRET`, `AUTH_ISSUER` - Authentication config
 - `SENTRY_DSN` - Error tracking
 - `LOG_GRAPHQL_QUERIES=true` - Debug GraphQL queries
 - `DEPLOYMENT_TYPE` - Environment identifier

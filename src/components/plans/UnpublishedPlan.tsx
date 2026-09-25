@@ -6,8 +6,11 @@ import { useRouter } from 'next/navigation';
 
 import { Box, Button, Card, CardContent, Container, Typography } from '@mui/material';
 
-import { signIn, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+
+import { useAuthSession } from '@common/auth/session-context';
+
+import { signInWithKausal } from '@/config/auth-client';
 
 type Props = {
   message: string;
@@ -29,7 +32,7 @@ const kausalLogo = (
 );
 
 export default function UnpublishedPlan({ message, loginEnabled, testId }: Props) {
-  const session = useSession();
+  const session = useAuthSession();
   const router = useRouter();
   const t = useTranslations();
   useEffect(() => {
@@ -48,7 +51,7 @@ export default function UnpublishedPlan({ message, loginEnabled, testId }: Props
               {message}
             </Typography>
             {loginEnabled && (
-              <Button variant="contained" onClick={() => void signIn('watch-oidc-provider')}>
+              <Button variant="contained" onClick={() => void signInWithKausal()}>
                 {t('ui-sign-in')}
               </Button>
             )}

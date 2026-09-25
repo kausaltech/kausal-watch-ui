@@ -9,7 +9,7 @@ import { getWatchGraphQLUrl } from '@common/env';
 import { getLogger } from '@common/logging';
 
 import possibleTypes from '@/common/__generated__/possible_types.json';
-import { auth } from '@/config/auth';
+import { getAccessToken } from '@/config/auth';
 import { SELECTED_WORKFLOW_COOKIE_KEY } from '@/constants/workflow';
 
 import { createErrorLink, getHttpLink, headersMiddleware, localeMiddleware } from './apollo.utils';
@@ -18,19 +18,19 @@ const rscLogger = getLogger('apollo-rsc');
 
 const rscErrorLink = createErrorLink(() => {
   rscLogger.warn(
-    'UNAUTHENTICATED error in RSC Apollo client — token should have been cleared by JWT callback'
+    'UNAUTHENTICATED error in RSC Apollo client — the proxy should have cleared the rejected session'
   );
 });
 
 const authMiddleware = new SetContextLink(async ({ uri, headers: initialHeaders = {} }) => {
   // Operations that override the uri target the Paths API, which uses its own
-  // authentication; the Watch ID token must not be sent there.
+  // authentication; the Watch access token must not be sent there.
   if (uri) {
     return { headers: initialHeaders };
   }
 
-  const session = await auth();
-  const token = session?.idToken;
+  // Read-only: the proxy has already refreshed the token for this request.
+  const token = await getAccessToken();
 
   return {
     headers: {

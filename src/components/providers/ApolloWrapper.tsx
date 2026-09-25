@@ -7,16 +7,17 @@ import {
   InMemoryCache,
   SSRMultipartLink,
 } from '@apollo/client-integration-nextjs';
-import { SetContextLink, setContext } from '@apollo/client/link/context';
+import { setContext } from '@apollo/client/link/context';
 import { useApolloClient } from '@apollo/client/react';
 import { disableFragmentWarnings } from 'graphql-tag';
-import { signOut, useSession } from 'next-auth/react';
 import { useLocale } from 'next-intl';
 
 import { createSentryLink, logOperationLink } from '@common/apollo/links';
+import { useAuthSession } from '@common/auth/session-context';
 import { getWatchGraphQLUrl } from '@common/env';
 
 import { isServer } from '@/common/environment';
+import { recoverFromInvalidToken } from '@/config/auth-client';
 
 import {
   createErrorLink,
@@ -26,24 +27,12 @@ import {
 } from '../../utils/apollo.utils';
 import { clearPledgeAuth } from '../pledge/use-pledge-auth';
 
-const authMiddleware = new SetContextLink(({ uri, sessionToken, headers: initialHeaders = {} }) => {
-  // Operations that override the uri target the Paths API, which uses its own
-  // authentication; the Watch ID token must not be sent there.
-  if (uri) {
-    return { headers: initialHeaders };
-  }
-
-  return {
-    headers: {
-      ...initialHeaders,
-      ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
-    },
-  };
-});
+// The OAuth access token is not sent from the browser: the GraphQL proxy
+// (src/app/api/graphql/route.ts) injects it server-side.
 
 // Injects the pledge bearer token for authenticated public users.
 const pledgeAuthMiddleware = setContext((_, context) => {
-  if (isServer || context.sessionToken) return {};
+  if (isServer || context.hasAccessToken) return {};
 
   const pledgeToken = localStorage.getItem('pledge-auth-token');
 
@@ -59,28 +48,32 @@ const pledgeAuthMiddleware = setContext((_, context) => {
 
 function makeClient(config: {
   initialLocale: string;
-  sessionToken?: string;
+  hasAccessToken: boolean;
   planIdentifier?: string;
   planDomain: string;
   noProxy?: boolean;
 }) {
-  const { initialLocale, sessionToken, planIdentifier, planDomain, noProxy } = config;
+  const { initialLocale, hasAccessToken, planIdentifier, planDomain, noProxy } = config;
   const unauthErrorLink = createErrorLink((errors) => {
-    // Backend returns UNAUTHENTICATED with an `invalid_token:` message for
-    // expired/invalid pledge bearer tokens. Clear the pledge token locally
-    // rather than triggering a full next-auth sign-out redirect, which would
-    // loop because the token persists in localStorage across the redirect.
-    const hasPledgeTokenError = errors.some((e) => e.message.startsWith('invalid_token'));
-    if (hasPledgeTokenError) {
-      clearPledgeAuth();
-      return;
+    // The pledge token is only sent without an OAuth access token, so with
+    // one, an UNAUTHENTICATED error concerns the OAuth session.
+    if (!hasAccessToken) {
+      // Backend returns UNAUTHENTICATED with an `invalid_token:` message for
+      // expired/invalid pledge bearer tokens. Clear the pledge token locally
+      // rather than triggering a full sign-out and reload, which would
+      // loop because the token persists in localStorage across the reload.
+      const hasPledgeTokenError = errors.some((e) => e.message.startsWith('invalid_token'));
+      if (hasPledgeTokenError) {
+        clearPledgeAuth();
+        return;
+      }
     }
-    void signOut({ redirect: true });
+    recoverFromInvalidToken();
   });
   return new ApolloClient({
     defaultContext: {
       locale: initialLocale,
-      sessionToken,
+      hasAccessToken,
       planIdentifier,
       planDomain,
     },
@@ -90,7 +83,6 @@ function makeClient(config: {
       logOperationLink,
       createSentryLink(getWatchGraphQLUrl()),
       localeMiddleware,
-      authMiddleware,
       pledgeAuthMiddleware,
       headersMiddleware,
       ...(isServer
@@ -129,15 +121,16 @@ type Props = {
 } & React.PropsWithChildren;
 
 export function ApolloWrapper({ initialLocale, planIdentifier, planDomain, children }: Props) {
-  const session = useSession();
-  const token = session.status === 'authenticated' ? session.data.idToken : undefined;
+  const session = useAuthSession();
+  const hasAccessToken = session.status === 'authenticated' && session.data.hasAccessToken;
 
   const clientConfig = {
     initialLocale,
-    sessionToken: token,
+    hasAccessToken,
     planIdentifier,
     planDomain,
-    noProxy: planIdentifier === 'minneapolis-climate',
+    // Signed-in users need the proxy, which adds their access token.
+    noProxy: planIdentifier === 'minneapolis-climate' && !hasAccessToken,
   };
 
   // Disable fragment warnings for now.

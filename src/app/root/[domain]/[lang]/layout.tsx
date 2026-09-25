@@ -8,6 +8,7 @@ import type { Metadata } from 'next';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import 'react-medium-image-zoom/dist/styles.css';
 
+import { AuthSessionProvider } from '@common/auth/session-context';
 import { EnvProvider } from '@common/env/runtime-react';
 import { EmotionRegistry } from '@common/themes/StyledComponentsRegistry';
 import '@common/themes/styles/main.scss';
@@ -15,8 +16,7 @@ import '@common/themes/styles/main.scss';
 import { DayjsLocaleProvider } from '@/common/dayjs';
 import { deploymentType } from '@/common/environment';
 import { ApolloWrapper } from '@/components/providers/ApolloWrapper';
-import { AuthProvider } from '@/components/providers/AuthProvider';
-import { auth } from '@/config/auth';
+import { getClientAuthSession } from '@/config/auth';
 
 type Props = {
   params: Promise<{ lang: string }>;
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
 };
 
 async function AsyncAuthProvider({ children }) {
-  const session = await auth();
+  const session = await getClientAuthSession();
 
-  return <AuthProvider session={session}>{children}</AuthProvider>;
+  return <AuthSessionProvider session={session}>{children}</AuthSessionProvider>;
 }
 
 export default function LangLayout(props: Props) {
