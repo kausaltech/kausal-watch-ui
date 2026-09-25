@@ -55,4 +55,17 @@ describe('UnpublishedPlan', () => {
     render(<UnpublishedPlan signInRequired />);
     expect(push).not.toHaveBeenCalled();
   });
+
+  /*
+   * MUI's own `:last-child` rule on CardContent outranks the `p` shorthand, so
+   * without an override the bottom padding shrinks below the top one and the
+   * lone logo sits off-centre.
+   */
+  it('pads the card evenly when there is no sign-in button', () => {
+    sessionWithStatus('unauthenticated');
+    const { container } = render(<UnpublishedPlan signInRequired={false} />);
+    const content = container.querySelector('.MuiCardContent-root')!;
+    const style = getComputedStyle(content);
+    expect(style.paddingBottom).toBe(style.paddingTop);
+  });
 });

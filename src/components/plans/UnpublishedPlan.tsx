@@ -46,7 +46,15 @@ export default function UnpublishedPlan({ message, signInRequired, testId }: Pro
     <Box sx={{ py: 8 }} data-testid={testId}>
       <Container maxWidth="sm">
         <Card sx={{ boxShadow: 4 }}>
-          <CardContent sx={{ textAlign: 'center', p: 4 }}>
+          <CardContent
+            sx={{
+              textAlign: 'center',
+              p: 4,
+              // MUI trims the bottom padding of a last-child CardContent, which
+              // leaves the logo off-centre when there is no button below it.
+              ...(!signInRequired && { '&:last-child': { pb: 4 } }),
+            }}
+          >
             <Box sx={{ mb: message || signInRequired ? 3 : 0 }}>{kausalLogo}</Box>
             {message && (
               <Typography
