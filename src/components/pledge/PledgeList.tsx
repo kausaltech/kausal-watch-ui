@@ -113,7 +113,7 @@ const StyledToolbarRight = styled.div`
   flex: 1;
   flex-wrap: wrap;
 
-  @media (max-width: ${({ theme }) => theme.breakpointSm}) {
+  ${({ theme }) => theme.breakpoints.down('sm')} {
     flex-basis: 100%;
   }
 `;

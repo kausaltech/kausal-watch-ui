@@ -118,7 +118,7 @@ const ContentGroup = styled.div<{ $vertical: boolean }>`
   ${(props) =>
     props.$vertical &&
     css`
-      max-width: ${props.theme.breakpointSm};
+      max-width: 576px;
     `}
   margin: ${(props) => props.theme.spaces.s100} auto ${(props) => props.theme.spaces.s300};
   padding: ${(props) => props.theme.spaces.s200} 0 0;
@@ -141,7 +141,7 @@ const StyledContentGrid = styled(Container)`
     'bottom';
   align-items: start;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     grid-template-columns: 7fr 5fr;
     grid-template-rows: auto 1fr;
     grid-template-areas:
@@ -149,7 +149,7 @@ const StyledContentGrid = styled(Container)`
       'bottom aside';
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+  ${(props) => props.theme.breakpoints.up('lg')} {
     grid-template-columns: 8fr 4fr;
   }
 

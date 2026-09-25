@@ -71,7 +71,7 @@ export const withKausalThemes = ({ themes, defaultTheme }: WithKausalThemesOptio
             ]}
           >
             <MuiThemeProvider theme={muiTheme}>
-              <ThemeProvider theme={theme}>
+              <ThemeProvider theme={muiTheme}>
                 <NextIntlClientProvider locale={locale} messages={messages}>
                   <DayjsLocaleProvider locale={locale}>
                     <PlanProvider plan={MOCK_PLAN}>

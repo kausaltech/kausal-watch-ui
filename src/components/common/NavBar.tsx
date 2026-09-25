@@ -46,7 +46,7 @@ const BotNav = styled(Navbar)`
     align-items: stretch;
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     .navbar-nav {
       padding: 0;
     }
@@ -80,7 +80,7 @@ const NavLink = styled.div`
       }
     }
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       align-self: flex-end;
       margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
     }
@@ -99,7 +99,7 @@ const NavHighlighter = styled.span`
     border-bottom: 5px solid ${(props) => props.theme.siteNavHighlightColor};
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     padding: ${(props) => props.theme.spaces.s150} 0
       calc(${(props) => props.theme.spaces.s150} - 5px);
 

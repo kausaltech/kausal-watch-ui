@@ -54,7 +54,7 @@ const ListHeader = styled(Col)`
     margin-bottom: ${(props) => props.theme.spaces.s300};
     font-size: ${(props) => props.theme.fontSizeLg};
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       font-size: ${(props) => props.theme.fontSizeXl};
     }
   }

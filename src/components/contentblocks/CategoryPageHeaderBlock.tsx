@@ -65,17 +65,17 @@ const CategoryHeader = styled.div<{ $bg: string | null | undefined; $hasImage?: 
   min-height: 14rem;
   padding: ${({ theme }) => `${theme.spaces.s100} 0`};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     display: flex;
     align-items: flex-start;
     padding: ${({ theme }) => `${theme.spaces.s300} 0`};
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+  ${(props) => props.theme.breakpoints.up('lg')} {
     min-height: ${(props) => (props.$hasImage ? '28rem' : '0')};
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointXl}) {
+  ${(props) => props.theme.breakpoints.up('xl')} {
     min-height: ${(props) => (props.$hasImage ? '32rem' : '0')};
   }
 `;
@@ -109,15 +109,15 @@ const HeaderImage = styled.div<{
     height: 14rem;
     border-radius: 0;
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       min-height: 20rem;
     }
 
-    @media (min-width: ${(props) => props.theme.breakpointLg}) {
+    ${(props) => props.theme.breakpoints.up('lg')} {
       min-height: 28rem;
     }
 
-    @media (min-width: ${(props) => props.theme.breakpointXl}) {
+    ${(props) => props.theme.breakpoints.up('xl')} {
       min-height: 32rem;
     }
   }
@@ -160,7 +160,7 @@ const HeaderContent = styled.div<{
     }
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     h1 {
       font-size: ${(props) => props.theme.fontSizeXl};
     }
@@ -168,7 +168,7 @@ const HeaderContent = styled.div<{
 `;
 
 const AttributesContainer = styled.div`
-  max-width: ${(props) => props.theme.breakpointMd};
+  max-width: 768px;
   margin: 0 ${({ theme }) => (theme.settings.layout.leftAlignCategoryPages ? '0' : 'auto')};
 `;
 

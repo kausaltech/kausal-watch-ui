@@ -88,7 +88,7 @@ const CardImage = styled.img<{ $imageAlign: string }>`
   object-fit: cover;
   object-position: ${(props) => props.$imageAlign};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     height: 8rem;
   }
 `;

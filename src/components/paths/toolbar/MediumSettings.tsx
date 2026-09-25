@@ -33,7 +33,7 @@ const ButtonLabel = styled.label`
 const StyledRow = styled(Row)`
   --bs-gutter-x: ${({ theme }) => theme.spaces.s100};
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.down('md')} {
     --bs-gutter-x: ${({ theme }) => theme.spaces.s050};
   }
 `;
@@ -49,7 +49,7 @@ const StyledDropdownCol = styled(Col)`
 `;
 
 const StyledOutcomeCol = styled(Col)`
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.down('md')} {
     display: none;
   }
 `;

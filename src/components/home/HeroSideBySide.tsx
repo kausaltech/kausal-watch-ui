@@ -18,14 +18,14 @@ const SideBySideHero = styled('div', transientOptions)<{ $backgroundColor?: stri
 `;
 
 function getStackedBreakpoint({ theme, $fitImage }: { theme: Theme; $fitImage: boolean }) {
-  return $fitImage ? theme.breakpointLg : theme.breakpointMd;
+  return `${theme.breakpoints.values[$fitImage ? 'lg' : 'md']}px`;
 }
 
 const SideBySideInner = styled(Container, transientOptions)<{ $fitImage: boolean }>`
   padding-top: ${(props) => props.theme.spaces.s300};
   padding-bottom: ${(props) => props.theme.spaces.s300};
 
-  @media (max-width: ${(props) => props.theme.breakpointSm}) {
+  ${(props) => props.theme.breakpoints.down('sm')} {
     padding-top: ${(props) => props.theme.spaces.s100};
   }
 
@@ -83,7 +83,7 @@ const SideBySideContent = styled('div', transientOptions)<{ $fitImage: boolean }
     margin-top: 0;
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpointXl}) {
+  ${({ theme }) => theme.breakpoints.down('xl')} {
     padding-right: 0;
   }
 `;

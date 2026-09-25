@@ -49,7 +49,7 @@ const TableWrapper = styled.div`
     10px 100%;
   background-attachment: local, local, scroll, scroll;
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.down('md')} {
     max-height: calc(100vh - ${(props) => props.theme.spaces.s100});
     overflow: auto;
   }

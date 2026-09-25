@@ -58,7 +58,7 @@ const Content = styled.p`
   line-height: ${(props) => props.theme.lineHeightMd};
   margin-bottom: ${(props) => props.theme.spaces.s300};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeMd};
     line-height: ${(props) => props.theme.lineHeightBase};
   }

@@ -97,20 +97,27 @@ Each PR:
 
 ### 1. Move to MUI breakpoints
 
-Replace the theme tokens in watch-ui (55 files) and `kausal_common/src/themes/ThemedGlobalStyles.tsx`. `breakpointMd` accounts for 114 of the 150 uses. Nearly all of them are one of two patterns, so a codemod handles most of it:
+Status: done on `feat/bye-reactstrap`.
 
-| Current                                                                          | Replacement                                      |
-| -------------------------------------------------------------------------------- | ------------------------------------------------ |
-| `@media (min-width: ${(p) => p.theme.breakpointMd})`                             | `${({ theme }) => theme.breakpoints.up('md')}`   |
-| `@media (max-width: ${(p) => p.theme.breakpointMd})`                             | `${({ theme }) => theme.breakpoints.down('md')}` |
-| `max-width: ${theme.breakpointSm}` used as a width, not a media query (4 places) | `${theme.breakpoints.values.sm}px`               |
-| `window.matchMedia(...)` in `DashboardIndicatorPieChartBlock.tsx`                | `useMediaQuery(theme.breakpoints.down('md'))`    |
+The theme tokens are gone from watch-ui and `kausal_common/src/themes/ThemedGlobalStyles.tsx`:
 
-Things to check:
+- **Media queries.** A codemod converted 133 of them. `@media (min-width: ${X.breakpointMd})` became `${X.breakpoints.up('md')}`, and the `max-width` form became `down()`. Each file keeps its own way of reaching the theme.
+- **Runtime checks.** The `parseInt(theme.breakpointMd)` checks in `GlobalNav` and `IndicatorProgressBar` compare against `theme.breakpoints.values.md` instead. `DashboardIndicatorPieChartBlock` uses `useMediaQuery` instead of `window.matchMedia`.
+- **Container queries and `sizes` attributes** use `theme.breakpoints.values.*` in pixels.
+- **Widths.** Tokens that were used as content widths, not breakpoints, are now fixed pixel values, so content doesn't widen: `max-width: 576px`, `768px` and `992px`.
+- **Theme providers.** The test utils and the Storybook decorator pass the MUI theme to Emotion's `ThemeProvider`, so styled components can see `theme.breakpoints`. The app itself only uses MUI's provider.
 
-- **Off-by-one widths.** `down('md')` is `max-width: 899.95px`. Today's `max-width: 768px` and `min-width: 768px` both match at exactly 768px. The fix happens by itself, but look for styles that were compensating for it.
-- **Desktop and mobile styles that must switch at the same width.** Where a styled-component query and a Bootstrap class (`d-md-none`, `col-md-*`) work together, for example the GlobalNav mobile menu, replace the Bootstrap class with a `theme.breakpoints` query in the same PR. Otherwise 768–899px shows both, or neither.
-- **Typing.** `theme.breakpoints` should already type-check in styled components, since `mui-theme/theme.ts` merges MUI's `Theme` into the emotion theme.
+**Bootstrap follows MUI too.** reactstrap's `Navbar expand="md"`, the `d-md-*` classes and `Col md=…` switch at Bootstrap's breakpoints. Left alone, the nav showed its desktop and mobile parts at once between 768px and 899px. `kausal_common/src/themes/styles/_theme-variables.scss` now sets:
+
+- **`$grid-breakpoints`:** MUI's values (600 / 900 / 1200 / 1536px). There's no xxl, because MUI doesn't have one.
+- **`$container-max-widths`:** 840px from md, 1140px from lg, 1320px from xl. Containers are full width below 900px.
+
+paths-ui imports the same `main.scss`, so its Bootstrap breakpoints move too.
+
+Results against the baseline:
+
+- **390px:** unchanged.
+- **820, 1100 and 1440px:** changed. They now fall on the other side of md and lg, and 1440px gets the 1140px container, where it had 1320px from 1400px up.
 
 ### 2. Simple one-to-one swaps (~20 files)
 

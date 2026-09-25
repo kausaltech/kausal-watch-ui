@@ -61,7 +61,7 @@ const StyledTitle = styled.h1`
   font-size: ${(props) => props.theme.fontSizeLg};
   color: inherit;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;

@@ -1,10 +1,12 @@
+import type { Breakpoints } from '@mui/material/styles';
+
 import { css } from '@emotion/react';
 
 export const STICKY_TABLE_NAME_COLUMN_CLASS = 'sticky-table-name-column';
 
 type ThemeProps = {
   theme: {
-    breakpointMd: string;
+    breakpoints: Breakpoints;
     spaces: {
       s050: string;
       s100: string;
@@ -27,7 +29,7 @@ export const mobileScrollableTableWrapperStyles = (props: ThemeProps) => css`
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 
-  @media (max-width: ${props.theme.breakpointMd}) {
+  ${props.theme.breakpoints.down('md')} {
     max-height: calc(100vh - ${props.theme.spaces.s100});
     overflow: auto;
   }
@@ -43,7 +45,7 @@ export const mobileStickyTableStyles = (
     containScrollableCellContent = false,
   }: MobileStickyTableStylesOptions = {}
 ) => css`
-  @media (max-width: ${props.theme.breakpointMd}) {
+  ${props.theme.breakpoints.down('md')} {
     border-collapse: separate;
     border-spacing: 0;
     min-width: max-content;

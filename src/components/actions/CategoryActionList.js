@@ -76,11 +76,11 @@ const ListColumn = styled.li`
   flex: 0 0 50%;
   padding: 0.5rem;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     flex: 0 0 33%;
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+  ${(props) => props.theme.breakpoints.up('lg')} {
     flex: 0 0 25%;
   }
 `;

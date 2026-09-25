@@ -35,7 +35,7 @@ const CategoryListSection = styled.div`
       )};
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     padding: ${(props) => props.theme.spaces.s400} 0;
   }
 `;
@@ -78,7 +78,7 @@ const CategoryCard = styled.div`
     border-bottom: 1.25rem solid white;
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     margin: 2rem 1rem 3px 0;
     height: calc(100% - 2rem);
 
@@ -97,7 +97,7 @@ const CategoryTreeLayout = styled.div`
   display: flex;
   flex-direction: column-reverse;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     flex-direction: row;
   }
 `;
@@ -105,7 +105,7 @@ const CategoryTreeLayout = styled.div`
 const CategoryCardColumn = styled.div`
   flex: 0 0 50%;
 
-  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+  ${(props) => props.theme.breakpoints.up('lg')} {
     flex: 0 0 33%;
   }
 `;
@@ -113,7 +113,7 @@ const CategoryCardColumn = styled.div`
 const CategoryVizColumn = styled.div`
   flex: 0 0 50%;
 
-  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+  ${(props) => props.theme.breakpoints.up('lg')} {
     flex: 0 0 66%;
   }
 `;
