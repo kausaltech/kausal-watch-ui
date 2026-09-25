@@ -44,6 +44,26 @@ const config: ConfigWithExtends[] = defineConfig(
     },
   },
   {
+    // reactstrap is being retired, see docs/reactstrap-migration.md.
+    // Raise to 'error' once the last import is gone.
+    name: 'no-reactstrap',
+    files: ['src/**/*.@(ts|tsx|js|jsx)', 'kausal_common/src/**/*.@(ts|tsx|js|jsx)'],
+    rules: {
+      'no-restricted-imports': [
+        'warn',
+        {
+          paths: [
+            {
+              name: 'reactstrap',
+              message:
+                'reactstrap is being retired. Use @mui/material instead (see docs/reactstrap-migration.md).',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     name: 'javascript',
     files: ['**/*.@(js|jsx)'],
     rules: {
