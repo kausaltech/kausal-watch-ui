@@ -68,6 +68,8 @@ function getColumnProps(cardCount: number) {
       return { md: 6 };
     case 3:
       return { md: 6, lg: 4 };
+    case 4:
+      return { md: 6, xl: 3 };
     default:
       return { md: 6, lg: Math.max(Math.floor(12 / cardCount), 3) };
   }

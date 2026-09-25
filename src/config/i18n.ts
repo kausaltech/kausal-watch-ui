@@ -1,19 +1,16 @@
 import * as Sentry from '@sentry/nextjs';
 import { getRequestConfig } from 'next-intl/server';
 
-const FALLBACKS: Record<string, string> & { default: string } = {
-  'en-AU': 'en',
-  'en-GB': 'en',
-  'de-CH': 'de',
-  'es-US': 'es',
-  'sv-FI': 'sv',
-  default: 'en',
-};
+import {
+  DEFAULT_LOCALE,
+  LOCALE_FILES,
+  type LocaleFile,
+  getLocaleFallbackChain,
+} from './i18n.fallbacks';
 
-type LocaleFiles = 'common' | 'actions' | 'paths' | 'a11y';
 type Messages = Record<string, unknown>;
 
-async function importLocale(locale: string, file: LocaleFiles): Promise<Messages> {
+async function importLocale(locale: string, file: LocaleFile): Promise<Messages> {
   try {
     const localeModule = (await import(`../../locales/${locale}/${file}.json`)) as {
       default: Messages;
@@ -27,41 +24,23 @@ async function importLocale(locale: string, file: LocaleFiles): Promise<Messages
   }
 }
 
+/**
+ * Messages for `locale` layered over its fallbacks (base language of a
+ * variant, and always English last), so missing keys resolve instead of
+ * every variant having to carry a complete set.
+ */
 async function importLocales(locale: string): Promise<Messages> {
-  const translations = {
-    ...(await importLocale(locale, 'common')),
-    ...(await importLocale(locale, 'actions')),
-    ...(await importLocale(locale, 'paths')),
-    ...(await importLocale(locale, 'a11y')),
-  };
-
-  /**
-   * Include fallback translations to avoid needing to add all translations for country
-   * specific language variants. E.g. "en" will be imported as the base for "en-GB".
-   */
-  const fallback = FALLBACKS[locale];
-  if (fallback) {
-    return {
-      ...(await importLocales(fallback)),
-      ...translations,
-    };
+  let messages: Messages = {};
+  for (const chainLocale of getLocaleFallbackChain(locale)) {
+    for (const file of LOCALE_FILES) {
+      messages = { ...messages, ...(await importLocale(chainLocale, file)) };
+    }
   }
-
-  /**
-   * Always include English as a final fallback in case translations are missing.
-   */
-  if (locale !== FALLBACKS.default) {
-    return {
-      ...(await importLocales(FALLBACKS.default)),
-      ...translations,
-    };
-  }
-
-  return translations;
+  return messages;
 }
 
 export default getRequestConfig(async ({ requestLocale }) => {
-  const locale = (await requestLocale) ?? 'en';
+  const locale = (await requestLocale) ?? DEFAULT_LOCALE;
   const messages = await importLocales(locale);
 
   return {

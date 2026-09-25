@@ -166,7 +166,7 @@ const getValue = (
         if (latestValue) {
           return {
             value: latestValue.value ?? null,
-            year: new Date(latestValue.date ?? '').getFullYear(),
+            year: new Date(latestValue.date ?? '').getUTCFullYear(),
           };
         }
       }
@@ -178,13 +178,13 @@ const getValue = (
         ? {
             value: indicator.latestValue?.normalizedValues?.[0]?.value ?? null,
             year: indicator.latestValue?.date
-              ? new Date(indicator.latestValue?.date ?? '').getFullYear()
+              ? new Date(indicator.latestValue?.date ?? '').getUTCFullYear()
               : null,
           }
         : {
             value: indicator.latestValue?.value ?? null,
             year: indicator.latestValue?.date
-              ? new Date(indicator.latestValue?.date ?? '').getFullYear()
+              ? new Date(indicator.latestValue?.date ?? '').getUTCFullYear()
               : null,
           };
     }
@@ -201,7 +201,7 @@ const getValue = (
       if (defaultYear) {
         const goal = indicator.goals?.find((goal) => goal?.date?.startsWith(String(defaultYear)));
         if (goal) {
-          return { value: goal.value ?? null, year: new Date(goal.date ?? '').getFullYear() };
+          return { value: goal.value ?? null, year: new Date(goal.date ?? '').getUTCFullYear() };
         }
       }
       // If no value for the default year is found, we return the LAST goal
@@ -211,13 +211,13 @@ const getValue = (
         ? {
             value: indicator.goals![lastGoalIndex]?.normalizedValues?.[0]?.value ?? null,
             year: indicator.goals![lastGoalIndex]?.date
-              ? new Date(indicator.goals![lastGoalIndex]?.date ?? '').getFullYear()
+              ? new Date(indicator.goals![lastGoalIndex]?.date ?? '').getUTCFullYear()
               : null,
           }
         : {
             value: indicator.goals![lastGoalIndex]?.value ?? null,
             year: indicator.goals![lastGoalIndex]?.date
-              ? new Date(indicator.goals![lastGoalIndex]?.date ?? '').getFullYear()
+              ? new Date(indicator.goals![lastGoalIndex]?.date ?? '').getUTCFullYear()
               : null,
           };
     }
@@ -227,13 +227,13 @@ const getValue = (
           ? {
               value: indicator.referenceValue?.normalizedValues?.[0]?.value ?? null,
               year: indicator.referenceValue?.date
-                ? new Date(indicator.referenceValue?.date ?? '').getFullYear()
+                ? new Date(indicator.referenceValue?.date ?? '').getUTCFullYear()
                 : null,
             }
           : {
               value: indicator.referenceValue?.value ?? null,
               year: indicator.referenceValue?.date
-                ? new Date(indicator.referenceValue?.date ?? '').getFullYear()
+                ? new Date(indicator.referenceValue?.date ?? '').getUTCFullYear()
                 : null,
             };
       }

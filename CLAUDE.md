@@ -21,6 +21,7 @@ This file provides guidance to LLM agents when working with this codebase.
 Detailed docs live in docs/. Read the relevant one before making changes in that area.
 
 - docs/types.md - Conventions for type annotations
+- docs/indicator-graph-unification.md - Feasibility and plan for rendering the default indicator graph and the chart blocks with one component
 
 ## Tech Stack
 

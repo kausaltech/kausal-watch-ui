@@ -9,8 +9,9 @@ import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import useNumberFormatter from '@/common/numbers';
 import Icon from '@/components/common/Icon';
+import { resolveValueRounding } from '@/components/graphs/indicator-graph.utils';
 
-type XValue = string | number | Date;
+type XValue = string | number | Date | null;
 
 type Trace = {
   name: string;
@@ -118,7 +119,7 @@ function GraphAsTable({
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const formatNumber = useNumberFormatter({
-    maximumSignificantDigits: specification.valueRounding ?? undefined,
+    maximumSignificantDigits: resolveValueRounding(specification.valueRounding),
   });
   const isTime = data?.[0]?.xType === 'time';
 
