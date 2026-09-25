@@ -70,11 +70,30 @@ Each PR:
 1. Add an ESLint `no-restricted-imports` rule for `reactstrap`. Set it to `warn` now and switch it to `error` in the last PR.
 2. Set up the layout primitives:
    - **`Container`:** use MUI's `Container` as it is, with `maxWidth="lg"` (1200px). Bootstrap's container was 1140px at xl and 1320px at xxl, so wide screens change slightly. Accept that during the screenshot review, or set a custom `maxWidth` if design objects.
-   - **Rows and columns:** use MUI `Grid`. For example:
-     - `md={{ size: 10, offset: 1 }}` becomes `size={{ md: 10 }} offset={{ md: 1 }}`.
-     - `sm="12"` becomes `size={{ sm: 12 }}`.
-     - Set the Grid `spacing` to match Bootstrap's 1.5rem gutter.
-3. Capture visual baselines before the breakpoint PR. Take Playwright screenshots of the key pages (home, action list, action page, indicator list, indicator page, content page, dashboard, a paths plan) on 3–4 plans with distinctive themes.
+   - **Rows and columns:** `Row` becomes `GridRow` (`src/components/common/layout/GridRow.tsx`), and `Col` becomes a plain MUI `Grid` item. `GridRow` spaces columns with Bootstrap's 1.5rem gutter and no vertical gap, like a `.row`. `ColumnProps` from the same file replaces reactstrap's `ColProps`. See the conversion rules under step 7.
+3. Capture visual baselines before the breakpoint PR, using `e2e-tests/tests/visual-baseline.spec.ts`.
+   - It takes full-page screenshots of home, action list, an action, indicator list, an indicator and a content page. Each is captured at 390, 820, 1100 and 1440px, widths that fall between the Bootstrap and MUI breakpoints.
+   - It runs only when `VISUAL_BASELINE=1` is set, so the regular e2e runs skip it.
+   - Set the plans to capture in `VISUAL_PLAN_IDENTIFIERS` (comma-separated) in the gitignored `e2e-tests/.env`. Pick 3–4 plans with distinctive themes, including a customised one. Without it, the spec falls back to `TEST_PLAN_IDENTIFIERS`.
+   - The pages show live data, so the screenshots are gitignored rather than committed. Capture the baseline from `main` just before starting a PR, and compare the branch soon afterwards:
+
+     ```bash
+     cd e2e-tests
+     VISUAL_BASELINE=1 pnpm exec playwright test visual-baseline --project=chromium --update-snapshots  # on main
+     VISUAL_BASELINE=1 pnpm exec playwright test visual-baseline --project=chromium                     # on the branch
+     ```
+
+     Review the differences in the HTML report.
+
+   - Use the published theme packages, not a local link to `kausal-themes`. A locally linked theme needs the `--webpack` dev server, which is too slow for this. With published themes, the default `pnpm dev` (Turbopack) works: run it with `WILDCARD_DOMAINS=localhost` and set `TEST_PAGE_BASE_URL='http://{planId}.localhost:3000'`. When `TEST_PAGE_BASE_URL` is unset, Playwright starts `pnpm start` itself, which needs a `pnpm build` first.
+   - The spec keeps repeat runs comparable:
+     - it masks charts;
+     - it pins the paths settings panel into the page flow;
+     - it hides the Next.js dev indicator;
+     - it re-registers web fonts from memory, because Chrome re-fetches them on every screenshot and the text can go blank;
+     - it allows up to 200 differing pixels for text-rendering jitter.
+
+     Expect the odd one-off difference from live data; judge it by eye in the report.
 
 ### 1. Move to MUI breakpoints
 
@@ -123,11 +142,30 @@ This is the riskiest PR: the menu shows on every page, is themed per plan, and h
 
 ### 7. Layout grid (~60 files, mostly mechanical)
 
-1. Write a jscodeshift codemod for the `Container`/`Row`/`Col` → `Container`/`Grid` changes. It needs to cover `md={{ size, offset }}`, string sizes, `fluid` and `tag`.
+1. Write a jscodeshift codemod for the `Container`/`Row`/`Col` → `Container`/`GridRow`/`Grid` changes, following the rules below.
 2. Hand-fix any `styled(Col)`-style wrappers the codemod can't handle.
 3. Run it one folder at a time (`contentblocks`, `actions`, `indicators`, `paths`, `app/root`, the rest) so each diff is small enough to review.
 
 Because pages are built from layout, the screenshot diffs matter most here.
+
+Conversion rules:
+
+| reactstrap                           | MUI                                                      |
+| ------------------------------------ | -------------------------------------------------------- |
+| `<Container>`                        | `<Container>`                                            |
+| `<Container fluid>`                  | `<Container maxWidth={false}>`                           |
+| `<Container tag="section">`          | `<Container component="section">`                        |
+| `<Row>`                              | `<GridRow>`                                              |
+| `<Col md="6">`, `<Col md={6}>`       | `<Grid size={{ xs: 12, md: 6 }}>`                        |
+| `<Col md={{ size: 10, offset: 1 }}>` | `<Grid size={{ xs: 12, md: 10 }} offset={{ md: 1 }}>`    |
+| `<Col>` (no sizes)                   | `<Grid size="grow">`                                     |
+| `<Col xs="auto">`                    | `<Grid size="auto">`                                     |
+| `columnProps?: ColProps`             | `columnProps?: ColumnProps`, spread onto the `Grid` item |
+
+Two behaviours differ from Bootstrap, and the codemod has to account for them:
+
+- **Items without a size.** A Bootstrap column is full width until one of its breakpoint sizes kicks in. A MUI `Grid` item without a `size` at a breakpoint takes its content width. So add `xs: 12` whenever a column has breakpoint sizes but no `xs`.
+- **Bare `<Col>`.** In Bootstrap this means equal-width columns, which is `size="grow"` in MUI.
 
 ### 8. Cleanup
 
