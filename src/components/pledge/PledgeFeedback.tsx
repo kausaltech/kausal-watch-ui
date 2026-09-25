@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import styled from '@emotion/styled';
 
 import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useMutation } from '@apollo/client/react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
-import { Alert, Spinner } from 'reactstrap';
 
 import type {
   CreatePledgeFeedbackMutation,
@@ -116,7 +118,7 @@ const StyledMotionFormContainer = styled(motion.div)`
   margin-top: ${({ theme }) => theme.spaces.s200};
 `;
 
-const StyledSpinner = styled(Spinner)`
+const StyledSpinner = styled(CircularProgress)`
   margin-right: ${({ theme }) => theme.spaces.s100};
 `;
 
@@ -265,13 +267,13 @@ function PledgeFeedbackComponent({
 
                 {!!otherMutationErrors.length &&
                   otherMutationErrors.map((errorMessage, i) => (
-                    <StyledAlert key={i} color="danger">
+                    <StyledAlert key={i} severity="error">
                       <p>{errorMessage}</p>
                     </StyledAlert>
                   ))}
 
                 {mutationError && (
-                  <StyledAlert color="danger">
+                  <StyledAlert severity="error">
                     <p>{t('feedback-error-content')}</p>
                   </StyledAlert>
                 )}
@@ -283,7 +285,7 @@ function PledgeFeedbackComponent({
                 >
                   {mutationLoading ? (
                     <span>
-                      <StyledSpinner size="sm" color="light" />
+                      <StyledSpinner size="1rem" color="inherit" />
                       {t('sending')}
                     </span>
                   ) : (

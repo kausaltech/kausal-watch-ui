@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import Alert from '@mui/material/Alert';
+
 import styled from '@emotion/styled';
 
 import { NetworkStatus } from '@apollo/client';
@@ -12,7 +14,7 @@ import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import ContentLoader from 'react-content-loader';
-import { Alert, Card, CardBody, Col, Container, Row } from 'reactstrap';
+import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 import { transientOptions } from '@common/themes/styles/styled';
@@ -205,7 +207,7 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
             <StyledCard $disabled={refetching}>
               <CardBody>
                 {deploymentType !== 'production' && !data?.node && !loading && (
-                  <Alert color="warning">
+                  <Alert severity="warning">
                     {t('error-no-outcome-node', { outcomeNodeId: outcomeNodeId ?? 'undefined' })}
                   </Alert>
                 )}

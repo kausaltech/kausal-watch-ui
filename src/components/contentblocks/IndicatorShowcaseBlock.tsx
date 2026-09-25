@@ -1,11 +1,12 @@
 import type React from 'react';
 
 import { Paper } from '@mui/material';
+import Alert from '@mui/material/Alert';
 
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Alert, Col, Container, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 
 import type { StreamFieldFragment } from '@/common/__generated__/graphql';
 import { deploymentType } from '@/common/environment';
@@ -85,7 +86,7 @@ const IndicatorShowcaseBlock = (props: IndicatorShowcaseBlockProps) => {
     indicatorVisualisation = (
       <>
         {deploymentType !== 'production' && (
-          <Alert color="warning">
+          <Alert severity="warning">
             {t('error-no-goals', { indicatorName: indicator?.name ?? 'undefined' })}
           </Alert>
         )}

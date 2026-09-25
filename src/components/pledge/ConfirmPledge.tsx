@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { FormHelperText, TextField } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import styled from '@emotion/styled';
 
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
-import { Container, Spinner } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
@@ -360,7 +361,7 @@ function ConfirmPledge({
                   disabled={submitting || (step === 'form' && isMissingRequiredField)}
                 >
                   {submitting ? (
-                    <Spinner size="sm" />
+                    <CircularProgress size="1rem" color="inherit" />
                   ) : step === 'form' ? (
                     <Icon name="award" width="18px" height="18px" />
                   ) : null}

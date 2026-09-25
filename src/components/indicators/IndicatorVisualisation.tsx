@@ -2,9 +2,10 @@
 
 import { type ReactElement, useEffect, useState } from 'react';
 
+import Alert from '@mui/material/Alert';
+
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Alert } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
@@ -73,7 +74,7 @@ function IndicatorVisualisation({
   });
 
   if (loading) return <ContentLoader message={t('loading')} />;
-  if (error) return <Alert color="danger">{`${t('error')}: ${error.message}`}</Alert>;
+  if (error) return <Alert severity="error">{`${t('error')}: ${error.message}`}</Alert>;
   if (!data || !data.plan) return null;
 
   const {
@@ -81,7 +82,7 @@ function IndicatorVisualisation({
     plan: { scenarios },
   } = data;
 
-  if (!indicator) return <Alert color="danger">{t('indicator-not-found')}</Alert>;
+  if (!indicator) return <Alert severity="error">{t('indicator-not-found')}</Alert>;
 
   if (indicator.values.length === 0) {
     return null;

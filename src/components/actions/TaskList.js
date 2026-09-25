@@ -5,12 +5,7 @@ import styled from '@emotion/styled';
 
 import { useLocale, useTranslations } from 'next-intl';
 import { PropTypes } from 'prop-types';
-import {
-  ListGroup as BaseListGroup,
-  ListGroupItem as BaseListGroupItem,
-  Button,
-  Collapse,
-} from 'reactstrap';
+import { Button, Collapse } from 'reactstrap';
 
 import dayjs from '@/common/dayjs';
 import Icon from '@/components/common/Icon';
@@ -95,7 +90,11 @@ const TaskContent = styled.div`
   }
 `;
 
-const ListGroup = styled(BaseListGroup)`
+const ListGroup = styled.ul`
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+
   h4 {
     margin: 0;
     font-size: ${(props) => props.theme.fontSizeBase};
@@ -110,8 +109,16 @@ const ListGroupTitle = styled.h3`
   font-size: ${(props) => props.theme.fontSizeMd};
 `;
 
-const ListGroupItem = styled(BaseListGroupItem)`
+const ListGroupItem = styled.li`
+  position: relative;
+  display: block;
   padding: ${(props) => props.theme.spaces.s050};
+  background-color: ${(props) => props.theme.themeColors.white};
+  border: 1px solid ${(props) => props.theme.graphColors.grey020};
+
+  & + & {
+    border-top-width: 0;
+  }
 
   &:first-child {
     border-top-left-radius: ${(props) => props.theme.cardBorderRadius};

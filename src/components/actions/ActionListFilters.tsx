@@ -1,6 +1,8 @@
 import type { Ref } from 'react';
 import React, { createRef, useCallback, useEffect, useMemo, useState } from 'react';
 
+import IconButton from '@mui/material/IconButton';
+
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -9,16 +11,7 @@ import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { createFilter } from 'react-select';
-import {
-  ButtonGroup,
-  CloseButton,
-  Col,
-  Collapse,
-  FormGroup,
-  Input,
-  Button as RButton,
-  Row,
-} from 'reactstrap';
+import { ButtonGroup, Col, Collapse, FormGroup, Input, Button as RButton, Row } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -144,10 +137,15 @@ const StyledBadge = styled('span', transientOptions)<{ $color?: string }>`
   line-height: 1.25;
   text-align: left;
 
-  .btn-close {
+  .badge-close {
     margin: 0 0.5rem;
-    width: 0.75rem;
-    height: 0.75rem;
+    padding: 0;
+    opacity: 0.5;
+
+    &:hover,
+    &:focus-visible {
+      opacity: 0.75;
+    }
   }
 `;
 
@@ -490,12 +488,15 @@ function ActionListFilterBadges({
       {/* TODO: animate transition */}
       {allBadges.map((item) => (
         <StyledBadge key={`${item.id}-${item.value}`} className="badge me-3" $color={buttonColor}>
-          <CloseButton
-            variant={readableColor(buttonColor || '#000') === '#000' ? 'black' : 'white'}
-            className="btn-sm"
+          <IconButton
+            className="badge-close"
+            size="small"
+            color="inherit"
             onClick={item.onReset}
             aria-label={t('remove-filter')}
-          />
+          >
+            <Icon.Times width="0.75rem" height="0.75rem" />
+          </IconButton>
           {item.label.trim()}
         </StyledBadge>
       ))}

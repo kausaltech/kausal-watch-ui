@@ -1,3 +1,5 @@
+import CircularProgress from '@mui/material/CircularProgress';
+
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -6,7 +8,7 @@ import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { BoxArrowRight } from 'react-bootstrap-icons';
 import SVG from 'react-inlinesvg';
-import { Container, Spinner } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
@@ -653,7 +655,7 @@ function SiteFooter(props: SiteFooterProps) {
                   }
                 >
                   {isAuthLoading ? (
-                    <Spinner size="sm" color="light" />
+                    <CircularProgress size="1rem" color="inherit" />
                   ) : isAuthenticated ? (
                     <BoxArrowRight color={theme.footerColor} aria-hidden="true" className="me-1" />
                   ) : (
