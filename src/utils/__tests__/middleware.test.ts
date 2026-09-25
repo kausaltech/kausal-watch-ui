@@ -253,6 +253,13 @@ describe('buildReportOnlyPolicy', () => {
     expect(/font-src [^;]*https:\/\/use\.typekit\.net/.test(policy)).toBe(true);
   });
 
+  /* The cartography block renders with Mapbox GL, which fetches styles, tiles and glyphs. */
+  it('allows the map host', () => {
+    const policy = buildReportOnlyPolicy(options)!;
+
+    expect(/connect-src [^;]*https:\/\/api\.mapbox\.com/.test(policy)).toBe(true);
+  });
+
   it('allows blob workers', () => {
     expect(buildReportOnlyPolicy(options)).toContain("worker-src 'self' blob:");
   });
