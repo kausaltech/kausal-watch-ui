@@ -263,6 +263,16 @@ function securityReportUri(dsn: string, environment: string, release: string) {
   return `${origin}${prefix}/api/${projectId}/security/?${params.toString()}`;
 }
 
+/*
+ * Theme CSS imports webfonts from Adobe Typekit, so the host comes from theme data rather
+ * than from the code. Enforcing a policy without it would leave those themes without their
+ * webfonts.
+ */
+const TYPEKIT_HOSTS = ['https://use.typekit.net', 'https://p.typekit.net'];
+
+/* The cartography block renders with Mapbox GL, which fetches styles, tiles and glyphs. */
+const MAPBOX_HOSTS = ['https://api.mapbox.com', 'https://events.mapbox.com'];
+
 type ReportOnlyOptions = {
   dsn: string | undefined;
   assetPrefix: string;
@@ -295,11 +305,11 @@ export function buildReportOnlyPolicy({
   return [
     "default-src 'self'",
     `script-src ${withCdn("'self'", "'unsafe-inline'", "'unsafe-eval'")}`,
-    `style-src ${withCdn("'self'", "'unsafe-inline'")}`,
-    `font-src ${withCdn("'self'", 'data:')}`,
+    `style-src ${withCdn("'self'", "'unsafe-inline'", ...TYPEKIT_HOSTS)}`,
+    `font-src ${withCdn("'self'", 'data:', ...TYPEKIT_HOSTS)}`,
     "img-src 'self' data: blob: https:",
     "worker-src 'self' blob:",
-    `connect-src ${withCdn("'self'", sentryOrigin)}`,
+    `connect-src ${withCdn("'self'", sentryOrigin, ...MAPBOX_HOSTS)}`,
     'frame-src https:',
     `report-uri ${reportUri}`,
   ].join('; ');

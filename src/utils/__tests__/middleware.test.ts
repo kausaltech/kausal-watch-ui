@@ -244,6 +244,22 @@ describe('buildReportOnlyPolicy', () => {
   });
 
   /* Mapbox GL starts its worker from a blob: URL, which would otherwise report on every map. */
+  /* Several themes import their webfonts from Adobe Typekit in the theme CSS. */
+  it('allows the theme webfont hosts', () => {
+    const policy = buildReportOnlyPolicy(options)!;
+
+    expect(/style-src [^;]*https:\/\/use\.typekit\.net/.test(policy)).toBe(true);
+    expect(/style-src [^;]*https:\/\/p\.typekit\.net/.test(policy)).toBe(true);
+    expect(/font-src [^;]*https:\/\/use\.typekit\.net/.test(policy)).toBe(true);
+  });
+
+  /* The cartography block renders with Mapbox GL, which fetches styles, tiles and glyphs. */
+  it('allows the map host', () => {
+    const policy = buildReportOnlyPolicy(options)!;
+
+    expect(/connect-src [^;]*https:\/\/api\.mapbox\.com/.test(policy)).toBe(true);
+  });
+
   it('allows blob workers', () => {
     expect(buildReportOnlyPolicy(options)).toContain("worker-src 'self' blob:");
   });
