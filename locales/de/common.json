@@ -14,6 +14,8 @@
     "access-request-description": "Sie haben noch keinen Zugang. Wenn Sie eine Anfrage senden, wird sie vom Administrationsteam dieser Website geprüft.",
     "access-request-failed": "Ihre Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es gleich noch einmal.",
     "access-request-notice": "Zugang erhalten nur Personen, die ihn für ihre Arbeit benötigen. Anfragen, die nicht überprüft werden können, werden abgelehnt.",
+    "access-request-rate-limited": "Zu viele Versuche. Bitte warten Sie eine Minute und versuchen Sie es erneut.",
+    "access-requests-disabled": "Diese Website nimmt keine Zugangsanfragen an. Wenden Sie sich an das Administrationsteam, wenn Sie Zugang benötigen.",
     "access-request-title": "Zugang anfordern",
     "access-send-request": "Zugangsanfrage senden",
     "access-sign-in-description": "{plan} ist nur für berechtigte Personen zugänglich. Geben Sie Ihre E-Mail-Adresse ein, um sich anzumelden oder Zugang anzufordern, falls Sie noch keinen haben.",

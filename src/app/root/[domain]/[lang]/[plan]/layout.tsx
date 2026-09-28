@@ -12,13 +12,13 @@ import { getThemeStaticURL } from '@common/themes/theme';
 import { loadTheme } from '@common/themes/theme-init.server';
 import { getRequestOrigin } from '@common/utils/request.server';
 
-import { PlanDomainStatus, type WorkflowState } from '@/common/__generated__/graphql';
+import type { WorkflowState } from '@/common/__generated__/graphql';
 import { MatomoAnalytics } from '@/components/MatomoAnalytics';
 import { SharedIcons } from '@/components/common/Icon';
 import IntroModal from '@/components/custom/IntroModal';
 import GlobalIndicatorModalWrapper from '@/components/indicators/GlobalIndicatorModalWrapper';
 import UnpublishedPlan from '@/components/plans/UnpublishedPlan';
-import AccessGate from '@/components/plans/access/AccessGate';
+import AccessGatePage from '@/components/plans/access/AccessGatePage';
 import PathsProvider from '@/components/providers/PathsProvider';
 import PlanProvider from '@/components/providers/PlanProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
@@ -30,7 +30,6 @@ import { WorkflowProvider } from '@/context/workflow-selector';
 import defaultTheme from '@/public/static/themes/default/theme.json';
 import { getPlan } from '@/queries/get-plan';
 import { getPlansForHostnameUncached } from '@/queries/get-plans-for-hostname';
-import { isAccessRequestFlowEnabled } from '@/utils/access-requests';
 import { tryRequest } from '@/utils/api.utils';
 import { getMetaTitles, getRobotsMetadata, getSiteVerificationMetadata } from '@/utils/metadata';
 import {
@@ -152,12 +151,15 @@ export default async function PlanLayout(props: Props) {
   if (!planData?.plan) {
     const staleResolution = await resolveStaleRouting(domain);
 
+    if (staleResolution?.kind === 'sign-in-required') {
+      return <AccessGatePage {...staleResolution.plan} />;
+    }
     if (staleResolution?.kind === 'unavailable') {
       return (
         <ThemeProvider theme={defaultTheme}>
           <UnpublishedPlan
             message={staleResolution.message}
-            signInRequired={staleResolution.status === PlanDomainStatus.SignInRequired}
+            signInRequired={false}
             testId="unpublished-page"
           />
         </ThemeProvider>
@@ -182,22 +184,6 @@ export default async function PlanLayout(props: Props) {
   const themeStylesheet = theme.name ? (
     <link rel="stylesheet" type="text/css" href={getThemeStaticURL(theme.mainCssFile)} />
   ) : undefined;
-
-  // TODO: Until the backend restricts these plans, this only hides the plan in the UI; its data
-  // remains available through the API.
-  if (isAccessRequestFlowEnabled(domain) && !(await auth())?.idToken) {
-    return (
-      <>
-        {themeStylesheet}
-        <ThemeProvider theme={theme}>
-          <ThemedGlobalStyles />
-          <PlanProvider plan={planData.plan}>
-            <AccessGate planName={planData.plan.generalContent.siteTitle || planData.plan.name} />
-          </PlanProvider>
-        </ThemeProvider>
-      </>
-    );
-  }
 
   const matomoAnalyticsUrl = planData.plan.domain?.matomoAnalyticsUrl ?? undefined;
   const selectedWorkflow = cookieStore.get(SELECTED_WORKFLOW_COOKIE_KEY);

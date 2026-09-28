@@ -11,15 +11,17 @@ import { generateCorrelationID, getLogger } from '@common/logging';
 import { LOGGER_SPAN_ID, LOGGER_TRACE_ID } from '@common/logging/init';
 import { LOGGER_CORRELATION_ID } from '@common/logging/logger';
 
+import { PlanDomainAvailability } from './common/__generated__/graphql';
 import { auth } from './config/auth';
-import { UNPUBLISHED_PATH } from './constants/routes';
+import { SIGN_IN_REQUIRED_PATH, UNPUBLISHED_PATH } from './constants/routes';
 import { hasUnauthenticatedErrors } from './utils/auth-errors';
 import {
   applySecurityHeaders,
   clearHostnameCache,
   convertPathnameFromInvalidLocaleCasing,
   convertPathnameFromLegacy,
-  getDomainStatus,
+  getAccessGatePlan,
+  getDomainAvailability,
   getLocaleAndPlan,
   getPlansForHostname,
   getSearchParamsString,
@@ -173,7 +175,7 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
   // A restricted plan exposes no identifier. Nothing downstream may substitute
   // a placeholder for it, because the RSC Apollo client turns the identifier
   // into a cache header that the backend rejects unless it names a real plan.
-  const planIdentifier = 'identifier' in parsedPlan ? parsedPlan.identifier : undefined;
+  const planIdentifier = parsedPlan.__typename === 'Plan' ? parsedPlan.identifier : undefined;
   const otherLanguages = 'otherLanguages' in parsedPlan ? parsedPlan.otherLanguages : [];
 
   requestScope.setTag('plan.identifier', planIdentifier ?? 'restricted');
@@ -212,9 +214,31 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
     clearSessionCookies(response);
   }
 
+  const availability = getDomainAvailability(parsedPlan);
+
+  if (availability === PlanDomainAvailability.SignInRequired) {
+    // Served at the requested URL, so signing in returns the visitor to the page they asked for.
+    const {
+      planIdentifier: gatePlanIdentifier,
+      planName,
+      themeIdentifier,
+      homePath,
+    } = getAccessGatePlan(parsedPlan);
+    const params = new URLSearchParams({ plan: gatePlanIdentifier, planName, homePath });
+    if (themeIdentifier) {
+      params.set('theme', themeIdentifier);
+    }
+    const rewrittenUrl = new URL(
+      `/root/${hostname}/${parsedLocale}${SIGN_IN_REQUIRED_PATH}?${params.toString()}`,
+      request.url
+    );
+
+    return rewriteUrl(request, response, hostUrl, rewrittenUrl, planIdentifier);
+  }
+
   if (!isPlanAvailable(parsedPlan)) {
     // The backend names the page to render; the message is optional and usually absent.
-    const params = new URLSearchParams({ status: getDomainStatus(parsedPlan) });
+    const params = new URLSearchParams({ status: availability });
     const message = getStatusMessage(parsedPlan);
 
     if (message) {

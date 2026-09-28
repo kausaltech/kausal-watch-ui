@@ -19,19 +19,25 @@ import {
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import { CombinedGraphQLErrors } from '@apollo/client/errors';
+import { useMutation } from '@apollo/client/react';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { Container as BootstrapContainer } from 'reactstrap';
 
 import { HomeLink, OrgLogo, Site, SiteTitle, TopNav } from '@/components/common/GlobalNav';
-import { checkAccountStatus, submitAccessRequest } from '@/utils/access-requests';
+import { REQUEST_PLAN_ACCESS } from '@/queries/request-plan-access';
+import { checkAccountStatus } from '@/utils/access-requests';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type Step = 'email' | 'request-access' | 'pending' | 'approved';
 
 type Props = {
+  planIdentifier: string;
   planName: string | null;
+  /** Where the logo and title lead: the plan's front page, which shows this form again. */
+  homePath: string;
 };
 
 const GateFooter = styled.footer`
@@ -55,9 +61,11 @@ const FooterContent = styled.div`
 
 function AccessGateLayout({
   planName,
+  homePath,
   children,
 }: {
   planName: string | null;
+  homePath: string;
   children: ReactNode;
 }) {
   const t = useTranslations();
@@ -68,11 +76,15 @@ function AccessGateLayout({
       <header>
         <TopNav expand="md" id="branding-navigation-bar" container>
           <Site>
-            <HomeLink href="/">
+            <HomeLink as="a" href={homePath}>
               <OrgLogo label={`${planName ?? ''} ${t('front-page')}`.trim()} />
             </HomeLink>
             {planName && (
-              <HomeLink href="/" aria-label={!theme.navTitleVisible ? planName : undefined}>
+              <HomeLink
+                as="a"
+                href={homePath}
+                aria-label={!theme.navTitleVisible ? planName : undefined}
+              >
                 <SiteTitle aria-hidden={!theme.navTitleVisible}>
                   {theme.navTitleVisible ? planName : '\u00A0'}
                 </SiteTitle>
@@ -245,10 +257,12 @@ function EmailStep({
 }
 
 function RequestAccessStep({
+  planIdentifier,
   email,
   onSent,
   onBack,
 }: {
+  planIdentifier: string;
   email: string;
   onSent: () => void;
   onBack: () => void;
@@ -256,15 +270,21 @@ function RequestAccessStep({
   const t = useTranslations();
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [requestPlanAccess] = useMutation(REQUEST_PLAN_ACCESS);
 
   async function handleSend() {
     setError(null);
     setSubmitting(true);
     try {
-      await submitAccessRequest(email);
+      // The backend answers the same whether a request was recorded, was already waiting, or was
+      // not needed; only refusals come back as errors.
+      await requestPlanAccess({ variables: { identifier: planIdentifier, email } });
       onSent();
-    } catch {
-      setError(t('access-request-failed'));
+    } catch (err) {
+      const code = CombinedGraphQLErrors.is(err) ? err.errors[0]?.extensions?.['code'] : undefined;
+      if (code === 'RATE_LIMITED') setError(t('access-request-rate-limited'));
+      else if (code === 'ACCESS_REQUESTS_DISABLED') setError(t('access-requests-disabled'));
+      else setError(t('access-request-failed'));
     } finally {
       setSubmitting(false);
     }
@@ -294,7 +314,7 @@ function RequestAccessStep({
   );
 }
 
-export default function AccessGate({ planName }: Props) {
+export default function AccessGate({ planIdentifier, planName, homePath }: Props) {
   const t = useTranslations();
   const [step, setStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
@@ -306,8 +326,9 @@ export default function AccessGate({ planName }: Props) {
 
   if (step === 'request-access') {
     return (
-      <AccessGateLayout planName={planName}>
+      <AccessGateLayout planName={planName} homePath={homePath}>
         <RequestAccessStep
+          planIdentifier={planIdentifier}
           email={email}
           onSent={() => setStep('pending')}
           onBack={() => setStep('email')}
@@ -318,7 +339,7 @@ export default function AccessGate({ planName }: Props) {
 
   if (step === 'pending') {
     return (
-      <AccessGateLayout planName={planName}>
+      <AccessGateLayout planName={planName} homePath={homePath}>
         <Heading
           title={t('access-pending-title')}
           description={t('access-pending-description', { email })}
@@ -334,7 +355,7 @@ export default function AccessGate({ planName }: Props) {
 
   if (step === 'approved') {
     return (
-      <AccessGateLayout planName={planName}>
+      <AccessGateLayout planName={planName} homePath={homePath}>
         <Heading
           title={t('access-approved-title')}
           description={t('access-approved-description', { email })}
@@ -345,7 +366,7 @@ export default function AccessGate({ planName }: Props) {
   }
 
   return (
-    <AccessGateLayout planName={planName}>
+    <AccessGateLayout planName={planName} homePath={homePath}>
       <EmailStep
         planName={planName}
         initialEmail={email}

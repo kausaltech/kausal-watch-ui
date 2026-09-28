@@ -22,7 +22,7 @@ import { getClientIP } from '@common/utils';
 import LRUCache from '@common/utils/lru-cache';
 
 import type { PlansByHostnameQuery } from '@/common/__generated__/graphql';
-import { PlanDomainStatus } from '@/common/__generated__/graphql';
+import { PlanDomainAvailability } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 
@@ -46,7 +46,7 @@ export const isRestrictedPlan = (plan: PlanForHostname) =>
 
 const isPlan = (plan: PlanForHostname) => plan?.__typename === 'Plan' || isRestrictedPlan(plan);
 
-const KNOWN_STATUSES: string[] = Object.values(PlanDomainStatus);
+const KNOWN_AVAILABILITIES: string[] = Object.values(PlanDomainAvailability);
 
 /**
  * What the backend says this hostname serves the current viewer.
@@ -56,47 +56,60 @@ const KNOWN_STATUSES: string[] = Object.values(PlanDomainStatus);
  * the plan's `__typename` from the same value. Gating on anything else here is how a production
  * domain once served a plan nobody had published.
  *
- * A backend that predates this vocabulary answers with the old publication statuses instead
- * (PUBLISHED, UNPUBLISHED, SCHEDULED). Treating an unrecognised value as authoritative would send
- * every site to the placeholder, so we fall back to `__typename`, which is what this proxy gated
- * on before. That keeps a backend rollback safe, but it is a degraded answer, so the backend ships
- * first. Remove the fallback once no deployed backend answers with the old values.
+ * Should the backend not answer (no domain, or a value this UI does not know), fall back to
+ * `__typename`, which is what this proxy gated on before.
  */
-export const getDomainStatus = (plan: PlanFromPlansQuery): PlanDomainStatus => {
-  const status = plan.domain?.status;
+export const getDomainAvailability = (plan: PlanFromPlansQuery): PlanDomainAvailability => {
+  const availability = plan.domain?.availability;
 
-  if (status && KNOWN_STATUSES.includes(status)) {
-    return status;
+  if (availability && KNOWN_AVAILABILITIES.includes(availability)) {
+    return availability;
   }
 
   if (plan.__typename === 'Plan') {
-    return PlanDomainStatus.Available;
+    return PlanDomainAvailability.Available;
   }
 
-  // Restricted, and an older backend cannot tell us whether signing in would help. Offering it
-  // where it cannot help is a dead end; withholding it where it could strands someone who has
-  // access, so offer it.
-  return PlanDomainStatus.SignInRequired;
+  // Restricted, and the backend did not say whether signing in would help. Offering it where it
+  // cannot help is a dead end; withholding it where it could strands someone who has access, so
+  // offer it.
+  return PlanDomainAvailability.SignInRequired;
 };
 
 /**
  * Whether this viewer is served the plan's site at this hostname.
  *
  * Narrowing to the full `Plan` here relies on a backend guarantee rather than on the response
- * shape: `PlanInterface.resolve_type` returns `PlanNode` exactly when the status is `AVAILABLE`,
- * both derived from one call, and `test_graphql_domain_status.py` asserts the two agree across
- * the whole matrix. Checking `__typename` here as well would put the frontend back in the
- * business of combining two signals, which is how an unpublished plan once reached production.
+ * shape: `PlanInterface.resolve_type` returns `PlanNode` exactly when the availability is
+ * `AVAILABLE`, both derived from one call. Checking `__typename` here as well would put the
+ * frontend back in the business of combining two signals, which is how an unpublished plan once
+ * reached production.
  */
 export const isPlanAvailable = (plan: PlanFromPlansQuery): plan is AvailablePlan =>
-  getDomainStatus(plan) === PlanDomainStatus.Available;
+  getDomainAvailability(plan) === PlanDomainAvailability.Available;
 
 /** The optional message the backend attaches to a hostname that is not serving its site. */
 export const getStatusMessage = (plan: PlanFromPlansQuery): string | undefined =>
   plan.domain?.statusMessage ?? plan.statusMessage ?? undefined;
 
+/** What the sign-in page needs to present the plan it stands in front of. */
+export type AccessGatePlan = {
+  planIdentifier: string;
+  planName: string;
+  themeIdentifier: string | null;
+  homePath: string;
+};
+
+export const getAccessGatePlan = (plan: PlanFromPlansQuery): AccessGatePlan => ({
+  planIdentifier: plan.identifier,
+  planName: plan.name,
+  themeIdentifier: plan.themeIdentifier,
+  homePath: plan.domain?.basePath || '/',
+});
+
 export type StalePlanResolution =
-  | { kind: 'unavailable'; status: PlanDomainStatus; message: string | undefined }
+  | { kind: 'sign-in-required'; plan: AccessGatePlan }
+  | { kind: 'unavailable'; message: string | undefined }
   | { kind: 'not-found' }
   | { kind: 'available' };
 
@@ -106,8 +119,9 @@ export type StalePlanResolution =
  * The proxy caches anonymous lookups, so a plan that stops being served — made internal, or its
  * site taken down — keeps being routed to its pages for the rest of the cache lifetime, and those
  * pages then find no plan. Given a fresh lookup, this names what the proxy would have done
- * instead: rewrite to a placeholder, or 404 a hostname that no longer resolves a plan. A fresh
- * lookup that still says the site is available cannot explain the missing plan.
+ * instead: rewrite to the sign-in page or a placeholder, or 404 a hostname that no longer
+ * resolves a plan. A fresh lookup that still says the site is available cannot explain the
+ * missing plan.
  */
 export function resolveStalePlan(
   pathname: string,
@@ -118,14 +132,14 @@ export function resolveStalePlan(
   if (!parsedPlan) {
     return { kind: 'not-found' };
   }
-  if (isPlanAvailable(parsedPlan)) {
+  const availability = getDomainAvailability(parsedPlan);
+  if (availability === PlanDomainAvailability.Available) {
     return { kind: 'available' };
   }
-  return {
-    kind: 'unavailable',
-    status: getDomainStatus(parsedPlan),
-    message: getStatusMessage(parsedPlan),
-  };
+  if (availability === PlanDomainAvailability.SignInRequired) {
+    return { kind: 'sign-in-required', plan: getAccessGatePlan(parsedPlan) };
+  }
+  return { kind: 'unavailable', message: getStatusMessage(parsedPlan) };
 }
 
 export function getParsedPlan(

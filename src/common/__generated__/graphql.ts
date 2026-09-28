@@ -198,8 +198,12 @@ export enum IndicatorTimeResolution {
  * has nothing to do with whether the plan has been published, so saying "published" there would
  * be a lie. `PublicationStatus` stays as the manual per-domain override's choices.
  *
+ * It is availability and not a status because nothing here is stored or settled: the answer is
+ * derived per request, and two viewers of the same hostname at the same moment can get
+ * different ones.
+ *
  */
-export enum PlanDomainStatus {
+export enum PlanDomainAvailability {
   Available = 'AVAILABLE',
   SignInRequired = 'SIGN_IN_REQUIRED',
   Unavailable = 'UNAVAILABLE'
@@ -8094,13 +8098,13 @@ export type PlanContextQueryVariables = Exact<{
 
 export type PlanContextFragment = { __typename: 'Plan', id: string, identifier: string, shortIdentifier: string | null, name: string, shortName: string | null, versionName: string, themeIdentifier: string | null, timezone: string, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers: boolean, publishedAt: string | null, kausalPathsInstanceUuid: string, viewUrl: string | null, actionReportExportViewUrl: string | null, serveFileBaseUrl: string, adminUrl: string | null, accessibilityStatementUrl: string | null, externalFeedbackUrl: string | null, primaryActionClassification: PlanContextQuery_plan_primaryActionClassification | null, secondaryActionClassification: PlanContextQuery_plan_secondaryActionClassification | null, domain: PlanContextQuery_plan_domain | null, image: PlanContextQuery_plan_image | null, actionSchedules: Array<PlanContextQuery_plan_actionSchedules>, actionImplementationPhases: Array<PlanContextQuery_plan_actionImplementationPhases>, actionDependencyRoles: Array<PlanContextQuery_plan_actionDependencyRoles>, actionImpacts: Array<PlanContextQuery_plan_actionImpacts>, actionStatuses: Array<PlanContextQuery_plan_actionStatuses>, actionStatusSummaries: Array<PlanContextQuery_plan_actionStatusSummaries>, actionTimelinessClasses: Array<PlanContextQuery_plan_actionTimelinessClasses>, impactGroups: Array<PlanContextQuery_plan_impactGroups>, primaryOrgs: Array<PlanContextQuery_plan_primaryOrgs>, generalContent: PlanContextQuery_plan_generalContent, mainMenu: PlanContextQuery_plan_mainMenu | null, footer: PlanContextQuery_plan_footer | null, features: PlanContextQuery_plan_features, allRelatedPlans: Array<PlanContextQuery_plan_allRelatedPlans>, supersededBy: PlanContextQuery_plan_supersededBy | null, supersededPlans: Array<PlanContextQuery_plan_supersededPlans>, supersedingPlans: Array<PlanContextQuery_plan_supersedingPlans>, children: Array<PlanContextQuery_plan_children>, parent: PlanContextQuery_plan_parent | null, additionalLinks: PlanContextQuery_plan_additionalLinks | null, actionListPage: PlanContextQuery_plan_actionListPage | null };
 
-export type PlansByHostnameQuery_plansForHostname_domain = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, status: PlanDomainStatus | null, statusMessage: string | null };
+export type PlansByHostnameQuery_plansForHostname_domain = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, availability: PlanDomainAvailability | null, statusMessage: string | null };
 
-export type PlansByHostnameQuery_plansForHostname_domains = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, status: PlanDomainStatus | null, statusMessage: string | null };
+export type PlansByHostnameQuery_plansForHostname_domains = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, availability: PlanDomainAvailability | null, statusMessage: string | null };
 
-export type PlansByHostnameQuery_plansForHostname_Plan = { __typename: 'Plan', id: string, identifier: string, otherLanguages: Array<string>, primaryLanguage: string, statusMessage: string | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
+export type PlansByHostnameQuery_plansForHostname_Plan = { __typename: 'Plan', id: string, otherLanguages: Array<string>, identifier: string, name: string, themeIdentifier: string | null, primaryLanguage: string, statusMessage: string | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
 
-export type PlansByHostnameQuery_plansForHostname_RestrictedPlanNode = { __typename: 'RestrictedPlanNode', primaryLanguage: string, statusMessage: string | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
+export type PlansByHostnameQuery_plansForHostname_RestrictedPlanNode = { __typename: 'RestrictedPlanNode', identifier: string, name: string, themeIdentifier: string | null, primaryLanguage: string, statusMessage: string | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
 
 export type PlansByHostnameQuery_plansForHostname =
   | PlansByHostnameQuery_plansForHostname_Plan
@@ -8642,6 +8646,16 @@ export type PledgeFeatureEnabledQuery = { __typename: 'Query', plan: PledgeFeatu
 
 export type PledgeFeatureEnabledQueryVariables = Exact<{
   plan: string | number;
+}>;
+
+export type RequestPlanAccessMutation_requestPlanAccess = { __typename: 'RequestPlanAccessResult', ok: boolean };
+
+export type RequestPlanAccessMutation = { __typename: 'Mutation', requestPlanAccess: RequestPlanAccessMutation_requestPlanAccess };
+
+
+export type RequestPlanAccessMutationVariables = Exact<{
+  identifier: string | number;
+  email: string;
 }>;
 
 export type StorybookIndicatorExplorerQuery_plan_organization = { __typename: 'Organization', id: string, name: string };

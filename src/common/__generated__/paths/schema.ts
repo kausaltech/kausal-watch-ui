@@ -39,14 +39,55 @@ export type AllowedCombinationsRuleInput = {
   enforcement: DatasetRuleEnforcement;
 };
 
-export type AssignCategoryInput = {
+export type AssignDimensionInput = {
   category: Scalars['String']['input'];
   dimension: Scalars['String']['input'];
 };
 
-export type AssignDimensionInput = {
-  category: Scalars['String']['input'];
-  dimension: Scalars['String']['input'];
+export type AssistantContextEventInput = {
+  beforeMessageId?: InputMaybe<Scalars['String']['input']>;
+  content: Scalars['JSON']['input'];
+  eventType: Scalars['String']['input'];
+  externalId: Scalars['String']['input'];
+};
+
+export enum AssistantInvocationTrigger {
+  Regenerate = 'REGENERATE',
+  ToolResult = 'TOOL_RESULT',
+  UserSubmit = 'USER_SUBMIT'
+}
+
+export type AssistantMessageInput = {
+  content: Scalars['JSON']['input'];
+  externalId: Scalars['String']['input'];
+  format?: Scalars['String']['input'];
+  parentId?: InputMaybe<Scalars['String']['input']>;
+  role: AssistantMessageRole;
+  schemaVersion?: Scalars['Int']['input'];
+  status?: AssistantMessageStatus;
+};
+
+export enum AssistantMessageRole {
+  Assistant = 'ASSISTANT',
+  User = 'USER'
+}
+
+export enum AssistantMessageStatus {
+  Complete = 'COMPLETE',
+  Error = 'ERROR',
+  Incomplete = 'INCOMPLETE'
+}
+
+export type BeginAssistantInvocationInput = {
+  contextEvents?: Array<AssistantContextEventInput>;
+  exchangeId?: InputMaybe<Scalars['UUID']['input']>;
+  messages?: Array<AssistantMessageInput>;
+  modelId: Scalars['String']['input'];
+  provider: Scalars['String']['input'];
+  requestKey: Scalars['String']['input'];
+  threadId: Scalars['UUID']['input'];
+  trigger: AssistantInvocationTrigger;
+  userMessageId: Scalars['String']['input'];
 };
 
 /** Bind a dataset metric to an existing input port on a node. */
@@ -74,6 +115,24 @@ export enum ChangeTargetKind {
   Node = 'NODE',
   Unknown = 'UNKNOWN'
 }
+
+export type CompleteAssistantInvocationInput = {
+  assistantMessage: AssistantMessageInput;
+  cacheReadTokens?: InputMaybe<Scalars['Int']['input']>;
+  cacheWriteTokens?: InputMaybe<Scalars['Int']['input']>;
+  completionToken: Scalars['String']['input'];
+  finishReason?: Scalars['String']['input'];
+  inputNoCacheTokens?: InputMaybe<Scalars['Int']['input']>;
+  inputTokens?: InputMaybe<Scalars['Int']['input']>;
+  invocationId: Scalars['UUID']['input'];
+  outputReasoningTokens?: InputMaybe<Scalars['Int']['input']>;
+  outputTextTokens?: InputMaybe<Scalars['Int']['input']>;
+  outputTokens?: InputMaybe<Scalars['Int']['input']>;
+  providerCallId?: Scalars['String']['input'];
+  rawUsage?: InputMaybe<Scalars['JSON']['input']>;
+  stepCount?: InputMaybe<Scalars['Int']['input']>;
+  totalTokens?: InputMaybe<Scalars['Int']['input']>;
+};
 
 export type CreateActionGroupInput = {
   color?: InputMaybe<Scalars['String']['input']>;
@@ -152,10 +211,10 @@ export type CreateDimensionInput = {
 };
 
 export type CreateEdgeInput = {
-  fromRef?: InputMaybe<NodePortRefInput>;
+  fromRef: NodePortRefInput;
   instanceId: Scalars['ID']['input'];
-  portRef?: InputMaybe<NodePortRefInput>;
-  /** Atomically displace whatever occupies the target port — an edge or a dataset binding — instead of rejecting the edge. Validation runs first, so a rejected edge leaves the old binding untouched. Requires an explicit `toPort` (an auto-selected port is never occupied) and is not valid for `multi` ports. */
+  portRef: NodePortRefInput;
+  /** Atomically displace whatever occupies the target port — an edge or a dataset binding — instead of rejecting the edge. Validation runs first, so a rejected edge leaves the old binding untouched. Requires an explicit `portRef.portId` (an auto-selected port is never occupied) and is not valid for `multi` ports. */
   replace?: Scalars['Boolean']['input'];
   transformations?: InputMaybe<Array<EdgeTransformationInput>>;
 };
@@ -276,6 +335,13 @@ export type EnsureUnitInput = {
   unit: Scalars['String']['input'];
 };
 
+export type FailAssistantInvocationInput = {
+  aborted?: Scalars['Boolean']['input'];
+  completionToken: Scalars['String']['input'];
+  errorCode: Scalars['String']['input'];
+  invocationId: Scalars['UUID']['input'];
+};
+
 export type FilterColumnInput = {
   column: Scalars['String']['input'];
   dropCol?: Scalars['Boolean']['input'];
@@ -297,10 +363,6 @@ export type FilterDimensionInput = {
 export type FilterTemporalInput = {
   maxYear?: InputMaybe<Scalars['Int']['input']>;
   minYear?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type FlattenInput = {
-  dimension: Scalars['String']['input'];
 };
 
 export type FormulaConfigInput = {
@@ -436,7 +498,8 @@ export enum NodeLayoutSource {
 
 export type NodePortRefInput = {
   nodeUuid: Scalars['UUID']['input'];
-  portId: Scalars['UUID']['input'];
+  /** Omit to let the server choose. On the source side that is the node's only output port; on the target side a free matching port is reused, or a new one is instantiated from the node class's port declarations. */
+  portId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 export enum NodeStatus {
@@ -548,13 +611,6 @@ export enum SearchOperatorEnum {
   And = 'AND',
   Or = 'OR'
 }
-
-export type SelectCategoriesInput = {
-  categories?: Array<Scalars['String']['input']>;
-  dimension: Scalars['String']['input'];
-  exclude?: Scalars['Boolean']['input'];
-  flatten?: Scalars['Boolean']['input'];
-};
 
 export type SetForecastFromInput = {
   year: Scalars['Int']['input'];

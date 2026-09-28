@@ -17,7 +17,7 @@ export const GET_PLANS_BY_HOSTNAME: TypedDocumentNode<
         hostname
         redirectToHostname
         basePath
-        status
+        availability
         statusMessage
       }
       domains {
@@ -25,14 +25,16 @@ export const GET_PLANS_BY_HOSTNAME: TypedDocumentNode<
         hostname
         redirectToHostname
         basePath
-        status
+        availability
         statusMessage
       }
+      identifier
+      name
+      themeIdentifier
       primaryLanguage
       statusMessage
       ... on Plan {
         id
-        identifier
         otherLanguages
       }
     }

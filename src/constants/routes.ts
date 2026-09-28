@@ -5,6 +5,8 @@ export const ACTIONS_PATH = '/actions';
 
 export const UNPUBLISHED_PATH = '/unpublished';
 
+export const SIGN_IN_REQUIRED_PATH = '/sign-in-required';
+
 export const PLEDGE_PATH = '/pledges';
 
 export const STATIC_ROUTES = [

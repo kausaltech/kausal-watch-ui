@@ -3,14 +3,14 @@
  */
 import type { NextRequest, NextResponse } from 'next/server';
 
-import { PlanDomainStatus } from '@/common/__generated__/graphql';
+import { PlanDomainAvailability } from '@/common/__generated__/graphql';
 
 import type * as MiddlewareUtilsModule from '../middleware.utils';
 import {
   type PlanFromPlansQuery,
   applySecurityHeaders,
   buildReportOnlyPolicy,
-  getDomainStatus,
+  getDomainAvailability,
   getLocaleAndPlan,
   getParsedLocale,
   isPlanAvailable,
@@ -355,74 +355,82 @@ describe('applySecurityHeaders over plain HTTP', () => {
   });
 });
 
-describe('domain status', () => {
-  const planWithStatus = (status: PlanDomainStatus | null) =>
-    ({ ...MOCK_PLAN, domain: { status } }) as PlanFromPlansQuery;
+describe('domain availability', () => {
+  const planWithAvailability = (availability: PlanDomainAvailability | null) =>
+    ({ ...MOCK_PLAN, domain: { availability } }) as PlanFromPlansQuery;
 
   it.each([
-    [PlanDomainStatus.Available, true],
-    [PlanDomainStatus.Unavailable, false],
-    [PlanDomainStatus.SignInRequired, false],
-  ])('serves the site only when the backend says %s', (status, expected) => {
-    expect(isPlanAvailable(planWithStatus(status))).toBe(expected);
+    [PlanDomainAvailability.Available, true],
+    [PlanDomainAvailability.Unavailable, false],
+    [PlanDomainAvailability.SignInRequired, false],
+  ])('serves the site only when the backend says %s', (availability, expected) => {
+    expect(isPlanAvailable(planWithAvailability(availability))).toBe(expected);
   });
 
-  describe('a backend that predates the surface-status vocabulary', () => {
-    // Deploying the UI before the backend must not darken every site. The old values come from
-    // the PublicationStatus enum the field used to carry.
-    const legacy = (status: string, typename: 'Plan' | 'RestrictedPlanNode') =>
-      ({ ...MOCK_PLAN, __typename: typename, domain: { status } }) as unknown as PlanFromPlansQuery;
+  describe('a value this UI does not recognise', () => {
+    const unknown = (typename: 'Plan' | 'RestrictedPlanNode') =>
+      ({
+        ...MOCK_PLAN,
+        __typename: typename,
+        domain: { availability: 'SOMETHING_NEW' },
+      }) as unknown as PlanFromPlansQuery;
 
-    it.each(['PUBLISHED', 'UNPUBLISHED', 'SCHEDULED'])(
-      'falls back to __typename when the status is %s',
-      (status) => {
-        expect(isPlanAvailable(legacy(status, 'Plan'))).toBe(true);
-        expect(isPlanAvailable(legacy(status, 'RestrictedPlanNode'))).toBe(false);
-      }
-    );
+    it('falls back to __typename', () => {
+      expect(isPlanAvailable(unknown('Plan'))).toBe(true);
+      expect(isPlanAvailable(unknown('RestrictedPlanNode'))).toBe(false);
+    });
 
     it('still offers a way in for a restricted plan', () => {
-      // The old backend cannot say whether signing in would help, and it offered a link by
-      // default, so stranding someone who has access would be the worse guess.
-      expect(getDomainStatus(legacy('UNPUBLISHED', 'RestrictedPlanNode'))).toBe(
-        PlanDomainStatus.SignInRequired
+      expect(getDomainAvailability(unknown('RestrictedPlanNode'))).toBe(
+        PlanDomainAvailability.SignInRequired
       );
     });
   });
 
-  it('treats a missing status as whatever __typename says', () => {
+  it('treats a missing availability as whatever __typename says', () => {
     // The field is nullable in the schema, and a plan reached without a hostname has no domain.
-    // Every plan from this query carries a __typename, so that is what decides.
     const served = { ...MOCK_PLAN, __typename: 'Plan' } as PlanFromPlansQuery;
-    expect(getDomainStatus(served)).toBe(PlanDomainStatus.Available);
-    expect(isPlanAvailable({ ...served, domain: { status: null } } as PlanFromPlansQuery)).toBe(
-      true
-    );
+    expect(getDomainAvailability(served)).toBe(PlanDomainAvailability.Available);
+    expect(
+      isPlanAvailable({ ...served, domain: { availability: null } } as PlanFromPlansQuery)
+    ).toBe(true);
   });
 });
 
 describe('resolveStalePlan', () => {
-  const restricted = (status: PlanDomainStatus, statusMessage: string | null = null) =>
+  const restricted = (availability: PlanDomainAvailability, statusMessage: string | null = null) =>
     ({
       __typename: 'RestrictedPlanNode',
+      identifier: 'private-plan',
+      name: 'Private plan',
+      themeIdentifier: 'de-nrw',
       primaryLanguage,
       statusMessage: null,
-      domain: { status, statusMessage, basePath: null },
+      domain: { availability, statusMessage, basePath: null },
       domains: [{ basePath: null }],
     }) as unknown as PlanFromPlansQuery;
 
-  it('names the placeholder the proxy would have rewritten to', () => {
-    expect(resolveStalePlan('/', [restricted(PlanDomainStatus.SignInRequired, 'Soon')])).toEqual({
-      kind: 'unavailable',
-      status: PlanDomainStatus.SignInRequired,
-      message: 'Soon',
+  it('names the sign-in page, and what it needs to present the plan', () => {
+    expect(resolveStalePlan('/', [restricted(PlanDomainAvailability.SignInRequired)])).toEqual({
+      kind: 'sign-in-required',
+      plan: {
+        planIdentifier: 'private-plan',
+        planName: 'Private plan',
+        themeIdentifier: 'de-nrw',
+        homePath: '/',
+      },
     });
   });
 
+  it('names the placeholder, with the message the backend gives', () => {
+    expect(resolveStalePlan('/', [restricted(PlanDomainAvailability.Unavailable, 'Soon')])).toEqual(
+      { kind: 'unavailable', message: 'Soon' }
+    );
+  });
+
   it('leaves no message when the backend gives none', () => {
-    expect(resolveStalePlan('/', [restricted(PlanDomainStatus.Unavailable)])).toEqual({
+    expect(resolveStalePlan('/', [restricted(PlanDomainAvailability.Unavailable)])).toEqual({
       kind: 'unavailable',
-      status: PlanDomainStatus.Unavailable,
       message: undefined,
     });
   });
@@ -435,7 +443,7 @@ describe('resolveStalePlan', () => {
     const available = {
       ...MOCK_PLAN,
       __typename: 'Plan',
-      domain: { status: PlanDomainStatus.Available, basePath: null },
+      domain: { availability: PlanDomainAvailability.Available, basePath: null },
       domains: [{ basePath: null }],
     } as unknown as PlanFromPlansQuery;
 
@@ -475,17 +483,17 @@ describe('a hostname shared by several plans', () => {
   const planAt = (
     basePath: string,
     typename: 'Plan' | 'RestrictedPlanNode',
-    status: PlanDomainStatus
+    availability: PlanDomainAvailability
   ) =>
     ({
       ...MOCK_PLAN,
       __typename: typename,
-      domain: { basePath, status },
-      domains: [{ basePath, status }],
+      domain: { basePath, availability },
+      domains: [{ basePath, availability }],
     }) as unknown as PlanFromPlansQuery;
 
-  const open = planAt('/open', 'Plan', PlanDomainStatus.Available);
-  const closed = planAt('/closed', 'RestrictedPlanNode', PlanDomainStatus.SignInRequired);
+  const open = planAt('/open', 'Plan', PlanDomainAvailability.Available);
+  const closed = planAt('/closed', 'RestrictedPlanNode', PlanDomainAvailability.SignInRequired);
   const plans = [open, closed];
 
   it('picks the restricted plan by its base path rather than its served neighbour', () => {
@@ -493,7 +501,7 @@ describe('a hostname shared by several plans', () => {
 
     expect(parsedPlan).toBe(closed);
     expect(isPlanAvailable(parsedPlan!)).toBe(false);
-    expect(getDomainStatus(parsedPlan!)).toBe(PlanDomainStatus.SignInRequired);
+    expect(getDomainAvailability(parsedPlan!)).toBe(PlanDomainAvailability.SignInRequired);
   });
 
   it('picks the served plan at its own base path', () => {

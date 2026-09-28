@@ -1,4 +1,4 @@
-import { checkAccountStatus, isAccessRequestFlowEnabled } from '@/utils/access-requests';
+import { checkAccountStatus } from '@/utils/access-requests';
 
 jest.mock('@common/env', () => ({ getWatchBackendUrl: () => 'https://backend.test' }));
 
@@ -48,26 +48,5 @@ describe('checkAccountStatus', () => {
 
     mockResponse(500, {});
     await expect(checkAccountStatus('a@example.com')).rejects.toThrow();
-  });
-});
-
-describe('isAccessRequestFlowEnabled', () => {
-  const original = process.env.MOCK_ACCESS_REQUEST_HOSTNAMES;
-  afterEach(() => {
-    process.env.MOCK_ACCESS_REQUEST_HOSTNAMES = original;
-  });
-
-  it('is enabled only for the configured hostnames', () => {
-    process.env.MOCK_ACCESS_REQUEST_HOSTNAMES = 'plan.example.com, Other.example.com';
-
-    expect(isAccessRequestFlowEnabled('plan.example.com')).toBe(true);
-    expect(isAccessRequestFlowEnabled('other.example.com')).toBe(true);
-    expect(isAccessRequestFlowEnabled('unlisted.example.com')).toBe(false);
-  });
-
-  it('is disabled when nothing is configured', () => {
-    delete process.env.MOCK_ACCESS_REQUEST_HOSTNAMES;
-
-    expect(isAccessRequestFlowEnabled('plan.example.com')).toBe(false);
   });
 });

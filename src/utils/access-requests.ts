@@ -1,20 +1,5 @@
 import { getWatchBackendUrl } from '@common/env';
 
-/**
- * Whether a restricted plan lets visitors request access instead of only signing in.
- *
- * TODO: Mocked until the backend exposes a plan setting for access requests. Enabled for the
- * comma-separated hostnames in `MOCK_ACCESS_REQUEST_HOSTNAMES`.
- */
-export function isAccessRequestFlowEnabled(hostname: string): boolean {
-  const hostnames = (process.env.MOCK_ACCESS_REQUEST_HOSTNAMES ?? '')
-    .split(',')
-    .map((h) => h.trim().toLowerCase())
-    .filter(Boolean);
-
-  return hostnames.includes(hostname.toLowerCase());
-}
-
 export type AccountStatus =
   'sign-in' | 'request-access' | 'approved-without-password' | 'invalid-email';
 
@@ -55,9 +40,4 @@ export async function checkAccountStatus(email: string): Promise<AccountStatus> 
     default:
       throw new Error(`Unexpected login check result: ${code ?? 'no code'}`);
   }
-}
-
-/** TODO: Mocked until the backend accepts access requests. */
-export async function submitAccessRequest(_email: string): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, 400));
 }
