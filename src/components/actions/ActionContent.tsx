@@ -46,6 +46,7 @@ import IndicatorCausalVisualisation from '@/components/indicators/IndicatorCausa
 import ActionVersionHistory from '@/components/versioning/ActionVersionHistory';
 import { ACTION_CONTENT_MAIN_BOTTOM } from '@/constants/containers';
 import { type PlanContextType, usePlan } from '@/context/plan';
+import { PRINT_MODE_SELECTOR } from '@/context/print';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 
 import ChangeHistory from '../common/ChangeHistory';
@@ -152,8 +153,8 @@ const StyledContentGrid = styled(Container)`
     grid-template-columns: 8fr 4fr;
   }
 
-  /* Single column like the (narrower than md) printed page, also while the PDF export renders on a wider screen */
-  @media print {
+  /* Single column like the printed page, which is narrower than md */
+  ${PRINT_MODE_SELECTOR} & {
     grid-template-columns: none;
     grid-template-rows: none;
     grid-template-areas:
