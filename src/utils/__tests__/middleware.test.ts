@@ -11,6 +11,7 @@ import {
   applySecurityHeaders,
   buildReportOnlyPolicy,
   getDomainStatus,
+  getLocaleAndPlan,
   getParsedLocale,
   isPlanAvailable,
   resolveStalePlan,
@@ -421,5 +422,42 @@ describe('hostname plan cache', () => {
 
     pageCopy!.evictHostnamePlans('shared.example.com');
     expect(proxyCopy!.getCachedHostnamePlans('shared.example.com')).toBeUndefined();
+  });
+});
+
+describe('a hostname shared by several plans', () => {
+  // A regional site carries several plans on one hostname, separated by base path. The backend
+  // answers for every plan on the hostname and cannot know the path, so choosing between them is
+  // this layer's job — including when the chosen one is not being served, which is exactly when
+  // picking the neighbour instead would show a site that should not be shown.
+  const planAt = (
+    basePath: string,
+    typename: 'Plan' | 'RestrictedPlanNode',
+    status: PlanDomainStatus
+  ) =>
+    ({
+      ...MOCK_PLAN,
+      __typename: typename,
+      domain: { basePath, status },
+      domains: [{ basePath, status }],
+    }) as unknown as PlanFromPlansQuery;
+
+  const open = planAt('/open', 'Plan', PlanDomainStatus.Available);
+  const closed = planAt('/closed', 'RestrictedPlanNode', PlanDomainStatus.SignInRequired);
+  const plans = [open, closed];
+
+  it('picks the restricted plan by its base path rather than its served neighbour', () => {
+    const { parsedPlan } = getLocaleAndPlan(`/${primaryLanguage}/closed/actions`, plans);
+
+    expect(parsedPlan).toBe(closed);
+    expect(isPlanAvailable(parsedPlan!)).toBe(false);
+    expect(getDomainStatus(parsedPlan!)).toBe(PlanDomainStatus.SignInRequired);
+  });
+
+  it('picks the served plan at its own base path', () => {
+    const { parsedPlan } = getLocaleAndPlan(`/${primaryLanguage}/open/actions`, plans);
+
+    expect(parsedPlan).toBe(open);
+    expect(isPlanAvailable(parsedPlan!)).toBe(true);
   });
 });
