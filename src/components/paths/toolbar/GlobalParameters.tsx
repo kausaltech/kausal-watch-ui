@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { NetworkStatus, gql } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Button, Col, FormFeedback, FormGroup, Input, InputGroup, Label, Row } from 'reactstrap';
+import { Col, FormFeedback, FormGroup, Input, InputGroup, Label, Row } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 

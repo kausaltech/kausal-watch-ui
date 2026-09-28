@@ -5,9 +5,10 @@ import styled from '@emotion/styled';
 
 import { useLocale, useTranslations } from 'next-intl';
 import { PropTypes } from 'prop-types';
-import { Button, Collapse } from 'reactstrap';
+import { Collapse } from 'reactstrap';
 
 import dayjs from '@/common/dayjs';
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import RichText from '@/components/common/RichText';
 import { usePlan } from '@/context/plan';
@@ -28,6 +29,7 @@ const TaskMeta = styled.div`
 `;
 
 const ToggleButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   padding: 0;
   margin: 0;
   color: ${(props) => props.theme.themeColors.dark};
@@ -35,6 +37,7 @@ const ToggleButton = styled(Button)`
 
   &:hover {
     text-decoration: underline;
+    background-color: transparent;
   }
 
   &.open {
@@ -169,7 +172,12 @@ const Task = (props) => {
         {/* Strip HTML tags to see if details field is actually empty */}
         {task.details?.replace(/(<([^>]+)>)/gi, '').length > 0 && (
           <>
-            <ToggleButton color="link" onClick={toggle} size="sm" className={isOpen ? 'open' : ''}>
+            <ToggleButton
+              variant="link"
+              onClick={toggle}
+              size="small"
+              className={isOpen ? 'open' : ''}
+            >
               {isOpen ? t('action-task-hide-details') : t('action-task-show-details')}
               <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
             </ToggleButton>

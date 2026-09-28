@@ -326,7 +326,7 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
 
       {(hasRest || shouldFallbackCollapse) && (
         <BreakPoint>
-          <ToggleButton color="link" onClick={toggle} className={isOpen ? 'open' : ''}>
+          <ToggleButton variant="link" onClick={toggle} className={isOpen ? 'open' : ''}>
             {isOpen ? t('close') : t('read-more')}
             <Icon name={isOpen ? 'angle-up' : 'angle-down'} />
           </ToggleButton>

@@ -1,6 +1,7 @@
 import type { Ref } from 'react';
 import React, { createRef, useCallback, useEffect, useMemo, useState } from 'react';
 
+import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
 
 import { useTheme } from '@emotion/react';
@@ -11,7 +12,7 @@ import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { createFilter } from 'react-select';
-import { ButtonGroup, Col, Collapse, FormGroup, Input, Button as RButton, Row } from 'reactstrap';
+import { Col, Collapse, FormGroup, Input, Row } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -149,7 +150,12 @@ const StyledBadge = styled('span', transientOptions)<{ $color?: string }>`
   }
 `;
 
-const ToggleButton = styled(RButton)`
+const RadioButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
+`;
+
+const ToggleButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   padding: 0;
   margin: 0 0 ${(props) => props.theme.spaces.s100} 0;
   color: ${(props) =>
@@ -952,31 +958,29 @@ const FilterField = React.memo(function FilterField({
             {filter.helpText && <PopoverTip identifier={filter.id} content={filter.helpText} />}
           </MainCategoryLabel>
           <ButtonGroup role="radiogroup" aria-labelledby={`label-${filter.id}`}>
-            <RButton
+            <RadioButton
               color="black"
-              outline
+              variant={showAllSelected ? 'contained' : 'outlined'}
               onClick={() => onChange(filter.id, undefined)}
-              active={showAllSelected}
               aria-checked={showAllSelected}
               role="radio"
             >
               {filter.showAllLabel}
-            </RButton>
+            </RadioButton>
             {(filter.options ?? []).map((opt) => {
               const isActive = selectedValue === opt.id;
 
               return (
-                <RButton
+                <RadioButton
                   color="black"
-                  outline
+                  variant={isActive ? 'contained' : 'outlined'}
                   onClick={() => onChange(filter.id, opt.id)}
-                  active={isActive}
                   aria-checked={isActive}
                   key={opt.id}
                   role="radio"
                 >
                   {opt.label}
-                </RButton>
+                </RadioButton>
               );
             })}
           </ButtonGroup>
@@ -1121,7 +1125,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
         {filterSections.map((section) => (
           <React.Fragment key={section.id}>
             {section.hidden ? (
-              <ToggleButton color="link" onClick={toggle}>
+              <ToggleButton variant="link" onClick={toggle}>
                 {t('additional-filters')}
                 <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
               </ToggleButton>
@@ -1148,7 +1152,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
                     xl={2}
                     className="d-flex flex-column justify-content-end"
                   >
-                    <Button type="submit" color={buttonColorName} className="mb-3" block>
+                    <Button type="submit" color={buttonColorName} className="mb-3" fullWidth>
                       {t('search')}
                     </Button>
                   </Col>

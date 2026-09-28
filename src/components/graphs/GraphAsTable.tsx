@@ -3,11 +3,12 @@ import { useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Button, Collapse, Table } from 'reactstrap';
+import { Collapse, Table } from 'reactstrap';
 
 import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import useNumberFormatter from '@/common/numbers';
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import { resolveValueRounding } from '@/components/graphs/indicator-graph.utils';
 
@@ -80,12 +81,14 @@ const TableContainer = styled.div`
   }
 `;
 const TriggerButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   text-decoration: none;
   color: ${(p) => p.theme.linkColor};
-  padding-left: 0;
+  padding: 0.25rem 0.5rem 0.25rem 0;
   &:hover {
     text-decoration: underline;
     color: ${(p) => p.theme.linkColor};
+    background-color: transparent;
   }
 `;
 
@@ -240,7 +243,7 @@ function GraphAsTable({
   }
   return (
     <CollapsibleTable>
-      <TriggerButton color="link" size="sm" onClick={toggle}>
+      <TriggerButton variant="link" size="small" onClick={toggle}>
         {isOpen ? t('graph-hideTable') : t('graph-showTable')}
         <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
       </TriggerButton>

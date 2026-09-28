@@ -329,10 +329,9 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
 
             <StyledActionsRow>
               <StyledCommitButton
-                color="primary"
-                outline={!isCommitted}
+                variant={isCommitted ? 'contained' : 'outlined'}
                 $isCommitted={isCommitted}
-                onClick={handleCommitClick}
+                onClick={() => void handleCommitClick()}
                 aria-pressed={isCommitted}
               >
                 {isUpdatingCommitment ? (
@@ -344,9 +343,8 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
               </StyledCommitButton>
               {isClient && (
                 <ShareButton
-                  color="link"
-                  outline
-                  size="md"
+                  variant="text"
+                  size="medium"
                   title={pledge.name}
                   shareUrl={window.location.href}
                 />

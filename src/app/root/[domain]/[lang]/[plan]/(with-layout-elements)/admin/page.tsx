@@ -55,7 +55,7 @@ export default function AdminPage() {
                 <h1>{t('page-not-found')}</h1>
                 <h2>{t('admin-login-not-defined')}</h2>
                 <Link href="/">
-                  <Button outline color="dark" size="sm">
+                  <Button variant="outlined" color="dark" size="small">
                     {t('return-to-front')}
                   </Button>
                 </Link>

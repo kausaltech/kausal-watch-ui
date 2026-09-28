@@ -1,188 +1,175 @@
 import React from 'react';
 
+import MuiButton, { type ButtonProps as MuiButtonProps } from '@mui/material/Button';
+
+import { type Theme, css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { readableColor, shade, transparentize } from 'polished';
-import { Button as BSButton, type ButtonProps as BSButtonProps } from 'reactstrap';
 
-const StyledButton = styled(BSButton)`
-  padding: ${({ theme }) => `${theme.inputBtnPaddingY} ${theme.inputBtnPaddingX}`};
-  border-radius: ${({ theme }) => theme.btnBorderRadius};
-  border-width: ${({ theme }) => theme.btnBorderWidth};
-  font-weight: ${({ theme }) => theme.fontWeightBold};
-  text-decoration: none;
+import { transientOptions } from '@common/themes/styles/styled';
 
-  &:hover {
-    text-decoration: none;
-  }
+type ButtonColor = 'primary' | 'secondary' | 'light' | 'dark' | 'black';
 
-  &.btn {
-    &:not(:disabled):not(.disabled):active:focus,
-    &:not(:disabled):not(.disabled):focus,
-    &.focus {
-      box-shadow: 0 0 0 0.25rem ${(props) => props.theme.inputBtnFocusColor};
-    }
-  }
+/**
+ * `link` renders a text button styled like a link; `text` renders a plain
+ * button in the surrounding text colour.
+ */
+type ButtonVariant = 'contained' | 'outlined' | 'link' | 'text';
 
-  &.btn-primary {
-    background-color: ${(props) => props.theme.brandDark};
-    border-color: ${(props) => props.theme.brandDark};
-    color: ${(props) =>
-      readableColor(
-        props.theme.brandDark,
-        props.theme.themeColors.black,
-        props.theme.themeColors.white
-      )};
-
-    &:hover {
-      background-color: ${(props) => shade(0.05, props.theme.brandDark)};
-      border-color: ${(props) => shade(0.05, props.theme.brandDark)};
-    }
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: ${(props) => shade(0.075, props.theme.brandDark)};
-      border-color: ${(props) => shade(0.075, props.theme.brandDark)};
-    }
-  }
-
-  &.btn-secondary {
-    background-color: ${(props) => props.theme.brandLight};
-    border-color: ${(props) => props.theme.brandLight};
-
-    &:hover {
-      background-color: ${(props) => shade(0.05, props.theme.brandLight)};
-      border-color: ${(props) => shade(0.1, props.theme.brandLight)};
-    }
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: ${(props) => shade(0.1, props.theme.brandLight)};
-      border-color: ${(props) => shade(0.1, props.theme.brandLight)};
-    }
-  }
-
-  &.btn-outline-primary {
-    color: ${(props) => props.theme.linkColor} !important;
-    border-color: ${(props) => props.theme.linkColor} !important;
-
-    svg {
-      fill: ${(props) => props.theme.linkColor} !important;
-    }
-
-    &:hover {
-      background-color: ${(props) => transparentize(0.9, props.theme.linkColor)};
-    }
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: ${(props) => transparentize(0.8, props.theme.linkColor)};
-    }
-  }
-
-  &.btn-outline-secondary {
-    color: ${(props) => props.theme.brandLight} !important;
-    border-color: ${(props) => props.theme.brandLight} !important;
-
-    svg {
-      fill: ${(props) => props.theme.brandLight} !important;
-    }
-
-    &:hover {
-      background-color: ${(props) => transparentize(0.9, props.theme.brandLight)};
-    }
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: ${(props) => transparentize(0.8, props.theme.brandLight)};
-    }
-  }
-
-  &.btn-outline-light {
-    color: ${(props) => props.theme.themeColors.light} !important;
-    border-color: ${(props) => props.theme.themeColors.light} !important;
-
-    svg {
-      fill: ${(props) => props.theme.themeColors.light} !important;
-    }
-
-    &:hover {
-      background-color: ${(props) => transparentize(0.9, props.theme.themeColors.light)};
-    }
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: ${(props) => transparentize(0.8, props.theme.themeColors.light)};
-    }
-  }
-
-  &.btn-outline-dark {
-    color: ${(props) => props.theme.themeColors.dark} !important;
-    border-color: ${(props) => props.theme.themeColors.dark} !important;
-
-    svg {
-      fill: ${(props) => props.theme.themeColors.dark} !important;
-    }
-
-    &:hover {
-      background-color: ${(props) => transparentize(0.9, props.theme.themeColors.dark)};
-    }
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: ${(props) => transparentize(0.8, props.theme.themeColors.dark)};
-    }
-  }
-
-  &.btn-link {
-    color: ${(props) => props.theme.linkColor};
-    text-decoration: underline;
-
-    &:hover {
-      text-decoration: none;
-      background-color: ${(props) => transparentize(0.9, props.theme.linkColor)};
-    }
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: ${(props) => transparentize(0.8, props.theme.linkColor)};
-    }
-  }
-`;
-
-type ButtonProps = BSButtonProps & {
-  /**
-   * Button rendered as outline
-   */
-  outline?: boolean;
-  /**
-   * Button active state
-   */
-  active?: boolean;
-  /**
-   * Render as close button
-   */
-  close?: boolean;
-  /**
-   * Render as block button
-   */
-  block?: boolean;
-  /**
-   * What background color to use
-   */
-  color?:
-    'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'link';
-  /**
-   * How large should the button be?
-   */
-  size?: 'sm' | 'lg';
-  /**
-   * Optional click handler
-   */
-  onClick?: () => void;
-  children: React.ReactNode;
+export type ButtonProps = Omit<MuiButtonProps, 'color' | 'variant'> & {
+  variant?: ButtonVariant;
+  color?: ButtonColor;
 };
 
-const Button = React.forwardRef<typeof StyledButton, ButtonProps>((props, _ref) => {
-  const { children } = props;
+function getButtonColor(theme: Theme, color: ButtonColor, variant: ButtonVariant) {
+  switch (color) {
+    case 'primary':
+      return variant === 'contained' ? theme.brandDark : theme.linkColor;
+    case 'secondary':
+      return theme.brandLight;
+    case 'light':
+      return theme.themeColors.light;
+    case 'dark':
+      return theme.themeColors.dark;
+    case 'black':
+      return theme.themeColors.black;
+  }
+}
 
-  // TODO: Do we need a ref here?
-  return <StyledButton {...props}>{children}</StyledButton>;
+const variantStyles = ({
+  theme,
+  $color,
+  $variant,
+}: {
+  theme: Theme;
+  $color: ButtonColor;
+  $variant: ButtonVariant;
+}) => {
+  if ($variant === 'text') {
+    return css`
+      color: inherit;
+
+      &:hover {
+        background-color: transparent;
+      }
+    `;
+  }
+
+  if ($variant === 'link') {
+    return css`
+      color: ${theme.linkColor};
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+        background-color: ${transparentize(0.9, theme.linkColor)};
+      }
+
+      &:active {
+        background-color: ${transparentize(0.8, theme.linkColor)};
+      }
+    `;
+  }
+
+  const color = getButtonColor(theme, $color, $variant);
+
+  if ($variant === 'outlined') {
+    return css`
+      color: ${color};
+      border-color: ${color};
+
+      svg {
+        fill: ${color};
+      }
+
+      &:hover {
+        border-color: ${color};
+        background-color: ${transparentize(0.9, color)};
+      }
+
+      &:active {
+        background-color: ${transparentize(0.8, color)};
+      }
+
+      &.Mui-disabled {
+        color: ${color};
+        border-color: ${color};
+      }
+    `;
+  }
+
+  const textColor = readableColor(color, theme.themeColors.black, theme.themeColors.white);
+  return css`
+    color: ${textColor};
+    background-color: ${color};
+    border-color: ${color};
+
+    &:hover {
+      background-color: ${shade(0.05, color)};
+      border-color: ${shade(0.05, color)};
+    }
+
+    &:active {
+      background-color: ${shade(0.075, color)};
+      border-color: ${shade(0.075, color)};
+    }
+
+    &.Mui-disabled {
+      color: ${textColor};
+      background-color: ${color};
+      border-color: ${color};
+    }
+  `;
+};
+
+const StyledButton = styled(MuiButton, transientOptions)<{
+  $color: ButtonColor;
+  $variant: ButtonVariant;
+}>`
+  display: inline-block;
+  min-width: 0;
+  text-align: center;
+  vertical-align: middle;
+  border: ${({ theme }) => theme.btnBorderWidth} solid transparent;
+  font-size: ${({ theme }) => theme.fontSizeBase};
+  line-height: ${({ theme }) => theme.lineHeightBase};
+  letter-spacing: normal;
+  text-decoration: none;
+
+  &.MuiButton-sizeSmall {
+    font-size: 0.75rem;
+  }
+
+  &.MuiButton-sizeLarge {
+    font-size: ${({ theme }) => theme.fontSizeMd};
+  }
+
+  &.Mui-disabled {
+    opacity: 0.65;
+  }
+
+  ${variantStyles}
+`;
+
+/**
+ * A button in the plan theme's colours. Renders MUI's `Button`, with the
+ * variant and colour mapped to the theme's brand and link colours.
+ */
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { variant = 'contained', color = 'primary', ...props },
+  ref
+) {
+  return (
+    <StyledButton
+      ref={ref}
+      variant={variant === 'link' ? 'text' : variant}
+      color="inherit"
+      $color={color}
+      $variant={variant}
+      {...props}
+    />
+  );
 });
-
-Button.displayName = 'Button';
 
 export default Button;

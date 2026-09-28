@@ -156,10 +156,31 @@ Status: done on `feat/bye-reactstrap`. 25 files changed, and files importing rea
 
 Results against the step 1 screenshots: 60 of 72 unchanged. The 12 that changed are the two badges above.
 
-### 3. Buttons and collapses (~25 files)
+### 3. Buttons and collapses
 
-1. The `Button` wrapper, then its direct users.
-2. `Collapse`/`UncontrolledCollapse`: Accordion, RichText, ContactPerson, TaskList, GraphAsTable, ReportComparisonBlock, ActionVersionHistory, the paths toolbar.
+**Buttons: done.** 27 files changed. No reactstrap `Button`, `ButtonGroup` or `ButtonToggle` is left, and files importing reactstrap went from 112 to 107.
+
+- **The shared `@/components/common/Button`** renders MUI's `Button` in the plan theme's colours. Its API follows MUI:
+  - `variant`: `contained` (the default), `outlined`, `link` (a text button styled as a link) or `text` (a plain button in the surrounding text colour);
+  - `color`: `primary` (the default), `secondary`, `light`, `dark` or `black`;
+  - MUI's `size` and `fullWidth`.
+- **Conversions at call sites:**
+  - `outline` → `variant="outlined"`;
+  - `color="link"` → `variant="link"`;
+  - reactstrap's undefined `btn-outline-link` (as in `color="link" outline`) → `variant="text"`, because it rendered as a plain button;
+  - `size="sm"` → `size="small"`, and `block` → `fullWidth`;
+  - `active` in the radio-style groups → `variant={active ? 'contained' : 'outlined'}` inside MUI's `ButtonGroup`, keeping their radio roles and keyboard handling.
+- **Look kept the same:**
+  - Bootstrap's `inline-block` layout keeps the space between a button's text and its icon (MUI's `inline-flex` drops it).
+  - Bootstrap's line height, and 0.75rem for small buttons.
+  - Buttons that used reactstrap directly keep Bootstrap's normal font weight and small padding. The shared wrapper makes buttons bold, with the theme's padding.
+- **Unchanged screenshots:** all 72 match the pre-button reference, within the 200-pixel tolerance.
+- **Not covered by the screenshots:** hover, focus and disabled states, and pages outside the capture set (pledges, the dashboard table, the paths toolbar, the admin page). Check these by hand.
+
+**Collapses: to do.**
+
+1. `Collapse` → MUI `Collapse` (`isOpen` becomes `in`) in Accordion, RichText, ContactPerson, TaskList, GraphAsTable, ReportComparisonBlock, ActionVersionHistory, ActionListFilters and ExpandableFeedbackFormBlock. The `Collapse` in `GlobalNav`, `NavBar` and the Zürich `GlobalNav` stays for step 6.
+2. `UncontrolledCollapse` in the paths toolbar (`CompleteSettings`, `GoalOutcomeBar`) gets local open state, and its triggers get `aria-expanded` and `aria-controls`.
 3. Update the `.collapse.show` selector in `e2e-tests/tests/report-comparison.spec.ts`.
 
 ### 4. Cards and tables (~15 files)
