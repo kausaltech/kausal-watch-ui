@@ -237,7 +237,7 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
             )}
             {sortedCategories
               ?.filter(
-                (cat) => (cat?.categoryPage?.live && hasParent(cat, group.id)) ?? group.id === 'all'
+                (cat) => cat?.categoryPage?.live && (group.id === 'all' || hasParent(cat, group.id))
               )
               .map(
                 (cat) =>
