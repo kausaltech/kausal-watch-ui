@@ -186,7 +186,7 @@ Results against the step 1 screenshots: 60 of 72 unchanged. The 12 that changed 
 - **`report-comparison.spec.ts`:** it waits for `.MuiCollapse-entered` instead of `.collapse.show`. It's untested, because none of the screenshot plans has a report comparison block.
 - **Screenshots:** unchanged.
 - **Browser check:** the GraphAsTable, TaskList and ContactPerson toggles open and close correctly.
-- **Existing gap:** most link-style toggles (TaskList, GraphAsTable, RichText, ReportComparisonBlock, ActionVersionHistory) have no `aria-expanded`. That's unchanged from before; ContactPerson and the paths toolbar have it.
+- **Toggle accessibility:** every collapse toggle now has `aria-expanded`, plus `aria-controls` pointing at its panel's `useId()` id. Before, only ContactPerson and the paths toolbar had them.
 
 ### 4. Cards and tables (~15 files)
 
