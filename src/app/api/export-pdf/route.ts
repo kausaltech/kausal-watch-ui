@@ -178,8 +178,8 @@ export async function POST(request: NextRequest) {
     formData.append('files', new Blob([headerHtml], { type: 'text/html' }), 'header.html');
     formData.append('files', new Blob([footerHtml], { type: 'text/html' }), 'footer.html');
 
-    // Wait for iframes to finish loading (the PrintProvider sets this flag).
-    formData.append('waitForExpression', 'window.__iframesReady === true');
+    // Wait until charts, loaders and iframes are done (set by PrintProvider)
+    formData.append('waitForExpression', 'window.__printReady === true');
     // Wait before printing because some elements may take time to render (e.g., SVGs that render asynchronously).
     formData.append('waitDelay', '2s');
 

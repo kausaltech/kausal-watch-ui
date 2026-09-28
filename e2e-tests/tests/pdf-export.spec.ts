@@ -5,7 +5,7 @@ import { test as coverageTest } from '../common/coverage.ts';
 
 declare global {
   interface Window {
-    __iframesReady?: boolean;
+    __printReady?: boolean;
   }
 }
 
@@ -133,15 +133,15 @@ test.describe('pdf-export', { annotation: annotations }, () => {
     expect(download.suggestedFilename()).toBe('export.pdf');
   });
 
-  test('print mode sets __iframesReady', async ({ page, ctx }) => {
+  test('print mode sets __printReady', async ({ page, ctx }) => {
     test.skip(!actionPageUrl, 'No action page URL from previous test');
 
     const printUrl = actionPageUrl + (actionPageUrl.includes('?') ? '&' : '?') + 'print=true';
     await page.goto(printUrl);
     await ctx.waitForLoadingFinished(page);
 
-    // PrintProvider should eventually set __iframesReady to true
-    await page.waitForFunction(() => window.__iframesReady === true, null, {
+    // PrintProvider should eventually set __printReady to true
+    await page.waitForFunction(() => window.__printReady === true, null, {
       timeout: 30_000,
     });
   });
