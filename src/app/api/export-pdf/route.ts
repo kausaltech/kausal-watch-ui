@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import * as Sentry from '@sentry/nextjs';
 
-import { getPdfExportServiceUrl } from '@/utils/pdf-export';
+import { PDF_PAGE, getPdfExportServiceUrl } from '@/utils/pdf-export';
 import { getSitemapUrlsForOrigin, getSitemapUrlsForPlan } from '@/utils/sitemap.server';
 
 export const dynamic = 'force-dynamic';
@@ -184,12 +184,12 @@ export async function POST(request: NextRequest) {
     formData.append('waitDelay', '2s');
 
     // PDF layout options
-    formData.append('marginTop', '1.5');
-    formData.append('marginBottom', '1');
-    formData.append('marginLeft', '0.7');
-    formData.append('marginRight', '0.7');
-    formData.append('paperWidth', '8.27'); // A4
-    formData.append('paperHeight', '11.69'); // A4
+    formData.append('marginTop', String(PDF_PAGE.marginTop));
+    formData.append('marginBottom', String(PDF_PAGE.marginBottom));
+    formData.append('marginLeft', String(PDF_PAGE.marginLeft));
+    formData.append('marginRight', String(PDF_PAGE.marginRight));
+    formData.append('paperWidth', String(PDF_PAGE.width));
+    formData.append('paperHeight', String(PDF_PAGE.height));
     formData.append('printBackground', 'true');
 
     const response = await fetch(`${gotenbergUrl}/forms/chromium/convert/url`, {

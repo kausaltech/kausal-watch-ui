@@ -151,6 +151,16 @@ const StyledContentGrid = styled(Container)`
   @media (min-width: ${(props) => props.theme.breakpointLg}) {
     grid-template-columns: 8fr 4fr;
   }
+
+  /* Single column like the (narrower than md) printed page, also while the PDF export renders on a wider screen */
+  @media print {
+    grid-template-columns: none;
+    grid-template-rows: none;
+    grid-template-areas:
+      'top'
+      'aside'
+      'bottom';
+  }
 `;
 
 const StyledMainTop = styled.div`

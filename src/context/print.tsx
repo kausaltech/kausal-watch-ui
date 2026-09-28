@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
+import { PDF_CONTENT_WIDTH_IN } from '@/utils/pdf-export';
+
 declare global {
   interface Window {
     /** Set in print mode once the page has rendered; the PDF export waits for it. */
@@ -132,5 +134,11 @@ export function PrintProvider({ children }: React.PropsWithChildren) {
 
   usePrintReadyTracker(isPrint);
 
-  return <>{children}</>;
+  return (
+    <>
+      {/* Lay out at the printed width, so charts are drawn at their printed size */}
+      {isPrint && <style>{`html { width: ${PDF_CONTENT_WIDTH_IN}in; }`}</style>}
+      {children}
+    </>
+  );
 }
