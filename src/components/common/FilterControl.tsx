@@ -231,8 +231,7 @@ function FilterControl({ fields, activeFilters, onChange }: FilterControlProps) 
   return (
     <>
       <StyledFilterButton
-        outline
-        color="primary"
+        variant="outlined"
         onClick={handleOpen}
         aria-expanded={isOpen}
         aria-haspopup="dialog"

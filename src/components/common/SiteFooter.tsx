@@ -21,19 +21,17 @@ import Button from './Button';
 import Icon, { type ValidIconName } from './Icon';
 
 const StyledButton = styled(Button)`
-  &.btn-link {
-    font-size: inherit;
-    padding: 0;
+  font-size: inherit;
+  padding: 0;
+  background: transparent;
+  color: ${({ theme }) => theme.footerColor};
+  text-decoration: none;
+  line-height: unset;
+
+  &:hover {
     background: transparent;
     color: ${({ theme }) => theme.footerColor};
-    text-decoration: none;
-    line-height: unset;
-
-    &:hover {
-      background: transparent;
-      color: ${({ theme }) => theme.footerColor};
-      text-decoration: underline;
-    }
+    text-decoration: underline;
   }
 `;
 
@@ -649,7 +647,7 @@ function SiteFooter(props: SiteFooterProps) {
               <UtilityItem>
                 <StyledButton
                   disabled={isAuthLoading}
-                  color="link"
+                  variant="link"
                   onClick={() =>
                     isAuthenticated ? handleSignOut() : void signIn('watch-oidc-provider')
                   }

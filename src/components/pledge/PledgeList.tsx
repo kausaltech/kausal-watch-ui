@@ -5,16 +5,18 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { Chip, Collapse, InputAdornment, TextField } from '@mui/material';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 import styled from '@emotion/styled';
 
 import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { Search } from 'react-bootstrap-icons';
-import { Button, ButtonGroup, Container } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import type { PledgesQuery } from '@/common/__generated__/graphql';
 import { PLEDGE_GRID_IMAGE_SIZES, getImageSrcSet } from '@/common/images';
+import Button from '@/components/common/Button';
 import FilterControl, { type FilterField } from '@/components/common/FilterControl';
 import Icon from '@/components/common/Icon';
 import { getDefaultFormFields } from '@/utils/pledge.utils';
@@ -87,10 +89,8 @@ const StyledContainer = styled(Container)`
 `;
 
 const StyledRadioButton = styled(Button)`
-  &.btn:focus-visible:not(.active) {
-    color: var(--bs-btn-color);
-    background-color: var(--bs-btn-bg);
-  }
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
+  padding: 0.25rem 0.5rem;
 `;
 
 const StyledToolbarContainer = styled.div`
@@ -373,7 +373,6 @@ function PledgeList({ pledges }: Props) {
         <StyledToolbarContainer>
           <StyledToolbarLeft>
             <ButtonGroup
-              size="small"
               role="radiogroup"
               aria-label={t('pledge-list-view-toggle')}
               onKeyDown={handleMyPledgesKeyDown}
@@ -381,9 +380,8 @@ function PledgeList({ pledges }: Props) {
               <StyledRadioButton
                 color="black"
                 size="small"
-                outline
+                variant={view === 'ALL' ? 'contained' : 'outlined'}
                 onClick={() => setView('ALL')}
-                active={view === 'ALL'}
                 aria-checked={view === 'ALL'}
                 role="radio"
                 tabIndex={view === 'ALL' ? 0 : -1}
@@ -393,9 +391,8 @@ function PledgeList({ pledges }: Props) {
               <StyledRadioButton
                 color="black"
                 size="small"
-                outline
+                variant={view === 'MY_PLEDGES' ? 'contained' : 'outlined'}
                 onClick={() => setView('MY_PLEDGES')}
-                active={view === 'MY_PLEDGES'}
                 aria-checked={view === 'MY_PLEDGES'}
                 role="radio"
                 tabIndex={view === 'MY_PLEDGES' ? 0 : -1}

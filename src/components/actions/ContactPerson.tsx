@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Button, Collapse } from 'reactstrap';
+import { Collapse } from 'reactstrap';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
@@ -16,6 +16,7 @@ import {
   type PlanContextFragment,
   PlanFeaturesContactPersonsPublicData,
 } from '@/common/__generated__/graphql';
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
@@ -51,11 +52,6 @@ const Person = styled.div<PersonProps>`
 
 const PersonDetails = styled.div`
   margin-left: 1em;
-
-  .btn-link,
-  .btn-link:hover {
-    color: ${(props) => props.theme.linkColor};
-  }
 `;
 
 const Name = styled.div`
@@ -110,11 +106,13 @@ const Address = styled.address`
 `;
 
 const CollapseButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   padding: 0;
   text-decoration: none;
 
   &:hover {
     text-decoration: underline;
+    background-color: transparent;
   }
 `;
 
@@ -252,8 +250,8 @@ function ContactPerson({ person, leader = false }: ContactPersonProps) {
         {plan.features.contactPersonsPublicData === PlanFeaturesContactPersonsPublicData.All && (
           <CollapseButton
             onClick={() => setCollapse(!collapse)}
-            color="link"
-            size="sm"
+            variant="link"
+            size="small"
             aria-expanded={collapse}
             aria-controls={`contact-${person.id}`}
           >

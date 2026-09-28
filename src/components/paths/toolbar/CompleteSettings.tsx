@@ -4,10 +4,11 @@ import styled from '@emotion/styled';
 
 import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Button, CardBody, Col, Container, Row, UncontrolledCollapse } from 'reactstrap';
+import { CardBody, Col, Container, Row, UncontrolledCollapse } from 'reactstrap';
 
 import { activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import GoalSelector from '@/components/paths/GoalSelector';
 import RangeSelector from '@/components/paths/RangeSelector';
@@ -45,6 +46,7 @@ const Widget = styled.div`
 `;
 
 const AccordionHeader = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   display: flex;
   justify-content: space-between;
   width: 100%;

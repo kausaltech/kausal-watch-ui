@@ -1,11 +1,18 @@
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Button, type ButtonProps } from 'reactstrap';
+
+import Button, { type ButtonProps } from '@/components/common/Button';
 
 import Icon from '../common/Icon';
 
 const StyledShareButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
+
+  &.MuiButton-sizeSmall {
+    padding: 0.25rem 0.5rem;
+  }
+
   display: inline-flex;
   align-items: center;
   gap: ${({ theme }) => theme.spaces.s050};
@@ -30,9 +37,8 @@ export function ShareButton({
 
   return (
     <StyledShareButton
-      color="primary"
-      outline
-      size="sm"
+      variant="outlined"
+      size="small"
       onClick={() => void handleShare()}
       {...buttonProps}
     >

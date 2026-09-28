@@ -6,7 +6,7 @@ import { useQuery, useReactiveVar } from '@apollo/client/react';
 import { max, min, sortBy } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
-import { Button, CardBody, UncontrolledCollapse } from 'reactstrap';
+import { CardBody, UncontrolledCollapse } from 'reactstrap';
 
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 
@@ -16,6 +16,7 @@ import type {
 } from '@/common/__generated__/paths/graphql';
 import type { TFunction } from '@/common/i18n';
 import useNumberFormatter from '@/common/numbers';
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import { usePaths } from '@/context/paths/paths';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';
@@ -57,6 +58,7 @@ const OutcomeBarLoader = (props) => (
 );
 
 const AccordionHeader = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   display: flex;
   justify-content: space-between;
   width: 100%;

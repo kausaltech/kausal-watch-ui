@@ -3,12 +3,13 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Button, Col, Collapse, Row } from 'reactstrap';
+import { Col, Collapse, Row } from 'reactstrap';
 
 import type { ReportComparisonBlockActionContentFragment } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import { getActionTermContext } from '@/common/i18n';
 import ActionAttribute from '@/components/common/ActionAttribute';
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 
@@ -39,6 +40,7 @@ const FieldHeader = styled.div`
 const ReportName = styled.div``;
 
 const ToggleButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   padding: 0;
   margin: 0;
   color: ${(props) => props.theme.themeColors.dark};
@@ -46,6 +48,7 @@ const ToggleButton = styled(Button)`
 
   &:hover {
     text-decoration: underline;
+    background-color: transparent;
   }
 
   &.open {
@@ -132,7 +135,7 @@ const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
           <SectionHeader>
             <h2>{block.reportType?.name}</h2>
             {reports && reports.length > 0 && (
-              <ToggleButton color="link" onClick={toggle} className={isOpen ? 'open' : ''}>
+              <ToggleButton variant="link" onClick={toggle} className={isOpen ? 'open' : ''}>
                 {isOpen ? t('close') : t('open')}
                 <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
               </ToggleButton>

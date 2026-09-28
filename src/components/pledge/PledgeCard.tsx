@@ -282,7 +282,7 @@ function SharePledgeCard({
         <StyledDivider />
         <StyledShareLabel>{t('pledge-success-share-label')}</StyledShareLabel>
         <StyledShareActions>
-          <StyledCopyButton color="primary" outline size="sm" onClick={handleCopyLink}>
+          <StyledCopyButton variant="outlined" size="small" onClick={() => void handleCopyLink()}>
             <Icon name={copied ? 'check' : 'link'} width="16px" height="16px" />
             {copied ? t('copied-to-clipboard') : t('pledge-copy-link')}
           </StyledCopyButton>
@@ -353,9 +353,8 @@ function InteractivePledgeCard({
 
           {!hideCommitButton && (
             <StyledCommitButton
-              color="primary"
-              outline={!isCommitted}
-              size="sm"
+              variant={isCommitted ? 'contained' : 'outlined'}
+              size="small"
               onClick={handleCommitButtonClick}
               $isCommitted={isCommitted}
               aria-pressed={isCommitted}

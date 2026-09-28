@@ -315,7 +315,7 @@ function SearchViewContent(props: SearchViewProps) {
                       <Label for="other-plans-only">{t('other-plans-only')}</Label>
                     </FormGroup>
                   )}
-                  <Button type="submit" color="primary" className="mb-3" block>
+                  <Button type="submit" color="primary" className="mb-3" fullWidth>
                     {t('search')}
                   </Button>
                 </form>
