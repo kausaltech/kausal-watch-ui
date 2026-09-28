@@ -1,10 +1,12 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+
+import Collapse from '@mui/material/Collapse';
 
 import styled from '@emotion/styled';
 
 import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { CardBody, Col, Container, Row, UncontrolledCollapse } from 'reactstrap';
+import { CardBody, Col, Container, Row } from 'reactstrap';
 
 import { activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 
@@ -76,6 +78,8 @@ const Card = styled.div`
 
 const CompleteSettings = (props) => {
   const t = useTranslations();
+  const [isDisplayOpen, setIsDisplayOpen] = useState(true);
+  const [isScenarioOpen, setIsScenarioOpen] = useState(true);
   const paths = usePaths();
   const instance = paths?.instance;
   const activeScenario = useReactiveVar(activeScenarioVar);
@@ -112,11 +116,17 @@ const CompleteSettings = (props) => {
       <SettingsContent>
         <Container fluid="lg">
           <SettingsSection>
-            <AccordionHeader color="primary" id="display-toggler">
+            <AccordionHeader
+              color="primary"
+              id="display-toggler"
+              onClick={() => setIsDisplayOpen(!isDisplayOpen)}
+              aria-expanded={isDisplayOpen}
+              aria-controls="display-settings"
+            >
               <h4>{t('display')}</h4>
               <Icon name="angle-down" width="24px" height="24px" />
             </AccordionHeader>
-            <UncontrolledCollapse toggler="#display-toggler" defaultOpen>
+            <Collapse in={isDisplayOpen} id="display-settings">
               <Card>
                 <CardBody>
                   <DisplaySettings>
@@ -148,16 +158,22 @@ const CompleteSettings = (props) => {
                   </DisplaySettings>
                 </CardBody>
               </Card>
-            </UncontrolledCollapse>
+            </Collapse>
           </SettingsSection>
           <SettingsSection>
-            <AccordionHeader color="primary" id="scenario-toggler">
+            <AccordionHeader
+              color="primary"
+              id="scenario-toggler"
+              onClick={() => setIsScenarioOpen(!isScenarioOpen)}
+              aria-expanded={isScenarioOpen}
+              aria-controls="scenario-settings"
+            >
               <h4>
                 {t('scenario')}: {activeScenario?.name}
               </h4>
               <Icon name="angle-down" width="24px" height="24px" />
             </AccordionHeader>
-            <UncontrolledCollapse toggler="#scenario-toggler" defaultOpen>
+            <Collapse in={isScenarioOpen} id="scenario-settings">
               <Card>
                 <CardBody>
                   <Widget>
@@ -167,7 +183,7 @@ const CompleteSettings = (props) => {
                   {/* TODO: Global parameters when requested */}
                 </CardBody>
               </Card>
-            </UncontrolledCollapse>
+            </Collapse>
           </SettingsSection>
           <SettingsSection>
             <GoalOutcomeBar />

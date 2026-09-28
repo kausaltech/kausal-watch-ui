@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 
 import { usePathname } from 'next/navigation';
 
+import Collapse from '@mui/material/Collapse';
+
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Collapse } from 'reactstrap';
 
 import { isServer } from '@/common/environment';
 import Icon from '@/components/common/Icon';
@@ -107,6 +108,7 @@ const AccordionContent = styled(Collapse)`
     display: block !important;
     height: auto !important;
     overflow: visible !important;
+    visibility: visible !important;
   }
 `;
 
@@ -188,7 +190,7 @@ interface AccordionBodyProps {
 
 const AccordionBody = ({ children, isOpen, identifier }: AccordionBodyProps) => (
   <AccordionContent
-    isOpen={isOpen}
+    in={isOpen}
     role="region"
     id={`#collapse-${identifier}`}
     aria-labelledby={`heading-${identifier}`}

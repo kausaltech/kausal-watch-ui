@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
 
+import Collapse from '@mui/material/Collapse';
+
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Collapse, Table } from 'reactstrap';
+import { Table } from 'reactstrap';
 
 import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
@@ -248,7 +250,7 @@ function GraphAsTable({
         <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
       </TriggerButton>
 
-      <Collapse isOpen={isOpen}>{dataTable}</Collapse>
+      <Collapse in={isOpen}>{dataTable}</Collapse>
     </CollapsibleTable>
   );
 }

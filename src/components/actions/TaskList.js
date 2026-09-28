@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
+import Collapse from '@mui/material/Collapse';
+
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useLocale, useTranslations } from 'next-intl';
 import { PropTypes } from 'prop-types';
-import { Collapse } from 'reactstrap';
 
 import dayjs from '@/common/dayjs';
 import Button from '@/components/common/Button';
@@ -181,7 +182,7 @@ const Task = (props) => {
               {isOpen ? t('action-task-hide-details') : t('action-task-show-details')}
               <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
             </ToggleButton>
-            <Collapse isOpen={isOpen}>
+            <Collapse in={isOpen}>
               <div className="task-details">
                 <RichText html={task.details} />
               </div>

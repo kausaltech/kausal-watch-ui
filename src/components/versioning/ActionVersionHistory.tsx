@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
+import Collapse from '@mui/material/Collapse';
+
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Collapse } from 'reactstrap';
 
 import { deploymentType } from '@/common/environment';
 import { ActionLink } from '@/common/links';
@@ -92,7 +93,7 @@ const ActionVersionHistory = ({ action }: Props) => {
           <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
         </VersionHistoryTitle>
       </ToggleButton>
-      <Collapse isOpen={isOpen}>
+      <Collapse in={isOpen}>
         <VersionHistoryList>
           {versions.reverse().map((v) => (
             <StyledVersionHistoryListItem

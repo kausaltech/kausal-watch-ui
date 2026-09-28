@@ -1,3 +1,7 @@
+import { useState } from 'react';
+
+import Collapse from '@mui/material/Collapse';
+
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -6,7 +10,7 @@ import { useQuery, useReactiveVar } from '@apollo/client/react';
 import { max, min, sortBy } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
-import { CardBody, UncontrolledCollapse } from 'reactstrap';
+import { CardBody } from 'reactstrap';
 
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 
@@ -248,6 +252,7 @@ type GoalOutcomeBarBar = {
 function GoalOutcomeBar(props: GoalOutcomeBarProps) {
   const { compact } = props;
   const t = useTranslations();
+  const [isOutcomeOpen, setIsOutcomeOpen] = useState(true);
   const numberFormatter = useNumberFormatter({ scope: 'paths' });
   const theme = useTheme();
   const paths = usePaths();
@@ -377,14 +382,21 @@ function GoalOutcomeBar(props: GoalOutcomeBarProps) {
         </div>
       ) : (
         <>
-          <AccordionHeader color="primary" id="outcome-toggler" className="settings-section-header">
+          <AccordionHeader
+            color="primary"
+            id="outcome-toggler"
+            className="settings-section-header"
+            onClick={() => setIsOutcomeOpen(!isOutcomeOpen)}
+            aria-expanded={isOutcomeOpen}
+            aria-controls="outcome-settings"
+          >
             <div>
               <h4>{isForecast ? t('scenario-outcome') : t('historical-outcome')}</h4>
               <OutcomeText dangerouslySetInnerHTML={{ __html: verbalizedOutcome }} />
             </div>
             <Icon name="angle-down" width="24px" height="24px" />
           </AccordionHeader>
-          <UncontrolledCollapse toggler="#outcome-toggler" defaultOpen>
+          <Collapse in={isOutcomeOpen} id="outcome-settings">
             <Card>
               <CardBody>
                 <div>
@@ -402,7 +414,7 @@ function GoalOutcomeBar(props: GoalOutcomeBarProps) {
                 </div>
               </CardBody>
             </Card>
-          </UncontrolledCollapse>
+          </Collapse>
         </>
       )}
     </>

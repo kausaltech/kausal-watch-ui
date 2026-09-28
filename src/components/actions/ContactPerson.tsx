@@ -1,12 +1,13 @@
 import { useState } from 'react';
 
+import Collapse from '@mui/material/Collapse';
+
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Collapse } from 'reactstrap';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
@@ -259,7 +260,7 @@ function ContactPerson({ person, leader = false }: ContactPersonProps) {
             <Icon name={collapse ? 'angle-down' : 'angle-right'} />
           </CollapseButton>
         )}
-        <Collapse isOpen={collapse} id={`contact-${person.id}`}>
+        <Collapse in={collapse} id={`contact-${person.id}`}>
           {collapse && <ContactDetails id={person.id} plan={plan} />}
         </Collapse>
       </PersonDetails>
