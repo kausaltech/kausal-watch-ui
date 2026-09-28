@@ -280,7 +280,7 @@ function PledgeFeedbackComponent({
 
                 <Button
                   color="primary"
-                  onClick={handleSubmit}
+                  onClick={() => void handleSubmit()}
                   disabled={mutationLoading || !selectedEmoji}
                 >
                   {mutationLoading ? (
