@@ -2,6 +2,7 @@ import type { Ref } from 'react';
 import React, { createRef, useCallback, useEffect, useMemo, useState } from 'react';
 
 import ButtonGroup from '@mui/material/ButtonGroup';
+import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 
 import { useTheme } from '@emotion/react';
@@ -12,7 +13,7 @@ import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { createFilter } from 'react-select';
-import { Col, Collapse, FormGroup, Input, Row } from 'reactstrap';
+import { Col, FormGroup, Input, Row } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -1130,7 +1131,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
                 <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
               </ToggleButton>
             ) : null}
-            <Collapse isOpen={section.hidden ? isOpen : true}>
+            <Collapse in={section.hidden ? isOpen : true}>
               <FilterSection key={section.id}>
                 {section.filters.map((filter) => (
                   <FilterField

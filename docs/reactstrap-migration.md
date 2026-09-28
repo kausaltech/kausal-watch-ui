@@ -177,11 +177,16 @@ Results against the step 1 screenshots: 60 of 72 unchanged. The 12 that changed 
 - **Unchanged screenshots:** all 72 match the pre-button reference, within the 200-pixel tolerance.
 - **Not covered by the screenshots:** hover, focus and disabled states, and pages outside the capture set (pledges, the dashboard table, the paths toolbar, the admin page). Check these by hand.
 
-**Collapses: to do.**
+**Collapses: done.** 13 files changed. Files importing reactstrap went from 107 to 100. `Collapse` is left only in `GlobalNav`, `NavBar` and the Zürich `GlobalNav`, for step 6.
 
-1. `Collapse` → MUI `Collapse` (`isOpen` becomes `in`) in Accordion, RichText, ContactPerson, TaskList, GraphAsTable, ReportComparisonBlock, ActionVersionHistory, ActionListFilters and ExpandableFeedbackFormBlock. The `Collapse` in `GlobalNav`, `NavBar` and the Zürich `GlobalNav` stays for step 6.
-2. `UncontrolledCollapse` in the paths toolbar (`CompleteSettings`, `GoalOutcomeBar`) gets local open state, and its triggers get `aria-expanded` and `aria-controls`.
-3. Update the `.collapse.show` selector in `e2e-tests/tests/report-comparison.spec.ts`.
+- **`Collapse` → MUI `Collapse`:** `isOpen` becomes `in`, and `id`, `role` and ARIA props pass through to MUI's root element.
+  - MUI hides a closed panel with zero height and `visibility: hidden`, where Bootstrap used `display: none`. So the Accordion's print styles now also force `visibility: visible`.
+- **`UncontrolledCollapse` in the paths toolbar:** each section keeps its open state in `useState(true)`, like `defaultOpen`. Its header button gets `onClick`, `aria-expanded` and `aria-controls`.
+- **`Accordion.test.tsx`:** it checked for Bootstrap's `collapse` class. It now checks only the region's `hidden` attribute.
+- **`report-comparison.spec.ts`:** it waits for `.MuiCollapse-entered` instead of `.collapse.show`. It's untested, because none of the screenshot plans has a report comparison block.
+- **Screenshots:** unchanged.
+- **Browser check:** the GraphAsTable, TaskList and ContactPerson toggles open and close correctly.
+- **Existing gap:** most link-style toggles (TaskList, GraphAsTable, RichText, ReportComparisonBlock, ActionVersionHistory) have no `aria-expanded`. That's unchanged from before; ContactPerson and the paths toolbar have it.
 
 ### 4. Cards and tables (~15 files)
 

@@ -265,8 +265,8 @@ getIdentifiersToTest().forEach((planId) => {
       const toggle = page.locator('button[class*="ReportComparisonBlock-ToggleButton"]').first();
       await toggle.click();
 
-      // Reactstrap animates the collapse in; wait for the open class before asserting content.
-      const openCollapse = page.locator('.collapse.show').first();
+      // MUI animates the collapse in; wait for the open class before asserting content.
+      const openCollapse = page.locator('.MuiCollapse-entered').first();
       await expect(openCollapse).toBeVisible({ timeout: 5000 });
 
       // Identify the card by name and date range. The probed report need not render first:

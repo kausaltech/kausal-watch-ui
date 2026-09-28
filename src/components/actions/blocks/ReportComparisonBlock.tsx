@@ -1,9 +1,11 @@
 import { useState } from 'react';
 
+import Collapse from '@mui/material/Collapse';
+
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Col, Collapse, Row } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 
 import type { ReportComparisonBlockActionContentFragment } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
@@ -144,7 +146,7 @@ const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
         </Col>
       </Row>
       {reports && reports.length > 0 ? (
-        <Collapse isOpen={isOpen}>
+        <Collapse in={isOpen}>
           <ReportFieldComparison>
             {reports.map((report) => (
               <ReportField key={report.identifier}>

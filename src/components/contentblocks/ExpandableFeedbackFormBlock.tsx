@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
+import Collapse from '@mui/material/Collapse';
+
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Collapse } from 'reactstrap';
 
 import { getActionTermContext } from '@/common/i18n';
 import type { ActionContentAction } from '@/components/actions/ActionContent';
@@ -98,7 +99,7 @@ const ExpandableFeedbackFormBlock = ({
         </div>
         <Icon name={isOpen ? 'angle-down' : 'angle-right'} width="2rem" height="2rem" />
       </ContactTriggerButton>
-      <Collapse isOpen={isOpen}>
+      <Collapse in={isOpen}>
         <FeedbackForm
           planIdentifier={plan.identifier}
           actionId={isAction ? action.id : undefined}
