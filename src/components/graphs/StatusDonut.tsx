@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 
 import { Chart } from '@common/components/Chart';
 
+import { escapeHtml } from '@/common/utils';
 import Icon from '@/components/common/Icon';
 import Modal from '@/components/common/Modal';
 
@@ -187,14 +188,6 @@ const formatPrecisePercent = (value: number, total: number) => {
 
   return `${roundedPercent}%`;
 };
-
-const escapeHtml = (value: string | number) =>
-  String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
 
 const getDownloadFilename = (header: string) =>
   header
@@ -471,7 +464,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         show: true,
         right: 0,
         top: 0,
-        itemSize: 18,
+        itemSize: 14,
         feature: {
           saveAsImage: {
             show: true,
