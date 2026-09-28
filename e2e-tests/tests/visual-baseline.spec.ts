@@ -18,9 +18,9 @@ import { type Page, expect, test } from '@playwright/test';
 import { PlanContext, getIdentifiersToTest } from '../common/context.ts';
 
 /**
- * Viewport widths chosen to fall between the Bootstrap breakpoints
- * (576/768/992/1200) and the MUI ones (600/900/1200/1536), so a shift from one
- * set to the other shows up as a layout change.
+ * Viewport widths for the theme breakpoints (sm 600, md 768, lg 1200, xl 1536):
+ * a phone, a tablet in portrait (md), a small laptop (md, but above Bootstrap's
+ * old lg of 992) and a desktop (lg).
  */
 const WIDTHS = [390, 820, 1100, 1440];
 const HEIGHT = 900;
