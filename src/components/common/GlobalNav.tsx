@@ -249,6 +249,31 @@ const EmptyLogo = styled.div`
   }
 `;
 
+export function OrgLogo({ label }: { label: string }) {
+  const theme = useTheme();
+
+  if (theme.navLogoVisible === false) {
+    return <EmptyLogo />;
+  }
+
+  if (theme.themeLogoUrl.endsWith('.png')) {
+    return (
+      // Theme assets are already deployment-owned static files; Next image optimization adds no value.
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={getThemeStaticURL(theme.themeLogoUrl)} alt={label} className="org-logo" />
+    );
+  }
+
+  return (
+    <SVG
+      src={getThemeStaticURL(theme.themeLogoUrl)}
+      title={label}
+      preserveAspectRatio="xMinYMid meet"
+      className="org-logo"
+    />
+  );
+}
+
 const NavLink = styled.div`
   height: 100%;
   a {
@@ -664,31 +689,6 @@ function GlobalNav(props: GlobalNavProps) {
     isPrimaryNavSticky,
   } = useStickyNavigation(sticky);
 
-  const orgLogo = (() => {
-    if (theme.navLogoVisible === false) {
-      return <EmptyLogo />;
-    } else if (theme.themeLogoUrl.endsWith('.png')) {
-      return (
-        // Theme assets are already deployment-owned static files; Next image optimization adds no value.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={getThemeStaticURL(theme.themeLogoUrl)}
-          alt={`${ownerName}, ${siteTitle} ${t('front-page')}`}
-          className="org-logo"
-        />
-      );
-    } else {
-      return (
-        <SVG
-          src={getThemeStaticURL(theme.themeLogoUrl)}
-          title={`${ownerName}, ${siteTitle} ${t('front-page')}`}
-          preserveAspectRatio="xMinYMid meet"
-          className="org-logo"
-        />
-      );
-    }
-  })();
-
   const handleClose = () => setIsOpen(false);
 
   const homeLink = theme.settings.homeLink ?? false;
@@ -710,7 +710,7 @@ function GlobalNav(props: GlobalNavProps) {
         >
           <Site>
             <HomeLink $hideLogoOnMobile={hideLogoOnMobile} href={logoLink}>
-              {orgLogo}
+              <OrgLogo label={`${ownerName}, ${siteTitle} ${t('front-page')}`} />
               <span className="visually-hidden">
                 + {`${ownerName}, ${siteTitle} ${t('front-page')}`}+{' '}
               </span>
@@ -854,5 +854,7 @@ function GlobalNav(props: GlobalNavProps) {
     </div>
   );
 }
+
+export { HomeLink, Site, SiteTitle, TopNav };
 
 export default GlobalNav;
