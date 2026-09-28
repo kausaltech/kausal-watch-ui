@@ -69,7 +69,7 @@ const Timeline = ({
     <StatusTitle>
       {startDate && `${format(startDate)} \u2192 `}
       {continuous && <Badge color="">{`${t('action-continuous')}`}</Badge>}
-      {((!startDate && endDate) ?? (continuous && endDate)) && ' \u2192 '}
+      {endDate && (!startDate || continuous) && ' \u2192 '}
       {endDate && `${format(endDate)}`}
     </StatusTitle>
   );

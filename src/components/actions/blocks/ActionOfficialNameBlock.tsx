@@ -34,7 +34,7 @@ const ActionOfficialNameBlock = (props: ActionOfficialNameBlockProps) => {
   const cleanOfficialText = action.officialName?.replace(/(?:\r\n|\r|\n)/g, '<br>') ?? '';
   if (!cleanOfficialText) return null;
   const caption = block.caption ?? generalContent.officialNameDescription;
-  const fieldLabel = block.fieldLabel ?? t('action-description-official');
+  const fieldLabel = block.fieldLabel || t('action-description-official');
 
   return (
     <OfficialText>

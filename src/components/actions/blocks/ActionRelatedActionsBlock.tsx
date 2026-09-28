@@ -41,7 +41,7 @@ const ActionRelatedActionsBlock = (props: ActionRelatedActionsBlockProps) => {
       <Row>
         <Col>
           <SectionHeader>
-            {heading ?? t('related-actions', getActionTermContext(plan))}
+            {heading || t('related-actions', getActionTermContext(plan))}
             {helpText && <PopoverTip identifier="related-actions-help" content={helpText} />}
           </SectionHeader>
           <RelatedActionList tag="ul">
