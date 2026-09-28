@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import Collapse from '@mui/material/Collapse';
 
@@ -66,6 +66,7 @@ type ActionVersions = (ActionContentAction | ActionContentAction['supersededActi
 const ActionVersionHistory = ({ action }: Props) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(action.supersededBy ? true : false);
+  const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
   const isProduction = deploymentType === 'production';
 
@@ -86,14 +87,20 @@ const ActionVersionHistory = ({ action }: Props) => {
 
   return (
     <VersionHistory>
-      <ToggleButton variant="link" onClick={toggle} className={isOpen ? 'open' : ''}>
+      <ToggleButton
+        variant="link"
+        onClick={toggle}
+        className={isOpen ? 'open' : ''}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+      >
         <VersionHistoryTitle>
           <Icon.Version className="me-2" width="1.5rem" height="1.5rem" />
           {t('version-history')}
           <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
         </VersionHistoryTitle>
       </ToggleButton>
-      <Collapse in={isOpen}>
+      <Collapse in={isOpen} id={panelId}>
         <VersionHistoryList>
           {versions.reverse().map((v) => (
             <StyledVersionHistoryListItem

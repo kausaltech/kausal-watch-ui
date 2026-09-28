@@ -1,5 +1,5 @@
 import type { Ref } from 'react';
-import React, { createRef, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { createRef, useCallback, useEffect, useId, useMemo, useState } from 'react';
 
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Collapse from '@mui/material/Collapse';
@@ -1095,6 +1095,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
   } = props;
 
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
 
   const t = useTranslations();
   const theme = useTheme();
@@ -1126,12 +1127,17 @@ function ActionListFilters(props: ActionListFiltersProps) {
         {filterSections.map((section) => (
           <React.Fragment key={section.id}>
             {section.hidden ? (
-              <ToggleButton variant="link" onClick={toggle}>
+              <ToggleButton
+                variant="link"
+                onClick={toggle}
+                aria-expanded={isOpen}
+                aria-controls={`${panelId}-${section.id}`}
+              >
                 {t('additional-filters')}
                 <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
               </ToggleButton>
             ) : null}
-            <Collapse in={section.hidden ? isOpen : true}>
+            <Collapse in={section.hidden ? isOpen : true} id={`${panelId}-${section.id}`}>
               <FilterSection key={section.id}>
                 {section.filters.map((filter) => (
                   <FilterField

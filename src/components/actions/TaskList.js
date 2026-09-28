@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import Collapse from '@mui/material/Collapse';
 
@@ -149,6 +149,7 @@ const Task = (props) => {
   const locale = useLocale();
   const { task, theme, completed } = props;
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
   const plan = usePlan();
 
@@ -178,11 +179,13 @@ const Task = (props) => {
               onClick={toggle}
               size="small"
               className={isOpen ? 'open' : ''}
+              aria-expanded={isOpen}
+              aria-controls={panelId}
             >
               {isOpen ? t('action-task-hide-details') : t('action-task-show-details')}
               <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
             </ToggleButton>
-            <Collapse in={isOpen}>
+            <Collapse in={isOpen} id={panelId}>
               <div className="task-details">
                 <RichText html={task.details} />
               </div>

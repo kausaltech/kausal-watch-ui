@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 
 import Collapse from '@mui/material/Collapse';
 
@@ -126,6 +126,7 @@ function GraphAsTable({
 }: GraphAsTableProps) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
   const formatNumber = useNumberFormatter({
     maximumSignificantDigits: resolveValueRounding(specification.valueRounding),
@@ -245,12 +246,20 @@ function GraphAsTable({
   }
   return (
     <CollapsibleTable>
-      <TriggerButton variant="link" size="small" onClick={toggle}>
+      <TriggerButton
+        variant="link"
+        size="small"
+        onClick={toggle}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+      >
         {isOpen ? t('graph-hideTable') : t('graph-showTable')}
         <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
       </TriggerButton>
 
-      <Collapse in={isOpen}>{dataTable}</Collapse>
+      <Collapse in={isOpen} id={panelId}>
+        {dataTable}
+      </Collapse>
     </CollapsibleTable>
   );
 }

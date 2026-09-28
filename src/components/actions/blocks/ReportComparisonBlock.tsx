@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import Collapse from '@mui/material/Collapse';
 
@@ -105,6 +105,7 @@ const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
   const { block } = props;
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
   const plan = usePlan();
 
@@ -137,7 +138,13 @@ const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
           <SectionHeader>
             <h2>{block.reportType?.name}</h2>
             {reports && reports.length > 0 && (
-              <ToggleButton variant="link" onClick={toggle} className={isOpen ? 'open' : ''}>
+              <ToggleButton
+                variant="link"
+                onClick={toggle}
+                className={isOpen ? 'open' : ''}
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+              >
                 {isOpen ? t('close') : t('open')}
                 <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
               </ToggleButton>
@@ -146,7 +153,7 @@ const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
         </Col>
       </Row>
       {reports && reports.length > 0 ? (
-        <Collapse in={isOpen}>
+        <Collapse in={isOpen} id={panelId}>
           <ReportFieldComparison>
             {reports.map((report) => (
               <ReportField key={report.identifier}>

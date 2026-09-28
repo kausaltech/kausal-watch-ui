@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import Collapse from '@mui/material/Collapse';
 
@@ -75,6 +75,7 @@ const ExpandableFeedbackFormBlock = ({
   const t = useTranslations();
   const plan = usePlan();
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
 
   const toggle = () => setIsOpen(!isOpen);
   const size = context === 'sidebar' ? 'sm' : 'md';
@@ -91,7 +92,7 @@ const ExpandableFeedbackFormBlock = ({
 
   return (
     <FeedbackFormSection $size={size}>
-      <ContactTriggerButton color="link" onClick={toggle}>
+      <ContactTriggerButton onClick={toggle} aria-expanded={isOpen} aria-controls={panelId}>
         <Icon.Commenting width="2rem" height="2rem" />
         <div>
           <h2>{heading || defaultHeading}</h2>
@@ -99,7 +100,7 @@ const ExpandableFeedbackFormBlock = ({
         </div>
         <Icon name={isOpen ? 'angle-down' : 'angle-right'} width="2rem" height="2rem" />
       </ContactTriggerButton>
-      <Collapse in={isOpen}>
+      <Collapse in={isOpen} id={panelId}>
         <FeedbackForm
           planIdentifier={plan.identifier}
           actionId={isAction ? action.id : undefined}
