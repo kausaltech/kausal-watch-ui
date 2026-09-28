@@ -42,6 +42,10 @@ type GraphAsTableProps = {
 const CollapsibleTable = styled.div`
   background-color: ${(p) => p.theme.themeColors.white};
   margin-bottom: ${(p) => p.theme.spaces.s100};
+
+  @media print {
+    background-color: #fff;
+  }
 `;
 
 const TableContainer = styled.div`

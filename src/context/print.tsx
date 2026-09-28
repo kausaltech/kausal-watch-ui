@@ -122,9 +122,13 @@ function usePrintReadyTracker(isPrint: boolean) {
   }, [isPrint]);
 }
 
+/** True when rendering for the PDF export */
+export function useIsPrintMode() {
+  return useSearchParams().get('print') === 'true';
+}
+
 export function PrintProvider({ children }: React.PropsWithChildren) {
-  const searchParams = useSearchParams();
-  const isPrint = searchParams.get('print') === 'true';
+  const isPrint = useIsPrintMode();
 
   usePrintReadyTracker(isPrint);
 
