@@ -20,6 +20,10 @@ const TableContainer = styled.div`
   margin-bottom: ${(props) => props.theme.spaces.s600};
   padding: ${(props) => props.theme.spaces.s200} 0 0;
   border-collapse: collapse;
+
+  @media print {
+    background-color: #fff;
+  }
 `;
 
 const StyledTable = styled(Table)`

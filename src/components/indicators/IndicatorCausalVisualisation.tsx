@@ -15,6 +15,7 @@ import { aplans } from '@/common/api';
 import Connector from '@/components/indicators/Connector';
 import IndicatorCard, { type IndicatorTimeResolution } from '@/components/indicators/IndicatorCard';
 import { usePlan } from '@/context/plan';
+import { PDF_CONTENT_WIDTH_IN } from '@/utils/pdf-export';
 
 type NodeId = string | number;
 
@@ -49,7 +50,10 @@ type InsightData = {
   edges: CausalEdge[];
 };
 
-const CausalChain = styled.div`
+// StyledIndicator width plus its horizontal margins
+const COLUMN_WIDTH = 280;
+
+const CausalChain = styled.div<{ $printZoom: number }>`
   background-color: ${(props) => props.theme.themeColors.light};
   display: flex;
   flex-wrap: nowrap;
@@ -59,6 +63,8 @@ const CausalChain = styled.div`
 
   @media print {
     background-color: #fff;
+    /* Fit on the page; a wider chain makes Chromium shrink the whole page */
+    zoom: ${(props) => props.$printZoom};
   }
 `;
 
@@ -301,7 +307,8 @@ const InteractiveCausalChain = (props: InteractiveCausalChainProps) => {
     nodes.forEach((node) => {
       const el = indicatorRefs.current[String(node.id)];
       if (el) {
-        heights[String(node.id)] = el.getBoundingClientRect().height;
+        // Unlike getBoundingClientRect(), not scaled by the print zoom
+        heights[String(node.id)] = el.offsetHeight;
       }
     });
 
@@ -385,7 +392,16 @@ const InteractiveCausalChain = (props: InteractiveCausalChainProps) => {
     column += 1;
   }
 
-  return <CausalChain className="causal-chain-visualisation">{chain}</CausalChain>;
+  // Page width in CSS px over the chain's width (columns plus 1em padding).
+  // Not chain.length: the loop above also adds an empty last column.
+  const columnCount = new Set(nodes.map((node) => node.column)).size;
+  const printZoom = Math.min(1, (PDF_CONTENT_WIDTH_IN * 96) / (columnCount * COLUMN_WIDTH + 32));
+
+  return (
+    <CausalChain className="causal-chain-visualisation" $printZoom={printZoom}>
+      {chain}
+    </CausalChain>
+  );
 };
 
 type IndicatorCausalVisualisationProps = {

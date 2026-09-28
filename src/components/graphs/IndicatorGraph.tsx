@@ -41,6 +41,7 @@ import {
   tickSignificantDigits,
   wrapTitle,
 } from './indicator-graph.utils';
+import { useChartBackground } from './use-chart-background';
 
 type IndicatorGraphProps = {
   yRange: YRange;
@@ -101,6 +102,9 @@ function IndicatorGraph({
   const graphSettings = parseGraphSettings(theme.settings?.graphs);
   const colors = resolveGraphColors(graphSettings, theme);
   const useAreaGraph = graphSettings.areaGraphs === true;
+  // The legacy renderer used the tenant-configured custom background as
+  // its plot background; keep honoring it
+  const chartBackground = useChartBackground(graphSettings.customBackground);
   const lineShape = graphSettings.lineShape ?? 'spline';
 
   const hasTimeDimension = useMemo(
@@ -225,13 +229,11 @@ function IndicatorGraph({
         enabled: true,
         label: { description: ariaDescription },
       },
-      // The legacy renderer used the tenant-configured custom background as
-      // its plot background; keep honoring it, white when unset
-      backgroundColor: graphSettings.customBackground || theme.themeColors.white,
+      backgroundColor: chartBackground,
       toolbox: buildSaveAsImageToolbox({
         filename: getChartDownloadFilename(downloadFilename ?? title),
         buttonTitle: t('download-chart-as-png'),
-        backgroundColor: graphSettings.customBackground || theme.themeColors.white,
+        backgroundColor: chartBackground,
       }),
       title: {
         text: wrappedTitle ?? undefined,
@@ -334,7 +336,7 @@ function IndicatorGraph({
     graphSettings.drawGoalLine,
     graphSettings.categorySymbols,
     graphSettings.goalSymbol,
-    graphSettings.customBackground,
+    chartBackground,
     timeResolution,
     yRange,
     trendTrace,

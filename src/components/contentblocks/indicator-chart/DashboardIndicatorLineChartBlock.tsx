@@ -24,6 +24,7 @@ import {
   buildTimeTooltipFormatter,
   getChartDownloadFilename,
 } from '@/components/graphs/indicator-graph.utils';
+import { useChartBackground } from '@/components/graphs/use-chart-background';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
@@ -69,7 +70,7 @@ const DashboardIndicatorLineChartBlock = ({
   });
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
   // Tenant chart background, white when unset (as in IndicatorGraph)
-  const chartBackground = graphsTheme.customBackground || theme.themeColors.white;
+  const chartBackground = useChartBackground(graphsTheme.customBackground);
   const unit = getUnitLabel(indicator);
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const timeResolution = indicator?.timeResolution ?? 'YEAR';

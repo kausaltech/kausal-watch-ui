@@ -18,6 +18,7 @@ import {
   buildSaveAsImageToolbox,
   getChartDownloadFilename,
 } from '@/components/graphs/indicator-graph.utils';
+import { useChartBackground } from '@/components/graphs/use-chart-background';
 
 import { getDefaultColors } from './indicator-chart-colors';
 import {
@@ -196,7 +197,7 @@ const DashboardIndicatorPieChartBlock = ({
   const graphsTheme: GraphsTheme = theme.settings?.graphs ?? {};
   // Same rule as IndicatorGraph: honor the tenant-configured chart
   // background, white when unset
-  const chartBackground = graphsTheme.customBackground || theme.themeColors.white;
+  const chartBackground = useChartBackground(graphsTheme.customBackground);
   const palette = graphsTheme.categoryColors ?? getDefaultColors(theme);
   const { year: assertedYear, slices: seriesData } = selectPieSlices(chartSeries, year);
 

@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
+import { PDF_CONTENT_WIDTH_IN } from '@/utils/pdf-export';
+
 declare global {
   interface Window {
     /** Set in print mode once the page has rendered; the PDF export waits for it. */
@@ -11,18 +13,16 @@ declare global {
   }
 }
 
+/** Matches in PDF export rendering, where media queries still see a screen */
+export const PRINT_MODE_SELECTOR = '[data-print-mode]';
+
 // Set by ContentLoader (also in SSR HTML) and Chart until rendered
 const BUSY_SELECTOR = '[aria-busy="true"]';
 
 // Bridges gaps between chained loads (data arrives, then a chart mounts)
 const SETTLE_DELAY_MS = 500;
 
-// The delay after the last iframe load event before we declare ready.
-// The iframe "load" event fires when the iframe's document finishes
-// loading, but cross-origin content (e.g. embedded charts) may still
-// be rendering via JavaScript after that. Since we can't detect
-// third-party render completion from outside the iframe, we use a
-// fixed delay as a buffer for the content to finish rendering.
+// Cross-origin iframe content may still render after its load event
 const IFRAME_RENDER_DELAY_MS = 3000;
 
 // Print anyway if something stays busy; keep below the export service timeout
@@ -82,11 +82,7 @@ function usePrintReadyTracker(isPrint: boolean) {
       pendingIframes++;
       iframe.addEventListener('load', onLoad);
 
-      // Since useEffect runs after paint, iframes already in the DOM may
-      // have finished loading before we attach the listener. Likewise,
-      // iframes added later via Suspense may already be loaded by the time
-      // the MutationObserver fires. Reassigning src forces the browser to
-      // re-trigger the load event so we can reliably detect completion.
+      // It may have loaded before we listened; reassigning src fires load again
       if (iframe.src) {
         iframe.setAttribute('src', iframe.src);
       }
@@ -126,11 +122,25 @@ function usePrintReadyTracker(isPrint: boolean) {
   }, [isPrint]);
 }
 
+/** True when rendering for the PDF export */
+export function useIsPrintMode() {
+  return useSearchParams().get('print') === 'true';
+}
+
 export function PrintProvider({ children }: React.PropsWithChildren) {
-  const searchParams = useSearchParams();
-  const isPrint = searchParams.get('print') === 'true';
+  const isPrint = useIsPrintMode();
 
   usePrintReadyTracker(isPrint);
 
-  return <>{children}</>;
+  if (!isPrint) {
+    return <>{children}</>;
+  }
+
+  return (
+    <div data-print-mode="" style={{ display: 'contents' }}>
+      {/* Draw charts at their printed width */}
+      <style>{`html { width: ${PDF_CONTENT_WIDTH_IN}in; }`}</style>
+      {children}
+    </div>
+  );
 }
