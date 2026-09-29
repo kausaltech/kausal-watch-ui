@@ -4,7 +4,6 @@ import { type ReactNode, useState } from 'react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Table } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -12,6 +11,7 @@ import { type PlanContextFragment } from '@/common/__generated__/graphql';
 import { actionStatusOrder } from '@/common/data/actions';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import Table from '@/components/common/Table';
 import {
   STICKY_TABLE_NAME_COLUMN_CLASS,
   mobileScrollableTableWrapperStyles,

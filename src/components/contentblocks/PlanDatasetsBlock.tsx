@@ -6,12 +6,12 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
-import { Table } from 'reactstrap';
 
 import type { ActionDateFormat, PlanDatasetsBlockFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 import { SectionHeader } from '@/components/actions/ActionContent';
 import PopoverTip from '@/components/common/PopoverTip';
+import Table from '@/components/common/Table';
 import { getDateFormat } from '@/utils/dates.utils';
 
 const TableContainer = styled.div`

@@ -6,11 +6,12 @@ import styled from '@emotion/styled';
 
 import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { CardBody, Col, Container, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 
 import { activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 
 import Button from '@/components/common/Button';
+import { CardBody } from '@/components/common/CardParts';
 import Icon from '@/components/common/Icon';
 import GoalSelector from '@/components/paths/GoalSelector';
 import RangeSelector from '@/components/paths/RangeSelector';

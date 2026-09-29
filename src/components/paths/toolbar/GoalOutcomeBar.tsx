@@ -10,7 +10,6 @@ import { useQuery, useReactiveVar } from '@apollo/client/react';
 import { max, min, sortBy } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
-import { CardBody } from 'reactstrap';
 
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 
@@ -21,6 +20,7 @@ import type {
 import type { TFunction } from '@/common/i18n';
 import useNumberFormatter from '@/common/numbers';
 import Button from '@/components/common/Button';
+import { CardBody } from '@/components/common/CardParts';
 import Icon from '@/components/common/Icon';
 import { usePaths } from '@/context/paths/paths';
 import { getHttpHeaders } from '@/utils/paths/paths.utils';

@@ -6,7 +6,6 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
-import { Table } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -14,6 +13,7 @@ import {
   IndicatorDashboardFieldName,
   type IndicatorListPageFragment,
 } from '@/common/__generated__/graphql';
+import Table from '@/components/common/Table';
 import {
   STICKY_TABLE_NAME_COLUMN_CLASS,
   mobileScrollableTableWrapperStyles,
