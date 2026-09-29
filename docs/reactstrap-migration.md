@@ -226,13 +226,27 @@ Status: done on `feat/bye-reactstrap`. Files importing reactstrap went from 89 t
 - **Screenshots:** unchanged against the pre-step-5 branch state. Espoo's action list varies between loads by itself.
 - **In a browser:** the switch toggles from both the control and its label, with Bootstrap's checked look, and the feedback form's text field and textarea render and accept typing.
 
-### 6. Dropdowns and navigation (~12 files)
+### 6. Dropdowns and navigation
 
-1. Build the shared `DropdownMenu`.
-2. Move LanguageSelector, PlanSelector, OrgSelector, PlanVersionSelector, ActionStatusExport, DataTable and CytoGraph onto it.
-3. Rewrite `common/GlobalNav.tsx`, `NavBar`, the Zurich `GlobalNav`, IndicatorsHero, OrgContent and OutcomeNodeContent.
+Status: done on `feat/bye-reactstrap`. Files importing reactstrap went from 80 to 70, and no dropdown, nav or collapse parts are left.
 
-This is the riskiest PR: the menu shows on every page, is themed per plan, and has both a desktop dropdown and a mobile menu. Test keyboard use and screen readers by hand, at every breakpoint.
+- **`@/components/common/Dropdowns`:** reactstrap's `UncontrolledDropdown`, `UncontrolledButtonDropdown`, `DropdownToggle`, `DropdownMenu` and `DropdownItem`, with reactstrap's markup and keyboard handling.
+  - **MUI parts:** `ClickAwayListener` closes the menu on an outside click. `Popper` positions menus outside a navbar, rendering into `document.body` with `container="body"`.
+  - **Markup kept:** `dropdown`, `show`, `dropdown-toggle`, `dropdown-menu` with `data-bs-popper="static"`, and `dropdown-item`. `GlobalNav` and others style through these classes.
+  - **No MUI `Menu`:** it's modal (portal, scroll lock, focus trap), unlike Bootstrap's dropdowns, and its portal would break the parents' `.dropdown-menu` styles.
+  - **Always render `ClickAwayListener`.** Wrapping the root only while open remounted the dropdown on every toggle and lost focus.
+- **`@/components/common/NavParts`:** `Navbar`, `Nav`, `NavItem` and `NavbarCollapse`, with reactstrap's markup.
+  - `NavbarCollapse` is MUI's `Collapse` for the mobile menu. From `md` up it's forced open, and MUI's wrappers become `display: contents` so the navs stay direct flex items of `.navbar-collapse`.
+  - No `!important`: MUI sets the closed state through class styles, so callers such as the Zürich nav can still set their own height.
+- **Paths-derived components follow paths-ui:**
+  - **`OutcomeNodeContent`:** the reactstrap tab strip is replaced by paths-ui's `NodeViewSelector` (an MUI `Select` with view icons), ported to `paths/outcome/NodeViewSelector.tsx` without paths-ui's node-page option. **Visible change** on outcome blocks, such as Zürich's home page.
+  - **`DataTable`:** the download dropdown uses paths-ui's `ToolsMenu` setup (MUI `Menu`, `ListSubheader`, `MenuItem` with file-type icons). The trigger keeps watch-ui's labelled "Download data" button.
+  - **Zürich `GlobalNav`:** uses `NavParts`. paths-ui still uses reactstrap there.
+- **Deleted:** `common/NavBar.tsx`. Nothing imported it.
+- **Checks:**
+  - **Screenshots:** unchanged against the pre-step branch state, apart from the Zürich view selector.
+  - **In a browser, compared with the committed reactstrap code:** the nav and plan-selector dropdowns (click, Escape, arrow keys, outside click) and the watch-ui and Zürich mobile menus behave the same. The open menus are pixel-identical.
+  - **One difference:** the plan selector's menu now opens below its toggle. reactstrap's Popper placed it over the toggle.
 
 ### 7. Layout grid (~60 files, mostly mechanical)
 

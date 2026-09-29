@@ -6,11 +6,12 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Nav, NavItem, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 
 import type { OrganizationDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { OrganizationLink } from '@/common/links';
+import { Nav, NavItem } from '@/components/common/NavParts';
 import RichText from '@/components/common/RichText';
 import ActionStatusTable from '@/components/dashboard/ActionStatusTable';
 import type { ColumnConfig } from '@/components/dashboard/dashboard.types';

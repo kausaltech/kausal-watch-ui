@@ -6,9 +6,10 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Nav, NavItem, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 
 import { getIndicatorTermContext } from '@/common/i18n';
+import { Nav, NavItem } from '@/components/common/NavParts';
 import RichText from '@/components/common/RichText';
 import { usePlan } from '@/context/plan';
 

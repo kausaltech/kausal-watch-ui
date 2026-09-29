@@ -11,21 +11,18 @@ import debounce from 'lodash-es/debounce';
 import { useLocale, useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
-import {
-  Collapse,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Nav,
-  NavItem,
-  Navbar,
-  UncontrolledDropdown,
-} from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 import { getThemeStaticURL } from '@common/themes/theme';
 
 import { Link, NavigationLink } from '@/common/links';
+import {
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+} from '@/components/common/Dropdowns';
+import { Nav, NavItem, Navbar, NavbarCollapse } from '@/components/common/NavParts';
 import PlanSelector from '@/components/plans/PlanSelector';
 import { selectSwitcherPlans } from '@/components/plans/relatedPlans';
 import PlanVersionSelector from '@/components/versioning/PlanVersionSelector';
@@ -760,7 +757,7 @@ function GlobalNav(props: GlobalNavProps) {
           container={fullwidth ? 'fluid' : true}
           aria-label={t('nav-primary')}
         >
-          <Collapse isOpen={isOpen} navbar>
+          <NavbarCollapse isOpen={isOpen}>
             <Nav navbar className="me-auto">
               {homeLink && (
                 <NavItem active={activeBranch === ''}>
@@ -852,7 +849,7 @@ function GlobalNav(props: GlobalNavProps) {
                   </NavItem>
                 ))}
             </Nav>
-          </Collapse>
+          </NavbarCollapse>
         </BotNav>
       </div>
       {isNavFixed && <NavSpacer $height={navHeight} />}

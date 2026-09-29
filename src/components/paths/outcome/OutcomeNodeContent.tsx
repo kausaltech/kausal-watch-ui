@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 
 import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Nav, NavItem, NavLink, TabContent } from 'reactstrap';
 
 import { activeGoalVar } from '@common/apollo/paths-cache';
 import DimensionalNodeVisualisation from '@common/components/paths/DimensionalNodeVisualisation';
@@ -14,30 +13,12 @@ import { getMetricChange, getMetricValue } from '@common/utils/paths/metric';
 import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
 import { PathsNodeLink } from '@/common/links';
 import useNumberFormatter from '@/common/numbers';
-import Icon from '@/components/common/Icon';
 import HighlightValue from '@/components/paths/HighlightValue';
 import ScenarioBadge from '@/components/paths/ScenarioBadge';
 import DataTable from '@/components/paths/graphs/DataTable';
+import NodeViewSelector, { type NodeView } from '@/components/paths/outcome/NodeViewSelector';
 import OutcomeNodeDetails from '@/components/paths/outcome/OutcomeNodeDetails';
 import { usePaths } from '@/context/paths/paths';
-
-const DisplayTab = styled(NavItem)`
-  font-size: 0.9rem;
-
-  // Redefine bootstrap styles as MUI overrides them
-  a.nav-link.active {
-    color: var(--bs-nav-tabs-link-active-color);
-    background-color: var(--bs-nav-tabs-link-active-bg);
-    border-color: var(--bs-nav-tabs-link-active-border-color);
-  }
-
-  .icon {
-    width: 1.2rem !important;
-    height: 1.2rem !important;
-    margin-right: 0.2rem;
-    vertical-align: middle;
-  }
-`;
 
 const ContentWrapper = styled.div`
   min-height: 300px;
@@ -76,10 +57,9 @@ const CardContent = styled.div`
   }
 `;
 
-const TabNavigation = styled(Nav)`
-  flex-wrap: nowrap;
-  width: 100%;
-  border-bottom: 0;
+const ViewSelectorBar = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const CardSetHeader = styled.div`
@@ -155,7 +135,7 @@ function OutcomeNodeContent({
 }: OutcomeNodeContentProps) {
   const t = useTranslations();
   const formatNumber = useNumberFormatter({ scope: 'paths' });
-  const [activeTabId, setActiveTabId] = useState('graph');
+  const [activeTabId, setActiveTabId] = useState<NodeView>('graph');
   const paths = usePaths();
 
   const activeGoal = useReactiveVar(activeGoalVar);
@@ -236,6 +216,12 @@ function OutcomeNodeContent({
   const unit = node.metric?.unit?.htmlLong || node.metric?.unit?.htmlShort;
   const showNodeDetails =
     !instance.features?.hideNodeDetails && instance.showOutcomeNodeDetails && node.shortDescription;
+  const viewLabels: Record<NodeView, string> = {
+    year: t('distribution'),
+    graph: t('time-series'),
+    table: t('table'),
+    info: t('details'),
+  };
   return (
     <div role="tabpanel" id={`tabpanel-${node.id}`}>
       <CardSetHeader>
@@ -289,81 +275,22 @@ function OutcomeNodeContent({
         )}
       </CardSetHeader>
       <CardContent>
-        <TabNavigation
-          tabs
-          className="justify-content-end"
-          role="tablist"
-          aria-label={t('outcome-tabs-label')}
-        >
-          {showDistribution && (
-            <DisplayTab role="presentation">
-              <NavLink
-                href="#"
-                onClick={() => setActiveTabId('year')}
-                active={activeTabId === 'year'}
-                disabled={subNodes.length < 2}
-                role="tab"
-                aria-selected={activeTabId === 'year'}
-                aria-controls={`${node.id}-panel-year`}
-                id={`${node.id}-tab-year`}
-                tabIndex={0}
-              >
-                <Icon name="chart-tree-map" /> {t('distribution')}
-              </NavLink>
-            </DisplayTab>
-          )}
-          <DisplayTab role="presentation">
-            <NavLink
-              href="#"
-              onClick={() => setActiveTabId('graph')}
-              active={activeTabId === 'graph'}
-              role="tab"
-              aria-selected={activeTabId === 'graph'}
-              aria-controls={`${node.id}-panel-graph`}
-              id={`${node.id}-tab-graph`}
-              tabIndex={0}
-            >
-              <Icon name="chart-area" /> {t('time-series')}
-            </NavLink>
-          </DisplayTab>
-          <DisplayTab role="presentation">
-            <NavLink
-              href="#"
-              onClick={() => setActiveTabId('table')}
-              active={activeTabId === 'table'}
-              role="tab"
-              aria-selected={activeTabId === 'table'}
-              aria-controls={`${node.id}-panel-table`}
-              id={`${node.id}-tab-table`}
-              tabIndex={0}
-            >
-              <Icon name="table" /> {t('table')}
-            </NavLink>
-          </DisplayTab>
-          {showNodeDetails && (
-            <DisplayTab role="presentation">
-              <NavLink
-                href="#"
-                onClick={() => setActiveTabId('info')}
-                active={activeTabId === 'info'}
-                role="tab"
-                aria-selected={activeTabId === 'info'}
-                aria-controls={`${node.id}-panel-info`}
-                id={`${node.id}-tab-info`}
-                tabIndex={0}
-              >
-                <Icon name="circle-info" /> {t('details')}
-              </NavLink>
-            </DisplayTab>
-          )}
-        </TabNavigation>
+        <ViewSelectorBar>
+          <NodeViewSelector
+            idPrefix={node.id}
+            activeTabId={activeTabId}
+            setActiveTabId={setActiveTabId}
+            showDistribution={!!showDistribution}
+            disableDistribution={subNodes.length < 2}
+            showDetails={!!showNodeDetails}
+          />
+        </ViewSelectorBar>
 
-        <TabContent
-          activeTab={activeTabId}
+        <div
           id={`${node.id}-panel-${activeTabId}`}
           role="tabpanel"
           tabIndex={0}
-          aria-labelledby={`${node.id}-tab-${activeTabId}}`}
+          aria-label={viewLabels[activeTabId]}
         >
           {activeTabId === 'year' && <ContentWrapper>{singleYearGraph}</ContentWrapper>}
           {activeTabId === 'graph' && (
@@ -389,7 +316,7 @@ function OutcomeNodeContent({
               />
             </ContentWrapper>
           )}
-        </TabContent>
+        </div>
       </CardContent>
     </div>
   );

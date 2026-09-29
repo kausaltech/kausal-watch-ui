@@ -5,11 +5,16 @@ import styled from '@emotion/styled';
 
 import { useApolloClient } from '@apollo/client/react';
 import { useLocale, useTranslations } from 'next-intl';
-import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
+import {
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+} from '@/components/common/Dropdowns';
 import { usePlan } from '@/context/plan';
 
 import Icon from './Icon';
