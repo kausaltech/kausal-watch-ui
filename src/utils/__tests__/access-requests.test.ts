@@ -17,14 +17,11 @@ describe('checkAccountStatus', () => {
     await expect(checkAccountStatus('a@example.com')).resolves.toBe('sign-in');
     expect(global.fetch).toHaveBeenCalledWith(
       'https://backend.test/login/check/',
-      expect.objectContaining({ method: 'POST' })
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ email: 'a@example.com', next: '/o/authorize/' }),
+      })
     );
-  });
-
-  it('treats a 404 as a known user', async () => {
-    mockResponse(404, {});
-
-    await expect(checkAccountStatus('a@example.com')).resolves.toBe('sign-in');
   });
 
   it.each([
@@ -47,6 +44,9 @@ describe('checkAccountStatus', () => {
 
   it('throws on unexpected responses', async () => {
     mockResponse(400, { code: 'no_admin_access' });
+    await expect(checkAccountStatus('a@example.com')).rejects.toThrow();
+
+    mockResponse(404, {});
     await expect(checkAccountStatus('a@example.com')).rejects.toThrow();
 
     mockResponse(500, {});

@@ -15,15 +15,12 @@ export async function checkAccountStatus(email: string): Promise<AccountStatus> 
   const response = await fetch(`${getWatchBackendUrl()}/login/check/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, next: 'https://admin.watch.kausal.tech/admin/login/' }),
+    // With `next` pointing at the OAuth authorize view, the backend checks for public site access
+    // instead of admin access.
+    body: JSON.stringify({ email, next: '/o/authorize/' }),
   });
 
   if (response.ok) return 'sign-in';
-
-  // TODO: Replace with the backend's user lookup once it exists. The endpoint only checks `next`
-  // after finding the user, and answers 404 when it cannot resolve that URL, so a 404 means the
-  // user exists.
-  if (response.status === 404) return 'sign-in';
 
   if (response.status !== 400) {
     throw new Error(`Login check failed with status ${response.status}`);
