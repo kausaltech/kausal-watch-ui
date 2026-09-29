@@ -59,7 +59,7 @@ const FooterContent = styled.div`
   gap: ${(props) => props.theme.spaces.s100};
 `;
 
-function AccessGateLayout({
+export function AccessGateLayout({
   planName,
   homePath,
   children,
@@ -119,7 +119,7 @@ function AccessGateLayout({
   );
 }
 
-function Heading({ title, description }: { title: string; description?: string }) {
+export function Heading({ title, description }: { title: string; description?: string }) {
   return (
     <Stack spacing={1.5}>
       <Typography variant="h1" component="h1">

@@ -15,6 +15,7 @@ type Props = {
     planName?: string;
     theme?: string;
     homePath?: string;
+    welcome?: string;
   }>;
 };
 
@@ -43,6 +44,7 @@ export default async function SignInRequiredPage(props: Props) {
       planName={searchParams.planName ?? ''}
       themeIdentifier={searchParams.theme ?? null}
       homePath={searchParams.homePath ?? '/'}
+      welcome={searchParams.welcome === 'true'}
     />
   );
 }

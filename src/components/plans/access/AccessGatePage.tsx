@@ -6,6 +6,7 @@ import ThemeProvider from '@/components/providers/ThemeProvider';
 import type { AccessGatePlan } from '@/utils/middleware.utils';
 
 import AccessGate from './AccessGate';
+import AccountWelcome from './AccountWelcome';
 
 // The theme identifier becomes part of a file path when the theme is loaded.
 const THEME_IDENTIFIER_PATTERN = /^[a-z0-9_-]+$/i;
@@ -16,10 +17,12 @@ export default async function AccessGatePage({
   planName,
   themeIdentifier,
   homePath,
-}: AccessGatePlan) {
+  welcome = false,
+}: AccessGatePlan & { welcome?: boolean }) {
   const safeThemeIdentifier =
     themeIdentifier && THEME_IDENTIFIER_PATTERN.test(themeIdentifier) ? themeIdentifier : 'default';
   const theme = await loadTheme(safeThemeIdentifier);
+  const safeHomePath = homePath.startsWith('/') ? homePath : '/';
 
   return (
     <>
@@ -28,11 +31,15 @@ export default async function AccessGatePage({
       )}
       <ThemeProvider theme={theme}>
         <ThemedGlobalStyles />
-        <AccessGate
-          planIdentifier={planIdentifier}
-          planName={planName || null}
-          homePath={homePath.startsWith('/') ? homePath : '/'}
-        />
+        {welcome ? (
+          <AccountWelcome planName={planName || null} homePath={safeHomePath} />
+        ) : (
+          <AccessGate
+            planIdentifier={planIdentifier}
+            planName={planName || null}
+            homePath={safeHomePath}
+          />
+        )}
       </ThemeProvider>
     </>
   );
