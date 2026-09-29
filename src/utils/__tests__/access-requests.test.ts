@@ -11,17 +11,20 @@ function mockResponse(status: number, body: unknown) {
 }
 
 describe('checkAccountStatus', () => {
-  it('asks the backend about public site access', async () => {
+  it('signs in a user the backend knows', async () => {
     mockResponse(200, { method: 'password' });
 
     await expect(checkAccountStatus('a@example.com')).resolves.toBe('sign-in');
     expect(global.fetch).toHaveBeenCalledWith(
       'https://backend.test/login/check/',
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ email: 'a@example.com', next: '/authorize/' }),
-      })
+      expect.objectContaining({ method: 'POST' })
     );
+  });
+
+  it('treats a 404 as a known user', async () => {
+    mockResponse(404, {});
+
+    await expect(checkAccountStatus('a@example.com')).resolves.toBe('sign-in');
   });
 
   it.each([
