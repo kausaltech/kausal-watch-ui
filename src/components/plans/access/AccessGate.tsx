@@ -96,7 +96,13 @@ export function AccessGateLayout({
       <Box component="main" id="main" sx={{ flexGrow: 1 }}>
         <Container maxWidth="sm" sx={{ py: { xs: 4, md: 10 } }}>
           <Card sx={{ backgroundColor: (muiTheme) => muiTheme.cardBackground }}>
-            <CardContent sx={{ p: { xs: 3, md: 5 } }}>
+            <CardContent
+              sx={{
+                p: { xs: 3, md: 5 },
+                // MUI gives the last CardContent a smaller bottom padding
+                '&:last-child': { pb: { xs: 3, md: 5 } },
+              }}
+            >
               <Stack spacing={2}>{children}</Stack>
             </CardContent>
           </Card>
@@ -245,6 +251,7 @@ function EmailStep({
             onChange={(e) => setEmail(e.target.value)}
             error={!!error}
             helperText={error}
+            slotProps={{ formHelperText: { sx: { mt: 0.5 } } }}
             fullWidth
           />
         </Box>
