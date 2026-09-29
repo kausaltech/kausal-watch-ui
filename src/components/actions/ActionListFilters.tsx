@@ -162,8 +162,10 @@ const StyledBadge = styled('span', transientOptions)<{ $color?: string }>`
       background-color: transparent;
     }
 
+    // The theme's focus ring colour can be too faint on the badge colour
     &:focus-visible {
       opacity: 1;
+      box-shadow: none;
       outline: 2px solid currentColor;
       outline-offset: 1px;
     }
