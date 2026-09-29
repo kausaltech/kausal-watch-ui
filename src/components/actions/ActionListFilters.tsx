@@ -4,6 +4,7 @@ import React, { createRef, useCallback, useEffect, useId, useMemo, useState } fr
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
+import SvgIcon from '@mui/material/SvgIcon';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -123,6 +124,10 @@ const FilterSectionDivider = styled.div`
   border-bottom: 1px solid #333;
 `;
 
+// Bootstrap's close icon ($btn-close-bg), which these badges have always used
+const CLOSE_ICON_PATH =
+  'M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414';
+
 const StyledBadge = styled('span', transientOptions)<{ $color?: string }>`
   display: inline-flex;
   max-width: 100%;
@@ -140,14 +145,27 @@ const StyledBadge = styled('span', transientOptions)<{ $color?: string }>`
   line-height: 1.25;
   text-align: left;
 
+  // Sized like Bootstrap's .btn-close was: a 1em X, relative to the badge's text
   .badge-close {
+    flex-shrink: 0;
+    font-size: inherit;
+    width: calc(0.75rem + 0.5em);
+    height: calc(0.75rem + 0.5em);
     margin: 0 0.5rem;
     padding: 0;
+    border-radius: 0.375rem;
     opacity: 0.5;
 
-    &:hover,
-    &:focus-visible {
+    // As with .btn-close, only the icon changes on hover, and focus gets a ring
+    &:hover {
       opacity: 0.75;
+      background-color: transparent;
+    }
+
+    &:focus-visible {
+      opacity: 1;
+      outline: 2px solid currentColor;
+      outline-offset: 1px;
     }
   }
 `;
@@ -503,7 +521,9 @@ function ActionListFilterBadges({
             onClick={item.onReset}
             aria-label={t('remove-filter')}
           >
-            <Icon.Times width="0.75rem" height="0.75rem" />
+            <SvgIcon viewBox="0 0 16 16" fontSize="inherit">
+              <path d={CLOSE_ICON_PATH} />
+            </SvgIcon>
           </IconButton>
           {item.label.trim()}
         </StyledBadge>
