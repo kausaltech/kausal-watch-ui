@@ -4,8 +4,13 @@ import styled from '@emotion/styled';
 
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
+import {
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+} from '@/components/common/Dropdowns';
 import { usePlan } from '@/context/plan';
 
 const ErrorMessage = styled.div`

@@ -8,7 +8,6 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';
-import { Collapse, Nav, NavItem, Navbar } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 import { getThemeStaticURL } from '@common/themes/theme';
@@ -17,6 +16,7 @@ import { deploymentType } from '@/common/environment';
 import { NavigationLink } from '@/common/links';
 import { type NavItem as NavItemType } from '@/components/Header';
 import Icon from '@/components/common/Icon';
+import { Nav, NavItem, Navbar, NavbarCollapse } from '@/components/common/NavParts';
 import NavbarSearch from '@/components/common/NavbarSearch';
 
 //import NavDropdown, { type NavDropdownProps } from '@/components/common/NavDropdown';
@@ -137,7 +137,7 @@ const NavHighlighter = styled.span`
   }
 `;
 
-const StyledCollapse = styled(Collapse, transientOptions)<{ $dark?: boolean }>`
+const StyledCollapse = styled(NavbarCollapse, transientOptions)<{ $dark?: boolean }>`
   ${(props) => props.theme.breakpoints.up('md')} {
     display: flex;
     background-color: ${(props) =>
@@ -278,7 +278,7 @@ function GlobalNav(props: GlobalNavProps) {
               className="header__appnav-inner"
               container={false}
             >
-              <StyledCollapse isOpen={isOpen} navbar>
+              <StyledCollapse isOpen={isOpen}>
                 <Nav navbar className="stzh-appnav__items sc-stzh-appnav sc-stzh-appnav-s me-auto">
                   <NavItem className="sc-stzh-link-h sc-stzh-link-s" active={false}>
                     <NavLink>
@@ -345,7 +345,7 @@ function GlobalNav(props: GlobalNavProps) {
                 container={false}
                 $dark={true}
               >
-                <StyledCollapse navbar $dark={true} isOpen={isOpen}>
+                <StyledCollapse $dark={true} isOpen={isOpen}>
                   <Nav
                     navbar
                     className="stzh-appnav__items sc-stzh-appnav sc-stzh-appnav-s me-auto"

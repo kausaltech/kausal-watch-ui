@@ -1,6 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 
 import {
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+  Menu,
+  MenuItem,
   Paper,
   Table,
   TableBody,
@@ -17,7 +22,7 @@ import styled from '@emotion/styled';
 import { useReactiveVar } from '@apollo/client/react';
 import { isEqual } from 'lodash-es';
 import { useTranslations } from 'next-intl';
-import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
+import { FiletypeCsv, FiletypeXls } from 'react-bootstrap-icons';
 
 import { activeGoalVar, activeScenarioVar } from '@common/apollo/paths-cache';
 import {
@@ -31,12 +36,13 @@ import type { MetricSliceData, SliceConfig } from '@common/utils/paths/metric';
 
 import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
 import useNumberFormatter from '@/common/numbers';
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 
 const Tools = styled.div`
   padding: 0 1rem 0.5rem;
   text-align: right;
-  .btn-link {
+  .download-button {
     text-decoration: none;
   }
   .icon {
@@ -65,6 +71,9 @@ const DataTable = (props: DataTableProps) => {
   const activeScenario = useReactiveVar(activeScenarioVar);
 
   const parsed = useMemo(() => parseMetric(metric), [metric]);
+  const menuId = useId();
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const isMenuOpen = Boolean(menuAnchor);
 
   const lastMetricYear = metric.years.slice(-1)[0];
   const usableEndYear = lastMetricYear && endYear > lastMetricYear ? lastMetricYear : endYear;
@@ -182,15 +191,35 @@ const DataTable = (props: DataTableProps) => {
         </TableBody>
       </Table>
       <Tools>
-        <UncontrolledDropdown size="sm">
-          <DropdownToggle caret color="link">
-            <Icon name="download" />
-            {` ${t('download-data')}`}
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem
-              onClick={async () =>
-                await downloadData(parsed, sliceConfig, 'xlsx', {
+        <Button
+          id={`${menuId}-button`}
+          className="download-button"
+          variant="link"
+          size="small"
+          aria-controls={isMenuOpen ? menuId : undefined}
+          aria-haspopup="true"
+          aria-expanded={isMenuOpen ? 'true' : undefined}
+          onClick={(e) => setMenuAnchor(e.currentTarget)}
+        >
+          <Icon name="download" />
+          {` ${t('download-data')}`}
+        </Button>
+        <Menu
+          id={menuId}
+          anchorEl={menuAnchor}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={isMenuOpen}
+          onClose={() => setMenuAnchor(null)}
+          slotProps={{ list: { 'aria-labelledby': `${menuId}-button` } }}
+        >
+          <ListSubheader>{t('download-data')}</ListSubheader>
+          {(['xlsx', 'csv'] as const).map((format) => (
+            <MenuItem
+              key={format}
+              onClick={() => {
+                setMenuAnchor(null);
+                void downloadData(parsed, sliceConfig, format, {
                   years,
                   tableTitle,
                   labels: {
@@ -201,31 +230,14 @@ const DataTable = (props: DataTableProps) => {
                     historical: t('table-historical'),
                     forecast: forecastLabel,
                   },
-                })
-              }
+                });
+              }}
             >
-              <Icon name="file" /> XLS
-            </DropdownItem>
-            <DropdownItem
-              onClick={async () =>
-                await downloadData(parsed, sliceConfig, 'csv', {
-                  years,
-                  tableTitle,
-                  labels: {
-                    total: t('plot-total'),
-                    type: t('table-measure-type'),
-                    year: t('table-year'),
-                    unit: t('table-unit'),
-                    historical: t('table-historical'),
-                    forecast: forecastLabel,
-                  },
-                })
-              }
-            >
-              <Icon name="file" /> CSV
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
+              <ListItemIcon>{format === 'xlsx' ? <FiletypeXls /> : <FiletypeCsv />}</ListItemIcon>
+              <ListItemText>{format === 'xlsx' ? 'XLS' : 'CSV'}</ListItemText>
+            </MenuItem>
+          ))}
+        </Menu>
       </Tools>
     </TableContainer>
   );
