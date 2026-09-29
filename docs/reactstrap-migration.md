@@ -202,11 +202,29 @@ Status: done on `feat/bye-reactstrap`. 17 call sites plus two new shared modules
 - **`IndicatorCard`:** its `disabled` prop, which only drives the grey background, is now a transient `$disabled` prop.
 - **Screenshots:** unchanged against the pre-step-4 branch state. Espoo's action list varies between loads by itself, both at 390px and 820px.
 
-### 5. Forms (~12 files)
+### 5. Forms
 
-1. The input wrappers first.
-2. Then ActionListFilters, SearchView, CategoryTypeListBlock, NormalizationWidget, GlobalParameters.
-3. Check that validation messages and `aria-invalid` still behave as before.
+Status: done on `feat/bye-reactstrap`. Files importing reactstrap went from 89 to 80.
+
+**`@/components/common/FormControls`** puts reactstrap's form API (`FormGroup check|switch`, `Label check`, `Input type=…`, `FormFeedback tooltip`, `InputGroup`, `Form`) on MUI with Bootstrap's look. The six wrappers (`TextInput`, `SelectInput`, `CheckboxInput`, `DropDown`, `SelectDropdown`, `Switch`) and the non-paths direct users only changed their import.
+
+- **Groups and labels:** `FormGroup` is MUI's `FormControl`, and `Label` is `FormLabel`.
+- **Text, textarea and select:** MUI's `InputBase` with the native element as `slots.input`, so MUI's input styles don't apply and the caller's styles merge after the base ones.
+  - Don't use Emotion's `ClassNames`/`cx` for this. Re-merging on each render piled the styles up into invalid CSS.
+- **Checkbox and switch:** MUI's `Checkbox` with icons drawn like Bootstrap's. The icon keeps `form-check-input`, and adds `checked` when checked, since `:checked` can't match the icon.
+- **`FormFeedback`:** MUI's `FormHelperText`.
+- **Values:** Bootstrap's compiled values, which are the same for every plan (for example the checked colour `rgb(16, 114, 81)`). Base styles stay single-class, so callers' styles still override them. Bootstrap's class names stay as hooks.
+- **Visible change: form error messages now show.** Before, this build had no Bootstrap validation styles, so `.invalid-feedback` was always hidden, and only `CheckboxInput`'s error, which forced `d-block`, was visible. `invalid` inputs also get Bootstrap's red border.
+
+**Paths-derived components follow paths-ui**, not the Bootstrap look:
+
+- **`NormalizationWidget`** uses paths-ui's setup: `FormControlLabel` with a small `Switch` and a caption label, plus a small `CircularProgress` while loading.
+- **`paths/toolbar/GlobalParameters`** was deleted. Nothing imported it.
+
+**Checks:**
+
+- **Screenshots:** unchanged against the pre-step-5 branch state. Espoo's action list varies between loads by itself.
+- **In a browser:** the switch toggles from both the control and its label, with Bootstrap's checked look, and the feedback form's text field and textarea render and accept typing.
 
 ### 6. Dropdowns and navigation (~12 files)
 

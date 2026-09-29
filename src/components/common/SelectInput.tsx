@@ -8,7 +8,7 @@ import {
   FormFeedback,
   FormGroup,
   type InputProps,
-} from 'reactstrap';
+} from '@/components/common/FormControls';
 
 const Label = styled(BSLabel)`
   font-weight: ${(props) => props.theme.formLabelFontWeight};
@@ -47,12 +47,7 @@ const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(functi
   return (
     <FormGroup>
       {label && <Label htmlFor={id}>{label}</Label>}
-      <Select
-        id={id}
-        type="select"
-        {...rest}
-        innerRef={ref as React.Ref<HTMLInputElement | HTMLTextAreaElement>}
-      >
+      <Select id={id} type="select" {...rest} innerRef={ref}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
