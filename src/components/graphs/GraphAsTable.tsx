@@ -5,13 +5,13 @@ import Collapse from '@mui/material/Collapse';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Table } from 'reactstrap';
 
 import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import useNumberFormatter from '@/common/numbers';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import Table from '@/components/common/Table';
 import { resolveValueRounding } from '@/components/graphs/indicator-graph.utils';
 
 type XValue = string | number | Date | null;

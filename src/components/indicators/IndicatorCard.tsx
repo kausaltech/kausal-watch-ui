@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Card, CardBody, CardTitle } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -12,6 +11,7 @@ import type { TFunction } from '@/common/i18n';
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorLink } from '@/common/links';
 import useNumberFormatter from '@/common/numbers';
+import { Card, CardBody, CardTitle } from '@/components/common/CardParts';
 import { usePlan } from '@/context/plan';
 
 const IndicatorValueDisplay = styled.div`
@@ -51,7 +51,10 @@ const StyledIndicatorLink = styled(IndicatorLink)`
   }
 `;
 
-const StyledIndicator = styled(Card, transientOptions)<{ $level: string | null }>`
+const StyledIndicator = styled(Card, transientOptions)<{
+  $level: string | null;
+  $disabled?: boolean | null;
+}>`
   hyphens: manual;
   line-height: ${(props) => props.theme.lineHeightSm};
   border: 0;
@@ -74,7 +77,7 @@ const StyledIndicator = styled(Card, transientOptions)<{ $level: string | null }
     }
   }};
   background-color: ${(props) => {
-    if (props.disabled) return props.theme.graphColors.grey050;
+    if (props.$disabled) return props.theme.graphColors.grey050;
     switch (props.$level) {
       case 'action':
         return props.theme.actionColor;
@@ -271,7 +274,7 @@ function IndicatorCard({
 
   return (
     <CardLink level={level} indicatorId={objectid} customHref={customHref}>
-      <StyledIndicator $level={level} disabled={disabled}>
+      <StyledIndicator $level={level} $disabled={disabled}>
         <CardBody>
           <div>
             <IndicatorType>{indicatorType}</IndicatorType>

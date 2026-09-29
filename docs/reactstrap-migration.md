@@ -188,9 +188,19 @@ Results against the step 1 screenshots: 60 of 72 unchanged. The 12 that changed 
 - **Browser check:** the GraphAsTable, TaskList and ContactPerson toggles open and close correctly.
 - **Toggle accessibility:** every collapse toggle now has `aria-expanded`, plus `aria-controls` pointing at its panel's `useId()` id. Before, only ContactPerson and the paths toolbar had them.
 
-### 4. Cards and tables (~15 files)
+### 4. Cards and tables
 
-ActionHighlightCard, IndicatorCard, IndicatorHighlightCard, ActionRelatedIndicatorsBlock, `common/Card`, DashCard, ActionsTable, ActionStatusTable, IndicatorListFiltered, PlanDatasetsBlock, ThemeDesignTokens.
+Status: done on `feat/bye-reactstrap`. 17 call sites plus two new shared modules; files importing reactstrap went from 100 to 89.
+
+- **Cards → `@/components/common/CardParts`:**
+  - `Card` is MUI's `Card`, laid out like Bootstrap's card: a flex column that doesn't clip its content, with Bootstrap's border, radius and white background.
+  - `CardBody`, `CardTitle` (`tag` becomes `as`), `CardFooter` and `CardImgOverlay` are styled `div`s with Bootstrap's padding and borders.
+  - `CardBody` isn't MUI's `CardContent`. `CardContent` adds 24px of bottom padding to the last element, and overriding that also overrode the padding parents set through `.card-body`, which made cards taller.
+  - **Class names kept as styling hooks:** all parts keep Bootstrap's class names (`card`, `card-body`, `card-title`, `card-footer`, `card-img-overlay`). About ten parent components style child cards through them. Rename them when Bootstrap's CSS is removed.
+- **Tables → `@/components/common/Table`:** a plain `<table>` with the classes reactstrap produced (`table`, `table-hover`, `table-bordered`, `table-sm`, and a `table-responsive` wrapper), so Bootstrap still styles it.
+  - Moving to MUI's table components would mean rewriting every row and cell in six tables, two of them with sticky-column styles, and changing their look. Do that together with the Bootstrap CSS removal.
+- **`IndicatorCard`:** its `disabled` prop, which only drives the grey background, is now a transient `$disabled` prop.
+- **Screenshots:** unchanged against the pre-step-4 branch state. Espoo's action list varies between loads by itself, both at 390px and 820px.
 
 ### 5. Forms (~12 files)
 
