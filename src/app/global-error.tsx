@@ -3,9 +3,9 @@
 import { useEffect } from 'react';
 
 import { captureException } from '@sentry/nextjs';
-import { Col, Container, Row } from 'reactstrap';
 
 import { CardBody } from '@/components/common/CardParts';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
 type Props = {
   error: Error & { digest?: string };

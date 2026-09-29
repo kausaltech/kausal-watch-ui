@@ -8,7 +8,6 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -21,6 +20,7 @@ import Breadcrumbs from '@/components/common/Breadcrumbs';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import RichText from '@/components/common/RichText';
+import { Container } from '@/components/common/layout/LayoutGrid';
 import { PLEDGE_PATH } from '@/constants/routes';
 
 import ConfirmPledge from './ConfirmPledge';

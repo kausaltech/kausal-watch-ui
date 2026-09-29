@@ -1,8 +1,8 @@
 import { useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
 import { type CommonContentBlockProps } from '@/common/blocks.types';
 import FeedbackForm from '@/components/common/FeedbackForm';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 const AccessibilityStatementContactFormBlock = ({ id = '' }: CommonContentBlockProps) => {

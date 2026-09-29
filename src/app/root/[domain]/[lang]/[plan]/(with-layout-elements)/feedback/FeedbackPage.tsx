@@ -4,9 +4,9 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import FeedbackForm from '@/components/common/FeedbackForm';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 const HeaderBg = styled.div`

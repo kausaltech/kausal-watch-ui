@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
 import { type IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import IndicatorValueSummary from '@/components/indicators/IndicatorValueSummary';
 import OrgSelector, { type OrganizationOption } from '@/components/orgs/OrgSelector';
 import { usePlan } from '@/context/plan';

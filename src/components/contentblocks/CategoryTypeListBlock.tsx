@@ -6,12 +6,12 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import type { CategoryFragment } from '@/common/__generated__/graphql';
 import { getDeepParents } from '@/common/categories';
 import type { TFunction } from '@/common/i18n';
 import { FormGroup, Input, Label } from '@/components/common/FormControls';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePaths } from '@/context/paths/paths';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
 

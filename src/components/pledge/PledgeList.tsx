@@ -12,13 +12,13 @@ import styled from '@emotion/styled';
 import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { Search } from 'react-bootstrap-icons';
-import { Container } from 'reactstrap';
 
 import type { PledgesQuery } from '@/common/__generated__/graphql';
 import { PLEDGE_GRID_IMAGE_SIZES, getImageSrcSet } from '@/common/images';
 import Button from '@/components/common/Button';
 import FilterControl, { type FilterField } from '@/components/common/FilterControl';
 import Icon from '@/components/common/Icon';
+import { Container } from '@/components/common/layout/LayoutGrid';
 
 import { getAttributeValueText } from '../common/ActionAttribute';
 import ConfirmPledge from './ConfirmPledge';

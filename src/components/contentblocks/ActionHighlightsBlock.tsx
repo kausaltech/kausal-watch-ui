@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 
 import { readableColor } from 'polished';
-import { Container } from 'reactstrap';
 
 import type { CommonContentBlockProps } from '@/common/blocks.types';
 import ActionHighlightsList from '@/components/actions/ActionHighlightsList';
+import { Container } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 const ActionsSection = styled.div`

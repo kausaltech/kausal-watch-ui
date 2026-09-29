@@ -11,7 +11,6 @@ import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import {
   type ActionListPageFiltersFragment,
@@ -35,6 +34,7 @@ import type {
 import ActionListFilters from '@/components/actions/ActionListFilters';
 import ErrorPage from '@/components/common/ErrorPage';
 import RichText from '@/components/common/RichText';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePaths } from '@/context/paths/paths';
 import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';

@@ -5,12 +5,12 @@ import styled from '@emotion/styled';
 
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
-import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import RichText from '@/components/common/RichText';
+import { Container } from '@/components/common/layout/LayoutGrid';
 
 import { ImageCredit } from '../common/ImageCredit';
 import { HeroCard } from './heroStyles';

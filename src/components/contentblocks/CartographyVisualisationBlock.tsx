@@ -6,9 +6,9 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import LegendControl from 'mapboxgl-legend';
 import 'mapboxgl-legend/dist/style.css';
 import Map, { NavigationControl, useMap } from 'react-map-gl/mapbox';
-import { Col, Container, Row } from 'reactstrap';
 
 import type { CommonContentBlockProps } from '@/common/blocks.types';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
 interface CartographyVisualisationBlockProps extends CommonContentBlockProps {
   styleUrl: string;

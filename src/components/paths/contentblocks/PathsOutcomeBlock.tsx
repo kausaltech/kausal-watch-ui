@@ -14,7 +14,6 @@ import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import ContentLoader from 'react-content-loader';
-import { Col, Container, Row } from 'reactstrap';
 
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 import { transientOptions } from '@common/themes/styles/styled';
@@ -26,6 +25,7 @@ import type {
 import { deploymentType } from '@/common/environment';
 import { Card, CardBody } from '@/components/common/CardParts';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
 import { usePaths } from '@/context/paths/paths';
 import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';

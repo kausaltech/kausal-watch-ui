@@ -8,9 +8,6 @@ import styled from '@emotion/styled';
 
 import * as Sentry from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
-import type { ColProps } from 'reactstrap';
-import { Col, Container, Row } from 'reactstrap';
-import type { ColumnProps } from 'reactstrap/types/lib/Col';
 
 import { showSettingsPanelVar } from '@common/apollo/paths-cache';
 import ContentLoader from '@common/components/ContentLoader';
@@ -21,6 +18,8 @@ import { getBgImageAlignment } from '@/common/images';
 import { excludeNullish } from '@/common/utils';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import RichText from '@/components/common/RichText';
+import type { ColProps, ColumnProps } from '@/components/common/layout/LayoutGrid';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import AccessibilityStatementComplianceStatusBlock from '@/components/contentblocks/AccessibilityStatementComplianceStatusBlock';
 import AccessibilityStatementContactFormBlock from '@/components/contentblocks/AccessibilityStatementContactFormBlock';
 import AccessibilityStatementContactInformationBlock from '@/components/contentblocks/AccessibilityStatementContactInformationBlock';

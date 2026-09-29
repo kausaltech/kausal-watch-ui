@@ -10,7 +10,6 @@ import styled from '@emotion/styled';
 import { captureMessage } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { Col, Container, Row } from 'reactstrap';
 
 import {
   type ActionAsideContentBlocksFragment,
@@ -40,6 +39,7 @@ import AttributesBlock from '@/components/common/AttributesBlock';
 import type { FeedbackFormAdditionalField } from '@/components/common/FeedbackForm';
 import PopoverTip from '@/components/common/PopoverTip';
 import StatusBadge from '@/components/common/StatusBadge';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import ExpandableFeedbackFormBlock from '@/components/contentblocks/ExpandableFeedbackFormBlock';
 import PlanDatasetsBlock from '@/components/contentblocks/PlanDatasetsBlock';
 import IndicatorCausalVisualisation from '@/components/indicators/IndicatorCausalVisualisation';

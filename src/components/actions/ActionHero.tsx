@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
@@ -14,6 +13,7 @@ import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import { ActionLink, ActionListLink, OrganizationLink } from '@/common/links';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import Icon from '@/components/common/Icon';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 import { ImageCredit } from '../common/ImageCredit';

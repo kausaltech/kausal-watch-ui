@@ -8,7 +8,6 @@ import * as Sentry from '@sentry/nextjs';
 import { concat } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import type {
   CategoriesForTreeMapQuery,
@@ -18,6 +17,7 @@ import type { CommonContentBlockProps } from '@/common/blocks.types';
 import CategoryActionList from '@/components/actions/CategoryActionList';
 import CategoryCardContent from '@/components/common/CategoryCardContent';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import CategoryTreeMap from '@/components/graphs/CategoryTreeMap';
 import { usePlan } from '@/context/plan';
 

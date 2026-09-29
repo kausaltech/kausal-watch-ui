@@ -8,7 +8,6 @@ import styled from '@emotion/styled';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
@@ -19,6 +18,7 @@ import { SEARCH_QUERY } from '@/common/search';
 import Button from '@/components/common/Button';
 import { FormGroup, Input, Label } from '@/components/common/FormControls';
 import TextInput from '@/components/common/TextInput';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';
 

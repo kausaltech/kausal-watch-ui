@@ -2,9 +2,9 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
 import { ImageCredit } from '../common/ImageCredit';
 
