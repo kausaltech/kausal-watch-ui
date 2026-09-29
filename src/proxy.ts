@@ -13,7 +13,12 @@ import { LOGGER_CORRELATION_ID } from '@common/logging/logger';
 
 import { PlanDomainAvailability } from './common/__generated__/graphql';
 import { auth } from './config/auth';
-import { ACCESS_APPROVED_PATH, SIGN_IN_REQUIRED_PATH, UNPUBLISHED_PATH } from './constants/routes';
+import {
+  ACCESS_APPROVED_PARAM,
+  ACCESS_APPROVED_PATH,
+  SIGN_IN_REQUIRED_PATH,
+  UNPUBLISHED_PATH,
+} from './constants/routes';
 import { hasUnauthenticatedErrors } from './utils/auth-errors';
 import {
   applySecurityHeaders,
@@ -229,7 +234,7 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
       params.set('theme', themeIdentifier);
     }
     if (`/${stripLocaleAndPlan(parsedPlan, parsedLocale, pathname)}` === ACCESS_APPROVED_PATH) {
-      params.set('welcome', 'true');
+      params.set(ACCESS_APPROVED_PARAM, 'true');
     }
     const rewrittenUrl = new URL(
       `/root/${hostname}/${parsedLocale}${SIGN_IN_REQUIRED_PATH}?${params.toString()}`,

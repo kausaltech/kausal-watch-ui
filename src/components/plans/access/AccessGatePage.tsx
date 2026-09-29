@@ -17,8 +17,8 @@ export default async function AccessGatePage({
   planName,
   themeIdentifier,
   homePath,
-  welcome = false,
-}: AccessGatePlan & { welcome?: boolean }) {
+  accessApproved = false,
+}: AccessGatePlan & { accessApproved?: boolean }) {
   const safeThemeIdentifier =
     themeIdentifier && THEME_IDENTIFIER_PATTERN.test(themeIdentifier) ? themeIdentifier : 'default';
   const theme = await loadTheme(safeThemeIdentifier);
@@ -31,7 +31,7 @@ export default async function AccessGatePage({
       )}
       <ThemeProvider theme={theme}>
         <ThemedGlobalStyles />
-        {welcome ? (
+        {accessApproved ? (
           <AccountWelcome planName={planName || null} homePath={safeHomePath} />
         ) : (
           <AccessGate

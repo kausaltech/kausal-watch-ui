@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import AccessGatePage from '@/components/plans/access/AccessGatePage';
+import { ACCESS_APPROVED_PARAM } from '@/constants/routes';
 import { getDomainSiteVerification } from '@/queries/get-domain-site-verification';
 import { tryRequest } from '@/utils/api.utils';
 import { getGoogleSiteVerificationTag, getSiteVerificationMetadata } from '@/utils/metadata';
@@ -15,7 +16,7 @@ type Props = {
     planName?: string;
     theme?: string;
     homePath?: string;
-    welcome?: string;
+    [ACCESS_APPROVED_PARAM]?: string;
   }>;
 };
 
@@ -44,7 +45,7 @@ export default async function SignInRequiredPage(props: Props) {
       planName={searchParams.planName ?? ''}
       themeIdentifier={searchParams.theme ?? null}
       homePath={searchParams.homePath ?? '/'}
-      welcome={searchParams.welcome === 'true'}
+      accessApproved={searchParams[ACCESS_APPROVED_PARAM] === 'true'}
     />
   );
 }
