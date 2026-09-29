@@ -14,6 +14,7 @@ import {
   getDeploymentType,
   getSentryDsn,
   getSentryRelease,
+  getWatchBackendUrl,
   getWatchGraphQLUrl,
   getWildcardDomains,
 } from '@common/env';
@@ -352,9 +353,13 @@ const TYPEKIT_HOSTS = ['https://use.typekit.net', 'https://p.typekit.net'];
 /* The cartography block renders with Mapbox GL, which fetches styles, tiles and glyphs. */
 const MAPBOX_HOSTS = ['https://api.mapbox.com', 'https://events.mapbox.com'];
 
+/* Our own Matomo, which most plans report to. */
+const ANALYTICS_HOST = 'https://ana.kausal.tech';
+
 type ReportOnlyOptions = {
   dsn: string | undefined;
   assetPrefix: string;
+  backendUrl: string;
   environment: string;
   release: string;
 };
@@ -367,6 +372,7 @@ type ReportOnlyOptions = {
 export function buildReportOnlyPolicy({
   dsn,
   assetPrefix,
+  backendUrl,
   environment,
   release,
 }: ReportOnlyOptions) {
@@ -379,16 +385,18 @@ export function buildReportOnlyPolicy({
 
   const sentryOrigin = new URL(reportUri).origin;
   const cdn = assetPrefix ? new URL(assetPrefix).origin : undefined;
+  /* Themes reference webfonts uploaded as documents on the backend, which differs per region. */
+  const backendSources = backendUrl ? [new URL(backendUrl).origin] : [];
   const withCdn = (...sources: string[]) => [...sources, cdn].filter(Boolean).join(' ');
 
   return [
     "default-src 'self'",
-    `script-src ${withCdn("'self'", "'unsafe-inline'", "'unsafe-eval'")}`,
+    `script-src ${withCdn("'self'", "'unsafe-inline'", "'unsafe-eval'", ANALYTICS_HOST)}`,
     `style-src ${withCdn("'self'", "'unsafe-inline'", ...TYPEKIT_HOSTS)}`,
-    `font-src ${withCdn("'self'", 'data:', ...TYPEKIT_HOSTS)}`,
+    `font-src ${withCdn("'self'", 'data:', ...TYPEKIT_HOSTS, ...backendSources)}`,
     "img-src 'self' data: blob: https:",
     "worker-src 'self' blob:",
-    `connect-src ${withCdn("'self'", sentryOrigin, ...MAPBOX_HOSTS)}`,
+    `connect-src ${withCdn("'self'", sentryOrigin, ...MAPBOX_HOSTS, ANALYTICS_HOST, ...backendSources)}`,
     'frame-src https:',
     `report-uri ${reportUri}`,
   ].join('; ');
@@ -397,6 +405,7 @@ export function buildReportOnlyPolicy({
 const REPORT_ONLY_POLICY = buildReportOnlyPolicy({
   dsn: getSentryDsn(),
   assetPrefix: getAssetPrefix(),
+  backendUrl: getWatchBackendUrl(),
   environment: getDeploymentType(),
   release: getSentryRelease(),
 });

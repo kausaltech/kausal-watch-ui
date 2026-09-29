@@ -216,6 +216,7 @@ describe('buildReportOnlyPolicy', () => {
   const options = {
     dsn: 'https://publickey@sentry.example.com/42',
     assetPrefix: 'https://cdn.example.com',
+    backendUrl: 'https://api.backend.example.com',
     environment: 'production',
     release: 'build-1',
   };
@@ -265,6 +266,28 @@ describe('buildReportOnlyPolicy', () => {
     const policy = buildReportOnlyPolicy(options)!;
 
     expect(/connect-src [^;]*https:\/\/api\.mapbox\.com/.test(policy)).toBe(true);
+  });
+
+  /* Our own Matomo, which most plans report to. */
+  it('allows the analytics host', () => {
+    const policy = buildReportOnlyPolicy(options)!;
+
+    expect(/script-src [^;]*https:\/\/ana\.kausal\.tech/.test(policy)).toBe(true);
+    expect(/connect-src [^;]*https:\/\/ana\.kausal\.tech/.test(policy)).toBe(true);
+  });
+
+  /* Themes reference webfonts uploaded as documents on the backend, which differs per region. */
+  it('allows the backend origin the deployment points at', () => {
+    const policy = buildReportOnlyPolicy(options)!;
+
+    expect(/font-src [^;]*https:\/\/api\.backend\.example\.com/.test(policy)).toBe(true);
+    expect(/connect-src [^;]*https:\/\/api\.backend\.example\.com/.test(policy)).toBe(true);
+  });
+
+  it('leaves the backend out when it is not configured', () => {
+    const policy = buildReportOnlyPolicy({ ...options, backendUrl: '' })!;
+
+    expect(policy).not.toContain('api.backend.example.com');
   });
 
   it('allows blob workers', () => {
