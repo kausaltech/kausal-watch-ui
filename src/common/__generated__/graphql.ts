@@ -4903,6 +4903,15 @@ export type StreamFieldFragment =
   | StreamField_UpdatedAtColumnBlock_Fragment
 ;
 
+export type AccountMenuQuery_me = { __typename: 'User', id: string, email: string, canAccessAdmin: boolean };
+
+export type AccountMenuQuery = { __typename: 'Query', me: AccountMenuQuery_me | null };
+
+
+export type AccountMenuQueryVariables = Exact<{
+  plan: string | number;
+}>;
+
 export type ActionDetailsQuery_action_workflowStatus_matchingVersion = { __typename: 'WorkflowStateDescription', id: string, description: string | null };
 
 export type ActionDetailsQuery_action_workflowStatus = { __typename: 'WorkflowInfoNode', matchingVersion: ActionDetailsQuery_action_workflowStatus_matchingVersion | null };

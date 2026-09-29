@@ -14,7 +14,7 @@ import {
 
 import styled from '@emotion/styled';
 
-import { useApolloClient } from '@apollo/client/react';
+import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import {
@@ -33,6 +33,7 @@ import { type PlanContextQuery, WorkflowState } from '@/common/__generated__/gra
 import { getActionTermContext } from '@/common/i18n';
 import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
+import { GET_ACCOUNT_MENU } from '@/queries/get-account-menu';
 import { useHandleSignOut } from '@/utils/auth.utils';
 import { hasSessionExpired } from '@/utils/session.utils';
 
@@ -116,6 +117,11 @@ export const TopToolBar = () => {
   } = useWorkflowSelector();
   const router = useRouter();
   const handleSignOut = useHandleSignOut();
+  // Only rendered for signed-in users, so this never runs anonymously.
+  const { data: accountData } = useQuery(GET_ACCOUNT_MENU, {
+    variables: { plan: plan.identifier },
+  });
+  const account = accountData?.me;
 
   const workflows = workflowStates?.filter(
     (workflow): workflow is StrictWorkflowStateDescription =>
@@ -217,7 +223,7 @@ export const TopToolBar = () => {
           startIcon={<Person size={16} />}
           endIcon={<ChevronDown />}
         >
-          {session.data.user?.name}
+          {session.data.user?.name || account?.email}
         </ToolbarButton>
         <Menu
           anchorEl={userAnchorEl}
@@ -226,7 +232,7 @@ export const TopToolBar = () => {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
-          {plan.adminUrl && (
+          {plan.adminUrl && account?.canAccessAdmin && (
             <MenuItem component="a" href={plan.adminUrl} target="_blank" rel="noopener noreferrer">
               <ListItemIcon>
                 <Lock size={18} />
