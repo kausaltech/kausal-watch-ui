@@ -3,13 +3,14 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import type { ControllerRenderProps } from 'react-hook-form';
+
 import {
   Input as BSInput,
   Label as BSLabel,
   FormFeedback,
   FormGroup,
   type InputProps,
-} from 'reactstrap';
+} from '@/components/common/FormControls';
 
 const GroupLabel = styled.div`
   font-weight: ${(props) => props.theme.formLabelFontWeight};
@@ -39,7 +40,8 @@ type CheckboxInputProps = Omit<InputProps, 'type'> & {
   options: CheckboxOption[];
   id: string;
   formFeedback?: string;
-  value?: string[];
+  /** The selected values; anything but an array means none are selected. */
+  value?: string | string[] | null;
   onChange: ControllerRenderProps['onChange'];
 };
 
@@ -47,7 +49,8 @@ const CheckboxInput = React.forwardRef<HTMLInputElement, CheckboxInputProps>(fun
   props: CheckboxInputProps,
   _ref
 ) {
-  const { heading, options, id, formFeedback, value = [], onChange, ...rest } = props;
+  const { heading, options, id, formFeedback, value: rawValue, onChange, ...rest } = props;
+  const value = Array.isArray(rawValue) ? rawValue : [];
 
   const handleChange = (optionValue: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;

@@ -13,7 +13,7 @@ import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { createFilter } from 'react-select';
-import { Col, FormGroup, Input, Row } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -30,6 +30,7 @@ import { constructCatHierarchy, getCategoryString } from '@/common/categories';
 import type { TFunction } from '@/common/i18n';
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import Button from '@/components/common/Button';
+import { FormGroup, Input } from '@/components/common/FormControls';
 import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
 import type { SelectDropdownOption } from '@/components/common/SelectDropdown';
