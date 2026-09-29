@@ -1,6 +1,6 @@
 # Retiring reactstrap in favour of MUI
 
-Status: planned. This doc covers what we're doing, the order of the work, and how we'll know it's finished.
+Status: steps 0–8 done on `feat/bye-reactstrap`; the themes package follow-up is open. This doc covers what we did, the order of the work, and how we know it's finished.
 
 ## Background
 
@@ -267,12 +267,22 @@ Status: done on `feat/bye-reactstrap`. All 70 remaining files changed only their
 
 ### 8. Cleanup
 
-1. Remove `reactstrap`, and `@popperjs/core` if unused.
-2. Switch the lint rule to `error`.
-3. Run `pnpm dedupe`.
-4. Check that `pnpm typecheck`, `pnpm exec eslint src`, `pnpm test`, e2e and a Storybook build are all clean.
+Status: done on `feat/bye-reactstrap`.
 
-Bootstrap SCSS stays.
+- **Dependencies:** `reactstrap` is removed from `package.json` and the lockfile, and `pnpm dedupe` has been run.
+  - `@popperjs/core` stays: `react-popper` (used by `NavbarSearch`) needs it as a peer, and MUI and `react-bootstrap-typeahead` depend on it too.
+  - `bootstrap` stays, because its SCSS is still loaded.
+- **Lint:** the `no-reactstrap` rule in `eslint.config.ts` is now an `error`, so reactstrap can't come back unnoticed.
+- **Bootstrap SCSS stays as it is.**
+  - `kausal_common/src/themes/styles/main.scss` is shared with paths-ui.
+  - Every partial it imports still matches classes in one app or the other, or in a library: `btn-close` is used by react-bootstrap-typeahead's clear button.
+  - Pruning belongs to the deferred Bootstrap CSS removal.
+- **Checks:**
+  - `pnpm typecheck` is clean.
+  - `pnpm exec eslint src kausal_common/src` has no errors. The 10 warnings were already there (`no-deprecated`, `graphql/no-deprecated`, one unused test variable).
+  - `pnpm test` passes (396 tests).
+  - The Storybook build succeeds.
+  - **e2e, `basic.spec.ts` in Chromium against the dev server with one worker, for the three test plans:** 24 passed and 8 skipped for plan data. The one failure is Zurich's `search`. Zurich turns search off (`plan.features.enableSearch`) and the test doesn't skip for that, so it fails on `main` too. With parallel workers, the dev server compiles pages too slowly and the tests time out.
 
 Steps 2–5 don't depend on each other and can run in parallel. Step 7 can start once steps 0 and 1 are merged.
 
