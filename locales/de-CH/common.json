@@ -2,7 +2,7 @@
     "action": "Massnahme",
     "actions-plural": "Massnahmen",
     "close": "Schliessen",
-"error-loading-actions": "Fehler beim Laden der Massnahmenliste",
+    "error-loading-actions": "Fehler beim Laden der Massnahmenliste",
     "filter-result-actions": "Massnahmen",
     "nav-menu-close": "Menü schliessen",
     "recently-updated-actions": "Kürzlich aktualisierte Massnahmen",
@@ -15,5 +15,8 @@
     "indicator-related-actions": "Massnahmen, die sich auf diesen Indikator auswirken",
     "select-sector-for-actions": "Wähle en Emissionssektor, um zugehörigi Massnahme ahzuzeigen",
     "filter-text": "{context, select, STRATEGY {Strategien durchsuchen} CASE_STUDY {Fallstudien durchsuchen} INDICATOR {Indikatoren durchsuchen} other {Massnahmen durchsuchen}}",
-    "indicator-graph-reference-line": "Start Massnahmen"
+    "indicator-graph-reference-line": "Start Massnahmen",
+    "pledge-create-account-description": "Speichern Sie Ihre Mitmach-Aktionen und verfolgen Sie Ihren Fortschritt. Ausserdem erhalten Sie exklusive Angebote und die Chance auf Gewinne.",
+    "pledge-sign-in-email-description": "Speichern Sie Ihre Mitmach-Aktionen und verfolgen Sie Ihren Fortschritt. Ausserdem erhalten Sie exklusive Angebote und die Chance auf Gewinne.",
+    "pledge-sign-in-close": "Schliessen"
 }
