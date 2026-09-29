@@ -8,7 +8,6 @@ import { useQuery } from '@apollo/client/react';
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';
-import { Col, Container, Row } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -26,6 +25,7 @@ import Breadcrumbs from '@/components/common/Breadcrumbs';
 import CategoryPageStreamField, {
   type CategoryPageMainTopBlock,
 } from '@/components/common/CategoryPageStreamField';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
 import { usePlan } from '@/context/plan';
 import { ATTRIBUTE_TYPE_FRAGMENT } from '@/fragments/action-attribute.fragment';

@@ -1,6 +1,6 @@
 import { useLocale, useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import accessibilityStatementData from '@/public/static/accessibility';
 
 type ComplianceStatus = 'partial' | 'full' | 'not';

@@ -9,10 +9,10 @@ import styled from '@emotion/styled';
 
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
-import { Container } from 'reactstrap';
 
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import { Container } from '@/components/common/layout/LayoutGrid';
 
 import PledgeCard from './PledgeCard';
 import PledgeSignInFlow from './PledgeSignInFlow';

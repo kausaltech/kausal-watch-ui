@@ -85,7 +85,7 @@ Each PR:
 1. Add an ESLint `no-restricted-imports` rule for `reactstrap`. Set it to `warn` now and switch it to `error` in the last PR.
 2. Set up the layout primitives:
    - **`Container`:** use MUI's `Container` as it is, with `maxWidth="lg"` (1200px). Bootstrap's container was 1140px at xl and 1320px at xxl, so wide screens change slightly. Accept that during the screenshot review, or set a custom `maxWidth` if design objects.
-   - **Rows and columns:** `Row` becomes `GridRow` (`src/components/common/layout/GridRow.tsx`), and `Col` becomes a plain MUI `Grid` item. `GridRow` spaces columns with Bootstrap's 1.5rem gutter and no vertical gap, like a `.row`. `ColumnProps` from the same file replaces reactstrap's `ColProps`. See the conversion rules under step 7.
+   - **Rows and columns:** planned as a gap-based `GridRow`. Step 7 used reactstrap-compatible `Row` and `Col` on MUI `Grid` instead, and `GridRow` was deleted.
 3. Capture visual baselines before the breakpoint PR, using `e2e-tests/tests/visual-baseline.spec.ts`.
    - It takes full-page screenshots of home, action list, an action, indicator list, an indicator and a content page. Each is captured at 390, 820, 1100 and 1440px, widths that fall between the Bootstrap and MUI breakpoints.
    - It runs only when `VISUAL_BASELINE=1` is set, so the regular e2e runs skip it.
@@ -248,32 +248,22 @@ Status: done on `feat/bye-reactstrap`. Files importing reactstrap went from 80 t
   - **In a browser, compared with the committed reactstrap code:** the nav and plan-selector dropdowns (click, Escape, arrow keys, outside click) and the watch-ui and Zürich mobile menus behave the same. The open menus are pixel-identical.
   - **One difference:** the plan selector's menu now opens below its toggle. reactstrap's Popper placed it over the toggle.
 
-### 7. Layout grid (~60 files, mostly mechanical)
+### 7. Layout grid
 
-1. Write a jscodeshift codemod for the `Container`/`Row`/`Col` → `Container`/`GridRow`/`Grid` changes, following the rules below.
-2. Hand-fix any `styled(Col)`-style wrappers the codemod can't handle.
-3. Run it one folder at a time (`contentblocks`, `actions`, `indicators`, `paths`, `app/root`, the rest) so each diff is small enough to review.
+Status: done on `feat/bye-reactstrap`. All 70 remaining files changed only their import, and no code imports reactstrap any more.
 
-Because pages are built from layout, the screenshot diffs matter most here.
-
-Conversion rules:
-
-| reactstrap                           | MUI                                                      |
-| ------------------------------------ | -------------------------------------------------------- |
-| `<Container>`                        | `<Container>`                                            |
-| `<Container fluid>`                  | `<Container maxWidth={false}>`                           |
-| `<Container tag="section">`          | `<Container component="section">`                        |
-| `<Row>`                              | `<GridRow>`                                              |
-| `<Col md="6">`, `<Col md={6}>`       | `<Grid size={{ xs: 12, md: 6 }}>`                        |
-| `<Col md={{ size: 10, offset: 1 }}>` | `<Grid size={{ xs: 12, md: 10 }} offset={{ md: 1 }}>`    |
-| `<Col>` (no sizes)                   | `<Grid size="grow">`                                     |
-| `<Col xs="auto">`                    | `<Grid size="auto">`                                     |
-| `columnProps?: ColProps`             | `columnProps?: ColumnProps`, spread onto the `Grid` item |
-
-Two behaviours differ from Bootstrap, and the codemod has to account for them:
-
-- **Items without a size.** A Bootstrap column is full width until one of its breakpoint sizes kicks in. A MUI `Grid` item without a `size` at a breakpoint takes its content width. So add `xs: 12` whenever a column has breakpoint sizes but no `xs`.
-- **Bare `<Col>`.** In Bootstrap this means equal-width columns, which is `size="grow"` in MUI.
+- **No codemod.** Column sizes are often computed (`md={{ size: single ? 8 : 6, offset: … }}`) or spread in from props (`{...columnProps}`), which a codemod can't rewrite reliably.
+- **`@/components/common/layout/LayoutGrid`** has reactstrap's `Container`, `Row` and `Col` API (plus the `ColProps` and `ColumnProps` types) on MUI. It translates reactstrap's breakpoint props into MUI `Grid`'s `size` and `offset` at runtime:
+  - `6` or `'6'` becomes a size, `'auto'` becomes `auto`, `true` becomes `grow`, and `{ size, offset, order }` becomes size, offset and order;
+  - a `Col` with no breakpoint props becomes `size="grow"`, like Bootstrap's `.col`.
+- **Look:** Bootstrap's grid model is kept.
+  - MUI `Grid` with no spacing computes the widths and offsets, which are the same percentages as Bootstrap's at the same breakpoints.
+  - `Row` keeps the `row` class and `Container` keeps `container` / `container-fluid` / `container-lg`. So Bootstrap's CSS still supplies the container widths and gutters, the row's negative margins, the column padding, full width for columns without an `xs` size, and the `gy-*` gutters.
+  - MUI's `Grid` and `Container` (with `maxWidth={false}` and `disableGutters`) set none of these, so nothing conflicts. When Bootstrap's CSS is removed, move those rules into `LayoutGrid`.
+- **`GridRow` deleted.** The Phase 0 gap-based row was never used, and it would have rendered columns with overridden padding or backgrounds differently.
+- **Checks:**
+  - **Screenshots:** unchanged against the pre-step branch state. Espoo's action list varies between loads by itself.
+  - **Other pages:** the organisation and search pages match the committed reactstrap code at 390px and 1100px, apart from minor text rendering noise on search.
 
 ### 8. Cleanup
 

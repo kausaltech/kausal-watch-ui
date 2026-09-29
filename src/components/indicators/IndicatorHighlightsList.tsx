@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Col, Row } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
@@ -16,6 +15,7 @@ import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 import IndicatorHighlightCard from './IndicatorHighlightCard';

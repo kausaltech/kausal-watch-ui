@@ -5,7 +5,6 @@ import Collapse from '@mui/material/Collapse';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Col, Row } from 'reactstrap';
 
 import type { ReportComparisonBlockActionContentFragment } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
@@ -13,6 +12,7 @@ import { getActionTermContext } from '@/common/i18n';
 import ActionAttribute from '@/components/common/ActionAttribute';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 const ReportSection = styled.div`

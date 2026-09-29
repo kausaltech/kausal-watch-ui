@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 
 import type { Theme } from '@kausal/themes/types';
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import type { CardImageFragment } from '@/common/__generated__/graphql';
 import type { CommonContentBlockProps } from '@/common/blocks.types';
@@ -10,6 +9,7 @@ import { CARD_GRID_IMAGE_SIZES, getBgImageAlignment, getImageSrcSet } from '@/co
 import { Link } from '@/common/links';
 import Card from '@/components/common/Card';
 import RichText from '@/components/common/RichText';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { SectionHeader } from '@/components/contentblocks/ActionListBlock';
 import { useFallbackCategories } from '@/context/categories';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';

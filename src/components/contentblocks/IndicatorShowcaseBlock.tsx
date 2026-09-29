@@ -6,11 +6,11 @@ import Alert from '@mui/material/Alert';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
 import type { StreamFieldFragment } from '@/common/__generated__/graphql';
 import { deploymentType } from '@/common/environment';
 import RichText from '@/components/common/RichText';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import IndicatorProgressBar from '@/components/indicators/IndicatorProgressBar';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 

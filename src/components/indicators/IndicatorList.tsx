@@ -7,7 +7,6 @@ import { useSearchParams } from 'next/navigation';
 
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Container } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
@@ -22,6 +21,7 @@ import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
 import { getIndicatorTermContext } from '@/common/i18n';
 import type { FilterValue } from '@/components/actions/ActionListFilters';
 import ErrorPage from '@/components/common/ErrorPage';
+import { Container } from '@/components/common/layout/LayoutGrid';
 import { GET_INDICATOR_LIST } from '@/queries/get-indicator-list';
 
 import { usePlan } from '../../context/plan';

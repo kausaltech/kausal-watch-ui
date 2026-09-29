@@ -3,13 +3,12 @@ import { type PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { Col, Row } from 'reactstrap';
-
 import type {
   AttributesBlockAttributeFragment,
   AttributesBlockAttributeTypeFragment,
   AttributesBlockAttributeWithNestedTypeFragment,
 } from '@/common/__generated__/graphql';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 
 import RestrictedBlockWrapper from '../actions/blocks/RestrictedBlockWrapper';
 import ActionAttribute from './ActionAttribute';

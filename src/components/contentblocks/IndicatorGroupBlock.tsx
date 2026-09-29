@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import type { StreamFieldFragment } from '@/common/__generated__/graphql';
 import { SiteGeneralContentIndicatorTerm } from '@/common/__generated__/graphql';
@@ -10,6 +9,7 @@ import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorLink, IndicatorListLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import IndicatorHighlightCard from '@/components/indicators/IndicatorHighlightCard';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 import { usePlan } from '@/context/plan';

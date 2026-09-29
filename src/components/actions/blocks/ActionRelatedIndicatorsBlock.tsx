@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor, shade } from 'polished';
-import { Col, Row } from 'reactstrap';
 
 import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getIndicatorTermContext } from '@/common/i18n';
@@ -11,6 +10,7 @@ import { SectionHeader } from '@/components/actions/ActionContent';
 import BaseBadge from '@/components/common/Badge';
 import { Card as BaseCard, CardBody, CardFooter } from '@/components/common/CardParts';
 import Icon from '@/components/common/Icon';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 import { usePlan } from '@/context/plan';
 

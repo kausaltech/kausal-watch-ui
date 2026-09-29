@@ -1,11 +1,10 @@
 import styled from '@emotion/styled';
 
-import { Col, Container, Row } from 'reactstrap';
-
 import { transientOptions } from '@common/themes/styles/styled';
 
 import { type StaticPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import { Link } from '@/common/links';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
 const NavigationContainer = styled(Container, transientOptions)<{ $pageHasContent: boolean }>`
   ${(props) => props.theme.breakpoints.up('lg')} {

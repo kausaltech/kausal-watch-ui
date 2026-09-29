@@ -8,11 +8,11 @@ import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import { BoxArrowRight } from 'react-bootstrap-icons';
 import SVG from 'react-inlinesvg';
-import { Container } from 'reactstrap';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
 import { Link, NavigationLink } from '@/common/links';
+import { Container } from '@/components/common/layout/LayoutGrid';
 import PlanSelector from '@/components/plans/PlanSelector';
 import { usePlan } from '@/context/plan';
 import { useHandleSignOut } from '@/utils/auth.utils';

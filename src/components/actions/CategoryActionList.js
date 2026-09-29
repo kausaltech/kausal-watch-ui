@@ -4,13 +4,13 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
-import { Container } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
 import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { Container } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 const GET_ACTION_LIST = gql`

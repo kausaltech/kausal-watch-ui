@@ -2,8 +2,6 @@
 
 import { useTheme } from '@emotion/react';
 
-import { Col, Container, Row } from 'reactstrap';
-
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import type { ContentPageQuery, HeroImageFragment } from '@/common/__generated__/graphql';
 import { getBgImageAlignment } from '@/common/images';
@@ -12,6 +10,7 @@ import CategoryPageContent from '@/components/categories/CategoryPageContent';
 import RichText from '@/components/common/RichText';
 import SecondaryNavigation from '@/components/common/SecondaryNavigation';
 import StreamField from '@/components/common/StreamField';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import CategoryPageHeaderBlock from '@/components/contentblocks/CategoryPageHeaderBlock';
 import ContentPageHeaderBlock from '@/components/contentblocks/ContentPageHeaderBlock';
 import IndicatorListPage from '@/components/indicators/IndicatorList';

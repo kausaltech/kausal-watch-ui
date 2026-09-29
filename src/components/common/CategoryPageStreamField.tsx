@@ -3,12 +3,12 @@ import type React from 'react';
 import styled from '@emotion/styled';
 
 import * as Sentry from '@sentry/nextjs';
-import { Col, type ColProps, Container, Row } from 'reactstrap';
 
 import type { CategoryPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import ActionAttribute from '@/components/common/ActionAttribute';
 import { Attributes, attributeHasValue } from '@/components/common/AttributesBlock';
 import StreamField from '@/components/common/StreamField';
+import { Col, type ColProps, Container, Row } from '@/components/common/layout/LayoutGrid';
 import ActionStatusGraphsBlock from '@/components/contentblocks/ActionStatusGraphsBlock';
 import CategoryListBlock from '@/components/contentblocks/CategoryListBlock';
 import ExpandableFeedbackFormBlock from '@/components/contentblocks/ExpandableFeedbackFormBlock';
@@ -62,7 +62,7 @@ type ChangeLogMessageBlockWithOverrides = {
 interface Props {
   page: CategoryPage;
   context?: 'hero' | 'main' | 'aside';
-  /** Passed down to reactstrap Col components */
+  /** Passed down to Col components */
   columnProps?: ColProps;
   block: OmitFields<CategoryPageMainTopBlock> | OmitFields<CategoryPageMainBottomBlock>;
   /**

@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type { StreamFieldFragment } from '@/common/__generated__/graphql';
 import { IndicatorLink } from '@/common/links';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import IndicatorVisualizationBlock from '@/components/indicators/IndicatorVisualizationBlock';
 
 import Card from '../common/Card';

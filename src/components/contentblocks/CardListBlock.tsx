@@ -2,11 +2,11 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import type { StreamFieldFragment } from '@/common/__generated__/graphql';
 import { CARD_GRID_IMAGE_SIZES, getBgImageAlignment, getImageSrcSet } from '@/common/images';
 import Card from '@/components/common/Card';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
 const CardListSection = styled.div`
   background-color: ${(props) => props.theme.brandDark};

@@ -13,7 +13,6 @@ import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { createFilter } from 'react-select';
-import { Col, Row } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -36,6 +35,7 @@ import PopoverTip from '@/components/common/PopoverTip';
 import type { SelectDropdownOption } from '@/components/common/SelectDropdown';
 import SelectDropdown from '@/components/common/SelectDropdown';
 import TextInput from '@/components/common/TextInput';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 import type {
   ActionListAction,
   ActionListActionAttributeTypeFilterBlock,

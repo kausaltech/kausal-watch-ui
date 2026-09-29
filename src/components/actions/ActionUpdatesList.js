@@ -5,11 +5,11 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
-import { Col, Row } from 'reactstrap';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
 import RichText from '@/components/common/RichText';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 
 import dayjs from '../../common/dayjs';
 import { usePlan } from '../../context/plan';

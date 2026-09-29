@@ -11,7 +11,6 @@ import dagre from 'cytoscape-dagre';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import type { TFunction } from '@/common/i18n';
 import {
@@ -20,6 +19,7 @@ import {
   DropdownToggle,
   UncontrolledButtonDropdown,
 } from '@/components/common/Dropdowns';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 import { getActionLinkProps, getIndicatorLinkProps } from '../../common/links';
