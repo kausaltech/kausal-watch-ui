@@ -183,6 +183,13 @@ describe('applySecurityHeaders', () => {
     expect(headers.get('content-security-policy')).toContain("frame-ancestors 'self'");
   });
 
+  /* The rewrite header is parsed per request, so a value that will not parse must not throw. */
+  it('denies framing when the rewrite target will not parse', () => {
+    const { headers } = applySecurityHeaders(rewrittenTo('http://%%'), secureRequest);
+
+    expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
+  });
+
   it('denies framing when nothing was rewritten', () => {
     const { headers } = applySecurityHeaders(new Response(null), secureRequest);
 
@@ -300,6 +307,18 @@ describe('buildReportOnlyPolicy', () => {
    */
   it('is left out in CI', () => {
     expect(buildReportOnlyPolicy({ ...options, environment: 'ci' })).toBeUndefined();
+  });
+
+  /*
+   * The policy is built when the module loads, so a malformed value must not throw: that would
+   * take down every request rather than degrade a header nothing enforces yet.
+   */
+  it.each([
+    ['assetPrefix', { assetPrefix: 'cdn.example.com' }],
+    ['backendUrl', { backendUrl: 'api.example.com' }],
+    ['dsn', { dsn: 'not a dsn' }],
+  ])('survives a malformed %s', (_name, override) => {
+    expect(() => buildReportOnlyPolicy({ ...options, ...override })).not.toThrow();
   });
 
   it('is left out when no DSN is configured', () => {
