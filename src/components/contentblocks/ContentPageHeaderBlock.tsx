@@ -2,9 +2,9 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
 import { ImageCredit } from '../common/ImageCredit';
 
@@ -15,11 +15,11 @@ const HeaderImage = styled.div`
   height: calc(4 * ${(props) => props.theme.spaces.s400});
   background-color: ${(props) => props.theme.brandDark};
 
-  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+  ${(props) => props.theme.breakpoints.up('lg')} {
     height: calc(4.5 * ${(props) => props.theme.spaces.s400});
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointXl}) {
+  ${(props) => props.theme.breakpoints.up('xl')} {
     height: calc(6 * ${(props) => props.theme.spaces.s400});
   }
 `;
@@ -60,7 +60,7 @@ const ContentHeader = styled.header`
   }
 
   .lead {
-    max-width: ${(props) => props.theme.breakpointLg};
+    max-width: 992px;
   }
 `;
 

@@ -1,11 +1,11 @@
 import { useTranslations } from 'next-intl';
-import { Col, Row } from 'reactstrap';
 
 import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTaskTermContext } from '@/common/i18n';
 import { ActionSection, SectionHeader } from '@/components/actions/ActionContent';
 import TaskList from '@/components/actions/TaskList';
 import PopoverTip from '@/components/common/PopoverTip';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 type ActionTasksBlockProps = {

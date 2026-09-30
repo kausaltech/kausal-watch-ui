@@ -41,7 +41,7 @@ const StyledTriggerButton = styled.button`
 const StyledEmailToggleSpan = styled.span`
   display: none;
 
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     display: inline;
   }
 `;
@@ -55,7 +55,7 @@ const StyledEmailLabel = styled.div`
   margin-bottom: ${({ theme }) => theme.spaces.s025};
   word-break: break-all;
 
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     display: none;
   }
 `;

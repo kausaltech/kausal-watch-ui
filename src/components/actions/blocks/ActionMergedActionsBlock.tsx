@@ -2,11 +2,11 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Row } from 'reactstrap';
 
 import { getActionTermContext } from '@/common/i18n';
 import type { ActionContentAction } from '@/components/actions/ActionContent';
 import { ActionSection, SectionHeader } from '@/components/actions/ActionContent';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 const ActionNumberBadge = styled.span`

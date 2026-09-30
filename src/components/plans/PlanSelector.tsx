@@ -4,11 +4,11 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { transparentize } from 'polished';
-import { DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 import { getThemeStaticURL } from '@common/themes/theme';
 
+import { DropdownMenu, DropdownToggle, UncontrolledDropdown } from '@/components/common/Dropdowns';
 import Icon from '@/components/common/Icon';
 import { usePlan } from '@/context/plan';
 

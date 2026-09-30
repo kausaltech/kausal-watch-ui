@@ -3,7 +3,8 @@ import React from 'react';
 import Head from 'next/head';
 
 import PropTypes from 'prop-types';
-import { Container, Row } from 'reactstrap';
+
+import { Container, Row } from '@/components/common/layout/LayoutGrid';
 
 /* eslint-disable @next/next/no-sync-scripts -- This legacy component requires the global before componentDidMount. */
 

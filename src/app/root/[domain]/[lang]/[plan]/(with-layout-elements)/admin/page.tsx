@@ -5,10 +5,11 @@ import { redirect } from 'next/navigation';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Card, CardBody, Col, Container, Row } from 'reactstrap';
 
 import { Link } from '@/common/links';
 import Button from '@/components/common/Button';
+import { Card, CardBody } from '@/components/common/CardParts';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 const ErrorBackground = styled.div`
@@ -55,7 +56,7 @@ export default function AdminPage() {
                 <h1>{t('page-not-found')}</h1>
                 <h2>{t('admin-login-not-defined')}</h2>
                 <Link href="/">
-                  <Button outline color="dark" size="sm">
+                  <Button variant="outlined" color="dark" size="small">
                     {t('return-to-front')}
                   </Button>
                 </Link>

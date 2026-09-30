@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
 import { type CommonContentBlockProps } from '@/common/blocks.types';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 type ContactContentBlock = { field?: string | null; value?: string | null };

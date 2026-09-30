@@ -6,7 +6,6 @@ import styled from '@emotion/styled';
 import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Col, type ColProps, Row } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -20,6 +19,7 @@ import images, { getActionImage } from '@/common/images';
 import { ActionListLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { Col, type ColProps, Row } from '@/components/common/layout/LayoutGrid';
 import { getReadableThemeTextColor } from '@/components/contentblocks/colorUtils';
 import EmbedContext from '@/context/embed';
 
@@ -97,7 +97,7 @@ const ListHeader = styled(Col, transientOptions)<{
     margin-bottom: ${(props) => props.theme.spaces.s300};
     font-size: ${(props) => props.theme.fontSizeLg};
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       font-size: ${(props) => props.theme.fontSizeXl};
     }
   }

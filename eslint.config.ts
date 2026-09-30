@@ -44,6 +44,25 @@ const config: ConfigWithExtends[] = defineConfig(
     },
   },
   {
+    // reactstrap was retired in favour of MUI, see docs/reactstrap-migration.md.
+    name: 'no-reactstrap',
+    files: ['src/**/*.@(ts|tsx|js|jsx)', 'kausal_common/src/**/*.@(ts|tsx|js|jsx)'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'reactstrap',
+              message:
+                'reactstrap was retired. Use @mui/material or the shared components in @/components/common (see docs/reactstrap-migration.md).',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     name: 'javascript',
     files: ['**/*.@(js|jsx)'],
     rules: {

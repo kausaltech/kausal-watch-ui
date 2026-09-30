@@ -15,13 +15,13 @@ const columnLayout = (theme: Theme) => css`
   gap: ${theme.spaces.s300};
 
   ${MainContent} {
-    flex: 0 2 ${theme.breakpointMd};
+    flex: 0 2 768px;
     padding: 0 ${theme.spaces.s100};
     background-color: ${theme.themeColors.white};
     border-radius: ${theme.cardBorderRadius};
   }
 
-  @media (max-width: ${theme.breakpointLg}) {
+  ${theme.breakpoints.down('lg')} {
     flex-direction: column-reverse;
     justify-content: flex-start;
     align-items: stretch;
@@ -31,16 +31,16 @@ const columnLayout = (theme: Theme) => css`
       top: 0;
       flex: 1 0 auto;
       width: 100%;
-      max-width: ${theme.breakpointMd};
+      max-width: 768px;
       margin: 0 auto;
     }
   }
 
-  @media (max-width: ${theme.breakpointMd}) {
+  ${theme.breakpoints.down('md')} {
     gap: ${theme.spaces.s150};
   }
 
-  @media (max-width: ${theme.breakpointSm}) {
+  ${theme.breakpoints.down('sm')} {
     padding: 0 ${theme.spaces.s050} ${theme.spaces.s050};
   }
 `;

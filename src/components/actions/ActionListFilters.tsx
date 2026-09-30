@@ -1,5 +1,10 @@
 import type { Ref } from 'react';
-import React, { createRef, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { createRef, useCallback, useEffect, useId, useMemo, useState } from 'react';
+
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import SvgIcon from '@mui/material/SvgIcon';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -9,16 +14,6 @@ import { debounce } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import { createFilter } from 'react-select';
-import {
-  ButtonGroup,
-  CloseButton,
-  Col,
-  Collapse,
-  FormGroup,
-  Input,
-  Button as RButton,
-  Row,
-} from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -35,11 +30,13 @@ import { constructCatHierarchy, getCategoryString } from '@/common/categories';
 import type { TFunction } from '@/common/i18n';
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import Button from '@/components/common/Button';
+import { FormGroup, Input } from '@/components/common/FormControls';
 import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
 import type { SelectDropdownOption } from '@/components/common/SelectDropdown';
 import SelectDropdown from '@/components/common/SelectDropdown';
 import TextInput from '@/components/common/TextInput';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 import type {
   ActionListAction,
   ActionListActionAttributeTypeFilterBlock,
@@ -127,6 +124,10 @@ const FilterSectionDivider = styled.div`
   border-bottom: 1px solid #333;
 `;
 
+// Bootstrap's close icon ($btn-close-bg), which these badges have always used
+const CLOSE_ICON_PATH =
+  'M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414';
+
 const StyledBadge = styled('span', transientOptions)<{ $color?: string }>`
   display: inline-flex;
   max-width: 100%;
@@ -144,14 +145,39 @@ const StyledBadge = styled('span', transientOptions)<{ $color?: string }>`
   line-height: 1.25;
   text-align: left;
 
-  .btn-close {
+  // Sized like Bootstrap's .btn-close was: a 1em X, relative to the badge's text
+  .badge-close {
+    flex-shrink: 0;
+    font-size: inherit;
+    width: calc(0.75rem + 0.5em);
+    height: calc(0.75rem + 0.5em);
     margin: 0 0.5rem;
-    width: 0.75rem;
-    height: 0.75rem;
+    padding: 0;
+    border-radius: 0.375rem;
+    opacity: 0.5;
+
+    // As with .btn-close, only the icon changes on hover, and focus gets a ring
+    &:hover {
+      opacity: 0.75;
+      background-color: transparent;
+    }
+
+    // The theme's focus ring colour can be too faint on the badge colour
+    &:focus-visible {
+      opacity: 1;
+      box-shadow: none;
+      outline: 2px solid currentColor;
+      outline-offset: 1px;
+    }
   }
 `;
 
-const ToggleButton = styled(RButton)`
+const RadioButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
+`;
+
+const ToggleButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   padding: 0;
   margin: 0 0 ${(props) => props.theme.spaces.s100} 0;
   color: ${(props) =>
@@ -490,12 +516,17 @@ function ActionListFilterBadges({
       {/* TODO: animate transition */}
       {allBadges.map((item) => (
         <StyledBadge key={`${item.id}-${item.value}`} className="badge me-3" $color={buttonColor}>
-          <CloseButton
-            variant={readableColor(buttonColor || '#000') === '#000' ? 'black' : 'white'}
-            className="btn-sm"
+          <IconButton
+            className="badge-close"
+            size="small"
+            color="inherit"
             onClick={item.onReset}
             aria-label={t('remove-filter')}
-          />
+          >
+            <SvgIcon viewBox="0 0 16 16" fontSize="inherit">
+              <path d={CLOSE_ICON_PATH} />
+            </SvgIcon>
+          </IconButton>
           {item.label.trim()}
         </StyledBadge>
       ))}
@@ -951,31 +982,29 @@ const FilterField = React.memo(function FilterField({
             {filter.helpText && <PopoverTip identifier={filter.id} content={filter.helpText} />}
           </MainCategoryLabel>
           <ButtonGroup role="radiogroup" aria-labelledby={`label-${filter.id}`}>
-            <RButton
+            <RadioButton
               color="black"
-              outline
+              variant={showAllSelected ? 'contained' : 'outlined'}
               onClick={() => onChange(filter.id, undefined)}
-              active={showAllSelected}
               aria-checked={showAllSelected}
               role="radio"
             >
               {filter.showAllLabel}
-            </RButton>
+            </RadioButton>
             {(filter.options ?? []).map((opt) => {
               const isActive = selectedValue === opt.id;
 
               return (
-                <RButton
+                <RadioButton
                   color="black"
-                  outline
+                  variant={isActive ? 'contained' : 'outlined'}
                   onClick={() => onChange(filter.id, opt.id)}
-                  active={isActive}
                   aria-checked={isActive}
                   key={opt.id}
                   role="radio"
                 >
                   {opt.label}
-                </RButton>
+                </RadioButton>
               );
             })}
           </ButtonGroup>
@@ -1089,6 +1118,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
   } = props;
 
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
 
   const t = useTranslations();
   const theme = useTheme();
@@ -1120,12 +1150,17 @@ function ActionListFilters(props: ActionListFiltersProps) {
         {filterSections.map((section) => (
           <React.Fragment key={section.id}>
             {section.hidden ? (
-              <ToggleButton color="link" onClick={toggle}>
+              <ToggleButton
+                variant="link"
+                onClick={toggle}
+                aria-expanded={isOpen}
+                aria-controls={`${panelId}-${section.id}`}
+              >
                 {t('additional-filters')}
                 <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
               </ToggleButton>
             ) : null}
-            <Collapse isOpen={section.hidden ? isOpen : true}>
+            <Collapse in={section.hidden ? isOpen : true} id={`${panelId}-${section.id}`}>
               <FilterSection key={section.id}>
                 {section.filters.map((filter) => (
                   <FilterField
@@ -1147,7 +1182,7 @@ function ActionListFilters(props: ActionListFiltersProps) {
                     xl={2}
                     className="d-flex flex-column justify-content-end"
                   >
-                    <Button type="submit" color={buttonColorName} className="mb-3" block>
+                    <Button type="submit" color={buttonColorName} className="mb-3" fullWidth>
                       {t('search')}
                     </Button>
                   </Col>

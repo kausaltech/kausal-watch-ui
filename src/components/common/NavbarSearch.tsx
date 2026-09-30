@@ -16,11 +16,11 @@ import { useApolloClient } from '@apollo/client/react';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
 import { useTranslations } from 'next-intl';
 import { usePopper } from 'react-popper';
-import { InputGroup } from 'reactstrap';
 
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { Link, usePrependPlanAndLocale } from '@/common/links';
 import WatchSearchAPIConnector, { type SearchHit } from '@/common/search';
+import { InputGroup } from '@/components/common/FormControls';
 import Icon from '@/components/common/Icon';
 import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';

@@ -1,4 +1,6 @@
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
+
+import MuiTooltip, { type TooltipProps } from '@mui/material/Tooltip';
 
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -7,7 +9,6 @@ import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
-import { Tooltip } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 import { getThemeStaticURL } from '@common/themes/theme';
@@ -223,16 +224,14 @@ const OrgLogo = styled.img`
   height: ${(props) => props.theme.spaces.s150};
 `;
 
-const StyledTooltip = styled(Tooltip)`
-  display: block;
-
-  .tooltip {
-    --bs-tooltip-bg: #fff;
-    --bs-tooltip-opacity: 0.98;
-  }
-
-  .tooltip-inner {
+const DependencyTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <MuiTooltip placement="top" describeChild {...props} classes={{ popper: className }} />
+))`
+  & .MuiTooltip-tooltip {
     max-width: 300px;
+    padding: ${({ theme }) => theme.spaces.s050};
+    background-color: rgba(255, 255, 255, 0.98);
+    color: ${({ theme }) => theme.textColor.primary};
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
   }
 `;
@@ -315,9 +314,6 @@ function ActionCard({
   const plan = usePlan();
   const t = useTranslations();
   const theme = useTheme();
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-
-  const toggle = () => setTooltipOpen(!tooltipOpen);
 
   if (!action || !action.name) {
     /**
@@ -446,19 +442,8 @@ function ActionCard({
       )}
 
       {variant === 'primary' && action.hasDependencyRelationships && (
-        <>
-          <StyledActionDependencyIconWrapper id={getDependencyTooltipId(action.id)}>
-            <Icon.ActionDependency width="24px" height="24px" role="presentation" />
-          </StyledActionDependencyIconWrapper>
-          <StyledTooltip
-            target={getDependencyTooltipId(action.id)}
-            role="tooltip"
-            autohide={false}
-            placement="top"
-            id={`tt-content-${getDependencyTooltipId(action.id)}`}
-            isOpen={tooltipOpen}
-            toggle={toggle}
-          >
+        <DependencyTooltip
+          title={
             <Suspense fallback={<ActionDependenciesBlock loading={true} />}>
               <ActionDependenciesBlock
                 action={action as unknown as Action}
@@ -468,8 +453,12 @@ function ActionCard({
                 showTitle
               />
             </Suspense>
-          </StyledTooltip>
-        </>
+          }
+        >
+          <StyledActionDependencyIconWrapper id={getDependencyTooltipId(action.id)}>
+            <Icon.ActionDependency width="24px" height="24px" role="presentation" />
+          </StyledActionDependencyIconWrapper>
+        </DependencyTooltip>
       )}
     </ActionCardElement>
   );

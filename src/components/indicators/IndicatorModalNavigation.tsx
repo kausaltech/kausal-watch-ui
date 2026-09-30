@@ -30,8 +30,7 @@ export function IndicatorModalNavigation({
   return (
     <ModalNavigation>
       <Button
-        color="primary"
-        outline
+        variant="outlined"
         onClick={onPrevious}
         disabled={!prevIndicatorId || loading}
         style={{ visibility: prevIndicatorId ? 'visible' : 'hidden' }}
@@ -42,8 +41,7 @@ export function IndicatorModalNavigation({
         {currentIndicatorNumber}/{indicatorCount}
       </IndicatorCounter>
       <Button
-        color="primary"
-        outline
+        variant="outlined"
         onClick={onNext}
         disabled={!nextIndicatorId || loading}
         style={{ visibility: nextIndicatorId ? 'visible' : 'hidden' }}

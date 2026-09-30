@@ -3,12 +3,12 @@ import styled from '@emotion/styled';
 
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
-import { Col, Row } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type { ActionCardFragment } from '@/common/__generated__/graphql';
 import type { TFunction } from '@/common/i18n';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 
 import type { ActionListAction, ActionListCategory } from '../dashboard/dashboard.types';
 import ActionCard from './ActionCard';

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 
-import { DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
-
+import { DropdownMenu, DropdownToggle, UncontrolledDropdown } from '@/components/common/Dropdowns';
 import Icon from '@/components/common/Icon';
 import OrgChip from '@/components/orgs/OrgChip';
 

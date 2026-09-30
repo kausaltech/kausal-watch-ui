@@ -46,7 +46,7 @@ function PledgeCreateAccountCard({ onCreateAccount }: Props) {
     <StyledCard>
       <StyledTitle>{t('pledge-create-account-title')}</StyledTitle>
       <StyledDescription>{t('pledge-create-account-description')}</StyledDescription>
-      <StyledButton size="sm" color="light" onClick={onCreateAccount}>
+      <StyledButton size="small" color="light" onClick={onCreateAccount}>
         {t('pledge-create-account-button')}
       </StyledButton>
     </StyledCard>

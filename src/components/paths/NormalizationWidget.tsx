@@ -1,9 +1,10 @@
+import { CircularProgress, FormControlLabel, Switch } from '@mui/material';
+
 import styled from '@emotion/styled';
 
-import { gql } from '@apollo/client';
+import { NetworkStatus, gql } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { FormGroup, Input, Label } from 'reactstrap';
 
 import {
   type GetParametersQuery,
@@ -60,7 +61,7 @@ function NormalizationWidget(props: NormalizationWidgetProps) {
     );
 
   if ((loading && !previousData) || !data || !data.parameters) {
-    return <>-</>;
+    return <CircularProgress size={10} sx={{ ml: 0.5, mb: -0.1 }} />;
   }
   if (error) {
     return (
@@ -77,24 +78,32 @@ function NormalizationWidget(props: NormalizationWidgetProps) {
   const label = t('normalize-by', { node: norm.label });
   return (
     <SwitchWrapper>
-      <FormGroup switch>
-        <Label for={norm.id}>{label}</Label>
-        <Input
-          disabled={mutationLoading}
-          type="switch"
-          role="switch"
-          id={norm.id}
-          name={norm.id}
-          checked={norm.isActive}
-          onChange={(e) => {
-            setNormalization({
-              variables: {
-                id: norm.isActive ? null : norm.id,
-              },
-            });
-          }}
-        />
-      </FormGroup>
+      <FormControlLabel
+        control={
+          <Switch
+            onChange={() =>
+              void setNormalization({
+                variables: {
+                  id: norm.isActive ? null : norm.id,
+                },
+              })
+            }
+            disabled={mutationLoading || networkStatus === NetworkStatus.refetch}
+            checked={norm.isActive}
+            size="small"
+          />
+        }
+        label={label}
+        sx={{
+          m: 0,
+          p: 0,
+        }}
+        slotProps={{
+          typography: {
+            variant: 'caption',
+          },
+        }}
+      />
     </SwitchWrapper>
   );
 }

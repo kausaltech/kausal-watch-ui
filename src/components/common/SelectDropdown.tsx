@@ -15,8 +15,8 @@ import Select, {
   type ValueContainerProps,
   components,
 } from 'react-select';
-import { Label as BSLabel, FormGroup } from 'reactstrap';
 
+import { Label as BSLabel, FormGroup } from '@/components/common/FormControls';
 import PopoverTip from '@/components/common/PopoverTip';
 
 const Label = styled(BSLabel)`

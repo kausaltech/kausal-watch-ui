@@ -5,11 +5,11 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import PropTypes from 'prop-types';
-import { Col, Media, Row } from 'reactstrap';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
 import RichText from '@/components/common/RichText';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 
 import dayjs from '../../common/dayjs';
 import { usePlan } from '../../context/plan';
@@ -76,21 +76,19 @@ function ActionStatusUpdate(props) {
   return (
     <ActionUpdate>
       <ActionUpdateHeader>
-        <Media className="mb-3">
-          <Media left top>
-            <AuthorAvatar
-              src={author?.avatarUrl || defaultAvatarUrl}
-              className="rounded-circle"
-              alt={author ? `${author.firstName} ${author.lastName}` : 'Author'}
-            />
-          </Media>
-          <Media body>
+        <div className="mb-3">
+          <AuthorAvatar
+            src={author?.avatarUrl || defaultAvatarUrl}
+            className="rounded-circle"
+            alt={author ? `${author.firstName} ${author.lastName}` : 'Author'}
+          />
+          <div>
             <AuthorName>{author ? `${author.firstName} ${author.lastName}` : 'Author'}</AuthorName>
             <UpdateDate>
               <time dateTime={date}>{dayjs(date).format('L')}</time>
             </UpdateDate>
-          </Media>
-        </Media>
+          </div>
+        </div>
         <h3>{title}</h3>
       </ActionUpdateHeader>
       <RichText html={content} />

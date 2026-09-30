@@ -29,7 +29,7 @@ const CausalNav = styled.div<{ $withBorder?: boolean }>`
     props.$withBorder ? '1px solid ' + props.theme.graphColors.grey030 : 'none'};
   border-bottom: ${(props) =>
     props.$withBorder ? '1px solid ' + props.theme.graphColors.grey030 : 'none'};
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     flex-direction: row;
   }
 `;
@@ -39,7 +39,7 @@ const CausalList = styled.div`
   flex-direction: column;
   gap: ${(props) => props.theme.spaces.s100};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     flex: 0 1 400px;
   }
 `;

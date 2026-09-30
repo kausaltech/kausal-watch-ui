@@ -1,13 +1,14 @@
 import type { ReactElement } from 'react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
+import Alert from '@mui/material/Alert';
+
 import type { Theme } from '@emotion/react';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { captureException } from '@sentry/nextjs';
 import { useLocale, useTranslations } from 'next-intl';
-import { Alert } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
@@ -441,7 +442,7 @@ function IndicatorCausalVisualisation({ actionId }: IndicatorCausalVisualisation
 
   if (error) {
     return (
-      <Alert color="danger">
+      <Alert severity="error">
         Error:
         {error.message}
       </Alert>

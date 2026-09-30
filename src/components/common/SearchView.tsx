@@ -1,12 +1,13 @@
 import { type ChangeEvent, type SyntheticEvent, useEffect, useState } from 'react';
 
+import Alert from '@mui/material/Alert';
+
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Alert, Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
@@ -15,7 +16,9 @@ import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { Link } from '@/common/links';
 import { SEARCH_QUERY } from '@/common/search';
 import Button from '@/components/common/Button';
+import { FormGroup, Input, Label } from '@/components/common/FormControls';
 import TextInput from '@/components/common/TextInput';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';
 
@@ -51,7 +54,7 @@ const SearchHeader = styled.div`
         props.theme.themeColors.white
       )};
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       font-size: ${(props) => props.theme.fontSizeXxl};
     }
   }
@@ -205,7 +208,7 @@ function SearchResults({ search }: SearchResultsProps) {
   if (error) {
     return (
       <ResultsHeader>
-        <Alert color="warning">
+        <Alert severity="warning">
           <h2>{t('error-with-code')}</h2>
           {error.message}
         </Alert>
@@ -313,7 +316,7 @@ function SearchViewContent(props: SearchViewProps) {
                       <Label for="other-plans-only">{t('other-plans-only')}</Label>
                     </FormGroup>
                   )}
-                  <Button type="submit" color="primary" className="mb-3" block>
+                  <Button type="submit" color="primary" className="mb-3" fullWidth>
                     {t('search')}
                   </Button>
                 </form>
@@ -327,7 +330,7 @@ function SearchViewContent(props: SearchViewProps) {
           <SearchResults search={search} />
         ) : (
           <Col sm="12" md={{ offset: 2, size: 8 }} className="mt-5">
-            <Alert color="primary">
+            <Alert severity="info">
               <ResultsHeader>{t('search-no-results')}</ResultsHeader>
             </Alert>
           </Col>

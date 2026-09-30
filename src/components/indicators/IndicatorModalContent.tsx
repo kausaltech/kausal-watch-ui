@@ -1,8 +1,10 @@
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import styled from '@emotion/styled';
 
 import type { CombinedGraphQLErrors } from '@apollo/client/errors';
 import { useTranslations } from 'next-intl';
-import { Alert, Spinner } from 'reactstrap';
 
 import type { IndicatorDetailsQuery, IndicatorListQuery } from '@/common/__generated__/graphql';
 import { deploymentType } from '@/common/environment';
@@ -119,7 +121,7 @@ const IndicatorModalContent = ({
     return (
       <ContentWrapper>
         <ContentLoader>
-          <Spinner />
+          <CircularProgress size="2rem" color="inherit" />
         </ContentLoader>
       </ContentWrapper>
     );
@@ -134,7 +136,7 @@ const IndicatorModalContent = ({
     <ContentWrapper>
       {loading && (
         <ContentLoader>
-          <Spinner />
+          <CircularProgress size="2rem" color="inherit" />
         </ContentLoader>
       )}
       <ModalHeader>
@@ -142,7 +144,7 @@ const IndicatorModalContent = ({
       </ModalHeader>
       <ModalScrollableContent>
         {!loading && !hasLayout && deploymentType !== 'production' && (
-          <Alert color="warning">{t('error-no-layout')}</Alert>
+          <Alert severity="warning">{t('error-no-layout')}</Alert>
         )}
         <ModalContentBlocksWrapper>
           {groupConsecutiveCategoryBlocks(layout.detailsMainTop ?? []).map(

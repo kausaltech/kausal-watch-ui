@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
+import type { Breakpoints } from '@mui/material/styles';
+
 import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -9,21 +11,18 @@ import debounce from 'lodash-es/debounce';
 import { useLocale, useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
-import {
-  Collapse,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Nav,
-  NavItem,
-  Navbar,
-  UncontrolledDropdown,
-} from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 import { getThemeStaticURL } from '@common/themes/theme';
 
 import { Link, NavigationLink } from '@/common/links';
+import {
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+} from '@/components/common/Dropdowns';
+import { Nav, NavItem, Navbar, NavbarCollapse } from '@/components/common/NavParts';
 import PlanSelector from '@/components/plans/PlanSelector';
 import { selectSwitcherPlans } from '@/components/plans/relatedPlans';
 import PlanVersionSelector from '@/components/versioning/PlanVersionSelector';
@@ -36,7 +35,7 @@ import LanguageSelector from './LanguageSelector';
 import NavbarSearch from './NavbarSearch';
 
 const MobileOnlyPledgeNavUser = styled(PledgeNavUser)`
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     display: none;
   }
 `;
@@ -86,7 +85,7 @@ const TopNav = styled(Navbar)`
 
   ${({ fixed, theme }) => fixed && baseFixedNavStyles(theme)}
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     padding: 0 ${(props) => props.theme.spaces.s100};
     border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
   }
@@ -163,7 +162,7 @@ const BotNav = styled(Navbar, transientOptions)<{ $offsetTop?: number; $expanded
     display: contents;
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     .navbar-nav {
       padding: 0;
     }
@@ -186,7 +185,7 @@ const SiteTitle = styled.div`
   line-height: 1;
   padding: ${(props) => props.theme.spaces.s150} 0 ${(props) => props.theme.spaces.s150};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeMd};
   }
 `;
@@ -226,7 +225,7 @@ const HomeLink = styled(Link, transientOptions)<{ $hideLogoOnMobile?: boolean }>
     max-height: ${({ theme }) => theme.spaces.s600};
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     .org-logo {
       display: block;
       max-width: 10em;
@@ -242,7 +241,7 @@ const EmptyLogo = styled.div`
   height: ${(props) => props.theme.spaces.s200};
   margin: ${(props) => props.theme.spaces.s050} 0 ${(props) => props.theme.spaces.s050} 0;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     width: 0;
     height: calc(${(props) => props.theme.spaces.s200} + ${(props) => props.theme.spaces.s050});
     margin: ${(props) => props.theme.spaces.s050} 0 ${(props) => props.theme.spaces.s050} 0;
@@ -291,7 +290,7 @@ const NavLink = styled.div`
       }
     }
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       align-self: flex-end;
       margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
     }
@@ -310,7 +309,7 @@ const NavHighlighter = styled.span`
     border-bottom: 5px solid ${(props) => props.theme.siteNavHighlightColor};
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     padding: ${(props) => props.theme.spaces.s150} 0
       calc(${(props) => props.theme.spaces.s150} - 5px);
 
@@ -340,7 +339,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
     }
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     align-self: flex-end;
     margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
   }
@@ -358,7 +357,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
       align-self: center;
       margin-top: 0;
 
-      @media (min-width: ${(props) => props.theme.breakpointMd}) {
+      ${(props) => props.theme.breakpoints.up('md')} {
         align-self: flex-start;
         margin-top: ${(props) => props.theme.spaces.s200};
       }
@@ -399,7 +398,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     }
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     .dropdown-menu {
       box-shadow: 3px 3px 6px 2px ${(props) => transparentize(0.85, props.theme.themeColors.black)};
     }
@@ -413,7 +412,7 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 const DropdownMenuWrapper = styled.div`
   position: static;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     position: absolute;
   }
 `;
@@ -435,7 +434,7 @@ const StyledDropdownMenu = styled(DropdownMenu)`
     width: auto;
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     min-width: 260px;
     width: auto;
 
@@ -466,7 +465,7 @@ const NavbarToggler = styled.button`
   -webkit-appearance: none;
   appearance: none;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     display: none;
   }
 
@@ -563,7 +562,8 @@ const subscribeToViewportWidth = (onStoreChange: () => void) => {
 const getViewportWidth = () => window.innerWidth;
 const getServerViewportWidth = () => 0;
 
-const getIsPrimaryNavSticky = (theme: Theme, width: number) => width < parseInt(theme.breakpointMd);
+const getIsPrimaryNavSticky = (breakpoints: Breakpoints, width: number) =>
+  width < breakpoints.values.md;
 
 /**
  * Monitors and returns the height of the nav bar to support
@@ -583,7 +583,7 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
   const [navHeight, setNavHeight] = useState<number>();
   const theme = useTheme();
 
-  const isPrimaryNavSticky = getIsPrimaryNavSticky(theme, width);
+  const isPrimaryNavSticky = getIsPrimaryNavSticky(theme.breakpoints, width);
 
   useEffect(() => {
     if (!isStickyEnabled) {
@@ -591,7 +591,9 @@ const useStickyNavigation = (isStickyEnabled: boolean = false) => {
     }
 
     const handleSetNavHeight = (width: number) => {
-      const navRef = getIsPrimaryNavSticky(theme, width) ? primaryNavRef : secondaryNavRef;
+      const navRef = getIsPrimaryNavSticky(theme.breakpoints, width)
+        ? primaryNavRef
+        : secondaryNavRef;
 
       setNavHeight((height) => navRef.current?.clientHeight ?? height);
     };
@@ -755,7 +757,7 @@ function GlobalNav(props: GlobalNavProps) {
           container={fullwidth ? 'fluid' : true}
           aria-label={t('nav-primary')}
         >
-          <Collapse isOpen={isOpen} navbar>
+          <NavbarCollapse isOpen={isOpen}>
             <Nav navbar className="me-auto">
               {homeLink && (
                 <NavItem active={activeBranch === ''}>
@@ -847,7 +849,7 @@ function GlobalNav(props: GlobalNavProps) {
                   </NavItem>
                 ))}
             </Nav>
-          </Collapse>
+          </NavbarCollapse>
         </BotNav>
       </div>
       {isNavFixed && <NavSpacer $height={navHeight} />}

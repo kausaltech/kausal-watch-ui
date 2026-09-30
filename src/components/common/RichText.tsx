@@ -1,5 +1,7 @@
 import type { PropsWithChildren, ReactElement } from 'react';
-import React, { type JSX, useMemo, useState } from 'react';
+import React, { type JSX, useId, useMemo, useState } from 'react';
+
+import Collapse from '@mui/material/Collapse';
 
 import styled from '@emotion/styled';
 
@@ -10,7 +12,6 @@ import parse, { domToReact } from 'html-react-parser';
 import { useTranslations } from 'next-intl';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
-import { Collapse } from 'reactstrap';
 
 import { IndicatorLink } from '@/common/links';
 import Button from '@/components/common/Button';
@@ -290,6 +291,7 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
   const { parsedContent, className, ...rest } = props;
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
 
   const BREAK_POINT = 400; // characters at least visible
@@ -318,7 +320,11 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
           ) : (
             <>
               {intro}
-              {hasRest && <Collapse isOpen={isOpen}>{restOfContent}</Collapse>}
+              {hasRest && (
+                <Collapse in={isOpen} id={panelId}>
+                  {restOfContent}
+                </Collapse>
+              )}
             </>
           )}
         </FadeClip>
@@ -326,7 +332,13 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
 
       {(hasRest || shouldFallbackCollapse) && (
         <BreakPoint>
-          <ToggleButton color="link" onClick={toggle} className={isOpen ? 'open' : ''}>
+          <ToggleButton
+            variant="link"
+            onClick={toggle}
+            className={isOpen ? 'open' : ''}
+            aria-expanded={isOpen}
+            aria-controls={panelId}
+          >
             {isOpen ? t('close') : t('read-more')}
             <Icon name={isOpen ? 'angle-up' : 'angle-down'} />
           </ToggleButton>

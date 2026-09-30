@@ -19,7 +19,7 @@ export const HeroCard = styled('div', transientOptions)<{ $cardColor: string }>`
     font-size: ${(props) => props.theme.fontSizeLg};
     margin-bottom: ${(props) => props.theme.spaces.s100};
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       font-size: ${(props) => props.theme.fontSizeXl};
     }
   }
@@ -47,7 +47,7 @@ export const HeroCard = styled('div', transientOptions)<{ $cardColor: string }>`
     font-family: ${(props) =>
       `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       font-size: ${(props) => props.theme.fontSizeMd};
     }
   }

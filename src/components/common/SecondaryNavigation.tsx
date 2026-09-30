@@ -1,14 +1,13 @@
 import styled from '@emotion/styled';
 
-import { Col, Container, Row } from 'reactstrap';
-
 import { transientOptions } from '@common/themes/styles/styled';
 
 import { type StaticPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
 import { Link } from '@/common/links';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
 const NavigationContainer = styled(Container, transientOptions)<{ $pageHasContent: boolean }>`
-  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+  ${(props) => props.theme.breakpoints.up('lg')} {
     // When there is no body content, render the navigation as
     // relative to ensure it's not clipped by the footer
     position: ${(props) => (props.$pageHasContent ? 'absolute' : 'relative')};

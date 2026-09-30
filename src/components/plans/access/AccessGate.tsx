@@ -23,9 +23,9 @@ import { CombinedGraphQLErrors } from '@apollo/client/errors';
 import { useMutation } from '@apollo/client/react';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { Container as BootstrapContainer } from 'reactstrap';
 
 import { HomeLink, OrgLogo, Site, SiteTitle, TopNav } from '@/components/common/GlobalNav';
+import { Container as LayoutContainer } from '@/components/common/layout/LayoutGrid';
 import { REQUEST_PLAN_ACCESS } from '@/queries/request-plan-access';
 import { checkAccountStatus } from '@/utils/access-requests';
 
@@ -111,7 +111,7 @@ export function AccessGateLayout({
         </Container>
       </Box>
       <GateFooter>
-        <BootstrapContainer>
+        <LayoutContainer>
           <FooterContent>
             {planName && <strong>{planName}</strong>}
             <span>
@@ -121,7 +121,7 @@ export function AccessGateLayout({
               </a>
             </span>
           </FooterContent>
-        </BootstrapContainer>
+        </LayoutContainer>
       </GateFooter>
     </Box>
   );

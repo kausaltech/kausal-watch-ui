@@ -10,7 +10,6 @@ import styled from '@emotion/styled';
 import { captureMessage } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { Col, Container, Row } from 'reactstrap';
 
 import {
   type ActionAsideContentBlocksFragment,
@@ -40,6 +39,7 @@ import AttributesBlock from '@/components/common/AttributesBlock';
 import type { FeedbackFormAdditionalField } from '@/components/common/FeedbackForm';
 import PopoverTip from '@/components/common/PopoverTip';
 import StatusBadge from '@/components/common/StatusBadge';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import ExpandableFeedbackFormBlock from '@/components/contentblocks/ExpandableFeedbackFormBlock';
 import PlanDatasetsBlock from '@/components/contentblocks/PlanDatasetsBlock';
 import IndicatorCausalVisualisation from '@/components/indicators/IndicatorCausalVisualisation';
@@ -118,7 +118,7 @@ const ContentGroup = styled.div<{ $vertical: boolean }>`
   ${(props) =>
     props.$vertical &&
     css`
-      max-width: ${props.theme.breakpointSm};
+      max-width: 576px;
     `}
   margin: ${(props) => props.theme.spaces.s100} auto ${(props) => props.theme.spaces.s300};
   padding: ${(props) => props.theme.spaces.s200} 0 0;
@@ -141,7 +141,7 @@ const StyledContentGrid = styled(Container)`
     'bottom';
   align-items: start;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     grid-template-columns: 7fr 5fr;
     grid-template-rows: auto 1fr;
     grid-template-areas:
@@ -149,7 +149,7 @@ const StyledContentGrid = styled(Container)`
       'bottom aside';
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+  ${(props) => props.theme.breakpoints.up('lg')} {
     grid-template-columns: 8fr 4fr;
   }
 

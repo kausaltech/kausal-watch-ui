@@ -4,7 +4,6 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { transparentize } from 'polished';
-import { Badge, Card, CardBody, CardTitle } from 'reactstrap';
 
 import { getStatusColorForAction } from '@/common/ActionStatusSummary';
 import type { CardImageFragment } from '@/common/__generated__/graphql';
@@ -12,6 +11,8 @@ import { getBgImageAlignment, getImageSrcSet } from '@/common/images';
 import { ActionLink } from '@/common/links';
 import { cleanActionStatus } from '@/common/preprocess';
 import ActionStatus from '@/components/actions/ActionStatus';
+import Badge from '@/components/common/Badge';
+import { Card, CardBody, CardTitle } from '@/components/common/CardParts';
 import Icon from '@/components/common/Icon';
 import EmbedContext from '@/context/embed';
 import { usePlan } from '@/context/plan';
@@ -60,7 +61,7 @@ const ReadyBadge = styled(Badge)`
   position: absolute;
   top: 1em;
   left: 1em;
-  background-color: ${(props) => props.theme.graphColors.green070} !important;
+  background-color: ${(props) => props.theme.graphColors.green070};
 `;
 
 const StyledCardTitle = styled(CardTitle)`
@@ -88,7 +89,7 @@ const CardImage = styled.img<{ $imageAlign: string }>`
   object-fit: cover;
   object-position: ${(props) => props.$imageAlign};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     height: 8rem;
   }
 `;
@@ -170,11 +171,11 @@ export default function ActionHighlightCard(props: ActionHighlightCardProps) {
         )}
         <CardBody>
           {actionStatus && actionStatus.identifier === 'completed' && (
-            <ReadyBadge pill>
+            <ReadyBadge $pill>
               <Icon.Check color="#ffffff" width="2em" height="2em" />
             </ReadyBadge>
           )}
-          <StyledCardTitle tag="h3" className="card-title">
+          <StyledCardTitle as="h3" className="card-title">
             {actionName}
           </StyledCardTitle>
         </CardBody>

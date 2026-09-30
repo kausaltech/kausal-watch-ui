@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
+
+import Collapse from '@mui/material/Collapse';
 
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Button, Col, Collapse, Row } from 'reactstrap';
 
 import type { ReportComparisonBlockActionContentFragment } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import { getActionTermContext } from '@/common/i18n';
 import ActionAttribute from '@/components/common/ActionAttribute';
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 const ReportSection = styled.div`
@@ -39,6 +42,7 @@ const FieldHeader = styled.div`
 const ReportName = styled.div``;
 
 const ToggleButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   padding: 0;
   margin: 0;
   color: ${(props) => props.theme.themeColors.dark};
@@ -46,6 +50,7 @@ const ToggleButton = styled(Button)`
 
   &:hover {
     text-decoration: underline;
+    background-color: transparent;
   }
 
   &.open {
@@ -100,6 +105,7 @@ const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
   const { block } = props;
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
   const plan = usePlan();
 
@@ -132,7 +138,13 @@ const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
           <SectionHeader>
             <h2>{block.reportType?.name}</h2>
             {reports && reports.length > 0 && (
-              <ToggleButton color="link" onClick={toggle} className={isOpen ? 'open' : ''}>
+              <ToggleButton
+                variant="link"
+                onClick={toggle}
+                className={isOpen ? 'open' : ''}
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+              >
                 {isOpen ? t('close') : t('open')}
                 <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
               </ToggleButton>
@@ -141,7 +153,7 @@ const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
         </Col>
       </Row>
       {reports && reports.length > 0 ? (
-        <Collapse isOpen={isOpen}>
+        <Collapse in={isOpen} id={panelId}>
           <ReportFieldComparison>
             {reports.map((report) => (
               <ReportField key={report.identifier}>

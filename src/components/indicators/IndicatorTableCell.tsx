@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import * as Sentry from '@sentry/nextjs';
 import { type DateTimeFormatOptions, useFormatter, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Button } from 'reactstrap';
 
 import {
   IndicatorColumnValueType,
@@ -14,6 +13,7 @@ import {
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorLink } from '@/common/links';
 import useNumberFormatter from '@/common/numbers';
+import Button from '@/components/common/Button';
 import { usePlan } from '@/context/plan';
 
 import BadgeTooltip from '../common/BadgeTooltip';
@@ -121,9 +121,10 @@ const IndicatorNameCell = (props: {
   const { indicator, openIndicatorsInModal } = props;
   const IndicatorTrigger: React.ReactNode = openIndicatorsInModal ? (
     <Button
-      color="link"
+      variant="text"
       onClick={() => openIndicatorsInModal(indicator.id)}
       style={{ padding: 0, textAlign: 'left' }}
+      sx={{ fontWeight: 'normal' }}
     >
       {indicator.name}
     </Button>

@@ -29,7 +29,7 @@ const AllTheProviders = ({ children }) => {
   return (
     <NextIntlClientProvider locale={'en'} messages={messages}>
       <MUIThemeProvider theme={muiTheme}>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>
       </MUIThemeProvider>
     </NextIntlClientProvider>
   );

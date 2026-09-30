@@ -1,0 +1,16 @@
+/* Applied only while visual-baseline.spec.ts takes screenshots. */
+
+/* The Next.js dev indicator and its issue badge come and go between runs. */
+nextjs-portal {
+  display: none !important;
+}
+
+/*
+ * The paths settings panel is fixed to the bottom of the viewport, so in a
+ * full-page screenshot it lands at a different spot on each run. Put it back
+ * into the page flow so it is still captured, at the end of the page.
+ */
+aside[class*='panel-'] {
+  position: static !important;
+  transition: none !important;
+}

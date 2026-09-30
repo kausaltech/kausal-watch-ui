@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { Form, FormGroup, Input, Label } from 'reactstrap';
+
+import { Form, FormGroup, Input, Label } from '@/components/common/FormControls';
 
 function Switch(props) {
   const { label, state, onChange, id } = props;

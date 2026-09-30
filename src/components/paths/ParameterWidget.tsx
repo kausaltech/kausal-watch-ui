@@ -140,9 +140,8 @@ const NumberWidget = (props) => {
     defaultValue !== null ? (
       <StyledResetButton
         id="reset-button"
-        color="link"
-        size="sm"
-        outline
+        variant="link"
+        size="small"
         onClick={() => handleChange({ parameterId: id, numberValue: defaultValue })}
         aria-label={t('reset-button')}
       >

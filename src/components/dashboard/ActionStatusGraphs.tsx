@@ -56,7 +56,7 @@ const StatusDonutsWrapper = styled.div`
     10px 100%;
   background-attachment: local, local, scroll, scroll;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     background-image: none;
     justify-content: center;
   }

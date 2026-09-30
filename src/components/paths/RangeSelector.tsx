@@ -5,8 +5,8 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { Range, getTrackBackground } from 'react-range';
-import { ButtonToggle } from 'reactstrap';
 
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 
 const SectionWrapper = styled.div`
@@ -37,10 +37,6 @@ const ActiveYearDisplay = styled.div`
   margin: 0;
   padding: 0.25rem 0 0.25rem;
   text-align: center;
-
-  .btn {
-    color: ${(props) => props.theme.graphColors.grey050};
-  }
 `;
 
 type ThumbProps = {
@@ -62,7 +58,11 @@ const Thumb = styled.div<ThumbProps>`
   }
 `;
 
-const StyledButtonToggle = styled(ButtonToggle)`
+const StyledButtonToggle = styled(Button)`
+  color: ${(props) => props.theme.graphColors.grey050};
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
+  padding: 0.25rem 0.5rem;
+
   &:focus {
     box-shadow: 0 0 0 0.25rem ${(props) => props.theme.inputBtnFocusColor};
   }
@@ -120,10 +120,9 @@ const RangeSelector = (props: RangeSelectorProps) => {
         <ActiveYear>{referenceYearActive ? referenceYear : values[0]}</ActiveYear>
         {referenceYear && (
           <StyledButtonToggle
-            color="link"
-            size="sm"
-            outline
-            active={referenceYearActive}
+            variant="text"
+            size="small"
+            aria-pressed={referenceYearActive}
             onClick={() => handleReferenceYear(!referenceYearActive)}
           >
             {referenceYearActive ? (

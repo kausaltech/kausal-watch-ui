@@ -1,7 +1,8 @@
+import CircularProgress from '@mui/material/CircularProgress';
+
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Spinner } from 'reactstrap';
 
 import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
@@ -66,7 +67,7 @@ const ActionLogBanner = (props: Props) => {
   return (
     <DraftBanner>
       <DraftBannerTitle>
-        {loading && <Spinner size="sm" className="me-3" />}
+        {loading && <CircularProgress size="1rem" color="inherit" className="me-3" />}
         {matchingVersion?.description}
         <DraftBannerInfo>{info && ` (${info})`} </DraftBannerInfo>
       </DraftBannerTitle>

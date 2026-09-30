@@ -11,17 +11,15 @@ import dagre from 'cytoscape-dagre';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
+
+import type { TFunction } from '@/common/i18n';
 import {
-  Col,
-  Container,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
-  Row,
   UncontrolledButtonDropdown,
-} from 'reactstrap';
-
-import type { TFunction } from '@/common/i18n';
+} from '@/components/common/Dropdowns';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
 import { getActionLinkProps, getIndicatorLinkProps } from '../../common/links';

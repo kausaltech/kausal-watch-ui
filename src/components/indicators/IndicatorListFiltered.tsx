@@ -1,10 +1,11 @@
 import React from 'react';
 
+import Alert from '@mui/material/Alert';
+
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
-import { Alert, Table } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -12,6 +13,7 @@ import {
   IndicatorDashboardFieldName,
   type IndicatorListPageFragment,
 } from '@/common/__generated__/graphql';
+import Table from '@/components/common/Table';
 import {
   STICKY_TABLE_NAME_COLUMN_CLASS,
   mobileScrollableTableWrapperStyles,
@@ -239,7 +241,7 @@ export default function IndicatorListFiltered(props: IndicatorListFilteredProps)
   if (indicators.flat().length === 0) {
     return (
       <div className="mt-5 mb-5 pb-5">
-        <Alert color="primary">{t('search-no-results')}</Alert>
+        <Alert severity="info">{t('search-no-results')}</Alert>
       </div>
     );
   }
