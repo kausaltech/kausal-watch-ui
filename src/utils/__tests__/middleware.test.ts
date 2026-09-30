@@ -398,12 +398,17 @@ describe('domain availability', () => {
 });
 
 describe('resolveStalePlan', () => {
-  const restricted = (availability: PlanDomainAvailability, statusMessage: string | null = null) =>
+  const restricted = (
+    availability: PlanDomainAvailability,
+    statusMessage: string | null = null,
+    accessRequestsEnabled = true
+  ) =>
     ({
       __typename: 'RestrictedPlanNode',
       identifier: 'private-plan',
       name: 'Private plan',
       themeIdentifier: 'de-nrw',
+      accessRequestsEnabled,
       primaryLanguage,
       statusMessage: null,
       domain: { availability, statusMessage, basePath: null },
@@ -422,15 +427,22 @@ describe('resolveStalePlan', () => {
     });
   });
 
+  it('names the placeholder with a sign-in button for a plan that takes no access requests', () => {
+    expect(
+      resolveStalePlan('/', [restricted(PlanDomainAvailability.SignInRequired, null, false)])
+    ).toEqual({ kind: 'unavailable', signInRequired: true, message: undefined });
+  });
+
   it('names the placeholder, with the message the backend gives', () => {
     expect(resolveStalePlan('/', [restricted(PlanDomainAvailability.Unavailable, 'Soon')])).toEqual(
-      { kind: 'unavailable', message: 'Soon' }
+      { kind: 'unavailable', signInRequired: false, message: 'Soon' }
     );
   });
 
   it('leaves no message when the backend gives none', () => {
     expect(resolveStalePlan('/', [restricted(PlanDomainAvailability.Unavailable)])).toEqual({
       kind: 'unavailable',
+      signInRequired: false,
       message: undefined,
     });
   });

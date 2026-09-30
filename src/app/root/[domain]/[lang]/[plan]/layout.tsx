@@ -159,7 +159,7 @@ export default async function PlanLayout(props: Props) {
         <ThemeProvider theme={defaultTheme}>
           <UnpublishedPlan
             message={staleResolution.message}
-            signInRequired={false}
+            signInRequired={staleResolution.signInRequired}
             testId="unpublished-page"
           />
         </ThemeProvider>

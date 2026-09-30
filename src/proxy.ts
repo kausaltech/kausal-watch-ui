@@ -11,7 +11,6 @@ import { generateCorrelationID, getLogger } from '@common/logging';
 import { LOGGER_SPAN_ID, LOGGER_TRACE_ID } from '@common/logging/init';
 import { LOGGER_CORRELATION_ID } from '@common/logging/logger';
 
-import { PlanDomainAvailability } from './common/__generated__/graphql';
 import { auth } from './config/auth';
 import {
   ACCESS_APPROVED_PARAM,
@@ -35,6 +34,7 @@ import {
   isLegacyPathStructure,
   isPlanAvailable,
   rewriteUrl,
+  usesAccessGate,
 } from './utils/middleware.utils';
 import { stripLocaleAndPlan } from './utils/urls';
 
@@ -221,7 +221,7 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
 
   const availability = getDomainAvailability(parsedPlan);
 
-  if (availability === PlanDomainAvailability.SignInRequired) {
+  if (usesAccessGate(parsedPlan)) {
     // Served at the requested URL, so signing in returns the visitor to the page they asked for.
     const {
       planIdentifier: gatePlanIdentifier,

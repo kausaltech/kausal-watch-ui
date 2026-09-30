@@ -92,6 +92,14 @@ export const isPlanAvailable = (plan: PlanFromPlansQuery): plan is AvailablePlan
 export const getStatusMessage = (plan: PlanFromPlansQuery): string | undefined =>
   plan.domain?.statusMessage ?? plan.statusMessage ?? undefined;
 
+/**
+ * Whether the viewer is sent to the access gate, where they can sign in or request access. A plan
+ * that does not take access requests gets the plain placeholder with a sign-in button instead.
+ */
+export const usesAccessGate = (plan: PlanFromPlansQuery): boolean =>
+  getDomainAvailability(plan) === PlanDomainAvailability.SignInRequired &&
+  plan.accessRequestsEnabled;
+
 /** What the sign-in page needs to present the plan it stands in front of. */
 export type AccessGatePlan = {
   planIdentifier: string;
@@ -109,7 +117,7 @@ export const getAccessGatePlan = (plan: PlanFromPlansQuery): AccessGatePlan => (
 
 export type StalePlanResolution =
   | { kind: 'sign-in-required'; plan: AccessGatePlan }
-  | { kind: 'unavailable'; message: string | undefined }
+  | { kind: 'unavailable'; signInRequired: boolean; message: string | undefined }
   | { kind: 'not-found' }
   | { kind: 'available' };
 
@@ -136,10 +144,14 @@ export function resolveStalePlan(
   if (availability === PlanDomainAvailability.Available) {
     return { kind: 'available' };
   }
-  if (availability === PlanDomainAvailability.SignInRequired) {
+  if (usesAccessGate(parsedPlan)) {
     return { kind: 'sign-in-required', plan: getAccessGatePlan(parsedPlan) };
   }
-  return { kind: 'unavailable', message: getStatusMessage(parsedPlan) };
+  return {
+    kind: 'unavailable',
+    signInRequired: availability === PlanDomainAvailability.SignInRequired,
+    message: getStatusMessage(parsedPlan),
+  };
 }
 
 export function getParsedPlan(
