@@ -83,7 +83,19 @@ type SitemapUrlOptions = {
    * that must not depend on whether a plan is indexed.
    */
   excludeHiddenFromSearchEngines?: boolean;
+  /**
+   * The visitor's ID token. Without it only public plans resolve; with it the
+   * urls also cover the internal plans the visitor has been granted access to.
+   */
+  authToken?: string;
 };
+
+function getQueryContext(options: SitemapUrlOptions) {
+  if (!options.authToken) {
+    return undefined;
+  }
+  return { headers: { Authorization: `Bearer ${options.authToken}` } };
+}
 
 type DomainLike = { hostname: string; basePath: string | null } | null;
 
@@ -183,6 +195,7 @@ async function getPlanUrls(
     apolloClient.query({
       query: GET_SITEMAP_CONTENTS,
       variables: { id: plan.id, hostname },
+      context: getQueryContext(options),
       fetchPolicy: 'no-cache',
     })
   );
@@ -210,6 +223,7 @@ export async function getSitemapUrlsForOrigin(
     apolloClient.query({
       query: GET_PLANS_BY_HOSTNAME,
       variables: { hostname: url.hostname },
+      context: getQueryContext(options),
       fetchPolicy: 'no-cache',
     })
   );
@@ -251,6 +265,7 @@ export async function getSitemapUrlsForPlan(
       // This works for wildcard/staging hosts that are not registered as a
       // dedicated plan domain, where the plan is served at the root.
       variables: { id: planId, hostname: url.hostname },
+      context: getQueryContext(options),
       fetchPolicy: 'no-cache',
     })
   );

@@ -8,7 +8,10 @@ import {
   getSitemapUrlsForPlan,
 } from '../sitemap.server';
 
-type MockQueryOptions = { query: DocumentNode };
+type MockQueryOptions = {
+  query: DocumentNode;
+  context?: { headers?: Record<string, string> };
+};
 type MockQueryResult = { data: Record<string, unknown> };
 
 const mockQuery = jest.fn<Promise<MockQueryResult>, [MockQueryOptions]>();
@@ -150,5 +153,62 @@ describeHiddenPlanHandling('getSitemapUrlsForOrigin', (options) =>
 );
 
 describeHiddenPlanHandling('getSitemapUrlsForPlan', (options) =>
+  getSitemapUrlsForPlan(origin, '1', options)
+);
+
+const VISITOR_TOKEN = 'visitor-id-token';
+
+/**
+ * An internal plan is only readable by a signed-in user who has been granted
+ * access to it, so the backend answers an anonymous query with no plan at all.
+ */
+function mockInternalPlan() {
+  mockQuery.mockImplementation(({ query, context }) => {
+    const isSignedIn = context?.headers?.Authorization === `Bearer ${VISITOR_TOKEN}`;
+    switch (getOperationName(query)) {
+      case 'PlansByHostname':
+        return Promise.resolve({
+          data: {
+            plansForHostname: [
+              isSignedIn
+                ? { ...hiddenPlan, identifier: 'plan', domains: [hiddenPlanDomain] }
+                : { id: '1', identifier: 'plan', __typename: 'RestrictedPlanNode' },
+            ],
+          },
+        });
+      case 'Sitemap':
+        return Promise.resolve({
+          data: { planIndicators: [], plan: isSignedIn ? hiddenPlan : null },
+        });
+      default:
+        throw new Error(`Unexpected query: ${getOperationName(query) ?? 'unnamed'}`);
+    }
+  });
+}
+
+function describeInternalPlanHandling(
+  name: string,
+  getUrls: (options: SitemapUrlOptions) => Promise<string[]>
+) {
+  describe(`${name} for an internal plan`, () => {
+    beforeEach(mockInternalPlan);
+
+    it('returns no urls to an anonymous visitor', async () => {
+      await expect(getUrls({})).resolves.toEqual([]);
+    });
+
+    it('returns urls to a visitor signed in with access to the plan', async () => {
+      await expect(getUrls({ authToken: VISITOR_TOKEN })).resolves.toContain(
+        `${origin}/actions/foo`
+      );
+    });
+  });
+}
+
+describeInternalPlanHandling('getSitemapUrlsForOrigin', (options) =>
+  getSitemapUrlsForOrigin(origin, { ...options, includeAllPlans: true })
+);
+
+describeInternalPlanHandling('getSitemapUrlsForPlan', (options) =>
   getSitemapUrlsForPlan(origin, '1', options)
 );
