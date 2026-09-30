@@ -66,7 +66,7 @@
     "filter-result-actions": "{context, select, STRATEGY {strategier} other {handlinger}}",
     "filter-schedule": "Tidsplan",
     "filter-text": "Tekstsøgning",
-    "filter-text-default": "Søg fra sidehoveder",
+    "filter-text-default": "Søg i titler",
     "filter-primary-responsible-party": "som ansvarlig part",
     "front-page": "Forside",
     "give-feedback": "Give feedback",

@@ -68,7 +68,7 @@
     "filter-schedule": "Cronograma",
     "filter-status": "Status",
     "filter-text": "{context, select, STRATEGY {Estratégias de pesquisa} CASE_STUDY {Pesquisa estudos de caso} other {Pesquisa ações}}",
-    "filter-text-default": "Pesquisar por palavra-chave",
+    "filter-text-default": "Pesquisar nos títulos",
     "front-page": "Primeira página",
     "give-feedback": "Dar feedback",
     "goal": "meta",

@@ -64,7 +64,7 @@
     "filter-result-actions": "{context, select, STRATEGY {estrategias} other {acciones}}",
     "filter-schedule": "Programar",
     "filter-text": "Búsqueda de texto",
-    "filter-text-default": "Búsqueda a partir de cabeceras",
+    "filter-text-default": "Buscar en los títulos",
     "filter-primary-responsible-party": "como responsable",
     "front-page": "Portada",
     "give-feedback": "Dar su opinión",

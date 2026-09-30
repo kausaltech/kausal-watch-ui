@@ -69,7 +69,7 @@
     "filter-schedule": "Schedule",
     "filter-status": "Status",
     "filter-text": "{context, select, STRATEGY {Search strategies} CASE_STUDY {Search case studies} INDICATOR {Search indicators} MEASURE {Search measures} other {Search actions}}",
-    "filter-text-default": "Search by keyword",
+    "filter-text-default": "Search from titles",
     "front-page": "Front Page",
     "give-feedback": "Give feedback",
     "goal": "goal",
