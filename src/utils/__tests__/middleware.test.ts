@@ -183,6 +183,13 @@ describe('applySecurityHeaders', () => {
     expect(headers.get('content-security-policy')).toContain("frame-ancestors 'self'");
   });
 
+  /* The rewrite header is parsed per request, so a value that will not parse must not throw. */
+  it('denies framing when the rewrite target will not parse', () => {
+    const { headers } = applySecurityHeaders(rewrittenTo('http://%%'), secureRequest);
+
+    expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
+  });
+
   it('denies framing when nothing was rewritten', () => {
     const { headers } = applySecurityHeaders(new Response(null), secureRequest);
 
@@ -216,6 +223,7 @@ describe('buildReportOnlyPolicy', () => {
   const options = {
     dsn: 'https://publickey@sentry.example.com/42',
     assetPrefix: 'https://cdn.example.com',
+    backendUrl: 'https://api.backend.example.com',
     environment: 'production',
     release: 'build-1',
   };
@@ -267,6 +275,28 @@ describe('buildReportOnlyPolicy', () => {
     expect(/connect-src [^;]*https:\/\/api\.mapbox\.com/.test(policy)).toBe(true);
   });
 
+  /* Our own Matomo, which most plans report to. */
+  it('allows the analytics host', () => {
+    const policy = buildReportOnlyPolicy(options)!;
+
+    expect(/script-src [^;]*https:\/\/ana\.kausal\.tech/.test(policy)).toBe(true);
+    expect(/connect-src [^;]*https:\/\/ana\.kausal\.tech/.test(policy)).toBe(true);
+  });
+
+  /* Themes reference webfonts uploaded as documents on the backend, which differs per region. */
+  it('allows the backend origin the deployment points at', () => {
+    const policy = buildReportOnlyPolicy(options)!;
+
+    expect(/font-src [^;]*https:\/\/api\.backend\.example\.com/.test(policy)).toBe(true);
+    expect(/connect-src [^;]*https:\/\/api\.backend\.example\.com/.test(policy)).toBe(true);
+  });
+
+  it('leaves the backend out when it is not configured', () => {
+    const policy = buildReportOnlyPolicy({ ...options, backendUrl: '' })!;
+
+    expect(policy).not.toContain('api.backend.example.com');
+  });
+
   it('allows blob workers', () => {
     expect(buildReportOnlyPolicy(options)).toContain("worker-src 'self' blob:");
   });
@@ -277,6 +307,18 @@ describe('buildReportOnlyPolicy', () => {
    */
   it('is left out in CI', () => {
     expect(buildReportOnlyPolicy({ ...options, environment: 'ci' })).toBeUndefined();
+  });
+
+  /*
+   * The policy is built when the module loads, so a malformed value must not throw: that would
+   * take down every request rather than degrade a header nothing enforces yet.
+   */
+  it.each([
+    ['assetPrefix', { assetPrefix: 'cdn.example.com' }],
+    ['backendUrl', { backendUrl: 'api.example.com' }],
+    ['dsn', { dsn: 'not a dsn' }],
+  ])('survives a malformed %s', (_name, override) => {
+    expect(() => buildReportOnlyPolicy({ ...options, ...override })).not.toThrow();
   });
 
   it('is left out when no DSN is configured', () => {

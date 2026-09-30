@@ -14,6 +14,7 @@ import {
   getDeploymentType,
   getSentryDsn,
   getSentryRelease,
+  getWatchBackendUrl,
   getWatchGraphQLUrl,
   getWildcardDomains,
 } from '@common/env';
@@ -323,8 +324,32 @@ const SECURITY_HEADERS: Record<string, string> = {
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
 };
 
+/*
+ * The policy is built when this module loads, so a malformed environment value must not throw:
+ * that would fail every request rather than leave one entry out of a header nothing enforces.
+ */
+const originOf = (value: string | undefined) => {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    return new URL(value).origin;
+  } catch {
+    return undefined;
+  }
+};
+
 function securityReportUri(dsn: string, environment: string, release: string) {
-  const { origin, username, pathname } = new URL(dsn);
+  let parsed: URL;
+
+  try {
+    parsed = new URL(dsn);
+  } catch {
+    return undefined;
+  }
+
+  const { origin, username, pathname } = parsed;
   const segments = pathname.split('/').filter(Boolean);
   const projectId = segments.pop();
   const prefix = segments.length ? `/${segments.join('/')}` : '';
@@ -352,9 +377,13 @@ const TYPEKIT_HOSTS = ['https://use.typekit.net', 'https://p.typekit.net'];
 /* The cartography block renders with Mapbox GL, which fetches styles, tiles and glyphs. */
 const MAPBOX_HOSTS = ['https://api.mapbox.com', 'https://events.mapbox.com'];
 
+/* Our own Matomo, which most plans report to. */
+const ANALYTICS_HOST = 'https://ana.kausal.tech';
+
 type ReportOnlyOptions = {
   dsn: string | undefined;
   assetPrefix: string;
+  backendUrl: string;
   environment: string;
   release: string;
 };
@@ -367,6 +396,7 @@ type ReportOnlyOptions = {
 export function buildReportOnlyPolicy({
   dsn,
   assetPrefix,
+  backendUrl,
   environment,
   release,
 }: ReportOnlyOptions) {
@@ -378,17 +408,19 @@ export function buildReportOnlyPolicy({
   }
 
   const sentryOrigin = new URL(reportUri).origin;
-  const cdn = assetPrefix ? new URL(assetPrefix).origin : undefined;
+  const cdn = originOf(assetPrefix);
+  /* Themes reference webfonts uploaded as documents on the backend, which differs per region. */
+  const backendSources = [originOf(backendUrl)].filter((o) => o !== undefined);
   const withCdn = (...sources: string[]) => [...sources, cdn].filter(Boolean).join(' ');
 
   return [
     "default-src 'self'",
-    `script-src ${withCdn("'self'", "'unsafe-inline'", "'unsafe-eval'")}`,
+    `script-src ${withCdn("'self'", "'unsafe-inline'", "'unsafe-eval'", ANALYTICS_HOST)}`,
     `style-src ${withCdn("'self'", "'unsafe-inline'", ...TYPEKIT_HOSTS)}`,
-    `font-src ${withCdn("'self'", 'data:', ...TYPEKIT_HOSTS)}`,
+    `font-src ${withCdn("'self'", 'data:', ...TYPEKIT_HOSTS, ...backendSources)}`,
     "img-src 'self' data: blob: https:",
     "worker-src 'self' blob:",
-    `connect-src ${withCdn("'self'", sentryOrigin, ...MAPBOX_HOSTS)}`,
+    `connect-src ${withCdn("'self'", sentryOrigin, ...MAPBOX_HOSTS, ANALYTICS_HOST, ...backendSources)}`,
     'frame-src https:',
     `report-uri ${reportUri}`,
   ].join('; ');
@@ -397,6 +429,7 @@ export function buildReportOnlyPolicy({
 const REPORT_ONLY_POLICY = buildReportOnlyPolicy({
   dsn: getSentryDsn(),
   assetPrefix: getAssetPrefix(),
+  backendUrl: getWatchBackendUrl(),
   environment: getDeploymentType(),
   release: getSentryRelease(),
 });
@@ -413,7 +446,15 @@ const isEmbedResponse = (response: Response) => {
     return false;
   }
 
-  const segments = new URL(rewrite, 'http://n').pathname.split('/').slice(5);
+  let pathname: string;
+
+  try {
+    pathname = new URL(rewrite, 'http://n').pathname;
+  } catch {
+    return false;
+  }
+
+  const segments = pathname.split('/').slice(5);
 
   return segments[0] === 'embed' && /^v\d+$/.test(segments[1] ?? '');
 };
