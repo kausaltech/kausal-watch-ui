@@ -73,6 +73,8 @@
     "export": "Export",
     "export-action-count": "Exporting {count, plural, one {# action} other {# actions}}",
     "export-all-columns": "All columns",
+    "export-failed": "Export failed. Please try again.",
+    "export-sign-in-again": "Your session has expired. Sign in again to export all columns.",
     "export-visible-columns": "Visible columns",
     "export-all-action-data": "All action data",
     "export-current-view": "Current view",

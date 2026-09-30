@@ -72,6 +72,8 @@
     "export": "Exportieren",
     "export-action-count": "{count, plural, one {# Maßnahme} other {# Maßnahmen}} exportieren",
     "export-all-columns": "Alle Spalten",
+    "export-failed": "Export fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "export-sign-in-again": "Ihre Sitzung ist abgelaufen. Melden Sie sich erneut an, um alle Spalten zu exportieren.",
     "export-visible-columns": "Sichtbare Spalten",
     "export-all-action-data": "Alle Maßnahmendaten",
     "export-current-view": "Aktuelle Ansicht",
