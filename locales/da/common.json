@@ -140,6 +140,7 @@
     "responsible-party-main": "Hovedansvarlig",
     "search": "Søg",
     "search-from-plans": "Søg fra planer",
+    "search-help-text": "Søg i alt indhold",
     "see-all-actions": "{context, select, STRATEGY {Se alle strategier} other {Se alle handlinger}}",
     "see-all-indicators": "Se alle indikatorer",
     "see-all-results": "Se alle {count} resultater",

@@ -7,6 +7,7 @@ import {
   Label as BSLabel,
   FormFeedback,
   FormGroup,
+  FormText,
   type InputProps,
 } from 'reactstrap';
 
@@ -36,17 +37,26 @@ type TextInputProps = InputProps & {
   id: string;
   placeholder?: string;
   formFeedback?: string;
+  helpText?: string;
 };
 
 const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(function TextInput(
   props: TextInputProps,
   ref
 ) {
-  const { label, id, placeholder, formFeedback, ...rest } = props;
+  const { label, id, placeholder, formFeedback, helpText, ...rest } = props;
+  const helpTextId = helpText ? `${id}-help` : undefined;
   return (
     <FormGroup>
       {label && <Label htmlFor={id}>{label}</Label>}
-      <Input id={id} placeholder={placeholder} {...rest} innerRef={ref} />
+      <Input
+        id={id}
+        placeholder={placeholder}
+        aria-describedby={helpTextId}
+        {...rest}
+        innerRef={ref}
+      />
+      {helpText && <FormText id={helpTextId}>{helpText}</FormText>}
       {formFeedback && <FormFeedback role="alert">{formFeedback}</FormFeedback>}
     </FormGroup>
   );

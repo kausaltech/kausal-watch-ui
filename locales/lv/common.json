@@ -170,6 +170,7 @@
     "responsible-party-main": "Galvenais atbildīgais",
     "search": "Meklēšana",
     "search-from-plans": "Meklēt pēc plāniem",
+    "search-help-text": "Meklēt visā saturā",
     "see-all-actions": "{context, select, CASE_STUDY {Skatīt visus gadījumu pētījumus} STRATEGY {Skatīt visas stratēģijas} other {Skatīt visas rīcības}}",
     "tactical-indicator": "Taktiskais rādītājs",
     "primary-organization": "Organizācija",

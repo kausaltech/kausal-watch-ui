@@ -138,6 +138,7 @@
     "responsible-party-main": "Principal responsable",
     "search": "Busque en",
     "search-from-plans": "Búsqueda a partir de planos",
+    "search-help-text": "Buscar en todo el contenido",
     "see-all-actions": "{context, select, STRATEGY {Ver todas las estrategias} other {Ver todas las acciones}}",
     "see-all-indicators": "Ver todos los indicadores",
     "see-all-results": "Ver todos los resultados {count}",

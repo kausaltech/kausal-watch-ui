@@ -298,6 +298,7 @@ function SearchViewContent(props: SearchViewProps) {
                     value={userSearch?.q}
                     onChange={handleValueChange}
                     aria-label={t('search')}
+                    helpText={t('search-help-text')}
                     data-testid="search-form"
                   />
                   {enableSearchAcrossPlans && (

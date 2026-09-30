@@ -139,6 +139,7 @@
     "responsible-party-main": "Hauptverantwortlich",
     "search": "Suche",
     "search-from-plans": "Suche in Plänen",
+    "search-help-text": "Suche in allen Inhalten",
     "see-all-actions": "{context, select, STRATEGY {Alle Strategien ansehen} CASE_STUDY {Alle Fallstudien anzeigen} other {Alle Maßnahmen ansehen}}",
     "see-all-indicators": "Alle Indikatoren ansehen",
     "see-all-results": "{count, plural, one {Ergebnis ansehen} other {Alle # Ergebnisse ansehen}}",
