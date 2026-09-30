@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import * as Sentry from '@sentry/nextjs';
 
+import { auth } from '@/config/auth';
 import { PDF_PAGE, getPdfExportServiceUrl } from '@/utils/pdf-export';
 import { getSitemapUrlsForOrigin, getSitemapUrlsForPlan } from '@/utils/sitemap.server';
 
@@ -57,6 +58,49 @@ function buildHeaderHtml(locale: string, timezone?: string): string {
 
   return `<div class="text left grow" style="font-size: 14px;">${date}</div>
 <div class="text right" style="font-size: 14px;"><span class="title"></span></div>`;
+}
+
+// Auth.js names its session cookie after whether it is served over https, and
+// splits a large one into numbered chunks (`<name>.0`, `<name>.1`, ...).
+const SESSION_COOKIE_NAMES = ['authjs.session-token', '__Secure-authjs.session-token'];
+
+function isSessionCookie(name: string): boolean {
+  return SESSION_COOKIE_NAMES.some(
+    (sessionName) => name === sessionName || name.startsWith(`${sessionName}.`)
+  );
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * The visitor's session, as a Cookie header for Gotenberg's Chromium to send
+ * when it fetches the page. An internal plan serves its site only to a
+ * signed-in visitor, so without it the PDF would show the sign-in page.
+ *
+ * Gotenberg's `cookies` field would put the session in the browser's cookie
+ * jar, which every conversion running at the same time shares: another
+ * visitor's export of this host would then be rendered with this session. An
+ * extra header is applied to this conversion's requests only. Gotenberg reads
+ * a `scope` token in the value as a regular expression of the urls to send it
+ * to, which keeps the session from reaching any other host the page loads
+ * from, and joins the remaining `;`-separated tokens back with `; `.
+ *
+ * The scope also leaves out the host's API routes, which rendering the page
+ * does not need the session for. Gotenberg's Chromium runs with web security
+ * disabled, so a cross-origin iframe on the page could read their responses,
+ * and the Auth.js session endpoint would give it the visitor's ID token.
+ */
+function getSessionCookieHeader(request: NextRequest, origin: string): string | undefined {
+  const sessionCookies = request.cookies
+    .getAll()
+    .filter((cookie) => isSessionCookie(cookie.name))
+    .map((cookie) => `${cookie.name}=${cookie.value}`);
+  if (!sessionCookies.length) {
+    return undefined;
+  }
+  return [...sessionCookies, `scope=^${escapeRegExp(origin)}/(?!api/)`].join(';');
 }
 
 function getComparableUrl(url: string): string | undefined {
@@ -140,9 +184,12 @@ export async function POST(request: NextRequest) {
     const requestedUrl = new URL(path, origin);
     // The sitemap urls act as an allowlist of exportable pages here, so plans
     // hidden from search engines are deliberately not excluded: opting out of
-    // indexing should not disable the PDF export.
+    // indexing should not disable the PDF export. Internal plans only list
+    // their pages to a signed-in visitor who may read them.
+    const session = await auth();
     const sitemapOptions = {
       includeLocaleAndBasePathVariants: true,
+      authToken: session?.idToken,
     };
     const sitemapUrls = body.plan
       ? await getSitemapUrlsForPlan(origin, body.plan, sitemapOptions)
@@ -174,6 +221,11 @@ export async function POST(request: NextRequest) {
 
     const formData = new FormData();
     formData.append('url', pageUrl);
+
+    const sessionCookieHeader = getSessionCookieHeader(request, requestedUrl.origin);
+    if (sessionCookieHeader) {
+      formData.append('extraHttpHeaders', JSON.stringify({ Cookie: sessionCookieHeader }));
+    }
 
     formData.append('files', new Blob([headerHtml], { type: 'text/html' }), 'header.html');
     formData.append('files', new Blob([footerHtml], { type: 'text/html' }), 'footer.html');
