@@ -122,11 +122,6 @@ describe('applySecurityHeaders', () => {
     nextUrl: { protocol: 'http:' },
   } as unknown as NextRequest;
 
-  const insecureRequest = {
-    headers: new Headers(),
-    nextUrl: { protocol: 'http:' },
-  } as unknown as NextRequest;
-
   const rewrittenTo = (path: string) => {
     const response = new Response(null);
     response.headers.set('x-middleware-rewrite', path);
