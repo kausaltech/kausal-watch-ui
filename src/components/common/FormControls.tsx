@@ -440,6 +440,34 @@ export function FormFeedback({ tooltip, className, children, ...props }: FormFee
   );
 }
 
+/* FormText */
+
+type FormTextProps = React.HTMLAttributes<HTMLElement> & {
+  /** Inline next to the field, rather than as a block below it */
+  inline?: boolean;
+  /** Bootstrap text colour, `muted` by default */
+  color?: string;
+};
+
+const StyledFormText = styled.small`
+  font-size: 0.875em;
+
+  &.form-text {
+    display: block;
+    margin-top: 0.25rem;
+  }
+`;
+
+/** Help text for the field before it, as reactstrap's `FormText`. */
+export function FormText({ inline, color = 'muted', className, ...props }: FormTextProps) {
+  return (
+    <StyledFormText
+      className={classes(className, !inline && 'form-text', color && `text-${color}`)}
+      {...props}
+    />
+  );
+}
+
 /* InputGroup and Form */
 
 const StyledInputGroup = styled.div`
