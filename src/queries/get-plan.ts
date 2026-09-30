@@ -210,6 +210,14 @@ const GET_PLAN_CONTEXT: TypedDocumentNode<PlanContextQuery, PlanContextQueryVari
       enableCommunityEngagement
       presentPlanHierarchyAsPeers
     }
+    pledgeFormFields {
+      id
+      identifier
+      label
+      helpText
+      placeholder
+      required
+    }
     allRelatedPlans {
       id
       identifier

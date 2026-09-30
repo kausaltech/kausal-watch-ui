@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { TextField } from '@mui/material';
+import { FormHelperText, TextField } from '@mui/material';
 
 import styled from '@emotion/styled';
 
@@ -15,6 +15,7 @@ import Icon from '@/components/common/Icon';
 
 import PledgeCard from './PledgeCard';
 import PledgeSignInFlow from './PledgeSignInFlow';
+import { PLEDGE_FORM_FIELD_VALUE_MAX_LENGTH, type PledgeFormField } from './use-pledge-form-fields';
 
 const StyledBackdrop = styled(motion.div)`
   position: fixed;
@@ -132,14 +133,6 @@ const StyledButton = styled(Button)`
   }
 `;
 
-type FormField = {
-  id: string;
-  label: string;
-  helpText?: string;
-  required: boolean;
-  placeholder?: string;
-};
-
 type ConfirmPledgeProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -149,7 +142,7 @@ type ConfirmPledgeProps = {
   pledgeSlug: string;
   pledgeImage?: string | null;
   commitmentCount: number;
-  formFields?: FormField[];
+  formFields?: PledgeFormField[];
   userData?: Record<string, string>;
   anonymousUserToken?: string;
   isSignedIn?: boolean;
@@ -179,6 +172,7 @@ function ConfirmPledge({
   const [step, setStep] = useState<Step>('form');
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const prevIsOpen = useRef(false);
 
   // Pre-fill form data from userData when the drawer opens
@@ -196,6 +190,7 @@ function ConfirmPledge({
 
       setStep('form');
       setFormData(initialData);
+      setSubmitError(false);
     }
 
     prevIsOpen.current = isOpen;
@@ -205,10 +200,14 @@ function ConfirmPledge({
   const visibleFormFields = isSignedIn
     ? formFields.filter((field) => !userData[field.id])
     : formFields;
+  const isMissingRequiredField = visibleFormFields.some(
+    (field) => field.required && !formData[field.id]?.trim()
+  );
 
   const handleClose = () => {
     setStep('form');
     setFormData({});
+    setSubmitError(false);
     onClose();
   };
 
@@ -218,14 +217,15 @@ function ConfirmPledge({
 
   const handleSubmit = async () => {
     setSubmitting(true);
+    setSubmitError(false);
 
     try {
       await onConfirm(formData);
       // Skip account creation flow if already signed in
       setStep(isSignedIn ? 'success' : 'account');
     } catch (error) {
-      // TODO: Handle and report the error
       console.error('Failed to commit:', error);
+      setSubmitError(true);
     } finally {
       setSubmitting(false);
     }
@@ -300,14 +300,24 @@ function ConfirmPledge({
                           type="text"
                           variant="filled"
                           size="small"
+                          required={field.required}
                           placeholder={field.placeholder}
                           value={formData[field.id] || ''}
                           onChange={(e) => handleFieldChange(field.id, e.target.value)}
-                          slotProps={{ input: { disableUnderline: true } }}
+                          slotProps={{
+                            input: { disableUnderline: true },
+                            htmlInput: { maxLength: PLEDGE_FORM_FIELD_VALUE_MAX_LENGTH },
+                          }}
                           helperText={field.helpText}
                         />
                       ))}
                     </StyledFormSection>
+                  )}
+
+                  {submitError && (
+                    <FormHelperText error role="alert">
+                      {t('pledge-confirm-error')}
+                    </FormHelperText>
                   )}
                 </>
               )}
@@ -344,7 +354,7 @@ function ConfirmPledge({
                 <StyledButton
                   color="primary"
                   onClick={step === 'form' ? handleSubmit : handleClose}
-                  disabled={submitting}
+                  disabled={submitting || (step === 'form' && isMissingRequiredField)}
                 >
                   {submitting ? (
                     <Spinner size="sm" />

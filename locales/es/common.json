@@ -245,8 +245,6 @@
     "pledge-feedback-text-prompt": "¿Algún comentario o sugerencia específica sobre este compromiso?",
     "pledge-feedback-thanks": "¡Gracias por sus comentarios!",
     "pledge-feedback-thanks-message": "Sus comentarios nos ayudan a mejorar nuestros compromisos y hacerlos más efectivos.",
-    "pledge-form-zip-code": "Su código postal",
-    "pledge-form-zip-code-help": "Ayúdenos a comprender qué barrios están tomando acción.",
     "pledge-how-this-supports-climate-plan": "Cómo esto apoya nuestro plan climático",
     "pledge-impact-equivalent-to": "Eso equivale a {equivalence}",
     "pledge-impact-if-residents-commit-html": "{count, plural, one {Si <strong># residente</strong> se compromete con este compromiso} other {Si <strong># residentes</strong> se comprometen con este compromiso}}",
@@ -313,5 +311,6 @@
     "pledge-sign-in-error-no-active-attempt": "No hay ningún código activo. Haz clic en reenviar para solicitar uno nuevo.",
     "pledge-nav-my-pledges": "Mis compromisos",
     "pledge-nav-sign-out": "Cerrar sesión",
-    "pledge-nav-user-menu-label": "Menú de usuario"
+    "pledge-nav-user-menu-label": "Menú de usuario",
+    "pledge-confirm-error": "Algo salió mal y su compromiso no se guardó. Inténtelo de nuevo."
 }

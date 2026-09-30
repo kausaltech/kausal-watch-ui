@@ -12,8 +12,8 @@ import { getAttributeValueText } from '@/components/common/ActionAttribute';
 import ConfirmPledge from '@/components/pledge/ConfirmPledge';
 import PledgeCard, { type PledgeCategory } from '@/components/pledge/PledgeCard';
 import { usePledgeNavUser } from '@/components/pledge/use-pledge-auth';
+import { usePledgeFormFields } from '@/components/pledge/use-pledge-form-fields';
 import { usePublicUser } from '@/components/pledge/use-public-user';
-import { getDefaultFormFields } from '@/utils/pledge.utils';
 
 import { ActionSection } from '../ActionContent';
 
@@ -33,6 +33,7 @@ const StyledPledgeGrid = styled.div`
 
 export default function ActionPledgesBlock({ pledges, heading }: Props) {
   const t = useTranslations();
+  const formFields = usePledgeFormFields();
   const { isAuthenticated } = usePledgeNavUser();
   const {
     userData,
@@ -101,7 +102,7 @@ export default function ActionPledgesBlock({ pledges, heading }: Props) {
           pledgeSlug={selectedPledge.slug}
           pledgeImage={selectedPledge.image?.rendition?.src ?? null}
           commitmentCount={selectedPledge.commitmentCount}
-          formFields={getDefaultFormFields(t)}
+          formFields={formFields}
           userData={userData}
           isSignedIn={isAuthenticated}
         />
