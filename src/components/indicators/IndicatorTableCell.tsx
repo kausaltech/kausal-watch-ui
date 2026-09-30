@@ -121,10 +121,10 @@ const IndicatorNameCell = (props: {
   const { indicator, openIndicatorsInModal } = props;
   const IndicatorTrigger: React.ReactNode = openIndicatorsInModal ? (
     <Button
-      variant="link"
+      variant="text"
       onClick={() => openIndicatorsInModal(indicator.id)}
       style={{ padding: 0, textAlign: 'left' }}
-      sx={{ fontWeight: 'normal', '&:hover': { backgroundColor: 'transparent' } }}
+      sx={{ fontWeight: 'normal' }}
     >
       {indicator.name}
     </Button>

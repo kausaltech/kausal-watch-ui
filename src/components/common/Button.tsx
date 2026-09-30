@@ -57,17 +57,14 @@ const variantStyles = ({
   }
 
   if ($variant === 'link') {
+    // Like Bootstrap's .btn-link: no background on hover
     return css`
       color: ${theme.linkColor};
       text-decoration: underline;
 
       &:hover {
         text-decoration: none;
-        background-color: ${transparentize(0.9, theme.linkColor)};
-      }
-
-      &:active {
-        background-color: ${transparentize(0.8, theme.linkColor)};
+        background-color: transparent;
       }
     `;
   }
