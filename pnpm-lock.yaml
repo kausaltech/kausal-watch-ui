@@ -39,8 +39,8 @@ importers:
         specifier: ^2.32.0
         version: 2.35.2(mapbox-gl@3.29.0)(supports-color@8.1.1)(webpack@5.110.3(@swc/core@1.16.1(@swc/helpers@0.5.23))(csso@4.2.0)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26))
       '@kausal/themes':
-        specifier: 0.8.26
-        version: 0.8.26
+        specifier: 0.8.28
+        version: 0.8.28
       '@mui/material':
         specifier: ^7.3.7
         version: 7.3.11(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5)(supports-color@8.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5)(supports-color@8.1.1))(@types/react@19.2.14)(react@19.2.5)(supports-color@8.1.1))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -524,8 +524,8 @@ importers:
         version: 5.110.3(@swc/core@1.16.1(@swc/helpers@0.5.23))(csso@4.2.0)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)
     optionalDependencies:
       '@kausal-private/themes-private':
-        specifier: 0.5.125
-        version: 0.5.125
+        specifier: 0.5.126
+        version: 0.5.126
 
   kausal_common:
     dependencies:
@@ -543,7 +543,7 @@ importers:
         version: 6.0.3(lodash@4.18.1)(marked@4.3.0)(react-dom@19.2.5(react@19.2.5))(react-responsive-carousel@3.2.23)(react@19.2.5)(supports-color@8.1.1)
       '@kausal/themes':
         specifier: '*'
-        version: 0.8.24
+        version: 0.8.28
       '@mui/material':
         specifier: '>=7'
         version: 7.3.11(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5)(supports-color@8.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5)(supports-color@8.1.1))(@types/react@19.2.14)(react@19.2.5)(supports-color@8.1.1))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -2654,8 +2654,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@kausal-private/themes-private@0.5.125':
-    resolution: {integrity: sha512-Iqt25Lm3K00CUAGEW4NGhgMXpVIbhevrs+UYVgrp42lyp8QB3d275ltkfvQVE2qV/SDZ8Bzi5ljYwmFYkUMMHQ==}
+  '@kausal-private/themes-private@0.5.126':
+    resolution: {integrity: sha512-Ar2rBTdxCnzXaM0I62ubsv6ZQCR5x3ted1K0WFANoDNi/S9kVcJioeZuVeU0EubVlHoyYIisfzuRpF00yE5R/Q==}
 
   '@kausal/mapboxgl-legend@1.7.2':
     resolution: {integrity: sha512-qmjchiPrcer3gCLkln7z2e0o8i5XK2BNRbMMdr6/KHMxDTSeOOaN1PvRjXzrTAtewOyxztHxnyYH9KaoC5LJdQ==}
@@ -2663,11 +2663,8 @@ packages:
   '@kausal/plotly-custom@2.35.2':
     resolution: {integrity: sha512-LTuhiMsKd36/1y2zebV9RcskUqLbKdPFiN0H2C/7UMUjtIW9sI+JkVL0d0jz6VlmQdhk6xoVA6pcFiXEa+0UPg==}
 
-  '@kausal/themes@0.8.24':
-    resolution: {integrity: sha512-mPEh4m2uORcOCrzQfaDvqHEzcovNquM9/LOPdxkVoNtUo8F2Um18OQPivn45ozuXMlDOsL0Ttx6FMS4rbLr1lA==}
-
-  '@kausal/themes@0.8.26':
-    resolution: {integrity: sha512-fBk5vfjrdbLFretRCs9IwK5sHBj426b4OW0iPSkxowgFW4jqwOTVrLmSN4VKp9xDeYrtUGP45hhv6bXmdYA7Tw==}
+  '@kausal/themes@0.8.28':
+    resolution: {integrity: sha512-KfRgdzMjmaApd7jBdyR6wqE01cvWmv0E+C7yFCCYlPOXAkUPyzIZpcSN06K3ZtR/Y+ESHCZ0xGY64ptkn4rwFw==}
 
   '@linaria/core@4.5.4':
     resolution: {integrity: sha512-vMs/5iU0stxjfbBCxobIgY+wSQx4G8ukNwrhjPVD+6bF9QrTwi5rl0mKaCMxaGMjnfsLRiiM3i+hnWLIEYLdSg==}
@@ -13072,7 +13069,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@kausal-private/themes-private@0.5.125':
+  '@kausal-private/themes-private@0.5.126':
     optional: true
 
   '@kausal/mapboxgl-legend@1.7.2': {}
@@ -13137,9 +13134,7 @@ snapshots:
       - supports-color
       - webpack
 
-  '@kausal/themes@0.8.24': {}
-
-  '@kausal/themes@0.8.26': {}
+  '@kausal/themes@0.8.28': {}
 
   '@linaria/core@4.5.4(supports-color@8.1.1)':
     dependencies:
