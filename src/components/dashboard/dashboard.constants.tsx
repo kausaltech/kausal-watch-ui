@@ -108,7 +108,15 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     headerClassName: 'logo-column',
     renderHeader: (t, _, label) => label || t('logo'),
     renderCell: (_, action) => <OrganizationCell action={action} />,
-    renderTooltipContent: (_, action) => <OrganizationTooltipContent action={action} />,
+    renderTooltipContent: (_, action, plan) => {
+      const fromOtherPlan = action.plan ? action.plan.id !== plan.id : false;
+      return (
+        <OrganizationTooltipContent
+          action={action}
+          plan={(fromOtherPlan ? action.plan : plan) as ActionListPlan}
+        />
+      );
+    },
   },
 
   ImplementationPhaseColumnBlock: {

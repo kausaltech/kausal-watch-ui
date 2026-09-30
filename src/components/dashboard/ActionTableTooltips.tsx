@@ -62,12 +62,13 @@ interface AttributeTooltipProps {
   attributeType: NonNullable<ColumnConfig['attributeType']>;
 }
 
-export const OrganizationTooltipContent = ({ action }: TooltipProps) => {
+export const OrganizationTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
   const t = useTranslations();
+  const organizationTerm = plan?.generalContent?.organizationTerm;
 
   return (
     <div>
-      <TooltipTitle>{t('primary-organization')}</TooltipTitle>
+      <TooltipTitle>{t('primary-organization', { context: organizationTerm })}</TooltipTitle>
       {action.primaryOrg?.name}
     </div>
   );
