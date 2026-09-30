@@ -32,6 +32,7 @@ export const GET_PLANS_BY_HOSTNAME: TypedDocumentNode<
       name
       themeIdentifier
       accessRequestsEnabled
+      accessRequestEligibilityText
       primaryLanguage
       statusMessage
       ... on Plan {

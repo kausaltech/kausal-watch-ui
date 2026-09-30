@@ -423,6 +423,7 @@ describe('resolveStalePlan', () => {
         planName: 'Private plan',
         themeIdentifier: 'de-nrw',
         homePath: '/',
+        eligibilityText: null,
       },
     });
   });

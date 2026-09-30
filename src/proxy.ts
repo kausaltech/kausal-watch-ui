@@ -228,10 +228,14 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
       planName,
       themeIdentifier,
       homePath,
+      eligibilityText,
     } = getAccessGatePlan(parsedPlan);
     const params = new URLSearchParams({ plan: gatePlanIdentifier, planName, homePath });
     if (themeIdentifier) {
       params.set('theme', themeIdentifier);
+    }
+    if (eligibilityText) {
+      params.set('eligibility', eligibilityText);
     }
     if (`/${stripLocaleAndPlan(parsedPlan, parsedLocale, pathname)}` === ACCESS_APPROVED_PATH) {
       params.set(ACCESS_APPROVED_PARAM, 'true');

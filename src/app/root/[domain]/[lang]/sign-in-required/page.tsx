@@ -15,6 +15,7 @@ type Props = {
     plan?: string;
     planName?: string;
     theme?: string;
+    eligibility?: string;
     homePath?: string;
     [ACCESS_APPROVED_PARAM]?: string;
   }>;
@@ -44,6 +45,7 @@ export default async function SignInRequiredPage(props: Props) {
       planIdentifier={searchParams.plan ?? ''}
       planName={searchParams.planName ?? ''}
       themeIdentifier={searchParams.theme ?? null}
+      eligibilityText={searchParams.eligibility ?? null}
       homePath={searchParams.homePath ?? '/'}
       accessApproved={searchParams[ACCESS_APPROVED_PARAM] === 'true'}
     />

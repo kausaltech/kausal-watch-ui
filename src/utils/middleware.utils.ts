@@ -105,6 +105,8 @@ export type AccessGatePlan = {
   planIdentifier: string;
   planName: string;
   themeIdentifier: string | null;
+  /** Who the plan is for, in the plan's own words; shown on the sign-in and request pages. */
+  eligibilityText: string | null;
   homePath: string;
 };
 
@@ -112,6 +114,7 @@ export const getAccessGatePlan = (plan: PlanFromPlansQuery): AccessGatePlan => (
   planIdentifier: plan.identifier,
   planName: plan.name,
   themeIdentifier: plan.themeIdentifier,
+  eligibilityText: plan.accessRequestEligibilityText || null,
   homePath: plan.domain?.basePath || '/',
 });
 

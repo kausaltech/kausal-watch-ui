@@ -36,6 +36,8 @@ type Step = 'email' | 'request-access' | 'pending' | 'approved';
 type Props = {
   planIdentifier: string;
   planName: string | null;
+  /** Who the plan is for, from the plan's settings; replaces the generic wording when set. */
+  eligibilityText: string | null;
   /** Where the logo and title lead: the plan's front page, which shows this form again. */
   homePath: string;
 };
@@ -186,10 +188,12 @@ function StartAgain({
 
 function EmailStep({
   planName,
+  eligibilityText,
   initialEmail,
   onContinue,
 }: {
   planName: string | null;
+  eligibilityText: string | null;
   initialEmail: string;
   onContinue: (email: string, step: 'request-access' | 'approved') => void;
 }) {
@@ -235,9 +239,11 @@ function EmailStep({
     <>
       <Heading
         title={t('access-sign-in-title')}
-        description={t('access-sign-in-description', {
-          plan: planName ?? t('access-plan-fallback'),
-        })}
+        description={
+          eligibilityText
+            ? `${eligibilityText} ${t('access-sign-in-instruction')}`
+            : t('access-sign-in-description', { plan: planName ?? t('access-plan-fallback') })
+        }
       />
       <Stack component="form" spacing={3} onSubmit={(e) => void handleSubmit(e)} noValidate>
         <Box>
@@ -266,11 +272,15 @@ function EmailStep({
 
 function RequestAccessStep({
   planIdentifier,
+  planName,
+  eligibilityText,
   email,
   onSent,
   onBack,
 }: {
   planIdentifier: string;
+  planName: string | null;
+  eligibilityText: string | null;
   email: string;
   onSent: () => void;
   onBack: () => void;
@@ -300,9 +310,14 @@ function RequestAccessStep({
 
   return (
     <>
-      <Heading title={t('access-request-title')} description={t('access-request-description')} />
+      <Heading
+        title={t('access-request-title')}
+        description={t('access-request-description', {
+          plan: planName ?? t('access-plan-fallback'),
+        })}
+      />
       <EmailChip email={email} onChange={onBack} />
-      <Alert severity="info">{t('access-request-notice')}</Alert>
+      <Alert severity="info">{eligibilityText ?? t('access-request-notice')}</Alert>
       {error && <Alert severity="error">{error}</Alert>}
       <Button
         variant="contained"
@@ -322,7 +337,7 @@ function RequestAccessStep({
   );
 }
 
-export default function AccessGate({ planIdentifier, planName, homePath }: Props) {
+export default function AccessGate({ planIdentifier, planName, eligibilityText, homePath }: Props) {
   const t = useTranslations();
   const [step, setStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
@@ -337,6 +352,8 @@ export default function AccessGate({ planIdentifier, planName, homePath }: Props
       <AccessGateLayout planName={planName} homePath={homePath}>
         <RequestAccessStep
           planIdentifier={planIdentifier}
+          planName={planName}
+          eligibilityText={eligibilityText}
           email={email}
           onSent={() => setStep('pending')}
           onBack={() => setStep('email')}
@@ -350,7 +367,10 @@ export default function AccessGate({ planIdentifier, planName, homePath }: Props
       <AccessGateLayout planName={planName} homePath={homePath}>
         <Heading
           title={t('access-pending-title')}
-          description={t('access-pending-description', { email })}
+          description={t('access-pending-description', {
+            email,
+            plan: planName ?? t('access-plan-fallback'),
+          })}
         />
         <StartAgain
           prompt={t('access-wrong-email')}
@@ -377,6 +397,7 @@ export default function AccessGate({ planIdentifier, planName, homePath }: Props
     <AccessGateLayout planName={planName} homePath={homePath}>
       <EmailStep
         planName={planName}
+        eligibilityText={eligibilityText}
         initialEmail={email}
         onContinue={(enteredEmail, nextStep) => {
           setEmail(enteredEmail);

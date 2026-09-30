@@ -8111,9 +8111,9 @@ export type PlansByHostnameQuery_plansForHostname_domain = { __typename: 'PlanDo
 
 export type PlansByHostnameQuery_plansForHostname_domains = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, availability: PlanDomainAvailability | null, statusMessage: string | null };
 
-export type PlansByHostnameQuery_plansForHostname_Plan = { __typename: 'Plan', id: string, otherLanguages: Array<string>, identifier: string, name: string, themeIdentifier: string | null, accessRequestsEnabled: boolean, primaryLanguage: string, statusMessage: string | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
+export type PlansByHostnameQuery_plansForHostname_Plan = { __typename: 'Plan', id: string, otherLanguages: Array<string>, identifier: string, name: string, themeIdentifier: string | null, accessRequestsEnabled: boolean, accessRequestEligibilityText: string | null, primaryLanguage: string, statusMessage: string | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
 
-export type PlansByHostnameQuery_plansForHostname_RestrictedPlanNode = { __typename: 'RestrictedPlanNode', identifier: string, name: string, themeIdentifier: string | null, accessRequestsEnabled: boolean, primaryLanguage: string, statusMessage: string | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
+export type PlansByHostnameQuery_plansForHostname_RestrictedPlanNode = { __typename: 'RestrictedPlanNode', identifier: string, name: string, themeIdentifier: string | null, accessRequestsEnabled: boolean, accessRequestEligibilityText: string | null, primaryLanguage: string, statusMessage: string | null, domain: PlansByHostnameQuery_plansForHostname_domain | null, domains: Array<PlansByHostnameQuery_plansForHostname_domains | null> | null };
 
 export type PlansByHostnameQuery_plansForHostname =
   | PlansByHostnameQuery_plansForHostname_Plan

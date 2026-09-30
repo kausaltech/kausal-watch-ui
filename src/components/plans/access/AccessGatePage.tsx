@@ -17,6 +17,7 @@ export default async function AccessGatePage({
   planName,
   themeIdentifier,
   homePath,
+  eligibilityText,
   accessApproved = false,
 }: AccessGatePlan & { accessApproved?: boolean }) {
   const safeThemeIdentifier =
@@ -37,6 +38,7 @@ export default async function AccessGatePage({
           <AccessGate
             planIdentifier={planIdentifier}
             planName={planName || null}
+            eligibilityText={eligibilityText}
             homePath={safeHomePath}
           />
         )}
