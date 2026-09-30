@@ -91,7 +91,6 @@ const StyledContainer = styled(Container)`
 
 const StyledRadioButton = styled(Button)`
   font-weight: ${({ theme }) => theme.fontWeightNormal};
-  padding: 0.25rem 0.5rem;
 `;
 
 const StyledToolbarContainer = styled.div`
@@ -382,7 +381,6 @@ function PledgeList({ pledges }: Props) {
             >
               <StyledRadioButton
                 color="black"
-                size="small"
                 variant={view === 'ALL' ? 'contained' : 'outlined'}
                 onClick={() => setView('ALL')}
                 aria-checked={view === 'ALL'}
@@ -393,7 +391,6 @@ function PledgeList({ pledges }: Props) {
               </StyledRadioButton>
               <StyledRadioButton
                 color="black"
-                size="small"
                 variant={view === 'MY_PLEDGES' ? 'contained' : 'outlined'}
                 onClick={() => setView('MY_PLEDGES')}
                 aria-checked={view === 'MY_PLEDGES'}
