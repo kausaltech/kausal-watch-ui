@@ -217,8 +217,9 @@ function EmailStep({
         await signIn(
           'watch-oidc-provider',
           { redirectTo: window.location.pathname },
-          // Not yet read by the backend login page, so the email may have to be entered again.
-          { login_hint: trimmed }
+          // `prompt: 'login'` shows the backend login form even when a backend session already
+          // exists, which could belong to a different account than the email entered.
+          { login_hint: trimmed, prompt: 'login' }
         );
         return;
       }
