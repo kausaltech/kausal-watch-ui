@@ -139,6 +139,7 @@
     "responsible-party-main": "Päävastuuorganisaatio",
     "search": "Haku",
     "search-from-plans": "Hae toimenpideohjelmista",
+    "search-help-text": "Hae kaikesta sisällöstä",
     "see-all-actions": "{context, select, STRATEGY {Katso kaikki strategiat} other {Katso kaikki toimenpiteet}}",
     "see-all-indicators": "Katso kaikki mittarit",
     "see-all-results": "Näytä kaikki tulokset ({count})",

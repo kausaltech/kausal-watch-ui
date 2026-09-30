@@ -1,5 +1,6 @@
 import { type ChangeEvent, type SyntheticEvent, useEffect, useState } from 'react';
 
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useQuery } from '@apollo/client/react';
@@ -183,20 +184,23 @@ type SearchResultsProps = {
 function SearchResults({ search }: SearchResultsProps) {
   const plan = usePlan();
   const t = useTranslations();
+  const theme = useTheme();
+  const enableSearchAcrossPlans = theme.settings.search?.enableSearchAcrossPlans !== false;
+  const onlyOtherPlans = enableSearchAcrossPlans && search.onlyOtherPlans;
   const { error, loading, data } = useQuery(SEARCH_QUERY, {
     variables: {
       plan: plan.identifier,
       query: search.q,
-      onlyOtherPlans: search.onlyOtherPlans,
+      onlyOtherPlans,
       clientUrl: plan.viewUrl,
     },
   });
 
   useEffect(() => {
     if (search.q && data?.search?.hits) {
-      trackSearch(search.q, search.onlyOtherPlans, data.search.hits.length);
+      trackSearch(search.q, onlyOtherPlans, data.search.hits.length);
     }
-  }, [search, data]);
+  }, [search, onlyOtherPlans, data]);
 
   if (error) {
     return (
@@ -254,6 +258,8 @@ function SearchViewContent(props: SearchViewProps) {
   const { search, onSearchChange, testId } = props;
   const [userSearch, setUserSearch] = useState<SearchResultsProps['search']>(search);
   const t = useTranslations();
+  const theme = useTheme();
+  const enableSearchAcrossPlans = theme.settings.search?.enableSearchAcrossPlans !== false;
 
   const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { target } = event;
@@ -292,18 +298,21 @@ function SearchViewContent(props: SearchViewProps) {
                     value={userSearch?.q}
                     onChange={handleValueChange}
                     aria-label={t('search')}
+                    helpText={t('search-help-text')}
                     data-testid="search-form"
                   />
-                  <FormGroup switch>
-                    <Input
-                      type="switch"
-                      id="other-plans-only"
-                      name="onlyOtherPlans"
-                      checked={userSearch?.onlyOtherPlans ?? false}
-                      onChange={handleValueChange}
-                    />
-                    <Label for="other-plans-only">{t('other-plans-only')}</Label>
-                  </FormGroup>
+                  {enableSearchAcrossPlans && (
+                    <FormGroup switch>
+                      <Input
+                        type="switch"
+                        id="other-plans-only"
+                        name="onlyOtherPlans"
+                        checked={userSearch?.onlyOtherPlans ?? false}
+                        onChange={handleValueChange}
+                      />
+                      <Label for="other-plans-only">{t('other-plans-only')}</Label>
+                    </FormGroup>
+                  )}
                   <Button type="submit" color="primary" className="mb-3" block>
                     {t('search')}
                   </Button>
