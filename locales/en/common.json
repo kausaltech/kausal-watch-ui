@@ -310,8 +310,6 @@
     "pledge-success-message": "Thank you for joining the community in taking climate action!",
     "pledge-success-share-label": "Share this pledge with your community",
     "pledge-copy-link": "Copy link",
-    "pledge-form-zip-code": "Your ZIP code",
-    "pledge-form-zip-code-help": "Help us understand which neighborhoods are taking action.",
     "pledge-most-committed": "Most committed",
     "share": "Share",
     "pledge-create-account-title": "Create an account to win rewards",
@@ -348,5 +346,6 @@
     "pledge-sign-in-error-no-active-attempt": "No active code. Please click resend to request a new one.",
     "pledge-nav-my-pledges": "My Pledges",
     "pledge-nav-sign-out": "Sign out",
-    "pledge-nav-user-menu-label": "User menu"
+    "pledge-nav-user-menu-label": "User menu",
+    "pledge-confirm-error": "Something went wrong and your commitment wasn't saved. Please try again."
 }

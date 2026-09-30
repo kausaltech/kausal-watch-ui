@@ -242,5 +242,59 @@ describe('ConfirmPledge', () => {
 
       consoleSpy.mockRestore();
     });
+
+    it('shows an error message when submission fails', async () => {
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      const onConfirm = jest.fn().mockRejectedValue(new Error('UNKNOWN_FIELD'));
+
+      render(<ConfirmPledge {...baseProps} onConfirm={onConfirm} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /confirm commitment/i }));
+
+      expect(await screen.findByRole('alert')).toHaveTextContent(/wasn't saved/i);
+
+      consoleSpy.mockRestore();
+    });
+  });
+
+  describe('configured fields', () => {
+    it('shows no form section when the plan collects no data', () => {
+      render(<ConfirmPledge {...baseProps} formFields={[]} />);
+
+      expect(screen.queryByText(/help us understand our community/i)).not.toBeInTheDocument();
+      expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /confirm commitment/i })).toBeEnabled();
+    });
+
+    it('disables confirm until required fields are filled', () => {
+      const formFields = [{ id: 'postal_code', label: 'Postal code', required: true }];
+
+      render(<ConfirmPledge {...baseProps} formFields={formFields} />);
+
+      const confirmButton = screen.getByRole('button', { name: /confirm commitment/i });
+      expect(confirmButton).toBeDisabled();
+
+      fireEvent.change(screen.getByLabelText(/postal code/i), { target: { value: '   ' } });
+      expect(confirmButton).toBeDisabled();
+
+      fireEvent.change(screen.getByLabelText(/postal code/i), { target: { value: '00100' } });
+      expect(confirmButton).toBeEnabled();
+    });
+
+    it('does not show the optional marker on required fields', () => {
+      const formFields = [{ id: 'postal_code', label: 'Postal code', required: true }];
+
+      render(<ConfirmPledge {...baseProps} formFields={formFields} />);
+
+      expect(screen.queryByText(/\(optional\)/i)).not.toBeInTheDocument();
+    });
+
+    it('limits input length to the backend maximum', () => {
+      const formFields = [{ id: 'postal_code', label: 'Postal code', required: false }];
+
+      render(<ConfirmPledge {...baseProps} formFields={formFields} />);
+
+      expect(screen.getByLabelText(/postal code/i)).toHaveAttribute('maxLength', '200');
+    });
   });
 });

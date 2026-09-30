@@ -20,13 +20,13 @@ import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import RichText from '@/components/common/RichText';
 import { PLEDGE_PATH } from '@/constants/routes';
-import { getDefaultFormFields } from '@/utils/pledge.utils';
 
 import ConfirmPledge from './ConfirmPledge';
 import PledgeFeedback from './PledgeFeedback';
 import PledgeImpactComparison from './PledgeImpactComparison';
 import { ShareButton } from './ShareButton';
 import { usePledgeNavUser } from './use-pledge-auth';
+import { usePledgeFormFields } from './use-pledge-form-fields';
 import { usePublicUser } from './use-public-user';
 
 type PledgeData = NonNullable<NonNullable<PledgeQuery['plan']>['pledge']>;
@@ -276,6 +276,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
     () => false
   );
   const t = useTranslations();
+  const formFields = usePledgeFormFields();
   const pledgeListLink = usePrependPlanAndLocale(PLEDGE_PATH);
   const { isAuthenticated } = usePledgeNavUser();
   const {
@@ -418,7 +419,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
         pledgeSlug={pledge.slug}
         pledgeImage={pledge.image?.rendition?.src ?? null}
         commitmentCount={pledge.commitmentCount}
-        formFields={getDefaultFormFields(t)}
+        formFields={formFields}
         userData={userData}
         isSignedIn={isAuthenticated}
       />

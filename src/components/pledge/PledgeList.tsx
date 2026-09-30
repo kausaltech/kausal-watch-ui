@@ -17,7 +17,6 @@ import type { PledgesQuery } from '@/common/__generated__/graphql';
 import { PLEDGE_GRID_IMAGE_SIZES, getImageSrcSet } from '@/common/images';
 import FilterControl, { type FilterField } from '@/components/common/FilterControl';
 import Icon from '@/components/common/Icon';
-import { getDefaultFormFields } from '@/utils/pledge.utils';
 
 import { getAttributeValueText } from '../common/ActionAttribute';
 import ConfirmPledge from './ConfirmPledge';
@@ -25,6 +24,7 @@ import PledgeCard, { type PledgeCategory } from './PledgeCard';
 import PledgeCreateAccountCard from './PledgeCreateAccountCard';
 import SignInDrawer from './SignInDrawer';
 import { usePledgeNavUser } from './use-pledge-auth';
+import { usePledgeFormFields } from './use-pledge-form-fields';
 import { usePublicUser } from './use-public-user';
 
 export type Pledge = NonNullable<NonNullable<NonNullable<PledgesQuery['plan']>['pledges']>[number]>;
@@ -271,6 +271,7 @@ function PledgeList({ pledges }: Props) {
   const [showSignInDrawer, setShowSignInDrawer] = useState(false);
 
   const t = useTranslations();
+  const formFields = usePledgeFormFields();
   const { isAuthenticated } = usePledgeNavUser();
   const {
     userData,
@@ -551,7 +552,7 @@ function PledgeList({ pledges }: Props) {
             pledgeSlug={selectedPledge.slug}
             pledgeImage={selectedPledge.image?.rendition?.src ?? null}
             commitmentCount={selectedPledge.commitmentCount}
-            formFields={getDefaultFormFields(t)}
+            formFields={formFields}
             userData={userData}
             anonymousUserToken={userUuid ?? undefined}
             isSignedIn={isAuthenticated}
