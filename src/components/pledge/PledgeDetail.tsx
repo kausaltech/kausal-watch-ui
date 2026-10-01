@@ -25,6 +25,7 @@ import ConfirmPledge from './ConfirmPledge';
 import PledgeFeedback from './PledgeFeedback';
 import PledgeImpactComparison from './PledgeImpactComparison';
 import { ShareButton } from './ShareButton';
+import { usePledgeAccountsEnabled } from './use-pledge-accounts-enabled';
 import { usePledgeNavUser } from './use-pledge-auth';
 import { usePledgeFormFields } from './use-pledge-form-fields';
 import { usePublicUser } from './use-public-user';
@@ -277,6 +278,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
   );
   const t = useTranslations();
   const formFields = usePledgeFormFields();
+  const accountsEnabled = usePledgeAccountsEnabled();
   const pledgeListLink = usePrependPlanAndLocale(PLEDGE_PATH);
   const { isAuthenticated } = usePledgeNavUser();
   const {
@@ -420,6 +422,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
         pledgeImage={pledge.image?.rendition?.src ?? null}
         commitmentCount={pledge.commitmentCount}
         formFields={formFields}
+        offerAccount={accountsEnabled}
         userData={userData}
         isSignedIn={isAuthenticated}
       />

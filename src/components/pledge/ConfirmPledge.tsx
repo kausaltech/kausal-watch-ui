@@ -146,6 +146,8 @@ type ConfirmPledgeProps = {
   userData?: Record<string, string>;
   anonymousUserToken?: string;
   isSignedIn?: boolean;
+  /** Offer to create an account after confirming. When false, confirming goes straight to the success step. */
+  offerAccount?: boolean;
   termsUrl?: string;
 };
 
@@ -166,6 +168,7 @@ function ConfirmPledge({
   userData = {},
   anonymousUserToken,
   isSignedIn = false,
+  offerAccount = true,
   termsUrl = DEFAULT_TERMS_URL,
 }: ConfirmPledgeProps) {
   const t = useTranslations();
@@ -221,8 +224,8 @@ function ConfirmPledge({
 
     try {
       await onConfirm(formData);
-      // Skip account creation flow if already signed in
-      setStep(isSignedIn ? 'success' : 'account');
+      // Skip account creation if already signed in or the plan doesn't offer accounts
+      setStep(isSignedIn || !offerAccount ? 'success' : 'account');
     } catch (error) {
       console.error('Failed to commit:', error);
       setSubmitError(true);

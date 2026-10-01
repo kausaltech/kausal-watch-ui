@@ -3,10 +3,14 @@
 import { fireEvent, screen } from '@testing-library/react';
 
 import PledgeList, { type Pledge } from '../../components/pledge/PledgeList';
+import { usePledgeAccountsEnabled } from '../../components/pledge/use-pledge-accounts-enabled';
 import { usePublicUser } from '../../components/pledge/use-public-user';
 import { render } from '../test-utils';
 
 jest.mock('../../components/pledge/use-public-user');
+
+jest.mock('../../components/pledge/use-pledge-accounts-enabled');
+const mockedUsePledgeAccountsEnabled = jest.mocked(usePledgeAccountsEnabled);
 const mockedUsePublicUser = jest.mocked(usePublicUser);
 
 jest.mock('../../components/pledge/use-pledge-auth', () => ({
@@ -66,6 +70,7 @@ const defaultHookReturn = {
 
 beforeEach(() => {
   mockedUsePublicUser.mockReturnValue(defaultHookReturn);
+  mockedUsePledgeAccountsEnabled.mockReturnValue(false);
 });
 
 const pledges = [
@@ -186,6 +191,22 @@ describe('PledgeList', () => {
       expect(screen.getByText(/43 committed/i)).toBeInTheDocument();
       // Reduce Waste: 18 + 0 = 18
       expect(screen.getByText(/18 committed/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('accounts', () => {
+    it('offers an account when the plan has accounts on', () => {
+      mockedUsePledgeAccountsEnabled.mockReturnValue(true);
+
+      render(<PledgeList pledges={pledges as any} />);
+
+      expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
+    });
+
+    it('offers no account when the plan has accounts off', () => {
+      render(<PledgeList pledges={pledges as any} />);
+
+      expect(screen.queryByRole('button', { name: /create account/i })).not.toBeInTheDocument();
     });
   });
 });
