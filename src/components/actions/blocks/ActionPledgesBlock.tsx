@@ -11,6 +11,7 @@ import { PLEDGE_GRID_IMAGE_SIZES, getImageSrcSet } from '@/common/images';
 import { getAttributeValueText } from '@/components/common/ActionAttribute';
 import ConfirmPledge from '@/components/pledge/ConfirmPledge';
 import PledgeCard, { type PledgeCategory } from '@/components/pledge/PledgeCard';
+import { usePledgeAccountsEnabled } from '@/components/pledge/use-pledge-accounts-enabled';
 import { usePledgeNavUser } from '@/components/pledge/use-pledge-auth';
 import { usePledgeFormFields } from '@/components/pledge/use-pledge-form-fields';
 import { usePublicUser } from '@/components/pledge/use-public-user';
@@ -34,6 +35,7 @@ const StyledPledgeGrid = styled.div`
 export default function ActionPledgesBlock({ pledges, heading }: Props) {
   const t = useTranslations();
   const formFields = usePledgeFormFields();
+  const accountsEnabled = usePledgeAccountsEnabled();
   const { isAuthenticated } = usePledgeNavUser();
   const {
     userData,
@@ -103,6 +105,7 @@ export default function ActionPledgesBlock({ pledges, heading }: Props) {
           pledgeImage={selectedPledge.image?.rendition?.src ?? null}
           commitmentCount={selectedPledge.commitmentCount}
           formFields={formFields}
+          offerAccount={accountsEnabled}
           userData={userData}
           isSignedIn={isAuthenticated}
         />

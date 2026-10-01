@@ -257,6 +257,27 @@ describe('ConfirmPledge', () => {
     });
   });
 
+  describe('offerAccount', () => {
+    it('goes straight to the success step when accounts are not offered', async () => {
+      render(<ConfirmPledge {...baseProps} offerAccount={false} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /confirm commitment/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText(/want to invite others/i)).toBeInTheDocument();
+      });
+      expect(screen.queryByLabelText(/your email/i)).not.toBeInTheDocument();
+    });
+
+    it('offers an account after confirming by default', async () => {
+      render(<ConfirmPledge {...baseProps} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /confirm commitment/i }));
+
+      expect(await screen.findByLabelText(/your email/i)).toBeInTheDocument();
+    });
+  });
+
   describe('configured fields', () => {
     it('shows no form section when the plan collects no data', () => {
       render(<ConfirmPledge {...baseProps} formFields={[]} />);

@@ -23,6 +23,7 @@ import ConfirmPledge from './ConfirmPledge';
 import PledgeCard, { type PledgeCategory } from './PledgeCard';
 import PledgeCreateAccountCard from './PledgeCreateAccountCard';
 import SignInDrawer from './SignInDrawer';
+import { usePledgeAccountsEnabled } from './use-pledge-accounts-enabled';
 import { usePledgeNavUser } from './use-pledge-auth';
 import { usePledgeFormFields } from './use-pledge-form-fields';
 import { usePublicUser } from './use-public-user';
@@ -272,6 +273,7 @@ function PledgeList({ pledges }: Props) {
 
   const t = useTranslations();
   const formFields = usePledgeFormFields();
+  const accountsEnabled = usePledgeAccountsEnabled();
   const { isAuthenticated } = usePledgeNavUser();
   const {
     userData,
@@ -470,7 +472,7 @@ function PledgeList({ pledges }: Props) {
         {filteredPledges.length > 0 && (
           <StyledPledgeGrid>
             {filteredPledges.map((pledge, index) => {
-              const showCreateAccountCard = !isAuthenticated && index === 1;
+              const showCreateAccountCard = accountsEnabled && !isAuthenticated && index === 1;
 
               return (
                 <React.Fragment key={pledge.slug}>
@@ -553,19 +555,22 @@ function PledgeList({ pledges }: Props) {
             pledgeImage={selectedPledge.image?.rendition?.src ?? null}
             commitmentCount={selectedPledge.commitmentCount}
             formFields={formFields}
+            offerAccount={accountsEnabled}
             userData={userData}
             anonymousUserToken={userUuid ?? undefined}
             isSignedIn={isAuthenticated}
           />
         )}
 
-        <SignInDrawer
-          isOpen={showSignInDrawer}
-          onClose={() => setShowSignInDrawer(false)}
-          onComplete={handleSignInComplete}
-          anonymousUserToken={userUuid ?? undefined}
-          termsUrl="https://kausal.tech/yolo-county-kausal-watch-terms-of-use-2026-07" // TODO: To come from the backend
-        />
+        {accountsEnabled && (
+          <SignInDrawer
+            isOpen={showSignInDrawer}
+            onClose={() => setShowSignInDrawer(false)}
+            onComplete={handleSignInComplete}
+            anonymousUserToken={userUuid ?? undefined}
+            termsUrl="https://kausal.tech/yolo-county-kausal-watch-terms-of-use-2026-07" // TODO: To come from the backend
+          />
+        )}
       </StyledContainer>
     </StyledPageWrapper>
   );
