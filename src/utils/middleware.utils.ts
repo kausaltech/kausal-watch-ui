@@ -24,6 +24,7 @@ import LRUCache from '@common/utils/lru-cache';
 import type { PlansByHostnameQuery } from '@/common/__generated__/graphql';
 import { PlanDomainAvailability } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
+import { THEME_CSS_HOSTS } from '@/constants/theme-hosts';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 
 import { stripSlashes } from './urls';
@@ -397,11 +398,13 @@ function securityReportUri(dsn: string, environment: string, release: string) {
 }
 
 /*
- * Theme CSS imports webfonts from Adobe Typekit, so the host comes from theme data rather
- * than from the code. Enforcing a policy without it would leave those themes without their
- * webfonts.
+ * Theme CSS imports webfonts from these vendors, so the hosts come from theme data rather than
+ * from the code. Enforcing a policy without them would leave those themes without their fonts.
  */
-const TYPEKIT_HOSTS = ['https://use.typekit.net', 'https://p.typekit.net'];
+/* Fetched by the vendor CSS the themes import, so they never appear in the theme CSS itself. */
+const FONT_VENDOR_COMPANION_HOSTS = ['https://p.typekit.net', 'https://fonts.gstatic.com'];
+
+const FONT_VENDOR_HOSTS = [...THEME_CSS_HOSTS, ...FONT_VENDOR_COMPANION_HOSTS];
 
 /* The cartography block renders with Mapbox GL, which fetches styles, tiles and glyphs. */
 const MAPBOX_HOSTS = ['https://api.mapbox.com', 'https://events.mapbox.com'];
@@ -445,11 +448,11 @@ export function buildReportOnlyPolicy({
   return [
     "default-src 'self'",
     `script-src ${withCdn("'self'", "'unsafe-inline'", "'unsafe-eval'", ANALYTICS_HOST)}`,
-    `style-src ${withCdn("'self'", "'unsafe-inline'", ...TYPEKIT_HOSTS)}`,
-    `font-src ${withCdn("'self'", 'data:', ...TYPEKIT_HOSTS, ...backendSources)}`,
+    `style-src ${withCdn("'self'", "'unsafe-inline'", ...FONT_VENDOR_HOSTS)}`,
+    `font-src ${withCdn("'self'", 'data:', ...FONT_VENDOR_HOSTS, ...backendSources)}`,
     "img-src 'self' data: blob: https:",
     "worker-src 'self' blob:",
-    `connect-src ${withCdn("'self'", sentryOrigin, ...MAPBOX_HOSTS, ANALYTICS_HOST, ...backendSources)}`,
+    `connect-src ${withCdn("'self'", sentryOrigin, ...MAPBOX_HOSTS, ANALYTICS_HOST, ...FONT_VENDOR_HOSTS, ...backendSources)}`,
     'frame-src https:',
     `report-uri ${reportUri}`,
   ].join('; ');

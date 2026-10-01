@@ -297,6 +297,23 @@ describe('buildReportOnlyPolicy', () => {
     expect(policy).not.toContain('api.backend.example.com');
   });
 
+  /* Theme CSS imports webfonts from a handful of vendors, so those are ours to know. */
+  it.each([
+    'https://use.typekit.net',
+    'https://p.typekit.net',
+    'https://fast.fonts.net',
+    'https://fonts.googleapis.com',
+    'https://fonts.gstatic.com',
+  ])('allows the theme webfont vendor %s', (host) => {
+    const policy = buildReportOnlyPolicy(options)!;
+    const escaped = host.replace(/[.]/g, '\\.');
+
+    expect(new RegExp(`style-src [^;]*${escaped}`).test(policy)).toBe(true);
+    expect(new RegExp(`font-src [^;]*${escaped}`).test(policy)).toBe(true);
+    /* Typekit's loader also calls back to its own host. */
+    expect(new RegExp(`connect-src [^;]*${escaped}`).test(policy)).toBe(true);
+  });
+
   it('allows blob workers', () => {
     expect(buildReportOnlyPolicy(options)).toContain("worker-src 'self' blob:");
   });
