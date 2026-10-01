@@ -220,6 +220,14 @@ describe('applySecurityHeaders', () => {
 });
 
 describe('buildReportOnlyPolicy', () => {
+  /* The sources of one directive, so assertions do not have to match against the whole policy. */
+  const sourcesOf = (policy: string, directive: string) =>
+    policy
+      .split(';')
+      .map((part) => part.trim().split(/\s+/))
+      .find((parts) => parts[0] === directive)
+      ?.slice(1) ?? [];
+
   const options = {
     dsn: 'https://publickey@sentry.example.com/42',
     assetPrefix: 'https://cdn.example.com',
@@ -306,12 +314,31 @@ describe('buildReportOnlyPolicy', () => {
     'https://fonts.gstatic.com',
   ])('allows the theme webfont vendor %s', (host) => {
     const policy = buildReportOnlyPolicy(options)!;
-    const escaped = host.replace(/[.]/g, '\\.');
-
-    expect(new RegExp(`style-src [^;]*${escaped}`).test(policy)).toBe(true);
-    expect(new RegExp(`font-src [^;]*${escaped}`).test(policy)).toBe(true);
+    expect(sourcesOf(policy, 'style-src')).toContain(host);
+    expect(sourcesOf(policy, 'font-src')).toContain(host);
     /* Typekit's loader also calls back to its own host. */
-    expect(new RegExp(`connect-src [^;]*${escaped}`).test(policy)).toBe(true);
+    expect(sourcesOf(policy, 'connect-src')).toContain(host);
+  });
+
+  /*
+   * Optional per-plan integrations. The entry point is hardcoded in our own components and
+   * switched on by a plan setting, so the hosts are ours to enumerate rather than customer data.
+   */
+  it.each([
+    ['https://www.googletagmanager.com', 'Google Analytics'],
+    ['https://www.google-analytics.com', 'Google Analytics'],
+    ['https://region1.google-analytics.com', 'Google Analytics'],
+    ['https://app-script.monsido.com', 'Monsido'],
+    ['https://cdn.monsido.com', 'Monsido'],
+    ['https://pagecorrect.monsido.com', 'Monsido'],
+    ['https://heatmaps.monsido.com', 'Monsido'],
+    ['https://www.stadt-zuerich.ch', 'Zurich analytics'],
+    ['https://analytics.stadt-zuerich.ch', 'Zurich analytics'],
+    ['https://dpm.demdex.net', 'Zurich analytics'],
+  ])('allows %s (%s)', (host) => {
+    const policy = buildReportOnlyPolicy(options)!;
+    expect(sourcesOf(policy, 'script-src')).toContain(host);
+    expect(sourcesOf(policy, 'connect-src')).toContain(host);
   });
 
   it('allows blob workers', () => {

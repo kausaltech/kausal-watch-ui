@@ -24,7 +24,8 @@ import LRUCache from '@common/utils/lru-cache';
 import type { PlansByHostnameQuery } from '@/common/__generated__/graphql';
 import { PlanDomainAvailability } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
-import { THEME_CSS_HOSTS } from '@/constants/theme-hosts';
+import { INTEGRATIONS, integrationHosts } from '@/constants/integrations';
+import { ENABLED_INTEGRATION_SETTINGS, THEME_CSS_HOSTS } from '@/constants/theme-hosts';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 
 import { stripSlashes } from './urls';
@@ -406,6 +407,11 @@ const FONT_VENDOR_COMPANION_HOSTS = ['https://p.typekit.net', 'https://fonts.gst
 
 const FONT_VENDOR_HOSTS = [...THEME_CSS_HOSTS, ...FONT_VENDOR_COMPANION_HOSTS];
 
+/* Only the integrations some installed theme switches on, plus those without a setting. */
+const INTEGRATION_HOSTS = INTEGRATIONS.filter(
+  ({ settingKey }) => !settingKey || ENABLED_INTEGRATION_SETTINGS.includes(settingKey)
+).flatMap(integrationHosts);
+
 /* The cartography block renders with Mapbox GL, which fetches styles, tiles and glyphs. */
 const MAPBOX_HOSTS = ['https://api.mapbox.com', 'https://events.mapbox.com'];
 
@@ -447,12 +453,26 @@ export function buildReportOnlyPolicy({
 
   return [
     "default-src 'self'",
-    `script-src ${withCdn("'self'", "'unsafe-inline'", "'unsafe-eval'", ANALYTICS_HOST)}`,
+    `script-src ${withCdn(
+      "'self'",
+      "'unsafe-inline'",
+      "'unsafe-eval'",
+      ANALYTICS_HOST,
+      ...INTEGRATION_HOSTS
+    )}`,
     `style-src ${withCdn("'self'", "'unsafe-inline'", ...FONT_VENDOR_HOSTS)}`,
     `font-src ${withCdn("'self'", 'data:', ...FONT_VENDOR_HOSTS, ...backendSources)}`,
     "img-src 'self' data: blob: https:",
     "worker-src 'self' blob:",
-    `connect-src ${withCdn("'self'", sentryOrigin, ...MAPBOX_HOSTS, ANALYTICS_HOST, ...FONT_VENDOR_HOSTS, ...backendSources)}`,
+    `connect-src ${withCdn(
+      "'self'",
+      sentryOrigin,
+      ...MAPBOX_HOSTS,
+      ANALYTICS_HOST,
+      ...FONT_VENDOR_HOSTS,
+      ...INTEGRATION_HOSTS,
+      ...backendSources
+    )}`,
     'frame-src https:',
     `report-uri ${reportUri}`,
   ].join('; ');

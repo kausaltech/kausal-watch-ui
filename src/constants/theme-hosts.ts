@@ -5,3 +5,8 @@ export const THEME_CSS_HOSTS = [
   'https://fonts.googleapis.com',
   'https://use.typekit.net',
 ];
+
+export const ENABLED_INTEGRATION_SETTINGS = [
+  'googleAnalyticsId',
+  'monsidoToken',
+];

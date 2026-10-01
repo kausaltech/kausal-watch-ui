@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 
 import Script from 'next/script';
 
+import { MONSIDO } from '@/constants/integrations';
+
 type Props = {
   token: string;
 };
@@ -63,13 +65,7 @@ const MonsidoAccessibility = ({ token }: Props) => {
     };
   }, [token]);
 
-  return (
-    <Script
-      type="text/javascript"
-      async
-      src="https://app-script.monsido.com/v2/monsido-script.js"
-    />
-  );
+  return <Script type="text/javascript" async src={MONSIDO.scriptUrl} />;
 };
 
 export default MonsidoAccessibility;
