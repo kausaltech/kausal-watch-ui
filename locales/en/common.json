@@ -332,7 +332,6 @@
     "pledge-sign-in-error-invalid-email": "Please enter a valid email address",
     "pledge-sign-in-error-invalid-pin": "Invalid code. Please check your email and try again.",
     "pledge-sign-in-error-generic": "Something went wrong. Please try again.",
-    "pledge-sign-in-close": "Close",
     "pledge-sign-in-existing-heading": "Sign in to your account",
     "pledge-sign-in-existing-description": "Enter your email and we'll send you a sign-in code.",
     "pledge-sign-in-have-account": "Already have an account?",

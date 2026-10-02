@@ -418,7 +418,7 @@ function PledgeSignInFlow({
         </StyledModeToggle>
 
         <StyledLinkButton type="button" onClick={onClose}>
-          {t('pledge-sign-in-close')}
+          {t('close')}
         </StyledLinkButton>
       </StyledSection>
     );
@@ -457,7 +457,7 @@ function PledgeSignInFlow({
           {t('pledge-sign-in-verify')}
         </StyledButton>
         <StyledLinkButton type="button" onClick={onClose}>
-          {t('pledge-sign-in-close')}
+          {t('close')}
         </StyledLinkButton>
       </StyledActionRow>
     </StyledSection>

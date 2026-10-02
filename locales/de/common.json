@@ -323,7 +323,6 @@
     "pledge-sign-in-error-invalid-email": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
     "pledge-sign-in-error-invalid-pin": "Ungültiger Code. Bitte überprüfen Sie Ihre E-Mails und versuchen Sie es erneut.",
     "pledge-sign-in-error-generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
-    "pledge-sign-in-close": "Schließen",
     "pledge-sign-in-existing-heading": "Bei Ihrem Konto anmelden",
     "pledge-sign-in-existing-description": "Geben Sie Ihre E-Mail-Adresse ein, und wir senden Ihnen einen Anmeldecode.",
     "pledge-sign-in-have-account": "Sie haben bereits ein Konto?",
