@@ -257,6 +257,23 @@ describe('ConfirmPledge', () => {
     });
   });
 
+  describe('sharing after committing', () => {
+    it('copies the pledge link rather than the current page', async () => {
+      const writeText = jest.fn().mockResolvedValue(undefined);
+      Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+      window.history.pushState({}, '', '/en/pledges?view=my-pledges');
+
+      render(<ConfirmPledge {...baseProps} isSignedIn={true} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /confirm commitment/i }));
+      fireEvent.click(await screen.findByRole('button', { name: /copy link/i }));
+
+      await waitFor(() => {
+        expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/en/pledges/bike-to-work`);
+      });
+    });
+  });
+
   describe('offerAccount', () => {
     it('goes straight to the success step when accounts are not offered', async () => {
       render(<ConfirmPledge {...baseProps} offerAccount={false} />);
