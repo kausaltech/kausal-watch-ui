@@ -93,7 +93,7 @@ type PendingFlow =
 
 export type SignInStep = 'email' | 'pin';
 
-function getErrorCode(err: unknown): string | undefined {
+export function getErrorCode(err: unknown): string | undefined {
   if (CombinedGraphQLErrors.is(err)) {
     return err.errors[0]?.extensions?.['code'] as string | undefined;
   }

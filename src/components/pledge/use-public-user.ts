@@ -20,8 +20,20 @@ import { isServer } from '@/common/environment';
 import {
   PLEDGE_AUTH_CHANGED_EVENT,
   PUBLIC_USER_UUID_KEY,
+  clearPledgeAuth,
+  getErrorCode,
   getPledgeAuthToken,
 } from './use-pledge-auth';
+
+/**
+ * Error codes meaning the stored anonymous UUID no longer identifies a user the backend will
+ * accept, e.g. the database was reset, the UUID belongs to another tenant, or it has since been
+ * claimed by a signed-up account.
+ */
+const STALE_ANONYMOUS_USER_CODES = new Set(['PUBLIC_USER_NOT_FOUND', 'TOKEN_REQUIRED']);
+
+/** Error code meaning the stored sign-in token no longer matches an account. */
+const STALE_TOKEN_CODE = 'AUTHENTICATION_REQUIRED';
 
 export const REGISTER_PUBLIC_USER: TypedDocumentNode<
   RegisterPublicUserMutation,
@@ -91,6 +103,15 @@ function storeUuid(uuid: string) {
   localStorage.setItem(PUBLIC_USER_UUID_KEY, uuid);
 }
 
+function isStaleAnonymousUserError(err: unknown): boolean {
+  const code = getErrorCode(err);
+  return code != null && STALE_ANONYMOUS_USER_CODES.has(code);
+}
+
+function isStaleTokenError(err: unknown): boolean {
+  return getErrorCode(err) === STALE_TOKEN_CODE;
+}
+
 function parseUserData(
   raw: string | Record<string, string> | undefined | null
 ): Record<string, string> {
@@ -132,6 +153,51 @@ export function usePublicUser() {
     fetchPolicy: 'network-only',
   });
 
+  // Track the committed slugs from the first fetch so we can compute
+  // a count adjustment without needing to refetch the pledge list query.
+  const initialCommittedSlugsRef = useRef<Set<string> | null>(null);
+
+  /** Drop a stored anonymous identity the backend no longer recognises. */
+  const forgetAnonymousUser = useCallback(() => {
+    localStorage.removeItem(PUBLIC_USER_UUID_KEY);
+    setUserUuid(null);
+    setPreExistingCommittedSlugs(new Set());
+    initialCommittedSlugsRef.current = null;
+  }, []);
+
+  /**
+   * Handle the result of looking up the user identified by `uuid`, or by the stored token when
+   * `uuid` is undefined.
+   *
+   * The backend answers a lookup for an unknown, other-tenant or already-claimed identity with
+   * `publicUser: null` rather than an error, e.g. after a database reset or with a UUID stored by
+   * another plan's site. Forget that identity so the next commit registers a fresh anonymous user
+   * instead of failing. Only act if the identity is still the one we hold, so a late response for
+   * an old identity can't clear a newer one; on errors, keep the identity and try again next time.
+   */
+  const forgetIfNotFound = useCallback(
+    (uuid: string | undefined, result: Awaited<ReturnType<typeof fetchUser>>) => {
+      if (result.error || !result.data || result.data.publicUser) return;
+
+      if (uuid) {
+        if (uuid === getStoredUuid()) forgetAnonymousUser();
+        return;
+      }
+      // Signing out through the shared event also clears the UUID and committed slugs
+      if (getPledgeAuthToken()) clearPledgeAuth();
+    },
+    [forgetAnonymousUser]
+  );
+
+  const lookUpUser = useCallback(
+    (uuid: string | undefined) =>
+      fetchUser({ variables: { user: uuid } }).then(
+        (result) => forgetIfNotFound(uuid, result),
+        () => undefined
+      ),
+    [fetchUser, forgetIfNotFound]
+  );
+
   // When ensureUser registers a new user it sets this flag so the effect
   // doesn't fire a duplicate fetch — commitToPledge calls fetchUser explicitly.
   const skipEffectFetchRef = useRef(false);
@@ -139,23 +205,23 @@ export function usePublicUser() {
   // Fetch user data on mount: token takes precedence over UUID.
   useEffect(() => {
     if (getPledgeAuthToken()) {
-      void fetchUser({ variables: { user: undefined } });
+      void lookUpUser(undefined);
     } else if (userUuid) {
       if (skipEffectFetchRef.current) {
         skipEffectFetchRef.current = false;
         return;
       }
 
-      void fetchUser({ variables: { user: userUuid } });
+      void lookUpUser(userUuid);
     }
-  }, [userUuid, fetchUser]);
+  }, [userUuid, lookUpUser]);
 
   // Distinguish sign-in from sign-out via the same auth-changed event
   useEffect(() => {
     const handler = () => {
       if (getPledgeAuthToken()) {
         // Signed in — identify via token, UUID has been cleared from localStorage
-        void fetchUser({ variables: { user: undefined } });
+        void lookUpUser(undefined);
       } else {
         // Signed out — clear the session entirely
         localStorage.removeItem(PUBLIC_USER_UUID_KEY);
@@ -167,7 +233,7 @@ export function usePublicUser() {
     window.addEventListener(PLEDGE_AUTH_CHANGED_EVENT, handler);
 
     return () => window.removeEventListener(PLEDGE_AUTH_CHANGED_EVENT, handler);
-  }, [fetchUser, setPreExistingCommittedSlugs]);
+  }, [lookUpUser, setPreExistingCommittedSlugs]);
 
   const userData = useMemo(
     () => parseUserData(queryData?.publicUser?.userData),
@@ -179,23 +245,16 @@ export function usePublicUser() {
   // from a previous user cannot leak through the Apollo lazy-query React state after
   // sign-out but before a full cache eviction has been processed
   const hasSession = userUuid != null || (!isServer && !!getPledgeAuthToken());
-  const committedSlugs = useMemo(
-    () => {
-      if (!hasSession) return new Set<string>();
+  const committedSlugs = useMemo(() => {
+    if (!hasSession) return new Set<string>();
 
-      return new Set([
-        ...(queryData?.publicUser?.commitments ?? [])
-          .map((c) => c.pledge?.slug)
-          .filter((c) => c != null),
-        ...preExistingCommittedSlugs,
-      ]);
-    },
-    [hasSession, queryData?.publicUser?.commitments, preExistingCommittedSlugs]
-  );
-
-  // Track the committed slugs from the first fetch so we can compute
-  // a count adjustment without needing to refetch the pledge list query.
-  const initialCommittedSlugsRef = useRef<Set<string> | null>(null);
+    return new Set([
+      ...(queryData?.publicUser?.commitments ?? [])
+        .map((c) => c.pledge?.slug)
+        .filter((c) => c != null),
+      ...preExistingCommittedSlugs,
+    ]);
+  }, [hasSession, queryData?.publicUser?.commitments, preExistingCommittedSlugs]);
 
   useEffect(() => {
     if (initialCommittedSlugsRef.current === null && queryData?.publicUser) {
@@ -213,9 +272,7 @@ export function usePublicUser() {
     [committedSlugs]
   );
 
-  const ensureUser = useCallback(async (): Promise<string> => {
-    if (userUuid) return userUuid;
-
+  const registerNewUser = useCallback(async (): Promise<string> => {
     const result = await registerUser();
     const newUuid = result.data?.pledge.registerUser?.uuid;
 
@@ -226,16 +283,24 @@ export function usePublicUser() {
     setUserUuid(newUuid);
 
     return newUuid;
-  }, [userUuid, registerUser]);
+  }, [registerUser]);
 
-  const commitToPledge = useCallback(
-    async (pledgeId: string, formData: Record<string, string> = {}) => {
-      const isAuth = !!getPledgeAuthToken();
-      const uuid = isAuth ? null : await ensureUser();
+  const ensureUser = useCallback(async (): Promise<string> => {
+    if (userUuid) return userUuid;
 
+    return registerNewUser();
+  }, [userUuid, registerNewUser]);
+
+  const saveAndCommit = useCallback(
+    async (
+      uuid: string | null,
+      pledgeId: string,
+      formData: Record<string, string>,
+      knownUserData: Record<string, string>
+    ) => {
       // Only send mutations for changed fields
       const changedEntries = Object.entries(formData).filter(
-        ([key, value]) => value !== (userData[key] ?? '')
+        ([key, value]) => value !== (knownUserData[key] ?? '')
       );
 
       if (changedEntries.length > 0) {
@@ -250,13 +315,39 @@ export function usePublicUser() {
         variables: { user: uuid ?? undefined, pledge: pledgeId, committed: true },
       });
 
-      if (isAuth) {
-        await fetchUser({ variables: { user: undefined } });
-      } else if (uuid) {
-        await fetchUser({ variables: { user: uuid } });
+      await fetchUser({ variables: { user: uuid ?? undefined } });
+    },
+    [setUserDataMutation, commitMutation, fetchUser]
+  );
+
+  const commitToPledge = useCallback(
+    async (pledgeId: string, formData: Record<string, string> = {}) => {
+      if (getPledgeAuthToken()) {
+        try {
+          await saveAndCommit(null, pledgeId, formData, userData);
+        } catch (err) {
+          // The token no longer matches an account: sign out rather than silently continuing
+          // as a different, anonymous user. The caller shows the error; retrying commits anonymously.
+          if (isStaleTokenError(err)) clearPledgeAuth();
+          throw err;
+        }
+        return;
+      }
+
+      const uuid = await ensureUser();
+      try {
+        await saveAndCommit(uuid, pledgeId, formData, userData);
+      } catch (err) {
+        if (!isStaleAnonymousUserError(err)) throw err;
+
+        // The stored UUID went stale after the page loaded. Start over once as a new anonymous
+        // user; nothing is known about them yet, so every filled-in field is sent.
+        forgetAnonymousUser();
+        const freshUuid = await registerNewUser();
+        await saveAndCommit(freshUuid, pledgeId, formData, {});
       }
     },
-    [ensureUser, userData, setUserDataMutation, commitMutation, fetchUser]
+    [ensureUser, registerNewUser, forgetAnonymousUser, saveAndCommit, userData]
   );
 
   const uncommitFromPledge = useCallback(
@@ -267,13 +358,26 @@ export function usePublicUser() {
         return;
       }
 
-      await commitMutation({
-        variables: {
-          user: isAuth ? undefined : (userUuid ?? undefined),
-          pledge: pledgeId,
-          committed: false,
-        },
-      });
+      try {
+        await commitMutation({
+          variables: {
+            user: isAuth ? undefined : (userUuid ?? undefined),
+            pledge: pledgeId,
+            committed: false,
+          },
+        });
+      } catch (err) {
+        // A stale identity has no commitments to remove; forgetting it clears the committed state.
+        if (isAuth && isStaleTokenError(err)) {
+          clearPledgeAuth();
+          return;
+        }
+        if (!isAuth && isStaleAnonymousUserError(err)) {
+          forgetAnonymousUser();
+          return;
+        }
+        throw err;
+      }
 
       if (isAuth) {
         await fetchUser({ variables: { user: undefined } });
@@ -281,7 +385,7 @@ export function usePublicUser() {
         await fetchUser({ variables: { user: userUuid } });
       }
     },
-    [userUuid, commitMutation, fetchUser]
+    [userUuid, commitMutation, fetchUser, forgetAnonymousUser]
   );
 
   const mergePreExistingPledgeSlugs = useCallback(
