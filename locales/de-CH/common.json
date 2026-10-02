@@ -17,5 +17,5 @@
     "filter-text": "{context, select, STRATEGY {Strategien durchsuchen} CASE_STUDY {Fallstudien durchsuchen} INDICATOR {Indikatoren durchsuchen} other {Massnahmen durchsuchen}}",
     "indicator-graph-reference-line": "Start Massnahmen",
     "pledge-create-account-description": "Speichern Sie Ihre Mitmach-Aktionen und verfolgen Sie Ihren Fortschritt. Ausserdem erhalten Sie exklusive Angebote und die Chance auf Gewinne.",
-    "pledge-sign-in-email-description": "Speichern Sie Ihre Mitmach-Aktionen und verfolgen Sie Ihren Fortschritt. Ausserdem erhalten Sie exklusive Angebote und die Chance auf Gewinne.",
+    "pledge-sign-in-email-description": "Speichern Sie Ihre Mitmach-Aktionen und verfolgen Sie Ihren Fortschritt. Ausserdem erhalten Sie exklusive Angebote und die Chance auf Gewinne."
 }
