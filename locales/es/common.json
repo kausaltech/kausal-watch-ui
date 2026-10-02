@@ -297,7 +297,6 @@
     "pledge-sign-in-error-invalid-email": "Por favor, ingresa una dirección de correo válida",
     "pledge-sign-in-error-invalid-pin": "Código inválido. Verifica tu correo e intenta nuevamente.",
     "pledge-sign-in-error-generic": "Algo salió mal. Por favor, inténtalo de nuevo.",
-    "pledge-sign-in-close": "Cerrar",
     "pledge-sign-in-existing-heading": "Inicia sesión en tu cuenta",
     "pledge-sign-in-existing-description": "Introduce tu correo electrónico y te enviaremos un código de acceso.",
     "pledge-sign-in-have-account": "¿Ya tienes una cuenta?",
