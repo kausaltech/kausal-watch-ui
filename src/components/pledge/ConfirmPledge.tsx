@@ -10,9 +10,11 @@ import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 
+import { usePrependPlanAndLocale } from '@/common/links';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import { Container } from '@/components/common/layout/LayoutGrid';
+import { PLEDGE_PATH } from '@/constants/routes';
 
 import PledgeCard from './PledgeCard';
 import PledgeSignInFlow from './PledgeSignInFlow';
@@ -169,6 +171,7 @@ function ConfirmPledge({
   offerAccount = true,
 }: ConfirmPledgeProps) {
   const t = useTranslations();
+  const pledgePath = usePrependPlanAndLocale(`${PLEDGE_PATH}/${pledgeSlug}`);
   const [step, setStep] = useState<Step>('form');
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -342,7 +345,7 @@ function ConfirmPledge({
                     slug={pledgeSlug}
                     image={pledgeImage ?? undefined}
                     committedCount={commitmentCount + 1}
-                    shareUrl={window.location.href}
+                    shareUrl={new URL(pledgePath, window.location.origin).toString()}
                   />
                 </>
               )}
