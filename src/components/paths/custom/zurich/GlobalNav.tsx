@@ -18,6 +18,7 @@ import { NavigationLink } from '@/common/links';
 import { type NavItem as NavItemType } from '@/components/Header';
 import Icon from '@/components/common/Icon';
 import NavbarSearch from '@/components/common/NavbarSearch';
+import { ZURICH_ANALYTICS } from '@/constants/integrations';
 
 //import NavDropdown, { type NavDropdownProps } from '@/components/common/NavDropdown';
 //import type { GlobalNavProps } from '@/components/common/GlobalNav';
@@ -236,8 +237,7 @@ function GlobalNav(props: GlobalNavProps) {
   }, [theme.themeLogoUrl, ownerName, siteTitle]);
 
   const isProduction = deploymentType === 'production';
-  const analyticsUrl =
-    'https://www.stadt-zuerich.ch/etc/clientlibs/stzh/analytics/294297d554c0/068a31a4609c/launch-9189fcb507a0.min.js';
+  const analyticsUrl = ZURICH_ANALYTICS.scriptUrl;
 
   return (
     <React.Fragment>
