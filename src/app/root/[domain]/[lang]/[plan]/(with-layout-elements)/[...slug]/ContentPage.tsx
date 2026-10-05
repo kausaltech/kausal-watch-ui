@@ -186,7 +186,11 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
           precedingBlockHasBackground={hasPageHeader}
         />
       ) : (
-        <div>
+        <div
+          // The secondary nav is positioned at the top of this element beside the content, so
+          // keep the first block's top margin from collapsing through and offsetting the nav too
+          style={siblings.length > 1 ? { display: 'flow-root' } : undefined}
+        >
           {typenameMatches(page, 'ActionListPage') && <ActionListPage actionListPage={page} />}
           {typenameMatches(page, 'IndicatorListPage') && <IndicatorListPage page={page} />}
           {isPageWithLeadContent && 'leadContent' in page && page.leadContent && (

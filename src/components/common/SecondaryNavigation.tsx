@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import { type StaticPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
+import { useContainImages } from '@/common/hooks/use-contain-images';
 import { Link } from '@/common/links';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
@@ -19,11 +20,17 @@ const NavigationContainer = styled(Container, transientOptions)<{ $pageHasConten
   }
 `;
 
-const NavigationCard = styled.div`
+/* Beside the content, line the card up with where unpadded rich text starts:
+ * flush below the contained header, or a block gap below a coloured header */
+const NavigationCard = styled('div', transientOptions)<{ $alignWithContent: boolean }>`
   padding: ${(props) => props.theme.spaces.s100};
   margin: ${(props) => props.theme.spaces.s200} 0;
   background-color: ${(props) => props.theme.cardBackground.secondary};
   pointer-events: all;
+
+  ${(props) => props.theme.breakpoints.up('lg')} {
+    margin-top: ${(props) => (props.$alignWithContent ? '0' : 'var(--block-gap)')};
+  }
 
   h3 {
     font-size: ${(props) => props.theme.fontSizeMd};
@@ -64,12 +71,13 @@ interface SecondaryNavigationProps {
 
 const SecondaryNavigation = (props: SecondaryNavigationProps) => {
   const { links, activeLink, title, pageHasContent = true } = props;
+  const containImages = useContainImages();
 
   return (
     <NavigationContainer $pageHasContent={pageHasContent}>
       <Row>
-        <Col md={{ size: 10, offset: 1 }} lg={{ size: 4, offset: 0 }} xl={3}>
-          <NavigationCard>
+        <Col md={containImages ? 12 : { size: 10, offset: 1 }} lg={{ size: 4, offset: 0 }} xl={3}>
+          <NavigationCard $alignWithContent={containImages}>
             {title && <h3>{title}</h3>}
             <Nav>
               {links.map((link) => (
