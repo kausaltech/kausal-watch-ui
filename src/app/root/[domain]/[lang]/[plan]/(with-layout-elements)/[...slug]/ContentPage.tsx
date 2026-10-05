@@ -4,6 +4,7 @@ import { useTheme } from '@emotion/react';
 
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import type { ContentPageQuery, HeroImageFragment } from '@/common/__generated__/graphql';
+import { useContainImages } from '@/common/hooks/use-contain-images';
 import { getBgImageAlignment } from '@/common/images';
 import { typenameMatches } from '@/common/utils';
 import CategoryPageContent from '@/components/categories/CategoryPageContent';
@@ -126,6 +127,7 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
 export default function ContentPage({ page, testId }: { page: GeneralPlanPage; testId?: string }) {
   // TODO: Resolve shareImageUrl by pagetype
   const theme = useTheme();
+  const containImages = useContainImages();
   const isCategoryPage = page.__typename === 'CategoryPage';
 
   const isPageWithBody = typenameMatches(
@@ -211,7 +213,8 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
               page={page as Parameters<typeof StreamField>[0]['page']}
               blocks={page.body}
               hasSidebar={siblings.length > 1}
-              precedingBlockHasBackground={hasPageHeader}
+              // The contained content page header has no background
+              precedingBlockHasBackground={hasPageHeader && !containImages}
             />
           )}
         </div>
