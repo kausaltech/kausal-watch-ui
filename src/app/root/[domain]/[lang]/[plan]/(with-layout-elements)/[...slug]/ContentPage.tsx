@@ -101,7 +101,8 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
           color={color || undefined}
           attributes={category.attributes}
           typeId={category.type.id}
-          level={page.category?.level?.name}
+          // Categories without a level are labelled with their category type's name
+          level={page.category?.level?.name ?? page.category?.type.name}
         />
       );
     }
