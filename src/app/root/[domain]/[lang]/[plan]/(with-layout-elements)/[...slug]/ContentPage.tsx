@@ -183,7 +183,8 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
         <CategoryPageContent
           page={page}
           pageSectionColor={pageSectionColor}
-          precedingBlockHasBackground={hasPageHeader}
+          // The contained category page header has no background
+          precedingBlockHasBackground={hasPageHeader && !containImages}
         />
       ) : (
         <div
