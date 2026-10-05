@@ -684,6 +684,8 @@ function ActionContent(props: ActionContentProps) {
         imageAlign={getBgImageAlignment(actionImage)}
         primaryOrg={action.primaryOrg}
         state={actionState}
+        // TODO: Remove before merging; previews the contained layout without a theme change
+        layout="contained"
       />
       <StyledContentGrid>
         <StyledMainTop>

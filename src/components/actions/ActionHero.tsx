@@ -85,12 +85,54 @@ const HeroCardBg = styled.div`
   }
 `;
 
-const CardContent = styled.div`
-  padding: ${(props) => props.theme.spaces.s150};
+const CardContent = styled.div<{ $flush?: boolean }>`
+  padding: ${({ theme, $flush }) => ($flush ? `${theme.spaces.s200} 0 0` : theme.spaces.s150)};
 
   ${(props) => props.theme.breakpoints.up('md')} {
-    padding: ${(props) => props.theme.spaces.s200};
+    padding: ${({ theme, $flush }) => ($flush ? `${theme.spaces.s300} 0 0` : theme.spaces.s200)};
   }
+`;
+
+const ImageBand = styled.div`
+  background-color: ${(props) => props.theme.pageHeaderBackgroundColor};
+  @media print {
+    display: none;
+  }
+`;
+
+/* Containers are full width below md, so let the image run edge to edge there */
+const ContainedImageContainer = styled(Container)`
+  ${(props) => props.theme.breakpoints.down('md')} {
+    && {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+`;
+
+const ContainedImage = styled.div`
+  position: relative;
+  height: 14rem;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.brandDark};
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    height: 20rem;
+    border-radius: ${(props) => props.theme.cardBorderRadius};
+  }
+
+  ${(props) => props.theme.breakpoints.up('lg')} {
+    height: 24rem;
+  }
+`;
+
+const ContainedImageImg = styled.img<{ $imageAlign: string }>`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: ${(props) => props.$imageAlign};
 `;
 
 const OverlayContainer = styled.div`
@@ -240,9 +282,28 @@ type ActionHeroProps = {
   state?: string;
   matchingVersion: NonNullable<ActionDetails['workflowStatus']>['matchingVersion'] | null;
   updatedAt: string;
+  /** Defaults to `contained` when the theme sets `settings.layout.containImages` */
+  layout?: ActionHeroLayout;
 };
 
-function ActionHero(props: ActionHeroProps) {
+export type ActionHeroLayout = 'overlay' | 'contained';
+
+type ActionHeroCardProps = Pick<
+  ActionHeroProps,
+  | 'categories'
+  | 'previousAction'
+  | 'nextAction'
+  | 'identifier'
+  | 'name'
+  | 'primaryOrg'
+  | 'matchingVersion'
+  | 'updatedAt'
+> & {
+  /** Lay the content out in the page flow rather than as a padded card */
+  flush?: boolean;
+};
+
+function ActionHeroCard(props: ActionHeroCardProps) {
   const {
     matchingVersion,
     updatedAt,
@@ -251,17 +312,109 @@ function ActionHero(props: ActionHeroProps) {
     nextAction,
     identifier,
     name,
-    image,
-    imageAlign,
-    altText,
-    imageCredit,
     primaryOrg,
+    flush,
   } = props;
   const theme = useTheme();
   const t = useTranslations();
   const plan = usePlan();
   const { status } = useSession();
   const isAuthenticated = status === 'authenticated';
+
+  return (
+    <>
+      {isAuthenticated && (
+        <ActionLogBanner matchingVersion={matchingVersion} updatedAt={updatedAt} />
+      )}
+      <CardContent $flush={flush}>
+        {primaryOrg && (
+          <PrimaryOrg>
+            <OrgLogo
+              src={
+                primaryOrg.logo?.rendition?.src || getThemeStaticURL(theme.defaultAvatarOrgImage)
+              }
+              alt=""
+            />
+            <strong>
+              <OrganizationLink organizationId={primaryOrg.id}>
+                {primaryOrg.abbreviation || primaryOrg.name}
+              </OrganizationLink>
+            </strong>
+          </PrimaryOrg>
+        )}
+        <ActionsNav aria-label={t('nav-actions-pager', getActionTermContext(plan))}>
+          <ActionListLink>
+            <IndexLink>{t('actions-plural', getActionTermContext(plan))}</IndexLink>
+          </ActionListLink>
+          {theme.settings?.actionView?.showPaginationTop && (
+            <ActionsPagination>
+              {previousAction && (
+                <ActionLink action={previousAction}>
+                  <>
+                    <Icon.ArrowLeft color={theme.linkColor} aria-hidden="true" /> {t('previous')}
+                  </>
+                </ActionLink>
+              )}
+              {nextAction && previousAction && <NavDivider />}
+              {nextAction && (
+                <ActionLink action={nextAction}>
+                  <>
+                    {t('next')}
+                    <Icon.ArrowRight color={theme.linkColor} aria-hidden="true" />
+                  </>
+                </ActionLink>
+              )}
+            </ActionsPagination>
+          )}
+        </ActionsNav>
+        <ActionCategories categories={categories} />
+        <ActionHeadline>
+          {identifier && <ActionNumber>{identifier}</ActionNumber>}
+          <ActionName>{name}</ActionName>
+        </ActionHeadline>
+      </CardContent>
+    </>
+  );
+}
+
+function ActionHero(props: ActionHeroProps) {
+  const { categories, image, imageAlign, altText, imageCredit } = props;
+  const theme = useTheme();
+  const t = useTranslations();
+
+  const layout: ActionHeroLayout =
+    props.layout ?? (theme.settings.layout.containImages ? 'contained' : 'overlay');
+  const imageSrc = image ? (image.fullMedium ?? image.full ?? image.fullSmall)?.src : undefined;
+  const srcSet = image
+    ? getImageSrcSet([image.fullSmall, image.fullMedium, image.full])
+    : undefined;
+  const credit = imageCredit ? `${t('image-credit')}: ${imageCredit}` : null;
+
+  if (layout === 'contained') {
+    return (
+      <Hero $bgColor="transparent">
+        {image && imageSrc && (
+          <ImageBand>
+            <ContainedImageContainer>
+              <ContainedImage>
+                <ContainedImageImg
+                  src={imageSrc}
+                  srcSet={srcSet}
+                  sizes="(min-width: 1400px) 1320px, (min-width: 1200px) 1140px, 100vw"
+                  alt={altText ?? ''}
+                  $imageAlign={imageAlign}
+                />
+                {credit && <ImageCredit>{credit}</ImageCredit>}
+              </ContainedImage>
+            </ContainedImageContainer>
+          </ImageBand>
+        )}
+        <Container>
+          <ActionHeroCard {...props} flush />
+        </Container>
+      </Hero>
+    );
+  }
 
   // Theme overlay color as fallback
   let categoryColor = theme.imageOverlay;
@@ -274,15 +427,13 @@ function ActionHero(props: ActionHeroProps) {
     categoryColor = categoryWithColor.color || categoryWithColor.parent?.color || categoryColor;
   }
 
-  const imageSrc = image ? (image.fullMedium ?? image.full ?? image.fullSmall)?.src : undefined;
-
   return (
     <Hero $bgColor={theme.brandDark}>
       <ActionBgImage $bgColor={categoryColor}>
         {image && imageSrc && (
           <ActionBgImageImg
             src={imageSrc}
-            srcSet={getImageSrcSet([image.fullSmall, image.fullMedium, image.full])}
+            srcSet={srcSet}
             sizes="100vw"
             alt={altText ?? ''}
             $imageAlign={imageAlign}
@@ -293,63 +444,12 @@ function ActionHero(props: ActionHeroProps) {
             <Row>
               <Col lg={8}>
                 <HeroCardBg>
-                  {isAuthenticated && (
-                    <ActionLogBanner matchingVersion={matchingVersion} updatedAt={updatedAt} />
-                  )}
-                  <CardContent>
-                    {primaryOrg && (
-                      <PrimaryOrg>
-                        <OrgLogo
-                          src={
-                            primaryOrg.logo?.rendition?.src ||
-                            getThemeStaticURL(theme.defaultAvatarOrgImage)
-                          }
-                          alt=""
-                        />
-                        <strong>
-                          <OrganizationLink organizationId={primaryOrg.id}>
-                            {primaryOrg.abbreviation || primaryOrg.name}
-                          </OrganizationLink>
-                        </strong>
-                      </PrimaryOrg>
-                    )}
-                    <ActionsNav aria-label={t('nav-actions-pager', getActionTermContext(plan))}>
-                      <ActionListLink>
-                        <IndexLink>{t('actions-plural', getActionTermContext(plan))}</IndexLink>
-                      </ActionListLink>
-                      {theme.settings?.actionView?.showPaginationTop && (
-                        <ActionsPagination>
-                          {previousAction && (
-                            <ActionLink action={previousAction}>
-                              <>
-                                <Icon.ArrowLeft color={theme.linkColor} aria-hidden="true" />{' '}
-                                {t('previous')}
-                              </>
-                            </ActionLink>
-                          )}
-                          {nextAction && previousAction && <NavDivider />}
-                          {nextAction && (
-                            <ActionLink action={nextAction}>
-                              <>
-                                {t('next')}
-                                <Icon.ArrowRight color={theme.linkColor} aria-hidden="true" />
-                              </>
-                            </ActionLink>
-                          )}
-                        </ActionsPagination>
-                      )}
-                    </ActionsNav>
-                    <ActionCategories categories={categories} />
-                    <ActionHeadline>
-                      {identifier && <ActionNumber>{identifier}</ActionNumber>}
-                      <ActionName>{name}</ActionName>
-                    </ActionHeadline>
-                  </CardContent>
+                  <ActionHeroCard {...props} />
                 </HeroCardBg>
               </Col>
             </Row>
           </Container>
-          {imageCredit && <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>}
+          {credit && <ImageCredit>{credit}</ImageCredit>}
         </OverlayContainer>
       </ActionBgImage>
     </Hero>
