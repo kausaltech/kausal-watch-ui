@@ -1,9 +1,9 @@
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 
+import { useContainImages } from '@/common/hooks/use-contain-images';
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import ContainedHeaderImage from '@/components/common/ContainedHeaderImage';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
@@ -91,9 +91,9 @@ export default function ContentPageHeaderBlock(props: Props) {
   } = props;
 
   const t = useTranslations();
-  const theme = useTheme();
+  const containImages = useContainImages();
   const layout: ContentPageHeaderLayout =
-    props.layout ?? (theme.settings.layout.containImages ? 'contained' : 'full-width');
+    props.layout ?? (containImages ? 'contained' : 'full-width');
 
   if (layout === 'contained') {
     return (
