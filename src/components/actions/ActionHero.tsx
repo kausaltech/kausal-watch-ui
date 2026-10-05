@@ -12,6 +12,7 @@ import { getActionTermContext } from '@/common/i18n';
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import { ActionLink, ActionListLink, OrganizationLink } from '@/common/links';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
+import ContainedHeaderImage from '@/components/common/ContainedHeaderImage';
 import Icon from '@/components/common/Icon';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
@@ -91,48 +92,6 @@ const CardContent = styled.div<{ $flush?: boolean }>`
   ${(props) => props.theme.breakpoints.up('md')} {
     padding: ${({ theme, $flush }) => ($flush ? `${theme.spaces.s300} 0 0` : theme.spaces.s200)};
   }
-`;
-
-const ImageBand = styled.div`
-  background-color: ${(props) => props.theme.pageHeaderBackgroundColor};
-  @media print {
-    display: none;
-  }
-`;
-
-/* Containers are full width below md, so let the image run edge to edge there */
-const ContainedImageContainer = styled(Container)`
-  ${(props) => props.theme.breakpoints.down('md')} {
-    && {
-      padding-left: 0;
-      padding-right: 0;
-    }
-  }
-`;
-
-const ContainedImage = styled.div`
-  position: relative;
-  height: 14rem;
-  overflow: hidden;
-  background-color: ${(props) => props.theme.brandDark};
-
-  ${(props) => props.theme.breakpoints.up('md')} {
-    height: 20rem;
-    border-radius: ${(props) => props.theme.cardBorderRadius};
-  }
-
-  ${(props) => props.theme.breakpoints.up('lg')} {
-    height: 24rem;
-  }
-`;
-
-const ContainedImageImg = styled.img<{ $imageAlign: string }>`
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: ${(props) => props.$imageAlign};
 `;
 
 const OverlayContainer = styled.div`
@@ -393,21 +352,13 @@ function ActionHero(props: ActionHeroProps) {
   if (layout === 'contained') {
     return (
       <Hero $bgColor="transparent">
-        {image && imageSrc && (
-          <ImageBand>
-            <ContainedImageContainer>
-              <ContainedImage>
-                <ContainedImageImg
-                  src={imageSrc}
-                  srcSet={srcSet}
-                  sizes="(min-width: 1400px) 1320px, (min-width: 1200px) 1140px, 100vw"
-                  alt={altText ?? ''}
-                  $imageAlign={imageAlign}
-                />
-                {credit && <ImageCredit>{credit}</ImageCredit>}
-              </ContainedImage>
-            </ContainedImageContainer>
-          </ImageBand>
+        {image && (
+          <ContainedHeaderImage
+            image={image}
+            imageAlign={imageAlign}
+            altText={altText}
+            imageCredit={imageCredit}
+          />
         )}
         <Container>
           <ActionHeroCard {...props} flush />

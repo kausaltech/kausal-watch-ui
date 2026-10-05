@@ -1,9 +1,11 @@
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
+import ContainedHeaderImage from '@/components/common/ContainedHeaderImage';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
 import { ImageCredit } from '../common/ImageCredit';
@@ -44,19 +46,20 @@ const HeaderBg = styled.div`
   position: relative;
 `;
 
-const ContentHeader = styled.header`
+const ContentHeader = styled.header<{ $contained?: boolean }>`
   padding: ${(props) => props.theme.spaces.s400} 0 ${(props) => props.theme.spaces.s200};
   font-family: ${(props) => `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
   h1 {
     margin-bottom: ${(props) => props.theme.spaces.s150};
     font-size: ${(props) => props.theme.fontSizeXxl};
-    color: ${(props) =>
-      readableColor(
-        props.theme.pageHeaderBackgroundColor,
-        props.theme.themeColors.black,
-        props.theme.themeColors.white,
+    ${({ theme, $contained }) =>
+      !$contained &&
+      `color: ${readableColor(
+        theme.pageHeaderBackgroundColor,
+        theme.themeColors.black,
+        theme.themeColors.white,
         true
-      )} !important;
+      )} !important;`}
   }
 
   .lead {
@@ -71,7 +74,11 @@ type Props = {
   imageAlign?: string;
   altText?: string;
   imageCredit?: string;
+  /** Defaults to `contained` when the theme sets `settings.layout.containImages` */
+  layout?: ContentPageHeaderLayout;
 };
+
+export type ContentPageHeaderLayout = 'full-width' | 'contained';
 
 export default function ContentPageHeaderBlock(props: Props) {
   const {
@@ -84,6 +91,34 @@ export default function ContentPageHeaderBlock(props: Props) {
   } = props;
 
   const t = useTranslations();
+  const theme = useTheme();
+  const layout: ContentPageHeaderLayout =
+    props.layout ?? (theme.settings.layout.containImages ? 'contained' : 'full-width');
+
+  if (layout === 'contained') {
+    return (
+      <>
+        {headerImage && (
+          <ContainedHeaderImage
+            image={headerImage}
+            imageAlign={imageAlign}
+            altText={altText}
+            imageCredit={imageCredit}
+          />
+        )}
+        <Container>
+          <Row>
+            <Col>
+              <ContentHeader $contained>
+                <h1>{title}</h1>
+                {lead && <p className="lead">{lead}</p>}
+              </ContentHeader>
+            </Col>
+          </Row>
+        </Container>
+      </>
+    );
+  }
 
   const headerImageSrc = headerImage
     ? (headerImage.fullMedium ?? headerImage.full ?? headerImage.fullSmall)?.src

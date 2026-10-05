@@ -117,6 +117,8 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
           imageAlign={getBgImageAlignment(headerImage)}
           altText={headerImage?.altText}
           imageCredit={headerImage?.imageCredit}
+          // TODO: Remove before merging; previews the contained layout without a theme change
+          layout="contained"
         />
       );
     }
