@@ -8,6 +8,7 @@ import { getThemeStaticURL } from '@common/themes/theme';
 
 import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
+import { useContainImages } from '@/common/hooks/use-contain-images';
 import { getActionTermContext } from '@/common/i18n';
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import { ActionLink, ActionListLink, OrganizationLink } from '@/common/links';
@@ -363,8 +364,8 @@ function ActionHero(props: ActionHeroProps) {
   const theme = useTheme();
   const t = useTranslations();
 
-  const layout: ActionHeroLayout =
-    props.layout ?? (theme.settings.layout.containImages ? 'contained' : 'overlay');
+  const containImages = useContainImages();
+  const layout: ActionHeroLayout = props.layout ?? (containImages ? 'contained' : 'overlay');
   const imageSrc = image ? (image.fullMedium ?? image.full ?? image.fullSmall)?.src : undefined;
   const srcSet = image
     ? getImageSrcSet([image.fullSmall, image.fullMedium, image.full])
