@@ -16,6 +16,7 @@ import ContainedHeaderImage from '@/components/common/ContainedHeaderImage';
 import Icon from '@/components/common/Icon';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
+import { PRINT_MODE_SELECTOR } from '@/context/print';
 
 import { ImageCredit } from '../common/ImageCredit';
 import ActionLogBanner from './ActionLogBanner';
@@ -103,6 +104,21 @@ const OverlayContainer = styled.div`
   @media print {
     min-height: 0;
     padding: 0;
+  }
+`;
+
+/* Matches the width of the main column in ActionContent's StyledContentGrid */
+const MainColumnWidth = styled.div`
+  ${(props) => props.theme.breakpoints.up('md')} {
+    max-width: calc((100% - var(--bs-gutter-x)) * 7 / 12);
+  }
+
+  ${(props) => props.theme.breakpoints.up('lg')} {
+    max-width: calc((100% - var(--bs-gutter-x)) * 8 / 12);
+  }
+
+  ${PRINT_MODE_SELECTOR} & {
+    max-width: none;
   }
 `;
 
@@ -280,6 +296,16 @@ function ActionHeroCard(props: ActionHeroCardProps) {
   const { status } = useSession();
   const isAuthenticated = status === 'authenticated';
 
+  const title = (
+    <>
+      <ActionCategories categories={categories} />
+      <ActionHeadline>
+        {identifier && <ActionNumber>{identifier}</ActionNumber>}
+        <ActionName>{name}</ActionName>
+      </ActionHeadline>
+    </>
+  );
+
   return (
     <>
       {isAuthenticated && (
@@ -326,11 +352,7 @@ function ActionHeroCard(props: ActionHeroCardProps) {
             </ActionsPagination>
           )}
         </ActionsNav>
-        <ActionCategories categories={categories} />
-        <ActionHeadline>
-          {identifier && <ActionNumber>{identifier}</ActionNumber>}
-          <ActionName>{name}</ActionName>
-        </ActionHeadline>
+        {flush ? <MainColumnWidth>{title}</MainColumnWidth> : title}
       </CardContent>
     </>
   );
