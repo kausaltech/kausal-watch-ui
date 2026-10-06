@@ -86,7 +86,6 @@ const TopNav = styled(Navbar)`
   ${({ fixed, theme }) => fixed && baseFixedNavStyles(theme)}
 
   ${(props) => props.theme.breakpoints.up('md')} {
-    padding: 0 ${(props) => props.theme.spaces.s100};
     border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
   }
 

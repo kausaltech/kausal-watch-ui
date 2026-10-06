@@ -126,7 +126,7 @@ const StyledCardContainer = styled(ReactStrapCol, transientOptions)<{
 
 /* Rendered card width in the xs=12, md=6, lg=4 highlight grid */
 const HIGHLIGHT_GRID_IMAGE_SIZES =
-  '(min-width: 1400px) 416px, (min-width: 992px) 33vw, (min-width: 768px) 50vw, 100vw';
+  '(min-width: 1400px) 434px, (min-width: 1200px) 367px, (min-width: 768px) calc(50vw - 38px), 100vw';
 
 export type ActionHighlightListAction = NonNullable<
   NonNullable<ActionHightlightListQuery['planActions']>[number]

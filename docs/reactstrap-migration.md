@@ -23,29 +23,32 @@ Out of scope (deferred):
 
 ## Breakpoints
 
-The theme (`kausal_common/src/themes/mui-theme/theme.ts`) uses MUI's default breakpoints, except `md`:
+The theme (`kausal_common/src/themes/mui-theme/theme.ts`) uses MUI's default breakpoints, except `md` and `xl`:
 
 |     | Old (Bootstrap / theme tokens) | MUI default | Now    |
 | --- | ------------------------------ | ----------- | ------ |
 | sm  | 576px                          | 600px       | 600px  |
 | md  | 768px                          | 900px       | 768px  |
 | lg  | 992px                          | 1200px      | 1200px |
-| xl  | 1200px                         | 1536px      | 1536px |
+| xl  | 1200px (xxl 1400px)            | 1536px      | 1400px |
 
 - **`md` stays at 768px.** It's the switch point Bootstrap and Tailwind share, and where tablets in portrait begin. With MUI's 900px, the nav and two-column layouts collapsed to mobile too early. There's no formal standard for breakpoint values; these use the values most widely shared between the common scales (Bootstrap, Tailwind, MUI, Material Design 3).
 - **`lg` moves from 992px to 1200px.** Layouts that switch at `lg` do so later than before.
-- **`xl` moves from 1200px to 1536px,** for large monitors.
-- **paths-ui shares this theme,** so its `md` moves from MUI's 900px to 768px too.
+- **`xl` is 1400px, Bootstrap's widest step,** not MUI's 1536px. With a 1536px container, content was hard to lay out cleanly on very wide screens, and 1400px also gives a container step for screens from 1400px up.
+- **paths-ui shares this theme.** Its `md` moves from MUI's 900px to 768px, and its `<Container fixed maxWidth="xl">` pages are now capped at 1400px instead of 1536px.
+- **Bootstrap follows the same values,** through `$grid-breakpoints` in `kausal_common/src/themes/styles/_theme-variables.scss`.
 
-Container max widths (Bootstrap's `$container-max-widths`, and MUI's `Container` once step 7 lands):
+Containers are MUI's `Container`, with MUI's gutters (`spacing(2)` on phones, `spacing(3)` from `sm`: 12.8px and 25.6px with the theme's spacing unit). Like MUI's `fixed` Container, each step is capped at the breakpoint's own width, but only from `lg`, so phones and tablets get the full width. A cap at `md` (768px) left a growing gap towards 1199px. `LayoutGrid`'s `Container` sets the caps; `$container-max-widths` has the same values for any leftover `.container` markup.
 
-| Viewport    | Old                             | Now                         |
-| ----------- | ------------------------------- | --------------------------- |
-| < 576px     | full width                      | full width                  |
-| 576–767px   | 540px                           | full width                  |
-| 768–1199px  | 720px, then 960px from 992px    | full width, capped at 840px |
-| 1200–1535px | 1140px, then 1320px from 1400px | 1140px                      |
-| ≥ 1536px    | 1320px                          | 1320px                      |
+| Viewport    | Old (Bootstrap)              | Now        |
+| ----------- | ---------------------------- | ---------- |
+| < 576px     | full width                   | full width |
+| 576–767px   | 540px                        | full width |
+| 768–1199px  | 720px, then 960px from 992px | full width |
+| 1200–1399px | 1140px                       | 1200px     |
+| ≥ 1400px    | 1320px                       | 1400px     |
+
+The widths include the gutters. Bootstrap's gutters were 12px, so from `sm` content sits about 14px further in on each side than before; on phones the difference is under 1px.
 
 ## Component mapping
 
@@ -124,8 +127,8 @@ The theme tokens are gone from watch-ui and `kausal_common/src/themes/ThemedGlob
 
 **Bootstrap follows MUI too.** reactstrap's `Navbar expand="md"`, the `d-md-*` classes and `Col md=…` switch at Bootstrap's breakpoints. Left alone, the nav showed its desktop and mobile parts at once when the two sets of breakpoints differed. `kausal_common/src/themes/styles/_theme-variables.scss` now sets:
 
-- **`$grid-breakpoints`:** the theme's values (600 / 768 / 1200 / 1536px). There's no xxl, because MUI doesn't have one.
-- **`$container-max-widths`:** 840px from md, 1140px from lg, 1320px from xl. Containers are full width below 768px.
+- **`$grid-breakpoints`:** the theme's values (600 / 768 / 1200 / 1536px at the time; see [Breakpoints](#breakpoints) for the current ones).
+- **`$container-max-widths`:** 840px from md, 1140px from lg, 1320px from xl, later replaced by MUI's containers. Containers are full width below 768px.
 
 paths-ui imports the same `main.scss`, so its Bootstrap breakpoints move too.
 

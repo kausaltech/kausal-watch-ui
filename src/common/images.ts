@@ -59,10 +59,10 @@ export interface HeroImageRenditions {
 
 /*
  * Rendered width of a card in the three-column card grid (xs=12, sm=6, lg=4
- * columns inside a Bootstrap container), for the <img> sizes attribute.
+ * columns inside a Container), for the <img> sizes attribute.
  */
 export const CARD_GRID_IMAGE_SIZES =
-  '(min-width: 1400px) 416px, (min-width: 992px) 33vw, (min-width: 576px) 50vw, 100vw';
+  '(min-width: 1400px) 434px, (min-width: 1200px) 367px, (min-width: 600px) calc(50vw - 38px), 100vw';
 
 /*
  * Rendered width of a card in the pledge grid, an auto-fill grid of at least

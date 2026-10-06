@@ -1,8 +1,11 @@
 import type React from 'react';
 
 import MuiCollapse from '@mui/material/Collapse';
+import type { Breakpoint } from '@mui/material/styles';
 
 import styled from '@emotion/styled';
+
+import { Container } from '@/components/common/layout/LayoutGrid';
 
 /*
  * Navigation parts with reactstrap's API and markup. They keep Bootstrap's
@@ -21,8 +24,8 @@ type NavbarProps = React.HTMLAttributes<HTMLElement> & {
   expand?: boolean | 'sm' | 'md' | 'lg' | 'xl';
   /** `top` or `bottom` to fix the navbar to the viewport */
   fixed?: string;
-  /** Wrap the content in a container: `true` for `.container`, or a suffix such as `fluid` */
-  container?: boolean | string;
+  /** Wrap the content in a Container: `true` for a capped one, `fluid` for full width, or a breakpoint below which it is full width */
+  container?: boolean | 'fluid' | Breakpoint;
 };
 
 export function Navbar({
@@ -34,13 +37,18 @@ export function Navbar({
   ...props
 }: NavbarProps) {
   const expandClass = expand === true ? 'navbar-expand' : expand && `navbar-expand-${expand}`;
-  const containerClass = container === true ? 'container' : `container-${container}`;
   return (
     <nav
       className={classes(className, 'navbar', expandClass, fixed && `fixed-${fixed}`)}
       {...props}
     >
-      {container ? <div className={containerClass}>{children}</div> : children}
+      {container ? (
+        <Container fluid={container === true ? undefined : container === 'fluid' || container}>
+          {children}
+        </Container>
+      ) : (
+        children
+      )}
     </nav>
   );
 }
