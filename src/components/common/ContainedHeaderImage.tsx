@@ -14,9 +14,9 @@ const ImageBand = styled.div`
   }
 `;
 
-/* Containers are full width below md, so let the image run edge to edge there */
+/* Containers are full width below lg, so let the image run edge to edge there */
 const ImageContainer = styled(Container)`
-  ${(props) => props.theme.breakpoints.down('md')} {
+  ${(props) => props.theme.breakpoints.down('lg')} {
     && {
       padding-left: 0;
       padding-right: 0;
@@ -36,6 +36,10 @@ const ImageFrame = styled.div`
 
   ${(props) => props.theme.breakpoints.up('lg')} {
     height: 24rem;
+  }
+
+  ${(props) => props.theme.breakpoints.up('xl')} {
+    height: 28rem;
   }
 `;
 
@@ -71,7 +75,7 @@ export default function ContainedHeaderImage({ image, imageAlign, altText, image
           <Img
             src={src}
             srcSet={getImageSrcSet([image.fullSmall, image.fullMedium, image.full])}
-            sizes="(min-width: 1536px) 1320px, (min-width: 1200px) 1140px, (min-width: 840px) 840px, 100vw"
+            sizes="(min-width: 1400px) 1349px, (min-width: 1200px) 1149px, 100vw"
             alt={altText ?? ''}
             $imageAlign={imageAlign}
           />
