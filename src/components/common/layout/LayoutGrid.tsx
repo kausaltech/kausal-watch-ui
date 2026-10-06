@@ -2,14 +2,16 @@ import React from 'react';
 
 import MuiContainer from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import type { Breakpoint as MuiBreakpoint, Theme } from '@mui/material/styles';
+import type { Breakpoint as MuiBreakpoint } from '@mui/material/styles';
+
+import ContentContainer, { containerMaxWidthStyles } from '@common/components/ContentContainer';
 
 /*
  * Container, Row and Col with reactstrap's API, on MUI's Container and Grid.
  *
- * Container is MUI's, with MUI's gutters. Like MUI's `fixed` Container it is
- * capped at each breakpoint's width, but only from lg, so it stays full width
- * on phones and tablets.
+ * Container is the shared ContentContainer: MUI's, with MUI's gutters, capped
+ * at each breakpoint's width from lg, so it stays full width on phones and
+ * tablets.
  *
  * MUI's Grid (with no spacing) computes the responsive column widths and
  * offsets, which are the same percentages as Bootstrap's at the same
@@ -117,20 +119,6 @@ export const Row = React.forwardRef<HTMLElement, RowProps>(function Row(
   );
 });
 
-// The breakpoints at which the container is capped, at the breakpoint's width
-const CONTAINER_CAPS = ['lg', 'xl'] as const satisfies readonly MuiBreakpoint[];
-
-/** Caps from the `from` breakpoint up; smaller screens get the full width. */
-function containerMaxWidth(theme: Theme, from: MuiBreakpoint | undefined) {
-  const start = from ? theme.breakpoints.values[from] : 0;
-  return Object.fromEntries(
-    CONTAINER_CAPS.filter((bp) => theme.breakpoints.values[bp] >= start).map((bp) => [
-      bp,
-      theme.breakpoints.values[bp],
-    ])
-  );
-}
-
 type ContainerProps = React.HTMLAttributes<HTMLElement> & {
   /** `true` for full width, or a breakpoint (such as `lg`) below which it is full width */
   fluid?: boolean | MuiBreakpoint;
@@ -143,16 +131,26 @@ export const Container = React.forwardRef<HTMLElement, ContainerProps>(function 
 ) {
   const containerClass =
     fluid === true ? 'container-fluid' : fluid ? `container-${fluid}` : 'container';
+  const component = tag ?? 'div';
+
+  if (!fluid) {
+    return (
+      <ContentContainer
+        ref={ref as React.Ref<HTMLDivElement>}
+        component={component}
+        className={classes(className, containerClass)}
+        {...props}
+      />
+    );
+  }
+
+  // Full width, or only capped from the given breakpoint up
   return (
     <MuiContainer
       ref={ref}
-      component={tag ?? 'div'}
+      component={component}
       maxWidth={false}
-      sx={
-        fluid === true
-          ? undefined
-          : (theme) => ({ maxWidth: containerMaxWidth(theme, fluid || undefined) })
-      }
+      sx={fluid === true ? undefined : (theme) => containerMaxWidthStyles(theme, { from: fluid })}
       className={classes(className, containerClass)}
       {...props}
     />

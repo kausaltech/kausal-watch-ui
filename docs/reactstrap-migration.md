@@ -35,10 +35,17 @@ The theme (`kausal_common/src/themes/mui-theme/theme.ts`) uses MUI's default bre
 - **`md` stays at 768px.** It's the switch point Bootstrap and Tailwind share, and where tablets in portrait begin. With MUI's 900px, the nav and two-column layouts collapsed to mobile too early. There's no formal standard for breakpoint values; these use the values most widely shared between the common scales (Bootstrap, Tailwind, MUI, Material Design 3).
 - **`lg` moves from 992px to 1200px.** Layouts that switch at `lg` do so later than before.
 - **`xl` is 1400px, Bootstrap's widest step,** not MUI's 1536px. With a 1536px container, content was hard to lay out cleanly on very wide screens, and 1400px also gives a container step for screens from 1400px up.
-- **paths-ui shares this theme.** Its `md` moves from MUI's 900px to 768px, and its `<Container fixed maxWidth="xl">` pages are now capped at 1400px instead of 1536px.
+- **paths-ui shares this theme.** Its `md` moves from MUI's 900px to 768px. Its page containers follow the same caps as watch-ui's (see below).
 - **Bootstrap follows the same values,** through `$grid-breakpoints` in `kausal_common/src/themes/styles/_theme-variables.scss`.
 
 Containers are MUI's `Container`, with MUI's gutters (`spacing(2)` on phones, `spacing(3)` from `sm`: 12.8px and 25.6px with the theme's spacing unit). Like MUI's `fixed` Container, each step is capped at the breakpoint's own width, but only from `lg`, so phones and tablets get the full width. A cap at `md` (768px) left a growing gap towards 1199px. `LayoutGrid`'s `Container` sets the caps; `$container-max-widths` has the same values for any leftover `.container` markup.
+
+The same caps are shared in `kausal_common/src/components/ContentContainer.tsx`:
+
+- **`ContentContainer`** is MUI's `Container` with the caps, and `maxWidth="lg"` stops at 1200px. paths-ui uses it for its page containers, which were MUI's `<Container fixed maxWidth="xl">`. `fixed` also capped them at 600px from `sm` and 768px from `md`, so a 1100px viewport had a 768px content column. The footer's plain `<Container>` stopped at 1200px, short of the header's 1400px.
+- **`containerMaxWidthStyles(theme, { from, upTo })`** returns the caps as media queries, for `sx` or `styled`.
+
+`LayoutGrid`'s `Container` renders `ContentContainer`. With `fluid` set to a breakpoint, it renders MUI's `Container` with `containerMaxWidthStyles(theme, { from: fluid })` instead, since `ContentContainer` has no option to stay full width below a breakpoint.
 
 | Viewport    | Old (Bootstrap)              | Now        |
 | ----------- | ---------------------------- | ---------- |
