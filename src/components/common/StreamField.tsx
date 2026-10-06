@@ -176,7 +176,11 @@ function richTextHasBackground(theme: Theme): boolean {
   return theme.section.richText.sectionBackground !== theme.themeColors.white;
 }
 
-function blockHasBackground(block: StreamFieldFragment, theme: Theme): boolean {
+function blockHasBackground(
+  block: StreamFieldFragment,
+  theme: Theme,
+  containImages: boolean
+): boolean {
   switch (block.__typename) {
     case 'CardListBlock':
     case 'ActionListBlock':
@@ -188,10 +192,11 @@ function blockHasBackground(block: StreamFieldFragment, theme: Theme): boolean {
     case 'ActionCategoryFilterCardsBlock':
     case 'CategoryTypeLevelListBlock':
     case 'RelatedPlanListBlock':
-    case 'FrontPageHeroBlock':
     case 'RelatedIndicatorsBlock':
     case 'IndicatorGroupBlock':
       return true;
+    case 'FrontPageHeroBlock':
+      return !heroHasFlowText(block, containImages);
     case 'RichTextBlock':
       return richTextHasBackground(theme);
     case 'LargeImageBlock':
@@ -202,12 +207,28 @@ function blockHasBackground(block: StreamFieldFragment, theme: Theme): boolean {
 }
 
 /**
- * Rich text without a section background drops its own vertical padding and
- * relies on the block gap for spacing, instead of floating in an invisible
- * padded box
+ * The big image front page hero follows the contained layout (see HeroFullImage).
+ * With text, the text sits in the page flow below the image band; without text,
+ * the hero is only the image band and behaves like a coloured block.
  */
-function blockIsUnpadded(block: StreamFieldFragment, theme: Theme) {
-  return block.__typename === 'RichTextBlock' && !richTextHasBackground(theme);
+function heroHasFlowText(block: StreamFieldFragment, containImages: boolean): boolean {
+  return (
+    block.__typename === 'FrontPageHeroBlock' &&
+    containImages &&
+    block.layout === 'big_image' &&
+    !!(block.heading || block.lead)
+  );
+}
+
+/**
+ * Rich text without a section background, and the contained front page hero with
+ * text, have no vertical padding of their own and rely on the block gap for spacing
+ */
+function blockIsUnpadded(block: StreamFieldFragment, theme: Theme, containImages: boolean) {
+  return (
+    (block.__typename === 'RichTextBlock' && !richTextHasBackground(theme)) ||
+    heroHasFlowText(block, containImages)
+  );
 }
 
 interface BlockWrapperProps {
@@ -765,6 +786,7 @@ export default function StreamField(props: StreamFieldProps) {
   const { page, blocks, hasSidebar = false, columnProps, precedingBlockHasBackground } = props;
   const t = useTranslations();
   const theme = useTheme();
+  const containImages = useContainImages();
 
   const isCategoryPage = page.__typename === 'CategoryPage';
   useEffect(() => {
@@ -781,13 +803,14 @@ export default function StreamField(props: StreamFieldProps) {
   return (
     <div className={`custom-${page.slug}`}>
       {blocks.map((block, index) => {
-        const hasBackground = blockHasBackground(block, theme);
+        const hasBackground = blockHasBackground(block, theme, containImages);
         const prevHasBackground =
           index === 0
             ? (precedingBlockHasBackground ?? false)
-            : blockHasBackground(blocks[index - 1], theme);
-        const isUnpadded = blockIsUnpadded(block, theme);
-        const prevIsUnpadded = index > 0 && blockIsUnpadded(blocks[index - 1], theme);
+            : blockHasBackground(blocks[index - 1], theme, containImages);
+        const isUnpadded = blockIsUnpadded(block, theme, containImages);
+        const prevIsUnpadded =
+          index > 0 && blockIsUnpadded(blocks[index - 1], theme, containImages);
 
         return (
           <ErrorBoundary
