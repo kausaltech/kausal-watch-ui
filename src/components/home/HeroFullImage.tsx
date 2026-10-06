@@ -8,7 +8,9 @@ import { useTranslations } from 'next-intl';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
+import { useContainImages } from '@/common/hooks/use-contain-images';
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
+import ContainedHeaderImage from '@/components/common/ContainedHeaderImage';
 import RichText from '@/components/common/RichText';
 import { Container } from '@/components/common/layout/LayoutGrid';
 
@@ -102,6 +104,41 @@ const MainCard = styled(HeroCard, transientOptions)<{ $alignment: string }>`
   }
 `;
 
+/* In the contained layout the hero text sits in the page flow below the image,
+ * aligned with the page content, instead of in a card over the image */
+const ContainedHeroContent = styled.div`
+  padding-top: ${({ theme }) => theme.spaces.s200};
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    padding-top: ${({ theme }) => theme.spaces.s300};
+  }
+
+  h1 {
+    font-size: ${(props) => props.theme.fontSizeLg};
+    margin-bottom: ${(props) => props.theme.spaces.s100};
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    ${(props) => props.theme.breakpoints.up('md')} {
+      font-size: ${(props) => props.theme.fontSizeXl};
+    }
+  }
+
+  .lead-content {
+    max-width: 992px;
+    font-size: ${(props) => props.theme.fontSizeBase};
+    line-height: ${(props) => props.theme.lineHeightMd};
+    font-family: ${(props) =>
+      `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
+
+    ${(props) => props.theme.breakpoints.up('md')} {
+      font-size: ${(props) => props.theme.fontSizeMd};
+    }
+  }
+`;
+
 interface FocalBoxInfo {
   focalPointX: number;
   focalPointY: number;
@@ -136,6 +173,7 @@ const HeroFullImage = (props: HeroFullImageProps) => {
 
   const t = useTranslations();
   const theme = useTheme();
+  const containImages = useContainImages();
 
   const contentAlignment = theme.settings?.frontHero?.cardPlacement ?? 'left';
   const contentColor = theme.settings?.frontHero?.color ?? 'light';
@@ -147,6 +185,27 @@ const HeroFullImage = (props: HeroFullImageProps) => {
   const focalBoxAspectRatio = focalBox
     ? focalBox.imageWidth / focalBox.focalPointHeight
     : undefined;
+
+  if (containImages) {
+    return (
+      <div id={id}>
+        <ContainedHeaderImage
+          image={image}
+          imageAlign={imageAlign}
+          altText={altText}
+          imageCredit={imageCredit}
+        />
+        {showContentBox && (
+          <Container>
+            <ContainedHeroContent>
+              {title && <h1>{title}</h1>}
+              {lead ? <RichText html={lead} className="lead-content" /> : null}
+            </ContainedHeroContent>
+          </Container>
+        )}
+      </div>
+    );
+  }
 
   const fallbackSrc = (image.fullMedium ?? image.full ?? image.fullSmall)?.src;
 
