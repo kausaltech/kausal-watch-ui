@@ -32,7 +32,6 @@ const ImageFrame = styled.div`
 
   ${(props) => props.theme.breakpoints.up('md')} {
     height: 20rem;
-    border-radius: ${(props) => props.theme.cardBorderRadius};
   }
 
   ${(props) => props.theme.breakpoints.up('lg')} {
