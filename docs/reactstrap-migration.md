@@ -19,7 +19,7 @@ In scope:
 
 Out of scope (deferred):
 
-- Removing Bootstrap's CSS, its grid and utility classes (`mb-5`, `d-flex`, `visually-hidden`, `btn`, …), and the `$breakpoint-*` SCSS variables in `_theme-variables.scss`. Leftover Bootstrap classes keep using Bootstrap's breakpoints until that later project.
+- Removing Bootstrap's CSS, its grid and utility classes (`mb-5`, `d-flex`, `visually-hidden`, `btn`, …). Until then, leftover Bootstrap classes switch at the theme's breakpoints, through `$grid-breakpoints` (the old `$breakpoint-*` SCSS variables are already gone).
 
 ## Breakpoints
 
@@ -244,7 +244,7 @@ Status: done on `feat/bye-reactstrap`. Files importing reactstrap went from 80 t
 - **Paths-derived components follow paths-ui:**
   - **`OutcomeNodeContent`:** the reactstrap tab strip is replaced by paths-ui's `NodeViewSelector` (an MUI `Select` with view icons), ported to `paths/outcome/NodeViewSelector.tsx` without paths-ui's node-page option. **Visible change** on outcome blocks, such as Zürich's home page.
   - **`DataTable`:** the download dropdown uses paths-ui's `ToolsMenu` setup (MUI `Menu`, `ListSubheader`, `MenuItem` with file-type icons). The trigger keeps watch-ui's labelled "Download data" button.
-  - **Zürich `GlobalNav`:** uses `NavParts`. paths-ui still uses reactstrap there.
+  - **Zürich `GlobalNav`:** uses `NavParts`. paths-ui has its own `NavParts` and `Dropdowns`, and reactstrap is removed from its dependencies.
 - **Deleted:** `common/NavBar.tsx`. Nothing imported it.
 - **Checks:**
   - **Screenshots:** unchanged against the pre-step branch state, apart from the Zürich view selector.
@@ -291,9 +291,10 @@ Steps 2–5 don't depend on each other and can run in parallel. Step 7 can start
 
 ### Follow-up: remove the tokens from `@kausal/themes`
 
-1. Migrate the remaining paths-ui use (`src/components/common/GlobalNav.tsx`, `breakpointMd`) to `theme.breakpoints.up('md')`.
-2. Remove `breakpointSm/Md/Lg/Xl` from the themes package and publish a new version.
-3. Bump `@kausal/themes` in both apps and run `pnpm dedupe`. The kausal_common submodule has its own lockfile importer, so this step is needed. Typecheck then catches anything missed.
+Neither app uses the tokens any more; paths-ui was migrated on its own `feat/bye-reactstrap` branch.
+
+1. Remove `breakpointSm/Md/Lg/Xl` from the themes package and publish a new version.
+2. Bump `@kausal/themes` in both apps and run `pnpm dedupe`. The kausal_common submodule has its own lockfile importer, so this step is needed. Typecheck then catches anything missed.
 
 ## Risks
 
