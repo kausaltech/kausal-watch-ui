@@ -215,7 +215,8 @@ interface BlockWrapperProps {
   $isUnpadded: boolean;
   $prevIsUnpadded: boolean;
   $isFirst: boolean;
-  $isLast: boolean;
+  /** Last block, or followed by an unwrapped block that sets no top gap of its own */
+  $isLastWrapped: boolean;
 }
 
 const StyledBlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
@@ -234,7 +235,8 @@ const StyledBlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
     }
     return 'var(--block-gap)';
   }};
-  margin-bottom: ${({ $isLast, $isUnpadded }) => ($isLast && $isUnpadded ? 'var(--block-gap)' : '0')};
+  margin-bottom: ${({ $isLastWrapped, $isUnpadded }) =>
+    $isLastWrapped && $isUnpadded ? 'var(--block-gap)' : '0'};
 `;
 
 function BlockWrapper({
@@ -782,7 +784,9 @@ export default function StreamField(props: StreamFieldProps) {
                 $isUnpadded={isUnpadded}
                 $prevIsUnpadded={prevIsUnpadded}
                 $isFirst={index === 0}
-                $isLast={index === blocks.length - 1}
+                $isLastWrapped={
+                  index === blocks.length - 1 || blocks[index + 1].blockType === 'DashboardRowBlock'
+                }
               >
                 <StreamFieldBlock
                   id={`section-${index + 1}`}
