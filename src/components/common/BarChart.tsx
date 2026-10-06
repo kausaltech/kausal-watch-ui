@@ -34,7 +34,7 @@ const Labels = styled.div<{ columns: string }>`
   margin-top: ${(props) => props.theme.spaces.s050};
   column-gap: 0;
 
-  @media (max-width: 768px) {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     display: flex;
     width: auto;
   }
@@ -55,7 +55,7 @@ const SegmentLabel = styled.span<{ portion: number }>`
     white-space: nowrap;
   }
 
-  @media (max-width: 768px) {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     align-items: flex-start;
     text-align: left;
     flex-basis: ${(props) => props.portion}%;

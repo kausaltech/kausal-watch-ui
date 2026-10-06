@@ -89,7 +89,7 @@ const ArrowWrapper = styled.div`
   flex: 0 0 auto;
   margin-top: 2.5rem;
 
-  @media (max-width: 1024px) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     margin-top: 0;
   }
 `;

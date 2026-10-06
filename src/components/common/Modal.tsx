@@ -31,7 +31,7 @@ const ModalBody = styled.div`
   overflow: auto;
   box-sizing: border-box;
 
-  @media (max-width: 480px) {
+  ${({ theme }) => theme.breakpoints.down('sm')} {
     padding: ${(props) => props.theme.spaces.s300} ${(props) => props.theme.spaces.s200};
   }
 `;
