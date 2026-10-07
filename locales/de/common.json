@@ -35,6 +35,8 @@
     "admin-login": "Admin",
     "back-to-top": "Zurück nach oben",
     "bar-goal": "Ziel",
+    "category-treemap-path": "Kategorieebenen",
+    "category-treemap-zoom-out": "Zurück zu {name}",
     "chart-aria-category-multi": "{title}: {chartType} mit {count, plural, one {# Reihe} other {# Reihen}} über {categories, plural, one {# Kategorie} other {# Kategorien}}: {names}.",
     "chart-aria-category-single": "{title}: {chartType} mit {count, plural, one {# Kategorie} other {# Kategorien}}.",
     "chart-aria-latest": "Letzter Wert {value} ({date}).",

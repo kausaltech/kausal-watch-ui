@@ -205,8 +205,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
     () => [
       theme.graphColors.blue070,
       theme.graphColors.blue050,
-      // The legacy Plotly fallback used orange, but the theme graph palette hasn't orange
-      '#ff7f0e',
+      theme.graphColors.yellow050,
       theme.graphColors.green050,
       theme.graphColors.grey030,
     ],

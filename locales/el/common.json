@@ -7,6 +7,8 @@
     "admin-login": "Διαχειριστής",
     "back-to-top": "Επιστροφή στην κορυφή",
     "bar-goal": "Στόχος",
+    "category-treemap-path": "Επίπεδα κατηγοριών",
+    "category-treemap-zoom-out": "Επιστροφή σε {name}",
     "chart-aria-category-multi": "{title}: {chartType} με {count, plural, one {# σειρά} other {# σειρές}} σε {categories, plural, one {# κατηγορία} other {# κατηγορίες}}: {names}.",
     "chart-aria-category-single": "{title}: {chartType} με {count, plural, one {# κατηγορία} other {# κατηγορίες}}.",
     "chart-aria-latest": "Τελευταία τιμή {value} ({date}).",

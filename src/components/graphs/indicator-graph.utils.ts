@@ -902,8 +902,7 @@ export function getChartDownloadFilename(
 }
 
 /**
- * The save-as-PNG toolbox button — the ECharts equivalent of the legacy
- * Plotly modebar's toImage option. ToolboxComponent is registered globally
+ * The save-as-PNG toolbox button. ToolboxComponent is registered globally
  * by the shared Chart wrapper.
  */
 export function buildSaveAsImageToolbox({
@@ -920,6 +919,9 @@ export function buildSaveAsImageToolbox({
     right: 0,
     top: 0,
     itemSize: 14,
+    // Explicit, since ECharts 6 changed the default icon colors to blue
+    iconStyle: { borderColor: '#666' },
+    emphasis: { iconStyle: { borderColor: '#3E98C5' } },
     feature: {
       saveAsImage: {
         show: true,

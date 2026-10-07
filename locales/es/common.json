@@ -7,6 +7,8 @@
     "admin-login": "Administrador",
     "back-to-top": "Volver arriba",
     "bar-goal": "Objetivo",
+    "category-treemap-path": "Niveles de categoría",
+    "category-treemap-zoom-out": "Volver a {name}",
     "chart-aria-category-multi": "{title}: {chartType} con {count, plural, one {# serie} other {# series}} en {categories, plural, one {# categoría} other {# categorías}}: {names}.",
     "chart-aria-category-single": "{title}: {chartType} de {count, plural, one {# categoría} other {# categorías}}.",
     "chart-aria-latest": "Último valor {value} ({date}).",

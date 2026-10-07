@@ -1,4 +1,6 @@
 {
+    "category-treemap-path": "Níveis de categoria",
+    "category-treemap-zoom-out": "Voltar para {name}",
     "chart-aria-category-multi": "{title}: {chartType} com {count, plural, one {# série} other {# séries}} em {categories, plural, one {# categoria} other {# categorias}}: {names}.",
     "chart-aria-category-single": "{title}: {chartType} de {count, plural, one {# categoria} other {# categorias}}.",
     "chart-aria-latest": "Último valor {value} ({date}).",

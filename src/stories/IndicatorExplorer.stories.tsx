@@ -979,8 +979,6 @@ function AriaLabelInspector({ children, enabled }: { children: ReactNode; enable
   );
 }
 
-/** Mount children only when scrolled near the viewport, to avoid rendering
- *  dozens of heavy Plotly/ECharts instances at once. */
 function LazyRender({ children, minHeight = 500 }: { children: ReactNode; minHeight?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
