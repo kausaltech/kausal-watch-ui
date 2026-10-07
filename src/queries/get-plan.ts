@@ -219,6 +219,11 @@ const GET_PLAN_CONTEXT: TypedDocumentNode<PlanContextQuery, PlanContextQueryVari
       placeholder
       required
     }
+    pledgeTermsUrl
+    pledgePrivacyUrl
+    pledgeAccountTitle
+    pledgeAccountDescription
+    pledgeMarketingConsentLabel
     allRelatedPlans {
       id
       identifier
