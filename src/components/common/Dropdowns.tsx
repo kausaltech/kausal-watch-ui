@@ -88,7 +88,9 @@ export function UncontrolledDropdown({
     if (isToggle) {
       if ([' ', 'Enter', 'ArrowUp', 'ArrowDown'].includes(key)) {
         if (!isOpen) setIsOpen(true);
-        setTimeout(() => getMenuItems()[0]?.focus());
+        // ArrowUp starts from the last item, the other keys from the first
+        const index = key === 'ArrowUp' ? -1 : 0;
+        setTimeout(() => getMenuItems().at(index)?.focus());
       } else if (isOpen && key === 'Tab') {
         e.preventDefault();
         getMenuItems()[0]?.focus();
