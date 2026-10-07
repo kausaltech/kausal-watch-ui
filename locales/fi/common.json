@@ -7,6 +7,8 @@
     "admin-login": "Ylläpito",
     "back-to-top": "Sivun alkuun",
     "bar-goal": "Tavoite",
+    "category-treemap-path": "Kategoriatasot",
+    "category-treemap-zoom-out": "Takaisin: {name}",
     "chart-aria-category-multi": "{title}: {chartType}, {count, plural, one {# sarja} other {# sarjaa}} {categories} luokassa: {names}.",
     "chart-aria-category-single": "{title}: {chartType}, {count, plural, one {# luokka} other {# luokkaa}}.",
     "chart-aria-latest": "Viimeisin arvo {value} ({date}).",

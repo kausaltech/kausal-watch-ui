@@ -1,6 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+import { useMediaQuery } from '@mui/material';
 
 import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 
 import type { CustomSeriesOption } from 'echarts/charts';
 import type { AriaComponentOption } from 'echarts/components';
@@ -42,6 +45,47 @@ const FONT_SIZE = 13;
 const SMALL_FONT_SIZE = 9;
 const LABEL_PADDING = 4;
 const ZOOM_DURATION = 500;
+
+const TreeMapFrame = styled.div`
+  position: relative;
+`;
+
+const PathBar = styled.nav`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: ${PATH_BAR_HEIGHT}px;
+
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+`;
+
+const TileButtons = styled.div`
+  position: absolute;
+  top: ${PATH_BAR_SPACE}px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
+
+const OverlayButton = styled.button`
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  /* Two rings, so that the focus shows on both light and dark tiles */
+  &:focus-visible {
+    outline: 3px solid ${(props) => props.theme.themeColors.white};
+    outline-offset: -3px;
+    box-shadow: inset 0 0 0 5px ${(props) => props.theme.themeColors.dark};
+  }
+`;
 
 /**
  * A tile of the icicle, or a segment of the path bar above it. Tile
@@ -329,6 +373,8 @@ const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeM
   const locale = useLocale();
   const theme = useTheme();
   const t = useTranslations();
+  // Read right away (`noSsr`): it only affects the chart options, not the markup
+  const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)', { noSsr: true });
 
   const catMap = useMemo(() => buildTree(data), [data]);
   const topRootId = useMemo(() => data.find((cat) => cat.parent === null)?.id ?? '', [data]);
@@ -386,7 +432,8 @@ const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeM
           // Tiles zoom from their previous positions (`enterFrom`, shape
           // transitions). Kept on for the first render too: switching it on
           // only at the first zoom washes out the whole chart for a moment.
-          animation: true,
+          // Only switched off for users who prefer reduced motion.
+          animation: !reduceMotion,
           animationDuration: ZOOM_DURATION,
           animationEasing: 'cubicInOut',
           animationDurationUpdate: ZOOM_DURATION,
@@ -394,34 +441,101 @@ const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeM
         },
       ],
     };
-  }, [tiles, prevRootId, heading, t]);
+  }, [tiles, prevRootId, heading, t, reduceMotion]);
 
-  const handleClick = useCallback(
-    (params: unknown) => {
-      const { dataIndex } = params as { dataIndex: number };
-      const tile = tiles[dataIndex];
-      // Leaving tiles are out of view after the zoom animation
-      if (!tile || tile.kind === 'leaving') return;
-      // Clicking the root zooms out, anything else zooms in to that category
-      const newRootId =
-        tile.kind === 'root' ? catMap.get(tile.categoryId)?.parent?.id : tile.categoryId;
-      if (!newRootId || newRootId === rootId) return;
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const restoreFocusRef = useRef(false);
+
+  const zoomTo = useCallback(
+    (newRootId: string) => {
+      if (newRootId === rootId) return;
+      // The focused button moves or disappears with the zoom
+      restoreFocusRef.current = !!overlayRef.current?.contains(document.activeElement);
       setView({ rootId: newRootId, prevRootId: rootId });
       onChangeSection(newRootId);
     },
-    [tiles, catMap, rootId, onChangeSection]
+    [rootId, onChangeSection]
   );
 
+  // After a zoom, move the focus to the new root (or its first child, when
+  // there's no zooming out from the root), so that the next tab reaches the
+  // children
+  useEffect(() => {
+    if (!restoreFocusRef.current) return;
+    restoreFocusRef.current = false;
+    overlayRef.current?.querySelector<HTMLButtonElement>('[data-tile]')?.focus();
+  }, [rootId]);
+
+  const root = tiles.find((tile) => tile.kind === 'root');
+  const parentOfRoot = root ? catMap.get(root.categoryId)?.parent : null;
+  const parentName = parentOfRoot ? catMap.get(parentOfRoot.id)?.name : undefined;
+  // Buttons for the tiles that are in view; zero-sized ones can't be seen
+  const buttonTiles = tiles.filter(
+    (tile) => (tile.kind === 'child' || (tile.kind === 'root' && parentOfRoot)) && tile.y1 > tile.y0
+  );
+  const pathTiles = tiles.filter((tile) => tile.kind === 'path');
+
   return (
-    <Chart
-      data={option}
-      isLoading={false}
-      height="450px"
-      withResizeLegend={false}
-      locale={locale}
-      onEvents={{ click: handleClick }}
-    />
+    <TreeMapFrame ref={overlayRef}>
+      <Chart
+        data={option}
+        isLoading={false}
+        height="450px"
+        withResizeLegend={false}
+        locale={locale}
+      />
+      {/* The chart is drawn on a canvas; these buttons on top of it make the
+          tiles and the path bar usable with a keyboard and screen readers */}
+      {pathTiles.length > 0 && (
+        <PathBar aria-label={t('category-treemap-path')}>
+          <ol>
+            {pathTiles.map((tile) => (
+              <li key={tile.categoryId}>
+                <OverlayButton
+                  type="button"
+                  style={toPercentages({ ...tile, y0: 0, y1: 1 })}
+                  onClick={() => zoomTo(tile.categoryId)}
+                >
+                  <span className="visually-hidden">{tile.name}</span>
+                </OverlayButton>
+              </li>
+            ))}
+          </ol>
+        </PathBar>
+      )}
+      <TileButtons>
+        {buttonTiles.map((tile) => (
+          <OverlayButton
+            key={tile.categoryId}
+            type="button"
+            data-tile
+            style={toPercentages(tile)}
+            onClick={() =>
+              zoomTo(tile.kind === 'root' && parentOfRoot ? parentOfRoot.id : tile.categoryId)
+            }
+          >
+            <span className="visually-hidden">
+              {tile.kind === 'root'
+                ? t('category-treemap-zoom-out', { name: parentName ?? '' })
+                : `${tile.name}, ${tile.valueText}`}
+            </span>
+          </OverlayButton>
+        ))}
+      </TileButtons>
+      <div className="visually-hidden" aria-live="polite">
+        {prevRootId !== null && root ? `${root.name}, ${root.valueText}` : ''}
+      </div>
+    </TreeMapFrame>
   );
 });
+
+function toPercentages(rect: Rect) {
+  return {
+    left: `${rect.x0 * 100}%`,
+    top: `${rect.y0 * 100}%`,
+    width: `${(rect.x1 - rect.x0) * 100}%`,
+    height: `${(rect.y1 - rect.y0) * 100}%`,
+  };
+}
 
 export default CategoryTreeMap;

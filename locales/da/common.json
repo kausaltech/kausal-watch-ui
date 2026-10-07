@@ -7,6 +7,8 @@
     "admin-login": "Admin",
     "back-to-top": "Tilbage til toppen",
     "bar-goal": "Mål",
+    "category-treemap-path": "Kategoriniveauer",
+    "category-treemap-zoom-out": "Tilbage til {name}",
     "chart-aria-category-multi": "{title}: {chartType} med {count, plural, one {# serie} other {# serier}} fordelt på {categories, plural, one {# kategori} other {# kategorier}}: {names}.",
     "chart-aria-category-single": "{title}: {chartType} med {count, plural, one {# kategori} other {# kategorier}}.",
     "chart-aria-latest": "Seneste værdi {value} ({date}).",

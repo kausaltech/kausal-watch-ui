@@ -1,6 +1,8 @@
 {
     "action": "{context, select, CASE_STUDY {Gadījuma izpēte} STRATEGY {Stratēģija} other {Rīcība}}",
     "actions-plural": "{context, select, CASE_STUDY {Gadījumu izpēte} STRATEGY {Stratēģijas} other {Rīcības}}",
+    "category-treemap-path": "Kategoriju līmeņi",
+    "category-treemap-zoom-out": "Atpakaļ uz {name}",
     "chart-aria-category-multi": "{title}: {chartType} ar {count, plural, zero {# sērijām} one {# sēriju} other {# sērijām}} {categories, plural, zero {# kategorijās} one {# kategorijā} other {# kategorijās}}: {names}.",
     "chart-aria-category-single": "{title}: {chartType} ar {count, plural, zero {# kategorijām} one {# kategoriju} other {# kategorijām}}.",
     "chart-aria-latest": "Jaunākā vērtība {value} ({date}).",
