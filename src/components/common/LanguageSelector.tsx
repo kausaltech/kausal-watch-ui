@@ -5,11 +5,16 @@ import styled from '@emotion/styled';
 
 import { useApolloClient } from '@apollo/client/react';
 import { useLocale, useTranslations } from 'next-intl';
-import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
+import {
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+} from '@/components/common/Dropdowns';
 import { usePlan } from '@/context/plan';
 
 import Icon from './Icon';
@@ -19,14 +24,14 @@ const LanguageSelectorListItem = styled.li`
   margin: 0;
   padding: 0;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-left: ${(props) => props.theme.spaces.s050};
   }
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.down('md')} {
     display: block;
   }
 `;
@@ -48,7 +53,7 @@ const Selector = styled(UncontrolledDropdown, transientOptions)<{ $mobile: boole
       }
     }
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       align-self: center;
       margin: 0;
     }
@@ -74,7 +79,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
     fill: ${(props) => props.theme.themeColors.dark} !important;
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     align-self: center;
     margin: 0 ${(props) => props.theme.spaces.s200} 0 0;
 

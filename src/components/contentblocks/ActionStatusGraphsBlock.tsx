@@ -3,7 +3,6 @@ import { useTheme } from '@emotion/react';
 import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
@@ -13,6 +12,7 @@ import type {
 } from '@/common/__generated__/graphql';
 import type { CommonContentBlockProps } from '@/common/blocks.types';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import type { ActionsStatusGraphsProps } from '@/components/dashboard/ActionStatusGraphs';
 import ActionStatusGraphs from '@/components/dashboard/ActionStatusGraphs';
 import { usePlan } from '@/context/plan';

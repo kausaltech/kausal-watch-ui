@@ -1,9 +1,14 @@
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 
 import { deploymentType } from '@/common/environment';
+import {
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+} from '@/components/common/Dropdowns';
 import Icon from '@/components/common/Icon';
 import type { PlanContextType } from '@/context/plan';
 

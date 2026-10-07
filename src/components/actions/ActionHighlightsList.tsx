@@ -6,7 +6,6 @@ import styled from '@emotion/styled';
 import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Col, type ColProps, Row } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -20,6 +19,7 @@ import images, { getActionImage } from '@/common/images';
 import { ActionListLink } from '@/common/links';
 import Button from '@/components/common/Button';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { Col, type ColProps, Row } from '@/components/common/layout/LayoutGrid';
 import { getReadableThemeTextColor } from '@/components/contentblocks/colorUtils';
 import EmbedContext from '@/context/embed';
 
@@ -97,7 +97,7 @@ const ListHeader = styled(Col, transientOptions)<{
     margin-bottom: ${(props) => props.theme.spaces.s300};
     font-size: ${(props) => props.theme.fontSizeLg};
 
-    @media (min-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.up('md')} {
       font-size: ${(props) => props.theme.fontSizeXl};
     }
   }
@@ -126,7 +126,7 @@ const StyledCardContainer = styled(ReactStrapCol, transientOptions)<{
 
 /* Rendered card width in the xs=12, md=6, lg=4 highlight grid */
 const HIGHLIGHT_GRID_IMAGE_SIZES =
-  '(min-width: 1400px) 416px, (min-width: 992px) 33vw, (min-width: 768px) 50vw, 100vw';
+  '(min-width: 1400px) 434px, (min-width: 1200px) 372px, (min-width: 768px) calc(50vw - 26px), 100vw';
 
 export type ActionHighlightListAction = NonNullable<
   NonNullable<ActionHightlightListQuery['planActions']>[number]

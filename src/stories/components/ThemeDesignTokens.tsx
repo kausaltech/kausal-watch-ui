@@ -5,7 +5,9 @@ import { useTheme } from '@emotion/react';
 import { cloneDeep, get, isObject, set } from 'lodash-es';
 import defaultTheme from 'public/static/themes/default/theme.json';
 import { ChromePicker } from 'react-color';
-import { Container, Table } from 'reactstrap';
+
+import Table from '@/components/common/Table';
+import { Container } from '@/components/common/layout/LayoutGrid';
 
 type ColorPickerProps = {
   color: string;

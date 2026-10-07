@@ -2,11 +2,12 @@
 
 import { useState, useSyncExternalStore } from 'react';
 
+import CircularProgress from '@mui/material/CircularProgress';
+
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Container, Spinner } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -19,6 +20,7 @@ import Breadcrumbs from '@/components/common/Breadcrumbs';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import RichText from '@/components/common/RichText';
+import { Container } from '@/components/common/layout/LayoutGrid';
 import { PLEDGE_PATH } from '@/constants/routes';
 
 import ConfirmPledge from './ConfirmPledge';
@@ -61,7 +63,7 @@ const StyledHeroContentContainer = styled(Container)`
   z-index: 1;
   padding-top: ${({ theme }) => theme.spaces.s200};
 
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     padding-top: ${({ theme }) => theme.spaces.s300};
   }
 `;
@@ -73,7 +75,7 @@ const StyledHeroCard = styled.div`
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   max-width: 700px;
 
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     padding: ${({ theme }) => theme.spaces.s300};
   }
 `;
@@ -89,7 +91,7 @@ const StyledTitle = styled.h1`
   margin-bottom: ${({ theme }) => theme.spaces.s150};
   line-height: ${({ theme }) => theme.lineHeightMd};
 
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     font-size: ${({ theme }) => theme.fontSizeXl};
   }
 `;
@@ -100,7 +102,7 @@ const StyledLead = styled.p`
   line-height: ${({ theme }) => theme.lineHeightBase};
   margin-bottom: ${({ theme }) => theme.spaces.s200};
 
-  @media (min-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.up('md')} {
     font-size: ${({ theme }) => theme.fontSizeMd};
   }
 `;
@@ -327,14 +329,13 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
 
             <StyledActionsRow>
               <StyledCommitButton
-                color="primary"
-                outline={!isCommitted}
+                variant={isCommitted ? 'contained' : 'outlined'}
                 $isCommitted={isCommitted}
-                onClick={handleCommitClick}
+                onClick={() => void handleCommitClick()}
                 aria-pressed={isCommitted}
               >
                 {isUpdatingCommitment ? (
-                  <Spinner size="sm" />
+                  <CircularProgress size="1rem" color="inherit" />
                 ) : (
                   <Icon name="award" width="18px" height="18px" />
                 )}
@@ -342,9 +343,8 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
               </StyledCommitButton>
               {isClient && (
                 <ShareButton
-                  color="link"
-                  outline
-                  size="md"
+                  variant="text"
+                  size="medium"
                   title={pledge.name}
                   shareUrl={window.location.href}
                 />

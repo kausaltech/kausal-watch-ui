@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
 
 import { transparentize } from 'polished';
-import { Card as BSCard, CardBody } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
+
+import { Card as BSCard, CardBody } from '@/components/common/CardParts';
 
 const StyledCard = styled(BSCard, transientOptions)<{
   $customColor?: string;
@@ -69,7 +70,7 @@ const ImgArea = styled.div<{ $colorEffect?: string }>`
   border-bottom: ${(props) => (props.$colorEffect ? '6px' : '0')} solid
     ${(props) => props.$colorEffect};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     height: 8rem;
   }
 `;
@@ -82,7 +83,7 @@ const CardImage = styled.img<{ $imageAlign: string }>`
   object-fit: cover;
   object-position: ${(props) => props.$imageAlign};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     height: 8rem;
   }
 `;

@@ -1,18 +1,15 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
+
+import Collapse from '@mui/material/Collapse';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useLocale, useTranslations } from 'next-intl';
 import { PropTypes } from 'prop-types';
-import {
-  ListGroup as BaseListGroup,
-  ListGroupItem as BaseListGroupItem,
-  Button,
-  Collapse,
-} from 'reactstrap';
 
 import dayjs from '@/common/dayjs';
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import RichText from '@/components/common/RichText';
 import { usePlan } from '@/context/plan';
@@ -33,6 +30,7 @@ const TaskMeta = styled.div`
 `;
 
 const ToggleButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   padding: 0;
   margin: 0;
   color: ${(props) => props.theme.themeColors.dark};
@@ -40,6 +38,7 @@ const ToggleButton = styled(Button)`
 
   &:hover {
     text-decoration: underline;
+    background-color: transparent;
   }
 
   &.open {
@@ -57,10 +56,10 @@ const TaskContent = styled.div`
   padding-left: ${(props) => props.theme.spaces.s100};
 
   @media print {
-    .collapse {
-      display: block !important;
+    .MuiCollapse-root {
       height: auto !important;
       overflow: visible !important;
+      visibility: visible !important;
     }
   }
 
@@ -95,7 +94,11 @@ const TaskContent = styled.div`
   }
 `;
 
-const ListGroup = styled(BaseListGroup)`
+const ListGroup = styled.ul`
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+
   h4 {
     margin: 0;
     font-size: ${(props) => props.theme.fontSizeBase};
@@ -110,8 +113,16 @@ const ListGroupTitle = styled.h3`
   font-size: ${(props) => props.theme.fontSizeMd};
 `;
 
-const ListGroupItem = styled(BaseListGroupItem)`
+const ListGroupItem = styled.li`
+  position: relative;
+  display: block;
   padding: ${(props) => props.theme.spaces.s050};
+  background-color: ${(props) => props.theme.themeColors.white};
+  border: 1px solid ${(props) => props.theme.graphColors.grey020};
+
+  & + & {
+    border-top-width: 0;
+  }
 
   &:first-child {
     border-top-left-radius: ${(props) => props.theme.cardBorderRadius};
@@ -138,6 +149,7 @@ const Task = (props) => {
   const locale = useLocale();
   const { task, theme, completed } = props;
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
   const plan = usePlan();
 
@@ -162,11 +174,18 @@ const Task = (props) => {
         {/* Strip HTML tags to see if details field is actually empty */}
         {task.details?.replace(/(<([^>]+)>)/gi, '').length > 0 && (
           <>
-            <ToggleButton color="link" onClick={toggle} size="sm" className={isOpen ? 'open' : ''}>
+            <ToggleButton
+              variant="link"
+              onClick={toggle}
+              size="small"
+              className={isOpen ? 'open' : ''}
+              aria-expanded={isOpen}
+              aria-controls={panelId}
+            >
               {isOpen ? t('action-task-hide-details') : t('action-task-show-details')}
               <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
             </ToggleButton>
-            <Collapse isOpen={isOpen}>
+            <Collapse in={isOpen} id={panelId}>
               <div className="task-details">
                 <RichText html={task.details} />
               </div>

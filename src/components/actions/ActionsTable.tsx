@@ -1,11 +1,11 @@
 import { useTranslations } from 'next-intl';
-import { Table } from 'reactstrap';
 
 import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { ActionLink } from '@/common/links';
 import ActionImpact from '@/components/actions/ActionImpact';
 import StatusBadge from '@/components/common/StatusBadge';
+import Table from '@/components/common/Table';
 import { usePlan } from '@/context/plan';
 
 type Action = NonNullable<NonNullable<IndicatorDetailsQuery['indicator']>['actions']>[number];

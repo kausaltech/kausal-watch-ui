@@ -2,11 +2,11 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Card, CardBody, CardImgOverlay, CardTitle } from 'reactstrap';
 
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorLink } from '@/common/links';
 import useNumberFormatter from '@/common/numbers';
+import { Card, CardBody, CardImgOverlay, CardTitle } from '@/components/common/CardParts';
 import { usePlan } from '@/context/plan';
 
 import { getIndicatorTranslation } from './IndicatorCard';
@@ -123,7 +123,7 @@ function IndicatorHighlightCard({
       <CardBody>
         <IndicatorType>{indicatorType}</IndicatorType>
         <IndicatorLink id={objectid}>
-          <StyledCardTitle tag="h3">{name}</StyledCardTitle>
+          <StyledCardTitle as="h3">{name}</StyledCardTitle>
         </IndicatorLink>
       </CardBody>
     </StyledCard>

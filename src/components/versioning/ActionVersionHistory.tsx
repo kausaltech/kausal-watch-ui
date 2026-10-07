@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
+
+import Collapse from '@mui/material/Collapse';
 
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Button, Collapse } from 'reactstrap';
 
 import { deploymentType } from '@/common/environment';
 import { ActionLink } from '@/common/links';
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 
 import { type ActionContentAction } from '../actions/ActionContent';
@@ -20,6 +22,7 @@ const VersionHistoryTitle = styled.h2`
 `;
 
 const ToggleButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   padding: 0;
   margin: 0;
   color: ${(props) => props.theme.themeColors.dark};
@@ -27,6 +30,7 @@ const ToggleButton = styled(Button)`
 
   &:hover {
     text-decoration: underline;
+    background-color: transparent;
   }
 
   &.open {
@@ -62,6 +66,7 @@ type ActionVersions = (ActionContentAction | ActionContentAction['supersededActi
 const ActionVersionHistory = ({ action }: Props) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(action.supersededBy ? true : false);
+  const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
   const isProduction = deploymentType === 'production';
 
@@ -82,14 +87,20 @@ const ActionVersionHistory = ({ action }: Props) => {
 
   return (
     <VersionHistory>
-      <ToggleButton color="link" onClick={toggle} className={isOpen ? 'open' : ''}>
+      <ToggleButton
+        variant="link"
+        onClick={toggle}
+        className={isOpen ? 'open' : ''}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+      >
         <VersionHistoryTitle>
           <Icon.Version className="me-2" width="1.5rem" height="1.5rem" />
           {t('version-history')}
           <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
         </VersionHistoryTitle>
       </ToggleButton>
-      <Collapse isOpen={isOpen}>
+      <Collapse in={isOpen} id={panelId}>
         <VersionHistoryList>
           {versions.reverse().map((v) => (
             <StyledVersionHistoryListItem

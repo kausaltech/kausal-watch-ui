@@ -3,15 +3,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { FormHelperText, TextField } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import styled from '@emotion/styled';
 
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
-import { Container, Spinner } from 'reactstrap';
 
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import { Container } from '@/components/common/layout/LayoutGrid';
 
 import PledgeCard from './PledgeCard';
 import PledgeSignInFlow from './PledgeSignInFlow';
@@ -53,7 +54,7 @@ const StyledDrawerHeader = styled.div`
   padding: ${({ theme }) => theme.spaces.s100} ${({ theme }) => theme.spaces.s150};
   border-bottom: 1px solid ${({ theme }) => theme.graphColors.grey020};
 
-  @media (max-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     padding: ${({ theme }) => theme.spaces.s100};
   }
 `;
@@ -87,7 +88,7 @@ const StyledCloseButton = styled.button`
 const StyledDrawerContent = styled.div`
   padding: ${({ theme }) => theme.spaces.s200};
 
-  @media (max-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     padding: ${({ theme }) => theme.spaces.s100};
   }
 `;
@@ -116,7 +117,7 @@ const StyledDrawerFooter = styled.div`
   padding: ${({ theme }) => theme.spaces.s200};
   border-top: 1px solid ${({ theme }) => theme.graphColors.grey020};
 
-  @media (max-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     padding: ${({ theme }) => theme.spaces.s100};
   }
 `;
@@ -128,7 +129,7 @@ const StyledButton = styled(Button)`
   justify-content: center;
   gap: ${({ theme }) => theme.spaces.s050};
 
-  @media (max-width: ${({ theme }) => theme.breakpointLg}) {
+  ${({ theme }) => theme.breakpoints.down('lg')} {
     width: 100%;
   }
 `;
@@ -360,7 +361,7 @@ function ConfirmPledge({
                   disabled={submitting || (step === 'form' && isMissingRequiredField)}
                 >
                   {submitting ? (
-                    <Spinner size="sm" />
+                    <CircularProgress size="1rem" color="inherit" />
                   ) : step === 'form' ? (
                     <Icon name="award" width="18px" height="18px" />
                   ) : null}

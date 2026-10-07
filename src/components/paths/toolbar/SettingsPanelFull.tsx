@@ -7,7 +7,6 @@ import styled from '@emotion/styled';
 
 import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Button } from 'reactstrap';
 
 import {
   activeGoalVar,
@@ -16,6 +15,7 @@ import {
   yearRangeVar,
 } from '@common/apollo/paths-cache';
 
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import type { PathsInstanceType } from '@/components/providers/PathsProvider';
 //import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
@@ -50,7 +50,7 @@ const FixedPanel = styled.aside`
   &.panel-md {
     height: 7.5rem;
 
-    @media (max-width: ${(props) => props.theme.breakpointMd}) {
+    ${(props) => props.theme.breakpoints.down('md')} {
       height: 6rem;
     }
   }
@@ -61,6 +61,7 @@ const FixedPanel = styled.aside`
 `;
 
 const StyledSettingsButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   position: absolute;
   background-color: ${(props) => props.theme.themeColors.white} !important;
   z-index: 25;
@@ -158,6 +159,7 @@ const SettingsPanelFull: React.FC = () => {
       <FixedPanel className={`panel-${mode}`} aria-label={t('all-settings')}>
         {mode !== MODE.NONE && (
           <StyledSettingsButton
+            color="secondary"
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggle(e)}
           >
             {mode === MODE.MD && (

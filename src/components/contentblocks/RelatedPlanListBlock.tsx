@@ -2,8 +2,8 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { readableColor, transparentize } from 'polished';
-import { Container } from 'reactstrap';
 
+import { Container } from '@/components/common/layout/LayoutGrid';
 import PlanChip from '@/components/plans/PlanChip';
 import { getRelatedPlansHeading, selectRelatedPlanCards } from '@/components/plans/relatedPlans';
 import { usePlan } from '@/context/plan';

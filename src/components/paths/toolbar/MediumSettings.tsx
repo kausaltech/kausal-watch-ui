@@ -6,10 +6,10 @@ import styled from '@emotion/styled';
 
 import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
 import { activeGoalVar, yearRangeVar } from '@common/apollo/paths-cache';
 
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import GoalSelector from '@/components/paths/GoalSelector';
 import RangeSelector from '@/components/paths/RangeSelector';
 import ScenarioSelector from '@/components/paths/ScenarioSelector';
@@ -33,7 +33,7 @@ const ButtonLabel = styled.label`
 const StyledRow = styled(Row)`
   --bs-gutter-x: ${({ theme }) => theme.spaces.s100};
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.down('md')} {
     --bs-gutter-x: ${({ theme }) => theme.spaces.s050};
   }
 `;
@@ -49,7 +49,7 @@ const StyledDropdownCol = styled(Col)`
 `;
 
 const StyledOutcomeCol = styled(Col)`
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.down('md')} {
     display: none;
   }
 `;

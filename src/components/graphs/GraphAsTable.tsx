@@ -1,14 +1,17 @@
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
+
+import Collapse from '@mui/material/Collapse';
 
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Button, Collapse, Table } from 'reactstrap';
 
 import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import useNumberFormatter from '@/common/numbers';
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import Table from '@/components/common/Table';
 import { resolveValueRounding } from '@/components/graphs/indicator-graph.utils';
 
 type XValue = string | number | Date | null;
@@ -68,7 +71,7 @@ const TableContainer = styled.div`
       text-align: right;
     }
 
-    @media (max-width: ${(p) => p.theme.breakpointMd}) {
+    ${(p) => p.theme.breakpoints.down('md')} {
       width: 100%;
       min-width: 0;
 
@@ -80,12 +83,14 @@ const TableContainer = styled.div`
   }
 `;
 const TriggerButton = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightNormal};
   text-decoration: none;
   color: ${(p) => p.theme.linkColor};
-  padding-left: 0;
+  padding: 0.25rem 0.5rem 0.25rem 0;
   &:hover {
     text-decoration: underline;
     color: ${(p) => p.theme.linkColor};
+    background-color: transparent;
   }
 `;
 
@@ -121,6 +126,7 @@ function GraphAsTable({
 }: GraphAsTableProps) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
   const formatNumber = useNumberFormatter({
     maximumSignificantDigits: resolveValueRounding(specification.valueRounding),
@@ -240,12 +246,20 @@ function GraphAsTable({
   }
   return (
     <CollapsibleTable>
-      <TriggerButton color="link" size="sm" onClick={toggle}>
+      <TriggerButton
+        variant="link"
+        size="small"
+        onClick={toggle}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+      >
         {isOpen ? t('graph-hideTable') : t('graph-showTable')}
         <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
       </TriggerButton>
 
-      <Collapse isOpen={isOpen}>{dataTable}</Collapse>
+      <Collapse in={isOpen} id={panelId}>
+        {dataTable}
+      </Collapse>
     </CollapsibleTable>
   );
 }

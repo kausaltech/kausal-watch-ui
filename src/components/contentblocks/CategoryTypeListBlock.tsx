@@ -6,11 +6,12 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, FormGroup, Input, Label, Row } from 'reactstrap';
 
 import type { CategoryFragment } from '@/common/__generated__/graphql';
 import { getDeepParents } from '@/common/categories';
 import type { TFunction } from '@/common/i18n';
+import { FormGroup, Input, Label } from '@/components/common/FormControls';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePaths } from '@/context/paths/paths';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
 
@@ -57,7 +58,7 @@ const StyledTitle = styled.h1`
   font-size: ${(props) => props.theme.fontSizeLg};
   color: inherit;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;
@@ -102,7 +103,7 @@ const CategoryListSection = styled.div`
     margin-bottom: ${(props) => props.theme.spaces.s300};
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     .lead-text {
       font-size: ${(props) => props.theme.fontSizeMd};
       line-height: ${(props) => props.theme.lineHeightBase};

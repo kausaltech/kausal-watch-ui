@@ -9,7 +9,7 @@ import {
   FormGroup,
   FormText,
   type InputProps,
-} from 'reactstrap';
+} from '@/components/common/FormControls';
 
 const Label = styled(BSLabel)`
   font-weight: ${(props) => props.theme.formLabelFontWeight};

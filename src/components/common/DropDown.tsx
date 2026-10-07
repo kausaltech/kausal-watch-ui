@@ -5,7 +5,12 @@ import styled from '@emotion/styled';
 import { Menu, MenuItem, Typeahead } from 'react-bootstrap-typeahead';
 import type { RenderMenuProps } from 'react-bootstrap-typeahead/types/components/Typeahead/Typeahead';
 import type { Option } from 'react-bootstrap-typeahead/types/types';
-import { Input as BSCustomInput, Label as BSLabel, FormGroup } from 'reactstrap';
+
+import {
+  Input as BSCustomInput,
+  Label as BSLabel,
+  FormGroup,
+} from '@/components/common/FormControls';
 
 const Label = styled(BSLabel)`
   font-weight: ${(props) => props.theme.formLabelFontWeight};

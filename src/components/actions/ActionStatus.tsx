@@ -1,7 +1,9 @@
+import LinearProgress from '@mui/material/LinearProgress';
+
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { Progress } from 'reactstrap';
+import { transientOptions } from '@common/themes/styles/styled';
 
 import { getStatusSummary } from '@/common/ActionStatusSummary';
 import type { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
@@ -24,12 +26,12 @@ const StatusTitle = styled.div`
   }
 `;
 
-const ActionProgress = styled(Progress)<{ color: string }>`
+const ActionProgress = styled(LinearProgress, transientOptions)<{ $color: string }>`
   position: relative;
   height: ${(props) => props.theme.spaces.s050};
-  background-color: ${(props) => props.color};
+  background-color: ${(props) => props.$color};
 
-  .progress-bar {
+  .MuiLinearProgress-bar {
     background-color: ${(props) => props.theme.graphColors.green090};
     color: ${(props) => props.theme.themeColors.black};
   }
@@ -58,7 +60,14 @@ function ActionStatus(props: ActionStatusProps) {
 
   return (
     <Status theme={theme}>
-      {shouldShowBar && <ActionProgress value={completionNumber} color={statusColor} aria-hidden />}
+      {shouldShowBar && (
+        <ActionProgress
+          variant="determinate"
+          value={completionNumber}
+          $color={statusColor}
+          aria-hidden
+        />
+      )}
       <StatusTitle>{statusName}</StatusTitle>
     </Status>
   );

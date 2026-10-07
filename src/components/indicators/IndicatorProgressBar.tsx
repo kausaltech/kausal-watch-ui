@@ -161,7 +161,7 @@ const CHART_WIDTHS = {
 function useChartWidth(): number {
   const theme = useTheme();
   const { width: windowWidth } = useWindowSize(400) as { width: number };
-  return windowWidth < parseInt(theme.breakpointMd) ? CHART_WIDTHS.sm : CHART_WIDTHS.md;
+  return windowWidth < theme.breakpoints.values.md ? CHART_WIDTHS.sm : CHART_WIDTHS.md;
 }
 
 /*

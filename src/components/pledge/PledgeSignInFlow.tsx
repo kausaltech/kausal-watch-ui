@@ -392,7 +392,11 @@ function PledgeSignInFlow({
               </Stack>
             )}
 
-            <StyledButton color="primary" onClick={handleEmailSubmit} disabled={submitDisabled}>
+            <StyledButton
+              color="primary"
+              onClick={() => void handleEmailSubmit()}
+              disabled={submitDisabled}
+            >
               {loading ? <CircularProgress size={16} /> : null}
               {t('pledge-sign-in-continue')}
             </StyledButton>
@@ -446,7 +450,7 @@ function PledgeSignInFlow({
       <StyledActionRow>
         <StyledButton
           color="primary"
-          onClick={handlePinSubmit}
+          onClick={() => void handlePinSubmit()}
           disabled={loading || pin.length !== 6}
         >
           {loading ? (

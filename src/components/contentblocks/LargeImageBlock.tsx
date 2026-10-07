@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
 import type { StreamFieldFragment } from '@/common/__generated__/graphql';
 import { getImageSrcSet } from '@/common/images';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
 import { ImageCredit } from '../common/ImageCredit';
 
@@ -51,16 +51,17 @@ function getColSize(
   }
 }
 
-// Rendered width of the image at each Bootstrap container breakpoint,
-// derived from the container widths (1320/1140/960/720) and the column
-// fractions in getColSize, so the browser picks the smallest sufficient rendition.
+// Rendered width of the image at each container breakpoint, derived from the
+// container's content widths (the caps 1200/1400 minus the 25.6px gutters;
+// full width below lg) and the column fractions in getColSize, so the browser
+// picks the smallest sufficient rendition.
 function getSizes(width: LargeImageBlockFragment['width'], hasSidebar: boolean) {
   if (width === 'maximum') {
-    return '(min-width: 1400px) 1320px, (min-width: 1200px) 1140px, (min-width: 992px) 960px, (min-width: 768px) 720px, 100vw';
+    return '(min-width: 1400px) 1349px, (min-width: 1200px) 1149px, 100vw';
   }
   return hasSidebar
-    ? '(min-width: 1400px) 770px, (min-width: 1200px) 665px, (min-width: 992px) 640px, (min-width: 768px) 600px, 100vw'
-    : '(min-width: 1400px) 660px, (min-width: 1200px) 570px, (min-width: 992px) 640px, (min-width: 768px) 600px, 100vw';
+    ? '(min-width: 1400px) 777px, (min-width: 1200px) 758px, (min-width: 768px) calc(83.33vw - 47px), 100vw'
+    : '(min-width: 1400px) 662px, (min-width: 1200px) 758px, (min-width: 768px) calc(83.33vw - 47px), 100vw';
 }
 
 type LargeImageBlockProps = {

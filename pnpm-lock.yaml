@@ -263,9 +263,6 @@ importers:
       react-sizeme:
         specifier: ^3.0.2
         version: 3.0.2
-      reactstrap:
-        specifier: 9.2.3
-        version: 9.2.3(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       require-in-the-middle:
         specifier: ^7.5.2
         version: 7.5.2(supports-color@8.1.1)
@@ -9003,12 +9000,6 @@ packages:
     resolution: {integrity: sha512-KiwVUcFu1RErkI97ywr8nvx8dNOpT03rbnma0SSalTYjkrPYaEajR4a/MRt6DZ46K6arDRbWMNHF+xH7G7n/8A==}
     peerDependencies:
       react: '*'
-
-  reactstrap@9.2.3:
-    resolution: {integrity: sha512-1nXy7FIBIoOgXr3AIHOpgzcZXdj6rZE5YvNSPd1hYgwv8X64m6TAJsU0ExlieJdlRXhaRfTYRSZoTWa127b0gw==}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
 
   readable-stream@1.0.34:
     resolution: {integrity: sha1-Elgg40vIQtLyqq+v5MKRbuMsFXw=}
@@ -20174,17 +20165,6 @@ snapshots:
     dependencies:
       lodash: 4.18.1
       react: 19.2.5
-
-  reactstrap@9.2.3(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
-    dependencies:
-      '@babel/runtime': 7.29.7
-      '@popperjs/core': 2.11.8
-      classnames: 2.5.1
-      prop-types: 15.8.1
-      react: 19.2.5
-      react-dom: 19.2.5(react@19.2.5)
-      react-popper: 2.3.0(@popperjs/core@2.11.8)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-      react-transition-group: 4.4.5(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
 
   readable-stream@1.0.34:
     dependencies:

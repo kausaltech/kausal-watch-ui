@@ -1,8 +1,8 @@
 import { useLocale, useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
 import type { CommonContentBlockProps } from '@/common/blocks.types';
 import dayjs from '@/common/dayjs';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import accessibilityStatementData from '@/public/static/accessibility';
 
 const AccessibilityStatementPreparationInformationBlock = ({

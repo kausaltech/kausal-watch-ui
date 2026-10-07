@@ -5,12 +5,12 @@ import styled from '@emotion/styled';
 
 import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
-import { Container } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import RichText from '@/components/common/RichText';
+import { Container } from '@/components/common/layout/LayoutGrid';
 
 import { ImageCredit } from '../common/ImageCredit';
 import { HeroCard } from './heroStyles';
@@ -35,19 +35,19 @@ const Hero = styled.div<{ $focalBoxAspectRatio?: number }>`
   background-color: ${(props) => props.theme.brandDark};
   padding: 0 0 2rem;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     display: flex;
     min-height: ${({ theme, $focalBoxAspectRatio }) =>
       getHeroMinHeight(theme, '24rem', $focalBoxAspectRatio)};
     padding: 0;
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointLg}) {
+  ${(props) => props.theme.breakpoints.up('lg')} {
     min-height: ${({ theme, $focalBoxAspectRatio }) =>
       getHeroMinHeight(theme, '28rem', $focalBoxAspectRatio)};
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointXl}) {
+  ${(props) => props.theme.breakpoints.up('xl')} {
     min-height: ${({ theme, $focalBoxAspectRatio }) =>
       getHeroMinHeight(theme, '30rem', $focalBoxAspectRatio)};
   }
@@ -58,7 +58,7 @@ const HeroImage = styled.div`
   position: relative;
   overflow: hidden;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -82,10 +82,10 @@ const HeroContent = styled.div`
 `;
 
 const MainCard = styled(HeroCard, transientOptions)<{ $alignment: string }>`
-  max-width: ${(props) => props.theme.breakpointSm};
+  max-width: 576px;
   margin: -2rem auto 0;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     margin: var(--block-padding-top)
       ${(props) => {
         switch (props.$alignment) {

@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Col, Row } from 'reactstrap';
 
 import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';
 import { type ActionContentAction, SectionHeader } from '@/components/actions/ActionContent';
 import PopoverTip from '@/components/common/PopoverTip';
+import { Col, Row } from '@/components/common/layout/LayoutGrid';
 import type { PlanContextType } from '@/context/plan';
 
 const RelatedActionList = styled(Row)`

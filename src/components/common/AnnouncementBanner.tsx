@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 
 import { readableColor } from 'polished';
-import { Container } from 'reactstrap';
+
+import { Container } from '@/components/common/layout/LayoutGrid';
 
 export const StyledAnnouncementBannerSection = styled.div`
   padding: ${(props) => props.theme.spaces.s100} 0;

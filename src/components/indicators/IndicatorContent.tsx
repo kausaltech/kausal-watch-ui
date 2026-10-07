@@ -3,7 +3,6 @@
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Col, Container, Row } from 'reactstrap';
 
 import type { IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
@@ -12,6 +11,7 @@ import ActionsTable from '@/components/actions/ActionsTable';
 import CategoryTags from '@/components/actions/CategoryTags';
 import ChangeHistory from '@/components/common/ChangeHistory';
 import RichText from '@/components/common/RichText';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import CausalNavigation from '@/components/indicators/CausalNavigation';
 import IndicatorVisualisation from '@/components/indicators/IndicatorVisualisation';
 import { usePlan } from '@/context/plan';
@@ -36,7 +36,7 @@ const CausalNavigationSection = styled(Section)`
 const GraphContainer = styled.div`
   padding: ${(props) => props.theme.spaces.s100};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     padding: ${(props) => props.theme.spaces.s200};
   }
 

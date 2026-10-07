@@ -3,25 +3,25 @@ import styled from '@emotion/styled';
 import type { Dayjs } from 'dayjs';
 import { useLocale, useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Badge } from 'reactstrap';
 
 import dayjs from '@/common/dayjs';
+import Badge from '@/components/common/Badge';
 
 const StatusTitle = styled.div`
   text-align: left;
   line-height: ${(props) => props.theme.spaces.s150};
+`;
 
-  .badge {
-    /* Awkwardly match category badges size */
-    font-size: calc(1.25rem * 0.75);
-    background-color: ${(props) => props.theme.brandDark} !important;
-    color: ${(props) =>
-      readableColor(
-        props.theme.brandDark,
-        props.theme.themeColors.black,
-        props.theme.themeColors.white
-      )};
-  }
+const ContinuousBadge = styled(Badge)`
+  /* Awkwardly match category badges size */
+  font-size: calc(1.25rem * 0.75);
+  background-color: ${(props) => props.theme.brandDark};
+  color: ${(props) =>
+    readableColor(
+      props.theme.brandDark,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
 `;
 
 type Props = {
@@ -68,7 +68,7 @@ const Timeline = ({
   return (
     <StatusTitle>
       {startDate && `${format(startDate)} \u2192 `}
-      {continuous && <Badge color="">{`${t('action-continuous')}`}</Badge>}
+      {continuous && <ContinuousBadge>{`${t('action-continuous')}`}</ContinuousBadge>}
       {endDate && (!startDate || continuous) && ' \u2192 '}
       {endDate && `${format(endDate)}`}
     </StatusTitle>

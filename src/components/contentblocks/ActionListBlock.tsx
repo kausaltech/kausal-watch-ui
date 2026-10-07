@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-import { Container } from 'reactstrap';
 
 import ContentLoader from '@common/components/ContentLoader';
 
@@ -18,6 +17,7 @@ import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';
 import ActionCardList from '@/components/actions/ActionCardList';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { Container } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 import { useWorkflowSelector } from '@/context/workflow-selector';
 
@@ -54,7 +54,7 @@ export const SectionHeader = styled.h2`
   margin-bottom: var(--block-header-margin-bottom);
   font-size: ${(props) => props.theme.fontSizeLg};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;

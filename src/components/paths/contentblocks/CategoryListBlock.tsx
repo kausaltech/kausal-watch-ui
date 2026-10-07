@@ -4,10 +4,9 @@ import React, { Suspense } from 'react';
 
 import styled from '@emotion/styled';
 
-import { Col, Container, Row } from 'reactstrap';
-
 import { type CategoryFragment } from '@/common/__generated__/graphql';
 import { type CommonContentBlockProps } from '@/common/blocks.types';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { useFallbackCategories } from '@/context/categories';
 import { usePaths } from '@/context/paths/paths';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';

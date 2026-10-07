@@ -1,10 +1,9 @@
 import { type Theme, css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { Col, type ColProps, Container, Row } from 'reactstrap';
-
 import Accordion from '@/components/common/Accordion';
 import RichText from '@/components/common/RichText';
+import { Col, type ColProps, Container, Row } from '@/components/common/layout/LayoutGrid';
 
 const inlineStyles = (theme: Theme) => css`
   h2 {

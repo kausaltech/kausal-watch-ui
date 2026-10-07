@@ -6,12 +6,13 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
-import { Col, Container, Nav, NavItem, Row } from 'reactstrap';
 
 import type { OrganizationDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { OrganizationLink } from '@/common/links';
+import { Nav, NavItem } from '@/components/common/NavParts';
 import RichText from '@/components/common/RichText';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import ActionStatusTable from '@/components/dashboard/ActionStatusTable';
 import type { ColumnConfig } from '@/components/dashboard/dashboard.types';
 import PlanChip from '@/components/plans/PlanChip';
@@ -83,7 +84,7 @@ const OrgHeader = styled.div`
     }
   }
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     h1 {
       font-size: ${(props) => props.theme.fontSizeXxl};
     }
@@ -100,7 +101,7 @@ const OrgLogo = styled.img`
   margin-bottom: ${(props) => props.theme.spaces.s200};
   max-width: ${(props) => props.theme.spaces.s800};
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     width: 100%;
     max-width: 100%;
   }

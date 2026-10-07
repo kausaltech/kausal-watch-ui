@@ -4,9 +4,9 @@ import styled from '@emotion/styled';
 
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
-import { Container } from 'reactstrap';
 
 import Icon from '@/components/common/Icon';
+import { Container } from '@/components/common/layout/LayoutGrid';
 
 import PledgeSignInFlow from './PledgeSignInFlow';
 
@@ -45,7 +45,7 @@ const StyledDrawerHeader = styled.div`
   padding: ${({ theme }) => theme.spaces.s100} ${({ theme }) => theme.spaces.s150};
   border-bottom: 1px solid ${({ theme }) => theme.graphColors.grey020};
 
-  @media (max-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     padding: ${({ theme }) => theme.spaces.s100};
   }
 `;
@@ -75,7 +75,7 @@ const StyledCloseButton = styled.button`
 const StyledDrawerContent = styled.div`
   padding: ${({ theme }) => theme.spaces.s200};
 
-  @media (max-width: ${({ theme }) => theme.breakpointMd}) {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     padding: ${({ theme }) => theme.spaces.s100};
   }
 `;

@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import Alert from '@mui/material/Alert';
+
 import styled from '@emotion/styled';
 
 import { NetworkStatus } from '@apollo/client';
@@ -12,7 +14,6 @@ import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import ContentLoader from 'react-content-loader';
-import { Alert, Card, CardBody, Col, Container, Row } from 'reactstrap';
 
 import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 import { transientOptions } from '@common/themes/styles/styled';
@@ -22,7 +23,9 @@ import type {
   OutcomeNodeFieldsFragment,
 } from '@/common/__generated__/paths/graphql';
 import { deploymentType } from '@/common/environment';
+import { Card, CardBody } from '@/components/common/CardParts';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
 import { usePaths } from '@/context/paths/paths';
 import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';
@@ -61,7 +64,7 @@ const StyledTitle = styled.h1`
   font-size: ${(props) => props.theme.fontSizeLg};
   color: inherit;
 
-  @media (min-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeXl};
   }
 `;
@@ -205,7 +208,7 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
             <StyledCard $disabled={refetching}>
               <CardBody>
                 {deploymentType !== 'production' && !data?.node && !loading && (
-                  <Alert color="warning">
+                  <Alert severity="warning">
                     {t('error-no-outcome-node', { outcomeNodeId: outcomeNodeId ?? 'undefined' })}
                   </Alert>
                 )}

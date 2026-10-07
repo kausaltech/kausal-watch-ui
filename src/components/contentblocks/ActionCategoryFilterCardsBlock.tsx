@@ -2,12 +2,12 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { readableColor } from 'polished';
-import { Col, Container, Row } from 'reactstrap';
 
 import type { CommonContentBlockProps } from '@/common/blocks.types';
 import { getCategoryString } from '@/common/categories';
 import { Link } from '@/common/links';
 import Card from '@/components/common/Card';
+import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
 const CategoryListSection = styled.div`
   background-color: ${(props) => props.theme.brandDark};

@@ -4,13 +4,14 @@ import { type ReactNode, useState } from 'react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
-import { Button, Table } from 'reactstrap';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
 import { type PlanContextFragment } from '@/common/__generated__/graphql';
 import { actionStatusOrder } from '@/common/data/actions';
+import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import Table from '@/components/common/Table';
 import {
   STICKY_TABLE_NAME_COLUMN_CLASS,
   mobileScrollableTableWrapperStyles,
@@ -49,7 +50,7 @@ const TableWrapper = styled.div`
     10px 100%;
   background-attachment: local, local, scroll, scroll;
 
-  @media (max-width: ${(props) => props.theme.breakpointMd}) {
+  ${(props) => props.theme.breakpoints.down('md')} {
     max-height: calc(100vh - ${(props) => props.theme.spaces.s100});
     overflow: auto;
   }
@@ -311,7 +312,12 @@ const ActionStatusTable = (props: Props) => {
       <ToolBar>
         <ResetSorting>
           {sort.key && (
-            <Button outline size="sm" color="primary" onClick={sortHandler(null)}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={sortHandler(null)}
+              sx={{ fontWeight: 'normal', padding: '0.25rem 0.5rem' }}
+            >
               {t('default-sorting')}
             </Button>
           )}
