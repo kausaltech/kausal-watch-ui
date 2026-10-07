@@ -56,10 +56,10 @@ const TaskContent = styled.div`
   padding-left: ${(props) => props.theme.spaces.s100};
 
   @media print {
-    .collapse {
-      display: block !important;
+    .MuiCollapse-root {
       height: auto !important;
       overflow: visible !important;
+      visibility: visible !important;
     }
   }
 
