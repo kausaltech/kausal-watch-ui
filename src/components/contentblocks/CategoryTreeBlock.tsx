@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 import { type TypedDocumentNode, gql } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/client/react';
 import * as Sentry from '@sentry/nextjs';
-import { concat } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 
@@ -190,20 +189,14 @@ const CategoryTreeSection = ({
   heading = 'Categories',
   hasSidebar,
 }: CategoryTreeSectionProps) => {
-  // console.log(sections);
   const rootSection = sections.find((sect) => sect.parent === null)!;
-  const [activeCategory, setCategory] = useState(rootSection);
+  const [activeCategoryId, setActiveCategoryId] = useState(rootSection.id);
+  // Looked up from the current data, falling back to the root like the tree
+  // map does when refetched data no longer has the selected category
+  const activeCategory = sections.find((sect) => sect.id === activeCategoryId) ?? rootSection;
 
   // useCallback, so function prop does not cause graph re-rendering
-  const onChangeSection = useCallback(
-    (cat: string) => {
-      const allSections = concat(rootSection, sections);
-      const newCat = allSections.find((sect) => sect.id === cat);
-      if (!newCat) return;
-      setCategory(newCat);
-    },
-    [sections, rootSection]
-  );
+  const onChangeSection = useCallback((cat: string) => setActiveCategoryId(cat), []);
   return (
     <CategoryListSection id={id}>
       <Container>
@@ -293,6 +286,9 @@ function CategoryTreeBlockBrowser(
 
   return (
     <CategoryTreeSection
+      // A different tree (e.g. after client-side navigation) starts from its
+      // root: reset the selected category and the tree map's zoom
+      key={cats.find((cat) => !cat.parent)?.id}
       id={id}
       heading={heading}
       lead={lead}

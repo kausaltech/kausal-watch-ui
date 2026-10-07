@@ -383,7 +383,13 @@ const CategoryTreeMap = React.memo(function CategoryTreeMap(props: CategoryTreeM
     rootId: topRootId,
     prevRootId: null,
   });
-  const { rootId, prevRootId } = view;
+  // The parent remounts this for a different tree, but refetched data can still
+  // drop the zoomed category: fall back to the top of the tree then
+  const rootId = catMap.has(view.rootId) ? view.rootId : topRootId;
+  const prevRootId =
+    rootId === view.rootId && view.prevRootId && catMap.has(view.prevRootId)
+      ? view.prevRootId
+      : null;
 
   const unit = valueAttribute.unit?.shortName ?? '';
   const formatValue = useMemo(() => {
