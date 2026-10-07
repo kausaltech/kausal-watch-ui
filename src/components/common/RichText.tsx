@@ -316,7 +316,9 @@ const CollapsibleText = (props: CollapsibleTextProps) => {
       <StyledRichText>
         <FadeClip $fade={showFade}>
           {shouldFallbackCollapse ? (
-            <CollapsedWrapper $isOpen={isOpen}>{parsedContent}</CollapsedWrapper>
+            <CollapsedWrapper $isOpen={isOpen} id={panelId}>
+              {parsedContent}
+            </CollapsedWrapper>
           ) : (
             <>
               {intro}
