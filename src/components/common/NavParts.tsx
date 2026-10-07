@@ -78,7 +78,9 @@ export function NavItem({ active, className, ...props }: NavItemProps) {
 // navbar is expanded: the collapse is forced open, and its wrappers are taken
 // out of the layout so the navs stay direct flex items of `.navbar-collapse`.
 // No !important: MUI sets the closed state through its class styles, which
-// these override, and callers can still override these.
+// these override, and callers can still override these. The exit transition
+// also leaves `height: 0px` inline, which would beat these; `clearHeight`
+// removes it once the menu has closed, leaving the class styles in charge.
 const StyledCollapse = styled(MuiCollapse)`
   ${({ theme }) => theme.breakpoints.up('md')} {
     height: auto;
@@ -99,10 +101,18 @@ type NavbarCollapseProps = {
   children?: React.ReactNode;
 };
 
+function clearHeight(node: HTMLElement) {
+  node.style.height = '';
+}
+
 /** reactstrap's `<Collapse navbar>`: the menu that collapses on small screens. */
 export function NavbarCollapse({ isOpen, className, children }: NavbarCollapseProps) {
   return (
-    <StyledCollapse in={isOpen} className={classes(className, 'navbar-collapse', isOpen && 'show')}>
+    <StyledCollapse
+      in={isOpen}
+      onExited={clearHeight}
+      className={classes(className, 'navbar-collapse', isOpen && 'show')}
+    >
       {children}
     </StyledCollapse>
   );
