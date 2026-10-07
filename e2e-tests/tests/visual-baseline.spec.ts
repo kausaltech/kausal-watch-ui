@@ -26,11 +26,11 @@ const WIDTHS = [390, 820, 1100, 1440];
 const HEIGHT = 900;
 
 /**
- * Charts (ECharts and legacy Plotly) keep re-rendering, so they never produce
+ * Charts keep re-rendering, so they never produce
  * two identical screenshots in a row. Mask them: the masked box keeps its size,
  * so layout changes still show.
  */
-const CHART_SELECTOR = '[_echarts_instance_], .js-plotly-plot';
+const CHART_SELECTOR = '[_echarts_instance_]';
 
 /**
  * Text rendering jitters by a few dozen pixels between runs, for example where

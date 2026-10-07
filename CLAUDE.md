@@ -9,7 +9,7 @@ This file provides guidance to LLM agents when working with this codebase.
 **Key Features:**
 
 - Action plan and indicator visualization dashboards
-- Interactive charts (Plotly, ECharts), maps (Mapbox), and graph visualizations (Cytoscape)
+- Interactive charts (ECharts), maps (Mapbox), and graph visualizations (Cytoscape)
 - Multi-tenant architecture with hostname-based plan resolution
 - Internationalization supporting 15+ languages
 - GraphQL data layer with Apollo Client

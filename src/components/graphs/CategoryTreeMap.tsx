@@ -180,9 +180,9 @@ const getShownCategories = (root: Category) =>
  * fills the left column, its children are stacked in the right one in
  * proportion to their values. Ancestors of the root form the path bar.
  *
- * Zooming moves the viewport over the whole-tree icicle, like Plotly's icicle
- * does. Every tile shown before or after the zoom gets its position in both
- * viewports, so it can animate from the old one to the new one.
+ * Zooming moves the viewport over the whole-tree icicle. Every tile shown
+ * before or after the zoom gets its position in both viewports, so it can
+ * animate from the old one to the new one.
  */
 function layoutTiles(
   catMap: Map<string, Category>,

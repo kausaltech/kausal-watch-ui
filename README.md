@@ -107,20 +107,6 @@ suite like this:
 
     node_modules/.bin/playwright test -j 1 --project chromium
 
-### Building the custom version of plotly.js
-
-If you need to add new plot types, or update to the upstream version of plotly.js,
-clone the [plotly.js GitHub repository](https://github.com/plotly/plotly.js) and
-run the following commands:
-
-    npm install
-    npx change-package-name @kausal/plotly-custom
-    npm run empty-dist && npm run locales && npm run bundle && npm run schema dist
-    TRACES=scatter,icicle,pie,bar
-    npm run custom-bundle -- --unminified --traces ${TRACES}
-    npm run custom-bundle -- --traces ${TRACES}
-    npm publish --access public
-
 ### Debugging
 
 Debug server side GraphQL queries by setting the `LOG_GRAPHQL_QUERIES=true` environment variable. This will log all outgoing queries and variables in your dev server console.
