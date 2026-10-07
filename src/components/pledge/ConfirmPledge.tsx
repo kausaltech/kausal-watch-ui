@@ -149,12 +149,9 @@ type ConfirmPledgeProps = {
   isSignedIn?: boolean;
   /** Offer to create an account after confirming. When false, confirming goes straight to the success step. */
   offerAccount?: boolean;
-  termsUrl?: string;
 };
 
 type Step = 'form' | 'account' | 'pin' | 'success';
-
-const DEFAULT_TERMS_URL = 'https://kausal.tech/yolo-county-kausal-watch-terms-of-use-2026-07'; // TODO: To come from the backend;
 
 function ConfirmPledge({
   isOpen,
@@ -170,7 +167,6 @@ function ConfirmPledge({
   anonymousUserToken,
   isSignedIn = false,
   offerAccount = true,
-  termsUrl = DEFAULT_TERMS_URL,
 }: ConfirmPledgeProps) {
   const t = useTranslations();
   const [step, setStep] = useState<Step>('form');
@@ -330,7 +326,6 @@ function ConfirmPledge({
                 <PledgeSignInFlow
                   anonymousUserToken={anonymousUserToken}
                   commitmentCount={commitmentCount + 1}
-                  termsUrl={termsUrl}
                   onComplete={handleSignInComplete}
                   onClose={handleClose}
                   onStepChange={(signInStep) => setStep(signInStep === 'email' ? 'account' : 'pin')}
