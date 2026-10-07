@@ -34,15 +34,17 @@ const PlanDivider = styled.div<{ $color: CSSProperties['color'] }>`
 
 const PlanAvatar = styled.img`
   display: block;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
-  box-shadow: 0 0 3px 1px ${(props) => transparentize(0.8, props.theme.themeColors.black)};
+  box-shadow: 0 0 3px 1px ${(props) => transparentize(0.9, props.theme.themeColors.black)};
 `;
 
 const PlanTitle = styled.div`
   margin-left: 0.5rem;
   font-size: ${(props) => props.theme.fontSizeSm};
+  line-height: 1;
+  text-align: left;
 `;
 
 type StyledDropdownToggleProps = {
