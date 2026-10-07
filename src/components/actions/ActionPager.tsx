@@ -30,10 +30,6 @@ const Next = styled.div`
 
 const PageButton = styled(Button)`
   line-height: ${(props) => props.theme.lineHeightSm};
-
-  .icon {
-    fill: ${(props) => props.theme.brandDark} !important;
-  }
 `;
 
 type Props = {
