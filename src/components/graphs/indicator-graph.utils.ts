@@ -920,6 +920,9 @@ export function buildSaveAsImageToolbox({
     right: 0,
     top: 0,
     itemSize: 14,
+    // Explicit, since ECharts 6 changed the default icon colors to blue
+    iconStyle: { borderColor: '#666' },
+    emphasis: { iconStyle: { borderColor: '#3E98C5' } },
     feature: {
       saveAsImage: {
         show: true,
