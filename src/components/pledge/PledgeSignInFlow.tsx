@@ -18,6 +18,7 @@ import { useTranslations } from 'next-intl';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 
+import { usePledgeAccountContent } from './use-pledge-account-content';
 import { type SignInStep, usePledgeSignIn } from './use-pledge-auth';
 
 const StyledSection = styled.div`
@@ -50,13 +51,6 @@ const StyledDescription = styled.p`
 const StyledTermsLink = styled.a`
   color: ${({ theme }) => theme.linkColor};
   text-decoration: underline;
-`;
-
-const StyledActionRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spaces.s100};
-  flex-wrap: wrap;
 `;
 
 const StyledButton = styled(Button)`
@@ -112,27 +106,63 @@ const StyledModeToggleLink = styled.button`
   }
 `;
 
+const StyledPinCard = styled(StyledCard)`
+  align-items: center;
+  gap: ${({ theme }) => theme.spaces.s150};
+  text-align: center;
+`;
+
+const StyledPinIntro = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spaces.s050};
+  max-width: 32rem;
+`;
+
+const StyledPinEmail = styled.strong`
+  color: ${({ theme }) => theme.textColor.primary};
+  /* Only break a long address when it cannot fit on a line of its own */
+  overflow-wrap: anywhere;
+`;
+
 const StyledPinWrapper = styled.div`
   display: flex;
+  justify-content: center;
   gap: ${({ theme }) => theme.spaces.s050};
+  width: 100%;
 `;
 
 const StyledPinDigit = styled.input`
-  width: 44px;
-  height: 52px;
+  /* Equal boxes that shrink together on narrow screens */
+  flex: 0 1 3rem;
+  min-width: 0;
+  height: 3.5rem;
+  padding: 0;
   text-align: center;
-  font-size: ${({ theme }) => theme.fontSizeMd};
+  font-size: ${({ theme }) => theme.fontSizeLg};
   font-weight: ${({ theme }) => theme.fontWeightBold};
-  border: ${({ theme }) => theme.inputBorderWidth} solid ${({ theme }) => theme.themeColors.dark};
+  border: ${({ theme }) => theme.inputBorderWidth} solid ${({ theme }) => theme.graphColors.grey050};
   border-radius: ${({ theme }) => theme.inputBorderRadius};
   background: ${({ theme }) => theme.inputBg};
   color: ${({ theme }) => theme.textColor.primary};
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.brandDark};
     box-shadow: 0 0 0 2px ${({ theme }) => theme.brandLight};
   }
+
+  &:disabled {
+    background: ${({ theme }) => theme.graphColors.grey010};
+  }
+`;
+
+const StyledPinError = styled(FormHelperText)`
+  margin: 0;
+  text-align: center;
 `;
 
 type PinInputProps = {
@@ -204,7 +234,6 @@ function PinInput({ value, onChange, disabled = false }: PinInputProps) {
 export type PledgeSignInFlowProps = {
   anonymousUserToken?: string;
   commitmentCount?: number;
-  termsUrl?: string;
   onComplete: (pledgeIds: string[]) => void;
   onClose: () => void;
   /** Called when the internal step changes — for hosts that mirror step in their own state */
@@ -229,12 +258,12 @@ function getPinErrorKey(code: string | null): string {
 function PledgeSignInFlow({
   anonymousUserToken,
   commitmentCount,
-  termsUrl,
   onComplete,
   onClose,
   onStepChange,
 }: PledgeSignInFlowProps) {
   const t = useTranslations();
+  const { termsUrl, privacyUrl, description, marketingLabel } = usePledgeAccountContent();
   const { step, pendingEmail, loading, error, signUp, signIn, verifyPin, resendCode, editEmail } =
     usePledgeSignIn();
 
@@ -315,9 +344,7 @@ function PledgeSignInFlow({
             {isSignUp ? t('pledge-sign-in-email-heading') : t('pledge-sign-in-existing-heading')}
           </StyledHeading>
           <StyledDescription>
-            {isSignUp
-              ? t('pledge-sign-in-email-description')
-              : t('pledge-sign-in-existing-description')}
+            {isSignUp ? description : t('pledge-sign-in-existing-description')}
           </StyledDescription>
 
           <Stack spacing={0.5}>
@@ -362,33 +389,49 @@ function PledgeSignInFlow({
                   }
                   label={
                     <span>
-                      {t.rich('pledge-sign-in-terms-label', {
-                        termsLink: (chunks) =>
-                          termsUrl ? (
+                      {t.rich(
+                        privacyUrl
+                          ? 'pledge-sign-in-terms-and-privacy-label'
+                          : 'pledge-sign-in-terms-label',
+                        {
+                          termsLink: (chunks) =>
+                            termsUrl ? (
+                              <StyledTermsLink
+                                href={termsUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {chunks}
+                              </StyledTermsLink>
+                            ) : (
+                              <strong>{chunks}</strong>
+                            ),
+                          privacyLink: (chunks) => (
                             <StyledTermsLink
-                              href={termsUrl}
+                              href={privacyUrl ?? undefined}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
                               {chunks}
                             </StyledTermsLink>
-                          ) : (
-                            <strong>{chunks}</strong>
                           ),
-                      })}
+                        }
+                      )}
                     </span>
                   }
                 />
 
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={marketingOptIn}
-                      onChange={(e) => setMarketingOptIn(e.target.checked)}
-                    />
-                  }
-                  label={t('pledge-sign-in-marketing-label')}
-                />
+                {marketingLabel && (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={marketingOptIn}
+                        onChange={(e) => setMarketingOptIn(e.target.checked)}
+                      />
+                    }
+                    label={marketingLabel}
+                  />
+                )}
               </Stack>
             )}
 
@@ -431,23 +474,24 @@ function PledgeSignInFlow({
   // PIN step
   return (
     <StyledSection>
-      <StyledHeading>{t('pledge-sign-in-pin-heading')}</StyledHeading>
-      <StyledDescription>
-        {t('pledge-sign-in-pin-description', { email: pendingEmail })}{' '}
-        <StyledLinkButton type="button" onClick={editEmail}>
-          {t('pledge-sign-in-pin-edit-email')}
-        </StyledLinkButton>
-      </StyledDescription>
+      <StyledPinCard>
+        <StyledPinIntro>
+          <StyledHeading>{t('pledge-sign-in-pin-heading')}</StyledHeading>
+          <StyledDescription>
+            {t.rich('pledge-sign-in-pin-description', {
+              email: pendingEmail ?? '',
+              strong: (chunks) => <StyledPinEmail>{chunks}</StyledPinEmail>,
+            })}{' '}
+            <StyledModeToggleLink type="button" onClick={editEmail}>
+              {t('pledge-sign-in-pin-edit-email')}
+            </StyledModeToggleLink>
+          </StyledDescription>
+        </StyledPinIntro>
 
-      <StyledLinkButton type="button" onClick={void handleResend} disabled={loading}>
-        {t('pledge-sign-in-pin-resend')}
-      </StyledLinkButton>
+        <PinInput value={pin} onChange={setPin} disabled={loading} />
 
-      <PinInput value={pin} onChange={setPin} disabled={loading} />
+        {error && <StyledPinError error>{t(getPinErrorKey(error))}</StyledPinError>}
 
-      {error && <FormHelperText error>{t(getPinErrorKey(error))}</FormHelperText>}
-
-      <StyledActionRow>
         <StyledButton
           color="primary"
           onClick={() => void handlePinSubmit()}
@@ -460,10 +504,18 @@ function PledgeSignInFlow({
           )}
           {t('pledge-sign-in-verify')}
         </StyledButton>
-        <StyledLinkButton type="button" onClick={onClose}>
-          {t('close')}
-        </StyledLinkButton>
-      </StyledActionRow>
+      </StyledPinCard>
+
+      <StyledModeToggle>
+        {t('pledge-sign-in-pin-no-code')}{' '}
+        <StyledModeToggleLink type="button" onClick={() => void handleResend()} disabled={loading}>
+          {t('pledge-sign-in-pin-resend')}
+        </StyledModeToggleLink>
+      </StyledModeToggle>
+
+      <StyledLinkButton type="button" onClick={onClose}>
+        {t('close')}
+      </StyledLinkButton>
     </StyledSection>
   );
 }

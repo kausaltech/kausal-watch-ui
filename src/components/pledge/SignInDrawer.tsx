@@ -85,10 +85,9 @@ type Props = {
   onClose: () => void;
   onComplete: (preExistingPledgeIds: string[]) => void;
   anonymousUserToken?: string;
-  termsUrl?: string;
 };
 
-function SignInDrawer({ isOpen, onClose, onComplete, anonymousUserToken, termsUrl }: Props) {
+function SignInDrawer({ isOpen, onClose, onComplete, anonymousUserToken }: Props) {
   const t = useTranslations();
 
   const handleComplete = (ids: string[]) => {
@@ -129,7 +128,6 @@ function SignInDrawer({ isOpen, onClose, onComplete, anonymousUserToken, termsUr
             <StyledDrawerContent>
               <PledgeSignInFlow
                 anonymousUserToken={anonymousUserToken}
-                termsUrl={termsUrl}
                 onComplete={handleComplete}
                 onClose={onClose}
               />
