@@ -165,7 +165,9 @@ const DashboardRowBlock = ({ id, blocks, isFirst, isLast }: DashboardRowBlockPro
   const headerBlock = blocks.find(isDashboardHeaderBlock);
   const cardBlocks = blocks.filter(isDashboardCardBlock);
   const columnProps = getColumnProps(cardBlocks.length);
-  const chartTypes = [
+  // Blocks that show a single indicator link to its full data
+  const indicatorBlockTypes = [
+    'DashboardIndicatorSummaryBlock',
     'DashboardIndicatorPieChartBlock',
     'DashboardIndicatorLineChartBlock',
     'DashboardIndicatorBarChartBlock',
@@ -182,18 +184,17 @@ const DashboardRowBlock = ({ id, blocks, isFirst, isLast }: DashboardRowBlockPro
           <StyledRow>
             {cardBlocks.map((block, index) => {
               const { blockType } = block;
-              const isChart = chartTypes.includes(blockType);
               const indicatorId =
-                isChart && 'indicator' in block && block.indicator ? block.indicator.id : undefined;
+                indicatorBlockTypes.includes(blockType) && 'indicator' in block && block.indicator
+                  ? block.indicator.id
+                  : undefined;
 
               const blockId = 'id' in block && block.id ? block.id : `${block.blockType}-${index}`;
               return (
                 <Col key={blockId} {...columnProps}>
                   <StyledCard outline>
                     <DashboardCardContents block={block} />
-                    {isChart && indicatorId && (
-                      <StyledLink id={indicatorId}>{t('see-full-data')}</StyledLink>
-                    )}
+                    {indicatorId && <StyledLink id={indicatorId}>{t('see-full-data')}</StyledLink>}
                   </StyledCard>
                 </Col>
               );
