@@ -344,8 +344,10 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
         {changeSymbol && absChange !== null && !displayOptions.referenceValue.show && (
           <ValueChange color={changeColor}>
             <ChangeSymbol>{changeSymbol}</ChangeSymbol>
-            <span>{format.number(absChange, { maximumSignificantDigits: rounding })}</span>{' '}
-            <small>{diffUnitName}</small>
+            <span>{format.number(absChange, { maximumSignificantDigits: rounding })}</span>
+            {/* The value above already shows the unit; only a percentage
+                change needs its own (percentage points) */}
+            {isPercentUnit && <small> {diffUnitName}</small>}
           </ValueChange>
         )}
       </ValueDisplay>
