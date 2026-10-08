@@ -139,7 +139,9 @@ const DashboardIndicatorBarChartBlock = ({
       goalLabel,
       timeResolution,
       formatValue,
-      goalSymbol(graphsTheme.goalSymbol)
+      goalSymbol(graphsTheme.goalSymbol),
+      graphsTheme.drawGoalLine,
+      theme.graphColors.grey070
     );
     // Goals lie beyond the last observation; the axis must reach them
     const goalDates = goalSeries.flatMap((series) => series.data.map(([key]) => key));

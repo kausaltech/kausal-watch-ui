@@ -78,7 +78,8 @@ export type GraphSettings = {
   trendLineColor?: string;
   areaGraphs?: boolean;
   lineShape?: string;
-  drawGoalLine?: boolean;
+  /** Join consecutive goals of a scenario with a dashed line. */
+  connectGoals?: boolean;
   categorySymbols?: string[];
   goalSymbol?: string;
   /** Tenant-configured chart background; the canvas is white when unset. */
@@ -107,7 +108,7 @@ export function parseGraphSettings(rawGraphSettings: unknown): GraphSettings {
     trendLineColor: str(raw.trendLineColor),
     areaGraphs: bool(raw.areaGraphs),
     lineShape: str(raw.lineShape),
-    drawGoalLine: bool(raw.drawGoalLine),
+    connectGoals: bool(raw.connectGoals),
     categorySymbols: strArray(raw.categorySymbols),
     goalSymbol: str(raw.goalSymbol),
     customBackground: str(raw.customBackground),
@@ -502,7 +503,7 @@ export function buildGoalSeries({
   timeResolution,
   goalColors,
   goalSymbol,
-  drawGoalLine,
+  connectGoals,
   formatValue,
 }: {
   goalTraces: GoalTrace[];
@@ -511,7 +512,7 @@ export function buildGoalSeries({
   goalColors: string[];
   /** Resolved ECharts symbol, see goalSymbol() */
   goalSymbol: string;
-  drawGoalLine: boolean | undefined;
+  connectGoals: boolean | undefined;
   formatValue: FormatValue;
 }): LineSeriesOption[] {
   return goalTraces.map((goalTrace, idx) => {
@@ -526,8 +527,8 @@ export function buildGoalSeries({
       symbol: goalSymbol,
       symbolSize: 12,
       lineStyle: {
-        width: drawGoalLine ? 2 : 0,
-        type: drawGoalLine ? 'dashed' : 'dotted',
+        width: connectGoals ? 2 : 0,
+        type: connectGoals ? 'dashed' : 'dotted',
         color,
       },
       itemStyle: markerItemStyle(color),

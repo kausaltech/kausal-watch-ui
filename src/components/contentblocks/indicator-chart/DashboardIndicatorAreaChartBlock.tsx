@@ -133,7 +133,9 @@ const DashboardIndicatorAreaChartBlock = ({
     goalLabel,
     timeResolution,
     formatValue,
-    goalSymbol(graphsTheme.goalSymbol)
+    goalSymbol(graphsTheme.goalSymbol),
+    graphsTheme.drawGoalLine,
+    theme.graphColors.grey070
   );
 
   const areaLegendItems: LegendComponentOption['data'] = hasDimension
