@@ -8,7 +8,7 @@ import { getThemeStaticURL } from '@common/themes/theme';
 
 import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
-import { useContainImages } from '@/common/hooks/use-contain-images';
+import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { getActionTermContext } from '@/common/i18n';
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import { ActionLink, ActionListLink, OrganizationLink } from '@/common/links';
@@ -258,7 +258,7 @@ type ActionHeroProps = {
   state?: string;
   matchingVersion: NonNullable<ActionDetails['workflowStatus']>['matchingVersion'] | null;
   updatedAt: string;
-  /** Defaults to `contained` when the theme sets `settings.layout.containImages` */
+  /** Defaults to `contained` when the contained layout is on (see useContainedLayout) */
   layout?: ActionHeroLayout;
 };
 
@@ -364,8 +364,8 @@ function ActionHero(props: ActionHeroProps) {
   const theme = useTheme();
   const t = useTranslations();
 
-  const containImages = useContainImages();
-  const layout: ActionHeroLayout = props.layout ?? (containImages ? 'contained' : 'overlay');
+  const containedLayout = useContainedLayout();
+  const layout: ActionHeroLayout = props.layout ?? (containedLayout ? 'contained' : 'overlay');
   const imageSrc = image ? (image.fullMedium ?? image.full ?? image.fullSmall)?.src : undefined;
   const srcSet = image
     ? getImageSrcSet([image.fullSmall, image.fullMedium, image.full])

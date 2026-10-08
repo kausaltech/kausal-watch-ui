@@ -61,7 +61,7 @@ type Props = {
 
 /**
  * Page header image limited to the container width, used by the header
- * components when the theme sets `settings.layout.containImages`.
+ * components in the contained layout (see useContainedLayout).
  */
 export default function ContainedHeaderImage({ image, imageAlign, altText, imageCredit }: Props) {
   const t = useTranslations();

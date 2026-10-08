@@ -4,8 +4,9 @@ import { useTheme } from '@emotion/react';
 
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import type { ContentPageQuery, HeroImageFragment } from '@/common/__generated__/graphql';
-import { useContainImages } from '@/common/hooks/use-contain-images';
+import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { getBgImageAlignment } from '@/common/images';
+import { themeLabelsCategoryPagesWithType } from '@/common/theme-settings';
 import { typenameMatches } from '@/common/utils';
 import CategoryPageContent from '@/components/categories/CategoryPageContent';
 import RichText from '@/components/common/RichText';
@@ -75,6 +76,8 @@ type PageHeaderBlockProps = {
 };
 
 function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
+  const theme = useTheme();
+
   switch (page.__typename) {
     case 'CategoryPage': {
       const category = page.category;
@@ -101,8 +104,10 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
           color={color || undefined}
           attributes={category.attributes}
           typeId={category.type.id}
-          // Categories without a level are labelled with their category type's name
-          level={page.category?.level?.name ?? page.category?.type.name}
+          level={
+            page.category?.level?.name ??
+            (themeLabelsCategoryPagesWithType(theme) ? page.category?.type.name : undefined)
+          }
         />
       );
     }
@@ -128,7 +133,7 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
 export default function ContentPage({ page, testId }: { page: GeneralPlanPage; testId?: string }) {
   // TODO: Resolve shareImageUrl by pagetype
   const theme = useTheme();
-  const containImages = useContainImages();
+  const containedLayout = useContainedLayout();
   const isCategoryPage = page.__typename === 'CategoryPage';
 
   const isPageWithBody = typenameMatches(
@@ -185,7 +190,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
           page={page}
           pageSectionColor={pageSectionColor}
           // The contained category page header has no background
-          precedingBlockHasBackground={hasPageHeader && !containImages}
+          precedingBlockHasBackground={hasPageHeader && !containedLayout}
         />
       ) : (
         <div
@@ -220,7 +225,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
               blocks={page.body}
               hasSidebar={siblings.length > 1}
               // The contained content page header has no background
-              precedingBlockHasBackground={hasPageHeader && !containImages}
+              precedingBlockHasBackground={hasPageHeader && !containedLayout}
             />
           )}
         </div>

@@ -19,8 +19,9 @@ import type {
   HeroImageFragment,
 } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
-import { useContainImages } from '@/common/hooks/use-contain-images';
+import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { getImageSrcSet } from '@/common/images';
+import { themeLeftAlignsCategoryHeroContent } from '@/common/theme-settings';
 import AttributesBlock, { Attributes } from '@/components/common/AttributesBlock';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import CategoryPageStreamField, {
@@ -92,24 +93,38 @@ const HeaderImageImg = styled.img<{ $imageAlign?: string | null | undefined }>`
 `;
 
 const HeaderImage = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 14rem;
+  height: 320px;
+  width: 100%;
+  position: relative;
+  border-radius: ${(props) => props.theme.cardBorderRadius}
+    ${(props) => props.theme.cardBorderRadius} 0 0;
   overflow: hidden;
   background-color: ${(props) => props.theme.brandDark};
 
-  ${(props) => props.theme.breakpoints.up('md')} {
-    min-height: 20rem;
-  }
+  &.full-width {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 14rem;
+    border-radius: 0;
 
-  ${(props) => props.theme.breakpoints.up('lg')} {
-    min-height: 28rem;
-  }
+    ${(props) => props.theme.breakpoints.up('md')} {
+      min-height: 20rem;
+    }
 
-  ${(props) => props.theme.breakpoints.up('xl')} {
-    min-height: 32rem;
+    /* From lg the header is as tall as the image unless the content is taller,
+     * so stretch the image to cover the whole header, up to a cap. Content
+     * longer than that hangs below the image, as it does on smaller screens. */
+    ${(props) => props.theme.breakpoints.up('lg')} {
+      height: 100%;
+      min-height: 28rem;
+      max-height: 40rem;
+    }
+
+    ${(props) => props.theme.breakpoints.up('xl')} {
+      min-height: 32rem;
+    }
   }
 `;
 
@@ -119,16 +134,18 @@ const Identifier = styled.span`
 
 const HeaderContent = styled.div<{
   $alignWithContent?: boolean;
+  $hasImage: boolean;
   $moveDown?: boolean;
 }>`
   position: relative;
   text-align: ${({ $alignWithContent }) => ($alignWithContent ? 'left' : 'center')};
   padding: ${({ theme }) => theme.spaces.s200};
-  border-radius: ${({ theme }) => theme.cardBorderRadius};
+  border-radius: ${({ theme, $hasImage }) =>
+    $hasImage ? `0 0 ${theme.cardBorderRadius} ${theme.cardBorderRadius}` : theme.cardBorderRadius};
   background-color: ${(props) => props.theme.cardBackground.primary};
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 100;
-  margin-top: ${({ $moveDown }) => ($moveDown ? '11rem' : '1rem')};
+  margin-top: ${({ $moveDown, $hasImage }) => ($moveDown ? '11rem' : $hasImage ? '0' : '1rem')};
 
   h1 {
     font-size: ${(props) => props.theme.fontSizeLg};
@@ -157,7 +174,7 @@ const HeaderContent = styled.div<{
 
 const AttributesContainer = styled.div`
   max-width: 768px;
-  margin: 0 ${({ theme }) => (theme.settings.layout.leftAlignCategoryPages ? '0' : 'auto')};
+  margin: 0 ${({ theme }) => (themeLeftAlignsCategoryHeroContent(theme) ? '0' : 'auto')};
 `;
 
 /* In the contained layout the header content sits in the page flow, aligned
@@ -315,12 +332,17 @@ const LegacyCategoryHeaderAttributes = ({
 /*
 Category header can have several variations
 
-Two layout options for header image:
+Layout options for header image:
 
-theme.settings.layout.containImages: true
--- header image width is limited by container (edge to edge below md)
+theme.settings.layout.containedLayout: true (see useContainedLayout)
+-- header image width is limited by container (edge to edge below lg)
 -- header content underneath the image in the page flow, aligned with the page content
 -- no background color behind the header content
+
+theme.settings.layout.containImages: true
+-- header image width is limited by container
+-- header content directly underneath the image, container width block
+-- background color of the section is brandDark
 
 theme.settings.layout.containImages: false (default)
 -- header image is full browser width
@@ -329,9 +351,9 @@ theme.settings.layout.containImages: false (default)
 
 Header content alignment:
 
-theme.settings.layout.leftAlignCategoryPages: true
+theme.settings.layout.leftAlignCategoryHeroContent: true (not in the contained layout)
 -- the text content is left aligned
-theme.settings.layout.leftAlignCategoryPages: false (default)
+theme.settings.layout.leftAlignCategoryHeroContent: false (default)
 -- the text content is centered
 
 Category attributes:
@@ -380,7 +402,9 @@ export default function CategoryPageHeaderBlock(props: Props) {
   const theme = useTheme();
   const t = useTranslations();
 
-  const containImages = useContainImages();
+  const containedLayout = useContainedLayout();
+  const containImages = theme.settings.layout.containImages ?? false;
+  const imageLayout = containImages ? 'contained' : 'full-width';
   const showIdentifiers = !plan.primaryActionClassification?.hideCategoryIdentifiers;
 
   const { data } = useQuery(GET_CATEGORY_ATTRIBUTE_TYPES, {
@@ -435,7 +459,7 @@ export default function CategoryPageHeaderBlock(props: Props) {
     </>
   );
 
-  if (containImages) {
+  if (containedLayout) {
     return (
       <>
         {headerImage && (
@@ -457,11 +481,22 @@ export default function CategoryPageHeaderBlock(props: Props) {
     ? (headerImage.fullMedium ?? headerImage.full ?? headerImage.fullSmall)?.src
     : undefined;
 
+  const columnSizing = containImages
+    ? { md: 12 }
+    : {
+        xl: { size: 8, offset: 2 },
+        lg: { size: 8, offset: 2 },
+        md: { size: 10, offset: 1 },
+      };
+
   return (
-    <CategoryHeader $bg={color} $hasImage={!!headerImage}>
+    <CategoryHeader
+      $bg={containImages ? theme.pageHeaderBackgroundColor : color}
+      $hasImage={!!headerImage}
+    >
       <Container className="header-container">
         {headerImage && headerImageSrc && (
-          <HeaderImage>
+          <HeaderImage className={imageLayout}>
             <HeaderImageImg
               src={headerImageSrc}
               srcSet={getImageSrcSet([
@@ -476,10 +511,11 @@ export default function CategoryPageHeaderBlock(props: Props) {
           </HeaderImage>
         )}
         <Row>
-          <Col xl={{ size: 8, offset: 2 }} lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+          <Col {...columnSizing}>
             <HeaderContent
-              $alignWithContent={theme.settings.layout.leftAlignCategoryPages}
-              $moveDown={!!headerImage}
+              $alignWithContent={themeLeftAlignsCategoryHeroContent(theme)}
+              $hasImage={!!headerImage && imageLayout === 'contained'}
+              $moveDown={!!headerImage && !containImages}
             >
               {headerContent}
             </HeaderContent>

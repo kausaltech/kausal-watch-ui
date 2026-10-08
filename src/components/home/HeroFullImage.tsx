@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import { useContainImages } from '@/common/hooks/use-contain-images';
+import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import ContainedHeaderImage from '@/components/common/ContainedHeaderImage';
 import RichText from '@/components/common/RichText';
@@ -173,7 +173,7 @@ const HeroFullImage = (props: HeroFullImageProps) => {
 
   const t = useTranslations();
   const theme = useTheme();
-  const containImages = useContainImages();
+  const containedLayout = useContainedLayout();
 
   const contentAlignment = theme.settings?.frontHero?.cardPlacement ?? 'left';
   const contentColor = theme.settings?.frontHero?.color ?? 'light';
@@ -186,7 +186,7 @@ const HeroFullImage = (props: HeroFullImageProps) => {
     ? focalBox.imageWidth / focalBox.focalPointHeight
     : undefined;
 
-  if (containImages) {
+  if (containedLayout) {
     return (
       <div id={id}>
         <ContainedHeaderImage
