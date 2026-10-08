@@ -4,7 +4,9 @@ import { useTheme } from '@emotion/react';
 
 import { ActionListPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/actions/ActionListPage';
 import type { ContentPageQuery, HeroImageFragment } from '@/common/__generated__/graphql';
+import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { getBgImageAlignment } from '@/common/images';
+import { themeLabelsCategoryPagesWithType } from '@/common/theme-settings';
 import { typenameMatches } from '@/common/utils';
 import CategoryPageContent from '@/components/categories/CategoryPageContent';
 import RichText from '@/components/common/RichText';
@@ -74,6 +76,8 @@ type PageHeaderBlockProps = {
 };
 
 function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
+  const theme = useTheme();
+
   switch (page.__typename) {
     case 'CategoryPage': {
       const category = page.category;
@@ -100,7 +104,10 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
           color={color || undefined}
           attributes={category.attributes}
           typeId={category.type.id}
-          level={page.category?.level?.name}
+          level={
+            page.category?.level?.name ??
+            (themeLabelsCategoryPagesWithType(theme) ? page.category?.type.name : undefined)
+          }
         />
       );
     }
@@ -126,6 +133,7 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
 export default function ContentPage({ page, testId }: { page: GeneralPlanPage; testId?: string }) {
   // TODO: Resolve shareImageUrl by pagetype
   const theme = useTheme();
+  const containedLayout = useContainedLayout();
   const isCategoryPage = page.__typename === 'CategoryPage';
 
   const isPageWithBody = typenameMatches(
@@ -181,10 +189,15 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
         <CategoryPageContent
           page={page}
           pageSectionColor={pageSectionColor}
-          precedingBlockHasBackground={hasPageHeader}
+          // The contained category page header has no background
+          precedingBlockHasBackground={hasPageHeader && !containedLayout}
         />
       ) : (
-        <div>
+        <div
+          // The secondary nav is positioned at the top of this element beside the content, so
+          // keep the first block's top margin from collapsing through and offsetting the nav too
+          style={siblings.length > 1 ? { display: 'flow-root' } : undefined}
+        >
           {typenameMatches(page, 'ActionListPage') && <ActionListPage actionListPage={page} />}
           {typenameMatches(page, 'IndicatorListPage') && <IndicatorListPage page={page} />}
           {isPageWithLeadContent && 'leadContent' in page && page.leadContent && (
@@ -211,7 +224,8 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
               page={page as Parameters<typeof StreamField>[0]['page']}
               blocks={page.body}
               hasSidebar={siblings.length > 1}
-              precedingBlockHasBackground={hasPageHeader}
+              // The contained content page header has no background
+              precedingBlockHasBackground={hasPageHeader && !containedLayout}
             />
           )}
         </div>

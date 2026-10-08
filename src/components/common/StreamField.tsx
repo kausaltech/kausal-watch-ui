@@ -14,6 +14,7 @@ import ContentLoader from '@common/components/ContentLoader';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type { CardImageFragment, StreamFieldFragment } from '@/common/__generated__/graphql';
+import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { getBgImageAlignment } from '@/common/images';
 import { excludeNullish } from '@/common/utils';
 import ErrorMessage from '@/components/common/ErrorMessage';
@@ -171,7 +172,15 @@ const ResponsiveStyles = styled.div`
   }
 `;
 
-function blockHasBackground(block: StreamFieldFragment, theme: Theme): boolean {
+function richTextHasBackground(theme: Theme): boolean {
+  return theme.section.richText.sectionBackground !== theme.themeColors.white;
+}
+
+function blockHasBackground(
+  block: StreamFieldFragment,
+  theme: Theme,
+  containedLayout: boolean
+): boolean {
   switch (block.__typename) {
     case 'CardListBlock':
     case 'ActionListBlock':
@@ -183,12 +192,13 @@ function blockHasBackground(block: StreamFieldFragment, theme: Theme): boolean {
     case 'ActionCategoryFilterCardsBlock':
     case 'CategoryTypeLevelListBlock':
     case 'RelatedPlanListBlock':
-    case 'FrontPageHeroBlock':
     case 'RelatedIndicatorsBlock':
     case 'IndicatorGroupBlock':
       return true;
+    case 'FrontPageHeroBlock':
+      return !heroHasFlowText(block, containedLayout);
     case 'RichTextBlock':
-      return theme.section.richText.sectionBackground !== theme.themeColors.white;
+      return richTextHasBackground(theme);
     case 'LargeImageBlock':
       return theme.section.largeImageBlock.background !== theme.themeColors.white;
     default:
@@ -196,19 +206,59 @@ function blockHasBackground(block: StreamFieldFragment, theme: Theme): boolean {
   }
 }
 
+/**
+ * The big image front page hero follows the contained layout (see HeroFullImage).
+ * With text, the text sits in the page flow below the image band; without text,
+ * the hero is only the image band and behaves like a coloured block.
+ */
+function heroHasFlowText(block: StreamFieldFragment, containedLayout: boolean): boolean {
+  return (
+    block.__typename === 'FrontPageHeroBlock' &&
+    containedLayout &&
+    block.layout === 'big_image' &&
+    !!(block.heading || block.lead)
+  );
+}
+
+/**
+ * Rich text without a section background, and the contained front page hero with
+ * text, have no vertical padding of their own and rely on the block gap for spacing
+ */
+function blockIsUnpadded(block: StreamFieldFragment, theme: Theme, containedLayout: boolean) {
+  return (
+    (block.__typename === 'RichTextBlock' && !richTextHasBackground(theme)) ||
+    heroHasFlowText(block, containedLayout)
+  );
+}
+
 interface BlockWrapperProps {
   $hasBackground: boolean;
   $prevHasBackground: boolean;
+  $isUnpadded: boolean;
+  $prevIsUnpadded: boolean;
   $isFirst: boolean;
+  /** Last block, or followed by an unwrapped block that sets no top gap of its own */
+  $isLastWrapped: boolean;
 }
 
 const StyledBlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
-  margin-top: ${({ $isFirst, $hasBackground, $prevHasBackground }) => {
-    if ($isFirst) return '0';
+  margin-top: ${({
+    $isFirst,
+    $hasBackground,
+    $prevHasBackground,
+    $isUnpadded,
+    $prevIsUnpadded,
+  }) => {
+    if ($isFirst) return $isUnpadded && $prevHasBackground ? 'var(--block-gap)' : '0';
     if ($hasBackground && $prevHasBackground) return 'var(--block-gap-coloured)';
-    if ($hasBackground || $prevHasBackground) return '0';
+    if ($hasBackground || $prevHasBackground) {
+      // Coloured blocks pad themselves, but an unpadded block next to one needs a gap
+      return $isUnpadded || $prevIsUnpadded ? 'var(--block-gap)' : '0';
+    }
     return 'var(--block-gap)';
   }};
+  margin-bottom: ${({ $isLastWrapped, $isUnpadded }) =>
+    $isLastWrapped && $isUnpadded ? 'var(--block-gap)' : '0'};
 `;
 
 function BlockWrapper({
@@ -232,17 +282,29 @@ function hasPathsContent(body: StreamFieldFragment[]) {
   );
 }
 
-const RichTextSection = styled.div`
-  padding-top: var(--block-padding-top);
-  padding-bottom: var(--block-padding-bottom);
+/* Adjacent rich text sections share a background, so they are joined with a
+ * single block gap instead of stacking both sections' padding */
+const RichTextSection = styled.div<{
+  $unpadded: boolean;
+  $joinPrev: boolean;
+  $joinNext: boolean;
+}>`
+  padding-top: ${({ $unpadded, $joinPrev }) =>
+    $unpadded ? '0' : $joinPrev ? 'var(--block-gap)' : 'var(--block-padding-top)'};
+  padding-bottom: ${({ $unpadded, $joinNext }) =>
+    $unpadded || $joinNext ? '0' : 'var(--block-padding-bottom)'};
   background-color: ${({ theme }) => theme.section.richText.sectionBackground};
 `;
 
-const RichTextContainer = styled.div`
+/* In the contained layout the text aligns left with the page header, and
+ * without a section background also drops the side padding */
+const RichTextContainer = styled.div<{ $unpadded: boolean; $contained: boolean }>`
   display: flex;
-  justify-content: center;
+  justify-content: ${({ $contained }) => ($contained ? 'flex-start' : 'center')};
   background-color: ${({ theme }) => theme.themeColors.white};
-  padding: var(--inner-block-padding-y) var(--inner-block-padding-x);
+  padding: ${({ $unpadded }) => ($unpadded ? '0' : 'var(--inner-block-padding-y)')}
+    ${({ $unpadded, $contained }) =>
+      $unpadded && $contained ? '0' : 'var(--inner-block-padding-x)'};
 
   > div {
     flex: 0 1 800px;
@@ -341,6 +403,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
   const { __typename } = block;
   const plan = usePlan();
   const theme = useTheme();
+  const containedLayout = useContainedLayout();
   const logContext = {
     'page-type': page.__typename,
     'block-type': __typename,
@@ -354,8 +417,14 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
         page.__typename === 'CategoryPage' && theme.settings.categories.collapseLongTexts;
       const COLLAPSIBLE_BREAKPOINT = 1200;
       const isCollapsible = canCollapse && value.length > COLLAPSIBLE_BREAKPOINT;
+      const siblings = getSiblingBlockTypes();
+      const sectionHasBackground = richTextHasBackground(theme);
       return (
-        <RichTextSection>
+        <RichTextSection
+          $unpadded={!sectionHasBackground}
+          $joinPrev={sectionHasBackground && siblings.prev === 'RichTextBlock'}
+          $joinNext={sectionHasBackground && siblings.next === 'RichTextBlock'}
+        >
           <Container id={id}>
             <Row>
               <Col
@@ -363,7 +432,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
                 lg={{ size: hasSidebar ? 8 : 12, offset: hasSidebar ? 4 : 0 }}
                 {...columnProps}
               >
-                <RichTextContainer>
+                <RichTextContainer $unpadded={!sectionHasBackground} $contained={containedLayout}>
                   <RichText html={value} isCollapsible={isCollapsible} />
                 </RichTextContainer>
               </Col>
@@ -378,9 +447,6 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return (
         <QuestionAnswerBlock
           id={id}
-          alignWithContent={
-            page.__typename === 'CategoryPage' && theme.settings.layout.leftAlignCategoryPages
-          }
           heading={heading ?? undefined}
           questions={excludeNullish(questions ?? [])}
           hasSidebar={hasSidebar}
@@ -717,6 +783,7 @@ export default function StreamField(props: StreamFieldProps) {
   const { page, blocks, hasSidebar = false, columnProps, precedingBlockHasBackground } = props;
   const t = useTranslations();
   const theme = useTheme();
+  const containedLayout = useContainedLayout();
 
   const isCategoryPage = page.__typename === 'CategoryPage';
   useEffect(() => {
@@ -733,11 +800,14 @@ export default function StreamField(props: StreamFieldProps) {
   return (
     <div className={`custom-${page.slug}`}>
       {blocks.map((block, index) => {
-        const hasBackground = blockHasBackground(block, theme);
+        const hasBackground = blockHasBackground(block, theme, containedLayout);
         const prevHasBackground =
           index === 0
             ? (precedingBlockHasBackground ?? false)
-            : blockHasBackground(blocks[index - 1], theme);
+            : blockHasBackground(blocks[index - 1], theme, containedLayout);
+        const isUnpadded = blockIsUnpadded(block, theme, containedLayout);
+        const prevIsUnpadded =
+          index > 0 && blockIsUnpadded(blocks[index - 1], theme, containedLayout);
 
         return (
           <ErrorBoundary
@@ -753,7 +823,12 @@ export default function StreamField(props: StreamFieldProps) {
                 blockType={block.blockType}
                 $hasBackground={hasBackground}
                 $prevHasBackground={prevHasBackground}
+                $isUnpadded={isUnpadded}
+                $prevIsUnpadded={prevIsUnpadded}
                 $isFirst={index === 0}
+                $isLastWrapped={
+                  index === blocks.length - 1 || blocks[index + 1].blockType === 'DashboardRowBlock'
+                }
               >
                 <StreamFieldBlock
                   id={`section-${index + 1}`}

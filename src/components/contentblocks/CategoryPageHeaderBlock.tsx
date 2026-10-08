@@ -19,12 +19,15 @@ import type {
   HeroImageFragment,
 } from '@/common/__generated__/graphql';
 import { getBreadcrumbsFromCategoryHierarchy } from '@/common/categories';
+import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { getImageSrcSet } from '@/common/images';
+import { themeLeftAlignsCategoryHeroContent } from '@/common/theme-settings';
 import AttributesBlock, { Attributes } from '@/components/common/AttributesBlock';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import CategoryPageStreamField, {
   type CategoryPageMainTopBlock,
 } from '@/components/common/CategoryPageStreamField';
+import ContainedHeaderImage from '@/components/common/ContainedHeaderImage';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { ChartType } from '@/components/dashboard/ActionStatusGraphs';
 import { usePlan } from '@/context/plan';
@@ -89,13 +92,10 @@ const HeaderImageImg = styled.img<{ $imageAlign?: string | null | undefined }>`
   object-position: ${(props) => props.$imageAlign ?? 'center center'};
 `;
 
-const HeaderImage = styled.div<{
-  $imageAlign?: string | null | undefined;
-}>`
+const HeaderImage = styled.div`
   height: 320px;
   width: 100%;
   position: relative;
-  object-position: ${(props) => props.$imageAlign};
   border-radius: ${(props) => props.theme.cardBorderRadius}
     ${(props) => props.theme.cardBorderRadius} 0 0;
   overflow: hidden;
@@ -113,8 +113,13 @@ const HeaderImage = styled.div<{
       min-height: 20rem;
     }
 
+    /* From lg the header is as tall as the image unless the content is taller,
+     * so stretch the image to cover the whole header, up to a cap. Content
+     * longer than that hangs below the image, as it does on smaller screens. */
     ${(props) => props.theme.breakpoints.up('lg')} {
+      height: 100%;
       min-height: 28rem;
+      max-height: 40rem;
     }
 
     ${(props) => props.theme.breakpoints.up('xl')} {
@@ -169,7 +174,45 @@ const HeaderContent = styled.div<{
 
 const AttributesContainer = styled.div`
   max-width: 768px;
-  margin: 0 ${({ theme }) => (theme.settings.layout.leftAlignCategoryPages ? '0' : 'auto')};
+  margin: 0 ${({ theme }) => (themeLeftAlignsCategoryHeroContent(theme) ? '0' : 'auto')};
+`;
+
+/* In the contained layout the header content sits in the page flow, aligned
+ * with the page content, instead of in a card */
+const ContainedHeaderContent = styled.div`
+  padding: ${({ theme }) => `${theme.spaces.s200} 0`};
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    padding-top: ${({ theme }) => theme.spaces.s300};
+  }
+
+  h1 {
+    font-size: ${(props) => props.theme.fontSizeLg};
+    margin-bottom: ${(props) => props.theme.spaces.s100};
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  p {
+    font-size: ${(props) => props.theme.fontSizeBase};
+    margin-bottom: ${(props) => props.theme.spaces.s100};
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    h1 {
+      font-size: ${(props) => props.theme.fontSizeXl};
+    }
+  }
+
+  ${AttributesContainer} {
+    margin: 0;
+  }
 `;
 
 const getIconHeight = (size: IconSize = IconSize.M, theme: Theme) => {
@@ -289,7 +332,12 @@ const LegacyCategoryHeaderAttributes = ({
 /*
 Category header can have several variations
 
-Two layout options for header image:
+Layout options for header image:
+
+theme.settings.layout.containedLayout: true (see useContainedLayout)
+-- header image width is limited by container (edge to edge below lg)
+-- header content underneath the image in the page flow, aligned with the page content
+-- no background color behind the header content
 
 theme.settings.layout.containImages: true
 -- header image width is limited by container
@@ -303,9 +351,9 @@ theme.settings.layout.containImages: false (default)
 
 Header content alignment:
 
-theme.settings.layout.leftAlignCategoryPages: true
+theme.settings.layout.leftAlignCategoryHeroContent: true (not in the contained layout)
 -- the text content is left aligned
-theme.settings.layout.leftAlignCategoryPages: false (default)
+theme.settings.layout.leftAlignCategoryHeroContent: false (default)
 -- the text content is centered
 
 Category attributes:
@@ -354,9 +402,9 @@ export default function CategoryPageHeaderBlock(props: Props) {
   const theme = useTheme();
   const t = useTranslations();
 
+  const containedLayout = useContainedLayout();
   const containImages = theme.settings.layout.containImages ?? false;
   const imageLayout = containImages ? 'contained' : 'full-width';
-  //const contentAlignment = theme.settings.layout.leftAlignCategoryPages ? 'left' : 'center';
   const showIdentifiers = !plan.primaryActionClassification?.hideCategoryIdentifiers;
 
   const { data } = useQuery(GET_CATEGORY_ATTRIBUTE_TYPES, {
@@ -364,6 +412,74 @@ export default function CategoryPageHeaderBlock(props: Props) {
       plan: plan.identifier,
     },
   });
+
+  const showLevel = level && !theme.settings.categories.categoryPageHideCategoryLabel;
+  const parentCategory = page.category?.parent;
+
+  const headerContent = (
+    <>
+      {showLevel && <CategoryLevelName>{level}</CategoryLevelName>}
+
+      {!!parentCategory && (
+        <Breadcrumbs
+          breadcrumbs={getBreadcrumbsFromCategoryHierarchy([parentCategory], showIdentifiers)}
+        />
+      )}
+
+      {iconImage &&
+        (iconImage.toLowerCase().split('?')[0].endsWith('.svg') ? (
+          <CategoryIconSvg
+            size={(page?.layout?.iconSize as IconSize) ?? undefined}
+            src={iconImage}
+            title=""
+            $color={color}
+          />
+        ) : (
+          <CategoryIconImage
+            size={(page?.layout?.iconSize as IconSize) ?? undefined}
+            src={iconImage}
+            alt=""
+          />
+        ))}
+      <h1>
+        {identifier && <Identifier>{identifier}.</Identifier>} {title}
+      </h1>
+      {lead && <p>{lead}</p>}
+
+      {layout ? (
+        <CategoryHeaderAttributes page={page} layout={layout} />
+      ) : (
+        <LegacyCategoryHeaderAttributes
+          attributes={attributes}
+          categoryTypes={data?.plan?.categoryTypes}
+          categoryId={categoryId}
+          typeId={typeId}
+        />
+      )}
+    </>
+  );
+
+  if (containedLayout) {
+    return (
+      <>
+        {headerImage && (
+          <ContainedHeaderImage
+            image={headerImage}
+            imageAlign={imageAlign ?? 'center center'}
+            altText={headerImage.altText}
+            imageCredit={headerImage.imageCredit}
+          />
+        )}
+        <Container>
+          <ContainedHeaderContent>{headerContent}</ContainedHeaderContent>
+        </Container>
+      </>
+    );
+  }
+
+  const headerImageSrc = headerImage
+    ? (headerImage.fullMedium ?? headerImage.full ?? headerImage.fullSmall)?.src
+    : undefined;
 
   const columnSizing = containImages
     ? { md: 12 }
@@ -373,19 +489,16 @@ export default function CategoryPageHeaderBlock(props: Props) {
         md: { size: 10, offset: 1 },
       };
 
-  const showLevel = level && !theme.settings.categories.categoryPageHideCategoryLabel;
-  const parentCategory = page.category?.parent;
-
   return (
     <CategoryHeader
       $bg={containImages ? theme.pageHeaderBackgroundColor : color}
       $hasImage={!!headerImage}
     >
       <Container className="header-container">
-        {headerImage && (headerImage.fullMedium ?? headerImage.full ?? headerImage.fullSmall) && (
-          <HeaderImage $imageAlign={imageAlign} className={imageLayout}>
+        {headerImage && headerImageSrc && (
+          <HeaderImage className={imageLayout}>
             <HeaderImageImg
-              src={(headerImage.fullMedium ?? headerImage.full ?? headerImage.fullSmall)!.src}
+              src={headerImageSrc}
               srcSet={getImageSrcSet([
                 headerImage.fullSmall,
                 headerImage.fullMedium,
@@ -400,51 +513,11 @@ export default function CategoryPageHeaderBlock(props: Props) {
         <Row>
           <Col {...columnSizing}>
             <HeaderContent
-              $alignWithContent={theme.settings.layout.leftAlignCategoryPages}
+              $alignWithContent={themeLeftAlignsCategoryHeroContent(theme)}
               $hasImage={!!headerImage && imageLayout === 'contained'}
               $moveDown={!!headerImage && !containImages}
             >
-              {showLevel && <CategoryLevelName>{level}</CategoryLevelName>}
-
-              {!!parentCategory && (
-                <Breadcrumbs
-                  breadcrumbs={getBreadcrumbsFromCategoryHierarchy(
-                    [parentCategory],
-                    showIdentifiers
-                  )}
-                />
-              )}
-
-              {iconImage &&
-                (iconImage.toLowerCase().split('?')[0].endsWith('.svg') ? (
-                  <CategoryIconSvg
-                    size={(page?.layout?.iconSize as IconSize) ?? undefined}
-                    src={iconImage}
-                    title=""
-                    $color={color}
-                  />
-                ) : (
-                  <CategoryIconImage
-                    size={(page?.layout?.iconSize as IconSize) ?? undefined}
-                    src={iconImage}
-                    alt=""
-                  />
-                ))}
-              <h1>
-                {identifier && <Identifier>{identifier}.</Identifier>} {title}
-              </h1>
-              {lead && <p>{lead}</p>}
-
-              {layout ? (
-                <CategoryHeaderAttributes page={page} layout={layout} />
-              ) : (
-                <LegacyCategoryHeaderAttributes
-                  attributes={attributes}
-                  categoryTypes={data?.plan?.categoryTypes}
-                  categoryId={categoryId}
-                  typeId={typeId}
-                />
-              )}
+              {headerContent}
             </HeaderContent>
           </Col>
         </Row>
