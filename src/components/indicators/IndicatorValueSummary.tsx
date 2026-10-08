@@ -22,6 +22,7 @@ import {
   ValueLabel,
   ValueSummary,
   ValueUnit,
+  isLongUnit,
 } from './IndicatorSummary.styles';
 
 const DEFAULT_ROUNDING = 2;
@@ -233,6 +234,8 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
   const shortUnitName = unitLabel === 'no unit' ? '' : unitLabel;
   const isPercentUnit = unitLabel === '%' || unitLabel.startsWith('%');
   const diffUnitName = isPercentUnit ? t('percent-point-abbreviation') : shortUnitName;
+  const longUnit = isLongUnit(shortUnitName);
+  const longDiffUnit = isLongUnit(diffUnitName);
   const now = dayjs();
   let timeFormat = 'l';
 
@@ -319,7 +322,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
         <ValueDisplay>
           <div>
             {format.number(referenceValue.value, { maximumSignificantDigits: rounding })}
-            <ValueUnit>{shortUnitName}</ValueUnit>
+            <ValueUnit $long={longUnit}>{shortUnitName}</ValueUnit>
           </div>
         </ValueDisplay>
       </ValueBlock>
@@ -335,7 +338,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
       <ValueDisplay>
         <div>
           {latestValueDisplay}
-          <ValueUnit>{shortUnitName}</ValueUnit>
+          <ValueUnit $long={longUnit}>{shortUnitName}</ValueUnit>
         </div>
         {/* Hack for legacy: Only show change symbol if reference value is not shown */}
         {changeSymbol && absChange !== null && !displayOptions.referenceValue.show && (
@@ -396,7 +399,7 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
           <div>
             {desiredTrend && DesiredTrendIcon}
             {nextGoalValue}
-            <ValueUnit>{shortUnitName}</ValueUnit>
+            <ValueUnit $long={longUnit}>{shortUnitName}</ValueUnit>
           </div>
         </ValueDisplay>
       </ValueBlock>
@@ -423,8 +426,8 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
           <div>
             {goalReached ? '' : prefix}
             {format.number(Math.abs(difference), { maximumSignificantDigits: rounding })}
-            <span style={{ display: 'inline-flex' }}>
-              <ValueUnit>{diffUnitName}</ValueUnit>
+            <span style={{ display: longDiffUnit ? 'flex' : 'inline-flex' }}>
+              <ValueUnit $long={longDiffUnit}>{diffUnitName}</ValueUnit>
               {isPercentagePoint && (
                 <PopoverTip
                   compact
