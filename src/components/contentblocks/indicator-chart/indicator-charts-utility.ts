@@ -125,6 +125,37 @@ export function buildDimSeries(
   });
 }
 
+/** A category-axis point whose value was interpolated into a gap, not observed */
+export type InterpolatedPoint = { value: [string, number]; interpolated: true };
+
+/**
+ * Fills the nulls between two observations with values interpolated by axis
+ * position, the same straight line `connectNulls` draws. Stacked areas need
+ * this: at a null point ECharts drops the area's lower edge to the axis even
+ * with `connectNulls` (getStackedOnPoint falls back to valueStart), so
+ * unreported periods saw-tooth the fill. Leading and trailing nulls stay.
+ */
+export function interpolateGaps(
+  data: [string, number | null][]
+): Array<[string, number | null] | InterpolatedPoint> {
+  const result: Array<[string, number | null] | InterpolatedPoint> = [...data];
+  let prevIdx = -1;
+  let prevValue = 0;
+  data.forEach(([, value], idx) => {
+    if (value == null) return;
+    for (let i = prevIdx + 1; prevIdx >= 0 && i < idx; i++) {
+      const ratio = (i - prevIdx) / (idx - prevIdx);
+      result[i] = {
+        value: [data[i][0], prevValue + (value - prevValue) * ratio],
+        interpolated: true,
+      };
+    }
+    prevIdx = idx;
+    prevValue = value;
+  });
+  return result;
+}
+
 /**
  * Whether any value carries a date. Category-only indicators (a value per
  * category, no time axis) have none; the schema permits null dates.

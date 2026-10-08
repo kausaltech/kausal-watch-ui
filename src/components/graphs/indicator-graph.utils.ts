@@ -789,9 +789,16 @@ export function buildTimeTooltipFormatter({
       const typedParam = param as {
         seriesName?: string;
         value?: number | [string | number, number | null];
+        data?: unknown;
         marker?: string;
       };
       if (!typedParam.seriesName) return;
+
+      // Values interpolated into gaps (see interpolateGaps) weren't observed
+      const data = typedParam.data;
+      if (data && typeof data === 'object' && 'interpolated' in data && data.interpolated) {
+        return;
+      }
 
       // Skip trend series in tooltip
       if (trendName && typedParam.seriesName === trendName) {
