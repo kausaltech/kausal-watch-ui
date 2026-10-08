@@ -6,6 +6,7 @@ import {
   buildUndatedTotal,
   collectAllDates,
   hasDatedValues,
+  interpolateGaps,
 } from '../indicator-charts-utility';
 
 type Indicator = Parameters<typeof buildGoalSeries>[0];
@@ -260,5 +261,29 @@ describe('collectAllDates', () => {
       ['2025']
     );
     expect(xCategories).toEqual(['2020', '2021', '2022', '2023', '2024', '2025']);
+  });
+});
+
+describe('interpolateGaps', () => {
+  it('fills interior gaps linearly and keeps leading and trailing nulls', () => {
+    expect(
+      interpolateGaps([
+        ['2004', null],
+        ['2005', 10],
+        ['2006', null],
+        ['2007', null],
+        ['2008', 40],
+        ['2009', 50],
+        ['2010', null],
+      ])
+    ).toEqual([
+      ['2004', null],
+      ['2005', 10],
+      { value: ['2006', 20], interpolated: true },
+      { value: ['2007', 30], interpolated: true },
+      ['2008', 40],
+      ['2009', 50],
+      ['2010', null],
+    ]);
   });
 });

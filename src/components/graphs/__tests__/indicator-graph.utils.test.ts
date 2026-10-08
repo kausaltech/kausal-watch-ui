@@ -197,6 +197,26 @@ describe('buildTimeTooltipFormatter', () => {
     ]);
     expect(text).toBe('');
   });
+
+  it('skips values interpolated into gaps', () => {
+    const formatter = buildTimeTooltipFormatter({
+      timeResolution: 'YEAR',
+      trendName: null,
+      yRange: { ...yRange, unit: 'kt' },
+      formatValue,
+    });
+    const text = formatter([
+      {
+        seriesName: 'Gap',
+        axisValue: '2021-01-01',
+        value: ['2021-01-01', 5],
+        data: { value: ['2021-01-01', 5], interpolated: true },
+        marker,
+      },
+      { seriesName: 'Value', axisValue: '2021-01-01', value: ['2021-01-01', 7], marker },
+    ]);
+    expect(text).toBe(`2021<br/>${marker} Value: 7 kt<br/>`);
+  });
 });
 
 describe('applyGoalMarkers', () => {

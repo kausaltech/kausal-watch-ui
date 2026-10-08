@@ -43,6 +43,7 @@ import {
   buildYAxisConfig,
   collectAllDates,
   getUnitLabel,
+  interpolateGaps,
   shouldSmoothLines,
   toChartTimeResolution,
 } from './indicator-charts-utility';
@@ -180,9 +181,12 @@ const DashboardIndicatorAreaChartBlock = ({
   const series: LineSeriesOption[] = hasDimension
     ? dimSeries.map((d) => {
         const dataMap = new Map(d.raw.map(([key, value]) => [key, value]));
-        const data = xCategories.map(
+        const observed = xCategories.map(
           (key) => [key, dataMap.get(key) ?? null] as [string, number | null]
         );
+        // Stacked fills drop to the axis at nulls despite connectNulls, so
+        // unreported periods get interpolated values (left out of the tooltip)
+        const data = stackable ? interpolateGaps(observed) : observed;
         return {
           name: d.name,
           type: 'line' as const,
