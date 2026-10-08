@@ -13,7 +13,7 @@ import ContentLoader from '@common/components/ContentLoader';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type { CardImageFragment, StreamFieldFragment } from '@/common/__generated__/graphql';
-import { useContainImages } from '@/common/hooks/use-contain-images';
+import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { getBgImageAlignment } from '@/common/images';
 import { excludeNullish } from '@/common/utils';
 import ErrorMessage from '@/components/common/ErrorMessage';
@@ -178,7 +178,7 @@ function richTextHasBackground(theme: Theme): boolean {
 function blockHasBackground(
   block: StreamFieldFragment,
   theme: Theme,
-  containImages: boolean
+  containedLayout: boolean
 ): boolean {
   switch (block.__typename) {
     case 'CardListBlock':
@@ -195,7 +195,7 @@ function blockHasBackground(
     case 'IndicatorGroupBlock':
       return true;
     case 'FrontPageHeroBlock':
-      return !heroHasFlowText(block, containImages);
+      return !heroHasFlowText(block, containedLayout);
     case 'RichTextBlock':
       return richTextHasBackground(theme);
     case 'LargeImageBlock':
@@ -210,10 +210,10 @@ function blockHasBackground(
  * With text, the text sits in the page flow below the image band; without text,
  * the hero is only the image band and behaves like a coloured block.
  */
-function heroHasFlowText(block: StreamFieldFragment, containImages: boolean): boolean {
+function heroHasFlowText(block: StreamFieldFragment, containedLayout: boolean): boolean {
   return (
     block.__typename === 'FrontPageHeroBlock' &&
-    containImages &&
+    containedLayout &&
     block.layout === 'big_image' &&
     !!(block.heading || block.lead)
   );
@@ -223,10 +223,10 @@ function heroHasFlowText(block: StreamFieldFragment, containImages: boolean): bo
  * Rich text without a section background, and the contained front page hero with
  * text, have no vertical padding of their own and rely on the block gap for spacing
  */
-function blockIsUnpadded(block: StreamFieldFragment, theme: Theme, containImages: boolean) {
+function blockIsUnpadded(block: StreamFieldFragment, theme: Theme, containedLayout: boolean) {
   return (
     (block.__typename === 'RichTextBlock' && !richTextHasBackground(theme)) ||
-    heroHasFlowText(block, containImages)
+    heroHasFlowText(block, containedLayout)
   );
 }
 
@@ -395,7 +395,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
   const { __typename } = block;
   const plan = usePlan();
   const theme = useTheme();
-  const containImages = useContainImages();
+  const containedLayout = useContainedLayout();
   const logContext = {
     'page-type': page.__typename,
     'block-type': __typename,
@@ -424,7 +424,7 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
                 lg={{ size: hasSidebar ? 8 : 12, offset: hasSidebar ? 4 : 0 }}
                 {...columnProps}
               >
-                <RichTextContainer $unpadded={!sectionHasBackground} $contained={containImages}>
+                <RichTextContainer $unpadded={!sectionHasBackground} $contained={containedLayout}>
                   <RichText html={value} isCollapsible={isCollapsible} />
                 </RichTextContainer>
               </Col>
@@ -439,9 +439,6 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return (
         <QuestionAnswerBlock
           id={id}
-          alignWithContent={
-            page.__typename === 'CategoryPage' && theme.settings.layout.leftAlignCategoryPages
-          }
           heading={heading ?? undefined}
           questions={excludeNullish(questions ?? [])}
           hasSidebar={hasSidebar}
@@ -776,19 +773,19 @@ export default function StreamField(props: StreamFieldProps) {
   const { page, blocks, hasSidebar = false, columnProps, precedingBlockHasBackground } = props;
   const t = useTranslations();
   const theme = useTheme();
-  const containImages = useContainImages();
+  const containedLayout = useContainedLayout();
 
   return (
     <div className={`custom-${page.slug}`}>
       {blocks.map((block, index) => {
-        const hasBackground = blockHasBackground(block, theme, containImages);
+        const hasBackground = blockHasBackground(block, theme, containedLayout);
         const prevHasBackground =
           index === 0
             ? (precedingBlockHasBackground ?? false)
-            : blockHasBackground(blocks[index - 1], theme, containImages);
-        const isUnpadded = blockIsUnpadded(block, theme, containImages);
+            : blockHasBackground(blocks[index - 1], theme, containedLayout);
+        const isUnpadded = blockIsUnpadded(block, theme, containedLayout);
         const prevIsUnpadded =
-          index > 0 && blockIsUnpadded(blocks[index - 1], theme, containImages);
+          index > 0 && blockIsUnpadded(blocks[index - 1], theme, containedLayout);
 
         return (
           <ErrorBoundary

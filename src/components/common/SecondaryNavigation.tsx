@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import { type StaticPage } from '@/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage';
-import { useContainImages } from '@/common/hooks/use-contain-images';
+import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { Link } from '@/common/links';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 
@@ -71,13 +71,13 @@ interface SecondaryNavigationProps {
 
 const SecondaryNavigation = (props: SecondaryNavigationProps) => {
   const { links, activeLink, title, pageHasContent = true } = props;
-  const containImages = useContainImages();
+  const containedLayout = useContainedLayout();
 
   return (
     <NavigationContainer $pageHasContent={pageHasContent}>
       <Row>
-        <Col md={containImages ? 12 : { size: 10, offset: 1 }} lg={{ size: 4, offset: 0 }} xl={3}>
-          <NavigationCard $alignWithContent={containImages}>
+        <Col md={containedLayout ? 12 : { size: 10, offset: 1 }} lg={{ size: 4, offset: 0 }} xl={3}>
+          <NavigationCard $alignWithContent={containedLayout}>
             {title && <h3>{title}</h3>}
             <Nav>
               {links.map((link) => (

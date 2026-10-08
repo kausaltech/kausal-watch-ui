@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 
-import { useContainImages } from '@/common/hooks/use-contain-images';
+import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import ContainedHeaderImage from '@/components/common/ContainedHeaderImage';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
@@ -74,7 +74,7 @@ type Props = {
   imageAlign?: string;
   altText?: string;
   imageCredit?: string;
-  /** Defaults to `contained` when the theme sets `settings.layout.containImages` */
+  /** Defaults to `contained` when the contained layout is on (see useContainedLayout) */
   layout?: ContentPageHeaderLayout;
 };
 
@@ -91,9 +91,9 @@ export default function ContentPageHeaderBlock(props: Props) {
   } = props;
 
   const t = useTranslations();
-  const containImages = useContainImages();
+  const containedLayout = useContainedLayout();
   const layout: ContentPageHeaderLayout =
-    props.layout ?? (containImages ? 'contained' : 'full-width');
+    props.layout ?? (containedLayout ? 'contained' : 'full-width');
 
   if (layout === 'contained') {
     return (
