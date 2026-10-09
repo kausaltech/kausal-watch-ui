@@ -8,6 +8,16 @@ const MOCK_PROPS: Story['args'] = {
   action: MOCK_ACTIONS[0],
 };
 
+// Status colors from the backend can be hex values instead of theme graphColors keys
+const HEX_STATUS_COLOR = '#1044e0';
+const MOCK_PROPS_HEX_STATUS: Story['args'] = {
+  action: {
+    ...MOCK_ACTIONS[0],
+    color: HEX_STATUS_COLOR,
+    status: MOCK_ACTIONS[0].status && { ...MOCK_ACTIONS[0].status, color: HEX_STATUS_COLOR },
+  },
+};
+
 const meta = {
   title: 'Actions/ActionCard',
   component: ActionCard,
@@ -32,6 +42,10 @@ export const Highlighted: Story = {
 
 export const WithoutLink: Story = {
   args: { ...MOCK_PROPS, isLink: false },
+};
+
+export const HexStatusColor: Story = {
+  args: MOCK_PROPS_HEX_STATUS,
 };
 
 // TODO: Add action dependency data to mock actions

@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 
 import { transientOptions } from '@common/themes/styles/styled';
 
-import { getStatusSummary } from '@/common/ActionStatusSummary';
+import { getStatusSummary, getThemeColor } from '@/common/ActionStatusSummary';
 import type { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
 import type { PlanContextType } from '@/context/plan';
 
@@ -26,7 +26,7 @@ const StatusTitle = styled.div`
   }
 `;
 
-const ActionProgress = styled(LinearProgress, transientOptions)<{ $color: string }>`
+const ActionProgress = styled(LinearProgress, transientOptions)<{ $color: string | undefined }>`
   position: relative;
   height: ${(props) => props.theme.spaces.s050};
   background-color: ${(props) => props.$color};
@@ -52,7 +52,7 @@ function ActionStatus(props: ActionStatusProps) {
   const { plan, statusSummary, color, completion = 0, text, showProgressBar = false } = props;
   const theme = useTheme();
   const enrichedStatusSummary = getStatusSummary(plan, statusSummary);
-  const statusColor = color ?? 'grey050';
+  const statusColor = getThemeColor(color ?? 'grey050', theme);
   const statusName = text ?? enrichedStatusSummary.label;
   const completionNumber =
     typeof completion === 'number' && Number.isFinite(completion) ? completion : null;

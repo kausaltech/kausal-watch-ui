@@ -5,7 +5,7 @@ import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 import { transparentize } from 'polished';
 
-import { getStatusSummary } from '@/common/ActionStatusSummary';
+import { getStatusSummary, getThemeColor } from '@/common/ActionStatusSummary';
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import {
   type ActionListForGraphsQuery,
@@ -146,9 +146,10 @@ const getTimelinessData = (
     }
     aggregates.values.push(counts.get(identifier) ?? 0);
     aggregates.labels.push(getTimelinessLabel(timeliness.days, timeliness.comparison, t));
-    const color: unknown = timeliness.color;
-    if (typeof color === 'string' && color in theme.graphColors) {
-      aggregates.colors.push(theme.graphColors[color as keyof typeof theme.graphColors]);
+    const color =
+      typeof timeliness.color === 'string' ? getThemeColor(timeliness.color, theme) : undefined;
+    if (color) {
+      aggregates.colors.push(color);
     }
   }
 

@@ -1,9 +1,9 @@
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import type { Theme } from '@kausal/themes/types';
 import { useTranslations } from 'next-intl';
 
+import { getThemeColor } from '@/common/ActionStatusSummary';
 import { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
 import dayjs from '@/common/dayjs';
 import {
@@ -35,7 +35,7 @@ const ResponsibleTooltipListItem = styled.li``;
 
 const TaskTooltip = styled.div``;
 
-const StatusLabel = styled.div<{ $color: keyof Theme['graphColors'] }>`
+const StatusLabel = styled.div<{ $color: string | undefined }>`
   &:before {
     content: '';
     display: inline-block;
@@ -44,8 +44,8 @@ const StatusLabel = styled.div<{ $color: keyof Theme['graphColors'] }>`
     margin-right: 0.5em;
     margin-bottom: -0.1em;
     border-radius: 50%;
-    background-color: ${(props) => props.theme.graphColors[props.$color]};
-    color: ${(props) => props.theme.graphColors[props.$color]};
+    background-color: ${(props) => props.$color};
+    color: ${(props) => props.$color};
   }
 `;
 
@@ -120,6 +120,7 @@ const StyledPhaseTimelineContainer = styled.div`
 
 export const ImplementationPhaseTooltipContent = ({ action, plan }: TooltipWithPlanProps) => {
   const t = useTranslations();
+  const theme = useTheme();
 
   const activePhase = action.implementationPhase;
   const merged = action.mergedWith;
@@ -141,7 +142,7 @@ export const ImplementationPhaseTooltipContent = ({ action, plan }: TooltipWithP
   };
 
   const statusDisplay = (
-    <StatusLabel $color={(action.color ?? 'grey050') as keyof Theme['graphColors']}>
+    <StatusLabel $color={getThemeColor(action.color ?? 'grey050', theme)}>
       {status.label}
     </StatusLabel>
   );

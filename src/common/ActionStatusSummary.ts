@@ -31,7 +31,14 @@ const getCacheKey = (plan: PlanContextType, statusSummary: MinimalActionStatusSu
 
 export const getStatusSummary = memoize(_getStatusSummary, getCacheKey);
 
-export const getThemeColor = (color: string, theme: Theme) => {
+const HEX_COLOR_PATTERN = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+
+/**
+ * Resolve a color coming from the backend. It is either a key of
+ * `theme.graphColors` (e.g. `green050`) or a hex color (e.g. `#24f415`).
+ */
+export const getThemeColor = (color: string, theme: Theme): string | undefined => {
+  if (HEX_COLOR_PATTERN.test(color)) return color;
   return theme.graphColors[color as keyof Theme['graphColors']];
 };
 
@@ -47,17 +54,14 @@ export interface ActionWithStatusSummary {
   scheduleContinuous?: boolean;
 }
 
-const DEFAULT_COLOR = 'grey050';
+const DEFAULT_COLOR = 'grey050' satisfies keyof Theme['graphColors'];
 
-export const getStatusColorForAction = (action: ActionWithStatusSummary, theme: Theme) => {
+export const getStatusColorForAction = (action: ActionWithStatusSummary, theme: Theme): string => {
   const { color, statusSummary, scheduleContinuous } = action;
 
   // Override for continuous actions. TODO: move logic to backend
   if (scheduleContinuous && statusSummary?.identifier === ActionStatusSummaryIdentifier.Completed)
     return theme.actionContinuousColor;
 
-  if (color != null) {
-    return getThemeColor(color, theme);
-  }
-  return getThemeColor(DEFAULT_COLOR, theme);
+  return (color ? getThemeColor(color, theme) : undefined) ?? theme.graphColors[DEFAULT_COLOR];
 };
