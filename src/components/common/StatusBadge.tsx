@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { setLightness } from 'polished';
 
 import type { ActionWithStatusSummary } from '@/common/ActionStatusSummary';
-import { getStatusColorForAction } from '@/common/ActionStatusSummary';
+import { getStatusColorForAction, getThemeColor } from '@/common/ActionStatusSummary';
 import { ActionStatusSummaryIdentifier } from '@/common/__generated__/graphql';
 import type { PlanContextType } from '@/context/plan';
 
@@ -78,9 +78,9 @@ const StatusBadge = ({
   const t = useTranslations();
 
   const theme = useTheme();
-  let statusColor = status?.color
-    ? theme.graphColors[status.color as keyof typeof theme.graphColors]
-    : getStatusColorForAction(action, theme);
+  let statusColor =
+    (status?.color ? getThemeColor(status.color, theme) : undefined) ??
+    getStatusColorForAction(action, theme);
   let label: string | undefined;
   // Continuous actions that are "completed" get a dedicated label/color in every
   // view, regardless of the status name the caller would otherwise pass in.

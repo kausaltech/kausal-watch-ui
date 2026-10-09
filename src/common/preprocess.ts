@@ -1,7 +1,7 @@
 import type { Theme } from '@kausal/themes/types';
 import { cloneDeep } from 'lodash-es';
 
-import { getStatusSummary } from '../common/ActionStatusSummary';
+import { getStatusSummary, getThemeColor } from '../common/ActionStatusSummary';
 import type { Progress } from '../components/dashboard/ActionStatusGraphs';
 import type { PlanContextType } from '../context/plan';
 import {
@@ -144,7 +144,7 @@ const getStatusData = (
           : label || unknownLabelText
       );
       progress.colors.push(
-        theme.graphColors[(colors.get(identifier) ?? 'grey050') as keyof Theme['graphColors']]
+        getThemeColor(colors.get(identifier) ?? 'grey050', theme) ?? theme.graphColors.grey050
       );
       if (
         sentiment === Sentiment.Positive ||
@@ -172,7 +172,7 @@ const getPhaseData = (
   if (phases.length == 0 || actions.length == 0) {
     return null;
   }
-  let phaseColors = phases.filter((p) => p.color).map((p) => theme.graphColors[p.color] as string);
+  let phaseColors = phases.filter((p) => p.color).map((p) => getThemeColor(p.color, theme));
 
   /* We assume that if a custom color has not been set for *all*
      phases in a plan, the sparse colors will not form a coherent
