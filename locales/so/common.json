@@ -1,1 +1,17 @@
-{}
+{
+    "select-field": "Goobta doorashada",
+    "select-no-options": "Ma jiraan doorashooyin",
+    "select-loading": "Waa la soo rarayaa…",
+    "select-results-available": "{count, plural, one {# natiijo ayaa la helay} other {# natiijo ayaa la helay}}",
+    "select-results-for-term": "{results}, ereyga la raadiyay: {term}.",
+    "select-guidance-menu": "Isticmaal fallaarta Kor iyo Hoos si aad u kala dooratid doorashooyinka, riix Enter si aad u doorato doorashada diiraddu saaran tahay, riix Escape si aad uga baxdo liiska{tabSelects, select, true {, riix Tab si aad u doorato doorashada oo aad uga baxdo liiska} other {}}.",
+    "select-guidance-input": "Diiraddu waxay saaran tahay {label}{searchable, select, true {, wax qor si aad liiska u yarayso} other {}}, riix fallaarta Hoos si aad u furto liiska{multi, select, true {, riix fallaarta Bidix si aad ugu gudubto qiyamka la doortay} other {}}.",
+    "select-guidance-value": "Isticmaal fallaarta Bidix iyo Midig si aad ugu dhex socoto qiyamka la doortay, riix Backspace si aad u tirtirto qiimaha diiraddu saaran tahay.",
+    "select-option-selected": "Doorashada {label} waa la doortay.",
+    "select-options-selected": "{count, plural, one {Doorashada {labels} waa la doortay.} other {Doorashooyinka {labels} waa la doortay.}}",
+    "select-option-deselected": "Doorashada {label} waa laga saaray.",
+    "select-option-disabled": "Doorashada {label} lama heli karo. Dooro doorasho kale.",
+    "select-options-cleared": "Dhammaan doorashooyinka la doortay waa la tirtiray.",
+    "select-value-focused": "Diiraddu waxay saaran tahay qiimaha {label}, {index} ka mid ah {total}.",
+    "select-option-focused": "{label}{selected, select, true {, la doortay} other {}}{disabled, select, true {, lama heli karo} other {}}, {index} ka mid ah {total}."
+}

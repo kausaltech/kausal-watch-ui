@@ -1,0 +1,17 @@
+{
+    "select-field": "Výběrové pole",
+    "select-no-options": "Žádné možnosti",
+    "select-loading": "Načítání…",
+    "select-results-available": "{count, plural, one {# dostupný výsledek} few {# dostupné výsledky} many {# dostupného výsledku} other {# dostupných výsledků}}",
+    "select-results-for-term": "{results} pro hledaný výraz {term}.",
+    "select-guidance-menu": "Šipkami nahoru a dolů procházejte možnosti, klávesou Enter vyberte aktuálně zvýrazněnou možnost, klávesou Esc zavřete nabídku{tabSelects, select, true {, klávesou Tab vyberte možnost a zavřete nabídku} other {}}.",
+    "select-guidance-input": "Pole {label} je aktivní{searchable, select, true {, psaním můžete zúžit seznam} other {}}, šipkou dolů otevřete nabídku{multi, select, true {, šipkou doleva přejděte na vybrané hodnoty} other {}}.",
+    "select-guidance-value": "Šipkami doleva a doprava přecházejte mezi vybranými hodnotami, klávesou Backspace odstraňte zvýrazněnou hodnotu.",
+    "select-option-selected": "Možnost {label}, vybrána.",
+    "select-options-selected": "{count, plural, one {Možnost {labels}, vybrána.} few {Možnosti {labels}, vybrány.} many {Možnosti {labels}, vybrány.} other {Možnosti {labels}, vybrány.}}",
+    "select-option-deselected": "Možnost {label}, výběr zrušen.",
+    "select-option-disabled": "Možnost {label} je nedostupná. Vyberte jinou možnost.",
+    "select-options-cleared": "Všechny vybrané možnosti byly odstraněny.",
+    "select-value-focused": "Hodnota {label} je aktivní, {index} z {total}.",
+    "select-option-focused": "{label}{selected, select, true {, vybráno} other {}}{disabled, select, true {, nedostupné} other {}}, {index} z {total}."
+}

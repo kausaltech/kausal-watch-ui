@@ -1,1 +1,17 @@
-{}
+{
+    "select-field": "Lub thawv xaiv",
+    "select-no-options": "Tsis muaj kev xaiv",
+    "select-loading": "Tab tom thauj…",
+    "select-results-available": "{count, plural, one {Muaj # qhov txiaj ntsig} other {Muaj # qhov txiaj ntsig}}",
+    "select-results-for-term": "{results} rau lo lus nrhiav {term}.",
+    "select-guidance-menu": "Siv tus xub Nce thiab Nqis los xaiv, nias Enter los xaiv qhov uas tab tom tsom, nias Escape los kaw cov npe{tabSelects, select, true {, nias Tab los xaiv thiab kaw cov npe} other {}}.",
+    "select-guidance-input": "Tab tom tsom {label}{searchable, select, true {, ntaus ntawv kom nqaim cov npe} other {}}, nias tus xub Nqis los qhib cov npe{multi, select, true {, nias tus xub Sab Laug los tsom cov uas twb xaiv lawm} other {}}.",
+    "select-guidance-value": "Siv tus xub Sab Laug thiab Sab Xis los txav ntawm cov uas twb xaiv lawm, nias Backspace los tshem qhov uas tab tom tsom.",
+    "select-option-selected": "Tau xaiv {label}.",
+    "select-options-selected": "{count, plural, one {Tau xaiv {labels}.} other {Tau xaiv {labels}.}}",
+    "select-option-deselected": "Tau tshem {label} tawm.",
+    "select-option-disabled": "{label} siv tsis tau. Thov xaiv lwm yam.",
+    "select-options-cleared": "Tau tshem tag nrho cov uas twb xaiv lawm.",
+    "select-value-focused": "Tab tom tsom {label}, {index} ntawm {total}.",
+    "select-option-focused": "{label}{selected, select, true {, twb xaiv lawm} other {}}{disabled, select, true {, siv tsis tau} other {}}, {index} ntawm {total}."
+}

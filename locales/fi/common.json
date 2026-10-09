@@ -300,5 +300,20 @@
     "pledge-sign-in-error-no-active-attempt": "Voimassa olevaa koodia ei ole. Pyydä uusi koodi valitsemalla ”Lähetä koodi uudelleen”.",
     "pledge-nav-my-pledges": "Omat sitoumukseni",
     "pledge-nav-sign-out": "Kirjaudu ulos",
-    "pledge-nav-user-menu-label": "Käyttäjävalikko"
+    "pledge-nav-user-menu-label": "Käyttäjävalikko",
+    "select-field": "Valintakenttä",
+    "select-no-options": "Ei vaihtoehtoja",
+    "select-loading": "Ladataan…",
+    "select-results-available": "{count, plural, one {# tulos saatavilla} other {# tulosta saatavilla}}",
+    "select-results-for-term": "{results} hakusanalle {term}.",
+    "select-guidance-menu": "Selaa vaihtoehtoja ylä- ja alanuolinäppäimillä, valitse kohdistettu vaihtoehto Enter-näppäimellä, sulje valikko Esc-näppäimellä{tabSelects, select, true {, valitse vaihtoehto ja sulje valikko sarkaimella} other {}}.",
+    "select-guidance-input": "{label} on kohdistettu{searchable, select, true {, rajaa luetteloa kirjoittamalla} other {}}, avaa valikko alanuolinäppäimellä{multi, select, true {, siirry valittuihin arvoihin vasemmalla nuolinäppäimellä} other {}}.",
+    "select-guidance-value": "Siirry valittujen arvojen välillä vasemmalla ja oikealla nuolinäppäimellä, poista kohdistettu arvo askelpalauttimella.",
+    "select-option-selected": "Vaihtoehto {label}, valittu.",
+    "select-options-selected": "{count, plural, one {Vaihtoehto {labels}, valittu.} other {Vaihtoehdot {labels}, valittu.}}",
+    "select-option-deselected": "Vaihtoehdon {label} valinta poistettu.",
+    "select-option-disabled": "Vaihtoehto {label} ei ole käytettävissä. Valitse toinen vaihtoehto.",
+    "select-options-cleared": "Kaikki valinnat on poistettu.",
+    "select-value-focused": "Arvo {label} kohdistettu, {index}/{total}.",
+    "select-option-focused": "{label}{selected, select, true {, valittu} other {}}{disabled, select, true {, ei käytettävissä} other {}}, {index}/{total}."
 }

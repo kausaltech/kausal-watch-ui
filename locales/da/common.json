@@ -205,5 +205,20 @@
     "select-sector-for-actions": "Vælg en emissionssektor for at se relaterede handlinger",
     "no-phase": "Ingen fase",
     "no-status": "Ingen status",
-    "content-could-not-be-displayed": "Vi kan i øjeblikket ikke vise dette indhold. Prøv venligst at genindlæse siden. En rapport er blevet sendt til vores team for at undersøge problemet."
+    "content-could-not-be-displayed": "Vi kan i øjeblikket ikke vise dette indhold. Prøv venligst at genindlæse siden. En rapport er blevet sendt til vores team for at undersøge problemet.",
+    "select-field": "Valgfelt",
+    "select-no-options": "Ingen valgmuligheder",
+    "select-loading": "Indlæser…",
+    "select-results-available": "{count, plural, one {# resultat tilgængeligt} other {# resultater tilgængelige}}",
+    "select-results-for-term": "{results} for søgetermen {term}.",
+    "select-guidance-menu": "Brug pil op og pil ned til at gennemse valgmulighederne, tryk på Enter for at vælge den markerede valgmulighed, tryk på Esc for at lukke menuen{tabSelects, select, true {, tryk på Tab for at vælge valgmuligheden og lukke menuen} other {}}.",
+    "select-guidance-input": "{label} har fokus{searchable, select, true {, skriv for at filtrere listen} other {}}, tryk på pil ned for at åbne menuen{multi, select, true {, tryk på pil venstre for at flytte fokus til de valgte værdier} other {}}.",
+    "select-guidance-value": "Brug pil venstre og pil højre til at flytte mellem de valgte værdier, tryk på Tilbage for at fjerne den markerede værdi.",
+    "select-option-selected": "Valgmuligheden {label}, valgt.",
+    "select-options-selected": "{count, plural, one {Valgmuligheden {labels}, valgt.} other {Valgmulighederne {labels}, valgte.}}",
+    "select-option-deselected": "Valgmuligheden {label}, fravalgt.",
+    "select-option-disabled": "Valgmuligheden {label} er deaktiveret. Vælg en anden valgmulighed.",
+    "select-options-cleared": "Alle valg er ryddet.",
+    "select-value-focused": "Værdien {label} har fokus, {index} af {total}.",
+    "select-option-focused": "{label}{selected, select, true {, valgt} other {}}{disabled, select, true {, deaktiveret} other {}}, {index} af {total}."
 }

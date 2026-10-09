@@ -1,0 +1,17 @@
+{
+    "select-field": "Lista wyboru",
+    "select-no-options": "Brak opcji",
+    "select-loading": "Ładowanie…",
+    "select-results-available": "{count, plural, one {# dostępny wynik} few {# dostępne wyniki} many {# dostępnych wyników} other {# dostępnego wyniku}}",
+    "select-results-for-term": "{results} dla wyszukiwanej frazy {term}.",
+    "select-guidance-menu": "Użyj strzałek w górę i w dół, aby przeglądać opcje, naciśnij Enter, aby wybrać zaznaczoną opcję, naciśnij Esc, aby zamknąć menu{tabSelects, select, true {, naciśnij Tab, aby wybrać opcję i zamknąć menu} other {}}.",
+    "select-guidance-input": "Pole {label} jest aktywne{searchable, select, true {, wpisz tekst, aby zawęzić listę} other {}}, naciśnij strzałkę w dół, aby otworzyć menu{multi, select, true {, naciśnij strzałkę w lewo, aby przejść do wybranych wartości} other {}}.",
+    "select-guidance-value": "Użyj strzałek w lewo i w prawo, aby przechodzić między wybranymi wartościami, naciśnij Backspace, aby usunąć zaznaczoną wartość.",
+    "select-option-selected": "Opcja {label}, wybrana.",
+    "select-options-selected": "{count, plural, one {Opcja {labels}, wybrana.} few {Opcje {labels}, wybrane.} many {Opcje {labels}, wybrane.} other {Opcje {labels}, wybrane.}}",
+    "select-option-deselected": "Opcja {label}, odznaczona.",
+    "select-option-disabled": "Opcja {label} jest niedostępna. Wybierz inną opcję.",
+    "select-options-cleared": "Wszystkie wybrane opcje zostały usunięte.",
+    "select-value-focused": "Wartość {label} aktywna, {index} z {total}.",
+    "select-option-focused": "{label}{selected, select, true {, wybrana} other {}}{disabled, select, true {, niedostępna} other {}}, {index} z {total}."
+}

@@ -206,5 +206,20 @@
     "feedback-thankyou-header": "Saņemtās atsauksmes",
     "open": "atvērts",
     "other-plans-only": "Meklēt tikai citu pilsētu plānos",
-    "updated": "Atjaunināts"
+    "updated": "Atjaunināts",
+    "select-field": "Izvēles lauks",
+    "select-no-options": "Nav opciju",
+    "select-loading": "Ielādē…",
+    "select-results-available": "{count, plural, =0 {Nav pieejamu rezultātu} zero {# rezultāti pieejami} one {# rezultāts pieejams} other {# rezultāti pieejami}}",
+    "select-results-for-term": "{results} meklēšanas vaicājumam {term}.",
+    "select-guidance-menu": "Izmantojiet bulttaustiņus uz augšu un uz leju, lai pārvietotos starp opcijām, nospiediet Enter, lai atlasītu fokusā esošo opciju, nospiediet Escape, lai izietu no izvēlnes{tabSelects, select, true {, nospiediet Tab, lai atlasītu opciju un izietu no izvēlnes} other {}}.",
+    "select-guidance-input": "Fokusā ir {label}{searchable, select, true {, rakstiet, lai sašaurinātu sarakstu} other {}}, nospiediet bulttaustiņu uz leju, lai atvērtu izvēlni{multi, select, true {, nospiediet bulttaustiņu pa kreisi, lai pārietu uz atlasītajām vērtībām} other {}}.",
+    "select-guidance-value": "Izmantojiet bulttaustiņus pa kreisi un pa labi, lai pārvietotos starp atlasītajām vērtībām, nospiediet Backspace, lai noņemtu fokusā esošo vērtību.",
+    "select-option-selected": "Opcija {label}, atlasīta.",
+    "select-options-selected": "{count, plural, =1 {Opcija {labels}, atlasīta.} zero {Opcijas {labels}, atlasītas.} one {Opcijas {labels}, atlasītas.} other {Opcijas {labels}, atlasītas.}}",
+    "select-option-deselected": "Opcijas {label} atlase atcelta.",
+    "select-option-disabled": "Opcija {label} ir atspējota. Atlasiet citu opciju.",
+    "select-options-cleared": "Visas atlasītās opcijas ir noņemtas.",
+    "select-value-focused": "Fokusā vērtība {label}, {index} no {total}.",
+    "select-option-focused": "{label}{selected, select, true {, atlasīta} other {}}{disabled, select, true {, atspējota} other {}}, {index} no {total}."
 }
