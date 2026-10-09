@@ -6,6 +6,8 @@ import { useTranslations } from 'next-intl';
 
 import Button from '@/components/common/Button';
 
+import { usePledgeAccountContent } from './use-pledge-account-content';
+
 const StyledCard = styled.div`
   background: ${({ theme }) => theme.brandDark};
   color: ${({ theme }) => theme.themeColors.white};
@@ -41,11 +43,12 @@ type Props = {
 
 function PledgeCreateAccountCard({ onCreateAccount }: Props) {
   const t = useTranslations();
+  const { title, description } = usePledgeAccountContent();
 
   return (
     <StyledCard>
-      <StyledTitle>{t('pledge-create-account-title')}</StyledTitle>
-      <StyledDescription>{t('pledge-create-account-description')}</StyledDescription>
+      <StyledTitle>{title}</StyledTitle>
+      <StyledDescription>{description}</StyledDescription>
       <StyledButton size="small" color="light" onClick={onCreateAccount}>
         {t('pledge-create-account-button')}
       </StyledButton>
