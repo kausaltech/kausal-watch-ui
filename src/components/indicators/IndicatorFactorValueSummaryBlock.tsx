@@ -14,6 +14,7 @@ import {
   ValueLabel,
   ValueSummary,
   ValueUnit,
+  isLongUnit,
 } from './IndicatorSummary.styles';
 import { getComputedMetricSeries } from './indicatorFactorUtils';
 
@@ -103,7 +104,9 @@ export default function IndicatorFactorValueSummaryBlock({ block, indicator }: P
                     {format.number(reference.value, {
                       maximumSignificantDigits: indicator.valueRounding ?? undefined,
                     })}
-                    {metric.unit && <ValueUnit>{metric.unit}</ValueUnit>}
+                    {metric.unit && (
+                      <ValueUnit $long={isLongUnit(metric.unit)}>{metric.unit}</ValueUnit>
+                    )}
                   </div>
                 </ValueDisplay>
               </ValueBlock>
@@ -116,7 +119,9 @@ export default function IndicatorFactorValueSummaryBlock({ block, indicator }: P
                     {format.number(latest.value, {
                       maximumSignificantDigits: indicator.valueRounding ?? undefined,
                     })}
-                    {metric.unit && <ValueUnit>{metric.unit}</ValueUnit>}
+                    {metric.unit && (
+                      <ValueUnit $long={isLongUnit(metric.unit)}>{metric.unit}</ValueUnit>
+                    )}
                   </div>
                 </ValueDisplay>
               </ValueBlock>
