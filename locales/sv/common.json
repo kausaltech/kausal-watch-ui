@@ -213,5 +213,20 @@
     "collapse-row": "Kollapsa rad",
     "expand-embed": "Expandera",
     "click-to-interact-embed": "Klicka för att interagera med det här innehållet",
-    "expand-row": "Expandera"
+    "expand-row": "Expandera",
+    "select-field": "Urvalsfält",
+    "select-no-options": "Inga alternativ",
+    "select-loading": "Läser in…",
+    "select-results-available": "{count, plural, one {# resultat tillgängligt} other {# resultat tillgängliga}}",
+    "select-results-for-term": "{results} för sökordet {term}.",
+    "select-guidance-menu": "Använd uppåt- och nedåtpilarna för att bläddra bland alternativen, tryck på Retur för att välja det markerade alternativet, tryck på Esc för att stänga menyn{tabSelects, select, true {, tryck på Tabb för att välja alternativet och stänga menyn} other {}}.",
+    "select-guidance-input": "{label} har fokus{searchable, select, true {, skriv för att filtrera listan} other {}}, tryck på nedåtpilen för att öppna menyn{multi, select, true {, tryck på vänsterpilen för att flytta fokus till valda värden} other {}}.",
+    "select-guidance-value": "Använd vänster- och högerpilarna för att flytta mellan valda värden, tryck på Backsteg för att ta bort det markerade värdet.",
+    "select-option-selected": "Alternativet {label}, valt.",
+    "select-options-selected": "{count, plural, one {Alternativet {labels}, valt.} other {Alternativen {labels}, valda.}}",
+    "select-option-deselected": "Alternativet {label}, avmarkerat.",
+    "select-option-disabled": "Alternativet {label} är inaktiverat. Välj ett annat alternativ.",
+    "select-options-cleared": "Alla valda alternativ har rensats.",
+    "select-value-focused": "Värdet {label} har fokus, {index} av {total}.",
+    "select-option-focused": "{label}{selected, select, true {, valt} other {}}{disabled, select, true {, inaktiverat} other {}}, {index} av {total}."
 }

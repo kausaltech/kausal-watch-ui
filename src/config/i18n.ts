@@ -10,6 +10,12 @@ import {
 
 type Messages = Record<string, unknown>;
 
+/** Both webpack and Turbopack tag unresolvable dynamic imports with this code. */
+function isModuleNotFound(error: unknown): boolean {
+  const code = (error as { code?: unknown } | null)?.code;
+  return code === 'MODULE_NOT_FOUND' || code === 'ERR_MODULE_NOT_FOUND';
+}
+
 async function importLocale(locale: string, file: LocaleFile): Promise<Messages> {
   try {
     const localeModule = (await import(`../../locales/${locale}/${file}.json`)) as {
@@ -18,6 +24,9 @@ async function importLocale(locale: string, file: LocaleFile): Promise<Messages>
 
     return localeModule.default;
   } catch (error) {
+    // A locale may ship only some files (or none); the fallback chain covers
+    // the rest, so a missing file is expected and not worth a Sentry event.
+    if (isModuleNotFound(error)) return {};
     console.warn(`kausal-watch-ui > Failed to load ${file} translations for ${locale}`);
     Sentry.captureException(error);
     return {};

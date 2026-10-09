@@ -212,5 +212,20 @@
     "ui-sign-out": "Sair do sistema",
     "action-versions": "Versões de ação",
     "accessibility": "Acessibilidade",
-    "action": "{context, select, CASE_STUDY {Estudo de caso} STRATEGY {Estratégia} outro {Ação}}"
+    "action": "{context, select, CASE_STUDY {Estudo de caso} STRATEGY {Estratégia} outro {Ação}}",
+    "select-field": "Campo de seleção",
+    "select-no-options": "Nenhuma opção",
+    "select-loading": "Carregando…",
+    "select-results-available": "{count, plural, =0 {Nenhum resultado disponível} one {# resultado disponível} other {# resultados disponíveis}}",
+    "select-results-for-term": "{results} para o termo de pesquisa {term}.",
+    "select-guidance-menu": "Use as setas para cima e para baixo para percorrer as opções, pressione Enter para selecionar a opção em foco, pressione Esc para sair do menu{tabSelects, select, true {, pressione Tab para selecionar a opção e sair do menu} other {}}.",
+    "select-guidance-input": "{label} em foco{searchable, select, true {, digite para filtrar a lista} other {}}, pressione a seta para baixo para abrir o menu{multi, select, true {, pressione a seta para a esquerda para ir aos valores selecionados} other {}}.",
+    "select-guidance-value": "Use as setas para a esquerda e para a direita para navegar entre os valores selecionados, pressione Backspace para remover o valor em foco.",
+    "select-option-selected": "Opção {label}, selecionada.",
+    "select-options-selected": "{count, plural, one {Opção {labels}, selecionada.} other {Opções {labels}, selecionadas.}}",
+    "select-option-deselected": "Opção {label}, desmarcada.",
+    "select-option-disabled": "A opção {label} está desativada. Selecione outra opção.",
+    "select-options-cleared": "Todas as opções selecionadas foram removidas.",
+    "select-value-focused": "Valor {label} em foco, {index} de {total}.",
+    "select-option-focused": "{label}{selected, select, true {, selecionada} other {}}{disabled, select, true {, desativada} other {}}, {index} de {total}."
 }

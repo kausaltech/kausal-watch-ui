@@ -4,9 +4,12 @@ import { useTheme } from '@emotion/react';
 import type { Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import { useTranslations } from 'next-intl';
 import Highlighter from 'react-highlight-words';
 import Select, {
+  type AriaLiveMessages,
   type DropdownIndicatorProps,
+  type GroupBase,
   type MultiValueProps,
   type OptionProps,
   type Props as ReactSelectProps,
@@ -247,9 +250,96 @@ type SelectDropdownProps<Option extends SelectDropdownOption> = Omit<
   onChange: (option: SelectDropdownOption[] | SelectDropdownOption | null) => void;
 };
 
+type SelectAriaLiveMessages = AriaLiveMessages<
+  SelectDropdownOption,
+  boolean,
+  GroupBase<SelectDropdownOption>
+>;
+
+/** "2 of 5" position of `item`, as react-select announces it; null when unknown. */
+function getPosition(items: readonly unknown[] | undefined, item: unknown) {
+  return items?.length ? { index: items.indexOf(item) + 1, total: items.length } : null;
+}
+
+/**
+ * react-select hard-codes its menu notices and screen-reader announcements in
+ * English. These follow its defaults, but come from our message files.
+ */
+function useSelectMessages(label: string | undefined) {
+  const t = useTranslations();
+
+  const ariaLiveMessages: SelectAriaLiveMessages = {
+    guidance: (props) => {
+      switch (props.context) {
+        case 'menu':
+          return t('select-guidance-menu', { tabSelects: String(props.tabSelectsValue) });
+        case 'input':
+          return props.isInitialFocus
+            ? t('select-guidance-input', {
+                label: props['aria-label'] ?? label ?? t('select-field'),
+                searchable: String(props.isSearchable),
+                multi: String(props.isMulti),
+              })
+            : '';
+        case 'value':
+          return t('select-guidance-value');
+        default:
+          return '';
+      }
+    },
+    onChange: ({ action, label = '', labels, isDisabled }) => {
+      switch (action) {
+        case 'deselect-option':
+        case 'pop-value':
+        case 'remove-value':
+          return t('select-option-deselected', { label });
+        case 'clear':
+          return t('select-options-cleared');
+        case 'initial-input-focus':
+          return t('select-options-selected', { count: labels.length, labels: labels.join(', ') });
+        case 'select-option':
+          return isDisabled
+            ? t('select-option-disabled', { label })
+            : t('select-option-selected', { label });
+        default:
+          return '';
+      }
+    },
+    onFocus: (props) => {
+      const { context, focused, label = '', isDisabled, isSelected, isAppleDevice } = props;
+      if (context === 'value') {
+        const position = getPosition(props.selectValue, focused);
+        return position ? t('select-value-focused', { label, ...position }) : '';
+      }
+      // Like react-select, only announce menu options on Apple devices; other
+      // screen readers read the focused option out themselves.
+      const position = getPosition(props.options, focused);
+      if (!isAppleDevice || !position) return '';
+      return t('select-option-focused', {
+        label,
+        selected: String(isSelected),
+        disabled: String(isDisabled),
+        ...position,
+      });
+    },
+    onFilter: ({ inputValue, resultsMessage }) =>
+      inputValue
+        ? t('select-results-for-term', { results: resultsMessage, term: inputValue })
+        : `${resultsMessage}.`,
+  };
+
+  return {
+    ariaLiveMessages,
+    noOptionsMessage: () => t('select-no-options'),
+    loadingMessage: () => t('select-loading'),
+    screenReaderStatus: ({ count }: { count: number }) => t('select-results-available', { count }),
+  };
+}
+
 function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdownProps<Option>) {
   const { size, id, label, value, onChange, helpText, invert, isMulti = false, ...rest } = props;
   const theme = useTheme();
+  const selectMessages = useSelectMessages(label);
   const styles = getSelectStyles(theme, props.isMulti === true, size);
   const isClient = useSyncExternalStore(
     () => () => undefined,
@@ -289,6 +379,7 @@ function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdo
           styles={styles}
           getOptionLabel={(option) => option.label}
           getOptionValue={(option) => option.id}
+          {...selectMessages}
           formatOptionLabel={(option, meta) => {
             const { inputValue } = meta;
             const { label } = option;

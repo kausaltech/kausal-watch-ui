@@ -16,6 +16,7 @@ const FALLBACKS: Record<string, string> = {
   'en-GB': 'en',
   'de-CH': 'de',
   'es-US': 'es',
+  'fr-CA': 'fr',
   'sv-FI': 'sv',
 };
 
