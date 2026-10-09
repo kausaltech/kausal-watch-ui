@@ -182,7 +182,7 @@ function IndicatorGraph({
       timeResolution,
       goalColors: colors.goalColors,
       goalSymbol: goalSymbol(graphSettings.goalSymbol),
-      drawGoalLine: graphSettings.drawGoalLine,
+      connectGoals: graphSettings.connectGoals,
       formatValue,
     });
 
@@ -333,7 +333,7 @@ function IndicatorGraph({
     colors.totalLineColor,
     colors.trendColor,
     goalTraces,
-    graphSettings.drawGoalLine,
+    graphSettings.connectGoals,
     graphSettings.categorySymbols,
     graphSettings.goalSymbol,
     chartBackground,

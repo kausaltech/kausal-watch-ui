@@ -36,6 +36,8 @@ export interface GraphsTheme {
   categorySymbols?: string[];
   /** Goal marker symbol, as an ECharts name */
   goalSymbol?: string;
+  /** Draw a lone goal's level as a horizontal line across the chart */
+  drawGoalLine?: boolean;
   /** Tenant-configured chart background; the canvas is white when unset. */
   customBackground?: string;
 }
@@ -235,6 +237,8 @@ export function buildTotalSeries(
  * Goal markers, one scatter series per scenario so that targets from
  * different scenarios keep their own name and color, like the generic
  * indicator graph. Goals without a scenario fall back to the plain label.
+ * With `drawGoalLine`, a single goal in a single scenario also gets its
+ * level drawn across the chart (the bar and area blocks use this).
  */
 export function buildGoalSeries(
   indicator: LineChartBlock['indicator'],
@@ -244,7 +248,10 @@ export function buildGoalSeries(
   timeResolution?: string | null,
   formatValue: (value: number) => string = String,
   /** Resolved ECharts symbol (see goalSymbol() in indicator-graph.utils) */
-  symbol: string = DEFAULT_GOAL_SYMBOL
+  symbol: string = DEFAULT_GOAL_SYMBOL,
+  drawGoalLine = false,
+  /** Color of the lone goal's level line; the goal color when unset */
+  goalLevelColor?: string
 ) {
   type Goal = NonNullable<NonNullable<LineChartBlock['indicator']>['goals']>[number];
   const byScenario = new Map<string | null, { name: string; goals: Array<NonNullable<Goal>> }>();
@@ -258,6 +265,12 @@ export function buildGoalSeries(
     group.goals.push(goal);
     byScenario.set(scenarioId, group);
   });
+
+  const goalValues =
+    byScenario.size === 1
+      ? Array.from(byScenario.values())[0].goals.filter((goal) => goal.value != null)
+      : [];
+  const goalLevel = drawGoalLine && goalValues.length === 1 ? goalValues[0].value : null;
 
   return Array.from(byScenario.values(), ({ name, goals }, idx) => {
     const color = goalLineColors[idx % goalLineColors.length] ?? '#3E9C88';
@@ -279,6 +292,24 @@ export function buildGoalSeries(
           return `${escapeHtml(name)}: ${formatted} ${escapeHtml(unit)}`.trim();
         },
       },
+      ...(goalLevel != null && {
+        // Mark lines default to z 5, above every series; lift the goal
+        // marker over its own level line
+        z: 6,
+        markLine: {
+          silent: true,
+          z: 5,
+          symbol: 'none' as const,
+          label: { show: false },
+          lineStyle: {
+            width: 2,
+            type: 'dashed' as const,
+            color: goalLevelColor ?? color,
+            opacity: 0.5,
+          },
+          data: [{ yAxis: goalLevel }],
+        },
+      }),
     };
   });
 }

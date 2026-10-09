@@ -2,6 +2,7 @@ import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
 
 import {
   applyGoalMarkers,
+  buildGoalSeries,
   buildTimeTooltipFormatter,
   buildTimeXAxis,
   collectChartDates,
@@ -108,6 +109,24 @@ describe('parseGraphSettings', () => {
   it('drops non-string values and tolerates missing settings', () => {
     expect(parseGraphSettings({ customBackground: 42 }).customBackground).toBeUndefined();
     expect(parseGraphSettings(undefined).customBackground).toBeUndefined();
+  });
+});
+
+describe('buildGoalSeries', () => {
+  const build = (connectGoals?: boolean) =>
+    buildGoalSeries({
+      goalTraces: [{ name: 'Goal', x: ['2025-01-01', '2030-01-01'], y: [50, 42] }],
+      allDates: ['2020-01-01', '2025-01-01', '2030-01-01'],
+      timeResolution: 'YEAR',
+      goalColors: ['#123456'],
+      goalSymbol: 'circle',
+      connectGoals,
+      formatValue: String,
+    });
+
+  it('connects goals only when connectGoals is set', () => {
+    expect(build(true)[0].lineStyle).toMatchObject({ width: 2, type: 'dashed' });
+    expect(build()[0].lineStyle?.width).toBe(0);
   });
 });
 

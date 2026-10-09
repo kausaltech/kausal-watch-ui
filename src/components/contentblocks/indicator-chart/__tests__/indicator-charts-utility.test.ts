@@ -98,6 +98,45 @@ describe('buildGoalSeries', () => {
   });
 });
 
+describe('buildGoalSeries goal line', () => {
+  const colors = ['#111', '#222'];
+  const build = (goals: ReturnType<typeof goal>[], drawGoalLine?: boolean) =>
+    buildGoalSeries(indicator(goals), 'kt', colors, 'Goal', 'YEAR', String, 'circle', drawGoalLine);
+
+  it('draws a lone goal level across the chart', () => {
+    const [series] = build([goal('1', '2030-01-01', 10)], true);
+    expect(series.markLine?.data).toEqual([{ yAxis: 10 }]);
+    expect(series.markLine?.lineStyle).toMatchObject({ type: 'dashed', color: colors[0] });
+    const [grey] = buildGoalSeries(
+      indicator([goal('1', '2030-01-01', 10)]),
+      'kt',
+      colors,
+      'Goal',
+      'YEAR',
+      String,
+      'circle',
+      true,
+      '#777'
+    );
+    expect(grey.markLine?.lineStyle.color).toBe('#777');
+  });
+
+  it('draws no goal level when disabled or when there are several goals', () => {
+    expect(build([goal('1', '2030-01-01', 10)])[0].markLine).toBeUndefined();
+    expect(
+      build([goal('1', '2025-01-01', 20), goal('2', '2030-01-01', 10)], true)[0].markLine
+    ).toBeUndefined();
+    const twoScenarios = build(
+      [
+        goal('1', '2030-01-01', 10, { id: 'a', name: 'A' }),
+        goal('2', '2030-01-01', 5, { id: 'b', name: 'B' }),
+      ],
+      true
+    );
+    expect(twoScenarios.map((s) => s.markLine)).toEqual([undefined, undefined]);
+  });
+});
+
 describe('tooltip HTML escaping', () => {
   it('escapes scenario names and units in goal tooltips', () => {
     const [series] = buildGoalSeries(
