@@ -4954,7 +4954,15 @@ export type ActionDetailsQuery_action_responsibleParties_organization = { __type
 
 export type ActionDetailsQuery_action_responsibleParties = { __typename: 'ActionResponsibleParty', id: string, role: ActionResponsiblePartyRole | null, specifier: string, organization: ActionDetailsQuery_action_responsibleParties_organization };
 
-export type ActionDetailsQuery_action_tasks = { __typename: 'ActionTask', id: string, name: string, dueAt: string, dateFormat: ActionTaskDateFormat | null, completedAt: string | null, details: string | null, state: ActionTaskState };
+export type ActionDetailsQuery_action_tasks_responsibleParties_organization = { __typename: 'Organization', id: string, abbreviation: string | null, name: string };
+
+export type ActionDetailsQuery_action_tasks_responsibleParties = { __typename: 'ActionTaskResponsibleParty', id: string, organization: ActionDetailsQuery_action_tasks_responsibleParties_organization };
+
+export type ActionDetailsQuery_action_tasks_contactPersons_person = { __typename: 'Person', id: string, firstName: string, lastName: string };
+
+export type ActionDetailsQuery_action_tasks_contactPersons = { __typename: 'ActionTaskContactPerson', id: string, person: ActionDetailsQuery_action_tasks_contactPersons_person };
+
+export type ActionDetailsQuery_action_tasks = { __typename: 'ActionTask', id: string, name: string, dueAt: string, dateFormat: ActionTaskDateFormat | null, completedAt: string | null, details: string | null, state: ActionTaskState, responsibleParties: Array<ActionDetailsQuery_action_tasks_responsibleParties>, contactPersons: Array<ActionDetailsQuery_action_tasks_contactPersons> };
 
 export type ActionDetailsQuery_action_status = { __typename: 'ActionStatus', id: string, identifier: string, name: string, color: string };
 
