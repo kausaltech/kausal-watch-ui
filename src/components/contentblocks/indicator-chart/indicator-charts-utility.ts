@@ -592,13 +592,15 @@ function fillMissingPeriods(
 
 /**
  * Collects and sorts all unique dates from multiple raw series arrays,
- * filling gap periods so the axis is a continuous timeline.
+ * by default filling gap periods so the axis is a continuous timeline.
  * Returns both the sorted normalized dates and the display-formatted categories.
  */
 export function collectAllDates(
   sources: Array<[string, number][]>,
   timeResolution: string | null | undefined,
-  additionalDates?: (string | number)[]
+  additionalDates?: (string | number)[],
+  /** Bars stay readable without the gap slots, which would only thin them */
+  fillGaps = true
 ): { allDates: string[]; xCategories: string[] } {
   const normalizedDateSet = new Set<string>();
 
@@ -611,7 +613,7 @@ export function collectAllDates(
   additionalDates?.forEach((date) => normalizedDateSet.add(normalizeDate(date, resolution)));
 
   const sortedDates = Array.from(normalizedDateSet).sort(compareDates);
-  const allDates = fillMissingPeriods(sortedDates, timeResolution);
+  const allDates = fillGaps ? fillMissingPeriods(sortedDates, timeResolution) : sortedDates;
   const xCategories = allDates.map((d) => formatDateLabel(d, resolution));
 
   return { allDates, xCategories };

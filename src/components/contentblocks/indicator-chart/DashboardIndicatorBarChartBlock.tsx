@@ -146,10 +146,13 @@ const DashboardIndicatorBarChartBlock = ({
     // Goals lie beyond the last observation; the axis must reach them
     const goalDates = goalSeries.flatMap((series) => series.data.map(([key]) => key));
 
+    // Only years with data or goals get a slot: filling the gaps up to a
+    // distant goal year would leave the bars very thin
     xCategories = collectAllDates(
       dimSeries.map((d) => d.raw),
       timeResolution,
-      goalDates
+      goalDates,
+      false
     ).xCategories;
 
     // An explicit block barType wins over the indicator's own
