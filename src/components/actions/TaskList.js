@@ -149,9 +149,14 @@ const ListGroupItem = styled.li`
   }
 `;
 
-function parseTimestamp(timestamp) {
-  const timeFormat = 'L';
-  return dayjs(timestamp).format(timeFormat);
+// Due and completion dates are plain dates (YYYY-MM-DD), which parse as UTC
+// midnight; format them in UTC so they don't shift a day west of Greenwich
+function formatTaskDate(date, locale, dateFormat) {
+  if (!date) return null;
+  return new Date(date).toLocaleDateString(locale, {
+    ...getDateFormat(dateFormat),
+    timeZone: 'UTC',
+  });
 }
 
 const Task = (props) => {
@@ -164,14 +169,13 @@ const Task = (props) => {
   const plan = usePlan();
 
   const dateFormat = task.dateFormat || plan.actionListPage?.taskDateFormat;
-  const formattedDueAt = new Date(task.dueAt).toLocaleDateString(locale, getDateFormat(dateFormat));
 
   return (
     <TaskWrapper>
       {completed ? (
         <TaskMeta>
           <Icon.Check color={theme.graphColors.green050} alt={t('action-task-done')} />
-          <StyledDate>{parseTimestamp(task.completedAt)}</StyledDate>
+          <StyledDate>{formatTaskDate(task.completedAt, locale, dateFormat)}</StyledDate>
         </TaskMeta>
       ) : (
         <TaskMeta>
@@ -179,7 +183,7 @@ const Task = (props) => {
             color={late ? theme.graphColors.red070 : theme.graphColors.blue070}
             alt={t(task.state === 'CANCELLED' ? 'action-task-cancelled' : 'action-task-todo')}
           />
-          <StyledDate>{formattedDueAt}</StyledDate>
+          <StyledDate>{formatTaskDate(task.dueAt, locale, dateFormat)}</StyledDate>
           {late && <LateLabel>{t('action-task-late')}</LateLabel>}
         </TaskMeta>
       )}
