@@ -94,6 +94,24 @@ const TaskContent = styled.div`
   }
 `;
 
+const TaskAssignees = styled.dl`
+  margin: ${(props) => props.theme.spaces.s025} 0 0;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
+  color: ${(props) => props.theme.textColor.secondary};
+
+  dt {
+    display: inline;
+    font-weight: ${(props) => props.theme.fontWeightBold};
+    margin-right: ${(props) => props.theme.spaces.s025};
+  }
+
+  dd {
+    display: inline;
+    margin: 0;
+  }
+`;
+
 const ListGroup = styled.ul`
   display: flex;
   flex-direction: column;
@@ -159,6 +177,9 @@ const Task = (props) => {
   const plan = usePlan();
 
   const dateFormat = task.dateFormat || plan.actionListPage?.taskDateFormat;
+  // Empty unless the plan has the task assignees feature
+  const responsibleParties = task.responsibleParties ?? [];
+  const contactPersons = task.contactPersons ?? [];
 
   return (
     <TaskWrapper>
@@ -175,6 +196,28 @@ const Task = (props) => {
       )}
       <TaskContent>
         <h4 className="task-title">{task.name}</h4>
+        {(responsibleParties.length > 0 || contactPersons.length > 0) && (
+          <TaskAssignees>
+            {responsibleParties.length > 0 && (
+              <div>
+                <dt>
+                  {t('responsible-parties', { context: plan.generalContent?.organizationTerm })}:
+                </dt>
+                <dd>{responsibleParties.map((rp) => rp.organization.name).join(', ')}</dd>
+              </div>
+            )}
+            {contactPersons.length > 0 && (
+              <div>
+                <dt>{t('contact-persons')}:</dt>
+                <dd>
+                  {contactPersons
+                    .map((cp) => `${cp.person.firstName} ${cp.person.lastName}`.trim())
+                    .join(', ')}
+                </dd>
+              </div>
+            )}
+          </TaskAssignees>
+        )}
         {/* Strip HTML tags to see if details field is actually empty */}
         {task.details?.replace(/(<([^>]+)>)/gi, '').length > 0 && (
           <>
@@ -203,11 +246,28 @@ const Task = (props) => {
 
 const taskShape = {
   completedAt: PropTypes.string,
+  contactPersons: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      person: PropTypes.shape({
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
+      }).isRequired,
+    })
+  ),
   dateFormat: PropTypes.string,
   details: PropTypes.string,
   dueAt: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  responsibleParties: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      organization: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }).isRequired,
+    })
+  ),
   state: PropTypes.string.isRequired,
 };
 
