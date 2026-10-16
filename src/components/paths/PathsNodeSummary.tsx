@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 
 import { NetworkStatus } from '@apollo/client';
-import { useReactiveVar } from '@apollo/client/react';
 import { captureException } from '@sentry/nextjs';
 import ContentLoader from 'react-content-loader';
-
-import { activeGoalVar } from '@common/apollo/paths-cache';
 
 import type {
   GetInstanceContextQuery,
@@ -15,8 +12,9 @@ import type {
   GetNodeContentQueryVariables,
 } from '@/common/__generated__/paths/graphql';
 import { usePaths } from '@/context/paths/paths';
-import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
-import { usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
+import { GET_NODE_CONTENT, getNodeContentVariables } from '@/queries/paths/get-paths-node';
+import { usePreloadedPathsQuery } from '@/utils/paths/hooks/usePathsApollo';
+import { useActiveGoal } from '@/utils/paths/hooks/usePathsSettings';
 
 import ActionNodeSummary from './ActionNodeSummary';
 import InventoryNodeSummary from './InventoryNodeSummary';
@@ -49,11 +47,22 @@ type PathsNodeContentProps = {
   targetNodeId?: string | null;
 };
 
-const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
+/**
+ * The node data may be preloaded on the server and streamed in. Until it has
+ * arrived nothing is shown, as before hydration when it is fetched in the
+ * browser.
+ */
+const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => (
+  <Suspense fallback={null}>
+    <PathsNodeSummaryContent {...props} />
+  </Suspense>
+));
+
+function PathsNodeSummaryContent(props: PathsNodeContentProps) {
   const { categoryId, node, onLoaded, targetNodeId } = props;
   const paths = usePaths();
   const pathsInstance = paths?.instance;
-  const activeGoal = useReactiveVar(activeGoalVar);
+  const activeGoal = useActiveGoal();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -72,16 +81,12 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
       : undefined;
   displayGoals?.sort((a) => (a.id === activeGoal?.id ? -1 : 1));
 
-  const { data, loading, error, networkStatus } = usePathsQuery<
+  const { data, loading, error, networkStatus } = usePreloadedPathsQuery<
     GetNodeContentQuery,
     GetNodeContentQueryVariables
   >(GET_NODE_CONTENT, {
     fetchPolicy: 'no-cache',
-    variables: {
-      node: node,
-      goal: actionImpactGoal?.id ?? 'net_emissions',
-      targetNodeId: targetNodeId ?? null,
-    },
+    variables: getNodeContentVariables(node, pathsInstance?.goals, targetNodeId),
     notifyOnNetworkStatusChange: true,
     skip: !pathsInstance,
   });
@@ -136,7 +141,7 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
     }
     return null;
   }
-});
+}
 
 PathsNodeSummary.displayName = 'PathsNodeSummary';
 

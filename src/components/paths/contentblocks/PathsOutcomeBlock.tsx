@@ -25,10 +25,9 @@ import { Card, CardBody } from '@/components/common/CardParts';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
-import { usePreloadedOutcomeNode } from '@/components/providers/PathsPreloadProvider';
 import { usePaths } from '@/context/paths/paths';
 import { GET_OUTCOME_NODE, getOutcomeNodeVariables } from '@/queries/paths/get-paths-page';
-import { usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
+import { usePreloadedPathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 import {
   useActiveGoal,
   useActiveScenario,
@@ -196,11 +195,9 @@ function PathsOutcomeBlockContent(props: PathsOutcomeBlockProps) {
 
   // router.push(pathname + '?' + createQueryString('sort', 'asc'))
   const variables = getOutcomeNodeVariables(outcomeNodeId, activeGoal?.id ?? null);
-  const preloaded = usePreloadedOutcomeNode(variables);
-  const queryResp = usePathsQuery<GetOutcomeNodeContentQuery>(GET_OUTCOME_NODE, {
+  const queryResp = usePreloadedPathsQuery<GetOutcomeNodeContentQuery>(GET_OUTCOME_NODE, {
     variables,
-    // Preloaded data was just fetched on the server for this visitor's session
-    fetchPolicy: preloaded ? 'cache-first' : 'cache-and-network',
+    fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
 

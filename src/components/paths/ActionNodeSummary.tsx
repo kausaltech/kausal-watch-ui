@@ -3,10 +3,7 @@ import React, { useEffect } from 'react';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
-
-import { yearRangeVar } from '@common/apollo/paths-cache';
 
 import type {
   GetInstanceContextQuery,
@@ -16,6 +13,7 @@ import useNumberFormatter from '@/common/numbers';
 import ActionParameters from '@/components/paths/ActionParameters';
 import HighlightValue from '@/components/paths/HighlightValue';
 import PathsActionNode from '@/utils/paths/PathsActionNode';
+import { useYearRange } from '@/utils/paths/hooks/usePathsSettings';
 
 const ValuesContainer = styled.div`
   display: flex;
@@ -73,7 +71,7 @@ const ActionNodeSummary = (props: PathsActionNodeContentProps) => {
   const t = useTranslations();
   const theme = useTheme();
   const formatNumber = useNumberFormatter({ scope: 'paths' });
-  const yearRange = useReactiveVar(yearRangeVar);
+  const yearRange = useYearRange();
   const pathsAction = new PathsActionNode(node);
 
   const impact = yearRange ? pathsAction.getYearlyImpact(yearRange[1]) || 0 : 0;
