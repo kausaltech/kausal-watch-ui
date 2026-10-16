@@ -27,3 +27,6 @@ export const STATIC_ROUTES = [
 ];
 
 export const API_PROXY_PATH = '/api/graphql';
+
+/** Route that proxies browser requests to the Paths GraphQL API */
+export const PATHS_API_PROXY_PATH = '/api/graphql-paths';

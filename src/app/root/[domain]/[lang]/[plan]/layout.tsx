@@ -19,6 +19,7 @@ import IntroModal from '@/components/custom/IntroModal';
 import GlobalIndicatorModalWrapper from '@/components/indicators/GlobalIndicatorModalWrapper';
 import UnpublishedPlan from '@/components/plans/UnpublishedPlan';
 import AccessGatePage from '@/components/plans/access/AccessGatePage';
+import PathsApolloProvider from '@/components/providers/PathsApolloProvider';
 import PathsProvider from '@/components/providers/PathsProvider';
 import PlanProvider from '@/components/providers/PlanProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
@@ -203,12 +204,14 @@ export default async function PlanLayout(props: Props) {
           <PlanProvider plan={planData.plan}>
             <GlobalIndicatorModalWrapper />
             <PathsProvider instance={pathsData}>
-              <WorkflowProvider
-                initialWorkflow={selectedWorkflow?.value as WorkflowState | undefined}
-                workflowStates={planData.workflowStates}
-              >
-                <PrintProvider>{children}</PrintProvider>
-              </WorkflowProvider>
+              <PathsApolloProvider instanceIdentifier={pathsData?.instance.id}>
+                <WorkflowProvider
+                  initialWorkflow={selectedWorkflow?.value as WorkflowState | undefined}
+                  workflowStates={planData.workflowStates}
+                >
+                  <PrintProvider>{children}</PrintProvider>
+                </WorkflowProvider>
+              </PathsApolloProvider>
             </PathsProvider>
           </PlanProvider>
         </ThemeProvider>
