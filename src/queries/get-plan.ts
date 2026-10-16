@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 import { type TypedDocumentNode, gql } from '@apollo/client';
 
 import type { PlanContextQuery, PlanContextQueryVariables } from '@/common/__generated__/graphql';
@@ -351,15 +353,21 @@ const GET_PLAN_CONTEXT: TypedDocumentNode<PlanContextQuery, PlanContextQueryVari
   ${images.fragments.socialImage}
 `;
 
-export const getPlan = async (hostname: string, planIdentifier: string, clientUrl: string) =>
-  await (
-    await getClient()
-  ).query({
-    query: GET_PLAN_CONTEXT,
-    variables: {
-      identifier: planIdentifier,
-      hostname,
-      clientUrl,
-    },
-    fetchPolicy: 'no-cache',
-  });
+/**
+ * Cached for the request, so the plan layout, its metadata and the pages below
+ * it share one request.
+ */
+export const getPlan = cache(
+  async (hostname: string, planIdentifier: string, clientUrl: string) =>
+    await (
+      await getClient()
+    ).query({
+      query: GET_PLAN_CONTEXT,
+      variables: {
+        identifier: planIdentifier,
+        hostname,
+        clientUrl,
+      },
+      fetchPolicy: 'no-cache',
+    })
+);

@@ -6,6 +6,9 @@ export type BackendCookieOptions = {
   prefix: string;
 };
 
+/** Prefix of the Paths API cookies that the Paths proxy route stores for the browser. */
+export const PATHS_COOKIE_PREFIX = 'paths_api_';
+
 export function getClientCookies(req: NextRequest, opts: BackendCookieOptions): RequestCookie[] {
   const cookieHeader = req.headers.get('cookie');
   if (!cookieHeader) return [];
@@ -18,6 +21,22 @@ export function getClientCookies(req: NextRequest, opts: BackendCookieOptions): 
       value: cookie.value,
     };
   });
+}
+
+/**
+ * The backend cookies of the request being rendered, as a Cookie header for a
+ * server-side request to that backend. For server components; route handlers
+ * use `getClientCookieAsHeader`.
+ */
+export async function getBackendCookieHeader(opts: BackendCookieOptions): Promise<string | null> {
+  const cookieStore = await cookies();
+  const prefixedCookies = cookieStore
+    .getAll()
+    .filter((cookie) => cookie.name.startsWith(opts.prefix));
+  if (!prefixedCookies.length) return null;
+  return prefixedCookies
+    .map((cookie) => `${cookie.name.slice(opts.prefix.length)}=${encodeURIComponent(cookie.value)}`)
+    .join('; ');
 }
 
 export function getClientCookieAsHeader(

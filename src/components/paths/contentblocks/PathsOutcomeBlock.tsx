@@ -9,7 +9,7 @@ import Alert from '@mui/material/Alert';
 import styled from '@emotion/styled';
 
 import { NetworkStatus } from '@apollo/client';
-import { useQuery, useReactiveVar } from '@apollo/client/react';
+import { useReactiveVar } from '@apollo/client/react';
 import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
@@ -29,7 +29,7 @@ import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
 import { usePaths } from '@/context/paths/paths';
 import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
+import { usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 
 const OutcomeBlockLoader = (props: React.ComponentProps<typeof ContentLoader>) => (
   <ContentLoader
@@ -151,16 +151,10 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
   }, [lastActiveNodeId, queryNodeId, router, pathname, createQueryString]);
 
   // router.push(pathname + '?' + createQueryString('sort', 'asc'))
-  const queryResp = useQuery<GetOutcomeNodeContentQuery>(GET_OUTCOME_NODE, {
+  const queryResp = usePathsQuery<GetOutcomeNodeContentQuery>(GET_OUTCOME_NODE, {
     variables: { node: outcomeNodeId || 'net_emissions', goal: activeGoal?.id ?? null },
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({
-        instanceIdentifier: pathsInstance?.instance.id,
-      }),
-    },
   });
 
   const { loading, error, previousData, networkStatus } = queryResp;

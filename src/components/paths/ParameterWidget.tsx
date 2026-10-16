@@ -4,7 +4,7 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { gql } from '@apollo/client';
-import { useMutation, useReactiveVar } from '@apollo/client/react';
+import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Range, getTrackBackground } from 'react-range';
 
@@ -14,8 +14,7 @@ import type { ActionParameterFragment } from '@/common/__generated__/paths/graph
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import Tooltip from '@/components/common/Tooltip';
-import { usePaths } from '@/context/paths/paths';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
+import { usePathsMutation } from '@/utils/paths/hooks/usePathsApollo';
 
 const RangeWrapper = styled.div`
   display: flex;
@@ -265,15 +264,10 @@ type ParameterWidgetProps = {
 const ParameterWidget = (props: ParameterWidgetProps) => {
   const { parameter } = props;
   const activeScenario = useReactiveVar(activeScenarioVar);
-  const paths = usePaths();
-  const [SetParameter, { loading: mutationLoading, error: mutationError }] = useMutation(
+  const [SetParameter, { loading: mutationLoading, error: mutationError }] = usePathsMutation(
     SET_PARAMETER,
     {
       refetchQueries: 'active',
-      context: {
-        uri: '/api/graphql-paths',
-        headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
-      },
       onCompleted: () => {
         if (activeScenario) {
           activeScenarioVar({ ...activeScenario });

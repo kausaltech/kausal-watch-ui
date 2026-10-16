@@ -19,6 +19,7 @@ import IntroModal from '@/components/custom/IntroModal';
 import GlobalIndicatorModalWrapper from '@/components/indicators/GlobalIndicatorModalWrapper';
 import UnpublishedPlan from '@/components/plans/UnpublishedPlan';
 import AccessGatePage from '@/components/plans/access/AccessGatePage';
+import PathsApolloProvider from '@/components/providers/PathsApolloProvider';
 import PathsProvider from '@/components/providers/PathsProvider';
 import PlanProvider from '@/components/providers/PlanProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
@@ -179,7 +180,11 @@ export default async function PlanLayout(props: Props) {
     notFound();
   }
 
-  const theme = await loadTheme(planData.plan.themeIdentifier || params.plan);
+  // The Paths instance only depends on the plan, so fetch it alongside the theme
+  const [theme, pathsData] = await Promise.all([
+    loadTheme(planData.plan.themeIdentifier || params.plan),
+    getPathsData(planData.plan.kausalPathsInstanceUuid),
+  ]);
 
   const themeStylesheet = theme.name ? (
     <link rel="stylesheet" type="text/css" href={getThemeStaticURL(theme.mainCssFile)} />
@@ -187,8 +192,6 @@ export default async function PlanLayout(props: Props) {
 
   const matomoAnalyticsUrl = planData.plan.domain?.matomoAnalyticsUrl ?? undefined;
   const selectedWorkflow = cookieStore.get(SELECTED_WORKFLOW_COOKIE_KEY);
-
-  const pathsData = await getPathsData(planData.plan?.kausalPathsInstanceUuid);
 
   return (
     <>
@@ -203,12 +206,14 @@ export default async function PlanLayout(props: Props) {
           <PlanProvider plan={planData.plan}>
             <GlobalIndicatorModalWrapper />
             <PathsProvider instance={pathsData}>
-              <WorkflowProvider
-                initialWorkflow={selectedWorkflow?.value as WorkflowState | undefined}
-                workflowStates={planData.workflowStates}
-              >
-                <PrintProvider>{children}</PrintProvider>
-              </WorkflowProvider>
+              <PathsApolloProvider instanceIdentifier={pathsData?.instance.id}>
+                <WorkflowProvider
+                  initialWorkflow={selectedWorkflow?.value as WorkflowState | undefined}
+                  workflowStates={planData.workflowStates}
+                >
+                  <PrintProvider>{children}</PrintProvider>
+                </WorkflowProvider>
+              </PathsApolloProvider>
             </PathsProvider>
           </PlanProvider>
         </ThemeProvider>

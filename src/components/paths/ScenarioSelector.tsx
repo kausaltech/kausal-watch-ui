@@ -3,7 +3,6 @@ import { useEffect, useMemo } from 'react';
 import styled from '@emotion/styled';
 
 import { gql } from '@apollo/client';
-import { useMutation, useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 
 import { activeScenarioVar } from '@common/apollo/paths-cache';
@@ -15,9 +14,8 @@ import type {
   GetScenariosQueryVariables,
 } from '@/common/__generated__/paths/graphql';
 import SelectDropdown, { type SelectDropdownOption } from '@/components/common/SelectDropdown';
-import { usePaths } from '@/context/paths/paths';
 import { GET_SCENARIOS } from '@/queries/paths/get-paths-scenarios';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
+import { usePathsMutation, usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 
 const pathsQueries = 'active';
 
@@ -71,28 +69,19 @@ const DropdownWrapper = styled.div<{ $isCustom: boolean }>`
 
 const ScenarioSelector = ({ disabled = false }: { disabled?: boolean }) => {
   const t = useTranslations();
-  const paths = usePaths();
 
-  const { loading, error, data } = useQuery<GetScenariosQuery, GetScenariosQueryVariables>(
+  const { loading, error, data } = usePathsQuery<GetScenariosQuery, GetScenariosQueryVariables>(
     GET_SCENARIOS,
     {
-      context: {
-        uri: '/api/graphql-paths',
-        headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
-      },
       fetchPolicy: 'network-only',
       notifyOnNetworkStatusChange: true,
     }
   );
 
-  const [activateScenario, { loading: mutationLoading, error: mutationError }] = useMutation<
+  const [activateScenario, { loading: mutationLoading, error: mutationError }] = usePathsMutation<
     ActivateScenarioMutation,
     ActivateScenarioMutationVariables
   >(ACTIVATE_SCENARIO, {
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
-    },
     refetchQueries: pathsQueries,
   });
 

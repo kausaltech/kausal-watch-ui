@@ -13,6 +13,22 @@ import {
 
 const SOURCE_DIRS = ['src', 'kausal_common/src'];
 
+/** Code that renders Paths impact-model data, fetched from the Paths API. */
+const PATHS_DIRS = [
+  'src/components/paths',
+  'src/context/paths',
+  'src/queries/paths',
+  'src/utils/paths',
+];
+const pathsJsFiles = PATHS_DIRS.map((dir) => `${dir}/**/*.@(ts|tsx|js|jsx)`);
+
+// reactstrap was retired in favour of MUI, see docs/reactstrap-migration.md.
+const noReactstrapImport = {
+  name: 'reactstrap',
+  message:
+    'reactstrap was retired. Use @mui/material or the shared components in @/components/common (see docs/reactstrap-migration.md).',
+};
+
 const nodeConfig = getNodeConfig({
   dirs: ['kausal_common/configs', 'e2e-tests'],
   files: ['*.ts', '*.js'],
@@ -44,22 +60,73 @@ const config: ConfigWithExtends[] = defineConfig(
     },
   },
   {
-    // reactstrap was retired in favour of MUI, see docs/reactstrap-migration.md.
     name: 'no-reactstrap',
     files: ['src/**/*.@(ts|tsx|js|jsx)', 'kausal_common/src/**/*.@(ts|tsx|js|jsx)'],
+    rules: {
+      'no-restricted-imports': ['error', { paths: [noReactstrapImport] }],
+    },
+  },
+  {
+    // Paths operations must use the Paths client, see docs/paths-apollo-client.md.
+    // This replaces the options of the rule above, so it repeats reactstrap.
+    name: 'paths-apollo-client',
+    files: pathsJsFiles,
+    ignores: ['src/utils/paths/hooks/usePathsApollo.ts'],
     rules: {
       'no-restricted-imports': [
         'error',
         {
           paths: [
+            noReactstrapImport,
             {
-              name: 'reactstrap',
+              name: '@apollo/client/react',
+              importNames: [
+                'useQuery',
+                'useLazyQuery',
+                'useSuspenseQuery',
+                'useBackgroundQuery',
+                'useMutation',
+              ],
               message:
-                'reactstrap was retired. Use @mui/material or the shared components in @/components/common (see docs/reactstrap-migration.md).',
+                'Use usePathsQuery or usePathsMutation from @/utils/paths/hooks/usePathsApollo; the plain hooks use the Watch client.',
             },
           ],
         },
       ],
+    },
+  },
+  {
+    // The GraphQL rules validate against the Watch schema, so they cannot
+    // check Paths documents.
+    name: 'paths-graphql',
+    files: PATHS_DIRS.map((dir) => `${dir}/**/*.graphql`),
+    rules: Object.fromEntries(Object.keys(graphqlConfig.rules).map((rule) => [rule, 'off'])),
+  },
+  {
+    // Paths code was excluded from linting until October 2026. These rules
+    // still fail there; they are warnings until that code is fixed.
+    name: 'paths-existing-issues',
+    files: pathsJsFiles,
+    rules: {
+      '@typescript-eslint/consistent-type-imports': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-namespace': 'warn',
+      '@typescript-eslint/no-redundant-type-constituents': 'warn',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
+      '@typescript-eslint/no-unsafe-assignment': 'warn',
+      '@typescript-eslint/no-unsafe-call': 'warn',
+      '@typescript-eslint/no-unsafe-member-access': 'warn',
+      '@typescript-eslint/no-unsafe-return': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+      'no-constant-binary-expression': 'warn',
+      'react-hooks/immutability': 'warn',
+      'react-hooks/rules-of-hooks': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/static-components': 'warn',
+      'react/jsx-no-target-blank': 'warn',
+      'react/no-unknown-property': 'warn',
     },
   },
   {
@@ -83,11 +150,7 @@ const config: ConfigWithExtends[] = defineConfig(
     },
   },
   getGlobalIgnores(),
-  globalIgnores(['src/embed']),
-  globalIgnores(
-    ['src/components/paths', 'src/context/paths', 'src/queries/paths', 'src/utils/paths'],
-    'no-paths'
-  )
+  globalIgnores(['src/embed'])
 );
 
 export default config;
