@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useId } from 'react';
 
 import { useTheme } from '@emotion/react';
 
@@ -21,8 +21,12 @@ import InventoryNodeSummary from './InventoryNodeSummary';
 
 const PathsContentLoader = (props) => {
   const theme = useTheme();
+  // Stable between server and browser, unlike the random default, so the
+  // loader can be server-rendered; and unique per loader on the page
+  const uniqueKey = useId();
   return (
     <ContentLoader
+      uniqueKey={uniqueKey}
       speed={1}
       width={330}
       height={80}
@@ -48,12 +52,11 @@ type PathsNodeContentProps = {
 };
 
 /**
- * The node data may be preloaded on the server and streamed in. Until it has
- * arrived nothing is shown, as before hydration when it is fetched in the
- * browser.
+ * The node data may be preloaded on the server and streamed in. The loader
+ * reserves the space for it meanwhile.
  */
 const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<PathsContentLoader />}>
     <PathsNodeSummaryContent {...props} />
   </Suspense>
 ));
@@ -63,11 +66,6 @@ function PathsNodeSummaryContent(props: PathsNodeContentProps) {
   const paths = usePaths();
   const pathsInstance = paths?.instance;
   const activeGoal = useActiveGoal();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   // Only show the impact of default goal if exists
   const actionImpactGoal = pathsInstance?.goals.find((goal) => goal.default === true);
@@ -98,14 +96,8 @@ function PathsNodeSummaryContent(props: PathsNodeContentProps) {
 
   const refetching = networkStatus === NetworkStatus.refetch;
 
-  // Only show loader after client-side hydration to prevent hydration mismatch
-  if (loading && !refetching && isMounted) {
+  if (loading && !refetching) {
     return <PathsContentLoader />;
-  }
-
-  // Return null during SSR/initial hydration to match server render
-  if (loading && !isMounted) {
-    return null;
   }
   if (error) {
     captureException(error, { extra: { pathsInstanceId: pathsInstance.id } });
