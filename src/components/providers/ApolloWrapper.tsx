@@ -27,13 +27,7 @@ import {
 } from '../../utils/apollo.utils';
 import { clearPledgeAuth } from '../pledge/use-pledge-auth';
 
-const authMiddleware = new SetContextLink(({ uri, sessionToken, headers: initialHeaders = {} }) => {
-  // Operations that override the uri target the Paths API, which uses its own
-  // authentication; the Watch ID token must not be sent there.
-  if (uri) {
-    return { headers: initialHeaders };
-  }
-
+const authMiddleware = new SetContextLink(({ sessionToken, headers: initialHeaders = {} }) => {
   return {
     headers: {
       ...initialHeaders,

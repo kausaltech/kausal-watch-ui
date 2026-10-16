@@ -4,9 +4,7 @@ import type {
   GetInstanceContextQuery,
   GetInstanceContextQueryVariables,
 } from '@/common/__generated__/paths/graphql';
-import { pathsGqlUrl } from '@/common/environment';
-import { getClient } from '@/utils/apollo-rsc-client';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
+import { getPathsClient } from '@/utils/paths/paths-rsc-client';
 
 import { ACTION_PARAMETER_FRAGMENT } from './get-paths-node';
 
@@ -85,13 +83,9 @@ export default GET_INSTANCE_CONTEXT;
 
 export const getPathsInstance = async (pathsInstance: string) =>
   await (
-    await getClient()
+    await getPathsClient(pathsInstance)
   ).query<GetInstanceContextQuery, GetInstanceContextQueryVariables>({
     query: GET_INSTANCE_CONTEXT,
     fetchPolicy: 'no-cache',
     variables: {},
-    context: {
-      uri: pathsGqlUrl,
-      headers: getHttpHeaders({ instanceIdentifier: pathsInstance }),
-    },
   });
