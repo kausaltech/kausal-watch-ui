@@ -22,13 +22,7 @@ const rscErrorLink = createErrorLink(() => {
   );
 });
 
-const authMiddleware = new SetContextLink(async ({ uri, headers: initialHeaders = {} }) => {
-  // Operations that override the uri target the Paths API, which uses its own
-  // authentication; the Watch ID token must not be sent there.
-  if (uri) {
-    return { headers: initialHeaders };
-  }
-
+const authMiddleware = new SetContextLink(async ({ headers: initialHeaders = {} }) => {
   const session = await auth();
   const token = session?.idToken;
 
