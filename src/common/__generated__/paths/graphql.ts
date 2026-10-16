@@ -85,6 +85,13 @@ export type GetInstanceContextQuery = { __typename: 'Query', instance: GetInstan
 
 export type GetInstanceContextQueryVariables = Exact<{ [key: string]: never; }>;
 
+export type GetInstanceLanguagesQuery_instance = { __typename: 'InstanceType', id: string, supportedLanguages: Array<string>, defaultLanguage: string };
+
+export type GetInstanceLanguagesQuery = { __typename: 'Query', instance: GetInstanceLanguagesQuery_instance };
+
+
+export type GetInstanceLanguagesQueryVariables = Exact<{ [key: string]: never; }>;
+
 export type ActionParameterFragment_node_ActionNode = { __typename: 'ActionNode', id: string };
 
 export type ActionParameterFragment_node_Node = { __typename: 'Node', id: string };

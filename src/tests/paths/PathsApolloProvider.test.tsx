@@ -11,6 +11,8 @@ import { Observable } from 'rxjs';
 import PathsApolloProvider, {
   usePathsApolloClient,
 } from '@/components/providers/PathsApolloProvider';
+import type { PathsInstanceType } from '@/components/providers/PathsProvider';
+import PathsContext from '@/context/paths/paths';
 import { usePathsMutation, usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 
 const GET_INSTANCE_NAME = parse(`
@@ -41,15 +43,22 @@ function makeWatchClient() {
   return new ApolloClient({ link: watchLink, cache: new InMemoryCache() });
 }
 
-function makeWrapper(instanceIdentifier: string | undefined, locale = 'en') {
+function makeWrapper(
+  instanceIdentifier: string | undefined,
+  locale = 'en',
+  paths?: { supportedLanguages: string[]; defaultLanguage: string }
+) {
   const watchClient = makeWatchClient();
+  const pathsContext = paths ? ({ instance: paths } as unknown as PathsInstanceType) : undefined;
   return function Wrapper({ children }: { children: ReactNode }) {
     return (
       <NextIntlClientProvider locale={locale} messages={{}}>
         <ApolloProvider client={watchClient}>
-          <PathsApolloProvider instanceIdentifier={instanceIdentifier}>
-            {children}
-          </PathsApolloProvider>
+          <PathsContext.Provider value={pathsContext}>
+            <PathsApolloProvider instanceIdentifier={instanceIdentifier}>
+              {children}
+            </PathsApolloProvider>
+          </PathsContext.Provider>
         </ApolloProvider>
       </NextIntlClientProvider>
     );
@@ -139,5 +148,16 @@ describe('PathsApolloProvider', () => {
     // The cache does not tell languages apart, so a new locale needs a new cache
     expect(french.result.current).not.toBe(german.result.current);
     expect(french.result.current?.defaultContext.locale).toBe('fr');
+  });
+
+  it('queries in a language the Paths instance supports', () => {
+    const { result } = renderHook(() => usePathsApolloClient(), {
+      wrapper: makeWrapper('patchenstein', 'de', {
+        supportedLanguages: ['fi', 'en'],
+        defaultLanguage: 'fi',
+      }),
+    });
+
+    expect(result.current?.defaultContext.locale).toBe('en');
   });
 });

@@ -10,6 +10,8 @@ import { makePathsClient } from '@common/apollo/paths-client';
 import pathsPossibleTypes from '@/common/__generated__/paths/possible_types.json';
 import { isServer } from '@/common/environment';
 import { PATHS_API_PROXY_PATH } from '@/constants/routes';
+import { usePaths } from '@/context/paths/paths';
+import { resolvePathsLocale } from '@/utils/paths/paths-locale';
 
 const PathsApolloClientContext = createContext<ApolloClient | null>(null);
 
@@ -59,7 +61,14 @@ type Props = {
  * single client per browser, so it cannot provide a second one.
  */
 export default function PathsApolloProvider({ instanceIdentifier, children }: Props) {
-  const locale = useLocale();
+  const paths = usePaths();
+  const watchLocale = useLocale();
+  // The same language the server picked for the instance context
+  const locale = resolvePathsLocale(
+    watchLocale,
+    paths?.instance.supportedLanguages,
+    paths?.instance.defaultLanguage
+  );
   // A module-level client on the server would be shared between requests,
   // so create one per request there.
   const [serverClient] = useState(() =>
