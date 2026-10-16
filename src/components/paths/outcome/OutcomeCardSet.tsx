@@ -2,14 +2,12 @@ import { useCallback, useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
 
-import { useReactiveVar } from '@apollo/client/react';
-
-import { activeGoalVar } from '@common/apollo/paths-cache';
 import { setUniqueColors } from '@common/utils/paths/colors';
 import { getMetricValue } from '@common/utils/paths/metric';
 
 import OutcomeCard from '@/components/paths/outcome/OutcomeCard';
 import OutcomeNodeContent from '@/components/paths/outcome/OutcomeNodeContent';
+import { useActiveGoal } from '@/utils/paths/hooks/usePathsSettings';
 
 import type { OutcomenodeType } from '../contentblocks/PathsOutcomeBlock';
 
@@ -189,7 +187,7 @@ const OutcomeCardSet = ({
     return cardNodes;
   }, [nodeMap, rootNode.inputNodes]);
 
-  const activeGoal = useReactiveVar(activeGoalVar);
+  const activeGoal = useActiveGoal();
   // We have a different group for indirect emissions (hack)
   const separateYears = activeGoal?.separateYears || null;
   const chartType = activeGoal?.defaultOutcomeGraphType || 'bar';

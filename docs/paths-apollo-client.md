@@ -189,12 +189,30 @@ the `authMiddleware` of both Watch clients can then be removed.
    `getPathsClient` and hand it to the Paths client in the browser (see open
    questions).
 
-   Moved to the follow-up branch `feat/paths-content-ssr` (October 2026).
-   The outcome block is an occasional embed in Watch pages, so this branch
-   keeps the current behaviour: Paths blocks fetch in the browser. Server
-   rendering pays off once the Paths content features build on it, and is
-   generalised there. Only its `getPlan` `cache()` change is kept here; it
-   also removes a duplicate request between the plan layout and its metadata.
+   Done for `PathsOutcomeBlock` (October 2026). Model computations can take
+   seconds on a cold cache (1.7–3.8 s measured), so the page does not wait:
+   - The root and content pages call `preloadPathsBlocks()` without awaiting
+     it and pass the promise to `PathsPreloadProvider`.
+   - The block reads it with `use()` inside `Suspense`, writes the results
+     into the Paths client cache (`writeQuery`, `broadcast: false`) and
+     renders them. The loader streams first and the server-rendered block
+     replaces it. The browser hydrates from the same data and skips the
+     request (`cache-first` when the variables were preloaded).
+   - The settings reactive vars are never set on the server, so
+     `useActiveGoal`, `useActiveScenario` and `useYearRange` fall back to the
+     initial values `SettingsPanelFull` seeds. The preload uses the same
+     default goal, so the variables match.
+   - `getPlan` is wrapped in `cache()`, so the preload reuses the layout's
+     plan and instance requests.
+
+   Not yet: blocks nested deeper than the page body, and the other Paths
+   blocks (`PathsNodeSummary` on category pages, `GoalOutcomeBar`). The
+   fallback hooks are only used in the outcome block subtree so far.
+
+   Next: generalise the mechanism before applying it to more block types: a
+   `preloadPathsQuery(query, variables)` on the server and a
+   `usePreloadedPathsQuery` hook in the block, so the variables are matched in
+   one place and a new block needs only a few lines.
 
 7. **Cleanup:**
    - remove the duplicate `makeInstanceMiddleware` and `getHttpHeaders`
@@ -233,7 +251,8 @@ and 5. Step 6 fixes 6.
   props and use them as initial data; `cache.writeQuery` each preloaded
   result in the provider; or `cache.restore()` an extracted snapshot. Writing
   each query is the safest with a browser-wide client that outlives
-  navigations, since `restore()` replaces the whole cache.
+  navigations, since `restore()` replaces the whole cache. Resolved: each
+  result is written with `writeQuery` from a streamed promise (step 6).
 - **Where `makePathsClient` lives,** and whether paths-ui adopts it at the
   same time.
 - **Whether the static instance context can be cached across requests**

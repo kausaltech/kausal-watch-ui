@@ -2,10 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { useReactiveVar } from '@apollo/client/react';
 import { isEqual } from 'lodash-es';
 
-import { activeGoalVar } from '@common/apollo/paths-cache';
 import {
   downloadData,
   flatten,
@@ -23,6 +21,8 @@ import type {
   ParsedMetric,
   SliceConfig,
 } from '@common/utils/paths/metric';
+
+import { useActiveGoal } from '@/utils/paths/hooks/usePathsSettings';
 
 type UseDimensionalMetricOptions = {
   /** Sync slice config with active goal changes (default: true) */
@@ -59,7 +59,7 @@ export function useDimensionalMetric(
   options: UseDimensionalMetricOptions = {}
 ): UseDimensionalMetricReturn {
   const { syncWithGoal = true } = options;
-  const activeGoal = useReactiveVar(activeGoalVar) as InstanceGoalInput | null;
+  const activeGoal = useActiveGoal() as InstanceGoalInput | null;
 
   // Parse metric once when data changes
   const metric = useMemo(() => parseMetric(metricData), [metricData]);
