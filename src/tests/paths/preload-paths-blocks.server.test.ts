@@ -36,29 +36,36 @@ const categoryListBlock = {
   },
 };
 
+function mockPathsInstance() {
+  mockedGetPlan.mockResolvedValue({
+    data: { plan: { kausalPathsInstanceUuid: 'zuerich-2025' } },
+  } as Awaited<ReturnType<typeof getPlan>>);
+  jest.mocked(getPathsData).mockResolvedValue({
+    instance: { id: 'zuerich-2025', goals: [{ id: 'net_emissions', default: true }] },
+  } as GetInstanceContextQuery);
+  const query = jest.fn().mockResolvedValue({ data: { node: { id: 'heating' } } });
+  jest.mocked(getPathsClient).mockResolvedValue({ query } as unknown as ApolloClient);
+}
+
 describe('preloadPathsBlocks', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   it('does nothing for a page without preloadable Paths blocks', async () => {
-    const blocks = [{ __typename: 'RichTextBlock' }, null];
+    const page = { __typename: 'StaticPage', body: [{ __typename: 'RichTextBlock' }, null] };
 
-    await expect(preloadPathsBlocks('zuerich', 'zuerich', blocks)).resolves.toEqual({});
+    await expect(preloadPathsBlocks('zuerich', 'zuerich', page)).resolves.toEqual({});
     expect(mockedGetPlan).not.toHaveBeenCalled();
   });
 
   it('starts a node summary query for each listed category', async () => {
-    mockedGetPlan.mockResolvedValue({
-      data: { plan: { kausalPathsInstanceUuid: 'zuerich-2025' } },
-    } as Awaited<ReturnType<typeof getPlan>>);
-    jest.mocked(getPathsData).mockResolvedValue({
-      instance: { id: 'zuerich-2025', goals: [{ id: 'net_emissions', default: true }] },
-    } as GetInstanceContextQuery);
-    const query = jest.fn().mockResolvedValue({ data: { node: { id: 'heating' } } });
-    jest.mocked(getPathsClient).mockResolvedValue({ query } as unknown as ApolloClient);
+    mockPathsInstance();
 
-    const preloaded = await preloadPathsBlocks('zuerich', 'zuerich', [categoryListBlock]);
+    const preloaded = await preloadPathsBlocks('zuerich', 'zuerich', {
+      __typename: 'StaticPage',
+      body: [categoryListBlock],
+    });
 
     const key = getPreloadKey(GET_NODE_CONTENT, {
       node: 'heating',
@@ -69,11 +76,42 @@ describe('preloadPathsBlocks', () => {
     await expect(preloaded[key]).resolves.toEqual({ node: { id: 'heating' } });
   });
 
+  it('starts the node summary query of a category page layout for its category', async () => {
+    mockPathsInstance();
+    const page = {
+      __typename: 'CategoryPage',
+      body: [],
+      category: { kausalPathsNodeUuid: 'heating' },
+      layout: { layoutMainTop: [{ __typename: 'PathsNodeSummaryBlock', pathsTargetNodeId: '' }] },
+    };
+
+    const preloaded = await preloadPathsBlocks('zuerich', 'zuerich', page);
+
+    // An empty target node id means none, as in CategoryPageStreamField
+    const key = getPreloadKey(GET_NODE_CONTENT, {
+      node: 'heating',
+      goal: 'net_emissions',
+      targetNodeId: null,
+    });
+    expect(Object.keys(preloaded)).toEqual([key]);
+  });
+
+  it('does nothing for a category page whose category has no Paths node', async () => {
+    const page = {
+      __typename: 'CategoryPage',
+      category: { kausalPathsNodeUuid: null },
+      layout: { layoutMainTop: [{ __typename: 'PathsNodeSummaryBlock', pathsTargetNodeId: null }] },
+    };
+
+    await expect(preloadPathsBlocks('zuerich', 'zuerich', page)).resolves.toEqual({});
+    expect(mockedGetPlan).not.toHaveBeenCalled();
+  });
+
   it('resolves with no data instead of rejecting when a request fails', async () => {
     mockedGetPlan.mockRejectedValue(new Error('Watch API unavailable'));
 
-    await expect(preloadPathsBlocks('zuerich', 'zuerich', [categoryListBlock])).resolves.toEqual(
-      {}
-    );
+    const page = { __typename: 'StaticPage', body: [categoryListBlock] };
+
+    await expect(preloadPathsBlocks('zuerich', 'zuerich', page)).resolves.toEqual({});
   });
 });

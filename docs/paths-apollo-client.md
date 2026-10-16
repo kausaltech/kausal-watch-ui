@@ -226,9 +226,12 @@ the `authMiddleware` of both Watch clients can then be removed.
    `preload-paths-blocks.ts`, read its data with `usePreloadedPathsQuery`
    inside `Suspense`, and use the fallback hooks in its components.
 
-   Not yet: blocks nested deeper than the page body, `PathsNodeSummaryBlock`
-   on category pages (`CategoryPageStreamField`), and `NormalizationWidget`,
-   which is only shown in the expanded settings panel.
+   Category pages: `preloadPathsBlocks()` takes the whole page, and also
+   preloads the `PathsNodeSummaryBlock` of a category page layout
+   (`layoutMainTop`), whose node is the page's category's.
+
+   Not yet: blocks nested deeper than the page body, and
+   `NormalizationWidget`, which is only shown in the expanded settings panel.
 
 7. **Cleanup:**
    - remove the duplicate `makeInstanceMiddleware` and `getHttpHeaders`

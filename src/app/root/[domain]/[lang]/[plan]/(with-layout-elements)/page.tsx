@@ -22,11 +22,7 @@ export default async function PlanPage(props: Props) {
   }
 
   // Not awaited: Paths blocks stream in when their data is ready
-  const pathsPreload = preloadPathsBlocks(
-    params.domain,
-    params.plan,
-    data.planPage && 'body' in data.planPage ? data.planPage.body : null
-  );
+  const pathsPreload = preloadPathsBlocks(params.domain, params.plan, data.planPage);
 
   return (
     <PathsPreloadProvider preload={pathsPreload}>
