@@ -5,6 +5,16 @@ import { useMutation, useQuery } from '@apollo/client/react';
 
 import { usePathsApolloClient } from '@/components/providers/PathsApolloProvider';
 
+/**
+ * Like `useQuery` without `returnPartialData`, data is either complete,
+ * streaming or empty.
+ */
+type PathsQueryResult<TData, TVariables extends OperationVariables> = useQuery.Result<
+  TData,
+  TVariables,
+  'empty' | 'complete' | 'streaming'
+>;
+
 /*
  * Apollo's own hook signatures resolve options and variables through
  * conditional types that TypeScript cannot evaluate for a generic wrapper.
@@ -14,7 +24,7 @@ import { usePathsApolloClient } from '@/components/providers/PathsApolloProvider
 const useQueryWithOptions = useQuery as unknown as <TData, TVariables extends OperationVariables>(
   query: DocumentNode | TypedDocumentNode<TData, TVariables>,
   options: useQuery.Options<NoInfer<TData>, NoInfer<TVariables>>
-) => useQuery.Result<TData, TVariables>;
+) => PathsQueryResult<TData, TVariables>;
 
 const useMutationWithOptions = useMutation as unknown as <
   TData,
@@ -49,7 +59,7 @@ export function usePathsQuery<
   ...[options]: Record<string, never> extends TVariables
     ? [options?: PathsQueryOptions<TData, TVariables>]
     : [options: PathsQueryOptions<TData, TVariables>]
-): useQuery.Result<TData, TVariables> {
+): PathsQueryResult<TData, TVariables> {
   const client = usePathsApolloClient();
   const queryOptions = {
     ...options,

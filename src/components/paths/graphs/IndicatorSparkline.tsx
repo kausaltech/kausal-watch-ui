@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
+// Queries Watch indicator data, so it uses the Watch client.
+// eslint-disable-next-line no-restricted-imports
 import { useQuery } from '@apollo/client/react';
 import type { DatasetComponentOption } from 'echarts/components';
 import { useTranslations } from 'next-intl';

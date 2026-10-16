@@ -6,7 +6,7 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { NetworkStatus, gql } from '@apollo/client';
-import { useQuery, useReactiveVar } from '@apollo/client/react';
+import { useReactiveVar } from '@apollo/client/react';
 import { max, min, sortBy } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
@@ -22,8 +22,7 @@ import useNumberFormatter from '@/common/numbers';
 import Button from '@/components/common/Button';
 import { CardBody } from '@/components/common/CardParts';
 import Icon from '@/components/common/Icon';
-import { usePaths } from '@/context/paths/paths';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
+import { usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 
 export const GET_INSTANCE_GOAL_OUTCOME = gql`
   query GetInstanceGoalOutcome($goal: ID!) {
@@ -255,19 +254,14 @@ function GoalOutcomeBar(props: GoalOutcomeBarProps) {
   const [isOutcomeOpen, setIsOutcomeOpen] = useState(true);
   const numberFormatter = useNumberFormatter({ scope: 'paths' });
   const theme = useTheme();
-  const paths = usePaths();
   const activeScenario = useReactiveVar(activeScenarioVar);
   const yearRange = useReactiveVar(yearRangeVar);
   const activeGoal = useReactiveVar(activeGoalVar);
 
-  const { loading, error, data, networkStatus } = useQuery<
+  const { loading, error, data, networkStatus } = usePathsQuery<
     GetInstanceGoalOutcomeQuery,
     GetInstanceGoalOutcomeQueryVariables
   >(GET_INSTANCE_GOAL_OUTCOME, {
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
-    },
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
     variables: {
