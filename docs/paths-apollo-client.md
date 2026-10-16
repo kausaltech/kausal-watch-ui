@@ -189,30 +189,39 @@ the `authMiddleware` of both Watch clients can then be removed.
    `getPathsClient` and hand it to the Paths client in the browser (see open
    questions).
 
-   Done for `PathsOutcomeBlock` (October 2026). Model computations can take
+   Done (October 2026) for `PathsOutcomeBlock` and the `PathsNodeSummary`
+   cards of `CategoryTypeLevelListBlock`. Model computations can take
    seconds on a cold cache (1.7–3.8 s measured), so the page does not wait:
-   - The root and content pages call `preloadPathsBlocks()` without awaiting
-     it and pass the promise to `PathsPreloadProvider`.
-   - The block reads it with `use()` inside `Suspense`, writes the results
-     into the Paths client cache (`writeQuery`, `broadcast: false`) and
-     renders them. The loader streams first and the server-rendered block
-     replaces it. The browser hydrates from the same data and skips the
-     request (`cache-first` when the variables were preloaded).
-   - The settings reactive vars are never set on the server, so
+   - **Server.** The root and content pages call `preloadPathsBlocks()`
+     without awaiting it. It starts one query per block with
+     `preloadPathsQueries()` and resolves, as soon as they are started, with
+     a promise per query keyed by `getPreloadKey(query, variables)`. The
+     page passes it to `PathsPreloadProvider`.
+   - **Block.** `usePreloadedPathsQuery(query, options)` in place of
+     `usePathsQuery`, inside `Suspense`. It waits only for its own key; a
+     block that wasn't preloaded fetches in the browser as before.
+   - **No cache writes.** While the variables match and the Paths session is
+     unchanged, the preloaded data is the result and the query is skipped.
+     This works with any fetch policy; `GetNodeContent` stays `no-cache`,
+     since its metrics have ids that may repeat across goals. Paths
+     mutations increment `pathsSessionVersionVar`; the query then runs as
+     usual, with the preloaded data shown as refetching meanwhile.
+   - **Matching variables.** The server and the block build them with the
+     same helpers (`getOutcomeNodeVariables`, `getNodeContentVariables`).
+     The settings reactive vars are never set on the server, so
      `useActiveGoal`, `useActiveScenario` and `useYearRange` fall back to the
-     initial values `SettingsPanelFull` seeds. The preload uses the same
-     default goal, so the variables match.
-   - `getPlan` is wrapped in `cache()`, so the preload reuses the layout's
-     plan and instance requests.
+     values `SettingsPanelFull` seeds.
+   - **Derived values during render.** `InventoryNodeSummary` computed its
+     values in an effect, which the server never runs; they are now derived
+     with `useMemo`.
 
-   Not yet: blocks nested deeper than the page body, and the other Paths
-   blocks (`PathsNodeSummary` on category pages, `GoalOutcomeBar`). The
-   fallback hooks are only used in the outcome block subtree so far.
+   To preload another block: add its requests to `getBlockRequests` in
+   `preload-paths-blocks.ts`, read its data with `usePreloadedPathsQuery`
+   inside `Suspense`, and use the fallback hooks in its components.
 
-   Next: generalise the mechanism before applying it to more block types: a
-   `preloadPathsQuery(query, variables)` on the server and a
-   `usePreloadedPathsQuery` hook in the block, so the variables are matched in
-   one place and a new block needs only a few lines.
+   Not yet: blocks nested deeper than the page body, `PathsNodeSummaryBlock`
+   on category pages (`CategoryPageStreamField`), and `GoalOutcomeBar` and
+   `ScenarioSelector` in the settings panel, which belongs to the layout.
 
 7. **Cleanup:**
    - remove the duplicate `makeInstanceMiddleware` and `getHttpHeaders`
