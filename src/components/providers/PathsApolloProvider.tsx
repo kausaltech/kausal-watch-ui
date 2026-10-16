@@ -27,13 +27,19 @@ function createClient(instanceIdentifier: string, locale: string) {
 
 /**
  * One client per browser, so its cache survives client-side navigation. It is
- * replaced when navigating to a plan that uses another Paths instance.
+ * replaced when navigating to a plan that uses another Paths instance, or to
+ * another locale: the cache does not tell the languages apart, so cached data
+ * would keep showing labels in the previous one.
  */
-let browserClient: { instanceIdentifier: string; client: ApolloClient } | undefined;
+let browserClient: { instanceIdentifier: string; locale: string; client: ApolloClient } | undefined;
 
 function getBrowserClient(instanceIdentifier: string, locale: string) {
-  if (browserClient?.instanceIdentifier !== instanceIdentifier) {
-    browserClient = { instanceIdentifier, client: createClient(instanceIdentifier, locale) };
+  if (browserClient?.instanceIdentifier !== instanceIdentifier || browserClient.locale !== locale) {
+    browserClient = {
+      instanceIdentifier,
+      locale,
+      client: createClient(instanceIdentifier, locale),
+    };
   }
   return browserClient.client;
 }
@@ -60,15 +66,10 @@ export default function PathsApolloProvider({ instanceIdentifier, children }: Pr
     isServer && instanceIdentifier ? createClient(instanceIdentifier, locale) : null
   );
 
+  // A request has a single locale, so the server client is always current
   let client: ApolloClient | null = null;
   if (instanceIdentifier) {
     client = isServer ? serverClient : getBrowserClient(instanceIdentifier, locale);
-  }
-  if (client) {
-    // Follow locale changes without recreating the client, like `UpdateLocale`
-    // in ApolloWrapper does for the Watch client.
-    // eslint-disable-next-line react-hooks/immutability
-    client.defaultContext.locale = locale;
   }
 
   return (
