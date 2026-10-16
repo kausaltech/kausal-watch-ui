@@ -188,6 +188,14 @@ the `authMiddleware` of both Watch clients can then be removed.
 6. **SSR for Paths blocks.** Fetch block data in server components with
    `getPathsClient` and hand it to the Paths client in the browser (see open
    questions).
+
+   Moved to the follow-up branch `feat/paths-content-ssr` (October 2026).
+   The outcome block is an occasional embed in Watch pages, so this branch
+   keeps the current behaviour: Paths blocks fetch in the browser. Server
+   rendering pays off once the Paths content features build on it, and is
+   generalised there. Only its `getPlan` `cache()` change is kept here; it
+   also removes a duplicate request between the plan layout and its metadata.
+
 7. **Cleanup:**
    - remove the duplicate `makeInstanceMiddleware` and `getHttpHeaders`
      helpers;
