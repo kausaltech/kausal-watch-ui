@@ -176,6 +176,15 @@ the `authMiddleware` of both Watch clients can then be removed.
 5. **Split the instance context.** Split it as described above, cache the
    static part and run it in parallel. Consider skipping it on pages that
    don't need Paths data.
+
+   Done so far (October 2026): the unused fields are dropped, `getPathsData`
+   is wrapped in `cache()` and runs in parallel with `loadTheme`. Since step 4
+   forwards the session cookies, one query returns correct session data, so
+   the split is deferred until the static part can be cached across requests
+   (see open questions). Skipping the fetch is deferred too: the layout can't
+   tell whether the page has Paths content, and the settings panel needs the
+   context on every page.
+
 6. **SSR for Paths blocks.** Fetch block data in server components with
    `getPathsClient` and hand it to the Paths client in the browser (see open
    questions).

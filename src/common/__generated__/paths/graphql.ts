@@ -49,42 +49,6 @@ export type ActivateScenarioMutationVariables = Exact<{
   scenarioId: string | number;
 }>;
 
-export type SetGlobalParameterMutation_setParameter_parameter_BoolParameterType = { __typename: 'BoolParameterType', isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null };
-
-export type SetGlobalParameterMutation_setParameter_parameter_NumberParameterType = { __typename: 'NumberParameterType', isCustomized: boolean, isCustomizable: boolean };
-
-export type SetGlobalParameterMutation_setParameter_parameter_StringParameterType = { __typename: 'StringParameterType', isCustomized: boolean, isCustomizable: boolean };
-
-export type SetGlobalParameterMutation_setParameter_parameter_UnknownParameterType = { __typename: 'UnknownParameterType', isCustomized: boolean, isCustomizable: boolean };
-
-export type SetGlobalParameterMutation_setParameter_parameter =
-  | SetGlobalParameterMutation_setParameter_parameter_BoolParameterType
-  | SetGlobalParameterMutation_setParameter_parameter_NumberParameterType
-  | SetGlobalParameterMutation_setParameter_parameter_StringParameterType
-  | SetGlobalParameterMutation_setParameter_parameter_UnknownParameterType
-;
-
-export type SetGlobalParameterMutation_setParameter = { __typename: 'SetParameterResult', ok: boolean, parameter: SetGlobalParameterMutation_setParameter_parameter | null };
-
-export type SetGlobalParameterMutation = { __typename: 'Mutation', setParameter: SetGlobalParameterMutation_setParameter };
-
-
-export type SetGlobalParameterMutationVariables = Exact<{
-  parameterId: string | number;
-  boolValue: boolean | null | undefined;
-  numberValue: number | null | undefined;
-  stringValue: string | null | undefined;
-}>;
-
-export type SetNormalizationMutation_setNormalizer = { __typename: 'SetNormalizerMutation', ok: boolean };
-
-export type SetNormalizationMutation = { __typename: 'Mutation', setNormalizer: SetNormalizationMutation_setNormalizer };
-
-
-export type SetNormalizationMutationVariables = Exact<{
-  id: string | number | null | undefined;
-}>;
-
 export type GetInstanceGoalOutcomeQuery_instance_goals_values = { __typename: 'InstanceYearlyGoalType', year: number, goal: number | null, actual: number | null, isForecast: boolean, isInterpolated: boolean | null };
 
 export type GetInstanceGoalOutcomeQuery_instance_goals_unit = { __typename: 'UnitType', htmlShort: string };
@@ -104,170 +68,41 @@ export type ScenarioFragmentFragment = { __typename: 'ScenarioType', id: string,
 
 export type GetInstanceContextQuery_instance_features = { __typename: 'InstanceFeaturesType', baselineVisibleInGraphs: boolean, hideNodeDetails: boolean, maximumFractionDigits: number | null, showAccumulatedEffects: boolean, showSignificantDigits: number | null };
 
-export type GetInstanceContextQuery_instance_introContent_ActionImpactBlock = { __typename: 'ActionImpactBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_BlockQuoteBlock = { __typename: 'BlockQuoteBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_BooleanBlock = { __typename: 'BooleanBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_CallToActionBlock = { __typename: 'CallToActionBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_CardListBlock = { __typename: 'CardListBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_CategoryBreakdownBlock = { __typename: 'CategoryBreakdownBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_CharBlock = { __typename: 'CharBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_ChoiceBlock = { __typename: 'ChoiceBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_CurrentProgressBarBlock = { __typename: 'CurrentProgressBarBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_DashboardCardBlock = { __typename: 'DashboardCardBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_DateBlock = { __typename: 'DateBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_DateTimeBlock = { __typename: 'DateTimeBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_DecimalBlock = { __typename: 'DecimalBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_DocumentChooserBlock = { __typename: 'DocumentChooserBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_EmailBlock = { __typename: 'EmailBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_EmbedBlock = { __typename: 'EmbedBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_FloatBlock = { __typename: 'FloatBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_FrameworkLandingBlock = { __typename: 'FrameworkLandingBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_GoalProgressBarBlock = { __typename: 'GoalProgressBarBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_ImageBlock = { __typename: 'ImageBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_ImageChooserBlock = { __typename: 'ImageChooserBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_IntegerBlock = { __typename: 'IntegerBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_ListBlock = { __typename: 'ListBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_PageChooserBlock = { __typename: 'PageChooserBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_RawHTMLBlock = { __typename: 'RawHTMLBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_ReferenceProgressBarBlock = { __typename: 'ReferenceProgressBarBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_RegexBlock = { __typename: 'RegexBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_RichTextBlock = { __typename: 'RichTextBlock', field: string, value: string };
-
-export type GetInstanceContextQuery_instance_introContent_ScenarioProgressBarBlock = { __typename: 'ScenarioProgressBarBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_SnippetChooserBlock = { __typename: 'SnippetChooserBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_StaticBlock = { __typename: 'StaticBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_StreamBlock = { __typename: 'StreamBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_StreamFieldBlock = { __typename: 'StreamFieldBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_StructBlock = { __typename: 'StructBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_TextBlock = { __typename: 'TextBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_TimeBlock = { __typename: 'TimeBlock' };
-
-export type GetInstanceContextQuery_instance_introContent_URLBlock = { __typename: 'URLBlock' };
-
-export type GetInstanceContextQuery_instance_introContent =
-  | GetInstanceContextQuery_instance_introContent_ActionImpactBlock
-  | GetInstanceContextQuery_instance_introContent_BlockQuoteBlock
-  | GetInstanceContextQuery_instance_introContent_BooleanBlock
-  | GetInstanceContextQuery_instance_introContent_CallToActionBlock
-  | GetInstanceContextQuery_instance_introContent_CardListBlock
-  | GetInstanceContextQuery_instance_introContent_CategoryBreakdownBlock
-  | GetInstanceContextQuery_instance_introContent_CharBlock
-  | GetInstanceContextQuery_instance_introContent_ChoiceBlock
-  | GetInstanceContextQuery_instance_introContent_CurrentProgressBarBlock
-  | GetInstanceContextQuery_instance_introContent_DashboardCardBlock
-  | GetInstanceContextQuery_instance_introContent_DateBlock
-  | GetInstanceContextQuery_instance_introContent_DateTimeBlock
-  | GetInstanceContextQuery_instance_introContent_DecimalBlock
-  | GetInstanceContextQuery_instance_introContent_DocumentChooserBlock
-  | GetInstanceContextQuery_instance_introContent_EmailBlock
-  | GetInstanceContextQuery_instance_introContent_EmbedBlock
-  | GetInstanceContextQuery_instance_introContent_FloatBlock
-  | GetInstanceContextQuery_instance_introContent_FrameworkLandingBlock
-  | GetInstanceContextQuery_instance_introContent_GoalProgressBarBlock
-  | GetInstanceContextQuery_instance_introContent_ImageBlock
-  | GetInstanceContextQuery_instance_introContent_ImageChooserBlock
-  | GetInstanceContextQuery_instance_introContent_IntegerBlock
-  | GetInstanceContextQuery_instance_introContent_ListBlock
-  | GetInstanceContextQuery_instance_introContent_PageChooserBlock
-  | GetInstanceContextQuery_instance_introContent_RawHTMLBlock
-  | GetInstanceContextQuery_instance_introContent_ReferenceProgressBarBlock
-  | GetInstanceContextQuery_instance_introContent_RegexBlock
-  | GetInstanceContextQuery_instance_introContent_RichTextBlock
-  | GetInstanceContextQuery_instance_introContent_ScenarioProgressBarBlock
-  | GetInstanceContextQuery_instance_introContent_SnippetChooserBlock
-  | GetInstanceContextQuery_instance_introContent_StaticBlock
-  | GetInstanceContextQuery_instance_introContent_StreamBlock
-  | GetInstanceContextQuery_instance_introContent_StreamFieldBlock
-  | GetInstanceContextQuery_instance_introContent_StructBlock
-  | GetInstanceContextQuery_instance_introContent_TextBlock
-  | GetInstanceContextQuery_instance_introContent_TimeBlock
-  | GetInstanceContextQuery_instance_introContent_URLBlock
-;
-
 export type GetInstanceContextQuery_instance_goals_outcomeNode = { __typename: 'Node', id: string };
 
 export type GetInstanceContextQuery_instance_goals_dimensions = { __typename: 'InstanceGoalDimension', dimension: string, categories: Array<string>, groups: Array<string> };
 
 export type GetInstanceContextQuery_instance_goals = { __typename: 'InstanceGoalEntry', id: string, label: string | null, default: boolean, disabled: boolean, outcomeNode: GetInstanceContextQuery_instance_goals_outcomeNode, dimensions: Array<GetInstanceContextQuery_instance_goals_dimensions> };
 
-export type GetInstanceContextQuery_instance = { __typename: 'InstanceType', id: string, name: string, themeIdentifier: string | null, owner: string | null, defaultLanguage: string, supportedLanguages: Array<string>, targetYear: number | null, modelEndYear: number, referenceYear: number | null, minimumHistoricalYear: number, maximumHistoricalYear: number | null, leadTitle: string, leadParagraph: string | null, features: GetInstanceContextQuery_instance_features, introContent: Array<GetInstanceContextQuery_instance_introContent> | null, goals: Array<GetInstanceContextQuery_instance_goals> };
+export type GetInstanceContextQuery_instance = { __typename: 'InstanceType', id: string, name: string, themeIdentifier: string | null, owner: string | null, defaultLanguage: string, supportedLanguages: Array<string>, targetYear: number | null, modelEndYear: number, referenceYear: number | null, minimumHistoricalYear: number, maximumHistoricalYear: number | null, features: GetInstanceContextQuery_instance_features, goals: Array<GetInstanceContextQuery_instance_goals> };
 
 export type GetInstanceContextQuery_scenarios = { __typename: 'ScenarioType', id: string, isActive: boolean, isDefault: boolean, name: string };
 
 export type GetInstanceContextQuery_availableNormalizations = { __typename: 'NormalizationType', id: string, label: string, isActive: boolean };
 
-export type GetInstanceContextQuery_parameters_node_ActionNode = { __typename: 'ActionNode', id: string };
-
-export type GetInstanceContextQuery_parameters_node_Node = { __typename: 'Node', id: string };
-
-export type GetInstanceContextQuery_parameters_node =
-  | GetInstanceContextQuery_parameters_node_ActionNode
-  | GetInstanceContextQuery_parameters_node_Node
-;
-
-export type GetInstanceContextQuery_parameters_NumberParameterType_unit = { __typename: 'UnitType', htmlShort: string };
-
-export type GetInstanceContextQuery_parameters_BoolParameterType = { __typename: 'BoolParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null, node: GetInstanceContextQuery_parameters_node | null };
-
-export type GetInstanceContextQuery_parameters_NumberParameterType = { __typename: 'NumberParameterType', minValue: number | null, maxValue: number | null, step: number | null, id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, numberValue: number | null, numberDefaultValue: number | null, unit: GetInstanceContextQuery_parameters_NumberParameterType_unit | null, node: GetInstanceContextQuery_parameters_node | null };
-
-export type GetInstanceContextQuery_parameters_StringParameterType = { __typename: 'StringParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, stringValue: string | null, stringDefaultValue: string | null, node: GetInstanceContextQuery_parameters_node | null };
-
-export type GetInstanceContextQuery_parameters_UnknownParameterType = { __typename: 'UnknownParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, node: GetInstanceContextQuery_parameters_node | null };
-
-export type GetInstanceContextQuery_parameters =
-  | GetInstanceContextQuery_parameters_BoolParameterType
-  | GetInstanceContextQuery_parameters_NumberParameterType
-  | GetInstanceContextQuery_parameters_StringParameterType
-  | GetInstanceContextQuery_parameters_UnknownParameterType
-;
-
-export type GetInstanceContextQuery = { __typename: 'Query', instance: GetInstanceContextQuery_instance, scenarios: Array<GetInstanceContextQuery_scenarios>, availableNormalizations: Array<GetInstanceContextQuery_availableNormalizations>, parameters: Array<GetInstanceContextQuery_parameters> };
+export type GetInstanceContextQuery = { __typename: 'Query', instance: GetInstanceContextQuery_instance, scenarios: Array<GetInstanceContextQuery_scenarios>, availableNormalizations: Array<GetInstanceContextQuery_availableNormalizations> };
 
 
 export type GetInstanceContextQueryVariables = Exact<{ [key: string]: never; }>;
 
-type ActionParameter_BoolParameterType_Fragment = { __typename: 'BoolParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null, node: GetInstanceContextQuery_parameters_node | null };
+export type ActionParameterFragment_node_ActionNode = { __typename: 'ActionNode', id: string };
 
-type ActionParameter_NumberParameterType_Fragment = { __typename: 'NumberParameterType', minValue: number | null, maxValue: number | null, step: number | null, id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, numberValue: number | null, numberDefaultValue: number | null, unit: GetInstanceContextQuery_parameters_NumberParameterType_unit | null, node: GetInstanceContextQuery_parameters_node | null };
+export type ActionParameterFragment_node_Node = { __typename: 'Node', id: string };
 
-type ActionParameter_StringParameterType_Fragment = { __typename: 'StringParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, stringValue: string | null, stringDefaultValue: string | null, node: GetInstanceContextQuery_parameters_node | null };
+export type ActionParameterFragment_node =
+  | ActionParameterFragment_node_ActionNode
+  | ActionParameterFragment_node_Node
+;
 
-type ActionParameter_UnknownParameterType_Fragment = { __typename: 'UnknownParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, node: GetInstanceContextQuery_parameters_node | null };
+export type ActionParameterFragment_NumberParameterType_unit = { __typename: 'UnitType', htmlShort: string };
+
+type ActionParameter_BoolParameterType_Fragment = { __typename: 'BoolParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null, node: ActionParameterFragment_node | null };
+
+type ActionParameter_NumberParameterType_Fragment = { __typename: 'NumberParameterType', minValue: number | null, maxValue: number | null, step: number | null, id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, numberValue: number | null, numberDefaultValue: number | null, unit: ActionParameterFragment_NumberParameterType_unit | null, node: ActionParameterFragment_node | null };
+
+type ActionParameter_StringParameterType_Fragment = { __typename: 'StringParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, stringValue: string | null, stringDefaultValue: string | null, node: ActionParameterFragment_node | null };
+
+type ActionParameter_UnknownParameterType_Fragment = { __typename: 'UnknownParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, node: ActionParameterFragment_node | null };
 
 export type ActionParameterFragment =
   | ActionParameter_BoolParameterType_Fragment
@@ -326,13 +161,13 @@ export type CausalGridNodeFragment_metricDim_normalizedBy = { __typename: 'Norma
 
 export type CausalGridNodeFragment_metricDim = { __typename: 'DimensionalMetricType', id: string, name: string, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<CausalGridNodeFragment_metricDim_dimensions>, goals: Array<CausalGridNodeFragment_metricDim_goals>, unit: CausalGridNodeFragment_metricDim_unit, normalizedBy: CausalGridNodeFragment_metricDim_normalizedBy | null };
 
-export type CausalGridNodeFragment_parameters_BoolParameterType = { __typename: 'BoolParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null, node: GetInstanceContextQuery_parameters_node | null };
+export type CausalGridNodeFragment_parameters_BoolParameterType = { __typename: 'BoolParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null, node: ActionParameterFragment_node | null };
 
-export type CausalGridNodeFragment_parameters_NumberParameterType = { __typename: 'NumberParameterType', minValue: number | null, maxValue: number | null, step: number | null, id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, numberValue: number | null, numberDefaultValue: number | null, unit: GetInstanceContextQuery_parameters_NumberParameterType_unit | null, node: GetInstanceContextQuery_parameters_node | null };
+export type CausalGridNodeFragment_parameters_NumberParameterType = { __typename: 'NumberParameterType', minValue: number | null, maxValue: number | null, step: number | null, id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, numberValue: number | null, numberDefaultValue: number | null, unit: ActionParameterFragment_NumberParameterType_unit | null, node: ActionParameterFragment_node | null };
 
-export type CausalGridNodeFragment_parameters_StringParameterType = { __typename: 'StringParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, stringValue: string | null, stringDefaultValue: string | null, node: GetInstanceContextQuery_parameters_node | null };
+export type CausalGridNodeFragment_parameters_StringParameterType = { __typename: 'StringParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, stringValue: string | null, stringDefaultValue: string | null, node: ActionParameterFragment_node | null };
 
-export type CausalGridNodeFragment_parameters_UnknownParameterType = { __typename: 'UnknownParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, node: GetInstanceContextQuery_parameters_node | null };
+export type CausalGridNodeFragment_parameters_UnknownParameterType = { __typename: 'UnknownParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, node: ActionParameterFragment_node | null };
 
 export type CausalGridNodeFragment_parameters =
   | CausalGridNodeFragment_parameters_BoolParameterType
@@ -539,13 +374,13 @@ export type GetPageQueryVariables = Exact<{
 
 export type GetParametersQuery_availableNormalizations = { __typename: 'NormalizationType', id: string, label: string, isActive: boolean };
 
-export type GetParametersQuery_parameters_BoolParameterType = { __typename: 'BoolParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null, node: GetInstanceContextQuery_parameters_node | null };
+export type GetParametersQuery_parameters_BoolParameterType = { __typename: 'BoolParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null, node: ActionParameterFragment_node | null };
 
-export type GetParametersQuery_parameters_NumberParameterType = { __typename: 'NumberParameterType', minValue: number | null, maxValue: number | null, step: number | null, id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, numberValue: number | null, numberDefaultValue: number | null, unit: GetInstanceContextQuery_parameters_NumberParameterType_unit | null, node: GetInstanceContextQuery_parameters_node | null };
+export type GetParametersQuery_parameters_NumberParameterType = { __typename: 'NumberParameterType', minValue: number | null, maxValue: number | null, step: number | null, id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, numberValue: number | null, numberDefaultValue: number | null, unit: ActionParameterFragment_NumberParameterType_unit | null, node: ActionParameterFragment_node | null };
 
-export type GetParametersQuery_parameters_StringParameterType = { __typename: 'StringParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, stringValue: string | null, stringDefaultValue: string | null, node: GetInstanceContextQuery_parameters_node | null };
+export type GetParametersQuery_parameters_StringParameterType = { __typename: 'StringParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, stringValue: string | null, stringDefaultValue: string | null, node: ActionParameterFragment_node | null };
 
-export type GetParametersQuery_parameters_UnknownParameterType = { __typename: 'UnknownParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, node: GetInstanceContextQuery_parameters_node | null };
+export type GetParametersQuery_parameters_UnknownParameterType = { __typename: 'UnknownParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, node: ActionParameterFragment_node | null };
 
 export type GetParametersQuery_parameters =
   | GetParametersQuery_parameters_BoolParameterType
