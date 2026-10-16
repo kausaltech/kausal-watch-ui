@@ -3,7 +3,6 @@ import { CircularProgress, FormControlLabel, Switch } from '@mui/material';
 import styled from '@emotion/styled';
 
 import { NetworkStatus, gql } from '@apollo/client';
-import { useMutation, useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 
 import {
@@ -11,9 +10,8 @@ import {
   type SetNormalizationMutation,
   type SetNormalizationMutationVariables,
 } from '@/common/__generated__/paths/graphql';
-import { usePaths } from '@/context/paths/paths';
 import { GET_PARAMETERS } from '@/queries/paths/get-paths-parameters';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
+import { usePathsMutation, usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 
 const SwitchWrapper = styled.div`
   max-width: 160px;
@@ -38,24 +36,15 @@ type NormalizationWidgetProps = {
 
 function NormalizationWidget(props: NormalizationWidgetProps) {
   const t = useTranslations();
-  const paths = usePaths();
   const { loading, error, data, previousData, refetch, networkStatus } =
-    useQuery<GetParametersQuery>(GET_PARAMETERS, {
+    usePathsQuery<GetParametersQuery>(GET_PARAMETERS, {
       notifyOnNetworkStatusChange: true,
-      context: {
-        uri: '/api/graphql-paths',
-        headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
-      },
     });
 
   const [setNormalization, { data: mutationData, loading: mutationLoading, error: mutationError }] =
-    useMutation<SetNormalizationMutation, SetNormalizationMutationVariables>(
+    usePathsMutation<SetNormalizationMutation, SetNormalizationMutationVariables>(
       SET_NORMALIZATION_MUTATION,
       {
-        context: {
-          uri: '/api/graphql-paths',
-          headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
-        },
         refetchQueries: 'active',
       }
     );
