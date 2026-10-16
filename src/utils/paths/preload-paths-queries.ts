@@ -13,6 +13,8 @@ import { getPreloadKey } from '@/utils/paths/preload-key';
 export type PathsPreloadRequest = {
   query: DocumentNode;
   variables: OperationVariables;
+  /** Data the server already has for this query, so it isn't queried again. */
+  data?: unknown;
 };
 
 /**
@@ -65,17 +67,19 @@ async function startQueries(
   );
 
   return Object.fromEntries(
-    [...requests].map(([key, { query, variables }]) => [
+    [...requests].map(([key, { query, variables, data: knownData }]) => [
       key,
-      client.query({ query, variables, fetchPolicy: 'no-cache' }).then(
-        ({ data }) => data ?? null,
-        (error: unknown) => {
-          captureException(error, {
-            extra: { pathsInstance: instanceId, context: 'preloadPathsQueries', key },
-          });
-          return null;
-        }
-      ),
+      knownData !== undefined
+        ? Promise.resolve(knownData)
+        : client.query({ query, variables, fetchPolicy: 'no-cache' }).then(
+            ({ data }) => data ?? null,
+            (error: unknown) => {
+              captureException(error, {
+                extra: { pathsInstance: instanceId, context: 'preloadPathsQueries', key },
+              });
+              return null;
+            }
+          ),
     ])
   );
 }
