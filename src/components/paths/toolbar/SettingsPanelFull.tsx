@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -92,6 +92,12 @@ const MODE = {
   NONE: 'none',
 };
 
+/**
+ * The Paths instance the reactive vars were initialised for. They are global,
+ * so they outlive navigation to a plan that uses another instance.
+ */
+let initializedInstanceId: string | undefined;
+
 const SettingsPanelFull: React.FC = () => {
   const paths = usePaths() as PathsInstanceType;
   const showSettingsPanel = useReactiveVar(showSettingsPanelVar);
@@ -112,6 +118,20 @@ const SettingsPanelFull: React.FC = () => {
       setMode(MODE.MD);
     }
   }, [showSettingsPanel]);
+  // Clear the values of a previous Paths instance. Layout effects run before all passive
+  // effects, so the effects below and in MediumSettings then initialize the values for the
+  // new instance the same way as on first mount.
+  useLayoutEffect(() => {
+    const instanceId = paths?.instance.id;
+    if (!instanceId || instanceId === initializedInstanceId) return;
+    if (initializedInstanceId !== undefined) {
+      activeGoalVar(null);
+      activeScenarioVar(null);
+      yearRangeVar(null!);
+    }
+    initializedInstanceId = instanceId;
+  });
+
   // Initialize default values only on mount. We don't want to reset user-modified values.
   // We do not want to unmount this when page changes so hiding the panel on relevant pages
   // is handled in the MediumSettings component.

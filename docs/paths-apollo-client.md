@@ -196,6 +196,13 @@ the `authMiddleware` of both Watch clients can then be removed.
    - reset the `paths-cache.ts` reactive vars when the instance id changes,
      since they're currently only seeded when empty.
 
+   Done (October 2026). paths-ui's `getInstanceConfig()` holds Watch links
+   and demo pages, not goal display settings, so there was nothing to share:
+   the settings moved to `src/config/paths-instances.ts` and still belong in
+   the backend eventually. `SettingsPanelFull` clears the reactive vars in a
+   layout effect when the instance changes, so they are seeded again the same
+   way as on first mount.
+
 Steps 1–3 can ship on their own and fix problems 1, 2 and 4. Steps 4–5 fix 3
 and 5. Step 6 fixes 6.
 

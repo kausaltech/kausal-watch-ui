@@ -3,8 +3,9 @@ import { describe, expect, it } from '@jest/globals';
 import { type DocumentNode, print } from 'graphql';
 import { Observable } from 'rxjs';
 
+import { makePathsInstanceMiddleware } from '@common/apollo/paths-client';
+
 import { headersMiddleware, localeMiddleware } from '@/utils/apollo.utils';
-import { makeInstanceMiddleware } from '@/utils/paths/paths.utils';
 
 async function executeAndCaptureQuery(
   link: ApolloLink,
@@ -75,7 +76,10 @@ describe('Apollo directive middleware', () => {
         }
       }
     `;
-    const middleware = makeInstanceMiddleware({ instanceIdentifier: 'test-plan' });
+    const middleware = makePathsInstanceMiddleware({
+      instanceIdentifier: 'test-plan',
+      possibleTypes: {},
+    });
 
     const printedQuery = await executeTwiceAndPrint(middleware, query, { locale: 'fi' });
 
