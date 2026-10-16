@@ -64,21 +64,65 @@ function getBlockRequests(
   }
 }
 
+/**
+ * The Paths queries of a category page layout block. Their Paths node is the
+ * one of the page's category; see `CategoryPageStreamField`.
+ */
+function getCategoryLayoutBlockRequests(
+  block: StreamFieldBlock,
+  categoryNodeId: string,
+  paths: GetInstanceContextQuery
+): PathsPreloadRequest[] {
+  if (block?.__typename !== 'PathsNodeSummaryBlock') return [];
+  return [
+    {
+      query: GET_NODE_CONTENT,
+      variables: getNodeContentVariables(
+        categoryNodeId,
+        paths.instance.goals,
+        block.pathsTargetNodeId || null
+      ),
+    },
+  ];
+}
+
+/** The page fields the preload reads. */
+type PlanPage = {
+  __typename: string;
+  body?: readonly StreamFieldBlock[] | null;
+  /** Category pages only */
+  category?: { kausalPathsNodeUuid?: string | null } | null;
+  layout?: { layoutMainTop?: readonly StreamFieldBlock[] | null } | null;
+};
+
 const PRELOADED_BLOCK_TYPES = new Set(['PathsOutcomeBlock', 'CategoryTypeLevelListBlock']);
 
 /**
- * Preload the Paths data of a page's top-level stream field blocks. See
+ * Preload the Paths data of a page: its top-level stream field blocks and,
+ * on a category page, the Paths blocks of its layout. See
  * `preloadPathsQueries`.
  */
 export function preloadPathsBlocks(
   domain: string,
   plan: string,
-  blocks: readonly StreamFieldBlock[] | null | undefined
+  page: PlanPage | null | undefined
 ): Promise<PathsPreloadedQueries> {
-  if (!blocks?.some((block) => block && PRELOADED_BLOCK_TYPES.has(block.__typename))) {
+  const blocks = (page?.body ?? []).filter(
+    (block) => block && PRELOADED_BLOCK_TYPES.has(block.__typename)
+  );
+  const categoryNodeId = page?.category?.kausalPathsNodeUuid;
+  const layoutBlocks = categoryNodeId
+    ? (page?.layout?.layoutMainTop ?? []).filter(
+        (block) => block?.__typename === 'PathsNodeSummaryBlock'
+      )
+    : [];
+  if (!blocks.length && !layoutBlocks.length) {
     return Promise.resolve({});
   }
-  return preloadPathsQueries(domain, plan, (paths) =>
-    blocks.flatMap((block) => getBlockRequests(block, paths))
-  );
+  return preloadPathsQueries(domain, plan, (paths) => [
+    ...blocks.flatMap((block) => getBlockRequests(block, paths)),
+    ...layoutBlocks.flatMap((block) =>
+      getCategoryLayoutBlockRequests(block, categoryNodeId!, paths)
+    ),
+  ]);
 }

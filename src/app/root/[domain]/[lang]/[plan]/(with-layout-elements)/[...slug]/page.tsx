@@ -57,11 +57,7 @@ export default async function SlugPage(props: Props) {
 
   const { planPage } = data;
   // Not awaited: Paths blocks stream in when their data is ready
-  const pathsPreload = preloadPathsBlocks(
-    params.domain,
-    plan,
-    'body' in planPage ? planPage.body : null
-  );
+  const pathsPreload = preloadPathsBlocks(params.domain, plan, planPage);
 
   return (
     <PathsPreloadProvider preload={pathsPreload}>
