@@ -6,8 +6,6 @@ import type {
 } from '@/common/__generated__/paths/graphql';
 import { getPathsClient } from '@/utils/paths/paths-rsc-client';
 
-import { ACTION_PARAMETER_FRAGMENT } from './get-paths-node';
-
 export const scenarioFragment = gql`
   fragment ScenarioFragment on ScenarioType {
     id
@@ -31,22 +29,12 @@ const GET_INSTANCE_CONTEXT = gql`
       referenceYear
       minimumHistoricalYear
       maximumHistoricalYear
-      leadTitle
-      leadParagraph
       features {
         baselineVisibleInGraphs
         hideNodeDetails
         maximumFractionDigits
         showAccumulatedEffects
         showSignificantDigits
-      }
-      introContent {
-        ... on StreamFieldInterface {
-          ... on RichTextBlock {
-            field
-            value
-          }
-        }
       }
       goals {
         id
@@ -71,12 +59,8 @@ const GET_INSTANCE_CONTEXT = gql`
       label
       isActive
     }
-    parameters {
-      ...ActionParameter
-    }
   }
   ${scenarioFragment}
-  ${ACTION_PARAMETER_FRAGMENT}
 `;
 
 export default GET_INSTANCE_CONTEXT;

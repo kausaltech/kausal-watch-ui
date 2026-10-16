@@ -180,7 +180,11 @@ export default async function PlanLayout(props: Props) {
     notFound();
   }
 
-  const theme = await loadTheme(planData.plan.themeIdentifier || params.plan);
+  // The Paths instance only depends on the plan, so fetch it alongside the theme
+  const [theme, pathsData] = await Promise.all([
+    loadTheme(planData.plan.themeIdentifier || params.plan),
+    getPathsData(planData.plan.kausalPathsInstanceUuid),
+  ]);
 
   const themeStylesheet = theme.name ? (
     <link rel="stylesheet" type="text/css" href={getThemeStaticURL(theme.mainCssFile)} />
@@ -188,8 +192,6 @@ export default async function PlanLayout(props: Props) {
 
   const matomoAnalyticsUrl = planData.plan.domain?.matomoAnalyticsUrl ?? undefined;
   const selectedWorkflow = cookieStore.get(SELECTED_WORKFLOW_COOKIE_KEY);
-
-  const pathsData = await getPathsData(planData.plan?.kausalPathsInstanceUuid);
 
   return (
     <>

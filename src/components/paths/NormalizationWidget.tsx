@@ -7,8 +7,8 @@ import { useTranslations } from 'next-intl';
 
 import {
   type GetParametersQuery,
-  type SetNormalizationMutation,
-  type SetNormalizationMutationVariables,
+  type SetNormalizationFromWidgetMutation,
+  type SetNormalizationFromWidgetMutationVariables,
 } from '@/common/__generated__/paths/graphql';
 import { GET_PARAMETERS } from '@/queries/paths/get-paths-parameters';
 import { usePathsMutation, usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
@@ -42,12 +42,12 @@ function NormalizationWidget(props: NormalizationWidgetProps) {
     });
 
   const [setNormalization, { data: mutationData, loading: mutationLoading, error: mutationError }] =
-    usePathsMutation<SetNormalizationMutation, SetNormalizationMutationVariables>(
-      SET_NORMALIZATION_MUTATION,
-      {
-        refetchQueries: 'active',
-      }
-    );
+    usePathsMutation<
+      SetNormalizationFromWidgetMutation,
+      SetNormalizationFromWidgetMutationVariables
+    >(SET_NORMALIZATION_MUTATION, {
+      refetchQueries: 'active',
+    });
 
   if ((loading && !previousData) || !data || !data.parameters) {
     return <CircularProgress size={10} sx={{ ml: 0.5, mb: -0.1 }} />;
