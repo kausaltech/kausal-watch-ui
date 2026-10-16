@@ -1,13 +1,12 @@
-import { useMutation, useQuery } from '@apollo/client/react';
-
 import { activeScenarioVar } from '@common/apollo/paths-cache';
 
 import ScenarioSelector from '@/components/paths/ScenarioSelector';
 import { render, waitFor } from '@/tests/test-utils';
+import { usePathsMutation, usePreloadedPathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 
-jest.mock('@apollo/client/react', () => ({
-  useMutation: jest.fn(),
-  useQuery: jest.fn(),
+jest.mock('@/utils/paths/hooks/usePathsApollo', () => ({
+  usePathsMutation: jest.fn(),
+  usePreloadedPathsQuery: jest.fn(),
 }));
 
 jest.mock('@/components/common/SelectDropdown', () => ({
@@ -21,8 +20,8 @@ jest.mock('@/context/paths/paths', () => ({
   usePaths: () => ({ instance: { id: 'zuerich' } }),
 }));
 
-const mockedUseMutation = jest.mocked(useMutation);
-const mockedUseQuery = jest.mocked(useQuery);
+const mockedUseMutation = jest.mocked(usePathsMutation);
+const mockedUseQuery = jest.mocked(usePreloadedPathsQuery);
 
 describe('ScenarioSelector', () => {
   beforeEach(() => {
@@ -30,7 +29,7 @@ describe('ScenarioSelector', () => {
     mockedUseMutation.mockReturnValue([
       jest.fn(),
       { loading: false, called: false, client: {} },
-    ] as ReturnType<typeof useMutation>);
+    ] as unknown as ReturnType<typeof usePathsMutation>);
   });
 
   afterEach(() => {
@@ -48,7 +47,7 @@ describe('ScenarioSelector', () => {
       previousData: undefined,
       variables: {},
       ...result,
-    } as unknown as ReturnType<typeof useQuery>);
+    } as unknown as ReturnType<typeof usePreloadedPathsQuery>);
 
     render(<ScenarioSelector />);
 
@@ -65,7 +64,7 @@ describe('ScenarioSelector', () => {
       networkStatus: 7,
       previousData: undefined,
       variables: {},
-    } as unknown as ReturnType<typeof useQuery>);
+    } as unknown as ReturnType<typeof usePreloadedPathsQuery>);
 
     render(<ScenarioSelector />);
 

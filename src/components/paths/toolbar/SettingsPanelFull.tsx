@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -20,11 +20,14 @@ import Icon from '@/components/common/Icon';
 import type { PathsInstanceType } from '@/components/providers/PathsProvider';
 //import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import { usePaths } from '@/context/paths/paths';
+import {
+  getDefaultGoal,
+  getInitialScenario,
+  getInitialYearRange,
+} from '@/utils/paths/paths-settings';
 
 import CompleteSettings from './CompleteSettings';
 import MediumSettings from './MediumSettings';
-
-type AugmentedGoal = PathsInstanceType['instance']['goals'][number];
 
 const Spacer = styled.div`
   // Add space under footer for approximate height of the settings panel
@@ -92,6 +95,12 @@ const MODE = {
   NONE: 'none',
 };
 
+/**
+ * The Paths instance the reactive vars were initialised for. They are global,
+ * so they outlive navigation to a plan that uses another instance.
+ */
+let initializedInstanceId: string | undefined;
+
 const SettingsPanelFull: React.FC = () => {
   const paths = usePaths() as PathsInstanceType;
   const showSettingsPanel = useReactiveVar(showSettingsPanelVar);
@@ -112,30 +121,37 @@ const SettingsPanelFull: React.FC = () => {
       setMode(MODE.MD);
     }
   }, [showSettingsPanel]);
+  // Clear the values of a previous Paths instance. Layout effects run before all passive
+  // effects, so the effects below and in MediumSettings then initialize the values for the
+  // new instance the same way as on first mount.
+  useLayoutEffect(() => {
+    const instanceId = paths?.instance.id;
+    if (!instanceId || instanceId === initializedInstanceId) return;
+    if (initializedInstanceId !== undefined) {
+      activeGoalVar(null);
+      activeScenarioVar(null);
+      yearRangeVar(null!);
+    }
+    initializedInstanceId = instanceId;
+  });
+
   // Initialize default values only on mount. We don't want to reset user-modified values.
   // We do not want to unmount this when page changes so hiding the panel on relevant pages
   // is handled in the MediumSettings component.
   useEffect(() => {
     if (!paths || paths.instance.id === 'unknown') return;
     const { instance, scenarios } = paths;
-    const firstActiveScenario = scenarios.find((sc) => sc.isActive);
-    const goals = instance.goals;
 
     if (!activeGoalVar()) {
-      const defaultGoal = goals.length > 1 ? goals.find((goal) => goal.default) : goals[0];
-      activeGoalVar((defaultGoal as AugmentedGoal | undefined) ?? null);
+      activeGoalVar(getDefaultGoal(instance.goals) ?? null);
     }
 
     if (!activeScenarioVar()) {
-      activeScenarioVar(firstActiveScenario ?? undefined);
+      activeScenarioVar(getInitialScenario(scenarios) ?? undefined);
     }
 
     if (!yearRangeVar()) {
-      const initialYearRange: [number, number] = [
-        instance.minimumHistoricalYear ?? instance.referenceYear ?? 2010,
-        instance.targetYear ?? instance.modelEndYear,
-      ];
-      yearRangeVar(initialYearRange);
+      yearRangeVar(getInitialYearRange(instance));
     }
   });
 

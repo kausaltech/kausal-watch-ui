@@ -1,10 +1,16 @@
+import { cache } from 'react';
+
 import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import { getPathsInstance } from '@/queries/paths/get-paths-instance';
 import { tryRequest } from '@/utils/api.utils';
 
 type PathsInstanceRequest = (pathsInstance: string) => ReturnType<typeof getPathsInstance>;
 
-export async function getPathsData(
+/**
+ * The Paths instance context of a plan, fetched once per request: the plan
+ * layout and any page below it share the result.
+ */
+export const getPathsData = cache(async function getPathsData(
   pathsInstance: string,
   request: PathsInstanceRequest = getPathsInstance
 ): Promise<GetInstanceContextQuery | undefined> {
@@ -21,4 +27,4 @@ export async function getPathsData(
     return result.data;
   }
   return undefined;
-}
+});

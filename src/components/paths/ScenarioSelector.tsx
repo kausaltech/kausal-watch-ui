@@ -1,9 +1,8 @@
-import { useEffect, useMemo } from 'react';
+import { Suspense, useEffect, useMemo } from 'react';
 
 import styled from '@emotion/styled';
 
 import { gql } from '@apollo/client';
-import { useMutation, useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 
 import { activeScenarioVar } from '@common/apollo/paths-cache';
@@ -15,9 +14,8 @@ import type {
   GetScenariosQueryVariables,
 } from '@/common/__generated__/paths/graphql';
 import SelectDropdown, { type SelectDropdownOption } from '@/components/common/SelectDropdown';
-import { usePaths } from '@/context/paths/paths';
 import { GET_SCENARIOS } from '@/queries/paths/get-paths-scenarios';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
+import { usePathsMutation, usePreloadedPathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 
 const pathsQueries = 'active';
 
@@ -69,30 +67,31 @@ const DropdownWrapper = styled.div<{ $isCustom: boolean }>`
   }
 `;
 
-const ScenarioSelector = ({ disabled = false }: { disabled?: boolean }) => {
+type ScenarioSelectorProps = { disabled?: boolean };
+
+/** The scenarios may be preloaded on the server, see `preloadSettingsPanel`. */
+const ScenarioSelector = (props: ScenarioSelectorProps) => (
+  <Suspense fallback={null}>
+    <ScenarioSelectorContent {...props} />
+  </Suspense>
+);
+
+const ScenarioSelectorContent = ({ disabled = false }: ScenarioSelectorProps) => {
   const t = useTranslations();
-  const paths = usePaths();
 
-  const { loading, error, data } = useQuery<GetScenariosQuery, GetScenariosQueryVariables>(
-    GET_SCENARIOS,
-    {
-      context: {
-        uri: '/api/graphql-paths',
-        headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
-      },
-      fetchPolicy: 'network-only',
-      notifyOnNetworkStatusChange: true,
-    }
-  );
+  const { loading, error, data } = usePreloadedPathsQuery<
+    GetScenariosQuery,
+    GetScenariosQueryVariables
+  >(GET_SCENARIOS, {
+    variables: {},
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+  });
 
-  const [activateScenario, { loading: mutationLoading, error: mutationError }] = useMutation<
+  const [activateScenario, { loading: mutationLoading, error: mutationError }] = usePathsMutation<
     ActivateScenarioMutation,
     ActivateScenarioMutationVariables
   >(ACTIVATE_SCENARIO, {
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
-    },
     refetchQueries: pathsQueries,
   });
 

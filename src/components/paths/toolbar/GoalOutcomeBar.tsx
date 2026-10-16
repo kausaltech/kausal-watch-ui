@@ -1,17 +1,14 @@
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 import Collapse from '@mui/material/Collapse';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { NetworkStatus, gql } from '@apollo/client';
-import { useQuery, useReactiveVar } from '@apollo/client/react';
+import { NetworkStatus } from '@apollo/client';
 import { max, min, sortBy } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import ContentLoader from 'react-content-loader';
-
-import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 
 import type {
   GetInstanceGoalOutcomeQuery,
@@ -22,31 +19,20 @@ import useNumberFormatter from '@/common/numbers';
 import Button from '@/components/common/Button';
 import { CardBody } from '@/components/common/CardParts';
 import Icon from '@/components/common/Icon';
-import { usePaths } from '@/context/paths/paths';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
-
-export const GET_INSTANCE_GOAL_OUTCOME = gql`
-  query GetInstanceGoalOutcome($goal: ID!) {
-    instance {
-      id
-      goals(id: $goal) {
-        values {
-          year
-          goal
-          actual
-          isForecast
-          isInterpolated
-        }
-        unit {
-          htmlShort
-        }
-      }
-    }
-  }
-`;
+import {
+  GET_INSTANCE_GOAL_OUTCOME,
+  getGoalOutcomeVariables,
+} from '@/queries/paths/get-paths-goal-outcome';
+import { usePreloadedPathsQuery } from '@/utils/paths/hooks/usePathsApollo';
+import {
+  useActiveGoal,
+  useActiveScenario,
+  useYearRange,
+} from '@/utils/paths/hooks/usePathsSettings';
 
 const OutcomeBarLoader = (props) => (
   <ContentLoader
+    uniqueKey="outcome-bar-loader"
     speed={2}
     width={500}
     height={80}
@@ -249,30 +235,35 @@ type GoalOutcomeBarBar = {
   placement?: number;
 };
 
+/**
+ * The goal outcome may be preloaded on the server and streamed in, so the bar
+ * shows its loader until that data has arrived.
+ */
 function GoalOutcomeBar(props: GoalOutcomeBarProps) {
+  return (
+    <Suspense fallback={<OutcomeBarLoader />}>
+      <GoalOutcomeBarContent {...props} />
+    </Suspense>
+  );
+}
+
+function GoalOutcomeBarContent(props: GoalOutcomeBarProps) {
   const { compact } = props;
   const t = useTranslations();
   const [isOutcomeOpen, setIsOutcomeOpen] = useState(true);
   const numberFormatter = useNumberFormatter({ scope: 'paths' });
   const theme = useTheme();
-  const paths = usePaths();
-  const activeScenario = useReactiveVar(activeScenarioVar);
-  const yearRange = useReactiveVar(yearRangeVar);
-  const activeGoal = useReactiveVar(activeGoalVar);
+  const activeScenario = useActiveScenario();
+  const yearRange = useYearRange();
+  const activeGoal = useActiveGoal();
 
-  const { loading, error, data, networkStatus } = useQuery<
+  const { loading, error, data, networkStatus } = usePreloadedPathsQuery<
     GetInstanceGoalOutcomeQuery,
     GetInstanceGoalOutcomeQueryVariables
   >(GET_INSTANCE_GOAL_OUTCOME, {
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: paths?.instance.id }),
-    },
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
-    variables: {
-      goal: activeGoal?.id || '',
-    },
+    variables: getGoalOutcomeVariables(activeGoal?.id),
     skip: !activeGoal?.id,
   });
 

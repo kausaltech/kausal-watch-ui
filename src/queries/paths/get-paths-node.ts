@@ -122,6 +122,23 @@ const GET_NODE_CONTENT = gql`
   ${ACTION_PARAMETER_FRAGMENT}
 `;
 
+/**
+ * Variables of `GET_NODE_CONTENT` for a node summary, which shows the impact on
+ * the instance's default goal. Shared by `PathsNodeSummary` and the
+ * server-side preload, which must ask for exactly the same data.
+ */
+export function getNodeContentVariables(
+  node: string,
+  goals: readonly { id: string; default: boolean }[] | undefined,
+  targetNodeId: string | null | undefined
+) {
+  return {
+    node,
+    goal: goals?.find((goal) => goal.default)?.id ?? 'net_emissions',
+    targetNodeId: targetNodeId ?? null,
+  };
+}
+
 const GET_NODE_INFO = gql`
   query GetNodeInfo($node: ID!) {
     node(id: $node) {
