@@ -3,14 +3,16 @@ import { notFound } from 'next/navigation';
 import type { Metadata, ResolvingMetadata } from 'next';
 
 import type { ContentPageQuery } from '@/common/__generated__/graphql';
+import PathsPreloadProvider from '@/components/providers/PathsPreloadProvider';
 import { getContentPage } from '@/queries/get-content-page';
 import { tryRequest } from '@/utils/api.utils';
 import { getMetaDescription, getMetaImage } from '@/utils/metadata';
+import { preloadPathsBlocks } from '@/utils/paths/preload-paths-blocks';
 
 import ContentPage from '../[...slug]/ContentPage';
 
 type Props = {
-  params: Promise<{ slug: string[]; plan: string }>;
+  params: Promise<{ slug: string[]; plan: string; domain: string }>;
 };
 
 const getPath = (slug: string[]) => `/${slug.map(decodeURIComponent).join('/')}`;
@@ -53,5 +55,17 @@ export default async function SlugPage(props: Props) {
     return notFound();
   }
 
-  return <ContentPage page={data.planPage} testId="slug-page" />;
+  const { planPage } = data;
+  // Not awaited: Paths blocks stream in when their data is ready
+  const pathsPreload = preloadPathsBlocks(
+    params.domain,
+    plan,
+    'body' in planPage ? planPage.body : null
+  );
+
+  return (
+    <PathsPreloadProvider preload={pathsPreload}>
+      <ContentPage page={planPage} testId="slug-page" />
+    </PathsPreloadProvider>
+  );
 }

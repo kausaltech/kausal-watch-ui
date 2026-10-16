@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { type ReactNode, Suspense, useCallback, useEffect, useState } from 'react';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
@@ -9,13 +9,11 @@ import Alert from '@mui/material/Alert';
 import styled from '@emotion/styled';
 
 import { NetworkStatus } from '@apollo/client';
-import { useReactiveVar } from '@apollo/client/react';
 import { captureException } from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 import ContentLoader from 'react-content-loader';
 
-import { activeGoalVar, activeScenarioVar, yearRangeVar } from '@common/apollo/paths-cache';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type {
@@ -27,9 +25,15 @@ import { Card, CardBody } from '@/components/common/CardParts';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import OutcomeCardSet from '@/components/paths/outcome/OutcomeCardSet';
+import { usePreloadedOutcomeNode } from '@/components/providers/PathsPreloadProvider';
 import { usePaths } from '@/context/paths/paths';
-import { GET_OUTCOME_NODE } from '@/queries/paths/get-paths-page';
+import { GET_OUTCOME_NODE, getOutcomeNodeVariables } from '@/queries/paths/get-paths-page';
 import { usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
+import {
+  useActiveGoal,
+  useActiveScenario,
+  useYearRange,
+} from '@/utils/paths/hooks/usePathsSettings';
 
 const OutcomeBlockLoader = (props: React.ComponentProps<typeof ContentLoader>) => (
   <ContentLoader
@@ -117,13 +121,53 @@ type PathsOutcomeBlockProps = {
   outcomeNodeId?: string | null;
 };
 
+function OutcomeBlockFrame(props: {
+  heading: string | null;
+  refetching?: boolean;
+  children: ReactNode;
+}) {
+  const { heading, refetching = false, children } = props;
+  return (
+    <Background>
+      <Container>
+        <Row>
+          <Col>
+            <StyledTitle>{heading}</StyledTitle>
+            <StyledCard $disabled={refetching}>
+              <CardBody>{children}</CardBody>
+            </StyledCard>
+          </Col>
+        </Row>
+      </Container>
+    </Background>
+  );
+}
+
+/**
+ * The outcome node data may be preloaded on the server and streamed in, so
+ * the block shows its loader until that data has arrived.
+ */
 export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
+  return (
+    <Suspense
+      fallback={
+        <OutcomeBlockFrame heading={props.heading}>
+          <OutcomeBlockLoader />
+        </OutcomeBlockFrame>
+      }
+    >
+      <PathsOutcomeBlockContent {...props} />
+    </Suspense>
+  );
+}
+
+function PathsOutcomeBlockContent(props: PathsOutcomeBlockProps) {
   const { heading, outcomeNodeId } = props;
   const t = useTranslations();
   const pathsInstance = usePaths();
-  const yearRange = useReactiveVar(yearRangeVar);
-  const activeGoal = useReactiveVar(activeGoalVar);
-  const activeScenario = useReactiveVar(activeScenarioVar);
+  const yearRange = useYearRange();
+  const activeGoal = useActiveGoal();
+  const activeScenario = useActiveScenario();
   //const path = '';
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -151,9 +195,12 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
   }, [lastActiveNodeId, queryNodeId, router, pathname, createQueryString]);
 
   // router.push(pathname + '?' + createQueryString('sort', 'asc'))
+  const variables = getOutcomeNodeVariables(outcomeNodeId, activeGoal?.id ?? null);
+  const preloaded = usePreloadedOutcomeNode(variables);
   const queryResp = usePathsQuery<GetOutcomeNodeContentQuery>(GET_OUTCOME_NODE, {
-    variables: { node: outcomeNodeId || 'net_emissions', goal: activeGoal?.id ?? null },
-    fetchPolicy: 'cache-and-network',
+    variables,
+    // Preloaded data was just fetched on the server for this visitor's session
+    fetchPolicy: preloaded ? 'cache-first' : 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
 
@@ -194,46 +241,33 @@ export default function PathsOutcomeBlock(props: PathsOutcomeBlockProps) {
     : { visible: [], all: new Map() };
 
   return (
-    <Background>
-      <Container>
-        <Row>
-          <Col>
-            <StyledTitle>{heading}</StyledTitle>
-            <StyledCard $disabled={refetching}>
-              <CardBody>
-                {deploymentType !== 'production' && !data?.node && !loading && (
-                  <Alert severity="warning">
-                    {t('error-no-outcome-node', { outcomeNodeId: outcomeNodeId ?? 'undefined' })}
-                  </Alert>
-                )}
-                {loading && !previousData && <OutcomeBlockLoader />}
-                {error && <ErrorMessage message={error.message} />}
-                {!error &&
-                  nodes.visible.map((node: OutcomenodeType, index: number) => (
-                    <OutcomeCardSet
-                      key={node.id}
-                      // Hacky solution to support different sub node titles depending on level
-                      subNodesTitle={
-                        index === 0 ? t('outcome-sub-nodes') : t('outcome-sub-nodes-secondary')
-                      }
-                      nodeMap={nodes.all}
-                      rootNode={node}
-                      startYear={yearRange[0]}
-                      endYear={yearRange[1]}
-                      activeScenario={activeScenario?.name || ''}
-                      parentColor="#666"
-                      activeNodeId={
-                        index < nodes.visible.length - 1 ? nodes.visible[index + 1].id : undefined
-                      }
-                      setLastActiveNodeId={setLastActiveNodeId}
-                      refetching={refetching}
-                    />
-                  ))}
-              </CardBody>
-            </StyledCard>
-          </Col>
-        </Row>
-      </Container>
-    </Background>
+    <OutcomeBlockFrame heading={heading} refetching={refetching}>
+      {deploymentType !== 'production' && !data?.node && !loading && (
+        <Alert severity="warning">
+          {t('error-no-outcome-node', { outcomeNodeId: outcomeNodeId ?? 'undefined' })}
+        </Alert>
+      )}
+      {loading && !data && <OutcomeBlockLoader />}
+      {error && <ErrorMessage message={error.message} />}
+      {!error &&
+        nodes.visible.map((node: OutcomenodeType, index: number) => (
+          <OutcomeCardSet
+            key={node.id}
+            // Hacky solution to support different sub node titles depending on level
+            subNodesTitle={index === 0 ? t('outcome-sub-nodes') : t('outcome-sub-nodes-secondary')}
+            nodeMap={nodes.all}
+            rootNode={node}
+            startYear={yearRange[0]}
+            endYear={yearRange[1]}
+            activeScenario={activeScenario?.name || ''}
+            parentColor="#666"
+            activeNodeId={
+              index < nodes.visible.length - 1 ? nodes.visible[index + 1].id : undefined
+            }
+            setLastActiveNodeId={setLastActiveNodeId}
+            refetching={refetching}
+          />
+        ))}
+    </OutcomeBlockFrame>
   );
 }
