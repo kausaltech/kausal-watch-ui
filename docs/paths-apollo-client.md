@@ -189,8 +189,9 @@ the `authMiddleware` of both Watch clients can then be removed.
    `getPathsClient` and hand it to the Paths client in the browser (see open
    questions).
 
-   Done (October 2026) for `PathsOutcomeBlock` and the `PathsNodeSummary`
-   cards of `CategoryTypeLevelListBlock`. Model computations can take
+   Done (October 2026) for `PathsOutcomeBlock`, the `PathsNodeSummary`
+   cards of `CategoryTypeLevelListBlock`, and the settings panel
+   (`ScenarioSelector`, `GoalOutcomeBar`). Model computations can take
    seconds on a cold cache (1.7–3.8 s measured), so the page does not wait:
    - **Server.** The root and content pages call `preloadPathsBlocks()`
      without awaiting it. It starts one query per block with
@@ -211,6 +212,12 @@ the `authMiddleware` of both Watch clients can then be removed.
      The settings reactive vars are never set on the server, so
      `useActiveGoal`, `useActiveScenario` and `useYearRange` fall back to the
      values `SettingsPanelFull` seeds.
+   - **Settings panel.** It belongs to the `(with-layout-elements)` layout,
+     which preloads it with `preloadSettingsPanel()` in its own
+     `PathsPreloadProvider`. The scenarios come from the instance context,
+     which was fetched for the session already, so `GetScenarios` costs no
+     Paths request. Nothing is preloaded when the theme disables scenario
+     editing, since the panel is not shown then.
    - **Derived values during render.** `InventoryNodeSummary` computed its
      values in an effect, which the server never runs; they are now derived
      with `useMemo`.
@@ -220,8 +227,8 @@ the `authMiddleware` of both Watch clients can then be removed.
    inside `Suspense`, and use the fallback hooks in its components.
 
    Not yet: blocks nested deeper than the page body, `PathsNodeSummaryBlock`
-   on category pages (`CategoryPageStreamField`), and `GoalOutcomeBar` and
-   `ScenarioSelector` in the settings panel, which belongs to the layout.
+   on category pages (`CategoryPageStreamField`), and `NormalizationWidget`,
+   which is only shown in the expanded settings panel.
 
 7. **Cleanup:**
    - remove the duplicate `makeInstanceMiddleware` and `getHttpHeaders`
