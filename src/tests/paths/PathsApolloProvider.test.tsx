@@ -127,4 +127,17 @@ describe('PathsApolloProvider', () => {
     expect(second.result.current).toBe(first.result.current);
     expect(other.result.current).not.toBe(first.result.current);
   });
+
+  it('replaces the browser client when the locale changes', () => {
+    const german = renderHook(() => usePathsApolloClient(), {
+      wrapper: makeWrapper('zuerich', 'de'),
+    });
+    const french = renderHook(() => usePathsApolloClient(), {
+      wrapper: makeWrapper('zuerich', 'fr'),
+    });
+
+    // The cache does not tell languages apart, so a new locale needs a new cache
+    expect(french.result.current).not.toBe(german.result.current);
+    expect(french.result.current?.defaultContext.locale).toBe('fr');
+  });
 });
