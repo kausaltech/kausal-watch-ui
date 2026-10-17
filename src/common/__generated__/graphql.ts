@@ -6398,7 +6398,7 @@ export type ContentPageQuery_planPage_CategoryPage_category_categoryPage = { __t
 
 export type ContentPageQuery_planPage_CategoryPage_category_level = { __typename: 'CategoryLevel', id: string, name: string, namePlural: string | null };
 
-export type ContentPageQuery_planPage_CategoryPage_category_type = { __typename: 'CategoryType', id: string, hideCategoryIdentifiers: boolean };
+export type ContentPageQuery_planPage_CategoryPage_category_type = { __typename: 'CategoryType', id: string, name: string, hideCategoryIdentifiers: boolean };
 
 export type ContentPageQuery_planPage_CategoryPage_category_image = { __typename: 'Image', id: string, title: string, altText: string, imageCredit: string, width: number, height: number, focalPointX: number | null, focalPointY: number | null, focalPointWidth: number | null, focalPointHeight: number | null, full: HeroImageFragment_full | null, fullMedium: HeroImageFragment_fullMedium | null, fullSmall: HeroImageFragment_fullSmall | null, social: SocialImageFragment_social | null, small: CardImageFragment_small | null, large: CardImageFragment_large | null, rendition: CardImageFragment_rendition | null };
 
