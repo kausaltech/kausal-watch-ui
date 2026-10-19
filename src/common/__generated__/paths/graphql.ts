@@ -51,7 +51,7 @@ export type ActivateScenarioMutationVariables = Exact<{
   scenarioId: string | number;
 }>;
 
-export type GetInstanceGoalOutcomeQuery_instance_goals_values = { __typename: 'InstanceYearlyGoalType', year: number, goal: number | null, actual: number | null, isForecast: boolean, isInterpolated: boolean | null };
+export type GetInstanceGoalOutcomeQuery_instance_goals_values = { __typename: 'InstanceYearlyGoalType', year: number, goal: number | null, actual: number | null, isForecast: boolean };
 
 export type GetInstanceGoalOutcomeQuery_instance_goals_unit = { __typename: 'UnitType', htmlShort: string };
 
@@ -75,15 +75,13 @@ export type GetInstanceLanguagesQueryVariables = Exact<{ [key: string]: never; }
 
 export type ScenarioFragmentFragment = { __typename: 'ScenarioType', id: string, isActive: boolean, isDefault: boolean, name: string, kind: Types.ScenarioKind | null, actualHistoricalYears: Array<number> | null };
 
-export type GetInstanceContextQuery_instance_features = { __typename: 'InstanceFeaturesType', baselineVisibleInGraphs: boolean, hideNodeDetails: boolean, maximumFractionDigits: number | null, showAccumulatedEffects: boolean, showSignificantDigits: number | null };
-
-export type GetInstanceContextQuery_instance_goals_outcomeNode = { __typename: 'Node', id: string };
+export type GetInstanceContextQuery_instance_features = { __typename: 'InstanceFeaturesType', baselineVisibleInGraphs: boolean, hideNodeDetails: boolean, maximumFractionDigits: number | null, showSignificantDigits: number | null };
 
 export type GetInstanceContextQuery_instance_goals_dimensions = { __typename: 'InstanceGoalDimension', dimension: string, categories: Array<string>, groups: Array<string> };
 
-export type GetInstanceContextQuery_instance_goals = { __typename: 'InstanceGoalEntry', id: string, label: string | null, default: boolean, disabled: boolean, outcomeNode: GetInstanceContextQuery_instance_goals_outcomeNode, dimensions: Array<GetInstanceContextQuery_instance_goals_dimensions> };
+export type GetInstanceContextQuery_instance_goals = { __typename: 'InstanceGoalEntry', id: string, label: string | null, default: boolean, disabled: boolean, dimensions: Array<GetInstanceContextQuery_instance_goals_dimensions> };
 
-export type GetInstanceContextQuery_instance = { __typename: 'InstanceType', id: string, name: string, themeIdentifier: string | null, owner: string | null, defaultLanguage: string, supportedLanguages: Array<string>, targetYear: number | null, modelEndYear: number, referenceYear: number | null, minimumHistoricalYear: number, maximumHistoricalYear: number | null, features: GetInstanceContextQuery_instance_features, goals: Array<GetInstanceContextQuery_instance_goals> };
+export type GetInstanceContextQuery_instance = { __typename: 'InstanceType', id: string, defaultLanguage: string, supportedLanguages: Array<string>, targetYear: number | null, modelEndYear: number, referenceYear: number | null, minimumHistoricalYear: number, features: GetInstanceContextQuery_instance_features, goals: Array<GetInstanceContextQuery_instance_goals> };
 
 export type GetInstanceContextQuery_scenarios = { __typename: 'ScenarioType', id: string, isActive: boolean, isDefault: boolean, name: string, kind: Types.ScenarioKind | null, actualHistoricalYears: Array<number> | null };
 
@@ -256,17 +254,6 @@ export type GetAvailableNormalizationsQuery = { __typename: 'Query', availableNo
 
 export type GetAvailableNormalizationsQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type DimensionalNodeMetricFragment_metricDim = { __typename: 'DimensionalMetricType', id: string, name: string, measureDatapointYears: Array<number>, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<GetNodePageQuery_node_metricDim_dimensions>, goals: Array<GetNodePageQuery_node_metricDim_goals>, unit: GetNodePageQuery_node_metricDim_unit, normalizedBy: GetNodePageQuery_node_metricDim_normalizedBy | null };
-
-type DimensionalNodeMetric_ActionNode_Fragment = { __typename: 'ActionNode', metricDim: DimensionalNodeMetricFragment_metricDim | null };
-
-type DimensionalNodeMetric_Node_Fragment = { __typename: 'Node', metricDim: DimensionalNodeMetricFragment_metricDim | null };
-
-export type DimensionalNodeMetricFragment =
-  | DimensionalNodeMetric_ActionNode_Fragment
-  | DimensionalNodeMetric_Node_Fragment
-;
-
 export type OutcomeNodeFieldsFragment_metric_unit = { __typename: 'UnitType', short: string, htmlShort: string, htmlLong: string };
 
 export type OutcomeNodeFieldsFragment_metric_forecastValues = { __typename: 'YearlyValue', year: number, value: number };
@@ -322,48 +309,6 @@ export type GetOutcomeNodeContentQuery = { __typename: 'Query', node: GetOutcome
 
 export type GetOutcomeNodeContentQueryVariables = Exact<{
   node: string | number;
-  goal: string | number | null | undefined;
-}>;
-
-export type GetPageQuery_activeScenario = { __typename: 'ScenarioType', id: string };
-
-export type GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes_ActionNode = { __typename: 'ActionNode' };
-
-export type GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes_Node = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, metric: OutcomeNodeFieldsFragment_metric | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
-
-export type GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes =
-  | GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes_ActionNode
-  | GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes_Node
-;
-
-export type GetPageQuery_page_OutcomePage_outcomeNode = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, upstreamNodes: Array<GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes>, metric: OutcomeNodeFieldsFragment_metric | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
-
-export type GetPageQuery_page_ActionListPage = { __typename: 'ActionListPage', id: string | null, title: string };
-
-export type GetPageQuery_page_DashboardPage = { __typename: 'DashboardPage', id: string | null, title: string };
-
-export type GetPageQuery_page_InstanceRootPage = { __typename: 'InstanceRootPage', id: string | null, title: string };
-
-export type GetPageQuery_page_OutcomePage = { __typename: 'OutcomePage', leadTitle: string, leadParagraph: string, id: string | null, title: string, outcomeNode: GetPageQuery_page_OutcomePage_outcomeNode };
-
-export type GetPageQuery_page_Page = { __typename: 'Page', id: string | null, title: string };
-
-export type GetPageQuery_page_StaticPage = { __typename: 'StaticPage', id: string | null, title: string };
-
-export type GetPageQuery_page =
-  | GetPageQuery_page_ActionListPage
-  | GetPageQuery_page_DashboardPage
-  | GetPageQuery_page_InstanceRootPage
-  | GetPageQuery_page_OutcomePage
-  | GetPageQuery_page_Page
-  | GetPageQuery_page_StaticPage
-;
-
-export type GetPageQuery = { __typename: 'Query', activeScenario: GetPageQuery_activeScenario, page: GetPageQuery_page | null };
-
-
-export type GetPageQueryVariables = Exact<{
-  path: string;
   goal: string | number | null | undefined;
 }>;
 

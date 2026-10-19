@@ -91,10 +91,6 @@ const CategoryCard = (props: CategoryCardProps) => {
               {category.name}
             </CardHeader>
           </Link>
-          {/* Leave this out for now */}
-          {category.leadParagraph && false && (
-            <CardContentBlock>{category.leadParagraph}</CardContentBlock>
-          )}
         </CardHeaderBlock>
         <CardDataBlock>
           {category.kausalPathsNodeUuid && pathsInstance?.id && (

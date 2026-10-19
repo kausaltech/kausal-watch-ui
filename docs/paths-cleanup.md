@@ -1,6 +1,6 @@
 # Cleaning up the Paths integration
 
-Status: steps 1 and 2 done, on `feat/watch-paths-cleanup` in watch-ui, paths-ui and kausal_common (branched from `feat/node-page` and `feat/shared-node-visualisation`). This doc lists what a review of Watch's Paths integration found after the node page and the shared node visualisation work, and in which order to fix it.
+Status: steps 1–3 done, on `feat/watch-paths-cleanup` in watch-ui, paths-ui and kausal_common (branched from `feat/node-page` and `feat/shared-node-visualisation`). This doc lists what a review of Watch's Paths integration found after the node page and the shared node visualisation work, and in which order to fix it.
 
 ## Background
 
@@ -84,7 +84,7 @@ In order of impact:
   - the `Bar`, `Segment` and `BarSeparator` styled components in `OutcomeCardSet`;
   - `mutationError` in `ScenarioSelector` and `ParameterWidget`;
   - the `referenceValue` cast in `IndicatorSparkline`.
-- **Config never read:** `outcomeDisclaimers[].year`, as disclaimers match on node and goal only.
+- **Config never read:** `outcomeDisclaimers[].year`, as disclaimers match on node and goal only. Left in: the texts are year-specific, so showing them only for that year may be the intent.
 
 ## Step 4: sharing with paths-ui (deferred)
 

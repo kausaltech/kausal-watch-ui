@@ -597,10 +597,8 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return <AccessibilityStatementPreparationInformationBlock {...block} id={id} />;
     }
     case 'PathsOutcomeBlock': {
-      const { heading, helpText, outcomeNodeId } = block;
-      return (
-        <PathsOutcomeBlock heading={heading} helpText={helpText} outcomeNodeId={outcomeNodeId} />
-      );
+      const { heading, outcomeNodeId } = block;
+      return <PathsOutcomeBlock heading={heading} outcomeNodeId={outcomeNodeId} />;
     }
     case 'CategoryTypeLevelListBlock': {
       const {

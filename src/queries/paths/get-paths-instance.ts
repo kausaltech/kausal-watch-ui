@@ -21,21 +21,16 @@ const GET_INSTANCE_CONTEXT = gql`
   query GetInstanceContext {
     instance {
       id
-      name
-      themeIdentifier
-      owner
       defaultLanguage
       supportedLanguages
       targetYear
       modelEndYear
       referenceYear
       minimumHistoricalYear
-      maximumHistoricalYear
       features {
         baselineVisibleInGraphs
         hideNodeDetails
         maximumFractionDigits
-        showAccumulatedEffects
         showSignificantDigits
       }
       goals {
@@ -43,9 +38,6 @@ const GET_INSTANCE_CONTEXT = gql`
         label
         default
         disabled
-        outcomeNode {
-          id
-        }
         dimensions {
           dimension
           categories

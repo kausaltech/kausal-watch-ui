@@ -12,7 +12,6 @@ import { useActiveGoal } from '@/utils/paths/hooks/usePathsSettings';
 import type { OutcomenodeType } from '../contentblocks/PathsOutcomeBlock';
 
 type CardSetProps = {
-  $color: string;
   $haschildren: boolean;
 };
 
@@ -46,53 +45,9 @@ const ContentArea = styled.div`
   padding: 0.5rem;
 `;
 
-const Bar = styled.div`
-  display: flex;
-  margin: 0.5rem 0 1.5rem;
-  height: 1rem;
-  border: ${(props) => props.color} solid;
-  border-width: 0;
-  border-top: 0;
-  cursor: pointer;
-`;
-
 const BarHeader = styled.h5`
   font-size: 1rem;
   color: ${({ theme }) => theme.textColor.tertiary};
-`;
-
-const Segment = styled.div`
-  display: inline-block;
-  position: relative;
-  border: ${(props) => props.theme.themeColors.white} solid;
-  border-width: 2px;
-  height: 1.5rem;
-
-  &.hovered::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 0.25rem;
-    background-color: ${(props) => props.theme.graphColors.grey050};
-    bottom: -0.5rem;
-  }
-
-  &.active::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 0.25rem;
-    background-color: ${(props) => props.theme.graphColors.grey090};
-    bottom: -0.5rem;
-  }
-`;
-
-const BarSeparator = styled.div`
-  display: inline-block;
-  position: relative;
-  height: 2rem;
-  width: 2px;
-  background-color: ${(props) => props.theme.graphColors.grey070};
 `;
 
 const DEFAULT_NODE_ORDER = 100;
@@ -191,7 +146,6 @@ const OutcomeCardSet = ({
   // We have a different group for indirect emissions (hack)
   const separateYears = activeGoal?.separateYears || null;
   const chartType = activeGoal?.defaultOutcomeGraphType || 'bar';
-  const hideForecast = separateYears && separateYears.length > 1;
   const colorAdjust = activeGoal?.colorAdjust;
 
   const handleHover = useCallback((evt) => {
@@ -207,19 +161,14 @@ const OutcomeCardSet = ({
     [activeNodeId, rootNode.id, setLastActiveNodeId]
   );
 
-  const { negativeNodesTotal, positiveNodesTotal } = useMemo(() => {
-    let negative = 0;
-    let positive = 0;
-    for (const node of cardNodes) {
-      const value = getMetricValue(node, endYear) ?? 0;
-      if (value < 0) negative += value;
-      else positive += value;
-    }
-    return { negativeNodesTotal: negative, positiveNodesTotal: positive };
-  }, [cardNodes, endYear]);
+  // The sum of the cards' absolute values, which their proportion bars divide
+  const total = useMemo(
+    () => cardNodes.reduce((sum, node) => sum + Math.abs(getMetricValue(node, endYear) ?? 0), 0),
+    [cardNodes, endYear]
+  );
 
   return (
-    <CardSet id={rootNode.id} $color={rootNode.color!} $haschildren={cardNodes.length > 0}>
+    <CardSet id={rootNode.id} $haschildren={cardNodes.length > 0}>
       <ContentArea>
         <OutcomeNodeContent
           node={rootNode}
@@ -250,11 +199,8 @@ const OutcomeCardSet = ({
                 handleClick={handleClick}
                 color={node.color || parentColor}
                 colorAdjust={colorAdjust ?? undefined}
-                total={positiveNodesTotal - negativeNodesTotal}
-                positiveTotal={positiveNodesTotal}
-                negativeTotal={negativeNodesTotal}
+                total={total}
                 refetching={refetching}
-                hideForecast={hideForecast}
                 disabled={
                   node.metric?.forecastValues?.length === 0 &&
                   node.metric?.historicalValues?.length === 0

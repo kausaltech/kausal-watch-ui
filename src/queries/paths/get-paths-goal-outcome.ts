@@ -10,7 +10,6 @@ export const GET_INSTANCE_GOAL_OUTCOME = gql`
           goal
           actual
           isForecast
-          isInterpolated
         }
         unit {
           htmlShort

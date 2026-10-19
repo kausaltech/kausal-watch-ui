@@ -79,8 +79,7 @@ const config: CodegenConfig = {
         {
           add: {
             placement: 'append',
-            content:
-              "export type { DimensionalNodeMetricFragment } from './paths/graphql';\nexport { ScenarioKind } from './paths/schema';",
+            content: "export { ScenarioKind } from './paths/schema';",
           },
         },
       ],

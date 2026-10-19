@@ -89,11 +89,9 @@ const MainUnit = styled.span`
   font-size: 0.6rem;
 `;
 
-// bottom: ${(props) => props.$size > 0 ? props.offset * 100 : 0}%;
 const ProportionBarBar = styled.div<{ $size: number; $color: string }>`
   position: absolute;
   bottom: ${(props) => (props.$size > 0 ? '0' : 'auto')}%;
-  //bottom: 0;
   top: ${(props) => (props.$size > 0 ? 'auto' : '0')}%;
   left: 0;
   height: ${(props) => Math.abs(props.$size) * 100}%;
@@ -113,12 +111,10 @@ const ProportionBar = ({
   size,
   color,
   active,
-  offset,
 }: {
   size: number;
   color: string;
   active: boolean;
-  offset?: number;
 }) => {
   return (
     <ProportionBarContainer $active={active}>
@@ -140,10 +136,7 @@ type OutcomeCardProps = {
   color: string;
   colorAdjust?: number;
   total: number;
-  positiveTotal: number;
-  negativeTotal: number;
   refetching: boolean;
-  hideForecast: boolean | null;
   disabled: boolean;
 };
 
@@ -160,10 +153,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
     startYear,
     endYear,
     total,
-    positiveTotal,
-    negativeTotal,
     refetching,
-    hideForecast,
     disabled,
   } = props;
 
@@ -233,7 +223,6 @@ const OutcomeCard = (props: OutcomeCardProps) => {
           size={goalOutcomeValue || goalOutcomeValue === 0 ? goalOutcomeValue / total : 0}
           color={displayColor}
           active={active}
-          offset={negativeTotal < 0 ? Math.abs(negativeTotal / total) : 0}
         />
         <Header className={state}>
           <Title color={displayColor}>

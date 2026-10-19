@@ -2,15 +2,6 @@ import { gql } from '@apollo/client';
 
 import { DIMENSIONAL_METRIC_FRAGMENT as DimensionalMetricFragment } from '@/utils/paths/metric';
 
-const dimensionalNodePlotFragment = gql`
-  fragment DimensionalNodeMetric on NodeInterface {
-    metricDim {
-      ...DimensionalMetric
-    }
-  }
-  ${DimensionalMetricFragment}
-`;
-
 /** What the outcome cards read */
 const OUTCOME_NODE_FIELDS = gql`
   fragment OutcomeNodeFields on Node {
@@ -76,29 +67,3 @@ export function getOutcomeNodeVariables(
 ) {
   return { node: outcomeNodeId || 'net_emissions', goal };
 }
-
-const GET_PAGE = gql`
-  ${OUTCOME_NODE_FIELDS}
-  query GetPage($path: String!, $goal: ID) {
-    activeScenario {
-      id
-    }
-    page(path: $path) {
-      id
-      __typename
-      title
-      ... on OutcomePage {
-        leadTitle
-        leadParagraph
-        outcomeNode {
-          ...OutcomeNodeFields
-          upstreamNodes(sameQuantity: true, sameUnit: true, includeActions: false) {
-            ...OutcomeNodeFields
-          }
-        }
-      }
-    }
-  }
-`;
-
-export default GET_PAGE;

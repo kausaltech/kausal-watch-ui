@@ -29,9 +29,8 @@ import {
   parseMetric,
   sliceBy,
 } from '@common/utils/paths/metric';
-import type { MetricSliceData } from '@common/utils/paths/metric';
+import type { MetricInput, MetricSliceData } from '@common/utils/paths/metric';
 
-import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
 import useNumberFormatter from '@/common/numbers';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
@@ -51,7 +50,7 @@ const Tools = styled.div`
 `;
 
 interface DataTableProps {
-  metric: NonNullable<DimensionalNodeMetricFragment['metricDim']>;
+  metric: MetricInput;
   startYear: number;
   endYear: number;
   separateYears?: number[] | null;

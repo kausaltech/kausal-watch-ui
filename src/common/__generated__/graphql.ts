@@ -4708,7 +4708,7 @@ type StreamField_PageLinkBlock_Fragment = { __typename: 'PageLinkBlock', blockTy
 
 type StreamField_PathsNodeSummaryBlock_Fragment = { __typename: 'PathsNodeSummaryBlock', blockType: string, field: string };
 
-type StreamField_PathsOutcomeBlock_Fragment = { __typename: 'PathsOutcomeBlock', heading: string | null, helpText: string | null, outcomeNodeId: string | null, blockType: string, field: string };
+type StreamField_PathsOutcomeBlock_Fragment = { __typename: 'PathsOutcomeBlock', heading: string | null, outcomeNodeId: string | null, blockType: string, field: string };
 
 type StreamField_PlanDatasetsBlock_Fragment = { __typename: 'PlanDatasetsBlock', blockType: string, field: string };
 
@@ -6317,7 +6317,7 @@ export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageAttri
 
 export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock = { __typename: 'CategoryPageProgressBlock', blocks: Array<TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks> };
 
-export type TemplatedCategoryPageFragment_layout_layoutMainTop_PathsNodeSummaryBlock = { __typename: 'PathsNodeSummaryBlock', id: string | null, heading: string | null, pathsTargetNodeId: string | null };
+export type TemplatedCategoryPageFragment_layout_layoutMainTop_PathsNodeSummaryBlock = { __typename: 'PathsNodeSummaryBlock', id: string | null, pathsTargetNodeId: string | null };
 
 export type TemplatedCategoryPageFragment_layout_layoutMainTop =
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageAttributeTypeBlock
@@ -6529,7 +6529,7 @@ export type ContentPageQuery_planPage_StaticPage_body_IndicatorGroupBlock = { __
 
 export type ContentPageQuery_planPage_StaticPage_body_LargeImageBlock = { __typename: 'LargeImageBlock', width: string | null, blockType: string, field: string, image: StreamFieldFragment_LargeImageBlock_image | null };
 
-export type ContentPageQuery_planPage_StaticPage_body_PathsOutcomeBlock = { __typename: 'PathsOutcomeBlock', heading: string | null, helpText: string | null, outcomeNodeId: string | null, blockType: string, field: string };
+export type ContentPageQuery_planPage_StaticPage_body_PathsOutcomeBlock = { __typename: 'PathsOutcomeBlock', heading: string | null, outcomeNodeId: string | null, blockType: string, field: string };
 
 export type ContentPageQuery_planPage_StaticPage_body_QuestionAnswerBlock = { __typename: 'QuestionAnswerBlock', heading: string | null, blockType: string, field: string, questions: Array<StreamFieldFragment_QuestionAnswerBlock_questions> | null };
 
@@ -6771,7 +6771,7 @@ export type HomePageQuery_planPage_PlanRootPage_body_IndicatorShowcaseBlock = { 
 
 export type HomePageQuery_planPage_PlanRootPage_body_LargeImageBlock = { __typename: 'LargeImageBlock', width: string | null, blockType: string, field: string, image: StreamFieldFragment_LargeImageBlock_image | null };
 
-export type HomePageQuery_planPage_PlanRootPage_body_PathsOutcomeBlock = { __typename: 'PathsOutcomeBlock', heading: string | null, helpText: string | null, outcomeNodeId: string | null, blockType: string, field: string };
+export type HomePageQuery_planPage_PlanRootPage_body_PathsOutcomeBlock = { __typename: 'PathsOutcomeBlock', heading: string | null, outcomeNodeId: string | null, blockType: string, field: string };
 
 export type HomePageQuery_planPage_PlanRootPage_body_RelatedPlanListBlock = { __typename: 'RelatedPlanListBlock', heading: string | null, blockType: string, field: string };
 
@@ -8853,5 +8853,4 @@ export type SitemapQueryVariables = Exact<{
   hostname: string | null | undefined;
 }>;
 
-export type { DimensionalNodeMetricFragment } from './paths/graphql';
 export { ScenarioKind } from './paths/schema';

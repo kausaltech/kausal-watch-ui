@@ -116,7 +116,6 @@ export interface OutcomenodeType extends OutcomeNodeFieldsFragment {
 
 type PathsOutcomeBlockProps = {
   heading: string | null;
-  helpText?: string | null;
   outcomeNodeId?: string | null;
 };
 
