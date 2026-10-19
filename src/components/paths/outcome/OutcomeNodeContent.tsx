@@ -19,6 +19,7 @@ import OutcomeNodeDetails from '@/components/paths/outcome/OutcomeNodeDetails';
 import { usePaths } from '@/context/paths/paths';
 import { useNodeVisualisationLabels } from '@/utils/paths/hooks/useNodeVisualisationLabels';
 import { useActiveGoal } from '@/utils/paths/hooks/usePathsSettings';
+import { usePathsSite } from '@/utils/paths/hooks/usePathsSite';
 
 const ContentWrapper = styled.div`
   min-height: 300px;
@@ -140,6 +141,7 @@ function OutcomeNodeContent({
 
   const activeGoal = useActiveGoal();
   const visualisationLabels = useNodeVisualisationLabels();
+  const site = usePathsSite();
   // We have a disclaimer for the mobility node for 2023 (hack)
   const hideForecast = separateYears && separateYears.length > 1;
 
@@ -176,7 +178,7 @@ function OutcomeNodeContent({
           minimumHistoricalYear: instance.minimumHistoricalYear,
           features: instance.features,
         }}
-        site={null}
+        site={site}
         activeGoal={activeGoal}
         labels={visualisationLabels}
         chartType={chartType}
@@ -192,6 +194,7 @@ function OutcomeNodeContent({
     separateYears,
     chartType,
     instance,
+    site,
     activeGoal,
     visualisationLabels,
     t,

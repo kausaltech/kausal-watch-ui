@@ -108,7 +108,8 @@ const config: CodegenConfig = {
       ],
       config: {
         ...tsoConfig,
-        importSchemaTypesFrom: './schema',
+        // Resolved from the working directory, not from the generated file
+        importSchemaTypesFrom: './src/common/__generated__/paths/schema',
       } satisfies TypeScriptDocumentsPluginConfig,
     },
     'src/common/__generated__/paths/schema.ts': {

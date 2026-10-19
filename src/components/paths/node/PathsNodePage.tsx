@@ -27,6 +27,7 @@ import { GET_NODE_PAGE, getNodePageVariables } from '@/queries/paths/get-paths-n
 import { useNodeVisualisationLabels } from '@/utils/paths/hooks/useNodeVisualisationLabels';
 import { usePreloadedPathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 import { useActiveGoal, useYearRange } from '@/utils/paths/hooks/usePathsSettings';
+import { usePathsSite } from '@/utils/paths/hooks/usePathsSite';
 
 const HeaderSection = styled('div', transientOptions)<{ $color?: string | null }>`
   padding: ${({ theme }) => theme.spaces.s200} 0;
@@ -87,6 +88,7 @@ function PathsNodePageContent({ nodeId }: Props) {
   const yearRange = useYearRange();
   const activeGoal = useActiveGoal();
   const visualisationLabels = useNodeVisualisationLabels();
+  const site = usePathsSite();
 
   const { data, previousData, loading, error, networkStatus } = usePreloadedPathsQuery<
     GetNodePageQuery,
@@ -148,7 +150,7 @@ function PathsNodePageContent({ nodeId }: Props) {
                     minimumHistoricalYear: instance.minimumHistoricalYear,
                     features: instance.features,
                   }}
-                  site={null}
+                  site={site}
                   activeGoal={activeGoal}
                   labels={visualisationLabels}
                 />

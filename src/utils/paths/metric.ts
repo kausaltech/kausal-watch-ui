@@ -102,6 +102,7 @@ export const DIMENSIONAL_METRIC_FRAGMENT = gql`
   fragment DimensionalMetric on DimensionalMetricType {
     id
     name
+    measureDatapointYears
     dimensions {
       id
       label
