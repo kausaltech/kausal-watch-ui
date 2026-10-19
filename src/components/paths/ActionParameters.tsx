@@ -28,14 +28,16 @@ const ActionParameters = (props: { parameters: ActionParameterFragment[] }) => {
     (param) => param.node && param.id === `${param.node.id}.enabled`
   );
 
-  const actionParameterSwitch = {
-    ...actionParameterSwitchParameter,
-    description:
-      t('action-enabled-description') === 'action-enabled-description'
-        ? actionParameterSwitchParameter?.description
-        : t('action-enabled-description'),
-    __typename: 'EnableParameterType',
-  } as Parameter;
+  const actionParameterSwitch = actionParameterSwitchParameter
+    ? ({
+        ...actionParameterSwitchParameter,
+        description:
+          t('action-enabled-description') === 'action-enabled-description'
+            ? actionParameterSwitchParameter.description
+            : t('action-enabled-description'),
+        __typename: 'EnableParameterType',
+      } as Parameter)
+    : null;
   const actionOtherParameters = parameters.filter(
     (param) => param.id !== actionParameterSwitch?.id
   );
