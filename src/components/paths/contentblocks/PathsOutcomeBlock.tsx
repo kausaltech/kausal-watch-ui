@@ -2,7 +2,7 @@
 
 import { type ReactNode, Suspense, useCallback, useEffect, useState } from 'react';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import Alert from '@mui/material/Alert';
 
@@ -167,10 +167,7 @@ function PathsOutcomeBlockContent(props: PathsOutcomeBlockProps) {
   const yearRange = useYearRange();
   const activeGoal = useActiveGoal();
   const activeScenario = useActiveScenario();
-  //const path = '';
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
   const queryNodeId = searchParams.get('node') ?? undefined;
   const [lastActiveNodeId, setLastActiveNodeId] = useState<string | undefined>(queryNodeId);
 
@@ -184,16 +181,14 @@ function PathsOutcomeBlockContent(props: PathsOutcomeBlockProps) {
     [searchParams]
   );
 
+  // No navigation: router.replace would re-render the page on the server
   useEffect(() => {
     if (queryNodeId === lastActiveNodeId) return;
     if (lastActiveNodeId) {
-      router.replace(pathname + '?' + createQueryString('node', lastActiveNodeId), {
-        scroll: false,
-      });
+      window.history.replaceState(null, '', `?${createQueryString('node', lastActiveNodeId)}`);
     }
-  }, [lastActiveNodeId, queryNodeId, router, pathname, createQueryString]);
+  }, [lastActiveNodeId, queryNodeId, createQueryString]);
 
-  // router.push(pathname + '?' + createQueryString('sort', 'asc'))
   const variables = getOutcomeNodeVariables(outcomeNodeId, activeGoal?.id ?? null);
   const queryResp = usePreloadedPathsQuery<GetOutcomeNodeContentQuery>(GET_OUTCOME_NODE, {
     variables,
