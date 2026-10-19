@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styled from '@emotion/styled';
 
 import { readableColor, transparentize } from 'polished';
@@ -66,12 +64,11 @@ type CategoryCardProps = {
   category: CategoryFragment;
   group?: CategoryFragment;
   pathsInstance?: GetInstanceContextQuery['instance'];
-  onLoaded: (id: string, impact: number) => void;
   targetNodeId?: string | null;
 };
 
 const CategoryCard = (props: CategoryCardProps) => {
-  const { category, group, pathsInstance, onLoaded, targetNodeId } = props;
+  const { category, group, pathsInstance, targetNodeId } = props;
 
   const mainIndicatorId = category.indicatorRelationships?.find(
     (relationship) => relationship.type === IndicatorCategoryRelationshipType.MainGoal
@@ -102,12 +99,7 @@ const CategoryCard = (props: CategoryCardProps) => {
         <CardDataBlock>
           {category.kausalPathsNodeUuid && pathsInstance?.id && (
             <CardContentBlock>
-              <PathsNodeSummary
-                categoryId={category.id}
-                node={category.kausalPathsNodeUuid}
-                onLoaded={onLoaded}
-                targetNodeId={targetNodeId}
-              />
+              <PathsNodeSummary node={category.kausalPathsNodeUuid} targetNodeId={targetNodeId} />
             </CardContentBlock>
           )}
           <CardContentBlock>

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -82,11 +82,8 @@ const getTotalValues = (yearData: {
 type AugmentedGoal = NonNullable<PathsInstanceType>['instance']['goals'][number];
 
 type PathsBasicNodeContentProps = {
-  categoryId: string;
   node: GetNodeContentQuery['node'] & { __typename: 'Node' };
-  onLoaded: (id: string, impact: number) => void;
   displayGoals: AugmentedGoal[];
-  refetching: boolean;
 };
 
 type EmissionDisplay = {
@@ -212,7 +209,7 @@ function getEmissions(
 }
 
 const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
-  const { categoryId, node, onLoaded, displayGoals, refetching } = props;
+  const { node, displayGoals } = props;
   const yearRange = useYearRange();
   const formatNumber = useNumberFormatter({ scope: 'paths' });
 
@@ -226,11 +223,6 @@ const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
     () => getEmissions(metric, displayGoals, referenceYear),
     [metric, displayGoals, referenceYear]
   );
-
-  useEffect(() => {
-    onLoaded(categoryId, 100);
-    // using exhausive deps here causes an infinite loop
-  }, [referenceYear, refetching, metric]);
 
   return (
     <ValuesContainer>

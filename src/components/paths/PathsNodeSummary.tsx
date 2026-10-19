@@ -7,7 +7,6 @@ import { captureException } from '@sentry/nextjs';
 import ContentLoader from 'react-content-loader';
 
 import type {
-  GetInstanceContextQuery,
   GetNodeContentQuery,
   GetNodeContentQueryVariables,
 } from '@/common/__generated__/paths/graphql';
@@ -45,9 +44,7 @@ const PathsContentLoader = (props) => {
 
 //   pathsInstance: GetInstanceContextQuery['instance'];
 type PathsNodeContentProps = {
-  categoryId: string;
   node: string;
-  onLoaded?: (id: string, impact: number) => void;
   targetNodeId?: string | null;
 };
 
@@ -62,7 +59,7 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => (
 ));
 
 function PathsNodeSummaryContent(props: PathsNodeContentProps) {
-  const { categoryId, node, onLoaded, targetNodeId } = props;
+  const { node, targetNodeId } = props;
   const paths = usePaths();
   const pathsInstance = paths?.instance;
   const activeGoal = useActiveGoal();
@@ -112,9 +109,7 @@ function PathsNodeSummaryContent(props: PathsNodeContentProps) {
     if (data.node.__typename === 'ActionNode') {
       return (
         <ActionNodeSummary
-          categoryId={categoryId}
           node={data.node}
-          onLoaded={onLoaded ? onLoaded : () => void 0}
           refetching={refetching}
           displayGoal={actionImpactGoal}
         />
@@ -122,13 +117,10 @@ function PathsNodeSummaryContent(props: PathsNodeContentProps) {
     } else if (data.node.__typename && displayGoals) {
       return (
         <InventoryNodeSummary
-          categoryId={categoryId}
           node={data.node}
-          onLoaded={onLoaded ? onLoaded : () => void 0}
           displayGoals={
             displayGoals as React.ComponentProps<typeof InventoryNodeSummary>['displayGoals']
           }
-          refetching={refetching}
         />
       );
     }

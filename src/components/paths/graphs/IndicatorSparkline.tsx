@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -541,4 +541,5 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   );
 };
 
-export default IndicatorSparkline;
+// Plain props, so card re-renders don't rebuild the chart
+export default memo(IndicatorSparkline);
