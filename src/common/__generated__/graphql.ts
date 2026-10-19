@@ -6990,6 +6990,24 @@ export type IndicatorListQueryVariables = Exact<{
   relatedPlanIndicators: boolean;
 }>;
 
+export type IndicatorSparklineGraphDataQuery_indicator_referenceValue = { __typename: 'IndicatorValue', id: string, date: string | null, value: number };
+
+export type IndicatorSparklineGraphDataQuery_indicator_unit = { __typename: 'Unit', id: string, name: string, shortName: string | null };
+
+export type IndicatorSparklineGraphDataQuery_indicator_values = { __typename: 'IndicatorValue', id: string, date: string | null, value: number };
+
+export type IndicatorSparklineGraphDataQuery_indicator_goals = { __typename: 'IndicatorGoal', id: string, date: string | null, value: number };
+
+export type IndicatorSparklineGraphDataQuery_indicator = { __typename: 'Indicator', id: string, name: string, minValue: number | null, maxValue: number | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, referenceValue: IndicatorSparklineGraphDataQuery_indicator_referenceValue | null, unit: IndicatorSparklineGraphDataQuery_indicator_unit, values: Array<IndicatorSparklineGraphDataQuery_indicator_values>, goals: Array<IndicatorSparklineGraphDataQuery_indicator_goals | null> | null };
+
+export type IndicatorSparklineGraphDataQuery = { __typename: 'Query', indicator: IndicatorSparklineGraphDataQuery_indicator | null };
+
+
+export type IndicatorSparklineGraphDataQueryVariables = Exact<{
+  id: string | number | null | undefined;
+  plan: string | number | null | undefined;
+}>;
+
 export type IndicatorDetailsQuery_plan_indicatorListPage_detailsMainTop_categoryType = { __typename: 'CategoryType', id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<CategoryTypeFragment_levels> };
 
 export type IndicatorDetailsQuery_plan_indicatorListPage_detailsMainTop_IndicatorCategoryContentBlock = { __typename: 'IndicatorCategoryContentBlock', id: string | null, blockType: string, fieldLabel: string | null, fieldHelpText: string | null, field: string, categoryType: IndicatorDetailsQuery_plan_indicatorListPage_detailsMainTop_categoryType };
@@ -8776,80 +8794,6 @@ export type TestRscCacheHeadersQuery = { __typename: 'Query', plan: TestRscCache
 
 export type TestRscCacheHeadersQueryVariables = Exact<{
   id: string | number;
-}>;
-
-export type IndicatorSparklineGraphDataQuery_plan_scenarios = { __typename: 'Scenario', id: string, identifier: string, name: string };
-
-export type IndicatorSparklineGraphDataQuery_plan = { __typename: 'Plan', id: string, scenarios: Array<IndicatorSparklineGraphDataQuery_plan_scenarios> };
-
-export type IndicatorSparklineGraphDataQuery_indicator_referenceValue = { __typename: 'IndicatorValue', id: string, date: string | null, value: number };
-
-export type IndicatorSparklineGraphDataQuery_indicator_organization = { __typename: 'Organization', id: string, name: string, abbreviation: string | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_quantity = { __typename: 'Quantity', id: string, name: string };
-
-export type IndicatorSparklineGraphDataQuery_indicator_values_normalizedValues = { __typename: 'NormalizedValue', normalizerId: string | null, value: number | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_values_categories = { __typename: 'DimensionCategory', id: string };
-
-export type IndicatorSparklineGraphDataQuery_indicator_values = { __typename: 'IndicatorValue', id: string, date: string | null, value: number, normalizedValues: Array<IndicatorSparklineGraphDataQuery_indicator_values_normalizedValues>, categories: Array<IndicatorSparklineGraphDataQuery_indicator_values_categories> };
-
-export type IndicatorSparklineGraphDataQuery_indicator_dimensions_dimension_categories = { __typename: 'DimensionCategory', id: string, name: string };
-
-export type IndicatorSparklineGraphDataQuery_indicator_dimensions_dimension = { __typename: 'Dimension', id: string, name: string, categories: Array<IndicatorSparklineGraphDataQuery_indicator_dimensions_dimension_categories> };
-
-export type IndicatorSparklineGraphDataQuery_indicator_dimensions = { __typename: 'IndicatorDimension', id: string, dimension: IndicatorSparklineGraphDataQuery_indicator_dimensions_dimension };
-
-export type IndicatorSparklineGraphDataQuery_indicator_goals_normalizedValues = { __typename: 'NormalizedValue', normalizerId: string | null, value: number | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_goals_scenario = { __typename: 'Scenario', id: string };
-
-export type IndicatorSparklineGraphDataQuery_indicator_goals = { __typename: 'IndicatorGoal', id: string, date: string | null, value: number, normalizedValues: Array<IndicatorSparklineGraphDataQuery_indicator_goals_normalizedValues>, scenario: IndicatorSparklineGraphDataQuery_indicator_goals_scenario | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_unit = { __typename: 'Unit', id: string, name: string, shortName: string | null, verboseName: string | null, verboseNamePlural: string | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_normalizations_unit = { __typename: 'Unit', id: string, shortName: string | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_normalizations_normalizer = { __typename: 'CommonIndicator', name: string, id: string, identifier: string | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_normalizations = { __typename: 'CommonIndicatorNormalization', unit: IndicatorSparklineGraphDataQuery_indicator_common_normalizations_unit, normalizer: IndicatorSparklineGraphDataQuery_indicator_common_normalizations_normalizer };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_organization = { __typename: 'Organization', id: string, name: string, abbreviation: string | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_quantity = { __typename: 'Quantity', id: string, name: string };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_values_normalizedValues = { __typename: 'NormalizedValue', normalizerId: string | null, value: number | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_values_categories = { __typename: 'DimensionCategory', id: string };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_values = { __typename: 'IndicatorValue', id: string, date: string | null, value: number, normalizedValues: Array<IndicatorSparklineGraphDataQuery_indicator_common_indicators_values_normalizedValues>, categories: Array<IndicatorSparklineGraphDataQuery_indicator_common_indicators_values_categories> };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_dimensions_dimension_categories = { __typename: 'DimensionCategory', id: string, name: string };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_dimensions_dimension = { __typename: 'Dimension', id: string, name: string, categories: Array<IndicatorSparklineGraphDataQuery_indicator_common_indicators_dimensions_dimension_categories> };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_dimensions = { __typename: 'IndicatorDimension', id: string, dimension: IndicatorSparklineGraphDataQuery_indicator_common_indicators_dimensions_dimension };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_goals_normalizedValues = { __typename: 'NormalizedValue', normalizerId: string | null, value: number | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_goals_scenario = { __typename: 'Scenario', id: string };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_goals = { __typename: 'IndicatorGoal', id: string, date: string | null, value: number, normalizedValues: Array<IndicatorSparklineGraphDataQuery_indicator_common_indicators_goals_normalizedValues>, scenario: IndicatorSparklineGraphDataQuery_indicator_common_indicators_goals_scenario | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators_unit = { __typename: 'Unit', id: string, name: string, shortName: string | null, verboseName: string | null, verboseNamePlural: string | null };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common_indicators = { __typename: 'Indicator', id: string, timeResolution: IndicatorTimeResolution, minValue: number | null, maxValue: number | null, organization: IndicatorSparklineGraphDataQuery_indicator_common_indicators_organization, quantity: IndicatorSparklineGraphDataQuery_indicator_common_indicators_quantity | null, values: Array<IndicatorSparklineGraphDataQuery_indicator_common_indicators_values>, dimensions: Array<IndicatorSparklineGraphDataQuery_indicator_common_indicators_dimensions>, goals: Array<IndicatorSparklineGraphDataQuery_indicator_common_indicators_goals | null> | null, unit: IndicatorSparklineGraphDataQuery_indicator_common_indicators_unit };
-
-export type IndicatorSparklineGraphDataQuery_indicator_common = { __typename: 'CommonIndicator', id: string, name: string, normalizations: Array<IndicatorSparklineGraphDataQuery_indicator_common_normalizations>, indicators: Array<IndicatorSparklineGraphDataQuery_indicator_common_indicators> };
-
-export type IndicatorSparklineGraphDataQuery_indicator = { __typename: 'Indicator', id: string, name: string, timeResolution: IndicatorTimeResolution, showTrendline: boolean, desiredTrend: IndicatorDesiredTrend | null, nonQuantifiedGoal: IndicatorNonQuantifiedGoal | null, nonQuantifiedGoalDate: string | null, reference: string | null, minValue: number | null, maxValue: number | null, referenceValue: IndicatorSparklineGraphDataQuery_indicator_referenceValue | null, organization: IndicatorSparklineGraphDataQuery_indicator_organization, quantity: IndicatorSparklineGraphDataQuery_indicator_quantity | null, values: Array<IndicatorSparklineGraphDataQuery_indicator_values>, dimensions: Array<IndicatorSparklineGraphDataQuery_indicator_dimensions>, goals: Array<IndicatorSparklineGraphDataQuery_indicator_goals | null> | null, unit: IndicatorSparklineGraphDataQuery_indicator_unit, common: IndicatorSparklineGraphDataQuery_indicator_common | null };
-
-export type IndicatorSparklineGraphDataQuery = { __typename: 'Query', plan: IndicatorSparklineGraphDataQuery_plan | null, indicator: IndicatorSparklineGraphDataQuery_indicator | null };
-
-
-export type IndicatorSparklineGraphDataQueryVariables = Exact<{
-  id: string | number | null | undefined;
-  plan: string | number | null | undefined;
 }>;
 
 export type SitemapQuery_planIndicators = { __typename: 'Indicator', id: string };

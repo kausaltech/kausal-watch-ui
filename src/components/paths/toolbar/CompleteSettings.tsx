@@ -106,7 +106,6 @@ const CompleteSettings = (props) => {
   const nrGoals = instance.goals.length;
 
   // Normalization
-  const availableNormalizations = paths.availableNormalizations;
   return (
     <>
       <SettingsHeader>
@@ -146,7 +145,7 @@ const CompleteSettings = (props) => {
                       {hasNormalizations && (
                         <Col md="3">
                           <h5>{t('normalization')}</h5>
-                          <NormalizationWidget availableNormalizations={availableNormalizations} />
+                          <NormalizationWidget />
                         </Col>
                       )}
                       {nrGoals > 1 && (

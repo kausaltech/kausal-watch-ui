@@ -35,78 +35,28 @@ export const ACTION_PARAMETER_FRAGMENT = gql`
   }
 `;
 
+/** What `PathsNodeSummary` reads */
 export const CAUSAL_GRID_NODE_FRAGMENT = gql`
   fragment CausalGridNode on NodeInterface {
     id
-    name
-    shortDescription
-    color
-    targetYearGoal
-    isVisible
     unit {
       htmlShort
     }
-    inputNodes {
-      id
-    }
-    outputNodes {
-      id
-    }
     ... on ActionNode {
       isEnabled
-      group {
-        id
-        name
-        color
-      }
     }
     impactMetric(goalId: $goal, targetNodeId: $targetNodeId) {
-      name
       id
-      unit {
-        htmlShort
-      }
-      historicalValues {
-        year
-        value
-      }
       forecastValues {
         value
         year
-      }
-      baselineForecastValues {
-        year
-        value
-      }
-      yearlyCumulativeUnit {
-        htmlShort
       }
     }
     metricDim {
       ...DimensionalMetric
     }
-    quantity
     parameters {
       ...ActionParameter
-    }
-    metric(goalId: $goal) {
-      name
-      id
-      unit {
-        htmlShort
-      }
-      historicalValues {
-        year
-        value
-      }
-      forecastValues {
-        value
-        year
-      }
-      baselineForecastValues {
-        year
-        value
-      }
     }
   }
   ${DIMENSIONAL_METRIC_FRAGMENT}

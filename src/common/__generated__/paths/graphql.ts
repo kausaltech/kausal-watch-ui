@@ -183,39 +183,11 @@ export type ActionParameterFragment =
   | ActionParameter_UnknownParameterType_Fragment
 ;
 
-export type CausalGridNodeFragment_group = { __typename: 'ActionGroupType', id: string, name: string, color: string | null };
-
 export type CausalGridNodeFragment_unit = { __typename: 'UnitType', htmlShort: string };
-
-export type CausalGridNodeFragment_inputNodes_ActionNode = { __typename: 'ActionNode', id: string };
-
-export type CausalGridNodeFragment_inputNodes_Node = { __typename: 'Node', id: string };
-
-export type CausalGridNodeFragment_inputNodes =
-  | CausalGridNodeFragment_inputNodes_ActionNode
-  | CausalGridNodeFragment_inputNodes_Node
-;
-
-export type CausalGridNodeFragment_outputNodes_ActionNode = { __typename: 'ActionNode', id: string };
-
-export type CausalGridNodeFragment_outputNodes_Node = { __typename: 'Node', id: string };
-
-export type CausalGridNodeFragment_outputNodes =
-  | CausalGridNodeFragment_outputNodes_ActionNode
-  | CausalGridNodeFragment_outputNodes_Node
-;
-
-export type CausalGridNodeFragment_impactMetric_unit = { __typename: 'UnitType', htmlShort: string };
-
-export type CausalGridNodeFragment_impactMetric_historicalValues = { __typename: 'YearlyValue', year: number, value: number };
 
 export type CausalGridNodeFragment_impactMetric_forecastValues = { __typename: 'YearlyValue', value: number, year: number };
 
-export type CausalGridNodeFragment_impactMetric_baselineForecastValues = { __typename: 'YearlyValue', year: number, value: number };
-
-export type CausalGridNodeFragment_impactMetric_yearlyCumulativeUnit = { __typename: 'UnitType', htmlShort: string };
-
-export type CausalGridNodeFragment_impactMetric = { __typename: 'ForecastMetricType', name: string | null, id: string | null, unit: CausalGridNodeFragment_impactMetric_unit | null, historicalValues: Array<CausalGridNodeFragment_impactMetric_historicalValues>, forecastValues: Array<CausalGridNodeFragment_impactMetric_forecastValues>, baselineForecastValues: Array<CausalGridNodeFragment_impactMetric_baselineForecastValues> | null, yearlyCumulativeUnit: CausalGridNodeFragment_impactMetric_yearlyCumulativeUnit | null };
+export type CausalGridNodeFragment_impactMetric = { __typename: 'ForecastMetricType', id: string | null, forecastValues: Array<CausalGridNodeFragment_impactMetric_forecastValues> };
 
 export type CausalGridNodeFragment_metricDim = { __typename: 'DimensionalMetricType', id: string, name: string, measureDatapointYears: Array<number>, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<GetNodePageQuery_node_metricDim_dimensions>, goals: Array<GetNodePageQuery_node_metricDim_goals>, unit: GetNodePageQuery_node_metricDim_unit, normalizedBy: GetNodePageQuery_node_metricDim_normalizedBy | null };
 
@@ -234,28 +206,18 @@ export type CausalGridNodeFragment_parameters =
   | CausalGridNodeFragment_parameters_UnknownParameterType
 ;
 
-export type CausalGridNodeFragment_metric_unit = { __typename: 'UnitType', htmlShort: string };
+type CausalGridNode_ActionNode_Fragment = { __typename: 'ActionNode', isEnabled: boolean, id: string, unit: CausalGridNodeFragment_unit | null, impactMetric: CausalGridNodeFragment_impactMetric | null, metricDim: CausalGridNodeFragment_metricDim | null, parameters: Array<CausalGridNodeFragment_parameters> };
 
-export type CausalGridNodeFragment_metric_historicalValues = { __typename: 'YearlyValue', year: number, value: number };
-
-export type CausalGridNodeFragment_metric_forecastValues = { __typename: 'YearlyValue', value: number, year: number };
-
-export type CausalGridNodeFragment_metric_baselineForecastValues = { __typename: 'YearlyValue', year: number, value: number };
-
-export type CausalGridNodeFragment_metric = { __typename: 'ForecastMetricType', name: string | null, id: string | null, unit: CausalGridNodeFragment_metric_unit | null, historicalValues: Array<CausalGridNodeFragment_metric_historicalValues>, forecastValues: Array<CausalGridNodeFragment_metric_forecastValues>, baselineForecastValues: Array<CausalGridNodeFragment_metric_baselineForecastValues> | null };
-
-type CausalGridNode_ActionNode_Fragment = { __typename: 'ActionNode', isEnabled: boolean, id: string, name: string, shortDescription: string | null, color: string | null, targetYearGoal: number | null, isVisible: boolean, quantity: string | null, group: CausalGridNodeFragment_group | null, unit: CausalGridNodeFragment_unit | null, inputNodes: Array<CausalGridNodeFragment_inputNodes>, outputNodes: Array<CausalGridNodeFragment_outputNodes>, impactMetric: CausalGridNodeFragment_impactMetric | null, metricDim: CausalGridNodeFragment_metricDim | null, parameters: Array<CausalGridNodeFragment_parameters>, metric: CausalGridNodeFragment_metric | null };
-
-type CausalGridNode_Node_Fragment = { __typename: 'Node', id: string, name: string, shortDescription: string | null, color: string | null, targetYearGoal: number | null, isVisible: boolean, quantity: string | null, unit: CausalGridNodeFragment_unit | null, inputNodes: Array<CausalGridNodeFragment_inputNodes>, outputNodes: Array<CausalGridNodeFragment_outputNodes>, impactMetric: CausalGridNodeFragment_impactMetric | null, metricDim: CausalGridNodeFragment_metricDim | null, parameters: Array<CausalGridNodeFragment_parameters>, metric: CausalGridNodeFragment_metric | null };
+type CausalGridNode_Node_Fragment = { __typename: 'Node', id: string, unit: CausalGridNodeFragment_unit | null, impactMetric: CausalGridNodeFragment_impactMetric | null, metricDim: CausalGridNodeFragment_metricDim | null, parameters: Array<CausalGridNodeFragment_parameters> };
 
 export type CausalGridNodeFragment =
   | CausalGridNode_ActionNode_Fragment
   | CausalGridNode_Node_Fragment
 ;
 
-export type GetNodeContentQuery_node_ActionNode = { __typename: 'ActionNode', isEnabled: boolean, id: string, name: string, shortDescription: string | null, color: string | null, targetYearGoal: number | null, isVisible: boolean, quantity: string | null, group: CausalGridNodeFragment_group | null, unit: CausalGridNodeFragment_unit | null, inputNodes: Array<CausalGridNodeFragment_inputNodes>, outputNodes: Array<CausalGridNodeFragment_outputNodes>, impactMetric: CausalGridNodeFragment_impactMetric | null, metricDim: CausalGridNodeFragment_metricDim | null, parameters: Array<CausalGridNodeFragment_parameters>, metric: CausalGridNodeFragment_metric | null };
+export type GetNodeContentQuery_node_ActionNode = { __typename: 'ActionNode', isEnabled: boolean, id: string, unit: CausalGridNodeFragment_unit | null, impactMetric: CausalGridNodeFragment_impactMetric | null, metricDim: CausalGridNodeFragment_metricDim | null, parameters: Array<CausalGridNodeFragment_parameters> };
 
-export type GetNodeContentQuery_node_Node = { __typename: 'Node', id: string, name: string, shortDescription: string | null, color: string | null, targetYearGoal: number | null, isVisible: boolean, quantity: string | null, unit: CausalGridNodeFragment_unit | null, inputNodes: Array<CausalGridNodeFragment_inputNodes>, outputNodes: Array<CausalGridNodeFragment_outputNodes>, impactMetric: CausalGridNodeFragment_impactMetric | null, metricDim: CausalGridNodeFragment_metricDim | null, parameters: Array<CausalGridNodeFragment_parameters>, metric: CausalGridNodeFragment_metric | null };
+export type GetNodeContentQuery_node_Node = { __typename: 'Node', id: string, unit: CausalGridNodeFragment_unit | null, impactMetric: CausalGridNodeFragment_impactMetric | null, metricDim: CausalGridNodeFragment_metricDim | null, parameters: Array<CausalGridNodeFragment_parameters> };
 
 export type GetNodeContentQuery_node =
   | GetNodeContentQuery_node_ActionNode
@@ -287,6 +249,13 @@ export type GetNodeInfoQueryVariables = Exact<{
   node: string | number;
 }>;
 
+export type GetAvailableNormalizationsQuery_availableNormalizations = { __typename: 'NormalizationType', id: string, label: string, isActive: boolean };
+
+export type GetAvailableNormalizationsQuery = { __typename: 'Query', availableNormalizations: Array<GetAvailableNormalizationsQuery_availableNormalizations> };
+
+
+export type GetAvailableNormalizationsQueryVariables = Exact<{ [key: string]: never; }>;
+
 export type DimensionalNodeMetricFragment_metricDim = { __typename: 'DimensionalMetricType', id: string, name: string, measureDatapointYears: Array<number>, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<GetNodePageQuery_node_metricDim_dimensions>, goals: Array<GetNodePageQuery_node_metricDim_goals>, unit: GetNodePageQuery_node_metricDim_unit, normalizedBy: GetNodePageQuery_node_metricDim_normalizedBy | null };
 
 type DimensionalNodeMetric_ActionNode_Fragment = { __typename: 'ActionNode', metricDim: DimensionalNodeMetricFragment_metricDim | null };
@@ -308,13 +277,9 @@ export type OutcomeNodeFieldsFragment_metric_historicalValues = { __typename: 'Y
 
 export type OutcomeNodeFieldsFragment_metric = { __typename: 'ForecastMetricType', id: string | null, name: string | null, unit: OutcomeNodeFieldsFragment_metric_unit | null, forecastValues: Array<OutcomeNodeFieldsFragment_metric_forecastValues>, baselineForecastValues: Array<OutcomeNodeFieldsFragment_metric_baselineForecastValues> | null, historicalValues: Array<OutcomeNodeFieldsFragment_metric_historicalValues> };
 
-export type OutcomeNodeFieldsFragment_goals = { __typename: 'NodeGoal', year: number, value: number };
+export type OutcomeNodeFieldsFragment_inputNodes_ActionNode = { __typename: 'ActionNode', id: string };
 
-export type OutcomeNodeFieldsFragment_unit = { __typename: 'UnitType', short: string, htmlShort: string, htmlLong: string };
-
-export type OutcomeNodeFieldsFragment_inputNodes_ActionNode = { __typename: 'ActionNode', id: string, name: string };
-
-export type OutcomeNodeFieldsFragment_inputNodes_Node = { __typename: 'Node', id: string, name: string };
+export type OutcomeNodeFieldsFragment_inputNodes_Node = { __typename: 'Node', id: string };
 
 export type OutcomeNodeFieldsFragment_inputNodes =
   | OutcomeNodeFieldsFragment_inputNodes_ActionNode
@@ -330,41 +295,13 @@ export type OutcomeNodeFieldsFragment_outputNodes =
   | OutcomeNodeFieldsFragment_outputNodes_Node
 ;
 
-export type OutcomeNodeFieldsFragment_upstreamActions_parameters_node_ActionNode = { __typename: 'ActionNode', id: string };
-
-export type OutcomeNodeFieldsFragment_upstreamActions_parameters_node_Node = { __typename: 'Node', id: string };
-
-export type OutcomeNodeFieldsFragment_upstreamActions_parameters_node =
-  | OutcomeNodeFieldsFragment_upstreamActions_parameters_node_ActionNode
-  | OutcomeNodeFieldsFragment_upstreamActions_parameters_node_Node
-;
-
-export type OutcomeNodeFieldsFragment_upstreamActions_parameters_BoolParameterType = { __typename: 'BoolParameterType', id: string, nodeRelativeId: string | null, isCustomized: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null, node: OutcomeNodeFieldsFragment_upstreamActions_parameters_node | null };
-
-export type OutcomeNodeFieldsFragment_upstreamActions_parameters_NumberParameterType = { __typename: 'NumberParameterType', id: string, nodeRelativeId: string | null, isCustomized: boolean, node: OutcomeNodeFieldsFragment_upstreamActions_parameters_node | null };
-
-export type OutcomeNodeFieldsFragment_upstreamActions_parameters_StringParameterType = { __typename: 'StringParameterType', id: string, nodeRelativeId: string | null, isCustomized: boolean, node: OutcomeNodeFieldsFragment_upstreamActions_parameters_node | null };
-
-export type OutcomeNodeFieldsFragment_upstreamActions_parameters_UnknownParameterType = { __typename: 'UnknownParameterType', id: string, nodeRelativeId: string | null, isCustomized: boolean, node: OutcomeNodeFieldsFragment_upstreamActions_parameters_node | null };
-
-export type OutcomeNodeFieldsFragment_upstreamActions_parameters =
-  | OutcomeNodeFieldsFragment_upstreamActions_parameters_BoolParameterType
-  | OutcomeNodeFieldsFragment_upstreamActions_parameters_NumberParameterType
-  | OutcomeNodeFieldsFragment_upstreamActions_parameters_StringParameterType
-  | OutcomeNodeFieldsFragment_upstreamActions_parameters_UnknownParameterType
-;
-
-export type OutcomeNodeFieldsFragment_upstreamActions_group = { __typename: 'ActionGroupType', id: string, name: string, color: string | null };
-
-export type OutcomeNodeFieldsFragment_upstreamActions = { __typename: 'ActionNode', id: string, name: string, goal: string | null, shortName: string | null, shortDescription: string | null, parameters: Array<OutcomeNodeFieldsFragment_upstreamActions_parameters>, group: OutcomeNodeFieldsFragment_upstreamActions_group | null };
-
 export type OutcomeNodeFieldsFragment_metricDim = { __typename: 'DimensionalMetricType', id: string, name: string, measureDatapointYears: Array<number>, stackable: boolean, forecastFrom: number | null, years: Array<number>, values: Array<number>, dimensions: Array<GetNodePageQuery_node_metricDim_dimensions>, goals: Array<GetNodePageQuery_node_metricDim_goals>, unit: GetNodePageQuery_node_metricDim_unit, normalizedBy: GetNodePageQuery_node_metricDim_normalizedBy | null };
 
-export type OutcomeNodeFieldsFragment = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, targetYearGoal: number | null, quantity: string | null, metric: OutcomeNodeFieldsFragment_metric | null, goals: Array<OutcomeNodeFieldsFragment_goals>, unit: OutcomeNodeFieldsFragment_unit | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, upstreamActions: Array<OutcomeNodeFieldsFragment_upstreamActions>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
+export type OutcomeNodeFieldsFragment = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, metric: OutcomeNodeFieldsFragment_metric | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
 
 export type GetOutcomeNodeContentQuery_node_upstreamNodes_ActionNode = { __typename: 'ActionNode' };
 
-export type GetOutcomeNodeContentQuery_node_upstreamNodes_Node = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, targetYearGoal: number | null, quantity: string | null, metric: OutcomeNodeFieldsFragment_metric | null, goals: Array<OutcomeNodeFieldsFragment_goals>, unit: OutcomeNodeFieldsFragment_unit | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, upstreamActions: Array<OutcomeNodeFieldsFragment_upstreamActions>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
+export type GetOutcomeNodeContentQuery_node_upstreamNodes_Node = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, metric: OutcomeNodeFieldsFragment_metric | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
 
 export type GetOutcomeNodeContentQuery_node_upstreamNodes =
   | GetOutcomeNodeContentQuery_node_upstreamNodes_ActionNode
@@ -373,7 +310,7 @@ export type GetOutcomeNodeContentQuery_node_upstreamNodes =
 
 export type GetOutcomeNodeContentQuery_node_ActionNode = { __typename: 'ActionNode', upstreamNodes: Array<GetOutcomeNodeContentQuery_node_upstreamNodes> };
 
-export type GetOutcomeNodeContentQuery_node_Node = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, targetYearGoal: number | null, quantity: string | null, upstreamNodes: Array<GetOutcomeNodeContentQuery_node_upstreamNodes>, metric: OutcomeNodeFieldsFragment_metric | null, goals: Array<OutcomeNodeFieldsFragment_goals>, unit: OutcomeNodeFieldsFragment_unit | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, upstreamActions: Array<OutcomeNodeFieldsFragment_upstreamActions>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
+export type GetOutcomeNodeContentQuery_node_Node = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, upstreamNodes: Array<GetOutcomeNodeContentQuery_node_upstreamNodes>, metric: OutcomeNodeFieldsFragment_metric | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
 
 export type GetOutcomeNodeContentQuery_node =
   | GetOutcomeNodeContentQuery_node_ActionNode
@@ -392,14 +329,14 @@ export type GetPageQuery_activeScenario = { __typename: 'ScenarioType', id: stri
 
 export type GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes_ActionNode = { __typename: 'ActionNode' };
 
-export type GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes_Node = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, targetYearGoal: number | null, quantity: string | null, metric: OutcomeNodeFieldsFragment_metric | null, goals: Array<OutcomeNodeFieldsFragment_goals>, unit: OutcomeNodeFieldsFragment_unit | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, upstreamActions: Array<OutcomeNodeFieldsFragment_upstreamActions>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
+export type GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes_Node = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, metric: OutcomeNodeFieldsFragment_metric | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
 
 export type GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes =
   | GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes_ActionNode
   | GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes_Node
 ;
 
-export type GetPageQuery_page_OutcomePage_outcomeNode = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, targetYearGoal: number | null, quantity: string | null, upstreamNodes: Array<GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes>, metric: OutcomeNodeFieldsFragment_metric | null, goals: Array<OutcomeNodeFieldsFragment_goals>, unit: OutcomeNodeFieldsFragment_unit | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, upstreamActions: Array<OutcomeNodeFieldsFragment_upstreamActions>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
+export type GetPageQuery_page_OutcomePage_outcomeNode = { __typename: 'Node', id: string, name: string, color: string | null, order: number | null, shortName: string | null, shortDescription: string | null, upstreamNodes: Array<GetPageQuery_page_OutcomePage_outcomeNode_upstreamNodes>, metric: OutcomeNodeFieldsFragment_metric | null, inputNodes: Array<OutcomeNodeFieldsFragment_inputNodes>, outputNodes: Array<OutcomeNodeFieldsFragment_outputNodes>, metricDim: OutcomeNodeFieldsFragment_metricDim | null };
 
 export type GetPageQuery_page_ActionListPage = { __typename: 'ActionListPage', id: string | null, title: string };
 
@@ -429,28 +366,6 @@ export type GetPageQueryVariables = Exact<{
   path: string;
   goal: string | number | null | undefined;
 }>;
-
-export type GetParametersQuery_availableNormalizations = { __typename: 'NormalizationType', id: string, label: string, isActive: boolean };
-
-export type GetParametersQuery_parameters_BoolParameterType = { __typename: 'BoolParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, boolValue: boolean | null, boolDefaultValue: boolean | null, node: ActionParameterFragment_node | null };
-
-export type GetParametersQuery_parameters_NumberParameterType = { __typename: 'NumberParameterType', minValue: number | null, maxValue: number | null, step: number | null, id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, numberValue: number | null, numberDefaultValue: number | null, unit: ActionParameterFragment_NumberParameterType_unit | null, node: ActionParameterFragment_node | null };
-
-export type GetParametersQuery_parameters_StringParameterType = { __typename: 'StringParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, stringValue: string | null, stringDefaultValue: string | null, node: ActionParameterFragment_node | null };
-
-export type GetParametersQuery_parameters_UnknownParameterType = { __typename: 'UnknownParameterType', id: string, label: string | null, description: string | null, nodeRelativeId: string | null, isCustomized: boolean, isCustomizable: boolean, node: ActionParameterFragment_node | null };
-
-export type GetParametersQuery_parameters =
-  | GetParametersQuery_parameters_BoolParameterType
-  | GetParametersQuery_parameters_NumberParameterType
-  | GetParametersQuery_parameters_StringParameterType
-  | GetParametersQuery_parameters_UnknownParameterType
-;
-
-export type GetParametersQuery = { __typename: 'Query', availableNormalizations: Array<GetParametersQuery_availableNormalizations>, parameters: Array<GetParametersQuery_parameters> };
-
-
-export type GetParametersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetScenariosQuery_scenarios = { __typename: 'ScenarioType', id: string, name: string, isActive: boolean, isDefault: boolean };
 
