@@ -85,7 +85,9 @@ export function useDimensionalMetric(
   const getSlice = useCallback(
     (years?: readonly number[]): MetricSliceData | null => {
       if (sliceConfig.dimensionId) {
-        return sliceBy(metric, sliceConfig.dimensionId, true, sliceConfig.categories, true, years);
+        return sliceBy(metric, sliceConfig.dimensionId, true, sliceConfig.categories, true, {
+          years,
+        });
       }
       return flatten(metric, sliceConfig.categories, years);
     },

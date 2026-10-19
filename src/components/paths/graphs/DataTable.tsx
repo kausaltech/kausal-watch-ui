@@ -99,7 +99,7 @@ const DataTable = (props: DataTableProps) => {
 
   let slice: MetricSliceData | null = null;
   if (slicedDim) {
-    slice = sliceBy(parsed, slicedDim.id, true, sliceConfig.categories, undefined, years);
+    slice = sliceBy(parsed, slicedDim.id, true, sliceConfig.categories, undefined, { years });
   } else {
     slice = flatten(parsed, sliceConfig.categories, years);
   }
@@ -219,6 +219,7 @@ const DataTable = (props: DataTableProps) => {
               onClick={() => {
                 setMenuAnchor(null);
                 void downloadData(parsed, sliceConfig, format, {
+                  layout: 'years',
                   years,
                   tableTitle,
                   labels: {

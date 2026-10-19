@@ -237,7 +237,7 @@ export class DimensionalMetric {
     useGroups: boolean = true,
     years?: number[]
   ): MetricSlice | null => {
-    const data = sliceBy(this.parsed, dimensionId, sort, categoryChoice, useGroups, years);
+    const data = sliceBy(this.parsed, dimensionId, sort, categoryChoice, useGroups, { years });
     return data ? new MetricSlice(data) : null;
   };
 
@@ -262,6 +262,7 @@ export class DimensionalMetric {
     forecastLabel?: string
   ) {
     return downloadData(this.parsed, cfg, format, {
+      layout: 'years',
       years,
       tableTitle,
       labels: {
