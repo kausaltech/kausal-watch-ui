@@ -2,11 +2,6 @@ import React, { useEffect, useMemo } from 'react';
 
 import styled from '@emotion/styled';
 
-import type { GetNodeContentQuery } from '@/common/__generated__/paths/graphql';
-import useNumberFormatter from '@/common/numbers';
-import HighlightValue from '@/components/paths/HighlightValue';
-import type { PathsInstanceType } from '@/components/providers/PathsProvider';
-import { useYearRange } from '@/utils/paths/hooks/usePathsSettings';
 import {
   type SliceConfig,
   flatten,
@@ -16,7 +11,13 @@ import {
   getSingleYear,
   getUnit,
   parseMetric,
-} from '@/utils/paths/metric';
+} from '@common/utils/paths/metric';
+
+import type { GetNodeContentQuery } from '@/common/__generated__/paths/graphql';
+import useNumberFormatter from '@/common/numbers';
+import HighlightValue from '@/components/paths/HighlightValue';
+import type { PathsInstanceType } from '@/components/providers/PathsProvider';
+import { useYearRange } from '@/utils/paths/hooks/usePathsSettings';
 
 const ValuesContainer = styled.div`
   display: flex;

@@ -229,7 +229,6 @@ const OutcomeCardSet = ({
           startYear={startYear}
           endYear={endYear}
           activeScenario={activeScenario}
-          refetching={refetching}
           separateYears={separateYears}
           chartType={chartType}
         />

@@ -9,7 +9,6 @@ import DimensionalPieGraph from '@common/components/paths/DimensionalPieGraph';
 import { getMetricChange, getMetricValue } from '@common/utils/paths/metric';
 
 import type { OutcomeNodeFieldsFragment } from '@/common/__generated__/paths/graphql';
-import { PathsNodeLink } from '@/common/links';
 import useNumberFormatter from '@/common/numbers';
 import HighlightValue from '@/components/paths/HighlightValue';
 import ScenarioBadge from '@/components/paths/ScenarioBadge';
@@ -117,7 +116,6 @@ type OutcomeNodeContentProps = {
   startYear: number;
   endYear: number;
   activeScenario: string;
-  refetching: boolean;
   separateYears: number[] | null;
   chartType?: 'area' | 'line' | 'bar';
 };
@@ -130,7 +128,6 @@ function OutcomeNodeContent({
   startYear,
   endYear,
   activeScenario,
-  refetching,
   chartType = 'bar',
   separateYears,
 }: OutcomeNodeContentProps) {
