@@ -1,6 +1,6 @@
 # Cleaning up the Paths integration
 
-Status: step 1 done, on `feat/watch-paths-cleanup` in watch-ui, paths-ui and kausal_common (branched from `feat/node-page` and `feat/shared-node-visualisation`). This doc lists what a review of Watch's Paths integration found after the node page and the shared node visualisation work, and in which order to fix it.
+Status: steps 1 and 2 done, on `feat/watch-paths-cleanup` in watch-ui, paths-ui and kausal_common (branched from `feat/node-page` and `feat/shared-node-visualisation`). This doc lists what a review of Watch's Paths integration found after the node page and the shared node visualisation work, and in which order to fix it.
 
 ## Background
 
@@ -36,7 +36,7 @@ Out of scope: step 4 (moving shared code to kausal_common). It is listed so it i
 In order of impact:
 
 1. **Clicking an outcome card recomputes the model on the server.** `PathsOutcomeBlock` records the active node with `router.replace(?node=…)`. That makes an RSC request for the dynamic page (no `staleTimes` is set), which re-runs `getContentPage` and all the Paths preloads, and throws the results away. Use `window.history.replaceState`, which Next syncs with `useSearchParams`.
-2. **The settings panel outcome is computed on every page.** `preloadSettingsPanel` preloads `GET_INSTANCE_GOAL_OUTCOME` for every page in `(with-layout-elements)`. `SettingsPanelFull` starts in `MODE.MD`, so the server renders `GoalOutcomeBar` and waits for the data. After hydration, a page without Paths content hides the panel. Preload only when the page shows the panel: it has Paths content, or the theme doesn't allow hiding it (`allowHidingSettingsPanel`). Start in the matching mode, so server and browser agree.
+2. **The settings panel outcome is computed on every page.** `preloadSettingsPanel` preloads `GET_INSTANCE_GOAL_OUTCOME` for every page in `(with-layout-elements)`. `SettingsPanelFull` starts in `MODE.MD`, so the server renders `GoalOutcomeBar` and waits for the data. After hydration, a page without Paths content hides the panel. Preload only when the page shows the panel: it has Paths content, or the theme doesn't allow hiding it (`allowHidingSettingsPanel`). Start in the matching mode, so server and browser agree. Themes that don't allow hiding the panel keep preloading it on every page, as it shows there.
 3. **Two Paths requests block every plan layout, one after the other.** `getPathsClient` awaits `getPathsLocale`, which runs an uncached `GetInstanceLanguages` before `GetInstanceContext` can start. The languages rarely change: cache them across requests (`'use cache'` with a revalidation time, or `unstable_cache`).
 4. **The removed impact sort still costs renders.** `CategoryTypeListBlock` only offers the `STANDARD` sort, but `handleCardLoaded` still stores each card's impact. Each `onLoaded` call (`ActionNodeSummary`, `InventoryNodeSummary`) replaces the array, which re-renders every `CategoryCard`. `handleCardLoaded` is a new function on every render, which defeats `memo` on `PathsNodeSummary`. Every `IndicatorSparkline` then rebuilds its chart, as its `option` isn't memoised. Remove `onLoaded`, `categoriesPathsData` and the impact branch, and memoise the sparkline `option`.
 5. **`GetNodeContent` runs once per card and fetches fields nobody reads.** The summaries read `impactMetric.forecastValues`, `isEnabled`, `parameters`, units and, for inventory nodes, `metricDim`. These are unread:
@@ -53,7 +53,7 @@ In order of impact:
    - The node page starts its metric preload only after the node lookup; start both at once, with the decoded id.
    - `PathsOutcomeBlock` builds a new node `Map` on every render, which defeats the memos in `OutcomeCardSet` and below it. `useMemo` it on the data and the active node.
    - `DataTable` sets its slice config in an effect, which costs an extra render with a stale config on every goal change. Derive it with `useMemo`.
-   - `NormalizationWidget` fetches all instance parameters only to check for null; the normalisations are in the instance context already.
+   - `NormalizationWidget` fetches all instance parameters only to check for null. It needs its own query for the normalisations, not the instance context: the mutation refetches it to show the new `isActive`, and the context is loaded once on the server.
    - `ParameterWidget`'s `onCompleted` sets `activeScenarioVar` to a copy, which re-renders every scenario consumer; `ScenarioSelector`'s refetch updates it already.
 
 ## Step 3: dead code
@@ -100,7 +100,7 @@ paths-ui's translations mostly match Watch's: of the 121 keys in Watch's `locale
 | Settings widgets: scenario, goal, parameter, normalisation, year range | Watch has older Bootstrap versions, paths-ui newer MUI ones. Needs the shared reactive vars, and Watch's Paths client hooks moved to kausal_common                                               | M–L    |
 | GraphQL fragments                                                      | Small field differences; both apps' codegen configs need to include a common directory                                                                                                           | M      |
 | Outcome card family                                                    | Same idea, about 300 lines of drift per file. `ScenarioBadge` is the easy start                                                                                                                  | L      |
-| Small duplicates                                                       | Initial goal, scenario and year range settings; the visualisation labels hook; `NodeLinks`; the Zürich footer                                                                                    | S each |
+| Small duplicates                                                       | Initial goal, scenario and year range settings; the visualisation labels hook; `NodeLinks`; the custom instance footer                                                                           | S each |
 
 Inside kausal_common, decide on one way to bridge app differences before moving more components. `DimensionalPieGraph` takes `t` and reads `activeGoalVar` itself, while `DimensionalNodeVisualisation` takes `labels` and `activeGoal` as props. Watch's `DataTable` also builds its own download menu where `ToolsMenu` could be used.
 

@@ -4,11 +4,8 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { gql } from '@apollo/client';
-import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Range, getTrackBackground } from 'react-range';
-
-import { activeScenarioVar } from '@common/apollo/paths-cache';
 
 import type { ActionParameterFragment } from '@/common/__generated__/paths/graphql';
 import Button from '@/components/common/Button';
@@ -263,18 +260,10 @@ type ParameterWidgetProps = {
 
 const ParameterWidget = (props: ParameterWidgetProps) => {
   const { parameter } = props;
-  const activeScenario = useReactiveVar(activeScenarioVar);
-  const [SetParameter, { loading: mutationLoading, error: mutationError }] = usePathsMutation(
-    SET_PARAMETER,
-    {
-      refetchQueries: 'active',
-      onCompleted: () => {
-        if (activeScenario) {
-          activeScenarioVar({ ...activeScenario });
-        }
-      },
-    }
-  );
+  // The scenario selector updates the active scenario from the refetch
+  const [SetParameter, { loading: mutationLoading }] = usePathsMutation(SET_PARAMETER, {
+    refetchQueries: 'active',
+  });
 
   const handleUserSelection = (evt) => {
     SetParameter({ variables: evt });

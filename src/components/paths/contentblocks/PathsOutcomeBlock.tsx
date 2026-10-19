@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, Suspense, useCallback, useEffect, useState } from 'react';
+import { type ReactNode, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
@@ -206,19 +206,15 @@ function PathsOutcomeBlockContent(props: PathsOutcomeBlockProps) {
   }
   const data = queryResp.data ?? previousData;
 
-  const getVisibleNodes: (outcomeNode: OutcomenodeType) => {
-    visible: OutcomenodeType[];
-    all: Map<string, OutcomenodeType>;
-  } = (outcomeNode: OutcomenodeType) => {
-    if (!outcomeNode) return { visible: [], all: new Map() };
-    const upstreamNodes = outcomeNode?.upstreamNodes ?? [];
-
-    const allNodes: Map<string, OutcomenodeType> = new Map(
-      upstreamNodes.map((node) => [node.id, node as OutcomenodeType])
+  // Memoised, so the card sets' memos hold
+  const outcomeNode = data?.node as OutcomenodeType | undefined;
+  const nodes = useMemo(() => {
+    const allNodes = new Map<string, OutcomenodeType>();
+    if (!outcomeNode) return { visible: [] as OutcomenodeType[], all: allNodes };
+    (outcomeNode.upstreamNodes ?? []).forEach((node) =>
+      allNodes.set(node.id, node as OutcomenodeType)
     );
-
     allNodes.set(outcomeNode.id, outcomeNode);
-    //setLastActiveNodeId(outcomeNode.id);
     const activeNodeId =
       lastActiveNodeId && allNodes.has(lastActiveNodeId) ? lastActiveNodeId : outcomeNode.id;
     // TODO: filtering out empty nodes, in some instances there are some -> investigate why
@@ -226,11 +222,7 @@ function PathsOutcomeBlockContent(props: PathsOutcomeBlockProps) {
       visible: findVisibleNodes(allNodes, activeNodeId, []).filter((node) => node?.id),
       all: allNodes,
     };
-  };
-
-  const nodes = data?.node
-    ? getVisibleNodes(data.node as OutcomenodeType)
-    : { visible: [], all: new Map() };
+  }, [outcomeNode, lastActiveNodeId]);
 
   return (
     <OutcomeBlockFrame heading={heading} refetching={refetching}>
