@@ -126,7 +126,11 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   ).referenceValue;
 
   const indicatorGoals: Array<IndicatorGoal | null> = indicator.goals || [];
-  const indicatorValues: Array<IndicatorValue> = indicator.values || [];
+  // The values include each category's value for the same dates; the
+  // sparkline shows the totals, which have no categories
+  const indicatorValues: Array<IndicatorValue> = (indicator.values || []).filter(
+    (value) => !value.categories.length
+  );
 
   interface CombinedDataItem {
     value?: number;
