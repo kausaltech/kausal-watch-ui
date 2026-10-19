@@ -172,6 +172,12 @@ const StyledRelatedActionCard = styled.div`
   padding: ${({ theme }) => theme.spaces.s100};
 `;
 
+const StyledActionPlanName = styled.div`
+  font-size: ${({ theme }) => theme.fontSizeSm};
+  color: ${({ theme }) => theme.textColor.secondary};
+  margin-bottom: ${({ theme }) => theme.spaces.s025};
+`;
+
 const StyledActionIdentifier = styled.span`
   font-weight: ${({ theme }) => theme.fontWeightBold};
   color: ${({ theme }) => theme.textColor.primary};
@@ -395,6 +401,12 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
 
             {actions.map((action) => (
               <StyledRelatedActionCard key={action.id}>
+                {/* Pledges on an umbrella plan can link actions from its child plans */}
+                {action.plan.identifier !== planIdentifier && (
+                  <StyledActionPlanName>
+                    {action.plan.shortName || action.plan.name}
+                  </StyledActionPlanName>
+                )}
                 <StyledActionIdentifier>{action.identifier}.</StyledActionIdentifier> {action.name}
                 <StyledViewActionLink href={action.viewUrl} target="_blank">
                   {t('pledge-view-action')}
