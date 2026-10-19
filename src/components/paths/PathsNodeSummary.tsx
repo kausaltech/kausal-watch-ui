@@ -1,4 +1,4 @@
-import React, { Suspense, useId } from 'react';
+import React, { Suspense, useId, useMemo } from 'react';
 
 import { useTheme } from '@emotion/react';
 
@@ -70,14 +70,15 @@ function PathsNodeSummaryContent(props: PathsNodeContentProps) {
   // Only show the impact of default goal if exists
   const actionImpactGoal = pathsInstance?.goals.find((goal) => goal.default === true);
 
-  // For Inventory nodes show all goals, Always show the active goal first
-  const displayAllGoals = true;
-  const displayGoals = displayAllGoals
-    ? pathsInstance?.goals
-    : activeGoal
-      ? [activeGoal]
-      : undefined;
-  displayGoals?.sort((a) => (a.id === activeGoal?.id ? -1 : 1));
+  // Inventory nodes show every goal, the active one first. Sorted as a copy:
+  // the goals belong to the Paths context, and summaries memoise on the array.
+  const goals = pathsInstance?.goals;
+  const activeGoalId = activeGoal?.id;
+  const displayGoals = useMemo(() => {
+    if (!goals) return undefined;
+    const isActive = (goal: { id: string }) => (goal.id === activeGoalId ? 1 : 0);
+    return [...goals].sort((a, b) => isActive(b) - isActive(a));
+  }, [goals, activeGoalId]);
 
   const { data, loading, error, networkStatus } = usePreloadedPathsQuery<
     GetNodeContentQuery,
