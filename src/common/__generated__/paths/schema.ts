@@ -599,6 +599,11 @@ export type RequiredCombinationsRuleInput = {
   groups: Array<RequiredCombinationGroupInput>;
 };
 
+export type RequiresMetricRuleInput = {
+  enforcement: DatasetRuleEnforcement;
+  metric: Scalars['String']['input'];
+};
+
 export enum ScenarioKind {
   Baseline = 'BASELINE',
   Custom = 'CUSTOM',
@@ -779,6 +784,7 @@ export type ValidationRuleSpecInput = {
   dimensionSum?: InputMaybe<DimensionSumRuleInput>;
   noGaps?: InputMaybe<NoGapsRuleInput>;
   requiredCombinations?: InputMaybe<RequiredCombinationsRuleInput>;
+  requiresMetric?: InputMaybe<RequiresMetricRuleInput>;
   valueRange?: InputMaybe<ValueRangeRuleInput>;
 };
 

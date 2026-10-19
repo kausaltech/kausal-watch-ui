@@ -332,6 +332,7 @@
       "DimensionSumRule",
       "NoGapsRule",
       "RequiredCombinationsRule",
+      "RequiresMetricRule",
       "ValueRangeRule"
     ],
     "VisualizationEntry": [

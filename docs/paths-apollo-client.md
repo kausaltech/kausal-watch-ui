@@ -230,6 +230,10 @@ the `authMiddleware` of both Watch clients can then be removed.
    preloads the `PathsNodeSummaryBlock` of a category page layout
    (`layoutMainTop`), whose node is the page's category's.
 
+   Node pages (`/model/nodes/[id]`, `PathsNodePage`): the page awaits only
+   `getPathsNodeInfo()`, which computes no metrics, for its title and the
+   404, then streams the node's metrics with `preloadNodePage()`.
+
    Not yet: blocks nested deeper than the page body, and
    `NormalizationWidget`, which is only shown in the expanded settings panel.
 
