@@ -3,9 +3,10 @@ import { useMemo } from 'react';
 import { usePaths } from '@/context/paths/paths';
 
 /**
- * The plan's Paths scenarios with the baseline name and the first year of
- * the model, as kausal_common's `DimensionalNodeVisualisation` takes them for
- * its baseline and progress tracking lines. Null without a Paths instance.
+ * Scenario info for the baseline and progress lines of kausal_common's
+ * `DimensionalNodeVisualisation`. Null without a Paths instance.
+ *
+ * Only fields that don't change when the active scenario does are passed.
  */
 export function usePathsSite() {
   const paths = usePaths();
@@ -13,7 +14,11 @@ export function usePathsSite() {
     if (!paths) return null;
     const { instance, scenarios } = paths;
     return {
-      scenarios,
+      scenarios: scenarios.map(({ id, kind, actualHistoricalYears }) => ({
+        id,
+        kind,
+        actualHistoricalYears,
+      })),
       baselineName: scenarios.find((scenario) => scenario.id === 'baseline')?.name,
       minYear: instance.minimumHistoricalYear,
     };
