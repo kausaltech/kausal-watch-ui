@@ -1,6 +1,6 @@
 # Cleaning up the Paths integration
 
-Status: planned, on `chore/paths-cleanup` (branched from `feat/node-page`). This doc lists what a review of Watch's Paths integration found after the node page and the shared node visualisation work, and in which order to fix it.
+Status: step 1 done, on `feat/watch-paths-cleanup` in watch-ui, paths-ui and kausal_common (branched from `feat/node-page` and `feat/shared-node-visualisation`). This doc lists what a review of Watch's Paths integration found after the node page and the shared node visualisation work, and in which order to fix it.
 
 ## Background
 
@@ -21,10 +21,15 @@ Out of scope: step 4 (moving shared code to kausal_common). It is listed so it i
 
 ## Step 1: bugs
 
-1. **Number formatting default differs between the apps.** `DEFAULT_SIGNIFICANT_DIGITS` is 2 in kausal_common (`utils/format/numbers.ts`) and 3 in paths-ui (`src/common/numbers.ts`). The shared visualisation uses kausal_common's, so since the shared visualisation landed, paths-ui charts show one digit less than its own cards, on instances that set neither `showSignificantDigits` nor `maximumFractionDigits`. Agree on one default (paths-ui's 3 was what paths-ui users saw) and use it in both.
+1. **Number formatting default differs between the apps.** `DEFAULT_SIGNIFICANT_DIGITS` is 2 in kausal_common (`utils/format/numbers.ts`) and 3 in paths-ui (`src/common/numbers.ts`). The shared visualisation uses kausal_common's, so since the shared visualisation landed, paths-ui charts show one digit less than its own cards, on instances that set neither `showSignificantDigits` nor `maximumFractionDigits`.
+
+   Each app keeps its own default: Watch's Paths numbers stay at 2 like the rest of Watch, paths-ui's at 3. Don't change kausal_common's `DEFAULT_SIGNIFICANT_DIGITS`, which is also Watch's general default (the indicator graphs and every `useNumberFormatter` call read it). Instead:
+   - give `makeInstanceFormatter` an optional default-digits argument, falling back to `DEFAULT_SIGNIFICANT_DIGITS`;
+   - give `DimensionalNodeVisualisation` and `DimensionalPieGraph` a `defaultSignificantDigits` prop, passed on to it;
+   - pass paths-ui's `DEFAULT_SIGNIFICANT_DIGITS` (3) from its visualisation wrapper and its pie graph caller. Watch passes nothing.
+
 2. **`PathsNodeSummary` sorts the instance goals in place.** `displayGoals?.sort(...)` sorts `paths.instance.goals` itself on every render. That reorders `GoalSelector`'s options, and `InventoryNodeSummary`'s `emissions` memo keeps the old order when the active goal changes, as the array reference never changes. Sort a copy in `useMemo`. `displayAllGoals` is always true, so the other branch goes too (see step 3).
-3. **Test disclaimer in production config.** `src/config/paths-instances.ts` has "Testing disclaimer" for `lappeenranta-nzc`. Check whether that instance is live, and remove or replace the text.
-4. **Sparkline may overwrite the total with a category value.** `IndicatorSparkline` merges dimensional values by year, so a category value for a year can replace the total. Confirm with data that has dimensions, and fix the merge to keep only the totals.
+3. **Sparkline may overwrite the total with a category value.** `IndicatorSparkline` merges dimensional values by year, so a category value for a year can replace the total. Confirm with data that has dimensions, and fix the merge to keep only the totals.
 
 ## Step 2: wasted work
 
@@ -89,7 +94,7 @@ paths-ui's translations mostly match Watch's: of the 121 keys in Watch's `locale
 | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ |
 | paths-ui's Apollo config (`src/common/apollo-config.ts`)               | Same logic as kausal_common's `apollo/paths-client.ts`, which paths-ui doesn't import. Its header names repeat `@common/constants/headers.mjs`                                                   | S      |
 | Reactive vars                                                          | paths-ui has its own `yearRangeVar` and `activeScenarioVar`; only `activeGoalVar` is shared. Common's `PathsScenario` lacks `isUserSelected`, `isSelectable`, `kind` and `actualHistoricalYears` | S      |
-| Number formatting                                                      | `useAxisLabelFormatter` is identical in both apps; `useNumberFormatter` repeats `makeInstanceFormatter`. Fixes step 1.1 for good                                                                 | S      |
+| Number formatting                                                      | `useAxisLabelFormatter` is identical in both apps; `useNumberFormatter` repeats `makeInstanceFormatter`. One shared hook, taking each app's default digits                                       | S      |
 | Metric accessors                                                       | paths-ui's `src/common/preprocess.ts` repeats `getMetricValue`, `getMetricChange` and `getOutcomeTotal`                                                                                          | S      |
 | Paths GraphQL proxy                                                    | Watch's `/api/graphql-paths` route is hand-written; paths-ui uses `@common/graphql/proxy`. Check what extra headers that forwards to Paths                                                       | S      |
 | Settings widgets: scenario, goal, parameter, normalisation, year range | Watch has older Bootstrap versions, paths-ui newer MUI ones. Needs the shared reactive vars, and Watch's Paths client hooks moved to kausal_common                                               | M–L    |
@@ -101,6 +106,6 @@ Inside kausal_common, decide on one way to bridge app differences before moving 
 
 ## Done when
 
-- Step 1: both apps format chart values the same way; goal order follows the active goal everywhere.
+- Step 1: in each app, Paths charts round like that app's other Paths numbers (paths-ui 3 significant digits, Watch 2); goal order follows the active goal everywhere.
 - Step 2: an outcome card click makes no server request; a page without Paths content makes no Paths model request; the plan layout makes at most one uncached Paths request.
 - Step 3: the listed items are gone, and `pnpm typecheck`, `pnpm exec eslint src` and `pnpm test` pass.
