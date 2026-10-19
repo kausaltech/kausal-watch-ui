@@ -19,6 +19,7 @@ import { usePaths } from '@/context/paths/paths';
 import { useNodeVisualisationLabels } from '@/utils/paths/hooks/useNodeVisualisationLabels';
 import { useActiveGoal } from '@/utils/paths/hooks/usePathsSettings';
 import { usePathsSite } from '@/utils/paths/hooks/usePathsSite';
+import { getOutcomeDisclaimer } from '@/utils/paths/outcome-disclaimer';
 
 const ContentWrapper = styled.div`
   min-height: 300px;
@@ -145,9 +146,11 @@ function OutcomeNodeContent({
   const instance = paths?.instance;
   const nodeName = node.shortName || node.name;
   const pathsDisclaimers = instance?.outcomeDisclaimers;
-  const disclaimer = pathsDisclaimers?.find(
-    (disclaimer) => disclaimer.node === node.id && disclaimer.goal === activeGoal?.id
-  )?.disclaimer;
+  const disclaimer = getOutcomeDisclaimer(pathsDisclaimers, node.id, activeGoal?.id, {
+    startYear,
+    endYear,
+    separateYears,
+  });
 
   const outcomeGraph = useMemo(() => {
     if (!node.metricDim) {

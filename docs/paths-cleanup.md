@@ -66,6 +66,8 @@ In order of impact:
   - `PathsOutcomeBlock`: `helpText`;
   - `PathsNodeSummaryBlock`: `heading`.
 
+  The two block fields stay in the backend for later use; the UI no longer fetches them.
+
   Check paths-ui's needs before trimming the instance context fields, in case step 4 shares the query.
 
 - **Branches that never run:**
@@ -84,7 +86,7 @@ In order of impact:
   - the `Bar`, `Segment` and `BarSeparator` styled components in `OutcomeCardSet`;
   - `mutationError` in `ScenarioSelector` and `ParameterWidget`;
   - the `referenceValue` cast in `IndicatorSparkline`.
-- **Config never read:** `outcomeDisclaimers[].year`, as disclaimers match on node and goal only. Left in: the texts are year-specific, so showing them only for that year may be the intent.
+- **Config never read:** `outcomeDisclaimers[].year`. Not dead after all: it was meant to hide a disclaimer when the years shown don't include its year. `getOutcomeDisclaimer` now does that.
 
 ## Step 4: sharing with paths-ui (deferred)
 
