@@ -147,6 +147,12 @@ const GET_PLEDGE: TypedDocumentNode<PledgeQuery, PledgeQueryVariables> = gql`
           identifier
           name
           viewUrl
+          plan {
+            id
+            identifier
+            name
+            shortName
+          }
         }
       }
     }

@@ -8634,7 +8634,9 @@ export type PledgeQuery_plan_pledge_body =
   | PledgeQuery_plan_pledge_body_RichTextBlock
 ;
 
-export type PledgeQuery_plan_pledge_actions = { __typename: 'Action', id: string, identifier: string, name: string, viewUrl: string };
+export type PledgeQuery_plan_pledge_actions_plan = { __typename: 'Plan', id: string, identifier: string, name: string, shortName: string | null };
+
+export type PledgeQuery_plan_pledge_actions = { __typename: 'Action', id: string, identifier: string, name: string, viewUrl: string, plan: PledgeQuery_plan_pledge_actions_plan };
 
 export type PledgeQuery_plan_pledge = { __typename: 'Pledge', id: string, name: string, description: string, uuid: string, slug: string, commitmentCount: number, residentCount: number | null, impactStatement: string, localEquivalency: string, body: Array<PledgeQuery_plan_pledge_body> | null, actions: Array<PledgeQuery_plan_pledge_actions> | null, image: PledgeFragment_image | null, attributes: Array<PledgeFragment_attributes> };
 
