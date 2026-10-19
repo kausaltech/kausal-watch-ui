@@ -25,7 +25,8 @@ const GET_NODE_INFO_TYPED: TypedDocumentNode<GetNodeInfoQuery, GetNodeInfoQueryV
 /**
  * A node of the plan's Paths model, or null if the plan has no model or the
  * model has no such node. Cheap, as it computes no metrics: the node page
- * uses it for its title and to answer 404 before streaming.
+ * uses it for its title and to answer 404 before streaming. Throws if the
+ * Paths API fails, so an outage shows as an error rather than a 404.
  *
  * Fetched once per request, for both the page and its metadata.
  */
@@ -36,8 +37,14 @@ export const getPathsNodeInfo = cache(async function getPathsNodeInfo(
 ): Promise<NonNullable<GetNodeInfoQuery['node']> | null> {
   // Cached for the request, the plan layout made these requests already
   const { data: planData } = await tryRequest(getPlan(domain, plan, await getRequestOrigin()));
-  const pathsData = await getPathsData(planData?.plan?.kausalPathsInstanceUuid ?? '');
-  if (!pathsData) return null;
+  const pathsInstance = planData?.plan?.kausalPathsInstanceUuid;
+  if (!pathsInstance) return null;
+  const pathsData = await getPathsData(pathsInstance);
+  // The plan has a model, so a missing instance context is a failed request
+  // (already reported), not a missing node
+  if (!pathsData) {
+    throw new Error(`Could not load Paths instance ${pathsInstance} for plan ${plan}`);
+  }
 
   const client = await getPathsClient(pathsData.instance.id);
   // Throws if the Paths API fails: that is an error, not a missing node

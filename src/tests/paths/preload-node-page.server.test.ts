@@ -60,6 +60,18 @@ describe('getPathsNodeInfo', () => {
     expect(query).not.toHaveBeenCalled();
   });
 
+  it("throws when the plan model's instance context fails, rather than answering not found", async () => {
+    const query = jest.fn();
+    mockPlan('zuerich-2025', query);
+    // getPathsData reports a failed request and resolves without data
+    jest.mocked(getPathsData).mockResolvedValue(undefined);
+
+    await expect(getPathsNodeInfo('zuerich', 'zuerich', 'solar_panels')).rejects.toThrow(
+      'Could not load Paths instance zuerich-2025'
+    );
+    expect(query).not.toHaveBeenCalled();
+  });
+
   it('throws when the Paths API fails, rather than answering not found', async () => {
     mockPlan('zuerich-2025', jest.fn().mockRejectedValue(new Error('Bad gateway')));
 
