@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { use, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -101,8 +101,14 @@ const MODE = {
  */
 let initializedInstanceId: string | undefined;
 
-const SettingsPanelFull: React.FC = () => {
+type SettingsPanelFullProps = {
+  /** Whether the panel shows on load, decided on the server */
+  visibleOnLoad: Promise<boolean>;
+};
+
+const SettingsPanelFull = ({ visibleOnLoad }: SettingsPanelFullProps) => {
   const paths = usePaths() as PathsInstanceType;
+  const initiallyVisible = use(visibleOnLoad);
   const showSettingsPanel = useReactiveVar(showSettingsPanelVar);
 
   const t = useTranslations();
@@ -112,10 +118,14 @@ const SettingsPanelFull: React.FC = () => {
   // showSettingsPanel===false means the panel is always hidden
   // showSettingsPanel controls the visibility of the panel from the page
 
-  const [mode, setMode] = useState(MODE.MD);
+  const [mode, setMode] = useState(initiallyVisible ? MODE.MD : MODE.NONE);
 
+  // Keep the server's decision until the hydrated page sets showSettingsPanelVar
+  const hasFollowedPage = useRef(false);
   useEffect(() => {
-    if (!showSettingsPanel && theme.settings.paths.allowHidingSettingsPanel) {
+    const visible = showSettingsPanel || (!hasFollowedPage.current && initiallyVisible);
+    hasFollowedPage.current = true;
+    if (!visible && theme.settings.paths.allowHidingSettingsPanel) {
       setMode(MODE.NONE);
     } else {
       setMode(MODE.MD);

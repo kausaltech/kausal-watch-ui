@@ -1,15 +1,18 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, Suspense } from 'react';
 
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import SettingsPanelFull from '@/components/paths/toolbar/SettingsPanelFull';
 import PathsPreloadProvider from '@/components/providers/PathsPreloadProvider';
-import { preloadSettingsPanel } from '@/utils/paths/preload-settings-panel';
+import {
+  getSettingsPanelVisibility,
+  preloadSettingsPanel,
+} from '@/utils/paths/preload-settings-panel';
 
 import { JsonLd } from './JsonLd';
 
 type Props = {
-  params: Promise<{ domain: string; plan: string }>;
+  params: Promise<{ domain: string; lang: string; plan: string }>;
   children: ReactNode;
 };
 
@@ -21,6 +24,8 @@ export default async function Layout(props: Props) {
   const params = await props.params;
 
   const { children } = props;
+  // Not awaited: the panel and its Paths data stream in when they are ready
+  const settingsPanelVisible = getSettingsPanelVisibility(params.domain, params.plan, params.lang);
 
   return (
     <>
@@ -32,10 +37,13 @@ export default async function Layout(props: Props) {
         </main>
       </div>
       <Footer />
-      {/* Not awaited: the panel's Paths data streams in when it is ready */}
-      <PathsPreloadProvider preload={preloadSettingsPanel(params.domain, params.plan)}>
-        <SettingsPanelFull />
-      </PathsPreloadProvider>
+      <Suspense fallback={null}>
+        <PathsPreloadProvider
+          preload={preloadSettingsPanel(params.domain, params.plan, settingsPanelVisible)}
+        >
+          <SettingsPanelFull visibleOnLoad={settingsPanelVisible} />
+        </PathsPreloadProvider>
+      </Suspense>
     </>
   );
 }

@@ -44,6 +44,7 @@ import RelatedPlanListBlock from '@/components/contentblocks/RelatedPlanListBloc
 import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBlock';
 import { usePlan } from '@/context/plan';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
+import { pageShowsPathsSettings } from '@/utils/paths/paths-content';
 
 import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
 import ChangeHistory from './ChangeHistory';
@@ -223,13 +224,6 @@ function BlockWrapper({
   }
 
   return <StyledBlockWrapper {...props} />;
-}
-
-function hasPathsContent(body: StreamFieldFragment[]) {
-  return body.some(
-    (block) =>
-      block.blockType === 'PathsOutcomeBlock' || block.blockType === 'CategoryTypeLevelListBlock'
-  );
 }
 
 const RichTextSection = styled.div`
@@ -718,17 +712,16 @@ export default function StreamField(props: StreamFieldProps) {
   const t = useTranslations();
   const theme = useTheme();
 
-  const isCategoryPage = page.__typename === 'CategoryPage';
   useEffect(() => {
     // If there are any content blocks that potentially use Paths scenario data
     // OR the page type is a CategoryPage, we do not hide the Paths settings panel
-    showSettingsPanelVar(isCategoryPage || hasPathsContent(blocks));
+    showSettingsPanelVar(pageShowsPathsSettings({ __typename: page.__typename, body: blocks }));
 
     // Cleanup: reset to false when component unmounts
     return () => {
       showSettingsPanelVar(false);
     };
-  }, [blocks, isCategoryPage]);
+  }, [blocks, page.__typename]);
 
   return (
     <div className={`custom-${page.slug}`}>

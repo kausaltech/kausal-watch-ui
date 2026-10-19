@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 import { type TypedDocumentNode, gql } from '@apollo/client';
 
 import type { HomePageQuery, HomePageQueryVariables } from '@/common/__generated__/graphql';
@@ -70,14 +72,17 @@ export const GET_HOME_PAGE: TypedDocumentNode<HomePageQuery, HomePageQueryVariab
   ${images.fragments.cardImage}
 `;
 
-export const getHomePage = async (plan: string) =>
-  await (
-    await getClient()
-  ).query({
-    query: GET_HOME_PAGE,
-    variables: {
-      plan,
-      path: '/',
-    },
-    fetchPolicy: 'no-cache',
-  });
+/** Cached per request, for the page and the layout */
+export const getHomePage = cache(
+  async (plan: string) =>
+    await (
+      await getClient()
+    ).query({
+      query: GET_HOME_PAGE,
+      variables: {
+        plan,
+        path: '/',
+      },
+      fetchPolicy: 'no-cache',
+    })
+);
