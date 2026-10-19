@@ -110,5 +110,10 @@
   "error-with-code": "Fejlkode {code}",
   "thumbSliderLabel": "Juster",
   "reset-button": "Nulstil",
-  "calculated-emissions": "Beregnede emissioner"
+  "calculated-emissions": "Beregnede emissioner",
+  "plot-break-down-by": "Opdel efter",
+  "plot-filter": "Filtrer",
+  "plot-filter-all": "Alle",
+  "plot-filter-no-data": "Ingen data med de aktuelle filtre",
+  "download-error": "Download mislykkedes. Prøv igen senere."
 }

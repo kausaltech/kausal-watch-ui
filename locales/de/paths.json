@@ -118,5 +118,10 @@
   "thumbSliderLabel": "Anpassen",
   "reset-button": "Zurücksetzen",
   "watch-action-list-title": "Maßnahmen",
-  "calculated-emissions": "Berechnete Emissionen"
+  "calculated-emissions": "Berechnete Emissionen",
+  "plot-break-down-by": "Aufschlüsseln nach",
+  "plot-filter": "Filtern",
+  "plot-filter-all": "Alle",
+  "plot-filter-no-data": "Keine Daten mit den aktuellen Filtern",
+  "download-error": "Download fehlgeschlagen. Bitte versuchen Sie es später erneut."
 }

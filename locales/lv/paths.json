@@ -100,5 +100,9 @@
   "outcome-tabs-label": "Attēlošanas opcijas",
   "tco2-e-inhabitant": "t CO<sub>2</sub>eq/iedzīvotājs/g",
   "ktco2-e": "kt CO<sub>2</sub>eq/g",
-  "calculated-emissions": "Aprēķinātās emisijas"
+  "calculated-emissions": "Aprēķinātās emisijas",
+  "plot-break-down-by": "Sadalīt pēc",
+  "plot-filter": "Filtrēt",
+  "plot-filter-all": "Visi",
+  "plot-filter-no-data": "Nav datu ar pašreizējiem filtriem"
 }

@@ -114,5 +114,10 @@
   "cost-benefit": "Cost-benefit",
   "cost-benefit-analysis": "Cost-benefit analysis",
   "return-of-investment": "Return of investment",
-  "calculated-emissions": "Calculated emissions"
+  "calculated-emissions": "Calculated emissions",
+  "plot-break-down-by": "Break down by",
+  "plot-filter": "Filter",
+  "plot-filter-all": "All",
+  "plot-filter-no-data": "No data with the current filters",
+  "download-error": "Download failed. Please try again later."
 }

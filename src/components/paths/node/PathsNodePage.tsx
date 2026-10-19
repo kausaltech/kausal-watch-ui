@@ -24,8 +24,9 @@ import { Container } from '@/components/common/layout/LayoutGrid';
 import NodeLinks from '@/components/paths/node/NodeLinks';
 import { usePaths } from '@/context/paths/paths';
 import { GET_NODE_PAGE, getNodePageVariables } from '@/queries/paths/get-paths-node-page';
+import { useNodeVisualisationLabels } from '@/utils/paths/hooks/useNodeVisualisationLabels';
 import { usePreloadedPathsQuery } from '@/utils/paths/hooks/usePathsApollo';
-import { useYearRange } from '@/utils/paths/hooks/usePathsSettings';
+import { useActiveGoal, useYearRange } from '@/utils/paths/hooks/usePathsSettings';
 
 const HeaderSection = styled('div', transientOptions)<{ $color?: string | null }>`
   padding: ${({ theme }) => theme.spaces.s200} 0;
@@ -84,6 +85,8 @@ function PathsNodePageContent({ nodeId }: Props) {
   const t = useTranslations();
   const paths = usePaths();
   const yearRange = useYearRange();
+  const activeGoal = useActiveGoal();
+  const visualisationLabels = useNodeVisualisationLabels();
 
   const { data, previousData, loading, error, networkStatus } = usePreloadedPathsQuery<
     GetNodePageQuery,
@@ -146,7 +149,8 @@ function PathsNodePageContent({ nodeId }: Props) {
                     features: instance.features,
                   }}
                   site={null}
-                  t={t}
+                  activeGoal={activeGoal}
+                  labels={visualisationLabels}
                 />
               </GraphWrapper>
             )}

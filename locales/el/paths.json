@@ -1,3 +1,8 @@
 {
-  "calculated-emissions": "Υπολογισμένες εκπομπές"
+  "calculated-emissions": "Υπολογισμένες εκπομπές",
+  "plot-break-down-by": "Ανάλυση ανά",
+  "plot-filter": "Φιλτράρισμα",
+  "plot-filter-all": "Όλες",
+  "plot-filter-no-data": "Δεν υπάρχουν δεδομένα με τα τρέχοντα φίλτρα",
+  "download-error": "Η λήψη απέτυχε. Παρακαλώ δοκιμάστε ξανά αργότερα."
 }

@@ -17,6 +17,7 @@ import DataTable from '@/components/paths/graphs/DataTable';
 import NodeViewSelector, { type NodeView } from '@/components/paths/outcome/NodeViewSelector';
 import OutcomeNodeDetails from '@/components/paths/outcome/OutcomeNodeDetails';
 import { usePaths } from '@/context/paths/paths';
+import { useNodeVisualisationLabels } from '@/utils/paths/hooks/useNodeVisualisationLabels';
 import { useActiveGoal } from '@/utils/paths/hooks/usePathsSettings';
 
 const ContentWrapper = styled.div`
@@ -138,6 +139,7 @@ function OutcomeNodeContent({
   const paths = usePaths();
 
   const activeGoal = useActiveGoal();
+  const visualisationLabels = useNodeVisualisationLabels();
   // We have a disclaimer for the mobility node for 2023 (hack)
   const hideForecast = separateYears && separateYears.length > 1;
 
@@ -175,12 +177,25 @@ function OutcomeNodeContent({
           features: instance.features,
         }}
         site={null}
-        t={t}
+        activeGoal={activeGoal}
+        labels={visualisationLabels}
         chartType={chartType}
         separateYears={separateYears}
       />
     );
-  }, [node, color, startYear, endYear, instance, nodeName, t]);
+  }, [
+    node,
+    color,
+    colorAdjust,
+    startYear,
+    endYear,
+    separateYears,
+    chartType,
+    instance,
+    activeGoal,
+    visualisationLabels,
+    t,
+  ]);
 
   const singleYearGraph = useMemo(() => {
     if (!instance) return null;
