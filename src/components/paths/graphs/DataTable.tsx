@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 
 import {
   ListItemIcon,
@@ -19,7 +19,6 @@ import {
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { isEqual } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { FiletypeCsv, FiletypeXls } from 'react-bootstrap-icons';
 
@@ -30,9 +29,8 @@ import {
   parseMetric,
   sliceBy,
 } from '@common/utils/paths/metric';
-import type { MetricSliceData, SliceConfig } from '@common/utils/paths/metric';
+import type { MetricInput, MetricSliceData } from '@common/utils/paths/metric';
 
-import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths/graphql';
 import useNumberFormatter from '@/common/numbers';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
@@ -52,7 +50,7 @@ const Tools = styled.div`
 `;
 
 interface DataTableProps {
-  metric: NonNullable<DimensionalNodeMetricFragment['metricDim']>;
+  metric: MetricInput;
   startYear: number;
   endYear: number;
   separateYears?: number[] | null;
@@ -77,32 +75,25 @@ const DataTable = (props: DataTableProps) => {
   const lastMetricYear = metric.years.slice(-1)[0];
   const usableEndYear = lastMetricYear && endYear > lastMetricYear ? lastMetricYear : endYear;
 
-  const defaultConfig = getDefaultSliceConfig(parsed, activeGoal);
-  const [sliceConfig, setSliceConfig] = useState<SliceConfig>(defaultConfig);
+  // Follows the active goal's default breakdown
+  const sliceConfig = useMemo(
+    () => getDefaultSliceConfig(parsed, activeGoal),
+    [parsed, activeGoal]
+  );
 
-  useEffect(() => {
-    /**
-     * If the active goal changes, we will reset the grouping + filtering
-     * to be compatible with the new choices (if the new goal has common
-     * dimensions with our metric).
-     */
-    if (!activeGoal) return;
-    const newDefault = getDefaultSliceConfig(parsed, activeGoal);
-    if (!newDefault || isEqual(sliceConfig, newDefault)) return;
-    setSliceConfig(newDefault);
-  }, [activeGoal, parsed, sliceConfig]);
+  const years = useMemo(
+    () =>
+      separateYears ??
+      Array.from({ length: usableEndYear - startYear + 1 }, (_, i) => startYear + i),
+    [separateYears, usableEndYear, startYear]
+  );
 
-  const slicedDim = parsed.dimensions.find((dim) => dim.id === sliceConfig.dimensionId);
-
-  const years =
-    separateYears ?? Array.from({ length: usableEndYear - startYear + 1 }, (_, i) => startYear + i);
-
-  let slice: MetricSliceData | null = null;
-  if (slicedDim) {
-    slice = sliceBy(parsed, slicedDim.id, true, sliceConfig.categories, undefined, { years });
-  } else {
-    slice = flatten(parsed, sliceConfig.categories, years);
-  }
+  const slice: MetricSliceData | null = useMemo(() => {
+    const slicedDim = parsed.dimensions.find((dim) => dim.id === sliceConfig.dimensionId);
+    return slicedDim
+      ? sliceBy(parsed, slicedDim.id, true, sliceConfig.categories, undefined, { years })
+      : flatten(parsed, sliceConfig.categories, years);
+  }, [parsed, sliceConfig, years]);
 
   if (!slice) return null;
 

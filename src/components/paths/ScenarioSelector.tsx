@@ -88,18 +88,14 @@ const ScenarioSelectorContent = ({ disabled = false }: ScenarioSelectorProps) =>
     notifyOnNetworkStatusChange: true,
   });
 
-  const [activateScenario, { loading: mutationLoading, error: mutationError }] = usePathsMutation<
+  const [activateScenario, { loading: mutationLoading }] = usePathsMutation<
     ActivateScenarioMutation,
     ActivateScenarioMutationVariables
   >(ACTIVATE_SCENARIO, {
     refetchQueries: pathsQueries,
   });
 
-  //const hideBaseScenario = instance.features?.baselineVisibleInGraphs === false;
-  const hideBaseScenario = false;
-  const scenarios = ((data as GetScenariosQuery | undefined)?.scenarios ?? []).filter((scen) =>
-    hideBaseScenario ? scen.id !== 'baseline' : true
-  );
+  const scenarios = (data as GetScenariosQuery | undefined)?.scenarios ?? [];
   const activeScenario = scenarios.find((scen) => scen.isActive);
 
   useEffect(() => {

@@ -108,7 +108,6 @@ const YearRangeSelector = (props) => {
   }, []);
   const t = useTranslations();
   const buttonLabel = disabled ? '-' : `${yearRange[0]}–${yearRange[1]}`;
-  if (!yearRange) return <div>Loading...</div>;
   return (
     <div className="mb-3">
       <ButtonLabel>{t('comparing-years')}</ButtonLabel>
@@ -168,11 +167,7 @@ function getColumnSizes(hasMultipleGoals: boolean) {
   };
 }
 
-type MediumSettingsProps = {
-  hidden?: boolean;
-};
-const MediumSettings = (props: MediumSettingsProps) => {
-  const { hidden = false } = props;
+const MediumSettings = () => {
   const paths = usePaths();
   const instance = paths?.instance;
   const nrGoals = instance?.goals.length;
@@ -182,7 +177,7 @@ const MediumSettings = (props: MediumSettingsProps) => {
   // TODO: This is a hack. We should get this from the backend.
   const goalHasSeparateYears = activeGoal?.separateYears;
 
-  if (hidden || !instance) return null;
+  if (!instance) return null;
   return (
     <Container fluid="xl">
       <PanelContent>

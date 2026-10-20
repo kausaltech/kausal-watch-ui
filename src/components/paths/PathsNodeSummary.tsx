@@ -1,4 +1,4 @@
-import React, { Suspense, useId } from 'react';
+import React, { Suspense, useId, useMemo } from 'react';
 
 import { useTheme } from '@emotion/react';
 
@@ -7,7 +7,6 @@ import { captureException } from '@sentry/nextjs';
 import ContentLoader from 'react-content-loader';
 
 import type {
-  GetInstanceContextQuery,
   GetNodeContentQuery,
   GetNodeContentQueryVariables,
 } from '@/common/__generated__/paths/graphql';
@@ -45,9 +44,7 @@ const PathsContentLoader = (props) => {
 
 //   pathsInstance: GetInstanceContextQuery['instance'];
 type PathsNodeContentProps = {
-  categoryId: string;
   node: string;
-  onLoaded?: (id: string, impact: number) => void;
   targetNodeId?: string | null;
 };
 
@@ -62,7 +59,7 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => (
 ));
 
 function PathsNodeSummaryContent(props: PathsNodeContentProps) {
-  const { categoryId, node, onLoaded, targetNodeId } = props;
+  const { node, targetNodeId } = props;
   const paths = usePaths();
   const pathsInstance = paths?.instance;
   const activeGoal = useActiveGoal();
@@ -70,14 +67,15 @@ function PathsNodeSummaryContent(props: PathsNodeContentProps) {
   // Only show the impact of default goal if exists
   const actionImpactGoal = pathsInstance?.goals.find((goal) => goal.default === true);
 
-  // For Inventory nodes show all goals, Always show the active goal first
-  const displayAllGoals = true;
-  const displayGoals = displayAllGoals
-    ? pathsInstance?.goals
-    : activeGoal
-      ? [activeGoal]
-      : undefined;
-  displayGoals?.sort((a) => (a.id === activeGoal?.id ? -1 : 1));
+  // Inventory nodes show every goal, the active one first. Sorted as a copy:
+  // the goals belong to the Paths context, and summaries memoise on the array.
+  const goals = pathsInstance?.goals;
+  const activeGoalId = activeGoal?.id;
+  const displayGoals = useMemo(() => {
+    if (!goals) return undefined;
+    const isActive = (goal: { id: string }) => (goal.id === activeGoalId ? 1 : 0);
+    return [...goals].sort((a, b) => isActive(b) - isActive(a));
+  }, [goals, activeGoalId]);
 
   const { data, loading, error, networkStatus } = usePreloadedPathsQuery<
     GetNodeContentQuery,
@@ -111,9 +109,7 @@ function PathsNodeSummaryContent(props: PathsNodeContentProps) {
     if (data.node.__typename === 'ActionNode') {
       return (
         <ActionNodeSummary
-          categoryId={categoryId}
           node={data.node}
-          onLoaded={onLoaded ? onLoaded : () => void 0}
           refetching={refetching}
           displayGoal={actionImpactGoal}
         />
@@ -121,13 +117,10 @@ function PathsNodeSummaryContent(props: PathsNodeContentProps) {
     } else if (data.node.__typename && displayGoals) {
       return (
         <InventoryNodeSummary
-          categoryId={categoryId}
           node={data.node}
-          onLoaded={onLoaded ? onLoaded : () => void 0}
           displayGoals={
             displayGoals as React.ComponentProps<typeof InventoryNodeSummary>['displayGoals']
           }
-          refetching={refetching}
         />
       );
     }

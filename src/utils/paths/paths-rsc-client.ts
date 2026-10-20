@@ -27,26 +27,46 @@ const getClientForLocale = cache(async (instanceIdentifier: string, locale: stri
   });
 });
 
+/** How long an instance's languages are reused */
+const INSTANCE_LANGUAGES_TTL_MS = 5 * 60 * 1000;
+
+type InstanceLanguages = { supportedLanguages: string[]; defaultLanguage: string } | undefined;
+
+/**
+ * Each instance's languages, shared across requests: they're public settings.
+ * Failures aren't kept.
+ */
+const instanceLanguages = new Map<
+  string,
+  { expiresAt: number; languages: Promise<InstanceLanguages> }
+>();
+
+function getInstanceLanguages(instanceIdentifier: string): Promise<InstanceLanguages> {
+  const cached = instanceLanguages.get(instanceIdentifier);
+  if (cached && cached.expiresAt > Date.now()) return cached.languages;
+
+  const languages = getClientForLocale(instanceIdentifier, undefined)
+    .then((client) => client.query({ query: GET_INSTANCE_LANGUAGES, fetchPolicy: 'no-cache' }))
+    .then(({ data }) => data?.instance);
+  instanceLanguages.set(instanceIdentifier, {
+    expiresAt: Date.now() + INSTANCE_LANGUAGES_TTL_MS,
+    languages,
+  });
+  languages.catch(() => instanceLanguages.delete(instanceIdentifier));
+  return languages;
+}
+
 /**
  * The language to query the Paths instance in for this request's locale; see
- * `resolvePathsLocale`. Asks the instance for its languages, without a
- * language, once per request.
+ * `resolvePathsLocale`.
  */
 export const getPathsLocale = cache(async (instanceIdentifier: string) => {
   const locale = (await headers()).get('x-next-intl-locale');
   if (!locale) return undefined;
 
   try {
-    const client = await getClientForLocale(instanceIdentifier, undefined);
-    const { data } = await client.query({
-      query: GET_INSTANCE_LANGUAGES,
-      fetchPolicy: 'no-cache',
-    });
-    return resolvePathsLocale(
-      locale,
-      data?.instance.supportedLanguages,
-      data?.instance.defaultLanguage
-    );
+    const languages = await getInstanceLanguages(instanceIdentifier);
+    return resolvePathsLocale(locale, languages?.supportedLanguages, languages?.defaultLanguage);
   } catch (error) {
     // Querying in the page's locale works whenever the instance supports it
     captureException(error, { extra: { pathsInstance: instanceIdentifier, locale } });

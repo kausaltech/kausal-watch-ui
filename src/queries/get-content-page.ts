@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 import { type TypedDocumentNode, gql } from '@apollo/client';
 
 import type { ContentPageQuery, ContentPageQueryVariables } from '@/common/__generated__/graphql';
@@ -10,17 +12,20 @@ import { CATEGORY_FRAGMENT } from '../fragments/category.fragment';
 import { STREAM_FIELD_FRAGMENT } from '../fragments/stream-field.fragment';
 import { getClient } from '../utils/apollo-rsc-client';
 
-export const getContentPage = async (plan: string, path: string) =>
-  await (
-    await getClient()
-  ).query({
-    query: GET_CONTENT_PAGE,
-    variables: {
-      plan,
-      path,
-    },
-    fetchPolicy: 'no-cache',
-  });
+/** Cached per request, for the page, its metadata and the layout */
+export const getContentPage = cache(
+  async (plan: string, path: string) =>
+    await (
+      await getClient()
+    ).query({
+      query: GET_CONTENT_PAGE,
+      variables: {
+        plan,
+        path,
+      },
+      fetchPolicy: 'no-cache',
+    })
+);
 
 const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
   fragment TemplatedCategoryPage on CategoryPage {
@@ -46,7 +51,6 @@ const TEMPLATED_CATEGORY_PAGE_FRAGMENT = gql`
         }
         ... on PathsNodeSummaryBlock {
           id
-          heading
           pathsTargetNodeId
         }
       }

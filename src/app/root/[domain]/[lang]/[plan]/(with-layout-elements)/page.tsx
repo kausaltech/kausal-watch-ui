@@ -1,10 +1,9 @@
 import { getTranslations } from 'next-intl/server';
 
 import ErrorPage from '@/components/common/ErrorPage';
-import PathsPreloadProvider from '@/components/providers/PathsPreloadProvider';
+import PathsPageData from '@/components/paths/PathsPageData';
 import { getHomePage } from '@/queries/get-home-page';
 import { tryRequest } from '@/utils/api.utils';
-import { preloadPathsBlocks } from '@/utils/paths/preload-paths-blocks';
 
 import { RootPage } from './RootPage';
 
@@ -21,12 +20,9 @@ export default async function PlanPage(props: Props) {
     return <ErrorPage message={t('error-loading-data')} details={error?.message} />;
   }
 
-  // Not awaited: Paths blocks stream in when their data is ready
-  const pathsPreload = preloadPathsBlocks(params.domain, params.plan, data.planPage);
-
   return (
-    <PathsPreloadProvider preload={pathsPreload}>
+    <PathsPageData domain={params.domain} plan={params.plan} page={data.planPage}>
       <RootPage data={data} testId="home-page" />
-    </PathsPreloadProvider>
+    </PathsPageData>
   );
 }

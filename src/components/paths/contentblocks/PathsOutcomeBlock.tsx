@@ -1,8 +1,8 @@
 'use client';
 
-import { type ReactNode, Suspense, useCallback, useEffect, useState } from 'react';
+import { type ReactNode, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import Alert from '@mui/material/Alert';
 
@@ -116,7 +116,6 @@ export interface OutcomenodeType extends OutcomeNodeFieldsFragment {
 
 type PathsOutcomeBlockProps = {
   heading: string | null;
-  helpText?: string | null;
   outcomeNodeId?: string | null;
 };
 
@@ -167,10 +166,7 @@ function PathsOutcomeBlockContent(props: PathsOutcomeBlockProps) {
   const yearRange = useYearRange();
   const activeGoal = useActiveGoal();
   const activeScenario = useActiveScenario();
-  //const path = '';
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
   const queryNodeId = searchParams.get('node') ?? undefined;
   const [lastActiveNodeId, setLastActiveNodeId] = useState<string | undefined>(queryNodeId);
 
@@ -184,16 +180,14 @@ function PathsOutcomeBlockContent(props: PathsOutcomeBlockProps) {
     [searchParams]
   );
 
+  // No navigation: router.replace would re-render the page on the server
   useEffect(() => {
     if (queryNodeId === lastActiveNodeId) return;
     if (lastActiveNodeId) {
-      router.replace(pathname + '?' + createQueryString('node', lastActiveNodeId), {
-        scroll: false,
-      });
+      window.history.replaceState(null, '', `?${createQueryString('node', lastActiveNodeId)}`);
     }
-  }, [lastActiveNodeId, queryNodeId, router, pathname, createQueryString]);
+  }, [lastActiveNodeId, queryNodeId, createQueryString]);
 
-  // router.push(pathname + '?' + createQueryString('sort', 'asc'))
   const variables = getOutcomeNodeVariables(outcomeNodeId, activeGoal?.id ?? null);
   const queryResp = usePreloadedPathsQuery<GetOutcomeNodeContentQuery>(GET_OUTCOME_NODE, {
     variables,
@@ -211,19 +205,15 @@ function PathsOutcomeBlockContent(props: PathsOutcomeBlockProps) {
   }
   const data = queryResp.data ?? previousData;
 
-  const getVisibleNodes: (outcomeNode: OutcomenodeType) => {
-    visible: OutcomenodeType[];
-    all: Map<string, OutcomenodeType>;
-  } = (outcomeNode: OutcomenodeType) => {
-    if (!outcomeNode) return { visible: [], all: new Map() };
-    const upstreamNodes = outcomeNode?.upstreamNodes ?? [];
-
-    const allNodes: Map<string, OutcomenodeType> = new Map(
-      upstreamNodes.map((node) => [node.id, node as OutcomenodeType])
+  // Memoised, so the card sets' memos hold
+  const outcomeNode = data?.node as OutcomenodeType | undefined;
+  const nodes = useMemo(() => {
+    const allNodes = new Map<string, OutcomenodeType>();
+    if (!outcomeNode) return { visible: [] as OutcomenodeType[], all: allNodes };
+    (outcomeNode.upstreamNodes ?? []).forEach((node) =>
+      allNodes.set(node.id, node as OutcomenodeType)
     );
-
     allNodes.set(outcomeNode.id, outcomeNode);
-    //setLastActiveNodeId(outcomeNode.id);
     const activeNodeId =
       lastActiveNodeId && allNodes.has(lastActiveNodeId) ? lastActiveNodeId : outcomeNode.id;
     // TODO: filtering out empty nodes, in some instances there are some -> investigate why
@@ -231,11 +221,7 @@ function PathsOutcomeBlockContent(props: PathsOutcomeBlockProps) {
       visible: findVisibleNodes(allNodes, activeNodeId, []).filter((node) => node?.id),
       all: allNodes,
     };
-  };
-
-  const nodes = data?.node
-    ? getVisibleNodes(data.node as OutcomenodeType)
-    : { visible: [], all: new Map() };
+  }, [outcomeNode, lastActiveNodeId]);
 
   return (
     <OutcomeBlockFrame heading={heading} refetching={refetching}>

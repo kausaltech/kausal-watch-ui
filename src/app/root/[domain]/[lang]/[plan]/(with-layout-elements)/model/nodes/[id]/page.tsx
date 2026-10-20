@@ -34,19 +34,20 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
 
 export default async function ModelNodePage(props: Props) {
   const { id, plan, domain } = await props.params;
-  const node = await getPathsNodeInfo(domain, plan, decodeURIComponent(id));
+  const nodeId = decodeURIComponent(id);
+  // Not awaited; started before the lookup so the metrics compute meanwhile
+  const preload = preloadNodePage(domain, plan, nodeId);
+  const node = await getPathsNodeInfo(domain, plan, nodeId);
 
   // Also when the plan has no Paths model
   if (!node) {
     return notFound();
   }
 
-  // Not awaited: the node's metrics stream in when the model has computed them
-  const preload = preloadNodePage(domain, plan, node.id);
-
   return (
     <PathsPreloadProvider preload={preload}>
-      <PathsNodePage nodeId={node.id} />
+      {/* Same id as the preload */}
+      <PathsNodePage nodeId={nodeId} />
     </PathsPreloadProvider>
   );
 }

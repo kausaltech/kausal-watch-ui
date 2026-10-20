@@ -9,7 +9,6 @@ import styled from '@emotion/styled';
 import * as Sentry from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 
-import { showSettingsPanelVar } from '@common/apollo/paths-cache';
 import ContentLoader from '@common/components/ContentLoader';
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -223,13 +222,6 @@ function BlockWrapper({
   }
 
   return <StyledBlockWrapper {...props} />;
-}
-
-function hasPathsContent(body: StreamFieldFragment[]) {
-  return body.some(
-    (block) =>
-      block.blockType === 'PathsOutcomeBlock' || block.blockType === 'CategoryTypeLevelListBlock'
-  );
 }
 
 const RichTextSection = styled.div`
@@ -603,10 +595,8 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
       return <AccessibilityStatementPreparationInformationBlock {...block} id={id} />;
     }
     case 'PathsOutcomeBlock': {
-      const { heading, helpText, outcomeNodeId } = block;
-      return (
-        <PathsOutcomeBlock heading={heading} helpText={helpText} outcomeNodeId={outcomeNodeId} />
-      );
+      const { heading, outcomeNodeId } = block;
+      return <PathsOutcomeBlock heading={heading} outcomeNodeId={outcomeNodeId} />;
     }
     case 'CategoryTypeLevelListBlock': {
       const {
@@ -717,18 +707,6 @@ export default function StreamField(props: StreamFieldProps) {
   const { page, blocks, hasSidebar = false, columnProps, precedingBlockHasBackground } = props;
   const t = useTranslations();
   const theme = useTheme();
-
-  const isCategoryPage = page.__typename === 'CategoryPage';
-  useEffect(() => {
-    // If there are any content blocks that potentially use Paths scenario data
-    // OR the page type is a CategoryPage, we do not hide the Paths settings panel
-    showSettingsPanelVar(isCategoryPage || hasPathsContent(blocks));
-
-    // Cleanup: reset to false when component unmounts
-    return () => {
-      showSettingsPanelVar(false);
-    };
-  }, [blocks, isCategoryPage]);
 
   return (
     <div className={`custom-${page.slug}`}>

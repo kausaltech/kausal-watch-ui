@@ -1,16 +1,13 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import styled from '@emotion/styled';
 
-import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 
 import type { CategoryFragment } from '@/common/__generated__/graphql';
 import { getDeepParents } from '@/common/categories';
-import type { TFunction } from '@/common/i18n';
-import { FormGroup, Input, Label } from '@/components/common/FormControls';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import { usePaths } from '@/context/paths/paths';
 import { CATEGORY_FRAGMENT } from '@/fragments/category.fragment';
@@ -25,21 +22,6 @@ const getColor = (theme: Theme, darkFallback = theme.themeColors.black) =>
 const getBackgroundColor = (theme: Theme) =>
   theme.section.categoryList?.background || theme.neutralLight;
 */
-
-type SortActionsConfig = {
-  key: 'IMPACT' | 'STANDARD';
-  label: string;
-  sortKey: string;
-  isHidden?: boolean;
-};
-
-const getSortOptions = (t: TFunction): SortActionsConfig[] => [
-  {
-    key: 'STANDARD',
-    label: t('actions-sort-default'),
-    sortKey: 'order',
-  },
-];
 
 const HeaderSection = styled.div`
   padding: 3rem 0;
@@ -121,18 +103,11 @@ interface CategoryTypeListBlockProps {
   targetNodeId?: string | null;
 }
 
-interface ImpactData {
-  id: string;
-  impact: number | null;
-}
-
 const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
   const { id = '', heading, groupByLevelId, categories, lead, targetNodeId } = props;
 
   const paths = usePaths();
-  const t = useTranslations();
   const pathsInstance = paths?.instance;
-  const sortOptions = getSortOptions(t);
 
   const groups = useMemo(
     () =>
@@ -141,54 +116,10 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
       ],
     [categories, groupByLevelId]
   );
-  const [sortBy, setSortBy] = useState<SortActionsConfig>(sortOptions[0]);
-  const [categoriesPathsData, setCategoriesPathsData] = useState<ImpactData[]>(
-    categories?.map((cat) => {
-      return { id: cat.id, impact: null };
-    })
-  );
-
-  /*
-   * Augment listed categories with loaded impact data from Paths
-   * to enable sorting by impact. We call it all 'impact' for now
-   */
-  const handleCardLoaded = (id: string, impact: number) => {
-    setCategoriesPathsData((prevCategories) => {
-      const updatedCategories = [...prevCategories];
-      const index = updatedCategories.findIndex((cat) => cat.id === id);
-      if (index !== -1) {
-        updatedCategories[index].impact = impact;
-      }
-      return updatedCategories;
-    });
-  };
-
-  const handleChangeSort = (sort: SortActionsConfig['key']) => {
-    const selectedSorter = sortOptions.find((option) => option.key === sort) ?? sortOptions[0];
-    setSortBy(selectedSorter);
-  };
-
+  // Smallest order first
   const sortedCategories: CategoryFragment[] = useMemo(
-    () =>
-      [...categories].sort((a, b) => {
-        if (sortBy.key === 'IMPACT') {
-          // if cat has no impact make sure it gets sorted to the bottom
-          const aValue = categoriesPathsData.find((cat) => cat.id === a.id)?.impact;
-          const bValue = categoriesPathsData.find((cat) => cat.id === b.id)?.impact;
-          // Let's use an absolute value here until we figure out how to handle pos/neg impact
-          // Make sure no impact value are sorted to the bottom
-          if (!aValue && !bValue) return 0;
-          if (!aValue) return 1;
-          if (!bValue) return -1;
-          return Math.abs(bValue) - Math.abs(aValue);
-        }
-        if (sortBy.key === 'STANDARD') {
-          // smallest order first
-          return a[sortBy.sortKey] - b[sortBy.sortKey];
-        }
-        return 0;
-      }),
-    [sortBy, categories, categoriesPathsData]
+    () => [...categories].sort((a, b) => a.order - b.order),
+    [categories]
   );
 
   return (
@@ -204,31 +135,6 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
         </Container>
       </HeaderSection>
       <Container>
-        {sortOptions.length > 1 && (
-          <Row>
-            <Col xs={{ size: 6, offset: 6 }} md={{ size: 2, offset: 10 }}>
-              <FormGroup>
-                <Label for="sort">{t('actions-sort-by')}</Label>
-                <Input
-                  id="sort"
-                  name="select"
-                  type="select"
-                  onChange={(e) => handleChangeSort(e.target.value as SortActionsConfig['key'])}
-                  defaultValue={sortBy.key}
-                >
-                  {sortOptions.map(
-                    (sortOption) =>
-                      !sortOption.isHidden && (
-                        <option key={sortOption.key} value={sortOption.key}>
-                          {sortOption.label}
-                        </option>
-                      )
-                  )}
-                </Input>
-              </FormGroup>
-            </Col>
-          </Row>
-        )}
         {groups?.map((group) => (
           <Row key={group?.id}>
             {group?.id !== 'all' && (
@@ -248,7 +154,6 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
                         category={cat}
                         group={group}
                         pathsInstance={pathsInstance}
-                        onLoaded={handleCardLoaded}
                         targetNodeId={targetNodeId}
                       />
                     </Col>

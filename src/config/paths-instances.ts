@@ -17,14 +17,6 @@ export const PATHS_INSTANCE_SETTINGS: Record<string, PathsInstanceSettings> = {
     separateYears: {
       net_emissions: null,
     },
-    outcomeDisclaimers: [
-      {
-        year: 2020,
-        node: 'net_emissions',
-        goal: 'net_emissions',
-        disclaimer: 'Testing disclaimer',
-      },
-    ],
   },
   zuerich: {
     defaultOutcomeGraphType: {

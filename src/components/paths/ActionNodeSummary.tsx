@@ -1,5 +1,3 @@
-import React, { useEffect } from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -59,15 +57,13 @@ const ParametersWrapper = styled.div`
 `;
 
 type PathsActionNodeContentProps = {
-  categoryId: string;
   node: GetNodeContentQuery['node'] & { __typename: 'ActionNode' };
   refetching: boolean;
-  onLoaded: (id: string, impact: number) => void;
   displayGoal?: GetInstanceContextQuery['instance']['goals'][number];
 };
 
 const ActionNodeSummary = (props: PathsActionNodeContentProps) => {
-  const { categoryId, node, refetching = false, onLoaded, displayGoal } = props;
+  const { node, refetching = false, displayGoal } = props;
   const t = useTranslations();
   const theme = useTheme();
   const formatNumber = useNumberFormatter({ scope: 'paths' });
@@ -75,11 +71,6 @@ const ActionNodeSummary = (props: PathsActionNodeContentProps) => {
   const pathsAction = new PathsActionNode(node);
 
   const impact = yearRange ? pathsAction.getYearlyImpact(yearRange[1]) || 0 : 0;
-
-  useEffect(() => {
-    onLoaded(categoryId, impact);
-    // Using exhaustive deps here causes an infinite loop
-  }, [yearRange[1]]);
 
   return (
     <ValuesContainer>

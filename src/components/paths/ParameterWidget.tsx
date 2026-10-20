@@ -4,11 +4,8 @@ import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { gql } from '@apollo/client';
-import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 import { Range, getTrackBackground } from 'react-range';
-
-import { activeScenarioVar } from '@common/apollo/paths-cache';
 
 import type { ActionParameterFragment } from '@/common/__generated__/paths/graphql';
 import Button from '@/components/common/Button';
@@ -214,12 +211,11 @@ type BoolWidgetProps = {
   parameter: BoolParameter | EnableParameter;
   handleChange: (opts: { parameterId: string; boolValue: boolean }) => void;
   loading: boolean;
-  WidgetWrapper: typeof WidgetWrapper;
   hideLabel?: boolean;
 };
 
 export const BoolWidget = (props: BoolWidgetProps) => {
-  const { parameter, handleChange, loading, WidgetWrapper, hideLabel = false } = props;
+  const { parameter, handleChange, loading, hideLabel = false } = props;
   const { id, boolValue, isCustomized, isCustomizable } = parameter;
   const t = useTranslations();
 
@@ -258,23 +254,14 @@ export const BoolWidget = (props: BoolWidgetProps) => {
 
 type ParameterWidgetProps = {
   parameter: Parameter;
-  WidgetWrapper?: typeof WidgetWrapper;
 };
 
 const ParameterWidget = (props: ParameterWidgetProps) => {
   const { parameter } = props;
-  const activeScenario = useReactiveVar(activeScenarioVar);
-  const [SetParameter, { loading: mutationLoading, error: mutationError }] = usePathsMutation(
-    SET_PARAMETER,
-    {
-      refetchQueries: 'active',
-      onCompleted: () => {
-        if (activeScenario) {
-          activeScenarioVar({ ...activeScenario });
-        }
-      },
-    }
-  );
+  // The scenario selector updates the active scenario from the refetch
+  const [SetParameter, { loading: mutationLoading }] = usePathsMutation(SET_PARAMETER, {
+    refetchQueries: 'active',
+  });
 
   const handleUserSelection = (evt) => {
     SetParameter({ variables: evt });
@@ -307,7 +294,6 @@ const ParameterWidget = (props: ParameterWidgetProps) => {
           parameter={parameter}
           handleChange={handleUserSelection}
           loading={mutationLoading}
-          WidgetWrapper={props.WidgetWrapper ?? WidgetWrapper}
         />
       );
 
@@ -317,7 +303,6 @@ const ParameterWidget = (props: ParameterWidgetProps) => {
           parameter={parameter}
           handleChange={handleUserSelection}
           loading={mutationLoading}
-          WidgetWrapper={props.WidgetWrapper ?? WidgetWrapper}
           hideLabel={true}
         />
       );

@@ -183,7 +183,6 @@ export default function CategoryPageStreamField({
       return (
         <PathsNodeWrapper>
           <PathsNodeSummary
-            categoryId={page.category?.identifier ?? ''}
             node={page.category?.kausalPathsNodeUuid}
             targetNodeId={block?.pathsTargetNodeId || null}
           />

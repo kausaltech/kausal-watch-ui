@@ -6,11 +6,11 @@ import { NetworkStatus, gql } from '@apollo/client';
 import { useTranslations } from 'next-intl';
 
 import {
-  type GetParametersQuery,
+  type GetAvailableNormalizationsQuery,
   type SetNormalizationFromWidgetMutation,
   type SetNormalizationFromWidgetMutationVariables,
 } from '@/common/__generated__/paths/graphql';
-import { GET_PARAMETERS } from '@/queries/paths/get-paths-parameters';
+import { GET_AVAILABLE_NORMALIZATIONS } from '@/queries/paths/get-paths-normalizations';
 import { usePathsMutation, usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 
 const SwitchWrapper = styled.div`
@@ -30,34 +30,26 @@ const SET_NORMALIZATION_MUTATION = gql`
   }
 `;
 
-type NormalizationWidgetProps = {
-  availableNormalizations: GetParametersQuery['availableNormalizations'];
-};
-
-function NormalizationWidget(props: NormalizationWidgetProps) {
+/** Queries the normalisations, as the server-loaded context goes stale after a switch */
+function NormalizationWidget() {
   const t = useTranslations();
-  const { loading, error, data, previousData, refetch, networkStatus } =
-    usePathsQuery<GetParametersQuery>(GET_PARAMETERS, {
+  const { loading, error, data, previousData, networkStatus } =
+    usePathsQuery<GetAvailableNormalizationsQuery>(GET_AVAILABLE_NORMALIZATIONS, {
       notifyOnNetworkStatusChange: true,
     });
 
-  const [setNormalization, { data: mutationData, loading: mutationLoading, error: mutationError }] =
-    usePathsMutation<
-      SetNormalizationFromWidgetMutation,
-      SetNormalizationFromWidgetMutationVariables
-    >(SET_NORMALIZATION_MUTATION, {
-      refetchQueries: 'active',
-    });
+  const [setNormalization, { loading: mutationLoading }] = usePathsMutation<
+    SetNormalizationFromWidgetMutation,
+    SetNormalizationFromWidgetMutationVariables
+  >(SET_NORMALIZATION_MUTATION, {
+    refetchQueries: 'active',
+  });
 
-  if ((loading && !previousData) || !data || !data.parameters) {
-    return <CircularProgress size={10} sx={{ ml: 0.5, mb: -0.1 }} />;
-  }
   if (error) {
-    return (
-      <>
-        <div>{t('error-loading-data')}</div>
-      </>
-    );
+    return <div>{t('error-loading-data')}</div>;
+  }
+  if ((loading && !previousData) || !data) {
+    return <CircularProgress size={10} sx={{ ml: 0.5, mb: -0.1 }} />;
   }
 
   const { availableNormalizations } = data;

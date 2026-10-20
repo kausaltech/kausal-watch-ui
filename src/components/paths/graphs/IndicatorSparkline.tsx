@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -20,7 +20,7 @@ import type { IndicatorCategoryRelationshipType } from '@/common/__generated__/g
 import { IndicatorNonQuantifiedGoal } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 import { usePlan } from '@/context/plan';
-import { GET_INDICATOR_GRAPH_DATA } from '@/utils/indicatorData';
+import { GET_INDICATOR_SPARKLINE } from '@/queries/get-indicator-sparkline';
 
 const SparklineLoader = (props: React.ComponentProps<typeof ContentLoader>) => (
   <ContentLoader
@@ -96,7 +96,7 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   const { loading, error, data } = useQuery<
     IndicatorSparklineGraphDataQuery,
     IndicatorSparklineGraphDataQueryVariables
-  >(GET_INDICATOR_GRAPH_DATA, {
+  >(GET_INDICATOR_SPARKLINE, {
     variables: {
       id: indicatorId,
       plan: plan.identifier,
@@ -120,12 +120,10 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   const indicator = data?.indicator;
   if (!indicator) return null;
   const { maxValue, minValue, nonQuantifiedGoal, nonQuantifiedGoalDate } = indicator;
-  // referenceValue may not be in the type yet until codegen runs, so access it safely
-  const referenceValue = (
-    indicator as { referenceValue?: { date: string | null; value: number } | null }
-  ).referenceValue;
+  const { referenceValue } = indicator;
 
   const indicatorGoals: Array<IndicatorGoal | null> = indicator.goals || [];
+  // Totals only, without category values
   const indicatorValues: Array<IndicatorValue> = indicator.values || [];
 
   interface CombinedDataItem {
@@ -537,4 +535,5 @@ const IndicatorSparkline = (props: IndicatorSparklineProps) => {
   );
 };
 
-export default IndicatorSparkline;
+// Plain props, so card re-renders don't rebuild the chart
+export default memo(IndicatorSparkline);

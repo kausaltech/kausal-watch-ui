@@ -76,12 +76,26 @@ describe('getPathsInstance', () => {
   it('falls back to English when the instance does not support the page’s language', async () => {
     const fetchMock = mockFetch(['fi', 'en']);
 
-    await getPathsInstance('zuerich');
+    // Another instance, as languages are kept across requests
+    await getPathsInstance('zuerich-fi');
 
     // Paths rejects an unsupported language, so its languages are asked without one
     const languages = getRequest(fetchMock, 'GetInstanceLanguages');
     expect(languages.body.query).not.toContain('@locale');
     const context = getRequest(fetchMock, 'GetInstanceContext');
     expect(context.body.variables).toMatchObject({ _locale: 'en' });
+  });
+
+  it('asks an instance for its languages once for many requests', async () => {
+    const fetchMock = mockFetch(['de-CH', 'en']);
+
+    await getPathsInstance('zuerich-reused');
+    await getPathsInstance('zuerich-reused');
+
+    const languageRequests = fetchMock.mock.calls.filter(
+      ([, init]) =>
+        (JSON.parse(init?.body as string) as GraphQLBody).operationName === 'GetInstanceLanguages'
+    );
+    expect(languageRequests).toHaveLength(1);
   });
 });
