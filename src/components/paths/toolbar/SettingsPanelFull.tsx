@@ -20,11 +20,14 @@ import Icon from '@/components/common/Icon';
 import type { PathsInstanceType } from '@/components/providers/PathsProvider';
 //import type { GetInstanceContextQuery } from '@/common/__generated__/paths/graphql';
 import { usePaths } from '@/context/paths/paths';
+import {
+  getDefaultGoal,
+  getInitialScenario,
+  getInitialYearRange,
+} from '@/utils/paths/paths-settings';
 
 import CompleteSettings from './CompleteSettings';
 import MediumSettings from './MediumSettings';
-
-type AugmentedGoal = PathsInstanceType['instance']['goals'][number];
 
 const Spacer = styled.div`
   // Add space under footer for approximate height of the settings panel
@@ -138,24 +141,17 @@ const SettingsPanelFull: React.FC = () => {
   useEffect(() => {
     if (!paths || paths.instance.id === 'unknown') return;
     const { instance, scenarios } = paths;
-    const firstActiveScenario = scenarios.find((sc) => sc.isActive);
-    const goals = instance.goals;
 
     if (!activeGoalVar()) {
-      const defaultGoal = goals.length > 1 ? goals.find((goal) => goal.default) : goals[0];
-      activeGoalVar((defaultGoal as AugmentedGoal | undefined) ?? null);
+      activeGoalVar(getDefaultGoal(instance.goals) ?? null);
     }
 
     if (!activeScenarioVar()) {
-      activeScenarioVar(firstActiveScenario ?? undefined);
+      activeScenarioVar(getInitialScenario(scenarios) ?? undefined);
     }
 
     if (!yearRangeVar()) {
-      const initialYearRange: [number, number] = [
-        instance.minimumHistoricalYear ?? instance.referenceYear ?? 2010,
-        instance.targetYear ?? instance.modelEndYear,
-      ];
-      yearRangeVar(initialYearRange);
+      yearRangeVar(getInitialYearRange(instance));
     }
   });
 

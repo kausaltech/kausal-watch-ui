@@ -103,6 +103,17 @@ export const GET_OUTCOME_NODE = gql`
   }
 `;
 
+/**
+ * Variables of `GET_OUTCOME_NODE` for an outcome block. Shared by the block and
+ * the server-side preload, which must ask for exactly the same data.
+ */
+export function getOutcomeNodeVariables(
+  outcomeNodeId: string | null | undefined,
+  goal: string | null
+) {
+  return { node: outcomeNodeId || 'net_emissions', goal };
+}
+
 const GET_PAGE = gql`
   ${OUTCOME_NODE_FIELDS}
   query GetPage($path: String!, $goal: ID) {

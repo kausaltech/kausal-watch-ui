@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { Suspense, useEffect, useMemo } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -15,7 +15,7 @@ import type {
 } from '@/common/__generated__/paths/graphql';
 import SelectDropdown, { type SelectDropdownOption } from '@/components/common/SelectDropdown';
 import { GET_SCENARIOS } from '@/queries/paths/get-paths-scenarios';
-import { usePathsMutation, usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
+import { usePathsMutation, usePreloadedPathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 
 const pathsQueries = 'active';
 
@@ -67,16 +67,26 @@ const DropdownWrapper = styled.div<{ $isCustom: boolean }>`
   }
 `;
 
-const ScenarioSelector = ({ disabled = false }: { disabled?: boolean }) => {
+type ScenarioSelectorProps = { disabled?: boolean };
+
+/** The scenarios may be preloaded on the server, see `preloadSettingsPanel`. */
+const ScenarioSelector = (props: ScenarioSelectorProps) => (
+  <Suspense fallback={null}>
+    <ScenarioSelectorContent {...props} />
+  </Suspense>
+);
+
+const ScenarioSelectorContent = ({ disabled = false }: ScenarioSelectorProps) => {
   const t = useTranslations();
 
-  const { loading, error, data } = usePathsQuery<GetScenariosQuery, GetScenariosQueryVariables>(
-    GET_SCENARIOS,
-    {
-      fetchPolicy: 'network-only',
-      notifyOnNetworkStatusChange: true,
-    }
-  );
+  const { loading, error, data } = usePreloadedPathsQuery<
+    GetScenariosQuery,
+    GetScenariosQueryVariables
+  >(GET_SCENARIOS, {
+    variables: {},
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+  });
 
   const [activateScenario, { loading: mutationLoading, error: mutationError }] = usePathsMutation<
     ActivateScenarioMutation,

@@ -2,13 +2,13 @@ import { useMemo } from 'react';
 
 import styled from '@emotion/styled';
 
-import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 
 import { activeGoalVar } from '@common/apollo/paths-cache';
 
 import SelectDropdown, { type SelectDropdownOption } from '@/components/common/SelectDropdown';
 import { usePaths } from '@/context/paths/paths';
+import { useActiveGoal } from '@/utils/paths/hooks/usePathsSettings';
 
 const DropdownWrapper = styled.div`
   max-width: 320px;
@@ -46,7 +46,7 @@ const DropdownWrapper = styled.div`
 const GoalSelector = () => {
   const t = useTranslations();
   const paths = usePaths();
-  const activeGoal = useReactiveVar(activeGoalVar);
+  const activeGoal = useActiveGoal();
 
   // Convert goals to SelectDropdownOption format
   const options: SelectDropdownOption[] = useMemo(

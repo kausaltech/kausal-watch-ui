@@ -19,12 +19,10 @@ import {
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { useReactiveVar } from '@apollo/client/react';
 import { isEqual } from 'lodash-es';
 import { useTranslations } from 'next-intl';
 import { FiletypeCsv, FiletypeXls } from 'react-bootstrap-icons';
 
-import { activeGoalVar, activeScenarioVar } from '@common/apollo/paths-cache';
 import {
   downloadData,
   flatten,
@@ -38,6 +36,7 @@ import type { DimensionalNodeMetricFragment } from '@/common/__generated__/paths
 import useNumberFormatter from '@/common/numbers';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import { useActiveGoal, useActiveScenario } from '@/utils/paths/hooks/usePathsSettings';
 
 const Tools = styled.div`
   padding: 0 1rem 0.5rem;
@@ -67,8 +66,8 @@ const DataTable = (props: DataTableProps) => {
   const t = useTranslations();
   const theme = useTheme();
   const formatNumber = useNumberFormatter({ scope: 'paths' });
-  const activeGoal = useReactiveVar(activeGoalVar);
-  const activeScenario = useReactiveVar(activeScenarioVar);
+  const activeGoal = useActiveGoal();
+  const activeScenario = useActiveScenario();
 
   const parsed = useMemo(() => parseMetric(metric), [metric]);
   const menuId = useId();

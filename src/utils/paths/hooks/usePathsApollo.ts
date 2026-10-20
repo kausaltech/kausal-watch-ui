@@ -1,9 +1,17 @@
-import { useCallback } from 'react';
+import { use, useCallback } from 'react';
 
-import type { DocumentNode, OperationVariables, TypedDocumentNode } from '@apollo/client';
-import { useMutation, useQuery } from '@apollo/client/react';
+import {
+  type DocumentNode,
+  NetworkStatus,
+  type OperationVariables,
+  type TypedDocumentNode,
+} from '@apollo/client';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client/react';
 
 import { usePathsApolloClient } from '@/components/providers/PathsApolloProvider';
+import { usePathsPreload } from '@/components/providers/PathsPreloadProvider';
+import { pathsSessionVersionVar } from '@/utils/paths/paths-session';
+import { getPreloadKey } from '@/utils/paths/preload-key';
 
 /**
  * Like `useQuery` without `returnPartialData`, data is either complete,
@@ -93,10 +101,76 @@ export function usePathsMutation<
       if (!client) {
         return Promise.reject(new Error('No Paths instance for this plan'));
       }
-      return execute(...args);
+      // Rejects on failure, so the session changed only when this resolves
+      return execute(...args).then((executed) => {
+        pathsSessionVersionVar(pathsSessionVersionVar() + 1);
+        return executed;
+      });
     },
     [client, execute]
   ) as typeof execute;
 
   return [executeOnPaths, result];
+}
+
+/**
+ * The page's preloaded data for this query and variables, if any. Suspends
+ * until it has arrived.
+ */
+function usePreloadedPathsData<TData>(query: DocumentNode, variables: OperationVariables) {
+  const preload = usePathsPreload();
+  const queries = preload ? use(preload.queries) : null;
+  const pending = queries?.[getPreloadKey(query, variables)];
+  const data = pending ? (use(pending) as TData | null) : null;
+  return data !== null && preload ? { data, sessionVersion: preload.sessionVersion } : null;
+}
+
+/**
+ * `usePathsQuery` for a block whose data the page can preload on the server
+ * (see `preloadPathsQueries`). Wrap the block in `Suspense`: it suspends
+ * until the preloaded data for its variables has arrived.
+ *
+ * While the variables match and the Paths session is unchanged, the
+ * preloaded data is the result and nothing is fetched; nothing is written to
+ * the cache either, so this works with any fetch policy. Once a Paths
+ * mutation changes the session, the query runs as usual, with the preloaded
+ * data shown as refetching meanwhile.
+ */
+export function usePreloadedPathsQuery<
+  TData = unknown,
+  TVariables extends OperationVariables = OperationVariables,
+>(
+  query: DocumentNode | TypedDocumentNode<TData, TVariables>,
+  options: PathsQueryOptions<TData, TVariables> & { variables: TVariables }
+): PathsQueryResult<TData, TVariables> {
+  const preloaded = usePreloadedPathsData<TData>(query, options.variables);
+  const sessionVersion = useReactiveVar(pathsSessionVersionVar);
+  const preloadIsCurrent = preloaded !== null && preloaded.sessionVersion === sessionVersion;
+
+  const queryOptions = {
+    ...options,
+    skip: (options.skip ?? false) || preloadIsCurrent,
+  } as PathsQueryOptions<TData, TVariables>;
+  const result = usePathsQuery<TData, TVariables>(query, queryOptions);
+
+  if (!preloaded) return result;
+  if (preloadIsCurrent) {
+    return {
+      ...result,
+      data: preloaded.data,
+      dataState: 'complete',
+      loading: false,
+      networkStatus: NetworkStatus.ready,
+    };
+  }
+  if (result.data === undefined && result.loading) {
+    return {
+      ...result,
+      data: preloaded.data,
+      previousData: preloaded.data,
+      dataState: 'complete',
+      networkStatus: NetworkStatus.refetch,
+    };
+  }
+  return result;
 }

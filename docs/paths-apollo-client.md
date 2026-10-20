@@ -189,12 +189,49 @@ the `authMiddleware` of both Watch clients can then be removed.
    `getPathsClient` and hand it to the Paths client in the browser (see open
    questions).
 
-   Moved to the follow-up branch `feat/paths-content-ssr` (October 2026).
-   The outcome block is an occasional embed in Watch pages, so this branch
-   keeps the current behaviour: Paths blocks fetch in the browser. Server
-   rendering pays off once the Paths content features build on it, and is
-   generalised there. Only its `getPlan` `cache()` change is kept here; it
-   also removes a duplicate request between the plan layout and its metadata.
+   Done (October 2026) for `PathsOutcomeBlock`, the `PathsNodeSummary`
+   cards of `CategoryTypeLevelListBlock`, and the settings panel
+   (`ScenarioSelector`, `GoalOutcomeBar`). Model computations can take
+   seconds on a cold cache (1.7–3.8 s measured), so the page does not wait:
+   - **Server.** The root and content pages call `preloadPathsBlocks()`
+     without awaiting it. It starts one query per block with
+     `preloadPathsQueries()` and resolves, as soon as they are started, with
+     a promise per query keyed by `getPreloadKey(query, variables)`. The
+     page passes it to `PathsPreloadProvider`.
+   - **Block.** `usePreloadedPathsQuery(query, options)` in place of
+     `usePathsQuery`, inside `Suspense`. It waits only for its own key; a
+     block that wasn't preloaded fetches in the browser as before.
+   - **No cache writes.** While the variables match and the Paths session is
+     unchanged, the preloaded data is the result and the query is skipped.
+     This works with any fetch policy; `GetNodeContent` stays `no-cache`,
+     since its metrics have ids that may repeat across goals. Paths
+     mutations increment `pathsSessionVersionVar`; the query then runs as
+     usual, with the preloaded data shown as refetching meanwhile.
+   - **Matching variables.** The server and the block build them with the
+     same helpers (`getOutcomeNodeVariables`, `getNodeContentVariables`).
+     The settings reactive vars are never set on the server, so
+     `useActiveGoal`, `useActiveScenario` and `useYearRange` fall back to the
+     values `SettingsPanelFull` seeds.
+   - **Settings panel.** It belongs to the `(with-layout-elements)` layout,
+     which preloads it with `preloadSettingsPanel()` in its own
+     `PathsPreloadProvider`. The scenarios come from the instance context,
+     which was fetched for the session already, so `GetScenarios` costs no
+     Paths request. Nothing is preloaded when the theme disables scenario
+     editing, since the panel is not shown then.
+   - **Derived values during render.** `InventoryNodeSummary` computed its
+     values in an effect, which the server never runs; they are now derived
+     with `useMemo`.
+
+   To preload another block: add its requests to `getBlockRequests` in
+   `preload-paths-blocks.ts`, read its data with `usePreloadedPathsQuery`
+   inside `Suspense`, and use the fallback hooks in its components.
+
+   Category pages: `preloadPathsBlocks()` takes the whole page, and also
+   preloads the `PathsNodeSummaryBlock` of a category page layout
+   (`layoutMainTop`), whose node is the page's category's.
+
+   Not yet: blocks nested deeper than the page body, and
+   `NormalizationWidget`, which is only shown in the expanded settings panel.
 
 7. **Cleanup:**
    - remove the duplicate `makeInstanceMiddleware` and `getHttpHeaders`
@@ -233,7 +270,8 @@ and 5. Step 6 fixes 6.
   props and use them as initial data; `cache.writeQuery` each preloaded
   result in the provider; or `cache.restore()` an extracted snapshot. Writing
   each query is the safest with a browser-wide client that outlives
-  navigations, since `restore()` replaces the whole cache.
+  navigations, since `restore()` replaces the whole cache. Resolved: each
+  result is written with `writeQuery` from a streamed promise (step 6).
 - **Where `makePathsClient` lives,** and whether paths-ui adopts it at the
   same time.
 - **Whether the static instance context can be cached across requests**

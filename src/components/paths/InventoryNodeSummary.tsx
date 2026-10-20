@@ -1,15 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import styled from '@emotion/styled';
-
-import { useReactiveVar } from '@apollo/client/react';
-
-import { yearRangeVar } from '@common/apollo/paths-cache';
 
 import type { GetNodeContentQuery } from '@/common/__generated__/paths/graphql';
 import useNumberFormatter from '@/common/numbers';
 import HighlightValue from '@/components/paths/HighlightValue';
 import type { PathsInstanceType } from '@/components/providers/PathsProvider';
+import { useYearRange } from '@/utils/paths/hooks/usePathsSettings';
 import {
   type SliceConfig,
   flatten,
@@ -105,143 +102,134 @@ type Emissions = {
   reference: EmissionDisplay;
 };
 
-const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
-  const { categoryId, node, onLoaded, displayGoals, refetching } = props;
-  const yearRange = useReactiveVar(yearRangeVar);
-  const formatNumber = useNumberFormatter({ scope: 'paths' });
+/** Latest historical and reference year values of the node for each goal. */
+function getEmissions(
+  metric: ReturnType<typeof parseMetric>,
+  displayGoals: AugmentedGoal[],
+  referenceYear: number
+): Emissions[] {
+  const historicalYears = getHistoricalYears(metric);
+  const lastHistoricalYear = historicalYears[historicalYears.length - 1];
 
-  const [emissions, setEmissions] = useState<Emissions[]>([
-    {
-      label: null,
-      metricName: null,
-      id: 0,
+  const displayEmissions: Emissions[] = [];
+
+  displayGoals.forEach((goal) => {
+    const sliceConfig: SliceConfig = getDefaultSliceConfig(metric, goal);
+    const hasCategoryFilters = Object.keys(sliceConfig.categories).length > 0;
+    const hasTwoDimensions = metric.dimensions.length >= 2;
+
+    let latestValue: number | null = null;
+    let referenceValue: number | null = null;
+    let latestLabel: string | null = null;
+    let referenceLabel: string | null = null;
+
+    if (hasCategoryFilters && hasTwoDimensions) {
+      // Use the 2D matrix approach for multi-dimension metrics with filters
+      const latestData = getSingleYear(metric, lastHistoricalYear, sliceConfig.categories);
+      const referenceData = getSingleYear(metric, referenceYear, sliceConfig.categories);
+
+      const displayCategoryType = sliceConfig.categories[Object.keys(sliceConfig.categories)[0]];
+      const displayCategory =
+        displayCategoryType && displayCategoryType.groups?.length
+          ? { id: displayCategoryType?.groups[0], type: 'group' }
+          : { id: displayCategoryType?.categories[0], type: 'category' };
+
+      const hasDataForThisGoal = !!displayCategory.id;
+
+      latestLabel =
+        latestData.allLabels.find((label) => label.id === displayCategory.id)?.label ?? null;
+      referenceLabel =
+        referenceData.allLabels.find((label) => label.id === displayCategory.id)?.label ?? null;
+
+      latestValue = hasDataForThisGoal ? (getTotalValues(latestData)[0] ?? null) : null;
+      referenceValue =
+        goal.hideForecast || !hasDataForThisGoal
+          ? null
+          : (getTotalValues(referenceData)[0] ?? null);
+    } else {
+      // Use flatten for single-dimension metrics or when no category filters
+      const sliceData = flatten(metric, sliceConfig.categories);
+
+      // Find the value for the specific year
+      const latestYearIndex = sliceData.historicalYears.indexOf(lastHistoricalYear);
+      const referenceYearIndex =
+        sliceData.historicalYears.indexOf(referenceYear) >= 0
+          ? sliceData.historicalYears.indexOf(referenceYear)
+          : sliceData.forecastYears.indexOf(referenceYear);
+      const isReferenceForecast = sliceData.forecastYears.includes(referenceYear);
+
+      if (latestYearIndex >= 0) {
+        latestValue = sliceData.categoryValues[0]?.historicalValues[latestYearIndex] ?? null;
+      }
+
+      if (!goal.hideForecast) {
+        if (isReferenceForecast && referenceYearIndex >= 0) {
+          referenceValue = sliceData.categoryValues[0]?.forecastValues[referenceYearIndex] ?? null;
+        } else if (referenceYearIndex >= 0) {
+          referenceValue =
+            sliceData.categoryValues[0]?.historicalValues[referenceYearIndex] ?? null;
+        }
+      }
+
+      // Use the metric name as the label when flattening
+      latestLabel = getName(metric);
+      referenceLabel = getName(metric);
+    }
+
+    displayEmissions.push({
+      metricName: getName(metric),
+      label: goal.label ? goal.label : null,
+      id: goal.id,
       latest: {
-        value: null,
-        label: null,
-        year: null,
-        change: null,
+        value: latestValue,
+        label: latestLabel,
+        year: lastHistoricalYear,
+        change:
+          latestValue !== null &&
+          lastHistoricalYear > referenceYear &&
+          referenceValue &&
+          referenceValue !== latestValue
+            ? (latestValue - referenceValue) / Math.abs(referenceValue)
+            : null,
       },
       reference: {
-        value: null,
-        label: null,
-        year: null,
-        change: null,
+        value: referenceValue,
+        label: referenceLabel,
+        year: referenceYear,
+        change:
+          referenceValue !== null &&
+          lastHistoricalYear < referenceYear &&
+          latestValue &&
+          latestValue !== referenceValue
+            ? (referenceValue - latestValue) / Math.abs(latestValue)
+            : null,
       },
-    },
-  ]);
+    });
+  });
 
-  const [unit, setUnit] = useState<string | null>(null);
+  return displayEmissions;
+}
+
+const InventoryNodeSummary = (props: PathsBasicNodeContentProps) => {
+  const { categoryId, node, onLoaded, displayGoals, refetching } = props;
+  const yearRange = useYearRange();
+  const formatNumber = useNumberFormatter({ scope: 'paths' });
 
   // Parse metric data once when node changes
   const metric = useMemo(() => parseMetric(node.metricDim!), [node.metricDim]);
 
-  // Redefine values if yearRange has been manipulated
+  const referenceYear = yearRange[1];
+  const unit = useMemo(() => getUnit(metric), [metric]);
+  // Derived during render, so that server rendering includes the values
+  const emissions = useMemo(
+    () => getEmissions(metric, displayGoals, referenceYear),
+    [metric, displayGoals, referenceYear]
+  );
+
   useEffect(() => {
-    const historicalYears = getHistoricalYears(metric);
-    const lastHistoricalYear = historicalYears[historicalYears.length - 1];
-    setUnit(getUnit(metric));
-
-    const displayEmissions: Emissions[] = [];
-
-    displayGoals.forEach((goal) => {
-      const sliceConfig: SliceConfig = getDefaultSliceConfig(metric, goal);
-      const hasCategoryFilters = Object.keys(sliceConfig.categories).length > 0;
-      const hasTwoDimensions = metric.dimensions.length >= 2;
-
-      let latestValue: number | null = null;
-      let referenceValue: number | null = null;
-      let latestLabel: string | null = null;
-      let referenceLabel: string | null = null;
-
-      if (hasCategoryFilters && hasTwoDimensions) {
-        // Use the 2D matrix approach for multi-dimension metrics with filters
-        const latestData = getSingleYear(metric, lastHistoricalYear, sliceConfig.categories);
-        const referenceData = getSingleYear(metric, yearRange[1], sliceConfig.categories);
-
-        const displayCategoryType = sliceConfig.categories[Object.keys(sliceConfig.categories)[0]];
-        const displayCategory =
-          displayCategoryType && displayCategoryType.groups?.length
-            ? { id: displayCategoryType?.groups[0], type: 'group' }
-            : { id: displayCategoryType?.categories[0], type: 'category' };
-
-        const hasDataForThisGoal = !!displayCategory.id;
-
-        latestLabel =
-          latestData.allLabels.find((label) => label.id === displayCategory.id)?.label ?? null;
-        referenceLabel =
-          referenceData.allLabels.find((label) => label.id === displayCategory.id)?.label ?? null;
-
-        latestValue = hasDataForThisGoal ? (getTotalValues(latestData)[0] ?? null) : null;
-        referenceValue =
-          goal.hideForecast || !hasDataForThisGoal
-            ? null
-            : (getTotalValues(referenceData)[0] ?? null);
-      } else {
-        // Use flatten for single-dimension metrics or when no category filters
-        const sliceData = flatten(metric, sliceConfig.categories);
-
-        // Find the value for the specific year
-        const latestYearIndex = sliceData.historicalYears.indexOf(lastHistoricalYear);
-        const referenceYearIndex =
-          sliceData.historicalYears.indexOf(yearRange[1]) >= 0
-            ? sliceData.historicalYears.indexOf(yearRange[1])
-            : sliceData.forecastYears.indexOf(yearRange[1]);
-        const isReferenceForecast = sliceData.forecastYears.includes(yearRange[1]);
-
-        if (latestYearIndex >= 0) {
-          latestValue = sliceData.categoryValues[0]?.historicalValues[latestYearIndex] ?? null;
-        }
-
-        if (!goal.hideForecast) {
-          if (isReferenceForecast && referenceYearIndex >= 0) {
-            referenceValue =
-              sliceData.categoryValues[0]?.forecastValues[referenceYearIndex] ?? null;
-          } else if (referenceYearIndex >= 0) {
-            referenceValue =
-              sliceData.categoryValues[0]?.historicalValues[referenceYearIndex] ?? null;
-          }
-        }
-
-        // Use the metric name as the label when flattening
-        latestLabel = getName(metric);
-        referenceLabel = getName(metric);
-      }
-
-      displayEmissions.push({
-        metricName: getName(metric),
-        label: goal.label ? goal.label : null,
-        id: goal.id,
-        latest: {
-          value: latestValue,
-          label: latestLabel,
-          year: lastHistoricalYear,
-          change:
-            latestValue !== null &&
-            lastHistoricalYear > yearRange[1] &&
-            referenceValue &&
-            referenceValue !== latestValue
-              ? (latestValue - referenceValue) / Math.abs(referenceValue)
-              : null,
-        },
-        reference: {
-          value: referenceValue,
-          label: referenceLabel,
-          year: yearRange[1],
-          change:
-            referenceValue !== null &&
-            lastHistoricalYear < yearRange[1] &&
-            latestValue &&
-            latestValue !== referenceValue
-              ? (referenceValue - latestValue) / Math.abs(latestValue)
-              : null,
-        },
-      });
-    });
-
-    setEmissions(displayEmissions);
     onLoaded(categoryId, 100);
     // using exhausive deps here causes an infinite loop
-  }, [yearRange[1], refetching, metric]);
+  }, [referenceYear, refetching, metric]);
 
   return (
     <ValuesContainer>

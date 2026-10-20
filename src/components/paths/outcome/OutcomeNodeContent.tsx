@@ -2,10 +2,8 @@ import { memo, useMemo, useState } from 'react';
 
 import styled from '@emotion/styled';
 
-import { useReactiveVar } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 
-import { activeGoalVar } from '@common/apollo/paths-cache';
 import DimensionalNodeVisualisation from '@common/components/paths/DimensionalNodeVisualisation';
 import DimensionalPieGraph from '@common/components/paths/DimensionalPieGraph';
 import { getMetricChange, getMetricValue } from '@common/utils/paths/metric';
@@ -19,6 +17,7 @@ import DataTable from '@/components/paths/graphs/DataTable';
 import NodeViewSelector, { type NodeView } from '@/components/paths/outcome/NodeViewSelector';
 import OutcomeNodeDetails from '@/components/paths/outcome/OutcomeNodeDetails';
 import { usePaths } from '@/context/paths/paths';
+import { useActiveGoal } from '@/utils/paths/hooks/usePathsSettings';
 
 const ContentWrapper = styled.div`
   min-height: 300px;
@@ -138,7 +137,7 @@ function OutcomeNodeContent({
   const [activeTabId, setActiveTabId] = useState<NodeView>('graph');
   const paths = usePaths();
 
-  const activeGoal = useReactiveVar(activeGoalVar);
+  const activeGoal = useActiveGoal();
   // We have a disclaimer for the mobility node for 2023 (hack)
   const hideForecast = separateYears && separateYears.length > 1;
 
