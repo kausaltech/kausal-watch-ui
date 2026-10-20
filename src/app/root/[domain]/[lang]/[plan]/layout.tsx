@@ -184,7 +184,12 @@ export default async function PlanLayout(props: Props) {
   const theme = await loadTheme(planData.plan.themeIdentifier || params.plan);
 
   const themeStylesheet = theme.name ? (
-    <link rel="stylesheet" type="text/css" href={getThemeStaticURL(theme.mainCssFile)} />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href={getThemeStaticURL(theme.mainCssFile)}
+      precedence="theme"
+    />
   ) : undefined;
 
   const matomoAnalyticsUrl = planData.plan.domain?.matomoAnalyticsUrl ?? undefined;

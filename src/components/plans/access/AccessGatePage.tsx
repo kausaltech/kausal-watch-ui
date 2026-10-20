@@ -28,7 +28,12 @@ export default async function AccessGatePage({
   return (
     <>
       {theme.name && (
-        <link rel="stylesheet" type="text/css" href={getThemeStaticURL(theme.mainCssFile)} />
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href={getThemeStaticURL(theme.mainCssFile)}
+          precedence="theme"
+        />
       )}
       <ThemeProvider theme={theme}>
         <ThemedGlobalStyles />
