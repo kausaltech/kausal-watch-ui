@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTheme } from '@emotion/react';
 
 import { NetworkStatus } from '@apollo/client';
-import { useQuery, useReactiveVar } from '@apollo/client/react';
+import { useReactiveVar } from '@apollo/client/react';
 import { captureException } from '@sentry/nextjs';
 import ContentLoader from 'react-content-loader';
 
@@ -16,7 +16,7 @@ import type {
 } from '@/common/__generated__/paths/graphql';
 import { usePaths } from '@/context/paths/paths';
 import { GET_NODE_CONTENT } from '@/queries/paths/get-paths-node';
-import { getHttpHeaders } from '@/utils/paths/paths.utils';
+import { usePathsQuery } from '@/utils/paths/hooks/usePathsApollo';
 
 import ActionNodeSummary from './ActionNodeSummary';
 import InventoryNodeSummary from './InventoryNodeSummary';
@@ -53,11 +53,6 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
   const { categoryId, node, onLoaded, targetNodeId } = props;
   const paths = usePaths();
   const pathsInstance = paths?.instance;
-  const pathsInstanceId = pathsInstance?.id;
-  if (!pathsInstance) {
-    captureException(new Error('Paths instance not found in context'));
-    return null;
-  }
   const activeGoal = useReactiveVar(activeGoalVar);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -66,18 +61,18 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
   }, []);
 
   // Only show the impact of default goal if exists
-  const actionImpactGoal = pathsInstance.goals.find((goal) => goal.default === true);
+  const actionImpactGoal = pathsInstance?.goals.find((goal) => goal.default === true);
 
   // For Inventory nodes show all goals, Always show the active goal first
   const displayAllGoals = true;
   const displayGoals = displayAllGoals
-    ? pathsInstance.goals
+    ? pathsInstance?.goals
     : activeGoal
       ? [activeGoal]
       : undefined;
   displayGoals?.sort((a) => (a.id === activeGoal?.id ? -1 : 1));
 
-  const { data, loading, error, networkStatus } = useQuery<
+  const { data, loading, error, networkStatus } = usePathsQuery<
     GetNodeContentQuery,
     GetNodeContentQueryVariables
   >(GET_NODE_CONTENT, {
@@ -88,11 +83,13 @@ const PathsNodeSummary = React.memo((props: PathsNodeContentProps) => {
       targetNodeId: targetNodeId ?? null,
     },
     notifyOnNetworkStatusChange: true,
-    context: {
-      uri: '/api/graphql-paths',
-      headers: getHttpHeaders({ instanceIdentifier: pathsInstanceId }),
-    },
+    skip: !pathsInstance,
   });
+
+  if (!pathsInstance) {
+    captureException(new Error('Paths instance not found in context'));
+    return null;
+  }
 
   const refetching = networkStatus === NetworkStatus.refetch;
 

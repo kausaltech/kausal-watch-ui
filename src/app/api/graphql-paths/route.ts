@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 import { captureException } from '@sentry/nextjs';
 
-import { forwardSetCookie, getClientCookieAsHeader } from '@/common/cookies';
+import { PATHS_COOKIE_PREFIX, forwardSetCookie, getClientCookieAsHeader } from '@/common/cookies';
 import { pathsGqlUrl } from '@/common/environment';
 
 export const dynamic = 'force-dynamic';
@@ -19,8 +19,6 @@ const PASS_HEADERS = [
   'dnt',
   'referer',
 ];
-
-const PATHS_COOKIE_PREFIX = 'paths_api_';
 
 export async function POST(request: NextRequest) {
   const headersList = await headers();
