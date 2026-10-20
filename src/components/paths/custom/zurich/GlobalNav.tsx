@@ -9,6 +9,10 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import SVG from 'react-inlinesvg';
 
+import {
+  contentContainerInsetStyles,
+  contentContainerStyles,
+} from '@common/components/ContentContainer';
 import { transientOptions } from '@common/themes/styles/styled';
 import { getThemeStaticURL } from '@common/themes/theme';
 
@@ -24,6 +28,8 @@ import NavbarSearch from '@/components/common/NavbarSearch';
 
 const SecondaryNav = styled(Navbar, transientOptions)<{ $dark?: boolean }>`
   padding: 0;
+  /* Lined up with the page content, not the design system's narrower header grid */
+  ${({ theme }) => contentContainerStyles(theme)}
   background-color: ${(props) =>
     props.$dark ? 'var(--stzh-color-zueriblue)' : 'var(--stzh-color-white)'};
 
@@ -164,6 +170,16 @@ const StyledHeaderMain = styled.div`
   &.header__main {
     z-index: 1;
   }
+
+  /* The logo lined up with the page content, not the design system's header
+     grid. !important, as its unlayered rules beat our layered ones otherwise */
+  .header__logobar-logo {
+    ${({ theme }) =>
+      contentContainerInsetStyles(theme, (inset) => ({ paddingLeft: `${inset} !important` }))}
+  }
+  .header__logo-link {
+    padding-left: 0 !important;
+  }
 `;
 
 const NavbarToggler = styled.button`
@@ -272,12 +288,7 @@ function GlobalNav(props: GlobalNavProps) {
           </StyledHeaderMain>
 
           <SecondaryNavWrapper>
-            <SecondaryNav
-              expand="md"
-              id="global-navigation-bar"
-              className="header__appnav-inner"
-              container={false}
-            >
+            <SecondaryNav expand="md" id="global-navigation-bar" container={false}>
               <StyledCollapse isOpen={isOpen}>
                 <Nav navbar className="stzh-appnav__items sc-stzh-appnav sc-stzh-appnav-s me-auto">
                   <NavItem className="sc-stzh-link-h sc-stzh-link-s" active={false}>
@@ -341,7 +352,7 @@ function GlobalNav(props: GlobalNavProps) {
               <SecondaryNav
                 expand="md"
                 id="global-navigation-bar"
-                className="header__appnav-inner dark-nav"
+                className="dark-nav"
                 container={false}
                 $dark={true}
               >
