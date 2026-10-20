@@ -9,7 +9,6 @@ import styled from '@emotion/styled';
 import * as Sentry from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 
-import { showSettingsPanelVar } from '@common/apollo/paths-cache';
 import ContentLoader from '@common/components/ContentLoader';
 import { transientOptions } from '@common/themes/styles/styled';
 
@@ -44,7 +43,6 @@ import RelatedPlanListBlock from '@/components/contentblocks/RelatedPlanListBloc
 import PathsOutcomeBlock from '@/components/paths/contentblocks/PathsOutcomeBlock';
 import { usePlan } from '@/context/plan';
 import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
-import { pageShowsPathsSettings } from '@/utils/paths/paths-content';
 
 import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
 import ChangeHistory from './ChangeHistory';
@@ -709,17 +707,6 @@ export default function StreamField(props: StreamFieldProps) {
   const { page, blocks, hasSidebar = false, columnProps, precedingBlockHasBackground } = props;
   const t = useTranslations();
   const theme = useTheme();
-
-  useEffect(() => {
-    // If there are any content blocks that potentially use Paths scenario data
-    // OR the page type is a CategoryPage, we do not hide the Paths settings panel
-    showSettingsPanelVar(pageShowsPathsSettings({ __typename: page.__typename, body: blocks }));
-
-    // Cleanup: reset to false when component unmounts
-    return () => {
-      showSettingsPanelVar(false);
-    };
-  }, [blocks, page.__typename]);
 
   return (
     <div className={`custom-${page.slug}`}>

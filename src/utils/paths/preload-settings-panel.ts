@@ -38,7 +38,7 @@ async function getRequestPagePath(
 
 /**
  * Whether the settings panel shows on the page being rendered, by
- * `StreamField`'s rule. Static routes get it only in the browser.
+ * `pageShowsPathsSettings`, as the page's `SettingsPanelVisibility` decides.
  */
 export const getSettingsPanelVisibility = cache(async function getSettingsPanelVisibility(
   domain: string,

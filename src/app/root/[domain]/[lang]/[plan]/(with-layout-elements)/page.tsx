@@ -1,9 +1,11 @@
 import { getTranslations } from 'next-intl/server';
 
 import ErrorPage from '@/components/common/ErrorPage';
+import SettingsPanelVisibility from '@/components/paths/toolbar/SettingsPanelVisibility';
 import PathsPreloadProvider from '@/components/providers/PathsPreloadProvider';
 import { getHomePage } from '@/queries/get-home-page';
 import { tryRequest } from '@/utils/api.utils';
+import { pageShowsPathsSettings } from '@/utils/paths/paths-content';
 import { preloadPathsBlocks } from '@/utils/paths/preload-paths-blocks';
 
 import { RootPage } from './RootPage';
@@ -26,6 +28,7 @@ export default async function PlanPage(props: Props) {
 
   return (
     <PathsPreloadProvider preload={pathsPreload}>
+      <SettingsPanelVisibility visible={!!data.planPage && pageShowsPathsSettings(data.planPage)} />
       <RootPage data={data} testId="home-page" />
     </PathsPreloadProvider>
   );
