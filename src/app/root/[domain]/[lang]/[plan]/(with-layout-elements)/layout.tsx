@@ -2,9 +2,7 @@ import type { ReactNode } from 'react';
 
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import SettingsPanelFull from '@/components/paths/toolbar/SettingsPanelFull';
-import PathsPreloadProvider from '@/components/providers/PathsPreloadProvider';
-import { preloadSettingsPanel } from '@/utils/paths/preload-settings-panel';
+import PathsSettingsPanel from '@/components/paths/toolbar/PathsSettingsPanel';
 
 import { JsonLd } from './JsonLd';
 
@@ -32,10 +30,7 @@ export default async function Layout(props: Props) {
         </main>
       </div>
       <Footer />
-      {/* Not awaited: the panel's Paths data streams in when it is ready */}
-      <PathsPreloadProvider preload={preloadSettingsPanel(params.domain, params.plan)}>
-        <SettingsPanelFull />
-      </PathsPreloadProvider>
+      <PathsSettingsPanel domain={params.domain} plan={params.plan} />
     </>
   );
 }
