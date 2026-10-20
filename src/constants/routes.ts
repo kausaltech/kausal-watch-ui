@@ -15,6 +15,9 @@ export const ACCESS_APPROVED_PARAM = 'accessApproved';
 
 export const PLEDGE_PATH = '/pledges';
 
+/** Pages of the plan's Paths model nodes, under `/model` with any later model pages */
+export const MODEL_NODES_PATH = '/model/nodes';
+
 export const STATIC_ROUTES = [
   '/accessibility',
   ACTIONS_PATH,

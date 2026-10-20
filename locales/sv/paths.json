@@ -91,5 +91,10 @@
   "page-not-found": "Sidan hittas inte",
   "error-with-code": "Felkod {{code}}",
   "show-error": "Visa fel\"",
-  "calculated-emissions": "Beräknade utsläpp"
+  "calculated-emissions": "Beräknade utsläpp",
+  "plot-break-down-by": "Dela upp efter",
+  "plot-filter": "Filtrera",
+  "plot-filter-all": "Alla",
+  "plot-filter-no-data": "Inga data med de aktuella filtren",
+  "download-error": "Nedladdningen misslyckades. Försök igen senare."
 }

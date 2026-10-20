@@ -114,5 +114,10 @@
   "thumbSliderLabel": "Ajustar",
   "watch-action-list-title": "¿Cómo hacemos esto posible?",
   "will_be_implemented": "Se implementa",
-  "calculated-emissions": "Emisiones calculadas"
+  "calculated-emissions": "Emisiones calculadas",
+  "plot-break-down-by": "Desglosar por",
+  "plot-filter": "Filtrar",
+  "plot-filter-all": "Todas",
+  "plot-filter-no-data": "No hay datos con los filtros actuales",
+  "download-error": "Error al descargar. Vuelva a intentarlo más tarde."
 }

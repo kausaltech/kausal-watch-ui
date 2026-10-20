@@ -110,5 +110,10 @@
   "error-with-code": "Chybový kód {code}",
   "thumbSliderLabel": "Upravit",
   "reset-button": "Resetovat",
-  "calculated-emissions": "Vypočtené emise"
+  "calculated-emissions": "Vypočtené emise",
+  "plot-break-down-by": "Rozdělit podle",
+  "plot-filter": "Filtrovat",
+  "plot-filter-all": "Vše",
+  "plot-filter-no-data": "Žádná data s aktuálními filtry",
+  "download-error": "Stahování se nezdařilo. Zkuste to prosím znovu později."
 }

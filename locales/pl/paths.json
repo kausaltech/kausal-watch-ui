@@ -110,5 +110,10 @@
   "error-with-code": "Kod błędu {code}",
   "thumbSliderLabel": "Dostosuj",
   "reset-button": "Resetuj",
-  "calculated-emissions": "Obliczone emisje"
+  "calculated-emissions": "Obliczone emisje",
+  "plot-break-down-by": "Podziel według",
+  "plot-filter": "Filtruj",
+  "plot-filter-all": "Wszystkie",
+  "plot-filter-no-data": "Brak danych przy obecnych filtrach",
+  "download-error": "Pobieranie nie powiodło się. Spróbuj ponownie później."
 }

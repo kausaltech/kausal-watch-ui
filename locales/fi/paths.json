@@ -103,5 +103,10 @@
   "show-error": "Näytä virhe",
   "thumbSliderLabel": "Säädä",
   "reset-button": "Nollaa",
-  "calculated-emissions": "Lasketut päästöt"
+  "calculated-emissions": "Lasketut päästöt",
+  "plot-break-down-by": "Jaottelu",
+  "plot-filter": "Suodata",
+  "plot-filter-all": "Kaikki",
+  "plot-filter-no-data": "Ei tietoja nykyisillä suodattimilla",
+  "download-error": "Lataus epäonnistui. Yritä uudelleen myöhemmin."
 }

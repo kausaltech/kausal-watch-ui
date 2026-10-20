@@ -5,7 +5,7 @@ import NextLink, { type LinkProps } from 'next/link';
 
 import { useLocale } from 'next-intl';
 
-import { ACTIONS_PATH, INDICATORS_PATH } from '@/constants/routes';
+import { ACTIONS_PATH, INDICATORS_PATH, MODEL_NODES_PATH } from '@/constants/routes';
 import { usePlan } from '@/context/plan';
 import { isAbsoluteUrl, stripLocaleAndPlan, stripSlashes } from '@/utils/urls';
 
@@ -104,12 +104,18 @@ export type IndicatorLinkProps = {
 // This allows server components to use IndicatorLink, which will be rendered as a client component
 export { IndicatorLinkClient as IndicatorLink } from '@/components/indicators/IndicatorLinkClient';
 
+/** A link to the page of a node of the plan's Paths model */
 export function PathsNodeLink({
   id,
+  children,
   ...other
-}: { id: string | number; children: ReactNode } & LinkProps) {
-  // TODO: implement this
-  return <span {...other} data-id={id} />;
+}: { id: string; children: ReactNode } & LinkPropsWithoutHref) {
+  const href = usePrependPlanAndLocale(`${MODEL_NODES_PATH}/${encodeURIComponent(id)}`);
+  return (
+    <NextLink href={href} {...disablePrefetch(other)}>
+      {children}
+    </NextLink>
+  );
 }
 
 export type ActionLinkProps = LinkPropsWithoutHref & {
