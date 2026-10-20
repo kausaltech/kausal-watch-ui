@@ -24,16 +24,16 @@ export default async function AccessGatePage({
     themeIdentifier && THEME_IDENTIFIER_PATTERN.test(themeIdentifier) ? themeIdentifier : 'default';
   const theme = await loadTheme(safeThemeIdentifier);
   const safeHomePath = homePath.startsWith('/') ? homePath : '/';
+  // See the plan layout for why this is a plain link plus a preload hint.
+  const themeCssUrl = theme.name ? getThemeStaticURL(theme.mainCssFile) : undefined;
 
   return (
     <>
-      {theme.name && (
-        <link
-          rel="stylesheet"
-          type="text/css"
-          href={getThemeStaticURL(theme.mainCssFile)}
-          precedence="theme"
-        />
+      {themeCssUrl && (
+        <>
+          <link rel="preload" as="style" href={themeCssUrl} />
+          <link rel="stylesheet" type="text/css" href={themeCssUrl} />
+        </>
       )}
       <ThemeProvider theme={theme}>
         <ThemedGlobalStyles />
