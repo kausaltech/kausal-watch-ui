@@ -20,10 +20,18 @@ import {
 } from '@common/env';
 import { getClientIP } from '@common/utils';
 import LRUCache from '@common/utils/lru-cache';
+import {
+  type ReportOnlyPolicyOptions,
+  applySecurityHeaders,
+  buildReportOnlyPolicy,
+  originOf,
+} from '@common/utils/security-headers';
 
 import type { PlansByHostnameQuery } from '@/common/__generated__/graphql';
 import { PlanDomainAvailability } from '@/common/__generated__/graphql';
 import possibleTypes from '@/common/__generated__/possible_types.json';
+import { INTEGRATIONS, integrationHosts } from '@/constants/integrations';
+import { ENABLED_INTEGRATION_SETTINGS } from '@/constants/theme-integrations';
 import { GET_PLANS_BY_HOSTNAME } from '@/queries/get-plans';
 
 import { stripSlashes } from './urls';
@@ -348,60 +356,10 @@ export function rewriteUrl(
   return response;
 }
 
-const SECURITY_HEADERS: Record<string, string> = {
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
-};
-
-/*
- * The policy is built when this module loads, so a malformed environment value must not throw:
- * that would fail every request rather than leave one entry out of a header nothing enforces.
- */
-const originOf = (value: string | undefined) => {
-  if (!value) {
-    return undefined;
-  }
-
-  try {
-    return new URL(value).origin;
-  } catch {
-    return undefined;
-  }
-};
-
-function securityReportUri(dsn: string, environment: string, release: string) {
-  let parsed: URL;
-
-  try {
-    parsed = new URL(dsn);
-  } catch {
-    return undefined;
-  }
-
-  const { origin, username, pathname } = parsed;
-  const segments = pathname.split('/').filter(Boolean);
-  const projectId = segments.pop();
-  const prefix = segments.length ? `/${segments.join('/')}` : '';
-
-  if (!username || !projectId) {
-    return undefined;
-  }
-
-  const params = new URLSearchParams({
-    sentry_key: username,
-    sentry_environment: environment,
-    sentry_release: release,
-  });
-
-  return `${origin}${prefix}/api/${projectId}/security/?${params.toString()}`;
-}
-
-/*
- * Theme CSS imports webfonts from Adobe Typekit, so the host comes from theme data rather
- * than from the code. Enforcing a policy without it would leave those themes without their
- * webfonts.
- */
-const TYPEKIT_HOSTS = ['https://use.typekit.net', 'https://p.typekit.net'];
+/* Only the integrations some installed theme switches on, plus those without a setting. */
+const INTEGRATION_HOSTS = INTEGRATIONS.filter(
+  ({ settingKey }) => !settingKey || ENABLED_INTEGRATION_SETTINGS.includes(settingKey)
+).flatMap(integrationHosts);
 
 /* The cartography block renders with Mapbox GL, which fetches styles, tiles and glyphs. */
 const MAPBOX_HOSTS = ['https://api.mapbox.com', 'https://events.mapbox.com'];
@@ -409,53 +367,23 @@ const MAPBOX_HOSTS = ['https://api.mapbox.com', 'https://events.mapbox.com'];
 /* Our own Matomo, which most plans report to. */
 const ANALYTICS_HOST = 'https://ana.kausal.tech';
 
-type ReportOnlyOptions = {
-  dsn: string | undefined;
-  assetPrefix: string;
-  backendUrl: string;
-  environment: string;
-  release: string;
+type WatchReportOnlyOptions = Omit<ReportOnlyPolicyOptions, 'scriptSources' | 'connectSources'> & {
+  backendUrl: string | undefined;
 };
 
-/*
- * Deliberately permissive on inline scripts and styles: without per-request nonces every
- * framework-emitted inline block would report, burying the thing worth learning, which is
- * which external hosts plans actually load from.
- */
-export function buildReportOnlyPolicy({
-  dsn,
-  assetPrefix,
-  backendUrl,
-  environment,
-  release,
-}: ReportOnlyOptions) {
-  const reportUri =
-    dsn && environment !== 'ci' ? securityReportUri(dsn, environment, release) : undefined;
+export const buildWatchReportOnlyPolicy = ({ backendUrl, ...options }: WatchReportOnlyOptions) =>
+  buildReportOnlyPolicy({
+    ...options,
+    scriptSources: [ANALYTICS_HOST, ...INTEGRATION_HOSTS],
+    connectSources: [
+      ...MAPBOX_HOSTS,
+      ANALYTICS_HOST,
+      ...INTEGRATION_HOSTS,
+      ...[originOf(backendUrl)].filter((o) => o !== undefined),
+    ],
+  });
 
-  if (!reportUri) {
-    return undefined;
-  }
-
-  const sentryOrigin = new URL(reportUri).origin;
-  const cdn = originOf(assetPrefix);
-  /* Themes reference webfonts uploaded as documents on the backend, which differs per region. */
-  const backendSources = [originOf(backendUrl)].filter((o) => o !== undefined);
-  const withCdn = (...sources: string[]) => [...sources, cdn].filter(Boolean).join(' ');
-
-  return [
-    "default-src 'self'",
-    `script-src ${withCdn("'self'", "'unsafe-inline'", "'unsafe-eval'", ANALYTICS_HOST)}`,
-    `style-src ${withCdn("'self'", "'unsafe-inline'", ...TYPEKIT_HOSTS)}`,
-    `font-src ${withCdn("'self'", 'data:', ...TYPEKIT_HOSTS, ...backendSources)}`,
-    "img-src 'self' data: blob: https:",
-    "worker-src 'self' blob:",
-    `connect-src ${withCdn("'self'", sentryOrigin, ...MAPBOX_HOSTS, ANALYTICS_HOST, ...backendSources)}`,
-    'frame-src https:',
-    `report-uri ${reportUri}`,
-  ].join('; ');
-}
-
-const REPORT_ONLY_POLICY = buildReportOnlyPolicy({
+const REPORT_ONLY_POLICY = buildWatchReportOnlyPolicy({
   dsn: getSentryDsn(),
   assetPrefix: getAssetPrefix(),
   backendUrl: getWatchBackendUrl(),
@@ -488,39 +416,11 @@ const isEmbedResponse = (response: Response) => {
   return segments[0] === 'embed' && /^v\d+$/.test(segments[1] ?? '');
 };
 
-/*
- * Keyed on how the request arrived, not on the build: the production image is also served
- * over plain HTTP (the e2e workflow), where asking browsers to upgrade would break assets.
- */
-const isSecureRequest = (request: NextRequest) =>
-  request.headers.get('x-forwarded-proto') === 'https' || request.nextUrl.protocol === 'https:';
-
-export function applySecurityHeaders<R>(response: R, request: NextRequest): R {
-  if (!(response instanceof Response)) {
-    return response;
-  }
-
-  for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
-    response.headers.set(name, value);
-  }
-
-  const directives = isSecureRequest(request) ? ['upgrade-insecure-requests'] : [];
-
-  if (!isEmbedResponse(response)) {
-    response.headers.set('X-Frame-Options', 'SAMEORIGIN');
-    directives.unshift("frame-ancestors 'self'");
-  }
-
-  if (directives.length) {
-    response.headers.set('Content-Security-Policy', directives.join('; '));
-  }
-
-  if (REPORT_ONLY_POLICY) {
-    response.headers.set('Content-Security-Policy-Report-Only', REPORT_ONLY_POLICY);
-  }
-
-  return response;
-}
+export const applyWatchSecurityHeaders = <R>(response: R, request: NextRequest): R =>
+  applySecurityHeaders(response, request, {
+    reportOnlyPolicy: REPORT_ONLY_POLICY,
+    isFramable: isEmbedResponse,
+  });
 
 function createApolloClient(req: NextAuthRequest, logger: Logger, skipAuth = false) {
   const uri = getWatchGraphQLUrl();

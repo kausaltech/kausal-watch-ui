@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 
 import Script from 'next/script';
 
+import { GOOGLE_ANALYTICS } from '@/constants/integrations';
+
 type Props = {
   trackingId: string;
 };
@@ -28,7 +30,7 @@ const GoogleAnalytics = ({ trackingId }: Props) => {
     <>
       <Script
         async
-        src={`https://www.googletagmanager.com/gtag/js?id=${trackingId}`}
+        src={`${GOOGLE_ANALYTICS.scriptUrl}?id=${trackingId}`}
         strategy="afterInteractive"
       />
       <Script id="google-analytics-inline" strategy="afterInteractive">
