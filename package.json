@@ -98,6 +98,7 @@
     "start": "next start",
     "start:inspect": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
+    "generate-theme-integrations": "node scripts/generate-theme-integrations.mjs",
     "clean": "rm -rf .next",
     "chromatic": "chromatic",
     "lint": "eslint --cache",

@@ -20,7 +20,7 @@ import {
 } from './constants/routes';
 import { hasUnauthenticatedErrors } from './utils/auth-errors';
 import {
-  applySecurityHeaders,
+  applyWatchSecurityHeaders,
   clearHostnameCache,
   convertPathnameFromInvalidLocaleCasing,
   convertPathnameFromLegacy,
@@ -276,7 +276,7 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
 });
 
 async function proxy(...args: Parameters<typeof handleRequest>) {
-  return applySecurityHeaders(await handleRequest(...args), args[0]);
+  return applyWatchSecurityHeaders(await handleRequest(...args), args[0]);
 }
 
 export default proxy;

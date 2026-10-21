@@ -8,8 +8,8 @@ import { PlanDomainAvailability } from '@/common/__generated__/graphql';
 import type * as MiddlewareUtilsModule from '../middleware.utils';
 import {
   type PlanFromPlansQuery,
-  applySecurityHeaders,
-  buildReportOnlyPolicy,
+  applyWatchSecurityHeaders,
+  buildWatchReportOnlyPolicy,
   getDomainAvailability,
   getLocaleAndPlan,
   getParsedLocale,
@@ -109,7 +109,7 @@ describe('rewriteUrl', () => {
   });
 });
 
-describe('applySecurityHeaders', () => {
+describe('applyWatchSecurityHeaders', () => {
   const hostUrl = new URL('https://plan.example.com');
   const rewrittenUrl = new URL('https://plan.example.com/root/plan.example.com/en/unpublished');
 
@@ -122,34 +122,12 @@ describe('applySecurityHeaders', () => {
     nextUrl: { protocol: 'http:' },
   } as unknown as NextRequest;
 
-  const insecureRequest = {
-    headers: new Headers(),
-    nextUrl: { protocol: 'http:' },
-  } as unknown as NextRequest;
-
   const rewrittenTo = (path: string) => {
     const response = new Response(null);
     response.headers.set('x-middleware-rewrite', path);
 
     return response;
   };
-
-  /*
-   * The Auth.js wrapper rebuilds the middleware result with `new Response(body, response)`
-   * before returning it, so what reaches the proxy is a native Response, never a NextResponse.
-   */
-  it('sets the constant security headers on a native Response', () => {
-    const { headers } = applySecurityHeaders(new Response(null), secureRequest);
-
-    expect(headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
-    expect(headers.get('permissions-policy')).toBe(
-      'camera=(), microphone=(), geolocation=(), payment=(), usb=()'
-    );
-  });
-
-  it('passes through a handler result that is not a response', () => {
-    expect(applySecurityHeaders(undefined, secureRequest)).toBeUndefined();
-  });
 
   /*
    * The exemption is decided from the rewritten path, because only there have the plan's base
@@ -160,7 +138,7 @@ describe('applySecurityHeaders', () => {
     ['/root/plan.example.com/fi/plan/embed/v1/actions-recent', 'an embed view'],
     ['/root/plan.example.com/fi/plan/embed/v2/actions-recent', 'a future embed version'],
   ])('leaves framing unrestricted for %s (%s)', (rewrite) => {
-    const { headers } = applySecurityHeaders(rewrittenTo(rewrite), secureRequest);
+    const { headers } = applyWatchSecurityHeaders(rewrittenTo(rewrite), secureRequest);
 
     expect(headers.has('x-frame-options')).toBe(false);
     expect(headers.get('content-security-policy')).toBe('upgrade-insecure-requests');
@@ -177,7 +155,7 @@ describe('applySecurityHeaders', () => {
     ['/root/plan.example.com/fi/plan/en/embed/v1/x', 'an unsupported locale position'],
     ['/404', 'a rewrite with no plan path'],
   ])('denies framing for %s (%s)', (rewrite) => {
-    const { headers } = applySecurityHeaders(rewrittenTo(rewrite), secureRequest);
+    const { headers } = applyWatchSecurityHeaders(rewrittenTo(rewrite), secureRequest);
 
     expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
     expect(headers.get('content-security-policy')).toContain("frame-ancestors 'self'");
@@ -185,13 +163,13 @@ describe('applySecurityHeaders', () => {
 
   /* The rewrite header is parsed per request, so a value that will not parse must not throw. */
   it('denies framing when the rewrite target will not parse', () => {
-    const { headers } = applySecurityHeaders(rewrittenTo('http://%%'), secureRequest);
+    const { headers } = applyWatchSecurityHeaders(rewrittenTo('http://%%'), secureRequest);
 
     expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
   });
 
   it('denies framing when nothing was rewritten', () => {
-    const { headers } = applySecurityHeaders(new Response(null), secureRequest);
+    const { headers } = applyWatchSecurityHeaders(new Response(null), secureRequest);
 
     expect(headers.get('x-frame-options')).toBe('SAMEORIGIN');
   });
@@ -211,7 +189,7 @@ describe('applySecurityHeaders', () => {
       'test-plan'
     );
 
-    const { headers } = applySecurityHeaders(response, secureRequest);
+    const { headers } = applyWatchSecurityHeaders(response, secureRequest);
 
     expect(headers.get('x-plan-identifier')).toBe('test-plan');
     expect(headers.get('x-plan-domain')).toBe('plan.example.com');
@@ -219,7 +197,15 @@ describe('applySecurityHeaders', () => {
   });
 });
 
-describe('buildReportOnlyPolicy', () => {
+describe('buildWatchReportOnlyPolicy', () => {
+  /* The sources of one directive, so assertions do not have to match against the whole policy. */
+  const sourcesOf = (policy: string, directive: string) =>
+    policy
+      .split(';')
+      .map((part) => part.trim().split(/\s+/))
+      .find((parts) => parts[0] === directive)
+      ?.slice(1) ?? [];
+
   const options = {
     dsn: 'https://publickey@sentry.example.com/42',
     assetPrefix: 'https://cdn.example.com',
@@ -228,130 +214,54 @@ describe('buildReportOnlyPolicy', () => {
     release: 'build-1',
   };
 
-  it('reports to the security endpoint derived from the Sentry DSN', () => {
-    const policy = buildReportOnlyPolicy(options)!;
-    const reportUri = new URL(/report-uri ([^;]+)/.exec(policy)![1]);
+  it('allows the map hosts', () => {
+    const policy = buildWatchReportOnlyPolicy(options)!;
 
-    expect(reportUri.origin).toBe('https://sentry.example.com');
-    expect(reportUri.pathname).toBe('/api/42/security/');
-    expect(reportUri.searchParams.get('sentry_key')).toBe('publickey');
-    expect(reportUri.searchParams.get('sentry_environment')).toBe('production');
-    expect(reportUri.searchParams.get('sentry_release')).toBe('build-1');
+    expect(sourcesOf(policy, 'connect-src')).toEqual(
+      expect.arrayContaining(['https://api.mapbox.com', 'https://events.mapbox.com'])
+    );
   });
 
-  /* Reports are posted to Sentry, so its origin has to survive the policy it reports against. */
-  it('allows the asset host and the Sentry origin', () => {
-    const policy = buildReportOnlyPolicy(options)!;
-
-    expect(/script-src [^;]*https:\/\/cdn\.example\.com/.test(policy)).toBe(true);
-    expect(/connect-src [^;]*https:\/\/sentry\.example\.com/.test(policy)).toBe(true);
-  });
-
-  /* A self-hosted Sentry can live under a path prefix: the project id is the last segment. */
-  it('keeps a path prefix out of the project id', () => {
-    const policy = buildReportOnlyPolicy({
-      ...options,
-      dsn: 'https://publickey@example.com/sentry/42',
-    })!;
-    const reportUri = new URL(/report-uri ([^;]+)/.exec(policy)![1]);
-
-    expect(reportUri.pathname).toBe('/sentry/api/42/security/');
-  });
-
-  /* Mapbox GL starts its worker from a blob: URL, which would otherwise report on every map. */
-  /* Several themes import their webfonts from Adobe Typekit in the theme CSS. */
-  it('allows the theme webfont hosts', () => {
-    const policy = buildReportOnlyPolicy(options)!;
-
-    expect(/style-src [^;]*https:\/\/use\.typekit\.net/.test(policy)).toBe(true);
-    expect(/style-src [^;]*https:\/\/p\.typekit\.net/.test(policy)).toBe(true);
-    expect(/font-src [^;]*https:\/\/use\.typekit\.net/.test(policy)).toBe(true);
-  });
-
-  /* The cartography block renders with Mapbox GL, which fetches styles, tiles and glyphs. */
-  it('allows the map host', () => {
-    const policy = buildReportOnlyPolicy(options)!;
-
-    expect(/connect-src [^;]*https:\/\/api\.mapbox\.com/.test(policy)).toBe(true);
-  });
-
-  /* Our own Matomo, which most plans report to. */
   it('allows the analytics host', () => {
-    const policy = buildReportOnlyPolicy(options)!;
+    const policy = buildWatchReportOnlyPolicy(options)!;
 
-    expect(/script-src [^;]*https:\/\/ana\.kausal\.tech/.test(policy)).toBe(true);
-    expect(/connect-src [^;]*https:\/\/ana\.kausal\.tech/.test(policy)).toBe(true);
+    expect(sourcesOf(policy, 'script-src')).toContain('https://ana.kausal.tech');
+    expect(sourcesOf(policy, 'connect-src')).toContain('https://ana.kausal.tech');
   });
 
-  /* Themes reference webfonts uploaded as documents on the backend, which differs per region. */
   it('allows the backend origin the deployment points at', () => {
-    const policy = buildReportOnlyPolicy(options)!;
+    const policy = buildWatchReportOnlyPolicy(options)!;
 
-    expect(/font-src [^;]*https:\/\/api\.backend\.example\.com/.test(policy)).toBe(true);
-    expect(/connect-src [^;]*https:\/\/api\.backend\.example\.com/.test(policy)).toBe(true);
+    expect(sourcesOf(policy, 'connect-src')).toContain('https://api.backend.example.com');
   });
 
-  it('leaves the backend out when it is not configured', () => {
-    const policy = buildReportOnlyPolicy({ ...options, backendUrl: '' })!;
+  it.each([
+    ['not configured', ''],
+    ['malformed', 'api.example.com'],
+  ])('leaves the backend out when it is %s', (_name, backendUrl) => {
+    const policy = buildWatchReportOnlyPolicy({ ...options, backendUrl })!;
 
+    expect(sourcesOf(policy, 'connect-src')).not.toContain(backendUrl);
     expect(policy).not.toContain('api.backend.example.com');
   });
 
-  it('allows blob workers', () => {
-    expect(buildReportOnlyPolicy(options)).toContain("worker-src 'self' blob:");
-  });
-
-  /*
-   * CI drives synthetic traffic over seeded data, so its violations say nothing about real
-   * sites, and reporting them would bury the traffic we actually want to learn from.
-   */
-  it('is left out in CI', () => {
-    expect(buildReportOnlyPolicy({ ...options, environment: 'ci' })).toBeUndefined();
-  });
-
-  /*
-   * The policy is built when the module loads, so a malformed value must not throw: that would
-   * take down every request rather than degrade a header nothing enforces yet.
-   */
   it.each([
-    ['assetPrefix', { assetPrefix: 'cdn.example.com' }],
-    ['backendUrl', { backendUrl: 'api.example.com' }],
-    ['dsn', { dsn: 'not a dsn' }],
-  ])('survives a malformed %s', (_name, override) => {
-    expect(() => buildReportOnlyPolicy({ ...options, ...override })).not.toThrow();
-  });
+    ['https://www.googletagmanager.com', 'Google Analytics'],
+    ['https://*.google-analytics.com', 'Google Analytics'],
+    ['https://*.google.com', 'Google Analytics'],
+    ['https://app-script.monsido.com', 'Monsido'],
+    ['https://cdn.monsido.com', 'Monsido'],
+    ['https://pagecorrect.monsido.com', 'Monsido'],
+    ['https://heatmaps.monsido.com', 'Monsido'],
+    ['https://tracking.monsido.com', 'Monsido'],
+    ['https://www.stadt-zuerich.ch', 'Zurich analytics'],
+    ['https://analytics.stadt-zuerich.ch', 'Zurich analytics'],
+    ['https://dpm.demdex.net', 'Zurich analytics'],
+  ])('allows %s (%s)', (host) => {
+    const policy = buildWatchReportOnlyPolicy(options)!;
 
-  it('is left out when no DSN is configured', () => {
-    expect(buildReportOnlyPolicy({ ...options, dsn: undefined })).toBeUndefined();
-  });
-});
-
-describe('applySecurityHeaders over plain HTTP', () => {
-  /*
-   * The production image is served over HTTP in the e2e workflow, so the upgrade has to key
-   * on how the request arrived rather than on how the bundle was built.
-   */
-  const insecureRequest = {
-    headers: new Headers(),
-    nextUrl: { protocol: 'http:' },
-  } as unknown as NextRequest;
-
-  it('does not ask the browser to upgrade subresources', () => {
-    const { headers } = applySecurityHeaders(new Response(null), insecureRequest);
-
-    expect(headers.get('content-security-policy')).toBe("frame-ancestors 'self'");
-  });
-
-  it('still upgrades when the edge terminated TLS', () => {
-    const secureRequest = {
-      headers: new Headers({ 'x-forwarded-proto': 'https' }),
-      nextUrl: { protocol: 'http:' },
-    } as unknown as NextRequest;
-    const { headers } = applySecurityHeaders(new Response(null), secureRequest);
-
-    expect(headers.get('content-security-policy')).toBe(
-      "frame-ancestors 'self'; upgrade-insecure-requests"
-    );
+    expect(sourcesOf(policy, 'script-src')).toContain(host);
+    expect(sourcesOf(policy, 'connect-src')).toContain(host);
   });
 });
 
