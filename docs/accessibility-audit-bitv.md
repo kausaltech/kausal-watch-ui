@@ -1,6 +1,6 @@
 # Fixing the BITV audit findings
 
-Status: steps 1 and 2 done on `fix/a11y`; step 2 also changes kausal_common. This doc translates the findings of a manual BITV accessibility audit of a customer's plan site, names their causes in the code, and orders the fixes.
+Status: steps 1 and 2 done on `fix/a11y`, step 3 apart from the theme colour pairs (item 6); step 2 also changes kausal_common. This doc translates the findings of a manual BITV accessibility audit of a customer's plan site, names their causes in the code, and orders the fixes.
 
 ## Background
 
@@ -212,10 +212,21 @@ The steps go from the clearest conformance failures in shared components, which 
 
 1. **Select options (F3, F9).** Mark the focused option with an outline or a left border at 3:1 or more. Mark the selected option with a check icon as well as the colour. Under `@media (forced-colors: active)`, use `Highlight` / `HighlightText`.
 2. **Search in forced colors (F1).** Give the input and button a `1px solid transparent` border, which forced-colors mode turns visible. Replace `display: 'hidden'`.
+
+   Done with a border on the open field in forced colors only, so the normal look doesn't change. The closed field stays focusable on purpose: tabbing into it opens the search. The real problem was the icons: their fill is set with `!important` in theme colours, which forced colors don't override. All icons in both nav bars now use `fill: currentColor` in forced colors.
+
 3. **Logo in forced colors (F2).** Under `@media (forced-colors: active)`, give `OrgLogo` `forced-color-adjust: none` and a white backplate. Alternatively, the theme ships a logo with an opaque background, as the auditor suggests.
+
+   Done with a backplate in the theme's nav background colour rather than white: logos are designed for that background, and a white plate would hide light logos.
+
 4. **Close buttons (F16).** Drop `opacity: 0.5` from `.badge-close`. Check the close buttons in `Modal`, `IndicatorModalBase` and `ChangeHistory` against their backgrounds.
 5. **Progress bar (F10).** In `ActionStatus`, use a neutral track and draw the bar in the status colour, or add a border. Confirm it is the bar the auditor meant first.
+
+   Done by marking where the bar ends with a white line instead of changing the colours. Completion over 100 % also drew the bar shifted right, so it looked partly empty; the value is now clamped.
+
 6. **Theme colour pairs (F11, F12, F17).** Ask the auditor for the locations of F11 and F17, then fix the colour pairs in the theme. Run a contrast check across all themes for the same pairs, not only the audited plan's.
+
+   Open. Also done in this step: the plan switcher's `outline: inherit` hid its focus ring, and the organisation tabs' second line in `PlanChip` was below 4.5:1 on the sunnydale theme.
 
 ### Step 4: charts
 
