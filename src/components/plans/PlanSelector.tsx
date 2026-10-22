@@ -63,7 +63,6 @@ const StyledDropdownToggle = styled(DropdownToggle, transientOptions)<StyledDrop
   color: ${(props) => props.$color};
   font: inherit;
   cursor: pointer;
-  outline: inherit;
 
   &:hover {
     background: ${(props) => props.theme.themeColors.white};

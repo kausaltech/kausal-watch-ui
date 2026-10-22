@@ -21,6 +21,7 @@ import Select, {
 } from 'react-select';
 
 import { Label as BSLabel, FormGroup } from '@/components/common/FormControls';
+import Icon from '@/components/common/Icon';
 import PopoverTip from '@/components/common/PopoverTip';
 
 /** Accessible name of the clear button, from the select's label */
@@ -44,6 +45,12 @@ const DropdownItem = styled.div`
     background-color: transparent;
     font-weight: ${(props) => props.theme.fontWeightBold};
   }
+`;
+
+const SelectedMark = styled(Icon.Check)`
+  flex-shrink: 0;
+  align-self: center;
+  margin: 0 0.75rem 0 auto;
 `;
 
 const DropdownIndent = styled.div`
@@ -124,6 +131,19 @@ function getSelectStyles<Option extends SelectDropdownOption>(
             : theme.inputBg,
         margin: 0,
         padding: 0,
+        // Mark keyboard focus with an outline too, not only a light background
+        outline: isFocused
+          ? `2px solid ${isSelected ? theme.themeColors.white : theme.themeColors.dark}`
+          : undefined,
+        outlineOffset: '-2px',
+        // Forced colors drop backgrounds: mark the selected option with system colours
+        '@media (forced-colors: active)': isSelected
+          ? ({
+              forcedColorAdjust: 'none',
+              backgroundColor: 'Highlight',
+              color: 'HighlightText',
+            } as const)
+          : {},
       };
       return ret;
     },
@@ -254,6 +274,8 @@ const Option = (props: OptionProps<SelectDropdownOption, boolean>) => {
       <DropdownItem>
         {indents}
         <DropdownLabel $primary={isHierarchical && indent == 0}>{children}</DropdownLabel>
+        {/* Selected is shown with more than colour */}
+        {props.isSelected && <SelectedMark color="currentColor" />}
       </DropdownItem>
     </components.Option>
   );

@@ -154,17 +154,15 @@ const StyledBadge = styled('span', transientOptions)<{ $color?: string }>`
     margin: 0 0.5rem;
     padding: 0;
     border-radius: 0.375rem;
-    opacity: 0.5;
 
-    // As with .btn-close, only the icon changes on hover, and focus gets a ring
+    // Full strength: a faded icon has too little contrast with the badge (WCAG 1.4.11).
+    // Hover tints the background instead.
     &:hover {
-      opacity: 0.75;
-      background-color: transparent;
+      background-color: color-mix(in srgb, currentColor 20%, transparent);
     }
 
     // The theme's focus ring colour can be too faint on the badge colour
     &:focus-visible {
-      opacity: 1;
       box-shadow: none;
       outline: 2px solid currentColor;
       outline-offset: 1px;

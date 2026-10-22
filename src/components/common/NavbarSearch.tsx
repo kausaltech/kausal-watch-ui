@@ -43,7 +43,7 @@ type TextInputProps = {
 };
 
 const TextInput = styled.input<TextInputProps>`
-  display: ${(props) => (props.$isOpen ? 'block' : 'hidden')};
+  display: block;
   width: ${(props) => (props.$isOpen ? 'auto' : '0')};
   height: calc(
     ${(props) => props.theme.inputLineHeight}em + ${(props) => props.theme.inputPaddingY} +
@@ -59,6 +59,11 @@ const TextInput = styled.input<TextInputProps>`
   &:focus,
   &:focus-visible {
     outline: 3px solid ${(props) => props.theme.inputBtnFocusColor};
+  }
+
+  /* Forced colors drop the background, so the open field needs a border */
+  @media (forced-colors: active) {
+    ${(props) => props.$isOpen && 'border: 1px solid CanvasText;'}
   }
 `;
 

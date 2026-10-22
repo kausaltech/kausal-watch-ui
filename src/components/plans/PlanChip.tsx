@@ -65,8 +65,10 @@ const PlanOrg = styled.span<{ $negative?: boolean }>`
   font-size: 75%;
   font-weight: ${(props) => props.theme.fontWeightNormal};
   font-family: ${(props) => `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
+  /* On a dark background, the same light colour as the name: a dimmer grey
+     falls under 4.5:1 on mid-tone backgrounds */
   color: ${(props) =>
-    props.$negative ? props.theme.graphColors.grey020 : props.theme.graphColors.grey070};
+    props.$negative ? props.theme.themeColors.light : props.theme.graphColors.grey070};
 `;
 
 interface PlanChipProps {
