@@ -21,10 +21,32 @@ const FeedbackFormSection = styled.div<{ $size: 'sm' | 'md' }>`
     display: none;
   }
 
+  /* The h2 wraps the trigger button, so the heading look moves to .trigger-heading
+     and the description gets the body text look back */
   h2 {
+    margin: 0;
+    font-size: ${(props) => props.theme.fontSizeBase};
+  }
+
+  .trigger-heading {
+    display: block;
+    margin-bottom: 0.5rem;
     color: ${(props) => props.theme.themeColors.black};
+    font-weight: ${(props) => props.theme.headingsFontWeight};
     font-size: ${(props) =>
       props.$size === 'sm' ? props.theme.fontSizeMd : props.theme.fontSizeLg};
+    line-height: ${(props) => props.theme.lineHeightMd};
+    text-transform: ${(props) => props.theme.headingsTextTransform};
+  }
+
+  .trigger-description {
+    display: block;
+    color: ${(props) => props.theme.themeColors.black};
+    font-family: ${({ theme }) =>
+      theme.fontFamily !== ''
+        ? `${theme.fontFamily}, ${theme.fontFamilyFallback}`
+        : theme.fontFamilyFallback};
+    font-weight: ${(props) => props.theme.fontWeightBase};
   }
 `;
 
@@ -92,14 +114,17 @@ const ExpandableFeedbackFormBlock = ({
 
   return (
     <FeedbackFormSection $size={size}>
-      <ContactTriggerButton onClick={toggle} aria-expanded={isOpen} aria-controls={panelId}>
-        <Icon.Commenting width="2rem" height="2rem" />
-        <div>
-          <h2>{heading || defaultHeading}</h2>
-          {description || defaultDescription}
-        </div>
-        <Icon name={isOpen ? 'angle-down' : 'angle-right'} width="2rem" height="2rem" />
-      </ContactTriggerButton>
+      {/* The button is inside the heading: a button may not contain a heading or a div */}
+      <h2>
+        <ContactTriggerButton onClick={toggle} aria-expanded={isOpen} aria-controls={panelId}>
+          <Icon.Commenting width="2rem" height="2rem" />
+          <span>
+            <span className="trigger-heading">{heading || defaultHeading}</span>
+            <span className="trigger-description">{description || defaultDescription}</span>
+          </span>
+          <Icon name={isOpen ? 'angle-down' : 'angle-right'} width="2rem" height="2rem" />
+        </ContactTriggerButton>
+      </h2>
       <Collapse in={isOpen} id={panelId}>
         <FeedbackForm
           planIdentifier={plan.identifier}
