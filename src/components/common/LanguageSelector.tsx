@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -9,6 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
+import { UnprefetchedLink } from '@/common/links';
 import {
   DropdownItem,
   DropdownMenu,
@@ -178,23 +177,25 @@ const LanguageSelector = (props: LanguageSelectorProps) => {
           <CurrentLanguage $mobile={mobile}>{languageCode}</CurrentLanguage>
         </StyledDropdownToggle>
         <StyledDropdownMenu end>
-          {locales.map((locale) => (
-            <DropdownItem key={locale} tag="div" active={locale === currentLocale}>
-              {locale !== currentLocale ? (
-                <Link
-                  href={getLocaleHref(locale)}
-                  prefetch={false}
-                  // Reset the cache so that stale locale cache isn't used. Required because the
-                  // locale isn't passed to query calls as an argument.
-                  onClick={() => void apolloClient.clearStore()}
-                >
-                  {languageNames[locale.split('-')[0]]}
-                </Link>
-              ) : (
+          {locales.map((locale) =>
+            locale !== currentLocale ? (
+              // The menu item is the link itself, so that Enter follows it
+              <DropdownItem
+                key={locale}
+                tag={UnprefetchedLink}
+                href={getLocaleHref(locale)}
+                // Reset the cache so that stale locale cache isn't used. Required because the
+                // locale isn't passed to query calls as an argument.
+                onClick={() => void apolloClient.clearStore()}
+              >
+                {languageNames[locale.split('-')[0]]}
+              </DropdownItem>
+            ) : (
+              <DropdownItem key={locale} tag="div" active aria-current="true">
                 <ActiveLanguage>{languageNames[locale.split('-')[0]]}</ActiveLanguage>
-              )}
-            </DropdownItem>
-          ))}
+              </DropdownItem>
+            )
+          )}
         </StyledDropdownMenu>
       </Selector>
     </LanguageSelectorListItem>

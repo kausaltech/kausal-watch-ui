@@ -1,9 +1,13 @@
-import { type Page, expect } from '@playwright/test';
+import { type Locator, type Page, expect } from '@playwright/test';
 
 import { PlanContext, getIdentifiersToTest } from '../common/context.ts';
 import { test as coverageTest } from '../common/coverage.ts';
 
 const test = coverageTest.extend<{ ctx: PlanContext }>({});
+
+/** A navigation link: top-level items are links, submenu items are links with the menuitem role. */
+const navLink = (nav: Locator, name: string) =>
+  nav.getByRole('link', { name, exact: true }).or(nav.getByRole('menuitem', { name, exact: true }));
 
 async function navigateAndCheckLayout(page: Page, url: string, ctx: PlanContext) {
   await page.goto(url);
@@ -74,10 +78,7 @@ const testPlan = (planId: string) => {
         });
         await parentLink.click();
       }
-      const link = nav.getByRole('link', {
-        name: listItem.page.title,
-        exact: true,
-      });
+      const link = navLink(nav, listItem.page.title);
 
       // Test SPA navigation
       await link.click();
@@ -159,10 +160,7 @@ const testPlan = (planId: string) => {
       });
       await categoryTypeLink.click();
 
-      const firstItemLink = nav.getByRole('link', {
-        name: items[0].page.title,
-        exact: true,
-      });
+      const firstItemLink = navLink(nav, items[0].page.title);
       await firstItemLink.click();
       await expect(page.locator('main#main')).toBeVisible();
     });
@@ -181,10 +179,7 @@ const testPlan = (planId: string) => {
       });
       await emptyPageMenuLink.click();
 
-      const firstItemLink = nav.getByRole('link', {
-        name: items[0].page.title,
-        exact: true,
-      });
+      const firstItemLink = navLink(nav, items[0].page.title);
       await firstItemLink.click();
 
       await expect(page.locator('main#main')).toBeVisible();
@@ -209,10 +204,7 @@ const testPlan = (planId: string) => {
           await parentButton.click();
         }
 
-        const staticPageLink = nav.getByRole('link', {
-          name: staticPageItem.page.title,
-          exact: true,
-        });
+        const staticPageLink = navLink(nav, staticPageItem.page.title);
 
         await staticPageLink.click();
 

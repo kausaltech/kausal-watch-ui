@@ -1,6 +1,6 @@
 # Fixing the BITV audit findings
 
-Status: not started. This doc translates the findings of a manual BITV accessibility audit of a customer's plan site, names their causes in the code, and orders the fixes.
+Status: step 1 done on `fix/a11y`. This doc translates the findings of a manual BITV accessibility audit of a customer's plan site, names their causes in the code, and orders the fixes.
 
 ## Background
 
@@ -183,8 +183,14 @@ The steps go from the clearest conformance failures in shared components, which 
 1. **Single links for the previous / next pager (F8, F18).** Render the MUI `Button` as the link itself (`component={ActionLink}` or `href`) so there is one `<a>` and one focus ring. Give `:focus-visible` the hover background plus the outline, so focus looks like hover with a ring.
 2. **Single links for organisation and category badges (F7, F27, F31).** Let `BadgeTooltip` render the `<a>` itself when it is a link, instead of a button for the caller to wrap. Turn its inner `div`s into `span`s. Fix the `OrganizationChip` label branches.
 3. **Navigation menus (F20, F27).** Make each `DropdownItem` the link itself (`<a role="menuitem">`) in `GlobalNav`'s `DropdownList` and in `LanguageSelector`, so Enter follows it. Let the key handler leave Enter alone on links. Make the toggles `<button>`s instead of `<a href="#" role="button">`. Test with zoom at 400 % and with VoiceOver on iOS.
-4. **Organisation page tabs (F28, F27).** With one plan, render no tabs. With several, use MUI `Tabs` / `Tab` with unique ids and a `role="tabpanel"` around the content; MUI handles the arrow keys. Turn the `PlanChip` divs inside the tab into spans.
+4. **Organisation page tabs (F28, F27).** With one plan, render no tabs. With several, use proper tabs: unique ids, a `role="tabpanel"` around the content, and arrow-key navigation. Turn the `PlanChip` divs inside the tab into spans.
+
+   Done with the existing tab look instead of MUI `Tabs`, which would have needed restyling: a `div` tablist with the tabs as direct children, only the selected tab in the tab order, and arrow keys, Home and End to move between tabs.
+
 5. **Remaining buttons that contain divs (F27).** `PlanSelector`'s `PlanTitle`: use `span`s with `display: block` / `flex`.
+
+   Also `ExpandableFeedbackFormBlock`, whose trigger button contained a `div` and an `h2`. The button is now inside the `h2`, so the heading's text includes the description.
+
 6. **Skip link (F22).** Add `tabIndex={-1}` to both `<main id="main">`s, and hide the focus outline that `main` then gets on click.
 7. **Header home links (F23).** When the logo and title link to the same page, render one `HomeLink` around both, with the site name as its text. Remove the "+" characters from the hidden label.
 
