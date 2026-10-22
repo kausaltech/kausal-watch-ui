@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { type KeyboardEvent, useRef, useState } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -10,7 +10,6 @@ import { readableColor } from 'polished';
 import type { OrganizationDetailsQuery } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
 import { OrganizationLink } from '@/common/links';
-import { Nav, NavItem } from '@/components/common/NavParts';
 import RichText from '@/components/common/RichText';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import ActionStatusTable from '@/components/dashboard/ActionStatusTable';
@@ -44,14 +43,25 @@ const Tab = styled.button`
   }
 `;
 
+/** The only plan, shown like the active tab but not interactive. */
+const SinglePlan = styled(Tab.withComponent('div'))`
+  &,
+  &:hover {
+    cursor: default;
+    color: ${(props) => props.theme.orgPageBackgroundColor};
+    background: ${(props) => props.theme.themeColors.white};
+  }
+`;
+
 const OrgTabs = styled.div`
   background-color: ${(props) => props.theme.orgPageBackgroundColor};
   margin-bottom: 0;
+`;
 
-  .nav {
-    flex-wrap: nowrap;
-    overflow: auto;
-  }
+const TabList = styled.div`
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: auto;
 `;
 
 const HeaderContainer = styled(Container)`
@@ -131,6 +141,9 @@ const ActionTableContainer = styled.div`
   overflow: auto;
 `;
 
+const PANEL_ID = 'org-plan-panel';
+const tabId = (index: number) => `org-plan-tab-${index}`;
+
 type Props = {
   org: NonNullable<OrganizationDetailsQuery['organization']>;
   planFromOrgQuery: NonNullable<OrganizationDetailsQuery['plan']>;
@@ -142,9 +155,37 @@ function OrgContent({ org, planFromOrgQuery, testId }: Props) {
   const t = useTranslations();
   const [selectedPlanIndex, setSelectedPlan] = useState(0);
 
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
   // Make sure host plan is first
   const allPlans = [planFromOrgQuery, ...org.plansWithActionResponsibilities];
   const selectedPlan = allPlans[selectedPlanIndex];
+
+  const handleTabKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+    const last = allPlans.length - 1;
+    const index = {
+      ArrowLeft: selectedPlanIndex === 0 ? last : selectedPlanIndex - 1,
+      ArrowRight: selectedPlanIndex === last ? 0 : selectedPlanIndex + 1,
+      Home: 0,
+      End: last,
+    }[e.key];
+    if (index === undefined) return;
+    e.preventDefault();
+    setSelectedPlan(index);
+    tabRefs.current[index]?.focus();
+  };
+
+  const renderPlanChip = (p: (typeof allPlans)[number], selected: boolean) => (
+    <PlanChip
+      planImage={p.image?.rendition?.src}
+      planShortName={`${p.shortName || p.name}${p.versionName ? ` (${p.versionName})` : ''}`}
+      organization={
+        p.shortName ? p.name : p.organization?.abbreviation || p.organization?.name || ''
+      }
+      size="md"
+      negative={!selected}
+    />
+  );
 
   return (
     <div className="mb-5" data-testid={testId}>
@@ -186,40 +227,43 @@ function OrgContent({ org, planFromOrgQuery, testId }: Props) {
         </HeaderContainer>
         <OrgTabs>
           <Container>
-            <Nav role="tablist">
-              {allPlans.map((p, i) => (
-                <NavItem key={p.id}>
+            {allPlans.length === 1 ? (
+              <SinglePlan>{renderPlanChip(allPlans[0], true)}</SinglePlan>
+            ) : (
+              <TabList role="tablist" aria-label={t('plan')}>
+                {allPlans.map((p, i) => (
                   <Tab
+                    key={p.id}
+                    ref={(el) => {
+                      tabRefs.current[i] = el;
+                    }}
+                    type="button"
                     className={i === selectedPlanIndex ? 'active' : ''}
-                    aria-selected={i === selectedPlanIndex}
                     role="tab"
-                    tabIndex={0}
-                    aria-controls="list-view"
-                    id="list-tab"
+                    id={tabId(i)}
+                    aria-selected={i === selectedPlanIndex}
+                    aria-controls={PANEL_ID}
+                    // Only the selected tab is in the tab order; arrow keys move between tabs
+                    tabIndex={i === selectedPlanIndex ? 0 : -1}
                     onClick={() => setSelectedPlan(i)}
+                    onKeyDown={handleTabKeyDown}
                   >
-                    <PlanChip
-                      planImage={p.image?.rendition?.src}
-                      planShortName={`${p.shortName || p.name}${
-                        p.versionName ? ` (${p.versionName})` : ''
-                      }`}
-                      organization={
-                        p.shortName
-                          ? p.name
-                          : p.organization?.abbreviation || p.organization?.name || ''
-                      }
-                      size="md"
-                      negative={i !== selectedPlanIndex}
-                    />
+                    {renderPlanChip(p, i === selectedPlanIndex)}
                   </Tab>
-                </NavItem>
-              ))}
-            </Nav>
+                ))}
+              </TabList>
+            )}
           </Container>
         </OrgTabs>
       </OrgHeader>
       {allPlans.length ? (
-        <Container fluid="lg" data-testid="org-actions-container">
+        <Container
+          fluid="lg"
+          data-testid="org-actions-container"
+          {...(allPlans.length > 1
+            ? { role: 'tabpanel', id: PANEL_ID, 'aria-labelledby': tabId(selectedPlanIndex) }
+            : {})}
+        >
           <ActionTableHeader>
             <h2>
               {t('org-responsible-in-actions', {

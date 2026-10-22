@@ -1,4 +1,4 @@
-import type React from 'react';
+import { type ReactElement, type ReactNode, cloneElement } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -9,13 +9,13 @@ import { transientOptions } from '@common/themes/styles/styled';
 
 import Tooltip from './Tooltip';
 
-const WrapperButton = styled.button<{ $isLink: boolean }>`
+const WrapperButton = styled.button`
   padding: 0;
   margin: 0;
   background-color: transparent;
   border: none;
   text-align: left;
-  cursor: ${({ $isLink }) => ($isLink ? 'pointer' : 'default')};
+  cursor: default;
 `;
 
 const StyledBadge = styled.span<{
@@ -82,7 +82,7 @@ const TruncatedContent = styled.span<{
     0;
 `;
 
-const IconBadge = styled.div<{ $themeColor: ThemeColorOption; $isLink: boolean }>`
+const IconBadge = styled.span<{ $themeColor: ThemeColorOption; $isLink: boolean }>`
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -103,7 +103,7 @@ const IconBadge = styled.div<{ $themeColor: ThemeColorOption; $isLink: boolean }
   }
 `;
 
-const IconImage = styled.div<{
+const IconImage = styled.span<{
   $imageSrc?: string;
   $color?: string;
   $themeColor: ThemeColorOption;
@@ -138,7 +138,8 @@ const IconSvg = styled(SVG, transientOptions)<{ $bgcolor?: string; $themeColor: 
   }
 `;
 
-const IconName = styled.div`
+const IconName = styled.span`
+  display: block;
   padding: ${({ theme }) =>
     `${theme.spaces.s050} ${theme.spaces.s100} ${theme.spaces.s050} ${theme.spaces.s050}`};
   font-size: ${(props) => props.theme.fontSizeBase};
@@ -149,7 +150,7 @@ const IconName = styled.div`
 type ThemeColorOption =
   'badgeColor' | 'brandDark' | 'brandLight' | 'neutralDark' | 'neutralLight' | 'badgeColorNeutral';
 interface BadgeContentProps {
-  content: string | React.ReactNode;
+  content: ReactNode;
   size?: 'lg' | 'md' | 'sm';
   ariaLabel?: string;
   iconSvg?: string;
@@ -213,37 +214,42 @@ const BadgeContent = (props: BadgeContentProps) => {
   );
 };
 
-export interface BadgeTooltipProps extends BadgeContentProps {
+export interface BadgeTooltipProps extends Omit<BadgeContentProps, 'isLink'> {
   tooltip?: string;
   id: string;
+  /**
+   * A link element to render the badge in, e.g. `<OrganizationLink organizationId={id} />`.
+   * The link gets the tooltip, so it is the only interactive element. It must
+   * pass its props and ref on to the `<a>`.
+   */
+  link?: ReactElement<{ children?: ReactNode }>;
 }
 
 const BadgeTooltip = (props: BadgeTooltipProps) => {
-  const { tooltip, id, ...badgeContentProps } = props;
+  const { tooltip, id, link, ...badgeContentProps } = props;
   const badgeId = `btt${id.replace(/[: ]/g, '_')}`;
+  const content = <BadgeContent {...badgeContentProps} isLink={!!link} />;
 
-  if (!badgeContentProps.isLink && !tooltip) {
-    return (
-      <span id={badgeId}>
-        <BadgeContent {...badgeContentProps} />
-      </span>
-    );
+  let trigger: ReactElement | null = null;
+  if (link) {
+    trigger = cloneElement(link, undefined, content);
+  } else if (tooltip) {
+    // Focusable, so that keyboard users can open the tooltip.
+    trigger = <WrapperButton type="button">{content}</WrapperButton>;
   }
 
-  const badge = (
-    <WrapperButton type="button" $isLink={badgeContentProps.isLink}>
-      <BadgeContent {...badgeContentProps} />
-    </WrapperButton>
-  );
+  if (!trigger) {
+    return <span id={badgeId}>{content}</span>;
+  }
 
   return (
     <span id={badgeId}>
       {tooltip ? (
         <Tooltip title={tooltip} describeChild>
-          {badge}
+          {trigger}
         </Tooltip>
       ) : (
-        badge
+        trigger
       )}
     </span>
   );

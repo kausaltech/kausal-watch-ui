@@ -194,7 +194,8 @@ export const DropdownToggle = React.forwardRef<HTMLElement, DropdownToggleProps>
     return (
       <Tag
         {...(nav && !tag ? { href: '#' } : {})}
-        {...(isBootstrapButton ? { type: 'button', disabled } : {})}
+        {...(Tag === 'button' ? { type: 'button' } : {})}
+        {...(isBootstrapButton ? { disabled } : {})}
         {...props}
         ref={handleRef}
         className={classes(

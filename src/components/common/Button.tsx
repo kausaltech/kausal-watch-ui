@@ -80,7 +80,9 @@ const variantStyles = ({
         fill: ${color};
       }
 
-      &:hover {
+      &:hover,
+      &.Mui-focusVisible {
+        color: ${color};
         border-color: ${color};
         background-color: ${transparentize(0.9, color)};
       }
@@ -102,7 +104,9 @@ const variantStyles = ({
     background-color: ${color};
     border-color: ${color};
 
-    &:hover {
+    &:hover,
+    &.Mui-focusVisible {
+      color: ${textColor};
       background-color: ${shade(0.05, color)};
       border-color: ${shade(0.05, color)};
     }
@@ -133,6 +137,11 @@ const StyledButton = styled(MuiButton, transientOptions)<{
   line-height: ${({ theme }) => theme.lineHeightBase};
   letter-spacing: normal;
   text-decoration: none;
+
+  /* With href, the button is an <a>: keep the global link hover underline off */
+  &:hover {
+    text-decoration: none;
+  }
 
   &.MuiButton-sizeSmall {
     font-size: 0.75rem;
