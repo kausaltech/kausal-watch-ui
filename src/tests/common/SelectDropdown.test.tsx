@@ -27,16 +27,20 @@ const options = [
   { id: 'transport', label: 'Transport' },
 ];
 
-function renderDropdown() {
+function renderDropdown(
+  value: (typeof options)[number] | null = null,
+  onChange: (value: unknown) => void = () => undefined
+) {
   render(
     <NextIntlClientProvider locale="fr" messages={messages}>
       <SelectDropdown
         id="sector"
         label="Sector"
         isMulti={false}
+        isClearable
         options={options}
-        value={null}
-        onChange={() => undefined}
+        value={value}
+        onChange={onChange}
       />
     </NextIntlClientProvider>
   );
@@ -57,5 +61,17 @@ describe('SelectDropdown', () => {
     expect(
       await screen.findByText('1 résultat disponible pour le terme de recherche tr.')
     ).toBeInTheDocument();
+  });
+
+  it('clears the value with the keyboard', async () => {
+    const user = userEvent.setup();
+    const onChange = jest.fn();
+    renderDropdown(options[0], onChange);
+    await user.tab();
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'Clear: Sector' })).toHaveFocus();
+    await user.keyboard('{Enter}');
+    expect(onChange).toHaveBeenCalledWith(null);
+    expect(screen.getByLabelText('Sector')).toHaveFocus();
   });
 });

@@ -1,4 +1,4 @@
-import { type JSX, useSyncExternalStore } from 'react';
+import { type JSX, createContext, useContext, useSyncExternalStore } from 'react';
 
 import { useTheme } from '@emotion/react';
 import type { Theme } from '@emotion/react';
@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import Highlighter from 'react-highlight-words';
 import Select, {
   type AriaLiveMessages,
+  type ClearIndicatorProps,
   type DropdownIndicatorProps,
   type GroupBase,
   type MultiValueProps,
@@ -21,6 +22,9 @@ import Select, {
 
 import { Label as BSLabel, FormGroup } from '@/components/common/FormControls';
 import PopoverTip from '@/components/common/PopoverTip';
+
+/** Accessible name of the clear button, from the select's label */
+const ClearLabelContext = createContext<string | undefined>(undefined);
 
 const Label = styled(BSLabel)`
   font-weight: ${(props) => props.theme.formLabelFontWeight};
@@ -162,6 +166,37 @@ function DropdownIndicator(props: DropdownIndicatorProps<SelectDropdownOption, b
   );
 }
 
+/**
+ * react-select's clear indicator only reacts to the mouse. This one is also a
+ * button that keyboard users can reach and press.
+ */
+function ClearIndicator(props: ClearIndicatorProps<SelectDropdownOption, boolean>) {
+  const { clearValue, selectProps, innerProps } = props;
+  const clearLabel = useContext(ClearLabelContext);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    // Keep react-select's own key handling (Space opens the menu) out of it
+    e.preventDefault();
+    e.stopPropagation();
+    clearValue();
+    // The button goes away with the value, so move focus back to the input
+    if (selectProps.inputId) document.getElementById(selectProps.inputId)?.focus();
+  };
+  return (
+    <components.ClearIndicator
+      {...props}
+      innerProps={{
+        ...innerProps,
+        'aria-hidden': undefined,
+        role: 'button',
+        tabIndex: 0,
+        'aria-label': clearLabel,
+        onKeyDown: handleKeyDown,
+      }}
+    />
+  );
+}
+
 function getSelectTheme(theme: SelectTheme) {
   const ret: SelectTheme = {
     ...theme,
@@ -226,7 +261,7 @@ const Option = (props: OptionProps<SelectDropdownOption, boolean>) => {
 
 const getCustomComponents = (isMulti: boolean) =>
   Object.assign(
-    { DropdownIndicator, IndicatorSeparator, Option },
+    { ClearIndicator, DropdownIndicator, IndicatorSeparator, Option },
     isMulti ? { ValueContainer, MultiValue } : {}
   );
 
@@ -339,6 +374,7 @@ function useSelectMessages(label: string | undefined) {
 function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdownProps<Option>) {
   const { size, id, label, value, onChange, helpText, invert, isMulti = false, ...rest } = props;
   const theme = useTheme();
+  const t = useTranslations();
   const selectMessages = useSelectMessages(label);
   const styles = getSelectStyles(theme, props.isMulti === true, size);
   const isClient = useSyncExternalStore(
@@ -370,33 +406,37 @@ function SelectDropdown<Option extends SelectDropdownOption>(props: SelectDropdo
 
       {/* Select doesn't support SSR */}
       {isClient && (
-        <Select<SelectDropdownOption, boolean>
-          inputId={id}
-          isMulti={isMulti}
-          components={getCustomComponents(isMulti)}
-          theme={getSelectTheme}
-          value={value}
-          styles={styles}
-          getOptionLabel={(option) => option.label}
-          getOptionValue={(option) => option.id}
-          {...selectMessages}
-          formatOptionLabel={(option, meta) => {
-            const { inputValue } = meta;
-            const { label } = option;
+        <ClearLabelContext.Provider
+          value={label ? `${t('filter-clear')}: ${label}` : t('filter-clear')}
+        >
+          <Select<SelectDropdownOption, boolean>
+            inputId={id}
+            isMulti={isMulti}
+            components={getCustomComponents(isMulti)}
+            theme={getSelectTheme}
+            value={value}
+            styles={styles}
+            getOptionLabel={(option) => option.label}
+            getOptionValue={(option) => option.id}
+            {...selectMessages}
+            formatOptionLabel={(option, meta) => {
+              const { inputValue } = meta;
+              const { label } = option;
 
-            return (
-              <Highlighter
-                highlightClassName="search-found"
-                searchWords={[inputValue]}
-                textToHighlight={label}
-              />
-            );
-          }}
-          onChange={(newValue) =>
-            onChange(newValue as SelectDropdownOption[] | SelectDropdownOption | null)
-          }
-          {...rest}
-        />
+              return (
+                <Highlighter
+                  highlightClassName="search-found"
+                  searchWords={[inputValue]}
+                  textToHighlight={label}
+                />
+              );
+            }}
+            onChange={(newValue) =>
+              onChange(newValue as SelectDropdownOption[] | SelectDropdownOption | null)
+            }
+            {...rest}
+          />
+        </ClearLabelContext.Provider>
       )}
     </FormGroup>
   );
