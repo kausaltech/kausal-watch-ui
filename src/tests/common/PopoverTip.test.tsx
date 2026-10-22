@@ -29,4 +29,27 @@ describe('PopoverTip', () => {
     // The MUI tooltip fades out with a transition, so wait for it to be removed
     await waitForElementToBeRemoved(() => screen.queryByRole('tooltip'));
   });
+
+  it('announces the content when pressed with Enter', async () => {
+    const user = userEvent.setup();
+    render(<PopoverTip content={mockContent} identifier={mockIdentifier} />);
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+    await user.tab();
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('status')).toHaveTextContent(mockContent);
+    // Pressing again unpins it
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  });
+
+  it('closes on Escape', async () => {
+    const user = userEvent.setup();
+    render(<PopoverTip content={mockContent} identifier={mockIdentifier} />);
+    await user.tab();
+    await user.keyboard('{Enter}');
+    expect(await screen.findByRole('tooltip')).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+    await waitForElementToBeRemoved(() => screen.queryByRole('tooltip'));
+  });
 });

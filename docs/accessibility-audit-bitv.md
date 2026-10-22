@@ -1,6 +1,6 @@
 # Fixing the BITV audit findings
 
-Status: step 1 done on `fix/a11y`. This doc translates the findings of a manual BITV accessibility audit of a customer's plan site, names their causes in the code, and orders the fixes.
+Status: steps 1 and 2 done on `fix/a11y`; step 2 also changes kausal_common. This doc translates the findings of a manual BITV accessibility audit of a customer's plan site, names their causes in the code, and orders the fixes.
 
 ## Background
 
@@ -197,8 +197,16 @@ The steps go from the clearest conformance failures in shared components, which 
 ### Step 2: popovers and keyboard
 
 1. **Toggletips instead of tooltips (F21, F26, F29).** Make `PopoverTip` (both copies) a toggletip: a button with `aria-expanded` that opens the content on click or Enter, closes it on Escape and on a second click, and keeps it open while focus is inside. Interactive content, such as the link in `IndicatorValueSummary`, then becomes reachable. Make the target at least 24×24 px, and drop the opacity.
+
+   Done differently in two ways. Hovering and keyboard focus still show the tip, as before; pressing the button pins it and puts its content in a `role="status"` live region, so screen readers announce it. Escape, a second press or leaving the button closes it. Instead of making links inside tips reachable, the only tip with a link (the percentage-point explainer) lost its link: the text explains enough. The target is 24×24 px, with negative margins so lines don't grow.
+
 2. **Clearing select values (F19).** Render react-select's `MultiValueRemove`, which can take focus, or put a clear button outside the select. Check that the visually hidden instructions mention Backspace.
+
+   Done with react-select's own clear indicator, which is now a focusable `role="button"` named "Clear: <label>" that clears on Enter or Space and moves focus back to the input.
+
 3. **Dashboard table tooltips (F21).** Make the cells that carry a tooltip focusable, or move the content into the row.
+
+   Done by moving the content into the row: each cell's tooltip content is also in the cell as visually hidden text, unless the tooltip repeats the cell (`tooltipRepeatsCell` in `dashboard.constants.tsx`). Sighted keyboard users find the same details on the action page.
 
 ### Step 3: contrast and contrast modes
 

@@ -85,7 +85,8 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
           return null;
         }
 
-        const { renderTooltipContent, cellClassName, rowHeader, renderCell } = columnConfig;
+        const { renderTooltipContent, tooltipRepeatsCell, cellClassName, rowHeader, renderCell } =
+          columnConfig;
         const hasTooltip = !!renderTooltipContent;
         const content = renderCell(t, action, plan, planViewUrl, column?.attributeType);
         const id = `row-${action.id}-${i}`;
@@ -93,6 +94,12 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
         const tooltipContent = hasTooltip
           ? renderTooltipContent(t, action, plan, column?.attributeType)
           : undefined;
+        // The tooltips only open on hover, and many cells are graphics without
+        // text, so screen readers get the tooltip's content in the cell.
+        const hiddenTooltip =
+          tooltipContent && !tooltipRepeatsCell ? (
+            <div className="visually-hidden">{tooltipContent}</div>
+          ) : null;
 
         const tooltipProps = {
           title: tooltipContent,
@@ -116,6 +123,7 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
             <Tooltip key={i} {...tooltipProps}>
               <th id={id} scope="row" className={className}>
                 {content}
+                {hiddenTooltip}
               </th>
             </Tooltip>
           );
@@ -125,6 +133,7 @@ const ActionTableRow = ({ columns, action, plan, planViewUrl }: Props) => {
           <Tooltip key={i} {...tooltipProps}>
             <td id={id} className={className}>
               {content}
+              {hiddenTooltip}
             </td>
           </Tooltip>
         );
