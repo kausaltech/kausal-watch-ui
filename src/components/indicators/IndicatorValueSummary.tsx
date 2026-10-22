@@ -44,13 +44,8 @@ const ChangeSymbol = styled.span`
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
 `;
 
-const TooltipContent = styled.div`
+const TooltipContent = styled.span`
   color: ${(props) => props.theme.themeColors.white};
-
-  a {
-    color: ${(props) => props.theme.themeColors.white};
-    text-decoration: underline;
-  }
 `;
 
 /**
@@ -434,18 +429,8 @@ function IndicatorValueSummary(props: IndicatorValueSummaryProps) {
                 <PopoverTip
                   compact
                   identifier="pp-explainer"
-                  content={
-                    <TooltipContent>
-                      {t('percentage-point-explainer')}{' '}
-                      <a
-                        href="https://en.wikipedia.org/wiki/Percentage_point"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {t('read-more')}
-                      </a>
-                    </TooltipContent>
-                  }
+                  // Text only: keyboard users can't reach links inside a tooltip
+                  content={<TooltipContent>{t('percentage-point-explainer')}</TooltipContent>}
                 />
               )}
             </span>
