@@ -89,6 +89,14 @@ const TopNav = styled(Navbar)`
     border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
   }
 
+  /* Forced colors don't recolour SVG fills, so draw icons in the text colour */
+  @media (forced-colors: active) {
+    svg.icon,
+    svg.icon use {
+      fill: currentColor !important;
+    }
+  }
+
   @media print {
     position: static !important;
     animation: none;
@@ -109,6 +117,14 @@ const BotNav = styled(Navbar, transientOptions)<{ $offsetTop?: number; $expanded
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
 
   ${({ fixed, $expanded, theme }) => fixed && !$expanded && baseFixedNavStyles(theme)}
+
+  /* Forced colors don't recolour SVG fills, so draw icons in the text colour */
+  @media (forced-colors: active) {
+    svg.icon,
+    svg.icon use {
+      fill: currentColor !important;
+    }
+  }
 
   ${({ $offsetTop, $expanded }) =>
     !!$expanded &&
@@ -214,6 +230,18 @@ const HomeLink = styled(Link, transientOptions)<{ $hideLogoOnMobile?: boolean }>
     height: ${(props) => props.theme.spaces.s200};
     margin: ${(props) => props.theme.spaces.s050} ${(props) => props.theme.spaces.s100}
       ${(props) => props.theme.spaces.s050} 0;
+  }
+
+  /* Forced colors don't recolour logos: keep the nav background they were
+     designed for behind them, so that a dark logo stays visible on a dark
+     system background */
+  @media (forced-colors: active) {
+    .org-logo {
+      forced-color-adjust: none;
+      background-color: ${(props) => props.theme.brandNavBackground};
+      padding: 2px;
+      box-sizing: content-box;
+    }
   }
 
   // Support png logos. PNG logos are always full height.

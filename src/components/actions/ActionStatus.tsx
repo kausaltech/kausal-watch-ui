@@ -34,6 +34,9 @@ const ActionProgress = styled(LinearProgress, transientOptions)<{ $color: string
   .MuiLinearProgress-bar {
     background-color: ${(props) => props.theme.graphColors.green090};
     color: ${(props) => props.theme.themeColors.black};
+    /* The bar and the status colour behind it can be close in contrast, so
+       mark where the bar ends with a white line (WCAG 1.4.11) */
+    box-shadow: 2px 0 0 ${(props) => props.theme.themeColors.white};
   }
 `;
 
@@ -63,7 +66,8 @@ function ActionStatus(props: ActionStatusProps) {
       {shouldShowBar && (
         <ActionProgress
           variant="determinate"
-          value={completionNumber}
+          // Completion can be over 100, which MUI would draw as a bar shifted right
+          value={Math.min(100, Math.max(0, completionNumber))}
           $color={statusColor}
           aria-hidden
         />
