@@ -1,6 +1,6 @@
 # Fixing the BITV audit findings
 
-Status: steps 1 and 2 done on `fix/a11y`, step 3 apart from the theme colour pairs (item 6); step 2 also changes kausal_common. This doc translates the findings of a manual BITV accessibility audit of a customer's plan site, names their causes in the code, and orders the fixes.
+Status: steps 1 and 2 done on `fix/a11y`, step 3 apart from the theme colour pairs (item 6), step 4 apart from the status donuts (item 1); step 2 also changes kausal_common. This doc translates the findings of a manual BITV accessibility audit of a customer's plan site, names their causes in the code, and orders the fixes.
 
 ## Background
 
@@ -79,7 +79,7 @@ Cause: not located; the audit report needs to say which button. Candidates: the 
 
 **F12. Green crosses in a chart.** "The contrast of the green crosses in the chart is too low."
 
-Likely cause (theme): the goal markers in indicator charts. Their symbol is the theme's `goalSymbol`, and their colour is the theme's goal colour. Confirm on the audited page.
+Cause (theme): the goal markers in indicator charts. The audited plan's theme sets `goalSymbol` to a cross, drawn in the theme's goal colour.
 
 **F13. Status donut colours.** "The contrasts orange / white (in progress), grey / white (not started) and light green / white (less than 3 months) are too low. You can mostly guess the value when the neighbouring colours have enough contrast. But in the 'actions by phase' chart, where white and grey are next to each other, you can't tell them apart. The white separator lines are good!"
 
@@ -87,11 +87,11 @@ Cause (code and theme): `StatusDonut.tsx`, used by `ActionStatusGraphs.tsx`. Pro
 
 **F14. Line charts told apart only by colour.** "The three lines don't have enough contrast with each other. People with colour vision deficiency can't tell which line belongs to which organisation. Use different markers for the yearly data points too, e.g. a circle for the first organisation, a square for the second and a triangle for the third."
 
-Cause (code): `buildSeriesFromTraces` (`indicator-graph.utils.ts`) and `DashboardIndicatorLineChartBlock.tsx` pick each series' marker with `categorySymbol`. Unless the theme sets `categorySymbols`, it falls back to `DEFAULT_CATEGORY_SYMBOLS = ['circle']` (`chart-symbols.ts`), and every line is solid.
+Cause (code): `buildSeriesFromTraces` (`indicator-graph.utils.ts`) and `DashboardIndicatorLineChartBlock.tsx` pick each series' marker with `categorySymbol`. Unless the theme sets `categorySymbols`, it falls back to `DEFAULT_CATEGORY_SYMBOLS = ['circle']` (`chart-symbols.ts`), and every line is solid. The audited plan's theme does set `categorySymbols`, though, and both use them in current code (see step 4).
 
 **F15. Stacked charts.** "The stacked charts' contrasts are too low too, both against the white background and against each other. Use, e.g., separator lines and hatching between the stacks, and order the legend to match, so it's clear which value is on top and which below."
 
-Cause (code): `DashboardIndicatorBarChartBlock.tsx` (`stack: 'total'`) and `DashboardIndicatorAreaChartBlock.tsx` (`stack: 'categories'`) set no border between stacks. `BarChart.tsx` renders adjacent segments with no gap. The legend order is not tied to the stack order.
+Cause (code): `DashboardIndicatorBarChartBlock.tsx` (`stack: 'total'`) and `DashboardIndicatorAreaChartBlock.tsx` (`stack: 'categories'`) set no border between stacks. `BarChart.tsx` (now `StatusBarChart.tsx`) renders adjacent segments with no gap. The legend order is not tied to the stack order.
 
 ### Text contrast (9.1.4.3)
 
@@ -231,8 +231,14 @@ The steps go from the clearest conformance failures in shared components, which 
 ### Step 4: charts
 
 1. **Status donuts (F13).** Keep the white separators. Change the phase palette so that no-phase, not-started and inactive differ from white and from each other by 3:1. Inactive must not be white on a white background. Check that the legend shows each segment's count as text, so the colours aren't the only source. The progress colours come from the backend status colours and the theme; check them together with the theme work in step 3.
+
 2. **Distinct markers per series (F14).** Change `DEFAULT_CATEGORY_SYMBOLS` to a cycle of different shapes (circle, rect, triangle, diamond, …) and make sure the markers show. This changes every plan's charts, so review it with design. Optionally also vary `lineStyle.type`.
+
+   Not changed. Decided to keep the code default and set markers in the theme only, but the audited plan's theme already sets `categorySymbols` (empty circle, square, diamond, …), and since `cbbc5c54` (in production) the line chart blocks use them as the default graph already did. The audit probably predates that, or looked at a chart not identified yet: confirm on the live site.
+
 3. **Stacked charts (F15).** Give stacked bar and area series a white `borderColor` / `borderWidth` (for areas, a line between bands). Turn on ECharts decal patterns (`aria.decal.show`) as the hatching the auditor suggests, and order the legend to match the stack. Give `BarChart.tsx`'s segments a 1 px gap.
+
+   Done without the decal patterns, which would change every plan's stacked charts: stacked bars and areas get separator lines in the chart background colour, the legend lists the top of the stack first, and `StatusBarChart` (renamed from `BarChart`) segments get a 1 px separator, a 3 px minimum width, "<1 %" / ">99 %" labels and labels placed by their segments without overlap (`label-placement.ts`); see the "Common/Action Status Bar" story.
 
 ### Step 5: content and text
 

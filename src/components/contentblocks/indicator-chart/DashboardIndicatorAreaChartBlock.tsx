@@ -141,6 +141,8 @@ const DashboardIndicatorAreaChartBlock = ({
   const areaLegendItems: LegendComponentOption['data'] = hasDimension
     ? dimSeries.map((d) => ({ name: d.name, icon: 'roundRect' as const }))
     : [{ name: totalLabel, icon: 'roundRect' as const }];
+  // Top of the stack first
+  if (hasDimension && stackable) areaLegendItems.reverse();
 
   const trendLegendItems: LegendComponentOption['data'] = trendSeries.length
     ? [{ name: trendLabel }]
@@ -198,7 +200,8 @@ const DashboardIndicatorAreaChartBlock = ({
           smooth: shouldSmoothLines(graphsTheme),
           data,
           itemStyle: { color: d.color },
-          lineStyle: { color: d.color },
+          // Separator between stacked bands (WCAG 1.4.11)
+          lineStyle: stackable ? { color: chartBackground, width: 1 } : { color: d.color },
           emphasis: { focus: 'series' as const },
         };
       })
