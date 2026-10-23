@@ -431,7 +431,10 @@ export class PlanContext {
 
 export function getIdentifiersToTest(): string[] {
   const val = process.env.TEST_PLAN_IDENTIFIERS || '';
-  return val.split(',').map((s) => s.trim());
+  return val
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
 }
 
 export function getPageBaseUrlToTest(planId: string): string {

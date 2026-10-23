@@ -16,7 +16,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { CombinedGraphQLErrors } from '@apollo/client/errors';
@@ -24,7 +23,7 @@ import { useMutation } from '@apollo/client/react';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
-import { HomeLink, OrgLogo, Site, SiteTitle, TopNav } from '@/components/common/GlobalNav';
+import { Site, SiteHomeLinks, TopNav } from '@/components/common/GlobalNav';
 import { Container as LayoutContainer } from '@/components/common/layout/LayoutGrid';
 import { REQUEST_PLAN_ACCESS } from '@/queries/request-plan-access';
 import { checkAccountStatus } from '@/utils/access-requests';
@@ -71,31 +70,23 @@ export function AccessGateLayout({
   children: ReactNode;
 }) {
   const t = useTranslations();
-  const theme = useTheme();
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: 'grey.100' }}>
       <header>
         <TopNav expand="md" id="branding-navigation-bar" container>
           <Site>
-            <HomeLink as="a" href={homePath}>
-              <OrgLogo label={`${planName ?? ''} ${t('front-page')}`.trim()} />
-            </HomeLink>
-            {planName && (
-              <HomeLink
-                as="a"
-                href={homePath}
-                aria-label={!theme.navTitleVisible ? planName : undefined}
-              >
-                <SiteTitle aria-hidden={!theme.navTitleVisible}>
-                  {theme.navTitleVisible ? planName : '\u00A0'}
-                </SiteTitle>
-              </HomeLink>
-            )}
+            <SiteHomeLinks
+              logoHref={homePath}
+              titleHref={homePath}
+              logoLabel={`${planName ?? ''} ${t('front-page')}`.trim()}
+              title={planName ?? undefined}
+              plainLinks
+            />
           </Site>
         </TopNav>
       </header>
-      <Box component="main" id="main" sx={{ flexGrow: 1 }}>
+      <Box component="main" id="main" tabIndex={-1} sx={{ flexGrow: 1, outline: 'none' }}>
         <Container maxWidth="sm" sx={{ py: { xs: 4, md: 10 } }}>
           <Card sx={{ backgroundColor: (muiTheme) => muiTheme.cardBackground }}>
             <CardContent

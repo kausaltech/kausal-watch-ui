@@ -3,3 +3,4 @@ playwright-report/
 test-results*
 /.env*
 /tests/*-snapshots/
+a11y-results/

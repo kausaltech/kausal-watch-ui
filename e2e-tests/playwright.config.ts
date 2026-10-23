@@ -29,6 +29,7 @@ export default defineConfig({
     ['list'],
     ['json', { outputFile: 'test-results.json' }],
     ['html', { open: process.env.CI ? 'never' : 'on-failure' }],
+    ['./a11y-reporter.ts'],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {

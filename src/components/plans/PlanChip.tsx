@@ -8,7 +8,7 @@ import { transparentize } from 'polished';
 
 import { getThemeStaticURL } from '@common/themes/theme';
 
-const Tag = styled.div<{ $minWidth: string; $link?: boolean; $size: string }>`
+const Tag = styled.span<{ $minWidth: string; $link?: boolean; $size: string }>`
   display: flex;
   align-items: flex-start;
   min-width: ${(props) => props.$minWidth};
@@ -40,17 +40,19 @@ const PlanAvatar = styled.img<PlanAvatarProps>`
   box-shadow: 0 0 3px 1px ${(props) => transparentize(0.9, props.theme.themeColors.black)};
 `;
 
-const PlanName = styled.div<{ $negative?: boolean }>`
+const PlanName = styled.span<{ $negative?: boolean }>`
+  display: block;
   flex-grow: 1;
   color: ${(props) =>
     props.$negative ? props.theme.themeColors.light : props.theme.themeColors.dark};
   line-height: 1.2;
 `;
 
-const PlanTitle = styled.div<{
+const PlanTitle = styled.span<{
   $size: 'fontSizeSm' | 'fontSizeMd';
   $weight: 'fontWeightNormal' | 'fontWeightBold';
 }>`
+  display: block;
   font-size: ${(props) => props.theme[props.$size]};
   font-weight: ${(props) => props.theme[props.$weight]};
   line-height: ${(props) => props.theme.lineHeightSm};
@@ -58,12 +60,15 @@ const PlanTitle = styled.div<{
     props.$size === 'fontSizeMd' ? props.theme.spaces.s050 : props.theme.spaces.s025};
 `;
 
-const PlanOrg = styled.div<{ $negative?: boolean }>`
+const PlanOrg = styled.span<{ $negative?: boolean }>`
+  display: block;
   font-size: 75%;
   font-weight: ${(props) => props.theme.fontWeightNormal};
   font-family: ${(props) => `${props.theme.fontFamilyContent}, ${props.theme.fontFamilyFallback}`};
+  /* On a dark background, the same light colour as the name: a dimmer grey
+     falls under 4.5:1 on mid-tone backgrounds */
   color: ${(props) =>
-    props.$negative ? props.theme.graphColors.grey020 : props.theme.graphColors.grey070};
+    props.$negative ? props.theme.themeColors.light : props.theme.graphColors.grey070};
 `;
 
 interface PlanChipProps {
@@ -120,7 +125,7 @@ const MIN_WIDTH = {
   lg: '240px',
 };
 
-const PlanChip = React.forwardRef<HTMLDivElement, PlanChipProps>((props, ref) => {
+const PlanChip = React.forwardRef<HTMLSpanElement, PlanChipProps>((props, ref) => {
   const {
     planImage,
     planShortName,

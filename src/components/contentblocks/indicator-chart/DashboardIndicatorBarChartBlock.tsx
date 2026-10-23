@@ -96,6 +96,8 @@ const DashboardIndicatorBarChartBlock = ({
   let xCategories: string[];
   let series: ECOption['series'];
   let showLegend: boolean;
+  // Legend order; undefined keeps the series order
+  let legendNames: string[] | undefined;
   let ariaDescription: string;
 
   if (categoryOnly) {
@@ -166,11 +168,16 @@ const DashboardIndicatorBarChartBlock = ({
         stack: stackBars ? 'total' : undefined,
         data: xCategories.map((key) => valuesByKey[key] ?? null),
         emphasis: { focus: 'series' as const },
-        itemStyle: { color },
+        // Separator between stacked segments (WCAG 1.4.11)
+        itemStyle: stackBars ? { color, borderColor: chartBackground, borderWidth: 1 } : { color },
       };
     });
     series = [...barSeries, ...goalSeries];
     showLegend = true;
+    // Top of the stack first
+    legendNames = stackBars
+      ? [...barSeries.map((s) => s.name).reverse(), ...goalSeries.map((s) => s.name)]
+      : undefined;
     // ECharts sets this as the canvas' aria-label; same wording as the
     // generic IndicatorGraph so screen-reader users hear one style of chart
     ariaDescription = buildBlockAriaDescription({
@@ -196,6 +203,7 @@ const DashboardIndicatorBarChartBlock = ({
     // Same legend style as the pie chart block
     legend: {
       show: showLegend,
+      data: legendNames,
       orient: 'horizontal',
       bottom: 0,
       right: 0,
