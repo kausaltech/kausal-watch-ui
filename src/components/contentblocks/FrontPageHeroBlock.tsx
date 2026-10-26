@@ -1,4 +1,7 @@
 import HeroFullImage from '@/components/home/HeroFullImage';
+import HeroSmallImage from '@/components/home/HeroSmallImage';
+
+import HeroSideBySide from '../home/HeroSideBySide';
 
 interface FocalBoxInfo {
   focalPointX: number;
@@ -62,6 +65,40 @@ const FrontPageHeroBlock = (props: FrontPageHeroProps) => {
   */
 
   const typedImage = image as ImageData | undefined;
+
+  if (layout === 'small_image') {
+    return (
+      <HeroSmallImage
+        id={id}
+        image={typedImage ?? {}}
+        title={heading}
+        lead={lead}
+        imageCredit={imageCredit}
+        altText={altText}
+        backgroundColor={additionalSettings?.backgroundColour}
+        fitImage={additionalSettings?.fitImage}
+        showImageAccent={additionalSettings?.showImageAccent}
+        fullBackground={additionalSettings?.backgroundCoversFullSection}
+      />
+    );
+  }
+
+  if (layout === 'side_by_side') {
+    return (
+      <HeroSideBySide
+        id={id}
+        image={typedImage ?? {}}
+        title={heading}
+        lead={lead}
+        imageCredit={imageCredit}
+        altText={altText}
+        imageWidth={typedImage?.full?.width}
+        imageHeight={typedImage?.full?.height}
+        backgroundColor={additionalSettings?.backgroundColour}
+        fitImage={additionalSettings?.fitImage}
+      />
+    );
+  }
 
   return (
     <HeroFullImage
