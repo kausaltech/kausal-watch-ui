@@ -11,21 +11,61 @@ import { escapeHtml } from '@/common/utils';
 import Icon from '@/components/common/Icon';
 import Modal from '@/components/common/Modal';
 
+// The legend under the donut is not in use yet; flip to show it
+const SHOW_LEGEND = false;
+
+/* Rows: heading, donut, legend; a subgrid, so the donuts line up across cards */
 const GraphCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  justify-items: center;
   padding: 1rem;
   margin: 1rem;
   max-width: 260px;
   cursor: pointer;
+`;
 
-  &:focus-visible {
-    outline: 2px solid ${(props) => props.theme.themeColors.dark};
-    outline-offset: 2px;
-    border-radius: ${(props) => props.theme.cardBorderRadius ?? props.theme.btnBorderRadius};
-  }
+const GraphHeading = styled.div`
+  align-self: end;
+`;
+
+const Legend = styled.ul`
+  align-self: start;
+  width: 100%;
+  margin: ${(props) => props.theme.spaces.s100} 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
+  line-height: ${(props) => props.theme.lineHeightSm};
+`;
+
+const LegendItem = styled.li`
+  display: flex;
+  align-items: center;
+  gap: ${(props) => props.theme.spaces.s050};
+  margin-bottom: ${(props) => props.theme.spaces.s025};
+`;
+
+const LegendSwatch = styled.span<{ $color: string }>`
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 2px;
+  background-color: ${(props) => props.$color};
+  /* Outlined, so white segments show */
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 35%);
+  forced-color-adjust: none;
+`;
+
+const LegendLabel = styled.span`
+  flex: 1;
+`;
+
+const LegendValue = styled.span`
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  font-variant-numeric: tabular-nums;
 `;
 
 const GraphHeader = styled.h2`
@@ -584,20 +624,12 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
 
   return (
     <>
-      <GraphCard
-        role="button"
-        tabIndex={0}
-        onClick={openModal}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            openModal();
-          }
-        }}
-      >
-        <GraphHeader>{header}</GraphHeader>
-
-        {helpText ? <HelpText>{helpText}</HelpText> : null}
+      {/* The card opens the modal on click; keyboard users have the button */}
+      <GraphCard onClick={openModal}>
+        <GraphHeading>
+          <GraphHeader>{header}</GraphHeader>
+          {helpText ? <HelpText>{helpText}</HelpText> : null}
+        </GraphHeading>
 
         <ChartWrapper>
           <OpenModalButton
@@ -606,7 +638,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
               event.stopPropagation();
               openModal();
             }}
-            aria-label={t('open')}
+            aria-label={`${t('expand-embed')}: ${header}`}
           >
             <Icon.ArrowUpRightFromSquare />
           </OpenModalButton>
@@ -620,6 +652,21 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
             locale={locale}
           />
         </ChartWrapper>
+
+        {/* Values as text, not only colours (WCAG 1.4.11) */}
+        {SHOW_LEGEND && (
+          <Legend>
+            {chartData
+              .filter((item) => item.value > 0)
+              .map((item, index) => (
+                <LegendItem key={`${item.name}-${index}`}>
+                  <LegendSwatch $color={item.itemStyle.color} />
+                  <LegendLabel>{item.name}</LegendLabel>
+                  <LegendValue>{item.value}</LegendValue>
+                </LegendItem>
+              ))}
+          </Legend>
+        )}
       </GraphCard>
 
       <Modal isOpen={isModalOpen} onClose={closeModal} header={header} helpText={helpText}>

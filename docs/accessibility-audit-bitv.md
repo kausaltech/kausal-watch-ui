@@ -232,6 +232,8 @@ The steps go from the clearest conformance failures in shared components, which 
 
 1. **Status donuts (F13).** Keep the white separators. Change the phase palette so that no-phase, not-started and inactive differ from white and from each other by 3:1. Inactive must not be white on a white background. Check that the legend shows each segment's count as text, so the colours aren't the only source. The progress colours come from the backend status colours and the theme; check them together with the theme work in step 3.
 
+   Done differently: the donut cards had no legend at all, only hover tooltips. Each card now has a legend with a swatch, the name and the count of every non-empty segment, which meets 1.4.11 whatever the colours, so the palette is unchanged. The cards line up their heading, donut and legend rows with a CSS subgrid. The card was also a `role="button"` with a button inside; the inner button ("Expand: <title>") is now the only control, and clicking the card still opens the modal.
+
 2. **Distinct markers per series (F14).** Change `DEFAULT_CATEGORY_SYMBOLS` to a cycle of different shapes (circle, rect, triangle, diamond, …) and make sure the markers show. This changes every plan's charts, so review it with design. Optionally also vary `lineStyle.type`.
 
    Not changed. Decided to keep the code default and set markers in the theme only, but the audited plan's theme already sets `categorySymbols` (empty circle, square, diamond, …), and since `cbbc5c54` (in production) the line chart blocks use them as the default graph already did. The audit probably predates that, or looked at a chart not identified yet: confirm on the live site.
