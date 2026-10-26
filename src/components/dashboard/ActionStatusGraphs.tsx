@@ -24,10 +24,14 @@ import { usePlan } from '@/context/plan';
 
 type ActionTimeliness = PlanContextFragment['actionTimelinessClasses'][number];
 
+// A grid for the donut cards' subgrid rows
 const StatusDonutsWrapper = styled.div`
   width: auto;
   margin: 0 auto;
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(3, auto);
+  grid-auto-columns: max-content;
   overflow-x: auto;
   margin-bottom: ${(props) => props.theme.spaces.s300};
   background-image: ${(props) => `linear-gradient(to right, ${
