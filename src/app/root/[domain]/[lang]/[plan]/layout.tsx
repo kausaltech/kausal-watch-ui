@@ -183,8 +183,15 @@ export default async function PlanLayout(props: Props) {
   const pathsData = getPathsData(planData.plan.kausalPathsInstanceUuid);
   const theme = await loadTheme(planData.plan.themeIdentifier || params.plan);
 
-  const themeStylesheet = theme.name ? (
-    <link rel="stylesheet" type="text/css" href={getThemeStaticURL(theme.mainCssFile)} />
+  // A plain link rather than a `precedence` stylesheet: React never removes those, so after
+  // a client navigation to a differently themed plan the old theme would keep applying.
+  // React hoists the preload link to <head>, so the download still starts early.
+  const themeCssUrl = theme.name ? getThemeStaticURL(theme.mainCssFile) : undefined;
+  const themeStylesheet = themeCssUrl ? (
+    <>
+      <link rel="preload" as="style" href={themeCssUrl} />
+      <link rel="stylesheet" type="text/css" href={themeCssUrl} />
+    </>
   ) : undefined;
 
   const matomoAnalyticsUrl = planData.plan.domain?.matomoAnalyticsUrl ?? undefined;
