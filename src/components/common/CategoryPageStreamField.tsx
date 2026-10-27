@@ -71,6 +71,8 @@ interface Props {
    * provide that wrapper themselves
    */
   wrapAttributeBlock?: boolean;
+  /** Whether the block above this one has a background, for the body's block spacing */
+  precedingBlockHasBackground?: boolean;
 }
 
 const findAttributeByType = (attributeTypeIdentifier: string, page: CategoryPage) =>
@@ -93,6 +95,7 @@ export default function CategoryPageStreamField({
   context = 'main',
   columnProps: customColumnProps,
   wrapAttributeBlock = false,
+  precedingBlockHasBackground,
 }: Props) {
   const plan = usePlan();
   const paths = usePaths();
@@ -194,7 +197,14 @@ export default function CategoryPageStreamField({
       if (!page.body) {
         return null;
       }
-      return <StreamField page={page} blocks={page.body} columnProps={columnProps} />;
+      return (
+        <StreamField
+          page={page}
+          blocks={page.body}
+          columnProps={columnProps}
+          precedingBlockHasBackground={precedingBlockHasBackground}
+        />
+      );
     }
 
     case 'CategoryPageCategoryListBlock': {

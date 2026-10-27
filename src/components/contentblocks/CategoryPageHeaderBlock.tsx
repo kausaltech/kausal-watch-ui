@@ -113,13 +113,8 @@ const HeaderImage = styled.div`
       min-height: 20rem;
     }
 
-    /* From lg the header is as tall as the image unless the content is taller,
-     * so stretch the image to cover the whole header, up to a cap. Content
-     * longer than that hangs below the image, as it does on smaller screens. */
     ${(props) => props.theme.breakpoints.up('lg')} {
-      height: 100%;
       min-height: 28rem;
-      max-height: 40rem;
     }
 
     ${(props) => props.theme.breakpoints.up('xl')} {
