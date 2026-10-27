@@ -572,6 +572,8 @@ const ActionList = (props: ActionListProps) => {
   const showUpdateStatus =
     theme.settings.dashboard?.showActionUpdateStatus === false ? false : true;
 
+  const showColorLegend = theme.settings.showActionColorLegend === true;
+
   return (
     <>
       <ActionListSection id="actions" data-testid={testId}>
@@ -673,14 +675,13 @@ const ActionList = (props: ActionListProps) => {
         >
           {!displayDashboard && filteredActions.length > 0 ? (
             <>
-              {/* TODO: gate behind theme.settings.showActionColorLegend once @kausal/themes is released */}
-              <ColorLegend actions={filteredActions} align="start" />
+              {showColorLegend && <ColorLegend actions={filteredActions} align="start" />}
               <ActionCardList
                 actions={filteredActions}
                 groupBy={groupBy}
                 includeRelatedPlans={includeRelatedPlans}
                 headingHierarchyDepth={headingHierarchyDepth}
-                compactTopMargin
+                compactTopMargin={showColorLegend}
               />
             </>
           ) : (

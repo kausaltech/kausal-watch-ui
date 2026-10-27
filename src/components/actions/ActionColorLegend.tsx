@@ -1,4 +1,4 @@
-import { useId, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -12,11 +12,12 @@ import {
   type ActionCardFragment,
   ActionStatusSummaryIdentifier,
 } from '@/common/__generated__/graphql';
+import { getReadableThemeTextColor } from '@/components/contentblocks/colorUtils';
 import { type PlanContextType, usePlan } from '@/context/plan';
 
 type LegendAlign = 'center' | 'start';
 
-const Legend = styled.div<{ $align: LegendAlign }>`
+const Legend = styled.div<{ $align: LegendAlign; $textColor: string }>`
   display: flex;
   flex-wrap: wrap;
   justify-content: ${({ $align }) => $align};
@@ -24,7 +25,7 @@ const Legend = styled.div<{ $align: LegendAlign }>`
   gap: ${({ theme }) => `${theme.spaces.s050} ${theme.spaces.s150}`};
   margin: 0 0 ${({ theme }) => theme.spaces.s200};
   font-size: ${({ theme }) => theme.fontSizeSm};
-  color: ${({ theme }) => theme.textColor.secondary};
+  color: ${({ $textColor }) => $textColor};
 `;
 
 const LegendHeading = styled.span`
@@ -47,12 +48,12 @@ const LegendItem = styled.li`
   gap: ${({ theme }) => theme.spaces.s050};
 `;
 
-const Swatch = styled.span<{ $color: string }>`
+const Swatch = styled.span<{ $color: string; $borderColor: string }>`
   flex-shrink: 0;
   width: 1.5em;
   height: 0.75em;
   background-color: ${({ $color }) => $color};
-  border: 1px solid ${({ theme }) => transparentize(0.8, theme.themeColors.dark)};
+  border: 1px solid ${({ $borderColor }) => $borderColor};
   print-color-adjust: exact;
   -webkit-print-color-adjust: exact;
 `;
@@ -182,14 +183,20 @@ const HEADING_KEYS = {
 type ActionColorLegendProps = {
   actions: LegendAction[];
   align?: LegendAlign;
+  /** The surface the legend sits on, to keep its text readable. Defaults to the page background. */
+  backgroundColor?: string;
   className?: string;
 };
 
-const ActionColorLegend = ({ actions, align = 'center', className }: ActionColorLegendProps) => {
+const ActionColorLegend = ({
+  actions,
+  align = 'center',
+  backgroundColor,
+  className,
+}: ActionColorLegendProps) => {
   const t = useTranslations();
   const plan = usePlan();
   const theme = useTheme();
-  const headingId = useId();
 
   const entries = useMemo(
     () =>
@@ -205,13 +212,21 @@ const ActionColorLegend = ({ actions, align = 'center', className }: ActionColor
   // "Progress" covers both, as on the action page where it heads the status and phase
   const heading = t(HEADING_KEYS[getLegendHeadingKind(entries)]);
 
+  const textColor = getReadableThemeTextColor(
+    backgroundColor ?? theme.themeColors.white,
+    theme.textColor.primary,
+    theme.themeColors.white
+  );
+
+  // Hidden from screen readers: each card already states its status as text,
+  // so the legend only explains a visual code they don't meet
   return (
-    <Legend $align={align} className={className}>
-      <LegendHeading id={headingId}>{heading}:</LegendHeading>
-      <LegendList $align={align} aria-labelledby={headingId}>
+    <Legend $align={align} $textColor={textColor} className={className} aria-hidden="true">
+      <LegendHeading>{heading}:</LegendHeading>
+      <LegendList $align={align}>
         {entries.map(({ color, labels }) => (
           <LegendItem key={color}>
-            <Swatch $color={color} aria-hidden="true" />
+            <Swatch $color={color} $borderColor={transparentize(0.5, textColor)} />
             {labels.join(' / ')}
           </LegendItem>
         ))}
