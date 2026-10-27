@@ -16,6 +16,7 @@ import type {
 import { getActionTermContext } from '@/common/i18n';
 import ActionCard from '@/components/actions/ActionCard';
 import ActionCardList from '@/components/actions/ActionCardList';
+import ActionColorLegend from '@/components/actions/ActionColorLegend';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import { Container } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
@@ -280,6 +281,8 @@ const ActionListBlock = (props: ActionListBlockProps) => {
         {displayHeader && displayHeader !== '-' ? (
           <SectionHeader>{displayHeader}</SectionHeader>
         ) : null}
+        {/* TODO: gate behind theme.settings.showActionColorLegend once @kausal/themes is released */}
+        <ActionColorLegend actions={planActions} />
         {!groups || namedGroupCount === 0 ? (
           // No grouping configured, or nothing resolved to a group — plain list
           <ActionCardList
