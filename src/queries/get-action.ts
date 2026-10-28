@@ -441,6 +441,10 @@ const GET_ACTION_DETAILS: TypedDocumentNode<ActionDetailsQuery, ActionDetailsQue
     ... on ActionTasksBlock {
       fieldLabel
       fieldHelpText
+      sections {
+        field
+        heading
+      }
     }
     ... on ActionContentAttributeTypeBlock {
       attributeType {
@@ -497,6 +501,10 @@ const GET_ACTION_DETAILS: TypedDocumentNode<ActionDetailsQuery, ActionDetailsQue
         ... on ActionTasksBlock {
           fieldLabel
           fieldHelpText
+          sections {
+            field
+            heading
+          }
         }
         ... on ActionContentAttributeTypeBlock {
           attributeType {

@@ -1,6 +1,9 @@
 import { useTranslations } from 'next-intl';
 
-import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
+import type {
+  ActionDetailsQuery,
+  ActionMainContentBlocksFragment,
+} from '@/common/__generated__/graphql';
 import { getActionTaskTermContext } from '@/common/i18n';
 import { ActionSection, SectionHeader } from '@/components/actions/ActionContent';
 import TaskList from '@/components/actions/TaskList';
@@ -8,13 +11,19 @@ import PopoverTip from '@/components/common/PopoverTip';
 import { Col, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
+type ActionTasksBlockFragment = Extract<
+  ActionMainContentBlocksFragment,
+  { __typename: 'ActionTasksBlock' }
+>;
+
 type ActionTasksBlockProps = {
   tasks: NonNullable<ActionDetailsQuery['action']>['tasks'];
+  sections?: ActionTasksBlockFragment['sections'];
   heading?: string | null;
   helpText?: string | null;
 };
 
-const ActionTasksBlock = ({ tasks, heading, helpText }: ActionTasksBlockProps) => {
+const ActionTasksBlock = ({ tasks, sections, heading, helpText }: ActionTasksBlockProps) => {
   const t = useTranslations();
   const plan = usePlan();
 
@@ -31,7 +40,7 @@ const ActionTasksBlock = ({ tasks, heading, helpText }: ActionTasksBlockProps) =
       <Row>
         <Col>
           <ActionSection>
-            <TaskList tasks={tasks} />
+            <TaskList tasks={tasks} sections={sections} />
           </ActionSection>
         </Col>
       </Row>
