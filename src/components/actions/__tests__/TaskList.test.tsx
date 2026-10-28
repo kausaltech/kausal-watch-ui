@@ -3,8 +3,9 @@ import type * as ReactModule from 'react';
 import { ThemeProvider } from '@emotion/react';
 
 import defaultThemeJson from '@kausal/themes/dist/themes/default/theme.json';
-import type { Theme } from '@kausal/themes/types';
 import { act, render, screen } from '@testing-library/react';
+
+import { initializeMuiTheme } from '@common/themes/mui-theme/theme';
 
 import dayjs from '@/common/dayjs';
 
@@ -32,7 +33,7 @@ jest.mock('react', () => {
 
 jest.mock('@/context/plan', () => ({ usePlan: () => ({ actionListPage: null }) }));
 
-const theme = defaultThemeJson as unknown as Theme;
+const theme = initializeMuiTheme(defaultThemeJson);
 
 const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
 const today = dayjs().format('YYYY-MM-DD');
@@ -163,7 +164,7 @@ describe('TaskList', () => {
         (title) => title.textContent
       );
     expect(iconTitles('Paint the lanes')).toEqual(['action-task-cancelled']);
-    expect(iconTitles('Plan the route')).toEqual(['action-task-todo']);
+    expect(iconTitles('Plan the route')).toEqual(['action-task-due-date']);
   });
 
   /* The GraphQL type allows null entries in a stream field. */

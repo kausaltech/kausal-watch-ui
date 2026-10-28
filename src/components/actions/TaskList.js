@@ -12,24 +12,31 @@ import dayjs from '@/common/dayjs';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import RichText from '@/components/common/RichText';
+import Tooltip from '@/components/common/Tooltip';
 import { usePlan } from '@/context/plan';
 import { getDateFormat } from '@/utils/dates.utils';
+
+// Display settings for the task list. Hard-coded for now; each is meant to become an admin or
+// theme setting later.
+const TASK_LIST_SETTINGS = {
+  // Split a section of more than LONG_LIST_THRESHOLD tasks into collapsible groups: 'YEAR' or null
+  collapseLongListsBy: 'YEAR',
+};
+
+const LONG_LIST_THRESHOLD = 12;
 
 const StyledDate = styled.span`
   font-size: ${(props) => props.theme.fontSizeSm};
   font-family: ${(props) => `${props.theme.fontFamilyTiny}, ${props.theme.fontFamilyFallback}`};
   margin-left: ${(props) => props.theme.spaces.s025};
+
+  &.cancelled {
+    color: ${(props) => props.theme.textColor.tertiary};
+  }
 `;
 
 const TaskWrapper = styled.div`
   display: flex;
-`;
-
-const LateLabel = styled.span`
-  display: block;
-  font-size: ${(props) => props.theme.fontSizeSm};
-  font-weight: ${(props) => props.theme.fontWeightBold};
-  color: ${(props) => props.theme.graphColors.red070};
 `;
 
 const TaskMeta = styled.div`
@@ -141,6 +148,31 @@ const ListGroupTitle = styled.h3`
   font-size: ${(props) => props.theme.fontSizeMd};
 `;
 
+const TaskGroup = styled.div`
+  margin-bottom: ${(props) => props.theme.spaces.s050};
+
+  @media print {
+    .MuiCollapse-root {
+      height: auto !important;
+      overflow: visible !important;
+      visibility: visible !important;
+    }
+  }
+`;
+
+const TaskGroupToggle = styled(Button)`
+  font-weight: ${({ theme }) => theme.fontWeightBold};
+  padding: 0;
+  margin: 0 0 ${(props) => props.theme.spaces.s050};
+  color: ${(props) => props.theme.themeColors.dark};
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    background-color: transparent;
+  }
+`;
+
 const ListGroupItem = styled.li`
   position: relative;
   display: block;
@@ -162,10 +194,15 @@ const ListGroupItem = styled.li`
     border-bottom-right-radius: ${(props) => props.theme.cardBorderRadius};
   }
 
-  &.state--CANCELLED .task-title {
+  &.state--cancelled .task-title {
     text-decoration: line-through;
   }
 `;
+
+// The date a task is sorted and grouped by
+function getTaskDate(task) {
+  return task.completedAt ?? task.dueAt;
+}
 
 // Due and completion dates are plain dates (YYYY-MM-DD), which parse as UTC
 // midnight; format them in UTC so they don't shift a day west of Greenwich
@@ -180,7 +217,7 @@ function formatTaskDate(date, locale, dateFormat) {
 const Task = (props) => {
   const t = useTranslations();
   const locale = useLocale();
-  const { task, theme, completed, late } = props;
+  const { task, theme, late } = props;
   const [isOpen, setIsOpen] = useState(false);
   const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
@@ -191,23 +228,51 @@ const Task = (props) => {
   const responsibleParties = task.responsibleParties ?? [];
   const contactPersons = task.contactPersons ?? [];
 
+  let meta;
+  if (task.state === 'COMPLETED') {
+    meta = {
+      icon: Icon.Check,
+      color: theme.graphColors.green050,
+      label: t('action-task-completed-on'),
+      date: task.completedAt,
+    };
+  } else if (task.state === 'CANCELLED') {
+    meta = {
+      icon: Icon.Times,
+      color: theme.graphColors.grey050,
+      label: t('action-task-cancelled'),
+      date: task.dueAt,
+      dateClassName: 'cancelled',
+    };
+  } else if (late) {
+    meta = {
+      icon: Icon.ExclamationCircle,
+      color: theme.taskStatusColors.late,
+      label: t('action-task-late'),
+      date: task.dueAt,
+    };
+  } else {
+    meta = {
+      icon: Icon.Calendar,
+      color: theme.graphColors.blue070,
+      label: t('action-task-due-date'),
+      date: task.dueAt,
+    };
+  }
+  const MetaIcon = meta.icon;
+
   return (
     <TaskWrapper>
-      {completed ? (
-        <TaskMeta>
-          <Icon.Check color={theme.graphColors.green050} alt={t('action-task-done')} />
-          <StyledDate>{formatTaskDate(task.completedAt, locale, dateFormat)}</StyledDate>
-        </TaskMeta>
-      ) : (
-        <TaskMeta>
-          <Icon.Calendar
-            color={late ? theme.graphColors.red070 : theme.graphColors.blue070}
-            alt={t(task.state === 'CANCELLED' ? 'action-task-cancelled' : 'action-task-todo')}
-          />
-          <StyledDate>{formatTaskDate(task.dueAt, locale, dateFormat)}</StyledDate>
-          {late && <LateLabel>{t('action-task-late')}</LateLabel>}
-        </TaskMeta>
-      )}
+      <TaskMeta>
+        <Tooltip title={meta.label} describeChild>
+          <span>
+            <MetaIcon color={meta.color} alt={meta.label} />
+            <StyledDate className={meta.dateClassName}>
+              {formatTaskDate(meta.date, locale, dateFormat)}
+            </StyledDate>
+          </span>
+        </Tooltip>
+      </TaskMeta>
       <TaskContent>
         <h4 className="task-title">{task.name}</h4>
         {(responsibleParties.length > 0 || contactPersons.length > 0) && (
@@ -286,14 +351,16 @@ const taskShape = {
 };
 
 Task.propTypes = {
-  completed: PropTypes.bool.isRequired,
   late: PropTypes.bool,
   task: PropTypes.shape(taskShape).isRequired,
   theme: PropTypes.shape({
     graphColors: PropTypes.shape({
       blue070: PropTypes.string.isRequired,
       green050: PropTypes.string.isRequired,
-      red070: PropTypes.string.isRequired,
+      grey050: PropTypes.string.isRequired,
+    }).isRequired,
+    taskStatusColors: PropTypes.shape({
+      late: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
 };
@@ -301,10 +368,10 @@ Task.propTypes = {
 // How each section of the task list shows its tasks, keyed by the task state the backend names
 // the section after.
 const SECTIONS = {
-  not_started: { state: 'NOT_STARTED', headingKey: 'action-tasks-todo', completed: false },
-  in_progress: { state: 'IN_PROGRESS', headingKey: 'action-tasks-doing', completed: false },
-  completed: { state: 'COMPLETED', headingKey: 'action-tasks-done', completed: true },
-  cancelled: { state: 'CANCELLED', headingKey: 'action-tasks-cancelled', completed: false },
+  not_started: { state: 'NOT_STARTED', headingKey: 'action-tasks-todo', newestFirst: false },
+  in_progress: { state: 'IN_PROGRESS', headingKey: 'action-tasks-doing', newestFirst: false },
+  completed: { state: 'COMPLETED', headingKey: 'action-tasks-done', newestFirst: true },
+  cancelled: { state: 'CANCELLED', headingKey: 'action-tasks-cancelled', newestFirst: true },
 };
 
 // The order the sections had before plan admins could choose it, for backends that don't send one.
@@ -352,16 +419,55 @@ function subscribeToDate(onChange) {
   return () => clearTimeout(timeoutId);
 }
 
+function TaskYearGroup(props) {
+  const { year, count, defaultOpen, children } = props;
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const panelId = useId();
+
+  return (
+    <TaskGroup>
+      <TaskGroupToggle
+        variant="link"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+      >
+        <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
+        {year} ({count})
+      </TaskGroupToggle>
+      <Collapse in={isOpen} id={panelId}>
+        <ListGroup>{children}</ListGroup>
+      </Collapse>
+    </TaskGroup>
+  );
+}
+
+TaskYearGroup.propTypes = {
+  children: PropTypes.node.isRequired,
+  count: PropTypes.number.isRequired,
+  defaultOpen: PropTypes.bool.isRequired,
+  year: PropTypes.number.isRequired,
+};
+
+// Group the tasks by the year of their date, keeping their order
+function groupTasksByYear(tasks) {
+  const groups = [];
+  for (const task of tasks) {
+    const year = new Date(getTaskDate(task)).getUTCFullYear();
+    const group = groups.at(-1);
+    if (group?.year === year) group.tasks.push(task);
+    else groups.push({ year, tasks: [task] });
+  }
+  return groups;
+}
+
 function TaskList(props) {
   const { tasks, sections } = props;
   const theme = useTheme();
   const t = useTranslations();
+  const { collapseLongListsBy } = TASK_LIST_SETTINGS;
 
-  const sortedTasks = [...tasks].sort((a, b) => {
-    const adate = a.completedAt ? a.completedAt : a.dueAt;
-    const bdate = b.completedAt ? b.completedAt : b.dueAt;
-    return dayjs(adate).diff(dayjs(bdate));
-  });
+  const sortedTasks = [...tasks].sort((a, b) => dayjs(getTaskDate(a)).diff(dayjs(getTaskDate(b))));
 
   // A task is late once the day it was due has passed. "Today" is the viewer's date, which only the
   // browser knows: the server's date can differ, so the server and the hydration render mark no task
@@ -369,32 +475,40 @@ function TaskList(props) {
   const today = useSyncExternalStore(subscribeToDate, getToday, getServerToday);
   const isLate = (task) => today !== null && dayjs(task.dueAt).isBefore(today, 'day');
 
-  function filterTasks(state, completed, highlightLate) {
-    const items = sortedTasks
-      .filter((item) => item.state === state)
-      .map((item) => (
-        <ListGroupItem key={item.id} className={`state--${item.state}`}>
-          <Task
-            task={item}
-            theme={theme}
-            completed={completed}
-            late={highlightLate && isLate(item)}
-          />
-        </ListGroupItem>
-      ));
-    // Completed tasks are listed newest first
-    return completed ? items.reverse() : items;
-  }
+  const renderTasks = (sectionTasks, highlightLate) =>
+    sectionTasks.map((item) => (
+      <ListGroupItem key={item.id} className={`state--${item.state.toLowerCase()}`}>
+        <Task task={item} theme={theme} late={highlightLate && isLate(item)} />
+      </ListGroupItem>
+    ));
 
   return (
     <div>
       {getSectionConfigs(sections).map((config) => {
-        const items = filterTasks(config.state, config.completed, config.highlightLate);
-        if (!items.length) return null;
+        const sectionTasks = sortedTasks.filter((item) => item.state === config.state);
+        if (!sectionTasks.length) return null;
+        if (config.newestFirst) sectionTasks.reverse();
         return (
           <Fragment key={config.field}>
             <ListGroupTitle>{config.heading || t(config.headingKey)}</ListGroupTitle>
-            <ListGroup className="mb-5">{items}</ListGroup>
+            {collapseLongListsBy === 'YEAR' && sectionTasks.length > LONG_LIST_THRESHOLD ? (
+              <div className="mb-5">
+                {groupTasksByYear(sectionTasks).map((group, index) => (
+                  <TaskYearGroup
+                    key={group.year}
+                    year={group.year}
+                    count={group.tasks.length}
+                    defaultOpen={index === 0}
+                  >
+                    {renderTasks(group.tasks, config.highlightLate)}
+                  </TaskYearGroup>
+                ))}
+              </div>
+            ) : (
+              <ListGroup className="mb-5">
+                {renderTasks(sectionTasks, config.highlightLate)}
+              </ListGroup>
+            )}
           </Fragment>
         );
       })}
