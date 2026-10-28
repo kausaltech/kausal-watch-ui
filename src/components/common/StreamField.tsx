@@ -230,14 +230,26 @@ function blockIsUnpadded(block: StreamFieldFragment, theme: Theme, containedLayo
   );
 }
 
+/**
+ * Unpadded blocks whose content starts right at their top edge, unlike the
+ * contained front page hero, which starts with its image band
+ */
+function blockStartsUnpadded(block: StreamFieldFragment, theme: Theme) {
+  return block.__typename === 'RichTextBlock' && !richTextHasBackground(theme);
+}
+
 interface BlockWrapperProps {
   $hasBackground: boolean;
   $prevHasBackground: boolean;
   $isUnpadded: boolean;
   $prevIsUnpadded: boolean;
+  $startsUnpadded: boolean;
   $isFirst: boolean;
-  /** Last block, or followed by an unwrapped block that sets no top gap of its own */
-  $isLastWrapped: boolean;
+  /** First block, with no page header above the stream field */
+  $isFirstWithoutHeader: boolean;
+  $isLast: boolean;
+  /** Followed by an unwrapped block that sets no top gap of its own */
+  $nextIsUnwrapped: boolean;
 }
 
 const StyledBlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
@@ -247,7 +259,10 @@ const StyledBlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
     $prevHasBackground,
     $isUnpadded,
     $prevIsUnpadded,
+    $startsUnpadded,
+    $isFirstWithoutHeader,
   }) => {
+    if ($isFirstWithoutHeader) return $startsUnpadded ? 'var(--block-gap)' : '0';
     if ($isFirst) return $isUnpadded && $prevHasBackground ? 'var(--block-gap)' : '0';
     if ($hasBackground && $prevHasBackground) return 'var(--block-gap-coloured)';
     if ($hasBackground || $prevHasBackground) {
@@ -256,8 +271,13 @@ const StyledBlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
     }
     return 'var(--block-gap)';
   }};
-  margin-bottom: ${({ $isLastWrapped, $isUnpadded }) =>
-    $isLastWrapped && $isUnpadded ? 'var(--block-gap)' : '0'};
+  margin-bottom: ${({ $isLast, $nextIsUnwrapped, $isUnpadded }) => {
+    if (!$isUnpadded) return '0';
+    // Coloured blocks end with their own bottom padding, which themes may cover with a
+    // footer decoration, so leave the same room after an unpadded block ending the page
+    if ($isLast) return 'calc(var(--block-gap) + var(--block-padding-bottom))';
+    return $nextIsUnwrapped ? 'var(--block-gap)' : '0';
+  }};
 `;
 
 function BlockWrapper({
@@ -756,6 +776,10 @@ interface StreamFieldProps {
   blocks: StreamFieldFragment[];
   hasSidebar?: boolean;
   columnProps?: ColProps;
+  /**
+   * Whether the page header above the stream field has a background. Leave
+   * undefined when there is no page header above it.
+   */
   precedingBlockHasBackground?: boolean;
 }
 
@@ -803,10 +827,11 @@ export default function StreamField(props: StreamFieldProps) {
                 $prevHasBackground={prevHasBackground}
                 $isUnpadded={isUnpadded}
                 $prevIsUnpadded={prevIsUnpadded}
+                $startsUnpadded={blockStartsUnpadded(block, theme)}
                 $isFirst={index === 0}
-                $isLastWrapped={
-                  index === blocks.length - 1 || blocks[index + 1].blockType === 'DashboardRowBlock'
-                }
+                $isFirstWithoutHeader={index === 0 && precedingBlockHasBackground === undefined}
+                $isLast={index === blocks.length - 1}
+                $nextIsUnwrapped={blocks[index + 1]?.blockType === 'DashboardRowBlock'}
               >
                 <StreamFieldBlock
                   id={`section-${index + 1}`}

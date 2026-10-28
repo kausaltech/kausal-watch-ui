@@ -190,7 +190,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
           page={page}
           pageSectionColor={pageSectionColor}
           // The contained category page header has no background
-          precedingBlockHasBackground={hasPageHeader && !containedLayout}
+          precedingBlockHasBackground={hasPageHeader ? !containedLayout : undefined}
         />
       ) : (
         <div
@@ -225,7 +225,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
               blocks={page.body}
               hasSidebar={siblings.length > 1}
               // The contained content page header has no background
-              precedingBlockHasBackground={hasPageHeader && !containedLayout}
+              precedingBlockHasBackground={hasPageHeader ? !containedLayout : undefined}
             />
           )}
         </div>
