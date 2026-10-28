@@ -24,6 +24,8 @@
     "action-task-todo": "At gøre",
     "action-task-late": "Forsinket",
     "action-task-cancelled": "Annulleret",
+    "action-task-completed-on": "Afsluttet den",
+    "action-task-due-date": "Frist",
     "action-tasks": "Projekter",
     "action-tasks-count": "projekter",
     "action-tasks-done": "Afsluttede projekter",

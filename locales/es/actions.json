@@ -24,6 +24,8 @@
     "action-task-todo": "Todo",
     "action-task-late": "Con retraso",
     "action-task-cancelled": "Cancelado",
+    "action-task-completed-on": "Completada el",
+    "action-task-due-date": "Fecha límite",
     "action-tasks": "Tareas",
     "action-tasks-count": "tareas",
     "action-tasks-done": "¿Qué se ha hecho?",

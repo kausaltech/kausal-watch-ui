@@ -29,6 +29,8 @@
     "action-task-todo": "À faire",
     "action-task-late": "En retard",
     "action-task-cancelled": "Annulée",
+    "action-task-completed-on": "Terminée le",
+    "action-task-due-date": "Date d’échéance",
     "action-tasks": "{context, select, MILESTONE {Jalons} other {Tâches}}",
     "action-tasks-count": "{context, select, MILESTONE {jalons} other {tâches}}",
     "action-tasks-done": "Qu’avons-nous déjà réalisé ?",

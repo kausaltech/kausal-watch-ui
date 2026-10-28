@@ -24,6 +24,8 @@
     "action-task-todo": "Todo",
     "action-task-late": "Καθυστερημένο",
     "action-task-cancelled": "Ακυρώθηκε",
+    "action-task-completed-on": "Ολοκληρώθηκε στις",
+    "action-task-due-date": "Προθεσμία",
     "action-tasks": "{context, select, MILESTONE {Milestones} other {Tasks}}",
     "action-tasks-count": "{context, select, MILESTONE {milestones} other {tasks}}",
     "action-tasks-done": "Τι έχει γίνει;",

@@ -35,6 +35,8 @@
     "action-task-todo": "Todo",
     "action-task-late": "Nokavēts",
     "action-task-cancelled": "Atcelts",
+    "action-task-completed-on": "Pabeigts",
+    "action-task-due-date": "Termiņš",
     "action-tasks": "{context, select, MILESTONE {Stūrakmeņi} other {Uzdevumi}}",
     "action-tasks-count": "{context, select, MILESTONE {stūrakmeņi} other {uzdevumi}}",
     "actions-phases-help": "Notiekošās un pabeigtās rīcības",

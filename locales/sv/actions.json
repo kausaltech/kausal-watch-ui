@@ -24,6 +24,8 @@
     "action-task-todo": "Att göra",
     "action-task-late": "Försenad",
     "action-task-cancelled": "Inställd",
+    "action-task-completed-on": "Slutförd den",
+    "action-task-due-date": "Sista datum",
     "action-tasks": "{context, select, MILESTONE {Milstolpar} other {Uppgifter}}",
     "action-tasks-count": "{context, select, MILESTONE {milstolpar} other {uppgifter}}",
     "action-tasks-done": "Vad har gjorts?",

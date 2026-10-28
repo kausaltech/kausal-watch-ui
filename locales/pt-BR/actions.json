@@ -29,6 +29,8 @@
     "action-task-todo": "Todo",
     "action-task-late": "Em atraso",
     "action-task-cancelled": "Cancelado",
+    "action-task-completed-on": "Concluída em",
+    "action-task-due-date": "Prazo",
     "action-tasks": "{context, select, MILESTONE {Milestones} other {Tasks}}",
     "action-tasks-count": "{context, select, MILESTONE {milestones} other {tasks}}",
     "action-tasks-done": "O que foi feito?",

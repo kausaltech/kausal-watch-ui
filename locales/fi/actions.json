@@ -19,6 +19,8 @@
     "action-task-todo": "Tehtävä",
     "action-task-late": "Myöhässä",
     "action-task-cancelled": "Peruttu",
+    "action-task-completed-on": "Valmistunut",
+    "action-task-due-date": "Määräpäivä",
     "action-status-updates": "Viimeisimmät päivitykset",
     "action-last-updated": "Tietoja päivitetty",
     "action-timeline": "Aikajänne",
