@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { Fragment, useId, useState } from 'react';
 
 import Collapse from '@mui/material/Collapse';
 
@@ -218,8 +218,42 @@ Task.propTypes = {
   }).isRequired,
 };
 
+// How each section of the task list shows its tasks, keyed by the task state the backend names
+// the section after.
+const SECTIONS = {
+  not_started: { state: 'NOT_STARTED', headingKey: 'action-tasks-todo', completed: false },
+  in_progress: { state: 'IN_PROGRESS', headingKey: 'action-tasks-doing', completed: false },
+  completed: { state: 'COMPLETED', headingKey: 'action-tasks-done', completed: true },
+};
+
+// The order the sections had before plan admins could choose it, for backends that don't send one.
+const DEFAULT_SECTIONS = [
+  { field: 'not_started' },
+  { field: 'in_progress' },
+  { field: 'completed' },
+];
+
+// The sections to show, in order. Skips empty entries and the sections this version of the UI does
+// not know yet.
+function getSectionConfigs(sections) {
+  return (sections ?? DEFAULT_SECTIONS)
+    .filter((section) => section && SECTIONS[section.field])
+    .map((section) => ({
+      ...SECTIONS[section.field],
+      field: section.field,
+      heading: section.heading,
+    }));
+}
+
+// Whether any of the tasks is in a section that is shown, so that the tasks block can leave out its
+// heading when there is nothing to list under it.
+export function hasVisibleTasks(tasks, sections) {
+  const states = new Set(getSectionConfigs(sections).map((config) => config.state));
+  return tasks.some((task) => states.has(task.state));
+}
+
 function TaskList(props) {
-  const { tasks } = props;
+  const { tasks, sections } = props;
   const theme = useTheme();
   const t = useTranslations();
 
@@ -230,45 +264,42 @@ function TaskList(props) {
   });
 
   function filterTasks(state, completed) {
-    return sortedTasks
+    const items = sortedTasks
       .filter((item) => item.state === state)
       .map((item) => (
         <ListGroupItem key={item.id} className={`state--${item.state}`}>
           <Task task={item} theme={theme} completed={completed} />
         </ListGroupItem>
       ));
+    // Completed tasks are listed newest first
+    return completed ? items.reverse() : items;
   }
-
-  const notStartedTasks = filterTasks('NOT_STARTED', false);
-  const inProgressTasks = filterTasks('IN_PROGRESS', false);
-  const completedTasks = filterTasks('COMPLETED', true).reverse();
 
   return (
     <div>
-      {notStartedTasks.length > 0 && (
-        <>
-          <ListGroupTitle>{t('action-tasks-todo')}</ListGroupTitle>
-          <ListGroup className="mb-5">{notStartedTasks}</ListGroup>
-        </>
-      )}
-      {inProgressTasks.length > 0 && (
-        <>
-          <ListGroupTitle>{t('action-tasks-doing')}</ListGroupTitle>
-          <ListGroup className="mb-5">{inProgressTasks}</ListGroup>
-        </>
-      )}
-      {completedTasks.length > 0 && (
-        <>
-          <ListGroupTitle>{t('action-tasks-done')}</ListGroupTitle>
-          <ListGroup className="mb-5">{completedTasks}</ListGroup>
-        </>
-      )}
+      {getSectionConfigs(sections).map((config) => {
+        const items = filterTasks(config.state, config.completed);
+        if (!items.length) return null;
+        return (
+          <Fragment key={config.field}>
+            <ListGroupTitle>{config.heading || t(config.headingKey)}</ListGroupTitle>
+            <ListGroup className="mb-5">{items}</ListGroup>
+          </Fragment>
+        );
+      })}
     </div>
   );
 }
 
 TaskList.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.shape(taskShape)).isRequired,
+  sections: PropTypes.arrayOf(
+    // Stream field entries can be null
+    PropTypes.shape({
+      field: PropTypes.string.isRequired,
+      heading: PropTypes.string,
+    })
+  ),
 };
 
 export default TaskList;

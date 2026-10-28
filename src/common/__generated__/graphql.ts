@@ -5169,6 +5169,8 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionContentCategoryTypeBlock_categoryType = { __typename: 'CategoryType', id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<CategoryTypeFragment_levels> };
 
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections = { __typename: 'ActionTaskSectionBlock', field: string, heading: string | null };
+
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportType = { __typename: 'ReportType', id: string, name: string };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_attribute_AttributeCategoryChoice = { __typename: 'AttributeCategoryChoice', id: string, type: AttributesBlockAttributeWithNestedTypeFragment_type, categories: Array<AttributesBlockAttributeFragment_categories> };
@@ -5349,7 +5351,7 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock', field: string };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections> | null };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock', field: string };
 
@@ -5686,6 +5688,8 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_UpdatedAtColumnBlock
 ;
 
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections = { __typename: 'ActionTaskSectionBlock', field: string, heading: string | null };
+
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_PlanDatasetsBlock_datasetSchema = { __typename: 'DatasetSchema', uuid: string };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContactFormBlock = { __typename: 'ActionContactFormBlock', field: string, heading: string | null, description: string | null, emailVisible: boolean | null, emailRequired: boolean | null, feedbackVisible: boolean | null, feedbackRequired: boolean | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null, fields: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_fields> };
@@ -5714,7 +5718,7 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionRelatedA
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionRelatedIndicatorsBlock = { __typename: 'ActionRelatedIndicatorsBlock', field: string, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections> | null };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ChangeLogMessageBlock = { __typename: 'ChangeLogMessageBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null };
 
@@ -5771,7 +5775,7 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainBottom_ActionRelat
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainBottom_ActionRelatedIndicatorsBlock = { __typename: 'ActionRelatedIndicatorsBlock', field: string, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainBottom_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainBottom_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections> | null };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainBottom_ChangeLogMessageBlock = { __typename: 'ChangeLogMessageBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null };
 
@@ -5896,7 +5900,7 @@ type ActionMainContentBlocks_ActionRelatedActionsBlock_Fragment = { __typename: 
 
 type ActionMainContentBlocks_ActionRelatedIndicatorsBlock_Fragment = { __typename: 'ActionRelatedIndicatorsBlock', field: string, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null };
 
-type ActionMainContentBlocks_ActionTasksBlock_Fragment = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null };
+type ActionMainContentBlocks_ActionTasksBlock_Fragment = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections> | null };
 
 type ActionMainContentBlocks_ChangeLogMessageBlock_Fragment = { __typename: 'ChangeLogMessageBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null };
 

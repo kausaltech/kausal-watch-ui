@@ -59,6 +59,7 @@ import CategoryTags from './CategoryTags';
 import EmissionScopeIcon from './EmissionScopeIcon';
 import ExportActionPdfButton from './ExportActionPdfButton';
 import { PhaseTimeline } from './PhaseTimeline';
+import { hasVisibleTasks } from './TaskList';
 import RestrictedBlockWrapper from './blocks/RestrictedBlockWrapper';
 import { ActionDependenciesBlock } from './blocks/action-dependencies/ActionDependenciesBlock';
 
@@ -260,10 +261,11 @@ function ActionContentBlock(props: ActionContentBlockProps) {
         <ActionRelatedIndicatorsBlock actionId={action.id} indicators={action.relatedIndicators} />
       );
     case 'ActionTasksBlock':
-      if (!action.tasks.length) return null;
+      if (!hasVisibleTasks(action.tasks, block.sections)) return null;
       return (
         <ActionTasksBlock
           tasks={action.tasks}
+          sections={block.sections}
           heading={block.fieldLabel}
           helpText={block.fieldHelpText}
         />
