@@ -253,6 +253,9 @@ The steps go from the clearest conformance failures in shared components, which 
    Done: the span is removed, and `RichText` no longer replaces an empty alt (an image marked decorative in the editor) with "Image"; such an image's credit is hidden too, as in F30. Checked on the audited plan: the home page and topic pages have no "Bild" labels or `role="img"` elements, and all their images have an empty alt.
 
 3. **Menu label (F25).** Show a visible "Menu" text next to the hamburger icon at the widths where the toggle shows, and reuse it as the accessible name.
+
+   Done with the label under the icon rather than beside it, to keep the header's width: an 11 px "Menu" (`nav-menu-label`) that is also the button's accessible name, in place of the `aria-label`; `aria-expanded` tells whether the menu is open. The header is no taller than before.
+
 4. **Organisation contact details (F5).** Fetch and show `email` on the organisation page. Use the organisation's name, not the raw URL, as the website link text. Add `alt` to the org logo. Check whether the backend has a phone number or address.
 5. **Link texts (F24).** Give the "Weiterlesen" links in `CategoryCardContent` the card title as visually hidden text. Ask the plan admins to fix "hier" links in their content.
 6. **Platform contact (F4).** Kausal and the plan admins decide where the imprint and the contact person go; the footer links are set in the plan's settings.

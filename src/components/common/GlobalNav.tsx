@@ -540,12 +540,14 @@ const StyledDropdownMenu = styled(DropdownMenu)`
 `;
 
 const NavbarToggler = styled.button`
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
   padding: 0;
   margin: 0;
-  text-align: right;
   font-size: 1.5rem;
-  width: ${(props) => props.theme.spaces.s300};
+  min-width: ${(props) => props.theme.spaces.s300};
+  color: ${(props) => props.theme.brandNavColor};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: manual;
@@ -563,6 +565,14 @@ const NavbarToggler = styled.button`
   @media print {
     display: none;
   }
+`;
+
+/* A visible name for the icon, also the button's accessible name; small, to
+   take no width beside the icon (BITV audit F25) */
+const NavbarTogglerLabel = styled.span`
+  font-size: 11px;
+  font-weight: ${(props) => props.theme.fontWeightNormal};
+  line-height: 1;
 `;
 
 type CustomToolbarProps = {
@@ -824,7 +834,6 @@ function GlobalNav(props: GlobalNavProps) {
           </Nav>
           <NavbarToggler
             onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
             aria-controls="global-navigation-bar"
             aria-expanded={isOpen}
             type="button"
@@ -834,6 +843,7 @@ function GlobalNav(props: GlobalNavProps) {
             ) : (
               <Icon.Bars color={theme.brandNavColor} />
             )}
+            <NavbarTogglerLabel>{t('nav-menu-label')}</NavbarTogglerLabel>
           </NavbarToggler>
         </TopNav>
       </div>
